@@ -1,26 +1,36 @@
 // Copyright (c) 2024 OrigAdmin. All rights reserved.
 
-//go:generate swag init --parseDependency --generalInfo ./main.go --output ./resources/docs
-// #go:generate docker run --rm -v resources:/local openapitools/openapi-generator-cli generate -i /local/docs/swagger.yaml -g openapi -o /local/docs/v3
-
 // Package main is the main package
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
-	"runtime"
 
+	goversion "github.com/caarlos0/go-version"
 	"github.com/spf13/cobra"
+
+	"origadmin/backend/cmd"
+	"origadmin/backend/helpers/interrupt"
 )
 
-// VERSION usage: go build -ldflags "-X main.VERSION=x.x.x"
-var VERSION = "v1.0.0"
+// build tool goreleaser tags
+//
+//nolint:gochecknoglobals
+var (
+	version   = ""
+	commit    = ""
+	treeState = ""
+	date      = ""
+	builtBy   = ""
+	debug     = false
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "Admin",
-	Short: "The Admin is a control backend for OrigAdmin",
+	Use:   "origadmin backend",
+	Short: "OrigAdmin Backend is a backend management system with a focus on scalability, security, and flexibility.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Place your logic here
 		// _ = cmd.Help()
@@ -28,26 +38,30 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	//cobra.AddTemplateFuncs(usage.Template)
+	goinfo := buildVersion(version, commit, date, builtBy, treeState)
 	rootCmd.SilenceUsage = true
 	rootCmd.SilenceErrors = true
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 	rootCmd.CompletionOptions.DisableNoDescFlag = true
-	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
-	rootCmd.Version = fmt.Sprintf(
-		"%s on %s/%s",
-		VERSION, runtime.GOOS, runtime.GOARCH,
-	)
+	//rootCmd.SetUsageTemplate(resources.Usage)
+	//rootCmd.SetHelpCommand(cmd.HelpCmd(goinfo))
+	rootCmd.AddCommand(cmd.StartCmd())
+	//rootCmd.AddCommand(cmd.StopCmd())
+	//rootCmd.AddCommand(cmd.RestartCmd())
+	//rootCmd.AddCommand(cmd.ConfigCmd())
+	rootCmd.Version = goinfo.String()
 }
 
-// @title						Admin
+// @title						OrigAdmin Backend API
 // @version					v1.0.0
-// @description				A control backend for OrigAdmin.
-// @contact.name				OrigAdmin
+// @description				A
+// @contact.name				GodCong
 // @contact.url				https://github.com/origadmin
 // @license.name				MIT
-// @license.url				https://github.com/origadmin/admin/blob/main/LICENSE.md
+// @license.url				https://github.com/origadmin/origadmin/blob/main/LICENSE.md
 //
-// @host						localhost:28080
+// @host						localhost:28088
 // @basepath					/api/v1
 // @schemes					http https
 //
@@ -63,9 +77,35 @@ func main() {
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
+	ctx := interrupt.WithContext(context.Background())
+	err := rootCmd.ExecuteContext(ctx)
 	if err != nil {
 		fmt.Printf("Command executed with error:\n%v\n", err)
 		os.Exit(1)
 	}
+}
+
+func buildVersion(version, commit, date, builtBy, treeState string) goversion.Info {
+	return goversion.GetVersionInfo(
+		//goversion.WithAppDetails(config.AppName, "A lightweight, flexible, elegant and full-featured RBAC scaffolding backend management project.",
+		//	config.WebSite),
+		func(i *goversion.Info) {
+			//i.ASCIIName = config.UI
+			if commit != "" {
+				i.GitCommit = commit
+			}
+			if version != "" {
+				i.GitVersion = version
+			}
+			if treeState != "" {
+				i.GitTreeState = treeState
+			}
+			if date != "" {
+				i.BuildDate = date
+			}
+			if builtBy != "" {
+				i.BuiltBy = builtBy
+			}
+		},
+	)
 }
