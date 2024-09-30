@@ -6,7 +6,7 @@ require (
 	github.com/caarlos0/go-version v0.1.1
 	github.com/go-kratos/kratos/v2 v2.8.0
 	github.com/godcong/dl v0.0.13
-	github.com/origadmin/slog-karatos v0.0.0-20240923073352-86294ec96ef9
+	github.com/origadmin/slog-kratos v1.0.0
 	github.com/origadmin/toolkits v0.0.42
 	github.com/origadmin/toolkits/codec v0.0.9
 	github.com/spf13/cobra v1.8.1

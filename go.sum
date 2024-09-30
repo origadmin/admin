@@ -59,8 +59,8 @@ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
-github.com/origadmin/slog-karatos v0.0.0-20240923073352-86294ec96ef9 h1:EuSY4h2xJl71n9IiO3b9HNwN88KBfv933Pkfm8fuv1w=
-github.com/origadmin/slog-karatos v0.0.0-20240923073352-86294ec96ef9/go.mod h1:DHfRPhiYamCICI96klD5ux4LceLlotIvWYoYyb2rdZc=
+github.com/origadmin/slog-kratos v1.0.0 h1:GfUuASeb2bobyLPXbbNsn9Pz96YM8dwApP8YOGyq+d8=
+github.com/origadmin/slog-kratos v1.0.0/go.mod h1:ZG9Mz2+tpE+U54mVSjJM6YrEQh49Q7m2ern7tQgECbU=
 github.com/origadmin/toolkits v0.0.42 h1:jioAUdbvF1XbZRGodNOHWt1jkMWM6r//E49xNy9htos=
 github.com/origadmin/toolkits v0.0.42/go.mod h1:Vg6IUo1vvnEv/kHdIuePaWEMH0Qc8m4hzRVMu81056s=
 github.com/origadmin/toolkits/codec v0.0.9 h1:zvfxw0vUBmw44gku21Qaawn8hOWRmdgAR26T9m8+9Ao=

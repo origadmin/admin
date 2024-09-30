@@ -21,7 +21,7 @@ import (
 
 const (
 	startRandom  = `random`
-	startWorkdir = `workdir`
+	startWorkDir = `workdir`
 	startConfig  = `config`
 	startStatic  = `static`
 	startDaemon  = `daemon`
@@ -34,8 +34,8 @@ func StartCmd() *cobra.Command {
 		Use:   "start",
 		Short: "Start the backend server",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			workDir, _ := cmd.Flags().GetString(startWorkdir)
-			staticDir, _ := cmd.Flags().GetString(startStatic)
+			workdir, _ := cmd.Flags().GetString(startWorkDir)
+			statics, _ := cmd.Flags().GetString(startStatic)
 			configs, _ := cmd.Flags().GetString(startConfig)
 			random, _ := cmd.Flags().GetBool(startRandom)
 
@@ -46,9 +46,9 @@ func StartCmd() *cobra.Command {
 				}
 
 				cmdArgs := []string{"start"}
-				cmdArgs = append(cmdArgs, "-d", strings.TrimSpace(workDir))
+				cmdArgs = append(cmdArgs, "-d", strings.TrimSpace(workdir))
 				cmdArgs = append(cmdArgs, "-c", strings.TrimSpace(configs))
-				cmdArgs = append(cmdArgs, "-s", strings.TrimSpace(staticDir))
+				cmdArgs = append(cmdArgs, "-s", strings.TrimSpace(statics))
 				command := exec.Command(bin, cmdArgs...)
 				err = command.Start()
 				if err != nil {
@@ -73,15 +73,16 @@ func StartCmd() *cobra.Command {
 				[]byte(fmt.Sprintf("%d", os.Getpid())),
 				0o600)
 			err := bootstrap.Run(cmd.Context(), bootstrap.Config{
-				Random: random,
+				WorkDir: workdir,
+				Random:  random,
 			})
 			return err
 		},
 	}
 	cmd.Flags().BoolP(startRandom, "r", false, "Start with random password")
-	cmd.Flags().StringP(startWorkdir, "d", ".", "Working directory")
+	cmd.Flags().StringP(startWorkDir, "d", ".", "Working directory")
 	cmd.Flags().StringP(startConfig, "c", "configs",
-		"Runtime configuration files or directory (relative to workdir, multiple separated by commas)")
+		"Runtime configuration files or directory (relative to dir, multiple separated by commas)")
 	cmd.Flags().StringP(startStatic, "s", "", "Static files directory")
 	cmd.Flags().Bool(startDaemon, false, "Run as a daemon")
 	return cmd

@@ -15,7 +15,7 @@ type Settings struct {
 	HTTP            struct {
 		Addr            string `default:":28080"`
 		ShutdownTimeout int    `default:"10"` // unit:seconds
-		ReadTimeout     int    `default:"60"` // unit:seconds
+		ReadTimeout     int    `default:"30"` // unit:seconds
 		WriteTimeout    int    `default:"60"` // unit:seconds
 		IdleTimeout     int    `default:"10"` // unit:seconds
 		UseTLS          bool
