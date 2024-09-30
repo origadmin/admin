@@ -56,7 +56,7 @@ func init() {
 
 // @title						OrigAdmin Backend API
 // @version					v1.0.0
-// @description				A
+// @description				A distributed backend management system with a focus on scalability, security, and flexibility.
 // @contact.name				OrigAdmin
 // @contact.url				https://github.com/origadmin
 // @license.name				MIT

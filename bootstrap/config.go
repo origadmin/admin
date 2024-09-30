@@ -10,5 +10,5 @@ type Config struct {
 	Random bool
 	// config read property
 	Dir     string
-	Configs string
+	Configs []string
 }

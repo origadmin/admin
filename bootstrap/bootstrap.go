@@ -13,7 +13,7 @@ import (
 )
 
 func Run(ctx context.Context, cfg Config) error {
-	config, err := config.Load(cfg.Dir, cfg.Configs)
+	config, err := config.Load(cfg.Dir, cfg.Configs...)
 	if err != nil {
 		return err
 	}
