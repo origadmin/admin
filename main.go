@@ -12,7 +12,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"origadmin/backend/cmd"
-	"origadmin/backend/helpers/interrupt"
 	"origadmin/backend/internal/config"
 )
 
@@ -78,8 +77,7 @@ func main() {
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	ctx := interrupt.WithContext(context.Background())
-	err := rootCmd.ExecuteContext(ctx)
+	err := rootCmd.ExecuteContext(context.Background())
 	if err != nil {
 		fmt.Printf("Command executed with error:\n%v\n", err)
 		os.Exit(1)

@@ -18,5 +18,5 @@ go mod tidy
 
 3. Run the server
 ```bash
-go run main.go
+go run main.go start
 ```
