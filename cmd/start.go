@@ -64,7 +64,7 @@ func StartCmd() *cobra.Command {
 					//_, _ = ppfmt.Printf("failed to write pid file: %s \n", err.Error())
 
 				}
-				//_, _ = ppfmt.Printf("service %s daemon thread started with pid %d \n", config.C.General.AppName, pid)
+				//_, _ = ppfmt.Printf("service %s daemon thread started with pid %d \n", config.C.General.ServiceName, pid)
 				return nil
 			}
 

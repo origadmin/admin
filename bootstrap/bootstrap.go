@@ -8,18 +8,24 @@ import (
 	logger "github.com/origadmin/slog-karatos"
 	"github.com/origadmin/toolkits/context"
 	"github.com/origadmin/toolkits/loge"
+
+	"origadmin/backend/internal/config"
 )
 
 func Run(ctx context.Context, cfg Config) error {
-	//config.Load(cfg.ConfigPath, cfg.ConfigType)
+	config, err := config.Load(cfg.Dir, cfg.Configs)
+	if err != nil {
+		return err
+	}
+
 	opts := []kratos.Option{
-		kratos.Name(cfg.Name),
+		kratos.Name(config.Settings.ServiceName),
 		kratos.Context(ctx),
 		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
 		kratos.Logger(logger.NewLogger(loge.New(loge.WithUseDefault()))),
 	}
 
-	srv := transhttp.NewServer(transhttp.Address(":8000"))
+	srv := transhttp.NewServer(transhttp.Address(config.Settings.HTTP.Addr))
 	r := srv.Route("/")
 	r.GET("/healthz", func(c transhttp.Context) error {
 		return c.Result(200, "ok")
@@ -32,27 +38,4 @@ func Run(ctx context.Context, cfg Config) error {
 	app := kratos.New(opts...)
 
 	return app.Run()
-	//b := redis.NewBroker(
-	//	broker.WithCodec("json"),
-	//	broker.WithAddress(localBroker),
-	//)
-	//
-	//_ = b.Init()
-	//
-	//if err := b.Connect(); err != nil {
-	//	fmt.Println(err)
-	//}
-	//defer func(b broker.Broker) {
-	//	err := b.Disconnect()
-	//	if err != nil {
-	//		fmt.Println(err)
-	//	}
-	//}(b)
-	//
-	//_, _ = b.Subscribe(testTopic,
-	//	api.RegisterHygrothermographJsonHandler(handleHygrothermograph),
-	//	api.HygrothermographCreator,
-	//)
-
-	return nil
 }

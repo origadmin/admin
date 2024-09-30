@@ -8,4 +8,7 @@ const (
 type Config struct {
 	Name   string
 	Random bool
+	// config read property
+	Dir     string
+	Configs string
 }

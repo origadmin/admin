@@ -13,6 +13,7 @@ import (
 
 	"origadmin/backend/cmd"
 	"origadmin/backend/helpers/interrupt"
+	"origadmin/backend/internal/config"
 )
 
 // build tool goreleaser tags
@@ -29,8 +30,8 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "origadmin backend",
-	Short: "OrigAdmin Backend is a backend management system with a focus on scalability, security, and flexibility.",
+	Use:   "origadmin",
+	Short: "OrigAdmin Backend is a distributed backend management system with a focus on scalability, security, and flexibility.",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Place your logic here
 		// _ = cmd.Help()
@@ -56,12 +57,12 @@ func init() {
 // @title						OrigAdmin Backend API
 // @version					v1.0.0
 // @description				A
-// @contact.name				GodCong
+// @contact.name				OrigAdmin
 // @contact.url				https://github.com/origadmin
 // @license.name				MIT
 // @license.url				https://github.com/origadmin/origadmin/blob/main/LICENSE.md
 //
-// @host						localhost:28088
+// @host						localhost:28080
 // @basepath					/api/v1
 // @schemes					http https
 //
@@ -87,10 +88,9 @@ func Execute() {
 
 func buildVersion(version, commit, date, builtBy, treeState string) goversion.Info {
 	return goversion.GetVersionInfo(
-		//goversion.WithAppDetails(config.AppName, "A lightweight, flexible, elegant and full-featured RBAC scaffolding backend management project.",
-		//	config.WebSite),
+		goversion.WithAppDetails(config.Application, config.Description, config.WebSite),
 		func(i *goversion.Info) {
-			//i.ASCIIName = config.UI
+			i.ASCIIName = config.UI
 			if commit != "" {
 				i.GitCommit = commit
 			}
