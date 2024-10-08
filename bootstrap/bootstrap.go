@@ -5,6 +5,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-kratos/kratos/contrib/opensergo/v2"
 	"github.com/go-kratos/kratos/v2"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	logger "github.com/origadmin/slog-kratos"
@@ -42,6 +43,14 @@ func Run(ctx context.Context, cfg Config) error {
 		httpOpts = append(httpOpts, transhttp.Timeout(time.Duration(config.Settings.HTTP.ReadTimeout)*time.Second))
 	}
 
+	mids, err := LoadMiddlewares(config.Settings.ServiceName, config.Middleware)
+	if err != nil {
+		return err
+	}
+	if len(mids) > 0 {
+		httpOpts = append(httpOpts, transhttp.Middleware(mids...))
+	}
+
 	srv := transhttp.NewServer(httpOpts...)
 
 	r := srv.Route("/")
@@ -54,6 +63,12 @@ func Run(ctx context.Context, cfg Config) error {
 	))
 
 	app := kratos.New(opts...)
-
+	osg, err := opensergo.New(opensergo.WithEndpoint("locahost:9090"))
+	if err != nil {
+		return err
+	}
+	if err = osg.ReportMetadata(ctx, app); err != nil {
+		return err
+	}
 	return app.Run()
 }

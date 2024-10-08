@@ -13,10 +13,11 @@ import (
 )
 
 type Config struct {
-	Dir         string // From command arguments
 	Debug       bool
 	PrintConfig bool
+	Dir         string // From command arguments
 	Settings    Settings
+	Middleware  Middleware
 }
 
 func (c *Config) Print() {
