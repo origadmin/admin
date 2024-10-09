@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package api.system.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "api/v1/system;system";
+
+
+service LoginService {
+  rpc Register (RegisterReq) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/api/v1/register"
+      body: "*"
+    };
+  }
+
+  rpc Login (LoginReq) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/api/v1/login"
+      body: "*"
+    };
+  }
+
+  rpc Logout (LogoutReq) returns (LogoutReply) {
+    option (google.api.http) = {
+      post: "/api/v1/logout"
+      body: "*"
+    };
+  }
+}
+
+message RegisterReq {
+  string username = 1;
+  string password = 2;
+}
+
+message RegisterReply {
+  int64 id = 1;
+}
+
+
+message LoginReq {
+  string username = 1;
+  string password = 2;
+  string captcha_id = 3;
+  string captcha_code = 4;
+}
+
+message LoginReply {
+  string access_token = 1;
+  string refresh_token = 2;
+  string token_type = 3;
+  int64 expires_at = 4;
+}
+
+message LogoutReq {
+
+}
+
+message LogoutReply {
+
+}

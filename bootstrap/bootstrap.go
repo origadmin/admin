@@ -43,12 +43,12 @@ func Run(ctx context.Context, cfg Config) error {
 		httpOpts = append(httpOpts, transhttp.Timeout(time.Duration(config.Settings.HTTP.ReadTimeout)*time.Second))
 	}
 
-	mids, err := LoadMiddlewares(config.Settings.ServiceName, config.Middleware)
+	middlewares, err := LoadMiddlewares(config.Settings.ServiceName, config.Middleware)
 	if err != nil {
 		return err
 	}
-	if len(mids) > 0 {
-		httpOpts = append(httpOpts, transhttp.Middleware(mids...))
+	if len(middlewares) > 0 {
+		httpOpts = append(httpOpts, transhttp.Middleware(middlewares...))
 	}
 
 	srv := transhttp.NewServer(httpOpts...)

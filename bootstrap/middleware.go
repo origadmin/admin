@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"github.com/go-kratos/kratos/v2/middleware"
+	"github.com/go-kratos/kratos/v2/middleware/validate"
 
 	"origadmin/backend/internal/config"
 	"origadmin/backend/toolkits/logger"
@@ -10,7 +11,8 @@ import (
 )
 
 func LoadMiddlewares(name string, conf config.Middleware) ([]middleware.Middleware, error) {
-	var mids []middleware.Middleware
+	var middlewares []middleware.Middleware
+	middlewares = append(middlewares, validate.Validator())
 	if conf.Logger.Enabled {
 		m, err := logger.Middleware(logger.Config{
 			Name: conf.Logger.Name,
@@ -18,10 +20,7 @@ func LoadMiddlewares(name string, conf config.Middleware) ([]middleware.Middlewa
 		if err != nil {
 			return nil, err
 		}
-		//tracing.Server(),
-		//logging.Server(logger),
-		//validate.Validator(),
-		mids = append(mids, m)
+		middlewares = append(middlewares, m)
 	}
 	if conf.Traces.Enabled {
 		m, err := traces.Middleware(traces.Config{
@@ -30,19 +29,18 @@ func LoadMiddlewares(name string, conf config.Middleware) ([]middleware.Middlewa
 		if err != nil {
 			return nil, err
 		}
-		//tracing.Server(),
-		//logging.Server(logger),
-		//validate.Validator(),
-		mids = append(mids, m)
+		middlewares = append(middlewares, m)
 	}
+
 	if conf.Metrics.Enabled {
 		m, err := metrics.Middleware(metrics.Config{
 			Name: conf.Traces.Name,
+			Side: metrics.SideServer,
 		})
 		if err != nil {
 			return nil, err
 		}
-		mids = append(mids, m)
+		middlewares = append(middlewares, m)
 	}
-	return mids, nil
+	return middlewares, nil
 }

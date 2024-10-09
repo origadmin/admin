@@ -10,18 +10,28 @@ type Config struct {
 }
 
 func Middleware(config Config) (middleware.Middleware, error) {
-	//meter := otel.Meter(config.Name)
-	//var err error
-	//_metricRequests, err := metrics.DefaultRequestsCounter(meter, metrics.DefaultServerRequestsCounterName)
-	//if err != nil {
-	//	return nil, err
+
+	//// WithPropagator with tracer propagator.
+	//func WithPropagator(propagator propagation.TextMapPropagator) Option {
+	//	return func(opts *options) {
+	//	opts.propagator = propagator
+	//}
 	//}
 	//
-	//_metricSeconds, err := metrics.DefaultSecondsHistogram(meter, metrics.DefaultServerSecondsHistogramName)
-	//if err != nil {
-	//	return nil, err
+	//// WithTracerProvider with tracer provider.
+	//// By default, it uses the global provider that is set by otel.SetTracerProvider(provider).
+	//func WithTracerProvider(provider trace.TracerProvider) Option {
+	//	return func(opts *options) {
+	//	opts.tracerProvider = provider
 	//}
-	// TODO: add metrics middleware
+	//}
+	//
+	//// WithTracerName with tracer name
+	//func WithTracerName(tracerName string) Option {
+	//	return func(opts *options) {
+	//	opts.tracerName = tracerName
+	//}
+	//}
 	return tracing.Server(
 	//metrics.WithSeconds(_metricSeconds),
 	//metrics.WithRequests(_metricRequests),
