@@ -6,10 +6,12 @@ require (
 	entgo.io/contrib v0.6.0
 	entgo.io/ent v0.14.1
 	github.com/caarlos0/go-version v0.1.1
+	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/contrib/opensergo/v2 v2.0.0-20240918015945-e1f5dc42b1e5
 	github.com/go-kratos/kratos/v2 v2.8.0
 	github.com/godcong/dl v0.0.13
+	github.com/gorilla/handlers v1.5.2
 	github.com/origadmin/slog-kratos v1.0.0
 	github.com/origadmin/toolkits v0.0.44
 	github.com/origadmin/toolkits/codec v0.0.9
@@ -31,6 +33,7 @@ require (
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.5 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect

@@ -19,84 +19,11 @@ const (
 	SideServer = "server"
 )
 
-const (
-	NameUptime                 = "uptime"
-	NameRequestTotal           = "requests_total"
-	NameRequestDurationSeconds = "request_duration_seconds"
-	NameRequestsInFlight       = "requests_in_flight"
-	NameRequestsSlowTotal      = "requests_slow_total"
-	NameCounterSendBytes       = "counter_send_bytes"
-	NameCounterRecvBytes       = "counter_recv_bytes"
-	NameHistogramSeconds       = "histogram_seconds"
-	NameHistogramLatency       = "histogram_latency"
-	NameSummaryLatency         = "summary_latency"
-	NameGaugeState             = "gauge_state"
-	NameCounterException       = "counter_exception"
-	NameCounterEvent           = "counter_event"
-	NameCounterSiteEvent       = "counter_site_event"
-)
-
 type Config struct {
 	Name    string
 	Side    string
 	Metrics []string
 }
-
-var (
-// namespace = "gin"
-//
-// labels = []string{"status", "path", "method"}
-//
-// uptime = prometheus.NewCounterVec(
-//
-//	prometheus.CounterOpts{
-//		Namespace: namespace,
-//		Name:      "uptime",
-//		Help:      "HTTP service uptime, updated every minute",
-//	}, nil,
-//
-// )
-//
-// reqCount = prometheus.NewCounterVec(
-//
-//	prometheus.CounterOpts{
-//		Namespace: namespace,
-//		Name:      "http_request_count_total",
-//		Help:      "Total number of HTTP requests made.",
-//	}, labels,
-//
-// )
-//
-// reqDuration = prometheus.NewHistogramVec(
-//
-//	prometheus.HistogramOpts{
-//		Namespace: namespace,
-//		Name:      "http_request_duration_seconds",
-//		Help:      "HTTP request latencies in seconds.",
-//	}, labels,
-//
-// )
-//
-// reqSizeBytes = prometheus.NewSummaryVec(
-//
-//	prometheus.SummaryOpts{
-//		Namespace: namespace,
-//		Name:      "http_request_size_bytes",
-//		Help:      "HTTP request sizes in bytes.",
-//	}, labels,
-//
-// )
-//
-// respSizeBytes = prometheus.NewSummaryVec(
-//
-//	prometheus.SummaryOpts{
-//		Namespace: namespace,
-//		Name:      "http_response_size_bytes",
-//		Help:      "HTTP response sizes in bytes.",
-//	}, labels,
-//
-// )
-)
 
 func Middleware(config Config) (middleware.Middleware, error) {
 	var (
@@ -157,12 +84,13 @@ func ClientMiddleware(config Config) (middleware.Middleware, error) {
 	return metrics.Client(opts...), nil
 }
 
-func WithMetrics(metrics toolmetrics.Metrics) (gins.HandlerFunc, error) {
-	return func(ctx *gin.Context) {
-		if !metrics.Enabled() {
+func WithMetrics(metrics toolmetrics.Metrics) gins.HandlerFunc {
+	if !metrics.Enabled() {
+		return func(ctx *gin.Context) {
 			ctx.Next()
-			return
 		}
+	}
+	return func(ctx *gin.Context) {
 		start := time.Now()
 		recv := int64(0)
 		if ctx.Request.ContentLength > 0 {
@@ -180,5 +108,5 @@ func WithMetrics(metrics toolmetrics.Metrics) (gins.HandlerFunc, error) {
 			Latency:  int64(time.Since(start).Seconds()),
 			Succeed:  code < 400,
 		})
-	}, nil
+	}
 }

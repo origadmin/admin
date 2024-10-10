@@ -5,9 +5,9 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 
 	"origadmin/backend/internal/config"
-	"origadmin/backend/toolkits/logger"
-	"origadmin/backend/toolkits/metrics"
-	"origadmin/backend/toolkits/traces"
+	"origadmin/backend/toolkits/middlewares/logger"
+	"origadmin/backend/toolkits/middlewares/metrics"
+	"origadmin/backend/toolkits/middlewares/traces"
 )
 
 func LoadMiddlewares(name string, conf config.Middleware) ([]middleware.Middleware, error) {
@@ -42,5 +42,6 @@ func LoadMiddlewares(name string, conf config.Middleware) ([]middleware.Middlewa
 		}
 		middlewares = append(middlewares, m)
 	}
+
 	return middlewares, nil
 }

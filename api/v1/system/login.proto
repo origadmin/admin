@@ -1,36 +1,38 @@
 syntax = "proto3";
 
-package api.system.v1;
+package api.v1.system;
 
 import "google/api/annotations.proto";
+import "google/protobuf/descriptor.proto";
 
-option go_package = "api/v1/system;system";
-
+option go_package = "origadmin/backend/api/v1/system;system";
+option java_multiple_files = true;
+option java_package = "api.v1.system";
 
 service LoginService {
-  rpc Register (RegisterReq) returns (RegisterReply) {
+  rpc Register (RegisterRequest) returns (RegisterReply) {
     option (google.api.http) = {
-      post: "/api/v1/register"
+      post: "/register"
       body: "*"
     };
   }
 
-  rpc Login (LoginReq) returns (LoginReply) {
+  rpc Login (LoginRequest) returns (LoginReply) {
     option (google.api.http) = {
-      post: "/api/v1/login"
+      post: "/login"
       body: "*"
     };
   }
 
-  rpc Logout (LogoutReq) returns (LogoutReply) {
+  rpc Logout (LogoutRequest) returns (LogoutReply) {
     option (google.api.http) = {
-      post: "/api/v1/logout"
+      post: "/logout"
       body: "*"
     };
   }
 }
 
-message RegisterReq {
+message RegisterRequest {
   string username = 1;
   string password = 2;
 }
@@ -40,7 +42,7 @@ message RegisterReply {
 }
 
 
-message LoginReq {
+message LoginRequest {
   string username = 1;
   string password = 2;
   string captcha_id = 3;
@@ -48,16 +50,19 @@ message LoginReq {
 }
 
 message LoginReply {
-  string access_token = 1;
-  string refresh_token = 2;
-  string token_type = 3;
-  int64 expires_at = 4;
+  string access_token = 1 [json_name = "access_token"];
+  string refresh_token = 2 [json_name = "refresh_token"];
+  string token_type = 3 [json_name = "token_type"];
+  int64 expires_at = 4 [json_name = "expires_at"];
 }
 
-message LogoutReq {
-
+message LogoutRequest {
 }
 
 message LogoutReply {
+}
 
+message Module {
+  string name = 1 ;
+  string version = 2;
 }

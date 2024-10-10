@@ -8,6 +8,7 @@ import (
 	"github.com/go-kratos/kratos/contrib/opensergo/v2"
 	"github.com/go-kratos/kratos/v2"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/gorilla/handlers"
 	logger "github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/context"
 
@@ -49,6 +50,15 @@ func Run(ctx context.Context, cfg Config) error {
 	}
 	if len(middlewares) > 0 {
 		httpOpts = append(httpOpts, transhttp.Middleware(middlewares...))
+	}
+
+	if config.Middleware.Cors.Enabled {
+		cors := transhttp.Filter(handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+			handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"}),
+			handlers.AllowedOrigins([]string{"*"}),
+		),
+		)
+		httpOpts = append(httpOpts, cors)
 	}
 
 	srv := transhttp.NewServer(httpOpts...)
