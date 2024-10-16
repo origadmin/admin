@@ -61,8 +61,3 @@ message LogoutRequest {
 
 message LogoutReply {
 }
-
-message Module {
-  string name = 1 ;
-  string version = 2;
-}
