@@ -1,4 +1,6 @@
-// Copyright (c) 2024 KasaAdmin. All rights reserved.
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
 
 // Package cmd defines a CLI command to start a server with various flags and options, including the
 // ability to run as a daemon.
@@ -15,8 +17,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"origadmin/backend/bootstrap"
-	"origadmin/backend/internal/errors"
+	"origadmin/application/admin/bootstrap"
+	"origadmin/application/admin/internal/errors"
 )
 
 const (

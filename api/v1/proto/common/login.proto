@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package api.v1.services.common;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "v1/services/common;common";
+option java_multiple_files = true;
+option java_package = "com.origadmin.api.v1.services.common";
+option java_outer_classname = "APIV1ServicesSystemProto";
+
+// The login service definition.
+service LoginAPI {
+    rpc CaptchaID (CaptchaIDRequest) returns (CaptchaIDResponse) {
+        option (google.api.http) = {
+            get: "/api/v1/captcha/id",
+        };
+    }
+    rpc CaptchaImage (CaptchaImageRequest) returns (CaptchaImageResponse) {
+        option (google.api.http) = {
+            get: "/api/v1/captcha/image",
+            response_body: "data.captcha_img",
+        };
+    }
+    rpc Login (LoginRequest) returns (LoginResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/login",
+            body: "data",
+        };
+    }
+    rpc Logout (LogoutRequest) returns (LogoutResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/current/logout",
+            body: "data",
+        };
+    }
+    rpc CurrentUser (CurrentUserRequest) returns (CurrentUserResponse) {
+        option (google.api.http) = {
+            post: "/api/v1/current/user",
+            body: "data",
+        };
+    }
+    rpc CurrentMenus (CurrentMenusRequest) returns (CurrentMenusResponse) {
+        option (google.api.http) = {
+            get: "/api/v1/current/menus",
+        };
+    }
+}
+
+message LoginRequest {
+    google.protobuf.Any data = 2 [json_name = "data"];
+}
+
+message LoginResponse {
+    string access_token = 1 [json_name = "access_token"];
+    string token_type = 2 [json_name = "token_type"];
+    int64 expires_at = 3 [json_name = "expires_at"];
+    optional string refresh_token = 4 [json_name = "refresh_token"];
+}
+
+message LogoutRequest {
+    google.protobuf.Any data = 2 [json_name = "data"];
+}
+
+message LogoutResponse {
+    bool success = 1;
+}
+
+message CurrentUserRequest {
+    google.protobuf.Any data = 2 [json_name = "data"];
+}
+
+message CurrentUserResponse {
+    bool success = 1;
+}
+
+message CaptchaIDRequest {
+    string id = 1 [json_name = "id"];
+    string reload = 2 [json_name = "reload"];
+    google.protobuf.Any data = 3 [json_name = "data"];
+}
+
+message CaptchaIDResponse {
+    bool success = 1;
+    string data = 2;
+}
+
+// The request message containing the user's name.
+message CaptchaImageRequest {
+    string id = 1 [json_name = "id"];
+    string reload = 2 [json_name = "reload"];
+    google.protobuf.Any data = 3 [json_name = "data"];
+}
+
+message CaptchaData {
+    string captcha_id = 1;
+    string captcha_img = 2;
+}
+
+// The response message containing the greetings
+message CaptchaImageResponse {
+    bool success = 1 [json_name = "success"];
+    optional CaptchaData data = 2 [json_name = "data"];
+}
+
+
+message CurrentMenusRequest {
+    google.protobuf.Any data = 2 [json_name = "data"];
+}
+message CurrentMenusResponse {
+    bool success = 1;
+}

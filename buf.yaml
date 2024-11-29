@@ -1,0 +1,24 @@
+# For details on buf.yaml configuration, visit https://buf.build/docs/configuration/v2/buf-yaml
+version: v2
+
+modules:
+  - path: api/v1/proto
+#    includes:
+#      - api/v1/proto
+lint:
+  use:
+    - STANDARD
+  except:
+    - ENUM_PASCAL_CASE
+    - PACKAGE_VERSION_SUFFIX
+    - PACKAGE_DIRECTORY_MATCH
+  service_suffix: API
+breaking:
+  use:
+    - FILE
+deps:
+  - buf.build/kratos/apis
+  - buf.build/googleapis/googleapis
+#  - buf.build/bufbuild/protovalidate
+#  - buf.build/origadmin/rpcerr
+#  - buf.build/origadmin/entgen

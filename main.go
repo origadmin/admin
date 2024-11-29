@@ -1,4 +1,6 @@
-// Copyright (c) 2024 OrigAdmin. All rights reserved.
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
 
 // Package main is the main package
 package main
@@ -11,8 +13,8 @@ import (
 	goversion "github.com/caarlos0/go-version"
 	"github.com/spf13/cobra"
 
-	"origadmin/backend/cmd"
-	"origadmin/backend/internal/config"
+	"origadmin/application/admin/cmd"
+	"origadmin/application/admin/internal/config"
 )
 
 // build tool goreleaser tags
@@ -86,9 +88,9 @@ func Execute() {
 
 func buildVersion(version, commit, date, builtBy, treeState string) goversion.Info {
 	return goversion.GetVersionInfo(
-		goversion.WithAppDetails(config.Application, config.Description, config.WebSite),
+		goversion.WithAppDetails(configs.Application, configs.Description, configs.WebSite),
 		func(i *goversion.Info) {
-			i.ASCIIName = config.UI
+			i.ASCIIName = configs.UI
 			if commit != "" {
 				i.GitCommit = commit
 			}

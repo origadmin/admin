@@ -1,0 +1,78 @@
+syntax = "proto3";
+package origadmin.configs.api;
+
+import "buf/validate/validate.proto";
+import "config/v1/data.proto";
+import "config/v1/registry.proto";
+import "config/v1/service.proto";
+import "config/v1/middleware.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "internal/configs;configs";
+
+message EntrySelectorConfig {
+  bool global = 2 [json_name = "global"];
+  string name = 3 [json_name = "name"];
+  string version = 4 [json_name = "version"];
+}
+
+message Bootstrap {
+  // name is the application name or service name for used
+  string name = 1 [json_name = "name"];
+  string version = 2 [json_name = "version"];
+  string crypto_type = 3 [json_name = "crypto_type"];
+
+  // Entry
+  message Entry {
+    string name = 1 [json_name = "name"];
+    string scheme = 2 [json_name = "scheme", (buf.validate.field).string = {in: ["http", "grpc"]}];
+    string addr = 3 [json_name = "addr"];
+    string network = 4 [json_name = "network"];
+    string weight = 5 [json_name = "weight"];
+    google.protobuf.Duration timeout = 6 [json_name = "timeout"];
+    google.protobuf.Duration read_timeout = 7 [json_name = "read_timeout"];
+    google.protobuf.Duration write_timeout = 8 [json_name = "write_timeout"];
+    google.protobuf.Duration idle_timeout = 9 [json_name = "idle_timeout"];
+    bool enable_swagger = 10 [json_name = "enable_swagger"];
+    bool enable_pprof = 11 [json_name = "enable_pprof"];
+    EntrySelectorConfig selector = 12 [json_name = "selector"];
+  }
+
+  Entry entry = 100 [json_name = "entry"];
+  config.v1.Service service = 200 [json_name = "service"];
+  config.v1.Data data = 300 [json_name = "data"];
+  config.v1.Registry registry = 400 [json_name = "registry"];
+  Middlewares middlewares = 9 [json_name = "middlewares"];
+  string id = 99 ;
+}
+
+message Middlewares {
+  bool register_as_global = 1 [json_name = "register_as_global"];
+  config.v1.Middleware middleware = 2[json_name = "middleware"];
+}
+
+
+message Server {
+    message Cors {
+      bool enabled = 1;
+      bool allow_all_origins = 2 [json_name = "allow_all_origins"];
+      repeated string allow_origins = 3 [json_name = "allow_origins"];
+      repeated string allow_methods = 4 [json_name = "allow_methods"];
+      repeated string allow_headers = 5 [json_name = "allow_headers"];
+      bool allow_credentials = 6 [json_name = "allow_credentials"];
+      repeated string expose_headers = 7 [json_name = "expose_headers"];
+      int32 max_age = 8 [json_name = "max_age"];
+      bool allow_wildcard = 9 [json_name = "allow_wildcard"];
+      bool allow_browser_extensions = 10 [json_name = "allow_browser_extensions"];
+      bool allow_web_sockets = 11 [json_name = "allow_web_sockets"];
+      bool allow_files = 12 [json_name = "allow_files"];
+    }
+
+    Cors cors = 1 [json_name = "cors"];
+
+  string host = 99 [json_name = "host"];
+}
+
+message Settings {
+  string crypto_type = 1 [json_name = "crypto_type"];
+}

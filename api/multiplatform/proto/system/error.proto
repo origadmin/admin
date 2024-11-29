@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api.v1.multiplatform.services.system;
+
+import "errors/errors.proto";
+
+option go_package = "v1/multiplatform/services/system;system";
+option java_multiple_files = true;
+option java_package = "com.origadmin.api.v1.multiplatform.services.system";
+option objc_class_prefix = "APIV1MultiplatformServicesSystem";
+
+enum SystemErrorReason {
+    option (errors.default_code) = 100500;
+    SYSTEM_ERROR_REASON_UNSPECIFIED = 0;
+    SYSTEM_ERROR_REASON_USER_NOT_FOUND = 100501;
+}

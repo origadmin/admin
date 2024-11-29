@@ -1,0 +1,1306 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /api/v1/captcha/id:
+        get:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_CaptchaID
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: reload
+                  in: query
+                  schema:
+                    type: string
+                - name: data.type_url
+                  in: query
+                  description: |-
+                    A URL/resource name that uniquely identifies the type of the serialized
+                     protocol buffer message. This string must contain at least
+                     one "/" character. The last segment of the URL's path must represent
+                     the fully qualified name of the type (as in
+                     `path/google.protobuf.Duration`). The name should be in a canonical form
+                     (e.g., leading "." is not accepted).
+
+                     In practice, teams usually precompile into the binary all types that they
+                     expect it to use in the context of Any. However, for URLs which use the
+                     scheme `http`, `https`, or no scheme, one can optionally set up a type
+                     server that maps type URLs to message definitions as follows:
+
+                     * If no scheme is provided, `https` is assumed.
+                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                       value in binary format, or produce an error.
+                     * Applications are allowed to cache lookup results based on the
+                       URL, or have them precompiled into a binary to avoid any
+                       lookup. Therefore, binary compatibility needs to be preserved
+                       on changes to types. (Use versioned type names to manage
+                       breaking changes.)
+
+                     Note: this functionality is not currently available in the official
+                     protobuf release, and it is not used for type URLs beginning with
+                     type.googleapis.com. As of May 2023, there are no widely used type server
+                     implementations and no plans to implement one.
+
+                     Schemes other than `http`, `https` (or the empty scheme) might be
+                     used with implementation specific semantics.
+                  schema:
+                    type: string
+                - name: data.value
+                  in: query
+                  description: Must be a valid serialized protocol buffer of the above specified type.
+                  schema:
+                    type: string
+                    format: bytes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.common.CaptchaIDResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/captcha/image:
+        get:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_CaptchaImage
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: reload
+                  in: query
+                  schema:
+                    type: string
+                - name: data.type_url
+                  in: query
+                  description: |-
+                    A URL/resource name that uniquely identifies the type of the serialized
+                     protocol buffer message. This string must contain at least
+                     one "/" character. The last segment of the URL's path must represent
+                     the fully qualified name of the type (as in
+                     `path/google.protobuf.Duration`). The name should be in a canonical form
+                     (e.g., leading "." is not accepted).
+
+                     In practice, teams usually precompile into the binary all types that they
+                     expect it to use in the context of Any. However, for URLs which use the
+                     scheme `http`, `https`, or no scheme, one can optionally set up a type
+                     server that maps type URLs to message definitions as follows:
+
+                     * If no scheme is provided, `https` is assumed.
+                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                       value in binary format, or produce an error.
+                     * Applications are allowed to cache lookup results based on the
+                       URL, or have them precompiled into a binary to avoid any
+                       lookup. Therefore, binary compatibility needs to be preserved
+                       on changes to types. (Use versioned type names to manage
+                       breaking changes.)
+
+                     Note: this functionality is not currently available in the official
+                     protobuf release, and it is not used for type URLs beginning with
+                     type.googleapis.com. As of May 2023, there are no widely used type server
+                     implementations and no plans to implement one.
+
+                     Schemes other than `http`, `https` (or the empty scheme) might be
+                     used with implementation specific semantics.
+                  schema:
+                    type: string
+                - name: data.value
+                  in: query
+                  description: Must be a valid serialized protocol buffer of the above specified type.
+                  schema:
+                    type: string
+                    format: bytes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.common.CaptchaImageResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/current/logout:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Logout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.common.LogoutResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/current/menus:
+        get:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_CurrentMenus
+            parameters:
+                - name: data.type_url
+                  in: query
+                  description: |-
+                    A URL/resource name that uniquely identifies the type of the serialized
+                     protocol buffer message. This string must contain at least
+                     one "/" character. The last segment of the URL's path must represent
+                     the fully qualified name of the type (as in
+                     `path/google.protobuf.Duration`). The name should be in a canonical form
+                     (e.g., leading "." is not accepted).
+
+                     In practice, teams usually precompile into the binary all types that they
+                     expect it to use in the context of Any. However, for URLs which use the
+                     scheme `http`, `https`, or no scheme, one can optionally set up a type
+                     server that maps type URLs to message definitions as follows:
+
+                     * If no scheme is provided, `https` is assumed.
+                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                       value in binary format, or produce an error.
+                     * Applications are allowed to cache lookup results based on the
+                       URL, or have them precompiled into a binary to avoid any
+                       lookup. Therefore, binary compatibility needs to be preserved
+                       on changes to types. (Use versioned type names to manage
+                       breaking changes.)
+
+                     Note: this functionality is not currently available in the official
+                     protobuf release, and it is not used for type URLs beginning with
+                     type.googleapis.com. As of May 2023, there are no widely used type server
+                     implementations and no plans to implement one.
+
+                     Schemes other than `http`, `https` (or the empty scheme) might be
+                     used with implementation specific semantics.
+                  schema:
+                    type: string
+                - name: data.value
+                  in: query
+                  description: Must be a valid serialized protocol buffer of the above specified type.
+                  schema:
+                    type: string
+                    format: bytes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.common.CurrentMenusResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/current/user:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_CurrentUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.common.CurrentUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/login:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.common.LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/menus:
+        get:
+            tags:
+                - MenuAPI
+            operationId: MenuAPI_ListMenus
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListMenusResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - MenuAPI
+            operationId: MenuAPI_CreateMenu
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the menu is to be created.
+                  schema:
+                    type: string
+                - name: menu_id
+                  in: query
+                  description: The menu id to use for this menu.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Menu'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreateMenuResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/menus/{id}:
+        get:
+            tags:
+                - MenuAPI
+            operationId: MenuAPI_GetMenu
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/menus/menu2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetMenuResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - MenuAPI
+            operationId: MenuAPI_DeleteMenu
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The resource id of the menu to be deleted, for example:
+                     "shelves/shelf1/menus/menu2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeleteMenuResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/menus/{menu.id}:
+        put:
+            tags:
+                - MenuAPI
+            operationId: MenuAPI_UpdateMenu
+            parameters:
+                - name: menu.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Menu'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateMenuResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/roles:
+        get:
+            tags:
+                - RoleAPI
+            operationId: RoleAPI_ListRoles
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListRolesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - RoleAPI
+            operationId: RoleAPI_CreateRole
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the role is to be created.
+                  schema:
+                    type: string
+                - name: role_id
+                  in: query
+                  description: The role id to use for this role.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Role'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreateRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/roles/{id}:
+        get:
+            tags:
+                - RoleAPI
+            operationId: RoleAPI_GetRole
+            parameters:
+                - name: id
+                  in: path
+                  description: "The field will contain id of the resource requested, for example:\r\n \"shelves/shelf1/roles/role2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - RoleAPI
+            operationId: RoleAPI_DeleteRole
+            parameters:
+                - name: id
+                  in: path
+                  description: "The resource id of the role to be deleted, for example:\r\n \"shelves/shelf1/roles/role2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeleteRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/roles/{role.id}:
+        put:
+            tags:
+                - RoleAPI
+            operationId: RoleAPI_UpdateRole
+            parameters:
+                - name: role.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Role'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateRoleResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/users:
+        get:
+            tags:
+                - UserAPI
+            operationId: UserAPI_ListUsers
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUsersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - UserAPI
+            operationId: UserAPI_CreateUser
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the user is to be created.
+                  schema:
+                    type: string
+                - name: user_id
+                  in: query
+                  description: The user id to use for this user.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.User'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/users/{id}:
+        get:
+            tags:
+                - UserAPI
+            operationId: UserAPI_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  description: "The field will contain id of the resource requested, for example:\r\n \"shelves/shelf1/users/user2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - UserAPI
+            operationId: UserAPI_DeleteUser
+            parameters:
+                - name: id
+                  in: path
+                  description: "The resource id of the user to be deleted, for example:\r\n \"shelves/shelf1/users/user2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeleteUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/sys/users/{user.id}:
+        put:
+            tags:
+                - UserAPI
+            operationId: UserAPI_UpdateUser
+            parameters:
+                - name: user.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.User'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+components:
+    schemas:
+        api.v1.services.common.CaptchaData:
+            type: object
+            properties:
+                captcha_id:
+                    type: string
+                captcha_img:
+                    type: string
+        api.v1.services.common.CaptchaIDResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                data:
+                    type: string
+        api.v1.services.common.CaptchaImageResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                data:
+                    $ref: '#/components/schemas/api.v1.services.common.CaptchaData'
+            description: The response message containing the greetings
+        api.v1.services.common.CurrentMenusResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.v1.services.common.CurrentUserResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.v1.services.common.LoginResponse:
+            type: object
+            properties:
+                access_token:
+                    type: string
+                token_type:
+                    type: string
+                expires_at:
+                    type: string
+                refresh_token:
+                    type: string
+        api.v1.services.common.LogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.v1.services.system.CreateMenuResponse:
+            type: object
+            properties:
+                menu:
+                    $ref: '#/components/schemas/api.v1.services.system.Menu'
+            description: CreateMenuResponse is the response for the MenuService.CreateMenu method.
+        api.v1.services.system.CreateRoleResponse:
+            type: object
+            properties:
+                role:
+                    $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.CreateUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.DeleteMenuResponse:
+            type: object
+            properties: {}
+            description: DeleteMenuResponse is the response for the MenuService.DeleteMenu method.
+        api.v1.services.system.DeleteRoleResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.DeleteUserResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.GetMenuResponse:
+            type: object
+            properties:
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: The field id should match the Noun in the method id.
+            description: GetMenuResponse is the response for the MenuService.GetMenu method.
+        api.v1.services.system.GetRoleResponse:
+            type: object
+            properties:
+                role:
+                    $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.GetUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.ListMenusResponse:
+            type: object
+            properties:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: |-
+                        The field id should match the noun "menus" in the method id.  There
+                         will be a maximum number of items returned based on the page_size field
+                         in the request.
+                total:
+                    type: string
+                    description: The total number of items in the list.
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: Additional information about this response.
+            description: ListMenusResponse is the response for the MenuService.ListMenus method.
+        api.v1.services.system.ListRolesResponse:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
+                total:
+                    type: string
+                    description: The total number of items in the list.
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: Additional information about this response.
+        api.v1.services.system.ListUsersResponse:
+            type: object
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.User'
+                    description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
+                total:
+                    type: string
+                    description: The total number of items in the list.
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: Additional information about this response.
+        api.v1.services.system.Menu:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                code:
+                    type: string
+                    description: Code holds the value of the "code" field.
+                name:
+                    type: string
+                    description: Name holds the value of the "name" field.
+                description:
+                    type: string
+                    description: Description holds the value of the "description" field.
+                sequence:
+                    type: integer
+                    description: Sequence holds the value of the "sequence" field.
+                    format: int32
+                type:
+                    type: string
+                    description: Type holds the value of the "type" field.
+                path:
+                    type: string
+                    description: Path holds the value of the "path" field.
+                properties:
+                    type: string
+                    description: Properties holds the value of the "properties" field.
+                status:
+                    type: integer
+                    description: Status holds the value of the "status" field.
+                    format: int32
+                parent_id:
+                    type: string
+                    description: ParentID holds the value of the "parent_id" field.
+                parent_path:
+                    type: string
+                    description: ParentPath holds the value of the "parent_path" field.
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.MenuEdges'
+                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the MenuQuery when eager-loading is set."
+            description: Menu is the model entity for the Menu schema.
+        api.v1.services.system.MenuEdges:
+            type: object
+            properties:
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Children holds the value of the children edge.
+                parent:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Parent holds the value of the parent edge.
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.MenuResource'
+                    description: Resources holds the value of the resources edge.
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Roles holds the value of the roles edge.
+                role_menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
+                    description: RoleMenu holds the value of the role_menu edge.
+            description: MenuEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.MenuResource:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                menu_id:
+                    type: string
+                    description: MenuID holds the value of the "menu_id" field.
+                method:
+                    type: string
+                    description: Method holds the value of the "method" field.
+                path:
+                    type: string
+                    description: Path holds the value of the "path" field.
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.MenuResourceEdges'
+                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the MenuResourceQuery when eager-loading is set."
+            description: MenuResource is the model entity for the MenuResource schema.
+        api.v1.services.system.MenuResourceEdges:
+            type: object
+            properties:
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menu holds the value of the menu edge.
+            description: MenuResourceEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.Role:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                code:
+                    type: string
+                    description: Code holds the value of the "code" field.
+                name:
+                    type: string
+                    description: Name holds the value of the "name" field.
+                description:
+                    type: string
+                    description: Description holds the value of the "description" field.
+                sequence:
+                    type: integer
+                    description: Sequence holds the value of the "sequence" field.
+                    format: int32
+                status:
+                    type: integer
+                    description: Status holds the value of the "status" field.
+                    format: int32
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.RoleEdges'
+                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the RoleQuery when eager-loading is set."
+            description: Role is the model entity for the Role schema.
+        api.v1.services.system.RoleEdges:
+            type: object
+            properties:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menus holds the value of the menus edge.
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.User'
+                    description: Users holds the value of the users edge.
+                role_menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
+                    description: RoleMenu holds the value of the role_menu edge.
+                user_roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
+                    description: UserRole holds the value of the user_role edge.
+            description: RoleEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.RoleMenu:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                role_id:
+                    type: string
+                    description: RoleID holds the value of the "role_id" field.
+                menu_id:
+                    type: string
+                    description: MenuID holds the value of the "menu_id" field.
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.RoleMenuEdges'
+                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the RoleMenuQuery when eager-loading is set."
+            description: RoleMenu is the model entity for the RoleMenu schema.
+        api.v1.services.system.RoleMenuEdges:
+            type: object
+            properties:
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Role holds the value of the role edge.
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menu holds the value of the menu edge.
+            description: RoleMenuEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.UpdateMenuResponse:
+            type: object
+            properties:
+                menu:
+                    $ref: '#/components/schemas/api.v1.services.system.Menu'
+            description: UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
+        api.v1.services.system.UpdateRoleResponse:
+            type: object
+            properties:
+                role:
+                    $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.UpdateUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.User:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                username:
+                    type: string
+                    description: Username holds the value of the "username" field.
+                name:
+                    type: string
+                    description: Name holds the value of the "name" field.
+                avatar:
+                    type: string
+                    description: Avatar holds the value of the "avatar" field.
+                password:
+                    type: string
+                    description: Password holds the value of the "password" field.
+                salt:
+                    type: string
+                    description: Salt holds the value of the "salt" field.
+                phone:
+                    type: string
+                    description: Phone holds the value of the "phone" field.
+                email:
+                    type: string
+                    description: Email holds the value of the "email" field.
+                remark:
+                    type: string
+                    description: Remark holds the value of the "remark" field.
+                status:
+                    type: integer
+                    description: Status holds the value of the "status" field.
+                    format: int32
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.UserEdges'
+                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the UserQuery when eager-loading is set."
+            description: User is the model entity for the User schema.
+        api.v1.services.system.UserEdges:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Roles holds the value of the roles edge.
+                user_roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
+                    description: UserRole holds the value of the user_role edge.
+            description: UserEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.UserRole:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                user_id:
+                    type: string
+                    description: UserID holds the value of the "user_id" field.
+                role_id:
+                    type: string
+                    description: RoleID holds the value of the "role_id" field.
+                role_name:
+                    type: string
+                    description: RoleName holds the value of the "role_name" field.
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.UserRoleEdges'
+                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the UserRoleQuery when eager-loading is set."
+            description: UserRole is the model entity for the UserRole schema.
+        api.v1.services.system.UserRoleEdges:
+            type: object
+            properties:
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.User'
+                    description: User holds the value of the user edge.
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Role holds the value of the role edge.
+            description: UserRoleEdges holds the relations/edges for other nodes in the graph.
+        google.protobuf.Any:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        google.rpc.Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+tags:
+    - name: LoginAPI
+      description: The login service definition.
+    - name: MenuAPI
+      description: The menu service definition.
+    - name: RoleAPI
+      description: The login service definition.
+    - name: UserAPI
+      description: The login service definition.

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api.v1.multiplatform.services.common;
+
+import "errors/errors.proto";
+
+option go_package = "v1/multiplatform/services/common;common";
+option java_multiple_files = true;
+option java_package = "com.origadmin.api.v1.multiplatform.services.common";
+option objc_class_prefix = "APIV1MultiplatformServicesSystem";
+
+enum CommonErrorReason {
+    option (errors.default_code) = 100100;
+    COMMON_ERROR_REASON_UNSPECIFIED = 0;
+    COMMON_ERROR_REASON_USER_NOT_FOUND = 100101;
+}

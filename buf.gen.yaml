@@ -1,0 +1,53 @@
+version: v2
+
+managed:
+  enabled: true
+  #  override:
+  #    - file_option: go_package_prefix
+  #      value: github.com/origadmin/runtime
+  #inputs:
+  #  - directory: api/v1/proto/helloworld
+  #  disable:
+  #    - file_option: go_package_prefix
+  #      module: buf.build/bufbuild/protovalidate
+
+plugins:
+  # comment with error: duplicate generated file name "openapi.yaml". Generation will continue without error here and drop the second occurrence of this file, but please raise an issue with the maintainer of the plugin.
+  - local: protoc-gen-openapi
+    out: resources/docs/openapi
+    opt:
+      - naming=proto # Naming convention. Using "proto" passes the name directly from the proto file. The default value is json
+      #      - depth=2 # Recursion depth of the loop message. The default value is 2
+      #      - default_response=false # Adds a default response message. If true, a default response is automatically added for actions using the google.rpc.Status message. This is useful if you use envoy or grpc-gateway for transcoding, as they use this type as the default error response. Default value: true.
+      #      - enum_type=string # Serialized type of enumeration type. Use "string" for string-based serialization. The default value is integer.
+      #      - output_mode=source_relative # Output file generation mode. By default, only one openapi.yaml file is generated in the output folder. Using "source_relative" generates a separate "[inputfile].openapi.yaml" file for each '[inputfile].proto' file. The default is: merged.
+      #      - output_mode=merge
+      - fq_schema_naming=true # Schema named whether to add a package name, is true, will add a package name, for example: system. Service. V1. ListDictDetailResponse, otherwise as follows: ListDictDetailResponse. The default value is false.
+    strategy: all # This tag will generate all files without split files in different directories.
+  - local: protoc-gen-go
+    out: api/v1/services
+    opt: paths=source_relative
+  - local: protoc-gen-validate
+    out: api/v1/services
+    opt:
+      - paths=source_relative
+      - lang=go
+  - local: protoc-gen-go-errors
+    out: api/v1/services
+    opt: paths=source_relative
+  - local: protoc-gen-go-http
+    out: api/v1/services
+    opt: paths=source_relative
+  - local: protoc-gen-go-grpc
+    out: api/v1/services
+    opt: paths=source_relative
+  - local: protoc-gen-go-gins
+    out: api/v1/services
+    opt: paths=source_relative
+  - local: protoc-gen-go-ginrpc
+    out: api/v1/services
+    opt: paths=source_relative
+#  - local: protoc-gen-ent
+#    out: database
+
+clean: true
