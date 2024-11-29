@@ -1,0 +1,287 @@
+syntax = "proto3";
+
+package config.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/duration.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+option cc_enable_arenas = true;
+option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option java_multiple_files = true;
+option java_outer_classname = "CorsProto";
+option java_package = "com.github.origadmin.runtime.config";
+option objc_class_prefix = "Config";
+
+// Data
+message Data {
+
+    // Database
+    message Database {
+        // Debugging
+        bool debug = 1 [
+            json_name = "debug",
+            (gnostic.openapi.v3.property) = {
+                description: "whether to enable debug mode ",
+            }];
+        // Driver name: mysql, postgresql, mongodb, sqlite......
+        string driver = 2 [
+            json_name = "driver",
+            (buf.validate.field).string = {in: ["mssql", "mysql", "postgresql", "mongodb", "sqlite", "oracle", "sqlserver", "sqlite3"]}, (gnostic.openapi.v3.property) = {
+                description: "database driver name",
+            }];
+        // Data source (DSN string)
+        string source = 3 [json_name = "source", (gnostic.openapi.v3.property) = {
+            description: "data source dsn string"}];
+        // Data migration switch
+        bool migrate = 10 [json_name = "migrate", (gnostic.openapi.v3.property) = {
+            description: "data migration switch",
+        }];
+        // Link tracking switch
+        bool enable_trace = 12 [json_name = "enable_trace", (gnostic.openapi.v3.property) = {
+            description: "link tracking switch",
+        }];
+        // Performance analysis switch
+        bool enable_metrics = 13 [json_name = "enable_metrics", (gnostic.openapi.v3.property) = {
+            description: "performance analysis switch",
+        }];
+        // Maximum number of free connections in the connection pool
+        int32 max_idle_connections = 20 [json_name = "max_idle_connections", (gnostic.openapi.v3.property) = {
+            description: "The maximum number of free connections in the connection pool",
+        }];
+        // Maximum number of open connections in the connection pool
+        int32 max_open_connections = 21 [json_name = "max_open_connections", (gnostic.openapi.v3.property) = {
+            description: "The maximum number of open connections in the connection pool",
+        }];
+        // Maximum length of time that the connection can be reused
+        google.protobuf.Duration connection_max_lifetime = 22 [json_name = "connection_max_lifetime", (gnostic.openapi.v3.property) = {
+            description: "The maximum length of time a connection can be reused",
+        }];
+        // Maximum number of connections in the connection pool for reading
+        google.protobuf.Duration connection_max_idle_time = 23 [json_name = "connection_max_idle_time", (gnostic.openapi.v3.property) = {
+            description: "The maximum number of connections in the connection pool for reading",
+        }];
+    }
+
+    // Redis
+    message Redis {
+        string network = 1 [
+            json_name = "network",
+            (gnostic.openapi.v3.property) = {
+                description: "network type",
+            }];
+        string addr = 2 [
+            json_name = "addr",
+            (gnostic.openapi.v3.property) = {
+                description: "address",
+            }];
+        string password = 3 [
+            json_name = "password",
+            (gnostic.openapi.v3.property) = {
+                description: "cipher",
+            }];
+        int32 db = 4 [
+            json_name = "db",
+            (gnostic.openapi.v3.property) = {
+                description: "database index",
+            }];
+        google.protobuf.Duration dial_timeout = 5 [
+            json_name = "dial_timeout",
+            (gnostic.openapi.v3.property) = {
+                description: "dial timeout",
+            }];
+        google.protobuf.Duration read_timeout = 6 [
+            json_name = "read_timeout",
+            (gnostic.openapi.v3.property) = {
+                description: "read timeout",
+            }];
+        google.protobuf.Duration write_timeout = 7 [
+            json_name = "write_timeout",
+            (gnostic.openapi.v3.property) = {
+                description: "write timeout",
+            }];
+    }
+
+    // Memcached
+    message Memcached {
+        string addr = 1 [json_name = "addr", (gnostic.openapi.v3.property) = {
+            description: "address",
+        }];
+        string username = 2 [json_name = "username", (gnostic.openapi.v3.property) = {
+            description: "username",
+        }];
+        string password = 3 [json_name = "password", (gnostic.openapi.v3.property) = {
+            description: "cipher",
+        }];
+        int32 max_idle = 4 [json_name = "max_idle", (gnostic.openapi.v3.property) = {
+            description: "maximum number of idle connections",
+        }];
+        google.protobuf.Duration timeout = 5 [json_name = "timeout", (gnostic.openapi.v3.property) = {
+            description: "overtime",
+        }];
+    }
+
+    // Memory
+    message Memory {
+        int32 size = 1 [
+            json_name = "size",
+            (gnostic.openapi.v3.property) = {
+                description: "size",
+            }];
+        int32 capacity = 2 [
+            json_name = "capacity",
+            (gnostic.openapi.v3.property) = {
+                description: "capacity",
+            }];
+        google.protobuf.Duration expiration = 3 [
+            json_name = "expiration",
+            (gnostic.openapi.v3.property) = {
+                description: "expiration time",
+            }];
+        google.protobuf.Duration cleanup_interval = 4 [
+            json_name = "cleanup_interval",
+            (gnostic.openapi.v3.property) = {
+                description: "clearance interval",
+            }
+        ];
+    }
+
+    message BadgerDS {
+        string path = 1 [
+            json_name = "path",
+            (gnostic.openapi.v3.property) = {
+                description: "path",
+            }];
+        bool sync_writes = 2 [
+            json_name = "sync_writes",
+            (gnostic.openapi.v3.property) = {
+                description: "synchronous write or not",
+            }];
+        int64 value_log_file_size = 3 [
+            json_name = "value_log_file_size",
+            (gnostic.openapi.v3.property) = {
+                description: "value log file size",
+            }];
+        uint32 log_level = 4 [
+            json_name = "log_level",
+            (buf.validate.field).uint32 = {gte: 0, lte: 3},
+            (gnostic.openapi.v3.property) = {
+                description: "log level",
+            }];
+    }
+
+    // File
+    message File {
+        string root = 1 [
+            json_name = "root",
+            (gnostic.openapi.v3.property) = {
+                description: "root directory",
+            }];
+    }
+
+    // OSS
+    message Oss {
+
+    }
+
+    // Mongo
+    message Mongo {
+
+    }
+
+    // Storage
+    message Storage {
+        // Type
+        string type = 1 [
+            json_name = "type",
+            (buf.validate.field).string = {
+                in: ["none", "file", "redis", "mongo", "oss"],
+            },
+            (gnostic.openapi.v3.property) = {
+                description: "storage type",
+            }];
+        // File
+        File file = 10 [
+            json_name = "file",
+            (gnostic.openapi.v3.property) = {
+                description: "file storage configuration",
+            }];
+        // Redis
+        Redis redis = 11 [
+            json_name = "redis",
+            (gnostic.openapi.v3.property) = {
+                description: "redis storage configuration",
+            }];
+        // Badger
+        BadgerDS badger = 12 [
+            json_name = "badger",
+            (gnostic.openapi.v3.property) = {
+                description: "badger storage configuration",
+            }];
+        // Mongo
+        Mongo mongo = 13 [
+            json_name = "mongo",
+            (gnostic.openapi.v3.property) = {
+                description: "mongo storage configuration",
+            }];
+        // OSS
+        Oss oss = 14 [
+            json_name = "oss",
+            (gnostic.openapi.v3.property) = {
+                description: "oss storage configuration",
+            }];
+    }
+
+    // Cache
+    message Cache {
+        // Driver name: redis, memcached, etc.
+        string driver = 1 [json_name = "driver",
+            (buf.validate.field).string = {
+                in: ["none", "redis", "memcached", "memory"],
+            },
+            (gnostic.openapi.v3.property) = {
+                description: "cache driver name",
+            }];
+        // Memcached
+        Memcached memcached = 10 [json_name = "memcached",
+            (gnostic.openapi.v3.property) = {
+                description: "memcached cache configuration",
+            }];
+        // Memory cache
+        Memory memory = 11 [json_name = "memory",
+            (gnostic.openapi.v3.property) = {
+                description: "memory cache configuration",
+            }];
+        // Redis
+        Redis redis = 12 [json_name = "redis",
+            (gnostic.openapi.v3.property) = {
+                description: "redis cache configuration",
+            }];
+        // Badger
+        BadgerDS badger = 13 [
+            json_name = "badger",
+            (gnostic.openapi.v3.property) = {
+                description: "badger storage configuration",
+            }];
+    }
+
+    // Database
+    Database database = 1 [
+        json_name = "database",
+        (gnostic.openapi.v3.property) = {
+            description: "database configuration",
+        }];
+    // Cache
+    Cache cache = 2 [
+        json_name = "cache",
+        (gnostic.openapi.v3.property) = {
+            description: "cache configuration",
+        }];
+    // Storage
+    Storage storage = 3 [
+        json_name = "storage",
+        (gnostic.openapi.v3.property) = {
+            description: "storage configuration",
+        }];
+
+}

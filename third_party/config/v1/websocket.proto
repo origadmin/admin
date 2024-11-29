@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package config.v1;
+
+import "google/protobuf/duration.proto";
+
+option cc_enable_arenas = true;
+option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option java_multiple_files = true;
+option java_outer_classname = "CorsProto";
+option java_package = "com.github.origadmin.runtime.config";
+option objc_class_prefix = "Config";
+
+message WebSocket {
+    string network = 1 [json_name = "network"];
+    string addr = 2 [json_name = "addr"];
+    string path = 3 [json_name = "path"];
+    string codec = 4 [json_name = "codec"];
+    google.protobuf.Duration timeout = 5 [json_name = "timeout"];
+}

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package config.v1;
+
+option cc_enable_arenas = true;
+option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option java_multiple_files = true;
+option java_outer_classname = "CorsProto";
+option java_package = "com.github.origadmin.runtime.config";
+option objc_class_prefix = "Config";
+
+// Logger
+message Logger {
+
+    // Logger level
+    enum Level {
+        LEVEL_UNSPECIFIED = 0;
+        LEVEL_DEBUG = 1;
+        LEVEL_INFO = 2;
+        LEVEL_WARN = 3;
+        LEVEL_ERROR = 4;
+        LEVEL_FATAL = 5;
+    }
+
+    string name = 2 [json_name = "name"];
+    Level level = 3 [json_name = "level"];
+}
