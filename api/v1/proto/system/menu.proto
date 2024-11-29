@@ -65,18 +65,35 @@ message ListMenusResponse {
   // The field id should match the noun "menus" in the method id.  There
   // will be a maximum number of items returned based on the page_size field
   // in the request.
-  repeated api.v1.services.system.Menu menus = 1;
+  bool success = 1 [
+    json_name = "success"
+  ];
   // The total number of items in the list.
-  int64 total = 2;
+  int32 total = 2 [
+    json_name = "total"
+  ];
+  // The paging menus
+  repeated api.v1.services.system.Menu menus = 3 [
+    json_name = "menus"
+  ];
   // The current page number.
-  int32 current = 3;
+  optional int32 current = 4 [
+    json_name = "current"
+  ];
   // The maximum number of items to return.
-  int32 page_size = 4;
+  optional int32 page_size = 5 [
+    json_name = "page_size"
+  ];
   // Token to retrieve the next page of results, or empty if there are no
   // more results in the list.
-  string next_page_token = 5;
+  string next_page_token = 6 [
+    json_name = "next_page_token"
+  ];
   // Additional information about this response.
-  google.protobuf.Any extra = 6;
+  // content to be added without destroying the current data format
+  google.protobuf.Any extra = 7 [
+    json_name = "extra"
+  ];
 }
 
 // GetMenuRequest is the request for the MenuService.GetMenu method.

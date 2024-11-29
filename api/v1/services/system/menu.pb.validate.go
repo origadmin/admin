@@ -169,6 +169,10 @@ func (m *ListMenusResponse) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Success
+
+	// no validation rules for Total
+
 	for idx, item := range m.GetMenus() {
 		_, _ = idx, item
 
@@ -203,12 +207,6 @@ func (m *ListMenusResponse) validate(all bool) error {
 
 	}
 
-	// no validation rules for Total
-
-	// no validation rules for Current
-
-	// no validation rules for PageSize
-
 	// no validation rules for NextPageToken
 
 	if all {
@@ -238,6 +236,14 @@ func (m *ListMenusResponse) validate(all bool) error {
 				cause:  err,
 			}
 		}
+	}
+
+	if m.Current != nil {
+		// no validation rules for Current
+	}
+
+	if m.PageSize != nil {
+		// no validation rules for PageSize
 	}
 
 	if len(errors) > 0 {

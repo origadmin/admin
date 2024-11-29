@@ -93,12 +93,12 @@ func (m UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts
 
 // NewUsersBiz new a UserPB use case.
 func NewUsersBiz(repo dto.UserRepo, logger log.Logger) *UsersBiz {
-	return &UsersBiz{dao: repo, log: log.NewHelper(logger)}
+	return &UsersBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewUsersClient new a UserPB use case.
 func NewUsersClient(repo dto.UserRepo, logger log.Logger) pb.UserAPIClient {
-	return &UsersBiz{dao: repo, log: log.NewHelper(logger)}
+	return &UsersBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 var _ pb.UserAPIClient = (*UsersBiz)(nil)

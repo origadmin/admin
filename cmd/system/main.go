@@ -14,10 +14,10 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
+	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	logger "github.com/origadmin/slog-kratos"
 
-	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 )
 
@@ -33,7 +33,8 @@ var (
 
 func init() {
 	flags.SetFlags(Name, Version)
-	flag.StringVar(&flags.ConfigPath, "c", "resources", "config path, eg: -c config.toml")
+	flags.WorkDir = "resources/configs"
+	flag.StringVar(&flags.ConfigPath, "c", "config.toml", "config path, eg: -c config.toml")
 }
 
 func main() {
@@ -50,14 +51,14 @@ func main() {
 	)
 	log.SetLogger(l)
 	log.Infof("bootstrap flags: %+v\n", flags)
-	var bs configs.Bootstrap
-	if err := bootstrap.LoadRemoteConfig(flags, &bs); err != nil {
+	bs, err := loader.LoadBootstrap(flags)
+	if err != nil {
 		log.Fatalf("failed to load config: %s", err.Error())
 	}
 	log.Infof("bootstrap config: %+v\n", loader.PrintString(bs))
 	ctx := context.Background()
 	//info to ctx
-	app, cleanup, err := buildInjectors(ctx, &bs, l)
+	app, cleanup, err := buildInjectors(ctx, bs, l)
 	if err != nil {
 		log.Fatalf("failed to build injector: %s", err.Error())
 	}

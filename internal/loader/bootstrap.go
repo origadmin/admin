@@ -8,6 +8,7 @@ package loader
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/metadata"
@@ -23,6 +24,7 @@ import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
+	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/errors"
 
@@ -203,10 +205,58 @@ func LoadFileBootstrap(path string) (*configs.Bootstrap, error) {
 	return &cfg, nil
 }
 
-// LoadRemoteServiceBootstrap get the configuration from the remote Configuration Center
-func LoadRemoteServiceBootstrap(bs *bootstrap.Bootstrap, name string, ss ...ConfigSetting) (*configs.Bootstrap, error) {
+func LoadLocalBootstrap(source *configv1.SourceConfig) (*configs.Bootstrap, error) {
+	if source.File == nil {
+		return nil, errors.String("file config is nil")
+	}
+	path := WorkPath("", source.File.Path)
+	log.Infof("loading config from %s", path)
+	stat, err := os.Stat(path)
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to state file %s", path)
+	}
+	if stat.IsDir() {
+		return nil, errors.String("file config is a directory")
+	}
+	return LoadFileBootstrap(path)
+}
+
+// LoadRemoteBootstrap load config from source
+func LoadRemoteBootstrap(source *configv1.SourceConfig) (*configs.Bootstrap, error) {
+	config, err := runtime.NewConfig(source)
+	if err != nil {
+		return nil, err
+	}
+	if err := config.Load(); err != nil {
+		return nil, err
+	}
 	var cfg configs.Bootstrap
-	sourceConfig, err := bootstrap.LoadSourceConfig(bs)
+	if err := config.Scan(&cfg); err != nil {
+		return nil, err
+	}
+	return &cfg, nil
+}
+
+// LoadBootstrap load config from file
+func LoadBootstrap(flags *Bootstrap) (*configs.Bootstrap, error) {
+	fmt.Println("load config from: ", flags.WorkPath())
+	sourceConfig, err := bootstrap.LoadSourceConfig(flags)
+	if err != nil {
+		return nil, err
+	}
+	log.Infof("load soure config: %+v", sourceConfig)
+	switch sourceConfig.GetType() {
+	case "file":
+		return LoadLocalBootstrap(sourceConfig)
+	default:
+		return LoadRemoteBootstrap(sourceConfig)
+	}
+}
+
+// LoadRemoteServiceBootstrap get the configuration from the remote Configuration Center
+func LoadRemoteServiceBootstrap(flags *Bootstrap, name string, ss ...ConfigSetting) (*configs.Bootstrap, error) {
+	var cfg configs.Bootstrap
+	sourceConfig, err := bootstrap.LoadSourceConfig(flags)
 	if err != nil {
 		return nil, err
 	}

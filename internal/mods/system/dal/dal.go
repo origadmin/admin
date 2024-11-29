@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/schema"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"github.com/origadmin/toolkits/database"
@@ -37,6 +38,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.Logger) (*Data, func(), er
 		database.Driver,
 		database.Source,
 	)
+	drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
 	if err != nil {
 		log.Errorw("failed opening connection to sqlite", "error", err)
 		return nil, nil, err
@@ -44,7 +46,11 @@ func NewData(bootstrap *configs.Bootstrap, logger log.Logger) (*Data, func(), er
 	// Run the auto migration tool.
 	client := ent.NewClient(ent.Driver(drv))
 	if database.GetMigrate() {
-		if err := client.Schema.Create(context.Background()); err != nil {
+		if err := client.Schema.Create(
+			context.Background(),
+			schema.WithDropIndex(true),
+			schema.WithDropColumn(true),
+			schema.WithForeignKeys(true)); err != nil {
 			log.Errorw("failed creating schema resources", "error", err)
 			return nil, nil, err
 		}

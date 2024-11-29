@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 
 	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/contrib/config/envf"
 	"github.com/origadmin/runtime"
@@ -79,25 +78,9 @@ func LoadEnvFiles(paths ...string) (map[string]string, error) {
 	return envs, nil
 }
 
-func FromLocal(source *configv1.SourceConfig) (*configs.Bootstrap, error) {
-	if source.File == nil {
-		return nil, errors.String("file config is nil")
-	}
-	path := WorkPath("", source.File.Path)
-	stat, err := os.Stat(path)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to state file %s", path)
-	}
-	if stat.IsDir() {
-		return nil, errors.String("file config is a directory")
-	}
-	log.Infof("loading config from %s", path)
-	return LoadFileBootstrap(path)
-}
-
 func FromLocalPath(path string, ss ...ConfigSetting) (*configs.Bootstrap, error) {
 	source := NewFileSource(path)
-	return FromLocal(settings.Apply(source, ss))
+	return LoadLocalBootstrap(settings.Apply(source, ss))
 }
 
 func NewFileConfig(cfg *Config, ss ...config.SourceSetting) (config.Config, error) {

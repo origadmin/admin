@@ -47,7 +47,7 @@ func NewGINSServer(bs *configs.Bootstrap, menus pb.MenuAPIServer, l log.Logger) 
 		opts = append(opts, gins.WithLogger(log.With(l, "module", "gins")))
 	}
 
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint("http", bs.GetService().Host, cfg.Addr, cfg.Endpoint)
+	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", bs.GetService().Host, cfg.Addr)
 	log.Infof("Server.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, gins.Endpoint(ep))

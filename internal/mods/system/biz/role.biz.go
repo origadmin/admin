@@ -94,12 +94,12 @@ func (m RolesBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts
 
 // NewRolesBiz new a RolePB use case.
 func NewRolesBiz(repo dto.RoleRepo, logger log.Logger) *RolesBiz {
-	return &RolesBiz{dao: repo, log: log.NewHelper(logger)}
+	return &RolesBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewRolesClient new a RolePB use case.
 func NewRolesClient(repo dto.RoleRepo, logger log.Logger) pb.RoleAPIClient {
-	return &RolesBiz{dao: repo, log: log.NewHelper(logger)}
+	return &RolesBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 var _ pb.RoleAPIClient = (*RolesBiz)(nil)

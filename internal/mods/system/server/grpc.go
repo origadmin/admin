@@ -44,7 +44,7 @@ func NewGRPCServer(bs *configs.Bootstrap, menus pb.MenuAPIServer, l log.Logger) 
 		opts = append(opts, grpc.Middleware(ms...))
 	}
 
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint("grpc", bs.GetService().Host, cfg.Addr, cfg.Endpoint)
+	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "grpc", bs.GetService().Host, cfg.Addr)
 	log.Infof("Server.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, grpc.Endpoint(ep))

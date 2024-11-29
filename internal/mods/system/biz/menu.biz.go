@@ -93,12 +93,12 @@ func (m MenusBiz) DeleteMenu(ctx context.Context, in *pb.DeleteMenuRequest, opts
 
 // NewMenusBiz new a Menu use case.
 func NewMenusBiz(repo dto.MenuRepo, logger log.Logger) *MenusBiz {
-	return &MenusBiz{dao: repo, log: log.NewHelper(logger)}
+	return &MenusBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewMenusClient new a Menu use case.
 func NewMenusClient(repo dto.MenuRepo, logger log.Logger) pb.MenuAPIClient {
-	return &MenusBiz{dao: repo, log: log.NewHelper(logger)}
+	return &MenusBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 var _ pb.MenuAPIClient = (*MenusBiz)(nil)

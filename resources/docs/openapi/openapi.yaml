@@ -861,17 +861,21 @@ components:
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                success:
+                    type: boolean
                     description: |-
                         The field id should match the noun "menus" in the method id.  There
                          will be a maximum number of items returned based on the page_size field
                          in the request.
                 total:
-                    type: string
+                    type: integer
                     description: The total number of items in the list.
+                    format: int32
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: The paging menus
                 current:
                     type: integer
                     description: The current page number.
@@ -888,19 +892,25 @@ components:
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: Additional information about this response.
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
             description: ListMenusResponse is the response for the MenuService.ListMenus method.
         api.v1.services.system.ListRolesResponse:
             type: object
             properties:
+                success:
+                    type: boolean
+                    description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
+                total:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
-                total:
-                    type: string
-                    description: The total number of items in the list.
+                    description: The paging menus
                 current:
                     type: integer
                     description: The current page number.
@@ -915,18 +925,22 @@ components:
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: Additional information about this response.
+                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
+                success:
+                    type: boolean
+                    description: "The field id should match the noun \"users\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
+                total:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
                 users:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.User'
-                    description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
-                total:
-                    type: string
-                    description: The total number of items in the list.
+                    description: The paging menus
                 current:
                     type: integer
                     description: The current page number.
@@ -941,7 +955,7 @@ components:
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: Additional information about this response.
+                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
         api.v1.services.system.Menu:
             type: object
             properties:
