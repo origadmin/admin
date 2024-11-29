@@ -13,8 +13,7 @@ import (
 	goversion "github.com/caarlos0/go-version"
 	"github.com/spf13/cobra"
 
-	"origadmin/application/admin/cmd"
-	"origadmin/application/admin/internal/config"
+	"origadmin/application/admin/internal/loader"
 )
 
 // build tool goreleaser tags
@@ -48,7 +47,7 @@ func init() {
 	rootCmd.CompletionOptions.DisableNoDescFlag = true
 	//rootCmd.SetUsageTemplate(resources.Usage)
 	//rootCmd.SetHelpCommand(cmd.HelpCmd(goinfo))
-	rootCmd.AddCommand(cmd.StartCmd())
+	//rootCmd.AddCommand(cmd.StartCmd())
 	//rootCmd.AddCommand(cmd.StopCmd())
 	//rootCmd.AddCommand(cmd.RestartCmd())
 	//rootCmd.AddCommand(cmd.ConfigCmd())
@@ -88,9 +87,9 @@ func Execute() {
 
 func buildVersion(version, commit, date, builtBy, treeState string) goversion.Info {
 	return goversion.GetVersionInfo(
-		goversion.WithAppDetails(configs.Application, configs.Description, configs.WebSite),
+		goversion.WithAppDetails(loader.Application, loader.Description, loader.WebSite),
 		func(i *goversion.Info) {
-			i.ASCIIName = configs.UI
+			i.ASCIIName = loader.UI
 			if commit != "" {
 				i.GitCommit = commit
 			}
