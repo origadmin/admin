@@ -76,11 +76,11 @@ func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pag
 
 func ListRoleResponse(result []*RolePB, in *ListRolesRequest, total int64, args ...any) (*ListRolesResponse, error) {
 	response := &ListRolesResponse{
-		Total:    total,
-		Current:  in.Current,
-		PageSize: in.PageSize,
-		Roles:    result,
-		Extra:    resp.Any(args...),
+		TotalSize: int32(total),
+		Current:   in.Current,
+		PageSize:  in.PageSize,
+		Roles:     result,
+		Extra:     resp.Any(args...),
 	}
 	return response, nil
 }

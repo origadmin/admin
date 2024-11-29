@@ -78,11 +78,11 @@ func (o MenuQueryOption) FromCreateRequest(in *pb.CreateMenuRequest, limiter pag
 
 func ListMenuResponse(result []*MenuPB, in *ListMenusRequest, total int64, args ...any) (*ListMenusResponse, error) {
 	response := &ListMenusResponse{
-		Total:    total,
-		Current:  in.Current,
-		PageSize: in.PageSize,
-		Menus:    result,
-		Extra:    resp.Any(args...),
+		TotalSize: int32(total),
+		Current:   in.Current,
+		PageSize:  in.PageSize,
+		Menus:     result,
+		Extra:     resp.Any(args...),
 	}
 	return response, nil
 }

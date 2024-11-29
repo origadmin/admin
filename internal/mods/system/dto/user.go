@@ -74,11 +74,11 @@ func (o UserQueryOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pag
 
 func ListUserResponse(result []*UserPB, in *ListUsersRequest, total int64, args ...any) (*ListUsersResponse, error) {
 	response := &ListUsersResponse{
-		Total:    total,
-		Current:  in.Current,
-		PageSize: in.PageSize,
-		Users:    result,
-		Extra:    resp.Any(args...),
+		TotalSize: int32(total),
+		Current:   in.Current,
+		PageSize:  in.PageSize,
+		Users:     result,
+		Extra:     resp.Any(args...),
 	}
 
 	return response, nil

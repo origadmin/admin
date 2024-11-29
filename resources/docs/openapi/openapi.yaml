@@ -867,7 +867,7 @@ components:
                         The field id should match the noun "menus" in the method id.  There
                          will be a maximum number of items returned based on the page_size field
                          in the request.
-                total:
+                total_size:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -902,7 +902,7 @@ components:
                 success:
                     type: boolean
                     description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
-                total:
+                total_size:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -932,7 +932,7 @@ components:
                 success:
                     type: boolean
                     description: "The field id should match the noun \"users\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
-                total:
+                total_size:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
