@@ -68,7 +68,7 @@ LDFLAGS := -X $(MODULE_PATH).gitTag=$(TAG) \
            -X $(MODULE_PATH).gitCommit=$(COMMIT) \
            -X $(MODULE_PATH).gitTreeState=$(TREE_STATE) \
            -X $(MODULE_PATH).gitBranch=$(BRANCH) \
-           -X $(MODULE_PATH).version=$(VERSION)
+           -X $(MODULE_PATH).gitVersion=$(VERSION)
 
 PROTO_PATH := --proto_path=. --proto_path=./third_party
 
