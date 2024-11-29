@@ -1,7 +1,8 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
 
-*/
+// Package main is the main package
 package main
 
 import (
