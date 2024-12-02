@@ -777,22 +777,14 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Name
-
 	// no validation rules for Scheme
 
-	// no validation rules for Addr
-
-	// no validation rules for Network
-
-	// no validation rules for Weight
-
 	if all {
-		switch v := interface{}(m.GetTimeout()).(type) {
+		switch v := interface{}(m.GetGrpc()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "Timeout",
+					field:  "Grpc",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -800,16 +792,16 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "Timeout",
+					field:  "Grpc",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetTimeout()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetGrpc()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return Bootstrap_EntryValidationError{
-				field:  "Timeout",
+				field:  "Grpc",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -817,11 +809,11 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetReadTimeout()).(type) {
+		switch v := interface{}(m.GetHttp()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "ReadTimeout",
+					field:  "Http",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -829,16 +821,16 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "ReadTimeout",
+					field:  "Http",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetReadTimeout()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetHttp()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return Bootstrap_EntryValidationError{
-				field:  "ReadTimeout",
+				field:  "Http",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -846,11 +838,11 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetWriteTimeout()).(type) {
+		switch v := interface{}(m.GetGins()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "WriteTimeout",
+					field:  "Gins",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -858,78 +850,16 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "WriteTimeout",
+					field:  "Gins",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetWriteTimeout()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetGins()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return Bootstrap_EntryValidationError{
-				field:  "WriteTimeout",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if all {
-		switch v := interface{}(m.GetIdleTimeout()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "IdleTimeout",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "IdleTimeout",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetIdleTimeout()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return Bootstrap_EntryValidationError{
-				field:  "IdleTimeout",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	// no validation rules for EnableSwagger
-
-	// no validation rules for EnablePprof
-
-	if all {
-		switch v := interface{}(m.GetSelector()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "Selector",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "Selector",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetSelector()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return Bootstrap_EntryValidationError{
-				field:  "Selector",
+				field:  "Gins",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

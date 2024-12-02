@@ -26,7 +26,7 @@ func (m UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts .
 	if err := option.FromListRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
-
+	log.Info("ListUsers")
 	result, total, err := m.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err
@@ -39,6 +39,7 @@ func (m UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...gr
 	if err := option.FromGetRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
+	log.Info("GetUser")
 	result, err := m.dao.Get(ctx, in.GetId(), option)
 	if err != nil {
 		return nil, err
@@ -53,6 +54,7 @@ func (m UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts
 	if err := option.FromCreateRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
+	log.Info("CreateUser")
 	result, err := m.dao.Create(ctx, in.User, option)
 	if err != nil {
 		return nil, err
@@ -67,6 +69,7 @@ func (m UsersBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts
 	//if err := option.FromListRequest(in, m.limiter); err != nil {
 	//	return nil, err
 	//}
+	log.Info("UpdateUser")
 	result, err := m.dao.Update(ctx, in.User)
 	if err != nil {
 		return nil, err
@@ -85,6 +88,7 @@ func (m UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts
 	//if err != nil {
 	//	return nil, err
 	//}
+	log.Info("DeleteUser")
 	if err := m.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err
 	}

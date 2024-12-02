@@ -15,17 +15,16 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/middleware"
 
-	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 )
 
-func NewGinHTTPServer(bs *configs.Bootstrap, menus pb.MenuAPIServer, l log.Logger) *http.Server {
-	ms := middleware.NewServer(bs.GetMiddlewares().GetMiddleware())
+func NewGinHTTPServer(bootstrap *configs.Bootstrap, register func(*gin.Engine), l log.Logger) *http.Server {
+	ms := middleware.NewServer(bootstrap.GetMiddlewares().GetMiddleware())
 	var opts = []http.ServerOption{
 		http.Middleware(ms...),
 	}
-	cfg := bs.GetService().GetGins()
+	cfg := bootstrap.GetService().GetGins()
 	if cfg == nil {
 		cfg = loader.DefaultServiceGins()
 	}
@@ -40,12 +39,12 @@ func NewGinHTTPServer(bs *configs.Bootstrap, menus pb.MenuAPIServer, l log.Logge
 		opts = append(opts, http.Timeout(cfg.Timeout.AsDuration()))
 	}
 
-	//middlewares, err := bootstrap.LoadMiddlewares(bs.GetServiceName(), bs, l)
+	//middlewares, err := bootstrap.LoadMiddlewares(bootstrap.GetServiceName(), bootstrap, l)
 	//if err == nil && len(middlewares) > 0 {
 	//	opts = append(opts, http.Middleware(middlewares...))
 	//}
 
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", bs.GetService().Host, cfg.Addr)
+	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", bootstrap.GetService().Host, cfg.Addr)
 	log.Infof("Server.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, http.Endpoint(ep))
@@ -59,7 +58,8 @@ func NewGinHTTPServer(bs *configs.Bootstrap, menus pb.MenuAPIServer, l log.Logge
 		WriteTimeout: cfg.WriteTimeout.AsDuration(),
 		IdleTimeout:  cfg.IdleTimeout.AsDuration(),
 	}
-
-	pb.RegisterMenuAPIGINSServer(engine, menus)
+	if register != nil {
+		register(engine)
+	}
 	return srv
 }

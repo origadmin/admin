@@ -7,12 +7,12 @@ This is the backend for the project `OrigAdmin`
 1. Clone the repository
 
 ```bash
-git clone https://github.com/OrigAdmin/backend.git
+git clone https://github.com/origadmin/admin.git
 ```
 
 2. Install dependencies
 ```bash
-cd backend
+cd admin
 go mod tidy
 ```
 

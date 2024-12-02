@@ -15,7 +15,14 @@ import (
 )
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(NewMenusBiz, NewMenusClient)
+var ProviderSet = wire.NewSet(
+	NewMenusBiz,
+	NewMenusClient,
+	NewRolesBiz,
+	NewRolesClient,
+	NewUsersBiz,
+	NewUsersClient,
+)
 
 var (
 	// ErrUserNotFound is user not found.

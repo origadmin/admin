@@ -16,9 +16,6 @@ type Error = httperr.Error
 
 func ErrorEncoder(w http.ResponseWriter, r *http.Request, err error) {
 	var reply Error
-	//if err == nil {
-	//	return
-	//}
 	if !errors.As(err, &reply) {
 		se := errors.FromError(err)
 		reply.ID = se.Message

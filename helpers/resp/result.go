@@ -19,6 +19,7 @@ import (
 //	TypeUrl: "type.googleapis.com/google.protobuf.Empty",
 //	Value:   []byte{},
 //}
+
 var Empty *anypb.Any
 
 func Result(ctx *gin.Context, result any, err error) {
@@ -31,33 +32,35 @@ func Result(ctx *gin.Context, result any, err error) {
 
 // Any converts the given arguments into a protobuf Any type.
 func Any(args ...any) *anypb.Any {
-	var extra anypb.Any
 	switch len(args) {
 	case 0:
 		return Empty
 	case 1:
 		if message, ok := args[0].(proto.Message); ok {
-			if err := extra.MarshalFrom(message); err != nil {
-				return Empty
-			}
-			return &extra
+			return marshalProto(message)
 		}
-		marshal, err := json.Marshal(args[0])
-		if err != nil {
-			return Empty
-		}
-		if err := protojson.Unmarshal(marshal, &extra); err != nil {
-			return Empty
-		}
-		return &extra
+		return marshalAny(args[0])
 	default:
-		marshal, err := json.Marshal(args)
-		if err != nil {
-			return nil
-		}
-		if err := protojson.Unmarshal(marshal, &extra); err != nil {
-			return Empty
-		}
-		return &extra
+		return marshalAny(args)
 	}
+}
+
+func marshalProto(message proto.Message) *anypb.Any {
+	var extra anypb.Any
+	if err := extra.MarshalFrom(message); err != nil {
+		return Empty
+	}
+	return &extra
+}
+
+func marshalAny(message any) *anypb.Any {
+	var extra anypb.Any
+	marshal, err := json.Marshal(message)
+	if err != nil {
+		return Empty
+	}
+	if err := protojson.Unmarshal(marshal, &extra); err != nil {
+		return Empty
+	}
+	return &extra
 }

@@ -19,6 +19,8 @@ import (
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/codec/json"
 	"github.com/origadmin/toolkits/errors"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/proto"
 
 	"origadmin/application/admin/internal/configs"
 )
@@ -119,6 +121,15 @@ func WorkPath(wd, path string) string {
 }
 
 func PrintString(v any) string {
+	if message, ok := v.(proto.Message); ok {
+		option := protojson.MarshalOptions{
+			Indent:          " ",
+			EmitUnpopulated: true,
+		}
+		bytes, _ := option.Marshal(message)
+		return string(bytes)
+	}
+
 	bytes, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		return ""

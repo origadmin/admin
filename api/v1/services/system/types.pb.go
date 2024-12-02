@@ -57,7 +57,8 @@ type Menu struct {
 	// ParentPath holds the value of the "parent_path" field.
 	ParentPath string `protobuf:"bytes,13,opt,name=parent_path,json=parentPath,proto3" json:"parent_path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	//    The values are being populated by the MenuQuery when eager-loading is set.
+	//
+	//	The values are being populated by the MenuQuery when eager-loading is set.
 	Edges *MenuEdges `protobuf:"bytes,14,opt,name=edges,proto3" json:"edges,omitempty"` //    selectValues = 15;
 }
 
@@ -295,7 +296,8 @@ type Role struct {
 	// Status holds the value of the "status" field.
 	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	//    The values are being populated by the RoleQuery when eager-loading is set.
+	//
+	//	The values are being populated by the RoleQuery when eager-loading is set.
 	Edges *RoleEdges `protobuf:"bytes,9,opt,name=edges,proto3" json:"edges,omitempty"` //    selectValues = 10;
 }
 
@@ -497,7 +499,8 @@ type User struct {
 	// Status holds the value of the "status" field.
 	Status int32 `protobuf:"varint,12,opt,name=status,proto3" json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	//    The values are being populated by the UserQuery when eager-loading is set.
+	//
+	//	The values are being populated by the UserQuery when eager-loading is set.
 	Edges *UserEdges `protobuf:"bytes,13,opt,name=edges,proto3" json:"edges,omitempty"` //    selectValues = 14;
 }
 
@@ -697,7 +700,8 @@ type UserRole struct {
 	// RoleName holds the value of the "role_name" field.
 	RoleName string `protobuf:"bytes,6,opt,name=role_name,json=roleName,proto3" json:"role_name,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	//    The values are being populated by the UserRoleQuery when eager-loading is set.
+	//
+	//	The values are being populated by the UserRoleQuery when eager-loading is set.
 	Edges *UserRoleEdges `protobuf:"bytes,7,opt,name=edges,proto3" json:"edges,omitempty"` //    selectValues = 8;
 }
 
@@ -853,7 +857,8 @@ type RoleMenu struct {
 	// MenuID holds the value of the "menu_id" field.
 	MenuId string `protobuf:"bytes,5,opt,name=menu_id,json=menuId,proto3" json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	//    The values are being populated by the RoleMenuQuery when eager-loading is set.
+	//
+	//	The values are being populated by the RoleMenuQuery when eager-loading is set.
 	Edges *RoleMenuEdges `protobuf:"bytes,6,opt,name=edges,proto3" json:"edges,omitempty"` //    selectValues = 7;
 }
 
@@ -1004,7 +1009,8 @@ type MenuResource struct {
 	// Path holds the value of the "path" field.
 	Path string `protobuf:"bytes,6,opt,name=path,proto3" json:"path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	//    The values are being populated by the MenuResourceQuery when eager-loading is set.
+	//
+	//	The values are being populated by the MenuResourceQuery when eager-loading is set.
 	Edges *MenuResourceEdges `protobuf:"bytes,7,opt,name=edges,proto3" json:"edges,omitempty"` //    selectValues = 8;
 }
 

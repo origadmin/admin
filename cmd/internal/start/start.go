@@ -39,8 +39,8 @@ var (
 	Name = "origadmin.server.v1"
 	// Version is the Version of the compiled software.
 	Version = "v1.0.0"
-	// boot are the bootstrap boot.
-	boot = bootstrap.Bootstrap{}
+	// flags are the bootstrap flags.
+	flags = bootstrap.Bootstrap{}
 )
 
 var cmd = &cobra.Command{
@@ -50,10 +50,10 @@ var cmd = &cobra.Command{
 }
 
 func init() {
-	boot.SetFlags(Name, Version)
+	flags.SetFlags(Name, Version)
 }
 
-// Cmd The function defines a CLI command to start a server with various boot and options, including the
+// Cmd The function defines a CLI command to start a server with various flags and options, including the
 // ability to run as a daemon.
 func Cmd() *cobra.Command {
 	cmd.Flags().BoolP(startRandom, "r", false, "start with random password")
@@ -66,31 +66,32 @@ func Cmd() *cobra.Command {
 }
 
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	boot.WorkDir, _ = cmd.Flags().GetString(startWorkDir)
+	flags.WorkDir, _ = cmd.Flags().GetString(startWorkDir)
 	staticDir, _ := cmd.Flags().GetString(startStatic)
-	boot.ConfigPath, _ = cmd.Flags().GetString(startConfig)
+	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)
 	//random, _ := cmd.Flags().GetBool(startRandom)
 
 	l := log.With(logger.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
-		"service.id", boot.ID,
-		"service.name", boot.ServiceName,
-		"service.version", boot.Version,
+		"service.id", flags.ID,
+		"service.name", flags.ServiceName,
+		"service.version", flags.Version,
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
 	log.SetLogger(l)
-	//path := filepath.Join(boot.WorkDir, boot.ConfigPath)
-	//envpath := filepath.Join(boot.WorkDir, boot.EnvPath)
-	log.Infow("msg", "start info", startWorkDir, boot.WorkDir, startStatic, staticDir, startConfig, boot.ConfigPath)
+	//path := filepath.Join(flags.WorkDir, flags.ConfigPath)
+	//envpath := filepath.Join(flags.WorkDir, flags.EnvPath)
+	log.Infow("msg", "start info", startWorkDir, flags.WorkDir, startStatic, staticDir, startConfig, flags.ConfigPath)
 	//env, _ := bootstrap.LoadEnv(envpath)
-	//bs, err := bootstrap.FromLocalPath(boot.ServiceName, path, l)
+	//bs, err := bootstrap.FromLocalPath(flags.ServiceName, path, l)
 	//if err != nil {
 	//	return errors.Wrap(err, "load config error")
 	//}
-	src := loader.LoadSourceFiles(boot.WorkDir, boot.ConfigPath)
-	bs, err := loader.FromRemote(boot.ServiceName(), src)
+	//src := loader.LoadSourceFiles(flags.WorkDir, flags.ConfigPath)
+	source := loader.NewFileSource(flags.WorkPath())
+	bs, err := loader.LoadRemoteBootstrap(source)
 	if err != nil {
 		return errors.Wrap(err, "load config error")
 	}
@@ -108,8 +109,8 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		}
 
 		cmdArgs := []string{"start"}
-		cmdArgs = append(cmdArgs, "-d", strings.TrimSpace(boot.WorkDir))
-		cmdArgs = append(cmdArgs, "-c", strings.TrimSpace(boot.ConfigPath))
+		cmdArgs = append(cmdArgs, "-d", strings.TrimSpace(flags.WorkDir))
+		cmdArgs = append(cmdArgs, "-c", strings.TrimSpace(flags.ConfigPath))
 		cmdArgs = append(cmdArgs, "-s", strings.TrimSpace(staticDir))
 		_, _ = fmt.Printf("execute command: %s %s \n", bin, strings.Join(cmdArgs, " "))
 		command := exec.Command(bin, cmdArgs...)
@@ -120,7 +121,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		}
 
 		pid := command.Process.Pid
-		log.Errorf("service %s daemon thread started with pid %d \n", bs.ServiceName, pid)
+		log.Errorf("service %s daemon thread started with pid %d \n", flags.ServiceName(), pid)
 		return nil
 	}
 	lockfile := fmt.Sprintf("%s.lock", command.ToLower(cmd))
@@ -128,7 +129,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		defer os.Remove(lockfile)
 	}
 	//info to ctx
-	app, cleanup, err := buildInjectors(cmd.Context(), src, bs, l)
+	app, cleanup, err := buildInjectors(cmd.Context(), source, bs, l)
 	if err != nil {
 		return err
 	}
@@ -142,9 +143,9 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 
 func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 	opts := []kratos.Option{
-		kratos.ID(boot.ID()),
-		kratos.Name(boot.ServiceName()),
-		kratos.Version(boot.Version()),
+		kratos.ID(flags.ID()),
+		kratos.Name(flags.ServiceName()),
+		kratos.Version(flags.Version()),
 		kratos.Metadata(map[string]string{}),
 		kratos.Context(ctx),
 		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
@@ -157,11 +158,11 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 	if err != nil {
 		panic(err)
 	}
-	if injector.ServerGINS != nil {
-		opts = append(opts, kratos.Server(injector.ServerGINS))
+	if injector.Agents != nil {
+		opts = append(opts, kratos.Server(injector.Agents...))
 	}
-	//if injector.ServerHTTP != nil {
-	//	opts = append(opts, kratos.Server(injector.ServerHTTP))
+	//if injector.ServerAgent != nil {
+	//	opts = append(opts, kratos.Server(injector.ServerAgent))
 	//}
 
 	return kratos.New(opts...)

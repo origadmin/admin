@@ -16,18 +16,6 @@ type UserAPIHTTPService struct {
 	client pb.UserAPIHTTPClient
 }
 
-// NewUserAPIHTTPService new a user service.
-func NewUserAPIHTTPService(client pb.UserAPIHTTPClient) *UserAPIHTTPService {
-	return &UserAPIHTTPService{}
-}
-
-// NewUserAPIHTTPServer new a user service.
-func NewUserAPIHTTPServer(client pb.UserAPIHTTPClient) pb.UserAPIHTTPServer {
-	return &UserAPIHTTPService{
-		client: client,
-	}
-}
-
 func (s *UserAPIHTTPService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return &pb.ListUsersResponse{}, nil
 }
@@ -43,3 +31,19 @@ func (s *UserAPIHTTPService) UpdateUser(ctx context.Context, req *pb.UpdateUserR
 func (s *UserAPIHTTPService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	return &pb.DeleteUserResponse{}, nil
 }
+
+// NewUserAPIHTTPService new a user service.
+func NewUserAPIHTTPService(client pb.UserAPIHTTPClient) *UserAPIHTTPService {
+	return &UserAPIHTTPService{
+		client: client,
+	}
+}
+
+// NewUserAPIHTTPServer new a user service.
+func NewUserAPIHTTPServer(client pb.UserAPIHTTPClient) pb.UserAPIHTTPServer {
+	return &UserAPIHTTPService{
+		client: client,
+	}
+}
+
+var _ pb.UserAPIServer = (*UserAPIHTTPService)(nil)

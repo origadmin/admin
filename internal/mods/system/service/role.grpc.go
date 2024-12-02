@@ -16,18 +16,6 @@ type RoleAPIService struct {
 	client pb.RoleAPIClient
 }
 
-// NewRoleAPIService new a user service.
-func NewRoleAPIService(client pb.RoleAPIClient) *RoleAPIService {
-	return &RoleAPIService{}
-}
-
-// NewRoleAPIServer new a user service.
-func NewRoleAPIServer(client pb.RoleAPIClient) pb.RoleAPIServer {
-	return &RoleAPIService{
-		client: client,
-	}
-}
-
 func (s *RoleAPIService) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	return &pb.ListRolesResponse{}, nil
 }
@@ -43,3 +31,19 @@ func (s *RoleAPIService) UpdateRole(ctx context.Context, req *pb.UpdateRoleReque
 func (s *RoleAPIService) DeleteRole(ctx context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	return &pb.DeleteRoleResponse{}, nil
 }
+
+// NewRoleAPIService new a user service.
+func NewRoleAPIService(client pb.RoleAPIClient) *RoleAPIService {
+	return &RoleAPIService{
+		client: client,
+	}
+}
+
+// NewRoleAPIServer new a user service.
+func NewRoleAPIServer(client pb.RoleAPIClient) pb.RoleAPIServer {
+	return &RoleAPIService{
+		client: client,
+	}
+}
+
+var _ pb.RoleAPIServer = (*RoleAPIService)(nil)

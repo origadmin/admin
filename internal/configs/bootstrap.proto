@@ -1,12 +1,10 @@
 syntax = "proto3";
 package origadmin.configs.api;
 
-import "buf/validate/validate.proto";
 import "config/v1/data.proto";
 import "config/v1/registry.proto";
 import "config/v1/service.proto";
 import "config/v1/middleware.proto";
-import "google/protobuf/duration.proto";
 
 option go_package = "internal/configs;configs";
 
@@ -24,18 +22,10 @@ message Bootstrap {
 
   // Entry
   message Entry {
-    string name = 1 [json_name = "name"];
-    string scheme = 2 [json_name = "scheme", (buf.validate.field).string = {in: ["http", "grpc"]}];
-    string addr = 3 [json_name = "addr"];
-    string network = 4 [json_name = "network"];
-    string weight = 5 [json_name = "weight"];
-    google.protobuf.Duration timeout = 6 [json_name = "timeout"];
-    google.protobuf.Duration read_timeout = 7 [json_name = "read_timeout"];
-    google.protobuf.Duration write_timeout = 8 [json_name = "write_timeout"];
-    google.protobuf.Duration idle_timeout = 9 [json_name = "idle_timeout"];
-    bool enable_swagger = 10 [json_name = "enable_swagger"];
-    bool enable_pprof = 11 [json_name = "enable_pprof"];
-    EntrySelectorConfig selector = 12 [json_name = "selector"];
+    string scheme = 1 [json_name = "scheme"];
+    config.v1.Service.GRPC grpc = 10 [json_name = "grpc"];
+    config.v1.Service.HTTP http = 20 [json_name = "http"];
+    config.v1.Service.GINS gins = 30 [json_name = "gins"];
   }
 
   Entry entry = 100 [json_name = "entry"];

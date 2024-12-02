@@ -27,7 +27,7 @@ func (m RolesBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts .
 	if err := option.FromListRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
-
+	log.Info("ListRoles")
 	result, total, err := m.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err
@@ -40,6 +40,7 @@ func (m RolesBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...gr
 	if err := option.FromGetRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
+	log.Info("GetRole")
 	result, err := m.dao.Get(ctx, in.GetId(), option)
 	if err != nil {
 		return nil, err
@@ -54,6 +55,7 @@ func (m RolesBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts
 	if err := option.FromCreateRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
+	log.Info("CreateRole")
 	result, err := m.dao.Create(ctx, in.Role, option)
 	if err != nil {
 		return nil, err
@@ -68,6 +70,7 @@ func (m RolesBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts
 	//if err := option.FromListRequest(in, m.limiter); err != nil {
 	//	return nil, err
 	//}
+	log.Info("UpdateRole")
 	result, err := m.dao.Update(ctx, in.Role)
 	if err != nil {
 		return nil, err
@@ -86,6 +89,7 @@ func (m RolesBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts
 	//if err != nil {
 	//	return nil, err
 	//}
+	log.Info("DeleteRole")
 	if err := m.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err
 	}

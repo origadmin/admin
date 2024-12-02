@@ -16,6 +16,7 @@ import (
 	"github.com/google/wire"
 
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/system/server"
 )
 

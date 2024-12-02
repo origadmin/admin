@@ -50,11 +50,11 @@ var (
 )
 
 type InjectorClient struct {
-	Bootstrap  *configs.Bootstrap
-	Logger     log.Logger
-	Discovery  registry.Discovery
-	ServerHTTP *http.Server
-	SystemMenu pb.MenuAPIServer
+	Bootstrap *configs.Bootstrap
+	Logger    log.Logger
+	Discovery registry.Discovery
+	Server    *gins.Server
+	Agents    []transport.Server
 }
 
 type InjectorServer struct {
@@ -130,9 +130,9 @@ func newHelloWorldServer(injector *InjectorClient) error {
 	//_ = grpcClient
 	//_ = httpClient
 	//pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
-	pb.RegisterMenuAPIHTTPServer(injector.ServerHTTP, client)
+	//pb.RegisterMenuAPIHTTPServer(injector.Agents, client)
 	//}
-
+	_ = client
 	return nil
 }
 
@@ -191,8 +191,9 @@ func newSecondWorldServer(injector *InjectorClient) error {
 	//_ = grpcClient
 	//_ = httpClient
 	//pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
-	pb.RegisterMenuAPIHTTPServer(injector.ServerHTTP, client)
+	//pb.RegisterMenuAPIHTTPServer(injector.Server, client)
 	//}
+	_ = client
 
 	return nil
 }

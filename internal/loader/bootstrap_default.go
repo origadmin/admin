@@ -20,34 +20,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
 		Entry: &configs.Bootstrap_Entry{
-			Name:    "",
-			Scheme:  "",
-			Addr:    "",
-			Network: "",
-			Weight:  "",
-			Timeout: &durationpb.Duration{
-				Seconds: 0,
-				Nanos:   0,
-			},
-			ReadTimeout: &durationpb.Duration{
-				Seconds: 0,
-				Nanos:   0,
-			},
-			WriteTimeout: &durationpb.Duration{
-				Seconds: 0,
-				Nanos:   0,
-			},
-			IdleTimeout: &durationpb.Duration{
-				Seconds: 0,
-				Nanos:   0,
-			},
-			EnableSwagger: false,
-			EnablePprof:   false,
-			Selector: &configs.EntrySelectorConfig{
-				Global:  false,
-				Name:    "",
-				Version: "",
-			},
+			Scheme: "http",
 		},
 		Service: &configv1.Service{
 			Name:     "",
@@ -358,6 +331,6 @@ func DefaultServiceGins() *configv1.Service_GINS {
 
 func DefaultEntry() *configs.Bootstrap_Entry {
 	return &configs.Bootstrap_Entry{
-		Name: "application",
+		Scheme: "http",
 	}
 }

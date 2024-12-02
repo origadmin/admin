@@ -17,16 +17,6 @@ type MenuAPIService struct {
 	client pb.MenuAPIClient
 }
 
-// NewMenuAPIService new a menu service.
-func NewMenuAPIService(client pb.MenuAPIClient) *MenuAPIService {
-	return &MenuAPIService{client: client}
-}
-
-// NewMenuAPIServer new a menu service.
-func NewMenuAPIServer(client pb.MenuAPIClient) pb.MenuAPIServer {
-	return &MenuAPIService{client: client}
-}
-
 func (m MenuAPIService) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
 	return m.client.ListMenus(ctx, request)
 }
@@ -51,5 +41,15 @@ func (m MenuAPIService) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRe
 //	//TODO implement me
 //	panic("implement me")
 //}
+
+// NewMenuAPIService new a menu service.
+func NewMenuAPIService(client pb.MenuAPIClient) *MenuAPIService {
+	return &MenuAPIService{client: client}
+}
+
+// NewMenuAPIServer new a menu service.
+func NewMenuAPIServer(client pb.MenuAPIClient) pb.MenuAPIServer {
+	return &MenuAPIService{client: client}
+}
 
 var _ pb.MenuAPIServer = (*MenuAPIService)(nil)

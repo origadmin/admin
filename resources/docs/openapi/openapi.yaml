@@ -540,7 +540,9 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: "The field will contain id of the resource requested, for example:\r\n \"shelves/shelf1/roles/role2\""
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/roles/role2"
                   required: true
                   schema:
                     type: string
@@ -564,7 +566,9 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: "The resource id of the role to be deleted, for example:\r\n \"shelves/shelf1/roles/role2\""
+                  description: |-
+                    The resource id of the role to be deleted, for example:
+                     "shelves/shelf1/roles/role2"
                   required: true
                   schema:
                     type: string
@@ -704,7 +708,9 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: "The field will contain id of the resource requested, for example:\r\n \"shelves/shelf1/users/user2\""
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/users/user2"
                   required: true
                   schema:
                     type: string
@@ -728,7 +734,9 @@ paths:
             parameters:
                 - name: id
                   in: path
-                  description: "The resource id of the user to be deleted, for example:\r\n \"shelves/shelf1/users/user2\""
+                  description: |-
+                    The resource id of the user to be deleted, for example:
+                     "shelves/shelf1/users/user2"
                   required: true
                   schema:
                     type: string
@@ -923,11 +931,15 @@ components:
                     format: int32
                 next_page_token:
                     type: string
-                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
@@ -950,11 +962,15 @@ components:
                     format: int32
                 next_page_token:
                     type: string
-                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
                 extra:
                     allOf:
                         - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
         api.v1.services.system.Menu:
             type: object
             properties:
@@ -1004,7 +1020,9 @@ components:
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.MenuEdges'
-                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the MenuQuery when eager-loading is set."
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the MenuQuery when eager-loading is set.
             description: Menu is the model entity for the Menu schema.
         api.v1.services.system.MenuEdges:
             type: object
@@ -1060,7 +1078,9 @@ components:
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.MenuResourceEdges'
-                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the MenuResourceQuery when eager-loading is set."
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the MenuResourceQuery when eager-loading is set.
             description: MenuResource is the model entity for the MenuResource schema.
         api.v1.services.system.MenuResourceEdges:
             type: object
@@ -1104,7 +1124,9 @@ components:
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.RoleEdges'
-                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the RoleQuery when eager-loading is set."
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the RoleQuery when eager-loading is set.
             description: Role is the model entity for the Role schema.
         api.v1.services.system.RoleEdges:
             type: object
@@ -1153,7 +1175,9 @@ components:
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.RoleMenuEdges'
-                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the RoleMenuQuery when eager-loading is set."
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the RoleMenuQuery when eager-loading is set.
             description: RoleMenu is the model entity for the RoleMenu schema.
         api.v1.services.system.RoleMenuEdges:
             type: object
@@ -1228,7 +1252,9 @@ components:
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.UserEdges'
-                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the UserQuery when eager-loading is set."
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the UserQuery when eager-loading is set.
             description: User is the model entity for the User schema.
         api.v1.services.system.UserEdges:
             type: object
@@ -1270,7 +1296,9 @@ components:
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.UserRoleEdges'
-                    description: "Edges holds the relations/edges for other nodes in the graph.\r\n    The values are being populated by the UserRoleQuery when eager-loading is set."
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the UserRoleQuery when eager-loading is set.
             description: UserRole is the model entity for the UserRole schema.
         api.v1.services.system.UserRoleEdges:
             type: object

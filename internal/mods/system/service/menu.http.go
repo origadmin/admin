@@ -17,16 +17,6 @@ type MenuAPIHTTPService struct {
 	client pb.MenuAPIHTTPClient
 }
 
-// NewMenuAPIHTTPService new a menu service.
-func NewMenuAPIHTTPService(client pb.MenuAPIHTTPClient) *MenuAPIHTTPService {
-	return &MenuAPIHTTPService{client: client}
-}
-
-// NewMenuAPIHTTPServer new a menu service.
-func NewMenuAPIHTTPServer(client pb.MenuAPIHTTPClient) pb.MenuAPIServer {
-	return &MenuAPIHTTPService{client: client}
-}
-
 func (m MenuAPIHTTPService) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
 	return m.client.CreateMenu(ctx, request)
 }
@@ -51,5 +41,15 @@ func (m MenuAPIHTTPService) UpdateMenu(ctx context.Context, request *pb.UpdateMe
 //	//TODO implement me
 //	panic("implement me")
 //}
+
+// NewMenuAPIHTTPService new a menu service.
+func NewMenuAPIHTTPService(client pb.MenuAPIHTTPClient) *MenuAPIHTTPService {
+	return &MenuAPIHTTPService{client: client}
+}
+
+// NewMenuAPIHTTPServer new a menu service.
+func NewMenuAPIHTTPServer(client pb.MenuAPIHTTPClient) pb.MenuAPIServer {
+	return &MenuAPIHTTPService{client: client}
+}
 
 var _ pb.MenuAPIServer = (*MenuAPIHTTPService)(nil)

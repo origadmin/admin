@@ -16,18 +16,6 @@ type UserAPIService struct {
 	client pb.UserAPIClient
 }
 
-// NewUserAPIService new a user service.
-func NewUserAPIService(client pb.UserAPIClient) *UserAPIService {
-	return &UserAPIService{}
-}
-
-// NewUserAPIServer new a user service.
-func NewUserAPIServer(client pb.UserAPIClient) pb.UserAPIServer {
-	return &UserAPIService{
-		client: client,
-	}
-}
-
 func (s *UserAPIService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return &pb.ListUsersResponse{}, nil
 }
@@ -43,3 +31,17 @@ func (s *UserAPIService) UpdateUser(ctx context.Context, req *pb.UpdateUserReque
 func (s *UserAPIService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	return &pb.DeleteUserResponse{}, nil
 }
+
+// NewUserAPIService new a user service.
+func NewUserAPIService(client pb.UserAPIClient) *UserAPIService {
+	return &UserAPIService{}
+}
+
+// NewUserAPIServer new a user service.
+func NewUserAPIServer(client pb.UserAPIClient) pb.UserAPIServer {
+	return &UserAPIService{
+		client: client,
+	}
+}
+
+var _ pb.UserAPIServer = (*UserAPIService)(nil)

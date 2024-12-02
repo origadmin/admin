@@ -16,20 +16,6 @@ type RoleAPIHTTPService struct {
 	client pb.RoleAPIHTTPClient
 }
 
-// NewRoleAPIHTTPService new a role service.
-func NewRoleAPIHTTPService(client pb.RoleAPIHTTPClient) *RoleAPIHTTPService {
-	return &RoleAPIHTTPService{
-		client: client,
-	}
-}
-
-// NewRoleAPIHTTPServer new a role service.
-func NewRoleAPIHTTPServer(client pb.RoleAPIHTTPClient) pb.RoleAPIHTTPServer {
-	return &RoleAPIHTTPService{
-		client: client,
-	}
-}
-
 func (s *RoleAPIHTTPService) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	return &pb.ListRolesResponse{}, nil
 }
@@ -45,3 +31,19 @@ func (s *RoleAPIHTTPService) UpdateRole(ctx context.Context, req *pb.UpdateRoleR
 func (s *RoleAPIHTTPService) DeleteRole(ctx context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	return &pb.DeleteRoleResponse{}, nil
 }
+
+// NewRoleAPIHTTPService new a role service.
+func NewRoleAPIHTTPService(client pb.RoleAPIHTTPClient) *RoleAPIHTTPService {
+	return &RoleAPIHTTPService{
+		client: client,
+	}
+}
+
+// NewRoleAPIHTTPServer new a role service.
+func NewRoleAPIHTTPServer(client pb.RoleAPIHTTPClient) pb.RoleAPIHTTPServer {
+	return &RoleAPIHTTPService{
+		client: client,
+	}
+}
+
+var _ pb.RoleAPIServer = (*RoleAPIHTTPService)(nil)

@@ -26,7 +26,7 @@ func (m MenusBiz) ListMenus(ctx context.Context, in *pb.ListMenusRequest, opts .
 	if err := option.FromListRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
-
+	log.Info("ListMenus")
 	result, total, err := m.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err
@@ -39,6 +39,7 @@ func (m MenusBiz) GetMenu(ctx context.Context, in *pb.GetMenuRequest, opts ...gr
 	if err := option.FromGetRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
+	log.Info("GetMenu")
 	result, err := m.dao.Get(ctx, in.GetId(), option)
 	if err != nil {
 		return nil, err
@@ -53,6 +54,7 @@ func (m MenusBiz) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest, opts
 	if err := option.FromCreateRequest(in, m.limiter); err != nil {
 		return nil, err
 	}
+	log.Info("CreateMenu")
 	result, err := m.dao.Create(ctx, in.Menu, option)
 	if err != nil {
 		return nil, err
@@ -67,6 +69,7 @@ func (m MenusBiz) UpdateMenu(ctx context.Context, in *pb.UpdateMenuRequest, opts
 	//if err := option.FromListRequest(in, m.limiter); err != nil {
 	//	return nil, err
 	//}
+	log.Info("UpdateMenu")
 	result, err := m.dao.Update(ctx, in.Menu)
 	if err != nil {
 		return nil, err

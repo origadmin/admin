@@ -39,7 +39,18 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	menuRepo := dal.NewMenuDal(data, logger)
 	menuAPIClient := biz.NewMenusClient(menuRepo, logger)
 	menuAPIServer := service.NewMenuAPIServer(menuAPIClient)
-	v := server.NewMenuServers(bootstrap, menuAPIServer, logger)
+	roleRepo := dal.NewRoleDal(data, logger)
+	roleAPIClient := biz.NewRolesClient(roleRepo, logger)
+	roleAPIServer := service.NewRoleAPIServer(roleAPIClient)
+	userRepo := dal.NewUserDal(data, logger)
+	userAPIClient := biz.NewUsersClient(userRepo, logger)
+	userAPIServer := service.NewUserAPIServer(userAPIClient)
+	serverServer := &server.Server{
+		Menu: menuAPIServer,
+		Role: roleAPIServer,
+		User: userAPIServer,
+	}
+	v := server.NewSystemServers(bootstrap, serverServer, logger)
 	injectorServer := &loader.InjectorServer{
 		Bootstrap: bootstrap,
 		Logger:    logger,
