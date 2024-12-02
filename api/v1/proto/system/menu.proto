@@ -85,7 +85,7 @@ message ListMenusResponse {
   ];
   // Additional information about this response.
   // content to be added without destroying the current data format
-  google.protobuf.Any extra = 6 [
+  optional google.protobuf.Any extra = 6 [
     json_name = "extra"
   ];
 }

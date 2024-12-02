@@ -14,8 +14,8 @@ info:
         url: https://github.com/origadmin/backend/blob/master/LICENSE
     version: Version from annotation
 servers:
-    - url: http://localhost:18080
-    - url: https://localhost:18080
+    - url: http://localhost:10080
+    - url: https://localhost:10080
 paths:
     /api/v1/captcha/id:
         get:
