@@ -17,7 +17,7 @@ require (
 	github.com/origadmin/contrib/consul v0.0.8
 	github.com/origadmin/contrib/database v0.0.8
 	github.com/origadmin/contrib/transport/gins v0.0.9
-	github.com/origadmin/runtime v0.0.2
+	github.com/origadmin/runtime v0.0.3
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.5
 	github.com/origadmin/toolkits/codec v0.0.33

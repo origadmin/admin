@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -50,16 +51,16 @@ var (
 )
 
 type InjectorClient struct {
-	Bootstrap *configs.Bootstrap
 	Logger    log.Logger
+	Bootstrap *configs.Bootstrap
 	Discovery registry.Discovery
-	Server    *gins.Server
-	Agents    []transport.Server
+	Server    *gin.Engine
+	Servers   []transport.Server
 }
 
 type InjectorServer struct {
-	Bootstrap *configs.Bootstrap
 	Logger    log.Logger
+	Bootstrap *configs.Bootstrap
 	Registrar registry.Registrar
 	Servers   []transport.Server
 }

@@ -26,6 +26,7 @@ message Bootstrap {
     config.v1.Service.GRPC grpc = 10 [json_name = "grpc"];
     config.v1.Service.HTTP http = 20 [json_name = "http"];
     config.v1.Service.GINS gins = 30 [json_name = "gins"];
+    repeated config.v1.Registry discoveries = 40 [json_name = "discoveries"];
   }
 
   Entry entry = 100 [json_name = "entry"];
@@ -60,7 +61,7 @@ message Server {
 
     Cors cors = 1 [json_name = "cors"];
 
-  string host = 99 [json_name = "host"];
+  string host = 100 [json_name = "host"];
 }
 
 message Settings {

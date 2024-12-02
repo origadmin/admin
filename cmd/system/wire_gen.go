@@ -50,10 +50,10 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		Role: roleAPIServer,
 		User: userAPIServer,
 	}
-	v := server.NewSystemServers(bootstrap, serverServer, logger)
+	v := server.NewSystemServers(serverServer, bootstrap, logger)
 	injectorServer := &loader.InjectorServer{
-		Bootstrap: bootstrap,
 		Logger:    logger,
+		Bootstrap: bootstrap,
 		Registrar: registrar,
 		Servers:   v,
 	}

@@ -23,11 +23,10 @@ func DefaultBootstrap() *configs.Bootstrap {
 			Scheme: "http",
 		},
 		Service: &configv1.Service{
-			Name:     "",
-			Endpoint: false,
-			Grpc:     DefaultServiceGrpc(),
-			Http:     DefaultServiceHttp(),
-			Gins:     DefaultServiceGins(),
+			Name: "",
+			Grpc: DefaultServiceGrpc(),
+			Http: DefaultServiceHttp(),
+			Gins: DefaultServiceGins(),
 			Websocket: &configv1.WebSocket{
 				Network: "",
 				Addr:    "",

@@ -5,17 +5,16 @@
 package server
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/config"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
-	"github.com/origadmin/runtime/service/grpc"
-	http "github.com/origadmin/runtime/service/http"
+	"github.com/origadmin/toolkits/errors"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
@@ -24,13 +23,13 @@ import (
 
 var (
 	// ProviderServer is server providers.
-	ProviderServer = wire.NewSet(NewSystemServers, wire.Struct(new(Server), "*"))
+	ProviderServer = wire.NewSet(wire.Struct(new(Server), "*"), NewSystemServers)
 	// ProviderAgent is agent providers.
-	ProviderAgent = wire.NewSet(NewGinHTTPServer)
+	ProviderAgent = wire.NewSet(NewSystemAgent)
 )
 
 func init() {
-	runtime.RegisterService("system", &serverBuilder{})
+	runtime.RegisterService("system", service.DefaultServiceBuilder)
 }
 
 type Server struct {
@@ -60,26 +59,7 @@ func (s Server) HTTP(server *service.HTTPServer) {
 	pb.RegisterUserAPIHTTPServer(server, s.User)
 }
 
-type serverBuilder struct {
-}
-
-func (s serverBuilder) NewGRPCServer(cfg *configv1.Service, opts ...config.ServiceSetting) (*service.GRPCServer, error) {
-	return grpc.NewServer(cfg, opts...), nil
-}
-
-func (s serverBuilder) NewHTTPServer(cfg *configv1.Service, opts ...config.ServiceSetting) (*service.HTTPServer, error) {
-	return http.NewServer(cfg, opts...), nil
-}
-
-func (s serverBuilder) NewGRPCClient(ctx context.Context, cfg *configv1.Service, opts ...config.ServiceSetting) (*service.GRPCClient, error) {
-	return grpc.NewClient(ctx, cfg, opts...)
-}
-
-func (s serverBuilder) NewHTTPClient(ctx context.Context, cfg *configv1.Service, opts ...config.ServiceSetting) (*service.HTTPClient, error) {
-	return http.NewClient(ctx, cfg, opts...)
-}
-
-func NewSystemServers(bootstrap *configs.Bootstrap, s *Server, l log.Logger) []transport.Server {
+func NewSystemServers(s *Server, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
 	var servers []transport.Server
 	service := bootstrap.GetService()
 	if service == nil {
@@ -100,35 +80,39 @@ func NewSystemServers(bootstrap *configs.Bootstrap, s *Server, l log.Logger) []t
 	return servers
 }
 
-func NewGinMenuAgent(bootstrap *configs.Bootstrap, server *gins.Server, l log.Logger) error {
+func NewSystemAgent(bootstrap *configs.Bootstrap, server *gin.Engine, l log.Logger) error {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
 		return nil
 	}
 	if entry.Scheme == "http" {
-		if client, err := NewMenuHTTPClient(&configv1.Service{
+		client, err := NewMenuHTTPClient(&configv1.Service{
 			Grpc: entry.GetGrpc(),
 			Http: entry.GetHttp(),
 			Gins: entry.GetGins(),
-		}); err == nil {
-			pb.RegisterMenuAPIGINSServer(server, client)
+		})
+		if err != nil {
+			return errors.Wrap(err, "create menu http client")
 		}
+		pb.RegisterMenuAPIGINSServer(server, client)
 		return nil
 	}
-	if client, err := NewMenuClient(&configv1.Service{
+	client, err := NewMenuClient(&configv1.Service{
 		Grpc: entry.GetGrpc(),
 		Http: entry.GetHttp(),
 		Gins: entry.GetGins(),
-	}); err == nil {
-		pb.RegisterMenuAPIGINSServer(server, client)
+	})
+	if err != nil {
+		return errors.Wrap(err, "create menu grpc client")
 	}
+	pb.RegisterMenuAPIGINSServer(server, client)
 	return nil
 }
 
 func NewMenuClient(service *configv1.Service) (pb.MenuAPIServer, error) {
 	client, err := runtime.NewGRPCServiceClient(context.Background(), service)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "create menu grpc client")
 	}
 	cli := pb.NewMenuAPIClient(client)
 	return systemservice.NewMenuAPIServer(cli), nil
@@ -137,7 +121,7 @@ func NewMenuClient(service *configv1.Service) (pb.MenuAPIServer, error) {
 func NewMenuHTTPClient(service *configv1.Service) (pb.MenuAPIServer, error) {
 	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "create menu http client")
 	}
 	cli := pb.NewMenuAPIHTTPClient(client)
 	return systemservice.NewMenuAPIHTTPServer(cli), nil
