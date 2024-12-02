@@ -44,7 +44,7 @@ type MenuRepo interface {
 	Create(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
 	Delete(context.Context, string) error
 	Update(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
-	List(context.Context, *ListMenusRequest, ...MenuQueryOption) ([]*MenuPB, int64, error)
+	List(context.Context, *ListMenusRequest, ...MenuQueryOption) ([]*MenuPB, int32, error)
 }
 
 type MenuQueryOption struct {
@@ -76,9 +76,9 @@ func (o MenuQueryOption) FromCreateRequest(in *pb.CreateMenuRequest, limiter pag
 	return nil
 }
 
-func ListMenuResponse(result []*MenuPB, in *ListMenusRequest, total int64, args ...any) (*ListMenusResponse, error) {
+func ListMenuResponse(result []*MenuPB, in *ListMenusRequest, total int32, args ...any) (*ListMenusResponse, error) {
 	response := &ListMenusResponse{
-		TotalSize: int32(total),
+		TotalSize: total,
 		Current:   in.Current,
 		PageSize:  in.PageSize,
 		Menus:     result,

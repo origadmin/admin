@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package tests.openapiv3annotations.message.v1;
+
+import "google/api/annotations.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "v1/services;services";
+
+option (gnostic.openapi.v3.document) = {
+  info: {
+    title: "OrigAdmin API";
+    version: "Version from annotation";
+    description: "A lightweight, flexible, elegant and full-featured RBAC scaffolding backend management project.";
+    contact: {
+      name: "GodCong";
+      url: "https://github.com/origadmin";
+      email: "waitforadding@gmail.com";
+    }
+    license: {
+      name: "MIT";
+      url: "https://github.com/origadmin/backend/blob/master/LICENSE";
+    }
+  }
+  servers: [
+    {
+      url: "http://localhost:10080";
+    },
+    {
+      url: "https://localhost:10080";
+    }
+
+  ]
+  components: {
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "Basic";
+          value: {
+            security_scheme: {
+              type: "http";
+              scheme: "basic";
+            }
+          }
+        },
+        {
+          name: "Bearer";
+          value: {
+            security_scheme: {
+              type: "apiKey";
+              name: "Authorization";
+              in: "header";
+            }
+          }
+        }
+      ]
+    }
+  }
+};

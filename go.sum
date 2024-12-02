@@ -658,8 +658,8 @@ github.com/bytedance/sonic v1.12.5/go.mod h1:B8Gt/XvtZ3Fqj+iSKMypzymZxw/FVwgIGKz
 github.com/bytedance/sonic/loader v0.1.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
 github.com/bytedance/sonic/loader v0.2.1 h1:1GgorWTqf12TA8mma4DDSbaQigE2wOgQo7iCjjJv3+E=
 github.com/bytedance/sonic/loader v0.2.1/go.mod h1:ncP89zfokxS5LZrJxl5z0UJcsk4M4yY2JpfqGeCtNLU=
-github.com/caarlos0/go-version v0.1.1 h1:1bikKHkGGVIIxqCmufhSSs3hpBScgHGacrvsi8FuIfc=
-github.com/caarlos0/go-version v0.1.1/go.mod h1:Ze5Qx4TsBBi5FyrSKVg1Ibc44KGV/llAaKGp86oTwZ0=
+github.com/caarlos0/go-version v0.2.0 h1:TTD5dF3PBAtRHbfCKRE173SrVVpbE0yX95EDQ4BwTGs=
+github.com/caarlos0/go-version v0.2.0/go.mod h1:X+rI5VAtJDpcjCjeEIXpxGa5+rTcgur1FK66wS0/944=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/census-instrumentation/opencensus-proto v0.3.0/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/census-instrumentation/opencensus-proto v0.4.1 h1:iKLQ0xPNFxR/2hzXZMrBo8f1j86j5WHzznCCQxV/b8g=
@@ -890,6 +890,7 @@ github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1/go.mod h1:kpwsk12EmLe
 github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd h1:gbpYu9NMq8jhDVbvlGkMFWCjLFlqqEZjEmObmhUy6Vo=
 github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd/go.mod h1:kf6iHlnVGwgKolg33glAes7Yg/8iWP8ukqeldJSO7jw=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
+github.com/google/subcommands v1.2.0 h1:vWQspBTo2nEqTUFita5/KeEWlUL8kQObDFbub/EN9oE=
 github.com/google/subcommands v1.2.0/go.mod h1:ZjhPrFU+Olkh9WazFPsl27BQ4UPiG37m3yTrtFlrHVk=
 github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
@@ -1073,8 +1074,8 @@ github.com/origadmin/contrib/consul v0.0.8 h1:3HC3BevwHgd2rat8O8QYV/+BHE8uGgUzIX
 github.com/origadmin/contrib/consul v0.0.8/go.mod h1:2RmCuvZngCbKotzZcU1U+1RX2kCjUlQeiGAAFAdzXbk=
 github.com/origadmin/contrib/database v0.0.8 h1:85YWo43M9pNpe+aMsu8E5ZKdLxNtTMEOsjzUrqmW9gY=
 github.com/origadmin/contrib/database v0.0.8/go.mod h1:yW5P6KGh2caNEfa7E6QofeYYmW12dqODlVU89YEUVYw=
-github.com/origadmin/contrib/transport/gins v0.0.8 h1:R9o+8LHSmIOFhoEjOsOCdHV4mMvv3C4/VJr89jAzW6g=
-github.com/origadmin/contrib/transport/gins v0.0.8/go.mod h1:cBay8nKNCpn9ln2XQEpok86pjGSKy+UDBimop2Sqg5w=
+github.com/origadmin/contrib/transport/gins v0.0.9 h1:mF7iwYtsvvG01nW3vh7wO6BwYVBAauBMxLGuf9nXkrs=
+github.com/origadmin/contrib/transport/gins v0.0.9/go.mod h1:cBay8nKNCpn9ln2XQEpok86pjGSKy+UDBimop2Sqg5w=
 github.com/origadmin/go-metrics v0.5.4 h1:odg6zeZUGkTCl6cGJ/bS5GlvjZ3x3GU2zyw9WtNmKFY=
 github.com/origadmin/go-metrics v0.5.4/go.mod h1:KiuAdjBbuXAkjTjy7p7F4g6sjO6WuvH+6hTlMKUxPkg=
 github.com/origadmin/runtime v0.0.2 h1:xWBuJOVQg8NF2aZL2Fts1bTn9KsXYeVpP1oL/xAeKvA=

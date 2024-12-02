@@ -7,15 +7,16 @@ replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20241127180247-a33202765966.1
 	entgo.io/ent v0.14.1
-	github.com/caarlos0/go-version v0.1.1
+	github.com/caarlos0/go-version v0.2.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/v2 v2.8.2
 	github.com/goexts/generic v0.1.1
+	github.com/google/gnostic v0.7.0
 	github.com/google/wire v0.6.0
 	github.com/origadmin/contrib/config v0.0.8
 	github.com/origadmin/contrib/consul v0.0.8
 	github.com/origadmin/contrib/database v0.0.8
-	github.com/origadmin/contrib/transport/gins v0.0.8
+	github.com/origadmin/contrib/transport/gins v0.0.9
 	github.com/origadmin/runtime v0.0.2
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.5
@@ -66,9 +67,9 @@ require (
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/google/cel-go v0.22.1 // indirect
-	github.com/google/gnostic v0.7.0 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/consul/api v1.30.0 // indirect
@@ -103,6 +104,7 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/shirou/gopsutil/v3 v3.24.5 // indirect

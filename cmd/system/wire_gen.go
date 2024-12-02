@@ -21,6 +21,7 @@ import (
 import (
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
+	_ "github.com/origadmin/contrib/database"
 )
 
 // Injectors from wire.go:
@@ -38,14 +39,12 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	menuRepo := dal.NewMenuDal(data, logger)
 	menuAPIClient := biz.NewMenusClient(menuRepo, logger)
 	menuAPIServer := service.NewMenuAPIServer(menuAPIClient)
-	grpcServer := server.NewGRPCServer(bootstrap, menuAPIServer, logger)
-	httpServer := server.NewHTTPServer(bootstrap, menuAPIServer, logger)
+	v := server.NewMenuServers(bootstrap, menuAPIServer, logger)
 	injectorServer := &loader.InjectorServer{
-		Bootstrap:  bootstrap,
-		Logger:     logger,
-		Registrar:  registrar,
-		ServerGRPC: grpcServer,
-		ServerHTTP: httpServer,
+		Bootstrap: bootstrap,
+		Logger:    logger,
+		Registrar: registrar,
+		Servers:   v,
 	}
 	app := NewApp(contextContext, injectorServer)
 	return app, func() {

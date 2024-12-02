@@ -169,8 +169,6 @@ func (m *ListRolesResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
-
 	// no validation rules for TotalSize
 
 	for idx, item := range m.GetRoles() {

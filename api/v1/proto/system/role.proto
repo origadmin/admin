@@ -60,36 +60,30 @@ message ListRolesRequest {
 }
 
 message ListRolesResponse {
-  // The field id should match the noun "roles" in the method id.  There
-  // will be a maximum number of items returned based on the page_size field
-  // in the request.
-  bool success = 1 [
-    json_name = "success"
-  ];
   // The total number of items in the list.
-  int32 total_size = 2 [
+  int32 total_size = 1 [
     json_name = "total_size"
   ];
   // The paging menus
-  repeated api.v1.services.system.Role roles = 3 [
+  repeated api.v1.services.system.Role roles = 2 [
     json_name = "menus"
   ];
   // The current page number.
-  int32 current = 4 [
+  int32 current = 3 [
     json_name = "current"
   ];
   // The maximum number of items to return.
-  int32 page_size = 5 [
+  int32 page_size = 4 [
     json_name = "page_size"
   ];
   // Token to retrieve the next page of results, or empty if there are no
   // more results in the list.
-  string next_page_token = 6 [
+  string next_page_token = 5 [
     json_name = "next_page_token"
   ];
   // Additional information about this response.
   // content to be added without destroying the current data format
-  google.protobuf.Any extra = 7 [
+  google.protobuf.Any extra = 6 [
     json_name = "extra"
   ];
 }

@@ -17,6 +17,7 @@ import (
 	"github.com/go-kratos/kratos/v2/selector"
 	"github.com/go-kratos/kratos/v2/selector/filter"
 	"github.com/go-kratos/kratos/v2/selector/random"
+	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/settings"
@@ -42,21 +43,25 @@ var (
 	)
 )
 
+var (
+	_ *gins.Server
+	_ *http.Server
+	_ *grpc.Server
+)
+
 type InjectorClient struct {
 	Bootstrap  *configs.Bootstrap
 	Logger     log.Logger
 	Discovery  registry.Discovery
-	ServerGINS *gins.Server
 	ServerHTTP *http.Server
 	SystemMenu pb.MenuAPIServer
 }
 
 type InjectorServer struct {
-	Bootstrap  *configs.Bootstrap
-	Logger     log.Logger
-	Registrar  registry.Registrar
-	ServerGRPC *grpc.Server
-	ServerHTTP *http.Server
+	Bootstrap *configs.Bootstrap
+	Logger    log.Logger
+	Registrar registry.Registrar
+	Servers   []transport.Server
 }
 
 func InjectorGinServer(injector *InjectorClient) error {
@@ -118,12 +123,13 @@ func newHelloWorldServer(injector *InjectorClient) error {
 	} else {
 		client = systemservice.NewMenuAPIServer(gClient)
 	}
+	//service, err := runtime.NewGRPCServiceServer(injector.Bootstrap.GetService())
 	//grpcClient := service.NewGreeterServer(gClient)
 	//httpClient := service.NewGreeterHTTPServer(hClient)
 	//// add _ to avoid unused
 	//_ = grpcClient
 	//_ = httpClient
-	pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
+	//pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
 	pb.RegisterMenuAPIHTTPServer(injector.ServerHTTP, client)
 	//}
 
@@ -184,7 +190,7 @@ func newSecondWorldServer(injector *InjectorClient) error {
 	//// add _ to avoid unused
 	//_ = grpcClient
 	//_ = httpClient
-	pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
+	//pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
 	pb.RegisterMenuAPIHTTPServer(injector.ServerHTTP, client)
 	//}
 

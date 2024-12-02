@@ -58,6 +58,20 @@ func TestSaveConfig(t *testing.T) {
 				conf: DefaultBootstrap(),
 			},
 		},
+		//{
+		//	name: "test",
+		//	args: args{
+		//		path: "test.ini",
+		//		conf: DefaultBootstrap(),
+		//	},
+		//},
+		//{
+		//	name: "test",
+		//	args: args{
+		//		path: "test.xml",
+		//		conf: DefaultBootstrap(),
+		//	},
+		//},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

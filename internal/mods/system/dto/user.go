@@ -45,7 +45,7 @@ type UserRepo interface {
 	Create(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
 	Delete(context.Context, string) error
 	Update(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
-	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int64, error)
+	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
 }
 
 type UserQueryOption struct {
@@ -72,9 +72,9 @@ func (o UserQueryOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pag
 	return nil
 }
 
-func ListUserResponse(result []*UserPB, in *ListUsersRequest, total int64, args ...any) (*ListUsersResponse, error) {
+func ListUserResponse(result []*UserPB, in *ListUsersRequest, total int32, args ...any) (*ListUsersResponse, error) {
 	response := &ListUsersResponse{
-		TotalSize: int32(total),
+		TotalSize: total,
 		Current:   in.Current,
 		PageSize:  in.PageSize,
 		Users:     result,

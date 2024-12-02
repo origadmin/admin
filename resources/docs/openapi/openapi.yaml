@@ -3,8 +3,19 @@
 
 openapi: 3.0.3
 info:
-    title: ""
-    version: 0.0.1
+    title: OrigAdmin API
+    description: A lightweight, flexible, elegant and full-featured RBAC scaffolding backend management project.
+    contact:
+        name: GodCong
+        url: https://github.com/origadmin
+        email: waitforadding@gmail.com
+    license:
+        name: MIT
+        url: https://github.com/origadmin/backend/blob/master/LICENSE
+    version: Version from annotation
+servers:
+    - url: http://localhost:18080
+    - url: https://localhost:18080
 paths:
     /api/v1/captcha/id:
         get:
@@ -861,12 +872,6 @@ components:
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
-                success:
-                    type: boolean
-                    description: |-
-                        The field id should match the noun "menus" in the method id.  There
-                         will be a maximum number of items returned based on the page_size field
-                         in the request.
                 total_size:
                     type: integer
                     description: The total number of items in the list.
@@ -899,9 +904,6 @@ components:
         api.v1.services.system.ListRolesResponse:
             type: object
             properties:
-                success:
-                    type: boolean
-                    description: "The field id should match the noun \"roles\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
                 total_size:
                     type: integer
                     description: The total number of items in the list.
@@ -929,9 +931,6 @@ components:
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
-                success:
-                    type: boolean
-                    description: "The field id should match the noun \"users\" in the method id.  There\r\n will be a maximum number of items returned based on the page_size field\r\n in the request."
                 total_size:
                     type: integer
                     description: The total number of items in the list.
@@ -1309,6 +1308,14 @@ components:
                         $ref: '#/components/schemas/google.protobuf.Any'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+    securitySchemes:
+        Basic:
+            type: http
+            scheme: basic
+        Bearer:
+            type: apiKey
+            name: Authorization
+            in: header
 tags:
     - name: LoginAPI
       description: The login service definition.

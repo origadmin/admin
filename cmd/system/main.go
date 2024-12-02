@@ -78,7 +78,7 @@ func NewApp(ctx context.Context, injector *loader.InjectorServer) *kratos.App {
 		kratos.Context(ctx),
 		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
 		kratos.Logger(injector.Logger),
-		kratos.Server(injector.ServerHTTP, injector.ServerGRPC),
+		kratos.Server(injector.Servers...),
 	}
 	if injector.Registrar != nil {
 		opts = append(opts, kratos.Registrar(injector.Registrar))

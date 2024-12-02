@@ -64,7 +64,7 @@ func (m menuRepo) Update(ctx context.Context, menu *dto.MenuPB, options ...dto.M
 	return dto.ConvertMenu2PB(saved), nil
 }
 
-func (m menuRepo) List(ctx context.Context, in *pb.ListMenusRequest, options ...dto.MenuQueryOption) ([]*dto.MenuPB, int64, error) {
+func (m menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options ...dto.MenuQueryOption) ([]*dto.MenuPB, int32, error) {
 	var option dto.MenuQueryOption
 	if len(options) > 0 {
 		option = options[0]
@@ -106,13 +106,13 @@ func NewMenuDal(db *Data, logger log.Logger) dto.MenuRepo {
 	}
 }
 
-func menuPageQuery(ctx context.Context, query *ent.MenuQuery, in *pb.ListMenusRequest, option dto.MenuQueryOption) ([]*dto.MenuPB, int64, error) {
+func menuPageQuery(ctx context.Context, query *ent.MenuQuery, in *pb.ListMenusRequest, option dto.MenuQueryOption) ([]*dto.MenuPB, int32, error) {
 	if in.OnlyCount {
 		count, err := query.Count(ctx)
 		if err != nil {
 			return nil, 0, err
 		}
-		return nil, int64(count), nil
+		return nil, int32(count), nil
 	}
 
 	query = menuQueryPage(query, in)
@@ -122,7 +122,7 @@ func menuPageQuery(ctx context.Context, query *ent.MenuQuery, in *pb.ListMenusRe
 		return nil, 0, err
 	}
 	result, err := query.All(ctx)
-	return dto.ConvertMenus(result), int64(count), err
+	return dto.ConvertMenus(result), int32(count), err
 }
 
 func menuQueryPage(query *ent.MenuQuery, in *pb.ListMenusRequest) *ent.MenuQuery {

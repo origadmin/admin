@@ -62,7 +62,7 @@ func (m userRepo) Update(ctx context.Context, user *dto.UserPB, options ...dto.U
 	return dto.ConvertUser2PB(saved), nil
 }
 
-func (m userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options ...dto.UserQueryOption) ([]*dto.UserPB, int64, error) {
+func (m userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options ...dto.UserQueryOption) ([]*dto.UserPB, int32, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {
 		option = options[0]
@@ -89,13 +89,13 @@ func NewUserDal(db *Data, logger log.Logger) dto.UserRepo {
 	}
 }
 
-func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRequest, option dto.UserQueryOption) ([]*dto.UserPB, int64, error) {
+func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRequest, option dto.UserQueryOption) ([]*dto.UserPB, int32, error) {
 	if in.OnlyCount {
 		count, err := query.Count(ctx)
 		if err != nil {
 			return nil, 0, err
 		}
-		return nil, int64(count), nil
+		return nil, int32(count), nil
 	}
 
 	query = userQueryPage(query, in)
@@ -105,7 +105,7 @@ func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRe
 		return nil, 0, err
 	}
 	result, err := query.All(ctx)
-	return dto.ConvertUsers(result), int64(count), err
+	return dto.ConvertUsers(result), int32(count), err
 }
 
 func userQueryPage(query *ent.UserQuery, in *pb.ListUsersRequest) *ent.UserQuery {

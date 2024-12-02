@@ -53,7 +53,7 @@ func (m RoleAPIGINService) ListRoles(context *gin.Context, request *pb.ListRoles
 	var res gins.Result
 	if err == nil {
 		res.Success = true
-		res.Total = int64(response.TotalSize)
+		res.Total = response.TotalSize
 		res.Data = response.Roles
 	}
 	resp.Result(context, res, err)

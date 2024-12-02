@@ -31,7 +31,7 @@ func (m MenusBiz) ListMenus(ctx context.Context, in *pb.ListMenusRequest, opts .
 	if err != nil {
 		return nil, err
 	}
-	return dto.ListMenuResponse(result, in, total)
+	return dto.ListMenuResponse(result, in, int32(total))
 }
 
 func (m MenusBiz) GetMenu(ctx context.Context, in *pb.GetMenuRequest, opts ...grpc.CallOption) (*pb.GetMenuResponse, error) {

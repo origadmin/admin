@@ -53,7 +53,7 @@ func buildVersion(version, commit, date, builtBy, treeState string) goversion.In
 //	@license.name				MIT
 //	@license.url				https://github.com/origadmin/origadmin/blob/main/LICENSE.md
 //
-//	@host						localhost:28080
+//	@host						localhost:10080
 //	@basepath					/api/v1
 //	@schemes					http https
 //

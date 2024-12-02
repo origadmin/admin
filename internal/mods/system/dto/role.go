@@ -46,7 +46,7 @@ type RoleRepo interface {
 	Create(context.Context, *RolePB, ...RoleQueryOption) (*RolePB, error)
 	Delete(context.Context, string) error
 	Update(context.Context, *RolePB, ...RoleQueryOption) (*RolePB, error)
-	List(context.Context, *ListRolesRequest, ...RoleQueryOption) ([]*RolePB, int64, error)
+	List(context.Context, *ListRolesRequest, ...RoleQueryOption) ([]*RolePB, int32, error)
 }
 
 type RoleQueryOption struct {
@@ -74,9 +74,9 @@ func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pag
 	return nil
 }
 
-func ListRoleResponse(result []*RolePB, in *ListRolesRequest, total int64, args ...any) (*ListRolesResponse, error) {
+func ListRoleResponse(result []*RolePB, in *ListRolesRequest, total int32, args ...any) (*ListRolesResponse, error) {
 	response := &ListRolesResponse{
-		TotalSize: int32(total),
+		TotalSize: total,
 		Current:   in.Current,
 		PageSize:  in.PageSize,
 		Roles:     result,
