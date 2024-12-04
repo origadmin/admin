@@ -47,8 +47,8 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 		opts = append(opts, gins.WithLogger(log.With(l, "module", "gins")))
 	}
 
-	log.Infof("Register.GinHttp.Endpoint: %v, type: %v, host: %v, addr: %v", cfg.Endpoint, "http", net.GetHostAddr("host"), cfg.Addr)
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", net.GetHostAddr(loader.ENVPrefix+"_host"), cfg.Addr)
+	log.Infof("Register.GinHttp.Endpoint: %v, type: %v, host: %v, addr: %v", cfg.Endpoint, "http", net.GetHostAddr(Host), cfg.Addr)
+	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", net.GetHostAddr(Host), cfg.Addr)
 	log.Infof("Register.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, gins.Endpoint(ep))

@@ -13,10 +13,12 @@ import (
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
+	"github.com/origadmin/toolkits/env"
 	"github.com/origadmin/toolkits/errors"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/loader"
 	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
@@ -32,6 +34,10 @@ var (
 	ProviderServer = wire.NewSet(NewSystemServer)
 	// ProviderAgent is agent providers.
 	ProviderAgent = wire.NewSet(NewSystemServerAgent)
+)
+
+var (
+	Host = env.Var(loader.ENVPrefix, "host")
 )
 
 func init() {

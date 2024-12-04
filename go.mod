@@ -17,15 +17,15 @@ require (
 	github.com/origadmin/contrib/database v0.0.8
 	github.com/origadmin/contrib/replacer v0.0.9
 	github.com/origadmin/contrib/transport/gins v0.0.9
-	github.com/origadmin/runtime v0.0.5
+	github.com/origadmin/runtime v0.0.6
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.1.5
+	github.com/origadmin/toolkits v0.1.6
 	github.com/origadmin/toolkits/codec v0.0.34
-	github.com/origadmin/toolkits/errors v0.0.15
+	github.com/origadmin/toolkits/errors v0.0.16
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/net v0.31.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20241118233622-e639e219e697
+	google.golang.org/genproto/googleapis/api v0.0.0-20241202173237-19429a94021a
 	google.golang.org/grpc v1.68.0
 	google.golang.org/protobuf v1.35.2
 )
@@ -33,7 +33,7 @@ require (
 require (
 	ariga.io/atlas v0.28.1 // indirect
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20241127180247-a33202765966.1 // indirect
-	cel.dev/expr v0.18.0 // indirect
+	cel.dev/expr v0.19.0 // indirect
 	dario.cat/mergo v1.0.1 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/BurntSushi/toml v1.4.0 // indirect
@@ -131,7 +131,7 @@ require (
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
 	golang.org/x/tools v0.27.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241118233622-e639e219e697 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241202173237-19429a94021a // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20241004144649-1aea3fae8852 // indirect
