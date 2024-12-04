@@ -10,7 +10,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 
 	pb "origadmin/application/admin/api/v1/services/common"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/mods/common/dto"
 )
 
 type loginRepo struct {
