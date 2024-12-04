@@ -36,7 +36,7 @@ const (
 
 var (
 	// Name is the name of the compiled software.
-	Name = "origadmin.server.v1"
+	Name = "origadmin.server.v1.admin"
 	// Version is the Version of the compiled software.
 	Version = "v1.0.0"
 	// flags are the bootstrap flags.
@@ -90,8 +90,8 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	//	return errors.Wrap(err, "load config error")
 	//}
 	//src := loader.LoadSourceFiles(flags.WorkDir, flags.ConfigPath)
-	source := loader.FileSourceConfig(flags.WorkPath())
-	bs, err := loader.LoadRemoteBootstrap(source)
+	//source := loader.FileSourceConfig(flags.WorkPath())
+	bs, err := loader.LoadBootstrap(&flags)
 	if err != nil {
 		return errors.Wrap(err, "load config error")
 	}

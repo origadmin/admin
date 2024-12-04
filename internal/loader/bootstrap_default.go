@@ -16,9 +16,13 @@ import (
 
 func DefaultBootstrap() *configs.Bootstrap {
 	return &configs.Bootstrap{
-		Name:       "origadmin.service.v1.demo",
+		Name:       "origadmin.service.v1.admin",
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
+		Servers: []string{
+			"origadmin.service.v1.common",
+			"origadmin.service.v1.system",
+		},
 		Entry: &configs.Bootstrap_Entry{
 			Scheme: "http",
 		},

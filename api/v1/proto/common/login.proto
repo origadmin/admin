@@ -80,8 +80,7 @@ message CaptchaIDRequest {
 }
 
 message CaptchaIDResponse {
-    bool success = 1;
-    string data = 2;
+    string data = 1;
 }
 
 // The request message containing the user's name.

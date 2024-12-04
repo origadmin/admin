@@ -913,8 +913,6 @@ func (m *CaptchaIDResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
-
 	// no validation rules for Data
 
 	if len(errors) > 0 {

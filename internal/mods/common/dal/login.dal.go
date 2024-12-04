@@ -19,7 +19,9 @@ type loginRepo struct {
 
 func (d loginRepo) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
 	log.Info("CaptchaID")
-	return &pb.CaptchaIDResponse{}, nil
+	return &pb.CaptchaIDResponse{
+		Data: "123",
+	}, nil
 }
 
 func (d loginRepo) Login(ctx context.Context, username, password string) (any, error) {

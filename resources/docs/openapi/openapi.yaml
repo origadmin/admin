@@ -795,8 +795,6 @@ components:
         api.v1.services.common.CaptchaIDResponse:
             type: object
             properties:
-                success:
-                    type: boolean
                 data:
                     type: string
         api.v1.services.common.CaptchaImageResponse:

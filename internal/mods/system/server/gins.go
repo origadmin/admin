@@ -11,8 +11,8 @@ import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/toolkits/helpers"
+	"github.com/origadmin/toolkits/net"
 
-	"origadmin/application/admin/helpers/net"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 )
@@ -46,11 +46,15 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 	if l != nil {
 		opts = append(opts, gins.WithLogger(log.With(l, "module", "gins")))
 	}
+	var endpoint string
+	if cfg.Endpoint == "" {
+		endpoint, _ = helpers.ServiceEndpoint("http", net.HostAddr(Host), cfg.Addr)
+	} else {
+		endpoint = cfg.Endpoint
+	}
 
-	log.Infof("Register.GinHttp.Endpoint: %v, type: %v, host: %v, addr: %v", cfg.Endpoint, "http", net.GetHostAddr(Host), cfg.Addr)
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", net.GetHostAddr(Host), cfg.Addr)
-	log.Infof("Register.GinHttp.Endpoint: %v", cfg.Endpoint)
-	ep, _ := url.Parse(cfg.Endpoint)
+	log.Infof("Register.GinHttp.Endpoint: %v", endpoint)
+	ep, _ := url.Parse(endpoint)
 	opts = append(opts, gins.Endpoint(ep))
 	srv := gins.NewServer(opts...)
 	//if register != nil {

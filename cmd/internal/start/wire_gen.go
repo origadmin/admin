@@ -22,13 +22,13 @@ import (
 
 // buildInjectors init kratos application.
 func buildInjectors(contextContext context.Context, arg *loader.Config, configsBootstrap *configs.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
-	v, err := bootstrap.NewDiscoveries(configsBootstrap)
+	v, err := loader.NewDiscoveries(configsBootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
 	server := server.NewGINSServer(configsBootstrap, logger)
 	httpServer := server.NewHTTPServer(configsBootstrap, logger)
-	injectorClient := &bootstrap.InjectorClient{
+	injectorClient := &loader.InjectorClient{
 		Config:      arg,
 		Bootstrap:   configsBootstrap,
 		Discoveries: v,
