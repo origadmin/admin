@@ -11,10 +11,9 @@ import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/toolkits/helpers"
+	"github.com/origadmin/toolkits/net"
 
-	"origadmin/application/admin/helpers/net"
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/loader"
 )
 
 // NewGINSServer new a gin server.
@@ -25,7 +24,7 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 	}
 	cfg := bootstrap.GetService().GetGins()
 	if cfg == nil {
-		cfg = loader.DefaultServiceGins()
+		return nil
 	}
 
 	if cfg.Network != "" {
@@ -47,8 +46,8 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 		opts = append(opts, gins.WithLogger(log.With(l, "module", "gins")))
 	}
 
-	log.Infof("Register.GinHttp.Endpoint: %v, type: %v, host: %v, addr: %v", cfg.Endpoint, "http", net.GetHostAddr("host"), cfg.Addr)
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", net.GetHostAddr(loader.ENVPrefix+"_host"), cfg.Addr)
+	log.Infof("Register.GinHttp.Endpoint: %v, type: %v, host: %v, addr: %v", cfg.Endpoint, "http", net.HostAddr("host"), cfg.Addr)
+	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", net.HostAddr("host"), cfg.Addr)
 	log.Infof("Register.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, gins.Endpoint(ep))

@@ -171,6 +171,8 @@ func (m *Bootstrap) validate(all bool) error {
 
 	// no validation rules for CryptoType
 
+	// no validation rules for Servers
+
 	if all {
 		switch v := interface{}(m.GetEntry()).(type) {
 		case interface{ ValidateAll() error }:
@@ -864,40 +866,6 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 				cause:  err,
 			}
 		}
-	}
-
-	for idx, item := range m.GetDiscoveries() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, Bootstrap_EntryValidationError{
-						field:  fmt.Sprintf("Discoveries[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, Bootstrap_EntryValidationError{
-						field:  fmt.Sprintf("Discoveries[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return Bootstrap_EntryValidationError{
-					field:  fmt.Sprintf("Discoveries[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
 	}
 
 	if len(errors) > 0 {

@@ -13,12 +13,12 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// UserAPIGINService is a menu service.
-type UserAPIGINService struct {
+// UserAPIGINRPCService is a menu service.
+type UserAPIGINRPCService struct {
 	client pb.UserAPIClient
 }
 
-func (m UserAPIGINService) CreateUser(context *gin.Context, request *pb.CreateUserRequest) {
+func (m UserAPIGINRPCService) CreateUser(context *gin.Context, request *pb.CreateUserRequest) {
 	response, err := m.client.CreateUser(context, request)
 	var res gins.Result
 	if err == nil {
@@ -28,7 +28,7 @@ func (m UserAPIGINService) CreateUser(context *gin.Context, request *pb.CreateUs
 	resp.Result(context, res, err)
 }
 
-func (m UserAPIGINService) DeleteUser(context *gin.Context, request *pb.DeleteUserRequest) {
+func (m UserAPIGINRPCService) DeleteUser(context *gin.Context, request *pb.DeleteUserRequest) {
 	response, err := m.client.DeleteUser(context, request)
 	var res gins.Result
 	if err == nil {
@@ -38,7 +38,7 @@ func (m UserAPIGINService) DeleteUser(context *gin.Context, request *pb.DeleteUs
 	resp.Result(context, res, err)
 }
 
-func (m UserAPIGINService) GetUser(context *gin.Context, request *pb.GetUserRequest) {
+func (m UserAPIGINRPCService) GetUser(context *gin.Context, request *pb.GetUserRequest) {
 	response, err := m.client.GetUser(context, request)
 	var res gins.Result
 	if err == nil {
@@ -48,7 +48,7 @@ func (m UserAPIGINService) GetUser(context *gin.Context, request *pb.GetUserRequ
 	resp.Result(context, res, err)
 }
 
-func (m UserAPIGINService) ListUsers(context *gin.Context, request *pb.ListUsersRequest) {
+func (m UserAPIGINRPCService) ListUsers(context *gin.Context, request *pb.ListUsersRequest) {
 	response, err := m.client.ListUsers(context, request)
 	var res gins.Result
 	if err == nil {
@@ -59,7 +59,7 @@ func (m UserAPIGINService) ListUsers(context *gin.Context, request *pb.ListUsers
 	resp.Result(context, res, err)
 }
 
-func (m UserAPIGINService) UpdateUser(context *gin.Context, request *pb.UpdateUserRequest) {
+func (m UserAPIGINRPCService) UpdateUser(context *gin.Context, request *pb.UpdateUserRequest) {
 	response, err := m.client.UpdateUser(context, request)
 	var res gins.Result
 	if err == nil {
@@ -69,14 +69,14 @@ func (m UserAPIGINService) UpdateUser(context *gin.Context, request *pb.UpdateUs
 	resp.Result(context, res, err)
 }
 
-// NewUserAPIGINService new a menu service.
-func NewUserAPIGINService(client pb.UserAPIClient) *UserAPIGINService {
-	return &UserAPIGINService{client: client}
+// NewUserAPIGINRPCService new a menu service.
+func NewUserAPIGINRPCService(client pb.UserAPIClient) *UserAPIGINRPCService {
+	return &UserAPIGINRPCService{client: client}
 }
 
-// NewUserAPIGINServer new a menu service.
-func NewUserAPIGINServer(client pb.UserAPIClient) pb.UserAPIGINRPCAgent {
-	return &UserAPIGINService{client: client}
+// NewUserAPIGINRPCAgent new a menu service.
+func NewUserAPIGINRPCAgent(client pb.UserAPIClient) pb.UserAPIGINRPCAgent {
+	return &UserAPIGINRPCService{client: client}
 }
 
-var _ pb.UserAPIGINRPCAgent = (*UserAPIGINService)(nil)
+var _ pb.UserAPIGINRPCAgent = (*UserAPIGINRPCService)(nil)

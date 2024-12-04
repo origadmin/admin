@@ -14,7 +14,6 @@ import (
 	"github.com/origadmin/toolkits/net"
 
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/loader"
 )
 
 // NewGINSServer new a gin server.
@@ -23,9 +22,10 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 	var opts = []gins.ServerOption{
 		gins.Middleware(ms...),
 	}
-	cfg := bootstrap.GetService().GetGins()
+	service := bootstrap.GetService()
+	cfg := service.GetGins()
 	if cfg == nil {
-		cfg = loader.DefaultServiceGins()
+		return nil
 	}
 
 	if cfg.Network != "" {
@@ -48,7 +48,7 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 	}
 	var endpoint string
 	if cfg.Endpoint == "" {
-		endpoint, _ = helpers.ServiceEndpoint("http", net.HostAddr(Host), cfg.Addr)
+		endpoint, _ = helpers.ServiceEndpoint("http", net.HostAddr(service.Host), cfg.Addr)
 	} else {
 		endpoint = cfg.Endpoint
 	}

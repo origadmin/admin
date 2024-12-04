@@ -31,7 +31,7 @@ type UserAPIGINRPCAgent interface {
 	UpdateUser(*gins.Context, *UpdateUserRequest)
 }
 
-func RegisterUserAPIGINRPCServer(router gins.IRouter, srv UserAPIGINRPCAgent) {
+func RegisterUserAPIGINRPCAgent(router gins.IRouter, srv UserAPIGINRPCAgent) {
 	router.GET("/api/v1/sys/users", _UserAPI_ListUsers0_GINRPC_Handler(srv))
 	router.GET("/api/v1/sys/users/:id", _UserAPI_GetUser0_GINRPC_Handler(srv))
 	router.POST("/api/v1/sys/users", _UserAPI_CreateUser0_GINRPC_Handler(srv))

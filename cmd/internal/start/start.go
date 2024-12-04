@@ -13,10 +13,15 @@ import (
 	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	_ "github.com/origadmin/contrib/consul/config"
+	_ "github.com/origadmin/contrib/consul/registry"
+	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	logger "github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/errors"
@@ -40,7 +45,7 @@ var (
 	// Version is the Version of the compiled software.
 	Version = "v1.0.0"
 	// flags are the bootstrap flags.
-	flags = bootstrap.Bootstrap{}
+	flags = bootstrap.Bootstrap{Env: "release"}
 )
 
 var cmd = &cobra.Command{
@@ -49,7 +54,15 @@ var cmd = &cobra.Command{
 	RunE:  startCommandRun,
 }
 
+func RandomID() string {
+	id, err := os.Hostname()
+	if err != nil {
+		id = "unknown"
+	}
+	return id + "." + fmt.Sprintf("%08d", time.Now().UnixNano()%(1<<32))
+}
 func init() {
+	flags.Flags.ID = RandomID()
 	flags.SetFlags(Name, Version)
 }
 
@@ -57,7 +70,8 @@ func init() {
 // ability to run as a daemon.
 func Cmd() *cobra.Command {
 	cmd.Flags().BoolP(startRandom, "r", false, "start with random password")
-	cmd.Flags().StringP(startWorkDir, "d", ".", "working directory")
+	//cmd.Flags().StringP(startWorkDir, "d", ".", "working directory")
+	//cmd.Flags().StringP(startWorkDir, "d", ".", "working directory")
 	cmd.Flags().StringP(startConfig, "c", "bootstrap.toml",
 		"runtime configuration files or directory (relative to workdir, multiple separated by commas)")
 	cmd.Flags().StringP(startStatic, "s", "", "static files directory")
@@ -66,7 +80,10 @@ func Cmd() *cobra.Command {
 }
 
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	flags.WorkDir, _ = cmd.Flags().GetString(startWorkDir)
+	//flags.WorkDir, _ = cmd.Flags().GetString(startWorkDir)
+	if flags.Env == "debug" {
+		flags.WorkDir = "resources/configs"
+	}
 	staticDir, _ := cmd.Flags().GetString(startStatic)
 	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)
 	//random, _ := cmd.Flags().GetBool(startRandom)
@@ -74,16 +91,16 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	l := log.With(logger.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
-		"service.id", flags.ID,
-		"service.name", flags.ServiceName,
-		"service.version", flags.Version,
+		"service.id", flags.ID(),
+		"service.name", flags.ServiceName(),
+		"service.version", flags.Version(),
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
 	log.SetLogger(l)
 	//path := filepath.Join(flags.WorkDir, flags.ConfigPath)
 	//envpath := filepath.Join(flags.WorkDir, flags.EnvPath)
-	log.Infow("msg", "start info", startWorkDir, flags.WorkDir, startStatic, staticDir, startConfig, flags.ConfigPath)
+	log.Infow("msg", "start info", "workpath", flags.WorkPath(), startStatic, staticDir)
 	//env, _ := bootstrap.LoadEnv(envpath)
 	//bs, err := bootstrap.FromLocalPath(flags.ServiceName, path, l)
 	//if err != nil {
@@ -128,8 +145,9 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	if err = os.WriteFile(lockfile, []byte(fmt.Sprintf("%d", os.Getpid())), 0o600); err == nil {
 		defer os.Remove(lockfile)
 	}
+	//engine := gin.New()
 	//info to ctx
-	app, cleanup, err := buildInjectors(cmd.Context(), source, bs, l)
+	app, cleanup, err := buildInjectors(cmd.Context(), bs, l)
 	if err != nil {
 		return err
 	}
@@ -143,7 +161,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 
 func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 	opts := []kratos.Option{
-		kratos.ID(flags.ID()),
+		kratos.ID(flags.ServiceID()),
 		kratos.Name(flags.ServiceName()),
 		kratos.Version(flags.Version()),
 		kratos.Metadata(map[string]string{}),
@@ -154,14 +172,25 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 		//kratos.Server(injector.ServerGINS),
 	}
 
-	err := loader.InjectorGinServer(injector)
-	if err != nil {
-		log.Errorf("injector gin server error: %v", err)
-		os.Exit(1)
+	//err := loader.InjectorGinServer(injector)
+	//if err != nil {
+	//	log.Errorf("injector gin server error: %v", err)
+	//	os.Exit(1)
+	//}
+
+	engine := gin.New()
+	if injector.SystemAgent != nil {
+		injector.SystemAgent.GIN(engine)
 	}
-	if injector.Servers != nil {
-		opts = append(opts, kratos.Server(injector.Servers...))
+
+	//srv := agent.NewHTTPServer(injector.Bootstrap, injector.Logger)
+	if injector.Server != nil {
+		injector.Server.Server.Handler = engine.Handler()
+		opts = append(opts, kratos.Server(injector.Server))
 	}
+
+	//server.Server.Handler = injector.Router
+
 	//if injector.ServerAgent != nil {
 	//	opts = append(opts, kratos.Server(injector.ServerAgent))
 	//}

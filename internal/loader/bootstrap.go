@@ -6,18 +6,11 @@
 package loader
 
 import (
-	"context"
 	"fmt"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/metadata"
-	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/go-kratos/kratos/v2/selector"
-	"github.com/go-kratos/kratos/v2/selector/filter"
-	"github.com/go-kratos/kratos/v2/selector/random"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
@@ -30,15 +23,13 @@ import (
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/errors"
 
-	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
-	systemservice "origadmin/application/admin/internal/mods/system/service"
+	"origadmin/application/admin/internal/mods/system/server"
 )
 
 var (
 	ProviderSet = wire.NewSet(
 		NewRegistrar,
-		NewDiscovery,
 		wire.Struct(new(InjectorServer), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)
@@ -51,11 +42,12 @@ var (
 )
 
 type InjectorClient struct {
-	Logger    log.Logger
-	Bootstrap *configs.Bootstrap
-	Discovery registry.Discovery
-	Server    *gin.Engine
-	Servers   []transport.Server
+	Logger      log.Logger
+	Bootstrap   *configs.Bootstrap
+	SystemAgent *server.RegisterAgent
+	Server      *http.Server
+	//Router      *gin.Engine
+	//Servers []transport.Server
 }
 
 type InjectorServer struct {
@@ -63,140 +55,6 @@ type InjectorServer struct {
 	Bootstrap *configs.Bootstrap
 	Registrar registry.Registrar
 	Servers   []transport.Server
-}
-
-func InjectorGinServer(injector *InjectorClient) error {
-	if err := newHelloWorldServer(injector); err != nil {
-		return err
-	}
-	if err := newSecondWorldServer(injector); err != nil {
-		return err
-	}
-	return nil
-}
-
-func newHelloWorldServer(injector *InjectorClient) error {
-	// Create route Filter: Filter instances whose version number is "2.0.0"
-	filter := filter.Version("v1.0.0")
-	// Create the Selector for the P2C load balancing algorithm and inject the route Filter
-	selector.SetGlobalSelector(random.NewBuilder())
-	//selector.SetGlobalSelector(wrr.NewBuilder())
-
-	serviceName := "origadmin.service.v1.helloworld"
-	discovery := injector.Discovery
-	if discovery == nil {
-		return errors.String("discovery is nil")
-	}
-	//if discovery, ok := injector.Discoveries[serviceName]; ok {
-	conn, err := grpc.DialInsecure(
-		context.Background(),
-		grpc.WithMiddleware(
-			recovery.Recovery(),
-			metadata.Client(),
-		),
-		grpc.WithEndpoint("discovery:///"+serviceName),
-		grpc.WithDiscovery(discovery),
-		grpc.WithNodeFilter(filter),
-	)
-	if err != nil {
-		return err
-	}
-	gClient := pb.NewMenuAPIClient(conn)
-	// new http client
-	hConn, err := http.NewClient(
-		context.Background(),
-		http.WithMiddleware(
-			recovery.Recovery(),
-			metadata.Client(),
-		),
-		http.WithEndpoint("discovery:///"+serviceName),
-		http.WithDiscovery(discovery),
-		http.WithNodeFilter(filter),
-	)
-	if err != nil {
-		return err
-	}
-	hClient := pb.NewMenuAPIHTTPClient(hConn)
-
-	var client pb.MenuAPIServer
-	if entry := injector.Bootstrap.GetEntry(); entry != nil && entry.Scheme == "http" {
-		client = systemservice.NewMenuAPIHTTPServer(hClient)
-	} else {
-		client = systemservice.NewMenuAPIServer(gClient)
-	}
-	//service, err := runtime.NewGRPCServiceServer(injector.Bootstrap.GetService())
-	//grpcClient := service.NewGreeterServer(gClient)
-	//httpClient := service.NewGreeterHTTPServer(hClient)
-	//// add _ to avoid unused
-	//_ = grpcClient
-	//_ = httpClient
-	//pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
-	//pb.RegisterMenuAPIHTTPServer(injector.Agents, client)
-	//}
-	_ = client
-	return nil
-}
-
-func newSecondWorldServer(injector *InjectorClient) error {
-	// Create route Filter: Filter instances whose version number is "2.0.0"
-	filter := filter.Version("v1.0.0")
-	// Create the Selector for the P2C load balancing algorithm and inject the route Filter
-	selector.SetGlobalSelector(random.NewBuilder())
-	//selector.SetGlobalSelector(wrr.NewBuilder())
-
-	serviceName := "origadmin.service.v1.pb"
-	discovery := injector.Discovery
-	if discovery == nil {
-		return errors.String("discovery is nil")
-	}
-	//if discovery, ok := injector.Discoveries[serviceName]; ok {
-	conn, err := grpc.DialInsecure(
-		context.Background(),
-		grpc.WithMiddleware(
-			recovery.Recovery(),
-			metadata.Client(),
-		),
-		grpc.WithEndpoint("discovery:///"+serviceName),
-		grpc.WithDiscovery(discovery),
-		grpc.WithNodeFilter(filter),
-	)
-	if err != nil {
-		return err
-	}
-	gClient := pb.NewMenuAPIClient(conn)
-	// new http client
-	hConn, err := http.NewClient(
-		context.Background(),
-		http.WithMiddleware(
-			recovery.Recovery(),
-			metadata.Client(),
-		),
-		http.WithEndpoint("discovery:///"+serviceName),
-		http.WithDiscovery(discovery),
-		http.WithNodeFilter(filter),
-	)
-	if err != nil {
-		return err
-	}
-	hClient := pb.NewMenuAPIHTTPClient(hConn)
-
-	var client pb.MenuAPIServer
-	if entry := injector.Bootstrap.GetEntry(); entry != nil && entry.Scheme == "http" {
-		client = systemservice.NewMenuAPIHTTPServer(hClient)
-	} else {
-		client = systemservice.NewMenuAPIServer(gClient)
-	}
-	//grpcClient := service.NewGreeterServer(gClient)
-	//httpClient := service.NewGreeterHTTPServer(hClient)
-	//// add _ to avoid unused
-	//_ = grpcClient
-	//_ = httpClient
-	//pb.RegisterMenuAPIGINSServer(injector.ServerGINS, client)
-	//pb.RegisterMenuAPIHTTPServer(injector.Server, client)
-	//}
-	_ = client
-
-	return nil
 }
 
 // LoadFileBootstrap load config from file

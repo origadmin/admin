@@ -29,28 +29,28 @@ func (biz LoginBiz) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest, opts
 }
 
 func (biz LoginBiz) CaptchaImage(ctx context.Context, in *pb.CaptchaImageRequest, opts ...grpc.CallOption) (*pb.CaptchaImageResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	log.Info("CaptchaImage")
+	return biz.dao.CaptchaImage(ctx, in)
 }
 
 func (biz LoginBiz) Login(ctx context.Context, in *pb.LoginRequest, opts ...grpc.CallOption) (*pb.LoginResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	log.Info("Login")
+	return biz.dao.Login(ctx, "admin", "123456")
 }
 
 func (biz LoginBiz) Logout(ctx context.Context, in *pb.LogoutRequest, opts ...grpc.CallOption) (*pb.LogoutResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	log.Info("Logout")
+	return biz.dao.Logout(ctx, in)
 }
 
 func (biz LoginBiz) CurrentUser(ctx context.Context, in *pb.CurrentUserRequest, opts ...grpc.CallOption) (*pb.CurrentUserResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	log.Info("CurrentUser")
+	return biz.dao.CurrentUser(ctx, in)
 }
 
 func (biz LoginBiz) CurrentMenus(ctx context.Context, in *pb.CurrentMenusRequest, opts ...grpc.CallOption) (*pb.CurrentMenusResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	log.Info("CurrentMenus")
+	return biz.dao.CurrentMenus(ctx, in)
 }
 
 // NewLoginBiz new a Login use case.

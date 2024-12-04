@@ -38,7 +38,7 @@ func init() {
 	runtime.RegisterService("common", service.DefaultServiceBuilder)
 }
 
-func NewCommonServer(register *systemservice.Register, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
+func NewCommonServer(register *systemservice.RegisterServer, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
 	var servers []transport.Server
 	service := bootstrap.GetService()
 	if service == nil {

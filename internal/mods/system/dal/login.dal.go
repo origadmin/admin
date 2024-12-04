@@ -17,14 +17,36 @@ type loginRepo struct {
 	db *Data
 }
 
-func (d loginRepo) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
-	log.Info("CaptchaID")
-	return &pb.CaptchaIDResponse{}, nil
-}
-
-func (d loginRepo) Login(ctx context.Context, username, password string) (any, error) {
+func (d loginRepo) Login(ctx context.Context, username, password string) (*dto.LoginResponse, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (d loginRepo) CaptchaImage(ctx context.Context, in *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d loginRepo) CurrentMenus(ctx context.Context, in *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d loginRepo) CurrentUser(ctx context.Context, in *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d loginRepo) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (d loginRepo) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
+	log.Info("CaptchaID")
+	return &pb.CaptchaIDResponse{
+		Data: "123",
+	}, nil
 }
 
 // NewLoginRepo .

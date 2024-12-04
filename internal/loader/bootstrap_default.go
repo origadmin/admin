@@ -12,6 +12,8 @@ import (
 	"google.golang.org/protobuf/types/known/durationpb"
 
 	"origadmin/application/admin/internal/configs"
+	commonserver "origadmin/application/admin/internal/mods/common/server"
+	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
 func DefaultBootstrap() *configs.Bootstrap {
@@ -19,9 +21,9 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Name:       "origadmin.service.v1.admin",
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
-		Servers: []string{
-			"origadmin.service.v1.common",
-			"origadmin.service.v1.system",
+		Servers: map[string]string{
+			commonserver.ServiceName: "origadmin.service.v1.common",
+			systemserver.ServiceName: "origadmin.service.v1.system",
 		},
 		Entry: &configs.Bootstrap_Entry{
 			Scheme: "http",
@@ -230,7 +232,7 @@ func DefaultRegistry() *configv1.Registry {
 		Debug: false,
 		Type:  "consul",
 		Consul: &configv1.Registry_Consul{
-			Address: "192.168.28.42:8500",
+			Address: "${consul_address:127.0.0.1:8500}",
 			Scheme:  "http",
 		},
 		Etcd: nil,
@@ -279,7 +281,7 @@ func DefaultServiceMiddleware() *configv1.Middleware {
 		},
 		Validator: &configv1.Middleware_Validator{
 			Version:  2,
-			FailFast: false,
+			FailFast: true,
 		},
 	}
 }

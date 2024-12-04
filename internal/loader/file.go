@@ -20,6 +20,10 @@ import (
 // SaveOption represents an option for saving configuration data.
 type SaveOption = func(*protojson.MarshalOptions)
 
+var (
+	r = replacer.New(replacer.WithStart("${"), replacer.WithEnd("}"), replacer.WithSeparator(":"))
+)
+
 // SaveConfig saves the configuration data to the specified file path.
 func SaveConfig(path string, data any, opts ...SaveOption) error {
 	if v, ok := data.(proto.Message); ok && strings.HasSuffix(path, ".json") {
@@ -40,10 +44,6 @@ func SaveConfig(path string, data any, opts ...SaveOption) error {
 	}
 	return nil
 }
-
-var (
-	r = replacer.New(replacer.WithStart("${"), replacer.WithEnd("}"), replacer.WithSeparator("="))
-)
 
 func Replace(s []byte, envs map[string]string) []byte {
 	return r.Replace(s, envs)

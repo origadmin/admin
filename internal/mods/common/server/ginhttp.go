@@ -16,7 +16,6 @@ import (
 	"github.com/origadmin/runtime/middleware"
 
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/loader"
 )
 
 func NewGinHTTPServer(bootstrap *configs.Bootstrap, engine *gin.Engine, l log.Logger) *http.Server {
@@ -26,7 +25,7 @@ func NewGinHTTPServer(bootstrap *configs.Bootstrap, engine *gin.Engine, l log.Lo
 	}
 	cfg := bootstrap.GetService().GetGins()
 	if cfg == nil {
-		cfg = loader.DefaultServiceGins()
+		return nil
 	}
 
 	if cfg.Network != "" {

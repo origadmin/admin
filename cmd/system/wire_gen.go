@@ -50,7 +50,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	loginRepo := dal.NewLoginRepo(data, logger)
 	loginAPIClient := biz2.NewLoginClient(loginRepo, logger)
 	loginAPIServer := service2.NewLoginAPIServer(loginAPIClient)
-	register := &service.Register{
+	register := &service.RegisterServer{
 		Menu:  menuAPIServer,
 		Role:  roleAPIServer,
 		User:  userAPIServer,

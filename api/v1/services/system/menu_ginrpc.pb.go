@@ -31,7 +31,7 @@ type MenuAPIGINRPCAgent interface {
 	UpdateMenu(*gins.Context, *UpdateMenuRequest)
 }
 
-func RegisterMenuAPIGINRPCServer(router gins.IRouter, srv MenuAPIGINRPCAgent) {
+func RegisterMenuAPIGINRPCAgent(router gins.IRouter, srv MenuAPIGINRPCAgent) {
 	router.GET("/api/v1/sys/menus", _MenuAPI_ListMenus0_GINRPC_Handler(srv))
 	router.GET("/api/v1/sys/menus/:id", _MenuAPI_GetMenu0_GINRPC_Handler(srv))
 	router.POST("/api/v1/sys/menus", _MenuAPI_CreateMenu0_GINRPC_Handler(srv))

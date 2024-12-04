@@ -16,7 +16,7 @@ import (
 
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
-	wire.Struct(new(Register), "*"),
+	wire.Struct(new(RegisterServer), "*"),
 	NewMenuAPIService,
 	NewMenuAPIServer,
 	NewRoleAPIServer,
@@ -25,14 +25,14 @@ var ProviderSet = wire.NewSet(
 	NewUserAPIService,
 )
 
-type Register struct {
+type RegisterServer struct {
 	Menu  pb.MenuAPIServer
 	Role  pb.RoleAPIServer
 	User  pb.UserAPIServer
 	Login commonpb.LoginAPIServer
 }
 
-func (s Register) GRPC(server *service.GRPCServer) *service.GRPCServer {
+func (s RegisterServer) GRPC(server *service.GRPCServer) *service.GRPCServer {
 	log.Info("grpc server init")
 	pb.RegisterMenuAPIServer(server, s.Menu)
 	pb.RegisterRoleAPIServer(server, s.Role)
@@ -41,7 +41,7 @@ func (s Register) GRPC(server *service.GRPCServer) *service.GRPCServer {
 	return server
 }
 
-func (s Register) GINS(server *gins.Server) *gins.Server {
+func (s RegisterServer) GINS(server *gins.Server) *gins.Server {
 	log.Info("gins server init")
 	pb.RegisterMenuAPIGINSServer(server, s.Menu)
 	pb.RegisterRoleAPIGINSServer(server, s.Role)
@@ -50,7 +50,7 @@ func (s Register) GINS(server *gins.Server) *gins.Server {
 	return server
 }
 
-func (s Register) HTTP(server *service.HTTPServer) *service.HTTPServer {
+func (s RegisterServer) HTTP(server *service.HTTPServer) *service.HTTPServer {
 	log.Info("http server init")
 	pb.RegisterMenuAPIHTTPServer(server, s.Menu)
 	pb.RegisterRoleAPIHTTPServer(server, s.Role)

@@ -33,7 +33,7 @@ type LoginAPIGINRPCAgent interface {
 	Logout(*gins.Context, *LogoutRequest)
 }
 
-func RegisterLoginAPIGINRPCServer(router gins.IRouter, srv LoginAPIGINRPCAgent) {
+func RegisterLoginAPIGINRPCAgent(router gins.IRouter, srv LoginAPIGINRPCAgent) {
 	router.GET("/api/v1/captcha/id", _LoginAPI_CaptchaID0_GINRPC_Handler(srv))
 	router.GET("/api/v1/captcha/image", _LoginAPI_CaptchaImage0_GINRPC_Handler(srv))
 	router.POST("/api/v1/login", _LoginAPI_Login0_GINRPC_Handler(srv))

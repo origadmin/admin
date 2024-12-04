@@ -31,7 +31,7 @@ type RoleAPIGINRPCAgent interface {
 	UpdateRole(*gins.Context, *UpdateRoleRequest)
 }
 
-func RegisterRoleAPIGINRPCServer(router gins.IRouter, srv RoleAPIGINRPCAgent) {
+func RegisterRoleAPIGINRPCAgent(router gins.IRouter, srv RoleAPIGINRPCAgent) {
 	router.GET("/api/v1/sys/roles", _RoleAPI_ListRoles0_GINRPC_Handler(srv))
 	router.GET("/api/v1/sys/roles/:id", _RoleAPI_GetRole0_GINRPC_Handler(srv))
 	router.POST("/api/v1/sys/roles", _RoleAPI_CreateRole0_GINRPC_Handler(srv))

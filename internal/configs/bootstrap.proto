@@ -19,14 +19,13 @@ message Bootstrap {
   string name = 1 [json_name = "name"];
   string version = 2 [json_name = "version"];
   string crypto_type = 3 [json_name = "crypto_type"];
-  repeated string servers = 4 [json_name = "servers"];
+  map<string, string> servers = 4 [json_name = "servers"];
   // Entry
   message Entry {
     string scheme = 1 [json_name = "scheme"];
     config.v1.Service.GRPC grpc = 10 [json_name = "grpc"];
     config.v1.Service.HTTP http = 20 [json_name = "http"];
     config.v1.Service.GINS gins = 30 [json_name = "gins"];
-    repeated config.v1.Registry discoveries = 40 [json_name = "discoveries"];
   }
 
   Entry entry = 100 [json_name = "entry"];

@@ -7,7 +7,10 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
+	"os"
 	"syscall"
+	"time"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -31,15 +34,27 @@ var (
 	flags = bootstrap.DefaultBootstrap()
 )
 
+func RandomID() string {
+	id, err := os.Hostname()
+	if err != nil {
+		id = "unknown"
+	}
+	return id + "." + fmt.Sprintf("%08d", time.Now().UnixNano()%(1<<32))
+}
+
 func init() {
+	flags.Flags.ID = RandomID()
 	flags.SetFlags(Name, Version)
-	flags.WorkDir = "resources/configs"
+	flag.StringVar(&flags.Env, "e", "release", "set environment, eg: -e debug")
 	flag.StringVar(&flags.ConfigPath, "c", "config.toml", "config path, eg: -c config.toml")
 }
 
 func main() {
 	flag.Parse()
-
+	// the release mode, work dir sets to empty, use config path as work dir
+	if flags.Env == "debug" {
+		flags.WorkDir = "resources/configs"
+	}
 	l := log.With(logger.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
@@ -71,7 +86,7 @@ func main() {
 
 func NewApp(ctx context.Context, injector *loader.InjectorServer) *kratos.App {
 	opts := []kratos.Option{
-		kratos.ID(flags.ID()),
+		kratos.ID(flags.ServiceID()),
 		kratos.Name(flags.ServiceName()),
 		kratos.Version(flags.Version()),
 		kratos.Metadata(flags.Metadata()),

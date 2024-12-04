@@ -13,12 +13,12 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// RoleAPIGINService is a menu service.
-type RoleAPIGINService struct {
+// RoleAPIGINRPCService is a menu service.
+type RoleAPIGINRPCService struct {
 	client pb.RoleAPIClient
 }
 
-func (m RoleAPIGINService) CreateRole(context *gin.Context, request *pb.CreateRoleRequest) {
+func (m RoleAPIGINRPCService) CreateRole(context *gin.Context, request *pb.CreateRoleRequest) {
 	response, err := m.client.CreateRole(context, request)
 	var res gins.Result
 	if err == nil {
@@ -28,7 +28,7 @@ func (m RoleAPIGINService) CreateRole(context *gin.Context, request *pb.CreateRo
 	resp.Result(context, res, err)
 }
 
-func (m RoleAPIGINService) DeleteRole(context *gin.Context, request *pb.DeleteRoleRequest) {
+func (m RoleAPIGINRPCService) DeleteRole(context *gin.Context, request *pb.DeleteRoleRequest) {
 	response, err := m.client.DeleteRole(context, request)
 	var res gins.Result
 	if err == nil {
@@ -38,7 +38,7 @@ func (m RoleAPIGINService) DeleteRole(context *gin.Context, request *pb.DeleteRo
 	resp.Result(context, res, err)
 }
 
-func (m RoleAPIGINService) GetRole(context *gin.Context, request *pb.GetRoleRequest) {
+func (m RoleAPIGINRPCService) GetRole(context *gin.Context, request *pb.GetRoleRequest) {
 	response, err := m.client.GetRole(context, request)
 	var res gins.Result
 	if err == nil {
@@ -48,7 +48,7 @@ func (m RoleAPIGINService) GetRole(context *gin.Context, request *pb.GetRoleRequ
 	resp.Result(context, res, err)
 }
 
-func (m RoleAPIGINService) ListRoles(context *gin.Context, request *pb.ListRolesRequest) {
+func (m RoleAPIGINRPCService) ListRoles(context *gin.Context, request *pb.ListRolesRequest) {
 	response, err := m.client.ListRoles(context, request)
 	var res gins.Result
 	if err == nil {
@@ -59,7 +59,7 @@ func (m RoleAPIGINService) ListRoles(context *gin.Context, request *pb.ListRoles
 	resp.Result(context, res, err)
 }
 
-func (m RoleAPIGINService) UpdateRole(context *gin.Context, request *pb.UpdateRoleRequest) {
+func (m RoleAPIGINRPCService) UpdateRole(context *gin.Context, request *pb.UpdateRoleRequest) {
 	response, err := m.client.UpdateRole(context, request)
 	var res gins.Result
 	if err == nil {
@@ -69,14 +69,14 @@ func (m RoleAPIGINService) UpdateRole(context *gin.Context, request *pb.UpdateRo
 	resp.Result(context, res, err)
 }
 
-// NewRoleAPIGINService new a menu service.
-func NewRoleAPIGINService(client pb.RoleAPIClient) *RoleAPIGINService {
-	return &RoleAPIGINService{client: client}
+// NewRoleAPIGINRPCService new a menu service.
+func NewRoleAPIGINRPCService(client pb.RoleAPIClient) *RoleAPIGINRPCService {
+	return &RoleAPIGINRPCService{client: client}
 }
 
-// NewRoleAPIGINServer new a menu service.
-func NewRoleAPIGINServer(client pb.RoleAPIClient) pb.RoleAPIGINRPCAgent {
-	return &RoleAPIGINService{client: client}
+// NewRoleAPIGINRPCAgent new a menu service.
+func NewRoleAPIGINRPCAgent(client pb.RoleAPIClient) pb.RoleAPIGINRPCAgent {
+	return &RoleAPIGINRPCService{client: client}
 }
 
-var _ pb.RoleAPIGINRPCAgent = (*RoleAPIGINService)(nil)
+var _ pb.RoleAPIGINRPCAgent = (*RoleAPIGINRPCService)(nil)

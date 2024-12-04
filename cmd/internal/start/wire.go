@@ -17,14 +17,16 @@ import (
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
+	"origadmin/application/admin/internal/mods/agent"
 	"origadmin/application/admin/internal/mods/system/server"
 )
 
 // buildInjectors init kratos application.
-func buildInjectors(context.Context, *loader.Config, *configs.Bootstrap, log.Logger) (*kratos.App, func(), error) {
+func buildInjectors(context.Context, *configs.Bootstrap, log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		loader.ProviderSet,
-		server.ProviderAgent,
+		agent.ProviderSet,
+		server.ProviderSet,
 		//helloworlddal.ProviderSet,
 		//helloworldbiz.ProviderSet,
 		//helloworldservice.ProviderSet,

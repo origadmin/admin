@@ -5,7 +5,6 @@ go 1.23.1
 replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0.5.4
 
 require (
-	bou.ke/monkey v1.0.2
 	entgo.io/ent v0.14.1
 	github.com/caarlos0/go-version v0.2.0
 	github.com/gin-gonic/gin v1.10.0
@@ -17,13 +16,12 @@ require (
 	github.com/origadmin/contrib/database v0.0.8
 	github.com/origadmin/contrib/replacer v0.0.9
 	github.com/origadmin/contrib/transport/gins v0.0.9
-	github.com/origadmin/runtime v0.0.6
+	github.com/origadmin/runtime v0.0.8
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.6
 	github.com/origadmin/toolkits/codec v0.0.34
 	github.com/origadmin/toolkits/errors v0.0.16
 	github.com/spf13/cobra v1.8.1
-	github.com/stretchr/testify v1.9.0
 	golang.org/x/net v0.31.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20241202173237-19429a94021a
 	google.golang.org/grpc v1.68.0
@@ -47,7 +45,6 @@ require (
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/denisenkom/go-mssqldb v0.12.3 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
@@ -106,7 +103,6 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/shirou/gopsutil/v3 v3.24.5 // indirect
@@ -114,6 +110,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/sqlite3ent/sqlite3 v1.34.1 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.9.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
