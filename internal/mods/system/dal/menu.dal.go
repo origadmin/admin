@@ -99,8 +99,8 @@ func (m menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options ..
 	return menuPageQuery(ctx, query, in, option)
 }
 
-// NewMenuDal .
-func NewMenuDal(db *Data, logger log.Logger) dto.MenuRepo {
+// NewMenuRepo .
+func NewMenuRepo(db *Data, logger log.Logger) dto.MenuRepo {
 	return &menuRepo{
 		db: db,
 	}

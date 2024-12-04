@@ -15,16 +15,30 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 
-	"origadmin/application/admin/internal/loader"
-	"origadmin/application/admin/internal/mods/system/biz"
-	"origadmin/application/admin/internal/mods/system/dal"
-	"origadmin/application/admin/internal/mods/system/server"
-	"origadmin/application/admin/internal/mods/system/service"
-
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/loader"
+	commonbiz "origadmin/application/admin/internal/mods/common/biz"
+	//commondal "origadmin/application/admin/internal/mods/common/dal"
+	//commonserver "origadmin/application/admin/internal/mods/common/server"
+	commonservice "origadmin/application/admin/internal/mods/common/service"
+	systembiz "origadmin/application/admin/internal/mods/system/biz"
+	systemdal "origadmin/application/admin/internal/mods/system/dal"
+	systemserver "origadmin/application/admin/internal/mods/system/server"
+	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
 // buildInjectors init kratos application.
 func buildInjectors(context.Context, *configs.Bootstrap, log.Logger) (*kratos.App, func(), error) {
-	panic(wire.Build(loader.ProviderSet, server.ProviderServer, dal.ProviderSet, biz.ProviderSet, service.ProviderSet, NewApp))
+	panic(wire.Build(
+		loader.ProviderSet,
+		//commondal.ProviderSet,
+		commonbiz.ProviderSet,
+		commonservice.ProviderSet,
+		//commonserver.ProviderSet,
+		systemdal.ProviderSet,
+		systembiz.ProviderSet,
+		systemservice.ProviderSet,
+		systemserver.ProviderSet,
+		/* add your providers here */
+		NewApp))
 }

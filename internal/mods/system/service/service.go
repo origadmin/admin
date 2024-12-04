@@ -4,12 +4,19 @@
 
 package service
 
-import "github.com/google/wire"
+import (
+	"github.com/google/wire"
+	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/service"
+
+	commonpb "origadmin/application/admin/api/v1/services/common"
+	pb "origadmin/application/admin/api/v1/services/system"
+)
 
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
-	NewLoginAPIService,
-	NewLoginAPIServer,
+	wire.Struct(new(Register), "*"),
 	NewMenuAPIService,
 	NewMenuAPIServer,
 	NewRoleAPIServer,
@@ -17,3 +24,37 @@ var ProviderSet = wire.NewSet(
 	NewUserAPIServer,
 	NewUserAPIService,
 )
+
+type Register struct {
+	Menu  pb.MenuAPIServer
+	Role  pb.RoleAPIServer
+	User  pb.UserAPIServer
+	Login commonpb.LoginAPIServer
+}
+
+func (s Register) GRPC(server *service.GRPCServer) *service.GRPCServer {
+	log.Info("grpc server init")
+	pb.RegisterMenuAPIServer(server, s.Menu)
+	pb.RegisterRoleAPIServer(server, s.Role)
+	pb.RegisterUserAPIServer(server, s.User)
+	commonpb.RegisterLoginAPIServer(server, s.Login)
+	return server
+}
+
+func (s Register) GINS(server *gins.Server) *gins.Server {
+	log.Info("gins server init")
+	pb.RegisterMenuAPIGINSServer(server, s.Menu)
+	pb.RegisterRoleAPIGINSServer(server, s.Role)
+	pb.RegisterUserAPIGINSServer(server, s.User)
+	commonpb.RegisterLoginAPIGINSServer(server, s.Login)
+	return server
+}
+
+func (s Register) HTTP(server *service.HTTPServer) *service.HTTPServer {
+	log.Info("http server init")
+	pb.RegisterMenuAPIHTTPServer(server, s.Menu)
+	pb.RegisterRoleAPIHTTPServer(server, s.Role)
+	pb.RegisterUserAPIHTTPServer(server, s.User)
+	commonpb.RegisterLoginAPIHTTPServer(server, s.Login)
+	return server
+}

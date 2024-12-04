@@ -9,21 +9,27 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 
-	"origadmin/application/admin/internal/mods/system/dto"
+	pb "origadmin/application/admin/api/v1/services/common"
+	"origadmin/application/admin/internal/mods/common/dto"
 )
 
-type loginDal struct {
+type loginRepo struct {
 	db *Data
 }
 
-func (l loginDal) Login(ctx context.Context, username, password string) (any, error) {
+func (d loginRepo) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
+	log.Info("CaptchaID")
+	return &pb.CaptchaIDResponse{}, nil
+}
+
+func (d loginRepo) Login(ctx context.Context, username, password string) (any, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-// NewLoginDal .
-func NewLoginDal(db *Data, logger log.Logger) dto.LoginRepo {
-	return &loginDal{
+// NewLoginRepo .
+func NewLoginRepo(db *Data, logger log.Logger) dto.LoginRepo {
+	return &loginRepo{
 		db: db,
 	}
 }

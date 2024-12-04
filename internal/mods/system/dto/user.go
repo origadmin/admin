@@ -58,6 +58,14 @@ type UserQueryOption struct {
 	Fields       []string
 }
 
+type UserQueryResult struct {
+	Current  int                      `json:"current"`
+	PageSize int                      `json:"page_size"`
+	Data     []*UserPB                `json:"data"`
+	Total    int64                    `json:"total"`
+	Args     map[string]proto.Message `json:"args"`
+}
+
 func (o UserQueryOption) FromListRequest(in *ListUsersRequest, limiter pagination.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
@@ -98,12 +106,4 @@ func ConvertUserRoles(roles []*UserRole) []*UserRolePB {
 		result = append(result, ConvertUserRole2PB(role))
 	}
 	return result
-}
-
-type UserQueryResult struct {
-	Current  int                      `json:"current"`
-	PageSize int                      `json:"page_size"`
-	Data     []*UserPB                `json:"data"`
-	Total    int64                    `json:"total"`
-	Args     map[string]proto.Message `json:"args"`
 }

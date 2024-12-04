@@ -9,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/go-kratos/kratos/v2/config/env"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/goexts/generic/settings"
-	"github.com/origadmin/contrib/config/envf"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/config"
@@ -81,29 +81,23 @@ func LoadEnvFiles(paths ...string) (map[string]string, error) {
 }
 
 func FromLocalPath(path string, ss ...ConfigSetting) (*configs.Bootstrap, error) {
-	source := NewFileSource(path)
+	source := FileSourceConfig(path)
 	return LoadLocalBootstrap(settings.Apply(source, ss))
 }
 
-func NewFileConfig(cfg *Config, ss ...config.SourceSetting) (config.Config, error) {
-	var configOption config.Option
-	if cfg.EnvArgs != nil {
-		configOption = config.WithSource(
-			file.NewSource(cfg.File.Path),
-			envf.WithEnv(cfg.EnvArgs, cfg.EnvPrefixes...),
-		)
-	} else {
-		configOption = config.WithSource(
-			file.NewSource(cfg.File.Path),
-		)
+func NewFileConfig(cfg *Config, rc *config.RuntimeConfig) (config.Config, error) {
+	var sources = []config.Source{file.NewSource(cfg.File.Path)}
+	if cfg.EnvPrefixes != nil {
+		sources = append(sources, env.NewSource(cfg.EnvPrefixes...))
+		SetupEnv(cfg.EnvArgs, cfg.EnvPrefixes[0])
 	}
-	opt := settings.Apply(&config.SourceOption{
-		Options: []config.Option{configOption},
-	}, ss)
-	return config.New(opt.Options...), nil
+
+	source := rc.Source()
+	source.Options = append(source.Options, config.WithSource(sources...))
+	return config.New(source.Options...), nil
 }
 
-func NewFileSource(path string) *Config {
+func FileSourceConfig(path string) *Config {
 	return &Config{
 		Type: "file",
 		File: &configv1.SourceConfig_File{
@@ -135,22 +129,6 @@ func PrintString(v any) string {
 		return ""
 	}
 	return string(bytes)
-}
-
-func SourcePath(typo string, name, filename string) string {
-	switch typo {
-	case "file":
-		return WorkPath("", filename)
-	case "consul":
-		return ConsulConfigPath(name, filename)
-	//case "etcd":
-	//	return source.ConfigPath(serviceName, "bootstrap.json")
-	//default:
-	//	return source.ConfigPath(serviceName, "bootstrap.json")
-	default:
-
-	}
-	return filename
 }
 
 func ConsulConfigPath(name, filename string) string {

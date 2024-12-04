@@ -205,11 +205,13 @@ func LoadFileBootstrap(path string) (*configs.Bootstrap, error) {
 	if typo == codec.UNKNOWN {
 		return nil, fmt.Errorf("unknown file type: %s", path)
 	}
+
 	var cfg configs.Bootstrap
 	err := codec.DecodeFromFile(path, &cfg)
 	if err != nil {
 		return nil, err
 	}
+
 	return &cfg, nil
 }
 
@@ -252,13 +254,25 @@ func LoadBootstrap(flags *Bootstrap) (*configs.Bootstrap, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(sourceConfig.EnvPrefixes) > 0 {
+		SetupEnv(sourceConfig.EnvArgs, sourceConfig.EnvPrefixes[0])
+	}
+
 	log.Infof("load soure config: %+v", sourceConfig)
+	var bs *configs.Bootstrap
 	switch sourceConfig.GetType() {
 	case "file":
-		return LoadLocalBootstrap(sourceConfig)
+		bs, err = LoadLocalBootstrap(sourceConfig)
 	default:
-		return LoadRemoteBootstrap(sourceConfig)
+		bs, err = LoadRemoteBootstrap(sourceConfig)
 	}
+	if err != nil {
+		return nil, err
+	}
+	if err := ReplaceObject(bs, sourceConfig.EnvArgs); err != nil {
+		return nil, err
+	}
+	return bs, nil
 }
 
 // LoadRemoteServiceBootstrap get the configuration from the remote Configuration Center

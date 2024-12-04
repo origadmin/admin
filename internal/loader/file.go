@@ -6,10 +6,12 @@
 package loader
 
 import (
+	"encoding/json"
 	"os"
 	"strings"
 
 	"github.com/goexts/generic/settings"
+	"github.com/origadmin/contrib/replacer"
 	"github.com/origadmin/toolkits/codec"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -37,4 +39,21 @@ func SaveConfig(path string, data any, opts ...SaveOption) error {
 		return err
 	}
 	return nil
+}
+
+var (
+	r = replacer.New(replacer.WithStart("${"), replacer.WithEnd("}"), replacer.WithSeparator("="))
+)
+
+func Replace(s []byte, envs map[string]string) []byte {
+	return r.Replace(s, envs)
+}
+
+func ReplaceObject(s any, envs map[string]string) error {
+	marshal, err := json.Marshal(s)
+	if err != nil {
+		return err
+	}
+	marshal = Replace(marshal, envs)
+	return json.Unmarshal(marshal, s)
 }

@@ -298,8 +298,8 @@ func DefaultServiceGrpc() *configv1.Service_GRPC {
 
 func DefaultServiceHttp() *configv1.Service_HTTP {
 	return &configv1.Service_HTTP{
-		Network:         "http",
-		Addr:            "${grpc_address:0.0.0.0:18100}",
+		Network:         "tcp",
+		Addr:            "${http_address:0.0.0.0:18100}",
 		UseTls:          false,
 		CertFile:        "",
 		KeyFile:         "",
@@ -314,8 +314,8 @@ func DefaultServiceHttp() *configv1.Service_HTTP {
 
 func DefaultServiceGins() *configv1.Service_GINS {
 	return &configv1.Service_GINS{
-		Network:         "http",
-		Addr:            "${grpc_address:0.0.0.0:18200}",
+		Network:         "tcp",
+		Addr:            "${gins_address:0.0.0.0:18200}",
 		UseTls:          false,
 		CertFile:        "",
 		KeyFile:         "",

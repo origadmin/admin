@@ -820,14 +820,8 @@ components:
         api.v1.services.common.LoginResponse:
             type: object
             properties:
-                access_token:
-                    type: string
-                token_type:
-                    type: string
-                expires_at:
-                    type: string
-                refresh_token:
-                    type: string
+                token:
+                    $ref: '#/components/schemas/pwt.v1.Token'
         api.v1.services.common.LogoutResponse:
             type: object
             properties:
@@ -1336,6 +1330,33 @@ components:
                         $ref: '#/components/schemas/google.protobuf.Any'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        pwt.v1.Token:
+            type: object
+            properties:
+                expiration_time:
+                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
+                    type: string
+                issued_at:
+                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
+                    type: string
+                not_before:
+                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
+                    type: string
+                issuer:
+                    type: string
+                audience:
+                    type: array
+                    items:
+                        type: string
+                subject:
+                    type: string
+                jwt_id:
+                    type: string
+                client_id:
+                    type: string
+                client_secret:
+                    type: string
+            description: PWT is a web token that can be used to authenticate a user with protobuf services.
     securitySchemes:
         Basic:
             type: http

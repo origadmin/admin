@@ -12,6 +12,8 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
+	biz2 "origadmin/application/admin/internal/mods/common/biz"
+	service2 "origadmin/application/admin/internal/mods/common/service"
 	"origadmin/application/admin/internal/mods/system/biz"
 	"origadmin/application/admin/internal/mods/system/dal"
 	"origadmin/application/admin/internal/mods/system/server"
@@ -36,21 +38,25 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	if err != nil {
 		return nil, nil, err
 	}
-	menuRepo := dal.NewMenuDal(data, logger)
+	menuRepo := dal.NewMenuRepo(data, logger)
 	menuAPIClient := biz.NewMenusClient(menuRepo, logger)
 	menuAPIServer := service.NewMenuAPIServer(menuAPIClient)
-	roleRepo := dal.NewRoleDal(data, logger)
+	roleRepo := dal.NewRoleRepo(data, logger)
 	roleAPIClient := biz.NewRolesClient(roleRepo, logger)
 	roleAPIServer := service.NewRoleAPIServer(roleAPIClient)
-	userRepo := dal.NewUserDal(data, logger)
+	userRepo := dal.NewUserRepo(data, logger)
 	userAPIClient := biz.NewUsersClient(userRepo, logger)
 	userAPIServer := service.NewUserAPIServer(userAPIClient)
-	serverServer := &server.Server{
-		Menu: menuAPIServer,
-		Role: roleAPIServer,
-		User: userAPIServer,
+	loginRepo := dal.NewLoginRepo(data, logger)
+	loginAPIClient := biz2.NewLoginClient(loginRepo, logger)
+	loginAPIServer := service2.NewLoginAPIServer(loginAPIClient)
+	register := &service.Register{
+		Menu:  menuAPIServer,
+		Role:  roleAPIServer,
+		User:  userAPIServer,
+		Login: loginAPIServer,
 	}
-	v := server.NewSystemServers(serverServer, bootstrap, logger)
+	v := server.NewSystemServer(register, bootstrap, logger)
 	injectorServer := &loader.InjectorServer{
 		Logger:    logger,
 		Bootstrap: bootstrap,

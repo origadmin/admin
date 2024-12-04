@@ -17,16 +17,6 @@ type LoginAPIService struct {
 	client pb.LoginAPIClient
 }
 
-// NewLoginAPIService new a login service.
-func NewLoginAPIService(client pb.LoginAPIClient) *LoginAPIService {
-	return &LoginAPIService{client: client}
-}
-
-// NewLoginAPIServer new a login service.
-func NewLoginAPIServer(client pb.LoginAPIClient) pb.LoginAPIServer {
-	return &LoginAPIService{client: client}
-}
-
 func (l LoginAPIService) CaptchaID(ctx context.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
 	return l.client.CaptchaID(ctx, request)
 }
@@ -55,5 +45,15 @@ func (l LoginAPIService) CurrentMenus(ctx context.Context, request *pb.CurrentMe
 //	//TODO implement me
 //	panic("implement me")
 //}
+
+// NewLoginAPIService new a login service.
+func NewLoginAPIService(client pb.LoginAPIClient) *LoginAPIService {
+	return &LoginAPIService{client: client}
+}
+
+// NewLoginAPIServer new a login service.
+func NewLoginAPIServer(client pb.LoginAPIClient) pb.LoginAPIServer {
+	return &LoginAPIService{client: client}
+}
 
 var _ pb.LoginAPIServer = (*LoginAPIService)(nil)

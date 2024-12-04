@@ -75,8 +75,8 @@ func NewUserAPIGINService(client pb.UserAPIClient) *UserAPIGINService {
 }
 
 // NewUserAPIGINServer new a menu service.
-func NewUserAPIGINServer(client pb.UserAPIClient) pb.UserAPIGINRPCServer {
+func NewUserAPIGINServer(client pb.UserAPIClient) pb.UserAPIGINRPCAgent {
 	return &UserAPIGINService{client: client}
 }
 
-var _ pb.UserAPIGINRPCServer = (*UserAPIGINService)(nil)
+var _ pb.UserAPIGINRPCAgent = (*UserAPIGINService)(nil)

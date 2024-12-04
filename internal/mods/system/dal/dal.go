@@ -6,6 +6,7 @@ package dal
 
 import (
 	"context"
+	"errors"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
@@ -18,7 +19,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewMenuDal, NewRoleDal, NewUserDal, NewLoginDal)
+var ProviderSet = wire.NewSet(NewData, NewMenuRepo, NewRoleRepo, NewUserRepo, NewLoginRepo)
 
 // Data .
 type Data struct {
@@ -33,11 +34,17 @@ func NewTrans(data *Data) database.Trans {
 // NewData .
 func NewData(bootstrap *configs.Bootstrap, logger log.Logger) (*Data, func(), error) {
 	log := log.NewHelper(logger)
-	database := bootstrap.GetData().GetDatabase()
+
+	//s := data.NewService(bootstrap.GetData(), nil)
+	cfg := bootstrap.GetData().GetDatabase()
+	if cfg == nil {
+		return nil, nil, errors.New("data source not found")
+	}
 	drv, err := sql.Open(
-		database.Driver,
-		database.Source,
+		cfg.Driver,
+		cfg.Source,
 	)
+
 	drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
 	if err != nil {
 		log.Errorw("failed opening connection to sqlite", "error", err)
@@ -45,7 +52,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.Logger) (*Data, func(), er
 	}
 	// Run the auto migration tool.
 	client := ent.NewClient(ent.Driver(drv))
-	if database.GetMigrate() {
+	if cfg.GetMigrate() {
 		if err := client.Schema.Create(
 			context.Background(),
 			schema.WithDropIndex(true),

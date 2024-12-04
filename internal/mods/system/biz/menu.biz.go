@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package biz is a biz layer for the system module of OrigAdmin.
 package biz
 
 import (
@@ -21,26 +22,26 @@ type MenusBiz struct {
 	log     *log.Helper
 }
 
-func (m MenusBiz) ListMenus(ctx context.Context, in *pb.ListMenusRequest, opts ...grpc.CallOption) (*pb.ListMenusResponse, error) {
+func (biz MenusBiz) ListMenus(ctx context.Context, in *pb.ListMenusRequest, opts ...grpc.CallOption) (*pb.ListMenusResponse, error) {
 	var option dto.MenuQueryOption
-	if err := option.FromListRequest(in, m.limiter); err != nil {
+	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("ListMenus")
-	result, total, err := m.dao.List(ctx, in, option)
+	result, total, err := biz.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ListMenuResponse(result, in, int32(total))
 }
 
-func (m MenusBiz) GetMenu(ctx context.Context, in *pb.GetMenuRequest, opts ...grpc.CallOption) (*pb.GetMenuResponse, error) {
+func (biz MenusBiz) GetMenu(ctx context.Context, in *pb.GetMenuRequest, opts ...grpc.CallOption) (*pb.GetMenuResponse, error) {
 	var option dto.MenuQueryOption
-	if err := option.FromGetRequest(in, m.limiter); err != nil {
+	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("GetMenu")
-	result, err := m.dao.Get(ctx, in.GetId(), option)
+	result, err := biz.dao.Get(ctx, in.GetId(), option)
 	if err != nil {
 		return nil, err
 	}
@@ -49,13 +50,13 @@ func (m MenusBiz) GetMenu(ctx context.Context, in *pb.GetMenuRequest, opts ...gr
 	}, nil
 }
 
-func (m MenusBiz) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest, opts ...grpc.CallOption) (*pb.CreateMenuResponse, error) {
+func (biz MenusBiz) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest, opts ...grpc.CallOption) (*pb.CreateMenuResponse, error) {
 	var option dto.MenuQueryOption
-	if err := option.FromCreateRequest(in, m.limiter); err != nil {
+	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("CreateMenu")
-	result, err := m.dao.Create(ctx, in.Menu, option)
+	result, err := biz.dao.Create(ctx, in.Menu, option)
 	if err != nil {
 		return nil, err
 	}
@@ -64,13 +65,13 @@ func (m MenusBiz) CreateMenu(ctx context.Context, in *pb.CreateMenuRequest, opts
 	}, nil
 }
 
-func (m MenusBiz) UpdateMenu(ctx context.Context, in *pb.UpdateMenuRequest, opts ...grpc.CallOption) (*pb.UpdateMenuResponse, error) {
+func (biz MenusBiz) UpdateMenu(ctx context.Context, in *pb.UpdateMenuRequest, opts ...grpc.CallOption) (*pb.UpdateMenuResponse, error) {
 	//var option dto.UpdateMenuOption
-	//if err := option.FromListRequest(in, m.limiter); err != nil {
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}
 	log.Info("UpdateMenu")
-	result, err := m.dao.Update(ctx, in.Menu)
+	result, err := biz.dao.Update(ctx, in.Menu)
 	if err != nil {
 		return nil, err
 	}
@@ -79,16 +80,16 @@ func (m MenusBiz) UpdateMenu(ctx context.Context, in *pb.UpdateMenuRequest, opts
 	}, nil
 }
 
-func (m MenusBiz) DeleteMenu(ctx context.Context, in *pb.DeleteMenuRequest, opts ...grpc.CallOption) (*pb.DeleteMenuResponse, error) {
+func (biz MenusBiz) DeleteMenu(ctx context.Context, in *pb.DeleteMenuRequest, opts ...grpc.CallOption) (*pb.DeleteMenuResponse, error) {
 	//var option dto.DeleteMenuOption
-	//if err := option.FromListRequest(in, m.limiter); err != nil {
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}
-	//_, err := m.dao.Get(ctx, in.GetId())
+	//_, err := biz.dao.Get(ctx, in.GetId())
 	//if err != nil {
 	//	return nil, err
 	//}
-	if err := m.dao.Delete(ctx, in.GetId()); err != nil {
+	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteMenuResponse{}, nil

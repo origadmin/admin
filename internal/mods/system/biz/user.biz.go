@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package biz is a biz layer for the system module of OrigAdmin.
 package biz
 
 import (
@@ -21,26 +22,26 @@ type UsersBiz struct {
 	log     *log.Helper
 }
 
-func (m UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
+func (biz UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
 	var option dto.UserQueryOption
-	if err := option.FromListRequest(in, m.limiter); err != nil {
+	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("ListUsers")
-	result, total, err := m.dao.List(ctx, in, option)
+	result, total, err := biz.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ListUserResponse(result, in, total)
 }
 
-func (m UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...grpc.CallOption) (*pb.GetUserResponse, error) {
+func (biz UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...grpc.CallOption) (*pb.GetUserResponse, error) {
 	var option dto.UserQueryOption
-	if err := option.FromGetRequest(in, m.limiter); err != nil {
+	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("GetUser")
-	result, err := m.dao.Get(ctx, in.GetId(), option)
+	result, err := biz.dao.Get(ctx, in.GetId(), option)
 	if err != nil {
 		return nil, err
 	}
@@ -49,13 +50,13 @@ func (m UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...gr
 	}, nil
 }
 
-func (m UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
+func (biz UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
 	var option dto.UserQueryOption
-	if err := option.FromCreateRequest(in, m.limiter); err != nil {
+	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("CreateUser")
-	result, err := m.dao.Create(ctx, in.User, option)
+	result, err := biz.dao.Create(ctx, in.User, option)
 	if err != nil {
 		return nil, err
 	}
@@ -64,13 +65,13 @@ func (m UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts
 	}, nil
 }
 
-func (m UsersBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error) {
+func (biz UsersBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error) {
 	//var option dto.UpdateUserOption
-	//if err := option.FromListRequest(in, m.limiter); err != nil {
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}
 	log.Info("UpdateUser")
-	result, err := m.dao.Update(ctx, in.User)
+	result, err := biz.dao.Update(ctx, in.User)
 	if err != nil {
 		return nil, err
 	}
@@ -79,17 +80,17 @@ func (m UsersBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts
 	}, nil
 }
 
-func (m UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts ...grpc.CallOption) (*pb.DeleteUserResponse, error) {
+func (biz UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts ...grpc.CallOption) (*pb.DeleteUserResponse, error) {
 	//var option dto.DeleteUserOption
-	//if err := option.FromListRequest(in, m.limiter); err != nil {
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}
-	//_, err := m.dao.Get(ctx, in.GetId())
+	//_, err := biz.dao.Get(ctx, in.GetId())
 	//if err != nil {
 	//	return nil, err
 	//}
 	log.Info("DeleteUser")
-	if err := m.dao.Delete(ctx, in.GetId()); err != nil {
+	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteUserResponse{}, nil

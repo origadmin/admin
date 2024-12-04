@@ -75,8 +75,8 @@ func NewRoleAPIGINService(client pb.RoleAPIClient) *RoleAPIGINService {
 }
 
 // NewRoleAPIGINServer new a menu service.
-func NewRoleAPIGINServer(client pb.RoleAPIClient) pb.RoleAPIGINRPCServer {
+func NewRoleAPIGINServer(client pb.RoleAPIClient) pb.RoleAPIGINRPCAgent {
 	return &RoleAPIGINService{client: client}
 }
 
-var _ pb.RoleAPIGINRPCServer = (*RoleAPIGINService)(nil)
+var _ pb.RoleAPIGINRPCAgent = (*RoleAPIGINService)(nil)

@@ -90,7 +90,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	//	return errors.Wrap(err, "load config error")
 	//}
 	//src := loader.LoadSourceFiles(flags.WorkDir, flags.ConfigPath)
-	source := loader.NewFileSource(flags.WorkPath())
+	source := loader.FileSourceConfig(flags.WorkPath())
 	bs, err := loader.LoadRemoteBootstrap(source)
 	if err != nil {
 		return errors.Wrap(err, "load config error")
@@ -156,10 +156,11 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 
 	err := loader.InjectorGinServer(injector)
 	if err != nil {
-		panic(err)
+		log.Errorf("injector gin server error: %v", err)
+		os.Exit(1)
 	}
-	if injector.Agents != nil {
-		opts = append(opts, kratos.Server(injector.Agents...))
+	if injector.Servers != nil {
+		opts = append(opts, kratos.Server(injector.Servers...))
 	}
 	//if injector.ServerAgent != nil {
 	//	opts = append(opts, kratos.Server(injector.ServerAgent))

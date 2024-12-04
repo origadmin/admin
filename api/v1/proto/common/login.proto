@@ -4,6 +4,7 @@ package api.v1.services.common;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
+import "pwt/v1/token.proto";
 
 option go_package = "v1/services/common;common";
 option java_multiple_files = true;
@@ -53,10 +54,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    string access_token = 1 [json_name = "access_token"];
-    string token_type = 2 [json_name = "token_type"];
-    int64 expires_at = 3 [json_name = "expires_at"];
-    optional string refresh_token = 4 [json_name = "refresh_token"];
+    pwt.v1.Token token = 1;
 }
 
 message LogoutRequest {

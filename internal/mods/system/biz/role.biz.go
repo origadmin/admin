@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package biz is a biz layer for the system module of OrigAdmin.
 package biz
 
 import (
@@ -22,26 +23,26 @@ type RolesBiz struct {
 	log     *log.Helper
 }
 
-func (m RolesBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts ...grpc.CallOption) (*pb.ListRolesResponse, error) {
+func (biz RolesBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts ...grpc.CallOption) (*pb.ListRolesResponse, error) {
 	var option dto.RoleQueryOption
-	if err := option.FromListRequest(in, m.limiter); err != nil {
+	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("ListRoles")
-	result, total, err := m.dao.List(ctx, in, option)
+	result, total, err := biz.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ListRoleResponse(result, in, total)
 }
 
-func (m RolesBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...grpc.CallOption) (*pb.GetRoleResponse, error) {
+func (biz RolesBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...grpc.CallOption) (*pb.GetRoleResponse, error) {
 	var option dto.RoleQueryOption
-	if err := option.FromGetRequest(in, m.limiter); err != nil {
+	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("GetRole")
-	result, err := m.dao.Get(ctx, in.GetId(), option)
+	result, err := biz.dao.Get(ctx, in.GetId(), option)
 	if err != nil {
 		return nil, err
 	}
@@ -50,13 +51,13 @@ func (m RolesBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...gr
 	}, nil
 }
 
-func (m RolesBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts ...grpc.CallOption) (*pb.CreateRoleResponse, error) {
+func (biz RolesBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts ...grpc.CallOption) (*pb.CreateRoleResponse, error) {
 	var option dto.RoleQueryOption
-	if err := option.FromCreateRequest(in, m.limiter); err != nil {
+	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("CreateRole")
-	result, err := m.dao.Create(ctx, in.Role, option)
+	result, err := biz.dao.Create(ctx, in.Role, option)
 	if err != nil {
 		return nil, err
 	}
@@ -65,13 +66,13 @@ func (m RolesBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts
 	}, nil
 }
 
-func (m RolesBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts ...grpc.CallOption) (*pb.UpdateRoleResponse, error) {
+func (biz RolesBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts ...grpc.CallOption) (*pb.UpdateRoleResponse, error) {
 	//var option dto.UpdateRoleOption
-	//if err := option.FromListRequest(in, m.limiter); err != nil {
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}
 	log.Info("UpdateRole")
-	result, err := m.dao.Update(ctx, in.Role)
+	result, err := biz.dao.Update(ctx, in.Role)
 	if err != nil {
 		return nil, err
 	}
@@ -80,17 +81,17 @@ func (m RolesBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts
 	}, nil
 }
 
-func (m RolesBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts ...grpc.CallOption) (*pb.DeleteRoleResponse, error) {
+func (biz RolesBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts ...grpc.CallOption) (*pb.DeleteRoleResponse, error) {
 	//var option dto.DeleteRoleOption
-	//if err := option.FromListRequest(in, m.limiter); err != nil {
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}
-	//_, err := m.dao.Get(ctx, in.GetId())
+	//_, err := biz.dao.Get(ctx, in.GetId())
 	//if err != nil {
 	//	return nil, err
 	//}
 	log.Info("DeleteRole")
-	if err := m.dao.Delete(ctx, in.GetId()); err != nil {
+	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteRoleResponse{}, nil

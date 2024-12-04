@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/google/wire"
-	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
@@ -21,66 +20,46 @@ import (
 	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
+const (
+	// ServiceName is service name.
+	ServiceName = "system"
+)
+
 var (
+	// ProviderSet is server providers.
+	ProviderSet = wire.NewSet(NewSystemServer, NewSystemServerAgent)
 	// ProviderServer is server providers.
-	ProviderServer = wire.NewSet(wire.Struct(new(Server), "*"), NewSystemServers)
+	ProviderServer = wire.NewSet(NewSystemServer)
 	// ProviderAgent is agent providers.
-	ProviderAgent = wire.NewSet(NewSystemAgent)
+	ProviderAgent = wire.NewSet(NewSystemServerAgent)
 )
 
 func init() {
 	runtime.RegisterService("system", service.DefaultServiceBuilder)
 }
 
-type Server struct {
-	Menu pb.MenuAPIServer
-	Role pb.RoleAPIServer
-	User pb.UserAPIServer
-}
-
-func (s Server) GRPC(server *service.GRPCServer) {
-	log.Info("grpc server init")
-	pb.RegisterMenuAPIServer(server, s.Menu)
-	pb.RegisterRoleAPIServer(server, s.Role)
-	pb.RegisterUserAPIServer(server, s.User)
-}
-
-func (s Server) GINS(server *gins.Server) {
-	log.Info("gins server init")
-	pb.RegisterMenuAPIGINSServer(server, s.Menu)
-	pb.RegisterRoleAPIGINSServer(server, s.Role)
-	pb.RegisterUserAPIGINSServer(server, s.User)
-}
-
-func (s Server) HTTP(server *service.HTTPServer) {
-	log.Info("http server init")
-	pb.RegisterMenuAPIHTTPServer(server, s.Menu)
-	pb.RegisterRoleAPIHTTPServer(server, s.Role)
-	pb.RegisterUserAPIHTTPServer(server, s.User)
-}
-
-func NewSystemServers(s *Server, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
+func NewSystemServer(register *systemservice.Register, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
 	var servers []transport.Server
 	service := bootstrap.GetService()
 	if service == nil {
 		return servers
 	}
 	if service.Name == "" {
-		service.Name = "system"
+		service.Name = ServiceName
 	}
-	if serv := NewGRPCServer(bootstrap, s.GRPC, l); serv != nil {
-		servers = append(servers, serv)
+	if serv := NewGRPCServer(bootstrap, l); serv != nil {
+		servers = append(servers, register.GRPC(serv))
 	}
-	if serv := NewGINSServer(bootstrap, s.GINS, l); serv != nil {
-		servers = append(servers, serv)
+	if serv := NewGINSServer(bootstrap, l); serv != nil {
+		servers = append(servers, register.GINS(serv))
 	}
-	if serv := NewHTTPServer(bootstrap, s.HTTP, l); serv != nil {
-		servers = append(servers, serv)
+	if serv := NewHTTPServer(bootstrap, l); serv != nil {
+		servers = append(servers, register.HTTP(serv))
 	}
 	return servers
 }
 
-func NewSystemAgent(bootstrap *configs.Bootstrap, server *gin.Engine, l log.Logger) error {
+func NewSystemServerAgent(bootstrap *configs.Bootstrap, server *gin.Engine, l log.Logger) error {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
 		return nil

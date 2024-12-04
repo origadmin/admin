@@ -20,12 +20,12 @@ type roleRepo struct {
 	db *Data
 }
 
-func (m roleRepo) Get(ctx context.Context, id string, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
+func (repo roleRepo) Get(ctx context.Context, id string, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
 	var option dto.RoleQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	query := m.db.Role(ctx).Query().Where(role.ID(id))
+	query := repo.db.Role(ctx).Query().Where(role.ID(id))
 	query = roleQueryOptions(query, option)
 	result, err := query.First(ctx)
 	if err != nil {
@@ -34,12 +34,12 @@ func (m roleRepo) Get(ctx context.Context, id string, options ...dto.RoleQueryOp
 	return dto.ConvertRole2PB(result), nil
 }
 
-func (m roleRepo) Create(ctx context.Context, role *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
+func (repo roleRepo) Create(ctx context.Context, role *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
 	var option dto.RoleQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	create := m.db.Role(ctx).Create()
+	create := repo.db.Role(ctx).Create()
 	create.SetRole(dto.RoleObject(role), option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -48,12 +48,12 @@ func (m roleRepo) Create(ctx context.Context, role *dto.RolePB, options ...dto.R
 	return dto.ConvertRole2PB(saved), nil
 }
 
-func (m roleRepo) Delete(ctx context.Context, id string) error {
-	return m.db.Role(ctx).DeleteOneID(id).Exec(ctx)
+func (repo roleRepo) Delete(ctx context.Context, id string) error {
+	return repo.db.Role(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (m roleRepo) Update(ctx context.Context, role *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
-	update := m.db.Role(ctx).UpdateOneID(role.Id)
+func (repo roleRepo) Update(ctx context.Context, role *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
+	update := repo.db.Role(ctx).UpdateOneID(role.Id)
 	update.SetRole(dto.RoleObject(role))
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -62,13 +62,13 @@ func (m roleRepo) Update(ctx context.Context, role *dto.RolePB, options ...dto.R
 	return dto.ConvertRole2PB(saved), nil
 }
 
-func (m roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options ...dto.RoleQueryOption) ([]*dto.RolePB, int32, error) {
+func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options ...dto.RoleQueryOption) ([]*dto.RolePB, int32, error) {
 	var option dto.RoleQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
 
-	query := m.db.Role(ctx).Query()
+	query := repo.db.Role(ctx).Query()
 	if v := option.InIDs; len(v) > 0 {
 		query = query.Where(role.IDIn(v...))
 	}
@@ -85,8 +85,8 @@ func (m roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options ...
 	return rolePageQuery(ctx, query, in, option)
 }
 
-// NewRoleDal .
-func NewRoleDal(db *Data, logger log.Logger) dto.RoleRepo {
+// NewRoleRepo .
+func NewRoleRepo(db *Data, logger log.Logger) dto.RoleRepo {
 	return &roleRepo{
 		db: db,
 	}

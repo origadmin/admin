@@ -20,12 +20,12 @@ type userRepo struct {
 	db *Data
 }
 
-func (m userRepo) Get(ctx context.Context, id string, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+func (repo userRepo) Get(ctx context.Context, id string, options ...dto.UserQueryOption) (*dto.UserPB, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	query := m.db.User(ctx).Query().Where(user.ID(id))
+	query := repo.db.User(ctx).Query().Where(user.ID(id))
 	query = userQueryOptions(query, option)
 	result, err := query.First(ctx)
 	if err != nil {
@@ -34,12 +34,12 @@ func (m userRepo) Get(ctx context.Context, id string, options ...dto.UserQueryOp
 	return dto.ConvertUser2PB(result), nil
 }
 
-func (m userRepo) Create(ctx context.Context, user *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+func (repo userRepo) Create(ctx context.Context, user *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	create := m.db.User(ctx).Create()
+	create := repo.db.User(ctx).Create()
 	create.SetUser(dto.UserObject(user), option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -48,12 +48,12 @@ func (m userRepo) Create(ctx context.Context, user *dto.UserPB, options ...dto.U
 	return dto.ConvertUser2PB(saved), nil
 }
 
-func (m userRepo) Delete(ctx context.Context, id string) error {
-	return m.db.User(ctx).DeleteOneID(id).Exec(ctx)
+func (repo userRepo) Delete(ctx context.Context, id string) error {
+	return repo.db.User(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (m userRepo) Update(ctx context.Context, user *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
-	update := m.db.User(ctx).UpdateOneID(user.Id)
+func (repo userRepo) Update(ctx context.Context, user *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+	update := repo.db.User(ctx).UpdateOneID(user.Id)
 	update.SetUser(dto.UserObject(user))
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -62,13 +62,13 @@ func (m userRepo) Update(ctx context.Context, user *dto.UserPB, options ...dto.U
 	return dto.ConvertUser2PB(saved), nil
 }
 
-func (m userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options ...dto.UserQueryOption) ([]*dto.UserPB, int32, error) {
+func (repo userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options ...dto.UserQueryOption) ([]*dto.UserPB, int32, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
 
-	query := m.db.User(ctx).Query()
+	query := repo.db.User(ctx).Query()
 	if v := option.Username; len(v) > 0 {
 		query = query.Where(user.UsernameContains(v))
 	}
@@ -82,8 +82,8 @@ func (m userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options ...
 	return userPageQuery(ctx, query, in, option)
 }
 
-// NewUserDal .
-func NewUserDal(db *Data, logger log.Logger) dto.UserRepo {
+// NewUserRepo .
+func NewUserRepo(db *Data, logger log.Logger) dto.UserRepo {
 	return &userRepo{
 		db: db,
 	}

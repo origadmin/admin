@@ -77,8 +77,8 @@ func NewMenuAPIGINService(client pb.MenuAPIClient) *MenuAPIGINService {
 }
 
 // NewMenuAPIGINServer new a menu service.
-func NewMenuAPIGINServer(client pb.MenuAPIClient) pb.MenuAPIGINRPCServer {
+func NewMenuAPIGINServer(client pb.MenuAPIClient) pb.MenuAPIGINRPCAgent {
 	return &MenuAPIGINService{client: client}
 }
 
-var _ pb.MenuAPIGINRPCServer = (*MenuAPIGINService)(nil)
+var _ pb.MenuAPIGINRPCAgent = (*MenuAPIGINService)(nil)
