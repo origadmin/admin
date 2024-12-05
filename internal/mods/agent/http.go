@@ -13,8 +13,19 @@ import (
 	"origadmin/application/admin/internal/configs"
 )
 
+type HTTPRegistrar interface {
+	HTTP(server service.HTTPServer)
+}
+
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(bootstrap *configs.Bootstrap, l log.Logger) *service.HTTPServer {
+	service := bootstrap.GetService()
+	if service == nil {
+		panic("no service")
+	}
+	if service.Name == "" {
+		service.Name = "agent"
+	}
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService())
 	if err != nil {
 		panic(err)

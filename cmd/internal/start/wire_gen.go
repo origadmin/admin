@@ -30,7 +30,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	if err != nil {
 		return nil, nil, err
 	}
-	httpServer := agent.NewHTTPServerAgent(bootstrap, logger)
+	httpServer := agent.NewHTTPServer(bootstrap, logger)
 	injectorClient := &loader.InjectorClient{
 		Logger:      logger,
 		Bootstrap:   bootstrap,

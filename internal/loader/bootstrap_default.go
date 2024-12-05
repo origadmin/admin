@@ -19,6 +19,7 @@ import (
 func DefaultBootstrap() *configs.Bootstrap {
 	return &configs.Bootstrap{
 		Name:       "origadmin.service.v1.admin",
+		Mode:       "singleton",
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
 		Servers: map[string]string{
@@ -43,180 +44,15 @@ func DefaultBootstrap() *configs.Bootstrap {
 					Nanos:   0,
 				},
 			},
-			Message: &configv1.Message{
-				Type: "",
-				Name: "",
-				Mqtt: &configv1.Message_MQTT{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Kafka: &configv1.Message_Kafka{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Rabbitmq: &configv1.Message_RabbitMQ{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Activemq: &configv1.Message_ActiveMQ{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Nats: &configv1.Message_NATS{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Nsq: &configv1.Message_NSQ{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Pulsar: &configv1.Message_Pulsar{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Redis: &configv1.Message_Redis{
-					Endpoint: "",
-					Codec:    "",
-				},
-				Rocketmq: &configv1.Message_RocketMQ{
-					Endpoint:         "",
-					Codec:            "",
-					EnableTrace:      false,
-					NameServers:      nil,
-					NameServerDomain: "",
-					AccessKey:        "",
-					SecretKey:        "",
-					SecurityToken:    "",
-					Namespace:        "",
-					InstanceName:     "",
-					GroupName:        "",
-				},
-			},
-			Task: &configv1.Task{
-				Type: "",
-				Name: "",
-				Asynq: &configv1.Task_Asynq{
-					Endpoint: "",
-					Password: "",
-					Db:       0,
-					Location: "",
-				},
-				Machinery: &configv1.Task_Machinery{
-					Brokers:  nil,
-					Backends: nil,
-				},
-				Cron: &configv1.Task_Cron{
-					Addr: "",
-				},
-			},
+			Message:    DefaultServiceMessage(),
+			Task:       DefaultServiceTask(),
 			Middleware: DefaultServiceMiddleware(),
 			Selector: &configv1.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
-			Host: "127.0.0.1",
 		},
-		Data: &configv1.Data{
-			Database: &configv1.Data_Database{
-				Debug:              false,
-				Driver:             "sqlite3",
-				Source:             "data/admin.db",
-				Migrate:            false,
-				EnableTrace:        false,
-				EnableMetrics:      false,
-				MaxIdleConnections: 0,
-				MaxOpenConnections: 0,
-				ConnectionMaxLifetime: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				ConnectionMaxIdleTime: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-			},
-			Cache: &configv1.Data_Cache{
-				Driver: "",
-				Memcached: &configv1.Data_Memcached{
-					Addr:     "",
-					Username: "",
-					Password: "",
-					MaxIdle:  0,
-					Timeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-				},
-				Memory: &configv1.Data_Memory{
-					Size:     0,
-					Capacity: 0,
-					Expiration: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-					CleanupInterval: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-				},
-				Redis: &configv1.Data_Redis{
-					Network:  "",
-					Addr:     "",
-					Password: "",
-					Db:       0,
-					DialTimeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-					ReadTimeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-					WriteTimeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-				},
-				Badger: &configv1.Data_BadgerDS{
-					Path:             "",
-					SyncWrites:       false,
-					ValueLogFileSize: 0,
-					LogLevel:         0,
-				},
-			},
-			Storage: &configv1.Data_Storage{
-				Type: "",
-				File: &configv1.Data_File{
-					Root: "",
-				},
-				Redis: &configv1.Data_Redis{
-					Network:  "",
-					Addr:     "",
-					Password: "",
-					Db:       0,
-					DialTimeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-					ReadTimeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-					WriteTimeout: &durationpb.Duration{
-						Seconds: 0,
-						Nanos:   0,
-					},
-				},
-				Badger: &configv1.Data_BadgerDS{
-					Path:             "",
-					SyncWrites:       false,
-					ValueLogFileSize: 0,
-					LogLevel:         0,
-				},
-				Mongo: &configv1.Data_Mongo{},
-				Oss:   &configv1.Data_Oss{},
-			},
-		},
+		Data:     DefaultData(),
 		Registry: DefaultRegistry(),
 		Middlewares: &configs.Middlewares{
 			RegisterAsGlobal: false,
@@ -227,13 +63,196 @@ func DefaultBootstrap() *configs.Bootstrap {
 
 }
 
+func DefaultData() *configv1.Data {
+	return &configv1.Data{
+		Database: &configv1.Data_Database{
+			Debug:              false,
+			Driver:             "sqlite3",
+			Source:             "data/admin.db",
+			Migrate:            false,
+			EnableTrace:        false,
+			EnableMetrics:      false,
+			MaxIdleConnections: 0,
+			MaxOpenConnections: 0,
+			ConnectionMaxLifetime: &durationpb.Duration{
+				Seconds: 0,
+				Nanos:   0,
+			},
+			ConnectionMaxIdleTime: &durationpb.Duration{
+				Seconds: 0,
+				Nanos:   0,
+			},
+		},
+		Cache: &configv1.Data_Cache{
+			Driver: "memory", //["none", "redis", "memcached", "memory"] [string.in]
+			Memcached: &configv1.Data_Memcached{
+				Addr:     "",
+				Username: "",
+				Password: "",
+				MaxIdle:  0,
+				Timeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+			},
+			Memory: &configv1.Data_Memory{
+				Size:     0,
+				Capacity: 0,
+				Expiration: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+				CleanupInterval: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+			},
+			Redis: &configv1.Data_Redis{
+				Network:  "",
+				Addr:     "",
+				Password: "",
+				Db:       0,
+				DialTimeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+				ReadTimeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+				WriteTimeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+			},
+			Badger: &configv1.Data_BadgerDS{
+				Path:             "",
+				SyncWrites:       false,
+				ValueLogFileSize: 0,
+				LogLevel:         0,
+			},
+		},
+		Storage: &configv1.Data_Storage{
+			Type: "none", //["none", "file", "redis", "mongo", "oss"] [string.in]
+			File: &configv1.Data_File{
+				Root: "",
+			},
+			Redis: &configv1.Data_Redis{
+				Network:  "",
+				Addr:     "",
+				Password: "",
+				Db:       0,
+				DialTimeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+				ReadTimeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+				WriteTimeout: &durationpb.Duration{
+					Seconds: 0,
+					Nanos:   0,
+				},
+			},
+			Badger: &configv1.Data_BadgerDS{
+				Path:             "",
+				SyncWrites:       false,
+				ValueLogFileSize: 0,
+				LogLevel:         0,
+			},
+			Mongo: &configv1.Data_Mongo{},
+			Oss:   &configv1.Data_Oss{},
+		},
+	}
+}
+
+func DefaultServiceTask() *configv1.Task {
+	return &configv1.Task{
+		Type: "none", //["none", "asynq", "machinery", "cron"] [string.in]
+		Name: "",
+		Asynq: &configv1.Task_Asynq{
+			Endpoint: "",
+			Password: "",
+			Db:       0,
+			Location: "",
+		},
+		Machinery: &configv1.Task_Machinery{
+			Brokers:  nil,
+			Backends: nil,
+		},
+		Cron: &configv1.Task_Cron{
+			Addr: "",
+		},
+	}
+}
+
+func DefaultServiceMessage() *configv1.Message {
+	return &configv1.Message{
+		Type: "none", //["none", "mqtt", "kafka", "rabbitmq", "activemq", "nats", "nsq", "pulsar", "redis", "rocketmq"]
+		Name: "",
+		Mqtt: &configv1.Message_MQTT{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Kafka: &configv1.Message_Kafka{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Rabbitmq: &configv1.Message_RabbitMQ{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Activemq: &configv1.Message_ActiveMQ{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Nats: &configv1.Message_NATS{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Nsq: &configv1.Message_NSQ{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Pulsar: &configv1.Message_Pulsar{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Redis: &configv1.Message_Redis{
+			Endpoint: "",
+			Codec:    "",
+		},
+		Rocketmq: &configv1.Message_RocketMQ{
+			Endpoint:         "",
+			Codec:            "",
+			EnableTrace:      false,
+			NameServers:      nil,
+			NameServerDomain: "",
+			AccessKey:        "",
+			SecretKey:        "",
+			SecurityToken:    "",
+			Namespace:        "",
+			InstanceName:     "",
+			GroupName:        "",
+		},
+	}
+}
+
 func DefaultRegistry() *configv1.Registry {
 	return &configv1.Registry{
 		Debug: false,
 		Type:  "consul",
 		Consul: &configv1.Registry_Consul{
-			Address: "${consul_address:127.0.0.1:8500}",
-			Scheme:  "http",
+			Address:                        "${consul_address:127.0.0.1:8500}",
+			Scheme:                         "http",
+			Token:                          "",
+			HeartBeat:                      true,
+			HealthCheck:                    true,
+			Datacenter:                     "",
+			HealthCheckInterval:            30,
+			Timeout:                        nil,
+			DeregisterCriticalServiceAfter: 0,
 		},
 		Etcd: nil,
 	}
@@ -248,7 +267,7 @@ func DefaultServiceMiddleware() *configv1.Middleware {
 		EnableCircuitBreaker: true,
 		EnableMetadata:       true,
 		RateLimiter: &configv1.Middleware_RateLimiter{
-			Name:                "",
+			Name:                "bbr",
 			Period:              0,
 			XRatelimitLimit:     0,
 			XRatelimitRemaining: 0,

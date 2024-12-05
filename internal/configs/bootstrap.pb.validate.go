@@ -167,6 +167,8 @@ func (m *Bootstrap) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Mode
+
 	// no validation rules for Version
 
 	// no validation rules for CryptoType

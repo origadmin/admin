@@ -5,6 +5,7 @@ import "config/v1/data.proto";
 import "config/v1/registry.proto";
 import "config/v1/service.proto";
 import "config/v1/middleware.proto";
+import "buf/validate/validate.proto";
 
 option go_package = "internal/configs;configs";
 
@@ -17,9 +18,11 @@ message EntrySelectorConfig {
 message Bootstrap {
   // name is the application name or service name for used
   string name = 1 [json_name = "name"];
+  string mode = 5 [json_name = "mode", (buf.validate.field).string = {in: ["singleton", "cluster"]}];
   string version = 2 [json_name = "version"];
   string crypto_type = 3 [json_name = "crypto_type"];
   map<string, string> servers = 4 [json_name = "servers"];
+
   // Entry
   message Entry {
     string scheme = 1 [json_name = "scheme"];

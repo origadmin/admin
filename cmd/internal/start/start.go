@@ -177,7 +177,9 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 	//	log.Errorf("injector gin server error: %v", err)
 	//	os.Exit(1)
 	//}
-
+	if flags.Env == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	engine := gin.New()
 	if injector.SystemAgent != nil {
 		injector.SystemAgent.GIN(engine)

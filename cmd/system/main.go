@@ -19,6 +19,7 @@ import (
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/runtime/middleware/validate"
 	logger "github.com/origadmin/slog-kratos"
 
 	"origadmin/application/admin/internal/loader"
@@ -69,6 +70,13 @@ func main() {
 	bs, err := loader.LoadBootstrap(flags)
 	if err != nil {
 		log.Fatalf("failed to load config: %s", err.Error())
+	}
+	v, err := validate.NewValidate()
+	if err != nil {
+		log.Fatalf("failed to new validate: %s", err.Error())
+	}
+	if err := v.Validate(bs); err != nil {
+		log.Fatalf("failed to validate config: %s", err.Error())
 	}
 	log.Infof("bootstrap config: %+v\n", loader.PrintString(bs))
 	ctx := context.Background()
