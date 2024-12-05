@@ -16,6 +16,7 @@ import (
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/config"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	"github.com/origadmin/runtime/service"
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/codec/json"
 	"github.com/origadmin/toolkits/errors"
@@ -32,6 +33,7 @@ type (
 
 func init() {
 	runtime.RegisterConfigFunc("file", NewFileConfig)
+	runtime.RegisterService("admin", service.DefaultServiceBuilder)
 }
 
 type ConfigSetting = func(config *Config)

@@ -7,8 +7,6 @@ package agent
 
 import (
 	"github.com/google/wire"
-	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/service"
 )
 
 var (
@@ -16,7 +14,3 @@ var (
 	//ProviderSet = wire.NewSet(NewHTTPServerAgent)
 	ProviderSet = wire.NewSet(NewHTTPServer)
 )
-
-func init() {
-	runtime.RegisterService("agent", service.DefaultServiceBuilder)
-}
