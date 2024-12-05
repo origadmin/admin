@@ -7,8 +7,8 @@ package server
 import (
 	"net/url"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/toolkits/helpers"
 	"github.com/origadmin/toolkits/net"
@@ -47,7 +47,14 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 	}
 
 	log.Infof("Register.GinHttp.Endpoint: %v, type: %v, host: %v, addr: %v", cfg.Endpoint, "http", net.HostAddr("host"), cfg.Addr)
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", net.HostAddr("host"), cfg.Addr)
+	host := bootstrap.GetService().GetHost()
+	if host == "" {
+		host = "ORIGADMIN_SERVICE_HOST"
+	}
+
+	if endpoint, err := helpers.ServiceEndpoint("http", net.HostAddr(host), cfg.Addr); err == nil {
+		cfg.Endpoint = endpoint
+	}
 	log.Infof("Register.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, gins.Endpoint(ep))

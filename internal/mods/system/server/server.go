@@ -16,9 +16,9 @@ import (
 	"github.com/origadmin/runtime/service"
 	"github.com/origadmin/toolkits/errors"
 
-	commonpb "origadmin/application/admin/api/v1/services/common"
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
+	commonserver "origadmin/application/admin/internal/mods/common/server"
 	commonservice "origadmin/application/admin/internal/mods/common/service"
 	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
@@ -37,7 +37,7 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceBuilder)
 }
 
-func NewSystemServer(register *systemservice.RegisterServer, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
+func NewSystemServer(register *systemservice.RegisterServer, register2 commonservice.RegisterServer, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
 	var servers []transport.Server
 	service := bootstrap.GetService()
 	if service == nil {
@@ -47,30 +47,37 @@ func NewSystemServer(register *systemservice.RegisterServer, bootstrap *configs.
 		service.Name = ServiceName
 	}
 	if serv := NewGRPCServer(bootstrap, l); serv != nil {
-		servers = append(servers, register.GRPC(serv))
+		serv = register.GRPC(serv)
+		serv = register2.GRPC(serv)
+		servers = append(servers, serv)
 	}
 	if serv := NewGINSServer(bootstrap, l); serv != nil {
-		servers = append(servers, register.GINS(serv))
+		serv = register.GINS(serv)
+		serv = register2.GINS(serv)
+		servers = append(servers, serv)
 	}
 	if serv := NewHTTPServer(bootstrap, l); serv != nil {
-		servers = append(servers, register.HTTP(serv))
+		serv = register.HTTP(serv)
+		serv = register2.HTTP(serv)
+		servers = append(servers, serv)
 	}
 	return servers
 }
 
 type RegisterAgent struct {
-	Menu  pb.MenuAPIGINRPCAgent
-	Role  pb.RoleAPIGINRPCAgent
-	User  pb.UserAPIGINRPCAgent
-	Login commonpb.LoginAPIGINRPCAgent
+	Menu        pb.MenuAPIGINRPCAgent
+	Role        pb.RoleAPIGINRPCAgent
+	User        pb.UserAPIGINRPCAgent
+	commonAgent commonserver.RegisterAgent
 }
 
 func (s RegisterAgent) GIN(server gins.IRouter) {
-	log.Info("gin server init")
+	log.Info("gin server system init")
+	s.commonAgent.GIN(server)
 	pb.RegisterMenuAPIGINRPCAgent(server, s.Menu)
 	pb.RegisterRoleAPIGINRPCAgent(server, s.Role)
 	pb.RegisterUserAPIGINRPCAgent(server, s.User)
-	commonpb.RegisterLoginAPIGINRPCAgent(server, s.Login)
+
 }
 
 func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
@@ -79,10 +86,12 @@ func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*Register
 		return nil, err
 	}
 	register := RegisterAgent{
-		Menu:  NewMenuServerAgent(client),
-		Role:  NewRoleServerAgent(client),
-		User:  NewUserServerAgent(client),
-		Login: NewLoginServerAgent(client),
+		Menu: systemservice.NewMenuServerAgent(client),
+		Role: systemservice.NewRoleServerAgent(client),
+		User: systemservice.NewUserServerAgent(client),
+		commonAgent: commonserver.RegisterAgent{
+			Login: commonservice.NewLoginServerAgent(client),
+		},
 	}
 	return &register, nil
 }
@@ -120,31 +129,14 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCC
 		return nil, errors.Wrap(err, "create discovery")
 	}
 
-	client, err := runtime.NewGRPCServiceClient(context.Background(), service, config.WithServiceOption(config.WithServiceDiscovery(registry.ServiceName, discovery)))
+	client, err := runtime.NewGRPCServiceClient(context.Background(), service,
+		config.WithServiceOption(
+			config.WithServiceDiscovery(registry.ServiceName, discovery),
+		))
 	if err != nil {
 		return nil, errors.Wrap(err, "create menu grpc client")
 	}
 	return client, nil
-}
-
-func NewLoginServerAgent(client *service.GRPCClient) commonpb.LoginAPIGINRPCAgent {
-	cli := commonpb.NewLoginAPIClient(client)
-	return commonservice.NewLoginAPIGINRPCAgent(cli)
-}
-
-func NewUserServerAgent(client *service.GRPCClient) pb.UserAPIGINRPCAgent {
-	c := pb.NewUserAPIClient(client)
-	return systemservice.NewUserAPIGINRPCAgent(c)
-}
-
-func NewRoleServerAgent(client *service.GRPCClient) pb.RoleAPIGINRPCAgent {
-	c := pb.NewRoleAPIClient(client)
-	return systemservice.NewRoleAPIGINRPCAgent(c)
-}
-
-func NewMenuServerAgent(client *service.GRPCClient) pb.MenuAPIGINRPCAgent {
-	cli := pb.NewMenuAPIClient(client)
-	return systemservice.NewMenuAPIGINRPCAgent(cli)
 }
 
 //func NewMenuHTTPServerAgent(service *configv1.Service) (pb.MenuAPIGINRPCAgent, error) {

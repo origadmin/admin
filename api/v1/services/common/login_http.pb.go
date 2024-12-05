@@ -79,7 +79,7 @@ func _LoginAPI_CaptchaImage0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.
 			return err
 		}
 		reply := out.(*CaptchaImageResponse)
-		return ctx.Result(200, reply.Data.CaptchaImg)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -204,7 +204,7 @@ func (c *LoginAPIHTTPClientImpl) CaptchaImage(ctx context.Context, in *CaptchaIm
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationLoginAPICaptchaImage))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Data.CaptchaImg, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -5,19 +5,18 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/google/wire"
+	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/config"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 	"github.com/origadmin/toolkits/errors"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/common"
 	"origadmin/application/admin/internal/configs"
-	systemservice "origadmin/application/admin/internal/mods/system/service"
+	commonservice "origadmin/application/admin/internal/mods/common/service"
 )
 
 const (
@@ -26,82 +25,93 @@ const (
 )
 
 var (
-	// ProviderSet is server providers.
-	ProviderSet = wire.NewSet(NewCommonServer, NewCommonServerAgent)
-	// ProviderServer is server providers.
-	ProviderServer = wire.NewSet(NewCommonServer)
-	// ProviderAgent is agent providers.
-	ProviderAgent = wire.NewSet(NewCommonServerAgent)
+// ProviderSet is server providers.
+// ProviderSet = wire.NewSet(NewCommonServer, NewCommonServerAgent)
 )
 
 func init() {
 	runtime.RegisterService("common", service.DefaultServiceBuilder)
 }
 
-func NewCommonServer(register *systemservice.RegisterServer, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
-	var servers []transport.Server
-	service := bootstrap.GetService()
-	if service == nil {
-		return servers
-	}
-	if service.Name == "" {
-		service.Name = ServiceName
-	}
-	if serv := NewGRPCServer(bootstrap, l); serv != nil {
-		servers = append(servers, register.GRPC(serv))
-	}
-	if serv := NewGINSServer(bootstrap, l); serv != nil {
-		servers = append(servers, register.GINS(serv))
-	}
-	if serv := NewHTTPServer(bootstrap, l); serv != nil {
-		servers = append(servers, register.HTTP(serv))
-	}
-	return servers
+type RegisterAgent struct {
+	Login pb.LoginAPIGINRPCAgent
 }
 
-func NewCommonServerAgent(bootstrap *configs.Bootstrap, server *gin.Engine, l log.Logger) error {
+func (s RegisterAgent) GIN(server gins.IRouter) {
+	log.Info("gin server common init")
+	pb.RegisterLoginAPIGINRPCAgent(server, s.Login)
+}
+
+func NewCommonServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
+	client, err := NewCommonClient(bootstrap, l)
+	if err != nil {
+		return nil, err
+	}
+	register := RegisterAgent{
+		Login: NewLoginServerAgent(client),
+	}
+	return &register, nil
+}
+
+func NewCommonClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCClient, error) {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
-		return nil
+		return nil, errors.New("no entry")
 	}
-	if entry.Scheme == "http" {
-		client, err := NewMenuHTTPClient(&configv1.Service{
-			Grpc: entry.GetGrpc(),
-			Http: entry.GetHttp(),
-			Gins: entry.GetGins(),
-		})
-		if err != nil {
-			return errors.Wrap(err, "create menu http client")
-		}
-		pb.RegisterMenuAPIGINSServer(server, client)
-		return nil
+
+	servers := bootstrap.GetServers()
+	if servers == nil {
+		return nil, errors.New("no servers")
 	}
-	client, err := NewMenuClient(&configv1.Service{
+	registry := bootstrap.GetRegistry()
+	if registry == nil {
+		return nil, errors.New("no registry")
+	}
+	service := &configv1.Service{
+		Name: ServiceName,
 		Grpc: entry.GetGrpc(),
 		Http: entry.GetHttp(),
 		Gins: entry.GetGins(),
-	})
-	if err != nil {
-		return errors.Wrap(err, "create menu grpc client")
+		Selector: &configv1.Service_Selector{
+			Version: "v1.0.0",
+			Builder: "bbr",
+		},
 	}
-	pb.RegisterMenuAPIGINSServer(server, client)
-	return nil
+	if v, ok := bootstrap.GetServers()[ServiceName]; ok {
+		registry.ServiceName = v
+	}
+	log.Infof("service name: %s", registry.ServiceName)
+	discovery, err := runtime.NewDiscovery(registry)
+	if err != nil {
+		return nil, errors.Wrap(err, "create discovery")
+	}
+
+	client, err := runtime.NewGRPCServiceClient(context.Background(), service, config.WithServiceOption(config.WithServiceDiscovery(registry.ServiceName, discovery)))
+	if err != nil {
+		return nil, errors.Wrap(err, "create menu grpc client")
+	}
+	return client, nil
 }
 
-func NewMenuClient(service *configv1.Service) (pb.MenuAPIServer, error) {
+func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIGINRPCAgent {
+	cli := pb.NewLoginAPIClient(client)
+	return commonservice.NewLoginAPIGINRPCAgent(cli)
+}
+
+func NewLoginClient(service *configv1.Service) (pb.LoginAPIServer, error) {
 	client, err := runtime.NewGRPCServiceClient(context.Background(), service)
 	if err != nil {
 		return nil, errors.Wrap(err, "create menu grpc client")
 	}
-	cli := pb.NewMenuAPIClient(client)
-	return systemservice.NewMenuAPIServer(cli), nil
+	cli := pb.NewLoginAPIClient(client)
+	return commonservice.NewLoginAPIServer(cli), nil
 }
 
-func NewMenuHTTPClient(service *configv1.Service) (pb.MenuAPIServer, error) {
-	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
-	if err != nil {
-		return nil, errors.Wrap(err, "create menu http client")
-	}
-	cli := pb.NewMenuAPIHTTPClient(client)
-	return systemservice.NewMenuAPIHTTPServer(cli), nil
-}
+//func NewCommonHTTPClient(service *configv1.Service) (pb.LoginAPIServer, error) {
+//	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
+//	if err != nil {
+//		return nil, errors.Wrap(err, "create menu http client")
+//	}
+//	cli := pb.NewCommonAPIHTTPClient(client)
+//	return commonservice.NewCommonAPIHTTPServer(cli), nil
+//}

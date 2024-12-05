@@ -12,13 +12,13 @@ import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/origadmin/runtime/log"
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	commonbiz "origadmin/application/admin/internal/mods/common/biz"
-	//commondal "origadmin/application/admin/internal/mods/common/dal"
+	commondal "origadmin/application/admin/internal/mods/common/dal"
 	//commonserver "origadmin/application/admin/internal/mods/common/server"
 	commonservice "origadmin/application/admin/internal/mods/common/service"
 	systembiz "origadmin/application/admin/internal/mods/system/biz"
@@ -31,7 +31,7 @@ import (
 func buildInjectors(context.Context, *configs.Bootstrap, log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		loader.ProviderSet,
-		//commondal.ProviderSet,
+		commondal.ProviderSet,
 		commonbiz.ProviderSet,
 		commonservice.ProviderSet,
 		//commonserver.ProviderSet,

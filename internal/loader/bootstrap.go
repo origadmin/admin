@@ -9,53 +9,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/settings"
-	"github.com/google/wire"
-	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/errors"
 
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/system/server"
 )
-
-var (
-	ProviderSet = wire.NewSet(
-		NewRegistrar,
-		wire.Struct(new(InjectorServer), "*"),
-		wire.Struct(new(InjectorClient), "*"),
-	)
-)
-
-var (
-	_ *gins.Server
-	_ *http.Server
-	_ *grpc.Server
-)
-
-type InjectorClient struct {
-	Logger      log.Logger
-	Bootstrap   *configs.Bootstrap
-	SystemAgent *server.RegisterAgent
-	Server      *http.Server
-	//Router      *gin.Engine
-	//Servers []transport.Server
-}
-
-type InjectorServer struct {
-	Logger    log.Logger
-	Bootstrap *configs.Bootstrap
-	Registrar registry.Registrar
-	Servers   []transport.Server
-}
 
 // LoadFileBootstrap load config from file
 func LoadFileBootstrap(path string) (*configs.Bootstrap, error) {

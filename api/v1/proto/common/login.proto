@@ -21,7 +21,7 @@ service LoginAPI {
     rpc CaptchaImage (CaptchaImageRequest) returns (CaptchaImageResponse) {
         option (google.api.http) = {
             get: "/api/v1/captcha/image",
-            response_body: "data.captcha_img",
+            response_body: "*",
         };
     }
     rpc Login (LoginRequest) returns (LoginResponse) {
@@ -74,9 +74,6 @@ message CurrentUserResponse {
 }
 
 message CaptchaIDRequest {
-    string id = 1 [json_name = "id"];
-    string reload = 2 [json_name = "reload"];
-    google.protobuf.Any data = 3 [json_name = "data"];
 }
 
 message CaptchaIDResponse {
@@ -97,8 +94,8 @@ message CaptchaData {
 
 // The response message containing the greetings
 message CaptchaImageResponse {
-    bool success = 1 [json_name = "success"];
-    optional CaptchaData data = 2 [json_name = "data"];
+    map<string, string> headers = 1;
+    bytes image = 2[json_name = "image"];
 }
 
 

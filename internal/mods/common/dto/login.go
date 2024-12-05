@@ -30,8 +30,8 @@ type (
 type LoginRepo interface {
 	Login(ctx context.Context, username, password string) (*LoginResponse, error)
 	CaptchaID(ctx context.Context, in *CaptchaIDRequest) (*CaptchaIDResponse, error)
-	CaptchaImage(ctx context.Context, in *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error)
-	CurrentMenus(ctx context.Context, in *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error)
-	CurrentUser(ctx context.Context, in *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error)
-	Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error)
+	CaptchaImage(ctx context.Context, id string, reload bool) (*CaptchaImageResponse, error)
+	CurrentMenus(ctx context.Context, in *CurrentMenusRequest) (*CurrentMenusResponse, error)
+	CurrentUser(ctx context.Context, in *CurrentUserRequest) (*CurrentUserResponse, error)
+	Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error)
 }

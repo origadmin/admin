@@ -6,8 +6,9 @@
 package agent
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/goexts/generic/types"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	"origadmin/application/admin/internal/configs"
@@ -23,9 +24,7 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, l log.Logger) *service.HTTPServ
 	if service == nil {
 		panic("no service")
 	}
-	if service.Name == "" {
-		service.Name = "agent"
-	}
+	service.Name = types.ZeroOr(service.Name, "admin")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService())
 	if err != nil {
 		panic(err)

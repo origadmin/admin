@@ -5,9 +5,9 @@
 package server
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	"origadmin/application/admin/api/v1/services/common"

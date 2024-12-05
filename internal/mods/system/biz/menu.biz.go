@@ -6,8 +6,8 @@
 package biz
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/net/pagination"
 	"google.golang.org/grpc"
 

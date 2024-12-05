@@ -9,10 +9,11 @@ package main
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	biz2 "origadmin/application/admin/internal/mods/common/biz"
+	dal2 "origadmin/application/admin/internal/mods/common/dal"
 	service2 "origadmin/application/admin/internal/mods/common/service"
 	"origadmin/application/admin/internal/mods/system/biz"
 	"origadmin/application/admin/internal/mods/system/dal"
@@ -29,39 +30,42 @@ import (
 // Injectors from wire.go:
 
 // buildInjectors init kratos application.
-func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
-	registrar, err := loader.NewRegistrar(bootstrap)
+func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap, arg log.Logger) (*kratos.App, func(), error) {
+	v, err := loader.NewRegistrar(bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	data, cleanup, err := dal.NewData(bootstrap, logger)
+	data, cleanup, err := dal.NewData(bootstrap, arg)
 	if err != nil {
 		return nil, nil, err
 	}
-	menuRepo := dal.NewMenuRepo(data, logger)
-	menuAPIClient := biz.NewMenusClient(menuRepo, logger)
+	menuRepo := dal.NewMenuRepo(data, arg)
+	menuAPIClient := biz.NewMenusClient(menuRepo, arg)
 	menuAPIServer := service.NewMenuAPIServer(menuAPIClient)
-	roleRepo := dal.NewRoleRepo(data, logger)
-	roleAPIClient := biz.NewRolesClient(roleRepo, logger)
+	roleRepo := dal.NewRoleRepo(data, arg)
+	roleAPIClient := biz.NewRolesClient(roleRepo, arg)
 	roleAPIServer := service.NewRoleAPIServer(roleAPIClient)
-	userRepo := dal.NewUserRepo(data, logger)
-	userAPIClient := biz.NewUsersClient(userRepo, logger)
+	userRepo := dal.NewUserRepo(data, arg)
+	userAPIClient := biz.NewUsersClient(userRepo, arg)
 	userAPIServer := service.NewUserAPIServer(userAPIClient)
-	loginRepo := dal.NewLoginRepo(data, logger)
-	loginAPIClient := biz2.NewLoginClient(loginRepo, logger)
+	registerServer := &service.RegisterServer{
+		Menu: menuAPIServer,
+		Role: roleAPIServer,
+		User: userAPIServer,
+	}
+	captcha := loader.NewCaptcha(bootstrap)
+	loginRepo := dal2.NewLoginRepo(captcha, menuRepo, arg)
+	loginAPIClient := biz2.NewLoginClient(loginRepo, arg)
 	loginAPIServer := service2.NewLoginAPIServer(loginAPIClient)
-	register := &service.RegisterServer{
-		Menu:  menuAPIServer,
-		Role:  roleAPIServer,
-		User:  userAPIServer,
+	serviceRegisterServer := service2.RegisterServer{
 		Login: loginAPIServer,
 	}
-	v := server.NewSystemServer(register, bootstrap, logger)
+	v2 := server.NewSystemServer(registerServer, serviceRegisterServer, bootstrap, arg)
 	injectorServer := &loader.InjectorServer{
-		Logger:    logger,
+		Logger:    arg,
 		Bootstrap: bootstrap,
-		Registrar: registrar,
-		Servers:   v,
+		Registrar: v,
+		Servers:   v2,
 	}
 	app := NewApp(contextContext, injectorServer)
 	return app, func() {

@@ -8,19 +8,21 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"syscall"
 	"time"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware/validate"
-	logger "github.com/origadmin/slog-kratos"
+	klog "github.com/origadmin/slog-kratos"
+	"github.com/origadmin/toolkits/sloge"
 
 	"origadmin/application/admin/internal/loader"
 )
@@ -33,6 +35,8 @@ var (
 	Version = "v1.0.0"
 	// boot are the bootstrap boot.
 	flags = bootstrap.DefaultBootstrap()
+	// debug mode
+	debug = false
 )
 
 func RandomID() string {
@@ -45,18 +49,29 @@ func RandomID() string {
 
 func init() {
 	flags.Flags.ID = RandomID()
+	flags.Env = "release"
 	flags.SetFlags(Name, Version)
-	flag.StringVar(&flags.Env, "e", "release", "set environment, eg: -e debug")
+	flag.BoolVar(&debug, "debug", false, "set environment, eg: -debug")
 	flag.StringVar(&flags.ConfigPath, "c", "config.toml", "config path, eg: -c config.toml")
 }
 
 func main() {
 	flag.Parse()
+
 	// the release mode, work dir sets to empty, use config path as work dir
-	if flags.Env == "debug" {
+	logger := slog.Default()
+	if debug {
+		flags.Env = "debug"
 		flags.WorkDir = "resources/configs"
+		logger = sloge.New(func(option *sloge.Option) {
+			option.Level = sloge.LevelDebug
+			option.Console = true
+			option.OutputPath = ""
+			option.FileName = ""
+		})
 	}
-	l := log.With(logger.NewLogger(),
+
+	l := log.With(klog.NewLogger(klog.WithLogger(logger)),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", flags.ID(),

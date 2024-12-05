@@ -7,8 +7,8 @@ package server
 import (
 	"net/url"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/toolkits/helpers"
 	"github.com/origadmin/toolkits/net"

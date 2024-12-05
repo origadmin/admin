@@ -5,8 +5,8 @@
 package server
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	"origadmin/application/admin/internal/configs"

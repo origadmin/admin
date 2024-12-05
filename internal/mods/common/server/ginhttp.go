@@ -8,12 +8,12 @@ import (
 	stdhttp "net/http"
 	"net/url"
 
-	"github.com/origadmin/toolkits/helpers"
-
 	"github.com/gin-gonic/gin"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
+	"github.com/origadmin/toolkits/helpers"
+	"github.com/origadmin/toolkits/net"
 
 	"origadmin/application/admin/internal/configs"
 )
@@ -37,8 +37,14 @@ func NewGinHTTPServer(bootstrap *configs.Bootstrap, engine *gin.Engine, l log.Lo
 	if cfg.Timeout != nil {
 		opts = append(opts, http.Timeout(cfg.Timeout.AsDuration()))
 	}
+	host := bootstrap.GetService().GetHost()
+	if host == "" {
+		host = "ORIGADMIN_SERVICE_HOST"
+	}
 
-	cfg.Endpoint = helpers.ServiceDiscoveryEndpoint(cfg.Endpoint, "http", bootstrap.GetService().Host, cfg.Addr)
+	if endpoint, err := helpers.ServiceEndpoint("http", net.HostAddr(host), cfg.Addr); err == nil {
+		cfg.Endpoint = endpoint
+	}
 	log.Infof("Register.GinHttp.Endpoint: %v", cfg.Endpoint)
 	ep, _ := url.Parse(cfg.Endpoint)
 	opts = append(opts, http.Endpoint(ep))

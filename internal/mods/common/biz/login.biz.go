@@ -30,7 +30,7 @@ func (biz LoginBiz) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest, opts
 
 func (biz LoginBiz) CaptchaImage(ctx context.Context, in *pb.CaptchaImageRequest, opts ...grpc.CallOption) (*pb.CaptchaImageResponse, error) {
 	log.Info("CaptchaImage")
-	return biz.dao.CaptchaImage(ctx, in)
+	return biz.dao.CaptchaImage(ctx, in.Id, in.Reload == "1" || in.Reload == "true")
 }
 
 func (biz LoginBiz) Login(ctx context.Context, in *pb.LoginRequest, opts ...grpc.CallOption) (*pb.LoginResponse, error) {

@@ -10,8 +10,8 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/database"
 
 	"origadmin/application/admin/internal/configs"
@@ -19,7 +19,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewMenuRepo, NewRoleRepo, NewUserRepo, NewLoginRepo)
+var ProviderSet = wire.NewSet(NewData, NewMenuRepo, NewRoleRepo, NewUserRepo)
 
 // Data .
 type Data struct {

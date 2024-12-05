@@ -7,6 +7,7 @@ package service
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
@@ -78,6 +79,10 @@ func NewMenuAPIGINRPCService(client pb.MenuAPIClient) *MenuAPIGINRPCService {
 // NewMenuAPIGINRPCAgent new a menu service.
 func NewMenuAPIGINRPCAgent(client pb.MenuAPIClient) pb.MenuAPIGINRPCAgent {
 	return &MenuAPIGINRPCService{client: client}
+}
+func NewMenuServerAgent(client *service.GRPCClient) pb.MenuAPIGINRPCAgent {
+	cli := pb.NewMenuAPIClient(client)
+	return NewMenuAPIGINRPCAgent(cli)
 }
 
 var _ pb.MenuAPIGINRPCAgent = (*MenuAPIGINRPCService)(nil)

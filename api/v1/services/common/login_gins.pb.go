@@ -75,7 +75,7 @@ func _LoginAPI_CaptchaImage0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFun
 			gins.ResultError(ctx, err)
 			return
 		}
-		gins.ResultJSON(ctx, 200, reply.Data.CaptchaImg)
+		gins.ResultJSON(ctx, 200, reply)
 		return
 	}
 }
@@ -204,7 +204,7 @@ func (c *LoginAPIGINSClientImpl) CaptchaImage(ctx context.Context, in *CaptchaIm
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(LoginAPI_CaptchaImage_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Data.CaptchaImg, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

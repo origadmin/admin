@@ -6,7 +6,7 @@
 package loader
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/env"
 )
 

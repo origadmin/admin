@@ -1,0 +1,34 @@
+syntax = "proto3";
+package origadmin.configs.api;
+
+import "buf/validate/validate.proto";
+
+option go_package = "internal/configs;configs";
+
+message Captcha {
+  // Length of the verification code
+  int32 length = 1 [json_name = "length"];
+  // CAPTCHA width
+  int32 width = 2 [json_name = "width"];
+  // CAPTCHA height
+  int32 height = 3 [json_name = "height"];
+  // Type of cache to use for storing CAPTCHA data
+  string cache_type = 4 [json_name = "cache_type", (buf.validate.field).string = {in: ["memory", "redis"]}];
+
+  // Redis configuration for CAPTCHA cache
+  message Redis {
+    // Address of the Redis server
+    string addr = 1 [json_name = "addr"];
+    // Username for Redis authentication
+    string username = 2 [json_name = "username"];
+    // Password for Redis authentication
+    string password = 3 [json_name = "password"];
+    // Database index for Redis
+    int32 db = 4 [json_name = "db"];
+    // Prefix for Redis keys (default: "admin:captcha")
+    string key_prefix = 5 [json_name = "key_prefix"];
+  }
+
+  // Redis instance for CAPTCHA cache
+  Redis redis = 5 [json_name = "redis"];
+}

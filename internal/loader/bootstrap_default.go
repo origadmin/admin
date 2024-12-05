@@ -51,6 +51,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
+			Host: "ORIGADMIN_SERVICE_HOST",
 		},
 		Data:     DefaultData(),
 		Registry: DefaultRegistry(),
@@ -356,5 +357,19 @@ func DefaultServiceGins() *configv1.Service_GINS {
 func DefaultEntry() *configs.Bootstrap_Entry {
 	return &configs.Bootstrap_Entry{
 		Scheme: "http",
+	}
+}
+
+func DefaultCaptcha() *configs.Captcha {
+	return &configs.Captcha{
+		CacheType: "memory",
+		Width:     400,
+		Height:    160,
+		Length:    4,
+		Redis: &configs.Captcha_Redis{
+			Addr:      "${captcha_redis_address:127.0.0.1:6379}",
+			Db:        0,
+			KeyPrefix: "captcha",
+		},
 	}
 }

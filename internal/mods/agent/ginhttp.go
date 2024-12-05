@@ -8,9 +8,9 @@ import (
 	stdhttp "net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 
 	"origadmin/application/admin/internal/configs"

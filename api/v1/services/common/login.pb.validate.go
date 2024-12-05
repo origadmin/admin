@@ -780,39 +780,6 @@ func (m *CaptchaIDRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
-	// no validation rules for Reload
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CaptchaIDRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CaptchaIDRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CaptchaIDRequestValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	if len(errors) > 0 {
 		return CaptchaIDRequestMultiError(errors)
 	}
@@ -1255,40 +1222,9 @@ func (m *CaptchaImageResponse) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Success
+	// no validation rules for Headers
 
-	if m.Data != nil {
-
-		if all {
-			switch v := interface{}(m.GetData()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, CaptchaImageResponseValidationError{
-						field:  "Data",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, CaptchaImageResponseValidationError{
-						field:  "Data",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return CaptchaImageResponseValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
+	// no validation rules for Image
 
 	if len(errors) > 0 {
 		return CaptchaImageResponseMultiError(errors)

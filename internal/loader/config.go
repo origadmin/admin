@@ -12,11 +12,9 @@ import (
 	"github.com/go-kratos/kratos/v2/config/env"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/goexts/generic/settings"
-	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/config"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
-	"github.com/origadmin/runtime/service"
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/codec/json"
 	"github.com/origadmin/toolkits/errors"
@@ -30,11 +28,6 @@ type (
 	Config    = configv1.SourceConfig
 	Bootstrap = bootstrap.Bootstrap
 )
-
-func init() {
-	runtime.RegisterConfigFunc("file", NewFileConfig)
-	runtime.RegisterService("admin", service.DefaultServiceBuilder)
-}
 
 type ConfigSetting = func(config *Config)
 
@@ -119,8 +112,9 @@ func WorkPath(wd, path string) string {
 func PrintString(v any) string {
 	if message, ok := v.(proto.Message); ok {
 		option := protojson.MarshalOptions{
-			Indent:          " ",
-			EmitUnpopulated: true,
+			Indent:            " ",
+			EmitDefaultValues: false,
+			EmitUnpopulated:   true,
 		}
 		bytes, _ := option.Marshal(message)
 		return string(bytes)

@@ -8,6 +8,7 @@ package service
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
@@ -77,6 +78,10 @@ func NewRoleAPIGINRPCService(client pb.RoleAPIClient) *RoleAPIGINRPCService {
 // NewRoleAPIGINRPCAgent new a menu service.
 func NewRoleAPIGINRPCAgent(client pb.RoleAPIClient) pb.RoleAPIGINRPCAgent {
 	return &RoleAPIGINRPCService{client: client}
+}
+func NewRoleServerAgent(client *service.GRPCClient) pb.RoleAPIGINRPCAgent {
+	c := pb.NewRoleAPIClient(client)
+	return NewRoleAPIGINRPCAgent(c)
 }
 
 var _ pb.RoleAPIGINRPCAgent = (*RoleAPIGINRPCService)(nil)

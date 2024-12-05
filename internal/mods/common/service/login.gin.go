@@ -5,8 +5,9 @@
 package service
 
 import (
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/common"
 	"origadmin/application/admin/helpers/resp"
@@ -26,19 +27,27 @@ func (l LoginAPIGINRPCService) CaptchaID(context *gins.Context, request *pb.Capt
 	var res gins.Result
 	if err == nil {
 		res.Success = true
-		res.Data = response
+		res.Data = response.Data
 	}
 	resp.Result(context, res, err)
 }
 
 func (l LoginAPIGINRPCService) CaptchaImage(context *gins.Context, request *pb.CaptchaImageRequest) {
 	response, err := l.client.CaptchaImage(context, request)
-	var res gins.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response
+	if err != nil {
+		gins.ResultError(context, err)
+		return
 	}
-	resp.Result(context, res, err)
+	if _, err := context.Writer.Write(response.Image); err != nil {
+		gins.ResultError(context, err)
+		return
+	}
+	for k, v := range response.Headers {
+		context.Writer.Header().Set(k, v)
+	}
+	context.Writer.Flush()
+	context.Writer.WriteHeader(200)
+	return
 }
 
 func (l LoginAPIGINRPCService) CurrentMenus(context *gins.Context, request *pb.CurrentMenusRequest) {
@@ -89,6 +98,10 @@ func NewLoginAPIGINRPCService(client pb.LoginAPIClient) *LoginAPIGINRPCService {
 // NewLoginAPIGINRPCAgent new a Login service.
 func NewLoginAPIGINRPCAgent(client pb.LoginAPIClient) pb.LoginAPIGINRPCAgent {
 	return &LoginAPIGINRPCService{client: client}
+}
+func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIGINRPCAgent {
+	cli := pb.NewLoginAPIClient(client)
+	return NewLoginAPIGINRPCAgent(cli)
 }
 
 var _ pb.LoginAPIGINRPCAgent = (*LoginAPIGINRPCService)(nil)

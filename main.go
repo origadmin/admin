@@ -45,23 +45,23 @@ func buildVersion(version, commit, date, builtBy, treeState string) goversion.In
 	)
 }
 
-//	@title						OrigAdmin Backend API
-//	@version					v1.0.0
-//	@description				A distributed backend management system with a focus on scalability, security, and flexibility.
-//	@contact.name				OrigAdmin
-//	@contact.url				https://github.com/origadmin
-//	@license.name				MIT
-//	@license.url				https://github.com/origadmin/origadmin/blob/main/LICENSE.md
+// @title						OrigAdmin Backend API
+// @version					v1.0.0
+// @description				A distributed backend management system with a focus on scalability, security, and flexibility.
+// @contact.name				OrigAdmin
+// @contact.url				https://github.com/origadmin
+// @license.name				MIT
+// @license.url				https://github.com/origadmin/origadmin/blob/main/LICENSE.md
 //
-//	@host						localhost:10080
-//	@basepath					/api/v1
-//	@schemes					http https
+// @host						localhost:10080
+// @basepath					/api/v1
+// @schemes					http https
 //
-//	@securitydefinitions.basic	Basic
+// @securitydefinitions.basic	Basic
 //
-//	@securitydefinitions.apikey	Bearer
-//	@in							header
-//	@name						Authorization
+// @securitydefinitions.apikey	Bearer
+// @in							header
+// @name						Authorization
 func main() {
 	cmd.Execute(buildVersion(version, commit, date, builtBy, treeState))
 }
