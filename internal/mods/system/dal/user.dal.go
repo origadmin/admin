@@ -20,6 +20,24 @@ type userRepo struct {
 	db *Data
 }
 
+func (repo userRepo) GetByUserName(ctx context.Context, username string, fields ...string) (*dto.UserPB, error) {
+	query := repo.db.User(ctx).Query().Where(user.UsernameEQ(username))
+	var option dto.UserQueryOption
+	if len(fields) > 0 {
+		option.SelectFields = fields
+	}
+	query = userQueryOptions(query, option)
+	result, err := query.First(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertUser2PB(result), nil
+}
+
+func (repo userRepo) GetRoleIDs(ctx context.Context, id string) ([]string, error) {
+	return repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().IDs(ctx)
+}
+
 func (repo userRepo) Get(ctx context.Context, id string, options ...dto.UserQueryOption) (*dto.UserPB, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {

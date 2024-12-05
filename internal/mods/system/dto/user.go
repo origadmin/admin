@@ -46,6 +46,8 @@ type UserRepo interface {
 	Delete(context.Context, string) error
 	Update(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
+	GetByUserName(context.Context, string, ...string) (*UserPB, error)
+	GetRoleIDs(context.Context, string) ([]string, error)
 }
 
 type UserQueryOption struct {

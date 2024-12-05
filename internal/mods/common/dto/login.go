@@ -28,7 +28,7 @@ type (
 )
 
 type LoginRepo interface {
-	Login(ctx context.Context, username, password string) (*LoginResponse, error)
+	Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error)
 	CaptchaID(ctx context.Context, in *CaptchaIDRequest) (*CaptchaIDResponse, error)
 	CaptchaImage(ctx context.Context, id string, reload bool) (*CaptchaImageResponse, error)
 	CurrentMenus(ctx context.Context, in *CurrentMenusRequest) (*CurrentMenusResponse, error)

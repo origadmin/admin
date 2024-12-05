@@ -11,9 +11,9 @@ import "google/protobuf/duration.proto";
 option cc_enable_arenas = true;
 option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
 option java_multiple_files = true;
-option java_outer_classname = "CorsProto";
-option java_package = "com.github.origadmin.runtime.config";
-option objc_class_prefix = "Config";
+option java_outer_classname = "ServiceProto";
+option java_package = "com.github.origadmin.runtime.config.v1";
+option objc_class_prefix = "ORC";
 
 message Service {
 
@@ -70,7 +70,7 @@ message Service {
 
   // Service name for service discovery
   string name = 1 [json_name = "name"];
-  bool endpoint = 2 [json_name = "endpoint"];
+  bool dynamic_endpoint = 2 [json_name = "dynamic_endpoint"];
 
   GRPC grpc = 10 [json_name = "grpc"];
   HTTP http = 20 [json_name = "http"];

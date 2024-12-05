@@ -23,32 +23,32 @@ type LoginBiz struct {
 	log     *log.Helper
 }
 
-func (biz LoginBiz) CaptchaID(ctx context.Context, in *pb.CaptchaIDRequest, opts ...grpc.CallOption) (*pb.CaptchaIDResponse, error) {
+func (biz LoginBiz) CaptchaID(ctx context.Context, in *dto.CaptchaIDRequest, opts ...grpc.CallOption) (*dto.CaptchaIDResponse, error) {
 	log.Info("CaptchaID")
 	return biz.dao.CaptchaID(ctx, in)
 }
 
-func (biz LoginBiz) CaptchaImage(ctx context.Context, in *pb.CaptchaImageRequest, opts ...grpc.CallOption) (*pb.CaptchaImageResponse, error) {
+func (biz LoginBiz) CaptchaImage(ctx context.Context, in *dto.CaptchaImageRequest, opts ...grpc.CallOption) (*dto.CaptchaImageResponse, error) {
 	log.Info("CaptchaImage")
 	return biz.dao.CaptchaImage(ctx, in.Id, in.Reload == "1" || in.Reload == "true")
 }
 
-func (biz LoginBiz) Login(ctx context.Context, in *pb.LoginRequest, opts ...grpc.CallOption) (*pb.LoginResponse, error) {
+func (biz LoginBiz) Login(ctx context.Context, in *dto.LoginRequest, opts ...grpc.CallOption) (*dto.LoginResponse, error) {
 	log.Info("Login")
-	return biz.dao.Login(ctx, "admin", "123456")
+	return biz.dao.Login(ctx, in)
 }
 
-func (biz LoginBiz) Logout(ctx context.Context, in *pb.LogoutRequest, opts ...grpc.CallOption) (*pb.LogoutResponse, error) {
+func (biz LoginBiz) Logout(ctx context.Context, in *dto.LogoutRequest, opts ...grpc.CallOption) (*dto.LogoutResponse, error) {
 	log.Info("Logout")
 	return biz.dao.Logout(ctx, in)
 }
 
-func (biz LoginBiz) CurrentUser(ctx context.Context, in *pb.CurrentUserRequest, opts ...grpc.CallOption) (*pb.CurrentUserResponse, error) {
+func (biz LoginBiz) CurrentUser(ctx context.Context, in *dto.CurrentUserRequest, opts ...grpc.CallOption) (*dto.CurrentUserResponse, error) {
 	log.Info("CurrentUser")
 	return biz.dao.CurrentUser(ctx, in)
 }
 
-func (biz LoginBiz) CurrentMenus(ctx context.Context, in *pb.CurrentMenusRequest, opts ...grpc.CallOption) (*pb.CurrentMenusResponse, error) {
+func (biz LoginBiz) CurrentMenus(ctx context.Context, in *dto.CurrentMenusRequest, opts ...grpc.CallOption) (*dto.CurrentMenusResponse, error) {
 	log.Info("CurrentMenus")
 	return biz.dao.CurrentMenus(ctx, in)
 }

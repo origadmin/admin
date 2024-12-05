@@ -780,6 +780,8 @@ func (m *CaptchaIDRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Ts
+
 	if len(errors) > 0 {
 		return CaptchaIDRequestMultiError(errors)
 	}
@@ -1540,3 +1542,113 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CurrentMenusResponseValidationError{}
+
+// Validate checks the field values on LoginRequest_Data with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *LoginRequest_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LoginRequest_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// LoginRequest_DataMultiError, or nil if none found.
+func (m *LoginRequest_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LoginRequest_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Username
+
+	// no validation rules for Password
+
+	// no validation rules for CaptchaId
+
+	// no validation rules for CaptchaCode
+
+	if len(errors) > 0 {
+		return LoginRequest_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// LoginRequest_DataMultiError is an error wrapping multiple validation errors
+// returned by LoginRequest_Data.ValidateAll() if the designated constraints
+// aren't met.
+type LoginRequest_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LoginRequest_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LoginRequest_DataMultiError) AllErrors() []error { return m }
+
+// LoginRequest_DataValidationError is the validation error returned by
+// LoginRequest_Data.Validate if the designated constraints aren't met.
+type LoginRequest_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e LoginRequest_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e LoginRequest_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e LoginRequest_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e LoginRequest_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e LoginRequest_DataValidationError) ErrorName() string {
+	return "LoginRequest_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e LoginRequest_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sLoginRequest_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = LoginRequest_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = LoginRequest_DataValidationError{}

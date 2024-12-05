@@ -12,11 +12,19 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 )
 
 var (
 	// ErrUserNotFound is user not found.
 	ErrUserNotFound = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+)
+
+const (
+	// UserStatusActivated represents the activated status of a user
+	UserStatusActivated = schema.UserStatusActivated
+	// UserStatusFreezed represents the freezed status of a user
+	UserStatusFreezed = schema.UserStatusFreezed
 )
 
 // ConvertMenu2PB Menu is the model entity for the Menu schema.

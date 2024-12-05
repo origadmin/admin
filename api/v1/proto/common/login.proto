@@ -5,6 +5,7 @@ package api.v1.services.common;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "pwt/v1/token.proto";
+import "buf/validate/validate.proto";
 
 option go_package = "v1/services/common;common";
 option java_multiple_files = true;
@@ -50,7 +51,13 @@ service LoginAPI {
 }
 
 message LoginRequest {
-    google.protobuf.Any data = 2 [json_name = "data"];
+    message Data {
+        string username = 1 [json_name = "username", (buf.validate.field).required = true];
+        string password = 2 [json_name = "password", (buf.validate.field).required = true];
+        string captcha_id = 3 [json_name = "captcha_id", (buf.validate.field).required = true];
+        string captcha_code = 4 [json_name = "captcha_code", (buf.validate.field).required = true];
+    }
+    Data data = 2 [json_name = "data"];
 }
 
 message LoginResponse {
@@ -74,6 +81,8 @@ message CurrentUserResponse {
 }
 
 message CaptchaIDRequest {
+    // The timestamp of the request prevent caching of the same result
+    string ts = 1 [json_name = "ts"];
 }
 
 message CaptchaIDResponse {

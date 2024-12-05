@@ -22,7 +22,6 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware/validate"
 	klog "github.com/origadmin/slog-kratos"
-	"github.com/origadmin/toolkits/sloge"
 
 	"origadmin/application/admin/internal/loader"
 )
@@ -59,19 +58,20 @@ func main() {
 	flag.Parse()
 
 	// the release mode, work dir sets to empty, use config path as work dir
-	logger := slog.Default()
+	//logger := slog.Default()
 	if debug {
 		flags.Env = "debug"
 		flags.WorkDir = "resources/configs"
-		logger = sloge.New(func(option *sloge.Option) {
-			option.Level = sloge.LevelDebug
-			option.Console = true
-			option.OutputPath = ""
-			option.FileName = ""
-		})
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+		//logger = sloge.New(func(option *sloge.Option) {
+		//	option.Level = sloge.LevelDebug
+		//	option.Console = true
+		//	option.OutputPath = ""
+		//	option.FileName = ""
+		//})
 	}
 
-	l := log.With(klog.NewLogger(klog.WithLogger(logger)),
+	l := log.With(klog.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", flags.ID(),

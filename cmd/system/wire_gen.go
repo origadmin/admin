@@ -54,7 +54,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		User: userAPIServer,
 	}
 	captcha := loader.NewCaptcha(bootstrap)
-	loginRepo := dal2.NewLoginRepo(captcha, menuRepo, arg)
+	loginRepo := dal2.NewLoginRepo(captcha, menuRepo, roleRepo, userRepo, arg)
 	loginAPIClient := biz2.NewLoginClient(loginRepo, arg)
 	loginAPIServer := service2.NewLoginAPIServer(loginAPIClient)
 	serviceRegisterServer := service2.RegisterServer{

@@ -3,14 +3,13 @@ syntax = "proto3";
 package config.v1;
 
 import "buf/validate/validate.proto";
-import "google/protobuf/any.proto";
 
 option cc_enable_arenas = true;
 option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
 option java_multiple_files = true;
-option java_outer_classname = "CorsProto";
-option java_package = "com.github.origadmin.runtime.config";
-option objc_class_prefix = "Config";
+option java_outer_classname = "SourceConfigProto";
+option java_package = "com.github.origadmin.runtime.config.v1";
+option objc_class_prefix = "ORC";
 
 // SourceConfig is the source file for load configuration
 message SourceConfig {
@@ -42,10 +41,11 @@ message SourceConfig {
   string name = 2 [json_name = "name"];
   // set the supported file format, if not set, all formats are supported
   repeated string formats = 3 [json_name = "formats"];
+  bool env = 5 [json_name = "env"];
   // set the environment variable name
-  map<string, string> env_args = 7 [json_name = "env_args"];
+  map<string, string> env_args = 6 [json_name = "env_args"];
   // set the environment variable prefix
-  repeated string env_prefixes = 8 [json_name = "env_prefixes"];
+  repeated string env_prefixes = 7 [json_name = "env_prefixes"];
 
   optional File file = 100 [json_name = "file"];
   optional Consul consul = 200 [json_name = "consul"];

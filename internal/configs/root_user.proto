@@ -1,0 +1,19 @@
+syntax = "proto3";
+package origadmin.configs.api;
+
+import "buf/validate/validate.proto";
+
+option go_package = "internal/configs;configs";
+
+message RootUser {
+  bool enabled = 1 [json_name = "enabled"];
+  string id = 2 [json_name = "id", (buf.validate.field).required = true];
+  string username = 3 [json_name = "username", (buf.validate.field).required = true];
+  string password = 4 [json_name = "password", (buf.validate.field).required = true];
+  string name = 5 [json_name = "name"];
+  string email = 6 [json_name = "email"];
+  string nickname = 7 [json_name = "nickname"];
+  string avatar = 8 [json_name = "avatar"];
+  string mobile = 9 [json_name = "mobile"];
+  string description = 10 [json_name = "description"];
+}

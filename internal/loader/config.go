@@ -114,7 +114,7 @@ func PrintString(v any) string {
 		option := protojson.MarshalOptions{
 			Indent:            " ",
 			EmitDefaultValues: false,
-			EmitUnpopulated:   true,
+			EmitUnpopulated:   false,
 		}
 		bytes, _ := option.Marshal(message)
 		return string(bytes)

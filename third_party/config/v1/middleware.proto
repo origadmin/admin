@@ -4,13 +4,14 @@ package config.v1;
 
 import "buf/validate/validate.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 option cc_enable_arenas = true;
 option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
 option java_multiple_files = true;
-option java_outer_classname = "CorsProto";
-option java_package = "com.github.origadmin.runtime.config";
-option objc_class_prefix = "Config";
+option java_outer_classname = "MiddlewareProto";
+option java_package = "com.github.origadmin.runtime.config.v1";
+option objc_class_prefix = "ORC";
 
 // UserMetric: used to report user-defined metrics
 // Example:
@@ -52,7 +53,7 @@ option objc_class_prefix = "Config";
 message UserMetric {
 
     // Timestamp: indicates the time of indicator data
-    int64 timestamp = 1;
+    google.protobuf.Timestamp timestamp = 1;
     // Indicator name
     string name = 2;
     // Indicator value
@@ -63,10 +64,11 @@ message UserMetric {
     string unit = 5;
     // Type of indicator (e.g. counter, timer, histogram, etc.)
     enum MetricType {
-        COUNTER = 0;
-        GAUGE = 1;
-        HISTOGRAM = 2;
-        SUMMARY = 3;
+        METRIC_TYPE_UNSPECIFIED = 0;
+        METRIC_TYPE_COUNTER = 1;
+        METRIC_TYPE_GAUGE = 2;
+        METRIC_TYPE_HISTOGRAM = 3;
+        METRIC_TYPE_SUMMARY = 4;
     }
     MetricType type = 6;
     // Description of indicators
@@ -77,36 +79,6 @@ message UserMetric {
     map<string, string> metadata = 9;
 }
 
-// Security middleware config.
-message Security {
-
-    // Casbin middleware config
-    message Casbin {
-        // Policy file
-        string policy_file = 3 [json_name = "policy_file"];
-        // Model file
-        string model_file = 4 [json_name = "model_file"];
-    }
-
-    // Authorization middleware config
-    message JWT {
-        // Signing method
-        string signing_method = 3 [json_name = "signing_method"];
-        // Signing key
-        string signing_key = 4 [json_name = "signing_key"];
-        // Old signing key
-        string old_signing_key = 5 [json_name = "old_signing_key"];
-        // Token expiration time
-        google.protobuf.Duration expired_time = 6 [json_name = "expired_time"];
-    }
-
-    // Direct release paths
-    repeated string direct_release_paths = 2 [json_name = "direct_release_paths"];
-    // JWT config for authorization
-    JWT jwt = 5 [json_name = "jwt"];
-    // Casbin config for authorization
-    Casbin casbin = 6 [json_name = "casbin"];
-}
 
 // Middleware config is used to configure middleware for entry
 message Middleware {
@@ -117,7 +89,7 @@ message Middleware {
             string addr = 1 [json_name = "addr"];
             string username = 2 [json_name = "username"];
             string password = 3 [json_name = "password"];
-            int64 db = 4 [json_name = "db"];
+            int32 db = 4 [json_name = "db"];
         }
         message Memory {
             google.protobuf.Duration expiration = 1 [json_name = "expiration"];
@@ -127,15 +99,15 @@ message Middleware {
         // rate limiter name, supported: bbr, memory, redis.
         string name = 1 [json_name = "name", (buf.validate.field).string = {in: ["bbr", "memory", "redis"]}];
         // The number of seconds in a rate limit window
-        int64 period = 2 [json_name = "period"];
+        int32 period = 2 [json_name = "period"];
         // The number of requests allowed in a window of time
-        int64 x_ratelimit_limit = 5 [json_name = "x_ratelimit_limit"];
+        int32 x_ratelimit_limit = 5 [json_name = "x_ratelimit_limit"];
         // The number of requests that can still be made in the current window of time
-        int64 x_ratelimit_remaining = 6 [json_name = "x_ratelimit_remaining"];
+        int32 x_ratelimit_remaining = 6 [json_name = "x_ratelimit_remaining"];
         // The number of seconds until the current rate limit window completely resets
-        int64 x_ratelimit_reset = 7 [json_name = "x_ratelimit_reset"];
+        int32 x_ratelimit_reset = 7 [json_name = "x_ratelimit_reset"];
         // When rate limited, the number of seconds to wait before another request will be accepted
-        int64 retry_after = 8 [json_name = "retry_after"];
+        int32 retry_after = 8 [json_name = "retry_after"];
 
         Memory memory = 101 [json_name = "memory"];
         Redis redis = 102 [json_name = "redis"];

@@ -35,12 +35,3 @@ const (
 	CacheKeyForSyncToCasbin = "sync:casbin:update"
 	CacheKeyForSyncedCasbin = "sync:casbin:success"
 )
-
-const (
-	// InvalidTokenID is the error code for invalid token ID
-	InvalidTokenID = "com.invalid.token"
-	// InvalidCaptchaID is the error code for invalid captcha ID
-	InvalidCaptchaID = "com.invalid.captcha"
-	// InvalidUsernameOrPasswordID is the error code for invalid username or password
-	InvalidUsernameOrPasswordID = "com.invalid.username.or.password"
-)
