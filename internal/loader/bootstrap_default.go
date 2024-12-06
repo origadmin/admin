@@ -8,11 +8,11 @@ package loader
 import (
 	"time"
 
-	"github.com/origadmin/runtime/gen/go/config/v1"
+	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"google.golang.org/protobuf/types/known/durationpb"
 
 	"origadmin/application/admin/internal/configs"
-	commonserver "origadmin/application/admin/internal/mods/common/server"
+	basisserver "origadmin/application/admin/internal/mods/basis/server"
 	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
@@ -23,7 +23,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
 		Servers: map[string]string{
-			commonserver.ServiceName: "origadmin.service.v1.common",
+			basisserver.ServiceName:  "origadmin.service.v1.basis",
 			systemserver.ServiceName: "origadmin.service.v1.system",
 		},
 		Entry: &configs.Bootstrap_Entry{

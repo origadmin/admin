@@ -165,11 +165,31 @@ release:
 #client:
 #	kratos proto client ./api
 
-.PHONY: generate
-# generate
-generate:
-	go generate ./...
+.PHONY: gen
+#gen
+#go mod tidy
+#buf dep update
+#buf build
+#buf generate # generate proto files
+#go generate ./internal/generate.go  #generate configs
+#go generate ./internal/mods/system/dal/entity/generate.go #generate dal entity
+#go generate ./cmd/system #generate system module
+#go generate ./cmd/internal/start #generate main module start
+gen:
 	go mod tidy
+
+	buf dep update
+	buf build
+	buf generate
+
+	go generate ./internal/generate.go
+
+	go generate ./internal/mods/system/dal/entity/ent/generate.go
+	go generate ./cmd/system
+
+	go generate ./cmd/internal/start
+
+
 
 .PHONY: all
 # generate all

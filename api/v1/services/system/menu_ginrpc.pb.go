@@ -23,7 +23,17 @@ const MenuAPI_GetMenu_FullOperation = "/api.v1.services.system.MenuAPI/GetMenu"
 const MenuAPI_ListMenus_FullOperation = "/api.v1.services.system.MenuAPI/ListMenus"
 const MenuAPI_UpdateMenu_FullOperation = "/api.v1.services.system.MenuAPI/UpdateMenu"
 
+type MenuAPIGINRPCAgentResponder interface {
+	// Error returns a error
+	Error(*gins.Context, int, error)
+	// JSON returns a json data
+	JSON(*gins.Context, int, any)
+	// Any returns errors or any data
+	Any(*gins.Context, int, any, error)
+}
+
 type MenuAPIGINRPCAgent interface {
+	MenuAPIGINRPCAgentResponder
 	CreateMenu(*gins.Context, *CreateMenuRequest)
 	DeleteMenu(*gins.Context, *DeleteMenuRequest)
 	GetMenu(*gins.Context, *GetMenuRequest)
@@ -43,7 +53,7 @@ func _MenuAPI_ListMenus0_GINRPC_Handler(srv MenuAPIGINRPCAgent) gins.HandlerFunc
 	return func(ctx *gins.Context) {
 		var in ListMenusRequest
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, MenuAPI_ListMenus_OperationName)
@@ -55,11 +65,11 @@ func _MenuAPI_GetMenu0_GINRPC_Handler(srv MenuAPIGINRPCAgent) gins.HandlerFunc {
 	return func(ctx *gins.Context) {
 		var in GetMenuRequest
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindURI(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, MenuAPI_GetMenu_OperationName)
@@ -71,11 +81,11 @@ func _MenuAPI_CreateMenu0_GINRPC_Handler(srv MenuAPIGINRPCAgent) gins.HandlerFun
 	return func(ctx *gins.Context) {
 		var in CreateMenuRequest
 		if err := gins.BindBody(ctx, &in.Menu); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, MenuAPI_CreateMenu_OperationName)
@@ -87,15 +97,15 @@ func _MenuAPI_UpdateMenu0_GINRPC_Handler(srv MenuAPIGINRPCAgent) gins.HandlerFun
 	return func(ctx *gins.Context) {
 		var in UpdateMenuRequest
 		if err := gins.BindBody(ctx, &in.Menu); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindURI(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, MenuAPI_UpdateMenu_OperationName)
@@ -107,11 +117,11 @@ func _MenuAPI_DeleteMenu0_GINRPC_Handler(srv MenuAPIGINRPCAgent) gins.HandlerFun
 	return func(ctx *gins.Context) {
 		var in DeleteMenuRequest
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindURI(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, MenuAPI_DeleteMenu_OperationName)

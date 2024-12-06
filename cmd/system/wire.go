@@ -17,10 +17,10 @@ import (
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
-	commonbiz "origadmin/application/admin/internal/mods/common/biz"
-	commondal "origadmin/application/admin/internal/mods/common/dal"
-	//commonserver "origadmin/application/admin/internal/mods/common/server"
-	commonservice "origadmin/application/admin/internal/mods/common/service"
+	basisbiz "origadmin/application/admin/internal/mods/basis/biz"
+	basisdal "origadmin/application/admin/internal/mods/basis/dal"
+	//basisserver "origadmin/application/admin/internal/mods/basis/server"
+	basisservice "origadmin/application/admin/internal/mods/basis/service"
 	systembiz "origadmin/application/admin/internal/mods/system/biz"
 	systemdal "origadmin/application/admin/internal/mods/system/dal"
 	systemserver "origadmin/application/admin/internal/mods/system/server"
@@ -31,10 +31,10 @@ import (
 func buildInjectors(context.Context, *configs.Bootstrap, log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		loader.ProviderSet,
-		commondal.ProviderSet,
-		commonbiz.ProviderSet,
-		commonservice.ProviderSet,
-		//commonserver.ProviderSet,
+		basisdal.ProviderSet,
+		basisbiz.ProviderSet,
+		basisservice.ProviderSet,
+		//basisserver.ProviderSet,
 		systemdal.ProviderSet,
 		systembiz.ProviderSet,
 		systemservice.ProviderSet,

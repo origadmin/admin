@@ -6,8 +6,9 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -16,58 +17,60 @@ import (
 
 // UserAPIGINRPCService is a menu service.
 type UserAPIGINRPCService struct {
+	resp.Response
+
 	client pb.UserAPIClient
 }
 
-func (m UserAPIGINRPCService) CreateUser(context *gin.Context, request *pb.CreateUserRequest) {
-	response, err := m.client.CreateUser(context, request)
-	var res gins.Result
+func (s UserAPIGINRPCService) CreateUser(context *gin.Context, request *pb.CreateUserRequest) {
+	response, err := s.client.CreateUser(context, request)
+	var res resp.Result
 	if err == nil {
 		res.Success = true
 		res.Data = response.User
 	}
-	resp.Result(context, res, err)
+	s.Any(context, http.StatusOK, &res, err)
 }
 
-func (m UserAPIGINRPCService) DeleteUser(context *gin.Context, request *pb.DeleteUserRequest) {
-	response, err := m.client.DeleteUser(context, request)
-	var res gins.Result
+func (s UserAPIGINRPCService) DeleteUser(context *gin.Context, request *pb.DeleteUserRequest) {
+	response, err := s.client.DeleteUser(context, request)
+	var res resp.Result
 	if err == nil {
 		res.Success = true
 		res.Data = response.GetEmpty()
 	}
-	resp.Result(context, res, err)
+	s.Any(context, http.StatusOK, &res, err)
 }
 
-func (m UserAPIGINRPCService) GetUser(context *gin.Context, request *pb.GetUserRequest) {
-	response, err := m.client.GetUser(context, request)
-	var res gins.Result
+func (s UserAPIGINRPCService) GetUser(context *gin.Context, request *pb.GetUserRequest) {
+	response, err := s.client.GetUser(context, request)
+	var res resp.Result
 	if err == nil {
 		res.Success = true
 		res.Data = response.User
 	}
-	resp.Result(context, res, err)
+	s.Any(context, http.StatusOK, &res, err)
 }
 
-func (m UserAPIGINRPCService) ListUsers(context *gin.Context, request *pb.ListUsersRequest) {
-	response, err := m.client.ListUsers(context, request)
-	var res gins.Result
+func (s UserAPIGINRPCService) ListUsers(context *gin.Context, request *pb.ListUsersRequest) {
+	response, err := s.client.ListUsers(context, request)
+	var res resp.Result
 	if err == nil {
 		res.Success = true
 		res.Total = response.TotalSize
 		res.Data = response.Users
 	}
-	resp.Result(context, res, err)
+	s.Any(context, http.StatusOK, &res, err)
 }
 
-func (m UserAPIGINRPCService) UpdateUser(context *gin.Context, request *pb.UpdateUserRequest) {
-	response, err := m.client.UpdateUser(context, request)
-	var res gins.Result
+func (s UserAPIGINRPCService) UpdateUser(context *gin.Context, request *pb.UpdateUserRequest) {
+	response, err := s.client.UpdateUser(context, request)
+	var res resp.Result
 	if err == nil {
 		res.Success = true
 		res.Data = response.User
 	}
-	resp.Result(context, res, err)
+	s.Any(context, http.StatusOK, &res, err)
 }
 
 // NewUserAPIGINRPCService new a menu service.

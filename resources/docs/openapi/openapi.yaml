@@ -34,7 +34,60 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.common.CaptchaIDResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaIDResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/captcha/id/{id}:
+        get:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_CaptchaResources
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/captcha/id/{id}/{resource}:
+        get:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_CaptchaResource
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: resource
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaResourceResponse'
                 default:
                     description: Default error response
                     content:
@@ -100,7 +153,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.common.CaptchaImageResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaImageResponse'
                 default:
                     description: Default error response
                     content:
@@ -124,7 +177,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.common.LogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.LogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -182,7 +235,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.common.CurrentMenusResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.CurrentMenusResponse'
                 default:
                     description: Default error response
                     content:
@@ -206,7 +259,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.common.CurrentUserResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.CurrentUserResponse'
                 default:
                     description: Default error response
                     content:
@@ -222,7 +275,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.common.LoginRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.basis.LoginRequest_Data'
                 required: true
             responses:
                 "200":
@@ -230,7 +283,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.common.LoginResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.LoginResponse'
                 default:
                     description: Default error response
                     content:
@@ -743,12 +796,12 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
-        api.v1.services.common.CaptchaIDResponse:
+        api.v1.services.basis.CaptchaIDResponse:
             type: object
             properties:
                 data:
                     type: string
-        api.v1.services.common.CaptchaImageResponse:
+        api.v1.services.basis.CaptchaImageResponse:
             type: object
             properties:
                 headers:
@@ -759,17 +812,44 @@ components:
                     type: string
                     format: bytes
             description: The response message containing the greetings
-        api.v1.services.common.CurrentMenusResponse:
+        api.v1.services.basis.CaptchaResourceResponse:
+            type: object
+            properties:
+                headers:
+                    type: object
+                    additionalProperties:
+                        type: string
+                data:
+                    type: string
+                    format: bytes
+        api.v1.services.basis.CaptchaResourcesResponse:
+            type: object
+            properties:
+                image:
+                    type: string
+                    description: |-
+                        message AudioText {
+                            string text = 1;
+                            string lang = 2;
+                          }
+                    format: bytes
+                audio:
+                    type: string
+                    format: bytes
+                audio_type:
+                    type: integer
+                    format: enum
+        api.v1.services.basis.CurrentMenusResponse:
             type: object
             properties:
                 success:
                     type: boolean
-        api.v1.services.common.CurrentUserResponse:
+        api.v1.services.basis.CurrentUserResponse:
             type: object
             properties:
                 success:
                     type: boolean
-        api.v1.services.common.LoginRequest_Data:
+        api.v1.services.basis.LoginRequest_Data:
             type: object
             properties:
                 username:
@@ -780,12 +860,12 @@ components:
                     type: string
                 captcha_code:
                     type: string
-        api.v1.services.common.LoginResponse:
+        api.v1.services.basis.LoginResponse:
             type: object
             properties:
                 token:
                     $ref: '#/components/schemas/pwt.v1.Token'
-        api.v1.services.common.LogoutResponse:
+        api.v1.services.basis.LogoutResponse:
             type: object
             properties:
                 success:

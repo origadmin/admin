@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api.v1.services.basis;
+
+import "errors/errors.proto";
+
+option go_package = "v1/services/basis;basis";
+option java_multiple_files = true;
+option java_package = "com.origadmin.api.v1.admin.services.basis";
+option objc_class_prefix = "APIV1ServicesBasis";
+
+enum BasisErrorReason {
+  option (errors.default_code) = 500;
+  BASIS_ERROR_REASON_UNSPECIFIED = 0;
+  BASIS_ERROR_REASON_CAPTCHA_ID_NOT_FOUND = 1001 [(errors.code) = 404];
+}

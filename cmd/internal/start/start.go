@@ -8,6 +8,7 @@ package start
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -37,6 +38,7 @@ const (
 	startConfig  = `config`
 	startStatic  = `static`
 	startDaemon  = `daemon`
+	startDebug   = `debug`
 )
 
 var (
@@ -75,14 +77,17 @@ func Cmd() *cobra.Command {
 	cmd.Flags().StringP(startConfig, "c", "bootstrap.toml",
 		"runtime configuration files or directory (relative to workdir, multiple separated by commas)")
 	cmd.Flags().StringP(startStatic, "s", "", "static files directory")
+	cmd.Flags().BoolP(startDebug, "d", false, "set debug mode, eg: --debug")
 	cmd.Flags().Bool(startDaemon, false, "run as a daemon")
 	return cmd
 }
 
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	//flags.WorkDir, _ = cmd.Flags().GetString(startWorkDir)
-	if flags.Env == "debug" {
+	debug, _ := cmd.Flags().GetBool(startDebug)
+	if debug {
+		flags.Env = "debug"
 		flags.WorkDir = "resources/configs"
+		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 	staticDir, _ := cmd.Flags().GetString(startStatic)
 	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)

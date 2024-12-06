@@ -23,7 +23,17 @@ const RoleAPI_GetRole_FullOperation = "/api.v1.services.system.RoleAPI/GetRole"
 const RoleAPI_ListRoles_FullOperation = "/api.v1.services.system.RoleAPI/ListRoles"
 const RoleAPI_UpdateRole_FullOperation = "/api.v1.services.system.RoleAPI/UpdateRole"
 
+type RoleAPIGINRPCAgentResponder interface {
+	// Error returns a error
+	Error(*gins.Context, int, error)
+	// JSON returns a json data
+	JSON(*gins.Context, int, any)
+	// Any returns errors or any data
+	Any(*gins.Context, int, any, error)
+}
+
 type RoleAPIGINRPCAgent interface {
+	RoleAPIGINRPCAgentResponder
 	CreateRole(*gins.Context, *CreateRoleRequest)
 	DeleteRole(*gins.Context, *DeleteRoleRequest)
 	GetRole(*gins.Context, *GetRoleRequest)
@@ -43,7 +53,7 @@ func _RoleAPI_ListRoles0_GINRPC_Handler(srv RoleAPIGINRPCAgent) gins.HandlerFunc
 	return func(ctx *gins.Context) {
 		var in ListRolesRequest
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, RoleAPI_ListRoles_OperationName)
@@ -55,11 +65,11 @@ func _RoleAPI_GetRole0_GINRPC_Handler(srv RoleAPIGINRPCAgent) gins.HandlerFunc {
 	return func(ctx *gins.Context) {
 		var in GetRoleRequest
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindURI(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, RoleAPI_GetRole_OperationName)
@@ -71,11 +81,11 @@ func _RoleAPI_CreateRole0_GINRPC_Handler(srv RoleAPIGINRPCAgent) gins.HandlerFun
 	return func(ctx *gins.Context) {
 		var in CreateRoleRequest
 		if err := gins.BindBody(ctx, &in.Role); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, RoleAPI_CreateRole_OperationName)
@@ -87,15 +97,15 @@ func _RoleAPI_UpdateRole0_GINRPC_Handler(srv RoleAPIGINRPCAgent) gins.HandlerFun
 	return func(ctx *gins.Context) {
 		var in UpdateRoleRequest
 		if err := gins.BindBody(ctx, &in.Role); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindURI(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, RoleAPI_UpdateRole_OperationName)
@@ -107,11 +117,11 @@ func _RoleAPI_DeleteRole0_GINRPC_Handler(srv RoleAPIGINRPCAgent) gins.HandlerFun
 	return func(ctx *gins.Context) {
 		var in DeleteRoleRequest
 		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		if err := gins.BindURI(ctx, &in); err != nil {
-			gins.ResultError(ctx, err)
+			srv.Error(ctx, 400, err)
 			return
 		}
 		gins.SetOperation(ctx, RoleAPI_DeleteRole_OperationName)

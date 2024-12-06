@@ -45,26 +45,26 @@ message Middlewares {
 }
 
 
-message Server {
-    message Cors {
-      bool enabled = 1;
-      bool allow_all_origins = 2 [json_name = "allow_all_origins"];
-      repeated string allow_origins = 3 [json_name = "allow_origins"];
-      repeated string allow_methods = 4 [json_name = "allow_methods"];
-      repeated string allow_headers = 5 [json_name = "allow_headers"];
-      bool allow_credentials = 6 [json_name = "allow_credentials"];
-      repeated string expose_headers = 7 [json_name = "expose_headers"];
-      int32 max_age = 8 [json_name = "max_age"];
-      bool allow_wildcard = 9 [json_name = "allow_wildcard"];
-      bool allow_browser_extensions = 10 [json_name = "allow_browser_extensions"];
-      bool allow_web_sockets = 11 [json_name = "allow_web_sockets"];
-      bool allow_files = 12 [json_name = "allow_files"];
-    }
-
-    Cors cors = 1 [json_name = "cors"];
-
-  string host = 100 [json_name = "host"];
-}
+//message Server {
+//    message Cors {
+//      bool enabled = 1;
+//      bool allow_all_origins = 2 [json_name = "allow_all_origins"];
+//      repeated string allow_origins = 3 [json_name = "allow_origins"];
+//      repeated string allow_methods = 4 [json_name = "allow_methods"];
+//      repeated string allow_headers = 5 [json_name = "allow_headers"];
+//      bool allow_credentials = 6 [json_name = "allow_credentials"];
+//      repeated string expose_headers = 7 [json_name = "expose_headers"];
+//      int32 max_age = 8 [json_name = "max_age"];
+//      bool allow_wildcard = 9 [json_name = "allow_wildcard"];
+//      bool allow_browser_extensions = 10 [json_name = "allow_browser_extensions"];
+//      bool allow_web_sockets = 11 [json_name = "allow_web_sockets"];
+//      bool allow_files = 12 [json_name = "allow_files"];
+//    }
+//
+//    Cors cors = 1 [json_name = "cors"];
+//
+//  string host = 100 [json_name = "host"];
+//}
 
 message Settings {
   string crypto_type = 1 [json_name = "crypto_type"];

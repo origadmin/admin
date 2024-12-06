@@ -262,59 +262,6 @@ func (x *Middlewares) GetMiddleware() *v1.Middleware {
 	return nil
 }
 
-type Server struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Cors *Server_Cors `protobuf:"bytes,1,opt,name=cors,proto3" json:"cors,omitempty"`
-	Host string       `protobuf:"bytes,100,opt,name=host,proto3" json:"host,omitempty"`
-}
-
-func (x *Server) Reset() {
-	*x = Server{}
-	mi := &file_configs_bootstrap_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Server) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Server) ProtoMessage() {}
-
-func (x *Server) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Server.ProtoReflect.Descriptor instead.
-func (*Server) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *Server) GetCors() *Server_Cors {
-	if x != nil {
-		return x.Cors
-	}
-	return nil
-}
-
-func (x *Server) GetHost() string {
-	if x != nil {
-		return x.Host
-	}
-	return ""
-}
-
 type Settings struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -325,7 +272,7 @@ type Settings struct {
 
 func (x *Settings) Reset() {
 	*x = Settings{}
-	mi := &file_configs_bootstrap_proto_msgTypes[4]
+	mi := &file_configs_bootstrap_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -337,7 +284,7 @@ func (x *Settings) String() string {
 func (*Settings) ProtoMessage() {}
 
 func (x *Settings) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[4]
+	mi := &file_configs_bootstrap_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -350,7 +297,7 @@ func (x *Settings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Settings.ProtoReflect.Descriptor instead.
 func (*Settings) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{4}
+	return file_configs_bootstrap_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Settings) GetCryptoType() string {
@@ -374,7 +321,7 @@ type Bootstrap_Entry struct {
 
 func (x *Bootstrap_Entry) Reset() {
 	*x = Bootstrap_Entry{}
-	mi := &file_configs_bootstrap_proto_msgTypes[6]
+	mi := &file_configs_bootstrap_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -386,7 +333,7 @@ func (x *Bootstrap_Entry) String() string {
 func (*Bootstrap_Entry) ProtoMessage() {}
 
 func (x *Bootstrap_Entry) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[6]
+	mi := &file_configs_bootstrap_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -428,139 +375,6 @@ func (x *Bootstrap_Entry) GetGins() *v1.Service_GINS {
 		return x.Gins
 	}
 	return nil
-}
-
-type Server_Cors struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Enabled                bool     `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	AllowAllOrigins        bool     `protobuf:"varint,2,opt,name=allow_all_origins,proto3" json:"allow_all_origins,omitempty"`
-	AllowOrigins           []string `protobuf:"bytes,3,rep,name=allow_origins,proto3" json:"allow_origins,omitempty"`
-	AllowMethods           []string `protobuf:"bytes,4,rep,name=allow_methods,proto3" json:"allow_methods,omitempty"`
-	AllowHeaders           []string `protobuf:"bytes,5,rep,name=allow_headers,proto3" json:"allow_headers,omitempty"`
-	AllowCredentials       bool     `protobuf:"varint,6,opt,name=allow_credentials,proto3" json:"allow_credentials,omitempty"`
-	ExposeHeaders          []string `protobuf:"bytes,7,rep,name=expose_headers,proto3" json:"expose_headers,omitempty"`
-	MaxAge                 int32    `protobuf:"varint,8,opt,name=max_age,proto3" json:"max_age,omitempty"`
-	AllowWildcard          bool     `protobuf:"varint,9,opt,name=allow_wildcard,proto3" json:"allow_wildcard,omitempty"`
-	AllowBrowserExtensions bool     `protobuf:"varint,10,opt,name=allow_browser_extensions,proto3" json:"allow_browser_extensions,omitempty"`
-	AllowWebSockets        bool     `protobuf:"varint,11,opt,name=allow_web_sockets,proto3" json:"allow_web_sockets,omitempty"`
-	AllowFiles             bool     `protobuf:"varint,12,opt,name=allow_files,proto3" json:"allow_files,omitempty"`
-}
-
-func (x *Server_Cors) Reset() {
-	*x = Server_Cors{}
-	mi := &file_configs_bootstrap_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Server_Cors) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Server_Cors) ProtoMessage() {}
-
-func (x *Server_Cors) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Server_Cors.ProtoReflect.Descriptor instead.
-func (*Server_Cors) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{3, 0}
-}
-
-func (x *Server_Cors) GetEnabled() bool {
-	if x != nil {
-		return x.Enabled
-	}
-	return false
-}
-
-func (x *Server_Cors) GetAllowAllOrigins() bool {
-	if x != nil {
-		return x.AllowAllOrigins
-	}
-	return false
-}
-
-func (x *Server_Cors) GetAllowOrigins() []string {
-	if x != nil {
-		return x.AllowOrigins
-	}
-	return nil
-}
-
-func (x *Server_Cors) GetAllowMethods() []string {
-	if x != nil {
-		return x.AllowMethods
-	}
-	return nil
-}
-
-func (x *Server_Cors) GetAllowHeaders() []string {
-	if x != nil {
-		return x.AllowHeaders
-	}
-	return nil
-}
-
-func (x *Server_Cors) GetAllowCredentials() bool {
-	if x != nil {
-		return x.AllowCredentials
-	}
-	return false
-}
-
-func (x *Server_Cors) GetExposeHeaders() []string {
-	if x != nil {
-		return x.ExposeHeaders
-	}
-	return nil
-}
-
-func (x *Server_Cors) GetMaxAge() int32 {
-	if x != nil {
-		return x.MaxAge
-	}
-	return 0
-}
-
-func (x *Server_Cors) GetAllowWildcard() bool {
-	if x != nil {
-		return x.AllowWildcard
-	}
-	return false
-}
-
-func (x *Server_Cors) GetAllowBrowserExtensions() bool {
-	if x != nil {
-		return x.AllowBrowserExtensions
-	}
-	return false
-}
-
-func (x *Server_Cors) GetAllowWebSockets() bool {
-	if x != nil {
-		return x.AllowWebSockets
-	}
-	return false
-}
-
-func (x *Server_Cors) GetAllowFiles() bool {
-	if x != nil {
-		return x.AllowFiles
-	}
-	return false
 }
 
 var File_configs_bootstrap_proto protoreflect.FileDescriptor
@@ -635,48 +449,12 @@ var file_configs_bootstrap_proto_rawDesc = []byte{
 	0x6f, 0x62, 0x61, 0x6c, 0x12, 0x35, 0x0a, 0x0a, 0x6d, 0x69, 0x64, 0x64, 0x6c, 0x65, 0x77, 0x61,
 	0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69,
 	0x67, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x69, 0x64, 0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x52,
-	0x0a, 0x6d, 0x69, 0x64, 0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x22, 0xbb, 0x04, 0x0a, 0x06,
-	0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x12, 0x36, 0x0a, 0x04, 0x63, 0x6f, 0x72, 0x73, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x6f, 0x72, 0x69, 0x67, 0x61, 0x64, 0x6d, 0x69, 0x6e,
-	0x2e, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x73, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x53, 0x65, 0x72,
-	0x76, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x72, 0x73, 0x52, 0x04, 0x63, 0x6f, 0x72, 0x73, 0x12, 0x12,
-	0x0a, 0x04, 0x68, 0x6f, 0x73, 0x74, 0x18, 0x64, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x68, 0x6f,
-	0x73, 0x74, 0x1a, 0xe4, 0x03, 0x0a, 0x04, 0x43, 0x6f, 0x72, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x65,
-	0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x65, 0x6e,
-	0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x2c, 0x0a, 0x11, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x61,
-	0x6c, 0x6c, 0x5f, 0x6f, 0x72, 0x69, 0x67, 0x69, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08,
-	0x52, 0x11, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x61, 0x6c, 0x6c, 0x5f, 0x6f, 0x72, 0x69, 0x67,
-	0x69, 0x6e, 0x73, 0x12, 0x24, 0x0a, 0x0d, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x6f, 0x72, 0x69,
-	0x67, 0x69, 0x6e, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0d, 0x61, 0x6c, 0x6c, 0x6f,
-	0x77, 0x5f, 0x6f, 0x72, 0x69, 0x67, 0x69, 0x6e, 0x73, 0x12, 0x24, 0x0a, 0x0d, 0x61, 0x6c, 0x6c,
-	0x6f, 0x77, 0x5f, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x09,
-	0x52, 0x0d, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x6d, 0x65, 0x74, 0x68, 0x6f, 0x64, 0x73, 0x12,
-	0x24, 0x0a, 0x0d, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x68, 0x65, 0x61, 0x64, 0x65, 0x72, 0x73,
-	0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0d, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x68, 0x65,
-	0x61, 0x64, 0x65, 0x72, 0x73, 0x12, 0x2c, 0x0a, 0x11, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x63,
-	0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x08,
-	0x52, 0x11, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x63, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69,
-	0x61, 0x6c, 0x73, 0x12, 0x26, 0x0a, 0x0e, 0x65, 0x78, 0x70, 0x6f, 0x73, 0x65, 0x5f, 0x68, 0x65,
-	0x61, 0x64, 0x65, 0x72, 0x73, 0x18, 0x07, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0e, 0x65, 0x78, 0x70,
-	0x6f, 0x73, 0x65, 0x5f, 0x68, 0x65, 0x61, 0x64, 0x65, 0x72, 0x73, 0x12, 0x18, 0x0a, 0x07, 0x6d,
-	0x61, 0x78, 0x5f, 0x61, 0x67, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x6d, 0x61,
-	0x78, 0x5f, 0x61, 0x67, 0x65, 0x12, 0x26, 0x0a, 0x0e, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x77,
-	0x69, 0x6c, 0x64, 0x63, 0x61, 0x72, 0x64, 0x18, 0x09, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0e, 0x61,
-	0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x77, 0x69, 0x6c, 0x64, 0x63, 0x61, 0x72, 0x64, 0x12, 0x3a, 0x0a,
-	0x18, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x62, 0x72, 0x6f, 0x77, 0x73, 0x65, 0x72, 0x5f, 0x65,
-	0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x08, 0x52,
-	0x18, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x62, 0x72, 0x6f, 0x77, 0x73, 0x65, 0x72, 0x5f, 0x65,
-	0x78, 0x74, 0x65, 0x6e, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x2c, 0x0a, 0x11, 0x61, 0x6c, 0x6c,
-	0x6f, 0x77, 0x5f, 0x77, 0x65, 0x62, 0x5f, 0x73, 0x6f, 0x63, 0x6b, 0x65, 0x74, 0x73, 0x18, 0x0b,
-	0x20, 0x01, 0x28, 0x08, 0x52, 0x11, 0x61, 0x6c, 0x6c, 0x6f, 0x77, 0x5f, 0x77, 0x65, 0x62, 0x5f,
-	0x73, 0x6f, 0x63, 0x6b, 0x65, 0x74, 0x73, 0x12, 0x20, 0x0a, 0x0b, 0x61, 0x6c, 0x6c, 0x6f, 0x77,
-	0x5f, 0x66, 0x69, 0x6c, 0x65, 0x73, 0x18, 0x0c, 0x20, 0x01, 0x28, 0x08, 0x52, 0x0b, 0x61, 0x6c,
-	0x6c, 0x6f, 0x77, 0x5f, 0x66, 0x69, 0x6c, 0x65, 0x73, 0x22, 0x2c, 0x0a, 0x08, 0x53, 0x65, 0x74,
-	0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x20, 0x0a, 0x0b, 0x63, 0x72, 0x79, 0x70, 0x74, 0x6f, 0x5f,
-	0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x63, 0x72, 0x79, 0x70,
-	0x74, 0x6f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x42, 0x1a, 0x5a, 0x18, 0x69, 0x6e, 0x74, 0x65, 0x72,
-	0x6e, 0x61, 0x6c, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x73, 0x3b, 0x63, 0x6f, 0x6e, 0x66,
-	0x69, 0x67, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x0a, 0x6d, 0x69, 0x64, 0x64, 0x6c, 0x65, 0x77, 0x61, 0x72, 0x65, 0x22, 0x2c, 0x0a, 0x08, 0x53,
+	0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x12, 0x20, 0x0a, 0x0b, 0x63, 0x72, 0x79, 0x70, 0x74,
+	0x6f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x63, 0x72,
+	0x79, 0x70, 0x74, 0x6f, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x42, 0x1a, 0x5a, 0x18, 0x69, 0x6e, 0x74,
+	0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x73, 0x3b, 0x63, 0x6f,
+	0x6e, 0x66, 0x69, 0x67, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -691,41 +469,38 @@ func file_configs_bootstrap_proto_rawDescGZIP() []byte {
 	return file_configs_bootstrap_proto_rawDescData
 }
 
-var file_configs_bootstrap_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_configs_bootstrap_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_configs_bootstrap_proto_goTypes = []any{
 	(*EntrySelectorConfig)(nil), // 0: origadmin.configs.api.EntrySelectorConfig
 	(*Bootstrap)(nil),           // 1: origadmin.configs.api.Bootstrap
 	(*Middlewares)(nil),         // 2: origadmin.configs.api.Middlewares
-	(*Server)(nil),              // 3: origadmin.configs.api.Server
-	(*Settings)(nil),            // 4: origadmin.configs.api.Settings
-	nil,                         // 5: origadmin.configs.api.Bootstrap.ServersEntry
-	(*Bootstrap_Entry)(nil),     // 6: origadmin.configs.api.Bootstrap.Entry
-	(*Server_Cors)(nil),         // 7: origadmin.configs.api.Server.Cors
-	(*v1.Service)(nil),          // 8: config.v1.Service
-	(*v1.Data)(nil),             // 9: config.v1.Data
-	(*v1.Registry)(nil),         // 10: config.v1.Registry
-	(*v1.Middleware)(nil),       // 11: config.v1.Middleware
-	(*v1.Service_GRPC)(nil),     // 12: config.v1.Service.GRPC
-	(*v1.Service_HTTP)(nil),     // 13: config.v1.Service.HTTP
-	(*v1.Service_GINS)(nil),     // 14: config.v1.Service.GINS
+	(*Settings)(nil),            // 3: origadmin.configs.api.Settings
+	nil,                         // 4: origadmin.configs.api.Bootstrap.ServersEntry
+	(*Bootstrap_Entry)(nil),     // 5: origadmin.configs.api.Bootstrap.Entry
+	(*v1.Service)(nil),          // 6: config.v1.Service
+	(*v1.Data)(nil),             // 7: config.v1.Data
+	(*v1.Registry)(nil),         // 8: config.v1.Registry
+	(*v1.Middleware)(nil),       // 9: config.v1.Middleware
+	(*v1.Service_GRPC)(nil),     // 10: config.v1.Service.GRPC
+	(*v1.Service_HTTP)(nil),     // 11: config.v1.Service.HTTP
+	(*v1.Service_GINS)(nil),     // 12: config.v1.Service.GINS
 }
 var file_configs_bootstrap_proto_depIdxs = []int32{
-	5,  // 0: origadmin.configs.api.Bootstrap.servers:type_name -> origadmin.configs.api.Bootstrap.ServersEntry
-	6,  // 1: origadmin.configs.api.Bootstrap.entry:type_name -> origadmin.configs.api.Bootstrap.Entry
-	8,  // 2: origadmin.configs.api.Bootstrap.service:type_name -> config.v1.Service
-	9,  // 3: origadmin.configs.api.Bootstrap.data:type_name -> config.v1.Data
-	10, // 4: origadmin.configs.api.Bootstrap.registry:type_name -> config.v1.Registry
+	4,  // 0: origadmin.configs.api.Bootstrap.servers:type_name -> origadmin.configs.api.Bootstrap.ServersEntry
+	5,  // 1: origadmin.configs.api.Bootstrap.entry:type_name -> origadmin.configs.api.Bootstrap.Entry
+	6,  // 2: origadmin.configs.api.Bootstrap.service:type_name -> config.v1.Service
+	7,  // 3: origadmin.configs.api.Bootstrap.data:type_name -> config.v1.Data
+	8,  // 4: origadmin.configs.api.Bootstrap.registry:type_name -> config.v1.Registry
 	2,  // 5: origadmin.configs.api.Bootstrap.middlewares:type_name -> origadmin.configs.api.Middlewares
-	11, // 6: origadmin.configs.api.Middlewares.middleware:type_name -> config.v1.Middleware
-	7,  // 7: origadmin.configs.api.Server.cors:type_name -> origadmin.configs.api.Server.Cors
-	12, // 8: origadmin.configs.api.Bootstrap.Entry.grpc:type_name -> config.v1.Service.GRPC
-	13, // 9: origadmin.configs.api.Bootstrap.Entry.http:type_name -> config.v1.Service.HTTP
-	14, // 10: origadmin.configs.api.Bootstrap.Entry.gins:type_name -> config.v1.Service.GINS
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	9,  // 6: origadmin.configs.api.Middlewares.middleware:type_name -> config.v1.Middleware
+	10, // 7: origadmin.configs.api.Bootstrap.Entry.grpc:type_name -> config.v1.Service.GRPC
+	11, // 8: origadmin.configs.api.Bootstrap.Entry.http:type_name -> config.v1.Service.HTTP
+	12, // 9: origadmin.configs.api.Bootstrap.Entry.gins:type_name -> config.v1.Service.GINS
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_configs_bootstrap_proto_init() }
@@ -739,7 +514,7 @@ func file_configs_bootstrap_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_configs_bootstrap_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

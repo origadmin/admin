@@ -28,9 +28,9 @@ func IsSystemErrorReasonUserNotFound(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String() && e.Code == 500
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String() && e.Code == 404
 }
 
 func ErrorSystemErrorReasonUserNotFound(format string, args ...interface{}) *errors.Error {
-	return errors.New(500, SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+	return errors.New(404, SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
