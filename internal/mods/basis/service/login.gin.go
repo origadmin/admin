@@ -115,4 +115,11 @@ func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIGINRPCAgent {
 	return NewLoginAPIGINRPCAgent(cli)
 }
 
+func NewLoginServerAgentGINRegister(client *service.GRPCClient) func(server gins.IRouter) {
+	cli := NewLoginServerAgent(client)
+	return func(server gins.IRouter) {
+		pb.RegisterLoginAPIGINRPCAgent(server, cli)
+	}
+}
+
 var _ pb.LoginAPIGINRPCAgent = (*LoginAPIGINRPCService)(nil)

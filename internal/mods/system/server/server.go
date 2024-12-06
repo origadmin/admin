@@ -18,7 +18,6 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
-	basisserver "origadmin/application/admin/internal/mods/basis/server"
 	basisservice "origadmin/application/admin/internal/mods/basis/service"
 	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
@@ -65,19 +64,20 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 }
 
 type RegisterAgent struct {
-	Menu       pb.MenuAPIGINRPCAgent
-	Role       pb.RoleAPIGINRPCAgent
-	User       pb.UserAPIGINRPCAgent
-	basisAgent basisserver.RegisterAgent
+	Menu           pb.MenuAPIGINRPCAgent
+	Role           pb.RoleAPIGINRPCAgent
+	User           pb.UserAPIGINRPCAgent
+	basisRegisters []func(server gins.IRouter)
 }
 
 func (s RegisterAgent) GIN(server gins.IRouter) {
 	log.Info("gin server system init")
-	s.basisAgent.GIN(server)
+	for _, register := range s.basisRegisters {
+		register(server)
+	}
 	pb.RegisterMenuAPIGINRPCAgent(server, s.Menu)
 	pb.RegisterRoleAPIGINRPCAgent(server, s.Role)
 	pb.RegisterUserAPIGINRPCAgent(server, s.User)
-
 }
 
 func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
@@ -89,8 +89,8 @@ func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*Register
 		Menu: systemservice.NewMenuServerAgent(client),
 		Role: systemservice.NewRoleServerAgent(client),
 		User: systemservice.NewUserServerAgent(client),
-		basisAgent: basisserver.RegisterAgent{
-			Login: basisservice.NewLoginServerAgent(client),
+		basisRegisters: []func(server gins.IRouter){
+			basisservice.NewLoginServerAgentGINRegister(client),
 		},
 	}
 	return &register, nil
