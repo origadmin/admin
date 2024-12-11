@@ -6,8 +6,6 @@
 package dto
 
 import (
-	"net/http"
-
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/origadmin/toolkits/errors/httperr"
 
@@ -25,12 +23,14 @@ const (
 var (
 	// ErrCaptchaIDNotFound is user not found.
 	ErrCaptchaIDNotFound = pb.ErrorBasisErrorReasonCaptchaIdNotFound("captcha id not found")
-	// ErrInvalidTokenID is the error code for invalid token ID
-	ErrInvalidTokenID = httperr.New(InvalidTokenID, http.StatusNotFound, "user not found")
+	// ErrInvalidToken is the error code for invalid token ID
+	ErrInvalidToken = pb.ErrorBasisErrorReasonInvalidToken("invalid token")
 	// ErrInvalidCaptchaID is the error code for invalid captcha ID
-	ErrInvalidCaptchaID = httperr.New(InvalidCaptchaID, http.StatusBadRequest, "Invalid captcha")
-	// ErrInvalidUsernameOrPassword is the error code for invalid username or password
-	ErrInvalidUsernameOrPassword = httperr.New(InvalidUsernameOrPasswordID, http.StatusBadRequest, "Invalid username or password")
+	ErrInvalidCaptchaID = pb.ErrorBasisErrorReasonInvalidCaptchaId("invalid captcha id")
+	// ErrInvalidUsername is the error code for invalid username
+	ErrInvalidUsername = pb.ErrorBasisErrorReasonInvalidUsername("invalid username")
+	// ErrInvalidPassword is the error code for invalid password
+	ErrInvalidPassword = pb.ErrorBasisErrorReasonInvalidPassword("invalid password")
 )
 
 func ErrorRPC2HTTP(err *errors.Error) *httperr.Error {

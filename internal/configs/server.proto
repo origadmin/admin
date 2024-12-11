@@ -7,7 +7,7 @@ import "config/v1/service.proto";
 import "config/v1/middleware.proto";
 import "buf/validate/validate.proto";
 
-option go_package = "internal/configs;configs";
+option go_package = "origadmin/application/admin/internal/configs";
 
 message Server {
   // name is the application name or service name for used

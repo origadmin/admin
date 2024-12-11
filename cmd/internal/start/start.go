@@ -25,6 +25,7 @@ import (
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 	logger "github.com/origadmin/slog-kratos"
+	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/spf13/cobra"
 
@@ -113,16 +114,6 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	//}
 	//src := loader.LoadSourceFiles(flags.WorkDir, flags.ConfigPath)
 	//source := loader.FileSourceConfig(flags.WorkPath())
-	bs, err := loader.LoadBootstrap(&flags)
-	if err != nil {
-		return errors.Wrap(err, "load config error")
-	}
-	if bs == nil {
-		return fmt.Errorf("bootstrap config not found")
-	}
-
-	log.Infof("bootstrap: %+v", loader.PrintString(bs))
-
 	if daemon, _ := cmd.Flags().GetBool("daemon"); daemon {
 		bin, err := filepath.Abs(os.Args[0])
 		if err != nil {
@@ -146,6 +137,19 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		log.Errorf("service %s daemon thread started with pid %d \n", flags.ServiceName(), pid)
 		return nil
 	}
+	bs, err := loader.LoadBootstrap(&flags)
+	if err != nil {
+		return errors.Wrap(err, "load config error")
+	}
+	if bs == nil {
+		return fmt.Errorf("bootstrap config not found")
+	}
+	if bs.CryptoType == "argon2" {
+		hash.UseArgon2()
+	}
+
+	log.Infof("bootstrap: %+v", loader.PrintString(bs))
+
 	lockfile := fmt.Sprintf("%s.lock", command.ToLower(cmd))
 	if err = os.WriteFile(lockfile, []byte(fmt.Sprintf("%d", os.Getpid())), 0o600); err == nil {
 		defer os.Remove(lockfile)

@@ -6,6 +6,7 @@ package dal
 
 import (
 	"bytes"
+	"fmt"
 	"sync"
 
 	"github.com/LyricTian/captcha"
@@ -13,6 +14,7 @@ import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
+	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/errors/httperr"
 
@@ -22,54 +24,67 @@ import (
 )
 
 type loginRepo struct {
-	bufpool  *sync.Pool
-	Captcha  *configs.Captcha
-	RootUser *configs.RootUser
-	Menu     systemdto.MenuRepo
-	Role     systemdto.RoleRepo
-	User     systemdto.UserRepo
+	*configs.BasisConfig
+	bufpool *sync.Pool
+	Menu    systemdto.MenuRepo
+	Role    systemdto.RoleRepo
+	User    systemdto.UserRepo
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {
+	log.Debugf("Login request received with data: %+v", in.GetData())
 	data := in.GetData()
+
 	// verify captcha
+	log.Debugf("Verifying captcha with id %s and code %s", data.CaptchaId, data.CaptchaCode)
 	if !captcha.VerifyString(data.CaptchaId, data.CaptchaCode) {
+		log.Warnf("Invalid captcha id %s or code %s", data.CaptchaId, data.CaptchaCode)
 		return nil, dto.ErrInvalidCaptchaID
 	}
 
 	//ctx = context.NewTag(ctx, logging.TagKeyLogin)
 
 	if root := repo.RootUser; root.GetEnabled() {
+		log.Debugf("Root user is enabled, checking if username matches")
 		// login by root
 		username := root.Username
 		if data.Username == username {
-			if data.Password != root.Password {
-				return nil, dto.ErrInvalidUsernameOrPassword
+			log.Debugf("Username matches, checking password")
+			if err := hash.Compare(root.Password, data.Password, root.Salt); err != nil {
+				log.Warnf("Invalid password for root user")
+				return nil, dto.ErrInvalidPassword
 			}
 
 			userID := root.Id
 			ctx = context.NewID(ctx, root.Id)
-			log.Info("Login by root")
+			log.Infof("Login by root successful, user ID: %s", userID)
 			return repo.genToken(ctx, userID)
 		}
 	}
 
 	// get user info
+	log.Debugf("Getting user info for username %s", data.Username)
 	user, err := repo.User.GetByUserName(ctx, data.Username, "id", "password", "salt", "status")
-	switch {
-	case err != nil:
+	if err != nil {
+		log.Errorf("Error getting user info: %v", err)
 		return nil, err
+	}
+	switch {
 	case user == nil:
-		return nil, dto.ErrInvalidUsernameOrPassword
+		log.Warnf("User not found with username %s", data.Username)
+		return nil, dto.ErrInvalidUsername
 	case user.Status != systemdto.UserStatusActivated:
+		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:
-
+		log.Debugf("User found with ID %s and status %s", user.Id, user.Status)
 	}
 
 	// check password
+	log.Debugf("Comparing password for user %s", data.Username)
 	if err := hash.Compare(user.Password, data.Password, user.Salt); err != nil {
-		return nil, dto.ErrInvalidUsernameOrPassword
+		log.Warnf("Invalid password for user %s", data.Username)
+		return nil, dto.ErrInvalidPassword
 	}
 
 	userID := user.Id
@@ -77,26 +92,16 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	ctx = context.NewID(ctx, userID)
 
 	// set user cache with role ids
+	log.Debugf("Getting role IDs for user %s", username)
 	roleIDs, err := repo.User.GetRoleIDs(ctx, userID)
 	if err != nil {
-		return nil, err
+		log.Errorf("Error getting role IDs: %v", err)
+		return nil, kerr.Newf(404, "UNKNOWN", "failed to get user role ids: %v", err)
 	}
-
-	//userCache := helpers.UserCache{
-	//	Root:     config.C().General.Root.ID == userID,
-	//	ID:       userID,
-	//	Username: username,
-	//	RoleIDs:  roleIDs,
-	//}.String()
-	//err = repo.Cache.Set(ctx, config.CacheNSForUser,
-	//	userID, userCache,
-	//	time.Duration(config.C().Dictionary.UserCacheExp)*time.Hour)
-	//if err != nil {
-	//	logging.FromAbnormal(ctx).LogAttrs(ctx, slog.LevelError, "Failed to set cache", slog.Any("error", err))
-	//}
 
 	log.Infof("User %s logged in successfully with role ids: %v", username, roleIDs)
 	// generate token
+	log.Debugf("Generating token for user %s", username)
 	return repo.genToken(ctx, userID)
 }
 
@@ -165,18 +170,29 @@ func (repo loginRepo) putBuf(buf *bytes.Buffer) {
 }
 
 func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginResponse, error) {
-	//TODO implement me
-	panic("implement me")
+
 }
 
 // NewLoginRepo .
-func NewLoginRepo(cfg *configs.Captcha, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.Logger) dto.LoginRepo {
+func NewLoginRepo(cfg *configs.BasisConfig, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.Logger) dto.LoginRepo {
+	var err error
+	if cfg.RootUser.RandomPassword {
+		passwd := rand.GenerateRandom(12)
+		cfg.RootUser.Salt = rand.GenerateSalt()
+		cfg.RootUser.Password, err = hash.Generate(passwd, cfg.RootUser.Salt)
+		if err == nil {
+			fmt.Println("Root user password:", passwd)
+		} else {
+			log.Errorf("Error generating password: %v", err)
+			cfg.RootUser.RandomPassword = false
+		}
+	}
 	return &loginRepo{
-		bufpool: BufPool(),
-		Captcha: cfg,
-		Menu:    sysMenu,
-		Role:    sysRole,
-		User:    sysUser,
+		bufpool:     BufPool(),
+		BasisConfig: cfg,
+		Menu:        sysMenu,
+		Role:        sysRole,
+		User:        sysUser,
 	}
 }
 

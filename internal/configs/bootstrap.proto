@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package origadmin.configs.api;
 
 import "config/v1/data.proto";
@@ -7,7 +8,7 @@ import "config/v1/service.proto";
 import "config/v1/middleware.proto";
 import "buf/validate/validate.proto";
 
-option go_package = "internal/configs;configs";
+option go_package = "origadmin/application/admin/internal/configs";
 
 message EntrySelectorConfig {
   bool global = 2 [json_name = "global"];
@@ -36,6 +37,9 @@ message Bootstrap {
   config.v1.Data data = 300 [json_name = "data"];
   config.v1.Registry registry = 400 [json_name = "registry"];
   Middlewares middlewares = 9 [json_name = "middlewares"];
+
+
+
   string id = 99 ;
 }
 

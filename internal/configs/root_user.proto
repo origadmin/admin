@@ -3,17 +3,29 @@ package origadmin.configs.api;
 
 import "buf/validate/validate.proto";
 
-option go_package = "internal/configs;configs";
+option go_package = "origadmin/application/admin/internal/configs";
 
 message RootUser {
   bool enabled = 1 [json_name = "enabled"];
   string id = 2 [json_name = "id", (buf.validate.field).required = true];
   string username = 3 [json_name = "username", (buf.validate.field).required = true];
-  string password = 4 [json_name = "password", (buf.validate.field).required = true];
-  string name = 5 [json_name = "name"];
-  string email = 6 [json_name = "email"];
-  string nickname = 7 [json_name = "nickname"];
-  string avatar = 8 [json_name = "avatar"];
-  string mobile = 9 [json_name = "mobile"];
-  string description = 10 [json_name = "description"];
+  string password = 4 [
+    json_name = "password",
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 6, max_len: 32}
+  ];
+  string salt = 5 [
+    json_name = "salt",
+    (buf.validate.field).required = true,
+    (buf.validate.field).string = {min_len: 6, max_len: 12}
+  ];
+  string name = 6 [json_name = "name"];
+  string email = 7 [json_name = "email"];
+  string nickname = 8 [json_name = "nickname"];
+  string avatar = 9 [json_name = "avatar"];
+  string mobile = 10 [json_name = "mobile"];
+  string description = 11 [json_name = "description"];
+
+  bool auto_create = 100 [json_name = "auto_create"];
+  bool random_password = 101 [json_name = "random_password"];
 }

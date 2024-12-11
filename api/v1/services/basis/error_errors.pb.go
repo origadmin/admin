@@ -34,3 +34,63 @@ func IsBasisErrorReasonCaptchaIdNotFound(err error) bool {
 func ErrorBasisErrorReasonCaptchaIdNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, BasisErrorReason_BASIS_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
+
+func IsBasisErrorReasonInvalidCaptchaId(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == BasisErrorReason_BASIS_ERROR_REASON_INVALID_CAPTCHA_ID.String() && e.Code == 400
+}
+
+func ErrorBasisErrorReasonInvalidCaptchaId(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, BasisErrorReason_BASIS_ERROR_REASON_INVALID_CAPTCHA_ID.String(), fmt.Sprintf(format, args...))
+}
+
+func IsBasisErrorReasonInvalidCaptchaCode(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == BasisErrorReason_BASIS_ERROR_REASON_INVALID_CAPTCHA_CODE.String() && e.Code == 400
+}
+
+func ErrorBasisErrorReasonInvalidCaptchaCode(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, BasisErrorReason_BASIS_ERROR_REASON_INVALID_CAPTCHA_CODE.String(), fmt.Sprintf(format, args...))
+}
+
+func IsBasisErrorReasonInvalidToken(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == BasisErrorReason_BASIS_ERROR_REASON_INVALID_TOKEN.String() && e.Code == 401
+}
+
+func ErrorBasisErrorReasonInvalidToken(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, BasisErrorReason_BASIS_ERROR_REASON_INVALID_TOKEN.String(), fmt.Sprintf(format, args...))
+}
+
+func IsBasisErrorReasonInvalidUsername(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == BasisErrorReason_BASIS_ERROR_REASON_INVALID_USERNAME.String() && e.Code == 400
+}
+
+func ErrorBasisErrorReasonInvalidUsername(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, BasisErrorReason_BASIS_ERROR_REASON_INVALID_USERNAME.String(), fmt.Sprintf(format, args...))
+}
+
+func IsBasisErrorReasonInvalidPassword(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == BasisErrorReason_BASIS_ERROR_REASON_INVALID_PASSWORD.String() && e.Code == 400
+}
+
+func ErrorBasisErrorReasonInvalidPassword(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, BasisErrorReason_BASIS_ERROR_REASON_INVALID_PASSWORD.String(), fmt.Sprintf(format, args...))
+}

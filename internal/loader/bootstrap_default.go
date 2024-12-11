@@ -373,3 +373,23 @@ func DefaultCaptcha() *configs.Captcha {
 		},
 	}
 }
+
+func DefaultRootUser() *configs.RootUser {
+	return &configs.RootUser{
+		Enabled:        true,
+		Username:       "admin",
+		Password:       "admin",
+		RandomPassword: true,
+		Name:           "admin",
+		Nickname:       "admin",
+		Email:          "admin@admin.com",
+		Mobile:         "1380000000",
+	}
+}
+
+func DefaultBasisConfig() *configs.BasisConfig {
+	return &configs.BasisConfig{
+		RootUser: DefaultRootUser(),
+		Captcha:  DefaultCaptcha(),
+	}
+}

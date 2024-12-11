@@ -65,6 +65,8 @@ func (m *RootUser) validate(all bool) error {
 
 	// no validation rules for Password
 
+	// no validation rules for Salt
+
 	// no validation rules for Name
 
 	// no validation rules for Email
@@ -76,6 +78,10 @@ func (m *RootUser) validate(all bool) error {
 	// no validation rules for Mobile
 
 	// no validation rules for Description
+
+	// no validation rules for AutoCreate
+
+	// no validation rules for RandomPassword
 
 	if len(errors) > 0 {
 		return RootUserMultiError(errors)

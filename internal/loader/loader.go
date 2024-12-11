@@ -23,7 +23,7 @@ import (
 
 var (
 	ProviderSet = wire.NewSet(
-		NewCaptcha,
+		NewBasisConfig,
 		NewRegistrar,
 		NewAgentGINRegistrar,
 		wire.Struct(new(InjectorServer), "*"),
@@ -58,10 +58,10 @@ func init() {
 	runtime.RegisterService("admin", service.DefaultServiceBuilder)
 }
 
-func NewCaptcha(bootstrap *configs.Bootstrap) *configs.Captcha {
-	c := DefaultCaptcha()
+func NewBasisConfig(bootstrap *configs.Bootstrap) *configs.BasisConfig {
+	//c := DefaultCaptcha()
 	// todo Read from the configuration file
-	return c
+	return DefaultBasisConfig()
 }
 
 func NewAgentGINRegistrar(systemagent *systemserver.RegisterAgent) []agent.GINRegistrar {

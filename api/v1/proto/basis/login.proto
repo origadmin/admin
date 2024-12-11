@@ -5,7 +5,7 @@ package api.v1.services.basis;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "pwt/v1/token.proto";
-import "buf/validate/validate.proto";
+import "validate/validate.proto";
 
 option go_package = "v1/services/basis;basis";
 option java_multiple_files = true;
@@ -64,7 +64,9 @@ service LoginAPI {
 
 message LoginRequest {
   message Data {
-    string username = 1 [json_name = "username", (buf.validate.field).required = true];
+    string username = 1 [json_name = "username",
+      (validate.rules).message.required = true
+    ];
     string password = 2 [json_name = "password", (buf.validate.field).required = true];
     string captcha_id = 3 [json_name = "captcha_id", (buf.validate.field).required = true];
     string captcha_code = 4 [json_name = "captcha_code", (buf.validate.field).required = true];

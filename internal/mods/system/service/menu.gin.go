@@ -5,6 +5,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/origadmin/runtime/service"
 
@@ -19,55 +21,65 @@ type MenuAPIGINRPCService struct {
 	client pb.MenuAPIClient
 }
 
-func (m MenuAPIGINRPCService) CreateMenu(context *gin.Context, request *pb.CreateMenuRequest) {
-	response, err := m.client.CreateMenu(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.Menu
+func (s MenuAPIGINRPCService) CreateMenu(context *gin.Context, request *pb.CreateMenuRequest) {
+	response, err := s.client.CreateMenu(context, request)
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	resp.Any(context, res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.Menu,
+	})
 }
 
-func (m MenuAPIGINRPCService) DeleteMenu(context *gin.Context, request *pb.DeleteMenuRequest) {
-	response, err := m.client.DeleteMenu(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.Empty
+func (s MenuAPIGINRPCService) DeleteMenu(context *gin.Context, request *pb.DeleteMenuRequest) {
+	response, err := s.client.DeleteMenu(context, request)
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	resp.Any(context, res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.Empty,
+	})
 }
 
-func (m MenuAPIGINRPCService) GetMenu(context *gin.Context, request *pb.GetMenuRequest) {
-	response, err := m.client.GetMenu(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.Menu
+func (s MenuAPIGINRPCService) GetMenu(context *gin.Context, request *pb.GetMenuRequest) {
+	response, err := s.client.GetMenu(context, request)
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	resp.Any(context, res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.Menu,
+	})
 }
 
-func (m MenuAPIGINRPCService) ListMenus(context *gin.Context, request *pb.ListMenusRequest) {
-	response, err := m.client.ListMenus(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Total = response.TotalSize
-		res.Data = response.Menus
+func (s MenuAPIGINRPCService) ListMenus(context *gin.Context, request *pb.ListMenusRequest) {
+	response, err := s.client.ListMenus(context, request)
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	resp.Any(context, res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Total:   response.TotalSize,
+		Data:    response.Menus,
+	})
 }
 
-func (m MenuAPIGINRPCService) UpdateMenu(context *gin.Context, request *pb.UpdateMenuRequest) {
-	response, err := m.client.UpdateMenu(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.Menu
+func (s MenuAPIGINRPCService) UpdateMenu(context *gin.Context, request *pb.UpdateMenuRequest) {
+	response, err := s.client.UpdateMenu(context, request)
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	resp.Any(context, res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.Menu,
+	})
 }
 
 // NewMenuAPIGINRPCService new a menu service.

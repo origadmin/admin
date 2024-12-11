@@ -24,53 +24,63 @@ type UserAPIGINRPCService struct {
 
 func (s UserAPIGINRPCService) CreateUser(context *gin.Context, request *pb.CreateUserRequest) {
 	response, err := s.client.CreateUser(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.User
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	s.Any(context, http.StatusOK, &res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.User,
+	})
 }
 
 func (s UserAPIGINRPCService) DeleteUser(context *gin.Context, request *pb.DeleteUserRequest) {
 	response, err := s.client.DeleteUser(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.GetEmpty()
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	s.Any(context, http.StatusOK, &res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.Empty,
+	})
 }
 
 func (s UserAPIGINRPCService) GetUser(context *gin.Context, request *pb.GetUserRequest) {
 	response, err := s.client.GetUser(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.User
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	s.Any(context, http.StatusOK, &res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.User,
+	})
 }
 
 func (s UserAPIGINRPCService) ListUsers(context *gin.Context, request *pb.ListUsersRequest) {
 	response, err := s.client.ListUsers(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Total = response.TotalSize
-		res.Data = response.Users
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	s.Any(context, http.StatusOK, &res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Total:   response.TotalSize,
+		Data:    response.Users,
+	})
 }
 
 func (s UserAPIGINRPCService) UpdateUser(context *gin.Context, request *pb.UpdateUserRequest) {
 	response, err := s.client.UpdateUser(context, request)
-	var res resp.Result
-	if err == nil {
-		res.Success = true
-		res.Data = response.User
+	if err != nil {
+		s.Error(context, http.StatusNotFound, err)
+		return
 	}
-	s.Any(context, http.StatusOK, &res, err)
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response.User,
+	})
 }
 
 // NewUserAPIGINRPCService new a menu service.

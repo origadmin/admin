@@ -3,7 +3,7 @@ package origadmin.configs.api;
 
 import "buf/validate/validate.proto";
 
-option go_package = "internal/configs;configs";
+option go_package = "origadmin/application/admin/internal/configs";
 
 message Captcha {
   // Length of the verification code
