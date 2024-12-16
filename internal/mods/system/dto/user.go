@@ -48,6 +48,8 @@ type UserRepo interface {
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
 	GetByUserName(context.Context, string, ...string) (*UserPB, error)
 	GetRoleIDs(context.Context, string) ([]string, error)
+	ListMenuByUserID(context.Context, string) ([]*MenuPB, error)
+	Current(context.Context, string) (*UserPB, error)
 }
 
 type UserQueryOption struct {

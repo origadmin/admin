@@ -13,8 +13,8 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(bootstrap *configs.Bootstrap, l log.Logger) *service.HTTPServer {
-	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService())
+func NewHTTPServer(bootstrap *configs.Bootstrap, l log.Logger, ss ...service.OptionSetting) *service.HTTPServer {
+	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), ss...)
 	if err != nil {
 		panic(err)
 	}

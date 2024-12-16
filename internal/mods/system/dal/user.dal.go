@@ -20,6 +20,18 @@ type userRepo struct {
 	db *Data
 }
 
+func (repo userRepo) Current(ctx context.Context, id string) (*dto.UserPB, error) {
+	return repo.Get(ctx, id)
+}
+
+func (repo userRepo) ListMenuByUserID(ctx context.Context, id string) ([]*dto.MenuPB, error) {
+	menus, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryMenus().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertMenus(menus), nil
+}
+
 func (repo userRepo) GetByUserName(ctx context.Context, username string, fields ...string) (*dto.UserPB, error) {
 	query := repo.db.User(ctx).Query().Where(user.UsernameEQ(username))
 	var option dto.UserQueryOption

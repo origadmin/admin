@@ -22,12 +22,12 @@ type menuRepo struct {
 	db *Data
 }
 
-func (m menuRepo) Get(ctx context.Context, id string, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
+func (repo menuRepo) Get(ctx context.Context, id string, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
 	var option dto.MenuQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	query := m.db.Menu(ctx).Query().Where(menu.ID(id))
+	query := repo.db.Menu(ctx).Query().Where(menu.ID(id))
 	query = menuQueryOptions(query, option)
 	result, err := query.First(ctx)
 	if err != nil {
@@ -36,12 +36,12 @@ func (m menuRepo) Get(ctx context.Context, id string, options ...dto.MenuQueryOp
 	return dto.ConvertMenu2PB(result), nil
 }
 
-func (m menuRepo) Create(ctx context.Context, menu *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
+func (repo menuRepo) Create(ctx context.Context, menu *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
 	var option dto.MenuQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	create := m.db.Menu(ctx).Create()
+	create := repo.db.Menu(ctx).Create()
 	create.SetMenu(dto.MenuObject(menu), option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -50,12 +50,12 @@ func (m menuRepo) Create(ctx context.Context, menu *dto.MenuPB, options ...dto.M
 	return dto.ConvertMenu2PB(saved), nil
 }
 
-func (m menuRepo) Delete(ctx context.Context, id string) error {
-	return m.db.Menu(ctx).DeleteOneID(id).Exec(ctx)
+func (repo menuRepo) Delete(ctx context.Context, id string) error {
+	return repo.db.Menu(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (m menuRepo) Update(ctx context.Context, menu *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
-	update := m.db.Menu(ctx).UpdateOneID(menu.Id)
+func (repo menuRepo) Update(ctx context.Context, menu *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
+	update := repo.db.Menu(ctx).UpdateOneID(menu.Id)
 	update.SetMenu(dto.MenuObject(menu))
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -64,13 +64,13 @@ func (m menuRepo) Update(ctx context.Context, menu *dto.MenuPB, options ...dto.M
 	return dto.ConvertMenu2PB(saved), nil
 }
 
-func (m menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options ...dto.MenuQueryOption) ([]*dto.MenuPB, int32, error) {
+func (repo menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options ...dto.MenuQueryOption) ([]*dto.MenuPB, int32, error) {
 	var option dto.MenuQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
 
-	query := m.db.Menu(ctx).Query()
+	query := repo.db.Menu(ctx).Query()
 	if option.IncludeResources {
 		query = query.WithResources()
 	}

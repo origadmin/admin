@@ -55,7 +55,7 @@ type InjectorServer struct {
 
 func init() {
 	runtime.RegisterConfigFunc("file", NewFileConfig)
-	runtime.RegisterService("admin", service.DefaultServiceBuilder)
+	runtime.RegisterService("ORIGADMIN_SERVICE", service.DefaultServiceBuilder)
 }
 
 func NewBasisConfig(bootstrap *configs.Bootstrap) *configs.BasisConfig {

@@ -13,10 +13,12 @@ import (
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/config"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/service"
+	servicegrpc "github.com/origadmin/runtime/service/grpc"
+
+	basisservice "origadmin/application/admin/internal/mods/basis/service"
 )
 
 func TestNewLoginServerAgent(t *testing.T) {
@@ -24,7 +26,7 @@ func TestNewLoginServerAgent(t *testing.T) {
 		client *service.GRPCClient
 	}
 
-	service := &configv1.Service{
+	serviceConfig := &configv1.Service{
 		Name: ServiceName,
 		//Grpc: entry.GetGrpc(),
 		//Http: entry.GetHttp(),
@@ -42,7 +44,10 @@ func TestNewLoginServerAgent(t *testing.T) {
 		t.Fatalf("create discovery: %v", err)
 	}
 
-	client, err := runtime.NewGRPCServiceClient(context.Background(), service, config.WithServiceOption(config.WithServiceDiscovery(discovery)))
+	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, service.WithGRPC(func(o *servicegrpc.Option) {
+		o.Discovery = discovery
+		o.ServiceName = ServiceName
+	}))
 	if err != nil {
 		t.Fatalf("create login grpc client: %v", err)
 	}
@@ -64,7 +69,7 @@ func TestNewLoginServerAgent(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			//agent := NewLoginServerAgent(tt.args.client)
 			//agent.CaptchaID(nil, &dto.CaptchaIDRequest{Id: "123"})
-			if got := NewLoginServerAgent(tt.args.client); !reflect.DeepEqual(got, tt.want) {
+			if got := basisservice.NewLoginServerAgentGINRegister(tt.args.client); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewLoginServerAgent() = %v, want %v", got, tt.want)
 			}
 		})

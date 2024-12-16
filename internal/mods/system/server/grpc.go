@@ -16,8 +16,8 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(bootstrap *configs.Bootstrap, l log.Logger) *service.GRPCServer {
-	srv, err := runtime.NewGRPCServiceServer(bootstrap.GetService())
+func NewGRPCServer(bootstrap *configs.Bootstrap, l log.Logger, ss ...service.OptionSetting) *service.GRPCServer {
+	srv, err := runtime.NewGRPCServiceServer(bootstrap.GetService(), ss...)
 	if err != nil {
 		panic(err)
 	}

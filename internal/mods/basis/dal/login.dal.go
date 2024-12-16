@@ -11,13 +11,21 @@ import (
 
 	"github.com/LyricTian/captcha"
 	kerr "github.com/go-kratos/kratos/v2/errors"
+	"github.com/origadmin/contrib/security/authn/jwt"
 	"github.com/origadmin/runtime/context"
+	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	pwtv1 "github.com/origadmin/runtime/gen/go/pwt/v1"
+	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/errors/httperr"
+	"github.com/origadmin/toolkits/security"
+	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/basis/dto"
 	systemdto "origadmin/application/admin/internal/mods/system/dto"
@@ -25,10 +33,11 @@ import (
 
 type loginRepo struct {
 	*configs.BasisConfig
-	bufpool *sync.Pool
-	Menu    systemdto.MenuRepo
-	Role    systemdto.RoleRepo
-	User    systemdto.UserRepo
+	bufpool       *sync.Pool
+	Menu          systemdto.MenuRepo
+	Role          systemdto.RoleRepo
+	User          systemdto.UserRepo
+	Authenticator security.Authenticator
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {
@@ -136,13 +145,27 @@ func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) 
 }
 
 func (repo loginRepo) CurrentMenus(ctx context.Context, in *dto.CurrentMenusRequest) (*dto.CurrentMenusResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	menus, err := repo.User.ListMenuByUserID(ctx, in.UserId)
+	if err != nil {
+		return nil, err
+	}
+	var anyMenus []*anypb.Any
+	for i, menu := range menus {
+		anyMenus[i] = resp.Any(menu)
+	}
+	return &dto.CurrentMenusResponse{
+		Data: anyMenus,
+	}, nil
 }
 
 func (repo loginRepo) CurrentUser(ctx context.Context, in *dto.CurrentUserRequest) (*dto.CurrentUserResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	user, err := repo.User.Current(ctx, in.GetData().GetUserId())
+	if err != nil {
+		return nil, err
+	}
+	return &dto.CurrentUserResponse{
+		Data: resp.Any(user),
+	}, nil
 }
 
 func (repo loginRepo) Logout(ctx context.Context, in *dto.LogoutRequest) (*dto.LogoutResponse, error) {
@@ -170,12 +193,50 @@ func (repo loginRepo) putBuf(buf *bytes.Buffer) {
 }
 
 func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginResponse, error) {
-	return nil, nil
+	claims, err := repo.Authenticator.CreateIdentityClaims(ctx, id, false)
+	if err != nil {
+		return nil, err
+	}
+	token, err := repo.Authenticator.CreateToken(ctx, claims)
+	if err != nil {
+		return nil, err
+	}
+	refreshClaims, err := repo.Authenticator.CreateIdentityClaims(ctx, id, true)
+	if err != nil {
+		return nil, err
+	}
+	refreshToken, err := repo.Authenticator.CreateToken(ctx, refreshClaims)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.LoginResponse{
+		Token: &pwtv1.Token{
+			Token:          token,
+			RefreshToken:   refreshToken,
+			ExpirationTime: timestamppb.New(claims.GetExpiration()),
+			SchemeType:     security.SchemeBearer.String(),
+			Claims:         fromSecurityClaims(claims),
+		},
+	}, nil
+}
+
+func fromSecurityClaims(claims security.Claims) *securityv1.Claims {
+	return &securityv1.Claims{
+		Sub:    claims.GetSubject(),
+		Iss:    claims.GetIssuer(),
+		Aud:    claims.GetAudience(),
+		Exp:    timestamppb.New(claims.GetExpiration()),
+		Nbf:    timestamppb.New(claims.GetNotBefore()),
+		Iat:    timestamppb.New(claims.GetIssuedAt()),
+		Jti:    claims.GetJWTID(),
+		Scopes: claims.GetScopes(),
+	}
 }
 
 // NewLoginRepo .
 func NewLoginRepo(cfg *configs.BasisConfig, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.Logger) dto.LoginRepo {
 	var err error
+	// todo: generate random password for root user if not exists
 	if cfg.RootUser.RandomPassword {
 		passwd := rand.GenerateRandom(12)
 		cfg.RootUser.Salt = rand.GenerateSalt()
@@ -187,12 +248,18 @@ func NewLoginRepo(cfg *configs.BasisConfig, sysMenu systemdto.MenuRepo, sysRole 
 			cfg.RootUser.RandomPassword = false
 		}
 	}
+
+	authenticator, err := jwt.NewAuthenticator(&configv1.Security{})
+	if err != nil {
+		panic(err)
+	}
 	return &loginRepo{
-		bufpool:     BufPool(),
-		BasisConfig: cfg,
-		Menu:        sysMenu,
-		Role:        sysRole,
-		User:        sysUser,
+		bufpool:       BufPool(),
+		BasisConfig:   cfg,
+		Menu:          sysMenu,
+		Role:          sysRole,
+		User:          sysUser,
+		Authenticator: authenticator,
 	}
 }
 

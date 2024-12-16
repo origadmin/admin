@@ -86,12 +86,17 @@ message LogoutResponse {
   bool success = 1;
 }
 
+message CurrentUserRequestQuery {
+  string user_id = 1 [json_name = "user_id"];
+}
+
 message CurrentUserRequest {
-  google.protobuf.Any data = 2 [json_name = "data"];
+  CurrentUserRequestQuery data = 1 [json_name = "data"];
 }
 
 message CurrentUserResponse {
   bool success = 1;
+  google.protobuf.Any data = 2 [json_name = "data"];
 }
 
 message CaptchaIDRequest {
@@ -123,10 +128,12 @@ message CaptchaImageResponse {
 
 
 message CurrentMenusRequest {
+  string user_id = 1 [json_name = "user_id"];
   google.protobuf.Any data = 2 [json_name = "data"];
 }
 message CurrentMenusResponse {
   bool success = 1;
+  repeated google.protobuf.Any data = 2 [json_name = "data"];
 }
 
 message CaptchaResourcesRequest {

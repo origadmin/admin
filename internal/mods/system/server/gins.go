@@ -10,6 +10,7 @@ import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
+	"github.com/origadmin/runtime/service"
 	"github.com/origadmin/toolkits/env"
 	"github.com/origadmin/toolkits/helpers"
 	"github.com/origadmin/toolkits/net"
@@ -18,13 +19,14 @@ import (
 )
 
 // NewGINSServer new a gin server.
-func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
+func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger, ss ...service.OptionSetting) *gins.Server {
 	ms := middleware.NewServer(bootstrap.GetMiddlewares().GetMiddleware())
+	//option := settings.ApplyOrZero(ss...)
 	var opts = []gins.ServerOption{
 		gins.Middleware(ms...),
 	}
-	service := bootstrap.GetService()
-	cfg := service.GetGins()
+	serviceConfig := bootstrap.GetService()
+	cfg := serviceConfig.GetGins()
 	if cfg == nil {
 		return nil
 	}

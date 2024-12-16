@@ -20,15 +20,16 @@ type HTTPRegistrar interface {
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(bootstrap *configs.Bootstrap, l log.Logger) *service.HTTPServer {
-	service := bootstrap.GetService()
-	if service == nil {
-		panic("no service")
+	serviceConfig := bootstrap.GetService()
+	if serviceConfig == nil {
+		panic("no serviceConfig")
 	}
-	service.Name = types.ZeroOr(service.Name, "admin")
+	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService())
 	if err != nil {
 		panic(err)
 	}
+
 	return srv
 }
 

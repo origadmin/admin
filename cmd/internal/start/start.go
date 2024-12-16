@@ -148,8 +148,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		hash.UseArgon2()
 	}
 
-	log.Infof("bootstrap: %+v", loader.PrintString(bs))
-
+	//log.Infof("bootstrap: %+v", loader.PrintString(bs))
 	lockfile := fmt.Sprintf("%s.lock", command.ToLower(cmd))
 	if err = os.WriteFile(lockfile, []byte(fmt.Sprintf("%d", os.Getpid())), 0o600); err == nil {
 		defer os.Remove(lockfile)

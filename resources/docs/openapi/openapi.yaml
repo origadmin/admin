@@ -190,6 +190,10 @@ paths:
                 - LoginAPI
             operationId: LoginAPI_CurrentMenus
             parameters:
+                - name: user_id
+                  in: query
+                  schema:
+                    type: string
                 - name: data.type_url
                   in: query
                   description: |-
@@ -251,7 +255,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
+                            $ref: '#/components/schemas/api.v1.services.basis.CurrentUserRequestQuery'
                 required: true
             responses:
                 "200":
@@ -844,11 +848,22 @@ components:
             properties:
                 success:
                     type: boolean
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/google.protobuf.Any'
+        api.v1.services.basis.CurrentUserRequestQuery:
+            type: object
+            properties:
+                user_id:
+                    type: string
         api.v1.services.basis.CurrentUserResponse:
             type: object
             properties:
                 success:
                     type: boolean
+                data:
+                    $ref: '#/components/schemas/google.protobuf.Any'
         api.v1.services.basis.LoginRequest_Data:
             type: object
             properties:

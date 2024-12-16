@@ -89,6 +89,7 @@ func NewCommonClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCC
 	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, service.WithGRPC(func(o *servicegrpc.Option) {
 		// todo: add your grpc options here.
 		o.Discovery = discovery
+		o.ServiceName = registry.ServiceName
 	}))
 	if err != nil {
 		return nil, errors.Wrap(err, "create menu grpc client")
