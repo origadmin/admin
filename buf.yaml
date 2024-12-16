@@ -17,6 +17,7 @@ breaking:
   use:
     - FILE
 deps:
+  - buf.build/envoyproxy/protoc-gen-validate
   - buf.build/kratos/apis
   - buf.build/googleapis/googleapis
   - buf.build/gnostic/gnostic

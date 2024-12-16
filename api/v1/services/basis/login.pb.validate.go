@@ -1777,9 +1777,27 @@ func (m *CaptchaResourceRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		err := CaptchaResourceRequestValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Resource
+	if _, ok := _CaptchaResourceRequest_Resource_InLookup[m.GetResource()]; !ok {
+		err := CaptchaResourceRequestValidationError{
+			field:  "Resource",
+			reason: "value must be in list [image audio]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return CaptchaResourceRequestMultiError(errors)
@@ -1860,6 +1878,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CaptchaResourceRequestValidationError{}
+
+var _CaptchaResourceRequest_Resource_InLookup = map[string]struct{}{
+	"image": {},
+	"audio": {},
+}
 
 // Validate checks the field values on CaptchaResourceResponse with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1989,13 +2012,49 @@ func (m *LoginRequest_Data) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Username
+	if utf8.RuneCountInString(m.GetUsername()) < 1 {
+		err := LoginRequest_DataValidationError{
+			field:  "Username",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Password
+	if utf8.RuneCountInString(m.GetPassword()) < 1 {
+		err := LoginRequest_DataValidationError{
+			field:  "Password",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for CaptchaId
+	if utf8.RuneCountInString(m.GetCaptchaId()) < 1 {
+		err := LoginRequest_DataValidationError{
+			field:  "CaptchaId",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for CaptchaCode
+	if utf8.RuneCountInString(m.GetCaptchaCode()) < 1 {
+		err := LoginRequest_DataValidationError{
+			field:  "CaptchaCode",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return LoginRequest_DataMultiError(errors)
