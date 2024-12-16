@@ -51,7 +51,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
-			Host: "ORIGADMIN_SERVICE_HOST",
+			HostName: "ORIGADMIN_SERVICE_HOST",
 		},
 		Data:     DefaultData(),
 		Registry: DefaultRegistry(),

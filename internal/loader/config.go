@@ -80,16 +80,15 @@ func FromLocalPath(path string, ss ...ConfigSetting) (*configs.Bootstrap, error)
 	return LoadLocalBootstrap(settings.Apply(source, ss))
 }
 
-func NewFileConfig(cfg *Config, rc *config.RuntimeConfig) (config.Config, error) {
+func NewFileConfig(cfg *Config, ss ...config.SourceOptionSetting) (config.Config, error) {
 	var sources = []config.Source{file.NewSource(cfg.File.Path)}
 	if cfg.EnvPrefixes != nil {
 		sources = append(sources, env.NewSource(cfg.EnvPrefixes...))
 		SetupEnv(cfg.EnvArgs, cfg.EnvPrefixes[0])
 	}
-
-	source := rc.Source()
-	source.Options = append(source.Options, config.WithSource(sources...))
-	return config.New(source.Options...), nil
+	option := settings.ApplyOrZero(ss...)
+	option.Options = append(option.Options, config.WithSource(sources...))
+	return config.New(option.Options...), nil
 }
 
 func FileSourceConfig(path string) *Config {

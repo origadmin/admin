@@ -9,19 +9,20 @@ require (
 	entgo.io/ent v0.14.1
 	github.com/LyricTian/captcha v1.2.0
 	github.com/caarlos0/go-version v0.2.0
+	github.com/envoyproxy/protoc-gen-validate v1.1.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/v2 v2.8.2
 	github.com/goexts/generic v0.1.4
 	github.com/google/gnostic v0.7.0
 	github.com/google/wire v0.6.0
-	github.com/origadmin/contrib/consul v0.0.11
-	github.com/origadmin/contrib/database v0.0.11
-	github.com/origadmin/contrib/replacer v0.0.11
-	github.com/origadmin/contrib/transport/gins v0.0.11
-	github.com/origadmin/runtime v0.1.4
+	github.com/origadmin/contrib/consul v0.0.12
+	github.com/origadmin/contrib/database v0.0.12
+	github.com/origadmin/contrib/replacer v0.0.12
+	github.com/origadmin/contrib/transport/gins v0.0.12
+	github.com/origadmin/runtime v0.1.8
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.19
-	github.com/origadmin/toolkits/codec v0.0.48
+	github.com/origadmin/toolkits/codec v0.0.49
 	github.com/origadmin/toolkits/errors v0.0.31
 	github.com/spf13/cobra v1.8.1
 	golang.org/x/net v0.32.0
@@ -50,7 +51,6 @@ require (
 	github.com/denisenkom/go-mssqldb v0.12.3 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/envoyproxy/protoc-gen-validate v1.1.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.7 // indirect
@@ -92,13 +92,11 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.7.1 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
-	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/lufia/plan9stats v0.0.0-20240909124753-873cd0166683 // indirect
-	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.24 // indirect

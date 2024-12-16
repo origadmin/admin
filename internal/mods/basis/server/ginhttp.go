@@ -12,6 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
+	"github.com/origadmin/toolkits/env"
 	"github.com/origadmin/toolkits/helpers"
 	"github.com/origadmin/toolkits/net"
 
@@ -37,12 +38,23 @@ func NewGinHTTPServer(bootstrap *configs.Bootstrap, engine *gin.Engine, l log.Lo
 	if cfg.Timeout != nil {
 		opts = append(opts, http.Timeout(cfg.Timeout.AsDuration()))
 	}
-	host := bootstrap.GetService().GetHost()
-	if host == "" {
-		host = "ORIGADMIN_SERVICE_HOST"
+
+	log.Infof("GetHostName: %s", bootstrap.GetService().GetHostName())
+	host := bootstrap.GetService().GetHostName()
+	if host != "" {
+		log.Debugf("HostName is not empty, replacing with env var: %s", host)
+		host = env.Var(host)
+		log.Debugf("HostName after env replacement: %s", host)
+	}
+	log.Debugf("GetHostIp: %s", bootstrap.GetService().GetHostIp())
+	hostIP := bootstrap.GetService().GetHostIp()
+	if hostIP == "" {
+		log.Debugf("HostIP is empty, replacing with HostAddr: %s", host)
+		hostIP = net.HostAddr(host)
+		log.Debugf("HostIP after replacement: %s", hostIP)
 	}
 
-	if endpoint, err := helpers.ServiceEndpoint("http", net.HostAddr(host), cfg.Addr); err == nil {
+	if endpoint, err := helpers.ServiceEndpoint("http", hostIP, cfg.Addr); err == nil {
 		cfg.Endpoint = endpoint
 	}
 	log.Infof("Register.GinHttp.Endpoint: %v", cfg.Endpoint)

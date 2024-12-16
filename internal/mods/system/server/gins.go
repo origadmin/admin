@@ -10,6 +10,7 @@ import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
+	"github.com/origadmin/toolkits/env"
 	"github.com/origadmin/toolkits/helpers"
 	"github.com/origadmin/toolkits/net"
 
@@ -46,14 +47,24 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.Logger) *gins.Server {
 	if l != nil {
 		opts = append(opts, gins.WithLogger(log.With(l, "module", "gins")))
 	}
+	host := bootstrap.GetService().GetHostName()
+	if host != "" {
+		host = env.Var(host)
+	} else {
+		host = "ORIGADMIN_SERVICE_HOST"
+	}
+	hostIP := bootstrap.GetService().GetHostIp()
+	if hostIP == "" {
+		hostIP = net.HostAddr(host)
+	}
+
 	var endpoint string
 	if cfg.Endpoint == "" {
-		endpoint, _ = helpers.ServiceEndpoint("http", net.HostAddr(service.Host), cfg.Addr)
+		endpoint, _ = helpers.ServiceEndpoint("http", hostIP, cfg.Addr)
 	} else {
 		endpoint = cfg.Endpoint
 	}
-
-	log.Infof("Register.GinHttp.Endpoint: %v", endpoint)
+	log.Debugf("GINS.Endpoint: %v", endpoint)
 	ep, _ := url.Parse(endpoint)
 	opts = append(opts, gins.Endpoint(ep))
 	srv := gins.NewServer(opts...)

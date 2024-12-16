@@ -7,11 +7,11 @@ package server
 import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/config"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
+	servicegrpc "github.com/origadmin/runtime/service/grpc"
 	"github.com/origadmin/toolkits/errors"
 
 	pb "origadmin/application/admin/api/v1/services/basis"
@@ -67,7 +67,7 @@ func NewCommonClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCC
 	if registry == nil {
 		return nil, errors.New("no registry")
 	}
-	service := &configv1.Service{
+	serviceConfig := &configv1.Service{
 		Name: ServiceName,
 		Grpc: entry.GetGrpc(),
 		Http: entry.GetHttp(),
@@ -86,7 +86,10 @@ func NewCommonClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCC
 		return nil, errors.Wrap(err, "create discovery")
 	}
 
-	client, err := runtime.NewGRPCServiceClient(context.Background(), service, config.WithServiceOption(config.WithServiceDiscovery(registry.ServiceName, discovery)))
+	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, service.WithGRPC(func(o *servicegrpc.Option) {
+		// todo: add your grpc options here.
+		o.Discovery = discovery
+	}))
 	if err != nil {
 		return nil, errors.Wrap(err, "create menu grpc client")
 	}

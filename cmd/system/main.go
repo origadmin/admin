@@ -20,7 +20,6 @@ import (
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/runtime/middleware/validate"
 	klog "github.com/origadmin/slog-kratos"
 
 	"origadmin/application/admin/internal/loader"
@@ -60,6 +59,7 @@ func main() {
 	// the release mode, work dir sets to empty, use config path as work dir
 	//logger := slog.Default()
 	if debug {
+		fmt.Println("debug mode")
 		flags.Env = "debug"
 		flags.WorkDir = "resources/configs"
 		slog.SetLogLoggerLevel(slog.LevelDebug)
@@ -85,15 +85,17 @@ func main() {
 	bs, err := loader.LoadBootstrap(flags)
 	if err != nil {
 		log.Fatalf("failed to load config: %s", err.Error())
+		return
 	}
-	v, err := validate.NewValidate()
-	if err != nil {
-		log.Fatalf("failed to new validate: %s", err.Error())
-	}
-	if err := v.Validate(bs); err != nil {
+	//v, err := validate.NewValidateV2()
+	//if err != nil {
+	//	log.Fatalf("failed to new validate: %s", err.Error())
+	//}
+	// v1 used method Validate to check the config
+	if err := bs.Validate(); err != nil {
 		log.Fatalf("failed to validate config: %s", err.Error())
 	}
-	log.Infof("bootstrap config: %+v\n", loader.PrintString(bs))
+	//log.Infof("bootstrap config: %+v\n", loader.PrintString(bs))
 	ctx := context.Background()
 	//info to ctx
 	app, cleanup, err := buildInjectors(ctx, bs, l)

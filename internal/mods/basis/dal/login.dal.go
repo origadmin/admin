@@ -170,7 +170,7 @@ func (repo loginRepo) putBuf(buf *bytes.Buffer) {
 }
 
 func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginResponse, error) {
-
+	return nil, nil
 }
 
 // NewLoginRepo .
