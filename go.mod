@@ -20,7 +20,7 @@ require (
 	github.com/origadmin/contrib/replacer v0.0.12
 	github.com/origadmin/contrib/security/authn/jwt v0.0.2
 	github.com/origadmin/contrib/transport/gins v0.0.12
-	github.com/origadmin/runtime v0.1.11
+	github.com/origadmin/runtime v0.1.13
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.21
 	github.com/origadmin/toolkits/codec v0.0.49

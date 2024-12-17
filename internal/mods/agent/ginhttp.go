@@ -26,7 +26,7 @@ func NewGinServer(bootstrap *configs.Bootstrap, l log.Logger) *gin.Engine {
 }
 
 func NewHTTPServerAgent(bootstrap *configs.Bootstrap, l log.Logger) *http.Server {
-	ms := middleware.NewServer(bootstrap.GetMiddlewares().GetMiddleware())
+	ms := middleware.NewServer(bootstrap.GetMiddlewares())
 	var opts = []http.ServerOption{
 		http.Middleware(ms...),
 	}

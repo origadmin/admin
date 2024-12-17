@@ -9,6 +9,7 @@ import (
 	"time"
 
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	"github.com/origadmin/toolkits/crypto/rand"
 	"google.golang.org/protobuf/types/known/durationpb"
 
 	"origadmin/application/admin/internal/configs"
@@ -30,38 +31,33 @@ func DefaultBootstrap() *configs.Bootstrap {
 			Scheme: "http",
 		},
 		Service: &configv1.Service{
-			Name: "",
-			Grpc: DefaultServiceGrpc(),
-			Http: DefaultServiceHttp(),
-			Gins: DefaultServiceGins(),
-			Websocket: &configv1.WebSocket{
-				Network: "",
-				Addr:    "",
-				Path:    "",
-				Codec:   "",
-				Timeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-			},
-			Message:    DefaultServiceMessage(),
-			Task:       DefaultServiceTask(),
-			Middleware: DefaultServiceMiddleware(),
+			Name:        "",
+			Grpc:        DefaultServiceGrpc(),
+			Http:        DefaultServiceHttp(),
+			Gins:        DefaultServiceGins(),
+			Websocket:   DefaultServiceWebsocket(),
+			Message:     DefaultServiceMessage(),
+			Task:        DefaultServiceTask(),
+			Middlewares: DefaultServiceMiddleware(),
 			Selector: &configv1.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
 			HostName: "ORIGADMIN_SERVICE_HOST",
 		},
-		Data:     DefaultData(),
-		Registry: DefaultRegistry(),
-		Middlewares: &configs.Middlewares{
-			RegisterAsGlobal: false,
-			Middleware:       DefaultServiceMiddleware(),
-		},
-		Id: "",
+		Data:        DefaultData(),
+		Registry:    DefaultRegistry(),
+		Middlewares: DefaultServiceMiddleware(),
+		Id:          "",
 	}
 
+}
+
+func DefaultServiceWebsocket() *configv1.WebSocket {
+	return &configv1.WebSocket{
+		Addr: "",
+		Path: "",
+	}
 }
 
 func DefaultData() *configv1.Data {
@@ -300,8 +296,34 @@ func DefaultServiceMiddleware() *configv1.Middleware {
 			UserMetrics:      nil,
 		},
 		Validator: &configv1.Middleware_Validator{
-			Version:  2,
+			Version:  1,
 			FailFast: true,
+		},
+		Security: &configv1.Security{
+			PublicPaths: nil,
+			Authz: &configv1.AuthZConfig{
+				Disabled:    false,
+				PublicPaths: nil,
+				Type:        "casbin",
+				Casbin: &configv1.AuthZConfig_CasbinConfig{
+					PolicyFile: "",
+					ModelFile:  "",
+				},
+				Opa:      nil,
+				Zanzibar: nil,
+			},
+			Authn: &configv1.AuthNConfig{
+				Disabled: false,
+				Type:     "jwt",
+				Jwt: &configv1.AuthNConfig_JWTConfig{
+					Algorithm:     "HS512",
+					SigningKey:    rand.GenerateRandom(32),
+					OldSigningKey: "",
+					ExpireTime:    nil, // use default
+					RefreshTime:   nil, // use default
+					CacheName:     "",
+				},
+			},
 		},
 	}
 }

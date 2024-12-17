@@ -21,6 +21,8 @@ type (
 	LoginResponse        = pb.LoginResponse
 	LogoutRequest        = pb.LogoutRequest
 	LogoutResponse       = pb.LogoutResponse
+	RefreshRequest       = pb.RefreshRequest
+	RefreshResponse      = pb.RefreshResponse
 	CurrentMenusRequest  = pb.CurrentMenusRequest
 	CurrentMenusResponse = pb.CurrentMenusResponse
 	CurrentUserRequest   = pb.CurrentUserRequest
@@ -29,9 +31,10 @@ type (
 
 type LoginRepo interface {
 	Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error)
+	Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error)
+	Refresh(ctx context.Context, in *RefreshRequest) (*RefreshResponse, error)
 	CaptchaID(ctx context.Context, in *CaptchaIDRequest) (*CaptchaIDResponse, error)
 	CaptchaImage(ctx context.Context, id string, reload bool) (*CaptchaImageResponse, error)
 	CurrentMenus(ctx context.Context, in *CurrentMenusRequest) (*CurrentMenusResponse, error)
 	CurrentUser(ctx context.Context, in *CurrentUserRequest) (*CurrentUserResponse, error)
-	Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error)
 }

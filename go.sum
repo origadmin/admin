@@ -1112,8 +1112,10 @@ github.com/origadmin/contrib/transport/gins v0.0.12 h1:K7EIJYxHaKSvVMh/ev6Uelu2u
 github.com/origadmin/contrib/transport/gins v0.0.12/go.mod h1:ODq6BEs68EzybWKdfpRA9huxlxQh0iddQeq/mIkKYCo=
 github.com/origadmin/go-metrics v0.5.4 h1:odg6zeZUGkTCl6cGJ/bS5GlvjZ3x3GU2zyw9WtNmKFY=
 github.com/origadmin/go-metrics v0.5.4/go.mod h1:KiuAdjBbuXAkjTjy7p7F4g6sjO6WuvH+6hTlMKUxPkg=
-github.com/origadmin/runtime v0.1.11 h1:vd8/4mwIQCWDbVcOos+oHIsapMk4fB2a7ViIyYmF2t8=
-github.com/origadmin/runtime v0.1.11/go.mod h1:x9RS5F+szmFub1JD/PxKyLk3GZ/iJoNHbxZcFKReoes=
+github.com/origadmin/runtime v0.1.12 h1:nMkeh8+8j5ofZuyKrvTY3J9Zc1VnMi9qI57/v/dSr2k=
+github.com/origadmin/runtime v0.1.12/go.mod h1:x9RS5F+szmFub1JD/PxKyLk3GZ/iJoNHbxZcFKReoes=
+github.com/origadmin/runtime v0.1.13 h1:zAgnzpBiaCluW4Uy5SC3PQ0G06f81aS4/YNs378F7aE=
+github.com/origadmin/runtime v0.1.13/go.mod h1:x9RS5F+szmFub1JD/PxKyLk3GZ/iJoNHbxZcFKReoes=
 github.com/origadmin/slog-kratos v1.0.4 h1:1et3TBy61Uwf5N1ZbEBFhMqCjgxqfRXmz2w0Q1dujG0=
 github.com/origadmin/slog-kratos v1.0.4/go.mod h1:WUdhcWLyN0i8TbdemqE2Y/muoj0GaZ86OcdpumAWHPo=
 github.com/origadmin/toolkits v0.1.21 h1:ul10WNrrT6dCopS4rC07COcMDEkJFdOcTg0lnU4aKkY=

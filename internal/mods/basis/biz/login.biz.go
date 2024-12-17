@@ -23,6 +23,10 @@ type LoginBiz struct {
 	log     *log.Helper
 }
 
+func (biz LoginBiz) Refresh(ctx context.Context, in *pb.RefreshRequest, opts ...grpc.CallOption) (*pb.RefreshResponse, error) {
+	return biz.dao.Refresh(ctx, in)
+}
+
 func (biz LoginBiz) CaptchaResource(ctx context.Context, in *pb.CaptchaResourceRequest, opts ...grpc.CallOption) (*pb.CaptchaResourceResponse, error) {
 	//TODO implement me
 	panic("implement me")

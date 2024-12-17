@@ -8,12 +8,11 @@ import (
 	"bytes"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/LyricTian/captcha"
 	kerr "github.com/go-kratos/kratos/v2/errors"
-	"github.com/origadmin/contrib/security/authn/jwt"
 	"github.com/origadmin/runtime/context"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	pwtv1 "github.com/origadmin/runtime/gen/go/pwt/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/runtime/log"
@@ -38,6 +37,12 @@ type loginRepo struct {
 	Role          systemdto.RoleRepo
 	User          systemdto.UserRepo
 	Authenticator security.Authenticator
+}
+
+func (repo loginRepo) Refresh(ctx context.Context, in *dto.RefreshRequest) (*dto.RefreshResponse, error) {
+	log.Debugf("Refresh request received with data: %+v", in.RefreshToken)
+
+	return repo.refreshToken(ctx, in.RefreshToken)
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {
@@ -192,6 +197,27 @@ func (repo loginRepo) putBuf(buf *bytes.Buffer) {
 	repo.bufpool.Put(buf)
 }
 
+func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.RefreshResponse, error) {
+	claims, err := repo.Authenticator.Authenticate(ctx, token)
+	if err != nil {
+		return nil, err
+	}
+	if claims.GetExpiration().Before(time.Now()) {
+		if err := repo.Authenticator.DestroyToken(ctx, token); err != nil {
+			log.Errorf("Error destroying token: %v", err)
+			return nil, err
+		}
+		return nil, fmt.Errorf("token expired")
+	}
+	genToken, err := repo.genToken(ctx, claims.GetSubject())
+	if err != nil {
+		return nil, err
+	}
+	return &dto.RefreshResponse{
+		Token: genToken.Token,
+	}, nil
+}
+
 func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginResponse, error) {
 	claims, err := repo.Authenticator.CreateIdentityClaims(ctx, id, false)
 	if err != nil {
@@ -211,10 +237,10 @@ func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginRespon
 	}
 	return &dto.LoginResponse{
 		Token: &pwtv1.Token{
-			Token:          token,
+			UserId:         id,
+			AccessToken:    token,
 			RefreshToken:   refreshToken,
 			ExpirationTime: timestamppb.New(claims.GetExpiration()),
-			SchemeType:     security.SchemeBearer.String(),
 			Claims:         fromSecurityClaims(claims),
 		},
 	}, nil
@@ -234,7 +260,7 @@ func fromSecurityClaims(claims security.Claims) *securityv1.Claims {
 }
 
 // NewLoginRepo .
-func NewLoginRepo(cfg *configs.BasisConfig, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.Logger) dto.LoginRepo {
+func NewLoginRepo(cfg *configs.BasisConfig, authenticator security.Authenticator, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.Logger) dto.LoginRepo {
 	var err error
 	// todo: generate random password for root user if not exists
 	if cfg.RootUser.RandomPassword {
@@ -248,11 +274,13 @@ func NewLoginRepo(cfg *configs.BasisConfig, sysMenu systemdto.MenuRepo, sysRole 
 			cfg.RootUser.RandomPassword = false
 		}
 	}
-
-	authenticator, err := jwt.NewAuthenticator(&configv1.Security{})
-	if err != nil {
-		panic(err)
+	if cfg.RootUser.Id == "" {
+		cfg.RootUser.Id = cfg.RootUser.Username
 	}
+	//authenticator, err := jwt.NewAuthenticator(&configv1.Security{})
+	//if err != nil {
+	//	panic(err)
+	//}
 	return &loginRepo{
 		bufpool:       BufPool(),
 		BasisConfig:   cfg,

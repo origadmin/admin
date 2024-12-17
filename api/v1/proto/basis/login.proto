@@ -43,6 +43,14 @@ service LoginAPI {
       body: "data",
     };
   }
+
+  rpc Refresh (RefreshRequest) returns (RefreshResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/current/refresh",
+      body: "refresh_token",
+    };
+  }
+
   rpc Logout (LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
       post: "/api/v1/current/logout",
@@ -169,4 +177,12 @@ message CaptchaResourceRequest {
 message CaptchaResourceResponse {
   map<string, string> headers = 1 [json_name = "headers"];
   bytes data = 2 [json_name = "data"];
+}
+
+message RefreshRequest {
+  string refresh_token = 1 [json_name = "refresh_token"];
+}
+
+message RefreshResponse {
+  pwt.v1.Token token = 1;
 }

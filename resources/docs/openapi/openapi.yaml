@@ -246,6 +246,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/current/refresh:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Refresh
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: string
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.RefreshResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /api/v1/current/user:
         post:
             tags:
@@ -885,6 +909,11 @@ components:
             properties:
                 success:
                     type: boolean
+        api.v1.services.basis.RefreshResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/pwt.v1.Token'
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:

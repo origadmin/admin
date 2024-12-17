@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package tests.openapiv3annotations.message.v1;
 
-import "google/api/annotations.proto";
 import "gnostic/openapi/v3/annotations.proto";
 
 option go_package = "v1/services;services";

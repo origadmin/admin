@@ -27,6 +27,7 @@ const OperationLoginAPICurrentMenus = "/api.v1.services.basis.LoginAPI/CurrentMe
 const OperationLoginAPICurrentUser = "/api.v1.services.basis.LoginAPI/CurrentUser"
 const OperationLoginAPILogin = "/api.v1.services.basis.LoginAPI/Login"
 const OperationLoginAPILogout = "/api.v1.services.basis.LoginAPI/Logout"
+const OperationLoginAPIRefresh = "/api.v1.services.basis.LoginAPI/Refresh"
 
 type LoginAPIHTTPServer interface {
 	CaptchaID(context.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error)
@@ -37,6 +38,7 @@ type LoginAPIHTTPServer interface {
 	CurrentUser(context.Context, *CurrentUserRequest) (*CurrentUserResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
 }
 
 func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
@@ -46,6 +48,7 @@ func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
 	r.GET("/api/v1/captcha/id/{id}/{resource}", _LoginAPI_CaptchaResource0_HTTP_Handler(srv))
 	r.GET("/api/v1/captcha/id/{id}", _LoginAPI_CaptchaResources0_HTTP_Handler(srv))
 	r.POST("/api/v1/login", _LoginAPI_Login0_HTTP_Handler(srv))
+	r.POST("/api/v1/current/refresh", _LoginAPI_Refresh0_HTTP_Handler(srv))
 	r.POST("/api/v1/current/logout", _LoginAPI_Logout0_HTTP_Handler(srv))
 	r.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_HTTP_Handler(srv))
 	r.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_HTTP_Handler(srv))
@@ -155,6 +158,28 @@ func _LoginAPI_Login0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context
 	}
 }
 
+func _LoginAPI_Refresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RefreshRequest
+		if err := ctx.Bind(&in.RefreshToken); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationLoginAPIRefresh)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Refresh(ctx, req.(*RefreshRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RefreshResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _LoginAPI_Logout0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LogoutRequest
@@ -227,6 +252,7 @@ type LoginAPIHTTPClient interface {
 	CurrentUser(ctx context.Context, req *CurrentUserRequest, opts ...http.CallOption) (rsp *CurrentUserResponse, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
 	Logout(ctx context.Context, req *LogoutRequest, opts ...http.CallOption) (rsp *LogoutResponse, err error)
+	Refresh(ctx context.Context, req *RefreshRequest, opts ...http.CallOption) (rsp *RefreshResponse, err error)
 }
 
 type LoginAPIHTTPClientImpl struct {
@@ -335,6 +361,19 @@ func (c *LoginAPIHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, 
 	opts = append(opts, http.Operation(OperationLoginAPILogout))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *LoginAPIHTTPClientImpl) Refresh(ctx context.Context, in *RefreshRequest, opts ...http.CallOption) (*RefreshResponse, error) {
+	var out RefreshResponse
+	pattern := "/api/v1/current/refresh"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationLoginAPIRefresh))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.RefreshToken, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

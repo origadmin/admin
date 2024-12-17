@@ -25,6 +25,7 @@ const LoginAPI_CurrentMenus_FullOperation = "/api.v1.services.basis.LoginAPI/Cur
 const LoginAPI_CurrentUser_FullOperation = "/api.v1.services.basis.LoginAPI/CurrentUser"
 const LoginAPI_Login_FullOperation = "/api.v1.services.basis.LoginAPI/Login"
 const LoginAPI_Logout_FullOperation = "/api.v1.services.basis.LoginAPI/Logout"
+const LoginAPI_Refresh_FullOperation = "/api.v1.services.basis.LoginAPI/Refresh"
 
 type LoginAPIGINRPCAgentResponder interface {
 	// Error returns a error
@@ -45,6 +46,7 @@ type LoginAPIGINRPCAgent interface {
 	CurrentUser(*gins.Context, *CurrentUserRequest)
 	Login(*gins.Context, *LoginRequest)
 	Logout(*gins.Context, *LogoutRequest)
+	Refresh(*gins.Context, *RefreshRequest)
 }
 
 func RegisterLoginAPIGINRPCAgent(router gins.IRouter, srv LoginAPIGINRPCAgent) {
@@ -53,6 +55,7 @@ func RegisterLoginAPIGINRPCAgent(router gins.IRouter, srv LoginAPIGINRPCAgent) {
 	router.GET("/api/v1/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_GINRPC_Handler(srv))
 	router.GET("/api/v1/captcha/id/:id", _LoginAPI_CaptchaResources0_GINRPC_Handler(srv))
 	router.POST("/api/v1/login", _LoginAPI_Login0_GINRPC_Handler(srv))
+	router.POST("/api/v1/current/refresh", _LoginAPI_Refresh0_GINRPC_Handler(srv))
 	router.POST("/api/v1/current/logout", _LoginAPI_Logout0_GINRPC_Handler(srv))
 	router.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_GINRPC_Handler(srv))
 	router.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_GINRPC_Handler(srv))
@@ -127,6 +130,22 @@ func _LoginAPI_Login0_GINRPC_Handler(srv LoginAPIGINRPCAgent) gins.HandlerFunc {
 		}
 		gins.SetOperation(ctx, LoginAPI_Login_OperationName)
 		srv.Login(ctx, &in)
+	}
+}
+
+func _LoginAPI_Refresh0_GINRPC_Handler(srv LoginAPIGINRPCAgent) gins.HandlerFunc {
+	return func(ctx *gins.Context) {
+		var in RefreshRequest
+		if err := gins.BindBody(ctx, &in.RefreshToken); err != nil {
+			srv.Error(ctx, 400, err)
+			return
+		}
+		if err := gins.BindQuery(ctx, &in); err != nil {
+			srv.Error(ctx, 400, err)
+			return
+		}
+		gins.SetOperation(ctx, LoginAPI_Refresh_OperationName)
+		srv.Refresh(ctx, &in)
 	}
 }
 

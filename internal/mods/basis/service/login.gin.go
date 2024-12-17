@@ -7,6 +7,7 @@ package service
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
@@ -99,7 +100,10 @@ func (s LoginAPIGINRPCService) CurrentUser(context *gins.Context, request *pb.Cu
 		Data:    response,
 	})
 }
-
+func (s LoginAPIGINRPCService) Refresh(context *gins.Context, request *pb.RefreshRequest) {
+	//TODO implement me
+	panic("implement me")
+}
 func (s LoginAPIGINRPCService) Login(context *gins.Context, request *pb.LoginRequest) {
 	response, err := s.client.Login(context, request)
 	if err != nil {
@@ -109,7 +113,12 @@ func (s LoginAPIGINRPCService) Login(context *gins.Context, request *pb.LoginReq
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
-		Data:    response,
+		Data: gin.H{
+			"user_id":       response.Token.GetUserId(),
+			"access_token":  response.Token.GetAccessToken(),
+			"refresh_token": response.Token.RefreshToken,
+			"expires_at":    response.Token.GetExpirationTime(),
+		},
 	})
 }
 

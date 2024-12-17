@@ -40,7 +40,7 @@ func init() {
 
 func NewSystemServer(register *systemservice.RegisterServer, register2 basisservice.RegisterServer, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
 	var servers []transport.Server
-	middlewares := middleware.NewServer(bootstrap.GetMiddlewares().GetMiddleware())
+	middlewares := middleware.NewServer(bootstrap.GetMiddlewares())
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		return servers

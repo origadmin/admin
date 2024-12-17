@@ -26,6 +26,7 @@ var (
 		NewBasisConfig,
 		NewRegistrar,
 		NewAgentGINRegistrar,
+		NewAuthenticator,
 		wire.Struct(new(InjectorServer), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)

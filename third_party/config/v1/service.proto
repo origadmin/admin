@@ -80,7 +80,7 @@ message Service {
   config.v1.Message message = 200 [json_name = "message"];
   config.v1.Task task = 300 [json_name = "task"];
 
-  config.v1.Middleware middleware = 400 [json_name = "middleware"];
+  config.v1.Middleware middlewares = 400 [json_name = "middlewares"];
   Selector selector = 500 [json_name = "selector"];
 
   string host = 99 [json_name = "host"];
