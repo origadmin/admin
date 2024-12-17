@@ -50,8 +50,10 @@ else
 	API_PROTO_FILES=$(shell find ${PROTO_API_PATH} -name *.proto)
 
 	BUILT_DATE = $(shell TZ=Asia/Shanghai date +%FT%T%z)
-	TREE_STATE = $(shell if git status | grep -q 'clean'; then echo clean; else echo dirty; fi)
-	TAG = $(shell if git tag --points-at "${gitHash}" | grep -q '^v'; then echo $(HEAD_TAG); else echo ${gitHash}; fi)
+#	TREE_STATE = $(shell if git status | grep -q 'clean'; then echo clean; else echo dirty; fi)
+   	TREE_STATE = $(shell [ -z "$$(git status --porcelain)" ] && echo clean || echo dirty)
+#	TAG = $(shell #if git tag --points-at "${gitHash}" | grep -q '^v'; then echo $(HEAD_TAG); else echo ${gitHash}; fi)
+	TAG = $(shell git tag --points-at "${gitHash}" | grep -q '^v' && echo $(HEAD_TAG) || echo ${gitHash})
 	# buildDate = $(shell TZ=Asia/Shanghai date +%F\ %T%z | tr 'T' ' ')
 	# same as gitHash previously
 	COMMIT = $(shell git log --pretty=format:'%h' -n 1)
