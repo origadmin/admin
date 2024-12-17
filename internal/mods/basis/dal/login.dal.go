@@ -40,9 +40,8 @@ type loginRepo struct {
 }
 
 func (repo loginRepo) Refresh(ctx context.Context, in *dto.RefreshRequest) (*dto.RefreshResponse, error) {
-	log.Debugf("Refresh request received with data: %+v", in.RefreshToken)
-
-	return repo.refreshToken(ctx, in.RefreshToken)
+	log.Debugf("Refresh request received with data: %+v", in.GetData())
+	return repo.refreshToken(ctx, in.GetData().GetRefreshToken())
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {

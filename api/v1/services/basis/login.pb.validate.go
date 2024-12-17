@@ -2181,7 +2181,34 @@ func (m *RefreshRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for RefreshToken
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RefreshRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RefreshRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RefreshRequestValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return RefreshRequestMultiError(errors)
@@ -2535,3 +2562,116 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = LoginRequest_DataValidationError{}
+
+// Validate checks the field values on RefreshRequest_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RefreshRequest_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RefreshRequest_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RefreshRequest_DataMultiError, or nil if none found.
+func (m *RefreshRequest_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RefreshRequest_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetRefreshToken()) < 1 {
+		err := RefreshRequest_DataValidationError{
+			field:  "RefreshToken",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RefreshRequest_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// RefreshRequest_DataMultiError is an error wrapping multiple validation
+// errors returned by RefreshRequest_Data.ValidateAll() if the designated
+// constraints aren't met.
+type RefreshRequest_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RefreshRequest_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RefreshRequest_DataMultiError) AllErrors() []error { return m }
+
+// RefreshRequest_DataValidationError is the validation error returned by
+// RefreshRequest_Data.Validate if the designated constraints aren't met.
+type RefreshRequest_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RefreshRequest_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RefreshRequest_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RefreshRequest_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RefreshRequest_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RefreshRequest_DataValidationError) ErrorName() string {
+	return "RefreshRequest_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RefreshRequest_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRefreshRequest_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RefreshRequest_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RefreshRequest_DataValidationError{}

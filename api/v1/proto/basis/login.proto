@@ -46,8 +46,8 @@ service LoginAPI {
 
   rpc Refresh (RefreshRequest) returns (RefreshResponse) {
     option (google.api.http) = {
-      post: "/api/v1/current/refresh",
-      body: "refresh_token",
+      post: "/api/v1/refresh_token",
+      body: "data",
     };
   }
 
@@ -180,7 +180,13 @@ message CaptchaResourceResponse {
 }
 
 message RefreshRequest {
-  string refresh_token = 1 [json_name = "refresh_token"];
+  message Data {
+    string refresh_token = 1 [
+      json_name = "refresh_token",
+      (validate.rules).string = {min_len: 1}
+    ];
+  }
+  Data data = 2 [json_name = "data"];
 }
 
 message RefreshResponse {

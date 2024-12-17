@@ -908,6 +908,7 @@ github.com/google/pprof v0.0.0-20210720184732-4bb14d4b1be1/go.mod h1:kpwsk12EmLe
 github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd h1:gbpYu9NMq8jhDVbvlGkMFWCjLFlqqEZjEmObmhUy6Vo=
 github.com/google/pprof v0.0.0-20240409012703-83162a5b38cd/go.mod h1:kf6iHlnVGwgKolg33glAes7Yg/8iWP8ukqeldJSO7jw=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
+github.com/google/subcommands v1.2.0 h1:vWQspBTo2nEqTUFita5/KeEWlUL8kQObDFbub/EN9oE=
 github.com/google/subcommands v1.2.0/go.mod h1:ZjhPrFU+Olkh9WazFPsl27BQ4UPiG37m3yTrtFlrHVk=
 github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
@@ -1112,8 +1113,6 @@ github.com/origadmin/contrib/transport/gins v0.0.12 h1:K7EIJYxHaKSvVMh/ev6Uelu2u
 github.com/origadmin/contrib/transport/gins v0.0.12/go.mod h1:ODq6BEs68EzybWKdfpRA9huxlxQh0iddQeq/mIkKYCo=
 github.com/origadmin/go-metrics v0.5.4 h1:odg6zeZUGkTCl6cGJ/bS5GlvjZ3x3GU2zyw9WtNmKFY=
 github.com/origadmin/go-metrics v0.5.4/go.mod h1:KiuAdjBbuXAkjTjy7p7F4g6sjO6WuvH+6hTlMKUxPkg=
-github.com/origadmin/runtime v0.1.12 h1:nMkeh8+8j5ofZuyKrvTY3J9Zc1VnMi9qI57/v/dSr2k=
-github.com/origadmin/runtime v0.1.12/go.mod h1:x9RS5F+szmFub1JD/PxKyLk3GZ/iJoNHbxZcFKReoes=
 github.com/origadmin/runtime v0.1.13 h1:zAgnzpBiaCluW4Uy5SC3PQ0G06f81aS4/YNs378F7aE=
 github.com/origadmin/runtime v0.1.13/go.mod h1:x9RS5F+szmFub1JD/PxKyLk3GZ/iJoNHbxZcFKReoes=
 github.com/origadmin/slog-kratos v1.0.4 h1:1et3TBy61Uwf5N1ZbEBFhMqCjgxqfRXmz2w0Q1dujG0=

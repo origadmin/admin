@@ -24,6 +24,7 @@ type LoginBiz struct {
 }
 
 func (biz LoginBiz) Refresh(ctx context.Context, in *pb.RefreshRequest, opts ...grpc.CallOption) (*pb.RefreshResponse, error) {
+	log.Info("Refresh")
 	return biz.dao.Refresh(ctx, in)
 }
 

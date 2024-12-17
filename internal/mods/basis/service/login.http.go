@@ -17,14 +17,16 @@ type LoginAPIHTTPService struct {
 	client pb.LoginAPIHTTPClient
 }
 
-// NewLoginAPIHTTPService new a login service.
-func NewLoginAPIHTTPService(client pb.LoginAPIHTTPClient) *LoginAPIHTTPService {
-	return &LoginAPIHTTPService{client: client}
+func (l LoginAPIHTTPService) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
+	return l.client.CaptchaResource(ctx, request)
 }
 
-// NewLoginHTTPServer new a login service.
-func NewLoginHTTPServer(client pb.LoginAPIHTTPClient) pb.LoginAPIServer {
-	return &LoginAPIHTTPService{client: client}
+func (l LoginAPIHTTPService) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
+	return l.client.CaptchaResources(ctx, request)
+}
+
+func (l LoginAPIHTTPService) Refresh(ctx context.Context, request *pb.RefreshRequest) (*pb.RefreshResponse, error) {
+	return l.client.Refresh(ctx, request)
 }
 
 func (l LoginAPIHTTPService) CaptchaID(ctx context.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
@@ -55,5 +57,15 @@ func (l LoginAPIHTTPService) CurrentMenus(ctx context.Context, request *pb.Curre
 //	//TODO implement me
 //	panic("implement me")
 //}
+
+// NewLoginAPIHTTPService new a login service.
+func NewLoginAPIHTTPService(client pb.LoginAPIHTTPClient) *LoginAPIHTTPService {
+	return &LoginAPIHTTPService{client: client}
+}
+
+// NewLoginHTTPServer new a login service.
+func NewLoginHTTPServer(client pb.LoginAPIHTTPClient) pb.LoginAPIServer {
+	return &LoginAPIHTTPService{client: client}
+}
 
 var _ pb.LoginAPIServer = (*LoginAPIHTTPService)(nil)

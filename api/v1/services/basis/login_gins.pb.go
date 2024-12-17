@@ -45,7 +45,7 @@ func RegisterLoginAPIGINSServer(router gins.IRouter, srv LoginAPIGINSServer) {
 	router.GET("/api/v1/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_GIN_Handler(srv))
 	router.GET("/api/v1/captcha/id/:id", _LoginAPI_CaptchaResources0_GIN_Handler(srv))
 	router.POST("/api/v1/login", _LoginAPI_Login0_GIN_Handler(srv))
-	router.POST("/api/v1/current/refresh", _LoginAPI_Refresh0_GIN_Handler(srv))
+	router.POST("/api/v1/refresh_token", _LoginAPI_Refresh0_GIN_Handler(srv))
 	router.POST("/api/v1/current/logout", _LoginAPI_Logout0_GIN_Handler(srv))
 	router.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_GIN_Handler(srv))
 	router.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_GIN_Handler(srv))
@@ -161,7 +161,7 @@ func _LoginAPI_Login0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 func _LoginAPI_Refresh0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 	return func(ctx *gins.Context) {
 		var in RefreshRequest
-		if err := gins.BindBody(ctx, &in.RefreshToken); err != nil {
+		if err := gins.BindBody(ctx, &in.Data); err != nil {
 			gins.JSON(ctx, 400, err)
 			return
 		}
@@ -372,11 +372,11 @@ func (c *LoginAPIGINSClientImpl) Logout(ctx context.Context, in *LogoutRequest, 
 
 func (c *LoginAPIGINSClientImpl) Refresh(ctx context.Context, in *RefreshRequest, opts ...gins.CallOption) (*RefreshResponse, error) {
 	var out RefreshResponse
-	pattern := "/api/v1/current/refresh"
+	pattern := "/api/v1/refresh_token"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Refresh_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.RefreshToken, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

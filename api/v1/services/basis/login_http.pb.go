@@ -48,7 +48,7 @@ func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
 	r.GET("/api/v1/captcha/id/{id}/{resource}", _LoginAPI_CaptchaResource0_HTTP_Handler(srv))
 	r.GET("/api/v1/captcha/id/{id}", _LoginAPI_CaptchaResources0_HTTP_Handler(srv))
 	r.POST("/api/v1/login", _LoginAPI_Login0_HTTP_Handler(srv))
-	r.POST("/api/v1/current/refresh", _LoginAPI_Refresh0_HTTP_Handler(srv))
+	r.POST("/api/v1/refresh_token", _LoginAPI_Refresh0_HTTP_Handler(srv))
 	r.POST("/api/v1/current/logout", _LoginAPI_Logout0_HTTP_Handler(srv))
 	r.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_HTTP_Handler(srv))
 	r.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_HTTP_Handler(srv))
@@ -161,7 +161,7 @@ func _LoginAPI_Login0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context
 func _LoginAPI_Refresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RefreshRequest
-		if err := ctx.Bind(&in.RefreshToken); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -369,11 +369,11 @@ func (c *LoginAPIHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, 
 
 func (c *LoginAPIHTTPClientImpl) Refresh(ctx context.Context, in *RefreshRequest, opts ...http.CallOption) (*RefreshResponse, error) {
 	var out RefreshResponse
-	pattern := "/api/v1/current/refresh"
+	pattern := "/api/v1/refresh_token"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPIRefresh))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.RefreshToken, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

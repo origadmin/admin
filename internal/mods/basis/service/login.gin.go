@@ -101,8 +101,21 @@ func (s LoginAPIGINRPCService) CurrentUser(context *gins.Context, request *pb.Cu
 	})
 }
 func (s LoginAPIGINRPCService) Refresh(context *gins.Context, request *pb.RefreshRequest) {
-	//TODO implement me
-	panic("implement me")
+	response, err := s.client.Refresh(context, request)
+	if err != nil {
+		log.Errorf("Refresh error: %v", err)
+		s.Error(context, http.StatusNotFound, err)
+		return
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data: gin.H{
+			"user_id":       response.Token.GetUserId(),
+			"access_token":  response.Token.GetAccessToken(),
+			"refresh_token": response.Token.GetRefreshToken(),
+			"expires_at":    response.Token.GetExpirationTime().GetSeconds(),
+		},
+	})
 }
 func (s LoginAPIGINRPCService) Login(context *gins.Context, request *pb.LoginRequest) {
 	response, err := s.client.Login(context, request)
@@ -116,8 +129,8 @@ func (s LoginAPIGINRPCService) Login(context *gins.Context, request *pb.LoginReq
 		Data: gin.H{
 			"user_id":       response.Token.GetUserId(),
 			"access_token":  response.Token.GetAccessToken(),
-			"refresh_token": response.Token.RefreshToken,
-			"expires_at":    response.Token.GetExpirationTime(),
+			"refresh_token": response.Token.GetRefreshToken(),
+			"expires_at":    response.Token.GetExpirationTime().GetSeconds(),
 		},
 	})
 }

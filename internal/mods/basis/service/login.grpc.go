@@ -17,6 +17,18 @@ type LoginAPIService struct {
 	client pb.LoginAPIClient
 }
 
+func (l LoginAPIService) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
+	return l.client.CaptchaResource(ctx, request)
+}
+
+func (l LoginAPIService) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
+	return l.client.CaptchaResources(ctx, request)
+}
+
+func (l LoginAPIService) Refresh(ctx context.Context, request *pb.RefreshRequest) (*pb.RefreshResponse, error) {
+	return l.client.Refresh(ctx, request)
+}
+
 func (l LoginAPIService) CaptchaID(ctx context.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
 	return l.client.CaptchaID(ctx, request)
 }
