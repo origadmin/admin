@@ -20,7 +20,7 @@ import (
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-	klog "github.com/origadmin/slog-kratos"
+	kslog "github.com/origadmin/slog-kratos"
 
 	"origadmin/application/admin/internal/loader"
 )
@@ -71,7 +71,7 @@ func main() {
 		//})
 	}
 
-	l := log.With(klog.NewLogger(),
+	l := log.With(kslog.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", flags.ID(),

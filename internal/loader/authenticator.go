@@ -7,6 +7,7 @@ package loader
 
 import (
 	"github.com/origadmin/contrib/security/authn/jwt"
+	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/internal/configs"
@@ -18,4 +19,12 @@ func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, err
 		return nil, err
 	}
 	return authenticator, nil
+}
+
+func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
+	authorizer, err := casbin.NewAuthorizer(bootstrap.GetMiddlewares().GetSecurity())
+	if err != nil {
+		return nil, err
+	}
+	return authorizer, nil
 }

@@ -24,7 +24,7 @@ import (
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-	logger "github.com/origadmin/slog-kratos"
+	kslog "github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/spf13/cobra"
@@ -94,7 +94,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)
 	//random, _ := cmd.Flags().GetBool(startRandom)
 
-	l := log.With(logger.NewLogger(),
+	l := log.With(kslog.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", flags.ID(),
@@ -188,16 +188,21 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 	if flags.Env == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
+		log.Infow("msg", "GIN route", "method", httpMethod, "path", absolutePath, "operation", handlerName, "handlers", nuHandlers)
+	}
 	engine := gin.New()
 	//if injector.Registrars != nil {
 	for _, registrar := range injector.Registrars {
 		registrar.GIN(engine)
 	}
 	//}
-
 	//srv := agent.NewHTTPServer(injector.Bootstrap, injector.Logger)
 	if injector.Server != nil {
-		injector.Server.Server.Handler = engine.Handler()
+		//injector.Server.Handle("/", engine.Handler())
+		//injector.Server.Handler = engine.Handler()
+		injector.Server.HandlePrefix("/", engine)
+		//injector.Server.Server.Handler = engine.Handler()
 		opts = append(opts, kratos.Server(injector.Server))
 	}
 

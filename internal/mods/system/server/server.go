@@ -48,23 +48,23 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 	if serviceConfig.Name == "" {
 		serviceConfig.Name = ServiceName
 	}
-	if serv := NewGRPCServer(bootstrap, l, service.WithGRPC(func(o *servicegrpc.Option) {
-		o.Middlewares = middlewares
-	})); serv != nil {
+	if serv := NewGRPCServer(bootstrap, l, service.WithGRPC(
+		servicegrpc.WithMiddlewares(middlewares...)),
+	); serv != nil {
 		serv = register.GRPC(serv)
 		serv = register2.GRPC(serv)
 		servers = append(servers, serv)
 	}
-	if serv := NewGINSServer(bootstrap, l, service.WithHTTP(func(o *servicehttp.Option) {
-		o.Middlewares = middlewares
-	})); serv != nil {
+	if serv := NewGINSServer(bootstrap, l, service.WithHTTP(
+		servicehttp.WithMiddlewares(middlewares...)),
+	); serv != nil {
 		serv = register.GINS(serv)
 		serv = register2.GINS(serv)
 		servers = append(servers, serv)
 	}
-	if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(func(o *servicehttp.Option) {
-		o.Middlewares = middlewares
-	})); serv != nil {
+	if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
+		servicehttp.WithMiddlewares(middlewares...)),
+	); serv != nil {
 		serv = register.HTTP(serv)
 		serv = register2.HTTP(serv)
 		servers = append(servers, serv)

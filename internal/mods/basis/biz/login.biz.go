@@ -23,6 +23,11 @@ type LoginBiz struct {
 	log     *log.Helper
 }
 
+func (biz LoginBiz) Register(ctx context.Context, in *pb.RegisterRequest, opts ...grpc.CallOption) (*pb.RegisterResponse, error) {
+	log.Info("Register")
+	return biz.dao.Register(ctx, in)
+}
+
 func (biz LoginBiz) Refresh(ctx context.Context, in *pb.RefreshRequest, opts ...grpc.CallOption) (*pb.RefreshResponse, error) {
 	log.Info("Refresh")
 	return biz.dao.Refresh(ctx, in)

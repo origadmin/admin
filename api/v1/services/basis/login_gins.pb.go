@@ -26,6 +26,7 @@ const LoginAPI_CurrentUser_OperationName = "/api.v1.services.basis.LoginAPI/Curr
 const LoginAPI_Login_OperationName = "/api.v1.services.basis.LoginAPI/Login"
 const LoginAPI_Logout_OperationName = "/api.v1.services.basis.LoginAPI/Logout"
 const LoginAPI_Refresh_OperationName = "/api.v1.services.basis.LoginAPI/Refresh"
+const LoginAPI_Register_OperationName = "/api.v1.services.basis.LoginAPI/Register"
 
 type LoginAPIGINSServer interface {
 	CaptchaID(context.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error)
@@ -37,6 +38,7 @@ type LoginAPIGINSServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
+	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
 func RegisterLoginAPIGINSServer(router gins.IRouter, srv LoginAPIGINSServer) {
@@ -45,6 +47,7 @@ func RegisterLoginAPIGINSServer(router gins.IRouter, srv LoginAPIGINSServer) {
 	router.GET("/api/v1/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_GIN_Handler(srv))
 	router.GET("/api/v1/captcha/id/:id", _LoginAPI_CaptchaResources0_GIN_Handler(srv))
 	router.POST("/api/v1/login", _LoginAPI_Login0_GIN_Handler(srv))
+	router.POST("/api/v1/register", _LoginAPI_Register0_GIN_Handler(srv))
 	router.POST("/api/v1/refresh_token", _LoginAPI_Refresh0_GIN_Handler(srv))
 	router.POST("/api/v1/current/logout", _LoginAPI_Logout0_GIN_Handler(srv))
 	router.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_GIN_Handler(srv))
@@ -158,6 +161,29 @@ func _LoginAPI_Login0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 	}
 }
 
+func _LoginAPI_Register0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
+	return func(ctx *gins.Context) {
+		var in RegisterRequest
+		if err := gins.BindBody(ctx, &in.Data); err != nil {
+			gins.JSON(ctx, 400, err)
+			return
+		}
+		if err := gins.BindQuery(ctx, &in); err != nil {
+			gins.JSON(ctx, 400, err)
+			return
+		}
+		gins.SetOperation(ctx, LoginAPI_Register_OperationName)
+		newCtx := gins.NewContext(ctx)
+		reply, err := srv.Register(newCtx, &in)
+		if err != nil {
+			gins.JSON(ctx, 500, err)
+			return
+		}
+		gins.JSON(ctx, 200, reply)
+		return
+	}
+}
+
 func _LoginAPI_Refresh0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 	return func(ctx *gins.Context) {
 		var in RefreshRequest
@@ -256,6 +282,7 @@ type LoginAPIGINSClient interface {
 	Login(ctx context.Context, req *LoginRequest, opts ...gins.CallOption) (rsp *LoginResponse, err error)
 	Logout(ctx context.Context, req *LogoutRequest, opts ...gins.CallOption) (rsp *LogoutResponse, err error)
 	Refresh(ctx context.Context, req *RefreshRequest, opts ...gins.CallOption) (rsp *RefreshResponse, err error)
+	Register(ctx context.Context, req *RegisterRequest, opts ...gins.CallOption) (rsp *RegisterResponse, err error)
 }
 
 type LoginAPIGINSClientImpl struct {
@@ -375,6 +402,19 @@ func (c *LoginAPIGINSClientImpl) Refresh(ctx context.Context, in *RefreshRequest
 	pattern := "/api/v1/refresh_token"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Refresh_OperationName))
+	opts = append(opts, gins.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *LoginAPIGINSClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...gins.CallOption) (*RegisterResponse, error) {
+	var out RegisterResponse
+	pattern := "/api/v1/register"
+	path := gins.EncodeURL(pattern, in, false)
+	opts = append(opts, gins.Operation(LoginAPI_Register_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {

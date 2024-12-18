@@ -23,14 +23,43 @@ type LoginAPIGINRPCService struct {
 	client pb.LoginAPIClient
 }
 
+func (s LoginAPIGINRPCService) Register(context *gins.Context, request *pb.RegisterRequest) {
+	response, err := s.client.Register(context, request)
+	if err != nil {
+		log.Errorf("Register error: %v", err)
+		s.Error(context, http.StatusNotFound, err)
+		return
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+}
+
 func (s LoginAPIGINRPCService) CaptchaResource(context *gins.Context, request *pb.CaptchaResourceRequest) {
-	//TODO implement me
-	panic("implement me")
+	response, err := s.client.CaptchaResource(context, request)
+	if err != nil {
+		log.Errorf("CaptchaResource error: %v", err)
+		s.Error(context, http.StatusNotFound, err)
+		return
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
 }
 
 func (s LoginAPIGINRPCService) CaptchaResources(context *gins.Context, request *pb.CaptchaResourcesRequest) {
-	//TODO implement me
-	panic("implement me")
+	response, err := s.client.CaptchaResources(context, request)
+	if err != nil {
+		log.Errorf("CaptchaResources error: %v", err)
+		s.Error(context, http.StatusNotFound, err)
+		return
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
 }
 
 func (s LoginAPIGINRPCService) CaptchaID(context *gins.Context, request *pb.CaptchaIDRequest) {

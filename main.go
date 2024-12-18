@@ -7,6 +7,7 @@ package main
 
 import (
 	goversion "github.com/caarlos0/go-version"
+	_ "github.com/google/wire"
 
 	"origadmin/application/admin/cmd"
 	"origadmin/application/admin/internal/loader"

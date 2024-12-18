@@ -318,6 +318,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/register:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.basis.RegisterRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.RegisterResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /api/v1/sys/menus:
         get:
             tags:
@@ -919,6 +943,29 @@ components:
             properties:
                 token:
                     $ref: '#/components/schemas/pwt.v1.Token'
+        api.v1.services.basis.RegisterRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.basis.RegisterResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                data:
+                    $ref: '#/components/schemas/api.v1.services.basis.RegisterResponse_Data'
+        api.v1.services.basis.RegisterResponse_Data:
+            type: object
+            properties:
+                redirect:
+                    type: string
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:
@@ -1425,30 +1472,59 @@ components:
         pwt.v1.Token:
             type: object
             properties:
+                client_id:
+                    type: string
+                    description: The client ID associated with the token.
+                user_id:
+                    type: string
+                    description: The ID of the user associated with the token.
+                access_token:
+                    type: string
+                    description: The web access token used for authentication.
+                refresh_token:
+                    type: string
+                    description: The refresh token used to obtain a new access token.
                 expiration_time:
-                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
                     type: string
-                issued_at:
-                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
+                    description: The expiration time of the token.
+                    format: date-time
+                claims:
+                    $ref: '#/components/schemas/security.v1.Claims'
+            description: PWT is a web token that can be used to authenticate a user with protobuf services.
+        security.v1.Claims:
+            type: object
+            properties:
+                sub:
                     type: string
-                not_before:
-                    pattern: ^-?(?:0|[1-9][0-9]{0,11})(?:\.[0-9]{1,9})?s$
+                    description: The subject of the token.
+                iss:
                     type: string
-                issuer:
-                    type: string
-                audience:
+                    description: The issuer of the token.
+                aud:
                     type: array
                     items:
                         type: string
-                subject:
+                    description: The audience for which the token is intended.
+                exp:
                     type: string
-                jwt_id:
+                    description: The expiration time of the token.
+                    format: date-time
+                nbf:
                     type: string
-                client_id:
+                    description: The time before which the token must not be accepted.
+                    format: date-time
+                iat:
                     type: string
-                client_secret:
+                    description: The time at which the token was issued.
+                    format: date-time
+                jti:
                     type: string
-            description: PWT is a web token that can be used to authenticate a user with protobuf services.
+                    description: The unique identifier for the token.
+                scopes:
+                    type: object
+                    additionalProperties:
+                        type: boolean
+                    description: The scopes associated with the token.
     securitySchemes:
         Basic:
             type: http

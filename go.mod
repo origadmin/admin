@@ -15,12 +15,13 @@ require (
 	github.com/goexts/generic v0.1.4
 	github.com/google/gnostic v0.7.0
 	github.com/google/wire v0.6.0
-	github.com/origadmin/contrib/consul v0.0.12
-	github.com/origadmin/contrib/database v0.0.12
-	github.com/origadmin/contrib/replacer v0.0.12
+	github.com/origadmin/contrib/consul v0.0.14
+	github.com/origadmin/contrib/database v0.0.14
+	github.com/origadmin/contrib/replacer v0.0.14
 	github.com/origadmin/contrib/security/authn/jwt v0.0.2
+	github.com/origadmin/contrib/security/authz/casbin v0.0.2
 	github.com/origadmin/contrib/transport/gins v0.0.12
-	github.com/origadmin/runtime v0.1.13
+	github.com/origadmin/runtime v0.1.14
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.21
 	github.com/origadmin/toolkits/codec v0.0.49
@@ -43,9 +44,12 @@ require (
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/armon/go-metrics v0.5.4 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
+	github.com/bmatcuk/doublestar/v4 v4.7.1 // indirect
 	github.com/bufbuild/protovalidate-go v0.8.0 // indirect
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
+	github.com/casbin/casbin/v2 v2.102.0 // indirect
+	github.com/casbin/govaluate v1.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
@@ -77,7 +81,6 @@ require (
 	github.com/google/cel-go v0.22.1 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/consul/api v1.30.0 // indirect
@@ -112,7 +115,6 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/shirou/gopsutil/v3 v3.24.5 // indirect

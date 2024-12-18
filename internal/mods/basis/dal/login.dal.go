@@ -39,6 +39,11 @@ type loginRepo struct {
 	Authenticator security.Authenticator
 }
 
+func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
+	log.Debugf("Register request received with data: %+v", in.GetData())
+	return nil, errors.New("not implemented")
+}
+
 func (repo loginRepo) Refresh(ctx context.Context, in *dto.RefreshRequest) (*dto.RefreshResponse, error) {
 	log.Debugf("Refresh request received with data: %+v", in.GetData())
 	return repo.refreshToken(ctx, in.GetData().GetRefreshToken())
@@ -173,8 +178,7 @@ func (repo loginRepo) CurrentUser(ctx context.Context, in *dto.CurrentUserReques
 }
 
 func (repo loginRepo) Logout(ctx context.Context, in *dto.LogoutRequest) (*dto.LogoutResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &dto.LogoutResponse{}, nil
 }
 
 func (repo loginRepo) CaptchaID(ctx context.Context, in *dto.CaptchaIDRequest) (*dto.CaptchaIDResponse, error) {

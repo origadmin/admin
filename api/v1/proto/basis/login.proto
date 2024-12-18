@@ -44,6 +44,13 @@ service LoginAPI {
     };
   }
 
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/register",
+      body: "data",
+    };
+  }
+
   rpc Refresh (RefreshRequest) returns (RefreshResponse) {
     option (google.api.http) = {
       post: "/api/v1/refresh_token",
@@ -191,4 +198,34 @@ message RefreshRequest {
 
 message RefreshResponse {
   pwt.v1.Token token = 1;
+}
+
+message RegisterRequest {
+  message Data {
+    string username = 1 [
+      json_name = "username",
+      (validate.rules).string = {min_len: 1}
+    ];
+    string password = 2 [
+      json_name = "password",
+      (validate.rules).string = {min_len: 1}
+    ];
+    string captcha_id = 3 [
+      json_name = "captcha_id",
+      (validate.rules).string = {min_len: 1}
+    ];
+    string captcha_code = 4 [
+      json_name = "captcha_code",
+      (validate.rules).string = {min_len: 1}
+    ];
+  }
+  Data data = 2 [json_name = "data"];
+}
+
+message RegisterResponse {
+  bool success = 1;
+  message Data {
+    string redirect = 1;
+  }
+  Data data = 2 [json_name = "data"];
 }

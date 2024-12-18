@@ -26,7 +26,7 @@ const (
 
 var (
 // ProviderSet is server providers.
-// ProviderSet = wire.NewSet(NewCommonServer, NewCommonServerAgent)
+// ProviderSet = wire.NewSet(NewBasisServer, NewBasisServerAgent)
 )
 
 func init() {
@@ -42,8 +42,8 @@ func (s RegisterAgent) GIN(server gins.IRouter) {
 	pb.RegisterLoginAPIGINRPCAgent(server, s.Login)
 }
 
-func NewCommonServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
-	client, err := NewCommonClient(bootstrap, l)
+func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
+	client, err := NewBasisClient(bootstrap, l)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func NewCommonServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*Register
 	return &register, nil
 }
 
-func NewCommonClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCClient, error) {
+func NewBasisClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCClient, error) {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
 		return nil, errors.New("no entry")
@@ -111,11 +111,11 @@ func NewLoginClient(service *configv1.Service) (pb.LoginAPIServer, error) {
 	return basisservice.NewLoginAPIServer(cli), nil
 }
 
-//func NewCommonHTTPClient(service *configv1.Service) (pb.LoginAPIServer, error) {
+//func NewBasisHTTPClient(service *configv1.Service) (pb.LoginAPIServer, error) {
 //	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
 //	if err != nil {
 //		return nil, errors.Wrap(err, "create menu http client")
 //	}
-//	cli := pb.NewCommonAPIHTTPClient(client)
-//	return basisservice.NewCommonAPIHTTPServer(cli), nil
+//	cli := pb.NewBasisAPIHTTPClient(client)
+//	return basisservice.NewBasisAPIHTTPServer(cli), nil
 //}
