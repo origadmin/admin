@@ -10,7 +10,7 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIV1ServicesSystem";
 
 enum SystemErrorReason {
-    option (errors.default_code) = 500;
-    SYSTEM_ERROR_REASON_UNSPECIFIED = 0;
-    SYSTEM_ERROR_REASON_USER_NOT_FOUND = 2001 [(errors.code) = 404];
+  option (errors.default_code) = 500;
+  SYSTEM_ERROR_REASON_UNSPECIFIED = 0;
+  SYSTEM_ERROR_REASON_USER_NOT_FOUND = 2001 [(errors.code) = 404];
 }

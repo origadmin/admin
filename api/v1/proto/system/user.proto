@@ -9,127 +9,108 @@ import "system/types.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.services.system";
 option java_outer_classname = "APIServiceSystemUserProto";
+option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemUser";
 
 // The login service definition.
 service UserAPI {
-    rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
-        option (google.api.http) = {
-            get: "/api/v1/sys/users",
-        };
-    }
-    rpc GetUser (GetUserRequest) returns (GetUserResponse) {
-        option (google.api.http) = {
-            get: "/api/v1/sys/users/{id}",
-        };
-    }
-    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
-        option (google.api.http) = {
-            post: "/api/v1/sys/users",
-            body: "user",
-        };
-    }
-    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
-        option (google.api.http) = {
-            put: "/api/v1/sys/users/{user.id}",
-            body: "user",
-        };
-    }
-    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {
-        option (google.api.http) = {
-            delete: "/api/v1/sys/users/{id}",
-        };
-    }
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {get: "/api/v1/sys/users"};
+  }
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {get: "/api/v1/sys/users/{id}"};
+  }
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/sys/users"
+      body: "user"
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/sys/users/{user.id}"
+      body: "user"
+    };
+  }
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {delete: "/api/v1/sys/users/{id}"};
+  }
 }
 
 message ListUsersRequest {
-    // The parent resource id, for example, "shelves/shelf1".
-    string id = 1;
-    // The current page number.
-    int32 current = 2;
-    // The maximum number of items to return.
-    int32 page_size = 3;
-    // The next_page_token value returned from a previous List request, if any.
-    string page_token = 4;
-    // The no_paging is used to disable pagination.
-    bool no_paging = 5;
-    // The only_count is the query parameter for set only to query the total number
-    bool only_count = 6;
+  // The parent resource id, for example, "shelves/shelf1".
+  string id = 1;
+  // The current page number.
+  int32 current = 2;
+  // The maximum number of items to return.
+  int32 page_size = 3;
+  // The next_page_token value returned from a previous List request, if any.
+  string page_token = 4;
+  // The no_paging is used to disable pagination.
+  bool no_paging = 5;
+  // The only_count is the query parameter for set only to query the total number
+  bool only_count = 6;
 }
 
 message ListUsersResponse {
-    // The total number of items in the list.
-    int32 total_size = 1 [
-        json_name = "total_size"
-    ];
-    // The paging menus
-    repeated api.v1.services.system.User users = 2 [
-        json_name = "users"
-    ];
-    // The current page number.
-    int32 current = 3 [
-        json_name = "current"
-    ];
-    // The maximum number of items to return.
-    int32 page_size = 4 [
-        json_name = "page_size"
-    ];
-    // Token to retrieve the next page of results, or empty if there are no
-    // more results in the list.
-    string next_page_token = 5 [
-        json_name = "next_page_token"
-    ];
-    // Additional information about this response.
-    // content to be added without destroying the current data format
-    optional google.protobuf.Any extra = 6 [
-        json_name = "extra"
-    ];
+  // The total number of items in the list.
+  int32 total_size = 1 [json_name = "total_size"];
+  // The paging menus
+  repeated api.v1.services.system.User users = 2 [json_name = "users"];
+  // The current page number.
+  int32 current = 3 [json_name = "current"];
+  // The maximum number of items to return.
+  int32 page_size = 4 [json_name = "page_size"];
+  // Token to retrieve the next page of results, or empty if there are no
+  // more results in the list.
+  string next_page_token = 5 [json_name = "next_page_token"];
+  // Additional information about this response.
+  // content to be added without destroying the current data format
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
 message GetUserRequest {
-    // The field will contain id of the resource requested, for example:
-    // "shelves/shelf1/users/user2"
-    string id = 1;
+  // The field will contain id of the resource requested, for example:
+  // "shelves/shelf1/users/user2"
+  string id = 1;
 }
 
 message GetUserResponse {
-    api.v1.services.system.User user = 1;
+  api.v1.services.system.User user = 1;
 }
 
 message CreateUserRequest {
-    // The parent resource id where the user is to be created.
-    string parent = 1;
+  // The parent resource id where the user is to be created.
+  string parent = 1;
 
-    // The user id to use for this user.
-    string user_id = 3;
+  // The user id to use for this user.
+  string user_id = 3;
 
-    // The user resource to create.
-    // The field id should match the Noun in the method id.
-    api.v1.services.system.User user = 2;
+  // The user resource to create.
+  // The field id should match the Noun in the method id.
+  api.v1.services.system.User user = 2;
 }
 
 message CreateUserResponse {
-    api.v1.services.system.User user = 1;
+  api.v1.services.system.User user = 1;
 }
 
 message UpdateUserRequest {
-    // The user resource which replaces the resource on the server.
-    api.v1.services.system.User user = 1;
-
+  // The user resource which replaces the resource on the server.
+  api.v1.services.system.User user = 1;
 }
 
 message UpdateUserResponse {
-    api.v1.services.system.User user = 1;
+  api.v1.services.system.User user = 1;
 }
 
 message DeleteUserRequest {
-    // The resource id of the user to be deleted, for example:
-    // "shelves/shelf1/users/user2"
-    string id = 1;
+  // The resource id of the user to be deleted, for example:
+  // "shelves/shelf1/users/user2"
+  string id = 1;
 }
 
 message DeleteUserResponse {
-    google.protobuf.Empty empty = 1;
+  google.protobuf.Empty empty = 1;
 }

@@ -21,11 +21,6 @@ func (obj LoginAPIHTTPService) Register(ctx context.Context, request *pb.Registe
 	return obj.client.Register(ctx, request)
 }
 
-func (obj LoginAPIHTTPService) mustEmbedUnimplementedLoginAPIServer() {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (obj LoginAPIHTTPService) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
 	return obj.client.CaptchaResource(ctx, request)
 }

@@ -6,10 +6,11 @@
 package agent
 
 import (
-	"fmt"
+	context2 "context"
 	"strings"
 
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
@@ -20,20 +21,22 @@ import (
 	servicehttp "github.com/origadmin/runtime/service/http"
 	"github.com/origadmin/toolkits/security"
 
+	"origadmin/application/admin/api/v1/services/basis"
 	"origadmin/application/admin/internal/configs"
 )
 
 type HTTPRegistrar interface {
-	HTTP(server service.HTTPServer)
+	HTTP(server *service.HTTPServer)
 }
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(bootstrap *configs.Bootstrap, authenticator security.Authenticator, authorizer security.Authorizer, l log.Logger) *service.HTTPServer {
+func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.Logger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no serviceConfig")
 	}
 	paths := bootstrap.GetMiddlewares().GetSecurity().GetPublicPaths()
+	paths = append(DefaultPaths(), paths...)
 	ms := middleware.NewClient(bootstrap.GetMiddlewares(), middleware.WithSecurityOptions(func(option *middlewaresecurity.Option) {
 		option.Authenticator = authenticator
 		option.Authorizer = authorizer
@@ -48,32 +51,51 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, authenticator security.Authenti
 			log.Debugf("Path '%s' does not match any public path, not skipping", path)
 			return false
 		}
+		option.Parser = func(ctx context2.Context, id string) (security.UserClaims, error) {
+			//todo: 从token中获取用户信息
+			return nil, nil
+		}
 	}))
-	ms = append([]middleware.Middleware{
-		func(handler middleware.Handler) middleware.Handler {
-			return func(ctx context.Context, req interface{}) (interface{}, error) {
-				fmt.Println("Handler called")
-				tr, ok := transport.FromClientContext(ctx)
-				if !ok {
-					log.Errorf("No transport found in context")
-				} else {
-					log.Debugf("Starting HTTP handler for path '%s'", tr.Operation())
-				}
-
-				return handler(ctx, req)
-			}
-		},
-	}, ms...)
+	ms = append([]middleware.Middleware{MiddlewareAdapter()}, ms...)
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(servicehttp.WithMiddlewares(ms...)))
 	if err != nil {
 		panic(err)
 	}
+	for _, registrar := range registrars {
+		registrar.HTTP(srv)
+	}
+	srv.WalkRoute(func(info http.RouteInfo) error {
+		log.Infof("Registered HTTP route: %s %s", info.Method, info.Path)
+		return nil
+	})
 
 	return srv
 }
 
-//func RegisterHTTPServer(srv *http.Register, menus pb.MenuAPIServer, login common.LoginAPIServer) {
-//	common.RegisterLoginAPIHTTPServer(srv, login)
-//	pb.RegisterMenuAPIHTTPServer(srv, menus)
-//}
+func MiddlewareAdapter() middleware.Middleware {
+	return func(handler middleware.Handler) middleware.Handler {
+		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+			tr, ok := transport.FromServerContext(ctx)
+			if ok {
+				return handler(transport.NewClientContext(ctx, tr), req)
+			}
+			return handler(ctx, req)
+		}
+	}
+}
+
+func DefaultPaths() []string {
+	return []string{
+		basis.OperationLoginAPICaptchaID,
+		basis.OperationLoginAPICaptchaImage,
+		basis.OperationLoginAPICaptchaResource,
+		basis.OperationLoginAPICaptchaResources,
+		//basis.OperationLoginAPICurrentMenus,
+		//basis.OperationLoginAPICurrentUser,
+		basis.OperationLoginAPILogin,
+		//basis.OperationLoginAPILogout,
+		basis.OperationLoginAPIRefresh,
+		basis.OperationLoginAPIRegister,
+	}
+}

@@ -9,38 +9,32 @@ import "system/types.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.services.system";
 option java_outer_classname = "APIServiceSystemRoleProto";
+option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemRole";
 
 // The login service definition.
 service RoleAPI {
-  rpc ListRoles (ListRolesRequest) returns (ListRolesResponse) {
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
+    option (google.api.http) = {get: "/api/v1/sys/roles"};
+  }
+  rpc GetRole(GetRoleRequest) returns (GetRoleResponse) {
+    option (google.api.http) = {get: "/api/v1/sys/roles/{id}"};
+  }
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
-      get: "/api/v1/sys/roles",
+      post: "/api/v1/sys/roles"
+      body: "role"
     };
   }
-  rpc GetRole (GetRoleRequest) returns (GetRoleResponse) {
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
-      get: "/api/v1/sys/roles/{id}",
+      put: "/api/v1/sys/roles/{role.id}"
+      body: "role"
     };
   }
-  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/sys/roles",
-      body: "role",
-    };
-  }
-  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse) {
-    option (google.api.http) = {
-      put: "/api/v1/sys/roles/{role.id}",
-      body: "role",
-    };
-  }
-  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse) {
-    option (google.api.http) = {
-      delete: "/api/v1/sys/roles/{id}",
-    };
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
+    option (google.api.http) = {delete: "/api/v1/sys/roles/{id}"};
   }
 }
 
@@ -61,31 +55,19 @@ message ListRolesRequest {
 
 message ListRolesResponse {
   // The total number of items in the list.
-  int32 total_size = 1 [
-    json_name = "total_size"
-  ];
+  int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated api.v1.services.system.Role roles = 2 [
-    json_name = "roles"
-  ];
+  repeated api.v1.services.system.Role roles = 2 [json_name = "roles"];
   // The current page number.
-  int32 current = 3 [
-    json_name = "current"
-  ];
+  int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
-  int32 page_size = 4 [
-    json_name = "page_size"
-  ];
+  int32 page_size = 4 [json_name = "page_size"];
   // Token to retrieve the next page of results, or empty if there are no
   // more results in the list.
-  string next_page_token = 5 [
-    json_name = "next_page_token"
-  ];
+  string next_page_token = 5 [json_name = "next_page_token"];
   // Additional information about this response.
   // content to be added without destroying the current data format
-  optional google.protobuf.Any extra = 6 [
-    json_name = "extra"
-  ];
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
 message GetRoleRequest {
@@ -117,7 +99,6 @@ message CreateRoleResponse {
 message UpdateRoleRequest {
   // The role resource which replaces the resource on the server.
   api.v1.services.system.Role role = 1;
-
 }
 
 message UpdateRoleResponse {

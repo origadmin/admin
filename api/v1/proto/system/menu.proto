@@ -9,38 +9,32 @@ import "system/types.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.services.system";
 option java_outer_classname = "APIServiceSystemMenuProto";
+option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemMenu";
 
 // The menu service definition.
 service MenuAPI {
-  rpc ListMenus (ListMenusRequest) returns (ListMenusResponse) {
+  rpc ListMenus(ListMenusRequest) returns (ListMenusResponse) {
+    option (google.api.http) = {get: "/api/v1/sys/menus"};
+  }
+  rpc GetMenu(GetMenuRequest) returns (GetMenuResponse) {
+    option (google.api.http) = {get: "/api/v1/sys/menus/{id}"};
+  }
+  rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse) {
     option (google.api.http) = {
-      get: "/api/v1/sys/menus",
+      post: "/api/v1/sys/menus"
+      body: "menu"
     };
   }
-  rpc GetMenu (GetMenuRequest) returns (GetMenuResponse) {
+  rpc UpdateMenu(UpdateMenuRequest) returns (UpdateMenuResponse) {
     option (google.api.http) = {
-      get: "/api/v1/sys/menus/{id}",
+      put: "/api/v1/sys/menus/{menu.id}"
+      body: "menu"
     };
   }
-  rpc CreateMenu (CreateMenuRequest) returns (CreateMenuResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/sys/menus",
-      body: "menu",
-    };
-  }
-  rpc UpdateMenu (UpdateMenuRequest) returns (UpdateMenuResponse) {
-    option (google.api.http) = {
-      put: "/api/v1/sys/menus/{menu.id}",
-      body: "menu",
-    };
-  }
-  rpc DeleteMenu (DeleteMenuRequest) returns (DeleteMenuResponse) {
-    option (google.api.http) = {
-      delete: "/api/v1/sys/menus/{id}",
-    };
+  rpc DeleteMenu(DeleteMenuRequest) returns (DeleteMenuResponse) {
+    option (google.api.http) = {delete: "/api/v1/sys/menus/{id}"};
   }
 }
 
@@ -63,31 +57,19 @@ message ListMenusRequest {
 // ListMenusResponse is the response for the MenuService.ListMenus method.
 message ListMenusResponse {
   // The total number of items in the list.
-  int32 total_size = 1 [
-    json_name = "total_size"
-  ];
+  int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated api.v1.services.system.Menu menus = 2 [
-    json_name = "menus"
-  ];
+  repeated api.v1.services.system.Menu menus = 2 [json_name = "menus"];
   // The current page number.
-  int32 current = 3 [
-    json_name = "current"
-  ];
+  int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
-  int32 page_size = 4 [
-    json_name = "page_size"
-  ];
+  int32 page_size = 4 [json_name = "page_size"];
   // Token to retrieve the next page of results, or empty if there are no
   // more results in the list.
-  string next_page_token = 5 [
-    json_name = "next_page_token"
-  ];
+  string next_page_token = 5 [json_name = "next_page_token"];
   // Additional information about this response.
   // content to be added without destroying the current data format
-  optional google.protobuf.Any extra = 6 [
-    json_name = "extra"
-  ];
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
 // GetMenuRequest is the request for the MenuService.GetMenu method.
@@ -125,7 +107,6 @@ message CreateMenuResponse {
 message UpdateMenuRequest {
   // The menu resource which replaces the resource on the server.
   api.v1.services.system.Menu menu = 1;
-
 }
 
 // UpdateMenuResponse is the response for the MenuService.UpdateMenu method.

@@ -300,7 +300,17 @@ func DefaultServiceMiddleware() *configv1.Middleware {
 			FailFast: true,
 		},
 		Security: &configv1.Security{
-			PublicPaths: nil,
+			PublicPaths: []string{
+				"/swagger/*",
+				"/api/v1/health",
+				"/api/v1/health/*",
+				"/api/v1/captcha",
+				"/api/v1/captcha/*",
+				"/api/v1/login",
+				"/api/v1/register",
+				"/api/v1/current/logout",
+				"/api/v1/refresh_token",
+			},
 			Authz: &configv1.AuthZConfig{
 				Disabled:    false,
 				PublicPaths: nil,

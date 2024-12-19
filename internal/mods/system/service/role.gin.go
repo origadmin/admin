@@ -8,7 +8,7 @@ package service
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -22,65 +22,70 @@ type RoleAPIGINRPCService struct {
 	client pb.RoleAPIClient
 }
 
-func (s RoleAPIGINRPCService) CreateRole(context *gin.Context, request *pb.CreateRoleRequest) {
+func (s RoleAPIGINRPCService) CreateRole(context transhttp.Context, request *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
 	response, err := s.client.CreateRole(context, request)
 	if err != nil {
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Role,
 	})
+	return response, nil
 }
 
-func (s RoleAPIGINRPCService) DeleteRole(context *gin.Context, request *pb.DeleteRoleRequest) {
+func (s RoleAPIGINRPCService) DeleteRole(context transhttp.Context, request *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	response, err := s.client.DeleteRole(context, request)
 	if err != nil {
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Empty,
 	})
+	return response, nil
 }
 
-func (s RoleAPIGINRPCService) GetRole(context *gin.Context, request *pb.GetRoleRequest) {
+func (s RoleAPIGINRPCService) GetRole(context transhttp.Context, request *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
 	response, err := s.client.GetRole(context, request)
 	if err != nil {
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Role,
 	})
+	return response, nil
 }
 
-func (s RoleAPIGINRPCService) ListRoles(context *gin.Context, request *pb.ListRolesRequest) {
+func (s RoleAPIGINRPCService) ListRoles(context transhttp.Context, request *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	response, err := s.client.ListRoles(context, request)
 	if err != nil {
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Total:   response.TotalSize,
 		Data:    response.Roles,
 	})
+	return response, nil
 }
 
-func (s RoleAPIGINRPCService) UpdateRole(context *gin.Context, request *pb.UpdateRoleRequest) {
+func (s RoleAPIGINRPCService) UpdateRole(context transhttp.Context, request *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
 	response, err := s.client.UpdateRole(context, request)
 	if err != nil {
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Role,
 	})
+	return response, nil
 }
 
 // NewRoleAPIGINRPCService new a menu service.
@@ -88,13 +93,13 @@ func NewRoleAPIGINRPCService(client pb.RoleAPIClient) *RoleAPIGINRPCService {
 	return &RoleAPIGINRPCService{client: client}
 }
 
-// NewRoleAPIGINRPCAgent new a menu service.
-func NewRoleAPIGINRPCAgent(client pb.RoleAPIClient) pb.RoleAPIGINRPCAgent {
+// NewRoleAPIAgent new a menu service.
+func NewRoleAPIAgent(client pb.RoleAPIClient) pb.RoleAPIAgent {
 	return &RoleAPIGINRPCService{client: client}
 }
-func NewRoleServerAgent(client *service.GRPCClient) pb.RoleAPIGINRPCAgent {
+func NewRoleServerAgent(client *service.GRPCClient) pb.RoleAPIAgent {
 	c := pb.NewRoleAPIClient(client)
-	return NewRoleAPIGINRPCAgent(c)
+	return NewRoleAPIAgent(c)
 }
 
-var _ pb.RoleAPIGINRPCAgent = (*RoleAPIGINRPCService)(nil)
+var _ pb.RoleAPIAgent = (*RoleAPIGINRPCService)(nil)

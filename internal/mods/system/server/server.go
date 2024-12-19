@@ -6,6 +6,7 @@ package server
 
 import (
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
@@ -73,20 +74,31 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 }
 
 type RegisterAgent struct {
-	Menu           pb.MenuAPIGINRPCAgent
-	Role           pb.RoleAPIGINRPCAgent
-	User           pb.UserAPIGINRPCAgent
-	basisRegisters []func(server gins.IRouter)
+	Menu           pb.MenuAPIAgent
+	Role           pb.RoleAPIAgent
+	User           pb.UserAPIAgent
+	basisRegisters []func(server *http.Server)
 }
 
-func (s RegisterAgent) GIN(server gins.IRouter) {
+func (s RegisterAgent) HTTP(server *http.Server) {
+	log.Info("http server system init")
 	log.Info("gin server system init")
 	for _, register := range s.basisRegisters {
 		register(server)
 	}
-	pb.RegisterMenuAPIGINRPCAgent(server, s.Menu)
-	pb.RegisterRoleAPIGINRPCAgent(server, s.Role)
-	pb.RegisterUserAPIGINRPCAgent(server, s.User)
+	pb.RegisterMenuAPIAgent(server, s.Menu)
+	pb.RegisterRoleAPIAgent(server, s.Role)
+	pb.RegisterUserAPIAgent(server, s.User)
+}
+
+func (s RegisterAgent) GIN(server gins.IRouter) {
+	log.Info("gin server system init")
+	//for _, register := range s.basisRegisters {
+	//	register(server)
+	//}
+	//pb.RegisterMenuAPIAgent(server, s.Menu)
+	//pb.RegisterRoleAPIAgent(server, s.Role)
+	//pb.RegisterUserAPIAgent(server, s.User)
 }
 
 func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
@@ -98,7 +110,7 @@ func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*Register
 		Menu: systemservice.NewMenuServerAgent(client),
 		Role: systemservice.NewRoleServerAgent(client),
 		User: systemservice.NewUserServerAgent(client),
-		basisRegisters: []func(server gins.IRouter){
+		basisRegisters: []func(server *http.Server){
 			basisservice.NewLoginServerAgentGINRegister(client),
 		},
 	}
@@ -149,11 +161,11 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCC
 	return client, nil
 }
 
-//func NewMenuHTTPServerAgent(service *configv1.Service) (pb.MenuAPIGINRPCAgent, error) {
+//func NewMenuHTTPServerAgent(service *configv1.Service) (pb.MenuAPIAgent, error) {
 //	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
 //	if err != nil {
 //		return nil, errors.Wrap(err, "create menu http client")
 //	}
 //	cli := pb.NewMenuAPIHTTPClient(client)
-//	return systemservice.NewMenuAPIGINRPCAgent(cli), nil
+//	return systemservice.NewMenuAPIAgent(cli), nil
 //}

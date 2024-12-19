@@ -34,12 +34,22 @@ func init() {
 }
 
 type RegisterAgent struct {
-	Login pb.LoginAPIGINRPCAgent
+	Login pb.LoginAPIAgent
 }
 
 func (s RegisterAgent) GIN(server gins.IRouter) {
 	log.Info("gin server basis init")
-	pb.RegisterLoginAPIGINRPCAgent(server, s.Login)
+	//pb.RegisterLoginAPIAgent(server, s.Login)
+}
+
+func (s RegisterAgent) GRPC(server *service.GRPCServer) {
+	log.Info("grpc server basis init")
+	//pb.RegisterLoginAPIServer(server, s.Login)
+}
+
+func (s RegisterAgent) HTTP(server *service.HTTPServer) {
+	log.Info("http server basis init")
+	pb.RegisterLoginAPIAgent(server, s.Login)
 }
 
 func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
@@ -97,9 +107,9 @@ func NewBasisClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCCl
 	return client, nil
 }
 
-func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIGINRPCAgent {
+func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIAgent {
 	cli := pb.NewLoginAPIClient(client)
-	return basisservice.NewLoginAPIGINRPCAgent(cli)
+	return basisservice.NewLoginAPIAgent(cli)
 }
 
 func NewLoginClient(service *configv1.Service) (pb.LoginAPIServer, error) {

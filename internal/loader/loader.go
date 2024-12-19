@@ -25,7 +25,7 @@ var (
 	ProviderSet = wire.NewSet(
 		NewBasisConfig,
 		NewRegistrar,
-		NewAgentGINRegistrar,
+		NewAgentHTTPRegistrar,
 		NewAuthenticator,
 		NewAuthorizer,
 		wire.Struct(new(InjectorServer), "*"),
@@ -42,7 +42,7 @@ var (
 type InjectorClient struct {
 	Logger     log.Logger
 	Bootstrap  *configs.Bootstrap
-	Registrars []agent.GINRegistrar
+	Registrars []agent.HTTPRegistrar
 	Server     *http.Server
 	//Router      *gin.Engine
 	//Servers []transport.Server
@@ -68,6 +68,12 @@ func NewBasisConfig(bootstrap *configs.Bootstrap) *configs.BasisConfig {
 
 func NewAgentGINRegistrar(systemagent *systemserver.RegisterAgent) []agent.GINRegistrar {
 	return []agent.GINRegistrar{
+		systemagent,
+	}
+}
+
+func NewAgentHTTPRegistrar(systemagent *systemserver.RegisterAgent) []agent.HTTPRegistrar {
+	return []agent.HTTPRegistrar{
 		systemagent,
 	}
 }

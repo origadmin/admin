@@ -10,9 +10,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	kerr "github.com/go-kratos/kratos/v2/errors"
-	"github.com/origadmin/contrib/transport/gins"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/errors/httperr"
@@ -68,44 +67,43 @@ type Response struct {
 
 var mo protojson.MarshalOptions
 
-func (r Response) result(context *gins.Context, status int, data any) {
+func (r Response) result(context transhttp.Context, status int, data any) {
 	if msg, ok := data.(proto.Message); ok {
 		buf, err := mo.Marshal(msg)
 		if err != nil {
-			context.Error(errors.Wrap(err, "marshal proto message error"))
+			//context.Error(errors.Wrap(err, "marshal proto message error"))
 			return
 		}
-		context.Set(gins.ContextResponseBodBytesKey, buf)
-		context.Data(status, "application/json; charset=utf-8", buf)
-		context.Abort()
+		context.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
+		context.Response().WriteHeader(status)
+		context.Response().Write(buf)
+		//context.Set(gins.ContextResponseBodBytesKey, buf)
+		//context.Data(status, "application/json; charset=utf-8", buf)
+		//context.Abort()
 		return
 	}
 	context.JSON(status, data)
 	return
 }
 
-func (r Response) resultProtoJSON(context *gins.Context, status int, msg proto.Message) {
+func (r Response) resultProtoJSON(context transhttp.Context, status int, msg proto.Message) {
 	buf, err := mo.Marshal(msg)
 	if err != nil {
 		r.Error(context, http.StatusInternalServerError, errors.Wrap(err, "marshal proto message error"))
 		return
 	}
-	context.Set(gins.ContextResponseBodBytesKey, buf)
-	context.Data(status, "application/json; charset=utf-8", buf)
-	context.Abort()
+	//context.Set(gins.ContextResponseBodBytesKey, buf)
+	context.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
+	context.Response().WriteHeader(status)
+	context.Response().Write(buf)
 	return
 }
 
-func (r Response) Error(context *gins.Context, status int, err error) {
+func (r Response) Error(context transhttp.Context, status int, err error) {
 	code, herr := r.decodeError(status, err)
 	r.result(context, code, &Result{
 		Success: false,
 		Error:   herr,
-	})
-	_ = context.Error(gin.Error{
-		Err:  herr,
-		Type: gin.ErrorTypeAny,
-		Meta: context.Request.URL.RawQuery,
 	})
 }
 
@@ -147,7 +145,7 @@ func (r Response) decodeError(code int, err error) (int, *httperr.Error) {
 	return code, ierr
 }
 
-func (r Response) JSON(context *gins.Context, status int, data any) {
+func (r Response) JSON(context transhttp.Context, status int, data any) {
 	if v, ok := data.(*Result); ok {
 		context.JSON(status, v)
 		return
@@ -162,7 +160,7 @@ func (r Response) JSON(context *gins.Context, status int, data any) {
 	})
 }
 
-func (r Response) Any(context *gins.Context, status int, data any, err error) {
+func (r Response) Any(context transhttp.Context, status int, data any, err error) {
 	if err != nil {
 		r.Error(context, status, err)
 		return

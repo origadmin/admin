@@ -4,93 +4,99 @@ package api.v1.services.basis;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
-import "pwt/v1/token.proto";
+import "security/jwt/v1/token.proto";
 import "validate/validate.proto";
 
 option go_package = "v1/services/basis;basis";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.admin.services.basis";
 option java_outer_classname = "APIV1ServicesBasisProto";
+option java_package = "com.origadmin.api.v1.admin.services.basis";
 
 // The login service definition.
 service LoginAPI {
-  rpc CaptchaID (CaptchaIDRequest) returns (CaptchaIDResponse) {
+  rpc CaptchaID(CaptchaIDRequest) returns (CaptchaIDResponse) {
+    option (google.api.http) = {get: "/api/v1/captcha/id"};
+  }
+  rpc CaptchaImage(CaptchaImageRequest) returns (CaptchaImageResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/id",
+      get: "/api/v1/captcha/image"
+      response_body: "*"
     };
   }
-  rpc CaptchaImage (CaptchaImageRequest) returns (CaptchaImageResponse) {
+  rpc CaptchaResource(CaptchaResourceRequest) returns (CaptchaResourceResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/image",
-      response_body: "*",
+      get: "/api/v1/captcha/id/{id}/{resource}"
+      response_body: "*"
     };
   }
-  rpc CaptchaResource (CaptchaResourceRequest) returns (CaptchaResourceResponse) {
+  rpc CaptchaResources(CaptchaResourcesRequest) returns (CaptchaResourcesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/id/{id}/{resource}",
-      response_body: "*",
+      get: "/api/v1/captcha/id/{id}"
+      response_body: "*"
     };
   }
-  rpc CaptchaResources (CaptchaResourcesRequest) returns (CaptchaResourcesResponse) {
+  rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/id/{id}",
-      response_body: "*",
-    };
-  }
-  rpc Login (LoginRequest) returns (LoginResponse) {
-    option (google.api.http) = {
-      post: "/api/v1/login",
-      body: "data",
+      post: "/api/v1/login"
+      body: "data"
     };
   }
 
-  rpc Register (RegisterRequest) returns (RegisterResponse) {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
-      post: "/api/v1/register",
-      body: "data",
+      post: "/api/v1/register"
+      body: "data"
     };
   }
 
-  rpc Refresh (RefreshRequest) returns (RefreshResponse) {
+  rpc Refresh(RefreshRequest) returns (RefreshResponse) {
     option (google.api.http) = {
-      post: "/api/v1/refresh_token",
-      body: "data",
+      post: "/api/v1/refresh_token"
+      body: "data"
     };
   }
 
-  rpc Logout (LogoutRequest) returns (LogoutResponse) {
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
-      post: "/api/v1/current/logout",
-      body: "data",
+      post: "/api/v1/current/logout"
+      body: "data"
     };
   }
-  rpc CurrentUser (CurrentUserRequest) returns (CurrentUserResponse) {
+  rpc CurrentUser(CurrentUserRequest) returns (CurrentUserResponse) {
     option (google.api.http) = {
-      post: "/api/v1/current/user",
-      body: "data",
+      post: "/api/v1/current/user"
+      body: "data"
     };
   }
-  rpc CurrentMenus (CurrentMenusRequest) returns (CurrentMenusResponse) {
-    option (google.api.http) = {
-      get: "/api/v1/current/menus",
-    };
+  rpc CurrentMenus(CurrentMenusRequest) returns (CurrentMenusResponse) {
+    option (google.api.http) = {get: "/api/v1/current/menus"};
   }
 }
 
 message LoginRequest {
   message Data {
-    string username = 1 [json_name = "username",
+    string username = 1 [
+      json_name = "username",
       (validate.rules).string = {min_len: 1}
     ];
-    string password = 2 [json_name = "password", (validate.rules).string = {min_len: 1}];
-    string captcha_id = 3 [json_name = "captcha_id", (validate.rules).string = {min_len: 1}];
-    string captcha_code = 4 [json_name = "captcha_code", (validate.rules).string = {min_len: 1}];
+    string password = 2 [
+      json_name = "password",
+      (validate.rules).string = {min_len: 1}
+    ];
+    string captcha_id = 3 [
+      json_name = "captcha_id",
+      (validate.rules).string = {min_len: 1}
+    ];
+    string captcha_code = 4 [
+      json_name = "captcha_code",
+      (validate.rules).string = {min_len: 1}
+    ];
   }
   Data data = 2 [json_name = "data"];
 }
 
 message LoginResponse {
-  pwt.v1.Token token = 1;
+  security.jwt.v1.Token token = 1;
 }
 
 message LogoutRequest {
@@ -138,9 +144,8 @@ message CaptchaData {
 // The response message containing the greetings
 message CaptchaImageResponse {
   map<string, string> headers = 1;
-  bytes image = 2[json_name = "image"];
+  bytes image = 2 [json_name = "image"];
 }
-
 
 message CurrentMenusRequest {
   string user_id = 1 [json_name = "user_id"];
@@ -164,19 +169,24 @@ message CaptchaResourcesResponse {
   //    string text = 1;
   //    string lang = 2;
   //  }
-  bytes image = 2[json_name = "image"]; // base64 encoded
-  bytes audio = 3[json_name = "audio"]; // 16k pcm encoded
+  bytes image = 2 [json_name = "image"]; // base64 encoded
+  bytes audio = 3 [json_name = "audio"]; // 16k pcm encoded
   AudioType audio_type = 4;
   //  AudioText audio_text = 5;
 }
 
-
 message CaptchaResourceRequest {
-  string id = 1 [json_name = "id", (validate.rules).string = {min_len: 1}];
+  string id = 1 [
+    json_name = "id",
+    (validate.rules).string = {min_len: 1}
+  ];
   string resource = 2 [
     json_name = "resource",
     (validate.rules).string = {
-      in: ["image", "audio"]
+      in: [
+        "image",
+        "audio"
+      ]
     }
   ];
 }
@@ -197,7 +207,7 @@ message RefreshRequest {
 }
 
 message RefreshResponse {
-  pwt.v1.Token token = 1;
+  security.jwt.v1.Token token = 1;
 }
 
 message RegisterRequest {

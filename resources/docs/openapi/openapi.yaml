@@ -927,7 +927,7 @@ components:
             type: object
             properties:
                 token:
-                    $ref: '#/components/schemas/pwt.v1.Token'
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.basis.LogoutResponse:
             type: object
             properties:
@@ -942,7 +942,7 @@ components:
             type: object
             properties:
                 token:
-                    $ref: '#/components/schemas/pwt.v1.Token'
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.basis.RegisterRequest_Data:
             type: object
             properties:
@@ -1469,7 +1469,7 @@ components:
                         $ref: '#/components/schemas/google.protobuf.Any'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        pwt.v1.Token:
+        security.jwt.v1.Token:
             type: object
             properties:
                 client_id:
@@ -1488,43 +1488,7 @@ components:
                     type: string
                     description: The expiration time of the token.
                     format: date-time
-                claims:
-                    $ref: '#/components/schemas/security.v1.Claims'
             description: PWT is a web token that can be used to authenticate a user with protobuf services.
-        security.v1.Claims:
-            type: object
-            properties:
-                sub:
-                    type: string
-                    description: The subject of the token.
-                iss:
-                    type: string
-                    description: The issuer of the token.
-                aud:
-                    type: array
-                    items:
-                        type: string
-                    description: The audience for which the token is intended.
-                exp:
-                    type: string
-                    description: The expiration time of the token.
-                    format: date-time
-                nbf:
-                    type: string
-                    description: The time before which the token must not be accepted.
-                    format: date-time
-                iat:
-                    type: string
-                    description: The time at which the token was issued.
-                    format: date-time
-                jti:
-                    type: string
-                    description: The unique identifier for the token.
-                scopes:
-                    type: object
-                    additionalProperties:
-                        type: boolean
-                    description: The scopes associated with the token.
     securitySchemes:
         Basic:
             type: http

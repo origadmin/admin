@@ -8,7 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/origadmin/contrib/transport/gins"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -16,125 +16,131 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// LoginAPIGINRPCService is a Login service.
-type LoginAPIGINRPCService struct {
+// LoginAPIAgentService is a Login service.
+type LoginAPIAgentService struct {
 	resp.Response
 
 	client pb.LoginAPIClient
 }
 
-func (s LoginAPIGINRPCService) Register(context *gins.Context, request *pb.RegisterRequest) {
+func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	response, err := s.client.Register(context, request)
 	if err != nil {
 		log.Errorf("Register error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) CaptchaResource(context *gins.Context, request *pb.CaptchaResourceRequest) {
+func (s LoginAPIAgentService) CaptchaResource(context transhttp.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
 	response, err := s.client.CaptchaResource(context, request)
 	if err != nil {
 		log.Errorf("CaptchaResource error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) CaptchaResources(context *gins.Context, request *pb.CaptchaResourcesRequest) {
+func (s LoginAPIAgentService) CaptchaResources(context transhttp.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
 	response, err := s.client.CaptchaResources(context, request)
 	if err != nil {
 		log.Errorf("CaptchaResources error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) CaptchaID(context *gins.Context, request *pb.CaptchaIDRequest) {
+func (s LoginAPIAgentService) CaptchaID(context transhttp.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
 	log.Debugf("CaptchaID: Request:%+v", request)
 	response, err := s.client.CaptchaID(context, request)
 	log.Debugf("CaptchaID: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Data,
 	})
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) CaptchaImage(context *gins.Context, request *pb.CaptchaImageRequest) {
+func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
 	log.Debugf("CaptchaImage: Request:%+v", request)
 	response, err := s.client.CaptchaImage(context, request)
 	log.Debugf("CaptchaImage: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	log.Debugf("CaptchaImage: Setting headers: %+v", response.Headers)
 	for k, v := range response.Headers {
-		context.Writer.Header().Set(k, v)
+		context.Response().Header().Set(k, v)
 	}
 	log.Debugf("CaptchaImage: Writing response headers")
-	context.Writer.WriteHeader(http.StatusOK)
+	context.Response().WriteHeader(http.StatusOK)
 	log.Debugf("CaptchaImage: Writing response image")
-	if _, err := context.Writer.Write(response.Image); err != nil {
+	if _, err := context.Response().Write(response.Image); err != nil {
 		log.Errorf("CaptchaImage error writing response: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
-	log.Debugf("CaptchaImage: Flushing response writer")
-	context.Writer.Flush()
+	//log.Debugf("CaptchaImage: Flushing response writer")
+	//context.Response().Flush()
 	log.Debugf("CaptchaImage: Completed successfully")
-	return
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) CurrentMenus(context *gins.Context, request *pb.CurrentMenusRequest) {
+func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error) {
 	response, err := s.client.CurrentMenus(context, request)
 	if err != nil {
 		log.Errorf("CurrentMenus error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) CurrentUser(context *gins.Context, request *pb.CurrentUserRequest) {
+func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error) {
 	response, err := s.client.CurrentUser(context, request)
 	if err != nil {
 		log.Errorf("CurrentUser error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
+	return response, nil
 }
-func (s LoginAPIGINRPCService) Refresh(context *gins.Context, request *pb.RefreshRequest) {
+func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.RefreshRequest) (*pb.RefreshResponse, error) {
 	response, err := s.client.Refresh(context, request)
 	if err != nil {
 		log.Errorf("Refresh error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
@@ -145,13 +151,14 @@ func (s LoginAPIGINRPCService) Refresh(context *gins.Context, request *pb.Refres
 			"expires_at":    response.Token.GetExpirationTime().GetSeconds(),
 		},
 	})
+	return response, nil
 }
-func (s LoginAPIGINRPCService) Login(context *gins.Context, request *pb.LoginRequest) {
+func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
 	response, err := s.client.Login(context, request)
 	if err != nil {
 		log.Errorf("Login error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
@@ -162,40 +169,42 @@ func (s LoginAPIGINRPCService) Login(context *gins.Context, request *pb.LoginReq
 			"expires_at":    response.Token.GetExpirationTime().GetSeconds(),
 		},
 	})
+	return response, nil
 }
 
-func (s LoginAPIGINRPCService) Logout(context *gins.Context, request *pb.LogoutRequest) {
+func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	response, err := s.client.Logout(context, request)
 	if err != nil {
 		log.Errorf("Logout error: %v", err)
 		s.Error(context, http.StatusNotFound, err)
-		return
+		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
+	return response, nil
 }
 
-// NewLoginAPIGINRPCService new a Login service.
-func NewLoginAPIGINRPCService(client pb.LoginAPIClient) *LoginAPIGINRPCService {
-	return &LoginAPIGINRPCService{client: client}
+// NewLoginAPIAgentService new a Login service.
+func NewLoginAPIAgentService(client pb.LoginAPIClient) *LoginAPIAgentService {
+	return &LoginAPIAgentService{client: client}
 }
 
-// NewLoginAPIGINRPCAgent new a Login service.
-func NewLoginAPIGINRPCAgent(client pb.LoginAPIClient) pb.LoginAPIGINRPCAgent {
-	return &LoginAPIGINRPCService{client: client}
+// NewLoginAPIAgent new a Login service.
+func NewLoginAPIAgent(client pb.LoginAPIClient) pb.LoginAPIAgent {
+	return &LoginAPIAgentService{client: client}
 }
-func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIGINRPCAgent {
+func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIAgent {
 	cli := pb.NewLoginAPIClient(client)
-	return NewLoginAPIGINRPCAgent(cli)
+	return NewLoginAPIAgent(cli)
 }
 
-func NewLoginServerAgentGINRegister(client *service.GRPCClient) func(server gins.IRouter) {
+func NewLoginServerAgentGINRegister(client *service.GRPCClient) func(server *transhttp.Server) {
 	cli := NewLoginServerAgent(client)
-	return func(server gins.IRouter) {
-		pb.RegisterLoginAPIGINRPCAgent(server, cli)
+	return func(server *transhttp.Server) {
+		pb.RegisterLoginAPIAgent(server, cli)
 	}
 }
 
-var _ pb.LoginAPIGINRPCAgent = (*LoginAPIGINRPCService)(nil)
+var _ pb.LoginAPIAgent = (*LoginAPIAgentService)(nil)

@@ -176,7 +176,7 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 		kratos.Context(ctx),
 		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
 		kratos.Logger(injector.Logger),
-		//kratos.Server(hs, gs, gss),
+		kratos.Server(injector.Server),
 		//kratos.Server(injector.ServerGINS),
 	}
 
@@ -190,20 +190,6 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 	}
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
 		log.Infow("msg", "GIN route", "method", httpMethod, "path", absolutePath, "operation", handlerName, "handlers", nuHandlers)
-	}
-	engine := gin.New()
-	//if injector.Registrars != nil {
-	for _, registrar := range injector.Registrars {
-		registrar.GIN(engine)
-	}
-	//}
-	//srv := agent.NewHTTPServer(injector.Bootstrap, injector.Logger)
-	if injector.Server != nil {
-		//injector.Server.Handle("/", engine.Handler())
-		//injector.Server.Handler = engine.Handler()
-		injector.Server.HandlePrefix("/", engine)
-		//injector.Server.Server.Handler = engine.Handler()
-		opts = append(opts, kratos.Server(injector.Server))
 	}
 
 	return kratos.New(opts...)
