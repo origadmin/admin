@@ -25,7 +25,7 @@ import (
 // Injectors from wire.go:
 
 // buildInjectors init kratos application.
-func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap, arg log.Logger) (*kratos.App, func(), error) {
+func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap, arg log.KLogger) (*kratos.App, func(), error) {
 	registerAgent, err := server.NewSystemServerAgent(bootstrap, arg)
 	if err != nil {
 		return nil, nil, err

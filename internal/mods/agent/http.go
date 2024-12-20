@@ -30,7 +30,7 @@ type HTTPRegistrar interface {
 }
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.Logger) *service.HTTPServer {
+func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no serviceConfig")
@@ -88,8 +88,8 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	return srv
 }
 
-func MiddlewareAdapter() middleware.Middleware {
-	return func(handler middleware.Handler) middleware.Handler {
+func MiddlewareAdapter() middleware.KMiddleware {
+	return func(handler middleware.KHandler) middleware.KHandler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			tr, ok := transport.FromServerContext(ctx)
 			if ok {

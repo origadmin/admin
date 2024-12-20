@@ -5,8 +5,6 @@
 package agent
 
 import (
-	stdhttp "net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/contrib/transport/gins"
@@ -20,31 +18,31 @@ type GINRegistrar interface {
 	GIN(server gins.IRouter)
 }
 
-func NewGinServer(bootstrap *configs.Bootstrap, l log.Logger) *gin.Engine {
+func NewGinServer(bootstrap *configs.Bootstrap, l log.KLogger) *gin.Engine {
 	//gin.SetMode(gin.ReleaseMode)
 	return gin.New()
 }
 
-func NewHTTPServerAgent(bootstrap *configs.Bootstrap, l log.Logger) *http.Server {
-	ms := middleware.NewClient(bootstrap.GetMiddlewares())
+func NewHTTPServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) *http.Server {
+	ms := middleware.NewClient(bootstrap.GetMiddleware())
 	var opts = []http.ServerOption{
 		http.Middleware(ms...),
 	}
-	service := bootstrap.GetService()
-	cfg := service.GetGins()
-	if cfg == nil {
-		return nil
-	}
-
-	if cfg.Network != "" {
-		opts = append(opts, http.Network(cfg.Network))
-	}
-	if cfg.Addr != "" {
-		opts = append(opts, http.Address(cfg.Addr))
-	}
-	if cfg.Timeout != nil {
-		opts = append(opts, http.Timeout(cfg.Timeout.AsDuration()))
-	}
+	//service := bootstrap.GetService()
+	//cfg := service.GetGins()
+	//if cfg == nil {
+	//	return nil
+	//}
+	//
+	//if cfg.Network != "" {
+	//	opts = append(opts, http.Network(cfg.Network))
+	//}
+	//if cfg.Addr != "" {
+	//	opts = append(opts, http.Address(cfg.Addr))
+	//}
+	//if cfg.Timeout != nil {
+	//	opts = append(opts, http.Timeout(cfg.Timeout.AsDuration()))
+	//}
 
 	//var endpoint string
 	//if cfg.Endpoint == "" {
@@ -57,11 +55,11 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, l log.Logger) *http.Server
 	//ep, _ := url.Parse(endpoint)
 	//opts = append(opts, http.Endpoint(ep))
 	srv := http.NewServer(opts...)
-	srv.Server = &stdhttp.Server{
-		Addr:         cfg.Addr,
-		ReadTimeout:  cfg.ReadTimeout.AsDuration(),
-		WriteTimeout: cfg.WriteTimeout.AsDuration(),
-		IdleTimeout:  cfg.IdleTimeout.AsDuration(),
-	}
+	//srv.Server = &stdhttp.Server{
+	//	Addr:         cfg.Addr,
+	//	ReadTimeout:  cfg.ReadTimeout.AsDuration(),
+	//	WriteTimeout: cfg.WriteTimeout.AsDuration(),
+	//	IdleTimeout:  cfg.IdleTimeout.AsDuration(),
+	//}
 	return srv
 }

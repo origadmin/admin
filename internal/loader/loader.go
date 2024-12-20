@@ -40,7 +40,7 @@ var (
 )
 
 type InjectorClient struct {
-	Logger     log.Logger
+	Logger     log.KLogger
 	Bootstrap  *configs.Bootstrap
 	Registrars []agent.HTTPRegistrar
 	Server     *http.Server
@@ -49,9 +49,9 @@ type InjectorClient struct {
 }
 
 type InjectorServer struct {
-	Logger    log.Logger
+	Logger    log.KLogger
 	Bootstrap *configs.Bootstrap
-	Registrar registry.Registrar
+	Registrar registry.KRegistrar
 	Servers   []transport.Server
 }
 

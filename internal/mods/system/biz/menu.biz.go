@@ -19,7 +19,7 @@ import (
 type MenusBiz struct {
 	dao     dto.MenuRepo
 	limiter pagination.PageLimiter
-	log     *log.Helper
+	log     *log.KHelper
 }
 
 func (biz MenusBiz) ListMenus(ctx context.Context, in *pb.ListMenusRequest, opts ...grpc.CallOption) (*pb.ListMenusResponse, error) {
@@ -96,12 +96,12 @@ func (biz MenusBiz) DeleteMenu(ctx context.Context, in *pb.DeleteMenuRequest, op
 }
 
 // NewMenusBiz new a Menu use case.
-func NewMenusBiz(repo dto.MenuRepo, logger log.Logger) *MenusBiz {
+func NewMenusBiz(repo dto.MenuRepo, logger log.KLogger) *MenusBiz {
 	return &MenusBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewMenusClient new a Menu use case.
-func NewMenusClient(repo dto.MenuRepo, logger log.Logger) pb.MenuAPIClient {
+func NewMenusClient(repo dto.MenuRepo, logger log.KLogger) pb.MenuAPIClient {
 	return &MenusBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 

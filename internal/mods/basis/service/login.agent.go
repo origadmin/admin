@@ -148,7 +148,7 @@ func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.Ref
 			"user_id":       response.Token.GetUserId(),
 			"access_token":  response.Token.GetAccessToken(),
 			"refresh_token": response.Token.GetRefreshToken(),
-			"expires_at":    response.Token.GetExpirationTime().GetSeconds(),
+			"expires_at":    response.Token.GetExpirationTime(),
 		},
 	})
 	return response, nil
@@ -166,7 +166,7 @@ func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.Login
 			"user_id":       response.Token.GetUserId(),
 			"access_token":  response.Token.GetAccessToken(),
 			"refresh_token": response.Token.GetRefreshToken(),
-			"expires_at":    response.Token.GetExpirationTime().GetSeconds(),
+			"expires_at":    response.Token.GetExpirationTime(),
 		},
 	})
 	return response, nil

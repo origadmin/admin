@@ -2,13 +2,13 @@ syntax = "proto3";
 
 package configs.api;
 
-import "buf/validate/validate.proto";
 import "config/v1/data.proto";
 import "config/v1/registry.proto";
 import "config/v1/security.proto";
 import "config/v1/service.proto";
 import "middleware/v1/middleware.proto";
 import "security/v1/auth.proto";
+import "validate/validate.proto"; // Updated import statement
 
 option go_package = "origadmin/application/admin/internal/configs";
 
@@ -23,7 +23,7 @@ message Bootstrap {
   string name = 1 [json_name = "name"];
   string mode = 5 [
     json_name = "mode",
-    (buf.validate.field).string = {
+    (validate.rules).string = { // Ensure this matches the new import
       in: [
         "singleton",
         "cluster"
@@ -39,7 +39,7 @@ message Bootstrap {
     string scheme = 1 [json_name = "scheme"];
     config.v1.Service.GRPC grpc = 10 [json_name = "grpc"];
     config.v1.Service.HTTP http = 20 [json_name = "http"];
-    config.v1.Service.GINS gins = 30 [json_name = "gins"];
+    //    config.v1.Service.GINS gins = 30 [json_name = "gins"];
   }
 
   string id = 101;

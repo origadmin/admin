@@ -6,15 +6,15 @@
 package loader
 
 import (
-	"github.com/origadmin/contrib/security/authn/jwt"
-	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/toolkits/security"
 
+	"origadmin/application/admin/contrib/security/authn/jwt"
+	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/internal/configs"
 )
 
 func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, error) {
-	authenticator, err := jwt.NewAuthenticator(bootstrap.GetMiddlewares().GetSecurity())
+	authenticator, err := jwt.NewAuthenticator(bootstrap.GetSecurity())
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, err
 }
 
 func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
-	authorizer, err := casbin.NewAuthorizer(bootstrap.GetMiddlewares().GetSecurity())
+	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity())
 	if err != nil {
 		return nil, err
 	}

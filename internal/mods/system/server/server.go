@@ -39,9 +39,9 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceBuilder)
 }
 
-func NewSystemServer(register *systemservice.RegisterServer, register2 basisservice.RegisterServer, bootstrap *configs.Bootstrap, l log.Logger) []transport.Server {
+func NewSystemServer(register *systemservice.RegisterServer, register2 basisservice.RegisterServer, bootstrap *configs.Bootstrap, l log.KLogger) []transport.Server {
 	var servers []transport.Server
-	middlewares := middleware.NewServer(bootstrap.GetMiddlewares())
+	middlewares := middleware.NewServer(bootstrap.GetMiddleware())
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		return servers
@@ -101,7 +101,7 @@ func (s RegisterAgent) GIN(server gins.IRouter) {
 	//pb.RegisterUserAPIAgent(server, s.User)
 }
 
-func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
+func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) (*RegisterAgent, error) {
 	client, err := NewSystemClient(bootstrap, l)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*Register
 	return &register, nil
 }
 
-func NewSystemClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCClient, error) {
+func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPCClient, error) {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
 		return nil, errors.New("no entry")
@@ -135,7 +135,6 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCC
 		Name: ServiceName,
 		Grpc: entry.GetGrpc(),
 		Http: entry.GetHttp(),
-		Gins: entry.GetGins(),
 		Selector: &configv1.Service_Selector{
 			Version: "v1.0.0",
 			Builder: "bbr",

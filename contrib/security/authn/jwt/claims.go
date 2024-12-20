@@ -11,8 +11,6 @@ import (
 	"time"
 
 	jwtv5 "github.com/golang-jwt/jwt/v5"
-	"google.golang.org/protobuf/types/known/timestamppb"
-
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/toolkits/security"
 )
@@ -56,15 +54,15 @@ func (s *SecurityClaims) GetAudience() []string {
 }
 
 func (s *SecurityClaims) GetExpiration() time.Time {
-	return s.Claims.Exp.AsTime()
+	return time.Unix(s.Claims.Exp, 0)
 }
 
 func (s *SecurityClaims) GetNotBefore() time.Time {
-	return s.Claims.Nbf.AsTime()
+	return time.Unix(s.Claims.Nbf, 0)
 }
 
 func (s *SecurityClaims) GetIssuedAt() time.Time {
-	return s.Claims.Iat.AsTime()
+	return time.Unix(s.Claims.Iat, 0)
 }
 
 func (s *SecurityClaims) GetJWTID() string {
@@ -146,7 +144,7 @@ func MapToClaims(rawClaims jwtv5.MapClaims, extras map[string]string) (security.
 	// optional Expiration
 	if expClaim, err := rawClaims.GetExpirationTime(); err == nil {
 		if expClaim != nil {
-			claims.Exp = timestamppb.New(expClaim.Time)
+			claims.Exp = expClaim.Unix()
 		}
 	} else {
 		return nil, ErrInvalidExpiration
@@ -193,7 +191,7 @@ func RegisteredToClaims(rawClaims *jwtv5.RegisteredClaims) (security.Claims, err
 	// optional Expiration
 	if expClaim, err := rawClaims.GetExpirationTime(); err == nil {
 		if expClaim != nil {
-			Claims.Exp = timestamppb.New(expClaim.Time)
+			Claims.Exp = expClaim.Time.Unix()
 		}
 	} else {
 		return nil, ErrInvalidExpiration

@@ -20,7 +20,7 @@ import (
 type RolesBiz struct {
 	dao     dto.RoleRepo
 	limiter pagination.PageLimiter
-	log     *log.Helper
+	log     *log.KHelper
 }
 
 func (biz RolesBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts ...grpc.CallOption) (*pb.ListRolesResponse, error) {
@@ -98,12 +98,12 @@ func (biz RolesBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, op
 }
 
 // NewRolesBiz new a RolePB use case.
-func NewRolesBiz(repo dto.RoleRepo, logger log.Logger) *RolesBiz {
+func NewRolesBiz(repo dto.RoleRepo, logger log.KLogger) *RolesBiz {
 	return &RolesBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewRolesClient new a RolePB use case.
-func NewRolesClient(repo dto.RoleRepo, logger log.Logger) pb.RoleAPIClient {
+func NewRolesClient(repo dto.RoleRepo, logger log.KLogger) pb.RoleAPIClient {
 	return &RolesBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 

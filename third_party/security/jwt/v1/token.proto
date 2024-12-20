@@ -37,7 +37,7 @@ message Token {
     (validate.rules).string.min_len = 1,
     (gnostic.openapi.v3.property) = {description: "The refresh token used to obtain a new access token."}
   ];
-  google.protobuf.Timestamp expiration_time = 12 [
+  int64 expiration_time = 12 [
     json_name = "expiration_time",
     (gnostic.openapi.v3.property) = {description: "The expiration time of the token."}
   ];

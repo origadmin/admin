@@ -9,8 +9,13 @@ import (
 	"time"
 
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
-	"github.com/origadmin/toolkits/crypto/rand"
-	"google.golang.org/protobuf/types/known/durationpb"
+	jwtv1 "github.com/origadmin/runtime/gen/go/middleware/jwt/v1"
+	"github.com/origadmin/runtime/gen/go/middleware/metrics/v1"
+	"github.com/origadmin/runtime/gen/go/middleware/ratelimit/v1"
+	"github.com/origadmin/runtime/gen/go/middleware/selector/v1"
+	middlewarev1 "github.com/origadmin/runtime/gen/go/middleware/v1"
+	"github.com/origadmin/runtime/gen/go/middleware/validator/v1"
+	sjwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 
 	"origadmin/application/admin/internal/configs"
 	basisserver "origadmin/application/admin/internal/mods/basis/server"
@@ -18,6 +23,7 @@ import (
 )
 
 func DefaultBootstrap() *configs.Bootstrap {
+
 	return &configs.Bootstrap{
 		Name:       "origadmin.service.v1.admin",
 		Mode:       "singleton",
@@ -27,30 +33,63 @@ func DefaultBootstrap() *configs.Bootstrap {
 			basisserver.ServiceName:  "origadmin.service.v1.basis",
 			systemserver.ServiceName: "origadmin.service.v1.system",
 		},
+		Id: "",
 		Entry: &configs.Bootstrap_Entry{
 			Scheme: "http",
 		},
 		Service: &configv1.Service{
-			Name:        "",
-			Grpc:        DefaultServiceGrpc(),
-			Http:        DefaultServiceHttp(),
-			Gins:        DefaultServiceGins(),
-			Websocket:   DefaultServiceWebsocket(),
-			Message:     DefaultServiceMessage(),
-			Task:        DefaultServiceTask(),
-			Middlewares: DefaultServiceMiddleware(),
+			Name:       "",
+			Grpc:       DefaultServiceGrpc(),
+			Http:       DefaultServiceHttp(),
+			Websocket:  DefaultServiceWebsocket(),
+			Message:    DefaultServiceMessage(),
+			Task:       DefaultServiceTask(),
+			Middleware: DefaultServiceMiddleware(),
 			Selector: &configv1.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
-			HostName: "ORIGADMIN_SERVICE_HOST",
 		},
-		Data:        DefaultData(),
-		Registry:    DefaultRegistry(),
-		Middlewares: DefaultServiceMiddleware(),
-		Id:          "",
+		Data:       DefaultData(),
+		Registry:   DefaultRegistry(),
+		Middleware: DefaultServiceMiddleware(),
+		Security: &configv1.Security{
+			PublicPaths: []string{
+				"/swagger/*",
+				"/api/v1/health",
+				"/api/v1/health/*",
+				"/api/v1/captcha",
+				"/api/v1/captcha/*",
+				"/api/v1/login",
+				"/api/v1/register",
+				"/api/v1/current/logout",
+				"/api/v1/refresh_token",
+			},
+			Authz: &configv1.AuthZConfig{
+				Disabled:    false,
+				PublicPaths: nil,
+				Type:        "casbin",
+				Casbin: &configv1.AuthZConfig_CasbinConfig{
+					PolicyFile: "",
+					ModelFile:  "",
+				},
+				Opa:      nil,
+				Zanzibar: nil,
+			},
+			Authn: &configv1.AuthNConfig{
+				Disabled: false,
+				Type:     "jwt",
+				Jwt: &configv1.AuthNConfig_JWTConfig{
+					Algorithm:     "HS512",
+					SigningKey:    "",
+					OldSigningKey: "",
+					ExpireTime:    0, // use default
+					RefreshTime:   0, // use default
+					CacheName:     "",
+				},
+			},
+		},
 	}
-
 }
 
 func DefaultServiceWebsocket() *configv1.WebSocket {
@@ -63,22 +102,16 @@ func DefaultServiceWebsocket() *configv1.WebSocket {
 func DefaultData() *configv1.Data {
 	return &configv1.Data{
 		Database: &configv1.Data_Database{
-			Debug:              false,
-			Driver:             "sqlite3",
-			Source:             "data/admin.db",
-			Migrate:            false,
-			EnableTrace:        false,
-			EnableMetrics:      false,
-			MaxIdleConnections: 0,
-			MaxOpenConnections: 0,
-			ConnectionMaxLifetime: &durationpb.Duration{
-				Seconds: 0,
-				Nanos:   0,
-			},
-			ConnectionMaxIdleTime: &durationpb.Duration{
-				Seconds: 0,
-				Nanos:   0,
-			},
+			Debug:                 false,
+			Driver:                "sqlite3",
+			Source:                "data/admin.db",
+			Migrate:               false,
+			EnableTrace:           false,
+			EnableMetrics:         false,
+			MaxIdleConnections:    0,
+			MaxOpenConnections:    0,
+			ConnectionMaxLifetime: 0,
+			ConnectionMaxIdleTime: 0,
 		},
 		Cache: &configv1.Data_Cache{
 			Driver: "memory", //["none", "redis", "memcached", "memory"] [string.in]
@@ -87,40 +120,22 @@ func DefaultData() *configv1.Data {
 				Username: "",
 				Password: "",
 				MaxIdle:  0,
-				Timeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
+				Timeout:  0,
 			},
 			Memory: &configv1.Data_Memory{
-				Size:     0,
-				Capacity: 0,
-				Expiration: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				CleanupInterval: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
+				Size:            0,
+				Capacity:        0,
+				Expiration:      0,
+				CleanupInterval: 0,
 			},
 			Redis: &configv1.Data_Redis{
-				Network:  "",
-				Addr:     "",
-				Password: "",
-				Db:       0,
-				DialTimeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				ReadTimeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				WriteTimeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
+				Network:      "",
+				Addr:         "",
+				Password:     "",
+				Db:           0,
+				DialTimeout:  0,
+				ReadTimeout:  0,
+				WriteTimeout: 0,
 			},
 			Badger: &configv1.Data_BadgerDS{
 				Path:             "",
@@ -135,22 +150,13 @@ func DefaultData() *configv1.Data {
 				Root: "",
 			},
 			Redis: &configv1.Data_Redis{
-				Network:  "",
-				Addr:     "",
-				Password: "",
-				Db:       0,
-				DialTimeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				ReadTimeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				WriteTimeout: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
+				Network:      "",
+				Addr:         "",
+				Password:     "",
+				Db:           0,
+				DialTimeout:  0,
+				ReadTimeout:  0,
+				WriteTimeout: 0,
 			},
 			Badger: &configv1.Data_BadgerDS{
 				Path:             "",
@@ -248,92 +254,52 @@ func DefaultRegistry() *configv1.Registry {
 			HealthCheck:                    true,
 			Datacenter:                     "",
 			HealthCheckInterval:            30,
-			Timeout:                        nil,
+			Timeout:                        0,
 			DeregisterCriticalServiceAfter: 0,
 		},
 		Etcd: nil,
 	}
 }
 
-func DefaultServiceMiddleware() *configv1.Middleware {
-	return &configv1.Middleware{
-		EnableLogging:        true,
-		EnableRecovery:       true,
-		EnableTracing:        true,
-		EnableValidate:       true,
-		EnableCircuitBreaker: true,
-		EnableMetadata:       true,
-		RateLimiter: &configv1.Middleware_RateLimiter{
-			Name:                "bbr",
-			Period:              0,
-			XRatelimitLimit:     0,
-			XRatelimitRemaining: 0,
-			XRatelimitReset:     0,
-			RetryAfter:          0,
-			Memory: &configv1.Middleware_RateLimiter_Memory{
-				Expiration: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-				CleanupInterval: &durationpb.Duration{
-					Seconds: 0,
-					Nanos:   0,
-				},
-			},
-			Redis: &configv1.Middleware_RateLimiter_Redis{
-				Addr:     "",
-				Username: "",
-				Password: "",
-				Db:       0,
-			},
+func DefaultServiceMiddleware() *middlewarev1.Middleware {
+	return &middlewarev1.Middleware{
+		Logging:        true,
+		Recovery:       true,
+		Tracing:        true,
+		CircuitBreaker: true,
+		Metadata: &middlewarev1.Middleware_Metadata{
+			Enabled: true,
 		},
-		Metadata: &configv1.Middleware_Metadata{
-			Prefix: "",
-			Data:   nil,
+		RateLimiter: &ratelimitv1.RateLimiter{
+			Enabled: true,
+			Name:    "bbr",
 		},
-		Metrics: &configv1.Middleware_Metrics{
-			SupportedMetrics: nil,
-			UserMetrics:      nil,
+		Metrics: &metricsv1.Metrics{
+			Enabled: true,
 		},
-		Validator: &configv1.Middleware_Validator{
+		Validator: &validatorv1.Validator{
+			Enabled:  true,
 			Version:  1,
 			FailFast: true,
 		},
-		Security: &configv1.Security{
-			PublicPaths: []string{
-				"/swagger/*",
-				"/api/v1/health",
-				"/api/v1/health/*",
-				"/api/v1/captcha",
-				"/api/v1/captcha/*",
-				"/api/v1/login",
-				"/api/v1/register",
-				"/api/v1/current/logout",
-				"/api/v1/refresh_token",
+		//It is not recommended to use integrated JWT components
+		Jwt: &jwtv1.JWT{
+			Enabled: false,
+			Config: &sjwtv1.Config{
+				SigningMethod:        "HS512",
+				Key:                  "",
+				Key2:                 "can empty next version fixed",
+				Keyfunc:              "unused next version removed",
+				AccessTokenLifetime:  int64(15 * time.Minute),
+				RefreshTokenLifetime: int64(3 * 24 * time.Hour),
+				Issuer:               "localhost",
+				Audience:             nil,
+				TokenType:            "Bearer",
 			},
-			Authz: &configv1.AuthZConfig{
-				Disabled:    false,
-				PublicPaths: nil,
-				Type:        "casbin",
-				Casbin: &configv1.AuthZConfig_CasbinConfig{
-					PolicyFile: "",
-					ModelFile:  "",
-				},
-				Opa:      nil,
-				Zanzibar: nil,
-			},
-			Authn: &configv1.AuthNConfig{
-				Disabled: false,
-				Type:     "jwt",
-				Jwt: &configv1.AuthNConfig_JWTConfig{
-					Algorithm:     "HS512",
-					SigningKey:    rand.GenerateRandom(32),
-					OldSigningKey: "",
-					ExpireTime:    nil, // use default
-					RefreshTime:   nil, // use default
-					CacheName:     "",
-				},
-			},
+		},
+		// Middleware filters
+		Selector: &selectorv1.Selector{
+			Enabled: false,
 		},
 	}
 }
@@ -345,11 +311,11 @@ func DefaultServiceGrpc() *configv1.Service_GRPC {
 		UseTls:          false,
 		CertFile:        "",
 		KeyFile:         "",
-		Timeout:         durationpb.New(time.Minute * 3),
-		ShutdownTimeout: durationpb.New(time.Minute * 3),
-		ReadTimeout:     durationpb.New(time.Minute * 3),
-		WriteTimeout:    durationpb.New(time.Minute * 3),
-		IdleTimeout:     durationpb.New(time.Minute * 3),
+		Timeout:         0,
+		ShutdownTimeout: 0,
+		ReadTimeout:     0,
+		WriteTimeout:    0,
+		IdleTimeout:     0,
 		Endpoint:        "",
 	}
 }
@@ -361,30 +327,30 @@ func DefaultServiceHttp() *configv1.Service_HTTP {
 		UseTls:          false,
 		CertFile:        "",
 		KeyFile:         "",
-		Timeout:         durationpb.New(time.Minute * 3),
-		ShutdownTimeout: durationpb.New(time.Minute * 3),
-		ReadTimeout:     durationpb.New(time.Minute * 3),
-		WriteTimeout:    durationpb.New(time.Minute * 3),
-		IdleTimeout:     durationpb.New(time.Minute * 3),
+		Timeout:         0,
+		ShutdownTimeout: 0,
+		ReadTimeout:     0,
+		WriteTimeout:    0,
+		IdleTimeout:     0,
 		Endpoint:        "",
 	}
 }
 
-func DefaultServiceGins() *configv1.Service_GINS {
-	return &configv1.Service_GINS{
-		Network:         "tcp",
-		Addr:            "${gins_address:0.0.0.0:18200}",
-		UseTls:          false,
-		CertFile:        "",
-		KeyFile:         "",
-		Timeout:         durationpb.New(time.Minute * 3),
-		ShutdownTimeout: durationpb.New(time.Minute * 3),
-		ReadTimeout:     durationpb.New(time.Minute * 3),
-		WriteTimeout:    durationpb.New(time.Minute * 3),
-		IdleTimeout:     durationpb.New(time.Minute * 3),
-		Endpoint:        "",
-	}
-}
+//func DefaultServiceGins() *configv1.Service_GINS {
+//	return &configv1.Service_GINS{
+//		Network:         "tcp",
+//		Addr:            "${gins_address:0.0.0.0:18200}",
+//		UseTls:          false,
+//		CertFile:        "",
+//		KeyFile:         "",
+//		Timeout:         durationpb.New(time.Minute * 3),
+//		ShutdownTimeout: durationpb.New(time.Minute * 3),
+//		ReadTimeout:     durationpb.New(time.Minute * 3),
+//		WriteTimeout:    durationpb.New(time.Minute * 3),
+//		IdleTimeout:     durationpb.New(time.Minute * 3),
+//		Endpoint:        "",
+//	}
+//}
 
 func DefaultEntry() *configs.Bootstrap_Entry {
 	return &configs.Bootstrap_Entry{

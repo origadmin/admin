@@ -23,7 +23,7 @@ var ProviderSet = wire.NewSet(
 )
 
 // NewGINServer new an HTTP server.
-func NewGINServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.Logger) *service.HTTPServer {
+func NewGINServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no service config")
@@ -31,7 +31,7 @@ func NewGINServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, auth
 
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(serviceConfig, service.WithHTTP(
-		servicehttp.WithMiddlewares(middleware.NewClient(bootstrap.GetMiddlewares())...),
+		servicehttp.WithMiddlewares(middleware.NewClient(bootstrap.GetMiddleware())...),
 	))
 	if err != nil {
 		panic(err)

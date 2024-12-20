@@ -26,7 +26,7 @@ message Registry {
     //  string tag = 7 [json_name = "tag"];
     uint32 health_check_interval = 8 [json_name = "health_check_interval"];
     //  string health_check_timeout = 9[json_name = "health_check_timeout"];
-    google.protobuf.Duration timeout = 10 [json_name = "timeout"];
+    int64 timeout = 10 [json_name = "timeout"];
     uint32 deregister_critical_service_after = 11 [json_name = "deregister_critical_service_after"];
   }
   // ETCD

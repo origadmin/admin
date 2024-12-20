@@ -22,7 +22,6 @@ import (
 	"github.com/origadmin/toolkits/errors/httperr"
 	"github.com/origadmin/toolkits/security"
 	"google.golang.org/protobuf/types/known/anypb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
@@ -243,7 +242,7 @@ func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginRespon
 			UserId:         id,
 			AccessToken:    token,
 			RefreshToken:   refreshToken,
-			ExpirationTime: timestamppb.New(claims.GetExpiration()),
+			ExpirationTime: claims.GetExpiration().Unix(),
 			//Claims:         fromSecurityClaims(claims),
 		},
 	}, nil
@@ -254,16 +253,16 @@ func fromSecurityClaims(claims security.Claims) *securityv1.Claims {
 		Sub:    claims.GetSubject(),
 		Iss:    claims.GetIssuer(),
 		Aud:    claims.GetAudience(),
-		Exp:    timestamppb.New(claims.GetExpiration()),
-		Nbf:    timestamppb.New(claims.GetNotBefore()),
-		Iat:    timestamppb.New(claims.GetIssuedAt()),
+		Exp:    claims.GetExpiration().Unix(),
+		Nbf:    claims.GetNotBefore().Unix(),
+		Iat:    claims.GetIssuedAt().Unix(),
 		Jti:    claims.GetJWTID(),
 		Scopes: claims.GetScopes(),
 	}
 }
 
 // NewLoginRepo .
-func NewLoginRepo(cfg *configs.BasisConfig, authenticator security.Authenticator, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.Logger) dto.LoginRepo {
+func NewLoginRepo(cfg *configs.BasisConfig, authenticator security.Authenticator, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.KLogger) dto.LoginRepo {
 	var err error
 	// todo: generate random password for root user if not exists
 	if cfg.RootUser.RandomPassword {

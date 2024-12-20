@@ -226,7 +226,7 @@ message AuthZ {
     json_name = "roles",
     (gnostic.openapi.v3.property) = {description: "The roles assigned to the user."}
   ];
-  google.protobuf.Timestamp timestamp = 6 [
+  int64 timestamp = 6 [
     json_name = "timestamp",
     (gnostic.openapi.v3.property) = {description: "The timestamp of the authorization."}
   ];
@@ -252,15 +252,15 @@ message Claims {
     (validate.rules).repeated.min_items = 1,
     (gnostic.openapi.v3.property) = {description: "The audience for which the token is intended."}
   ]; // Audience
-  google.protobuf.Timestamp exp = 4 [
+  int64 exp = 4 [
     json_name = "exp",
     (gnostic.openapi.v3.property) = {description: "The expiration time of the token."}
   ]; // Expiration Time
-  google.protobuf.Timestamp nbf = 5 [
+  int64 nbf = 5 [
     json_name = "nbf",
     (gnostic.openapi.v3.property) = {description: "The time before which the token must not be accepted."}
   ]; // Not Before
-  google.protobuf.Timestamp iat = 6 [
+  int64 iat = 6 [
     json_name = "iat",
     (gnostic.openapi.v3.property) = {description: "The time at which the token was issued."}
   ]; // Issued At

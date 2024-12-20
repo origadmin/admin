@@ -14,12 +14,10 @@ import (
 	"github.com/dchest/uniuri"
 	"github.com/goexts/generic/settings"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
-	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
-	"github.com/origadmin/runtime/log"
-	"google.golang.org/protobuf/types/known/timestamppb"
-
 	middlewaresecurity "github.com/origadmin/runtime/agent/middleware/security"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/security"
 	"github.com/origadmin/toolkits/storage/cache"
 )
@@ -46,9 +44,9 @@ func (obj *Authenticator) CreateIdentityClaims(_ context.Context, id string, ref
 			Sub:    id,
 			Iss:    obj.issuer,
 			Aud:    obj.audience,
-			Exp:    timestamppb.New(now.Add(expiration)),
-			Nbf:    timestamppb.New(now),
-			Iat:    timestamppb.New(now),
+			Exp:    now.Add(expiration).Unix(),
+			Nbf:    now.Unix(),
+			Iat:    now.Unix(),
 			Jti:    obj.generateJTI(),
 			Scopes: make(map[string]bool),
 		},

@@ -19,7 +19,6 @@ import (
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/toolkits/security"
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -153,8 +152,8 @@ func TestServer(t *testing.T) {
 						Algorithm:     test.alg,
 						SigningKey:    testKey,
 						OldSigningKey: "",
-						ExpireTime:    nil,
-						RefreshTime:   nil,
+						ExpireTime:    0,
+						RefreshTime:   0,
 						CacheName:     "",
 					},
 				},
@@ -208,8 +207,8 @@ func TestClient(t *testing.T) {
 						Algorithm:     "HS256",
 						SigningKey:    testKey,
 						OldSigningKey: "",
-						ExpireTime:    nil,
-						RefreshTime:   nil,
+						ExpireTime:    0,
+						RefreshTime:   0,
 						CacheName:     "",
 					},
 				},
@@ -251,8 +250,8 @@ func TestAuth(t *testing.T) {
 				Algorithm:     "HS256",
 				SigningKey:    "abc123",
 				OldSigningKey: "",
-				ExpireTime:    nil,
-				RefreshTime:   nil,
+				ExpireTime:    0,
+				RefreshTime:   0,
 				CacheName:     "",
 			},
 		},
@@ -263,13 +262,14 @@ func TestAuth(t *testing.T) {
 		t.Fatal(err)
 	}
 	userID := "test"
+	now := time.Now()
 	claims := &securityv1.Claims{
 		Sub: userID,
 		Iss: "test",
 		Aud: []string{"test"},
-		Exp: timestamppb.New(time.Now().Add(time.Hour)),
-		Nbf: timestamppb.New(time.Now()),
-		Iat: timestamppb.New(time.Now()),
+		Exp: now.Add(time.Hour).Unix(),
+		Nbf: now.Unix(),
+		Iat: now.Unix(),
 		Jti: "not need",
 		Scopes: map[string]bool{
 			"test": true,

@@ -19,7 +19,7 @@ import (
 type UsersBiz struct {
 	dao     dto.UserRepo
 	limiter pagination.PageLimiter
-	log     *log.Helper
+	log     *log.KHelper
 }
 
 func (biz UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
@@ -97,12 +97,12 @@ func (biz UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, op
 }
 
 // NewUsersBiz new a UserPB use case.
-func NewUsersBiz(repo dto.UserRepo, logger log.Logger) *UsersBiz {
+func NewUsersBiz(repo dto.UserRepo, logger log.KLogger) *UsersBiz {
 	return &UsersBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewUsersClient new a UserPB use case.
-func NewUsersClient(repo dto.UserRepo, logger log.Logger) pb.UserAPIClient {
+func NewUsersClient(repo dto.UserRepo, logger log.KLogger) pb.UserAPIClient {
 	return &UsersBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 

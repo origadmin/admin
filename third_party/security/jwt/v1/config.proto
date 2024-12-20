@@ -20,47 +20,34 @@ option php_namespace = "OrigAdmin\\Runtime\\Security\\JWT\\V1";
 message Config {
   string signing_method = 1 [
     json_name = "signing_method",
-    (validate.rules).string.min_len = 1,
     (gnostic.openapi.v3.property) = {description: "The signing method used for the token (e.g., HS256, RS256)."}
   ];
-  bytes key = 2 [
+  string key = 2 [
     json_name = "key",
-    (validate.rules).bytes.min_len = 1,
     (gnostic.openapi.v3.property) = {description: "The key used for signing the token."}
   ];
-  bytes key2 = 3 [
+  string key2 = 3 [
     json_name = "key2",
-    (validate.rules).bytes.min_len = 1,
     (gnostic.openapi.v3.property) = {description: "The secondary key used for signing the token."}
   ];
-  string keyfunc = 4 [
-    json_name = "keyfunc",
-    (validate.rules).string.min_len = 1,
-    (gnostic.openapi.v3.property) = {description: "The function used to retrieve the key for validation."}
-  ];
-  google.protobuf.Duration access_token_lifetime = 5 [
+  int64 access_token_lifetime = 5 [
     json_name = "access_token_lifetime",
-    (validate.rules).duration.gt.seconds = 0,
     (gnostic.openapi.v3.property) = {description: "The lifetime of the token."}
   ];
-  google.protobuf.Duration refresh_token_lifetime = 6 [
+  int64 refresh_token_lifetime = 6 [
     json_name = "refresh_token_lifetime",
-    (validate.rules).duration.gt.seconds = 0,
     (gnostic.openapi.v3.property) = {description: "The lifetime of the refresh token."}
   ];
   string issuer = 7 [
     json_name = "issuer",
-    (validate.rules).string.min_len = 1,
     (gnostic.openapi.v3.property) = {description: "The issuer of the token."}
   ];
   repeated string audience = 8 [
     json_name = "audience",
-    (validate.rules).repeated.min_items = 1,
     (gnostic.openapi.v3.property) = {description: "The audience for which the token is intended."}
   ]; // Audience
   string token_type = 9 [
     json_name = "token_type",
-    (validate.rules).string.min_len = 1,
     (gnostic.openapi.v3.property) = {description: "The type of the token (e.g., Bearer)."}
   ];
 }

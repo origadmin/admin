@@ -100,7 +100,7 @@ func (repo menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options
 }
 
 // NewMenuRepo .
-func NewMenuRepo(db *Data, logger log.Logger) dto.MenuRepo {
+func NewMenuRepo(db *Data, logger log.KLogger) dto.MenuRepo {
 	return &menuRepo{
 		db: db,
 	}

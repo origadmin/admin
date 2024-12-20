@@ -6,11 +6,14 @@
 package loader
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
 	"testing"
+	"time"
 
+	"github.com/origadmin/toolkits/crypto/rand"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"origadmin/application/admin/internal/configs"
@@ -18,6 +21,10 @@ import (
 
 const (
 	testPath = "test"
+)
+
+var (
+	key = rand.GenerateRandom(32)
 )
 
 func init() {
@@ -28,6 +35,15 @@ func init() {
 }
 
 func TestSaveConfig(t *testing.T) {
+	fmt.Println("unix:", time.Now().Unix())
+	fmt.Println("unixmillis:", time.Now().UnixMilli())
+	bootstrap := DefaultBootstrap()
+	//bootstrap.Security.Authn.Jwt.SigningMethod = "HS256"
+	bootstrap.Security.Authn.Jwt.SigningKey = key
+	bootstrap.Middleware.Jwt.Config.Key = key
+	bootstrap.Middleware.Jwt.Config.SigningMethod = "HS512"
+	bootstrap.Service.Middleware.Jwt.Config.Key = key
+	bootstrap.Service.Middleware.Jwt.Config.SigningMethod = "HS512"
 	type args struct {
 		path string
 		conf *configs.Bootstrap
@@ -41,21 +57,21 @@ func TestSaveConfig(t *testing.T) {
 			name: "test",
 			args: args{
 				path: "test.toml",
-				conf: DefaultBootstrap(),
+				conf: bootstrap,
 			},
 		},
 		{
 			name: "test",
 			args: args{
 				path: "test.yml",
-				conf: DefaultBootstrap(),
+				conf: bootstrap,
 			},
 		},
 		{
 			name: "test",
 			args: args{
 				path: "test.json",
-				conf: DefaultBootstrap(),
+				conf: bootstrap,
 			},
 		},
 		//{

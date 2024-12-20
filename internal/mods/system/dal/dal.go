@@ -32,7 +32,7 @@ func NewTrans(data *Data) database.Trans {
 }
 
 // NewData .
-func NewData(bootstrap *configs.Bootstrap, logger log.Logger) (*Data, func(), error) {
+func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), error) {
 	log := log.NewHelper(logger)
 
 	//s := data.NewService(bootstrap.GetData(), nil)

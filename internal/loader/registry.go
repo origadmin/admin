@@ -14,7 +14,7 @@ import (
 	"origadmin/application/admin/internal/configs"
 )
 
-func NewRegistrar(bootstrap *configs.Bootstrap) (registry.Registrar, error) {
+func NewRegistrar(bootstrap *configs.Bootstrap) (registry.KRegistrar, error) {
 	cfg := bootstrap.GetRegistry()
 	if cfg == nil {
 		return nil, errors.New("registry config is nil")
@@ -26,7 +26,7 @@ func NewRegistrar(bootstrap *configs.Bootstrap) (registry.Registrar, error) {
 	return registrar, nil
 }
 
-func NewDiscovery(bootstrap *configs.Bootstrap) (registry.Discovery, error) {
+func NewDiscovery(bootstrap *configs.Bootstrap) (registry.KDiscovery, error) {
 	cfg := bootstrap.GetRegistry()
 	if cfg == nil {
 		return nil, errors.New("registry config is nil")

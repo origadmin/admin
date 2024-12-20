@@ -86,7 +86,7 @@ func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options 
 }
 
 // NewRoleRepo .
-func NewRoleRepo(db *Data, logger log.Logger) dto.RoleRepo {
+func NewRoleRepo(db *Data, logger log.KLogger) dto.RoleRepo {
 	return &roleRepo{
 		db: db,
 	}

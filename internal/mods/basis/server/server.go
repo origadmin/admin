@@ -52,7 +52,7 @@ func (s RegisterAgent) HTTP(server *service.HTTPServer) {
 	pb.RegisterLoginAPIAgent(server, s.Login)
 }
 
-func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterAgent, error) {
+func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) (*RegisterAgent, error) {
 	client, err := NewBasisClient(bootstrap, l)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.Logger) (*RegisterA
 	return &register, nil
 }
 
-func NewBasisClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCClient, error) {
+func NewBasisClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPCClient, error) {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
 		return nil, errors.New("no entry")
@@ -81,7 +81,6 @@ func NewBasisClient(bootstrap *configs.Bootstrap, l log.Logger) (*service.GRPCCl
 		Name: ServiceName,
 		Grpc: entry.GetGrpc(),
 		Http: entry.GetHttp(),
-		Gins: entry.GetGins(),
 		Selector: &configv1.Service_Selector{
 			Version: "v1.0.0",
 			Builder: "bbr",

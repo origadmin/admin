@@ -20,7 +20,7 @@ import (
 type LoginBiz struct {
 	dao     dto.LoginRepo
 	limiter pagination.PageLimiter
-	log     *log.Helper
+	log     *log.KHelper
 }
 
 func (biz LoginBiz) Register(ctx context.Context, in *pb.RegisterRequest, opts ...grpc.CallOption) (*pb.RegisterResponse, error) {
@@ -74,12 +74,12 @@ func (biz LoginBiz) CurrentMenus(ctx context.Context, in *dto.CurrentMenusReques
 }
 
 // NewLoginBiz new a Login use case.
-func NewLoginBiz(repo dto.LoginRepo, logger log.Logger) *LoginBiz {
+func NewLoginBiz(repo dto.LoginRepo, logger log.KLogger) *LoginBiz {
 	return &LoginBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
 // NewLoginClient new a Login use case.
-func NewLoginClient(repo dto.LoginRepo, logger log.Logger) pb.LoginAPIClient {
+func NewLoginClient(repo dto.LoginRepo, logger log.KLogger) pb.LoginAPIClient {
 	return &LoginBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 

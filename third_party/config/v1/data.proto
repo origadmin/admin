@@ -70,12 +70,12 @@ message Data {
       (gnostic.openapi.v3.property) = {description: "The maximum number of open connections in the connection pool"}
     ];
     // Maximum length of time that the connection can be reused
-    google.protobuf.Duration connection_max_lifetime = 22 [
+    int64 connection_max_lifetime = 22 [
       json_name = "connection_max_lifetime",
       (gnostic.openapi.v3.property) = {description: "The maximum length of time a connection can be reused"}
     ];
     // Maximum number of connections in the connection pool for reading
-    google.protobuf.Duration connection_max_idle_time = 23 [
+    int64 connection_max_idle_time = 23 [
       json_name = "connection_max_idle_time",
       (gnostic.openapi.v3.property) = {description: "The maximum number of connections in the connection pool for reading"}
     ];
@@ -99,15 +99,15 @@ message Data {
       json_name = "db",
       (gnostic.openapi.v3.property) = {description: "database index"}
     ];
-    google.protobuf.Duration dial_timeout = 5 [
+    int64 dial_timeout = 5 [
       json_name = "dial_timeout",
       (gnostic.openapi.v3.property) = {description: "dial timeout"}
     ];
-    google.protobuf.Duration read_timeout = 6 [
+    int64 read_timeout = 6 [
       json_name = "read_timeout",
       (gnostic.openapi.v3.property) = {description: "read timeout"}
     ];
-    google.protobuf.Duration write_timeout = 7 [
+    int64 write_timeout = 7 [
       json_name = "write_timeout",
       (gnostic.openapi.v3.property) = {description: "write timeout"}
     ];
@@ -131,7 +131,7 @@ message Data {
       json_name = "max_idle",
       (gnostic.openapi.v3.property) = {description: "maximum number of idle connections"}
     ];
-    google.protobuf.Duration timeout = 5 [
+    int64 timeout = 5 [
       json_name = "timeout",
       (gnostic.openapi.v3.property) = {description: "overtime"}
     ];
@@ -147,11 +147,11 @@ message Data {
       json_name = "capacity",
       (gnostic.openapi.v3.property) = {description: "capacity"}
     ];
-    google.protobuf.Duration expiration = 3 [
+    int64 expiration = 3 [
       json_name = "expiration",
       (gnostic.openapi.v3.property) = {description: "expiration time"}
     ];
-    google.protobuf.Duration cleanup_interval = 4 [
+    int64 cleanup_interval = 4 [
       json_name = "cleanup_interval",
       (gnostic.openapi.v3.property) = {description: "clearance interval"}
     ];

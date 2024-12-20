@@ -23,8 +23,8 @@ message RateLimiter {
     int32 db = 4 [json_name = "db"];
   }
   message Memory {
-    google.protobuf.Duration expiration = 1 [json_name = "expiration"];
-    google.protobuf.Duration cleanup_interval = 2 [json_name = "cleanup_interval"];
+    int64 expiration = 1 [json_name = "expiration"];
+    int64 cleanup_interval = 2 [json_name = "cleanup_interval"];
   }
   bool enabled = 1 [json_name = "enabled"];
   // rate limiter name, supported: bbr, memory, redis.

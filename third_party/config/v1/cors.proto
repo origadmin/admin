@@ -33,7 +33,7 @@ message Cors {
   repeated string expose_headers = 6 [json_name = "expose_headers"];
   // MaxAge indicates how long (with second-precision) the results of a preflight request
   // can be cached
-  google.protobuf.Duration max_age = 7 [json_name = "max_age"];
+  int64 max_age = 7 [json_name = "max_age"];
   // Allows to add origins like http://some-domain/*, https://api.* or http://some.*.subdomain.com
   bool allow_wildcard = 8 [json_name = "allow_wildcard"];
   // Allows usage of popular browser extensions schemas

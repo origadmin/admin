@@ -113,7 +113,7 @@ func (repo userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options 
 }
 
 // NewUserRepo .
-func NewUserRepo(db *Data, logger log.Logger) dto.UserRepo {
+func NewUserRepo(db *Data, logger log.KLogger) dto.UserRepo {
 	return &userRepo{
 		db: db,
 	}

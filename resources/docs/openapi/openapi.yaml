@@ -1487,7 +1487,6 @@ components:
                 expiration_time:
                     type: string
                     description: The expiration time of the token.
-                    format: date-time
             description: PWT is a web token that can be used to authenticate a user with protobuf services.
     securitySchemes:
         Basic:

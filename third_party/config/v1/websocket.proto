@@ -16,5 +16,5 @@ message WebSocket {
   string addr = 2 [json_name = "addr"];
   string path = 3 [json_name = "path"];
   string codec = 4 [json_name = "codec"];
-  google.protobuf.Duration timeout = 5 [json_name = "timeout"];
+  int64 timeout = 5 [json_name = "timeout"];
 }

@@ -167,7 +167,16 @@ func (m *Bootstrap) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for Mode
+	if _, ok := _Bootstrap_Mode_InLookup[m.GetMode()]; !ok {
+		err := BootstrapValidationError{
+			field:  "Mode",
+			reason: "value must be in list [singleton cluster]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	// no validation rules for Version
 
@@ -486,6 +495,11 @@ var _ interface {
 	ErrorName() string
 } = BootstrapValidationError{}
 
+var _Bootstrap_Mode_InLookup = map[string]struct{}{
+	"singleton": {},
+	"cluster":   {},
+}
+
 // Validate checks the field values on Settings with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -663,35 +677,6 @@ func (m *Bootstrap_Entry) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return Bootstrap_EntryValidationError{
 				field:  "Http",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if all {
-		switch v := interface{}(m.GetGins()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "Gins",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, Bootstrap_EntryValidationError{
-					field:  "Gins",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetGins()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return Bootstrap_EntryValidationError{
-				field:  "Gins",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
