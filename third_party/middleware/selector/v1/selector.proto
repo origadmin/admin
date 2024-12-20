@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package middleware.selector.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+option cc_enable_arenas = true;
+option go_package = "github.com/origadmin/runtime/gen/go/middleware/selector/v1;selectorv1";
+option java_multiple_files = true;
+option java_outer_classname = "SelectorProto";
+option java_package = "com.github.origadmin.runtime.middleware.selector.v1";
+option objc_class_prefix = "OMM";
+option php_namespace = "OrigAdmin\\Runtime\\Middleware\\Selector\\V1";
+
+// Selector
+message Selector {
+  bool enabled = 1 [json_name = "enabled"];
+  repeated string names = 2 [json_name = "names"];
+  repeated string paths = 3 [json_name = "paths"];
+  string regex = 4 [json_name = "regex"];
+  repeated string prefixes = 5 [json_name = "prefixes"];
+}

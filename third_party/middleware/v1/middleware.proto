@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package middleware.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "middleware/jwt/v1/jwt.proto";
+import "middleware/metrics/v1/metrics.proto";
+import "middleware/ratelimit/v1/ratelimiter.proto";
+import "middleware/selector/v1/selector.proto";
+import "middleware/validator/v1/validator.proto";
+import "validate/validate.proto";
+
+option cc_enable_arenas = true;
+option go_package = "github.com/origadmin/runtime/gen/go/middleware/v1;middlewarev1";
+option java_multiple_files = true;
+option java_outer_classname = "MiddlewareProto";
+option java_package = "com.github.origadmin.runtime.middleware.v1";
+option objc_class_prefix = "OMX";
+option php_namespace = "OrigAdmin\\Runtime\\Middleware\\V1";
+
+// UserMetric: used to report user-defined metrics
+// Example:
+//    request_count := UserMetric {
+//      timestamp: 1633072800,
+//      name: "request_count",
+//      value: 12345,
+//      labels: {
+//        "service": "api_service",
+//        "endpoint": "/users"
+//      },
+//      unit: "requests",
+//      type: COUNTER,
+//      description: "Number of requests to the API service",
+//      context: "Production environment",
+//      metadata: {
+//        "region": "us-west-1",
+//        "instance_id": "i-0123456789abcdef0"
+//      }
+//    };
+//
+//    response_time := UserMetric {
+//      timestamp: 1633072800,
+//      name: "response_time",
+//      value: 0.25,
+//      labels: {
+//        "service": "api_service",
+//        "endpoint": "/users"
+//      },
+//      unit: "seconds",
+//      type: GAUGE,
+//      description: "Average response time of the API service",
+//      context: "Production environment",
+//      metadata: {
+//        "region": "us-west-1",
+//        "instance_id": "i-0123456789abcdef0"
+//      }
+//    };
+
+// Middleware middleware is used to middlewareure middleware for entry
+message Middleware {
+  // Metadata
+  message Metadata {
+    bool enabled = 1 [json_name = "enabled"];
+    // Metadata prefix
+    string prefix = 2 [json_name = "prefix"];
+    // Metadata data
+    map<string, string> data = 3 [json_name = "data"];
+  }
+
+  // Logging switch
+  bool logging = 1 [json_name = "logging"];
+  // Recovery switch
+  bool recovery = 2 [json_name = "recovery"];
+  //  // tracing switch
+  bool tracing = 3 [json_name = "tracing"];
+  // Circuit breaker switch
+  bool circuit_breaker = 4 [json_name = "circuit_breaker"];
+  //  // Metadata switch
+  //  bool enable_metadata = 6 [json_name = "enable_metadata"];
+  //  // JWT switch
+  //  bool enable_jwt = 7 [json_name = "jwt"];
+
+  Metadata metadata = 100 [json_name = "metadata"];
+  middleware.ratelimit.v1.RateLimiter rate_limiter = 101 [json_name = "rate_limiter"];
+  middleware.metrics.v1.Metrics metrics = 102 [json_name = "metrics"];
+  middleware.validator.v1.Validator validator = 103 [json_name = "validator"];
+  middleware.jwt.v1.JWT jwt = 104 [json_name = "jwt"];
+  middleware.selector.v1.Selector selector = 105 [json_name = "selector"];
+}

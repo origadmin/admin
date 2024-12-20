@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package security.v1;
+
+import "errors/errors.proto";
+
+option cc_enable_arenas = true;
+option csharp_namespace = "OrigAdmin.Runtime.Security.V1";
+option go_package = "github.com/origadmin/runtime/gen/go/security/v1;securityv1";
+option java_multiple_files = true;
+option java_outer_classname = "SecurityProto";
+option java_package = "com.github.origadmin.runtime.security.v1";
+option objc_class_prefix = "ORS";
+option php_namespace = "OrigAdmin\\Runtime\\Security\\V1";
+
+enum SecurityErrorReason {
+  option (errors.default_code) = 500;
+  SECURITY_ERROR_REASON_UNSPECIFIED = 0;
+  // authentication starts at 1000, and ends at 1999
+  SECURITY_ERROR_REASON_INVALID_AUTHENTICATION = 1000;
+  SECURITY_ERROR_REASON_INVALID_CLAIMS = 1001;
+  SECURITY_ERROR_REASON_INVALID_BEARER_TOKEN = 1002;
+  SECURITY_ERROR_REASON_INVALID_SUBJECT = 1003;
+  SECURITY_ERROR_REASON_INVALID_AUDIENCE = 1004;
+  SECURITY_ERROR_REASON_INVALID_ISSUER = 1005;
+  SECURITY_ERROR_REASON_INVALID_EXPIRATION = 1006;
+  SECURITY_ERROR_REASON_TOKEN_NOT_FOUND = 1007;
+  SECURITY_ERROR_REASON_BEARER_TOKEN_MISSING = 1010;
+  SECURITY_ERROR_REASON_TOKEN_EXPIRED = 1011;
+  SECURITY_ERROR_REASON_UNSUPPORTED_SIGNING_METHOD = 1012;
+  SECURITY_ERROR_REASON_MISSING_KEY_FUNC = 1014;
+  SECURITY_ERROR_REASON_SIGN_TOKEN_FAILED = 1015;
+  SECURITY_ERROR_REASON_GET_KEY_FAILED = 1016;
+  // authorization starts at 2000, and ends at 2999
+  SECURITY_ERROR_REASON_INVALID_AUTHORIZATION = 2000;
+
+  SECURITY_ERROR_REASON_NO_AT_HASH = 1050;
+  SECURITY_ERROR_REASON_INVALID_AT_HASH = 1051;
+
+  SECURITY_ERROR_REASON_UNSECURITY_ENTICATED = 3000;
+}

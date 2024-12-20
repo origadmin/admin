@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package fileupload.v1;
+
+import "validate/validate.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+option cc_enable_arenas = true;
+option go_package = "github.com/origadmin/runtime/gen/go/fileupload/v1;fileuploadv1";
+option java_multiple_files = true;
+option java_outer_classname = "FileUploadProto";
+option java_package = "com.github.origadmin.runtime.fileupload";
+option objc_class_prefix = "ORPF";
+
+service FileUploadService {
+  rpc Upload(stream UploadRequest) returns (UploadResponse);
+}
+
+// FileHeader defines the structure of a file header.
+message FileHeader {
+  string filename = 1 [
+    json_name = "filename",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {
+      description: "fie name",
+    }
+  ];
+  uint32 size = 3 [
+    json_name = "size",
+    (gnostic.openapi.v3.property) = {
+      description: "file size",
+    }
+  ];
+  string mod_time_string = 4 [
+    json_name = "mod_time_string",
+    (gnostic.openapi.v3.property) = {
+      description: "file mod time string",
+    }
+  ];
+  uint32 mod_time = 5 [
+    json_name = "mod_time",
+    (gnostic.openapi.v3.property) = {
+      description: "file mod time unix",
+    }
+  ];
+  string content_type = 2 [
+    json_name = "content_type",
+    (gnostic.openapi.v3.property) = {
+      description: "file content type",
+    }
+  ];
+  map<string, string> header = 6 [
+    json_name = "header",
+    (gnostic.openapi.v3.property) = {
+      description: "file header",
+    }
+  ];
+  bool is_dir = 7 [
+    json_name = "is_dir",
+    (gnostic.openapi.v3.property) = {
+      description: "file is dir",
+    }
+  ];
+}
+
+// UploadRequest file block information
+message UploadRequest {
+  bool is_header = 1 [
+    json_name = "is_header",
+    (gnostic.openapi.v3.property) = {
+      description: "file header",
+    }
+  ];
+  bytes data = 2 [
+    json_name = "data",
+    (gnostic.openapi.v3.property) = {
+      description: "file data",
+    }
+  ];
+}
+
+
+// UploadResponse defines the structure of a file response.
+message UploadResponse {
+  bool success = 1 [
+    json_name = "success",
+    (gnostic.openapi.v3.property) = {
+      description: "file upload success",
+    }
+  ];
+  string hash = 2 [
+    json_name = "hash",
+    (gnostic.openapi.v3.property) = {
+      description: "file hash",
+    }
+  ];
+  string path = 3 [
+    json_name = "path",
+    (gnostic.openapi.v3.property) = {
+      description: "file path",
+    }
+  ];
+  uint32 size = 4 [
+    json_name = "size",
+    (gnostic.openapi.v3.property) = {
+      description: "file size",
+    }
+  ];
+  string fail_reason = 5 [
+    json_name = "fail_reason",
+    (gnostic.openapi.v3.property) = {
+      description: "file failed reason message info",
+    }
+  ];
+}
