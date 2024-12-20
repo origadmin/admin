@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package Option implements the functions, types, and interfaces for the module.
+// Package security implements the functions, types, and interfaces for the module.
 package security
 
 import (
@@ -101,8 +101,8 @@ func WithSkipper(paths []string) Setting {
 //	}
 //}
 
-func OuterMiddlewares(ms ...middleware.Middleware) func(middleware.Handler) middleware.Handler {
-	return func(handler middleware.Handler) middleware.Handler {
+func OuterMiddlewares(ms ...middleware.KMiddleware) func(middleware.KHandler) middleware.KHandler {
+	return func(handler middleware.KHandler) middleware.KHandler {
 		for i := range ms {
 			ms[i](handler)
 		}
@@ -111,7 +111,7 @@ func OuterMiddlewares(ms ...middleware.Middleware) func(middleware.Handler) midd
 }
 
 // AdapterMiddleware is a Gin middleware that adapts to Kratos middleware
-func AdapterMiddleware(handler middleware.Handler) gin.HandlerFunc {
+func AdapterMiddleware(handler middleware.KHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tr, ok := transport.FromServerContext(c.Request.Context())
 		if !ok {
@@ -127,7 +127,7 @@ func AdapterMiddleware(handler middleware.Handler) gin.HandlerFunc {
 	}
 }
 
-func NewClient(cfg *middlewarev1.Middleware, ss ...middleware.OptionSetting) []middleware.Middleware {
+func NewClient(cfg *middlewarev1.Middleware, ss ...middleware.OptionSetting) []middleware.KMiddleware {
 	return middleware.NewClient(cfg, ss...)
 }
 

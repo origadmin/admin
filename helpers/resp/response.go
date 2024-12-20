@@ -168,4 +168,107 @@ func (r Response) Any(context transhttp.Context, status int, data any, err error
 	r.JSON(context, http.StatusOK, data)
 }
 
+func ResponseErrorEncoder(writer http.ResponseWriter, request *http.Request, err error) {
+	ResultError(writer, http.StatusInternalServerError, err)
+	return
+}
+
+func ResponseJSONBytes(rw http.ResponseWriter, status int, data []byte) {
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.WriteHeader(status)
+	rw.Write(data)
+}
+
+func ResultAny(rw http.ResponseWriter, status int, data any, err error) {
+	if err != nil {
+		ResultError(rw, status, err)
+		return
+	}
+	resultResult(rw, http.StatusOK, data)
+}
+
+func decodeError(alwaysSucceed bool, code int, err error) (int, *httperr.Error) {
+	var ierr *httperr.Error
+	var status int
+	if ok := errors.As(err, &ierr); ok {
+		status = int(ierr.Code)
+	} else if ke := kerr.FromError(err); ke != nil {
+		status = int(ke.Code)
+		if ke.Reason == "" {
+			ke.Reason = "UNKNOWN_REASON"
+		}
+		ierr = &httperr.Error{
+			ID:     HTTPErrorPrefix + ke.Reason,
+			Code:   ke.Code,
+			Detail: ke.Message,
+		}
+	} else {
+		status = http.StatusInternalServerError
+		ierr = &httperr.Error{
+			ID:     HTTPErrorPrefix + "UNKNOWN",
+			Code:   http.StatusInternalServerError,
+			Detail: fmt.Sprintf("unhandled error: %v", err),
+		}
+	}
+	if code >= 500 {
+		log.Debugf("Error: %v, 5xx status: %d", ierr, code)
+	}
+	if alwaysSucceed {
+		status = http.StatusOK
+	}
+	if !alwaysSucceed && code != status {
+		ierr.Code = int32(status)
+	}
+	if code == 0 {
+		code = status
+	}
+	return code, ierr
+}
+
+func resultResult(rw http.ResponseWriter, status int, data any) {
+	if msg, ok := data.(proto.Message); ok {
+		buf, err := mo.Marshal(msg)
+		if err != nil {
+			//context.Error(errors.Wrap(err, "marshal proto message error"))
+			return
+		}
+		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+		rw.WriteHeader(status)
+		rw.Write(buf)
+		//context.Set(gins.ContextResponseBodBytesKey, buf)
+		//context.Data(status, "application/json; charset=utf-8", buf)
+		//context.Abort()
+		return
+	}
+	ResultJSON(rw, status, data)
+	return
+}
+
+func ResultError(rw http.ResponseWriter, status int, err error) {
+	code, herr := decodeError(false, status, err)
+	resultResult(rw, code, &Result{
+		Success: false,
+		Error:   herr,
+	})
+}
+
+func ResultProtoJSON(rw http.ResponseWriter, status int, msg proto.Message) {
+	buf, err := mo.Marshal(msg)
+	if err != nil {
+		ResultError(rw, http.StatusInternalServerError, errors.Wrap(err, "marshal proto message error"))
+		return
+	}
+	//context.Set(gins.ContextResponseBodBytesKey, buf)
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.WriteHeader(status)
+	rw.Write(buf)
+	return
+}
+
+func ResultJSON(rw http.ResponseWriter, status int, data any) {
+	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(status)
+	_ = json.NewEncoder(rw).Encode(data)
+}
+
 var Default = Response{}

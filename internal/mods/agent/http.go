@@ -22,6 +22,7 @@ import (
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/basis"
+	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
 )
 
@@ -37,7 +38,8 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	}
 	paths := bootstrap.GetSecurity().GetPublicPaths()
 	paths = append(DefaultPaths(), paths...)
-	ms := middleware.NewClient(bootstrap.GetMiddleware())
+	var ms []middleware.KMiddleware
+	//ms := middleware.NewClient(bootstrap.GetMiddleware())
 
 	options := []msecurity.OptionSetting{
 		msecurity.WithAuthorizer(authorizer),
@@ -63,6 +65,12 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 			}
 		},
 	}
+	s, ok := msecurity.SkipperServer(bootstrap.GetSecurity(), options...)
+	log.Debugf("Skipper: %v", ok)
+	if ok {
+		ms = append(ms, s)
+	}
+
 	n, err := msecurity.NewAuthN(bootstrap.GetSecurity(), options...)
 	if err != nil {
 		panic(err)
@@ -73,7 +81,13 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	}
 	ms = append(ms, n, z)
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
-	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(servicehttp.WithMiddlewares(ms...)))
+	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
+		servicehttp.WithMiddlewares(ms...),
+		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+		servicehttp.WithServerOptions(
+			http.ErrorEncoder(resp.ResponseErrorEncoder),
+		),
+	))
 	if err != nil {
 		panic(err)
 	}

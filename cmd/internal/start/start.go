@@ -117,7 +117,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	if daemon, _ := cmd.Flags().GetBool("daemon"); daemon {
 		bin, err := filepath.Abs(os.Args[0])
 		if err != nil {
-			log.Errorf("failed to get absolute path for command: %s \n", err.Error())
+			log.Errorf("failed to get absolute path for cmd: %s \n", err.Error())
 			return err
 		}
 
@@ -125,15 +125,15 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		cmdArgs = append(cmdArgs, "-d", strings.TrimSpace(flags.WorkDir))
 		cmdArgs = append(cmdArgs, "-c", strings.TrimSpace(flags.ConfigPath))
 		cmdArgs = append(cmdArgs, "-s", strings.TrimSpace(staticDir))
-		_, _ = fmt.Printf("execute command: %s %s \n", bin, strings.Join(cmdArgs, " "))
-		command := exec.Command(bin, cmdArgs...)
-		err = command.Start()
+		_, _ = fmt.Printf("execute cmd: %s %s \n", bin, strings.Join(cmdArgs, " "))
+		cmd := exec.Command(bin, cmdArgs...)
+		err = cmd.Start()
 		if err != nil {
 			_, _ = fmt.Printf("failed to start daemon thread: %s \n", err.Error())
 			return err
 		}
 
-		pid := command.Process.Pid
+		pid := cmd.Process.Pid
 		log.Errorf("service %s daemon thread started with pid %d \n", flags.ServiceName(), pid)
 		return nil
 	}
@@ -179,7 +179,6 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 		kratos.Server(injector.Server),
 		//kratos.Server(injector.ServerGINS),
 	}
-
 	//err := loader.InjectorGinServer(injector)
 	//if err != nil {
 	//	log.Errorf("injector gin server error: %v", err)

@@ -50,22 +50,24 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 		serviceConfig.Name = ServiceName
 	}
 	if serv := NewGRPCServer(bootstrap, l, service.WithGRPC(
-		servicegrpc.WithMiddlewares(middlewares...)),
-	); serv != nil {
+		servicegrpc.WithMiddlewares(middlewares...),
+		servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
+	)); serv != nil {
 		serv = register.GRPC(serv)
 		serv = register2.GRPC(serv)
 		servers = append(servers, serv)
 	}
-	if serv := NewGINSServer(bootstrap, l, service.WithHTTP(
-		servicehttp.WithMiddlewares(middlewares...)),
-	); serv != nil {
-		serv = register.GINS(serv)
-		serv = register2.GINS(serv)
-		servers = append(servers, serv)
-	}
+	//if serv := NewGINSServer(bootstrap, l, service.WithHTTP(
+	//	servicehttp.WithMiddlewares(middlewares...)),
+	//); serv != nil {
+	//	serv = register.GINS(serv)
+	//	serv = register2.GINS(serv)
+	//	servers = append(servers, serv)
+	//}
 	if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
-		servicehttp.WithMiddlewares(middlewares...)),
-	); serv != nil {
+		servicehttp.WithMiddlewares(middlewares...),
+		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+	)); serv != nil {
 		serv = register.HTTP(serv)
 		serv = register2.HTTP(serv)
 		servers = append(servers, serv)
@@ -148,12 +150,15 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	if err != nil {
 		return nil, errors.Wrap(err, "create discovery")
 	}
-
-	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig,
-		service.WithGRPC(func(o *servicegrpc.Option) {
-			o.Discovery = discovery
-			o.ServiceName = registry.ServiceName
-		}))
+	var ms []middleware.KMiddleware
+	options := []servicegrpc.OptionSetting{
+		servicegrpc.WithDiscovery(registry.ServiceName, discovery),
+	}
+	ms = middleware.NewClient(bootstrap.GetMiddleware())
+	if len(ms) > 0 {
+		options = append(options, servicegrpc.WithMiddlewares(ms...))
+	}
+	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, service.WithGRPC(options...))
 	if err != nil {
 		return nil, errors.Wrap(err, "create menu grpc client")
 	}

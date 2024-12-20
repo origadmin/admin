@@ -27,7 +27,6 @@ func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.Re
 	response, err := s.client.Register(context, request)
 	if err != nil {
 		log.Errorf("Register error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -41,7 +40,6 @@ func (s LoginAPIAgentService) CaptchaResource(context transhttp.Context, request
 	response, err := s.client.CaptchaResource(context, request)
 	if err != nil {
 		log.Errorf("CaptchaResource error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -55,7 +53,6 @@ func (s LoginAPIAgentService) CaptchaResources(context transhttp.Context, reques
 	response, err := s.client.CaptchaResources(context, request)
 	if err != nil {
 		log.Errorf("CaptchaResources error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -71,7 +68,6 @@ func (s LoginAPIAgentService) CaptchaID(context transhttp.Context, request *pb.C
 	log.Debugf("CaptchaID: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -87,7 +83,6 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	log.Debugf("CaptchaImage: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	log.Debugf("CaptchaImage: Setting headers: %+v", response.Headers)
@@ -99,7 +94,6 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	log.Debugf("CaptchaImage: Writing response image")
 	if _, err := context.Response().Write(response.Image); err != nil {
 		log.Errorf("CaptchaImage error writing response: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	//log.Debugf("CaptchaImage: Flushing response writer")
@@ -112,7 +106,6 @@ func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *p
 	response, err := s.client.CurrentMenus(context, request)
 	if err != nil {
 		log.Errorf("CurrentMenus error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -126,7 +119,6 @@ func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb
 	response, err := s.client.CurrentUser(context, request)
 	if err != nil {
 		log.Errorf("CurrentUser error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -139,7 +131,6 @@ func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.Ref
 	response, err := s.client.Refresh(context, request)
 	if err != nil {
 		log.Errorf("Refresh error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -157,7 +148,6 @@ func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.Login
 	response, err := s.client.Login(context, request)
 	if err != nil {
 		log.Errorf("Login error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -176,7 +166,6 @@ func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.Logo
 	response, err := s.client.Logout(context, request)
 	if err != nil {
 		log.Errorf("Logout error: %v", err)
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{

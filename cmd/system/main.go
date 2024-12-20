@@ -25,10 +25,10 @@ import (
 	"origadmin/application/admin/internal/loader"
 )
 
-// go build -ldflags "-X main.Version=vx.y.z -X main.Name=origadmin.service.v1.system"
+// go build -ldflags "-X main.Version=vx.y.z -X main.Name=origadmin.service.system.v1"
 var (
 	// Name is the Name of the compiled software.
-	Name = "origadmin.service.v1.system"
+	Name = "origadmin.service.system.v1"
 	// Version is the Version of the compiled software.
 	Version = "v1.0.0"
 	// boot are the bootstrap boot.
