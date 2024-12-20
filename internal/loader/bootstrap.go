@@ -27,13 +27,13 @@ func LoadFileBootstrap(path string) (*configs.Bootstrap, error) {
 		return nil, fmt.Errorf("unknown file type: %s", path)
 	}
 
-	cfg := DefaultBootstrap()
-	err := codec.DecodeFromFile(path, cfg)
+	var cfg configs.Bootstrap
+	err := codec.DecodeFromFile(path, &cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	return cfg, nil
+	return &cfg, nil
 }
 
 func LoadLocalBootstrap(source *configv1.SourceConfig) (*configs.Bootstrap, error) {
@@ -61,11 +61,11 @@ func LoadRemoteBootstrap(source *configv1.SourceConfig) (*configs.Bootstrap, err
 	if err := config.Load(); err != nil {
 		return nil, err
 	}
-	cfg := DefaultBootstrap()
-	if err := config.Scan(cfg); err != nil {
+	var cfg configs.Bootstrap
+	if err := config.Scan(&cfg); err != nil {
 		return nil, err
 	}
-	return cfg, nil
+	return &cfg, nil
 }
 
 // LoadBootstrap load config from file
@@ -99,7 +99,7 @@ func LoadBootstrap(flags *Bootstrap) (*configs.Bootstrap, error) {
 
 // LoadRemoteServiceBootstrap get the configuration from the remote Configuration Center
 func LoadRemoteServiceBootstrap(flags *Bootstrap, name string, ss ...ConfigSetting) (*configs.Bootstrap, error) {
-	cfg := DefaultBootstrap()
+	var cfg configs.Bootstrap
 	sourceConfig, err := bootstrap.LoadSourceConfig(flags)
 	if err != nil {
 		return nil, err
@@ -114,8 +114,8 @@ func LoadRemoteServiceBootstrap(flags *Bootstrap, name string, ss ...ConfigSetti
 	if err := config.Load(); err != nil {
 		return nil, err
 	}
-	if err := config.Scan(cfg); err != nil {
+	if err := config.Scan(&cfg); err != nil {
 		return nil, err
 	}
-	return cfg, nil
+	return &cfg, nil
 }

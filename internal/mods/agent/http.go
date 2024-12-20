@@ -6,9 +6,9 @@
 package agent
 
 import (
-	context2 "context"
 	"strings"
 
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
@@ -19,10 +19,12 @@ import (
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
 	servicehttp "github.com/origadmin/runtime/service/http"
+	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/basis"
 	"origadmin/application/admin/helpers/resp"
+	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
 )
 
@@ -38,7 +40,9 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	}
 	paths := bootstrap.GetSecurity().GetPublicPaths()
 	paths = append(DefaultPaths(), paths...)
-	var ms []middleware.KMiddleware
+	ms := []middleware.KMiddleware{
+		recovery.Recovery(),
+	}
 	//ms := middleware.NewClient(bootstrap.GetMiddleware())
 
 	options := []msecurity.OptionSetting{
@@ -59,9 +63,23 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 				log.Debugf("Path '%s' does not match any public path, not skipping", path)
 				return false
 			}
-			option.Parser = func(ctx context2.Context, id string) (security.UserClaims, error) {
-				//todo: 从token中获取用户信息
-				return nil, nil
+			option.Parser = func(ctx context.Context, id string) (security.UserClaims, error) {
+				req, ok := http.RequestFromServerContext(ctx)
+				if !ok {
+					return nil, errors.New("no request in context")
+				}
+				c := msecurity.ClaimsFromContext(ctx)
+				if c == nil {
+					return nil, errors.New("no token in context")
+				}
+				return &securityx.CasbinUserClaims{
+					Claims:  c,
+					Subject: c.GetSubject(),
+					Method:  req.Method,
+					Path:    req.URL.Path,
+					Scopes:  c.GetIssuer(),
+					Root:    c.GetSubject() == "admin",
+				}, nil
 			}
 		},
 	}
