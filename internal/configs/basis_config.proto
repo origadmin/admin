@@ -1,5 +1,5 @@
 syntax = "proto3";
-package origadmin.configs.api;
+package configs.api;
 
 import "configs/root_user.proto";
 import "configs/captcha.proto";
@@ -7,6 +7,6 @@ import "configs/captcha.proto";
 option go_package = "origadmin/application/admin/internal/configs";
 
 message BasisConfig {
-  origadmin.configs.api.RootUser root_user = 1 [json_name = "root_user"];
-  origadmin.configs.api.Captcha captcha = 2 [json_name = "captcha"];
+  configs.api.RootUser root_user = 1 [json_name = "root_user"];
+  configs.api.Captcha captcha = 2 [json_name = "captcha"];
 }

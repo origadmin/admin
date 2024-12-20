@@ -62,7 +62,16 @@ func (m *Captcha) validate(all bool) error {
 
 	// no validation rules for Height
 
-	// no validation rules for CacheType
+	if _, ok := _Captcha_CacheType_InLookup[m.GetCacheType()]; !ok {
+		err := CaptchaValidationError{
+			field:  "CacheType",
+			reason: "value must be in list [memory redis]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetRedis()).(type) {
@@ -169,6 +178,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CaptchaValidationError{}
+
+var _Captcha_CacheType_InLookup = map[string]struct{}{
+	"memory": {},
+	"redis":  {},
+}
 
 // Validate checks the field values on Captcha_Redis with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

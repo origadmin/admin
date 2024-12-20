@@ -1,11 +1,11 @@
 syntax = "proto3";
 package origadmin.configs.api;
 
+import "buf/validate/validate.proto";
 import "config/v1/data.proto";
 import "config/v1/registry.proto";
 import "config/v1/service.proto";
-import "config/v1/middleware.proto";
-import "buf/validate/validate.proto";
+import "middleware/v1/middleware.proto";
 
 option go_package = "origadmin/application/admin/internal/configs";
 
@@ -15,12 +15,20 @@ message Server {
   string version = 2 [json_name = "version"];
   string crypto_type = 3 [
     json_name = "crypto_type",
-    (buf.validate.field).string = {in:["argon2", "scrypt", "bcrypt", "pbkdf2", "sha256", "sha512"]}
+    (buf.validate.field).string = {
+      in: [
+        "argon2",
+        "scrypt",
+        "bcrypt",
+        "pbkdf2",
+        "sha256",
+        "sha512"
+      ]
+    }
   ];
 
   config.v1.Service service = 200 [json_name = "service"];
   config.v1.Data data = 300 [json_name = "data"];
   config.v1.Registry registry = 400 [json_name = "registry"];
-  config.v1.Middleware middlewares = 9 [json_name = "middlewares"];
+  middleware.v1.Middleware middleware = 9 [json_name = "middleware"];
 }
-

@@ -13,10 +13,10 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
 	"github.com/origadmin/runtime"
+	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
-	middlewaresecurity "github.com/origadmin/runtime/middleware/security"
 	"github.com/origadmin/runtime/service"
 	servicehttp "github.com/origadmin/runtime/service/http"
 	"github.com/origadmin/toolkits/security"
@@ -35,28 +35,43 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	if serviceConfig == nil {
 		panic("no serviceConfig")
 	}
-	paths := bootstrap.GetMiddlewares().GetSecurity().GetPublicPaths()
+	paths := bootstrap.GetSecurity().GetPublicPaths()
 	paths = append(DefaultPaths(), paths...)
-	ms := middleware.NewClient(bootstrap.GetMiddlewares(), middleware.WithSecurityOptions(func(option *middlewaresecurity.Option) {
-		option.Authenticator = authenticator
-		option.Authorizer = authorizer
-		option.Skipper = func(path string) bool {
-			log.Debugf("Checking if path '%s' should be skipped", path)
-			for _, p := range paths {
-				if strings.HasPrefix(path, p) {
-					log.Debugf("Path '%s' starts with '%s', skipping", path, p)
-					return true
+	ms := middleware.NewClient(bootstrap.GetMiddleware())
+
+	options := []msecurity.OptionSetting{
+		msecurity.WithAuthorizer(authorizer),
+		msecurity.WithAuthenticator(authenticator),
+		//msecurity.WithSkipper(paths...),
+		func(option *msecurity.Option) {
+			//option.Authenticator = authenticator
+			//option.Authorizer = authorizer
+			option.Skipper = func(path string) bool {
+				log.Debugf("Checking if path '%s' should be skipped", path)
+				for _, p := range paths {
+					if strings.HasPrefix(path, p) {
+						log.Debugf("Path '%s' starts with '%s', skipping", path, p)
+						return true
+					}
 				}
+				log.Debugf("Path '%s' does not match any public path, not skipping", path)
+				return false
 			}
-			log.Debugf("Path '%s' does not match any public path, not skipping", path)
-			return false
-		}
-		option.Parser = func(ctx context2.Context, id string) (security.UserClaims, error) {
-			//todo: 从token中获取用户信息
-			return nil, nil
-		}
-	}))
-	ms = append([]middleware.Middleware{MiddlewareAdapter()}, ms...)
+			option.Parser = func(ctx context2.Context, id string) (security.UserClaims, error) {
+				//todo: 从token中获取用户信息
+				return nil, nil
+			}
+		},
+	}
+	n, err := msecurity.NewAuthN(bootstrap.GetSecurity(), options...)
+	if err != nil {
+		panic(err)
+	}
+	z, err := msecurity.NewAuthZ(bootstrap.GetSecurity(), options...)
+	if err != nil {
+		panic(err)
+	}
+	ms = append(ms, n, z)
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(servicehttp.WithMiddlewares(ms...)))
 	if err != nil {

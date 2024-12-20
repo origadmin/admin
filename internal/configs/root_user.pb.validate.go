@@ -59,13 +59,49 @@ func (m *RootUser) validate(all bool) error {
 
 	// no validation rules for Enabled
 
-	// no validation rules for Id
+	if utf8.RuneCountInString(m.GetId()) < 1 {
+		err := RootUserValidationError{
+			field:  "Id",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Username
+	if utf8.RuneCountInString(m.GetUsername()) < 1 {
+		err := RootUserValidationError{
+			field:  "Username",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Password
+	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 32 {
+		err := RootUserValidationError{
+			field:  "Password",
+			reason: "value length must be between 6 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Salt
+	if l := utf8.RuneCountInString(m.GetSalt()); l < 6 || l > 12 {
+		err := RootUserValidationError{
+			field:  "Salt",
+			reason: "value length must be between 6 and 12 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	// no validation rules for Name
 

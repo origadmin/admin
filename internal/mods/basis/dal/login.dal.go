@@ -13,7 +13,7 @@ import (
 	"github.com/LyricTian/captcha"
 	kerr "github.com/go-kratos/kratos/v2/errors"
 	"github.com/origadmin/runtime/context"
-	pwtv1 "github.com/origadmin/runtime/gen/go/pwt/v1"
+	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
@@ -239,12 +239,12 @@ func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginRespon
 		return nil, err
 	}
 	return &dto.LoginResponse{
-		Token: &pwtv1.Token{
+		Token: &jwtv1.Token{
 			UserId:         id,
 			AccessToken:    token,
 			RefreshToken:   refreshToken,
 			ExpirationTime: timestamppb.New(claims.GetExpiration()),
-			Claims:         fromSecurityClaims(claims),
+			//Claims:         fromSecurityClaims(claims),
 		},
 	}, nil
 }

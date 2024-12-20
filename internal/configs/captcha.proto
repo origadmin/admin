@@ -1,7 +1,7 @@
 syntax = "proto3";
-package origadmin.configs.api;
+package configs.api;
 
-import "buf/validate/validate.proto";
+import "validate/validate.proto";
 
 option go_package = "origadmin/application/admin/internal/configs";
 
@@ -13,7 +13,15 @@ message Captcha {
   // CAPTCHA height
   int32 height = 3 [json_name = "height"];
   // Type of cache to use for storing CAPTCHA data
-  string cache_type = 4 [json_name = "cache_type", (buf.validate.field).string = {in: ["memory", "redis"]}];
+  string cache_type = 4 [
+    json_name = "cache_type",
+    (validate.rules).string = {
+      in: [
+        "memory",
+        "redis"
+      ]
+    }
+  ];
 
   // Redis configuration for CAPTCHA cache
   message Redis {
