@@ -16,19 +16,19 @@ type UserAPIHTTPService struct {
 	client pb.UserAPIHTTPClient
 }
 
-func (s *UserAPIHTTPService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+func (s UserAPIHTTPService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return &pb.ListUsersResponse{}, nil
 }
-func (s *UserAPIHTTPService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (s UserAPIHTTPService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	return &pb.GetUserResponse{}, nil
 }
-func (s *UserAPIHTTPService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (s UserAPIHTTPService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	return &pb.CreateUserResponse{}, nil
 }
-func (s *UserAPIHTTPService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+func (s UserAPIHTTPService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	return &pb.UpdateUserResponse{}, nil
 }
-func (s *UserAPIHTTPService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (s UserAPIHTTPService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	return &pb.DeleteUserResponse{}, nil
 }
 

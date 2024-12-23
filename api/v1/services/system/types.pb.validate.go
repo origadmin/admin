@@ -2100,6 +2100,8 @@ func (m *MenuResource) validate(all bool) error {
 
 	// no validation rules for Path
 
+	// no validation rules for Operation
+
 	if all {
 		switch v := interface{}(m.GetEdges()).(type) {
 		case interface{ ValidateAll() error }:

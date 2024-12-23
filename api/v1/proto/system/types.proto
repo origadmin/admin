@@ -220,9 +220,11 @@ message MenuResource {
   string method = 5;
   // Path holds the value of the "path" field.
   string path = 6;
+  // Operation holds the value of the "operation" field.
+  string operation = 7;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the MenuResourceQuery when eager-loading is set.
-  MenuResourceEdges edges = 7;
+  MenuResourceEdges edges = 8;
   //    selectValues = 8;
 }
 

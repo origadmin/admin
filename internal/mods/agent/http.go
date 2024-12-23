@@ -23,6 +23,7 @@ import (
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/basis"
+	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
@@ -33,7 +34,7 @@ type HTTPRegistrar interface {
 }
 
 // NewHTTPServerAgent new an HTTP server.
-func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, l log.KLogger) *service.HTTPServer {
+func NewHTTPServerAgent(bootstrap *configs.Bootstrap, sys *system.CreateMenuResponse, registrars []HTTPRegistrar, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no serviceConfig")
@@ -51,7 +52,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar
 	if err != nil {
 		panic(err)
 	}
-
+	authorizer.SetPolicies()
 	options := []msecurity.OptionSetting{
 		msecurity.WithAuthorizer(authorizer),
 		msecurity.WithAuthenticator(authenticator),

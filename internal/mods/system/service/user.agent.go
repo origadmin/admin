@@ -22,6 +22,16 @@ type UserAPIGINRPCService struct {
 	client pb.UserAPIClient
 }
 
+func (s UserAPIGINRPCService) ResetUserPassword(context transhttp.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserAPIGINRPCService) UpdateUserStatus(context transhttp.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s UserAPIGINRPCService) CreateUser(context transhttp.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	response, err := s.client.CreateUser(context, request)
 	if err != nil {

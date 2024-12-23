@@ -77,6 +77,7 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 }
 
 type RegisterAgent struct {
+	Auth           pb.AuthAPIAgent
 	Menu           pb.MenuAPIAgent
 	Role           pb.RoleAPIAgent
 	User           pb.UserAPIAgent
@@ -90,6 +91,7 @@ func (s RegisterAgent) HTTP(server *http.Server) {
 		register(server)
 	}
 	ag := agent.New(server)
+	pb.RegisterAuthAPIAgent(ag, s.Auth)
 	pb.RegisterMenuAPIAgent(ag, s.Menu)
 	pb.RegisterRoleAPIAgent(ag, s.Role)
 	pb.RegisterUserAPIAgent(ag, s.User)
@@ -111,6 +113,7 @@ func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) (*Registe
 		return nil, err
 	}
 	register := RegisterAgent{
+		Auth: systemservice.NewAuthServerAgent(client),
 		Menu: systemservice.NewMenuServerAgent(client),
 		Role: systemservice.NewRoleServerAgent(client),
 		User: systemservice.NewUserServerAgent(client),

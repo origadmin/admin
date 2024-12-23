@@ -33,7 +33,7 @@ func (biz RolesBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts
 	if err != nil {
 		return nil, err
 	}
-	return dto.ListRoleResponse(result, in, total)
+	return dto.ToListRolesResponse(result, in, total)
 }
 
 func (biz RolesBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...grpc.CallOption) (*pb.GetRoleResponse, error) {

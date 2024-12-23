@@ -74,7 +74,7 @@ func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pag
 	return nil
 }
 
-func ListRoleResponse(result []*RolePB, in *ListRolesRequest, total int32, args ...any) (*ListRolesResponse, error) {
+func ToListRolesResponse(result []*RolePB, in *ListRolesRequest, total int32, args ...any) (*ListRolesResponse, error) {
 	response := &ListRolesResponse{
 		TotalSize: total,
 		Current:   in.Current,

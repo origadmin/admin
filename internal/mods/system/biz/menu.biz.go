@@ -32,7 +32,7 @@ func (biz MenusBiz) ListMenus(ctx context.Context, in *pb.ListMenusRequest, opts
 	if err != nil {
 		return nil, err
 	}
-	return dto.ListMenuResponse(result, in, int32(total))
+	return dto.ToListMenusResponse(result, in, int32(total))
 }
 
 func (biz MenusBiz) GetMenu(ctx context.Context, in *pb.GetMenuRequest, opts ...grpc.CallOption) (*pb.GetMenuResponse, error) {

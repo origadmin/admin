@@ -76,7 +76,7 @@ func (o MenuQueryOption) FromCreateRequest(in *pb.CreateMenuRequest, limiter pag
 	return nil
 }
 
-func ListMenuResponse(result []*MenuPB, in *ListMenusRequest, total int32, args ...any) (*ListMenusResponse, error) {
+func ToListMenusResponse(result []*MenuPB, in *ListMenusRequest, total int32, args ...any) (*ListMenusResponse, error) {
 	response := &ListMenusResponse{
 		TotalSize: total,
 		Current:   in.Current,

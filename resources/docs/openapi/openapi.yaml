@@ -972,6 +972,47 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /v1/sys/resources:
+        get:
+            tags:
+                - AuthAPI
+            operationId: AuthAPI_ListResources
+            parameters:
+                - name: page_size
+                  in: query
+                  description: The maximum number of Auths to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
         api.v1.services.basis.CaptchaIDResponse:
@@ -1158,6 +1199,18 @@ components:
                         Additional information about this response.
                          content to be added without destroying the current data format
             description: ListMenusResponse is the response for the MenuService.ListMenus method.
+        api.v1.services.system.ListResourcesResponse:
+            type: object
+            properties:
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.MenuResource'
+                    description: The list of Auths.
+                total_size:
+                    type: integer
+                    description: The total number of Auths in the result set.
+                    format: int32
         api.v1.services.system.ListRolesResponse:
             type: object
             properties:
@@ -1324,6 +1377,9 @@ components:
                 path:
                     type: string
                     description: Path holds the value of the "path" field.
+                operation:
+                    type: string
+                    description: Operation holds the value of the "operation" field.
                 edges:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.MenuResourceEdges'
@@ -1619,6 +1675,7 @@ components:
             name: Authorization
             in: header
 tags:
+    - name: AuthAPI
     - name: CurrentAPI
       description: The current service definition.
     - name: LoginAPI

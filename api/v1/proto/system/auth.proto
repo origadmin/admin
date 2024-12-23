@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package api.v1.services.system;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "system/types.proto";
+
+option go_package = "v1/services/system;system";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceSystemAuthProto";
+option java_package = "com.origadmin.api.v1.services.system";
+option objc_class_prefix = "APIServiceSystemAuth";
+
+service AuthAPI {
+  rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
+    option (google.api.http) = {get: "/v1/sys/resources"};
+  }
+}
+
+message ListResourcesRequest {
+  // The maximum number of Auths to return.
+  int32 page_size = 1;
+  // The next_page_token value returned from a previous List request, if any.
+  string page_token = 2;
+  // The current page number.
+  int32 current = 3;
+  // The no_paging is used to disable pagination.
+  bool no_paging = 4;
+}
+
+message ListResourcesResponse {
+  // The list of Auths.
+  repeated MenuResource resources = 1;
+  // The total number of Auths in the result set.
+  int32 total_size = 2;
+}

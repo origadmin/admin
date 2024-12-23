@@ -17,24 +17,24 @@ type MenuAPIService struct {
 	client pb.MenuAPIClient
 }
 
-func (m MenuAPIService) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
-	return m.client.ListMenus(ctx, request)
+func (s MenuAPIService) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
+	return s.client.ListMenus(ctx, request)
 }
 
-func (m MenuAPIService) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
-	return m.client.GetMenu(ctx, request)
+func (s MenuAPIService) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
+	return s.client.GetMenu(ctx, request)
 }
 
-func (m MenuAPIService) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
-	return m.client.CreateMenu(ctx, request)
+func (s MenuAPIService) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
+	return s.client.CreateMenu(ctx, request)
 }
 
-func (m MenuAPIService) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
-	return m.client.UpdateMenu(ctx, request)
+func (s MenuAPIService) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
+	return s.client.UpdateMenu(ctx, request)
 }
 
-func (m MenuAPIService) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
-	return m.client.DeleteMenu(ctx, request)
+func (s MenuAPIService) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
+	return s.client.DeleteMenu(ctx, request)
 }
 
 //func (m MenuAPIService) mustEmbedUnimplementedMenuAPIServer() {

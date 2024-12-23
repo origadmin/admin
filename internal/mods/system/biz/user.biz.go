@@ -32,7 +32,7 @@ func (biz UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts
 	if err != nil {
 		return nil, err
 	}
-	return dto.ListUserResponse(result, in, total)
+	return dto.ToListUsersResponse(result, in, total)
 }
 
 func (biz UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...grpc.CallOption) (*pb.GetUserResponse, error) {
