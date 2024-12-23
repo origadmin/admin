@@ -41,9 +41,6 @@ plugins:
   - local: protoc-gen-go-grpc
     out: api/v1/services
     opt: paths=source_relative
-  - local: protoc-gen-go-gins
-    out: api/v1/services
-    opt: paths=source_relative
   - local: protoc-gen-go-agent
     out: api/v1/services
     opt: paths=source_relative
