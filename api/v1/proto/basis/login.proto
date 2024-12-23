@@ -59,7 +59,9 @@ service LoginAPI {
 
 message CurrentTokenRefreshRequest {}
 
-message CurrentTokenRefreshResponse {}
+message CurrentTokenRefreshResponse {
+  security.jwt.v1.Token token = 1;
+}
 
 message LoginRequest {
   message Data {

@@ -103,33 +103,34 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error) {
-	response, err := s.client.CurrentMenus(context, request)
-	if err != nil {
-		log.Errorf("CurrentMenus error: %v", err)
-		return nil, err
-	}
-	s.JSON(context, http.StatusOK, &resp.Result{
-		Success: true,
-		Data:    response,
-	})
-	return nil, nil
-}
+//func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error) {
+//	response, err := s.client.CurrentMenus(context, request)
+//	if err != nil {
+//		log.Errorf("CurrentMenus error: %v", err)
+//		return nil, err
+//	}
+//	s.JSON(context, http.StatusOK, &resp.Result{
+//		Success: true,
+//		Data:    response,
+//	})
+//	return nil, nil
+//}
 
-func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error) {
-	response, err := s.client.CurrentUser(context, request)
-	if err != nil {
-		log.Errorf("CurrentUser error: %v", err)
-		return nil, err
-	}
-	s.JSON(context, http.StatusOK, &resp.Result{
-		Success: true,
-		Data:    response,
-	})
-	return nil, nil
-}
-func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.RefreshRequest) (*pb.RefreshResponse, error) {
-	response, err := s.client.Refresh(context, request)
+//func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error) {
+//	response, err := s.client.CurrentUser(context, request)
+//	if err != nil {
+//		log.Errorf("CurrentUser error: %v", err)
+//		return nil, err
+//	}
+//	s.JSON(context, http.StatusOK, &resp.Result{
+//		Success: true,
+//		Data:    response,
+//	})
+//	return nil, nil
+//}
+
+func (s LoginAPIAgentService) CurrentTokenRefresh(context transhttp.Context, request *pb.CurrentTokenRefreshRequest) (*pb.CurrentTokenRefreshResponse, error) {
+	response, err := s.client.CurrentTokenRefresh(context, request)
 	if err != nil {
 		log.Errorf("Refresh error: %v", err)
 		return nil, err
@@ -145,6 +146,7 @@ func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.Ref
 	})
 	return nil, nil
 }
+
 func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
 	response, err := s.client.Login(context, request)
 	if err != nil {
@@ -163,18 +165,18 @@ func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.Login
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	response, err := s.client.Logout(context, request)
-	if err != nil {
-		log.Errorf("Logout error: %v", err)
-		return nil, err
-	}
-	s.JSON(context, http.StatusOK, &resp.Result{
-		Success: true,
-		Data:    response,
-	})
-	return nil, nil
-}
+//func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+//	response, err := s.client.Logout(context, request)
+//	if err != nil {
+//		log.Errorf("Logout error: %v", err)
+//		return nil, err
+//	}
+//	s.JSON(context, http.StatusOK, &resp.Result{
+//		Success: true,
+//		Data:    response,
+//	})
+//	return nil, nil
+//}
 
 // NewLoginAPIAgentService new a Login service.
 func NewLoginAPIAgentService(client pb.LoginAPIClient) *LoginAPIAgentService {

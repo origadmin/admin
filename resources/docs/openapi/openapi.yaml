@@ -1068,7 +1068,9 @@ components:
             properties: {}
         api.v1.services.basis.CurrentTokenRefreshResponse:
             type: object
-            properties: {}
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.basis.ListCurrentMenusResponse:
             type: object
             properties: {}
