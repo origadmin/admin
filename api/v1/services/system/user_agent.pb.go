@@ -26,7 +26,11 @@ type UserAPIAgent interface {
 	DeleteUser(http.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(http.Context, *GetUserRequest) (*GetUserResponse, error)
 	ListUsers(http.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	// ResetUserPassword ResetUserPassword reset the user s password
+	ResetUserPassword(http.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(http.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// UpdateUserStatus UpdateUserStatus Update the status of the user information
+	UpdateUserStatus(http.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 
 func RegisterUserAPIAgent(ag agent.Agent, srv UserAPIAgent) {
@@ -36,6 +40,8 @@ func RegisterUserAPIAgent(ag agent.Agent, srv UserAPIAgent) {
 	r.POST("/sys/users", _UserAPI_CreateUser0_Agent_Handler(srv))
 	r.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_Agent_Handler(srv))
 	r.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_Agent_Handler(srv))
+	r.PUT("/sys/users/:user.id/status", _UserAPI_UpdateUserStatus0_Agent_Handler(srv))
+	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_Agent_Handler(srv))
 }
 
 func _UserAPI_ListUsers0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
@@ -156,6 +162,59 @@ func _UserAPI_DeleteUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 			return err
 		}
 		reply := out.(*DeleteUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserAPI_UpdateUserStatus0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in UpdateUserStatusRequest
+		if err := ctx.Bind(&in.User); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAPIUpdateUserStatus)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserStatusResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserAPI_ResetUserPassword0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in ResetUserPasswordRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAPIResetUserPassword)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ResetUserPasswordResponse)
 		if reply == nil {
 			return nil
 		}

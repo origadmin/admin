@@ -26,10 +26,8 @@ type LoginAPIAgent interface {
 	CaptchaImage(http.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error)
 	CaptchaResource(http.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error)
 	CaptchaResources(http.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
-	CurrentMenus(http.Context, *CurrentMenusRequest) (*CurrentMenusResponse, error)
-	CurrentUser(http.Context, *CurrentUserRequest) (*CurrentUserResponse, error)
+	CurrentTokenRefresh(http.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	Login(http.Context, *LoginRequest) (*LoginResponse, error)
-	Logout(http.Context, *LogoutRequest) (*LogoutResponse, error)
 	Refresh(http.Context, *RefreshRequest) (*RefreshResponse, error)
 	Register(http.Context, *RegisterRequest) (*RegisterResponse, error)
 }
@@ -43,9 +41,7 @@ func RegisterLoginAPIAgent(ag agent.Agent, srv LoginAPIAgent) {
 	r.POST("/login", _LoginAPI_Login0_Agent_Handler(srv))
 	r.POST("/register", _LoginAPI_Register0_Agent_Handler(srv))
 	r.POST("/refresh_token", _LoginAPI_Refresh0_Agent_Handler(srv))
-	r.POST("/current/logout", _LoginAPI_Logout0_Agent_Handler(srv))
-	r.POST("/current/user", _LoginAPI_CurrentUser0_Agent_Handler(srv))
-	r.GET("/current/menus", _LoginAPI_CurrentMenus0_Agent_Handler(srv))
+	r.POST("/current/token/refresh", _LoginAPI_CurrentTokenRefresh0_Agent_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
@@ -217,71 +213,24 @@ func _LoginAPI_Refresh0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _LoginAPI_Logout0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
+func _LoginAPI_CurrentTokenRefresh0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
-		var in LogoutRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in CurrentTokenRefreshRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPILogout)
+		http.SetOperation(ctx, OperationLoginAPICurrentTokenRefresh)
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.Logout(ctx, req.(*LogoutRequest))
+			return srv.CurrentTokenRefresh(ctx, req.(*CurrentTokenRefreshRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*LogoutResponse)
-		if reply == nil {
-			return nil
-		}
-		return ctx.Result(200, reply)
-	}
-}
-
-func _LoginAPI_CurrentUser0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
-		var in CurrentUserRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationLoginAPICurrentUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.CurrentUser(ctx, req.(*CurrentUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CurrentUserResponse)
-		if reply == nil {
-			return nil
-		}
-		return ctx.Result(200, reply)
-	}
-}
-
-func _LoginAPI_CurrentMenus0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
-		var in CurrentMenusRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationLoginAPICurrentMenus)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.CurrentMenus(ctx, req.(*CurrentMenusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CurrentMenusResponse)
+		reply := out.(*CurrentTokenRefreshResponse)
 		if reply == nil {
 			return nil
 		}

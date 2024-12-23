@@ -19,7 +19,7 @@ import (
 )
 
 var ProviderSet = wire.NewSet(
-	NewHTTPServer,
+	NewHTTPServerAgent,
 )
 
 // NewGINServer new an HTTP server.

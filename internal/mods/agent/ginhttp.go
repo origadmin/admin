@@ -23,7 +23,7 @@ func NewGinServer(bootstrap *configs.Bootstrap, l log.KLogger) *gin.Engine {
 	return gin.New()
 }
 
-func NewHTTPServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) *http.Server {
+func NewHTTPServerAgentX(bootstrap *configs.Bootstrap, l log.KLogger) *http.Server {
 	ms := middleware.NewClient(bootstrap.GetMiddleware())
 	var opts = []http.ServerOption{
 		http.Middleware(ms...),

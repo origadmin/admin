@@ -2,8 +2,8 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package loader implements the functions, types, and interfaces for the module.
-package loader
+// Package securityx implements the functions, types, and interfaces for the module.
+package securityx
 
 import (
 	"github.com/origadmin/toolkits/security"
@@ -21,8 +21,8 @@ func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, err
 	return authenticator, nil
 }
 
-func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
-	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity())
+func NewAuthorizer(bootstrap *configs.Bootstrap, roleQuery security.RoleQuery) (security.Authorizer, error) {
+	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity(), casbin.WithRoleQuery(roleQuery))
 	if err != nil {
 		return nil, err
 	}

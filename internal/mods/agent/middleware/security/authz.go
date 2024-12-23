@@ -61,11 +61,6 @@ func NewAuthZ(config *configv1.Security, option *Option) gin.HandlerFunc {
 			return
 		}
 
-		//var project []string
-		//if domains := claims.GetDomain(); domains != nil {
-		//	project = domains
-		//}
-		// todo add domain project
 		log.Debugf("NewAuthZ: checking authorization for user claims %+v", userClaims)
 		allowed, err = option.Authorizer.Authorized(c, userClaims)
 		if err != nil {

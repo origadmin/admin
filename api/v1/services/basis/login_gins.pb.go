@@ -21,10 +21,8 @@ const LoginAPI_CaptchaID_OperationName = "/api.v1.services.basis.LoginAPI/Captch
 const LoginAPI_CaptchaImage_OperationName = "/api.v1.services.basis.LoginAPI/CaptchaImage"
 const LoginAPI_CaptchaResource_OperationName = "/api.v1.services.basis.LoginAPI/CaptchaResource"
 const LoginAPI_CaptchaResources_OperationName = "/api.v1.services.basis.LoginAPI/CaptchaResources"
-const LoginAPI_CurrentMenus_OperationName = "/api.v1.services.basis.LoginAPI/CurrentMenus"
-const LoginAPI_CurrentUser_OperationName = "/api.v1.services.basis.LoginAPI/CurrentUser"
+const LoginAPI_CurrentTokenRefresh_OperationName = "/api.v1.services.basis.LoginAPI/CurrentTokenRefresh"
 const LoginAPI_Login_OperationName = "/api.v1.services.basis.LoginAPI/Login"
-const LoginAPI_Logout_OperationName = "/api.v1.services.basis.LoginAPI/Logout"
 const LoginAPI_Refresh_OperationName = "/api.v1.services.basis.LoginAPI/Refresh"
 const LoginAPI_Register_OperationName = "/api.v1.services.basis.LoginAPI/Register"
 
@@ -33,10 +31,8 @@ type LoginAPIGINSServer interface {
 	CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error)
 	CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error)
 	CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
-	CurrentMenus(context.Context, *CurrentMenusRequest) (*CurrentMenusResponse, error)
-	CurrentUser(context.Context, *CurrentUserRequest) (*CurrentUserResponse, error)
+	CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
@@ -49,9 +45,7 @@ func RegisterLoginAPIGINSServer(router gins.IRouter, srv LoginAPIGINSServer) {
 	router.POST("/login", _LoginAPI_Login0_GIN_Handler(srv))
 	router.POST("/register", _LoginAPI_Register0_GIN_Handler(srv))
 	router.POST("/refresh_token", _LoginAPI_Refresh0_GIN_Handler(srv))
-	router.POST("/current/logout", _LoginAPI_Logout0_GIN_Handler(srv))
-	router.POST("/current/user", _LoginAPI_CurrentUser0_GIN_Handler(srv))
-	router.GET("/current/menus", _LoginAPI_CurrentMenus0_GIN_Handler(srv))
+	router.POST("/current/token/refresh", _LoginAPI_CurrentTokenRefresh0_GIN_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
@@ -207,10 +201,10 @@ func _LoginAPI_Refresh0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 	}
 }
 
-func _LoginAPI_Logout0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
+func _LoginAPI_CurrentTokenRefresh0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 	return func(ctx *gins.Context) {
-		var in LogoutRequest
-		if err := gins.BindBody(ctx, &in.Data); err != nil {
+		var in CurrentTokenRefreshRequest
+		if err := gins.BindBody(ctx, &in); err != nil {
 			gins.JSON(ctx, 400, err)
 			return
 		}
@@ -218,51 +212,9 @@ func _LoginAPI_Logout0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
 			gins.JSON(ctx, 400, err)
 			return
 		}
-		gins.SetOperation(ctx, LoginAPI_Logout_OperationName)
+		gins.SetOperation(ctx, LoginAPI_CurrentTokenRefresh_OperationName)
 		newCtx := gins.NewContext(ctx)
-		reply, err := srv.Logout(newCtx, &in)
-		if err != nil {
-			gins.JSON(ctx, 500, err)
-			return
-		}
-		gins.JSON(ctx, 200, reply)
-		return
-	}
-}
-
-func _LoginAPI_CurrentUser0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
-	return func(ctx *gins.Context) {
-		var in CurrentUserRequest
-		if err := gins.BindBody(ctx, &in.Data); err != nil {
-			gins.JSON(ctx, 400, err)
-			return
-		}
-		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.JSON(ctx, 400, err)
-			return
-		}
-		gins.SetOperation(ctx, LoginAPI_CurrentUser_OperationName)
-		newCtx := gins.NewContext(ctx)
-		reply, err := srv.CurrentUser(newCtx, &in)
-		if err != nil {
-			gins.JSON(ctx, 500, err)
-			return
-		}
-		gins.JSON(ctx, 200, reply)
-		return
-	}
-}
-
-func _LoginAPI_CurrentMenus0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
-	return func(ctx *gins.Context) {
-		var in CurrentMenusRequest
-		if err := gins.BindQuery(ctx, &in); err != nil {
-			gins.JSON(ctx, 400, err)
-			return
-		}
-		gins.SetOperation(ctx, LoginAPI_CurrentMenus_OperationName)
-		newCtx := gins.NewContext(ctx)
-		reply, err := srv.CurrentMenus(newCtx, &in)
+		reply, err := srv.CurrentTokenRefresh(newCtx, &in)
 		if err != nil {
 			gins.JSON(ctx, 500, err)
 			return
@@ -277,10 +229,8 @@ type LoginAPIGINSClient interface {
 	CaptchaImage(ctx context.Context, req *CaptchaImageRequest, opts ...gins.CallOption) (rsp *CaptchaImageResponse, err error)
 	CaptchaResource(ctx context.Context, req *CaptchaResourceRequest, opts ...gins.CallOption) (rsp *CaptchaResourceResponse, err error)
 	CaptchaResources(ctx context.Context, req *CaptchaResourcesRequest, opts ...gins.CallOption) (rsp *CaptchaResourcesResponse, err error)
-	CurrentMenus(ctx context.Context, req *CurrentMenusRequest, opts ...gins.CallOption) (rsp *CurrentMenusResponse, err error)
-	CurrentUser(ctx context.Context, req *CurrentUserRequest, opts ...gins.CallOption) (rsp *CurrentUserResponse, err error)
+	CurrentTokenRefresh(ctx context.Context, req *CurrentTokenRefreshRequest, opts ...gins.CallOption) (rsp *CurrentTokenRefreshResponse, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...gins.CallOption) (rsp *LoginResponse, err error)
-	Logout(ctx context.Context, req *LogoutRequest, opts ...gins.CallOption) (rsp *LogoutResponse, err error)
 	Refresh(ctx context.Context, req *RefreshRequest, opts ...gins.CallOption) (rsp *RefreshResponse, err error)
 	Register(ctx context.Context, req *RegisterRequest, opts ...gins.CallOption) (rsp *RegisterResponse, err error)
 }
@@ -345,26 +295,13 @@ func (c *LoginAPIGINSClientImpl) CaptchaResources(ctx context.Context, in *Captc
 	return &out, nil
 }
 
-func (c *LoginAPIGINSClientImpl) CurrentMenus(ctx context.Context, in *CurrentMenusRequest, opts ...gins.CallOption) (*CurrentMenusResponse, error) {
-	var out CurrentMenusResponse
-	pattern := "/current/menus"
-	path := gins.EncodeURL(pattern, in, true)
-	opts = append(opts, gins.Operation(LoginAPI_CurrentMenus_OperationName))
-	opts = append(opts, gins.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *LoginAPIGINSClientImpl) CurrentUser(ctx context.Context, in *CurrentUserRequest, opts ...gins.CallOption) (*CurrentUserResponse, error) {
-	var out CurrentUserResponse
-	pattern := "/current/user"
+func (c *LoginAPIGINSClientImpl) CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...gins.CallOption) (*CurrentTokenRefreshResponse, error) {
+	var out CurrentTokenRefreshResponse
+	pattern := "/current/token/refresh"
 	path := gins.EncodeURL(pattern, in, false)
-	opts = append(opts, gins.Operation(LoginAPI_CurrentUser_OperationName))
+	opts = append(opts, gins.Operation(LoginAPI_CurrentTokenRefresh_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -376,19 +313,6 @@ func (c *LoginAPIGINSClientImpl) Login(ctx context.Context, in *LoginRequest, op
 	pattern := "/login"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Login_OperationName))
-	opts = append(opts, gins.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *LoginAPIGINSClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...gins.CallOption) (*LogoutResponse, error) {
-	var out LogoutResponse
-	pattern := "/current/logout"
-	path := gins.EncodeURL(pattern, in, false)
-	opts = append(opts, gins.Operation(LoginAPI_Logout_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {

@@ -23,10 +23,8 @@ const OperationLoginAPICaptchaID = "/api.v1.services.basis.LoginAPI/CaptchaID"
 const OperationLoginAPICaptchaImage = "/api.v1.services.basis.LoginAPI/CaptchaImage"
 const OperationLoginAPICaptchaResource = "/api.v1.services.basis.LoginAPI/CaptchaResource"
 const OperationLoginAPICaptchaResources = "/api.v1.services.basis.LoginAPI/CaptchaResources"
-const OperationLoginAPICurrentMenus = "/api.v1.services.basis.LoginAPI/CurrentMenus"
-const OperationLoginAPICurrentUser = "/api.v1.services.basis.LoginAPI/CurrentUser"
+const OperationLoginAPICurrentTokenRefresh = "/api.v1.services.basis.LoginAPI/CurrentTokenRefresh"
 const OperationLoginAPILogin = "/api.v1.services.basis.LoginAPI/Login"
-const OperationLoginAPILogout = "/api.v1.services.basis.LoginAPI/Logout"
 const OperationLoginAPIRefresh = "/api.v1.services.basis.LoginAPI/Refresh"
 const OperationLoginAPIRegister = "/api.v1.services.basis.LoginAPI/Register"
 
@@ -35,10 +33,8 @@ type LoginAPIHTTPServer interface {
 	CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error)
 	CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error)
 	CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
-	CurrentMenus(context.Context, *CurrentMenusRequest) (*CurrentMenusResponse, error)
-	CurrentUser(context.Context, *CurrentUserRequest) (*CurrentUserResponse, error)
+	CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 }
@@ -52,9 +48,7 @@ func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
 	r.POST("/login", _LoginAPI_Login0_HTTP_Handler(srv))
 	r.POST("/register", _LoginAPI_Register0_HTTP_Handler(srv))
 	r.POST("/refresh_token", _LoginAPI_Refresh0_HTTP_Handler(srv))
-	r.POST("/current/logout", _LoginAPI_Logout0_HTTP_Handler(srv))
-	r.POST("/current/user", _LoginAPI_CurrentUser0_HTTP_Handler(srv))
-	r.GET("/current/menus", _LoginAPI_CurrentMenus0_HTTP_Handler(srv))
+	r.POST("/current/token/refresh", _LoginAPI_CurrentTokenRefresh0_HTTP_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
@@ -205,65 +199,24 @@ func _LoginAPI_Refresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Conte
 	}
 }
 
-func _LoginAPI_Logout0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
+func _LoginAPI_CurrentTokenRefresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in LogoutRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in CurrentTokenRefreshRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPILogout)
+		http.SetOperation(ctx, OperationLoginAPICurrentTokenRefresh)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Logout(ctx, req.(*LogoutRequest))
+			return srv.CurrentTokenRefresh(ctx, req.(*CurrentTokenRefreshRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*LogoutResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _LoginAPI_CurrentUser0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CurrentUserRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationLoginAPICurrentUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CurrentUser(ctx, req.(*CurrentUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CurrentUserResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _LoginAPI_CurrentMenus0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CurrentMenusRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationLoginAPICurrentMenus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CurrentMenus(ctx, req.(*CurrentMenusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CurrentMenusResponse)
+		reply := out.(*CurrentTokenRefreshResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -273,10 +226,8 @@ type LoginAPIHTTPClient interface {
 	CaptchaImage(ctx context.Context, req *CaptchaImageRequest, opts ...http.CallOption) (rsp *CaptchaImageResponse, err error)
 	CaptchaResource(ctx context.Context, req *CaptchaResourceRequest, opts ...http.CallOption) (rsp *CaptchaResourceResponse, err error)
 	CaptchaResources(ctx context.Context, req *CaptchaResourcesRequest, opts ...http.CallOption) (rsp *CaptchaResourcesResponse, err error)
-	CurrentMenus(ctx context.Context, req *CurrentMenusRequest, opts ...http.CallOption) (rsp *CurrentMenusResponse, err error)
-	CurrentUser(ctx context.Context, req *CurrentUserRequest, opts ...http.CallOption) (rsp *CurrentUserResponse, err error)
+	CurrentTokenRefresh(ctx context.Context, req *CurrentTokenRefreshRequest, opts ...http.CallOption) (rsp *CurrentTokenRefreshResponse, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
-	Logout(ctx context.Context, req *LogoutRequest, opts ...http.CallOption) (rsp *LogoutResponse, err error)
 	Refresh(ctx context.Context, req *RefreshRequest, opts ...http.CallOption) (rsp *RefreshResponse, err error)
 	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterResponse, err error)
 }
@@ -341,26 +292,13 @@ func (c *LoginAPIHTTPClientImpl) CaptchaResources(ctx context.Context, in *Captc
 	return &out, nil
 }
 
-func (c *LoginAPIHTTPClientImpl) CurrentMenus(ctx context.Context, in *CurrentMenusRequest, opts ...http.CallOption) (*CurrentMenusResponse, error) {
-	var out CurrentMenusResponse
-	pattern := "/current/menus"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationLoginAPICurrentMenus))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *LoginAPIHTTPClientImpl) CurrentUser(ctx context.Context, in *CurrentUserRequest, opts ...http.CallOption) (*CurrentUserResponse, error) {
-	var out CurrentUserResponse
-	pattern := "/current/user"
+func (c *LoginAPIHTTPClientImpl) CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...http.CallOption) (*CurrentTokenRefreshResponse, error) {
+	var out CurrentTokenRefreshResponse
+	pattern := "/current/token/refresh"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationLoginAPICurrentUser))
+	opts = append(opts, http.Operation(OperationLoginAPICurrentTokenRefresh))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -372,19 +310,6 @@ func (c *LoginAPIHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, op
 	pattern := "/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPILogin))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-func (c *LoginAPIHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*LogoutResponse, error) {
-	var out LogoutResponse
-	pattern := "/current/logout"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationLoginAPILogout))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {

@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package api.v1.services.basis;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "security/jwt/v1/token.proto";
+import "validate/validate.proto";
+
+option go_package = "v1/services/basis;basis";
+option java_multiple_files = true;
+option java_outer_classname = "APIV1ServicesBasisProto";
+option java_package = "com.origadmin.api.v1.admin.services.basis";
+
+// The current service definition.
+service CurrentAPI {
+  rpc CurrentLogout(CurrentLogoutRequest) returns (CurrentLogoutResponse) {
+    option (google.api.http) = {
+      post: "/current/logout"
+      body: "data"
+    };
+  }
+
+  // UpdateCurrentUserPassword The user changes the password
+  rpc UpdateCurrentUserPassword(UpdateCurrentUserPasswordRequest) returns (UpdateCurrentUserPasswordResponse) {
+    option (google.api.http) = {
+      put: "/current/user/password"
+      body: "data"
+    };
+  }
+  // UpdateCurrentUser Update the current user information
+  rpc UpdateCurrentUser(UpdateCurrentUserRequest) returns (UpdateCurrentUserResponse) {
+    option (google.api.http) = {
+      put: "/current/user"
+      body: "data"
+    };
+  }
+
+  rpc ListCurrentMenus(ListCurrentMenusRequest) returns (ListCurrentMenusResponse) {
+    option (google.api.http) = {get: "/current/menus"};
+  }
+
+  // UpdateCurrentRoles Switch the user's current role
+  rpc UpdateCurrentRoles(UpdateCurrentRolesRequest) returns (UpdateCurrentRolesResponse) {
+    option (google.api.http) = {
+      put: "/current/roles"
+      body: "data"
+    };
+  }
+
+  // UpdateCurrentSetting User settings are saved
+  rpc UpdateCurrentSetting(UpdateCurrentSettingRequest) returns (UpdateCurrentSettingResponse) {
+    option (google.api.http) = {
+      put: "/current/setting"
+      body: "data"
+    };
+  }
+}
+
+message UpdateCurrentSettingRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdateCurrentSettingResponse {}
+
+message UpdateCurrentRolesRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdateCurrentRolesResponse {}
+
+message ListCurrentMenusRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message ListCurrentMenusResponse {}
+
+message UpdateCurrentUserPasswordRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdateCurrentUserPasswordResponse {}
+
+message CurrentPasswordRestRequest {
+  string id = 1 [
+    json_name = "id",
+    (validate.rules).string = {min_len: 1}
+  ];
+}
+
+message CurrentPasswordRestResponse {}
+
+message UpdateCurrentUserRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdateCurrentUserResponse {}
+
+message CurrentLogoutRequest {
+  google.protobuf.Any data = 2 [json_name = "data"];
+}
+
+message CurrentLogoutResponse {
+  bool success = 1;
+}

@@ -19,11 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserAPI_ListUsers_FullMethodName  = "/api.v1.services.system.UserAPI/ListUsers"
-	UserAPI_GetUser_FullMethodName    = "/api.v1.services.system.UserAPI/GetUser"
-	UserAPI_CreateUser_FullMethodName = "/api.v1.services.system.UserAPI/CreateUser"
-	UserAPI_UpdateUser_FullMethodName = "/api.v1.services.system.UserAPI/UpdateUser"
-	UserAPI_DeleteUser_FullMethodName = "/api.v1.services.system.UserAPI/DeleteUser"
+	UserAPI_ListUsers_FullMethodName         = "/api.v1.services.system.UserAPI/ListUsers"
+	UserAPI_GetUser_FullMethodName           = "/api.v1.services.system.UserAPI/GetUser"
+	UserAPI_CreateUser_FullMethodName        = "/api.v1.services.system.UserAPI/CreateUser"
+	UserAPI_UpdateUser_FullMethodName        = "/api.v1.services.system.UserAPI/UpdateUser"
+	UserAPI_DeleteUser_FullMethodName        = "/api.v1.services.system.UserAPI/DeleteUser"
+	UserAPI_UpdateUserStatus_FullMethodName  = "/api.v1.services.system.UserAPI/UpdateUserStatus"
+	UserAPI_ResetUserPassword_FullMethodName = "/api.v1.services.system.UserAPI/ResetUserPassword"
 )
 
 // UserAPIClient is the client API for UserAPI service.
@@ -37,6 +39,10 @@ type UserAPIClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	// UpdateUserStatus Update the status of the user information
+	UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*UpdateUserStatusResponse, error)
+	// ResetUserPassword reset the user s password
+	ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...grpc.CallOption) (*ResetUserPasswordResponse, error)
 }
 
 type userAPIClient struct {
@@ -97,6 +103,26 @@ func (c *userAPIClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, o
 	return out, nil
 }
 
+func (c *userAPIClient) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*UpdateUserStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateUserStatusResponse)
+	err := c.cc.Invoke(ctx, UserAPI_UpdateUserStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAPIClient) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...grpc.CallOption) (*ResetUserPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResetUserPasswordResponse)
+	err := c.cc.Invoke(ctx, UserAPI_ResetUserPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserAPIServer is the server API for UserAPI service.
 // All implementations must embed UnimplementedUserAPIServer
 // for forward compatibility.
@@ -108,6 +134,10 @@ type UserAPIServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
+	// UpdateUserStatus Update the status of the user information
+	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
+	// ResetUserPassword reset the user s password
+	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	mustEmbedUnimplementedUserAPIServer()
 }
 
@@ -132,6 +162,12 @@ func (UnimplementedUserAPIServer) UpdateUser(context.Context, *UpdateUserRequest
 }
 func (UnimplementedUserAPIServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (UnimplementedUserAPIServer) UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserStatus not implemented")
+}
+func (UnimplementedUserAPIServer) ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetUserPassword not implemented")
 }
 func (UnimplementedUserAPIServer) mustEmbedUnimplementedUserAPIServer() {}
 func (UnimplementedUserAPIServer) testEmbeddedByValue()                 {}
@@ -244,6 +280,42 @@ func _UserAPI_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserAPI_UpdateUserStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAPIServer).UpdateUserStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserAPI_UpdateUserStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAPIServer).UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAPI_ResetUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetUserPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAPIServer).ResetUserPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserAPI_ResetUserPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAPIServer).ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserAPI_ServiceDesc is the grpc.ServiceDesc for UserAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -270,6 +342,14 @@ var UserAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _UserAPI_DeleteUser_Handler,
+		},
+		{
+			MethodName: "UpdateUserStatus",
+			Handler:    _UserAPI_UpdateUserStatus_Handler,
+		},
+		{
+			MethodName: "ResetUserPassword",
+			Handler:    _UserAPI_ResetUserPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

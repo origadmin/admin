@@ -23,14 +23,20 @@ const OperationUserAPICreateUser = "/api.v1.services.system.UserAPI/CreateUser"
 const OperationUserAPIDeleteUser = "/api.v1.services.system.UserAPI/DeleteUser"
 const OperationUserAPIGetUser = "/api.v1.services.system.UserAPI/GetUser"
 const OperationUserAPIListUsers = "/api.v1.services.system.UserAPI/ListUsers"
+const OperationUserAPIResetUserPassword = "/api.v1.services.system.UserAPI/ResetUserPassword"
 const OperationUserAPIUpdateUser = "/api.v1.services.system.UserAPI/UpdateUser"
+const OperationUserAPIUpdateUserStatus = "/api.v1.services.system.UserAPI/UpdateUserStatus"
 
 type UserAPIHTTPServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	// ResetUserPassword ResetUserPassword reset the user s password
+	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// UpdateUserStatus UpdateUserStatus Update the status of the user information
+	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 
 func RegisterUserAPIHTTPServer(s *http.Server, srv UserAPIHTTPServer) {
@@ -40,6 +46,8 @@ func RegisterUserAPIHTTPServer(s *http.Server, srv UserAPIHTTPServer) {
 	r.POST("/sys/users", _UserAPI_CreateUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}", _UserAPI_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/sys/users/{id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
+	r.PUT("/sys/users/{user.id}/status", _UserAPI_UpdateUserStatus0_HTTP_Handler(srv))
+	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTP_Handler(srv))
 }
 
 func _UserAPI_ListUsers0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
@@ -152,12 +160,61 @@ func _UserAPI_DeleteUser0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Cont
 	}
 }
 
+func _UserAPI_UpdateUserStatus0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserStatusRequest
+		if err := ctx.Bind(&in.User); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAPIUpdateUserStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserStatusResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserAPI_ResetUserPassword0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ResetUserPasswordRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAPIResetUserPassword)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ResetUserPasswordResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UserAPIHTTPClient interface {
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserResponse, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserResponse, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
 	ListUsers(ctx context.Context, req *ListUsersRequest, opts ...http.CallOption) (rsp *ListUsersResponse, err error)
+	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *ResetUserPasswordResponse, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserResponse, err error)
+	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *UpdateUserStatusResponse, err error)
 }
 
 type UserAPIHTTPClientImpl struct {
@@ -220,11 +277,37 @@ func (c *UserAPIHTTPClientImpl) ListUsers(ctx context.Context, in *ListUsersRequ
 	return &out, nil
 }
 
+func (c *UserAPIHTTPClientImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...http.CallOption) (*ResetUserPasswordResponse, error) {
+	var out ResetUserPasswordResponse
+	pattern := "/sys/user/password/reset"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserAPIResetUserPassword))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *UserAPIHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UpdateUserResponse, error) {
 	var out UpdateUserResponse
 	pattern := "/sys/users/{user.id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserAPIUpdateUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserAPIHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...http.CallOption) (*UpdateUserStatusResponse, error) {
+	var out UpdateUserStatusResponse
+	pattern := "/sys/users/{user.id}/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserAPIUpdateUserStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
 	if err != nil {

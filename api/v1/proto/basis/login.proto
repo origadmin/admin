@@ -56,22 +56,17 @@ service LoginAPI {
     };
   }
 
-  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+  rpc CurrentTokenRefresh(CurrentTokenRefreshRequest) returns (CurrentTokenRefreshResponse) {
     option (google.api.http) = {
-      post: "/current/logout"
-      body: "data"
+      post: "/current/token/refresh"
+      body: "*"
     };
-  }
-  rpc CurrentUser(CurrentUserRequest) returns (CurrentUserResponse) {
-    option (google.api.http) = {
-      post: "/current/user"
-      body: "data"
-    };
-  }
-  rpc CurrentMenus(CurrentMenusRequest) returns (CurrentMenusResponse) {
-    option (google.api.http) = {get: "/current/menus"};
   }
 }
+
+message CurrentTokenRefreshRequest {}
+
+message CurrentTokenRefreshResponse {}
 
 message LoginRequest {
   message Data {
@@ -97,14 +92,6 @@ message LoginRequest {
 
 message LoginResponse {
   security.jwt.v1.Token token = 1;
-}
-
-message LogoutRequest {
-  google.protobuf.Any data = 2 [json_name = "data"];
-}
-
-message LogoutResponse {
-  bool success = 1;
 }
 
 message CurrentUserRequestQuery {

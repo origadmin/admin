@@ -32,8 +32,8 @@ type HTTPRegistrar interface {
 	HTTP(server *service.HTTPServer)
 }
 
-// NewHTTPServer new an HTTP server.
-func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.KLogger) *service.HTTPServer {
+// NewHTTPServerAgent new an HTTP server.
+func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no serviceConfig")
@@ -43,15 +43,19 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	ms := []middleware.KMiddleware{
 		recovery.Recovery(),
 	}
-	//ms := middleware.NewClient(bootstrap.GetMiddleware())
+	authenticator, err := securityx.NewAuthenticator(bootstrap)
+	if err != nil {
+		panic(err)
+	}
+	authorizer, err := securityx.NewAuthorizer(bootstrap)
+	if err != nil {
+		panic(err)
+	}
 
 	options := []msecurity.OptionSetting{
 		msecurity.WithAuthorizer(authorizer),
 		msecurity.WithAuthenticator(authenticator),
-		//msecurity.WithSkipper(paths...),
 		func(option *msecurity.Option) {
-			//option.Authenticator = authenticator
-			//option.Authorizer = authorizer
 			option.Skipper = func(path string) bool {
 				log.Debugf("Checking if path '%s' should be skipped", path)
 				for _, p := range paths {
@@ -100,12 +104,9 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 	ms = append(ms, n, z)
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
+		servicehttp.WithServerOptions(http.ErrorEncoder(resp.ResponseErrorEncoder)),
 		servicehttp.WithMiddlewares(ms...),
 		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
-		servicehttp.WithServerOptions(
-			http.ErrorEncoder(resp.ResponseErrorEncoder),
-			http.ResponseEncoder(resp.ResponseEncoder),
-		),
 	))
 	if err != nil {
 		panic(err)

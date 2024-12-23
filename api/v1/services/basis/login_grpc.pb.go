@@ -19,16 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LoginAPI_CaptchaID_FullMethodName        = "/api.v1.services.basis.LoginAPI/CaptchaID"
-	LoginAPI_CaptchaImage_FullMethodName     = "/api.v1.services.basis.LoginAPI/CaptchaImage"
-	LoginAPI_CaptchaResource_FullMethodName  = "/api.v1.services.basis.LoginAPI/CaptchaResource"
-	LoginAPI_CaptchaResources_FullMethodName = "/api.v1.services.basis.LoginAPI/CaptchaResources"
-	LoginAPI_Login_FullMethodName            = "/api.v1.services.basis.LoginAPI/Login"
-	LoginAPI_Register_FullMethodName         = "/api.v1.services.basis.LoginAPI/Register"
-	LoginAPI_Refresh_FullMethodName          = "/api.v1.services.basis.LoginAPI/Refresh"
-	LoginAPI_Logout_FullMethodName           = "/api.v1.services.basis.LoginAPI/Logout"
-	LoginAPI_CurrentUser_FullMethodName      = "/api.v1.services.basis.LoginAPI/CurrentUser"
-	LoginAPI_CurrentMenus_FullMethodName     = "/api.v1.services.basis.LoginAPI/CurrentMenus"
+	LoginAPI_CaptchaID_FullMethodName           = "/api.v1.services.basis.LoginAPI/CaptchaID"
+	LoginAPI_CaptchaImage_FullMethodName        = "/api.v1.services.basis.LoginAPI/CaptchaImage"
+	LoginAPI_CaptchaResource_FullMethodName     = "/api.v1.services.basis.LoginAPI/CaptchaResource"
+	LoginAPI_CaptchaResources_FullMethodName    = "/api.v1.services.basis.LoginAPI/CaptchaResources"
+	LoginAPI_Login_FullMethodName               = "/api.v1.services.basis.LoginAPI/Login"
+	LoginAPI_Register_FullMethodName            = "/api.v1.services.basis.LoginAPI/Register"
+	LoginAPI_Refresh_FullMethodName             = "/api.v1.services.basis.LoginAPI/Refresh"
+	LoginAPI_CurrentTokenRefresh_FullMethodName = "/api.v1.services.basis.LoginAPI/CurrentTokenRefresh"
 )
 
 // LoginAPIClient is the client API for LoginAPI service.
@@ -44,9 +42,7 @@ type LoginAPIClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error)
-	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
-	CurrentUser(ctx context.Context, in *CurrentUserRequest, opts ...grpc.CallOption) (*CurrentUserResponse, error)
-	CurrentMenus(ctx context.Context, in *CurrentMenusRequest, opts ...grpc.CallOption) (*CurrentMenusResponse, error)
+	CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...grpc.CallOption) (*CurrentTokenRefreshResponse, error)
 }
 
 type loginAPIClient struct {
@@ -127,30 +123,10 @@ func (c *loginAPIClient) Refresh(ctx context.Context, in *RefreshRequest, opts .
 	return out, nil
 }
 
-func (c *loginAPIClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+func (c *loginAPIClient) CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...grpc.CallOption) (*CurrentTokenRefreshResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LogoutResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_Logout_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *loginAPIClient) CurrentUser(ctx context.Context, in *CurrentUserRequest, opts ...grpc.CallOption) (*CurrentUserResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CurrentUserResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_CurrentUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *loginAPIClient) CurrentMenus(ctx context.Context, in *CurrentMenusRequest, opts ...grpc.CallOption) (*CurrentMenusResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CurrentMenusResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_CurrentMenus_FullMethodName, in, out, cOpts...)
+	out := new(CurrentTokenRefreshResponse)
+	err := c.cc.Invoke(ctx, LoginAPI_CurrentTokenRefresh_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -170,9 +146,7 @@ type LoginAPIServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
-	CurrentUser(context.Context, *CurrentUserRequest) (*CurrentUserResponse, error)
-	CurrentMenus(context.Context, *CurrentMenusRequest) (*CurrentMenusResponse, error)
+	CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	mustEmbedUnimplementedLoginAPIServer()
 }
 
@@ -204,14 +178,8 @@ func (UnimplementedLoginAPIServer) Register(context.Context, *RegisterRequest) (
 func (UnimplementedLoginAPIServer) Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
-func (UnimplementedLoginAPIServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
-}
-func (UnimplementedLoginAPIServer) CurrentUser(context.Context, *CurrentUserRequest) (*CurrentUserResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CurrentUser not implemented")
-}
-func (UnimplementedLoginAPIServer) CurrentMenus(context.Context, *CurrentMenusRequest) (*CurrentMenusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CurrentMenus not implemented")
+func (UnimplementedLoginAPIServer) CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CurrentTokenRefresh not implemented")
 }
 func (UnimplementedLoginAPIServer) mustEmbedUnimplementedLoginAPIServer() {}
 func (UnimplementedLoginAPIServer) testEmbeddedByValue()                  {}
@@ -360,56 +328,20 @@ func _LoginAPI_Refresh_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogoutRequest)
+func _LoginAPI_CurrentTokenRefresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CurrentTokenRefreshRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).Logout(ctx, in)
+		return srv.(LoginAPIServer).CurrentTokenRefresh(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_Logout_FullMethodName,
+		FullMethod: LoginAPI_CurrentTokenRefresh_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).Logout(ctx, req.(*LogoutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _LoginAPI_CurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CurrentUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LoginAPIServer).CurrentUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: LoginAPI_CurrentUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).CurrentUser(ctx, req.(*CurrentUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _LoginAPI_CurrentMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CurrentMenusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LoginAPIServer).CurrentMenus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: LoginAPI_CurrentMenus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).CurrentMenus(ctx, req.(*CurrentMenusRequest))
+		return srv.(LoginAPIServer).CurrentTokenRefresh(ctx, req.(*CurrentTokenRefreshRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -450,16 +382,8 @@ var LoginAPI_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _LoginAPI_Refresh_Handler,
 		},
 		{
-			MethodName: "Logout",
-			Handler:    _LoginAPI_Logout_Handler,
-		},
-		{
-			MethodName: "CurrentUser",
-			Handler:    _LoginAPI_CurrentUser_Handler,
-		},
-		{
-			MethodName: "CurrentMenus",
-			Handler:    _LoginAPI_CurrentMenus_Handler,
+			MethodName: "CurrentTokenRefresh",
+			Handler:    _LoginAPI_CurrentTokenRefresh_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

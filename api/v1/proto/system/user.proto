@@ -36,7 +36,32 @@ service UserAPI {
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {delete: "/sys/users/{id}"};
   }
+  // UpdateUserStatus Update the status of the user information
+  rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
+    option (google.api.http) = {
+      put: "/sys/users/{user.id}/status"
+      body: "user"
+    };
+  }
+
+  // ResetUserPassword reset the user s password
+  rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
+    option (google.api.http) = {
+      post: "/sys/user/password/reset"
+      body: "data"
+    };
+  }
 }
+
+message UpdateUserStatusRequest {
+  User user = 1 [json_name = "user"];
+}
+
+message UpdateUserStatusResponse {}
+
+message ResetUserPasswordRequest {}
+
+message ResetUserPasswordResponse {}
 
 message ListUsersRequest {
   // The parent resource id, for example, "shelves/shelf1".

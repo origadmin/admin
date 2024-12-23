@@ -22,6 +22,10 @@ import (
 	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
+const (
+	SigningKey = "%VH_C!Vpa$_aK2kOynB&q+x=4$27&Ios"
+)
+
 func DefaultBootstrap() *configs.Bootstrap {
 
 	return &configs.Bootstrap{
@@ -92,7 +96,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 				Type:     "jwt",
 				Jwt: &configv1.AuthNConfig_JWTConfig{
 					Algorithm:     "HS512",
-					SigningKey:    "",
+					SigningKey:    SigningKey,
 					OldSigningKey: "",
 					ExpireTime:    0, // use default
 					RefreshTime:   0, // use default
@@ -298,7 +302,7 @@ func DefaultServiceMiddleware() *middlewarev1.Middleware {
 			Enabled: false,
 			Config: &sjwtv1.Config{
 				SigningMethod:        "HS512",
-				Key:                  "",
+				Key:                  SigningKey,
 				Key2:                 "can empty next version fixed",
 				AccessTokenLifetime:  int64(15 * time.Minute),
 				RefreshTokenLifetime: int64(3 * 24 * time.Hour),
