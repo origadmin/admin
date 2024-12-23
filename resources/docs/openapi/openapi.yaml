@@ -1281,19 +1281,25 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Menu'
                     description: Children holds the value of the children edge.
+                parent:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Parent holds the value of the parent edge.
                 resources:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.MenuResource'
-                    description: |-
-                        Parent holds the value of the parent edge.
-                          Menu parent = 2;
-                         Resources holds the value of the resources edge.
+                    description: Resources holds the value of the resources edge.
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
+                role_menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
+                    description: RoleMenu holds the value of the role_menu edge.
             description: MenuEdges holds the relations/edges for other nodes in the graph.
         api.v1.services.system.MenuResource:
             type: object
@@ -1387,7 +1393,56 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.User'
                     description: Users holds the value of the users edge.
+                role_menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
+                    description: RoleMenu holds the value of the role_menu edge.
+                user_roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
+                    description: UserRole holds the value of the user_role edge.
             description: RoleEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.RoleMenu:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                role_id:
+                    type: string
+                    description: RoleID holds the value of the "role_id" field.
+                menu_id:
+                    type: string
+                    description: MenuID holds the value of the "menu_id" field.
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.RoleMenuEdges'
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the RoleMenuQuery when eager-loading is set.
+            description: RoleMenu is the model entity for the RoleMenu schema.
+        api.v1.services.system.RoleMenuEdges:
+            type: object
+            properties:
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Role holds the value of the role edge.
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menu holds the value of the menu edge.
+            description: RoleMenuEdges holds the relations/edges for other nodes in the graph.
         api.v1.services.system.UpdateMenuResponse:
             type: object
             properties:
@@ -1464,7 +1519,54 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
+                user_roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
+                    description: UserRole holds the value of the user_role edge.
             description: UserEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.UserRole:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                user_id:
+                    type: string
+                    description: UserID holds the value of the "user_id" field.
+                role_id:
+                    type: string
+                    description: RoleID holds the value of the "role_id" field.
+                role_name:
+                    type: string
+                    description: RoleName holds the value of the "role_name" field.
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.UserRoleEdges'
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the UserRoleQuery when eager-loading is set.
+            description: UserRole is the model entity for the UserRole schema.
+        api.v1.services.system.UserRoleEdges:
+            type: object
+            properties:
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.User'
+                    description: User holds the value of the user edge.
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Role holds the value of the role edge.
+            description: UserRoleEdges holds the relations/edges for other nodes in the graph.
         google.protobuf.Any:
             type: object
             properties:

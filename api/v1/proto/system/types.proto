@@ -52,13 +52,13 @@ message MenuEdges {
   // Children holds the value of the children edge.
   repeated Menu children = 1;
   // Parent holds the value of the parent edge.
-//  Menu parent = 2;
+  Menu parent = 2;
   // Resources holds the value of the resources edge.
   repeated MenuResource resources = 3;
   // Roles holds the value of the roles edge.
   repeated Role roles = 4;
   // RoleMenu holds the value of the role_menu edge.
-//  repeated RoleMenu role_menus = 5;
+  repeated RoleMenu role_menus = 5;
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 6;
@@ -95,9 +95,9 @@ message RoleEdges {
   // Users holds the value of the users edge.
   repeated User users = 2;
   // RoleMenu holds the value of the role_menu edge.
-//  repeated RoleMenu role_menus = 3;
+  repeated RoleMenu role_menus = 3;
   // UserRole holds the value of the user_role edge.
-//  repeated UserRole user_roles = 4;
+  repeated UserRole user_roles = 4;
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 5;
@@ -140,7 +140,7 @@ message UserEdges {
   // Roles holds the value of the roles edge.
   repeated Role roles = 1;
   // UserRole holds the value of the user_role edge.
-//  repeated UserRole user_roles = 2;
+  repeated UserRole user_roles = 2;
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 3;
