@@ -12,7 +12,6 @@ import (
 
 type adapter struct {
 	typedPolicies map[string][][]string
-	src           [][]string
 }
 
 func (a *adapter) LoadPolicy(model model.Model) error {
@@ -114,5 +113,10 @@ func (a *adapter) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int,
 func NewAdapter() persist.Adapter {
 	return &adapter{
 		typedPolicies: make(map[string][][]string),
+	}
+}
+func NewAdapterWithPolicies(policies map[string][][]string) persist.Adapter {
+	return &adapter{
+		typedPolicies: policies,
 	}
 }

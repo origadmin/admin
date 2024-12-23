@@ -8,6 +8,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
+	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/runtime/log"
 
@@ -21,8 +22,24 @@ import (
 type Authorizer struct {
 	model        model.Model
 	policy       persist.Adapter
+	watcher      persist.Watcher
 	enforcer     *casbin.SyncedEnforcer
 	wildcardItem string
+}
+
+func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any, roles map[string]any) error {
+	p := maps.Transform(policies, func(k string, v any) (string, [][]string, bool) {
+		if vv, ok := v.([][]string); ok {
+			return k, vv, ok
+		}
+		return k, [][]string{}, false
+	})
+	auth.policy = NewAdapterWithPolicies(p)
+	err := auth.watcher.Update()
+	if err != nil {
+		return errors.Wrap(err, "failed to load policy")
+	}
+	return nil
 }
 
 func (auth *Authorizer) Authorized(ctx context.Context, claims security.UserClaims) (bool, error) {
@@ -54,15 +71,19 @@ func (auth *Authorizer) ApplyDefaults() error {
 	}
 	if auth.model == nil {
 		auth.model, _ = model.NewModelFromString(DefaultModel())
-		//if err != nil {
-		//	return err
-		//}
+	}
+	if auth.watcher == nil {
+		auth.watcher = NewWatcher()
 	}
 	if auth.enforcer == nil {
 		auth.enforcer, _ = casbin.NewSyncedEnforcer(auth.model, auth.policy)
-		//if err!= nil {
-		//	return err
-		//}
+	}
+	err := auth.enforcer.SetWatcher(auth.watcher)
+	if err != nil {
+		return err
+	}
+	if err := auth.enforcer.LoadPolicy(); err != nil {
+		return err
 	}
 	return nil
 }

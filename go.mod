@@ -22,17 +22,17 @@ require (
 	github.com/origadmin/contrib/database v0.0.18
 	github.com/origadmin/contrib/replacer v0.0.18
 	github.com/origadmin/contrib/transport/gins v0.0.18
-	github.com/origadmin/runtime v0.1.28
+	github.com/origadmin/runtime v0.1.29
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.1.22
-	github.com/origadmin/toolkits/codec v0.0.52
-	github.com/origadmin/toolkits/errors v0.0.34
+	github.com/origadmin/toolkits v0.1.24
+	github.com/origadmin/toolkits/codec v0.0.53
+	github.com/origadmin/toolkits/errors v0.0.36
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/net v0.33.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20241219192143-6b3ec007d9bb
+	google.golang.org/genproto/googleapis/api v0.0.0-20241223144023-3abc09e42ca8
 	google.golang.org/grpc v1.69.2
-	google.golang.org/protobuf v1.36.0
+	google.golang.org/protobuf v1.36.1
 )
 
 require (
@@ -141,10 +141,10 @@ require (
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241219192143-6b3ec007d9bb // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241223144023-3abc09e42ca8 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/gc/v3 v3.0.0-20241213165251-3bc300f6d0c9 // indirect
+	modernc.org/gc/v3 v3.0.0-20241223112719-96e2e1e4408d // indirect
 	modernc.org/libc v1.61.5 // indirect
 	modernc.org/mathutil v1.7.0 // indirect
 	modernc.org/memory v1.8.0 // indirect

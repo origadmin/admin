@@ -52,3 +52,9 @@ func WithPolicyAdapter(policy persist.Adapter) Setting {
 		s.policy = policy
 	}
 }
+
+func WithWatcher(watcher persist.Watcher) Setting {
+	return func(s *Authorizer) {
+		s.watcher = watcher
+	}
+}

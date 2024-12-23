@@ -6,6 +6,7 @@
 package securityx
 
 import (
+	"github.com/casbin/casbin/v2/persist"
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/contrib/security/authn/jwt"
@@ -21,8 +22,11 @@ func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, err
 	return authenticator, nil
 }
 
-func NewAuthorizer(bootstrap *configs.Bootstrap, roleQuery security.RoleQuery) (security.Authorizer, error) {
-	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity(), casbin.WithRoleQuery(roleQuery))
+func NewAuthorizer(bootstrap *configs.Bootstrap, watcher persist.Watcher) (security.Authorizer, error) {
+	if watcher != nil {
+
+	}
+	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity(), casbin.WithWatcher(watcher))
 	if err != nil {
 		return nil, err
 	}

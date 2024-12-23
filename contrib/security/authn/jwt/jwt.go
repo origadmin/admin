@@ -31,8 +31,10 @@ const (
 // Authenticator is a struct that implements the Authenticator interface.
 type Authenticator struct {
 	*Option
-	// cache is the token cache service.
+	//// cache is the token cache service.
 	cache security.TokenCacheService
+	//issuer   string
+	//audience []string
 }
 
 func (obj *Authenticator) CreateIdentityClaims(_ context.Context, id string, refresh bool) (security.Claims, error) {
@@ -338,6 +340,7 @@ func NewAuthenticator(cfg *configv1.Security, ss ...Setting) (security.Authentic
 		return nil, err
 	}
 	return &Authenticator{
+		//option: option,
 		Option: option,
 		cache:  option.cache,
 	}, nil
