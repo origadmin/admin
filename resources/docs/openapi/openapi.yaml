@@ -17,7 +17,7 @@ servers:
     - url: http://localhost:10080
     - url: https://localhost:10080
 paths:
-    /api/v1/captcha/id:
+    /captcha/id:
         get:
             tags:
                 - LoginAPI
@@ -41,7 +41,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/captcha/id/{id}:
+    /captcha/id/{id}:
         get:
             tags:
                 - LoginAPI
@@ -65,7 +65,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/captcha/id/{id}/{resource}:
+    /captcha/id/{id}/{resource}:
         get:
             tags:
                 - LoginAPI
@@ -94,7 +94,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/captcha/image:
+    /captcha/image:
         get:
             tags:
                 - LoginAPI
@@ -160,7 +160,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/current/logout:
+    /current/logout:
         post:
             tags:
                 - LoginAPI
@@ -184,7 +184,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/current/menus:
+    /current/menus:
         get:
             tags:
                 - LoginAPI
@@ -246,7 +246,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/current/user:
+    /current/user:
         post:
             tags:
                 - LoginAPI
@@ -270,7 +270,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/login:
+    /login:
         post:
             tags:
                 - LoginAPI
@@ -294,7 +294,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/refresh_token:
+    /refresh_token:
         post:
             tags:
                 - LoginAPI
@@ -318,7 +318,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/register:
+    /register:
         post:
             tags:
                 - LoginAPI
@@ -342,7 +342,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/menus:
+    /sys/menus:
         get:
             tags:
                 - MenuAPI
@@ -427,7 +427,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/menus/{id}:
+    /sys/menus/{id}:
         get:
             tags:
                 - MenuAPI
@@ -480,7 +480,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/menus/{menu.id}:
+    /sys/menus/{menu.id}:
         put:
             tags:
                 - MenuAPI
@@ -510,7 +510,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/roles:
+    /sys/roles:
         get:
             tags:
                 - RoleAPI
@@ -595,7 +595,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/roles/{id}:
+    /sys/roles/{id}:
         get:
             tags:
                 - RoleAPI
@@ -648,7 +648,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/roles/{role.id}:
+    /sys/roles/{role.id}:
         put:
             tags:
                 - RoleAPI
@@ -678,7 +678,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/users:
+    /sys/users:
         get:
             tags:
                 - UserAPI
@@ -763,7 +763,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/users/{id}:
+    /sys/users/{id}:
         get:
             tags:
                 - UserAPI
@@ -816,7 +816,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/sys/users/{user.id}:
+    /sys/users/{user.id}:
         put:
             tags:
                 - UserAPI

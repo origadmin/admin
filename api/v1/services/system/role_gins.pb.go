@@ -32,11 +32,11 @@ type RoleAPIGINSServer interface {
 }
 
 func RegisterRoleAPIGINSServer(router gins.IRouter, srv RoleAPIGINSServer) {
-	router.GET("/api/v1/sys/roles", _RoleAPI_ListRoles0_GIN_Handler(srv))
-	router.GET("/api/v1/sys/roles/:id", _RoleAPI_GetRole0_GIN_Handler(srv))
-	router.POST("/api/v1/sys/roles", _RoleAPI_CreateRole0_GIN_Handler(srv))
-	router.PUT("/api/v1/sys/roles/:role.id", _RoleAPI_UpdateRole0_GIN_Handler(srv))
-	router.DELETE("/api/v1/sys/roles/:id", _RoleAPI_DeleteRole0_GIN_Handler(srv))
+	router.GET("/sys/roles", _RoleAPI_ListRoles0_GIN_Handler(srv))
+	router.GET("/sys/roles/:id", _RoleAPI_GetRole0_GIN_Handler(srv))
+	router.POST("/sys/roles", _RoleAPI_CreateRole0_GIN_Handler(srv))
+	router.PUT("/sys/roles/:role.id", _RoleAPI_UpdateRole0_GIN_Handler(srv))
+	router.DELETE("/sys/roles/:id", _RoleAPI_DeleteRole0_GIN_Handler(srv))
 }
 
 func _RoleAPI_ListRoles0_GIN_Handler(srv RoleAPIGINSServer) gins.HandlerFunc {
@@ -172,7 +172,7 @@ func NewRoleAPIGINSClient(client *gins.Client) RoleAPIGINSClient {
 
 func (c *RoleAPIGINSClientImpl) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...gins.CallOption) (*CreateRoleResponse, error) {
 	var out CreateRoleResponse
-	pattern := "/api/v1/sys/roles"
+	pattern := "/sys/roles"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(RoleAPI_CreateRole_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -185,7 +185,7 @@ func (c *RoleAPIGINSClientImpl) CreateRole(ctx context.Context, in *CreateRoleRe
 
 func (c *RoleAPIGINSClientImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...gins.CallOption) (*DeleteRoleResponse, error) {
 	var out DeleteRoleResponse
-	pattern := "/api/v1/sys/roles/{id}"
+	pattern := "/sys/roles/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(RoleAPI_DeleteRole_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -198,7 +198,7 @@ func (c *RoleAPIGINSClientImpl) DeleteRole(ctx context.Context, in *DeleteRoleRe
 
 func (c *RoleAPIGINSClientImpl) GetRole(ctx context.Context, in *GetRoleRequest, opts ...gins.CallOption) (*GetRoleResponse, error) {
 	var out GetRoleResponse
-	pattern := "/api/v1/sys/roles/{id}"
+	pattern := "/sys/roles/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(RoleAPI_GetRole_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -211,7 +211,7 @@ func (c *RoleAPIGINSClientImpl) GetRole(ctx context.Context, in *GetRoleRequest,
 
 func (c *RoleAPIGINSClientImpl) ListRoles(ctx context.Context, in *ListRolesRequest, opts ...gins.CallOption) (*ListRolesResponse, error) {
 	var out ListRolesResponse
-	pattern := "/api/v1/sys/roles"
+	pattern := "/sys/roles"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(RoleAPI_ListRoles_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -224,7 +224,7 @@ func (c *RoleAPIGINSClientImpl) ListRoles(ctx context.Context, in *ListRolesRequ
 
 func (c *RoleAPIGINSClientImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...gins.CallOption) (*UpdateRoleResponse, error) {
 	var out UpdateRoleResponse
-	pattern := "/api/v1/sys/roles/{role.id}"
+	pattern := "/sys/roles/{role.id}"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(RoleAPI_UpdateRole_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))

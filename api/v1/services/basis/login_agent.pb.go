@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	agent "github.com/origadmin/runtime/agent"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +19,7 @@ var _ = new(context.Context)
 var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
+const _ = agent.ApiVersionV1
 
 type LoginAPIAgent interface {
 	CaptchaID(http.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error)
@@ -32,18 +34,18 @@ type LoginAPIAgent interface {
 	Register(http.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
-func RegisterLoginAPIAgent(s *http.Server, srv LoginAPIAgent) {
-	r := s.Route("/")
-	r.GET("/api/v1/captcha/id", _LoginAPI_CaptchaID0_Agent_Handler(srv))
-	r.GET("/api/v1/captcha/image", _LoginAPI_CaptchaImage0_Agent_Handler(srv))
-	r.GET("/api/v1/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_Agent_Handler(srv))
-	r.GET("/api/v1/captcha/id/:id", _LoginAPI_CaptchaResources0_Agent_Handler(srv))
-	r.POST("/api/v1/login", _LoginAPI_Login0_Agent_Handler(srv))
-	r.POST("/api/v1/register", _LoginAPI_Register0_Agent_Handler(srv))
-	r.POST("/api/v1/refresh_token", _LoginAPI_Refresh0_Agent_Handler(srv))
-	r.POST("/api/v1/current/logout", _LoginAPI_Logout0_Agent_Handler(srv))
-	r.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_Agent_Handler(srv))
-	r.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_Agent_Handler(srv))
+func RegisterLoginAPIAgent(ag agent.Agent, srv LoginAPIAgent) {
+	r := ag.Route()
+	r.GET("/captcha/id", _LoginAPI_CaptchaID0_Agent_Handler(srv))
+	r.GET("/captcha/image", _LoginAPI_CaptchaImage0_Agent_Handler(srv))
+	r.GET("/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_Agent_Handler(srv))
+	r.GET("/captcha/id/:id", _LoginAPI_CaptchaResources0_Agent_Handler(srv))
+	r.POST("/login", _LoginAPI_Login0_Agent_Handler(srv))
+	r.POST("/register", _LoginAPI_Register0_Agent_Handler(srv))
+	r.POST("/refresh_token", _LoginAPI_Refresh0_Agent_Handler(srv))
+	r.POST("/current/logout", _LoginAPI_Logout0_Agent_Handler(srv))
+	r.POST("/current/user", _LoginAPI_CurrentUser0_Agent_Handler(srv))
+	r.GET("/current/menus", _LoginAPI_CurrentMenus0_Agent_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
@@ -56,11 +58,15 @@ func _LoginAPI_CaptchaID0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaID(ctx, req.(*CaptchaIDRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CaptchaIDResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -74,11 +80,15 @@ func _LoginAPI_CaptchaImage0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaImage(ctx, req.(*CaptchaImageRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CaptchaImageResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -95,11 +105,15 @@ func _LoginAPI_CaptchaResource0_Agent_Handler(srv LoginAPIAgent) http.HandlerFun
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaResource(ctx, req.(*CaptchaResourceRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CaptchaResourceResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -116,11 +130,15 @@ func _LoginAPI_CaptchaResources0_Agent_Handler(srv LoginAPIAgent) http.HandlerFu
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaResources(ctx, req.(*CaptchaResourcesRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CaptchaResourcesResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -137,11 +155,15 @@ func _LoginAPI_Login0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*LoginResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -158,11 +180,15 @@ func _LoginAPI_Register0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.Register(ctx, req.(*RegisterRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*RegisterResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -179,11 +205,15 @@ func _LoginAPI_Refresh0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.Refresh(ctx, req.(*RefreshRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*RefreshResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -200,11 +230,15 @@ func _LoginAPI_Logout0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.Logout(ctx, req.(*LogoutRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*LogoutResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -221,11 +255,15 @@ func _LoginAPI_CurrentUser0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CurrentUser(ctx, req.(*CurrentUserRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CurrentUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -239,10 +277,14 @@ func _LoginAPI_CurrentMenus0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CurrentMenus(ctx, req.(*CurrentMenusRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CurrentMenusResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }

@@ -7,6 +7,7 @@ package server
 import (
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
@@ -49,7 +50,8 @@ func (s RegisterAgent) GRPC(server *service.GRPCServer) {
 
 func (s RegisterAgent) HTTP(server *service.HTTPServer) {
 	log.Info("http server basis init")
-	pb.RegisterLoginAPIAgent(server, s.Login)
+	ag := agent.New(server)
+	pb.RegisterLoginAPIAgent(ag, s.Login)
 }
 
 func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) (*RegisterAgent, error) {

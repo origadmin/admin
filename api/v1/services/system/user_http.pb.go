@@ -35,11 +35,11 @@ type UserAPIHTTPServer interface {
 
 func RegisterUserAPIHTTPServer(s *http.Server, srv UserAPIHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/v1/sys/users", _UserAPI_ListUsers0_HTTP_Handler(srv))
-	r.GET("/api/v1/sys/users/{id}", _UserAPI_GetUser0_HTTP_Handler(srv))
-	r.POST("/api/v1/sys/users", _UserAPI_CreateUser0_HTTP_Handler(srv))
-	r.PUT("/api/v1/sys/users/{user.id}", _UserAPI_UpdateUser0_HTTP_Handler(srv))
-	r.DELETE("/api/v1/sys/users/{id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
+	r.GET("/sys/users", _UserAPI_ListUsers0_HTTP_Handler(srv))
+	r.GET("/sys/users/{id}", _UserAPI_GetUser0_HTTP_Handler(srv))
+	r.POST("/sys/users", _UserAPI_CreateUser0_HTTP_Handler(srv))
+	r.PUT("/sys/users/{user.id}", _UserAPI_UpdateUser0_HTTP_Handler(srv))
+	r.DELETE("/sys/users/{id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
 }
 
 func _UserAPI_ListUsers0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
@@ -170,7 +170,7 @@ func NewUserAPIHTTPClient(client *http.Client) UserAPIHTTPClient {
 
 func (c *UserAPIHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserResponse, error) {
 	var out CreateUserResponse
-	pattern := "/api/v1/sys/users"
+	pattern := "/sys/users"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserAPICreateUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -183,7 +183,7 @@ func (c *UserAPIHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRe
 
 func (c *UserAPIHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*DeleteUserResponse, error) {
 	var out DeleteUserResponse
-	pattern := "/api/v1/sys/users/{id}"
+	pattern := "/sys/users/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserAPIDeleteUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -196,7 +196,7 @@ func (c *UserAPIHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRe
 
 func (c *UserAPIHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserResponse, error) {
 	var out GetUserResponse
-	pattern := "/api/v1/sys/users/{id}"
+	pattern := "/sys/users/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserAPIGetUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -209,7 +209,7 @@ func (c *UserAPIHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest,
 
 func (c *UserAPIHTTPClientImpl) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...http.CallOption) (*ListUsersResponse, error) {
 	var out ListUsersResponse
-	pattern := "/api/v1/sys/users"
+	pattern := "/sys/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserAPIListUsers))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -222,7 +222,7 @@ func (c *UserAPIHTTPClientImpl) ListUsers(ctx context.Context, in *ListUsersRequ
 
 func (c *UserAPIHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UpdateUserResponse, error) {
 	var out UpdateUserResponse
-	pattern := "/api/v1/sys/users/{user.id}"
+	pattern := "/sys/users/{user.id}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserAPIUpdateUser))
 	opts = append(opts, http.PathTemplate(pattern))

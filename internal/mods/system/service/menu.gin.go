@@ -24,46 +24,42 @@ type MenuAPIGINRPCService struct {
 func (s MenuAPIGINRPCService) CreateMenu(context transhttp.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
 	response, err := s.client.CreateMenu(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Menu,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s MenuAPIGINRPCService) DeleteMenu(context transhttp.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
 	response, err := s.client.DeleteMenu(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Empty,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s MenuAPIGINRPCService) GetMenu(context transhttp.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
 	response, err := s.client.GetMenu(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Menu,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
 	response, err := s.client.ListMenus(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -71,20 +67,19 @@ func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.L
 		Total:   response.TotalSize,
 		Data:    response.Menus,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s MenuAPIGINRPCService) UpdateMenu(context transhttp.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
 	response, err := s.client.UpdateMenu(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Menu,
 	})
-	return response, nil
+	return nil, nil
 }
 
 // NewMenuAPIGINRPCService new a menu service.

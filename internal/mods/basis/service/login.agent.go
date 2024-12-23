@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -33,7 +34,7 @@ func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.Re
 		Success: true,
 		Data:    response,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) CaptchaResource(context transhttp.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
@@ -46,7 +47,7 @@ func (s LoginAPIAgentService) CaptchaResource(context transhttp.Context, request
 		Success: true,
 		Data:    response,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) CaptchaResources(context transhttp.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
@@ -59,7 +60,7 @@ func (s LoginAPIAgentService) CaptchaResources(context transhttp.Context, reques
 		Success: true,
 		Data:    response,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) CaptchaID(context transhttp.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
@@ -74,7 +75,7 @@ func (s LoginAPIAgentService) CaptchaID(context transhttp.Context, request *pb.C
 		Success: true,
 		Data:    response.Data,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
@@ -99,7 +100,7 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	//log.Debugf("CaptchaImage: Flushing response writer")
 	//context.Response().Flush()
 	log.Debugf("CaptchaImage: Completed successfully")
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error) {
@@ -112,7 +113,7 @@ func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *p
 		Success: true,
 		Data:    response,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error) {
@@ -125,7 +126,7 @@ func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb
 		Success: true,
 		Data:    response,
 	})
-	return response, nil
+	return nil, nil
 }
 func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.RefreshRequest) (*pb.RefreshResponse, error) {
 	response, err := s.client.Refresh(context, request)
@@ -142,7 +143,7 @@ func (s LoginAPIAgentService) Refresh(context transhttp.Context, request *pb.Ref
 			"expires_at":    response.Token.GetExpirationTime(),
 		},
 	})
-	return response, nil
+	return nil, nil
 }
 func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
 	response, err := s.client.Login(context, request)
@@ -159,7 +160,7 @@ func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.Login
 			"expires_at":    response.Token.GetExpirationTime(),
 		},
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
@@ -172,7 +173,7 @@ func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.Logo
 		Success: true,
 		Data:    response,
 	})
-	return response, nil
+	return nil, nil
 }
 
 // NewLoginAPIAgentService new a Login service.
@@ -192,7 +193,7 @@ func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIAgent {
 func NewLoginServerAgentGINRegister(client *service.GRPCClient) func(server *transhttp.Server) {
 	cli := NewLoginServerAgent(client)
 	return func(server *transhttp.Server) {
-		pb.RegisterLoginAPIAgent(server, cli)
+		pb.RegisterLoginAPIAgent(agent.New(server), cli)
 	}
 }
 

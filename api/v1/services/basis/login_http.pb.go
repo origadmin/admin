@@ -45,16 +45,16 @@ type LoginAPIHTTPServer interface {
 
 func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/v1/captcha/id", _LoginAPI_CaptchaID0_HTTP_Handler(srv))
-	r.GET("/api/v1/captcha/image", _LoginAPI_CaptchaImage0_HTTP_Handler(srv))
-	r.GET("/api/v1/captcha/id/{id}/{resource}", _LoginAPI_CaptchaResource0_HTTP_Handler(srv))
-	r.GET("/api/v1/captcha/id/{id}", _LoginAPI_CaptchaResources0_HTTP_Handler(srv))
-	r.POST("/api/v1/login", _LoginAPI_Login0_HTTP_Handler(srv))
-	r.POST("/api/v1/register", _LoginAPI_Register0_HTTP_Handler(srv))
-	r.POST("/api/v1/refresh_token", _LoginAPI_Refresh0_HTTP_Handler(srv))
-	r.POST("/api/v1/current/logout", _LoginAPI_Logout0_HTTP_Handler(srv))
-	r.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_HTTP_Handler(srv))
-	r.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_HTTP_Handler(srv))
+	r.GET("/captcha/id", _LoginAPI_CaptchaID0_HTTP_Handler(srv))
+	r.GET("/captcha/image", _LoginAPI_CaptchaImage0_HTTP_Handler(srv))
+	r.GET("/captcha/id/{id}/{resource}", _LoginAPI_CaptchaResource0_HTTP_Handler(srv))
+	r.GET("/captcha/id/{id}", _LoginAPI_CaptchaResources0_HTTP_Handler(srv))
+	r.POST("/login", _LoginAPI_Login0_HTTP_Handler(srv))
+	r.POST("/register", _LoginAPI_Register0_HTTP_Handler(srv))
+	r.POST("/refresh_token", _LoginAPI_Refresh0_HTTP_Handler(srv))
+	r.POST("/current/logout", _LoginAPI_Logout0_HTTP_Handler(srv))
+	r.POST("/current/user", _LoginAPI_CurrentUser0_HTTP_Handler(srv))
+	r.GET("/current/menus", _LoginAPI_CurrentMenus0_HTTP_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
@@ -291,7 +291,7 @@ func NewLoginAPIHTTPClient(client *http.Client) LoginAPIHTTPClient {
 
 func (c *LoginAPIHTTPClientImpl) CaptchaID(ctx context.Context, in *CaptchaIDRequest, opts ...http.CallOption) (*CaptchaIDResponse, error) {
 	var out CaptchaIDResponse
-	pattern := "/api/v1/captcha/id"
+	pattern := "/captcha/id"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationLoginAPICaptchaID))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -304,7 +304,7 @@ func (c *LoginAPIHTTPClientImpl) CaptchaID(ctx context.Context, in *CaptchaIDReq
 
 func (c *LoginAPIHTTPClientImpl) CaptchaImage(ctx context.Context, in *CaptchaImageRequest, opts ...http.CallOption) (*CaptchaImageResponse, error) {
 	var out CaptchaImageResponse
-	pattern := "/api/v1/captcha/image"
+	pattern := "/captcha/image"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationLoginAPICaptchaImage))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -317,7 +317,7 @@ func (c *LoginAPIHTTPClientImpl) CaptchaImage(ctx context.Context, in *CaptchaIm
 
 func (c *LoginAPIHTTPClientImpl) CaptchaResource(ctx context.Context, in *CaptchaResourceRequest, opts ...http.CallOption) (*CaptchaResourceResponse, error) {
 	var out CaptchaResourceResponse
-	pattern := "/api/v1/captcha/id/{id}/{resource}"
+	pattern := "/captcha/id/{id}/{resource}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationLoginAPICaptchaResource))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -330,7 +330,7 @@ func (c *LoginAPIHTTPClientImpl) CaptchaResource(ctx context.Context, in *Captch
 
 func (c *LoginAPIHTTPClientImpl) CaptchaResources(ctx context.Context, in *CaptchaResourcesRequest, opts ...http.CallOption) (*CaptchaResourcesResponse, error) {
 	var out CaptchaResourcesResponse
-	pattern := "/api/v1/captcha/id/{id}"
+	pattern := "/captcha/id/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationLoginAPICaptchaResources))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -343,7 +343,7 @@ func (c *LoginAPIHTTPClientImpl) CaptchaResources(ctx context.Context, in *Captc
 
 func (c *LoginAPIHTTPClientImpl) CurrentMenus(ctx context.Context, in *CurrentMenusRequest, opts ...http.CallOption) (*CurrentMenusResponse, error) {
 	var out CurrentMenusResponse
-	pattern := "/api/v1/current/menus"
+	pattern := "/current/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationLoginAPICurrentMenus))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -356,7 +356,7 @@ func (c *LoginAPIHTTPClientImpl) CurrentMenus(ctx context.Context, in *CurrentMe
 
 func (c *LoginAPIHTTPClientImpl) CurrentUser(ctx context.Context, in *CurrentUserRequest, opts ...http.CallOption) (*CurrentUserResponse, error) {
 	var out CurrentUserResponse
-	pattern := "/api/v1/current/user"
+	pattern := "/current/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPICurrentUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -369,7 +369,7 @@ func (c *LoginAPIHTTPClientImpl) CurrentUser(ctx context.Context, in *CurrentUse
 
 func (c *LoginAPIHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
 	var out LoginResponse
-	pattern := "/api/v1/login"
+	pattern := "/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPILogin))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -382,7 +382,7 @@ func (c *LoginAPIHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, op
 
 func (c *LoginAPIHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*LogoutResponse, error) {
 	var out LogoutResponse
-	pattern := "/api/v1/current/logout"
+	pattern := "/current/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPILogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -395,7 +395,7 @@ func (c *LoginAPIHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, 
 
 func (c *LoginAPIHTTPClientImpl) Refresh(ctx context.Context, in *RefreshRequest, opts ...http.CallOption) (*RefreshResponse, error) {
 	var out RefreshResponse
-	pattern := "/api/v1/refresh_token"
+	pattern := "/refresh_token"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPIRefresh))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -408,7 +408,7 @@ func (c *LoginAPIHTTPClientImpl) Refresh(ctx context.Context, in *RefreshRequest
 
 func (c *LoginAPIHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*RegisterResponse, error) {
 	var out RegisterResponse
-	pattern := "/api/v1/register"
+	pattern := "/register"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPIRegister))
 	opts = append(opts, http.PathTemplate(pattern))

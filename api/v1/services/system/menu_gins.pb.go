@@ -32,11 +32,11 @@ type MenuAPIGINSServer interface {
 }
 
 func RegisterMenuAPIGINSServer(router gins.IRouter, srv MenuAPIGINSServer) {
-	router.GET("/api/v1/sys/menus", _MenuAPI_ListMenus0_GIN_Handler(srv))
-	router.GET("/api/v1/sys/menus/:id", _MenuAPI_GetMenu0_GIN_Handler(srv))
-	router.POST("/api/v1/sys/menus", _MenuAPI_CreateMenu0_GIN_Handler(srv))
-	router.PUT("/api/v1/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_GIN_Handler(srv))
-	router.DELETE("/api/v1/sys/menus/:id", _MenuAPI_DeleteMenu0_GIN_Handler(srv))
+	router.GET("/sys/menus", _MenuAPI_ListMenus0_GIN_Handler(srv))
+	router.GET("/sys/menus/:id", _MenuAPI_GetMenu0_GIN_Handler(srv))
+	router.POST("/sys/menus", _MenuAPI_CreateMenu0_GIN_Handler(srv))
+	router.PUT("/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_GIN_Handler(srv))
+	router.DELETE("/sys/menus/:id", _MenuAPI_DeleteMenu0_GIN_Handler(srv))
 }
 
 func _MenuAPI_ListMenus0_GIN_Handler(srv MenuAPIGINSServer) gins.HandlerFunc {
@@ -172,7 +172,7 @@ func NewMenuAPIGINSClient(client *gins.Client) MenuAPIGINSClient {
 
 func (c *MenuAPIGINSClientImpl) CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...gins.CallOption) (*CreateMenuResponse, error) {
 	var out CreateMenuResponse
-	pattern := "/api/v1/sys/menus"
+	pattern := "/sys/menus"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(MenuAPI_CreateMenu_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -185,7 +185,7 @@ func (c *MenuAPIGINSClientImpl) CreateMenu(ctx context.Context, in *CreateMenuRe
 
 func (c *MenuAPIGINSClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...gins.CallOption) (*DeleteMenuResponse, error) {
 	var out DeleteMenuResponse
-	pattern := "/api/v1/sys/menus/{id}"
+	pattern := "/sys/menus/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(MenuAPI_DeleteMenu_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -198,7 +198,7 @@ func (c *MenuAPIGINSClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRe
 
 func (c *MenuAPIGINSClientImpl) GetMenu(ctx context.Context, in *GetMenuRequest, opts ...gins.CallOption) (*GetMenuResponse, error) {
 	var out GetMenuResponse
-	pattern := "/api/v1/sys/menus/{id}"
+	pattern := "/sys/menus/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(MenuAPI_GetMenu_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -211,7 +211,7 @@ func (c *MenuAPIGINSClientImpl) GetMenu(ctx context.Context, in *GetMenuRequest,
 
 func (c *MenuAPIGINSClientImpl) ListMenus(ctx context.Context, in *ListMenusRequest, opts ...gins.CallOption) (*ListMenusResponse, error) {
 	var out ListMenusResponse
-	pattern := "/api/v1/sys/menus"
+	pattern := "/sys/menus"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(MenuAPI_ListMenus_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -224,7 +224,7 @@ func (c *MenuAPIGINSClientImpl) ListMenus(ctx context.Context, in *ListMenusRequ
 
 func (c *MenuAPIGINSClientImpl) UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...gins.CallOption) (*UpdateMenuResponse, error) {
 	var out UpdateMenuResponse
-	pattern := "/api/v1/sys/menus/{menu.id}"
+	pattern := "/sys/menus/{menu.id}"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(MenuAPI_UpdateMenu_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))

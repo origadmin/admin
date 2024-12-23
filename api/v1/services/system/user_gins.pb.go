@@ -32,11 +32,11 @@ type UserAPIGINSServer interface {
 }
 
 func RegisterUserAPIGINSServer(router gins.IRouter, srv UserAPIGINSServer) {
-	router.GET("/api/v1/sys/users", _UserAPI_ListUsers0_GIN_Handler(srv))
-	router.GET("/api/v1/sys/users/:id", _UserAPI_GetUser0_GIN_Handler(srv))
-	router.POST("/api/v1/sys/users", _UserAPI_CreateUser0_GIN_Handler(srv))
-	router.PUT("/api/v1/sys/users/:user.id", _UserAPI_UpdateUser0_GIN_Handler(srv))
-	router.DELETE("/api/v1/sys/users/:id", _UserAPI_DeleteUser0_GIN_Handler(srv))
+	router.GET("/sys/users", _UserAPI_ListUsers0_GIN_Handler(srv))
+	router.GET("/sys/users/:id", _UserAPI_GetUser0_GIN_Handler(srv))
+	router.POST("/sys/users", _UserAPI_CreateUser0_GIN_Handler(srv))
+	router.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_GIN_Handler(srv))
+	router.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_GIN_Handler(srv))
 }
 
 func _UserAPI_ListUsers0_GIN_Handler(srv UserAPIGINSServer) gins.HandlerFunc {
@@ -172,7 +172,7 @@ func NewUserAPIGINSClient(client *gins.Client) UserAPIGINSClient {
 
 func (c *UserAPIGINSClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...gins.CallOption) (*CreateUserResponse, error) {
 	var out CreateUserResponse
-	pattern := "/api/v1/sys/users"
+	pattern := "/sys/users"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(UserAPI_CreateUser_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -185,7 +185,7 @@ func (c *UserAPIGINSClientImpl) CreateUser(ctx context.Context, in *CreateUserRe
 
 func (c *UserAPIGINSClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...gins.CallOption) (*DeleteUserResponse, error) {
 	var out DeleteUserResponse
-	pattern := "/api/v1/sys/users/{id}"
+	pattern := "/sys/users/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(UserAPI_DeleteUser_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -198,7 +198,7 @@ func (c *UserAPIGINSClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRe
 
 func (c *UserAPIGINSClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...gins.CallOption) (*GetUserResponse, error) {
 	var out GetUserResponse
-	pattern := "/api/v1/sys/users/{id}"
+	pattern := "/sys/users/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(UserAPI_GetUser_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -211,7 +211,7 @@ func (c *UserAPIGINSClientImpl) GetUser(ctx context.Context, in *GetUserRequest,
 
 func (c *UserAPIGINSClientImpl) ListUsers(ctx context.Context, in *ListUsersRequest, opts ...gins.CallOption) (*ListUsersResponse, error) {
 	var out ListUsersResponse
-	pattern := "/api/v1/sys/users"
+	pattern := "/sys/users"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(UserAPI_ListUsers_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -224,7 +224,7 @@ func (c *UserAPIGINSClientImpl) ListUsers(ctx context.Context, in *ListUsersRequ
 
 func (c *UserAPIGINSClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...gins.CallOption) (*UpdateUserResponse, error) {
 	var out UpdateUserResponse
-	pattern := "/api/v1/sys/users/{user.id}"
+	pattern := "/sys/users/{user.id}"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(UserAPI_UpdateUser_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))

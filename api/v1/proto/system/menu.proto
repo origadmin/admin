@@ -16,25 +16,25 @@ option objc_class_prefix = "APIServiceSystemMenu";
 // The menu service definition.
 service MenuAPI {
   rpc ListMenus(ListMenusRequest) returns (ListMenusResponse) {
-    option (google.api.http) = {get: "/api/v1/sys/menus"};
+    option (google.api.http) = {get: "/sys/menus"};
   }
   rpc GetMenu(GetMenuRequest) returns (GetMenuResponse) {
-    option (google.api.http) = {get: "/api/v1/sys/menus/{id}"};
+    option (google.api.http) = {get: "/sys/menus/{id}"};
   }
   rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse) {
     option (google.api.http) = {
-      post: "/api/v1/sys/menus"
+      post: "/sys/menus"
       body: "menu"
     };
   }
   rpc UpdateMenu(UpdateMenuRequest) returns (UpdateMenuResponse) {
     option (google.api.http) = {
-      put: "/api/v1/sys/menus/{menu.id}"
+      put: "/sys/menus/{menu.id}"
       body: "menu"
     };
   }
   rpc DeleteMenu(DeleteMenuRequest) returns (DeleteMenuResponse) {
-    option (google.api.http) = {delete: "/api/v1/sys/menus/{id}"};
+    option (google.api.http) = {delete: "/sys/menus/{id}"};
   }
 }
 

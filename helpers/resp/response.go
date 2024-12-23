@@ -24,66 +24,59 @@ const (
 	HTTPErrorPrefix = "http.response.status."
 )
 
-var Empty *anypb.Any
+var (
+	Empty *anypb.Any
+	mo    protojson.MarshalOptions
+)
+
+func init() {
+	Empty = &anypb.Any{}
+}
 
 // Any converts the given arguments into a protobuf Any type.
 func Any(args ...any) *anypb.Any {
-	switch len(args) {
-	case 0:
+	if len(args) == 0 {
 		return Empty
-	case 1:
+	}
+	if len(args) == 1 {
 		if message, ok := args[0].(proto.Message); ok {
 			return marshalProto(message)
 		}
 		return marshalAny(args[0])
-	default:
-		return marshalAny(args)
 	}
+	return marshalAny(args)
 }
 
 func marshalProto(message proto.Message) *anypb.Any {
-	var extra anypb.Any
+	extra := &anypb.Any{}
 	if err := extra.MarshalFrom(message); err != nil {
 		return Empty
 	}
-	return &extra
+	return extra
 }
 
 func marshalAny(message any) *anypb.Any {
-	var extra anypb.Any
+	extra := &anypb.Any{}
 	marshal, err := json.Marshal(message)
 	if err != nil {
 		return Empty
 	}
-	if err := protojson.Unmarshal(marshal, &extra); err != nil {
+	if err := protojson.Unmarshal(marshal, extra); err != nil {
 		return Empty
 	}
-	return &extra
+	return extra
 }
 
 type Response struct {
 	alwaysSucceed bool
 }
 
-var mo protojson.MarshalOptions
-
 func (r Response) result(context transhttp.Context, status int, data any) {
 	if msg, ok := data.(proto.Message); ok {
-		buf, err := mo.Marshal(msg)
-		if err != nil {
-			//context.Error(errors.Wrap(err, "marshal proto message error"))
-			return
-		}
-		context.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
-		context.Response().WriteHeader(status)
-		context.Response().Write(buf)
-		//context.Set(gins.ContextResponseBodBytesKey, buf)
-		//context.Data(status, "application/json; charset=utf-8", buf)
-		//context.Abort()
+		r.resultProtoJSON(context, status, msg)
 		return
 	}
 	context.JSON(status, data)
-	return
 }
 
 func (r Response) resultProtoJSON(context transhttp.Context, status int, msg proto.Message) {
@@ -92,11 +85,9 @@ func (r Response) resultProtoJSON(context transhttp.Context, status int, msg pro
 		r.Error(context, http.StatusInternalServerError, errors.Wrap(err, "marshal proto message error"))
 		return
 	}
-	//context.Set(gins.ContextResponseBodBytesKey, buf)
 	context.Response().Header().Set("Content-Type", "application/json; charset=utf-8")
 	context.Response().WriteHeader(status)
 	context.Response().Write(buf)
-	return
 }
 
 func (r Response) Error(context transhttp.Context, status int, err error) {
@@ -184,7 +175,11 @@ func ResultAny(rw http.ResponseWriter, status int, data any, err error) {
 		ResultError(rw, status, err)
 		return
 	}
-	resultResult(rw, http.StatusOK, data)
+	err = resultResult(rw, http.StatusOK, data)
+	if err != nil {
+		ResultError(rw, status, err)
+		return
+	}
 }
 
 func decodeError(alwaysSucceed bool, code int, err error) (int, *httperr.Error) {
@@ -225,50 +220,36 @@ func decodeError(alwaysSucceed bool, code int, err error) (int, *httperr.Error) 
 	return code, ierr
 }
 
-func resultResult(rw http.ResponseWriter, status int, data any) {
+func resultResult(rw http.ResponseWriter, status int, data any) error {
 	if msg, ok := data.(proto.Message); ok {
 		buf, err := mo.Marshal(msg)
 		if err != nil {
 			//context.Error(errors.Wrap(err, "marshal proto message error"))
-			return
+			return err
 		}
 		rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 		rw.WriteHeader(status)
-		rw.Write(buf)
-		//context.Set(gins.ContextResponseBodBytesKey, buf)
-		//context.Data(status, "application/json; charset=utf-8", buf)
-		//context.Abort()
-		return
+		_, _ = rw.Write(buf)
+		return nil
 	}
-	ResultJSON(rw, status, data)
-	return
+	return resultJSON(rw, status, data)
+}
+
+func resultJSON(rw http.ResponseWriter, status int, data any) error {
+	v, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.WriteHeader(status)
+	_, _ = rw.Write(v)
+	return nil
 }
 
 func ResultError(rw http.ResponseWriter, status int, err error) {
 	code, herr := decodeError(false, status, err)
-	resultResult(rw, code, &Result{
+	_ = resultResult(rw, code, &Result{
 		Success: false,
 		Error:   herr,
 	})
 }
-
-func ResultProtoJSON(rw http.ResponseWriter, status int, msg proto.Message) {
-	buf, err := mo.Marshal(msg)
-	if err != nil {
-		ResultError(rw, http.StatusInternalServerError, errors.Wrap(err, "marshal proto message error"))
-		return
-	}
-	//context.Set(gins.ContextResponseBodBytesKey, buf)
-	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
-	rw.WriteHeader(status)
-	rw.Write(buf)
-	return
-}
-
-func ResultJSON(rw http.ResponseWriter, status int, data any) {
-	rw.Header().Set("Content-Type", "application/json")
-	rw.WriteHeader(status)
-	_ = json.NewEncoder(rw).Encode(data)
-}
-
-var Default = Response{}

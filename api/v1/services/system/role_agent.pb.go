@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	agent "github.com/origadmin/runtime/agent"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +19,7 @@ var _ = new(context.Context)
 var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
+const _ = agent.ApiVersionV1
 
 type RoleAPIAgent interface {
 	CreateRole(http.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
@@ -27,13 +29,13 @@ type RoleAPIAgent interface {
 	UpdateRole(http.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
 }
 
-func RegisterRoleAPIAgent(s *http.Server, srv RoleAPIAgent) {
-	r := s.Route("/")
-	r.GET("/api/v1/sys/roles", _RoleAPI_ListRoles0_Agent_Handler(srv))
-	r.GET("/api/v1/sys/roles/:id", _RoleAPI_GetRole0_Agent_Handler(srv))
-	r.POST("/api/v1/sys/roles", _RoleAPI_CreateRole0_Agent_Handler(srv))
-	r.PUT("/api/v1/sys/roles/:role.id", _RoleAPI_UpdateRole0_Agent_Handler(srv))
-	r.DELETE("/api/v1/sys/roles/:id", _RoleAPI_DeleteRole0_Agent_Handler(srv))
+func RegisterRoleAPIAgent(ag agent.Agent, srv RoleAPIAgent) {
+	r := ag.Route()
+	r.GET("/sys/roles", _RoleAPI_ListRoles0_Agent_Handler(srv))
+	r.GET("/sys/roles/:id", _RoleAPI_GetRole0_Agent_Handler(srv))
+	r.POST("/sys/roles", _RoleAPI_CreateRole0_Agent_Handler(srv))
+	r.PUT("/sys/roles/:role.id", _RoleAPI_UpdateRole0_Agent_Handler(srv))
+	r.DELETE("/sys/roles/:id", _RoleAPI_DeleteRole0_Agent_Handler(srv))
 }
 
 func _RoleAPI_ListRoles0_Agent_Handler(srv RoleAPIAgent) http.HandlerFunc {
@@ -46,11 +48,15 @@ func _RoleAPI_ListRoles0_Agent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.ListRoles(ctx, req.(*ListRolesRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*ListRolesResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -67,11 +73,15 @@ func _RoleAPI_GetRole0_Agent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.GetRole(ctx, req.(*GetRoleRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*GetRoleResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -88,11 +98,15 @@ func _RoleAPI_CreateRole0_Agent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateRole(ctx, req.(*CreateRoleRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CreateRoleResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -112,11 +126,15 @@ func _RoleAPI_UpdateRole0_Agent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateRole(ctx, req.(*UpdateRoleRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*UpdateRoleResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -133,10 +151,14 @@ func _RoleAPI_DeleteRole0_Agent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteRole(ctx, req.(*DeleteRoleRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*DeleteRoleResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }

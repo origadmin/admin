@@ -104,6 +104,7 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, aut
 		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
 		servicehttp.WithServerOptions(
 			http.ErrorEncoder(resp.ResponseErrorEncoder),
+			http.ResponseEncoder(resp.ResponseEncoder),
 		),
 	))
 	if err != nil {

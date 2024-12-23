@@ -16,25 +16,25 @@ option objc_class_prefix = "APIServiceSystemUser";
 // The login service definition.
 service UserAPI {
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
-    option (google.api.http) = {get: "/api/v1/sys/users"};
+    option (google.api.http) = {get: "/sys/users"};
   }
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {
-    option (google.api.http) = {get: "/api/v1/sys/users/{id}"};
+    option (google.api.http) = {get: "/sys/users/{id}"};
   }
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
-      post: "/api/v1/sys/users"
+      post: "/sys/users"
       body: "user"
     };
   }
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
-      put: "/api/v1/sys/users/{user.id}"
+      put: "/sys/users/{user.id}"
       body: "user"
     };
   }
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
-    option (google.api.http) = {delete: "/api/v1/sys/users/{id}"};
+    option (google.api.http) = {delete: "/sys/users/{id}"};
   }
 }
 

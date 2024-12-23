@@ -65,6 +65,7 @@ func RandomID() string {
 	return id + "." + fmt.Sprintf("%08d", time.Now().UnixNano()%(1<<32))
 }
 func init() {
+	//fmt.Println("total env: ", os.Environ(), len(os.Environ()))
 	flags.Flags.ID = RandomID()
 	flags.SetFlags(Name, Version)
 }

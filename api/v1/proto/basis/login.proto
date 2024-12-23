@@ -15,61 +15,61 @@ option java_package = "com.origadmin.api.v1.admin.services.basis";
 // The login service definition.
 service LoginAPI {
   rpc CaptchaID(CaptchaIDRequest) returns (CaptchaIDResponse) {
-    option (google.api.http) = {get: "/api/v1/captcha/id"};
+    option (google.api.http) = {get: "/captcha/id"};
   }
   rpc CaptchaImage(CaptchaImageRequest) returns (CaptchaImageResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/image"
+      get: "/captcha/image"
       response_body: "*"
     };
   }
   rpc CaptchaResource(CaptchaResourceRequest) returns (CaptchaResourceResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/id/{id}/{resource}"
+      get: "/captcha/id/{id}/{resource}"
       response_body: "*"
     };
   }
   rpc CaptchaResources(CaptchaResourcesRequest) returns (CaptchaResourcesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha/id/{id}"
+      get: "/captcha/id/{id}"
       response_body: "*"
     };
   }
   rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
-      post: "/api/v1/login"
+      post: "/login"
       body: "data"
     };
   }
 
   rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
-      post: "/api/v1/register"
+      post: "/register"
       body: "data"
     };
   }
 
   rpc Refresh(RefreshRequest) returns (RefreshResponse) {
     option (google.api.http) = {
-      post: "/api/v1/refresh_token"
+      post: "/refresh_token"
       body: "data"
     };
   }
 
   rpc Logout(LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
-      post: "/api/v1/current/logout"
+      post: "/current/logout"
       body: "data"
     };
   }
   rpc CurrentUser(CurrentUserRequest) returns (CurrentUserResponse) {
     option (google.api.http) = {
-      post: "/api/v1/current/user"
+      post: "/current/user"
       body: "data"
     };
   }
   rpc CurrentMenus(CurrentMenusRequest) returns (CurrentMenusResponse) {
-    option (google.api.http) = {get: "/api/v1/current/menus"};
+    option (google.api.http) = {get: "/current/menus"};
   }
 }
 

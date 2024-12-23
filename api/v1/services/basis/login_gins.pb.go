@@ -42,16 +42,16 @@ type LoginAPIGINSServer interface {
 }
 
 func RegisterLoginAPIGINSServer(router gins.IRouter, srv LoginAPIGINSServer) {
-	router.GET("/api/v1/captcha/id", _LoginAPI_CaptchaID0_GIN_Handler(srv))
-	router.GET("/api/v1/captcha/image", _LoginAPI_CaptchaImage0_GIN_Handler(srv))
-	router.GET("/api/v1/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_GIN_Handler(srv))
-	router.GET("/api/v1/captcha/id/:id", _LoginAPI_CaptchaResources0_GIN_Handler(srv))
-	router.POST("/api/v1/login", _LoginAPI_Login0_GIN_Handler(srv))
-	router.POST("/api/v1/register", _LoginAPI_Register0_GIN_Handler(srv))
-	router.POST("/api/v1/refresh_token", _LoginAPI_Refresh0_GIN_Handler(srv))
-	router.POST("/api/v1/current/logout", _LoginAPI_Logout0_GIN_Handler(srv))
-	router.POST("/api/v1/current/user", _LoginAPI_CurrentUser0_GIN_Handler(srv))
-	router.GET("/api/v1/current/menus", _LoginAPI_CurrentMenus0_GIN_Handler(srv))
+	router.GET("/captcha/id", _LoginAPI_CaptchaID0_GIN_Handler(srv))
+	router.GET("/captcha/image", _LoginAPI_CaptchaImage0_GIN_Handler(srv))
+	router.GET("/captcha/id/:id/:resource", _LoginAPI_CaptchaResource0_GIN_Handler(srv))
+	router.GET("/captcha/id/:id", _LoginAPI_CaptchaResources0_GIN_Handler(srv))
+	router.POST("/login", _LoginAPI_Login0_GIN_Handler(srv))
+	router.POST("/register", _LoginAPI_Register0_GIN_Handler(srv))
+	router.POST("/refresh_token", _LoginAPI_Refresh0_GIN_Handler(srv))
+	router.POST("/current/logout", _LoginAPI_Logout0_GIN_Handler(srv))
+	router.POST("/current/user", _LoginAPI_CurrentUser0_GIN_Handler(srv))
+	router.GET("/current/menus", _LoginAPI_CurrentMenus0_GIN_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_GIN_Handler(srv LoginAPIGINSServer) gins.HandlerFunc {
@@ -295,7 +295,7 @@ func NewLoginAPIGINSClient(client *gins.Client) LoginAPIGINSClient {
 
 func (c *LoginAPIGINSClientImpl) CaptchaID(ctx context.Context, in *CaptchaIDRequest, opts ...gins.CallOption) (*CaptchaIDResponse, error) {
 	var out CaptchaIDResponse
-	pattern := "/api/v1/captcha/id"
+	pattern := "/captcha/id"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(LoginAPI_CaptchaID_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -308,7 +308,7 @@ func (c *LoginAPIGINSClientImpl) CaptchaID(ctx context.Context, in *CaptchaIDReq
 
 func (c *LoginAPIGINSClientImpl) CaptchaImage(ctx context.Context, in *CaptchaImageRequest, opts ...gins.CallOption) (*CaptchaImageResponse, error) {
 	var out CaptchaImageResponse
-	pattern := "/api/v1/captcha/image"
+	pattern := "/captcha/image"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(LoginAPI_CaptchaImage_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -321,7 +321,7 @@ func (c *LoginAPIGINSClientImpl) CaptchaImage(ctx context.Context, in *CaptchaIm
 
 func (c *LoginAPIGINSClientImpl) CaptchaResource(ctx context.Context, in *CaptchaResourceRequest, opts ...gins.CallOption) (*CaptchaResourceResponse, error) {
 	var out CaptchaResourceResponse
-	pattern := "/api/v1/captcha/id/{id}/{resource}"
+	pattern := "/captcha/id/{id}/{resource}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(LoginAPI_CaptchaResource_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -334,7 +334,7 @@ func (c *LoginAPIGINSClientImpl) CaptchaResource(ctx context.Context, in *Captch
 
 func (c *LoginAPIGINSClientImpl) CaptchaResources(ctx context.Context, in *CaptchaResourcesRequest, opts ...gins.CallOption) (*CaptchaResourcesResponse, error) {
 	var out CaptchaResourcesResponse
-	pattern := "/api/v1/captcha/id/{id}"
+	pattern := "/captcha/id/{id}"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(LoginAPI_CaptchaResources_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -347,7 +347,7 @@ func (c *LoginAPIGINSClientImpl) CaptchaResources(ctx context.Context, in *Captc
 
 func (c *LoginAPIGINSClientImpl) CurrentMenus(ctx context.Context, in *CurrentMenusRequest, opts ...gins.CallOption) (*CurrentMenusResponse, error) {
 	var out CurrentMenusResponse
-	pattern := "/api/v1/current/menus"
+	pattern := "/current/menus"
 	path := gins.EncodeURL(pattern, in, true)
 	opts = append(opts, gins.Operation(LoginAPI_CurrentMenus_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -360,7 +360,7 @@ func (c *LoginAPIGINSClientImpl) CurrentMenus(ctx context.Context, in *CurrentMe
 
 func (c *LoginAPIGINSClientImpl) CurrentUser(ctx context.Context, in *CurrentUserRequest, opts ...gins.CallOption) (*CurrentUserResponse, error) {
 	var out CurrentUserResponse
-	pattern := "/api/v1/current/user"
+	pattern := "/current/user"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_CurrentUser_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -373,7 +373,7 @@ func (c *LoginAPIGINSClientImpl) CurrentUser(ctx context.Context, in *CurrentUse
 
 func (c *LoginAPIGINSClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...gins.CallOption) (*LoginResponse, error) {
 	var out LoginResponse
-	pattern := "/api/v1/login"
+	pattern := "/login"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Login_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -386,7 +386,7 @@ func (c *LoginAPIGINSClientImpl) Login(ctx context.Context, in *LoginRequest, op
 
 func (c *LoginAPIGINSClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...gins.CallOption) (*LogoutResponse, error) {
 	var out LogoutResponse
-	pattern := "/api/v1/current/logout"
+	pattern := "/current/logout"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Logout_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -399,7 +399,7 @@ func (c *LoginAPIGINSClientImpl) Logout(ctx context.Context, in *LogoutRequest, 
 
 func (c *LoginAPIGINSClientImpl) Refresh(ctx context.Context, in *RefreshRequest, opts ...gins.CallOption) (*RefreshResponse, error) {
 	var out RefreshResponse
-	pattern := "/api/v1/refresh_token"
+	pattern := "/refresh_token"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Refresh_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))
@@ -412,7 +412,7 @@ func (c *LoginAPIGINSClientImpl) Refresh(ctx context.Context, in *RefreshRequest
 
 func (c *LoginAPIGINSClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...gins.CallOption) (*RegisterResponse, error) {
 	var out RegisterResponse
-	pattern := "/api/v1/register"
+	pattern := "/register"
 	path := gins.EncodeURL(pattern, in, false)
 	opts = append(opts, gins.Operation(LoginAPI_Register_OperationName))
 	opts = append(opts, gins.PathTemplate(pattern))

@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	agent "github.com/origadmin/runtime/agent"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +19,7 @@ var _ = new(context.Context)
 var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
+const _ = agent.ApiVersionV1
 
 type MenuAPIAgent interface {
 	CreateMenu(http.Context, *CreateMenuRequest) (*CreateMenuResponse, error)
@@ -27,13 +29,13 @@ type MenuAPIAgent interface {
 	UpdateMenu(http.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
 }
 
-func RegisterMenuAPIAgent(s *http.Server, srv MenuAPIAgent) {
-	r := s.Route("/")
-	r.GET("/api/v1/sys/menus", _MenuAPI_ListMenus0_Agent_Handler(srv))
-	r.GET("/api/v1/sys/menus/:id", _MenuAPI_GetMenu0_Agent_Handler(srv))
-	r.POST("/api/v1/sys/menus", _MenuAPI_CreateMenu0_Agent_Handler(srv))
-	r.PUT("/api/v1/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_Agent_Handler(srv))
-	r.DELETE("/api/v1/sys/menus/:id", _MenuAPI_DeleteMenu0_Agent_Handler(srv))
+func RegisterMenuAPIAgent(ag agent.Agent, srv MenuAPIAgent) {
+	r := ag.Route()
+	r.GET("/sys/menus", _MenuAPI_ListMenus0_Agent_Handler(srv))
+	r.GET("/sys/menus/:id", _MenuAPI_GetMenu0_Agent_Handler(srv))
+	r.POST("/sys/menus", _MenuAPI_CreateMenu0_Agent_Handler(srv))
+	r.PUT("/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_Agent_Handler(srv))
+	r.DELETE("/sys/menus/:id", _MenuAPI_DeleteMenu0_Agent_Handler(srv))
 }
 
 func _MenuAPI_ListMenus0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
@@ -46,11 +48,15 @@ func _MenuAPI_ListMenus0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.ListMenus(ctx, req.(*ListMenusRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*ListMenusResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -67,11 +73,15 @@ func _MenuAPI_GetMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.GetMenu(ctx, req.(*GetMenuRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*GetMenuResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -88,11 +98,15 @@ func _MenuAPI_CreateMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateMenu(ctx, req.(*CreateMenuRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CreateMenuResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -112,11 +126,15 @@ func _MenuAPI_UpdateMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateMenu(ctx, req.(*UpdateMenuRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*UpdateMenuResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -133,10 +151,14 @@ func _MenuAPI_DeleteMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*DeleteMenuResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }

@@ -25,46 +25,42 @@ type UserAPIGINRPCService struct {
 func (s UserAPIGINRPCService) CreateUser(context transhttp.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	response, err := s.client.CreateUser(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.User,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s UserAPIGINRPCService) DeleteUser(context transhttp.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	response, err := s.client.DeleteUser(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Empty,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s UserAPIGINRPCService) GetUser(context transhttp.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	response, err := s.client.GetUser(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.User,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s UserAPIGINRPCService) ListUsers(context transhttp.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	response, err := s.client.ListUsers(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -72,20 +68,19 @@ func (s UserAPIGINRPCService) ListUsers(context transhttp.Context, request *pb.L
 		Total:   response.TotalSize,
 		Data:    response.Users,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s UserAPIGINRPCService) UpdateUser(context transhttp.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	response, err := s.client.UpdateUser(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.User,
 	})
-	return response, nil
+	return nil, nil
 }
 
 // NewUserAPIGINRPCService new a menu service.

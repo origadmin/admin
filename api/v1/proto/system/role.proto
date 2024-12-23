@@ -16,25 +16,25 @@ option objc_class_prefix = "APIServiceSystemRole";
 // The login service definition.
 service RoleAPI {
   rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
-    option (google.api.http) = {get: "/api/v1/sys/roles"};
+    option (google.api.http) = {get: "/sys/roles"};
   }
   rpc GetRole(GetRoleRequest) returns (GetRoleResponse) {
-    option (google.api.http) = {get: "/api/v1/sys/roles/{id}"};
+    option (google.api.http) = {get: "/sys/roles/{id}"};
   }
   rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
-      post: "/api/v1/sys/roles"
+      post: "/sys/roles"
       body: "role"
     };
   }
   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
-      put: "/api/v1/sys/roles/{role.id}"
+      put: "/sys/roles/{role.id}"
       body: "role"
     };
   }
   rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
-    option (google.api.http) = {delete: "/api/v1/sys/roles/{id}"};
+    option (google.api.http) = {delete: "/sys/roles/{id}"};
   }
 }
 

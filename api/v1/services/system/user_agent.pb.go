@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	agent "github.com/origadmin/runtime/agent"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +19,7 @@ var _ = new(context.Context)
 var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
+const _ = agent.ApiVersionV1
 
 type UserAPIAgent interface {
 	CreateUser(http.Context, *CreateUserRequest) (*CreateUserResponse, error)
@@ -27,13 +29,13 @@ type UserAPIAgent interface {
 	UpdateUser(http.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 }
 
-func RegisterUserAPIAgent(s *http.Server, srv UserAPIAgent) {
-	r := s.Route("/")
-	r.GET("/api/v1/sys/users", _UserAPI_ListUsers0_Agent_Handler(srv))
-	r.GET("/api/v1/sys/users/:id", _UserAPI_GetUser0_Agent_Handler(srv))
-	r.POST("/api/v1/sys/users", _UserAPI_CreateUser0_Agent_Handler(srv))
-	r.PUT("/api/v1/sys/users/:user.id", _UserAPI_UpdateUser0_Agent_Handler(srv))
-	r.DELETE("/api/v1/sys/users/:id", _UserAPI_DeleteUser0_Agent_Handler(srv))
+func RegisterUserAPIAgent(ag agent.Agent, srv UserAPIAgent) {
+	r := ag.Route()
+	r.GET("/sys/users", _UserAPI_ListUsers0_Agent_Handler(srv))
+	r.GET("/sys/users/:id", _UserAPI_GetUser0_Agent_Handler(srv))
+	r.POST("/sys/users", _UserAPI_CreateUser0_Agent_Handler(srv))
+	r.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_Agent_Handler(srv))
+	r.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_Agent_Handler(srv))
 }
 
 func _UserAPI_ListUsers0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
@@ -46,11 +48,15 @@ func _UserAPI_ListUsers0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.ListUsers(ctx, req.(*ListUsersRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*ListUsersResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -67,11 +73,15 @@ func _UserAPI_GetUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUser(ctx, req.(*GetUserRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*GetUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -88,11 +98,15 @@ func _UserAPI_CreateUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateUser(ctx, req.(*CreateUserRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*CreateUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -112,11 +126,15 @@ func _UserAPI_UpdateUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*UpdateUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -133,10 +151,14 @@ func _UserAPI_DeleteUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
 		})
-		_, err := h(ctx, &in)
+		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		return nil
+		reply := out.(*DeleteUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
 	}
 }

@@ -25,46 +25,42 @@ type RoleAPIGINRPCService struct {
 func (s RoleAPIGINRPCService) CreateRole(context transhttp.Context, request *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
 	response, err := s.client.CreateRole(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Role,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s RoleAPIGINRPCService) DeleteRole(context transhttp.Context, request *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	response, err := s.client.DeleteRole(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Empty,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s RoleAPIGINRPCService) GetRole(context transhttp.Context, request *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
 	response, err := s.client.GetRole(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Role,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s RoleAPIGINRPCService) ListRoles(context transhttp.Context, request *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	response, err := s.client.ListRoles(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
@@ -72,20 +68,19 @@ func (s RoleAPIGINRPCService) ListRoles(context transhttp.Context, request *pb.L
 		Total:   response.TotalSize,
 		Data:    response.Roles,
 	})
-	return response, nil
+	return nil, nil
 }
 
 func (s RoleAPIGINRPCService) UpdateRole(context transhttp.Context, request *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
 	response, err := s.client.UpdateRole(context, request)
 	if err != nil {
-		s.Error(context, http.StatusNotFound, err)
 		return nil, err
 	}
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response.Role,
 	})
-	return response, nil
+	return nil, nil
 }
 
 // NewRoleAPIGINRPCService new a menu service.

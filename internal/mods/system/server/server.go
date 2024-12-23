@@ -10,6 +10,7 @@ import (
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
@@ -88,9 +89,10 @@ func (s RegisterAgent) HTTP(server *http.Server) {
 	for _, register := range s.basisRegisters {
 		register(server)
 	}
-	pb.RegisterMenuAPIAgent(server, s.Menu)
-	pb.RegisterRoleAPIAgent(server, s.Role)
-	pb.RegisterUserAPIAgent(server, s.User)
+	ag := agent.New(server)
+	pb.RegisterMenuAPIAgent(ag, s.Menu)
+	pb.RegisterRoleAPIAgent(ag, s.Role)
+	pb.RegisterUserAPIAgent(ag, s.User)
 }
 
 func (s RegisterAgent) GIN(server gins.IRouter) {
