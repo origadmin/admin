@@ -25,7 +25,6 @@ const (
 	LoginAPI_CaptchaResources_FullMethodName    = "/api.v1.services.basis.LoginAPI/CaptchaResources"
 	LoginAPI_Login_FullMethodName               = "/api.v1.services.basis.LoginAPI/Login"
 	LoginAPI_Register_FullMethodName            = "/api.v1.services.basis.LoginAPI/Register"
-	LoginAPI_Refresh_FullMethodName             = "/api.v1.services.basis.LoginAPI/Refresh"
 	LoginAPI_CurrentTokenRefresh_FullMethodName = "/api.v1.services.basis.LoginAPI/CurrentTokenRefresh"
 )
 
@@ -41,7 +40,6 @@ type LoginAPIClient interface {
 	CaptchaResources(ctx context.Context, in *CaptchaResourcesRequest, opts ...grpc.CallOption) (*CaptchaResourcesResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error)
 	CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...grpc.CallOption) (*CurrentTokenRefreshResponse, error)
 }
 
@@ -113,16 +111,6 @@ func (c *loginAPIClient) Register(ctx context.Context, in *RegisterRequest, opts
 	return out, nil
 }
 
-func (c *loginAPIClient) Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RefreshResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_Refresh_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *loginAPIClient) CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...grpc.CallOption) (*CurrentTokenRefreshResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CurrentTokenRefreshResponse)
@@ -145,7 +133,6 @@ type LoginAPIServer interface {
 	CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
 	CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	mustEmbedUnimplementedLoginAPIServer()
 }
@@ -174,9 +161,6 @@ func (UnimplementedLoginAPIServer) Login(context.Context, *LoginRequest) (*Login
 }
 func (UnimplementedLoginAPIServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
-}
-func (UnimplementedLoginAPIServer) Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
 func (UnimplementedLoginAPIServer) CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrentTokenRefresh not implemented")
@@ -310,24 +294,6 @@ func _LoginAPI_Register_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(LoginAPIServer).Refresh(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: LoginAPI_Refresh_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).Refresh(ctx, req.(*RefreshRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _LoginAPI_CurrentTokenRefresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CurrentTokenRefreshRequest)
 	if err := dec(in); err != nil {
@@ -376,10 +342,6 @@ var LoginAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Register",
 			Handler:    _LoginAPI_Register_Handler,
-		},
-		{
-			MethodName: "Refresh",
-			Handler:    _LoginAPI_Refresh_Handler,
 		},
 		{
 			MethodName: "CurrentTokenRefresh",

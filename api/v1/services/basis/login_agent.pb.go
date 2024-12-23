@@ -28,7 +28,6 @@ type LoginAPIAgent interface {
 	CaptchaResources(http.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
 	CurrentTokenRefresh(http.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	Login(http.Context, *LoginRequest) (*LoginResponse, error)
-	Refresh(http.Context, *RefreshRequest) (*RefreshResponse, error)
 	Register(http.Context, *RegisterRequest) (*RegisterResponse, error)
 }
 
@@ -40,7 +39,6 @@ func RegisterLoginAPIAgent(ag agent.Agent, srv LoginAPIAgent) {
 	r.GET("/captcha/id/:id", _LoginAPI_CaptchaResources0_Agent_Handler(srv))
 	r.POST("/login", _LoginAPI_Login0_Agent_Handler(srv))
 	r.POST("/register", _LoginAPI_Register0_Agent_Handler(srv))
-	r.POST("/refresh_token", _LoginAPI_Refresh0_Agent_Handler(srv))
 	r.POST("/current/token/refresh", _LoginAPI_CurrentTokenRefresh0_Agent_Handler(srv))
 }
 
@@ -181,31 +179,6 @@ func _LoginAPI_Register0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 			return err
 		}
 		reply := out.(*RegisterResponse)
-		if reply == nil {
-			return nil
-		}
-		return ctx.Result(200, reply)
-	}
-}
-
-func _LoginAPI_Refresh0_Agent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
-		var in RefreshRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationLoginAPIRefresh)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.Refresh(ctx, req.(*RefreshRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*RefreshResponse)
 		if reply == nil {
 			return nil
 		}

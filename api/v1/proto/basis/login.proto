@@ -49,13 +49,6 @@ service LoginAPI {
     };
   }
 
-  rpc Refresh(RefreshRequest) returns (RefreshResponse) {
-    option (google.api.http) = {
-      post: "/refresh_token"
-      body: "data"
-    };
-  }
-
   rpc CurrentTokenRefresh(CurrentTokenRefreshRequest) returns (CurrentTokenRefreshResponse) {
     option (google.api.http) = {
       post: "/current/token/refresh"

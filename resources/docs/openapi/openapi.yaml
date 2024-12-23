@@ -390,30 +390,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /refresh_token:
-        post:
-            tags:
-                - LoginAPI
-            operationId: LoginAPI_Refresh
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.RefreshRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.RefreshResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /register:
         post:
             tags:
@@ -1067,16 +1043,6 @@ components:
                 captcha_code:
                     type: string
         api.v1.services.basis.LoginResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.basis.RefreshRequest_Data:
-            type: object
-            properties:
-                refresh_token:
-                    type: string
-        api.v1.services.basis.RefreshResponse:
             type: object
             properties:
                 token:
