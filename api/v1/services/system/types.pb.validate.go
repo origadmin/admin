@@ -298,35 +298,6 @@ func (m *MenuEdges) validate(all bool) error {
 
 	}
 
-	if all {
-		switch v := interface{}(m.GetParent()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuEdgesValidationError{
-					field:  "Parent",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuEdgesValidationError{
-					field:  "Parent",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetParent()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return MenuEdgesValidationError{
-				field:  "Parent",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	for idx, item := range m.GetResources() {
 		_, _ = idx, item
 
@@ -387,40 +358,6 @@ func (m *MenuEdges) validate(all bool) error {
 			if err := v.Validate(); err != nil {
 				return MenuEdgesValidationError{
 					field:  fmt.Sprintf("Roles[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	for idx, item := range m.GetRoleMenus() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return MenuEdgesValidationError{
-					field:  fmt.Sprintf("RoleMenus[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -793,74 +730,6 @@ func (m *RoleEdges) validate(all bool) error {
 
 	}
 
-	for idx, item := range m.GetRoleMenus() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return RoleEdgesValidationError{
-					field:  fmt.Sprintf("RoleMenus[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	for idx, item := range m.GetUserRoles() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("UserRoles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("UserRoles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return RoleEdgesValidationError{
-					field:  fmt.Sprintf("UserRoles[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return RoleEdgesMultiError(errors)
 	}
@@ -1191,40 +1060,6 @@ func (m *UserEdges) validate(all bool) error {
 			if err := v.Validate(); err != nil {
 				return UserEdgesValidationError{
 					field:  fmt.Sprintf("Roles[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	for idx, item := range m.GetUserRoles() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, UserEdgesValidationError{
-						field:  fmt.Sprintf("UserRoles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, UserEdgesValidationError{
-						field:  fmt.Sprintf("UserRoles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return UserEdgesValidationError{
-					field:  fmt.Sprintf("UserRoles[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
