@@ -64,7 +64,7 @@ func (auth *Authorizer) Authorized(ctx context.Context, claims security.UserClai
 }
 func (auth *Authorizer) ApplyDefaults() error {
 	if auth.policy == nil {
-		auth.policy = NewAdapter()
+		return errors.New("policy adapter is nil")
 	}
 	if auth.wildcardItem == "" {
 		auth.wildcardItem = "*"
