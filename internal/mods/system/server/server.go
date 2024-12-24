@@ -38,7 +38,7 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceBuilder)
 }
 
-func NewSystemServer(registers []service.ServerRegister, bootstrap *configs.Bootstrap, l log.KLogger) []transport.Server {
+func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerRegister, l log.KLogger) []transport.Server {
 	var servers []transport.Server
 	middlewares := middleware.NewServer(bootstrap.GetMiddleware())
 	serviceConfig := bootstrap.GetService()

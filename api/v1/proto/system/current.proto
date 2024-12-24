@@ -36,18 +36,28 @@ service CurrentAPI {
       body: "data"
     };
   }
+
+  // GetCurrentUser Update the current user information
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (GetCurrentUserResponse) {
+    option (google.api.http) = {get: "/sys/current/user"};
+  }
   // ListCurrentMenus List the current user's menu
   rpc ListCurrentMenus(ListCurrentMenusRequest) returns (ListCurrentMenusResponse) {
     option (google.api.http) = {get: "/sys/current/menus"};
   }
 
-  // UpdateCurrentRoles Switch the user's current role
-  rpc UpdateCurrentRoles(UpdateCurrentRolesRequest) returns (UpdateCurrentRolesResponse) {
-    option (google.api.http) = {
-      put: "/sys/current/roles"
-      body: "data"
-    };
+  // ListCurrentMenus List the current user's menu
+  rpc ListCurrentRoles(ListCurrentRolesRequest) returns (ListCurrentRolesResponse) {
+    option (google.api.http) = {get: "/sys/current/roles"};
   }
+
+  // UpdateCurrentRoles Switch the user's current role
+  //  rpc UpdateCurrentRole(UpdateCurrentRoleRequest) returns (UpdateCurrentRoleResponse) {
+  //    option (google.api.http) = {
+  //      put: "/sys/current/roles/{role.id}"
+  //      body: "role"
+  //    };
+  //  }
 
   // UpdateCurrentSetting User settings are saved
   rpc UpdateCurrentSetting(UpdateCurrentSettingRequest) returns (UpdateCurrentSettingResponse) {
@@ -64,11 +74,11 @@ message UpdateCurrentSettingRequest {
 
 message UpdateCurrentSettingResponse {}
 
-message UpdateCurrentRolesRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
+message UpdateCurrentRoleRequest {
+  Role role = 1 [json_name = "role"];
 }
 
-message UpdateCurrentRolesResponse {}
+message UpdateCurrentRoleResponse {}
 
 message ListCurrentMenusRequest {
   google.protobuf.Any data = 1 [json_name = "data"];
@@ -105,4 +115,16 @@ message CurrentLogoutRequest {
 
 message CurrentLogoutResponse {
   bool success = 1;
+}
+
+message ListCurrentRolesRequest {}
+
+message ListCurrentRolesResponse {
+  repeated Role roles = 1;
+}
+
+message GetCurrentUserRequest {}
+
+message GetCurrentUserResponse {
+  User user = 1 [json_name = "user"];
 }

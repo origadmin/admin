@@ -23,6 +23,8 @@ import (
 	"github.com/origadmin/toolkits/security"
 	"google.golang.org/protobuf/types/known/anypb"
 
+	"origadmin/application/admin/api/v1/services/basis"
+	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/basis/dto"
@@ -45,7 +47,29 @@ func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequ
 
 func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
 	log.Debugf("Register request received with data: %+v", in.GetData())
-	return nil, errors.New("not implemented")
+	_, err := repo.User.Create(ctx, &system.User{
+		Id:         "",
+		CreateTime: nil,
+		UpdateTime: nil,
+		Username:   "",
+		Name:       "",
+		Avatar:     "",
+		Password:   "",
+		Salt:       "",
+		Phone:      "",
+		Email:      "",
+		Remark:     "",
+		Status:     0,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &dto.RegisterResponse{
+		Success: true,
+		Data: &basis.RegisterResponse_Data{
+			Redirect: "",
+		},
+	}, nil
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {
@@ -58,8 +82,6 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		log.Warnf("Invalid captcha id %s or code %s", data.CaptchaId, data.CaptchaCode)
 		return nil, dto.ErrInvalidCaptchaID
 	}
-
-	//ctx = context.NewTag(ctx, logging.TagKeyLogin)
 
 	if root := repo.cfg().RootUser; root.GetEnabled() {
 		log.Debugf("Root user is enabled, checking if username matches")

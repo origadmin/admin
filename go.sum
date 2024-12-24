@@ -1,7 +1,7 @@
 ariga.io/atlas v0.29.1 h1:7gB8XRFTnJeZ7ZiccNCJqwBtUv3yjFyxRFDMzu0AmRg=
 ariga.io/atlas v0.29.1/go.mod h1:lkLAw/t2/P7g5CFYlYmHvNuShlmGujwm3OGsW00xowI=
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1 h1:ntAj16eF7AtUyzOOAFk5gvbAO52QmUKPKk7GmsIEORo=
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1/go.mod h1:AxRT+qTj5PJCz2nyQzsR/qxAcveW5USRhJTt/edTO5w=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.1-20241127180247-a33202765966.1 h1:v223wh/bhlSHSc0tU9PXRWXHhkw3UWMtth7TmYGfHAQ=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.1-20241127180247-a33202765966.1/go.mod h1:/zlFuuECgFgewxwW6qQKgvMJ07YZkWlVkcSxEhJprJw=
 cel.dev/expr v0.19.1 h1:NciYrtDRIR0lNCnH1LFJegdjspNx9fI59O7TWcua/W4=
 cel.dev/expr v0.19.1/go.mod h1:MrpN08Q+lEBs+bGYdLxxHkZoUSsCp0nSKTs0nTymJgw=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
@@ -1119,14 +1119,8 @@ github.com/origadmin/contrib/transport/gins v0.0.18 h1:ic7vSxhmcMXnGf9f+2t1Vi9n/
 github.com/origadmin/contrib/transport/gins v0.0.18/go.mod h1:3G/Lx2PpH9YoWVkiQk4zFQWFm8dJMvJFYBZ8DcSUGWg=
 github.com/origadmin/go-metrics v0.5.4 h1:odg6zeZUGkTCl6cGJ/bS5GlvjZ3x3GU2zyw9WtNmKFY=
 github.com/origadmin/go-metrics v0.5.4/go.mod h1:KiuAdjBbuXAkjTjy7p7F4g6sjO6WuvH+6hTlMKUxPkg=
-github.com/origadmin/runtime v0.1.32 h1:M9sbNCJwCUyVl2VY4PHuNrYHXlwSnFyYogeVnu8/eq4=
-github.com/origadmin/runtime v0.1.32/go.mod h1:xHhlJ7zG1l4WwIVbE0b1LuWxsmbbrIaTZyNBDexocYk=
-github.com/origadmin/runtime v0.1.33 h1:BoO4wTshN1TuyEIyNio0TQLtWhhSels5sCe5IOjUrPs=
-github.com/origadmin/runtime v0.1.33/go.mod h1:xHhlJ7zG1l4WwIVbE0b1LuWxsmbbrIaTZyNBDexocYk=
-github.com/origadmin/runtime v0.1.34 h1:B9bq9VMQvmiDEUPDtrhbBmNb5j9LFIzJOtRYkFPCohw=
-github.com/origadmin/runtime v0.1.34/go.mod h1:xHhlJ7zG1l4WwIVbE0b1LuWxsmbbrIaTZyNBDexocYk=
-github.com/origadmin/runtime v0.1.36 h1:qNhCbLYTBk8Q5Devbjxgt/Iq6+ibT1YPtph4vxRsmf4=
-github.com/origadmin/runtime v0.1.36/go.mod h1:xHhlJ7zG1l4WwIVbE0b1LuWxsmbbrIaTZyNBDexocYk=
+github.com/origadmin/runtime v0.1.38 h1:Oir9c0ByH0/CNqHLI7mz3ZyF4fKhYIrBiDifa9zm87o=
+github.com/origadmin/runtime v0.1.38/go.mod h1:xHhlJ7zG1l4WwIVbE0b1LuWxsmbbrIaTZyNBDexocYk=
 github.com/origadmin/slog-kratos v1.0.4 h1:1et3TBy61Uwf5N1ZbEBFhMqCjgxqfRXmz2w0Q1dujG0=
 github.com/origadmin/slog-kratos v1.0.4/go.mod h1:WUdhcWLyN0i8TbdemqE2Y/muoj0GaZ86OcdpumAWHPo=
 github.com/origadmin/toolkits v0.1.24 h1:J/OFSq5iPjsA6TN2sxdXGTmXuftQz2AKlAANXj6hvBk=

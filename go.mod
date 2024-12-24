@@ -5,7 +5,7 @@ go 1.23.1
 replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0.5.4
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.0-20241127180247-a33202765966.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.1-20241127180247-a33202765966.1
 	entgo.io/ent v0.14.1
 	github.com/LyricTian/captcha v1.2.0
 	github.com/caarlos0/go-version v0.2.0
@@ -22,7 +22,7 @@ require (
 	github.com/origadmin/contrib/database v0.0.18
 	github.com/origadmin/contrib/replacer v0.0.18
 	github.com/origadmin/contrib/transport/gins v0.0.18
-	github.com/origadmin/runtime v0.1.36
+	github.com/origadmin/runtime v0.1.38
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.24
 	github.com/origadmin/toolkits/codec v0.0.54

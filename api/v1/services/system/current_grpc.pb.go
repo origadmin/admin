@@ -22,8 +22,9 @@ const (
 	CurrentAPI_CurrentLogout_FullMethodName             = "/api.v1.services.system.CurrentAPI/CurrentLogout"
 	CurrentAPI_UpdateCurrentUserPassword_FullMethodName = "/api.v1.services.system.CurrentAPI/UpdateCurrentUserPassword"
 	CurrentAPI_UpdateCurrentUser_FullMethodName         = "/api.v1.services.system.CurrentAPI/UpdateCurrentUser"
+	CurrentAPI_GetCurrentUser_FullMethodName            = "/api.v1.services.system.CurrentAPI/GetCurrentUser"
 	CurrentAPI_ListCurrentMenus_FullMethodName          = "/api.v1.services.system.CurrentAPI/ListCurrentMenus"
-	CurrentAPI_UpdateCurrentRoles_FullMethodName        = "/api.v1.services.system.CurrentAPI/UpdateCurrentRoles"
+	CurrentAPI_ListCurrentRoles_FullMethodName          = "/api.v1.services.system.CurrentAPI/ListCurrentRoles"
 	CurrentAPI_UpdateCurrentSetting_FullMethodName      = "/api.v1.services.system.CurrentAPI/UpdateCurrentSetting"
 )
 
@@ -38,10 +39,12 @@ type CurrentAPIClient interface {
 	UpdateCurrentUserPassword(ctx context.Context, in *UpdateCurrentUserPasswordRequest, opts ...grpc.CallOption) (*UpdateCurrentUserPasswordResponse, error)
 	// UpdateCurrentUser Update the current user information
 	UpdateCurrentUser(ctx context.Context, in *UpdateCurrentUserRequest, opts ...grpc.CallOption) (*UpdateCurrentUserResponse, error)
+	// GetCurrentUser Update the current user information
+	GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*GetCurrentUserResponse, error)
 	// ListCurrentMenus List the current user's menu
 	ListCurrentMenus(ctx context.Context, in *ListCurrentMenusRequest, opts ...grpc.CallOption) (*ListCurrentMenusResponse, error)
-	// UpdateCurrentRoles Switch the user's current role
-	UpdateCurrentRoles(ctx context.Context, in *UpdateCurrentRolesRequest, opts ...grpc.CallOption) (*UpdateCurrentRolesResponse, error)
+	// ListCurrentMenus List the current user's menu
+	ListCurrentRoles(ctx context.Context, in *ListCurrentRolesRequest, opts ...grpc.CallOption) (*ListCurrentRolesResponse, error)
 	// UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(ctx context.Context, in *UpdateCurrentSettingRequest, opts ...grpc.CallOption) (*UpdateCurrentSettingResponse, error)
 }
@@ -84,6 +87,16 @@ func (c *currentAPIClient) UpdateCurrentUser(ctx context.Context, in *UpdateCurr
 	return out, nil
 }
 
+func (c *currentAPIClient) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*GetCurrentUserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCurrentUserResponse)
+	err := c.cc.Invoke(ctx, CurrentAPI_GetCurrentUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *currentAPIClient) ListCurrentMenus(ctx context.Context, in *ListCurrentMenusRequest, opts ...grpc.CallOption) (*ListCurrentMenusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListCurrentMenusResponse)
@@ -94,10 +107,10 @@ func (c *currentAPIClient) ListCurrentMenus(ctx context.Context, in *ListCurrent
 	return out, nil
 }
 
-func (c *currentAPIClient) UpdateCurrentRoles(ctx context.Context, in *UpdateCurrentRolesRequest, opts ...grpc.CallOption) (*UpdateCurrentRolesResponse, error) {
+func (c *currentAPIClient) ListCurrentRoles(ctx context.Context, in *ListCurrentRolesRequest, opts ...grpc.CallOption) (*ListCurrentRolesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateCurrentRolesResponse)
-	err := c.cc.Invoke(ctx, CurrentAPI_UpdateCurrentRoles_FullMethodName, in, out, cOpts...)
+	out := new(ListCurrentRolesResponse)
+	err := c.cc.Invoke(ctx, CurrentAPI_ListCurrentRoles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,10 +138,12 @@ type CurrentAPIServer interface {
 	UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordResponse, error)
 	// UpdateCurrentUser Update the current user information
 	UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*UpdateCurrentUserResponse, error)
+	// GetCurrentUser Update the current user information
+	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*GetCurrentUserResponse, error)
 	// ListCurrentMenus List the current user's menu
 	ListCurrentMenus(context.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
-	// UpdateCurrentRoles Switch the user's current role
-	UpdateCurrentRoles(context.Context, *UpdateCurrentRolesRequest) (*UpdateCurrentRolesResponse, error)
+	// ListCurrentMenus List the current user's menu
+	ListCurrentRoles(context.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
 	// UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(context.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
 	mustEmbedUnimplementedCurrentAPIServer()
@@ -150,11 +165,14 @@ func (UnimplementedCurrentAPIServer) UpdateCurrentUserPassword(context.Context, 
 func (UnimplementedCurrentAPIServer) UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*UpdateCurrentUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentUser not implemented")
 }
+func (UnimplementedCurrentAPIServer) GetCurrentUser(context.Context, *GetCurrentUserRequest) (*GetCurrentUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUser not implemented")
+}
 func (UnimplementedCurrentAPIServer) ListCurrentMenus(context.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentMenus not implemented")
 }
-func (UnimplementedCurrentAPIServer) UpdateCurrentRoles(context.Context, *UpdateCurrentRolesRequest) (*UpdateCurrentRolesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentRoles not implemented")
+func (UnimplementedCurrentAPIServer) ListCurrentRoles(context.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentRoles not implemented")
 }
 func (UnimplementedCurrentAPIServer) UpdateCurrentSetting(context.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentSetting not implemented")
@@ -234,6 +252,24 @@ func _CurrentAPI_UpdateCurrentUser_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CurrentAPI_GetCurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCurrentUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CurrentAPIServer).GetCurrentUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CurrentAPI_GetCurrentUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CurrentAPIServer).GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CurrentAPI_ListCurrentMenus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListCurrentMenusRequest)
 	if err := dec(in); err != nil {
@@ -252,20 +288,20 @@ func _CurrentAPI_ListCurrentMenus_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CurrentAPI_UpdateCurrentRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCurrentRolesRequest)
+func _CurrentAPI_ListCurrentRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCurrentRolesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CurrentAPIServer).UpdateCurrentRoles(ctx, in)
+		return srv.(CurrentAPIServer).ListCurrentRoles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CurrentAPI_UpdateCurrentRoles_FullMethodName,
+		FullMethod: CurrentAPI_ListCurrentRoles_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CurrentAPIServer).UpdateCurrentRoles(ctx, req.(*UpdateCurrentRolesRequest))
+		return srv.(CurrentAPIServer).ListCurrentRoles(ctx, req.(*ListCurrentRolesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -308,12 +344,16 @@ var CurrentAPI_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CurrentAPI_UpdateCurrentUser_Handler,
 		},
 		{
+			MethodName: "GetCurrentUser",
+			Handler:    _CurrentAPI_GetCurrentUser_Handler,
+		},
+		{
 			MethodName: "ListCurrentMenus",
 			Handler:    _CurrentAPI_ListCurrentMenus_Handler,
 		},
 		{
-			MethodName: "UpdateCurrentRoles",
-			Handler:    _CurrentAPI_UpdateCurrentRoles_Handler,
+			MethodName: "ListCurrentRoles",
+			Handler:    _CurrentAPI_ListCurrentRoles_Handler,
 		},
 		{
 			MethodName: "UpdateCurrentSetting",

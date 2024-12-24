@@ -22,6 +22,7 @@ import (
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/basis"
+	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
@@ -42,7 +43,9 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	if err != nil {
 		panic(err)
 	}
-	authorizer, err := securityx.NewAuthorizer(bootstrap)
+	adapter := casbin.NewAdapter()
+
+	authorizer, err := securityx.NewAuthorizer(bootstrap, casbin.WithPolicyAdapter(adapter))
 	if err != nil {
 		panic(err)
 	}
@@ -77,7 +80,6 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 					Method:  req.Method,
 					Path:    req.URL.Path,
 					Scopes:  c.GetIssuer(),
-					Root:    c.GetSubject() == "admin",
 				}, nil
 			}
 		},

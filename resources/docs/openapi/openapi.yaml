@@ -316,24 +316,18 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
     /sys/current/roles:
-        put:
+        get:
             tags:
                 - CurrentAPI
-            description: UpdateCurrentRoles Switch the user's current role
-            operationId: CurrentAPI_UpdateCurrentRoles
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
+            description: ListCurrentMenus List the current user's menu
+            operationId: CurrentAPI_ListCurrentRoles
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentRolesResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.ListCurrentRolesResponse'
                 default:
                     description: Default error response
                     content:
@@ -366,6 +360,24 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
     /sys/current/user:
+        get:
+            tags:
+                - CurrentAPI
+            description: GetCurrentUser Update the current user information
+            operationId: CurrentAPI_GetCurrentUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetCurrentUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
         put:
             tags:
                 - CurrentAPI
@@ -1175,6 +1187,11 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
+        api.v1.services.system.GetCurrentUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.system.User'
         api.v1.services.system.GetMenuResponse:
             type: object
             properties:
@@ -1200,6 +1217,13 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Menu'
+        api.v1.services.system.ListCurrentRolesResponse:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Role'
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
@@ -1532,9 +1556,6 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
                     description: Menu holds the value of the menu edge.
             description: RoleMenuEdges holds the relations/edges for other nodes in the graph.
-        api.v1.services.system.UpdateCurrentRolesResponse:
-            type: object
-            properties: {}
         api.v1.services.system.UpdateCurrentSettingResponse:
             type: object
             properties: {}

@@ -23,10 +23,12 @@ const _ = agent.ApiVersionV1
 
 type CurrentAPIAgent interface {
 	CurrentLogout(http.Context, *CurrentLogoutRequest) (*CurrentLogoutResponse, error)
+	// GetCurrentUser GetCurrentUser Update the current user information
+	GetCurrentUser(http.Context, *GetCurrentUserRequest) (*GetCurrentUserResponse, error)
 	// ListCurrentMenus ListCurrentMenus List the current user's menu
 	ListCurrentMenus(http.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
-	// UpdateCurrentRoles UpdateCurrentRoles Switch the user's current role
-	UpdateCurrentRoles(http.Context, *UpdateCurrentRolesRequest) (*UpdateCurrentRolesResponse, error)
+	// ListCurrentRoles ListCurrentMenus List the current user's menu
+	ListCurrentRoles(http.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
 	// UpdateCurrentSetting UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(http.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
 	// UpdateCurrentUser UpdateCurrentUser Update the current user information
@@ -110,6 +112,28 @@ func _CurrentAPI_UpdateCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.
 	}
 }
 
+func _CurrentAPI_GetCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in GetCurrentUserRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCurrentAPIGetCurrentUser)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetCurrentUserResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
 func _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ListCurrentMenusRequest
@@ -132,24 +156,21 @@ func _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv CurrentAPIAgent) http.H
 	}
 }
 
-func _CurrentAPI_UpdateCurrentRoles0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_ListCurrentRoles0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
-		var in UpdateCurrentRolesRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
+		var in ListCurrentRolesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCurrentAPIUpdateCurrentRoles)
+		http.SetOperation(ctx, OperationCurrentAPIListCurrentRoles)
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdateCurrentRoles(ctx, req.(*UpdateCurrentRolesRequest))
+			return srv.ListCurrentRoles(ctx, req.(*ListCurrentRolesRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateCurrentRolesResponse)
+		reply := out.(*ListCurrentRolesResponse)
 		if reply == nil {
 			return nil
 		}
@@ -187,7 +208,8 @@ func RegisterCurrentAPIAgent(ag agent.HTTPAgent, srv CurrentAPIAgent) {
 	r.POST("/sys/current/logout", _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/current/user/password", _CurrentAPI_UpdateCurrentUserPassword0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/current/user", _CurrentAPI_UpdateCurrentUser0_HTTPAgent_Handler(srv))
+	r.GET("/sys/current/user", _CurrentAPI_GetCurrentUser0_HTTPAgent_Handler(srv))
 	r.GET("/sys/current/menus", _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/current/roles", _CurrentAPI_UpdateCurrentRoles0_HTTPAgent_Handler(srv))
+	r.GET("/sys/current/roles", _CurrentAPI_ListCurrentRoles0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/current/setting", _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv))
 }

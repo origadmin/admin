@@ -10,17 +10,12 @@ import (
 )
 
 type CasbinUserClaims struct {
-	Root    bool
 	Subject string
 	Method  string
 	Path    string
 	Scopes  string
 	Extra   map[string]string
 	Claims  security.Claims
-}
-
-func (u CasbinUserClaims) IsRoot() bool {
-	return u.Root
 }
 
 func (u CasbinUserClaims) GetSubject() string {

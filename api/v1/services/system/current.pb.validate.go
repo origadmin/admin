@@ -270,22 +270,22 @@ var _ interface {
 	ErrorName() string
 } = UpdateCurrentSettingResponseValidationError{}
 
-// Validate checks the field values on UpdateCurrentRolesRequest with the rules
+// Validate checks the field values on UpdateCurrentRoleRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateCurrentRolesRequest) Validate() error {
+func (m *UpdateCurrentRoleRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateCurrentRolesRequest with the
+// ValidateAll checks the field values on UpdateCurrentRoleRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UpdateCurrentRolesRequestMultiError, or nil if none found.
-func (m *UpdateCurrentRolesRequest) ValidateAll() error {
+// UpdateCurrentRoleRequestMultiError, or nil if none found.
+func (m *UpdateCurrentRoleRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateCurrentRolesRequest) validate(all bool) error {
+func (m *UpdateCurrentRoleRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -293,28 +293,28 @@ func (m *UpdateCurrentRolesRequest) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetData()).(type) {
+		switch v := interface{}(m.GetRole()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateCurrentRolesRequestValidationError{
-					field:  "Data",
+				errors = append(errors, UpdateCurrentRoleRequestValidationError{
+					field:  "Role",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateCurrentRolesRequestValidationError{
-					field:  "Data",
+				errors = append(errors, UpdateCurrentRoleRequestValidationError{
+					field:  "Role",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetRole()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return UpdateCurrentRolesRequestValidationError{
-				field:  "Data",
+			return UpdateCurrentRoleRequestValidationError{
+				field:  "Role",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -322,19 +322,19 @@ func (m *UpdateCurrentRolesRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UpdateCurrentRolesRequestMultiError(errors)
+		return UpdateCurrentRoleRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateCurrentRolesRequestMultiError is an error wrapping multiple validation
-// errors returned by UpdateCurrentRolesRequest.ValidateAll() if the
-// designated constraints aren't met.
-type UpdateCurrentRolesRequestMultiError []error
+// UpdateCurrentRoleRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdateCurrentRoleRequest.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateCurrentRoleRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateCurrentRolesRequestMultiError) Error() string {
+func (m UpdateCurrentRoleRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -343,11 +343,11 @@ func (m UpdateCurrentRolesRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateCurrentRolesRequestMultiError) AllErrors() []error { return m }
+func (m UpdateCurrentRoleRequestMultiError) AllErrors() []error { return m }
 
-// UpdateCurrentRolesRequestValidationError is the validation error returned by
-// UpdateCurrentRolesRequest.Validate if the designated constraints aren't met.
-type UpdateCurrentRolesRequestValidationError struct {
+// UpdateCurrentRoleRequestValidationError is the validation error returned by
+// UpdateCurrentRoleRequest.Validate if the designated constraints aren't met.
+type UpdateCurrentRoleRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -355,24 +355,24 @@ type UpdateCurrentRolesRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateCurrentRolesRequestValidationError) Field() string { return e.field }
+func (e UpdateCurrentRoleRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateCurrentRolesRequestValidationError) Reason() string { return e.reason }
+func (e UpdateCurrentRoleRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateCurrentRolesRequestValidationError) Cause() error { return e.cause }
+func (e UpdateCurrentRoleRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateCurrentRolesRequestValidationError) Key() bool { return e.key }
+func (e UpdateCurrentRoleRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateCurrentRolesRequestValidationError) ErrorName() string {
-	return "UpdateCurrentRolesRequestValidationError"
+func (e UpdateCurrentRoleRequestValidationError) ErrorName() string {
+	return "UpdateCurrentRoleRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateCurrentRolesRequestValidationError) Error() string {
+func (e UpdateCurrentRoleRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -384,14 +384,14 @@ func (e UpdateCurrentRolesRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateCurrentRolesRequest.%s: %s%s",
+		"invalid %sUpdateCurrentRoleRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateCurrentRolesRequestValidationError{}
+var _ error = UpdateCurrentRoleRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -399,24 +399,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateCurrentRolesRequestValidationError{}
+} = UpdateCurrentRoleRequestValidationError{}
 
-// Validate checks the field values on UpdateCurrentRolesResponse with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on UpdateCurrentRoleResponse with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateCurrentRolesResponse) Validate() error {
+func (m *UpdateCurrentRoleResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateCurrentRolesResponse with the
+// ValidateAll checks the field values on UpdateCurrentRoleResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UpdateCurrentRolesResponseMultiError, or nil if none found.
-func (m *UpdateCurrentRolesResponse) ValidateAll() error {
+// UpdateCurrentRoleResponseMultiError, or nil if none found.
+func (m *UpdateCurrentRoleResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateCurrentRolesResponse) validate(all bool) error {
+func (m *UpdateCurrentRoleResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -424,19 +424,19 @@ func (m *UpdateCurrentRolesResponse) validate(all bool) error {
 	var errors []error
 
 	if len(errors) > 0 {
-		return UpdateCurrentRolesResponseMultiError(errors)
+		return UpdateCurrentRoleResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateCurrentRolesResponseMultiError is an error wrapping multiple
-// validation errors returned by UpdateCurrentRolesResponse.ValidateAll() if
-// the designated constraints aren't met.
-type UpdateCurrentRolesResponseMultiError []error
+// UpdateCurrentRoleResponseMultiError is an error wrapping multiple validation
+// errors returned by UpdateCurrentRoleResponse.ValidateAll() if the
+// designated constraints aren't met.
+type UpdateCurrentRoleResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateCurrentRolesResponseMultiError) Error() string {
+func (m UpdateCurrentRoleResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -445,11 +445,11 @@ func (m UpdateCurrentRolesResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateCurrentRolesResponseMultiError) AllErrors() []error { return m }
+func (m UpdateCurrentRoleResponseMultiError) AllErrors() []error { return m }
 
-// UpdateCurrentRolesResponseValidationError is the validation error returned
-// by UpdateCurrentRolesResponse.Validate if the designated constraints aren't met.
-type UpdateCurrentRolesResponseValidationError struct {
+// UpdateCurrentRoleResponseValidationError is the validation error returned by
+// UpdateCurrentRoleResponse.Validate if the designated constraints aren't met.
+type UpdateCurrentRoleResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -457,24 +457,24 @@ type UpdateCurrentRolesResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateCurrentRolesResponseValidationError) Field() string { return e.field }
+func (e UpdateCurrentRoleResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateCurrentRolesResponseValidationError) Reason() string { return e.reason }
+func (e UpdateCurrentRoleResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateCurrentRolesResponseValidationError) Cause() error { return e.cause }
+func (e UpdateCurrentRoleResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateCurrentRolesResponseValidationError) Key() bool { return e.key }
+func (e UpdateCurrentRoleResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateCurrentRolesResponseValidationError) ErrorName() string {
-	return "UpdateCurrentRolesResponseValidationError"
+func (e UpdateCurrentRoleResponseValidationError) ErrorName() string {
+	return "UpdateCurrentRoleResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateCurrentRolesResponseValidationError) Error() string {
+func (e UpdateCurrentRoleResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -486,14 +486,14 @@ func (e UpdateCurrentRolesResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateCurrentRolesResponse.%s: %s%s",
+		"invalid %sUpdateCurrentRoleResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateCurrentRolesResponseValidationError{}
+var _ error = UpdateCurrentRoleResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -501,7 +501,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateCurrentRolesResponseValidationError{}
+} = UpdateCurrentRoleResponseValidationError{}
 
 // Validate checks the field values on ListCurrentMenusRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1692,3 +1692,474 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CurrentLogoutResponseValidationError{}
+
+// Validate checks the field values on ListCurrentRolesRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListCurrentRolesRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCurrentRolesRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListCurrentRolesRequestMultiError, or nil if none found.
+func (m *ListCurrentRolesRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCurrentRolesRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListCurrentRolesRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListCurrentRolesRequestMultiError is an error wrapping multiple validation
+// errors returned by ListCurrentRolesRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListCurrentRolesRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCurrentRolesRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCurrentRolesRequestMultiError) AllErrors() []error { return m }
+
+// ListCurrentRolesRequestValidationError is the validation error returned by
+// ListCurrentRolesRequest.Validate if the designated constraints aren't met.
+type ListCurrentRolesRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCurrentRolesRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCurrentRolesRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCurrentRolesRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCurrentRolesRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCurrentRolesRequestValidationError) ErrorName() string {
+	return "ListCurrentRolesRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCurrentRolesRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCurrentRolesRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCurrentRolesRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCurrentRolesRequestValidationError{}
+
+// Validate checks the field values on ListCurrentRolesResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListCurrentRolesResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListCurrentRolesResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListCurrentRolesResponseMultiError, or nil if none found.
+func (m *ListCurrentRolesResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListCurrentRolesResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetRoles() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListCurrentRolesResponseValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListCurrentRolesResponseValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListCurrentRolesResponseValidationError{
+					field:  fmt.Sprintf("Roles[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListCurrentRolesResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListCurrentRolesResponseMultiError is an error wrapping multiple validation
+// errors returned by ListCurrentRolesResponse.ValidateAll() if the designated
+// constraints aren't met.
+type ListCurrentRolesResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListCurrentRolesResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListCurrentRolesResponseMultiError) AllErrors() []error { return m }
+
+// ListCurrentRolesResponseValidationError is the validation error returned by
+// ListCurrentRolesResponse.Validate if the designated constraints aren't met.
+type ListCurrentRolesResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListCurrentRolesResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListCurrentRolesResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListCurrentRolesResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListCurrentRolesResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListCurrentRolesResponseValidationError) ErrorName() string {
+	return "ListCurrentRolesResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListCurrentRolesResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListCurrentRolesResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListCurrentRolesResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListCurrentRolesResponseValidationError{}
+
+// Validate checks the field values on GetCurrentUserRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetCurrentUserRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetCurrentUserRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetCurrentUserRequestMultiError, or nil if none found.
+func (m *GetCurrentUserRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetCurrentUserRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return GetCurrentUserRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetCurrentUserRequestMultiError is an error wrapping multiple validation
+// errors returned by GetCurrentUserRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetCurrentUserRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetCurrentUserRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetCurrentUserRequestMultiError) AllErrors() []error { return m }
+
+// GetCurrentUserRequestValidationError is the validation error returned by
+// GetCurrentUserRequest.Validate if the designated constraints aren't met.
+type GetCurrentUserRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetCurrentUserRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetCurrentUserRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetCurrentUserRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetCurrentUserRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetCurrentUserRequestValidationError) ErrorName() string {
+	return "GetCurrentUserRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetCurrentUserRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetCurrentUserRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetCurrentUserRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetCurrentUserRequestValidationError{}
+
+// Validate checks the field values on GetCurrentUserResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetCurrentUserResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetCurrentUserResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetCurrentUserResponseMultiError, or nil if none found.
+func (m *GetCurrentUserResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetCurrentUserResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetCurrentUserResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetCurrentUserResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetCurrentUserResponseValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetCurrentUserResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetCurrentUserResponseMultiError is an error wrapping multiple validation
+// errors returned by GetCurrentUserResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetCurrentUserResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetCurrentUserResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetCurrentUserResponseMultiError) AllErrors() []error { return m }
+
+// GetCurrentUserResponseValidationError is the validation error returned by
+// GetCurrentUserResponse.Validate if the designated constraints aren't met.
+type GetCurrentUserResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetCurrentUserResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetCurrentUserResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetCurrentUserResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetCurrentUserResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetCurrentUserResponseValidationError) ErrorName() string {
+	return "GetCurrentUserResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetCurrentUserResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetCurrentUserResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetCurrentUserResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetCurrentUserResponseValidationError{}

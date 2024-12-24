@@ -20,6 +20,10 @@ type userRepo struct {
 	db *Data
 }
 
+func (repo userRepo) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option dto.UserQueryOption) (*pb.UpdateUserStatusResponse, error) {
+	return nil, nil
+}
+
 func (repo userRepo) Current(ctx context.Context, id string) (*dto.UserPB, error) {
 	return repo.Get(ctx, id)
 }

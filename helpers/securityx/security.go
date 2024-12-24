@@ -13,16 +13,16 @@ import (
 	"origadmin/application/admin/internal/configs"
 )
 
-func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, error) {
-	authenticator, err := jwt.NewAuthenticator(bootstrap.GetSecurity())
+func NewAuthenticator(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Authenticator, error) {
+	authenticator, err := jwt.NewAuthenticator(bootstrap.GetSecurity(), ss...)
 	if err != nil {
 		return nil, err
 	}
 	return authenticator, nil
 }
 
-func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
-	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity())
+func NewAuthorizer(bootstrap *configs.Bootstrap, ss ...casbin.Setting) (security.Authorizer, error) {
+	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity(), ss...)
 	if err != nil {
 		return nil, err
 	}
