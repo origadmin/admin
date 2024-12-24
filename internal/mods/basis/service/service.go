@@ -6,7 +6,7 @@ package service
 
 import (
 	"github.com/google/wire"
-	"github.com/origadmin/contrib/transport/gins"
+	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -18,31 +18,25 @@ var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
 	NewLoginAPIService,
 	NewLoginAPIServer,
-	NewCurrentAPIService,
-	NewCurrentAPIServer,
 )
 
 type RegisterServer struct {
-	Login   pb.LoginAPIServer
-	Current pb.CurrentAPIServer
+	Login pb.LoginAPIServer
 }
 
-func (s RegisterServer) GRPC(server *service.GRPCServer) *service.GRPCServer {
+func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
 	log.Info("grpc server basis init")
 	pb.RegisterLoginAPIServer(server, s.Login)
-	pb.RegisterCurrentAPIServer(server, s.Current)
-	return server
 }
 
-func (s RegisterServer) GINS(server *gins.Server) *gins.Server {
-	log.Info("gins server basis init")
-	//pb.RegisterLoginAPIGINSServer(server, s.Login)
-	return server
-}
-
-func (s RegisterServer) HTTP(server *service.HTTPServer) *service.HTTPServer {
+func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server basis init")
 	pb.RegisterLoginAPIHTTPServer(server, s.Login)
-	pb.RegisterCurrentAPIHTTPServer(server, s.Current)
-	return server
 }
+
+func (s RegisterServer) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
+	s.HTTPServer(ctx, httpServer)
+	s.GRPCServer(ctx, grpcServer)
+}
+
+var _ service.ServerRegister = (*RegisterServer)(nil)

@@ -7,7 +7,7 @@ package service
 import (
 	"context"
 
-	pb "origadmin/application/admin/api/v1/services/basis"
+	pb "origadmin/application/admin/api/v1/services/system"
 )
 
 // CurrentAPIHTTPService is a login service.

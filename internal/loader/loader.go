@@ -16,18 +16,16 @@ import (
 	"github.com/origadmin/runtime/registry"
 	"github.com/origadmin/runtime/service"
 
+	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/agent"
-	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
 var (
 	ProviderSet = wire.NewSet(
 		NewBasisConfig,
 		NewRegistrar,
-		NewAgentHTTPRegistrar,
-		NewAuthenticator,
-		NewAuthorizer,
+		securityx.NewAuthenticator,
+		securityx.NewAuthorizer,
 		wire.Struct(new(InjectorServer), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)
@@ -40,12 +38,9 @@ var (
 )
 
 type InjectorClient struct {
-	Logger     log.KLogger
-	Bootstrap  *configs.Bootstrap
-	Registrars []agent.HTTPRegistrar
-	Server     *http.Server
-	//Router      *gin.Engine
-	//Servers []transport.Server
+	Logger    log.KLogger
+	Bootstrap *configs.Bootstrap
+	Server    *http.Server
 }
 
 type InjectorServer struct {
@@ -64,16 +59,4 @@ func NewBasisConfig(bootstrap *configs.Bootstrap) *configs.BasisConfig {
 	//c := DefaultCaptcha()
 	// todo Read from the configuration file
 	return DefaultBasisConfig()
-}
-
-func NewAgentGINRegistrar(systemagent *systemserver.RegisterAgent) []agent.GINRegistrar {
-	return []agent.GINRegistrar{
-		systemagent,
-	}
-}
-
-func NewAgentHTTPRegistrar(systemagent *systemserver.RegisterAgent) []agent.HTTPRegistrar {
-	return []agent.HTTPRegistrar{
-		systemagent,
-	}
 }

@@ -10,6 +10,7 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime/log"
+	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	biz2 "origadmin/application/admin/internal/mods/basis/biz"
@@ -48,29 +49,45 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	userRepo := dal.NewUserRepo(data, arg)
 	userAPIClient := biz.NewUsersClient(userRepo, arg)
 	userAPIServer := service.NewUserAPIServer(userAPIClient)
+	authRepo := dal.NewAuthRepo(data, arg)
+	authAPIClient := biz.NewAuthsClient(authRepo, arg)
+	authAPIServer := service.NewAuthAPIServer(authAPIClient)
+	currentRepo := dal.NewCurrentRepo(data, arg)
+	currentAPIClient := biz.NewCurrentClient(currentRepo, arg)
+	currentAPIServer := service.NewCurrentAPIServer(currentAPIClient)
 	registerServer := &service.RegisterServer{
-		Menu: menuAPIServer,
-		Role: roleAPIServer,
-		User: userAPIServer,
+		Menu:    menuAPIServer,
+		Role:    roleAPIServer,
+		User:    userAPIServer,
+		Auth:    authAPIServer,
+		Current: currentAPIServer,
 	}
 	basisConfig := loader.NewBasisConfig(bootstrap)
-	authenticator, err := loader.NewAuthenticator(bootstrap)
+	authenticator, err := securityx.NewAuthenticator(bootstrap)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	loginRepo := dal2.NewLoginRepo(basisConfig, authenticator, menuRepo, roleRepo, userRepo, arg)
+	loginData := &dal2.LoginData{
+		BasisConfig:   basisConfig,
+		Authenticator: authenticator,
+		Menu:          menuRepo,
+		Role:          roleRepo,
+		User:          userRepo,
+	}
+	loginRepo := dal2.NewLoginRepo(loginData, arg)
 	loginAPIClient := biz2.NewLoginClient(loginRepo, arg)
 	loginAPIServer := service2.NewLoginAPIServer(loginAPIClient)
-	serviceRegisterServer := service2.RegisterServer{
+	serviceRegisterServer := &service2.RegisterServer{
 		Login: loginAPIServer,
 	}
-	v2 := server.NewSystemServer(registerServer, serviceRegisterServer, bootstrap, arg)
+	v2 := server.NewRegisterServer(registerServer, serviceRegisterServer)
+	v3 := server.NewSystemServer(v2, bootstrap, arg)
 	injectorServer := &loader.InjectorServer{
 		Logger:    arg,
 		Bootstrap: bootstrap,
 		Registrar: v,
-		Servers:   v2,
+		Servers:   v3,
 	}
 	app := NewApp(contextContext, injectorServer)
 	return app, func() {

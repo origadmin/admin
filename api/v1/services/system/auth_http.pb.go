@@ -27,7 +27,7 @@ type AuthAPIHTTPServer interface {
 
 func RegisterAuthAPIHTTPServer(s *http.Server, srv AuthAPIHTTPServer) {
 	r := s.Route("/")
-	r.GET("/v1/sys/resources", _AuthAPI_ListResources0_HTTP_Handler(srv))
+	r.GET("/sys/resources", _AuthAPI_ListResources0_HTTP_Handler(srv))
 }
 
 func _AuthAPI_ListResources0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
@@ -63,7 +63,7 @@ func NewAuthAPIHTTPClient(client *http.Client) AuthAPIHTTPClient {
 
 func (c *AuthAPIHTTPClientImpl) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...http.CallOption) (*ListResourcesResponse, error) {
 	var out ListResourcesResponse
-	pattern := "/v1/sys/resources"
+	pattern := "/sys/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthAPIListResources))
 	opts = append(opts, http.PathTemplate(pattern))

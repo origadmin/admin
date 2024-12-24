@@ -29,16 +29,7 @@ type MenuAPIAgent interface {
 	UpdateMenu(http.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
 }
 
-func RegisterMenuAPIAgent(ag agent.Agent, srv MenuAPIAgent) {
-	r := ag.Route()
-	r.GET("/sys/menus", _MenuAPI_ListMenus0_Agent_Handler(srv))
-	r.GET("/sys/menus/:id", _MenuAPI_GetMenu0_Agent_Handler(srv))
-	r.POST("/sys/menus", _MenuAPI_CreateMenu0_Agent_Handler(srv))
-	r.PUT("/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_Agent_Handler(srv))
-	r.DELETE("/sys/menus/:id", _MenuAPI_DeleteMenu0_Agent_Handler(srv))
-}
-
-func _MenuAPI_ListMenus0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuAPI_ListMenus0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ListMenusRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -60,7 +51,7 @@ func _MenuAPI_ListMenus0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_GetMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in GetMenuRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -85,7 +76,7 @@ func _MenuAPI_GetMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_CreateMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in CreateMenuRequest
 		if err := ctx.Bind(&in.Menu); err != nil {
@@ -110,7 +101,7 @@ func _MenuAPI_CreateMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_UpdateMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateMenuRequest
 		if err := ctx.Bind(&in.Menu); err != nil {
@@ -138,7 +129,7 @@ func _MenuAPI_UpdateMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_DeleteMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in DeleteMenuRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -161,4 +152,13 @@ func _MenuAPI_DeleteMenu0_Agent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		}
 		return ctx.Result(200, reply)
 	}
+}
+
+func RegisterMenuAPIAgent(ag agent.HTTPAgent, srv MenuAPIAgent) {
+	r := ag.Route()
+	r.GET("/sys/menus", _MenuAPI_ListMenus0_HTTPAgent_Handler(srv))
+	r.GET("/sys/menus/:id", _MenuAPI_GetMenu0_HTTPAgent_Handler(srv))
+	r.POST("/sys/menus", _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/menus/:id", _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv))
 }

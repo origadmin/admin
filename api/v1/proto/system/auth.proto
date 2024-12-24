@@ -15,7 +15,7 @@ option objc_class_prefix = "APIServiceSystemAuth";
 
 service AuthAPI {
   rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
-    option (google.api.http) = {get: "/v1/sys/resources"};
+    option (google.api.http) = {get: "/sys/resources"};
   }
 }
 

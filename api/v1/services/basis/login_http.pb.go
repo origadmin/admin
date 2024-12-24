@@ -23,18 +23,20 @@ const OperationLoginAPICaptchaID = "/api.v1.services.basis.LoginAPI/CaptchaID"
 const OperationLoginAPICaptchaImage = "/api.v1.services.basis.LoginAPI/CaptchaImage"
 const OperationLoginAPICaptchaResource = "/api.v1.services.basis.LoginAPI/CaptchaResource"
 const OperationLoginAPICaptchaResources = "/api.v1.services.basis.LoginAPI/CaptchaResources"
-const OperationLoginAPICurrentTokenRefresh = "/api.v1.services.basis.LoginAPI/CurrentTokenRefresh"
 const OperationLoginAPILogin = "/api.v1.services.basis.LoginAPI/Login"
+const OperationLoginAPILogout = "/api.v1.services.basis.LoginAPI/Logout"
 const OperationLoginAPIRegister = "/api.v1.services.basis.LoginAPI/Register"
+const OperationLoginAPITokenRefresh = "/api.v1.services.basis.LoginAPI/TokenRefresh"
 
 type LoginAPIHTTPServer interface {
 	CaptchaID(context.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error)
 	CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error)
 	CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error)
 	CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
-	CurrentTokenRefresh(context.Context, *CurrentTokenRefreshRequest) (*CurrentTokenRefreshResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
+	TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error)
 }
 
 func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
@@ -44,8 +46,9 @@ func RegisterLoginAPIHTTPServer(s *http.Server, srv LoginAPIHTTPServer) {
 	r.GET("/captcha/id/{id}/{resource}", _LoginAPI_CaptchaResource0_HTTP_Handler(srv))
 	r.GET("/captcha/id/{id}", _LoginAPI_CaptchaResources0_HTTP_Handler(srv))
 	r.POST("/login", _LoginAPI_Login0_HTTP_Handler(srv))
+	r.POST("/logout", _LoginAPI_Logout0_HTTP_Handler(srv))
 	r.POST("/register", _LoginAPI_Register0_HTTP_Handler(srv))
-	r.POST("/current/token/refresh", _LoginAPI_CurrentTokenRefresh0_HTTP_Handler(srv))
+	r.POST("/token/refresh", _LoginAPI_TokenRefresh0_HTTP_Handler(srv))
 }
 
 func _LoginAPI_CaptchaID0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
@@ -152,6 +155,28 @@ func _LoginAPI_Login0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context
 	}
 }
 
+func _LoginAPI_Logout0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LogoutRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationLoginAPILogout)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Logout(ctx, req.(*LogoutRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LogoutResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _LoginAPI_Register0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RegisterRequest
@@ -174,24 +199,24 @@ func _LoginAPI_Register0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Cont
 	}
 }
 
-func _LoginAPI_CurrentTokenRefresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
+func _LoginAPI_TokenRefresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CurrentTokenRefreshRequest
+		var in TokenRefreshRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPICurrentTokenRefresh)
+		http.SetOperation(ctx, OperationLoginAPITokenRefresh)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CurrentTokenRefresh(ctx, req.(*CurrentTokenRefreshRequest))
+			return srv.TokenRefresh(ctx, req.(*TokenRefreshRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CurrentTokenRefreshResponse)
+		reply := out.(*TokenRefreshResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -201,9 +226,10 @@ type LoginAPIHTTPClient interface {
 	CaptchaImage(ctx context.Context, req *CaptchaImageRequest, opts ...http.CallOption) (rsp *CaptchaImageResponse, err error)
 	CaptchaResource(ctx context.Context, req *CaptchaResourceRequest, opts ...http.CallOption) (rsp *CaptchaResourceResponse, err error)
 	CaptchaResources(ctx context.Context, req *CaptchaResourcesRequest, opts ...http.CallOption) (rsp *CaptchaResourcesResponse, err error)
-	CurrentTokenRefresh(ctx context.Context, req *CurrentTokenRefreshRequest, opts ...http.CallOption) (rsp *CurrentTokenRefreshResponse, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
+	Logout(ctx context.Context, req *LogoutRequest, opts ...http.CallOption) (rsp *LogoutResponse, err error)
 	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterResponse, err error)
+	TokenRefresh(ctx context.Context, req *TokenRefreshRequest, opts ...http.CallOption) (rsp *TokenRefreshResponse, err error)
 }
 
 type LoginAPIHTTPClientImpl struct {
@@ -266,24 +292,24 @@ func (c *LoginAPIHTTPClientImpl) CaptchaResources(ctx context.Context, in *Captc
 	return &out, nil
 }
 
-func (c *LoginAPIHTTPClientImpl) CurrentTokenRefresh(ctx context.Context, in *CurrentTokenRefreshRequest, opts ...http.CallOption) (*CurrentTokenRefreshResponse, error) {
-	var out CurrentTokenRefreshResponse
-	pattern := "/current/token/refresh"
+func (c *LoginAPIHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
+	var out LoginResponse
+	pattern := "/login"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationLoginAPICurrentTokenRefresh))
+	opts = append(opts, http.Operation(OperationLoginAPILogin))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &out, nil
 }
 
-func (c *LoginAPIHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
-	var out LoginResponse
-	pattern := "/login"
+func (c *LoginAPIHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*LogoutResponse, error) {
+	var out LogoutResponse
+	pattern := "/logout"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationLoginAPILogin))
+	opts = append(opts, http.Operation(OperationLoginAPILogout))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -299,6 +325,19 @@ func (c *LoginAPIHTTPClientImpl) Register(ctx context.Context, in *RegisterReque
 	opts = append(opts, http.Operation(OperationLoginAPIRegister))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *LoginAPIHTTPClientImpl) TokenRefresh(ctx context.Context, in *TokenRefreshRequest, opts ...http.CallOption) (*TokenRefreshResponse, error) {
+	var out TokenRefreshResponse
+	pattern := "/token/refresh"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationLoginAPITokenRefresh))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

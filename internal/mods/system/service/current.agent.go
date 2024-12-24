@@ -8,11 +8,10 @@ import (
 	"net/http"
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
-	pb "origadmin/application/admin/api/v1/services/basis"
+	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 )
 
@@ -152,13 +151,6 @@ func NewCurrentAPIAgent(client pb.CurrentAPIClient) pb.CurrentAPIAgent {
 func NewCurrentServerAgent(client *service.GRPCClient) pb.CurrentAPIAgent {
 	cli := pb.NewCurrentAPIClient(client)
 	return NewCurrentAPIAgent(cli)
-}
-
-func NewCurrentServerAgentGINRegister(client *service.GRPCClient) func(server *transhttp.Server) {
-	cli := NewCurrentServerAgent(client)
-	return func(server *transhttp.Server) {
-		pb.RegisterCurrentAPIAgent(agent.New(server), cli)
-	}
 }
 
 var _ pb.CurrentAPIAgent = (*CurrentAPIAgentService)(nil)

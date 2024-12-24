@@ -33,18 +33,7 @@ type UserAPIAgent interface {
 	UpdateUserStatus(http.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 
-func RegisterUserAPIAgent(ag agent.Agent, srv UserAPIAgent) {
-	r := ag.Route()
-	r.GET("/sys/users", _UserAPI_ListUsers0_Agent_Handler(srv))
-	r.GET("/sys/users/:id", _UserAPI_GetUser0_Agent_Handler(srv))
-	r.POST("/sys/users", _UserAPI_CreateUser0_Agent_Handler(srv))
-	r.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_Agent_Handler(srv))
-	r.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_Agent_Handler(srv))
-	r.PUT("/sys/users/:user.id/status", _UserAPI_UpdateUserStatus0_Agent_Handler(srv))
-	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_Agent_Handler(srv))
-}
-
-func _UserAPI_ListUsers0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_ListUsers0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ListUsersRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -66,7 +55,7 @@ func _UserAPI_ListUsers0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _UserAPI_GetUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_GetUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in GetUserRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -91,7 +80,7 @@ func _UserAPI_GetUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _UserAPI_CreateUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_CreateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in CreateUserRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -116,7 +105,7 @@ func _UserAPI_CreateUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _UserAPI_UpdateUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_UpdateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateUserRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -144,7 +133,7 @@ func _UserAPI_UpdateUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _UserAPI_DeleteUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_DeleteUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in DeleteUserRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -169,7 +158,7 @@ func _UserAPI_DeleteUser0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _UserAPI_UpdateUserStatus0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateUserStatusRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -197,7 +186,7 @@ func _UserAPI_UpdateUserStatus0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc
 	}
 }
 
-func _UserAPI_ResetUserPassword0_Agent_Handler(srv UserAPIAgent) http.HandlerFunc {
+func _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ResetUserPasswordRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -220,4 +209,15 @@ func _UserAPI_ResetUserPassword0_Agent_Handler(srv UserAPIAgent) http.HandlerFun
 		}
 		return ctx.Result(200, reply)
 	}
+}
+
+func RegisterUserAPIAgent(ag agent.HTTPAgent, srv UserAPIAgent) {
+	r := ag.Route()
+	r.GET("/sys/users", _UserAPI_ListUsers0_HTTPAgent_Handler(srv))
+	r.GET("/sys/users/:id", _UserAPI_GetUser0_HTTPAgent_Handler(srv))
+	r.POST("/sys/users", _UserAPI_CreateUser0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/users/:user.id/status", _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv))
+	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv))
 }

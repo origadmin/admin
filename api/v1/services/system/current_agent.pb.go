@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-agent unknown
 // - protoc             (unknown)
-// source: basis/current.proto
+// source: system/current.proto
 
-package basis
+package system
 
 import (
 	context "context"
@@ -23,6 +23,7 @@ const _ = agent.ApiVersionV1
 
 type CurrentAPIAgent interface {
 	CurrentLogout(http.Context, *CurrentLogoutRequest) (*CurrentLogoutResponse, error)
+	// ListCurrentMenus ListCurrentMenus List the current user's menu
 	ListCurrentMenus(http.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
 	// UpdateCurrentRoles UpdateCurrentRoles Switch the user's current role
 	UpdateCurrentRoles(http.Context, *UpdateCurrentRolesRequest) (*UpdateCurrentRolesResponse, error)
@@ -34,17 +35,7 @@ type CurrentAPIAgent interface {
 	UpdateCurrentUserPassword(http.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordResponse, error)
 }
 
-func RegisterCurrentAPIAgent(ag agent.Agent, srv CurrentAPIAgent) {
-	r := ag.Route()
-	r.POST("/current/logout", _CurrentAPI_CurrentLogout0_Agent_Handler(srv))
-	r.PUT("/current/user/password", _CurrentAPI_UpdateCurrentUserPassword0_Agent_Handler(srv))
-	r.PUT("/current/user", _CurrentAPI_UpdateCurrentUser0_Agent_Handler(srv))
-	r.GET("/current/menus", _CurrentAPI_ListCurrentMenus0_Agent_Handler(srv))
-	r.PUT("/current/roles", _CurrentAPI_UpdateCurrentRoles0_Agent_Handler(srv))
-	r.PUT("/current/setting", _CurrentAPI_UpdateCurrentSetting0_Agent_Handler(srv))
-}
-
-func _CurrentAPI_CurrentLogout0_Agent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in CurrentLogoutRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -69,7 +60,7 @@ func _CurrentAPI_CurrentLogout0_Agent_Handler(srv CurrentAPIAgent) http.HandlerF
 	}
 }
 
-func _CurrentAPI_UpdateCurrentUserPassword0_Agent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_UpdateCurrentUserPassword0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateCurrentUserPasswordRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -94,7 +85,7 @@ func _CurrentAPI_UpdateCurrentUserPassword0_Agent_Handler(srv CurrentAPIAgent) h
 	}
 }
 
-func _CurrentAPI_UpdateCurrentUser0_Agent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_UpdateCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateCurrentUserRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -119,7 +110,7 @@ func _CurrentAPI_UpdateCurrentUser0_Agent_Handler(srv CurrentAPIAgent) http.Hand
 	}
 }
 
-func _CurrentAPI_ListCurrentMenus0_Agent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ListCurrentMenusRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -141,7 +132,7 @@ func _CurrentAPI_ListCurrentMenus0_Agent_Handler(srv CurrentAPIAgent) http.Handl
 	}
 }
 
-func _CurrentAPI_UpdateCurrentRoles0_Agent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_UpdateCurrentRoles0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateCurrentRolesRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -166,7 +157,7 @@ func _CurrentAPI_UpdateCurrentRoles0_Agent_Handler(srv CurrentAPIAgent) http.Han
 	}
 }
 
-func _CurrentAPI_UpdateCurrentSetting0_Agent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+func _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateCurrentSettingRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -189,4 +180,14 @@ func _CurrentAPI_UpdateCurrentSetting0_Agent_Handler(srv CurrentAPIAgent) http.H
 		}
 		return ctx.Result(200, reply)
 	}
+}
+
+func RegisterCurrentAPIAgent(ag agent.HTTPAgent, srv CurrentAPIAgent) {
+	r := ag.Route()
+	r.POST("/sys/current/logout", _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/current/user/password", _CurrentAPI_UpdateCurrentUserPassword0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/current/user", _CurrentAPI_UpdateCurrentUser0_HTTPAgent_Handler(srv))
+	r.GET("/sys/current/menus", _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/current/roles", _CurrentAPI_UpdateCurrentRoles0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/current/setting", _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv))
 }

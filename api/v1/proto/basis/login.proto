@@ -41,7 +41,12 @@ service LoginAPI {
       body: "data"
     };
   }
-
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+    option (google.api.http) = {
+      post: "/logout"
+      body: "data"
+    };
+  }
   rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/register"
@@ -49,17 +54,25 @@ service LoginAPI {
     };
   }
 
-  rpc CurrentTokenRefresh(CurrentTokenRefreshRequest) returns (CurrentTokenRefreshResponse) {
+  rpc TokenRefresh(TokenRefreshRequest) returns (TokenRefreshResponse) {
     option (google.api.http) = {
-      post: "/current/token/refresh"
+      post: "/token/refresh"
       body: "*"
     };
   }
 }
 
-message CurrentTokenRefreshRequest {}
+message TokenRefreshRequest {
+  message Data {
+    string refresh_token = 1 [
+      json_name = "refresh_token",
+      (validate.rules).string = {min_len: 1}
+    ];
+  }
+  Data data = 2 [json_name = "data"];
+}
 
-message CurrentTokenRefreshResponse {
+message TokenRefreshResponse {
   security.jwt.v1.Token token = 1;
 }
 
@@ -178,20 +191,6 @@ message CaptchaResourceResponse {
   bytes data = 2 [json_name = "data"];
 }
 
-message RefreshRequest {
-  message Data {
-    string refresh_token = 1 [
-      json_name = "refresh_token",
-      (validate.rules).string = {min_len: 1}
-    ];
-  }
-  Data data = 2 [json_name = "data"];
-}
-
-message RefreshResponse {
-  security.jwt.v1.Token token = 1;
-}
-
 message RegisterRequest {
   message Data {
     string username = 1 [
@@ -220,4 +219,12 @@ message RegisterResponse {
     string redirect = 1;
   }
   Data data = 2 [json_name = "data"];
+}
+
+message LogoutRequest {
+  google.protobuf.Any data = 2 [json_name = "data"];
+}
+
+message LogoutResponse {
+  bool success = 1;
 }

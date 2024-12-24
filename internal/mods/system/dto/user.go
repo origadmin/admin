@@ -50,6 +50,7 @@ type UserRepo interface {
 	GetRoleIDs(context.Context, string) ([]string, error)
 	ListMenuByUserID(context.Context, string) ([]*MenuPB, error)
 	Current(context.Context, string) (*UserPB, error)
+	UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option UserQueryOption) (*pb.UpdateUserStatusResponse, error)
 }
 
 type UserQueryOption struct {

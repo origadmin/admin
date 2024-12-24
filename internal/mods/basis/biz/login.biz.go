@@ -28,11 +28,6 @@ func (biz LoginBiz) Register(ctx context.Context, in *pb.RegisterRequest, opts .
 	return biz.dao.Register(ctx, in)
 }
 
-func (biz LoginBiz) Refresh(ctx context.Context, in *pb.RefreshRequest, opts ...grpc.CallOption) (*pb.RefreshResponse, error) {
-	log.Info("Refresh")
-	return biz.dao.Refresh(ctx, in)
-}
-
 func (biz LoginBiz) CaptchaResource(ctx context.Context, in *pb.CaptchaResourceRequest, opts ...grpc.CallOption) (*pb.CaptchaResourceResponse, error) {
 	//TODO implement me
 	panic("implement me")
@@ -71,6 +66,11 @@ func (biz LoginBiz) CurrentUser(ctx context.Context, in *dto.CurrentUserRequest,
 func (biz LoginBiz) CurrentMenus(ctx context.Context, in *dto.CurrentMenusRequest, opts ...grpc.CallOption) (*dto.CurrentMenusResponse, error) {
 	log.Info("CurrentMenus")
 	return biz.dao.CurrentMenus(ctx, in)
+}
+
+func (biz LoginBiz) TokenRefresh(ctx context.Context, in *pb.TokenRefreshRequest, opts ...grpc.CallOption) (*pb.TokenRefreshResponse, error) {
+	log.Info("TokenRefresh")
+	return biz.dao.TokenRefresh(ctx, in)
 }
 
 // NewLoginBiz new a Login use case.

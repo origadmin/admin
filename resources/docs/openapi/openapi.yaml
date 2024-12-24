@@ -160,7 +160,79 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /current/logout:
+    /login:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.basis.LoginRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /logout:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Logout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.LogoutResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /register:
+        post:
+            tags:
+                - LoginAPI
+            operationId: LoginAPI_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.basis.RegisterRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.basis.RegisterResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/current/logout:
         post:
             tags:
                 - CurrentAPI
@@ -177,17 +249,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.CurrentLogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.CurrentLogoutResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /current/menus:
+    /sys/current/menus:
         get:
             tags:
                 - CurrentAPI
+            description: ListCurrentMenus List the current user's menu
             operationId: CurrentAPI_ListCurrentMenus
             parameters:
                 - name: data.type_url
@@ -235,14 +308,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.ListCurrentMenusResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.ListCurrentMenusResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /current/roles:
+    /sys/current/roles:
         put:
             tags:
                 - CurrentAPI
@@ -260,14 +333,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.UpdateCurrentRolesResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentRolesResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /current/setting:
+    /sys/current/setting:
         put:
             tags:
                 - CurrentAPI
@@ -285,38 +358,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.UpdateCurrentSettingResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentSettingResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /current/token/refresh:
-        post:
-            tags:
-                - LoginAPI
-            operationId: LoginAPI_CurrentTokenRefresh
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.CurrentTokenRefreshRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.CurrentTokenRefreshResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /current/user:
+    /sys/current/user:
         put:
             tags:
                 - CurrentAPI
@@ -334,14 +383,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.UpdateCurrentUserResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentUserResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /current/user/password:
+    /sys/current/user/password:
         put:
             tags:
                 - CurrentAPI
@@ -359,55 +408,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.UpdateCurrentUserPasswordResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /login:
-        post:
-            tags:
-                - LoginAPI
-            operationId: LoginAPI_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.LoginRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.LoginResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /register:
-        post:
-            tags:
-                - LoginAPI
-            operationId: LoginAPI_Register
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.RegisterRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.RegisterResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentUserPasswordResponse'
                 default:
                     description: Default error response
                     content:
@@ -576,6 +577,47 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdateMenuResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/resources:
+        get:
+            tags:
+                - AuthAPI
+            operationId: AuthAPI_ListResources
+            parameters:
+                - name: page_size
+                  in: query
+                  description: The maximum number of Auths to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListResourcesResponse'
                 default:
                     description: Default error response
                     content:
@@ -758,7 +800,9 @@ paths:
             operationId: UserAPI_ResetUserPassword
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
                 required: true
             responses:
                 "200":
@@ -972,41 +1016,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /v1/sys/resources:
-        get:
+    /token/refresh:
+        post:
             tags:
-                - AuthAPI
-            operationId: AuthAPI_ListResources
-            parameters:
-                - name: page_size
-                  in: query
-                  description: The maximum number of Auths to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
-                  schema:
-                    type: string
-                - name: current
-                  in: query
-                  description: The current page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: no_paging
-                  in: query
-                  description: The no_paging is used to disable pagination.
-                  schema:
-                    type: boolean
+                - LoginAPI
+            operationId: LoginAPI_TokenRefresh
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.basis.TokenRefreshRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListResourcesResponse'
+                                $ref: '#/components/schemas/api.v1.services.basis.TokenRefreshResponse'
                 default:
                     description: Default error response
                     content:
@@ -1058,22 +1085,6 @@ components:
                 audio_type:
                     type: integer
                     format: enum
-        api.v1.services.basis.CurrentLogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-        api.v1.services.basis.CurrentTokenRefreshRequest:
-            type: object
-            properties: {}
-        api.v1.services.basis.CurrentTokenRefreshResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.basis.ListCurrentMenusResponse:
-            type: object
-            properties: {}
         api.v1.services.basis.LoginRequest_Data:
             type: object
             properties:
@@ -1090,6 +1101,11 @@ components:
             properties:
                 token:
                     $ref: '#/components/schemas/security.jwt.v1.Token'
+        api.v1.services.basis.LogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.v1.services.basis.RegisterRequest_Data:
             type: object
             properties:
@@ -1113,18 +1129,21 @@ components:
             properties:
                 redirect:
                     type: string
-        api.v1.services.basis.UpdateCurrentRolesResponse:
+        api.v1.services.basis.TokenRefreshRequest:
             type: object
-            properties: {}
-        api.v1.services.basis.UpdateCurrentSettingResponse:
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.basis.TokenRefreshRequest_Data'
+        api.v1.services.basis.TokenRefreshRequest_Data:
             type: object
-            properties: {}
-        api.v1.services.basis.UpdateCurrentUserPasswordResponse:
+            properties:
+                refresh_token:
+                    type: string
+        api.v1.services.basis.TokenRefreshResponse:
             type: object
-            properties: {}
-        api.v1.services.basis.UpdateCurrentUserResponse:
-            type: object
-            properties: {}
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:
@@ -1141,6 +1160,11 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.CurrentLogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.v1.services.system.DeleteMenuResponse:
             type: object
             properties: {}
@@ -1169,6 +1193,13 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.ListCurrentMenusResponse:
+            type: object
+            properties:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
@@ -1501,6 +1532,18 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
                     description: Menu holds the value of the menu edge.
             description: RoleMenuEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.UpdateCurrentRolesResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdateCurrentSettingResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdateCurrentUserPasswordResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdateCurrentUserResponse:
+            type: object
+            properties: {}
         api.v1.services.system.UpdateMenuResponse:
             type: object
             properties:

@@ -13,6 +13,7 @@ import (
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/agent"
+	server2 "origadmin/application/admin/internal/mods/basis/server"
 	"origadmin/application/admin/internal/mods/system/server"
 )
 
@@ -26,25 +27,24 @@ import (
 
 // buildInjectors init kratos application.
 func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap, arg log.KLogger) (*kratos.App, func(), error) {
-	registerAgent, err := server.NewSystemServerAgent(bootstrap, arg)
+	v, err := server.NewSystemClient(bootstrap, arg)
 	if err != nil {
 		return nil, nil, err
 	}
-	v := loader.NewAgentHTTPRegistrar(registerAgent)
-	authenticator, err := loader.NewAuthenticator(bootstrap)
+	registerAgent, err := server.NewSystemServerAgent(v, arg)
 	if err != nil {
 		return nil, nil, err
 	}
-	authorizer, err := loader.NewAuthorizer(bootstrap)
+	serverRegisterAgent, err := server2.NewBasisServerAgent(v, arg)
 	if err != nil {
 		return nil, nil, err
 	}
-	httpServer := agent.NewHTTPServer(bootstrap, v, authenticator, authorizer, arg)
+	v2 := agent.NewRegisterAgent(registerAgent, serverRegisterAgent)
+	httpServer := agent.NewHTTPServerAgent(bootstrap, v2, arg)
 	injectorClient := &loader.InjectorClient{
-		Logger:     arg,
-		Bootstrap:  bootstrap,
-		Registrars: v,
-		Server:     httpServer,
+		Logger:    arg,
+		Bootstrap: bootstrap,
+		Server:    httpServer,
 	}
 	app := NewApp(contextContext, injectorClient)
 	return app, func() {

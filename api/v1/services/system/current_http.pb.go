@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.8.2
 // - protoc             (unknown)
-// source: basis/current.proto
+// source: system/current.proto
 
-package basis
+package system
 
 import (
 	context "context"
@@ -19,15 +19,16 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationCurrentAPICurrentLogout = "/api.v1.services.basis.CurrentAPI/CurrentLogout"
-const OperationCurrentAPIListCurrentMenus = "/api.v1.services.basis.CurrentAPI/ListCurrentMenus"
-const OperationCurrentAPIUpdateCurrentRoles = "/api.v1.services.basis.CurrentAPI/UpdateCurrentRoles"
-const OperationCurrentAPIUpdateCurrentSetting = "/api.v1.services.basis.CurrentAPI/UpdateCurrentSetting"
-const OperationCurrentAPIUpdateCurrentUser = "/api.v1.services.basis.CurrentAPI/UpdateCurrentUser"
-const OperationCurrentAPIUpdateCurrentUserPassword = "/api.v1.services.basis.CurrentAPI/UpdateCurrentUserPassword"
+const OperationCurrentAPICurrentLogout = "/api.v1.services.system.CurrentAPI/CurrentLogout"
+const OperationCurrentAPIListCurrentMenus = "/api.v1.services.system.CurrentAPI/ListCurrentMenus"
+const OperationCurrentAPIUpdateCurrentRoles = "/api.v1.services.system.CurrentAPI/UpdateCurrentRoles"
+const OperationCurrentAPIUpdateCurrentSetting = "/api.v1.services.system.CurrentAPI/UpdateCurrentSetting"
+const OperationCurrentAPIUpdateCurrentUser = "/api.v1.services.system.CurrentAPI/UpdateCurrentUser"
+const OperationCurrentAPIUpdateCurrentUserPassword = "/api.v1.services.system.CurrentAPI/UpdateCurrentUserPassword"
 
 type CurrentAPIHTTPServer interface {
 	CurrentLogout(context.Context, *CurrentLogoutRequest) (*CurrentLogoutResponse, error)
+	// ListCurrentMenus ListCurrentMenus List the current user's menu
 	ListCurrentMenus(context.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
 	// UpdateCurrentRoles UpdateCurrentRoles Switch the user's current role
 	UpdateCurrentRoles(context.Context, *UpdateCurrentRolesRequest) (*UpdateCurrentRolesResponse, error)
@@ -41,12 +42,12 @@ type CurrentAPIHTTPServer interface {
 
 func RegisterCurrentAPIHTTPServer(s *http.Server, srv CurrentAPIHTTPServer) {
 	r := s.Route("/")
-	r.POST("/current/logout", _CurrentAPI_CurrentLogout0_HTTP_Handler(srv))
-	r.PUT("/current/user/password", _CurrentAPI_UpdateCurrentUserPassword0_HTTP_Handler(srv))
-	r.PUT("/current/user", _CurrentAPI_UpdateCurrentUser0_HTTP_Handler(srv))
-	r.GET("/current/menus", _CurrentAPI_ListCurrentMenus0_HTTP_Handler(srv))
-	r.PUT("/current/roles", _CurrentAPI_UpdateCurrentRoles0_HTTP_Handler(srv))
-	r.PUT("/current/setting", _CurrentAPI_UpdateCurrentSetting0_HTTP_Handler(srv))
+	r.POST("/sys/current/logout", _CurrentAPI_CurrentLogout0_HTTP_Handler(srv))
+	r.PUT("/sys/current/user/password", _CurrentAPI_UpdateCurrentUserPassword0_HTTP_Handler(srv))
+	r.PUT("/sys/current/user", _CurrentAPI_UpdateCurrentUser0_HTTP_Handler(srv))
+	r.GET("/sys/current/menus", _CurrentAPI_ListCurrentMenus0_HTTP_Handler(srv))
+	r.PUT("/sys/current/roles", _CurrentAPI_UpdateCurrentRoles0_HTTP_Handler(srv))
+	r.PUT("/sys/current/setting", _CurrentAPI_UpdateCurrentSetting0_HTTP_Handler(srv))
 }
 
 func _CurrentAPI_CurrentLogout0_HTTP_Handler(srv CurrentAPIHTTPServer) func(ctx http.Context) error {
@@ -197,7 +198,7 @@ func NewCurrentAPIHTTPClient(client *http.Client) CurrentAPIHTTPClient {
 
 func (c *CurrentAPIHTTPClientImpl) CurrentLogout(ctx context.Context, in *CurrentLogoutRequest, opts ...http.CallOption) (*CurrentLogoutResponse, error) {
 	var out CurrentLogoutResponse
-	pattern := "/current/logout"
+	pattern := "/sys/current/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCurrentAPICurrentLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -210,7 +211,7 @@ func (c *CurrentAPIHTTPClientImpl) CurrentLogout(ctx context.Context, in *Curren
 
 func (c *CurrentAPIHTTPClientImpl) ListCurrentMenus(ctx context.Context, in *ListCurrentMenusRequest, opts ...http.CallOption) (*ListCurrentMenusResponse, error) {
 	var out ListCurrentMenusResponse
-	pattern := "/current/menus"
+	pattern := "/sys/current/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCurrentAPIListCurrentMenus))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -223,7 +224,7 @@ func (c *CurrentAPIHTTPClientImpl) ListCurrentMenus(ctx context.Context, in *Lis
 
 func (c *CurrentAPIHTTPClientImpl) UpdateCurrentRoles(ctx context.Context, in *UpdateCurrentRolesRequest, opts ...http.CallOption) (*UpdateCurrentRolesResponse, error) {
 	var out UpdateCurrentRolesResponse
-	pattern := "/current/roles"
+	pattern := "/sys/current/roles"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCurrentAPIUpdateCurrentRoles))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -236,7 +237,7 @@ func (c *CurrentAPIHTTPClientImpl) UpdateCurrentRoles(ctx context.Context, in *U
 
 func (c *CurrentAPIHTTPClientImpl) UpdateCurrentSetting(ctx context.Context, in *UpdateCurrentSettingRequest, opts ...http.CallOption) (*UpdateCurrentSettingResponse, error) {
 	var out UpdateCurrentSettingResponse
-	pattern := "/current/setting"
+	pattern := "/sys/current/setting"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCurrentAPIUpdateCurrentSetting))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -249,7 +250,7 @@ func (c *CurrentAPIHTTPClientImpl) UpdateCurrentSetting(ctx context.Context, in 
 
 func (c *CurrentAPIHTTPClientImpl) UpdateCurrentUser(ctx context.Context, in *UpdateCurrentUserRequest, opts ...http.CallOption) (*UpdateCurrentUserResponse, error) {
 	var out UpdateCurrentUserResponse
-	pattern := "/current/user"
+	pattern := "/sys/current/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCurrentAPIUpdateCurrentUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -262,7 +263,7 @@ func (c *CurrentAPIHTTPClientImpl) UpdateCurrentUser(ctx context.Context, in *Up
 
 func (c *CurrentAPIHTTPClientImpl) UpdateCurrentUserPassword(ctx context.Context, in *UpdateCurrentUserPasswordRequest, opts ...http.CallOption) (*UpdateCurrentUserPasswordResponse, error) {
 	var out UpdateCurrentUserPasswordResponse
-	pattern := "/current/user/password"
+	pattern := "/sys/current/user/password"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCurrentAPIUpdateCurrentUserPassword))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
-	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
 	"github.com/origadmin/runtime"
@@ -23,18 +22,13 @@ import (
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/basis"
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
 )
 
-type HTTPRegistrar interface {
-	HTTP(server *service.HTTPServer)
-}
-
 // NewHTTPServerAgent new an HTTP server.
-func NewHTTPServerAgent(bootstrap *configs.Bootstrap, sys *system.CreateMenuResponse, registrars []HTTPRegistrar, l log.KLogger) *service.HTTPServer {
+func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegisterAgent, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no serviceConfig")
@@ -52,7 +46,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, sys *system.CreateMenuResp
 	if err != nil {
 		panic(err)
 	}
-	authorizer.SetPolicies()
+	//authorizer.SetPolicies()
 	options := []msecurity.OptionSetting{
 		msecurity.WithAuthorizer(authorizer),
 		msecurity.WithAuthenticator(authenticator),
@@ -68,7 +62,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, sys *system.CreateMenuResp
 				log.Debugf("Path '%s' does not match any public path, not skipping", path)
 				return false
 			}
-			option.Parser = func(ctx context.Context, id string) (security.UserClaims, error) {
+			option.Parser = func(ctx context.Context, claims security.Claims) (security.UserClaims, error) {
 				req, ok := http.RequestFromServerContext(ctx)
 				if !ok {
 					return nil, errors.New("no request in context")
@@ -112,8 +106,9 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, sys *system.CreateMenuResp
 	if err != nil {
 		panic(err)
 	}
+	ctx := context.Background()
 	for _, registrar := range registrars {
-		registrar.HTTP(srv)
+		registrar.HTTPServer(ctx, srv)
 	}
 	srv.WalkRoute(func(info http.RouteInfo) error {
 		log.Infof("Registered HTTP route: %s %s", info.Method, info.Path)
@@ -121,18 +116,6 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, sys *system.CreateMenuResp
 	})
 
 	return srv
-}
-
-func MiddlewareAdapter() middleware.KMiddleware {
-	return func(handler middleware.KHandler) middleware.KHandler {
-		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			tr, ok := transport.FromServerContext(ctx)
-			if ok {
-				return handler(transport.NewClientContext(ctx, tr), req)
-			}
-			return handler(ctx, req)
-		}
-	}
 }
 
 func DefaultPaths() []string {
@@ -145,7 +128,7 @@ func DefaultPaths() []string {
 		//basis.OperationLoginAPICurrentUser,
 		basis.OperationLoginAPILogin,
 		//basis.OperationLoginAPILogout,
-		basis.OperationLoginAPIRefresh,
+		//basis.OperationLoginAPIRefresh,
 		basis.OperationLoginAPIRegister,
 	}
 }

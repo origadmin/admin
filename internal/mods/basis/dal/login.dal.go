@@ -30,22 +30,22 @@ import (
 )
 
 type loginRepo struct {
-	*configs.BasisConfig
-	bufpool       *sync.Pool
-	Menu          systemdto.MenuRepo
-	Role          systemdto.RoleRepo
-	User          systemdto.UserRepo
-	Authenticator security.Authenticator
+	*LoginData
+	bufpool *sync.Pool
+	//Menu          systemdto.MenuRepo
+	//Role          systemdto.RoleRepo
+	//User          systemdto.UserRepo
+	//Authenticator security.Authenticator
+}
+
+func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequest) (*dto.TokenRefreshResponse, error) {
+	log.Debugf("Token refresh request received with data: %+v", in.GetData())
+	return repo.refreshToken(ctx, in.GetData().GetRefreshToken())
 }
 
 func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
 	log.Debugf("Register request received with data: %+v", in.GetData())
 	return nil, errors.New("not implemented")
-}
-
-func (repo loginRepo) Refresh(ctx context.Context, in *dto.RefreshRequest) (*dto.RefreshResponse, error) {
-	log.Debugf("Refresh request received with data: %+v", in.GetData())
-	return repo.refreshToken(ctx, in.GetData().GetRefreshToken())
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {
@@ -61,7 +61,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 
 	//ctx = context.NewTag(ctx, logging.TagKeyLogin)
 
-	if root := repo.RootUser; root.GetEnabled() {
+	if root := repo.cfg().RootUser; root.GetEnabled() {
 		log.Debugf("Root user is enabled, checking if username matches")
 		// login by root
 		username := root.Username
@@ -129,8 +129,9 @@ func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) 
 		return nil, dto.ErrCaptchaIDNotFound
 	}
 	buf := repo.getBuf()
-	log.Debugf("Writing captcha image to buffer with width %d and height %d", int(repo.Captcha.Width), int(repo.Captcha.Height))
-	err := captcha.WriteImage(buf, id, int(repo.Captcha.Width), int(repo.Captcha.Height))
+	captchaConfig := repo.cfg().Captcha
+	log.Debugf("Writing captcha image to buffer with width %d and height %d", int(captchaConfig.Width), int(captchaConfig.Height))
+	err := captcha.WriteImage(buf, id, int(repo.cfg().Captcha.Width), int(captchaConfig.Height))
 	if err != nil {
 		log.Errorf("Error writing captcha image: %v", err)
 		if errors.Is(err, captcha.ErrNotFound) {
@@ -182,7 +183,7 @@ func (repo loginRepo) Logout(ctx context.Context, in *dto.LogoutRequest) (*dto.L
 
 func (repo loginRepo) CaptchaID(ctx context.Context, in *dto.CaptchaIDRequest) (*dto.CaptchaIDResponse, error) {
 	return &dto.CaptchaIDResponse{
-		Data: captcha.NewLen(int(repo.Captcha.Length)),
+		Data: captcha.NewLen(int(repo.cfg().Captcha.Length)),
 	}, nil
 }
 
@@ -199,7 +200,7 @@ func (repo loginRepo) putBuf(buf *bytes.Buffer) {
 	repo.bufpool.Put(buf)
 }
 
-func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.RefreshResponse, error) {
+func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.TokenRefreshResponse, error) {
 	claims, err := repo.Authenticator.Authenticate(ctx, token)
 	if err != nil {
 		return nil, err
@@ -215,7 +216,7 @@ func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.Refr
 	if err != nil {
 		return nil, err
 	}
-	return &dto.RefreshResponse{
+	return &dto.TokenRefreshResponse{
 		Token: genToken.Token,
 	}, nil
 }
@@ -261,9 +262,22 @@ func fromSecurityClaims(claims security.Claims) *securityv1.Claims {
 	}
 }
 
+func (repo loginRepo) cfg() *configs.BasisConfig {
+	return repo.LoginData.BasisConfig
+}
+
+type LoginData struct {
+	BasisConfig   *configs.BasisConfig
+	Authenticator security.Authenticator
+	Menu          systemdto.MenuRepo
+	Role          systemdto.RoleRepo
+	User          systemdto.UserRepo
+}
+
 // NewLoginRepo .
-func NewLoginRepo(cfg *configs.BasisConfig, authenticator security.Authenticator, sysMenu systemdto.MenuRepo, sysRole systemdto.RoleRepo, sysUser systemdto.UserRepo, logger log.KLogger) dto.LoginRepo {
+func NewLoginRepo(data *LoginData, logger log.KLogger) dto.LoginRepo {
 	var err error
+	cfg := data.BasisConfig
 	// todo: generate random password for root user if not exists
 	if cfg.RootUser.RandomPassword {
 		passwd := rand.GenerateRandom(12)
@@ -284,12 +298,8 @@ func NewLoginRepo(cfg *configs.BasisConfig, authenticator security.Authenticator
 	//	panic(err)
 	//}
 	return &loginRepo{
-		bufpool:       BufPool(),
-		BasisConfig:   cfg,
-		Menu:          sysMenu,
-		Role:          sysRole,
-		User:          sysUser,
-		Authenticator: authenticator,
+		bufpool:   BufPool(),
+		LoginData: data,
 	}
 }
 

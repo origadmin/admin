@@ -21,8 +21,8 @@ type (
 	LoginResponse        = pb.LoginResponse
 	LogoutRequest        = pb.LogoutRequest
 	LogoutResponse       = pb.LogoutResponse
-	RefreshRequest       = pb.RefreshRequest
-	RefreshResponse      = pb.RefreshResponse
+	TokenRefreshRequest  = pb.TokenRefreshRequest
+	TokenRefreshResponse = pb.TokenRefreshResponse
 	RegisterRequest      = pb.RegisterRequest
 	RegisterResponse     = pb.RegisterResponse
 	CurrentMenusRequest  = pb.CurrentMenusRequest
@@ -38,6 +38,6 @@ type LoginRepo interface {
 	CurrentUser(ctx context.Context, in *CurrentUserRequest) (*CurrentUserResponse, error)
 	Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error)
-	Refresh(ctx context.Context, in *RefreshRequest) (*RefreshResponse, error)
 	Register(ctx context.Context, in *RegisterRequest) (*RegisterResponse, error)
+	TokenRefresh(ctx context.Context, in *TokenRefreshRequest) (*TokenRefreshResponse, error)
 }

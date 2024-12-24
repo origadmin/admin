@@ -5,7 +5,7 @@
 package server
 
 import (
-	"github.com/origadmin/contrib/transport/gins"
+	"github.com/google/wire"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
@@ -26,8 +26,8 @@ const (
 )
 
 var (
-// ProviderSet is server providers.
-// ProviderSet = wire.NewSet(NewBasisServer, NewBasisServerAgent)
+	// ProviderSet is server providers.
+	ProviderSet = wire.NewSet(NewBasisServerAgent)
 )
 
 func init() {
@@ -36,29 +36,30 @@ func init() {
 
 type RegisterAgent struct {
 	Login pb.LoginAPIAgent
+	Agent agent.Agent
 }
 
-func (s RegisterAgent) GIN(server gins.IRouter) {
-	log.Info("gin server basis init")
-	//pb.RegisterLoginAPIAgent(server, s.Login)
+func (s RegisterAgent) Server(ctx context.Context, server *service.GRPCServer, server2 *service.HTTPServer) {
+
 }
 
-func (s RegisterAgent) GRPC(server *service.GRPCServer) {
+func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
 	log.Info("grpc server basis init")
-	//pb.RegisterLoginAPIServer(server, s.Login)
+	//srv := agent.NewGRPC(server)
+	//pb.RegisterLoginAPIServer(srv, s.Login)
 }
 
-func (s RegisterAgent) HTTP(server *service.HTTPServer) {
+func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server basis init")
-	ag := agent.New(server)
-	pb.RegisterLoginAPIAgent(ag, s.Login)
+	srv := agent.NewHTTP(server)
+	pb.RegisterLoginAPIAgent(srv, s.Login)
 }
 
-func NewBasisServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) (*RegisterAgent, error) {
-	client, err := NewBasisClient(bootstrap, l)
-	if err != nil {
-		return nil, err
-	}
+func NewBasisServerAgent(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
+	//client, err := NewBasisClient(bootstrap, l)
+	//if err != nil {
+	//	return nil, err
+	//}
 	register := RegisterAgent{
 		Login: NewLoginServerAgent(client),
 	}
@@ -130,3 +131,5 @@ func NewLoginClient(service *configv1.Service) (pb.LoginAPIServer, error) {
 //	cli := pb.NewBasisAPIHTTPClient(client)
 //	return basisservice.NewBasisAPIHTTPServer(cli), nil
 //}
+
+var _ service.ServerRegister = (*RegisterAgent)(nil)

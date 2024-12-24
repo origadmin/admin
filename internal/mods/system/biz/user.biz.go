@@ -22,6 +22,16 @@ type UsersBiz struct {
 	log     *log.KHelper
 }
 
+func (biz UsersBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, opts ...grpc.CallOption) (*pb.UpdateUserStatusResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (biz UsersBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUserPasswordRequest, opts ...grpc.CallOption) (*pb.ResetUserPasswordResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (biz UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
 	var option dto.UserQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {

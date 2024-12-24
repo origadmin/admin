@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: basis/current.proto
+// source: system/current.proto
 
-package basis
+package system
 
 import (
 	context "context"
@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CurrentAPI_CurrentLogout_FullMethodName             = "/api.v1.services.basis.CurrentAPI/CurrentLogout"
-	CurrentAPI_UpdateCurrentUserPassword_FullMethodName = "/api.v1.services.basis.CurrentAPI/UpdateCurrentUserPassword"
-	CurrentAPI_UpdateCurrentUser_FullMethodName         = "/api.v1.services.basis.CurrentAPI/UpdateCurrentUser"
-	CurrentAPI_ListCurrentMenus_FullMethodName          = "/api.v1.services.basis.CurrentAPI/ListCurrentMenus"
-	CurrentAPI_UpdateCurrentRoles_FullMethodName        = "/api.v1.services.basis.CurrentAPI/UpdateCurrentRoles"
-	CurrentAPI_UpdateCurrentSetting_FullMethodName      = "/api.v1.services.basis.CurrentAPI/UpdateCurrentSetting"
+	CurrentAPI_CurrentLogout_FullMethodName             = "/api.v1.services.system.CurrentAPI/CurrentLogout"
+	CurrentAPI_UpdateCurrentUserPassword_FullMethodName = "/api.v1.services.system.CurrentAPI/UpdateCurrentUserPassword"
+	CurrentAPI_UpdateCurrentUser_FullMethodName         = "/api.v1.services.system.CurrentAPI/UpdateCurrentUser"
+	CurrentAPI_ListCurrentMenus_FullMethodName          = "/api.v1.services.system.CurrentAPI/ListCurrentMenus"
+	CurrentAPI_UpdateCurrentRoles_FullMethodName        = "/api.v1.services.system.CurrentAPI/UpdateCurrentRoles"
+	CurrentAPI_UpdateCurrentSetting_FullMethodName      = "/api.v1.services.system.CurrentAPI/UpdateCurrentSetting"
 )
 
 // CurrentAPIClient is the client API for CurrentAPI service.
@@ -38,6 +38,7 @@ type CurrentAPIClient interface {
 	UpdateCurrentUserPassword(ctx context.Context, in *UpdateCurrentUserPasswordRequest, opts ...grpc.CallOption) (*UpdateCurrentUserPasswordResponse, error)
 	// UpdateCurrentUser Update the current user information
 	UpdateCurrentUser(ctx context.Context, in *UpdateCurrentUserRequest, opts ...grpc.CallOption) (*UpdateCurrentUserResponse, error)
+	// ListCurrentMenus List the current user's menu
 	ListCurrentMenus(ctx context.Context, in *ListCurrentMenusRequest, opts ...grpc.CallOption) (*ListCurrentMenusResponse, error)
 	// UpdateCurrentRoles Switch the user's current role
 	UpdateCurrentRoles(ctx context.Context, in *UpdateCurrentRolesRequest, opts ...grpc.CallOption) (*UpdateCurrentRolesResponse, error)
@@ -124,6 +125,7 @@ type CurrentAPIServer interface {
 	UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordResponse, error)
 	// UpdateCurrentUser Update the current user information
 	UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*UpdateCurrentUserResponse, error)
+	// ListCurrentMenus List the current user's menu
 	ListCurrentMenus(context.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
 	// UpdateCurrentRoles Switch the user's current role
 	UpdateCurrentRoles(context.Context, *UpdateCurrentRolesRequest) (*UpdateCurrentRolesResponse, error)
@@ -290,7 +292,7 @@ func _CurrentAPI_UpdateCurrentSetting_Handler(srv interface{}, ctx context.Conte
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CurrentAPI_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.basis.CurrentAPI",
+	ServiceName: "api.v1.services.system.CurrentAPI",
 	HandlerType: (*CurrentAPIServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -319,5 +321,5 @@ var CurrentAPI_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "basis/current.proto",
+	Metadata: "system/current.proto",
 }

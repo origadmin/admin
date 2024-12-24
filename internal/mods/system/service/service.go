@@ -5,8 +5,9 @@
 package service
 
 import (
+	"context"
+
 	"github.com/google/wire"
-	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -16,40 +17,47 @@ import (
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
-	NewMenuAPIService,
 	NewMenuAPIServer,
+	NewMenuAPIService,
 	NewRoleAPIServer,
 	NewRoleAPIService,
 	NewUserAPIServer,
 	NewUserAPIService,
+	NewCurrentAPIServer,
+	NewCurrentAPIService,
+	NewAuthAPIServer,
+	NewAuthAPIService,
 )
 
 type RegisterServer struct {
-	Menu pb.MenuAPIServer
-	Role pb.RoleAPIServer
-	User pb.UserAPIServer
+	Menu    pb.MenuAPIServer
+	Role    pb.RoleAPIServer
+	User    pb.UserAPIServer
+	Auth    pb.AuthAPIServer
+	Current pb.CurrentAPIServer
 }
 
-func (s RegisterServer) GRPC(server *service.GRPCServer) *service.GRPCServer {
+func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
 	log.Info("grpc server system init")
 	pb.RegisterMenuAPIServer(server, s.Menu)
 	pb.RegisterRoleAPIServer(server, s.Role)
 	pb.RegisterUserAPIServer(server, s.User)
-	return server
+	pb.RegisterAuthAPIServer(server, s.Auth)
+	pb.RegisterCurrentAPIServer(server, s.Current)
 }
 
-func (s RegisterServer) GINS(server *gins.Server) *gins.Server {
-	log.Info("gins server system init")
-	pb.RegisterMenuAPIGINSServer(server, s.Menu)
-	pb.RegisterRoleAPIGINSServer(server, s.Role)
-	pb.RegisterUserAPIGINSServer(server, s.User)
-	return server
-}
-
-func (s RegisterServer) HTTP(server *service.HTTPServer) *service.HTTPServer {
+func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server system init")
 	pb.RegisterMenuAPIHTTPServer(server, s.Menu)
 	pb.RegisterRoleAPIHTTPServer(server, s.Role)
 	pb.RegisterUserAPIHTTPServer(server, s.User)
-	return server
+	pb.RegisterAuthAPIHTTPServer(server, s.Auth)
+	pb.RegisterCurrentAPIHTTPServer(server, s.Current)
 }
+
+func (s RegisterServer) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
+	s.HTTPServer(ctx, httpServer)
+	s.GRPCServer(ctx, grpcServer)
+}
+
+var _ service.ServerRegister = (*RegisterServer)(nil)

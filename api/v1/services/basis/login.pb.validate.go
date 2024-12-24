@@ -35,42 +35,71 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on CurrentTokenRefreshRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on TokenRefreshRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CurrentTokenRefreshRequest) Validate() error {
+func (m *TokenRefreshRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CurrentTokenRefreshRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on TokenRefreshRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CurrentTokenRefreshRequestMultiError, or nil if none found.
-func (m *CurrentTokenRefreshRequest) ValidateAll() error {
+// TokenRefreshRequestMultiError, or nil if none found.
+func (m *TokenRefreshRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CurrentTokenRefreshRequest) validate(all bool) error {
+func (m *TokenRefreshRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, TokenRefreshRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, TokenRefreshRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return TokenRefreshRequestValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
-		return CurrentTokenRefreshRequestMultiError(errors)
+		return TokenRefreshRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CurrentTokenRefreshRequestMultiError is an error wrapping multiple
-// validation errors returned by CurrentTokenRefreshRequest.ValidateAll() if
-// the designated constraints aren't met.
-type CurrentTokenRefreshRequestMultiError []error
+// TokenRefreshRequestMultiError is an error wrapping multiple validation
+// errors returned by TokenRefreshRequest.ValidateAll() if the designated
+// constraints aren't met.
+type TokenRefreshRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CurrentTokenRefreshRequestMultiError) Error() string {
+func (m TokenRefreshRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -79,11 +108,11 @@ func (m CurrentTokenRefreshRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CurrentTokenRefreshRequestMultiError) AllErrors() []error { return m }
+func (m TokenRefreshRequestMultiError) AllErrors() []error { return m }
 
-// CurrentTokenRefreshRequestValidationError is the validation error returned
-// by CurrentTokenRefreshRequest.Validate if the designated constraints aren't met.
-type CurrentTokenRefreshRequestValidationError struct {
+// TokenRefreshRequestValidationError is the validation error returned by
+// TokenRefreshRequest.Validate if the designated constraints aren't met.
+type TokenRefreshRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -91,24 +120,24 @@ type CurrentTokenRefreshRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CurrentTokenRefreshRequestValidationError) Field() string { return e.field }
+func (e TokenRefreshRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CurrentTokenRefreshRequestValidationError) Reason() string { return e.reason }
+func (e TokenRefreshRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CurrentTokenRefreshRequestValidationError) Cause() error { return e.cause }
+func (e TokenRefreshRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CurrentTokenRefreshRequestValidationError) Key() bool { return e.key }
+func (e TokenRefreshRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CurrentTokenRefreshRequestValidationError) ErrorName() string {
-	return "CurrentTokenRefreshRequestValidationError"
+func (e TokenRefreshRequestValidationError) ErrorName() string {
+	return "TokenRefreshRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CurrentTokenRefreshRequestValidationError) Error() string {
+func (e TokenRefreshRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -120,14 +149,14 @@ func (e CurrentTokenRefreshRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCurrentTokenRefreshRequest.%s: %s%s",
+		"invalid %sTokenRefreshRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CurrentTokenRefreshRequestValidationError{}
+var _ error = TokenRefreshRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -135,24 +164,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CurrentTokenRefreshRequestValidationError{}
+} = TokenRefreshRequestValidationError{}
 
-// Validate checks the field values on CurrentTokenRefreshResponse with the
-// rules defined in the proto definition for this message. If any rules are
+// Validate checks the field values on TokenRefreshResponse with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CurrentTokenRefreshResponse) Validate() error {
+func (m *TokenRefreshResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CurrentTokenRefreshResponse with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on TokenRefreshResponse with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CurrentTokenRefreshResponseMultiError, or nil if none found.
-func (m *CurrentTokenRefreshResponse) ValidateAll() error {
+// TokenRefreshResponseMultiError, or nil if none found.
+func (m *TokenRefreshResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CurrentTokenRefreshResponse) validate(all bool) error {
+func (m *TokenRefreshResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -163,7 +192,7 @@ func (m *CurrentTokenRefreshResponse) validate(all bool) error {
 		switch v := interface{}(m.GetToken()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CurrentTokenRefreshResponseValidationError{
+				errors = append(errors, TokenRefreshResponseValidationError{
 					field:  "Token",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -171,7 +200,7 @@ func (m *CurrentTokenRefreshResponse) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, CurrentTokenRefreshResponseValidationError{
+				errors = append(errors, TokenRefreshResponseValidationError{
 					field:  "Token",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -180,7 +209,7 @@ func (m *CurrentTokenRefreshResponse) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetToken()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return CurrentTokenRefreshResponseValidationError{
+			return TokenRefreshResponseValidationError{
 				field:  "Token",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -189,19 +218,19 @@ func (m *CurrentTokenRefreshResponse) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CurrentTokenRefreshResponseMultiError(errors)
+		return TokenRefreshResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// CurrentTokenRefreshResponseMultiError is an error wrapping multiple
-// validation errors returned by CurrentTokenRefreshResponse.ValidateAll() if
-// the designated constraints aren't met.
-type CurrentTokenRefreshResponseMultiError []error
+// TokenRefreshResponseMultiError is an error wrapping multiple validation
+// errors returned by TokenRefreshResponse.ValidateAll() if the designated
+// constraints aren't met.
+type TokenRefreshResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CurrentTokenRefreshResponseMultiError) Error() string {
+func (m TokenRefreshResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -210,12 +239,11 @@ func (m CurrentTokenRefreshResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CurrentTokenRefreshResponseMultiError) AllErrors() []error { return m }
+func (m TokenRefreshResponseMultiError) AllErrors() []error { return m }
 
-// CurrentTokenRefreshResponseValidationError is the validation error returned
-// by CurrentTokenRefreshResponse.Validate if the designated constraints
-// aren't met.
-type CurrentTokenRefreshResponseValidationError struct {
+// TokenRefreshResponseValidationError is the validation error returned by
+// TokenRefreshResponse.Validate if the designated constraints aren't met.
+type TokenRefreshResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -223,24 +251,24 @@ type CurrentTokenRefreshResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e CurrentTokenRefreshResponseValidationError) Field() string { return e.field }
+func (e TokenRefreshResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CurrentTokenRefreshResponseValidationError) Reason() string { return e.reason }
+func (e TokenRefreshResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CurrentTokenRefreshResponseValidationError) Cause() error { return e.cause }
+func (e TokenRefreshResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CurrentTokenRefreshResponseValidationError) Key() bool { return e.key }
+func (e TokenRefreshResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CurrentTokenRefreshResponseValidationError) ErrorName() string {
-	return "CurrentTokenRefreshResponseValidationError"
+func (e TokenRefreshResponseValidationError) ErrorName() string {
+	return "TokenRefreshResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CurrentTokenRefreshResponseValidationError) Error() string {
+func (e TokenRefreshResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -252,14 +280,14 @@ func (e CurrentTokenRefreshResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCurrentTokenRefreshResponse.%s: %s%s",
+		"invalid %sTokenRefreshResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CurrentTokenRefreshResponseValidationError{}
+var _ error = TokenRefreshResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -267,7 +295,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CurrentTokenRefreshResponseValidationError{}
+} = TokenRefreshResponseValidationError{}
 
 // Validate checks the field values on LoginRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -2162,264 +2190,6 @@ var _ interface {
 	ErrorName() string
 } = CaptchaResourceResponseValidationError{}
 
-// Validate checks the field values on RefreshRequest with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *RefreshRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on RefreshRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in RefreshRequestMultiError,
-// or nil if none found.
-func (m *RefreshRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *RefreshRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RefreshRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, RefreshRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return RefreshRequestValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return RefreshRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// RefreshRequestMultiError is an error wrapping multiple validation errors
-// returned by RefreshRequest.ValidateAll() if the designated constraints
-// aren't met.
-type RefreshRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m RefreshRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m RefreshRequestMultiError) AllErrors() []error { return m }
-
-// RefreshRequestValidationError is the validation error returned by
-// RefreshRequest.Validate if the designated constraints aren't met.
-type RefreshRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e RefreshRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e RefreshRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e RefreshRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e RefreshRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e RefreshRequestValidationError) ErrorName() string { return "RefreshRequestValidationError" }
-
-// Error satisfies the builtin error interface
-func (e RefreshRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sRefreshRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = RefreshRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = RefreshRequestValidationError{}
-
-// Validate checks the field values on RefreshResponse with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *RefreshResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on RefreshResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// RefreshResponseMultiError, or nil if none found.
-func (m *RefreshResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *RefreshResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if all {
-		switch v := interface{}(m.GetToken()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RefreshResponseValidationError{
-					field:  "Token",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, RefreshResponseValidationError{
-					field:  "Token",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetToken()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return RefreshResponseValidationError{
-				field:  "Token",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return RefreshResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// RefreshResponseMultiError is an error wrapping multiple validation errors
-// returned by RefreshResponse.ValidateAll() if the designated constraints
-// aren't met.
-type RefreshResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m RefreshResponseMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m RefreshResponseMultiError) AllErrors() []error { return m }
-
-// RefreshResponseValidationError is the validation error returned by
-// RefreshResponse.Validate if the designated constraints aren't met.
-type RefreshResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e RefreshResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e RefreshResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e RefreshResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e RefreshResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e RefreshResponseValidationError) ErrorName() string { return "RefreshResponseValidationError" }
-
-// Error satisfies the builtin error interface
-func (e RefreshResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sRefreshResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = RefreshResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = RefreshResponseValidationError{}
-
 // Validate checks the field values on RegisterRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -2680,6 +2450,350 @@ var _ interface {
 	ErrorName() string
 } = RegisterResponseValidationError{}
 
+// Validate checks the field values on LogoutRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *LogoutRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LogoutRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LogoutRequestMultiError, or
+// nil if none found.
+func (m *LogoutRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LogoutRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, LogoutRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, LogoutRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return LogoutRequestValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return LogoutRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// LogoutRequestMultiError is an error wrapping multiple validation errors
+// returned by LogoutRequest.ValidateAll() if the designated constraints
+// aren't met.
+type LogoutRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LogoutRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LogoutRequestMultiError) AllErrors() []error { return m }
+
+// LogoutRequestValidationError is the validation error returned by
+// LogoutRequest.Validate if the designated constraints aren't met.
+type LogoutRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e LogoutRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e LogoutRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e LogoutRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e LogoutRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e LogoutRequestValidationError) ErrorName() string { return "LogoutRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e LogoutRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sLogoutRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = LogoutRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = LogoutRequestValidationError{}
+
+// Validate checks the field values on LogoutResponse with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *LogoutResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on LogoutResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in LogoutResponseMultiError,
+// or nil if none found.
+func (m *LogoutResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *LogoutResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Success
+
+	if len(errors) > 0 {
+		return LogoutResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// LogoutResponseMultiError is an error wrapping multiple validation errors
+// returned by LogoutResponse.ValidateAll() if the designated constraints
+// aren't met.
+type LogoutResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m LogoutResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m LogoutResponseMultiError) AllErrors() []error { return m }
+
+// LogoutResponseValidationError is the validation error returned by
+// LogoutResponse.Validate if the designated constraints aren't met.
+type LogoutResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e LogoutResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e LogoutResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e LogoutResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e LogoutResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e LogoutResponseValidationError) ErrorName() string { return "LogoutResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e LogoutResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sLogoutResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = LogoutResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = LogoutResponseValidationError{}
+
+// Validate checks the field values on TokenRefreshRequest_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *TokenRefreshRequest_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on TokenRefreshRequest_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// TokenRefreshRequest_DataMultiError, or nil if none found.
+func (m *TokenRefreshRequest_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *TokenRefreshRequest_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetRefreshToken()) < 1 {
+		err := TokenRefreshRequest_DataValidationError{
+			field:  "RefreshToken",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return TokenRefreshRequest_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// TokenRefreshRequest_DataMultiError is an error wrapping multiple validation
+// errors returned by TokenRefreshRequest_Data.ValidateAll() if the designated
+// constraints aren't met.
+type TokenRefreshRequest_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m TokenRefreshRequest_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m TokenRefreshRequest_DataMultiError) AllErrors() []error { return m }
+
+// TokenRefreshRequest_DataValidationError is the validation error returned by
+// TokenRefreshRequest_Data.Validate if the designated constraints aren't met.
+type TokenRefreshRequest_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e TokenRefreshRequest_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e TokenRefreshRequest_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e TokenRefreshRequest_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e TokenRefreshRequest_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e TokenRefreshRequest_DataValidationError) ErrorName() string {
+	return "TokenRefreshRequest_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e TokenRefreshRequest_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sTokenRefreshRequest_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = TokenRefreshRequest_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = TokenRefreshRequest_DataValidationError{}
+
 // Validate checks the field values on LoginRequest_Data with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -2825,119 +2939,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = LoginRequest_DataValidationError{}
-
-// Validate checks the field values on RefreshRequest_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *RefreshRequest_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on RefreshRequest_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// RefreshRequest_DataMultiError, or nil if none found.
-func (m *RefreshRequest_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *RefreshRequest_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if utf8.RuneCountInString(m.GetRefreshToken()) < 1 {
-		err := RefreshRequest_DataValidationError{
-			field:  "RefreshToken",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return RefreshRequest_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// RefreshRequest_DataMultiError is an error wrapping multiple validation
-// errors returned by RefreshRequest_Data.ValidateAll() if the designated
-// constraints aren't met.
-type RefreshRequest_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m RefreshRequest_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m RefreshRequest_DataMultiError) AllErrors() []error { return m }
-
-// RefreshRequest_DataValidationError is the validation error returned by
-// RefreshRequest_Data.Validate if the designated constraints aren't met.
-type RefreshRequest_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e RefreshRequest_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e RefreshRequest_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e RefreshRequest_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e RefreshRequest_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e RefreshRequest_DataValidationError) ErrorName() string {
-	return "RefreshRequest_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e RefreshRequest_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sRefreshRequest_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = RefreshRequest_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = RefreshRequest_DataValidationError{}
 
 // Validate checks the field values on RegisterRequest_Data with the rules
 // defined in the proto definition for this message. If any rules are

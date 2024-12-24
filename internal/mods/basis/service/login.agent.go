@@ -24,6 +24,11 @@ type LoginAPIAgentService struct {
 	client pb.LoginAPIClient
 }
 
+func (s LoginAPIAgentService) CurrentLogout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	response, err := s.client.Register(context, request)
 	if err != nil {
@@ -129,8 +134,8 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 //	return nil, nil
 //}
 
-func (s LoginAPIAgentService) CurrentTokenRefresh(context transhttp.Context, request *pb.CurrentTokenRefreshRequest) (*pb.CurrentTokenRefreshResponse, error) {
-	response, err := s.client.CurrentTokenRefresh(context, request)
+func (s LoginAPIAgentService) TokenRefresh(context transhttp.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
+	response, err := s.client.TokenRefresh(context, request)
 	if err != nil {
 		log.Errorf("Refresh error: %v", err)
 		return nil, err
@@ -165,18 +170,18 @@ func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.Login
 	return nil, nil
 }
 
-//func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-//	response, err := s.client.Logout(context, request)
-//	if err != nil {
-//		log.Errorf("Logout error: %v", err)
-//		return nil, err
-//	}
-//	s.JSON(context, http.StatusOK, &resp.Result{
-//		Success: true,
-//		Data:    response,
-//	})
-//	return nil, nil
-//}
+func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	response, err := s.client.Logout(context, request)
+	if err != nil {
+		log.Errorf("Logout error: %v", err)
+		return nil, err
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+	return nil, nil
+}
 
 // NewLoginAPIAgentService new a Login service.
 func NewLoginAPIAgentService(client pb.LoginAPIClient) *LoginAPIAgentService {
@@ -195,7 +200,7 @@ func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIAgent {
 func NewLoginServerAgentGINRegister(client *service.GRPCClient) func(server *transhttp.Server) {
 	cli := NewLoginServerAgent(client)
 	return func(server *transhttp.Server) {
-		pb.RegisterLoginAPIAgent(agent.New(server), cli)
+		pb.RegisterLoginAPIAgent(agent.NewHTTP(server), cli)
 	}
 }
 

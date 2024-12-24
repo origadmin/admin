@@ -6,50 +6,22 @@
 package agent
 
 import (
-	"github.com/goexts/generic/types"
 	"github.com/google/wire"
-	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
-	servicehttp "github.com/origadmin/runtime/service/http"
-	"github.com/origadmin/toolkits/security"
 
-	"origadmin/application/admin/internal/configs"
+	basisserver "origadmin/application/admin/internal/mods/basis/server"
+	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
 var ProviderSet = wire.NewSet(
+	NewRegisterAgent,
 	NewHTTPServerAgent,
 )
 
-// NewGINServer new an HTTP server.
-func NewGINServer(bootstrap *configs.Bootstrap, registrars []HTTPRegistrar, authenticator security.Authenticator, authorizer security.Authorizer, l log.KLogger) *service.HTTPServer {
-	serviceConfig := bootstrap.GetService()
-	if serviceConfig == nil {
-		panic("no service config")
-	}
+type ServerRegisterAgent service.ServerRegister
 
-	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
-	srv, err := runtime.NewHTTPServiceServer(serviceConfig, service.WithHTTP(
-		servicehttp.WithMiddlewares(middleware.NewClient(bootstrap.GetMiddleware())...),
-	))
-	if err != nil {
-		panic(err)
+func NewRegisterAgent(s1 *systemserver.RegisterAgent, s2 *basisserver.RegisterAgent) []ServerRegisterAgent {
+	return []ServerRegisterAgent{
+		s1, s2,
 	}
-
-	//engine := gin.New()
-	//engine.ContextWithFallback = true
-	//config := bootstrap.GetMiddlewares()
-	//paths := config.GetSecurity().GetPublicPaths()
-	//ms := middleware.New(config,
-	//	middleware.WithAuthorizer(authorizer),
-	//	middleware.WithAuthenticator(authenticator),
-	//	middleware.WithSkipper(paths),
-	//)
-	//engine.Use(gin.Recovery())
-	for _, registrar := range registrars {
-		registrar.HTTP(srv)
-	}
-	//srv.HandlePrefix("/", engine)
-	return srv
 }

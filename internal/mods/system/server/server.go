@@ -6,9 +6,7 @@ package server
 
 import (
 	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
-	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
@@ -33,14 +31,14 @@ const (
 
 var (
 	// ProviderSet is server providers.
-	ProviderSet = wire.NewSet(NewSystemServer, NewSystemServerAgent)
+	ProviderSet = wire.NewSet(NewSystemClient, NewRegisterServer, NewSystemServer, NewSystemServerAgent)
 )
 
 func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceBuilder)
 }
 
-func NewSystemServer(register *systemservice.RegisterServer, register2 basisservice.RegisterServer, bootstrap *configs.Bootstrap, l log.KLogger) []transport.Server {
+func NewSystemServer(registers []service.ServerRegister, bootstrap *configs.Bootstrap, l log.KLogger) []transport.Server {
 	var servers []transport.Server
 	middlewares := middleware.NewServer(bootstrap.GetMiddleware())
 	serviceConfig := bootstrap.GetService()
@@ -50,12 +48,23 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 	if serviceConfig.Name == "" {
 		serviceConfig.Name = ServiceName
 	}
+	ctx := context.Background()
 	if serv := NewGRPCServer(bootstrap, l, service.WithGRPC(
 		servicegrpc.WithMiddlewares(middlewares...),
 		servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
 	)); serv != nil {
-		serv = register.GRPC(serv)
-		serv = register2.GRPC(serv)
+		for i := range registers {
+			registers[i].GRPCServer(ctx, serv)
+		}
+		servers = append(servers, serv)
+	}
+	if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
+		servicehttp.WithMiddlewares(middlewares...),
+		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+	)); serv != nil {
+		for i := range registers {
+			registers[i].HTTPServer(ctx, serv)
+		}
 		servers = append(servers, serv)
 	}
 	//if serv := NewGINSServer(bootstrap, l, service.WithHTTP(
@@ -65,61 +74,65 @@ func NewSystemServer(register *systemservice.RegisterServer, register2 basisserv
 	//	serv = register2.GINS(serv)
 	//	servers = append(servers, serv)
 	//}
-	if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
-		servicehttp.WithMiddlewares(middlewares...),
-		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
-	)); serv != nil {
-		serv = register.HTTP(serv)
-		serv = register2.HTTP(serv)
-		servers = append(servers, serv)
-	}
 	return servers
 }
 
 type RegisterAgent struct {
-	Auth           pb.AuthAPIAgent
-	Menu           pb.MenuAPIAgent
-	Role           pb.RoleAPIAgent
-	User           pb.UserAPIAgent
-	basisRegisters []func(server *http.Server)
+	Auth    pb.AuthAPIAgent
+	Current pb.CurrentAPIAgent
+	Menu    pb.MenuAPIAgent
+	Role    pb.RoleAPIAgent
+	User    pb.UserAPIAgent
 }
 
-func (s RegisterAgent) HTTP(server *http.Server) {
+func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
+	log.Info("grpc server system init")
+}
+
+func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server system init")
-	log.Info("gin server system init")
-	for _, register := range s.basisRegisters {
-		register(server)
-	}
-	ag := agent.New(server)
+	ag := agent.NewHTTP(server)
 	pb.RegisterAuthAPIAgent(ag, s.Auth)
+	pb.RegisterCurrentAPIAgent(ag, s.Current)
 	pb.RegisterMenuAPIAgent(ag, s.Menu)
 	pb.RegisterRoleAPIAgent(ag, s.Role)
 	pb.RegisterUserAPIAgent(ag, s.User)
 }
 
-func (s RegisterAgent) GIN(server gins.IRouter) {
-	log.Info("gin server system init")
-	//for _, register := range s.basisRegisters {
-	//	register(server)
-	//}
-	//pb.RegisterMenuAPIAgent(server, s.Menu)
-	//pb.RegisterRoleAPIAgent(server, s.Role)
-	//pb.RegisterUserAPIAgent(server, s.User)
+func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
+	s.HTTPServer(ctx, httpServer)
+	s.GRPCServer(ctx, grpcServer)
 }
 
-func NewSystemServerAgent(bootstrap *configs.Bootstrap, l log.KLogger) (*RegisterAgent, error) {
-	client, err := NewSystemClient(bootstrap, l)
-	if err != nil {
-		return nil, err
-	}
+//
+//func (s RegisterAgent) HTTP(server *http.Server) {
+//	log.Info("http server system init")
+//	log.Info("gin server system init")
+//	for _, register := range s.basisRegisters {
+//		register(server)
+//	}
+//	ag := agent.NewHTTP(server)
+//	pb.RegisterAuthAPIAgent(ag, s.Auth)
+//	pb.RegisterCurrentAPIAgent(ag, s.Current)
+//	pb.RegisterMenuAPIAgent(ag, s.Menu)
+//	pb.RegisterRoleAPIAgent(ag, s.Role)
+//	pb.RegisterUserAPIAgent(ag, s.User)
+//}
+
+func NewSystemServerAgent(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
+	//client, err := NewSystemClient(bootstrap, l)
+	//if err != nil {
+	//	return nil, err
+	//}
 	register := RegisterAgent{
-		Auth: systemservice.NewAuthServerAgent(client),
-		Menu: systemservice.NewMenuServerAgent(client),
-		Role: systemservice.NewRoleServerAgent(client),
-		User: systemservice.NewUserServerAgent(client),
-		basisRegisters: []func(server *http.Server){
-			basisservice.NewLoginServerAgentGINRegister(client),
-		},
+		Auth:    systemservice.NewAuthServerAgent(client),
+		Current: systemservice.NewCurrentServerAgent(client),
+		Menu:    systemservice.NewMenuServerAgent(client),
+		Role:    systemservice.NewRoleServerAgent(client),
+		User:    systemservice.NewUserServerAgent(client),
+		//basisRegisters: []func(server *http.Server){
+		//	basisservice.NewLoginServerAgentGINRegister(client),
+		//},
 	}
 	return &register, nil
 }
@@ -170,6 +183,12 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	return client, nil
 }
 
+func NewRegisterServer(s1 *systemservice.RegisterServer, s2 *basisservice.RegisterServer) []service.ServerRegister {
+	return []service.ServerRegister{
+		s1, s2,
+	}
+}
+
 //func NewMenuHTTPServerAgent(service *configv1.Service) (pb.MenuAPIAgent, error) {
 //	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
 //	if err != nil {
@@ -178,3 +197,5 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 //	cli := pb.NewMenuAPIHTTPClient(client)
 //	return systemservice.NewMenuAPIAgent(cli), nil
 //}
+
+var _ service.ServerRegister = (*RegisterAgent)(nil)

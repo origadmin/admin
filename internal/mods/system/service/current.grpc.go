@@ -7,7 +7,7 @@ package service
 import (
 	"github.com/origadmin/runtime/context"
 
-	pb "origadmin/application/admin/api/v1/services/basis"
+	pb "origadmin/application/admin/api/v1/services/system"
 )
 
 // CurrentAPIService is a login service.

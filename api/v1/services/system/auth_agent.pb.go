@@ -25,12 +25,7 @@ type AuthAPIAgent interface {
 	ListResources(http.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
 }
 
-func RegisterAuthAPIAgent(ag agent.Agent, srv AuthAPIAgent) {
-	r := ag.Route()
-	r.GET("/v1/sys/resources", _AuthAPI_ListResources0_Agent_Handler(srv))
-}
-
-func _AuthAPI_ListResources0_Agent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthAPI_ListResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ListResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -50,4 +45,9 @@ func _AuthAPI_ListResources0_Agent_Handler(srv AuthAPIAgent) http.HandlerFunc {
 		}
 		return ctx.Result(200, reply)
 	}
+}
+
+func RegisterAuthAPIAgent(ag agent.HTTPAgent, srv AuthAPIAgent) {
+	r := ag.Route()
+	r.GET("/sys/resources", _AuthAPI_ListResources0_HTTPAgent_Handler(srv))
 }

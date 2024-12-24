@@ -59,7 +59,9 @@ message UpdateUserStatusRequest {
 
 message UpdateUserStatusResponse {}
 
-message ResetUserPasswordRequest {}
+message ResetUserPasswordRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
 
 message ResetUserPasswordResponse {}
 
