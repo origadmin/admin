@@ -59,10 +59,10 @@ const (
 	// ParentColumn is the table column denoting the parent relation/edge.
 	ParentColumn = "parent_id"
 	// ResourcesTable is the table that holds the resources relation/edge.
-	ResourcesTable = "sys_menu_resources"
-	// ResourcesInverseTable is the table name for the MenuResource entity.
-	// It exists in this package in order to avoid circular dependency with the "menuresource" package.
-	ResourcesInverseTable = "sys_menu_resources"
+	ResourcesTable = "sys_resources"
+	// ResourcesInverseTable is the table name for the Resource entity.
+	// It exists in this package in order to avoid circular dependency with the "resource" package.
+	ResourcesInverseTable = "sys_resources"
 	// ResourcesColumn is the table column denoting the resources relation/edge.
 	ResourcesColumn = "menu_id"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.

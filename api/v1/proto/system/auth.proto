@@ -14,12 +14,12 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemAuth";
 
 service AuthAPI {
-  rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
-    option (google.api.http) = {get: "/sys/resources"};
+  rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
+    option (google.api.http) = {get: "/sys/auth/resources"};
   }
 }
 
-message ListResourcesRequest {
+message ListAuthResourcesRequest {
   // The maximum number of Auths to return.
   int32 page_size = 1;
   // The next_page_token value returned from a previous List request, if any.
@@ -30,9 +30,9 @@ message ListResourcesRequest {
   bool no_paging = 4;
 }
 
-message ListResourcesResponse {
+message ListAuthResourcesResponse {
   // The list of Auths.
-  repeated MenuResource resources = 1;
+  repeated Resource resources = 1;
   // The total number of Auths in the result set.
   int32 total_size = 2;
 }

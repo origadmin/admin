@@ -15,13 +15,13 @@ import (
 	"origadmin/application/admin/helpers/ent/mixin"
 )
 
-// MenuResource holds the schema definition for the MenuResource domain.
-type MenuResource struct {
+// Resource holds the schema definition for the Resource domain.
+type Resource struct {
 	ent.Schema
 }
 
-// Fields of the MenuResource.
-func (MenuResource) Fields() []ent.Field {
+// Fields of the Resource.
+func (Resource) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("menu_id").MaxLen(36).Optional(), // From Menu.ID
 		field.String("method").MaxLen(20).Default(""), // HTTP method
@@ -29,27 +29,27 @@ func (MenuResource) Fields() []ent.Field {
 	}
 }
 
-// Mixin of the MenuResource.
-func (MenuResource) Mixin() []ent.Mixin {
+// Mixin of the Resource.
+func (Resource) Mixin() []ent.Mixin {
 	return mixin.ModelMixin
 }
 
-// Indexes of the MenuResource.
-func (MenuResource) Indexes() []ent.Index {
+// Indexes of the Resource.
+func (Resource) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("menu_id"),
 	}
 }
 
 // Annotations of the Menu.
-func (MenuResource) Annotations() []schema.Annotation {
+func (Resource) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Table("sys_menu_resources"),
+		entsql.Table("sys_resources"),
 	}
 }
 
-// Edges of the MenuResource.
-func (MenuResource) Edges() []ent.Edge {
+// Edges of the Resource.
+func (Resource) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("menu", Menu.Type).Ref("resources").Field("menu_id").Unique(),
 	}

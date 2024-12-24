@@ -107,9 +107,9 @@ func (db *Database) Menu(ctx context.Context) *MenuClient {
 	return db.Client(ctx).Menu
 }
 
-// MenuResource is the client for interacting with the MenuResource builders.
-func (db *Database) MenuResource(ctx context.Context) *MenuResourceClient {
-	return db.Client(ctx).MenuResource
+// Resource is the client for interacting with the Resource builders.
+func (db *Database) Resource(ctx context.Context) *ResourceClient {
+	return db.Client(ctx).Resource
 }
 
 // Role is the client for interacting with the Role builders.

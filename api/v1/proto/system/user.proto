@@ -84,7 +84,7 @@ message ListUsersResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated api.v1.services.system.User users = 2 [json_name = "users"];
+  repeated User users = 2 [json_name = "users"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -104,7 +104,7 @@ message GetUserRequest {
 }
 
 message GetUserResponse {
-  api.v1.services.system.User user = 1;
+  User user = 1;
 }
 
 message CreateUserRequest {
@@ -116,20 +116,20 @@ message CreateUserRequest {
 
   // The user resource to create.
   // The field id should match the Noun in the method id.
-  api.v1.services.system.User user = 2;
+  User user = 2;
 }
 
 message CreateUserResponse {
-  api.v1.services.system.User user = 1;
+  User user = 1;
 }
 
 message UpdateUserRequest {
   // The user resource which replaces the resource on the server.
-  api.v1.services.system.User user = 1;
+  User user = 1;
 }
 
 message UpdateUserResponse {
-  api.v1.services.system.User user = 1;
+  User user = 1;
 }
 
 message DeleteUserRequest {

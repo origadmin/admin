@@ -22,24 +22,24 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type AuthAPIAgent interface {
-	ListResources(http.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	ListAuthResources(http.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 }
 
-func _AuthAPI_ListResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
-		var in ListResourcesRequest
+		var in ListAuthResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIListResources)
+		http.SetOperation(ctx, OperationAuthAPIListAuthResources)
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.ListResources(ctx, req.(*ListResourcesRequest))
+			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListResourcesResponse)
+		reply := out.(*ListAuthResourcesResponse)
 		if reply == nil {
 			return nil
 		}
@@ -49,5 +49,5 @@ func _AuthAPI_ListResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFun
 
 func RegisterAuthAPIAgent(ag agent.HTTPAgent, srv AuthAPIAgent) {
 	r := ag.Route()
-	r.GET("/sys/resources", _AuthAPI_ListResources0_HTTPAgent_Handler(srv))
+	r.GET("/sys/auth/resources", _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv))
 }

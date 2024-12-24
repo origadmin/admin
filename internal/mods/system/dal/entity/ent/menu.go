@@ -54,7 +54,7 @@ type MenuEdges struct {
 	// Parent holds the value of the parent edge.
 	Parent *Menu `json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*MenuResource `json:"resources,omitempty"`
+	Resources []*Resource `json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
@@ -86,7 +86,7 @@ func (e MenuEdges) ParentOrErr() (*Menu, error) {
 
 // ResourcesOrErr returns the Resources value or an error if the edge
 // was not loaded in eager-loading.
-func (e MenuEdges) ResourcesOrErr() ([]*MenuResource, error) {
+func (e MenuEdges) ResourcesOrErr() ([]*Resource, error) {
 	if e.loadedTypes[2] {
 		return e.Resources, nil
 	}
@@ -239,7 +239,7 @@ func (m *Menu) QueryParent() *MenuQuery {
 }
 
 // QueryResources queries the "resources" edge of the Menu entity.
-func (m *Menu) QueryResources() *MenuResourceQuery {
+func (m *Menu) QueryResources() *ResourceQuery {
 	return NewMenuClient(m.config).QueryResources(m)
 }
 

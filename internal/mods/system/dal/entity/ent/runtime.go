@@ -4,7 +4,7 @@ package ent
 
 import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
@@ -84,43 +84,43 @@ func init() {
 	menuDescID := menuMixinFields0[0].Descriptor()
 	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	menu.IDValidator = menuDescID.Validators[0].(func(string) error)
-	menuresourceMixin := schema.MenuResource{}.Mixin()
-	menuresourceMixinFields0 := menuresourceMixin[0].Fields()
-	_ = menuresourceMixinFields0
-	menuresourceMixinFields1 := menuresourceMixin[1].Fields()
-	_ = menuresourceMixinFields1
-	menuresourceMixinFields2 := menuresourceMixin[2].Fields()
-	_ = menuresourceMixinFields2
-	menuresourceFields := schema.MenuResource{}.Fields()
-	_ = menuresourceFields
-	// menuresourceDescCreateTime is the schema descriptor for create_time field.
-	menuresourceDescCreateTime := menuresourceMixinFields1[0].Descriptor()
-	// menuresource.DefaultCreateTime holds the default value on creation for the create_time field.
-	menuresource.DefaultCreateTime = menuresourceDescCreateTime.Default.(func() time.Time)
-	// menuresourceDescUpdateTime is the schema descriptor for update_time field.
-	menuresourceDescUpdateTime := menuresourceMixinFields2[0].Descriptor()
-	// menuresource.DefaultUpdateTime holds the default value on creation for the update_time field.
-	menuresource.DefaultUpdateTime = menuresourceDescUpdateTime.Default.(func() time.Time)
-	// menuresource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
-	menuresource.UpdateDefaultUpdateTime = menuresourceDescUpdateTime.UpdateDefault.(func() time.Time)
-	// menuresourceDescMenuID is the schema descriptor for menu_id field.
-	menuresourceDescMenuID := menuresourceFields[0].Descriptor()
-	// menuresource.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
-	menuresource.MenuIDValidator = menuresourceDescMenuID.Validators[0].(func(string) error)
-	// menuresourceDescMethod is the schema descriptor for method field.
-	menuresourceDescMethod := menuresourceFields[1].Descriptor()
-	// menuresource.DefaultMethod holds the default value on creation for the method field.
-	menuresource.DefaultMethod = menuresourceDescMethod.Default.(string)
-	// menuresource.MethodValidator is a validator for the "method" field. It is called by the builders before save.
-	menuresource.MethodValidator = menuresourceDescMethod.Validators[0].(func(string) error)
-	// menuresourceDescPath is the schema descriptor for path field.
-	menuresourceDescPath := menuresourceFields[2].Descriptor()
-	// menuresource.PathValidator is a validator for the "path" field. It is called by the builders before save.
-	menuresource.PathValidator = menuresourceDescPath.Validators[0].(func(string) error)
-	// menuresourceDescID is the schema descriptor for id field.
-	menuresourceDescID := menuresourceMixinFields0[0].Descriptor()
-	// menuresource.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	menuresource.IDValidator = menuresourceDescID.Validators[0].(func(string) error)
+	resourceMixin := schema.Resource{}.Mixin()
+	resourceMixinFields0 := resourceMixin[0].Fields()
+	_ = resourceMixinFields0
+	resourceMixinFields1 := resourceMixin[1].Fields()
+	_ = resourceMixinFields1
+	resourceMixinFields2 := resourceMixin[2].Fields()
+	_ = resourceMixinFields2
+	resourceFields := schema.Resource{}.Fields()
+	_ = resourceFields
+	// resourceDescCreateTime is the schema descriptor for create_time field.
+	resourceDescCreateTime := resourceMixinFields1[0].Descriptor()
+	// resource.DefaultCreateTime holds the default value on creation for the create_time field.
+	resource.DefaultCreateTime = resourceDescCreateTime.Default.(func() time.Time)
+	// resourceDescUpdateTime is the schema descriptor for update_time field.
+	resourceDescUpdateTime := resourceMixinFields2[0].Descriptor()
+	// resource.DefaultUpdateTime holds the default value on creation for the update_time field.
+	resource.DefaultUpdateTime = resourceDescUpdateTime.Default.(func() time.Time)
+	// resource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	resource.UpdateDefaultUpdateTime = resourceDescUpdateTime.UpdateDefault.(func() time.Time)
+	// resourceDescMenuID is the schema descriptor for menu_id field.
+	resourceDescMenuID := resourceFields[0].Descriptor()
+	// resource.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
+	resource.MenuIDValidator = resourceDescMenuID.Validators[0].(func(string) error)
+	// resourceDescMethod is the schema descriptor for method field.
+	resourceDescMethod := resourceFields[1].Descriptor()
+	// resource.DefaultMethod holds the default value on creation for the method field.
+	resource.DefaultMethod = resourceDescMethod.Default.(string)
+	// resource.MethodValidator is a validator for the "method" field. It is called by the builders before save.
+	resource.MethodValidator = resourceDescMethod.Validators[0].(func(string) error)
+	// resourceDescPath is the schema descriptor for path field.
+	resourceDescPath := resourceFields[2].Descriptor()
+	// resource.PathValidator is a validator for the "path" field. It is called by the builders before save.
+	resource.PathValidator = resourceDescPath.Validators[0].(func(string) error)
+	// resourceDescID is the schema descriptor for id field.
+	resourceDescID := resourceMixinFields0[0].Descriptor()
+	// resource.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	resource.IDValidator = resourceDescID.Validators[0].(func(string) error)
 	roleMixin := schema.Role{}.Mixin()
 	roleMixinFields0 := roleMixin[0].Fields()
 	_ = roleMixinFields0

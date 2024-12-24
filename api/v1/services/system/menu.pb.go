@@ -563,7 +563,7 @@ type DeleteMenuResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// or api.v1.services.system.Menu menu = 1; or google.protobuf.Empty empty = 1;
+	// or Menu menu = 1; or google.protobuf.Empty empty = 1;
 	Empty *emptypb.Empty `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
 }
 

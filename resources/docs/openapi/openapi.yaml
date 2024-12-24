@@ -232,6 +232,47 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /sys/auth/resources:
+        get:
+            tags:
+                - AuthAPI
+            operationId: AuthAPI_ListAuthResources
+            parameters:
+                - name: page_size
+                  in: query
+                  description: The maximum number of Auths to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListAuthResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/current/logout:
         post:
             tags:
@@ -598,18 +639,12 @@ paths:
     /sys/resources:
         get:
             tags:
-                - AuthAPI
-            operationId: AuthAPI_ListResources
+                - ResourceAPI
+            operationId: ResourceAPI_ListResources
             parameters:
-                - name: page_size
+                - name: id
                   in: query
-                  description: The maximum number of Auths to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
+                  description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
                 - name: current
@@ -618,9 +653,25 @@ paths:
                   schema:
                     type: integer
                     format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
                 - name: no_paging
                   in: query
                   description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
             responses:
@@ -630,6 +681,123 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.ListResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - ResourceAPI
+            operationId: ResourceAPI_CreateResource
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the resource is to be created.
+                  schema:
+                    type: string
+                - name: resource_id
+                  in: query
+                  description: The resource id to use for this resource.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Resource'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreateResourceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/resources/{id}:
+        get:
+            tags:
+                - ResourceAPI
+            operationId: ResourceAPI_GetResource
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/resources/resource2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetResourceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - ResourceAPI
+            operationId: ResourceAPI_DeleteResource
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The resource id of the resource to be deleted, for example:
+                     "shelves/shelf1/resources/resource2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeleteResourceResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/resources/{resource.id}:
+        put:
+            tags:
+                - ResourceAPI
+            operationId: ResourceAPI_UpdateResource
+            parameters:
+                - name: resource.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Resource'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateResourceResponse'
                 default:
                     description: Default error response
                     content:
@@ -1162,6 +1330,12 @@ components:
                 menu:
                     $ref: '#/components/schemas/api.v1.services.system.Menu'
             description: CreateMenuResponse is the response for the MenuService.CreateMenu method.
+        api.v1.services.system.CreateResourceResponse:
+            type: object
+            properties:
+                resource:
+                    $ref: '#/components/schemas/api.v1.services.system.Resource'
+            description: CreateResourceResponse is the response for the ResourceService.CreateResource method.
         api.v1.services.system.CreateRoleResponse:
             type: object
             properties:
@@ -1181,6 +1355,10 @@ components:
             type: object
             properties: {}
             description: DeleteMenuResponse is the response for the MenuService.DeleteMenu method.
+        api.v1.services.system.DeleteResourceResponse:
+            type: object
+            properties: {}
+            description: DeleteResourceResponse is the response for the ResourceService.DeleteResource method.
         api.v1.services.system.DeleteRoleResponse:
             type: object
             properties: {}
@@ -1200,6 +1378,14 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
                     description: The field id should match the Noun in the method id.
             description: GetMenuResponse is the response for the MenuService.GetMenu method.
+        api.v1.services.system.GetResourceResponse:
+            type: object
+            properties:
+                resource:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    description: The field id should match the Noun in the method id.
+            description: GetResourceResponse is the response for the ResourceService.GetResource method.
         api.v1.services.system.GetRoleResponse:
             type: object
             properties:
@@ -1210,6 +1396,18 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.ListAuthResourcesResponse:
+            type: object
+            properties:
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    description: The list of Auths.
+                total_size:
+                    type: integer
+                    description: The total number of Auths in the result set.
+                    format: int32
         api.v1.services.system.ListCurrentMenusResponse:
             type: object
             properties:
@@ -1259,15 +1457,35 @@ components:
         api.v1.services.system.ListResourcesResponse:
             type: object
             properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
                 resources:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.MenuResource'
-                    description: The list of Auths.
-                total_size:
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    description: The paging resources
+                current:
                     type: integer
-                    description: The total number of Auths in the result set.
+                    description: The current page number.
                     format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+            description: ListResourcesResponse is the response for the ResourceService.ListResources method.
         api.v1.services.system.ListRolesResponse:
             type: object
             properties:
@@ -1398,7 +1616,7 @@ components:
                 resources:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.MenuResource'
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
                     description: Resources holds the value of the resources edge.
                 roles:
                     type: array
@@ -1411,7 +1629,10 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
                     description: RoleMenu holds the value of the role_menu edge.
             description: MenuEdges holds the relations/edges for other nodes in the graph.
-        api.v1.services.system.MenuResource:
+        api.v1.services.system.ResetUserPasswordResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.Resource:
             type: object
             properties:
                 id:
@@ -1439,22 +1660,19 @@ components:
                     description: Operation holds the value of the "operation" field.
                 edges:
                     allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.MenuResourceEdges'
+                        - $ref: '#/components/schemas/api.v1.services.system.ResourceEdges'
                     description: |-
                         Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the MenuResourceQuery when eager-loading is set.
-            description: MenuResource is the model entity for the MenuResource schema.
-        api.v1.services.system.MenuResourceEdges:
+                            The values are being populated by the ResourceQuery when eager-loading is set.
+            description: Resource is the model entity for the Resource schema.
+        api.v1.services.system.ResourceEdges:
             type: object
             properties:
                 menu:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
                     description: Menu holds the value of the menu edge.
-            description: MenuResourceEdges holds the relations/edges for other nodes in the graph.
-        api.v1.services.system.ResetUserPasswordResponse:
-            type: object
-            properties: {}
+            description: ResourceEdges holds the relations/edges for other nodes in the graph.
         api.v1.services.system.Role:
             type: object
             properties:
@@ -1571,6 +1789,12 @@ components:
                 menu:
                     $ref: '#/components/schemas/api.v1.services.system.Menu'
             description: UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
+        api.v1.services.system.UpdateResourceResponse:
+            type: object
+            properties:
+                resource:
+                    $ref: '#/components/schemas/api.v1.services.system.Resource'
+            description: UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
         api.v1.services.system.UpdateRoleResponse:
             type: object
             properties:
@@ -1748,6 +1972,8 @@ tags:
       description: The login service definition.
     - name: MenuAPI
       description: The menu service definition.
+    - name: ResourceAPI
+      description: The resource service definition.
     - name: RoleAPI
       description: The login service definition.
     - name: UserAPI

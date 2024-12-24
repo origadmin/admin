@@ -5,7 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"strings"
 	"time"
 
@@ -13,8 +13,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// MenuResource is the model entity for the MenuResource schema.
-type MenuResource struct {
+// Resource is the model entity for the Resource schema.
+type Resource struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
@@ -29,13 +29,13 @@ type MenuResource struct {
 	// Path holds the value of the "path" field.
 	Path string `json:"path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the MenuResourceQuery when eager-loading is set.
-	Edges        MenuResourceEdges `json:"edges"`
+	// The values are being populated by the ResourceQuery when eager-loading is set.
+	Edges        ResourceEdges `json:"edges"`
 	selectValues sql.SelectValues
 }
 
-// MenuResourceEdges holds the relations/edges for other nodes in the graph.
-type MenuResourceEdges struct {
+// ResourceEdges holds the relations/edges for other nodes in the graph.
+type ResourceEdges struct {
 	// Menu holds the value of the menu edge.
 	Menu *Menu `json:"menu,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -45,7 +45,7 @@ type MenuResourceEdges struct {
 
 // MenuOrErr returns the Menu value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e MenuResourceEdges) MenuOrErr() (*Menu, error) {
+func (e ResourceEdges) MenuOrErr() (*Menu, error) {
 	if e.Menu != nil {
 		return e.Menu, nil
 	} else if e.loadedTypes[0] {
@@ -55,13 +55,13 @@ func (e MenuResourceEdges) MenuOrErr() (*Menu, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*MenuResource) scanValues(columns []string) ([]any, error) {
+func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menuresource.FieldID, menuresource.FieldMenuID, menuresource.FieldMethod, menuresource.FieldPath:
+		case resource.FieldID, resource.FieldMenuID, resource.FieldMethod, resource.FieldPath:
 			values[i] = new(sql.NullString)
-		case menuresource.FieldCreateTime, menuresource.FieldUpdateTime:
+		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -71,107 +71,107 @@ func (*MenuResource) scanValues(columns []string) ([]any, error) {
 }
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
-// to the MenuResource fields.
-func (mr *MenuResource) assignValues(columns []string, values []any) error {
+// to the Resource fields.
+func (r *Resource) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
 	for i := range columns {
 		switch columns[i] {
-		case menuresource.FieldID:
+		case resource.FieldID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
-				mr.ID = value.String
+				r.ID = value.String
 			}
-		case menuresource.FieldCreateTime:
+		case resource.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				mr.CreateTime = value.Time
+				r.CreateTime = value.Time
 			}
-		case menuresource.FieldUpdateTime:
+		case resource.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				mr.UpdateTime = value.Time
+				r.UpdateTime = value.Time
 			}
-		case menuresource.FieldMenuID:
+		case resource.FieldMenuID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
 			} else if value.Valid {
-				mr.MenuID = value.String
+				r.MenuID = value.String
 			}
-		case menuresource.FieldMethod:
+		case resource.FieldMethod:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field method", values[i])
 			} else if value.Valid {
-				mr.Method = value.String
+				r.Method = value.String
 			}
-		case menuresource.FieldPath:
+		case resource.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
-				mr.Path = value.String
+				r.Path = value.String
 			}
 		default:
-			mr.selectValues.Set(columns[i], values[i])
+			r.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
 }
 
-// Value returns the ent.Value that was dynamically selected and assigned to the MenuResource.
+// Value returns the ent.Value that was dynamically selected and assigned to the Resource.
 // This includes values selected through modifiers, order, etc.
-func (mr *MenuResource) Value(name string) (ent.Value, error) {
-	return mr.selectValues.Get(name)
+func (r *Resource) Value(name string) (ent.Value, error) {
+	return r.selectValues.Get(name)
 }
 
-// QueryMenu queries the "menu" edge of the MenuResource entity.
-func (mr *MenuResource) QueryMenu() *MenuQuery {
-	return NewMenuResourceClient(mr.config).QueryMenu(mr)
+// QueryMenu queries the "menu" edge of the Resource entity.
+func (r *Resource) QueryMenu() *MenuQuery {
+	return NewResourceClient(r.config).QueryMenu(r)
 }
 
-// Update returns a builder for updating this MenuResource.
-// Note that you need to call MenuResource.Unwrap() before calling this method if this MenuResource
+// Update returns a builder for updating this Resource.
+// Note that you need to call Resource.Unwrap() before calling this method if this Resource
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (mr *MenuResource) Update() *MenuResourceUpdateOne {
-	return NewMenuResourceClient(mr.config).UpdateOne(mr)
+func (r *Resource) Update() *ResourceUpdateOne {
+	return NewResourceClient(r.config).UpdateOne(r)
 }
 
-// Unwrap unwraps the MenuResource entity that was returned from a transaction after it was closed,
+// Unwrap unwraps the Resource entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (mr *MenuResource) Unwrap() *MenuResource {
-	_tx, ok := mr.config.driver.(*txDriver)
+func (r *Resource) Unwrap() *Resource {
+	_tx, ok := r.config.driver.(*txDriver)
 	if !ok {
-		panic("ent: MenuResource is not a transactional entity")
+		panic("ent: Resource is not a transactional entity")
 	}
-	mr.config.driver = _tx.drv
-	return mr
+	r.config.driver = _tx.drv
+	return r
 }
 
 // String implements the fmt.Stringer.
-func (mr *MenuResource) String() string {
+func (r *Resource) String() string {
 	var builder strings.Builder
-	builder.WriteString("MenuResource(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", mr.ID))
+	builder.WriteString("Resource(")
+	builder.WriteString(fmt.Sprintf("id=%v, ", r.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(mr.CreateTime.Format(time.ANSIC))
+	builder.WriteString(r.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(mr.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(r.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("menu_id=")
-	builder.WriteString(mr.MenuID)
+	builder.WriteString(r.MenuID)
 	builder.WriteString(", ")
 	builder.WriteString("method=")
-	builder.WriteString(mr.Method)
+	builder.WriteString(r.Method)
 	builder.WriteString(", ")
 	builder.WriteString("path=")
-	builder.WriteString(mr.Path)
+	builder.WriteString(r.Path)
 	builder.WriteByte(')')
 	return builder.String()
 }
 
-// MenuResources is a parsable slice of MenuResource.
-type MenuResources []*MenuResource
+// Resources is a parsable slice of Resource.
+type Resources []*Resource

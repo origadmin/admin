@@ -12,7 +12,7 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/migrate"
 
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
@@ -31,8 +31,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
-	// MenuResource is the client for interacting with the MenuResource builders.
-	MenuResource *MenuResourceClient
+	// Resource is the client for interacting with the Resource builders.
+	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// RoleMenu is the client for interacting with the RoleMenu builders.
@@ -53,7 +53,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Menu = NewMenuClient(c.config)
-	c.MenuResource = NewMenuResourceClient(c.config)
+	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
 	c.RoleMenu = NewRoleMenuClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -148,14 +148,14 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		Menu:         NewMenuClient(cfg),
-		MenuResource: NewMenuResourceClient(cfg),
-		Role:         NewRoleClient(cfg),
-		RoleMenu:     NewRoleMenuClient(cfg),
-		User:         NewUserClient(cfg),
-		UserRole:     NewUserRoleClient(cfg),
+		ctx:      ctx,
+		config:   cfg,
+		Menu:     NewMenuClient(cfg),
+		Resource: NewResourceClient(cfg),
+		Role:     NewRoleClient(cfg),
+		RoleMenu: NewRoleMenuClient(cfg),
+		User:     NewUserClient(cfg),
+		UserRole: NewUserRoleClient(cfg),
 	}, nil
 }
 
@@ -173,14 +173,14 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:          ctx,
-		config:       cfg,
-		Menu:         NewMenuClient(cfg),
-		MenuResource: NewMenuResourceClient(cfg),
-		Role:         NewRoleClient(cfg),
-		RoleMenu:     NewRoleMenuClient(cfg),
-		User:         NewUserClient(cfg),
-		UserRole:     NewUserRoleClient(cfg),
+		ctx:      ctx,
+		config:   cfg,
+		Menu:     NewMenuClient(cfg),
+		Resource: NewResourceClient(cfg),
+		Role:     NewRoleClient(cfg),
+		RoleMenu: NewRoleMenuClient(cfg),
+		User:     NewUserClient(cfg),
+		UserRole: NewUserRoleClient(cfg),
 	}, nil
 }
 
@@ -210,7 +210,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Menu, c.MenuResource, c.Role, c.RoleMenu, c.User, c.UserRole,
+		c.Menu, c.Resource, c.Role, c.RoleMenu, c.User, c.UserRole,
 	} {
 		n.Use(hooks...)
 	}
@@ -220,7 +220,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Menu, c.MenuResource, c.Role, c.RoleMenu, c.User, c.UserRole,
+		c.Menu, c.Resource, c.Role, c.RoleMenu, c.User, c.UserRole,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -231,8 +231,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *MenuMutation:
 		return c.Menu.mutate(ctx, m)
-	case *MenuResourceMutation:
-		return c.MenuResource.mutate(ctx, m)
+	case *ResourceMutation:
+		return c.Resource.mutate(ctx, m)
 	case *RoleMutation:
 		return c.Role.mutate(ctx, m)
 	case *RoleMenuMutation:
@@ -387,13 +387,13 @@ func (c *MenuClient) QueryParent(m *Menu) *MenuQuery {
 }
 
 // QueryResources queries the resources edge of a Menu.
-func (c *MenuClient) QueryResources(m *Menu) *MenuResourceQuery {
-	query := (&MenuResourceClient{config: c.config}).Query()
+func (c *MenuClient) QueryResources(m *Menu) *ResourceQuery {
+	query := (&ResourceClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(menu.Table, menu.FieldID, id),
-			sqlgraph.To(menuresource.Table, menuresource.FieldID),
+			sqlgraph.To(resource.Table, resource.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, menu.ResourcesTable, menu.ResourcesColumn),
 		)
 		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
@@ -459,107 +459,107 @@ func (c *MenuClient) mutate(ctx context.Context, m *MenuMutation) (Value, error)
 	}
 }
 
-// MenuResourceClient is a client for the MenuResource schema.
-type MenuResourceClient struct {
+// ResourceClient is a client for the Resource schema.
+type ResourceClient struct {
 	config
 }
 
-// NewMenuResourceClient returns a client for the MenuResource from the given config.
-func NewMenuResourceClient(c config) *MenuResourceClient {
-	return &MenuResourceClient{config: c}
+// NewResourceClient returns a client for the Resource from the given config.
+func NewResourceClient(c config) *ResourceClient {
+	return &ResourceClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `menuresource.Hooks(f(g(h())))`.
-func (c *MenuResourceClient) Use(hooks ...Hook) {
-	c.hooks.MenuResource = append(c.hooks.MenuResource, hooks...)
+// A call to `Use(f, g, h)` equals to `resource.Hooks(f(g(h())))`.
+func (c *ResourceClient) Use(hooks ...Hook) {
+	c.hooks.Resource = append(c.hooks.Resource, hooks...)
 }
 
 // Intercept adds a list of query interceptors to the interceptors stack.
-// A call to `Intercept(f, g, h)` equals to `menuresource.Intercept(f(g(h())))`.
-func (c *MenuResourceClient) Intercept(interceptors ...Interceptor) {
-	c.inters.MenuResource = append(c.inters.MenuResource, interceptors...)
+// A call to `Intercept(f, g, h)` equals to `resource.Intercept(f(g(h())))`.
+func (c *ResourceClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Resource = append(c.inters.Resource, interceptors...)
 }
 
-// Create returns a builder for creating a MenuResource entity.
-func (c *MenuResourceClient) Create() *MenuResourceCreate {
-	mutation := newMenuResourceMutation(c.config, OpCreate)
-	return &MenuResourceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a builder for creating a Resource entity.
+func (c *ResourceClient) Create() *ResourceCreate {
+	mutation := newResourceMutation(c.config, OpCreate)
+	return &ResourceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of MenuResource entities.
-func (c *MenuResourceClient) CreateBulk(builders ...*MenuResourceCreate) *MenuResourceCreateBulk {
-	return &MenuResourceCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Resource entities.
+func (c *ResourceClient) CreateBulk(builders ...*ResourceCreate) *ResourceCreateBulk {
+	return &ResourceCreateBulk{config: c.config, builders: builders}
 }
 
 // MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
 // a builder and applies setFunc on it.
-func (c *MenuResourceClient) MapCreateBulk(slice any, setFunc func(*MenuResourceCreate, int)) *MenuResourceCreateBulk {
+func (c *ResourceClient) MapCreateBulk(slice any, setFunc func(*ResourceCreate, int)) *ResourceCreateBulk {
 	rv := reflect.ValueOf(slice)
 	if rv.Kind() != reflect.Slice {
-		return &MenuResourceCreateBulk{err: fmt.Errorf("calling to MenuResourceClient.MapCreateBulk with wrong type %T, need slice", slice)}
+		return &ResourceCreateBulk{err: fmt.Errorf("calling to ResourceClient.MapCreateBulk with wrong type %T, need slice", slice)}
 	}
-	builders := make([]*MenuResourceCreate, rv.Len())
+	builders := make([]*ResourceCreate, rv.Len())
 	for i := 0; i < rv.Len(); i++ {
 		builders[i] = c.Create()
 		setFunc(builders[i], i)
 	}
-	return &MenuResourceCreateBulk{config: c.config, builders: builders}
+	return &ResourceCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for MenuResource.
-func (c *MenuResourceClient) Update() *MenuResourceUpdate {
-	mutation := newMenuResourceMutation(c.config, OpUpdate)
-	return &MenuResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Resource.
+func (c *ResourceClient) Update() *ResourceUpdate {
+	mutation := newResourceMutation(c.config, OpUpdate)
+	return &ResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *MenuResourceClient) UpdateOne(mr *MenuResource) *MenuResourceUpdateOne {
-	mutation := newMenuResourceMutation(c.config, OpUpdateOne, withMenuResource(mr))
-	return &MenuResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *ResourceClient) UpdateOne(r *Resource) *ResourceUpdateOne {
+	mutation := newResourceMutation(c.config, OpUpdateOne, withResource(r))
+	return &ResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *MenuResourceClient) UpdateOneID(id string) *MenuResourceUpdateOne {
-	mutation := newMenuResourceMutation(c.config, OpUpdateOne, withMenuResourceID(id))
-	return &MenuResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *ResourceClient) UpdateOneID(id string) *ResourceUpdateOne {
+	mutation := newResourceMutation(c.config, OpUpdateOne, withResourceID(id))
+	return &ResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for MenuResource.
-func (c *MenuResourceClient) Delete() *MenuResourceDelete {
-	mutation := newMenuResourceMutation(c.config, OpDelete)
-	return &MenuResourceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Resource.
+func (c *ResourceClient) Delete() *ResourceDelete {
+	mutation := newResourceMutation(c.config, OpDelete)
+	return &ResourceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a builder for deleting the given entity.
-func (c *MenuResourceClient) DeleteOne(mr *MenuResource) *MenuResourceDeleteOne {
-	return c.DeleteOneID(mr.ID)
+func (c *ResourceClient) DeleteOne(r *Resource) *ResourceDeleteOne {
+	return c.DeleteOneID(r.ID)
 }
 
 // DeleteOneID returns a builder for deleting the given entity by its id.
-func (c *MenuResourceClient) DeleteOneID(id string) *MenuResourceDeleteOne {
-	builder := c.Delete().Where(menuresource.ID(id))
+func (c *ResourceClient) DeleteOneID(id string) *ResourceDeleteOne {
+	builder := c.Delete().Where(resource.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &MenuResourceDeleteOne{builder}
+	return &ResourceDeleteOne{builder}
 }
 
-// Query returns a query builder for MenuResource.
-func (c *MenuResourceClient) Query() *MenuResourceQuery {
-	return &MenuResourceQuery{
+// Query returns a query builder for Resource.
+func (c *ResourceClient) Query() *ResourceQuery {
+	return &ResourceQuery{
 		config: c.config,
-		ctx:    &QueryContext{Type: TypeMenuResource},
+		ctx:    &QueryContext{Type: TypeResource},
 		inters: c.Interceptors(),
 	}
 }
 
-// Get returns a MenuResource entity by its id.
-func (c *MenuResourceClient) Get(ctx context.Context, id string) (*MenuResource, error) {
-	return c.Query().Where(menuresource.ID(id)).Only(ctx)
+// Get returns a Resource entity by its id.
+func (c *ResourceClient) Get(ctx context.Context, id string) (*Resource, error) {
+	return c.Query().Where(resource.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *MenuResourceClient) GetX(ctx context.Context, id string) *MenuResource {
+func (c *ResourceClient) GetX(ctx context.Context, id string) *Resource {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -567,44 +567,44 @@ func (c *MenuResourceClient) GetX(ctx context.Context, id string) *MenuResource 
 	return obj
 }
 
-// QueryMenu queries the menu edge of a MenuResource.
-func (c *MenuResourceClient) QueryMenu(mr *MenuResource) *MenuQuery {
+// QueryMenu queries the menu edge of a Resource.
+func (c *ResourceClient) QueryMenu(r *Resource) *MenuQuery {
 	query := (&MenuClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := mr.ID
+		id := r.ID
 		step := sqlgraph.NewStep(
-			sqlgraph.From(menuresource.Table, menuresource.FieldID, id),
+			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(menu.Table, menu.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, menuresource.MenuTable, menuresource.MenuColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, resource.MenuTable, resource.MenuColumn),
 		)
-		fromV = sqlgraph.Neighbors(mr.driver.Dialect(), step)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
 	}
 	return query
 }
 
 // Hooks returns the client hooks.
-func (c *MenuResourceClient) Hooks() []Hook {
-	return c.hooks.MenuResource
+func (c *ResourceClient) Hooks() []Hook {
+	return c.hooks.Resource
 }
 
 // Interceptors returns the client interceptors.
-func (c *MenuResourceClient) Interceptors() []Interceptor {
-	return c.inters.MenuResource
+func (c *ResourceClient) Interceptors() []Interceptor {
+	return c.inters.Resource
 }
 
-func (c *MenuResourceClient) mutate(ctx context.Context, m *MenuResourceMutation) (Value, error) {
+func (c *ResourceClient) mutate(ctx context.Context, m *ResourceMutation) (Value, error) {
 	switch m.Op() {
 	case OpCreate:
-		return (&MenuResourceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&ResourceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdate:
-		return (&MenuResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&ResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpUpdateOne:
-		return (&MenuResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+		return (&ResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
 	case OpDelete, OpDeleteOne:
-		return (&MenuResourceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+		return (&ResourceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
-		return nil, fmt.Errorf("ent: unknown MenuResource mutation op: %q", m.Op())
+		return nil, fmt.Errorf("ent: unknown Resource mutation op: %q", m.Op())
 	}
 }
 
@@ -1303,9 +1303,9 @@ func (c *UserRoleClient) mutate(ctx context.Context, m *UserRoleMutation) (Value
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Menu, MenuResource, Role, RoleMenu, User, UserRole []ent.Hook
+		Menu, Resource, Role, RoleMenu, User, UserRole []ent.Hook
 	}
 	inters struct {
-		Menu, MenuResource, Role, RoleMenu, User, UserRole []ent.Interceptor
+		Menu, Resource, Role, RoleMenu, User, UserRole []ent.Interceptor
 	}
 )

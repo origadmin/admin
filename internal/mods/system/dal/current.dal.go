@@ -10,9 +10,10 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/log"
 
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
+
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -25,7 +26,7 @@ func (repo currentRepo) ListResources(ctx context.Context, in *dto.ListResources
 	if len(options) > 0 {
 		option = options[0]
 	}
-	query := repo.db.MenuResource(ctx).Query()
+	query := repo.db.Resource(ctx).Query()
 	return currentPageQuery(ctx, query, in, option)
 }
 
@@ -36,7 +37,7 @@ func NewCurrentRepo(db *Data, logger log.KLogger) dto.CurrentRepo {
 	}
 }
 
-func currentPageQuery(ctx context.Context, query *ent.MenuResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+func currentPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
 	query = currentQueryPage(query, in)
 	query = currentQueryOptions(query, option)
 	count, err := query.Count(ctx)
@@ -47,7 +48,7 @@ func currentPageQuery(ctx context.Context, query *ent.MenuResourceQuery, in *pb.
 	return dto.ConvertResources(result), int32(count), err
 }
 
-func currentQueryPage(query *ent.MenuResourceQuery, in *pb.ListResourcesRequest) *ent.MenuResourceQuery {
+func currentQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
 	if in.NoPaging {
 		pageSize := in.PageSize
 		if pageSize > 0 {
@@ -67,12 +68,12 @@ func currentQueryPage(query *ent.MenuResourceQuery, in *pb.ListResourcesRequest)
 	return query
 }
 
-func currentQueryOptions(query *ent.MenuResourceQuery, option dto.ResourceQueryOption) *ent.MenuResourceQuery {
+func currentQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
 	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).MenuResourceQuery
+		query = query.Select(option.SelectFields...).ResourceQuery
 	}
 	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).MenuResourceQuery
+		query = query.Omit(option.OmitFields...).ResourceQuery
 	}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(currentOrderBy(option.OrderFields)...)
@@ -80,8 +81,8 @@ func currentQueryOptions(query *ent.MenuResourceQuery, option dto.ResourceQueryO
 	return query
 }
 
-func currentOrderBy(fields []string, opts ...sql.OrderTermOption) []menuresource.OrderOption {
-	var orders []menuresource.OrderOption
+func currentOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
+	var orders []resource.OrderOption
 	for _, field := range fields {
 		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
 	}

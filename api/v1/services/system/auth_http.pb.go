@@ -19,38 +19,38 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAuthAPIListResources = "/api.v1.services.system.AuthAPI/ListResources"
+const OperationAuthAPIListAuthResources = "/api.v1.services.system.AuthAPI/ListAuthResources"
 
 type AuthAPIHTTPServer interface {
-	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 }
 
 func RegisterAuthAPIHTTPServer(s *http.Server, srv AuthAPIHTTPServer) {
 	r := s.Route("/")
-	r.GET("/sys/resources", _AuthAPI_ListResources0_HTTP_Handler(srv))
+	r.GET("/sys/auth/resources", _AuthAPI_ListAuthResources0_HTTP_Handler(srv))
 }
 
-func _AuthAPI_ListResources0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
+func _AuthAPI_ListAuthResources0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListResourcesRequest
+		var in ListAuthResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIListResources)
+		http.SetOperation(ctx, OperationAuthAPIListAuthResources)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListResources(ctx, req.(*ListResourcesRequest))
+			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListResourcesResponse)
+		reply := out.(*ListAuthResourcesResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
 type AuthAPIHTTPClient interface {
-	ListResources(ctx context.Context, req *ListResourcesRequest, opts ...http.CallOption) (rsp *ListResourcesResponse, err error)
+	ListAuthResources(ctx context.Context, req *ListAuthResourcesRequest, opts ...http.CallOption) (rsp *ListAuthResourcesResponse, err error)
 }
 
 type AuthAPIHTTPClientImpl struct {
@@ -61,11 +61,11 @@ func NewAuthAPIHTTPClient(client *http.Client) AuthAPIHTTPClient {
 	return &AuthAPIHTTPClientImpl{client}
 }
 
-func (c *AuthAPIHTTPClientImpl) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...http.CallOption) (*ListResourcesResponse, error) {
-	var out ListResourcesResponse
-	pattern := "/sys/resources"
+func (c *AuthAPIHTTPClientImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...http.CallOption) (*ListAuthResourcesResponse, error) {
+	var out ListAuthResourcesResponse
+	pattern := "/sys/auth/resources"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthAPIListResources))
+	opts = append(opts, http.Operation(OperationAuthAPIListAuthResources))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

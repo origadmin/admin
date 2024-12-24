@@ -2012,22 +2012,22 @@ var _ interface {
 	ErrorName() string
 } = RoleMenuEdgesValidationError{}
 
-// Validate checks the field values on MenuResource with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
+// Validate checks the field values on Resource with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *MenuResource) Validate() error {
+func (m *Resource) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on MenuResource with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in MenuResourceMultiError, or
-// nil if none found.
-func (m *MenuResource) ValidateAll() error {
+// ValidateAll checks the field values on Resource with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ResourceMultiError, or nil
+// if none found.
+func (m *Resource) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *MenuResource) validate(all bool) error {
+func (m *Resource) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2040,7 +2040,7 @@ func (m *MenuResource) validate(all bool) error {
 		switch v := interface{}(m.GetCreateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuResourceValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2048,7 +2048,7 @@ func (m *MenuResource) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuResourceValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2057,7 +2057,7 @@ func (m *MenuResource) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuResourceValidationError{
+			return ResourceValidationError{
 				field:  "CreateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2069,7 +2069,7 @@ func (m *MenuResource) validate(all bool) error {
 		switch v := interface{}(m.GetUpdateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuResourceValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2077,7 +2077,7 @@ func (m *MenuResource) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuResourceValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2086,7 +2086,7 @@ func (m *MenuResource) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuResourceValidationError{
+			return ResourceValidationError{
 				field:  "UpdateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2106,7 +2106,7 @@ func (m *MenuResource) validate(all bool) error {
 		switch v := interface{}(m.GetEdges()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuResourceValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "Edges",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2114,7 +2114,7 @@ func (m *MenuResource) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuResourceValidationError{
+				errors = append(errors, ResourceValidationError{
 					field:  "Edges",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2123,7 +2123,7 @@ func (m *MenuResource) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetEdges()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuResourceValidationError{
+			return ResourceValidationError{
 				field:  "Edges",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2132,18 +2132,18 @@ func (m *MenuResource) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return MenuResourceMultiError(errors)
+		return ResourceMultiError(errors)
 	}
 
 	return nil
 }
 
-// MenuResourceMultiError is an error wrapping multiple validation errors
-// returned by MenuResource.ValidateAll() if the designated constraints aren't met.
-type MenuResourceMultiError []error
+// ResourceMultiError is an error wrapping multiple validation errors returned
+// by Resource.ValidateAll() if the designated constraints aren't met.
+type ResourceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m MenuResourceMultiError) Error() string {
+func (m ResourceMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2152,11 +2152,11 @@ func (m MenuResourceMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m MenuResourceMultiError) AllErrors() []error { return m }
+func (m ResourceMultiError) AllErrors() []error { return m }
 
-// MenuResourceValidationError is the validation error returned by
-// MenuResource.Validate if the designated constraints aren't met.
-type MenuResourceValidationError struct {
+// ResourceValidationError is the validation error returned by
+// Resource.Validate if the designated constraints aren't met.
+type ResourceValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2164,22 +2164,22 @@ type MenuResourceValidationError struct {
 }
 
 // Field function returns field value.
-func (e MenuResourceValidationError) Field() string { return e.field }
+func (e ResourceValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e MenuResourceValidationError) Reason() string { return e.reason }
+func (e ResourceValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e MenuResourceValidationError) Cause() error { return e.cause }
+func (e ResourceValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e MenuResourceValidationError) Key() bool { return e.key }
+func (e ResourceValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e MenuResourceValidationError) ErrorName() string { return "MenuResourceValidationError" }
+func (e ResourceValidationError) ErrorName() string { return "ResourceValidationError" }
 
 // Error satisfies the builtin error interface
-func (e MenuResourceValidationError) Error() string {
+func (e ResourceValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2191,14 +2191,14 @@ func (e MenuResourceValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sMenuResource.%s: %s%s",
+		"invalid %sResource.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = MenuResourceValidationError{}
+var _ error = ResourceValidationError{}
 
 var _ interface {
 	Field() string
@@ -2206,24 +2206,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = MenuResourceValidationError{}
+} = ResourceValidationError{}
 
-// Validate checks the field values on MenuResourceEdges with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *MenuResourceEdges) Validate() error {
+// Validate checks the field values on ResourceEdges with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ResourceEdges) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on MenuResourceEdges with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// MenuResourceEdgesMultiError, or nil if none found.
-func (m *MenuResourceEdges) ValidateAll() error {
+// ValidateAll checks the field values on ResourceEdges with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ResourceEdgesMultiError, or
+// nil if none found.
+func (m *ResourceEdges) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *MenuResourceEdges) validate(all bool) error {
+func (m *ResourceEdges) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2234,7 +2234,7 @@ func (m *MenuResourceEdges) validate(all bool) error {
 		switch v := interface{}(m.GetMenu()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuResourceEdgesValidationError{
+				errors = append(errors, ResourceEdgesValidationError{
 					field:  "Menu",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2242,7 +2242,7 @@ func (m *MenuResourceEdges) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuResourceEdgesValidationError{
+				errors = append(errors, ResourceEdgesValidationError{
 					field:  "Menu",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2251,7 +2251,7 @@ func (m *MenuResourceEdges) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetMenu()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuResourceEdgesValidationError{
+			return ResourceEdgesValidationError{
 				field:  "Menu",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2260,19 +2260,19 @@ func (m *MenuResourceEdges) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return MenuResourceEdgesMultiError(errors)
+		return ResourceEdgesMultiError(errors)
 	}
 
 	return nil
 }
 
-// MenuResourceEdgesMultiError is an error wrapping multiple validation errors
-// returned by MenuResourceEdges.ValidateAll() if the designated constraints
+// ResourceEdgesMultiError is an error wrapping multiple validation errors
+// returned by ResourceEdges.ValidateAll() if the designated constraints
 // aren't met.
-type MenuResourceEdgesMultiError []error
+type ResourceEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m MenuResourceEdgesMultiError) Error() string {
+func (m ResourceEdgesMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2281,11 +2281,11 @@ func (m MenuResourceEdgesMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m MenuResourceEdgesMultiError) AllErrors() []error { return m }
+func (m ResourceEdgesMultiError) AllErrors() []error { return m }
 
-// MenuResourceEdgesValidationError is the validation error returned by
-// MenuResourceEdges.Validate if the designated constraints aren't met.
-type MenuResourceEdgesValidationError struct {
+// ResourceEdgesValidationError is the validation error returned by
+// ResourceEdges.Validate if the designated constraints aren't met.
+type ResourceEdgesValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2293,24 +2293,22 @@ type MenuResourceEdgesValidationError struct {
 }
 
 // Field function returns field value.
-func (e MenuResourceEdgesValidationError) Field() string { return e.field }
+func (e ResourceEdgesValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e MenuResourceEdgesValidationError) Reason() string { return e.reason }
+func (e ResourceEdgesValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e MenuResourceEdgesValidationError) Cause() error { return e.cause }
+func (e ResourceEdgesValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e MenuResourceEdgesValidationError) Key() bool { return e.key }
+func (e ResourceEdgesValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e MenuResourceEdgesValidationError) ErrorName() string {
-	return "MenuResourceEdgesValidationError"
-}
+func (e ResourceEdgesValidationError) ErrorName() string { return "ResourceEdgesValidationError" }
 
 // Error satisfies the builtin error interface
-func (e MenuResourceEdgesValidationError) Error() string {
+func (e ResourceEdgesValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2322,14 +2320,14 @@ func (e MenuResourceEdgesValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sMenuResourceEdges.%s: %s%s",
+		"invalid %sResourceEdges.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = MenuResourceEdgesValidationError{}
+var _ error = ResourceEdgesValidationError{}
 
 var _ interface {
 	Field() string
@@ -2337,4 +2335,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = MenuResourceEdgesValidationError{}
+} = ResourceEdgesValidationError{}

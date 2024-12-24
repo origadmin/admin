@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"math"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 
@@ -29,7 +29,7 @@ type MenuQuery struct {
 	predicates    []predicate.Menu
 	withChildren  *MenuQuery
 	withParent    *MenuQuery
-	withResources *MenuResourceQuery
+	withResources *ResourceQuery
 	withRoles     *RoleQuery
 	withRoleMenus *RoleMenuQuery
 	modifiers     []func(*sql.Selector)
@@ -114,8 +114,8 @@ func (mq *MenuQuery) QueryParent() *MenuQuery {
 }
 
 // QueryResources chains the current query on the "resources" edge.
-func (mq *MenuQuery) QueryResources() *MenuResourceQuery {
-	query := (&MenuResourceClient{config: mq.config}).Query()
+func (mq *MenuQuery) QueryResources() *ResourceQuery {
+	query := (&ResourceClient{config: mq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := mq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -126,7 +126,7 @@ func (mq *MenuQuery) QueryResources() *MenuResourceQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(menu.Table, menu.FieldID, selector),
-			sqlgraph.To(menuresource.Table, menuresource.FieldID),
+			sqlgraph.To(resource.Table, resource.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, menu.ResourcesTable, menu.ResourcesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(mq.driver.Dialect(), step)
@@ -407,8 +407,8 @@ func (mq *MenuQuery) WithParent(opts ...func(*MenuQuery)) *MenuQuery {
 
 // WithResources tells the query-builder to eager-load the nodes that are connected to
 // the "resources" edge. The optional arguments are used to configure the query builder of the edge.
-func (mq *MenuQuery) WithResources(opts ...func(*MenuResourceQuery)) *MenuQuery {
-	query := (&MenuResourceClient{config: mq.config}).Query()
+func (mq *MenuQuery) WithResources(opts ...func(*ResourceQuery)) *MenuQuery {
+	query := (&ResourceClient{config: mq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -560,8 +560,8 @@ func (mq *MenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Menu, e
 	}
 	if query := mq.withResources; query != nil {
 		if err := mq.loadResources(ctx, query, nodes,
-			func(n *Menu) { n.Edges.Resources = []*MenuResource{} },
-			func(n *Menu, e *MenuResource) { n.Edges.Resources = append(n.Edges.Resources, e) }); err != nil {
+			func(n *Menu) { n.Edges.Resources = []*Resource{} },
+			func(n *Menu, e *Resource) { n.Edges.Resources = append(n.Edges.Resources, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -641,7 +641,7 @@ func (mq *MenuQuery) loadParent(ctx context.Context, query *MenuQuery, nodes []*
 	}
 	return nil
 }
-func (mq *MenuQuery) loadResources(ctx context.Context, query *MenuResourceQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *MenuResource)) error {
+func (mq *MenuQuery) loadResources(ctx context.Context, query *ResourceQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Resource)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Menu)
 	for i := range nodes {
@@ -652,9 +652,9 @@ func (mq *MenuQuery) loadResources(ctx context.Context, query *MenuResourceQuery
 		}
 	}
 	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(menuresource.FieldMenuID)
+		query.ctx.AppendFieldOnce(resource.FieldMenuID)
 	}
-	query.Where(predicate.MenuResource(func(s *sql.Selector) {
+	query.Where(predicate.Resource(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(menu.ResourcesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)

@@ -873,7 +873,7 @@ func HasResources() predicate.Menu {
 }
 
 // HasResourcesWith applies the HasEdge predicate on the "resources" edge with a given conditions (other predicates).
-func HasResourcesWith(preds ...predicate.MenuResource) predicate.Menu {
+func HasResourcesWith(preds ...predicate.Resource) predicate.Menu {
 	return predicate.Menu(func(s *sql.Selector) {
 		step := newResourcesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {

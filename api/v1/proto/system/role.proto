@@ -57,7 +57,7 @@ message ListRolesResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated api.v1.services.system.Role roles = 2 [json_name = "roles"];
+  repeated Role roles = 2 [json_name = "roles"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -77,7 +77,7 @@ message GetRoleRequest {
 }
 
 message GetRoleResponse {
-  api.v1.services.system.Role role = 1;
+  Role role = 1;
 }
 
 message CreateRoleRequest {
@@ -89,20 +89,20 @@ message CreateRoleRequest {
 
   // The role resource to create.
   // The field id should match the Noun in the method id.
-  api.v1.services.system.Role role = 2;
+  Role role = 2;
 }
 
 message CreateRoleResponse {
-  api.v1.services.system.Role role = 1;
+  Role role = 1;
 }
 
 message UpdateRoleRequest {
   // The role resource which replaces the resource on the server.
-  api.v1.services.system.Role role = 1;
+  Role role = 1;
 }
 
 message UpdateRoleResponse {
-  api.v1.services.system.Role role = 1;
+  Role role = 1;
 }
 
 message DeleteRoleRequest {

@@ -72,7 +72,7 @@ func (Menu) Edges() []ent.Edge {
 			Ref("children").
 			Field("parent_id").
 			Unique(),
-		edge.To("resources", MenuResource.Type),
+		edge.To("resources", Resource.Type),
 		edge.From("roles", Role.Type).
 			Ref("menus").
 			// Field("role_id").

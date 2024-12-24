@@ -52,7 +52,7 @@ func ConvertMenuEdges2PB(goModel *MenuEdges) (pbModel *MenuEdgesPB) {
 	pbModel = &MenuEdgesPB{}
 	pbModel.Children = ConvertMenus(goModel.Children)
 	pbModel.Parent = ConvertMenu2PB(goModel.Parent)
-	pbModel.Resources = ConvertMenuResources(goModel.Resources)
+	pbModel.Resources = ConvertResources(goModel.Resources)
 	pbModel.Roles = ConvertRoles(goModel.Roles)
 	pbModel.RoleMenus = ConvertRoleMenus(goModel.RoleMenus)
 	return pbModel
@@ -151,22 +151,22 @@ func ConvertRoleMenuEdges2PB(goModel *RoleMenuEdges) (pbModel *RoleMenuEdgesPB) 
 	return pbModel
 }
 
-// ConvertMenuResource2PB MenuResource is the model entity for the MenuResource schema.
-func ConvertMenuResource2PB(goModel *MenuResource) (pbModel *MenuResourcePB) {
-	pbModel = &MenuResourcePB{}
+// ConvertResource2PB Resource is the model entity for the Resource schema.
+func ConvertResource2PB(goModel *Resource) (pbModel *ResourcePB) {
+	pbModel = &ResourcePB{}
 	pbModel.Id = goModel.ID
 	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.MenuId = goModel.MenuID
 	pbModel.Method = goModel.Method
 	pbModel.Path = goModel.Path
-	pbModel.Edges = ConvertMenuResourceEdges2PB(&goModel.Edges)
+	pbModel.Edges = ConvertResourceEdges2PB(&goModel.Edges)
 	return pbModel
 }
 
-// ConvertMenuResourceEdges2PB MenuResourceEdges holds the relations/edges for other nodes in the graph.
-func ConvertMenuResourceEdges2PB(goModel *MenuResourceEdges) (pbModel *MenuResourceEdgesPB) {
-	pbModel = &MenuResourceEdgesPB{}
+// ConvertResourceEdges2PB ResourceEdges holds the relations/edges for other nodes in the graph.
+func ConvertResourceEdges2PB(goModel *ResourceEdges) (pbModel *ResourceEdgesPB) {
+	pbModel = &ResourceEdgesPB{}
 	pbModel.Menu = ConvertMenu2PB(goModel.Menu)
 	return pbModel
 }

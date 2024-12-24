@@ -14,8 +14,8 @@ type Tx struct {
 	config
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
-	// MenuResource is the client for interacting with the MenuResource builders.
-	MenuResource *MenuResourceClient
+	// Resource is the client for interacting with the Resource builders.
+	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// RoleMenu is the client for interacting with the RoleMenu builders.
@@ -156,7 +156,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Menu = NewMenuClient(tx.config)
-	tx.MenuResource = NewMenuResourceClient(tx.config)
+	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.RoleMenu = NewRoleMenuClient(tx.config)
 	tx.User = NewUserClient(tx.config)

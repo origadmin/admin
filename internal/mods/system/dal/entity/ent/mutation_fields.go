@@ -5,7 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
@@ -56,25 +56,25 @@ func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *MenuResourceMutation) SetFields(input *MenuResource, fields ...string) error {
+func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case menuresource.FieldCreateTime:
+		case resource.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
 			}
-		case menuresource.FieldUpdateTime:
+		case resource.FieldUpdateTime:
 			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case menuresource.FieldMenuID:
+		case resource.FieldMenuID:
 			m.SetMenuID(input.MenuID)
-		case menuresource.FieldMethod:
+		case resource.FieldMethod:
 			m.SetMethod(input.Method)
-		case menuresource.FieldPath:
+		case resource.FieldPath:
 			m.SetPath(input.Path)
 		default:
-			return fmt.Errorf("unknown MenuResource field %s", fields[i])
+			return fmt.Errorf("unknown Resource field %s", fields[i])
 		}
 	}
 	return nil

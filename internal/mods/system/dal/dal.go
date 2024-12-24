@@ -44,10 +44,12 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 		cfg.Driver,
 		cfg.Source,
 	)
-
-	drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
 	if err != nil {
 		log.Errorw("failed opening connection to sqlite", "error", err)
+		return nil, nil, err
+	}
+	err = drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
+	if err != nil {
 		return nil, nil, err
 	}
 	// Run the auto migration tool.
@@ -66,7 +68,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	d := &Data{
 		Database: ent.NewDatabase(client),
 	}
-
+	cfg.GetSource()
 	return d, func() {
 		log.Info("message", "closing the data resources")
 		if err := drv.Close(); err != nil {

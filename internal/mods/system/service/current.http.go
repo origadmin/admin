@@ -17,6 +17,10 @@ type CurrentAPIHTTPService struct {
 	client pb.CurrentAPIHTTPClient
 }
 
+func (s CurrentAPIHTTPService) GetCurrentUser(ctx context.Context, request *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
+	return s.client.GetCurrentUser(ctx, request)
+}
+
 func (s CurrentAPIHTTPService) CurrentLogout(ctx context.Context, request *pb.CurrentLogoutRequest) (*pb.CurrentLogoutResponse, error) {
 	return s.client.CurrentLogout(ctx, request)
 }
@@ -33,8 +37,8 @@ func (s CurrentAPIHTTPService) ListCurrentMenus(ctx context.Context, request *pb
 	return s.client.ListCurrentMenus(ctx, request)
 }
 
-func (s CurrentAPIHTTPService) UpdateCurrentRoles(ctx context.Context, request *pb.UpdateCurrentRolesRequest) (*pb.UpdateCurrentRolesResponse, error) {
-	return s.client.UpdateCurrentRoles(ctx, request)
+func (s CurrentAPIHTTPService) ListCurrentRoles(ctx context.Context, request *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error) {
+	return s.client.ListCurrentRoles(ctx, request)
 }
 
 func (s CurrentAPIHTTPService) UpdateCurrentSetting(ctx context.Context, request *pb.UpdateCurrentSettingRequest) (*pb.UpdateCurrentSettingResponse, error) {

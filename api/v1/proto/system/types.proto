@@ -54,7 +54,7 @@ message MenuEdges {
   // Parent holds the value of the parent edge.
   Menu parent = 2;
   // Resources holds the value of the resources edge.
-  repeated MenuResource resources = 3;
+  repeated Resource resources = 3;
   // Roles holds the value of the roles edge.
   repeated Role roles = 4;
   // RoleMenu holds the value of the role_menu edge.
@@ -206,8 +206,8 @@ message RoleMenuEdges {
   //        repeated bool loadedTypes = 3;
 }
 
-// MenuResource is the model entity for the MenuResource schema.
-message MenuResource {
+// Resource is the model entity for the Resource schema.
+message Resource {
   // ID of the ent.
   string id = 1;
   // CreateTime holds the value of the "create_time" field.
@@ -223,13 +223,13 @@ message MenuResource {
   // Operation holds the value of the "operation" field.
   string operation = 7;
   // Edges holds the relations/edges for other nodes in the graph.
-  //    The values are being populated by the MenuResourceQuery when eager-loading is set.
-  MenuResourceEdges edges = 8;
+  //    The values are being populated by the ResourceQuery when eager-loading is set.
+  ResourceEdges edges = 8;
   //    selectValues = 8;
 }
 
-// MenuResourceEdges holds the relations/edges for other nodes in the graph.
-message MenuResourceEdges {
+// ResourceEdges holds the relations/edges for other nodes in the graph.
+message ResourceEdges {
   // Menu holds the value of the menu edge.
   Menu menu = 1;
   // loadedTypes holds the information for reporting if a

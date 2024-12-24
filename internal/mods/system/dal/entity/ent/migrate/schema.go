@@ -81,8 +81,8 @@ var (
 			},
 		},
 	}
-	// SysMenuResourcesColumns holds the columns for the "sys_menu_resources" table.
-	SysMenuResourcesColumns = []*schema.Column{
+	// SysResourcesColumns holds the columns for the "sys_resources" table.
+	SysResourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
@@ -90,34 +90,34 @@ var (
 		{Name: "path", Type: field.TypeString, Size: 255},
 		{Name: "menu_id", Type: field.TypeString, Nullable: true, Size: 36},
 	}
-	// SysMenuResourcesTable holds the schema information for the "sys_menu_resources" table.
-	SysMenuResourcesTable = &schema.Table{
-		Name:       "sys_menu_resources",
-		Columns:    SysMenuResourcesColumns,
-		PrimaryKey: []*schema.Column{SysMenuResourcesColumns[0]},
+	// SysResourcesTable holds the schema information for the "sys_resources" table.
+	SysResourcesTable = &schema.Table{
+		Name:       "sys_resources",
+		Columns:    SysResourcesColumns,
+		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_menu_resources_sys_menus_resources",
-				Columns:    []*schema.Column{SysMenuResourcesColumns[5]},
+				Symbol:     "sys_resources_sys_menus_resources",
+				Columns:    []*schema.Column{SysResourcesColumns[5]},
 				RefColumns: []*schema.Column{SysMenusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "menuresource_create_time",
+				Name:    "resource_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenuResourcesColumns[1]},
+				Columns: []*schema.Column{SysResourcesColumns[1]},
 			},
 			{
-				Name:    "menuresource_update_time",
+				Name:    "resource_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenuResourcesColumns[2]},
+				Columns: []*schema.Column{SysResourcesColumns[2]},
 			},
 			{
-				Name:    "menuresource_menu_id",
+				Name:    "resource_menu_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenuResourcesColumns[5]},
+				Columns: []*schema.Column{SysResourcesColumns[5]},
 			},
 		},
 	}
@@ -357,7 +357,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		SysMenusTable,
-		SysMenuResourcesTable,
+		SysResourcesTable,
 		SysRolesTable,
 		SysRoleMenusTable,
 		SysUsersTable,
@@ -370,9 +370,9 @@ func init() {
 	SysMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_menus",
 	}
-	SysMenuResourcesTable.ForeignKeys[0].RefTable = SysMenusTable
-	SysMenuResourcesTable.Annotation = &entsql.Annotation{
-		Table: "sys_menu_resources",
+	SysResourcesTable.ForeignKeys[0].RefTable = SysMenusTable
+	SysResourcesTable.Annotation = &entsql.Annotation{
+		Table: "sys_resources",
 	}
 	SysRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_roles",

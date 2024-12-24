@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"time"
@@ -218,17 +218,17 @@ func (mu *MenuUpdate) SetParent(m *Menu) *MenuUpdate {
 	return mu.SetParentID(m.ID)
 }
 
-// AddResourceIDs adds the "resources" edge to the MenuResource entity by IDs.
+// AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
 func (mu *MenuUpdate) AddResourceIDs(ids ...string) *MenuUpdate {
 	mu.mutation.AddResourceIDs(ids...)
 	return mu
 }
 
-// AddResources adds the "resources" edges to the MenuResource entity.
-func (mu *MenuUpdate) AddResources(m ...*MenuResource) *MenuUpdate {
-	ids := make([]string, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+// AddResources adds the "resources" edges to the Resource entity.
+func (mu *MenuUpdate) AddResources(r ...*Resource) *MenuUpdate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
 	return mu.AddResourceIDs(ids...)
 }
@@ -295,23 +295,23 @@ func (mu *MenuUpdate) ClearParent() *MenuUpdate {
 	return mu
 }
 
-// ClearResources clears all "resources" edges to the MenuResource entity.
+// ClearResources clears all "resources" edges to the Resource entity.
 func (mu *MenuUpdate) ClearResources() *MenuUpdate {
 	mu.mutation.ClearResources()
 	return mu
 }
 
-// RemoveResourceIDs removes the "resources" edge to MenuResource entities by IDs.
+// RemoveResourceIDs removes the "resources" edge to Resource entities by IDs.
 func (mu *MenuUpdate) RemoveResourceIDs(ids ...string) *MenuUpdate {
 	mu.mutation.RemoveResourceIDs(ids...)
 	return mu
 }
 
-// RemoveResources removes "resources" edges to MenuResource entities.
-func (mu *MenuUpdate) RemoveResources(m ...*MenuResource) *MenuUpdate {
-	ids := make([]string, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+// RemoveResources removes "resources" edges to Resource entities.
+func (mu *MenuUpdate) RemoveResources(r ...*Resource) *MenuUpdate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
 	return mu.RemoveResourceIDs(ids...)
 }
@@ -570,7 +570,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -583,7 +583,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -599,7 +599,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -917,17 +917,17 @@ func (muo *MenuUpdateOne) SetParent(m *Menu) *MenuUpdateOne {
 	return muo.SetParentID(m.ID)
 }
 
-// AddResourceIDs adds the "resources" edge to the MenuResource entity by IDs.
+// AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
 func (muo *MenuUpdateOne) AddResourceIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.AddResourceIDs(ids...)
 	return muo
 }
 
-// AddResources adds the "resources" edges to the MenuResource entity.
-func (muo *MenuUpdateOne) AddResources(m ...*MenuResource) *MenuUpdateOne {
-	ids := make([]string, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+// AddResources adds the "resources" edges to the Resource entity.
+func (muo *MenuUpdateOne) AddResources(r ...*Resource) *MenuUpdateOne {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
 	return muo.AddResourceIDs(ids...)
 }
@@ -994,23 +994,23 @@ func (muo *MenuUpdateOne) ClearParent() *MenuUpdateOne {
 	return muo
 }
 
-// ClearResources clears all "resources" edges to the MenuResource entity.
+// ClearResources clears all "resources" edges to the Resource entity.
 func (muo *MenuUpdateOne) ClearResources() *MenuUpdateOne {
 	muo.mutation.ClearResources()
 	return muo
 }
 
-// RemoveResourceIDs removes the "resources" edge to MenuResource entities by IDs.
+// RemoveResourceIDs removes the "resources" edge to Resource entities by IDs.
 func (muo *MenuUpdateOne) RemoveResourceIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.RemoveResourceIDs(ids...)
 	return muo
 }
 
-// RemoveResources removes "resources" edges to MenuResource entities.
-func (muo *MenuUpdateOne) RemoveResources(m ...*MenuResource) *MenuUpdateOne {
-	ids := make([]string, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+// RemoveResources removes "resources" edges to Resource entities.
+func (muo *MenuUpdateOne) RemoveResources(r ...*Resource) *MenuUpdateOne {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
 	return muo.RemoveResourceIDs(ids...)
 }
@@ -1299,7 +1299,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1312,7 +1312,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1328,7 +1328,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

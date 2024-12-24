@@ -35,22 +35,22 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on ListResourcesRequest with the rules
+// Validate checks the field values on ListAuthResourcesRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListResourcesRequest) Validate() error {
+func (m *ListAuthResourcesRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListResourcesRequest with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ListAuthResourcesRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListResourcesRequestMultiError, or nil if none found.
-func (m *ListResourcesRequest) ValidateAll() error {
+// ListAuthResourcesRequestMultiError, or nil if none found.
+func (m *ListAuthResourcesRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListResourcesRequest) validate(all bool) error {
+func (m *ListAuthResourcesRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -66,19 +66,19 @@ func (m *ListResourcesRequest) validate(all bool) error {
 	// no validation rules for NoPaging
 
 	if len(errors) > 0 {
-		return ListResourcesRequestMultiError(errors)
+		return ListAuthResourcesRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListResourcesRequestMultiError is an error wrapping multiple validation
-// errors returned by ListResourcesRequest.ValidateAll() if the designated
+// ListAuthResourcesRequestMultiError is an error wrapping multiple validation
+// errors returned by ListAuthResourcesRequest.ValidateAll() if the designated
 // constraints aren't met.
-type ListResourcesRequestMultiError []error
+type ListAuthResourcesRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListResourcesRequestMultiError) Error() string {
+func (m ListAuthResourcesRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -87,11 +87,11 @@ func (m ListResourcesRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListResourcesRequestMultiError) AllErrors() []error { return m }
+func (m ListAuthResourcesRequestMultiError) AllErrors() []error { return m }
 
-// ListResourcesRequestValidationError is the validation error returned by
-// ListResourcesRequest.Validate if the designated constraints aren't met.
-type ListResourcesRequestValidationError struct {
+// ListAuthResourcesRequestValidationError is the validation error returned by
+// ListAuthResourcesRequest.Validate if the designated constraints aren't met.
+type ListAuthResourcesRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -99,24 +99,24 @@ type ListResourcesRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListResourcesRequestValidationError) Field() string { return e.field }
+func (e ListAuthResourcesRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListResourcesRequestValidationError) Reason() string { return e.reason }
+func (e ListAuthResourcesRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListResourcesRequestValidationError) Cause() error { return e.cause }
+func (e ListAuthResourcesRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListResourcesRequestValidationError) Key() bool { return e.key }
+func (e ListAuthResourcesRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListResourcesRequestValidationError) ErrorName() string {
-	return "ListResourcesRequestValidationError"
+func (e ListAuthResourcesRequestValidationError) ErrorName() string {
+	return "ListAuthResourcesRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListResourcesRequestValidationError) Error() string {
+func (e ListAuthResourcesRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -128,14 +128,14 @@ func (e ListResourcesRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListResourcesRequest.%s: %s%s",
+		"invalid %sListAuthResourcesRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListResourcesRequestValidationError{}
+var _ error = ListAuthResourcesRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -143,24 +143,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListResourcesRequestValidationError{}
+} = ListAuthResourcesRequestValidationError{}
 
-// Validate checks the field values on ListResourcesResponse with the rules
+// Validate checks the field values on ListAuthResourcesResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListResourcesResponse) Validate() error {
+func (m *ListAuthResourcesResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListResourcesResponse with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ListAuthResourcesResponse with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListResourcesResponseMultiError, or nil if none found.
-func (m *ListResourcesResponse) ValidateAll() error {
+// ListAuthResourcesResponseMultiError, or nil if none found.
+func (m *ListAuthResourcesResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListResourcesResponse) validate(all bool) error {
+func (m *ListAuthResourcesResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -174,7 +174,7 @@ func (m *ListResourcesResponse) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListResourcesResponseValidationError{
+					errors = append(errors, ListAuthResourcesResponseValidationError{
 						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -182,7 +182,7 @@ func (m *ListResourcesResponse) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListResourcesResponseValidationError{
+					errors = append(errors, ListAuthResourcesResponseValidationError{
 						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -191,7 +191,7 @@ func (m *ListResourcesResponse) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListResourcesResponseValidationError{
+				return ListAuthResourcesResponseValidationError{
 					field:  fmt.Sprintf("Resources[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -204,19 +204,19 @@ func (m *ListResourcesResponse) validate(all bool) error {
 	// no validation rules for TotalSize
 
 	if len(errors) > 0 {
-		return ListResourcesResponseMultiError(errors)
+		return ListAuthResourcesResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListResourcesResponseMultiError is an error wrapping multiple validation
-// errors returned by ListResourcesResponse.ValidateAll() if the designated
-// constraints aren't met.
-type ListResourcesResponseMultiError []error
+// ListAuthResourcesResponseMultiError is an error wrapping multiple validation
+// errors returned by ListAuthResourcesResponse.ValidateAll() if the
+// designated constraints aren't met.
+type ListAuthResourcesResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListResourcesResponseMultiError) Error() string {
+func (m ListAuthResourcesResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -225,11 +225,11 @@ func (m ListResourcesResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListResourcesResponseMultiError) AllErrors() []error { return m }
+func (m ListAuthResourcesResponseMultiError) AllErrors() []error { return m }
 
-// ListResourcesResponseValidationError is the validation error returned by
-// ListResourcesResponse.Validate if the designated constraints aren't met.
-type ListResourcesResponseValidationError struct {
+// ListAuthResourcesResponseValidationError is the validation error returned by
+// ListAuthResourcesResponse.Validate if the designated constraints aren't met.
+type ListAuthResourcesResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -237,24 +237,24 @@ type ListResourcesResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListResourcesResponseValidationError) Field() string { return e.field }
+func (e ListAuthResourcesResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListResourcesResponseValidationError) Reason() string { return e.reason }
+func (e ListAuthResourcesResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListResourcesResponseValidationError) Cause() error { return e.cause }
+func (e ListAuthResourcesResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListResourcesResponseValidationError) Key() bool { return e.key }
+func (e ListAuthResourcesResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListResourcesResponseValidationError) ErrorName() string {
-	return "ListResourcesResponseValidationError"
+func (e ListAuthResourcesResponseValidationError) ErrorName() string {
+	return "ListAuthResourcesResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListResourcesResponseValidationError) Error() string {
+func (e ListAuthResourcesResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -266,14 +266,14 @@ func (e ListResourcesResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListResourcesResponse.%s: %s%s",
+		"invalid %sListAuthResourcesResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListResourcesResponseValidationError{}
+var _ error = ListAuthResourcesResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -281,4 +281,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListResourcesResponseValidationError{}
+} = ListAuthResourcesResponseValidationError{}

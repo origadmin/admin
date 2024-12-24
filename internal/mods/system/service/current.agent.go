@@ -22,6 +22,19 @@ type CurrentAPIAgentService struct {
 	client pb.CurrentAPIClient
 }
 
+func (s CurrentAPIAgentService) GetCurrentUser(context transhttp.Context, request *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
+	response, err := s.client.GetCurrentUser(context, request)
+	if err != nil {
+		log.Errorf("GetCurrentUser error: %v", err)
+		return nil, err
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+	return nil, nil
+}
+
 func (s CurrentAPIAgentService) CurrentLogout(context transhttp.Context, request *pb.CurrentLogoutRequest) (*pb.CurrentLogoutResponse, error) {
 	response, err := s.client.CurrentLogout(context, request)
 	if err != nil {
@@ -48,8 +61,8 @@ func (s CurrentAPIAgentService) ListCurrentMenus(context transhttp.Context, requ
 	return nil, nil
 }
 
-func (s CurrentAPIAgentService) UpdateCurrentRoles(context transhttp.Context, request *pb.UpdateCurrentRolesRequest) (*pb.UpdateCurrentRolesResponse, error) {
-	response, err := s.client.UpdateCurrentRoles(context, request)
+func (s CurrentAPIAgentService) ListCurrentRoles(context transhttp.Context, request *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error) {
+	response, err := s.client.ListCurrentRoles(context, request)
 	if err != nil {
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err

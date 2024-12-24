@@ -9,8 +9,8 @@ import (
 // Menu is the predicate function for menu builders.
 type Menu func(*sql.Selector)
 
-// MenuResource is the predicate function for menuresource builders.
-type MenuResource func(*sql.Selector)
+// Resource is the predicate function for resource builders.
+type Resource func(*sql.Selector)
 
 // Role is the predicate function for role builders.
 type Role func(*sql.Selector)

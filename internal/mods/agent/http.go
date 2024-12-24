@@ -44,16 +44,17 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		panic(err)
 	}
 	adapter := casbin.NewAdapter()
-
 	authorizer, err := securityx.NewAuthorizer(bootstrap, casbin.WithPolicyAdapter(adapter))
 	if err != nil {
 		panic(err)
 	}
-	//authorizer.SetPolicies()
 	options := []msecurity.OptionSetting{
 		msecurity.WithAuthorizer(authorizer),
 		msecurity.WithAuthenticator(authenticator),
 		func(option *msecurity.Option) {
+			option.IsRoot = func(ctx context.Context, claims security.Claims) bool {
+				return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
+			}
 			option.Skipper = func(path string) bool {
 				log.Debugf("Checking if path '%s' should be skipped", path)
 				for _, p := range paths {

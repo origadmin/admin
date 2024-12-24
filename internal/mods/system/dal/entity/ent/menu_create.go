@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"time"
@@ -201,17 +201,17 @@ func (mc *MenuCreate) SetParent(m *Menu) *MenuCreate {
 	return mc.SetParentID(m.ID)
 }
 
-// AddResourceIDs adds the "resources" edge to the MenuResource entity by IDs.
+// AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
 func (mc *MenuCreate) AddResourceIDs(ids ...string) *MenuCreate {
 	mc.mutation.AddResourceIDs(ids...)
 	return mc
 }
 
-// AddResources adds the "resources" edges to the MenuResource entity.
-func (mc *MenuCreate) AddResources(m ...*MenuResource) *MenuCreate {
-	ids := make([]string, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+// AddResources adds the "resources" edges to the Resource entity.
+func (mc *MenuCreate) AddResources(r ...*Resource) *MenuCreate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
 	}
 	return mc.AddResourceIDs(ids...)
 }
@@ -514,7 +514,7 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menuresource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthAPI_ListResources_FullMethodName = "/api.v1.services.system.AuthAPI/ListResources"
+	AuthAPI_ListAuthResources_FullMethodName = "/api.v1.services.system.AuthAPI/ListAuthResources"
 )
 
 // AuthAPIClient is the client API for AuthAPI service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthAPIClient interface {
-	ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error)
+	ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error)
 }
 
 type authAPIClient struct {
@@ -37,10 +37,10 @@ func NewAuthAPIClient(cc grpc.ClientConnInterface) AuthAPIClient {
 	return &authAPIClient{cc}
 }
 
-func (c *authAPIClient) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error) {
+func (c *authAPIClient) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListResourcesResponse)
-	err := c.cc.Invoke(ctx, AuthAPI_ListResources_FullMethodName, in, out, cOpts...)
+	out := new(ListAuthResourcesResponse)
+	err := c.cc.Invoke(ctx, AuthAPI_ListAuthResources_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *authAPIClient) ListResources(ctx context.Context, in *ListResourcesRequ
 // All implementations must embed UnimplementedAuthAPIServer
 // for forward compatibility.
 type AuthAPIServer interface {
-	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 	mustEmbedUnimplementedAuthAPIServer()
 }
 
@@ -62,8 +62,8 @@ type AuthAPIServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthAPIServer struct{}
 
-func (UnimplementedAuthAPIServer) ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListResources not implemented")
+func (UnimplementedAuthAPIServer) ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthResources not implemented")
 }
 func (UnimplementedAuthAPIServer) mustEmbedUnimplementedAuthAPIServer() {}
 func (UnimplementedAuthAPIServer) testEmbeddedByValue()                 {}
@@ -86,20 +86,20 @@ func RegisterAuthAPIServer(s grpc.ServiceRegistrar, srv AuthAPIServer) {
 	s.RegisterService(&AuthAPI_ServiceDesc, srv)
 }
 
-func _AuthAPI_ListResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListResourcesRequest)
+func _AuthAPI_ListAuthResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthResourcesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthAPIServer).ListResources(ctx, in)
+		return srv.(AuthAPIServer).ListAuthResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthAPI_ListResources_FullMethodName,
+		FullMethod: AuthAPI_ListAuthResources_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthAPIServer).ListResources(ctx, req.(*ListResourcesRequest))
+		return srv.(AuthAPIServer).ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +112,8 @@ var AuthAPI_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthAPIServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListResources",
-			Handler:    _AuthAPI_ListResources_Handler,
+			MethodName: "ListAuthResources",
+			Handler:    _AuthAPI_ListAuthResources_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

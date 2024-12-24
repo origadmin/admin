@@ -59,7 +59,7 @@ message ListMenusResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated api.v1.services.system.Menu menus = 2 [json_name = "menus"];
+  repeated Menu menus = 2 [json_name = "menus"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -82,7 +82,7 @@ message GetMenuRequest {
 // GetMenuResponse is the response for the MenuService.GetMenu method.
 message GetMenuResponse {
   // The field id should match the Noun in the method id.
-  api.v1.services.system.Menu menu = 1;
+  Menu menu = 1;
 }
 
 // CreateMenuRequest is the request for the MenuService.CreateMenu method.
@@ -95,23 +95,23 @@ message CreateMenuRequest {
 
   // The menu resource to create.
   // The field id should match the Noun in the method id.
-  api.v1.services.system.Menu menu = 2;
+  Menu menu = 2;
 }
 
 // CreateMenuResponse is the response for the MenuService.CreateMenu method.
 message CreateMenuResponse {
-  api.v1.services.system.Menu menu = 1;
+  Menu menu = 1;
 }
 
 // UpdateMenuRequest is the request for the MenuService.UpdateMenu method.
 message UpdateMenuRequest {
   // The menu resource which replaces the resource on the server.
-  api.v1.services.system.Menu menu = 1;
+  Menu menu = 1;
 }
 
 // UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
 message UpdateMenuResponse {
-  api.v1.services.system.Menu menu = 1;
+  Menu menu = 1;
 }
 
 // DeleteMenuRequest is the request for the MenuService.DeleteMenu method.
@@ -123,6 +123,6 @@ message DeleteMenuRequest {
 
 // DeleteMenuResponse is the response for the MenuService.DeleteMenu method.
 message DeleteMenuResponse {
-  // or api.v1.services.system.Menu menu = 1; or google.protobuf.Empty empty = 1;
+  // or Menu menu = 1; or google.protobuf.Empty empty = 1;
   google.protobuf.Empty empty = 1;
 }
