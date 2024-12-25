@@ -36,7 +36,14 @@ func RoleObject(menu *RolePB) *Role {
 		return nil
 	}
 	return &Role{
-		ID: menu.Id,
+		ID:          menu.Id,
+		CreateTime:  menu.CreateTime.AsTime(),
+		UpdateTime:  menu.UpdateTime.AsTime(),
+		Code:        menu.Code,
+		Name:        menu.Name,
+		Description: menu.Description,
+		Sequence:    int(menu.Sequence),
+		Status:      int8(menu.Status),
 	}
 }
 

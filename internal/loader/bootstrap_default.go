@@ -120,7 +120,7 @@ func DefaultData() *configv1.Data {
 			Debug:                 false,
 			Driver:                "sqlite3",
 			Source:                "data/admin.db",
-			Migrate:               false,
+			Migrate:               true,
 			EnableTrace:           false,
 			EnableMetrics:         false,
 			MaxIdleConnections:    0,

@@ -12,7 +12,7 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menuresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -20,13 +20,13 @@ type authRepo struct {
 	db *Data
 }
 
-func (repo authRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
-	var option dto.ResourceQueryOption
+func (repo authRepo) ListAuthResources(ctx context.Context, in *dto.ListAuthResourcesRequest, options ...dto.AuthResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+	var option dto.AuthResourceQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	query := repo.db.MenuResource(ctx).Query()
-	return resourcePageQuery(ctx, query, in, option)
+	query := repo.db.Resource(ctx).Query()
+	return authResourcePageQuery(ctx, query, in, option)
 }
 
 // NewAuthRepo .
@@ -36,9 +36,9 @@ func NewAuthRepo(db *Data, logger log.KLogger) dto.AuthRepo {
 	}
 }
 
-func resourcePageQuery(ctx context.Context, query *ent.MenuResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
-	query = resourceQueryPage(query, in)
-	query = resourceQueryOptions(query, option)
+func authResourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListAuthResourcesRequest, option dto.AuthResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+	query = authResourceQueryPage(query, in)
+	query = authResourceQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
 		return nil, 0, err
@@ -47,7 +47,7 @@ func resourcePageQuery(ctx context.Context, query *ent.MenuResourceQuery, in *pb
 	return dto.ConvertResources(result), int32(count), err
 }
 
-func resourceQueryPage(query *ent.MenuResourceQuery, in *pb.ListResourcesRequest) *ent.MenuResourceQuery {
+func authResourceQueryPage(query *ent.ResourceQuery, in *pb.ListAuthResourcesRequest) *ent.ResourceQuery {
 	if in.NoPaging {
 		pageSize := in.PageSize
 		if pageSize > 0 {
@@ -67,12 +67,12 @@ func resourceQueryPage(query *ent.MenuResourceQuery, in *pb.ListResourcesRequest
 	return query
 }
 
-func resourceQueryOptions(query *ent.MenuResourceQuery, option dto.ResourceQueryOption) *ent.MenuResourceQuery {
+func authResourceQueryOptions(query *ent.ResourceQuery, option dto.AuthResourceQueryOption) *ent.ResourceQuery {
 	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).MenuResourceQuery
+		query = query.Select(option.SelectFields...).ResourceQuery
 	}
 	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).MenuResourceQuery
+		query = query.Omit(option.OmitFields...).ResourceQuery
 	}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(resourceOrderBy(option.OrderFields)...)
@@ -80,8 +80,8 @@ func resourceQueryOptions(query *ent.MenuResourceQuery, option dto.ResourceQuery
 	return query
 }
 
-func resourceOrderBy(fields []string, opts ...sql.OrderTermOption) []menuresource.OrderOption {
-	var orders []menuresource.OrderOption
+func authResourceOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
+	var orders []resource.OrderOption
 	for _, field := range fields {
 		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
 	}

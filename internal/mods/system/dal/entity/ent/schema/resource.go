@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package schema implements the functions, types, and interfaces for the module.
 package schema
 
 import (
@@ -23,9 +24,10 @@ type Resource struct {
 // Fields of the Resource.
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("menu_id").MaxLen(36).Optional(), // From Menu.ID
+		mixin.FieldFK("menu_id"),                      // From Menu.UUID
 		field.String("method").MaxLen(20).Default(""), // HTTP method
-		field.String("path").MaxLen(255),              // API request path (e.g. /users/:id or /users/{id})
+		field.String("operation").MaxLen(20).Default(""),
+		field.String("path").MaxLen(255), // API request path (e.g. /users/:id or /users/{id})
 	}
 }
 

@@ -21,8 +21,8 @@ type Role struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Code holds the value of the "code" field.
-	Code string `json:"code,omitempty"`
+	// Keyword holds the value of the "keyword" field.
+	Keyword string `json:"keyword,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Description holds the value of the "description" field.
@@ -95,7 +95,7 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case role.FieldSequence, role.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case role.FieldID, role.FieldCode, role.FieldName, role.FieldDescription:
+		case role.FieldID, role.FieldKeyword, role.FieldName, role.FieldDescription:
 			values[i] = new(sql.NullString)
 		case role.FieldCreateTime, role.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -132,11 +132,11 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.UpdateTime = value.Time
 			}
-		case role.FieldCode:
+		case role.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field code", values[i])
+				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				r.Code = value.String
+				r.Keyword = value.String
 			}
 		case role.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -224,8 +224,8 @@ func (r *Role) String() string {
 	builder.WriteString("update_time=")
 	builder.WriteString(r.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("code=")
-	builder.WriteString(r.Code)
+	builder.WriteString("keyword=")
+	builder.WriteString(r.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(r.Name)

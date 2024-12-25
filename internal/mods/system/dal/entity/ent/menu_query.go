@@ -892,10 +892,11 @@ func (mq *MenuQuery) Modify(modifiers ...func(s *sql.Selector)) *MenuSelect {
 //	var v []struct {
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
-//	  Code string `json:"code,omitempty"`
+//	  Keyword string `json:"keyword,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Description string `json:"description,omitempty"`
-//	  Type string `json:"type,omitempty"`
+//	  Type uint8 `json:"type,omitempty"`
+//	  Icon string `json:"icon,omitempty"`
 //	  Path string `json:"path,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
 //	  ParentID string `json:"parent_id,omitempty"`
@@ -908,10 +909,11 @@ func (mq *MenuQuery) Modify(modifiers ...func(s *sql.Selector)) *MenuSelect {
 //	  Omit(
 //	  menu.FieldCreateTime,
 //	  menu.FieldUpdateTime,
-//	  menu.FieldCode,
+//	  menu.FieldKeyword,
 //	  menu.FieldName,
 //	  menu.FieldDescription,
 //	  menu.FieldType,
+//	  menu.FieldIcon,
 //	  menu.FieldPath,
 //	  menu.FieldStatus,
 //	  menu.FieldParentID,

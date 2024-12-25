@@ -337,12 +337,12 @@ func (rmq *RoleMenuQuery) WithMenu(opts ...func(*MenuQuery)) *RoleMenuQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		RoleID string `json:"role_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
-//		GroupBy(rolemenu.FieldCreateTime).
+//		GroupBy(rolemenu.FieldRoleID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (rmq *RoleMenuQuery) GroupBy(field string, fields ...string) *RoleMenuGroupBy {
@@ -360,11 +360,11 @@ func (rmq *RoleMenuQuery) GroupBy(field string, fields ...string) *RoleMenuGroup
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		RoleID string `json:"role_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
-//		Select(rolemenu.FieldCreateTime).
+//		Select(rolemenu.FieldRoleID).
 //		Scan(ctx, &v)
 func (rmq *RoleMenuQuery) Select(fields ...string) *RoleMenuSelect {
 	rmq.ctx.Fields = append(rmq.ctx.Fields, fields...)
@@ -639,16 +639,12 @@ func (rmq *RoleMenuQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleMenuSe
 // Example:
 //
 //	var v []struct {
-//	  CreateTime time.Time `json:"create_time,omitempty"`
-//	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  RoleID string `json:"role_id,omitempty"`
 //	  MenuID string `json:"menu_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
 //	  Omit(
-//	  rolemenu.FieldCreateTime,
-//	  rolemenu.FieldUpdateTime,
 //	  rolemenu.FieldRoleID,
 //	  rolemenu.FieldMenuID,
 //	  ).

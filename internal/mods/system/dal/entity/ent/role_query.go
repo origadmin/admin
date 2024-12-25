@@ -850,7 +850,7 @@ func (rq *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 //	var v []struct {
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
-//	  Code string `json:"code,omitempty"`
+//	  Keyword string `json:"keyword,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Description string `json:"description,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
@@ -861,7 +861,7 @@ func (rq *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 //	  Omit(
 //	  role.FieldCreateTime,
 //	  role.FieldUpdateTime,
-//	  role.FieldCode,
+//	  role.FieldKeyword,
 //	  role.FieldName,
 //	  role.FieldDescription,
 //	  role.FieldSequence,

@@ -43,8 +43,16 @@ message Menu {
   string parent_path = 13;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the MenuQuery when eager-loading is set.
-  MenuEdges edges = 14;
+  //  MenuEdges edges = 14;
   //    selectValues = 15;
+  // Children holds the value of the children edge.
+  repeated Menu children = 21;
+  // Parent holds the value of the parent edge.
+  Menu parent = 22;
+  // Resources holds the value of the resources edge.
+  repeated Resource resources = 23;
+  // Roles holds the value of the roles edge.
+  repeated Role roles = 24;
 }
 
 // MenuEdges holds the relations/edges for other nodes in the graph.
@@ -84,8 +92,12 @@ message Role {
   int32 status = 8;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the RoleQuery when eager-loading is set.
-  RoleEdges edges = 9;
+  //  RoleEdges edges = 9;
   //    selectValues = 10;
+  // Menus holds the value of the menus edge.
+  repeated Menu menus = 21;
+  // Users holds the value of the users edge.
+  repeated User users = 22;
 }
 
 // RoleEdges holds the relations/edges for other nodes in the graph.
@@ -131,8 +143,10 @@ message User {
   int32 status = 12;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the UserQuery when eager-loading is set.
-  UserEdges edges = 13;
+  //  UserEdges edges = 13;
   //    selectValues = 14;
+  // Roles holds the value of the roles edge.
+  repeated Role roles = 21;
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.
@@ -162,8 +176,12 @@ message UserRole {
   string role_name = 6;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the UserRoleQuery when eager-loading is set.
-  UserRoleEdges edges = 7;
+  //  UserRoleEdges edges = 7;
   //    selectValues = 8;
+  // User holds the value of the user edge.
+  User user = 21;
+  // Role holds the value of the role edge.
+  Role role = 22;
 }
 
 // UserRoleEdges holds the relations/edges for other nodes in the graph.
@@ -191,8 +209,12 @@ message RoleMenu {
   string menu_id = 5;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the RoleMenuQuery when eager-loading is set.
-  RoleMenuEdges edges = 6;
+  //  RoleMenuEdges edges = 6;
   //    selectValues = 7;
+  // Role holds the value of the role edge.
+  Role role = 21;
+  // Menu holds the value of the menu edge.
+  Menu menu = 22;
 }
 
 // RoleMenuEdges holds the relations/edges for other nodes in the graph.
@@ -224,8 +246,9 @@ message Resource {
   string operation = 7;
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the ResourceQuery when eager-loading is set.
-  ResourceEdges edges = 8;
+  //  ResourceEdges edges = 8;
   //    selectValues = 8;
+  Menu menu = 21;
 }
 
 // ResourceEdges holds the relations/edges for other nodes in the graph.

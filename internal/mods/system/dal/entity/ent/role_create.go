@@ -52,16 +52,16 @@ func (rc *RoleCreate) SetNillableUpdateTime(t *time.Time) *RoleCreate {
 	return rc
 }
 
-// SetCode sets the "code" field.
-func (rc *RoleCreate) SetCode(s string) *RoleCreate {
-	rc.mutation.SetCode(s)
+// SetKeyword sets the "keyword" field.
+func (rc *RoleCreate) SetKeyword(s string) *RoleCreate {
+	rc.mutation.SetKeyword(s)
 	return rc
 }
 
-// SetNillableCode sets the "code" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableCode(s *string) *RoleCreate {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableKeyword(s *string) *RoleCreate {
 	if s != nil {
-		rc.SetCode(*s)
+		rc.SetKeyword(*s)
 	}
 	return rc
 }
@@ -223,9 +223,9 @@ func (rc *RoleCreate) defaults() {
 		v := role.DefaultUpdateTime()
 		rc.mutation.SetUpdateTime(v)
 	}
-	if _, ok := rc.mutation.Code(); !ok {
-		v := role.DefaultCode
-		rc.mutation.SetCode(v)
+	if _, ok := rc.mutation.Keyword(); !ok {
+		v := role.DefaultKeyword
+		rc.mutation.SetKeyword(v)
 	}
 	if _, ok := rc.mutation.Name(); !ok {
 		v := role.DefaultName
@@ -249,12 +249,12 @@ func (rc *RoleCreate) check() error {
 	if _, ok := rc.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Role.update_time"`)}
 	}
-	if _, ok := rc.mutation.Code(); !ok {
-		return &ValidationError{Name: "code", err: errors.New(`ent: missing required field "Role.code"`)}
+	if _, ok := rc.mutation.Keyword(); !ok {
+		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Role.keyword"`)}
 	}
-	if v, ok := rc.mutation.Code(); ok {
-		if err := role.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Role.code": %w`, err)}
+	if v, ok := rc.mutation.Keyword(); ok {
+		if err := role.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Role.keyword": %w`, err)}
 		}
 	}
 	if _, ok := rc.mutation.Name(); !ok {
@@ -327,9 +327,9 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := rc.mutation.Code(); ok {
-		_spec.SetField(role.FieldCode, field.TypeString, value)
-		_node.Code = value
+	if value, ok := rc.mutation.Keyword(); ok {
+		_spec.SetField(role.FieldKeyword, field.TypeString, value)
+		_node.Keyword = value
 	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
@@ -361,10 +361,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: rc.config, mutation: newRoleMenuMutation(rc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
@@ -381,10 +377,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: rc.config, mutation: newUserRoleMutation(rc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := rc.mutation.RoleMenusIDs(); len(nodes) > 0 {
@@ -425,7 +417,20 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 // SetRole set the Role
 func (rc *RoleCreate) SetRole(input *Role, fields ...string) *RoleCreate {
 	m := rc.mutation
+	if len(fields) == 0 {
+		fields = role.Columns
+	}
 	_ = m.SetFields(input, fields...)
+	return rc
+}
+
+// SetRoleWithZero set the Role
+func (rc *RoleCreate) SetRoleWithZero(input *Role, fields ...string) *RoleCreate {
+	m := rc.mutation
+	if len(fields) == 0 {
+		fields = role.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return rc
 }
 

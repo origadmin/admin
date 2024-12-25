@@ -70,6 +70,20 @@ func (ru *ResourceUpdate) SetNillableMethod(s *string) *ResourceUpdate {
 	return ru
 }
 
+// SetOperation sets the "operation" field.
+func (ru *ResourceUpdate) SetOperation(s string) *ResourceUpdate {
+	ru.mutation.SetOperation(s)
+	return ru
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableOperation(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetOperation(*s)
+	}
+	return ru
+}
+
 // SetPath sets the "path" field.
 func (ru *ResourceUpdate) SetPath(s string) *ResourceUpdate {
 	ru.mutation.SetPath(s)
@@ -148,6 +162,11 @@ func (ru *ResourceUpdate) check() error {
 			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.Operation(); ok {
+		if err := resource.OperationValidator(v); err != nil {
+			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
+		}
+	}
 	if v, ok := ru.mutation.Path(); ok {
 		if err := resource.PathValidator(v); err != nil {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
@@ -179,6 +198,9 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
@@ -274,6 +296,20 @@ func (ruo *ResourceUpdateOne) SetNillableMethod(s *string) *ResourceUpdateOne {
 	return ruo
 }
 
+// SetOperation sets the "operation" field.
+func (ruo *ResourceUpdateOne) SetOperation(s string) *ResourceUpdateOne {
+	ruo.mutation.SetOperation(s)
+	return ruo
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableOperation(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetOperation(*s)
+	}
+	return ruo
+}
+
 // SetPath sets the "path" field.
 func (ruo *ResourceUpdateOne) SetPath(s string) *ResourceUpdateOne {
 	ruo.mutation.SetPath(s)
@@ -365,6 +401,11 @@ func (ruo *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.Operation(); ok {
+		if err := resource.OperationValidator(v); err != nil {
+			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
+		}
+	}
 	if v, ok := ruo.mutation.Path(); ok {
 		if err := resource.PathValidator(v); err != nil {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
@@ -413,6 +454,9 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	}
 	if value, ok := ruo.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
@@ -465,14 +509,40 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 // SetResource set the Resource
 func (ru *ResourceUpdate) SetResource(input *Resource, fields ...string) *ResourceUpdate {
 	m := ru.mutation
+	if len(fields) == 0 {
+		fields = resource.OmitColumns(resource.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return ru
+}
+
+// SetResourceWithZero set the Resource
+func (ru *ResourceUpdate) SetResourceWithZero(input *Resource, fields ...string) *ResourceUpdate {
+	m := ru.mutation
+	if len(fields) == 0 {
+		fields = resource.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return ru
 }
 
 // SetResource set the Resource
 func (ruo *ResourceUpdateOne) SetResource(input *Resource, fields ...string) *ResourceUpdateOne {
 	m := ruo.mutation
+	if len(fields) == 0 {
+		fields = resource.OmitColumns(resource.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return ruo
+}
+
+// SetResourceWithZero set the Resource
+func (ruo *ResourceUpdateOne) SetResourceWithZero(input *Resource, fields ...string) *ResourceUpdateOne {
+	m := ruo.mutation
+	if len(fields) == 0 {
+		fields = resource.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return ruo
 }
 

@@ -77,6 +77,20 @@ func (rc *ResourceCreate) SetNillableMethod(s *string) *ResourceCreate {
 	return rc
 }
 
+// SetOperation sets the "operation" field.
+func (rc *ResourceCreate) SetOperation(s string) *ResourceCreate {
+	rc.mutation.SetOperation(s)
+	return rc
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillableOperation(s *string) *ResourceCreate {
+	if s != nil {
+		rc.SetOperation(*s)
+	}
+	return rc
+}
+
 // SetPath sets the "path" field.
 func (rc *ResourceCreate) SetPath(s string) *ResourceCreate {
 	rc.mutation.SetPath(s)
@@ -141,6 +155,10 @@ func (rc *ResourceCreate) defaults() {
 		v := resource.DefaultMethod
 		rc.mutation.SetMethod(v)
 	}
+	if _, ok := rc.mutation.Operation(); !ok {
+		v := resource.DefaultOperation
+		rc.mutation.SetOperation(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -162,6 +180,14 @@ func (rc *ResourceCreate) check() error {
 	if v, ok := rc.mutation.Method(); ok {
 		if err := resource.MethodValidator(v); err != nil {
 			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
+		}
+	}
+	if _, ok := rc.mutation.Operation(); !ok {
+		return &ValidationError{Name: "operation", err: errors.New(`ent: missing required field "Resource.operation"`)}
+	}
+	if v, ok := rc.mutation.Operation(); ok {
+		if err := resource.OperationValidator(v); err != nil {
+			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
 		}
 	}
 	if _, ok := rc.mutation.Path(); !ok {
@@ -224,6 +250,10 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 		_node.Method = value
 	}
+	if value, ok := rc.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
+		_node.Operation = value
+	}
 	if value, ok := rc.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 		_node.Path = value
@@ -251,7 +281,20 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 // SetResource set the Resource
 func (rc *ResourceCreate) SetResource(input *Resource, fields ...string) *ResourceCreate {
 	m := rc.mutation
+	if len(fields) == 0 {
+		fields = resource.Columns
+	}
 	_ = m.SetFields(input, fields...)
+	return rc
+}
+
+// SetResourceWithZero set the Resource
+func (rc *ResourceCreate) SetResourceWithZero(input *Resource, fields ...string) *ResourceCreate {
+	m := rc.mutation
+	if len(fields) == 0 {
+		fields = resource.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return rc
 }
 

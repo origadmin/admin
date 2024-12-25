@@ -8,7 +8,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"strings"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -19,16 +18,10 @@ type UserRole struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
-	UpdateTime time.Time `json:"update_time,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID string `json:"user_id,omitempty"`
 	// RoleID holds the value of the "role_id" field.
 	RoleID string `json:"role_id,omitempty"`
-	// RoleName holds the value of the "role_name" field.
-	RoleName string `json:"role_name,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserRoleQuery when eager-loading is set.
 	Edges        UserRoleEdges `json:"edges"`
@@ -73,10 +66,8 @@ func (*UserRole) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userrole.FieldID, userrole.FieldUserID, userrole.FieldRoleID, userrole.FieldRoleName:
+		case userrole.FieldID, userrole.FieldUserID, userrole.FieldRoleID:
 			values[i] = new(sql.NullString)
-		case userrole.FieldCreateTime, userrole.FieldUpdateTime:
-			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -98,18 +89,6 @@ func (ur *UserRole) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				ur.ID = value.String
 			}
-		case userrole.FieldCreateTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field create_time", values[i])
-			} else if value.Valid {
-				ur.CreateTime = value.Time
-			}
-		case userrole.FieldUpdateTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field update_time", values[i])
-			} else if value.Valid {
-				ur.UpdateTime = value.Time
-			}
 		case userrole.FieldUserID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
@@ -121,12 +100,6 @@ func (ur *UserRole) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
 				ur.RoleID = value.String
-			}
-		case userrole.FieldRoleName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field role_name", values[i])
-			} else if value.Valid {
-				ur.RoleName = value.String
 			}
 		default:
 			ur.selectValues.Set(columns[i], values[i])
@@ -174,20 +147,11 @@ func (ur *UserRole) String() string {
 	var builder strings.Builder
 	builder.WriteString("UserRole(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", ur.ID))
-	builder.WriteString("create_time=")
-	builder.WriteString(ur.CreateTime.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("update_time=")
-	builder.WriteString(ur.UpdateTime.Format(time.ANSIC))
-	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(ur.UserID)
 	builder.WriteString(", ")
 	builder.WriteString("role_id=")
 	builder.WriteString(ur.RoleID)
-	builder.WriteString(", ")
-	builder.WriteString("role_name=")
-	builder.WriteString(ur.RoleName)
 	builder.WriteByte(')')
 	return builder.String()
 }

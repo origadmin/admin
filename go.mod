@@ -27,6 +27,7 @@ require (
 	github.com/origadmin/toolkits v0.1.24
 	github.com/origadmin/toolkits/codec v0.0.54
 	github.com/origadmin/toolkits/errors v0.0.36
+	github.com/origadmin/toolkits/idgen v0.0.21
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/net v0.33.0
@@ -81,7 +82,6 @@ require (
 	github.com/google/cel-go v0.22.1 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/consul/api v1.31.0 // indirect

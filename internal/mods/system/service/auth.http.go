@@ -17,8 +17,8 @@ type AuthAPIHTTPService struct {
 	client pb.AuthAPIHTTPClient
 }
 
-func (s AuthAPIHTTPService) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
-	return s.client.ListResources(ctx, request)
+func (s AuthAPIHTTPService) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
+	return s.client.ListAuthResources(ctx, request)
 }
 
 //func (m AuthAPIHTTPService) mustEmbedUnimplementedAuthAPIHTTPServer() {

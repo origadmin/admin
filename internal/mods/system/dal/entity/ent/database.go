@@ -102,6 +102,11 @@ func (db *Database) Query(ctx context.Context, query string, args ...interface{}
 	return &rows, nil
 }
 
+// Department is the client for interacting with the Department builders.
+func (db *Database) Department(ctx context.Context) *DepartmentClient {
+	return db.Client(ctx).Department
+}
+
 // Menu is the client for interacting with the Menu builders.
 func (db *Database) Menu(ctx context.Context) *MenuClient {
 	return db.Client(ctx).Menu
@@ -125,6 +130,11 @@ func (db *Database) RoleMenu(ctx context.Context) *RoleMenuClient {
 // User is the client for interacting with the User builders.
 func (db *Database) User(ctx context.Context) *UserClient {
 	return db.Client(ctx).User
+}
+
+// UserDepartment is the client for interacting with the UserDepartment builders.
+func (db *Database) UserDepartment(ctx context.Context) *UserDepartmentClient {
+	return db.Client(ctx).UserDepartment
 }
 
 // UserRole is the client for interacting with the UserRole builders.

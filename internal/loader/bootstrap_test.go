@@ -6,6 +6,7 @@
 package loader
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,10 +14,14 @@ import (
 	"testing"
 	"time"
 
+	_ "github.com/origadmin/contrib/database"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/rand"
+	"github.com/origadmin/toolkits/idgen/uuid"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/mods/system/dal"
 )
 
 const (
@@ -140,6 +145,46 @@ func TestLoadConfig(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("LoadConf() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestData_InitFromFile(t *testing.T) {
+	_ = uuid.UUID{}
+	type fields struct {
+		Bootstrap *configs.Bootstrap
+	}
+	type args struct {
+		filename string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "test",
+			fields: fields{
+				Bootstrap: DefaultBootstrap(),
+			},
+			args: args{
+				filename: "../../resources/data/menu.json",
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d, cleanup, err := dal.NewData(tt.fields.Bootstrap, log.DefaultLogger)
+			if err != nil {
+				t.Errorf("NewData() error = %v", err)
+				return
+			}
+			defer cleanup()
+			if err := d.InitFromFile(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
+				t.Errorf("InitFromFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

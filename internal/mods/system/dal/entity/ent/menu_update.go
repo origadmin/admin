@@ -38,16 +38,16 @@ func (mu *MenuUpdate) SetUpdateTime(t time.Time) *MenuUpdate {
 	return mu
 }
 
-// SetCode sets the "code" field.
-func (mu *MenuUpdate) SetCode(s string) *MenuUpdate {
-	mu.mutation.SetCode(s)
+// SetKeyword sets the "keyword" field.
+func (mu *MenuUpdate) SetKeyword(s string) *MenuUpdate {
+	mu.mutation.SetKeyword(s)
 	return mu
 }
 
-// SetNillableCode sets the "code" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableCode(s *string) *MenuUpdate {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableKeyword(s *string) *MenuUpdate {
 	if s != nil {
-		mu.SetCode(*s)
+		mu.SetKeyword(*s)
 	}
 	return mu
 }
@@ -81,15 +81,36 @@ func (mu *MenuUpdate) SetNillableDescription(s *string) *MenuUpdate {
 }
 
 // SetType sets the "type" field.
-func (mu *MenuUpdate) SetType(s string) *MenuUpdate {
-	mu.mutation.SetType(s)
+func (mu *MenuUpdate) SetType(u uint8) *MenuUpdate {
+	mu.mutation.ResetType()
+	mu.mutation.SetType(u)
 	return mu
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableType(s *string) *MenuUpdate {
+func (mu *MenuUpdate) SetNillableType(u *uint8) *MenuUpdate {
+	if u != nil {
+		mu.SetType(*u)
+	}
+	return mu
+}
+
+// AddType adds u to the "type" field.
+func (mu *MenuUpdate) AddType(u int8) *MenuUpdate {
+	mu.mutation.AddType(u)
+	return mu
+}
+
+// SetIcon sets the "icon" field.
+func (mu *MenuUpdate) SetIcon(s string) *MenuUpdate {
+	mu.mutation.SetIcon(s)
+	return mu
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableIcon(s *string) *MenuUpdate {
 	if s != nil {
-		mu.SetType(*s)
+		mu.SetIcon(*s)
 	}
 	return mu
 }
@@ -195,6 +216,12 @@ func (mu *MenuUpdate) SetNillableProperties(s *string) *MenuUpdate {
 	if s != nil {
 		mu.SetProperties(*s)
 	}
+	return mu
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (mu *MenuUpdate) ClearProperties() *MenuUpdate {
+	mu.mutation.ClearProperties()
 	return mu
 }
 
@@ -396,9 +423,9 @@ func (mu *MenuUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (mu *MenuUpdate) check() error {
-	if v, ok := mu.mutation.Code(); ok {
-		if err := menu.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Menu.code": %w`, err)}
+	if v, ok := mu.mutation.Keyword(); ok {
+		if err := menu.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Menu.keyword": %w`, err)}
 		}
 	}
 	if v, ok := mu.mutation.Name(); ok {
@@ -411,9 +438,9 @@ func (mu *MenuUpdate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Menu.description": %w`, err)}
 		}
 	}
-	if v, ok := mu.mutation.GetType(); ok {
-		if err := menu.TypeValidator(v); err != nil {
-			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Menu.type": %w`, err)}
+	if v, ok := mu.mutation.Icon(); ok {
+		if err := menu.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Menu.icon": %w`, err)}
 		}
 	}
 	if v, ok := mu.mutation.Path(); ok {
@@ -455,8 +482,8 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.UpdateTime(); ok {
 		_spec.SetField(menu.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := mu.mutation.Code(); ok {
-		_spec.SetField(menu.FieldCode, field.TypeString, value)
+	if value, ok := mu.mutation.Keyword(); ok {
+		_spec.SetField(menu.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
@@ -465,7 +492,13 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(menu.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeString, value)
+		_spec.SetField(menu.FieldType, field.TypeUint8, value)
+	}
+	if value, ok := mu.mutation.AddedType(); ok {
+		_spec.AddField(menu.FieldType, field.TypeUint8, value)
+	}
+	if value, ok := mu.mutation.Icon(); ok {
+		_spec.SetField(menu.FieldIcon, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
@@ -487,6 +520,9 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := mu.mutation.Properties(); ok {
 		_spec.SetField(menu.FieldProperties, field.TypeString, value)
+	}
+	if mu.mutation.PropertiesCleared() {
+		_spec.ClearField(menu.FieldProperties, field.TypeString)
 	}
 	if mu.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -618,10 +654,6 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
-		createE := &RoleMenuCreate{config: mu.config, mutation: newRoleMenuMutation(mu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := mu.mutation.RemovedRolesIDs(); len(nodes) > 0 && !mu.mutation.RolesCleared() {
@@ -638,10 +670,6 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: mu.config, mutation: newRoleMenuMutation(mu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := mu.mutation.RolesIDs(); len(nodes) > 0 {
@@ -658,10 +686,6 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: mu.config, mutation: newRoleMenuMutation(mu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if mu.mutation.RoleMenusCleared() {
@@ -737,16 +761,16 @@ func (muo *MenuUpdateOne) SetUpdateTime(t time.Time) *MenuUpdateOne {
 	return muo
 }
 
-// SetCode sets the "code" field.
-func (muo *MenuUpdateOne) SetCode(s string) *MenuUpdateOne {
-	muo.mutation.SetCode(s)
+// SetKeyword sets the "keyword" field.
+func (muo *MenuUpdateOne) SetKeyword(s string) *MenuUpdateOne {
+	muo.mutation.SetKeyword(s)
 	return muo
 }
 
-// SetNillableCode sets the "code" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableCode(s *string) *MenuUpdateOne {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableKeyword(s *string) *MenuUpdateOne {
 	if s != nil {
-		muo.SetCode(*s)
+		muo.SetKeyword(*s)
 	}
 	return muo
 }
@@ -780,15 +804,36 @@ func (muo *MenuUpdateOne) SetNillableDescription(s *string) *MenuUpdateOne {
 }
 
 // SetType sets the "type" field.
-func (muo *MenuUpdateOne) SetType(s string) *MenuUpdateOne {
-	muo.mutation.SetType(s)
+func (muo *MenuUpdateOne) SetType(u uint8) *MenuUpdateOne {
+	muo.mutation.ResetType()
+	muo.mutation.SetType(u)
 	return muo
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableType(s *string) *MenuUpdateOne {
+func (muo *MenuUpdateOne) SetNillableType(u *uint8) *MenuUpdateOne {
+	if u != nil {
+		muo.SetType(*u)
+	}
+	return muo
+}
+
+// AddType adds u to the "type" field.
+func (muo *MenuUpdateOne) AddType(u int8) *MenuUpdateOne {
+	muo.mutation.AddType(u)
+	return muo
+}
+
+// SetIcon sets the "icon" field.
+func (muo *MenuUpdateOne) SetIcon(s string) *MenuUpdateOne {
+	muo.mutation.SetIcon(s)
+	return muo
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableIcon(s *string) *MenuUpdateOne {
 	if s != nil {
-		muo.SetType(*s)
+		muo.SetIcon(*s)
 	}
 	return muo
 }
@@ -894,6 +939,12 @@ func (muo *MenuUpdateOne) SetNillableProperties(s *string) *MenuUpdateOne {
 	if s != nil {
 		muo.SetProperties(*s)
 	}
+	return muo
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (muo *MenuUpdateOne) ClearProperties() *MenuUpdateOne {
+	muo.mutation.ClearProperties()
 	return muo
 }
 
@@ -1108,9 +1159,9 @@ func (muo *MenuUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (muo *MenuUpdateOne) check() error {
-	if v, ok := muo.mutation.Code(); ok {
-		if err := menu.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Menu.code": %w`, err)}
+	if v, ok := muo.mutation.Keyword(); ok {
+		if err := menu.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Menu.keyword": %w`, err)}
 		}
 	}
 	if v, ok := muo.mutation.Name(); ok {
@@ -1123,9 +1174,9 @@ func (muo *MenuUpdateOne) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Menu.description": %w`, err)}
 		}
 	}
-	if v, ok := muo.mutation.GetType(); ok {
-		if err := menu.TypeValidator(v); err != nil {
-			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Menu.type": %w`, err)}
+	if v, ok := muo.mutation.Icon(); ok {
+		if err := menu.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Menu.icon": %w`, err)}
 		}
 	}
 	if v, ok := muo.mutation.Path(); ok {
@@ -1184,8 +1235,8 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.UpdateTime(); ok {
 		_spec.SetField(menu.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := muo.mutation.Code(); ok {
-		_spec.SetField(menu.FieldCode, field.TypeString, value)
+	if value, ok := muo.mutation.Keyword(); ok {
+		_spec.SetField(menu.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
@@ -1194,7 +1245,13 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		_spec.SetField(menu.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeString, value)
+		_spec.SetField(menu.FieldType, field.TypeUint8, value)
+	}
+	if value, ok := muo.mutation.AddedType(); ok {
+		_spec.AddField(menu.FieldType, field.TypeUint8, value)
+	}
+	if value, ok := muo.mutation.Icon(); ok {
+		_spec.SetField(menu.FieldIcon, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
@@ -1216,6 +1273,9 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	}
 	if value, ok := muo.mutation.Properties(); ok {
 		_spec.SetField(menu.FieldProperties, field.TypeString, value)
+	}
+	if muo.mutation.PropertiesCleared() {
+		_spec.ClearField(menu.FieldProperties, field.TypeString)
 	}
 	if muo.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1347,10 +1407,6 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
-		createE := &RoleMenuCreate{config: muo.config, mutation: newRoleMenuMutation(muo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := muo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !muo.mutation.RolesCleared() {
@@ -1367,10 +1423,6 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: muo.config, mutation: newRoleMenuMutation(muo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := muo.mutation.RolesIDs(); len(nodes) > 0 {
@@ -1387,10 +1439,6 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: muo.config, mutation: newRoleMenuMutation(muo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if muo.mutation.RoleMenusCleared() {
@@ -1457,14 +1505,40 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 // SetMenu set the Menu
 func (mu *MenuUpdate) SetMenu(input *Menu, fields ...string) *MenuUpdate {
 	m := mu.mutation
+	if len(fields) == 0 {
+		fields = menu.OmitColumns(menu.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return mu
+}
+
+// SetMenuWithZero set the Menu
+func (mu *MenuUpdate) SetMenuWithZero(input *Menu, fields ...string) *MenuUpdate {
+	m := mu.mutation
+	if len(fields) == 0 {
+		fields = menu.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return mu
 }
 
 // SetMenu set the Menu
 func (muo *MenuUpdateOne) SetMenu(input *Menu, fields ...string) *MenuUpdateOne {
 	m := muo.mutation
+	if len(fields) == 0 {
+		fields = menu.OmitColumns(menu.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return muo
+}
+
+// SetMenuWithZero set the Menu
+func (muo *MenuUpdateOne) SetMenuWithZero(input *Menu, fields ...string) *MenuUpdateOne {
+	m := muo.mutation
+	if len(fields) == 0 {
+		fields = menu.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return muo
 }
 

@@ -6,9 +6,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"time"
 
@@ -86,20 +88,6 @@ func (uu *UserUpdate) AddIndex(i int) *UserUpdate {
 	return uu
 }
 
-// SetDepartment sets the "department" field.
-func (uu *UserUpdate) SetDepartment(s string) *UserUpdate {
-	uu.mutation.SetDepartment(s)
-	return uu
-}
-
-// SetNillableDepartment sets the "department" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableDepartment(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetDepartment(*s)
-	}
-	return uu
-}
-
 // SetAllowedIP sets the "allowed_ip" field.
 func (uu *UserUpdate) SetAllowedIP(s string) *UserUpdate {
 	uu.mutation.SetAllowedIP(s)
@@ -128,30 +116,16 @@ func (uu *UserUpdate) SetNillableUsername(s *string) *UserUpdate {
 	return uu
 }
 
-// SetName sets the "name" field.
-func (uu *UserUpdate) SetName(s string) *UserUpdate {
-	uu.mutation.SetName(s)
+// SetNickname sets the "nickname" field.
+func (uu *UserUpdate) SetNickname(s string) *UserUpdate {
+	uu.mutation.SetNickname(s)
 	return uu
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableNickname(s *string) *UserUpdate {
 	if s != nil {
-		uu.SetName(*s)
-	}
-	return uu
-}
-
-// SetUserID sets the "user_id" field.
-func (uu *UserUpdate) SetUserID(s string) *UserUpdate {
-	uu.mutation.SetUserID(s)
-	return uu
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableUserID(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetUserID(*s)
+		uu.SetNickname(*s)
 	}
 	return uu
 }
@@ -166,6 +140,34 @@ func (uu *UserUpdate) SetAvatar(s string) *UserUpdate {
 func (uu *UserUpdate) SetNillableAvatar(s *string) *UserUpdate {
 	if s != nil {
 		uu.SetAvatar(*s)
+	}
+	return uu
+}
+
+// SetName sets the "name" field.
+func (uu *UserUpdate) SetName(s string) *UserUpdate {
+	uu.mutation.SetName(s)
+	return uu
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetName(*s)
+	}
+	return uu
+}
+
+// SetGender sets the "gender" field.
+func (uu *UserUpdate) SetGender(s string) *UserUpdate {
+	uu.mutation.SetGender(s)
+	return uu
+}
+
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableGender(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetGender(*s)
 	}
 	return uu
 }
@@ -240,6 +242,55 @@ func (uu *UserUpdate) SetNillableRemark(s *string) *UserUpdate {
 	return uu
 }
 
+// SetToken sets the "token" field.
+func (uu *UserUpdate) SetToken(s string) *UserUpdate {
+	uu.mutation.SetToken(s)
+	return uu
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableToken(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetToken(*s)
+	}
+	return uu
+}
+
+// SetStatus sets the "status" field.
+func (uu *UserUpdate) SetStatus(i int8) *UserUpdate {
+	uu.mutation.ResetStatus()
+	uu.mutation.SetStatus(i)
+	return uu
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableStatus(i *int8) *UserUpdate {
+	if i != nil {
+		uu.SetStatus(*i)
+	}
+	return uu
+}
+
+// AddStatus adds i to the "status" field.
+func (uu *UserUpdate) AddStatus(i int8) *UserUpdate {
+	uu.mutation.AddStatus(i)
+	return uu
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (uu *UserUpdate) SetLastLoginIP(s string) *UserUpdate {
+	uu.mutation.SetLastLoginIP(s)
+	return uu
+}
+
+// SetNillableLastLoginIP sets the "last_login_ip" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableLastLoginIP(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetLastLoginIP(*s)
+	}
+	return uu
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (uu *UserUpdate) SetLastLoginTime(t time.Time) *UserUpdate {
 	uu.mutation.SetLastLoginTime(t)
@@ -268,24 +319,23 @@ func (uu *UserUpdate) SetNillableSanctionDate(t *time.Time) *UserUpdate {
 	return uu
 }
 
-// SetStatus sets the "status" field.
-func (uu *UserUpdate) SetStatus(i int8) *UserUpdate {
-	uu.mutation.ResetStatus()
-	uu.mutation.SetStatus(i)
+// SetDepartmentID sets the "department_id" field.
+func (uu *UserUpdate) SetDepartmentID(s string) *UserUpdate {
+	uu.mutation.SetDepartmentID(s)
 	return uu
 }
 
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableStatus(i *int8) *UserUpdate {
-	if i != nil {
-		uu.SetStatus(*i)
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDepartmentID(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetDepartmentID(*s)
 	}
 	return uu
 }
 
-// AddStatus adds i to the "status" field.
-func (uu *UserUpdate) AddStatus(i int8) *UserUpdate {
-	uu.mutation.AddStatus(i)
+// ClearDepartmentID clears the value of the "department_id" field.
+func (uu *UserUpdate) ClearDepartmentID() *UserUpdate {
+	uu.mutation.ClearDepartmentID()
 	return uu
 }
 
@@ -338,6 +388,21 @@ func (uu *UserUpdate) AddRoles(r ...*Role) *UserUpdate {
 	return uu.AddRoleIDs(ids...)
 }
 
+// AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
+func (uu *UserUpdate) AddDepartmentIDs(ids ...string) *UserUpdate {
+	uu.mutation.AddDepartmentIDs(ids...)
+	return uu
+}
+
+// AddDepartments adds the "departments" edges to the Department entity.
+func (uu *UserUpdate) AddDepartments(d ...*Department) *UserUpdate {
+	ids := make([]string, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uu.AddDepartmentIDs(ids...)
+}
+
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
 func (uu *UserUpdate) AddUserRoleIDs(ids ...string) *UserUpdate {
 	uu.mutation.AddUserRoleIDs(ids...)
@@ -351,6 +416,21 @@ func (uu *UserUpdate) AddUserRoles(u ...*UserRole) *UserUpdate {
 		ids[i] = u[i].ID
 	}
 	return uu.AddUserRoleIDs(ids...)
+}
+
+// AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
+func (uu *UserUpdate) AddUserDepartmentIDs(ids ...string) *UserUpdate {
+	uu.mutation.AddUserDepartmentIDs(ids...)
+	return uu
+}
+
+// AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
+func (uu *UserUpdate) AddUserDepartments(u ...*UserDepartment) *UserUpdate {
+	ids := make([]string, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uu.AddUserDepartmentIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -379,6 +459,27 @@ func (uu *UserUpdate) RemoveRoles(r ...*Role) *UserUpdate {
 	return uu.RemoveRoleIDs(ids...)
 }
 
+// ClearDepartments clears all "departments" edges to the Department entity.
+func (uu *UserUpdate) ClearDepartments() *UserUpdate {
+	uu.mutation.ClearDepartments()
+	return uu
+}
+
+// RemoveDepartmentIDs removes the "departments" edge to Department entities by IDs.
+func (uu *UserUpdate) RemoveDepartmentIDs(ids ...string) *UserUpdate {
+	uu.mutation.RemoveDepartmentIDs(ids...)
+	return uu
+}
+
+// RemoveDepartments removes "departments" edges to Department entities.
+func (uu *UserUpdate) RemoveDepartments(d ...*Department) *UserUpdate {
+	ids := make([]string, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uu.RemoveDepartmentIDs(ids...)
+}
+
 // ClearUserRoles clears all "user_roles" edges to the UserRole entity.
 func (uu *UserUpdate) ClearUserRoles() *UserUpdate {
 	uu.mutation.ClearUserRoles()
@@ -398,6 +499,27 @@ func (uu *UserUpdate) RemoveUserRoles(u ...*UserRole) *UserUpdate {
 		ids[i] = u[i].ID
 	}
 	return uu.RemoveUserRoleIDs(ids...)
+}
+
+// ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
+func (uu *UserUpdate) ClearUserDepartments() *UserUpdate {
+	uu.mutation.ClearUserDepartments()
+	return uu
+}
+
+// RemoveUserDepartmentIDs removes the "user_departments" edge to UserDepartment entities by IDs.
+func (uu *UserUpdate) RemoveUserDepartmentIDs(ids ...string) *UserUpdate {
+	uu.mutation.RemoveUserDepartmentIDs(ids...)
+	return uu
+}
+
+// RemoveUserDepartments removes "user_departments" edges to UserDepartment entities.
+func (uu *UserUpdate) RemoveUserDepartments(u ...*UserDepartment) *UserUpdate {
+	ids := make([]string, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uu.RemoveUserDepartmentIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -443,14 +565,24 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
-	if v, ok := uu.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
+	if v, ok := uu.mutation.Nickname(); ok {
+		if err := user.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.Avatar(); ok {
 		if err := user.AvatarValidator(v); err != nil {
 			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.Name(); ok {
+		if err := user.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.Gender(); ok {
+		if err := user.GenderValidator(v); err != nil {
+			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.Password(); ok {
@@ -476,6 +608,21 @@ func (uu *UserUpdate) check() error {
 	if v, ok := uu.mutation.Remark(); ok {
 		if err := user.RemarkValidator(v); err != nil {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.Token(); ok {
+		if err := user.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.LastLoginIP(); ok {
+		if err := user.LastLoginIPValidator(v); err != nil {
+			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.DepartmentID(); ok {
+		if err := user.DepartmentIDValidator(v); err != nil {
+			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "User.department_id": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.ManagerID(); ok {
@@ -519,23 +666,23 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.AddedIndex(); ok {
 		_spec.AddField(user.FieldIndex, field.TypeInt, value)
 	}
-	if value, ok := uu.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeString, value)
-	}
 	if value, ok := uu.mutation.AllowedIP(); ok {
 		_spec.SetField(user.FieldAllowedIP, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
-	if value, ok := uu.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if value, ok := uu.mutation.UserID(); ok {
-		_spec.SetField(user.FieldUserID, field.TypeString, value)
+	if value, ok := uu.mutation.Nickname(); ok {
+		_spec.SetField(user.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Gender(); ok {
+		_spec.SetField(user.FieldGender, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
@@ -552,17 +699,29 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.Remark(); ok {
 		_spec.SetField(user.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := uu.mutation.LastLoginTime(); ok {
-		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
-	}
-	if value, ok := uu.mutation.SanctionDate(); ok {
-		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
+	if value, ok := uu.mutation.Token(); ok {
+		_spec.SetField(user.FieldToken, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Status(); ok {
 		_spec.SetField(user.FieldStatus, field.TypeInt8, value)
 	}
 	if value, ok := uu.mutation.AddedStatus(); ok {
 		_spec.AddField(user.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := uu.mutation.LastLoginIP(); ok {
+		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.LastLoginTime(); ok {
+		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
+	}
+	if value, ok := uu.mutation.SanctionDate(); ok {
+		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
+	}
+	if value, ok := uu.mutation.DepartmentID(); ok {
+		_spec.SetField(user.FieldDepartmentID, field.TypeString, value)
+	}
+	if uu.mutation.DepartmentIDCleared() {
+		_spec.ClearField(user.FieldDepartmentID, field.TypeString)
 	}
 	if value, ok := uu.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeString, value)
@@ -584,10 +743,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
-		createE := &UserRoleCreate{config: uu.config, mutation: newUserRoleMutation(uu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedRolesIDs(); len(nodes) > 0 && !uu.mutation.RolesCleared() {
@@ -604,10 +759,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: uu.config, mutation: newUserRoleMutation(uu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RolesIDs(); len(nodes) > 0 {
@@ -624,10 +775,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: uu.config, mutation: newUserRoleMutation(uu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 && !uu.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if uu.mutation.UserRolesCleared() {
@@ -668,6 +860,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.UserDepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedUserDepartmentsIDs(); len(nodes) > 0 && !uu.mutation.UserDepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.UserDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -752,20 +989,6 @@ func (uuo *UserUpdateOne) AddIndex(i int) *UserUpdateOne {
 	return uuo
 }
 
-// SetDepartment sets the "department" field.
-func (uuo *UserUpdateOne) SetDepartment(s string) *UserUpdateOne {
-	uuo.mutation.SetDepartment(s)
-	return uuo
-}
-
-// SetNillableDepartment sets the "department" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableDepartment(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetDepartment(*s)
-	}
-	return uuo
-}
-
 // SetAllowedIP sets the "allowed_ip" field.
 func (uuo *UserUpdateOne) SetAllowedIP(s string) *UserUpdateOne {
 	uuo.mutation.SetAllowedIP(s)
@@ -794,30 +1017,16 @@ func (uuo *UserUpdateOne) SetNillableUsername(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// SetName sets the "name" field.
-func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
-	uuo.mutation.SetName(s)
+// SetNickname sets the "nickname" field.
+func (uuo *UserUpdateOne) SetNickname(s string) *UserUpdateOne {
+	uuo.mutation.SetNickname(s)
 	return uuo
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableNickname(s *string) *UserUpdateOne {
 	if s != nil {
-		uuo.SetName(*s)
-	}
-	return uuo
-}
-
-// SetUserID sets the "user_id" field.
-func (uuo *UserUpdateOne) SetUserID(s string) *UserUpdateOne {
-	uuo.mutation.SetUserID(s)
-	return uuo
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableUserID(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetUserID(*s)
+		uuo.SetNickname(*s)
 	}
 	return uuo
 }
@@ -832,6 +1041,34 @@ func (uuo *UserUpdateOne) SetAvatar(s string) *UserUpdateOne {
 func (uuo *UserUpdateOne) SetNillableAvatar(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetAvatar(*s)
+	}
+	return uuo
+}
+
+// SetName sets the "name" field.
+func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
+	uuo.mutation.SetName(s)
+	return uuo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetName(*s)
+	}
+	return uuo
+}
+
+// SetGender sets the "gender" field.
+func (uuo *UserUpdateOne) SetGender(s string) *UserUpdateOne {
+	uuo.mutation.SetGender(s)
+	return uuo
+}
+
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableGender(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetGender(*s)
 	}
 	return uuo
 }
@@ -906,6 +1143,55 @@ func (uuo *UserUpdateOne) SetNillableRemark(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetToken sets the "token" field.
+func (uuo *UserUpdateOne) SetToken(s string) *UserUpdateOne {
+	uuo.mutation.SetToken(s)
+	return uuo
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableToken(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetToken(*s)
+	}
+	return uuo
+}
+
+// SetStatus sets the "status" field.
+func (uuo *UserUpdateOne) SetStatus(i int8) *UserUpdateOne {
+	uuo.mutation.ResetStatus()
+	uuo.mutation.SetStatus(i)
+	return uuo
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableStatus(i *int8) *UserUpdateOne {
+	if i != nil {
+		uuo.SetStatus(*i)
+	}
+	return uuo
+}
+
+// AddStatus adds i to the "status" field.
+func (uuo *UserUpdateOne) AddStatus(i int8) *UserUpdateOne {
+	uuo.mutation.AddStatus(i)
+	return uuo
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (uuo *UserUpdateOne) SetLastLoginIP(s string) *UserUpdateOne {
+	uuo.mutation.SetLastLoginIP(s)
+	return uuo
+}
+
+// SetNillableLastLoginIP sets the "last_login_ip" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableLastLoginIP(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetLastLoginIP(*s)
+	}
+	return uuo
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (uuo *UserUpdateOne) SetLastLoginTime(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetLastLoginTime(t)
@@ -934,24 +1220,23 @@ func (uuo *UserUpdateOne) SetNillableSanctionDate(t *time.Time) *UserUpdateOne {
 	return uuo
 }
 
-// SetStatus sets the "status" field.
-func (uuo *UserUpdateOne) SetStatus(i int8) *UserUpdateOne {
-	uuo.mutation.ResetStatus()
-	uuo.mutation.SetStatus(i)
+// SetDepartmentID sets the "department_id" field.
+func (uuo *UserUpdateOne) SetDepartmentID(s string) *UserUpdateOne {
+	uuo.mutation.SetDepartmentID(s)
 	return uuo
 }
 
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableStatus(i *int8) *UserUpdateOne {
-	if i != nil {
-		uuo.SetStatus(*i)
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDepartmentID(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetDepartmentID(*s)
 	}
 	return uuo
 }
 
-// AddStatus adds i to the "status" field.
-func (uuo *UserUpdateOne) AddStatus(i int8) *UserUpdateOne {
-	uuo.mutation.AddStatus(i)
+// ClearDepartmentID clears the value of the "department_id" field.
+func (uuo *UserUpdateOne) ClearDepartmentID() *UserUpdateOne {
+	uuo.mutation.ClearDepartmentID()
 	return uuo
 }
 
@@ -1004,6 +1289,21 @@ func (uuo *UserUpdateOne) AddRoles(r ...*Role) *UserUpdateOne {
 	return uuo.AddRoleIDs(ids...)
 }
 
+// AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
+func (uuo *UserUpdateOne) AddDepartmentIDs(ids ...string) *UserUpdateOne {
+	uuo.mutation.AddDepartmentIDs(ids...)
+	return uuo
+}
+
+// AddDepartments adds the "departments" edges to the Department entity.
+func (uuo *UserUpdateOne) AddDepartments(d ...*Department) *UserUpdateOne {
+	ids := make([]string, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uuo.AddDepartmentIDs(ids...)
+}
+
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
 func (uuo *UserUpdateOne) AddUserRoleIDs(ids ...string) *UserUpdateOne {
 	uuo.mutation.AddUserRoleIDs(ids...)
@@ -1017,6 +1317,21 @@ func (uuo *UserUpdateOne) AddUserRoles(u ...*UserRole) *UserUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return uuo.AddUserRoleIDs(ids...)
+}
+
+// AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
+func (uuo *UserUpdateOne) AddUserDepartmentIDs(ids ...string) *UserUpdateOne {
+	uuo.mutation.AddUserDepartmentIDs(ids...)
+	return uuo
+}
+
+// AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
+func (uuo *UserUpdateOne) AddUserDepartments(u ...*UserDepartment) *UserUpdateOne {
+	ids := make([]string, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uuo.AddUserDepartmentIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -1045,6 +1360,27 @@ func (uuo *UserUpdateOne) RemoveRoles(r ...*Role) *UserUpdateOne {
 	return uuo.RemoveRoleIDs(ids...)
 }
 
+// ClearDepartments clears all "departments" edges to the Department entity.
+func (uuo *UserUpdateOne) ClearDepartments() *UserUpdateOne {
+	uuo.mutation.ClearDepartments()
+	return uuo
+}
+
+// RemoveDepartmentIDs removes the "departments" edge to Department entities by IDs.
+func (uuo *UserUpdateOne) RemoveDepartmentIDs(ids ...string) *UserUpdateOne {
+	uuo.mutation.RemoveDepartmentIDs(ids...)
+	return uuo
+}
+
+// RemoveDepartments removes "departments" edges to Department entities.
+func (uuo *UserUpdateOne) RemoveDepartments(d ...*Department) *UserUpdateOne {
+	ids := make([]string, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uuo.RemoveDepartmentIDs(ids...)
+}
+
 // ClearUserRoles clears all "user_roles" edges to the UserRole entity.
 func (uuo *UserUpdateOne) ClearUserRoles() *UserUpdateOne {
 	uuo.mutation.ClearUserRoles()
@@ -1064,6 +1400,27 @@ func (uuo *UserUpdateOne) RemoveUserRoles(u ...*UserRole) *UserUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return uuo.RemoveUserRoleIDs(ids...)
+}
+
+// ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
+func (uuo *UserUpdateOne) ClearUserDepartments() *UserUpdateOne {
+	uuo.mutation.ClearUserDepartments()
+	return uuo
+}
+
+// RemoveUserDepartmentIDs removes the "user_departments" edge to UserDepartment entities by IDs.
+func (uuo *UserUpdateOne) RemoveUserDepartmentIDs(ids ...string) *UserUpdateOne {
+	uuo.mutation.RemoveUserDepartmentIDs(ids...)
+	return uuo
+}
+
+// RemoveUserDepartments removes "user_departments" edges to UserDepartment entities.
+func (uuo *UserUpdateOne) RemoveUserDepartments(u ...*UserDepartment) *UserUpdateOne {
+	ids := make([]string, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uuo.RemoveUserDepartmentIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -1122,14 +1479,24 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
-	if v, ok := uuo.mutation.Name(); ok {
-		if err := user.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
+	if v, ok := uuo.mutation.Nickname(); ok {
+		if err := user.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.Avatar(); ok {
 		if err := user.AvatarValidator(v); err != nil {
 			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.Name(); ok {
+		if err := user.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.Gender(); ok {
+		if err := user.GenderValidator(v); err != nil {
+			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.Password(); ok {
@@ -1155,6 +1522,21 @@ func (uuo *UserUpdateOne) check() error {
 	if v, ok := uuo.mutation.Remark(); ok {
 		if err := user.RemarkValidator(v); err != nil {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.Token(); ok {
+		if err := user.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.LastLoginIP(); ok {
+		if err := user.LastLoginIPValidator(v); err != nil {
+			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.DepartmentID(); ok {
+		if err := user.DepartmentIDValidator(v); err != nil {
+			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "User.department_id": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.ManagerID(); ok {
@@ -1215,23 +1597,23 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.AddedIndex(); ok {
 		_spec.AddField(user.FieldIndex, field.TypeInt, value)
 	}
-	if value, ok := uuo.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeString, value)
-	}
 	if value, ok := uuo.mutation.AllowedIP(); ok {
 		_spec.SetField(user.FieldAllowedIP, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Username(); ok {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 	}
-	if value, ok := uuo.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-	}
-	if value, ok := uuo.mutation.UserID(); ok {
-		_spec.SetField(user.FieldUserID, field.TypeString, value)
+	if value, ok := uuo.mutation.Nickname(); ok {
+		_spec.SetField(user.FieldNickname, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Gender(); ok {
+		_spec.SetField(user.FieldGender, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
@@ -1248,17 +1630,29 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.Remark(); ok {
 		_spec.SetField(user.FieldRemark, field.TypeString, value)
 	}
-	if value, ok := uuo.mutation.LastLoginTime(); ok {
-		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
-	}
-	if value, ok := uuo.mutation.SanctionDate(); ok {
-		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
+	if value, ok := uuo.mutation.Token(); ok {
+		_spec.SetField(user.FieldToken, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Status(); ok {
 		_spec.SetField(user.FieldStatus, field.TypeInt8, value)
 	}
 	if value, ok := uuo.mutation.AddedStatus(); ok {
 		_spec.AddField(user.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := uuo.mutation.LastLoginIP(); ok {
+		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.LastLoginTime(); ok {
+		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
+	}
+	if value, ok := uuo.mutation.SanctionDate(); ok {
+		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
+	}
+	if value, ok := uuo.mutation.DepartmentID(); ok {
+		_spec.SetField(user.FieldDepartmentID, field.TypeString, value)
+	}
+	if uuo.mutation.DepartmentIDCleared() {
+		_spec.ClearField(user.FieldDepartmentID, field.TypeString)
 	}
 	if value, ok := uuo.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeString, value)
@@ -1280,10 +1674,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
-		createE := &UserRoleCreate{config: uuo.config, mutation: newUserRoleMutation(uuo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !uuo.mutation.RolesCleared() {
@@ -1300,10 +1690,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: uuo.config, mutation: newUserRoleMutation(uuo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RolesIDs(); len(nodes) > 0 {
@@ -1320,10 +1706,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: uuo.config, mutation: newUserRoleMutation(uuo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 && !uuo.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if uuo.mutation.UserRolesCleared() {
@@ -1371,6 +1798,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uuo.mutation.UserDepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedUserDepartmentsIDs(); len(nodes) > 0 && !uuo.mutation.UserDepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.UserDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	_spec.AddModifiers(uuo.modifiers...)
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues
@@ -1390,14 +1862,40 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 // SetUser set the User
 func (uu *UserUpdate) SetUser(input *User, fields ...string) *UserUpdate {
 	m := uu.mutation
+	if len(fields) == 0 {
+		fields = user.OmitColumns(user.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return uu
+}
+
+// SetUserWithZero set the User
+func (uu *UserUpdate) SetUserWithZero(input *User, fields ...string) *UserUpdate {
+	m := uu.mutation
+	if len(fields) == 0 {
+		fields = user.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return uu
 }
 
 // SetUser set the User
 func (uuo *UserUpdateOne) SetUser(input *User, fields ...string) *UserUpdateOne {
 	m := uuo.mutation
+	if len(fields) == 0 {
+		fields = user.OmitColumns(user.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return uuo
+}
+
+// SetUserWithZero set the User
+func (uuo *UserUpdateOne) SetUserWithZero(input *User, fields ...string) *UserUpdateOne {
+	m := uuo.mutation
+	if len(fields) == 0 {
+		fields = user.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return uuo
 }
 

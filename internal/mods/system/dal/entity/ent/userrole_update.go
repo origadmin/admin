@@ -10,7 +10,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -28,12 +27,6 @@ type UserRoleUpdate struct {
 // Where appends a list predicates to the UserRoleUpdate builder.
 func (uru *UserRoleUpdate) Where(ps ...predicate.UserRole) *UserRoleUpdate {
 	uru.mutation.Where(ps...)
-	return uru
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (uru *UserRoleUpdate) SetUpdateTime(t time.Time) *UserRoleUpdate {
-	uru.mutation.SetUpdateTime(t)
 	return uru
 }
 
@@ -61,20 +54,6 @@ func (uru *UserRoleUpdate) SetRoleID(s string) *UserRoleUpdate {
 func (uru *UserRoleUpdate) SetNillableRoleID(s *string) *UserRoleUpdate {
 	if s != nil {
 		uru.SetRoleID(*s)
-	}
-	return uru
-}
-
-// SetRoleName sets the "role_name" field.
-func (uru *UserRoleUpdate) SetRoleName(s string) *UserRoleUpdate {
-	uru.mutation.SetRoleName(s)
-	return uru
-}
-
-// SetNillableRoleName sets the "role_name" field if the given value is not nil.
-func (uru *UserRoleUpdate) SetNillableRoleName(s *string) *UserRoleUpdate {
-	if s != nil {
-		uru.SetRoleName(*s)
 	}
 	return uru
 }
@@ -108,7 +87,6 @@ func (uru *UserRoleUpdate) ClearRole() *UserRoleUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (uru *UserRoleUpdate) Save(ctx context.Context) (int, error) {
-	uru.defaults()
 	return withHooks(ctx, uru.sqlSave, uru.mutation, uru.hooks)
 }
 
@@ -134,14 +112,6 @@ func (uru *UserRoleUpdate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (uru *UserRoleUpdate) defaults() {
-	if _, ok := uru.mutation.UpdateTime(); !ok {
-		v := userrole.UpdateDefaultUpdateTime()
-		uru.mutation.SetUpdateTime(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (uru *UserRoleUpdate) check() error {
 	if v, ok := uru.mutation.UserID(); ok {
@@ -152,11 +122,6 @@ func (uru *UserRoleUpdate) check() error {
 	if v, ok := uru.mutation.RoleID(); ok {
 		if err := userrole.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_id": %w`, err)}
-		}
-	}
-	if v, ok := uru.mutation.RoleName(); ok {
-		if err := userrole.RoleNameValidator(v); err != nil {
-			return &ValidationError{Name: "role_name", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_name": %w`, err)}
 		}
 	}
 	if uru.mutation.UserCleared() && len(uru.mutation.UserIDs()) > 0 {
@@ -185,12 +150,6 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := uru.mutation.UpdateTime(); ok {
-		_spec.SetField(userrole.FieldUpdateTime, field.TypeTime, value)
-	}
-	if value, ok := uru.mutation.RoleName(); ok {
-		_spec.SetField(userrole.FieldRoleName, field.TypeString, value)
 	}
 	if uru.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -272,12 +231,6 @@ type UserRoleUpdateOne struct {
 	modifiers []func(*sql.UpdateBuilder)
 }
 
-// SetUpdateTime sets the "update_time" field.
-func (uruo *UserRoleUpdateOne) SetUpdateTime(t time.Time) *UserRoleUpdateOne {
-	uruo.mutation.SetUpdateTime(t)
-	return uruo
-}
-
 // SetUserID sets the "user_id" field.
 func (uruo *UserRoleUpdateOne) SetUserID(s string) *UserRoleUpdateOne {
 	uruo.mutation.SetUserID(s)
@@ -302,20 +255,6 @@ func (uruo *UserRoleUpdateOne) SetRoleID(s string) *UserRoleUpdateOne {
 func (uruo *UserRoleUpdateOne) SetNillableRoleID(s *string) *UserRoleUpdateOne {
 	if s != nil {
 		uruo.SetRoleID(*s)
-	}
-	return uruo
-}
-
-// SetRoleName sets the "role_name" field.
-func (uruo *UserRoleUpdateOne) SetRoleName(s string) *UserRoleUpdateOne {
-	uruo.mutation.SetRoleName(s)
-	return uruo
-}
-
-// SetNillableRoleName sets the "role_name" field if the given value is not nil.
-func (uruo *UserRoleUpdateOne) SetNillableRoleName(s *string) *UserRoleUpdateOne {
-	if s != nil {
-		uruo.SetRoleName(*s)
 	}
 	return uruo
 }
@@ -362,7 +301,6 @@ func (uruo *UserRoleUpdateOne) Select(field string, fields ...string) *UserRoleU
 
 // Save executes the query and returns the updated UserRole entity.
 func (uruo *UserRoleUpdateOne) Save(ctx context.Context) (*UserRole, error) {
-	uruo.defaults()
 	return withHooks(ctx, uruo.sqlSave, uruo.mutation, uruo.hooks)
 }
 
@@ -388,14 +326,6 @@ func (uruo *UserRoleUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (uruo *UserRoleUpdateOne) defaults() {
-	if _, ok := uruo.mutation.UpdateTime(); !ok {
-		v := userrole.UpdateDefaultUpdateTime()
-		uruo.mutation.SetUpdateTime(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (uruo *UserRoleUpdateOne) check() error {
 	if v, ok := uruo.mutation.UserID(); ok {
@@ -406,11 +336,6 @@ func (uruo *UserRoleUpdateOne) check() error {
 	if v, ok := uruo.mutation.RoleID(); ok {
 		if err := userrole.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_id": %w`, err)}
-		}
-	}
-	if v, ok := uruo.mutation.RoleName(); ok {
-		if err := userrole.RoleNameValidator(v); err != nil {
-			return &ValidationError{Name: "role_name", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_name": %w`, err)}
 		}
 	}
 	if uruo.mutation.UserCleared() && len(uruo.mutation.UserIDs()) > 0 {
@@ -456,12 +381,6 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := uruo.mutation.UpdateTime(); ok {
-		_spec.SetField(userrole.FieldUpdateTime, field.TypeTime, value)
-	}
-	if value, ok := uruo.mutation.RoleName(); ok {
-		_spec.SetField(userrole.FieldRoleName, field.TypeString, value)
 	}
 	if uruo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -540,14 +459,40 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 // SetUserRole set the UserRole
 func (uru *UserRoleUpdate) SetUserRole(input *UserRole, fields ...string) *UserRoleUpdate {
 	m := uru.mutation
+	if len(fields) == 0 {
+		fields = userrole.OmitColumns(userrole.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return uru
+}
+
+// SetUserRoleWithZero set the UserRole
+func (uru *UserRoleUpdate) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleUpdate {
+	m := uru.mutation
+	if len(fields) == 0 {
+		fields = userrole.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return uru
 }
 
 // SetUserRole set the UserRole
 func (uruo *UserRoleUpdateOne) SetUserRole(input *UserRole, fields ...string) *UserRoleUpdateOne {
 	m := uruo.mutation
+	if len(fields) == 0 {
+		fields = userrole.OmitColumns(userrole.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return uruo
+}
+
+// SetUserRoleWithZero set the UserRole
+func (uruo *UserRoleUpdateOne) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleUpdateOne {
+	m := uruo.mutation
+	if len(fields) == 0 {
+		fields = userrole.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return uruo
 }
 

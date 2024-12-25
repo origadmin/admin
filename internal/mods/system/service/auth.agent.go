@@ -21,8 +21,8 @@ type AuthAPIGINRPCService struct {
 	client pb.AuthAPIClient
 }
 
-func (s AuthAPIGINRPCService) ListResources(context transhttp.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
-	response, err := s.client.ListResources(context, request)
+func (s AuthAPIGINRPCService) ListAuthResources(context transhttp.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
+	response, err := s.client.ListAuthResources(context, request)
 	if err != nil {
 		return nil, err
 	}

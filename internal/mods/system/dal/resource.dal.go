@@ -13,8 +13,6 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -71,30 +69,30 @@ func (repo resourceRepo) List(ctx context.Context, in *dto.ListResourcesRequest,
 	}
 
 	query := repo.db.Resource(ctx).Query()
-	if option.IncludeResources {
-		query = query.WithResources()
-	}
-	if v := option.UserID; len(v) > 0 {
-		query = query.Where(resource.HasRolesWith(role.HasUsersWith(user.ID(v))))
-	}
-	if v := option.RoleID; len(v) > 0 {
-		query = query.Where(resource.HasRolesWith(role.ID(v)))
-	}
-	if v := option.InIDs; len(v) > 0 {
-		query = query.Where(resource.IDIn(v...))
-	}
-	if v := option.Name; len(v) > 0 {
-		query = query.Where(resource.ParentPathContains(v))
-	}
-	if v := option.Status; v > 0 {
-		query = query.Where(resource.StatusEQ(v))
-	}
-	if v := option.ParentID; len(v) > 0 {
-		query = query.Where(resource.ParentID(v))
-	}
-	if v := option.ParentPathPrefix; len(v) > 0 {
-		query = query.Where(resource.ParentPathHasPrefix(v))
-	}
+	//if option.IncludeResources {
+	//	query = query.WithResources()
+	//}
+	//if v := option.UserID; len(v) > 0 {
+	//	query = query.Where(resource.HasRolesWith(role.HasUsersWith(user.ID(v))))
+	//}
+	//if v := option.RoleID; len(v) > 0 {
+	//	query = query.Where(resource.HasRolesWith(role.ID(v)))
+	//}
+	//if v := option.InIDs; len(v) > 0 {
+	//	query = query.Where(resource.IDIn(v...))
+	//}
+	//if v := option.Name; len(v) > 0 {
+	//	query = query.Where(resource.ParentPathContains(v))
+	//}
+	//if v := option.Status; v > 0 {
+	//	query = query.Where(resource.StatusEQ(v))
+	//}
+	//if v := option.ParentID; len(v) > 0 {
+	//	query = query.Where(resource.ParentID(v))
+	//}
+	//if v := option.ParentPathPrefix; len(v) > 0 {
+	//	query = query.Where(resource.ParentPathHasPrefix(v))
+	//}
 
 	return resourcePageQuery(ctx, query, in, option)
 }

@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package schema implements the functions, types, and interfaces for the module.
 package schema
 
 import (
@@ -9,7 +10,6 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
-	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
@@ -23,22 +23,25 @@ type UserRole struct {
 // Fields of the UserRole.
 func (UserRole) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("user_id").MaxLen(36),                // From User.ID
-		field.String("role_id").MaxLen(36),                // From Role.ID
-		field.String("role_name").MaxLen(128).Default(""), // From Role.Name
+		mixin.FieldFK("user_id"), // From User.ID
+		mixin.FieldFK("role_id"), // From Role.ID
 	}
 }
 
 // Mixin of the UserRole.
 func (UserRole) Mixin() []ent.Mixin {
-	return mixin.ModelMixin
+	return []ent.Mixin{
+		mixin.ID{},
+	}
 }
 
 // Indexes of the UserRole.
 func (UserRole) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id"),
-		index.Fields("role_id"),
+		index.Fields("user_id"), // From User.ID
+		index.Fields("role_id"), // From Role.ID
+		index.Fields("user_id", "role_id").
+			Unique(),
 	}
 }
 

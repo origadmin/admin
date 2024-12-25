@@ -26,6 +26,8 @@ type Resource struct {
 	MenuID string `json:"menu_id,omitempty"`
 	// Method holds the value of the "method" field.
 	Method string `json:"method,omitempty"`
+	// Operation holds the value of the "operation" field.
+	Operation string `json:"operation,omitempty"`
 	// Path holds the value of the "path" field.
 	Path string `json:"path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -59,7 +61,7 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case resource.FieldID, resource.FieldMenuID, resource.FieldMethod, resource.FieldPath:
+		case resource.FieldID, resource.FieldMenuID, resource.FieldMethod, resource.FieldOperation, resource.FieldPath:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -107,6 +109,12 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field method", values[i])
 			} else if value.Valid {
 				r.Method = value.String
+			}
+		case resource.FieldOperation:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field operation", values[i])
+			} else if value.Valid {
+				r.Operation = value.String
 			}
 		case resource.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -166,6 +174,9 @@ func (r *Resource) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("method=")
 	builder.WriteString(r.Method)
+	builder.WriteString(", ")
+	builder.WriteString("operation=")
+	builder.WriteString(r.Operation)
 	builder.WriteString(", ")
 	builder.WriteString("path=")
 	builder.WriteString(r.Path)

@@ -1594,21 +1594,16 @@ components:
                 parent_path:
                     type: string
                     description: ParentPath holds the value of the "parent_path" field.
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.MenuEdges'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the MenuQuery when eager-loading is set.
-            description: Menu is the model entity for the Menu schema.
-        api.v1.services.system.MenuEdges:
-            type: object
-            properties:
                 children:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: Children holds the value of the children edge.
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the MenuQuery when eager-loading is set.
+                          MenuEdges edges = 14;
+                            selectValues = 15;
+                         Children holds the value of the children edge.
                 parent:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
@@ -1623,12 +1618,7 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
-                role_menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
-                    description: RoleMenu holds the value of the role_menu edge.
-            description: MenuEdges holds the relations/edges for other nodes in the graph.
+            description: Menu is the model entity for the Menu schema.
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
@@ -1658,21 +1648,15 @@ components:
                 operation:
                     type: string
                     description: Operation holds the value of the "operation" field.
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.ResourceEdges'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the ResourceQuery when eager-loading is set.
-            description: Resource is the model entity for the Resource schema.
-        api.v1.services.system.ResourceEdges:
-            type: object
-            properties:
                 menu:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: Menu holds the value of the menu edge.
-            description: ResourceEdges holds the relations/edges for other nodes in the graph.
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the ResourceQuery when eager-loading is set.
+                          ResourceEdges edges = 8;
+                            selectValues = 8;
+            description: Resource is the model entity for the Resource schema.
         api.v1.services.system.Role:
             type: object
             properties:
@@ -1704,76 +1688,22 @@ components:
                     type: integer
                     description: Status holds the value of the "status" field.
                     format: int32
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.RoleEdges'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the RoleQuery when eager-loading is set.
-            description: Role is the model entity for the Role schema.
-        api.v1.services.system.RoleEdges:
-            type: object
-            properties:
                 menus:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: Menus holds the value of the menus edge.
+                    description: |-
+                        Edges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the RoleQuery when eager-loading is set.
+                          RoleEdges edges = 9;
+                            selectValues = 10;
+                         Menus holds the value of the menus edge.
                 users:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.User'
                     description: Users holds the value of the users edge.
-                role_menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
-                    description: RoleMenu holds the value of the role_menu edge.
-                user_roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
-                    description: UserRole holds the value of the user_role edge.
-            description: RoleEdges holds the relations/edges for other nodes in the graph.
-        api.v1.services.system.RoleMenu:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: ID of the ent.
-                create_time:
-                    type: string
-                    description: CreateTime holds the value of the "create_time" field.
-                    format: date-time
-                update_time:
-                    type: string
-                    description: UpdateTime holds the value of the "update_time" field.
-                    format: date-time
-                role_id:
-                    type: string
-                    description: RoleID holds the value of the "role_id" field.
-                menu_id:
-                    type: string
-                    description: MenuID holds the value of the "menu_id" field.
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.RoleMenuEdges'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the RoleMenuQuery when eager-loading is set.
-            description: RoleMenu is the model entity for the RoleMenu schema.
-        api.v1.services.system.RoleMenuEdges:
-            type: object
-            properties:
-                role:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: Role holds the value of the role edge.
-                menu:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: Menu holds the value of the menu edge.
-            description: RoleMenuEdges holds the relations/edges for other nodes in the graph.
+            description: Role is the model entity for the Role schema.
         api.v1.services.system.UpdateCurrentSettingResponse:
             type: object
             properties: {}
@@ -1850,69 +1780,17 @@ components:
                     type: integer
                     description: Status holds the value of the "status" field.
                     format: int32
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.UserEdges'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the UserQuery when eager-loading is set.
-            description: User is the model entity for the User schema.
-        api.v1.services.system.UserEdges:
-            type: object
-            properties:
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: Roles holds the value of the roles edge.
-                user_roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
-                    description: UserRole holds the value of the user_role edge.
-            description: UserEdges holds the relations/edges for other nodes in the graph.
-        api.v1.services.system.UserRole:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: ID of the ent.
-                create_time:
-                    type: string
-                    description: CreateTime holds the value of the "create_time" field.
-                    format: date-time
-                update_time:
-                    type: string
-                    description: UpdateTime holds the value of the "update_time" field.
-                    format: date-time
-                user_id:
-                    type: string
-                    description: UserID holds the value of the "user_id" field.
-                role_id:
-                    type: string
-                    description: RoleID holds the value of the "role_id" field.
-                role_name:
-                    type: string
-                    description: RoleName holds the value of the "role_name" field.
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.UserRoleEdges'
                     description: |-
                         Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the UserRoleQuery when eager-loading is set.
-            description: UserRole is the model entity for the UserRole schema.
-        api.v1.services.system.UserRoleEdges:
-            type: object
-            properties:
-                user:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.User'
-                    description: User holds the value of the user edge.
-                role:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: Role holds the value of the role edge.
-            description: UserRoleEdges holds the relations/edges for other nodes in the graph.
+                            The values are being populated by the UserQuery when eager-loading is set.
+                          UserEdges edges = 13;
+                            selectValues = 14;
+                         Roles holds the value of the roles edge.
+            description: User is the model entity for the User schema.
         google.protobuf.Any:
             type: object
             properties:

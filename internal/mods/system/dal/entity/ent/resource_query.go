@@ -568,6 +568,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  MenuID string `json:"menu_id,omitempty"`
 //	  Method string `json:"method,omitempty"`
+//	  Operation string `json:"operation,omitempty"`
 //	  Path string `json:"path,omitempty"`
 //	}
 //
@@ -577,6 +578,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  resource.FieldUpdateTime,
 //	  resource.FieldMenuID,
 //	  resource.FieldMethod,
+//	  resource.FieldOperation,
 //	  resource.FieldPath,
 //	  ).
 //	  Scan(ctx, &v)

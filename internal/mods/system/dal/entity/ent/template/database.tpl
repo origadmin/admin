@@ -13,7 +13,7 @@
 		"context"
 		"fmt"
 		"entgo.io/ent/dialect/sql"
-    "github.com/origadmin/toolkits/database"
+		"github.com/origadmin/toolkits/database"
 		)
 
 		// Database is the client that holds all ent builders.
@@ -39,13 +39,13 @@
 		}
 
 		// Tx runs the given function f within a transaction.
-    func (db *Database) Tx(ctx context.Context, fn func(context.Context) error) error {
+		func (db *Database) Tx(ctx context.Context, fn func(context.Context) error) error {
 		tx := TxFromContext(ctx)
 		if tx != nil {
 		return fn(ctx)
 		}
 
-    return db.InTx(ctx, func (tx database.Tx) error {
+		return db.InTx(ctx, func (tx database.Tx) error {
 		txv, ok := tx.(*Tx)
 		if !ok {
 		return fmt.Errorf("ent: expected tx context")
@@ -55,7 +55,7 @@
 		}
 
 		// InTx runs the given function f within a transaction.
-    func (db *Database) InTx(ctx context.Context, fn func(tx database.Tx) error) error {
+		func (db *Database) InTx(ctx context.Context, fn func(tx database.Tx) error) error {
 		tx := TxFromContext(ctx)
 		if tx != nil {
 		return fn(tx)

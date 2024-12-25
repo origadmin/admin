@@ -9,21 +9,71 @@ import (
 )
 
 var (
+	// SysDepartmentsColumns holds the columns for the "sys_Departments" table.
+	SysDepartmentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 64, Default: ""},
+		{Name: "description", Type: field.TypeString, Size: 256, Default: ""},
+		{Name: "sequence", Type: field.TypeInt},
+		{Name: "status", Type: field.TypeInt8, Default: 0},
+	}
+	// SysDepartmentsTable holds the schema information for the "sys_Departments" table.
+	SysDepartmentsTable = &schema.Table{
+		Name:       "sys_Departments",
+		Columns:    SysDepartmentsColumns,
+		PrimaryKey: []*schema.Column{SysDepartmentsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "department_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentsColumns[1]},
+			},
+			{
+				Name:    "department_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentsColumns[2]},
+			},
+			{
+				Name:    "department_keyword",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentsColumns[3]},
+			},
+			{
+				Name:    "department_name",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentsColumns[4]},
+			},
+			{
+				Name:    "department_sequence",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentsColumns[6]},
+			},
+			{
+				Name:    "department_status",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentsColumns[7]},
+			},
+		},
+	}
 	// SysMenusColumns holds the columns for the "sys_menus" table.
 	SysMenusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
-		{Name: "code", Type: field.TypeString, Size: 32, Default: ""},
+		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 128, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Default: ""},
-		{Name: "type", Type: field.TypeString, Size: 20, Default: ""},
+		{Name: "type", Type: field.TypeUint8, Default: 80},
+		{Name: "icon", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "path", Type: field.TypeString, Size: 255, Default: ""},
 		{Name: "status", Type: field.TypeInt8, Default: 0},
 		{Name: "parent_path", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "sequence", Type: field.TypeInt},
-		{Name: "properties", Type: field.TypeString, Size: 2147483647},
-		{Name: "parent_id", Type: field.TypeString, Nullable: true, Size: 36},
+		{Name: "sequence", Type: field.TypeInt, Default: 0},
+		{Name: "properties", Type: field.TypeString, Nullable: true, Size: 2147483647, Default: ""},
+		{Name: "parent_id", Type: field.TypeString, Nullable: true, Size: 36, Default: ""},
 	}
 	// SysMenusTable holds the schema information for the "sys_menus" table.
 	SysMenusTable = &schema.Table{
@@ -33,7 +83,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_menus_sys_menus_children",
-				Columns:    []*schema.Column{SysMenusColumns[12]},
+				Columns:    []*schema.Column{SysMenusColumns[13]},
 				RefColumns: []*schema.Column{SysMenusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -50,7 +100,7 @@ var (
 				Columns: []*schema.Column{SysMenusColumns[2]},
 			},
 			{
-				Name:    "menu_code",
+				Name:    "menu_keyword",
 				Unique:  false,
 				Columns: []*schema.Column{SysMenusColumns[3]},
 			},
@@ -67,17 +117,17 @@ var (
 			{
 				Name:    "menu_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[8]},
+				Columns: []*schema.Column{SysMenusColumns[9]},
 			},
 			{
 				Name:    "menu_parent_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[12]},
+				Columns: []*schema.Column{SysMenusColumns[13]},
 			},
 			{
 				Name:    "menu_parent_path",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[9]},
+				Columns: []*schema.Column{SysMenusColumns[10]},
 			},
 		},
 	}
@@ -87,6 +137,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "method", Type: field.TypeString, Size: 20, Default: ""},
+		{Name: "operation", Type: field.TypeString, Size: 20, Default: ""},
 		{Name: "path", Type: field.TypeString, Size: 255},
 		{Name: "menu_id", Type: field.TypeString, Nullable: true, Size: 36},
 	}
@@ -98,7 +149,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_resources_sys_menus_resources",
-				Columns:    []*schema.Column{SysResourcesColumns[5]},
+				Columns:    []*schema.Column{SysResourcesColumns[6]},
 				RefColumns: []*schema.Column{SysMenusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -117,7 +168,7 @@ var (
 			{
 				Name:    "resource_menu_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[5]},
+				Columns: []*schema.Column{SysResourcesColumns[6]},
 			},
 		},
 	}
@@ -126,7 +177,7 @@ var (
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
-		{Name: "code", Type: field.TypeString, Size: 32, Default: ""},
+		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 128, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Default: ""},
 		{Name: "sequence", Type: field.TypeInt},
@@ -149,7 +200,7 @@ var (
 				Columns: []*schema.Column{SysRolesColumns[2]},
 			},
 			{
-				Name:    "role_code",
+				Name:    "role_keyword",
 				Unique:  false,
 				Columns: []*schema.Column{SysRolesColumns[3]},
 			},
@@ -173,8 +224,6 @@ var (
 	// SysRoleMenusColumns holds the columns for the "sys_role_menus" table.
 	SysRoleMenusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
 		{Name: "role_id", Type: field.TypeString, Size: 36},
 		{Name: "menu_id", Type: field.TypeString, Size: 36},
 	}
@@ -186,42 +235,32 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_role_menus_sys_roles_role",
-				Columns:    []*schema.Column{SysRoleMenusColumns[3]},
+				Columns:    []*schema.Column{SysRoleMenusColumns[1]},
 				RefColumns: []*schema.Column{SysRolesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "sys_role_menus_sys_menus_menu",
-				Columns:    []*schema.Column{SysRoleMenusColumns[4]},
+				Columns:    []*schema.Column{SysRoleMenusColumns[2]},
 				RefColumns: []*schema.Column{SysMenusColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "rolemenu_create_time",
+				Name:    "rolemenu_role_id",
 				Unique:  false,
 				Columns: []*schema.Column{SysRoleMenusColumns[1]},
 			},
 			{
-				Name:    "rolemenu_update_time",
+				Name:    "rolemenu_menu_id",
 				Unique:  false,
 				Columns: []*schema.Column{SysRoleMenusColumns[2]},
 			},
 			{
-				Name:    "rolemenu_role_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysRoleMenusColumns[3]},
-			},
-			{
-				Name:    "rolemenu_menu_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysRoleMenusColumns[4]},
-			},
-			{
 				Name:    "rolemenu_role_id_menu_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysRoleMenusColumns[3], SysRoleMenusColumns[4]},
+				Columns: []*schema.Column{SysRoleMenusColumns[1], SysRoleMenusColumns[2]},
 			},
 		},
 	}
@@ -233,20 +272,23 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "index", Type: field.TypeInt, Unique: true},
-		{Name: "department", Type: field.TypeString, Default: ""},
 		{Name: "allowed_ip", Type: field.TypeString, Default: "0.0.0.0"},
-		{Name: "username", Type: field.TypeString, Size: 64, Default: ""},
+		{Name: "username", Type: field.TypeString, Size: 32, Default: ""},
+		{Name: "nickname", Type: field.TypeString, Size: 64, Default: ""},
+		{Name: "avatar", Type: field.TypeString, Size: 256, Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Default: ""},
-		{Name: "user_id", Type: field.TypeString, Default: ""},
-		{Name: "avatar", Type: field.TypeString, Size: 255, Default: ""},
-		{Name: "password", Type: field.TypeString, Size: 128, Default: ""},
-		{Name: "salt", Type: field.TypeString, Size: 255, Default: ""},
+		{Name: "gender", Type: field.TypeString, Size: 16, Default: ""},
+		{Name: "password", Type: field.TypeString, Size: 256, Default: ""},
+		{Name: "salt", Type: field.TypeString, Size: 64, Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Default: ""},
-		{Name: "email", Type: field.TypeString, Size: 128, Default: ""},
+		{Name: "email", Type: field.TypeString, Size: 64, Default: ""},
 		{Name: "remark", Type: field.TypeString, Size: 1024, Default: ""},
+		{Name: "token", Type: field.TypeString, Size: 512, Default: ""},
+		{Name: "status", Type: field.TypeInt8, Default: 0},
+		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "sanction_date", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "status", Type: field.TypeInt8, Default: 0},
+		{Name: "department_id", Type: field.TypeString, Nullable: true, Size: 36},
 		{Name: "manager_id", Type: field.TypeString, Nullable: true, Size: 36},
 		{Name: "manager", Type: field.TypeString, Default: ""},
 	}
@@ -279,7 +321,7 @@ var (
 			{
 				Name:    "user_username",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[8]},
+				Columns: []*schema.Column{SysUsersColumns[7]},
 			},
 			{
 				Name:    "user_phone",
@@ -294,16 +336,56 @@ var (
 			{
 				Name:    "user_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[19]},
+				Columns: []*schema.Column{SysUsersColumns[18]},
+			},
+		},
+	}
+	// SysUserDepartmentsColumns holds the columns for the "sys_user_departments" table.
+	SysUserDepartmentsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "user_id", Type: field.TypeString, Size: 36},
+		{Name: "department_id", Type: field.TypeString, Size: 36},
+	}
+	// SysUserDepartmentsTable holds the schema information for the "sys_user_departments" table.
+	SysUserDepartmentsTable = &schema.Table{
+		Name:       "sys_user_departments",
+		Columns:    SysUserDepartmentsColumns,
+		PrimaryKey: []*schema.Column{SysUserDepartmentsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_user_departments_sys_users_user",
+				Columns:    []*schema.Column{SysUserDepartmentsColumns[1]},
+				RefColumns: []*schema.Column{SysUsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "sys_user_departments_sys_Departments_department",
+				Columns:    []*schema.Column{SysUserDepartmentsColumns[2]},
+				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "userdepartment_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserDepartmentsColumns[1]},
+			},
+			{
+				Name:    "userdepartment_department_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysUserDepartmentsColumns[2]},
+			},
+			{
+				Name:    "userdepartment_user_id_department_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysUserDepartmentsColumns[1], SysUserDepartmentsColumns[2]},
 			},
 		},
 	}
 	// SysUserRolesColumns holds the columns for the "sys_user_roles" table.
 	SysUserRolesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
-		{Name: "role_name", Type: field.TypeString, Size: 128, Default: ""},
 		{Name: "user_id", Type: field.TypeString, Size: 36},
 		{Name: "role_id", Type: field.TypeString, Size: 36},
 	}
@@ -315,57 +397,52 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_user_roles_sys_users_user",
-				Columns:    []*schema.Column{SysUserRolesColumns[4]},
+				Columns:    []*schema.Column{SysUserRolesColumns[1]},
 				RefColumns: []*schema.Column{SysUsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "sys_user_roles_sys_roles_role",
-				Columns:    []*schema.Column{SysUserRolesColumns[5]},
+				Columns:    []*schema.Column{SysUserRolesColumns[2]},
 				RefColumns: []*schema.Column{SysRolesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "userrole_create_time",
+				Name:    "userrole_user_id",
 				Unique:  false,
 				Columns: []*schema.Column{SysUserRolesColumns[1]},
 			},
 			{
-				Name:    "userrole_update_time",
+				Name:    "userrole_role_id",
 				Unique:  false,
 				Columns: []*schema.Column{SysUserRolesColumns[2]},
 			},
 			{
-				Name:    "userrole_user_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserRolesColumns[4]},
-			},
-			{
-				Name:    "userrole_role_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserRolesColumns[5]},
-			},
-			{
 				Name:    "userrole_user_id_role_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysUserRolesColumns[4], SysUserRolesColumns[5]},
+				Columns: []*schema.Column{SysUserRolesColumns[1], SysUserRolesColumns[2]},
 			},
 		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		SysDepartmentsTable,
 		SysMenusTable,
 		SysResourcesTable,
 		SysRolesTable,
 		SysRoleMenusTable,
 		SysUsersTable,
+		SysUserDepartmentsTable,
 		SysUserRolesTable,
 	}
 )
 
 func init() {
+	SysDepartmentsTable.Annotation = &entsql.Annotation{
+		Table: "sys_Departments",
+	}
 	SysMenusTable.ForeignKeys[0].RefTable = SysMenusTable
 	SysMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_menus",
@@ -384,6 +461,11 @@ func init() {
 	}
 	SysUsersTable.Annotation = &entsql.Annotation{
 		Table: "sys_users",
+	}
+	SysUserDepartmentsTable.ForeignKeys[0].RefTable = SysUsersTable
+	SysUserDepartmentsTable.ForeignKeys[1].RefTable = SysDepartmentsTable
+	SysUserDepartmentsTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_departments",
 	}
 	SysUserRolesTable.ForeignKeys[0].RefTable = SysUsersTable
 	SysUserRolesTable.ForeignKeys[1].RefTable = SysRolesTable

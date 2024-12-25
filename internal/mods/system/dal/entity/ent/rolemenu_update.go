@@ -10,7 +10,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -28,12 +27,6 @@ type RoleMenuUpdate struct {
 // Where appends a list predicates to the RoleMenuUpdate builder.
 func (rmu *RoleMenuUpdate) Where(ps ...predicate.RoleMenu) *RoleMenuUpdate {
 	rmu.mutation.Where(ps...)
-	return rmu
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (rmu *RoleMenuUpdate) SetUpdateTime(t time.Time) *RoleMenuUpdate {
-	rmu.mutation.SetUpdateTime(t)
 	return rmu
 }
 
@@ -94,7 +87,6 @@ func (rmu *RoleMenuUpdate) ClearMenu() *RoleMenuUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (rmu *RoleMenuUpdate) Save(ctx context.Context) (int, error) {
-	rmu.defaults()
 	return withHooks(ctx, rmu.sqlSave, rmu.mutation, rmu.hooks)
 }
 
@@ -117,14 +109,6 @@ func (rmu *RoleMenuUpdate) Exec(ctx context.Context) error {
 func (rmu *RoleMenuUpdate) ExecX(ctx context.Context) {
 	if err := rmu.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (rmu *RoleMenuUpdate) defaults() {
-	if _, ok := rmu.mutation.UpdateTime(); !ok {
-		v := rolemenu.UpdateDefaultUpdateTime()
-		rmu.mutation.SetUpdateTime(v)
 	}
 }
 
@@ -166,9 +150,6 @@ func (rmu *RoleMenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := rmu.mutation.UpdateTime(); ok {
-		_spec.SetField(rolemenu.FieldUpdateTime, field.TypeTime, value)
 	}
 	if rmu.mutation.RoleCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -250,12 +231,6 @@ type RoleMenuUpdateOne struct {
 	modifiers []func(*sql.UpdateBuilder)
 }
 
-// SetUpdateTime sets the "update_time" field.
-func (rmuo *RoleMenuUpdateOne) SetUpdateTime(t time.Time) *RoleMenuUpdateOne {
-	rmuo.mutation.SetUpdateTime(t)
-	return rmuo
-}
-
 // SetRoleID sets the "role_id" field.
 func (rmuo *RoleMenuUpdateOne) SetRoleID(s string) *RoleMenuUpdateOne {
 	rmuo.mutation.SetRoleID(s)
@@ -326,7 +301,6 @@ func (rmuo *RoleMenuUpdateOne) Select(field string, fields ...string) *RoleMenuU
 
 // Save executes the query and returns the updated RoleMenu entity.
 func (rmuo *RoleMenuUpdateOne) Save(ctx context.Context) (*RoleMenu, error) {
-	rmuo.defaults()
 	return withHooks(ctx, rmuo.sqlSave, rmuo.mutation, rmuo.hooks)
 }
 
@@ -349,14 +323,6 @@ func (rmuo *RoleMenuUpdateOne) Exec(ctx context.Context) error {
 func (rmuo *RoleMenuUpdateOne) ExecX(ctx context.Context) {
 	if err := rmuo.Exec(ctx); err != nil {
 		panic(err)
-	}
-}
-
-// defaults sets the default values of the builder before save.
-func (rmuo *RoleMenuUpdateOne) defaults() {
-	if _, ok := rmuo.mutation.UpdateTime(); !ok {
-		v := rolemenu.UpdateDefaultUpdateTime()
-		rmuo.mutation.SetUpdateTime(v)
 	}
 }
 
@@ -415,9 +381,6 @@ func (rmuo *RoleMenuUpdateOne) sqlSave(ctx context.Context) (_node *RoleMenu, er
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := rmuo.mutation.UpdateTime(); ok {
-		_spec.SetField(rolemenu.FieldUpdateTime, field.TypeTime, value)
 	}
 	if rmuo.mutation.RoleCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -496,14 +459,40 @@ func (rmuo *RoleMenuUpdateOne) sqlSave(ctx context.Context) (_node *RoleMenu, er
 // SetRoleMenu set the RoleMenu
 func (rmu *RoleMenuUpdate) SetRoleMenu(input *RoleMenu, fields ...string) *RoleMenuUpdate {
 	m := rmu.mutation
+	if len(fields) == 0 {
+		fields = rolemenu.OmitColumns(rolemenu.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return rmu
+}
+
+// SetRoleMenuWithZero set the RoleMenu
+func (rmu *RoleMenuUpdate) SetRoleMenuWithZero(input *RoleMenu, fields ...string) *RoleMenuUpdate {
+	m := rmu.mutation
+	if len(fields) == 0 {
+		fields = rolemenu.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return rmu
 }
 
 // SetRoleMenu set the RoleMenu
 func (rmuo *RoleMenuUpdateOne) SetRoleMenu(input *RoleMenu, fields ...string) *RoleMenuUpdateOne {
 	m := rmuo.mutation
+	if len(fields) == 0 {
+		fields = rolemenu.OmitColumns(rolemenu.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return rmuo
+}
+
+// SetRoleMenuWithZero set the RoleMenu
+func (rmuo *RoleMenuUpdateOne) SetRoleMenuWithZero(input *RoleMenu, fields ...string) *RoleMenuUpdateOne {
+	m := rmuo.mutation
+	if len(fields) == 0 {
+		fields = rolemenu.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return rmuo
 }
 

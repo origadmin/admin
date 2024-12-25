@@ -21,14 +21,16 @@ type Menu struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Code holds the value of the "code" field.
-	Code string `json:"code,omitempty"`
+	// Keyword holds the value of the "keyword" field.
+	Keyword string `json:"keyword,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// Type holds the value of the "type" field.
-	Type string `json:"type,omitempty"`
+	Type uint8 `json:"type,omitempty"`
+	// Icon holds the value of the "icon" field.
+	Icon string `json:"icon,omitempty"`
 	// Path holds the value of the "path" field.
 	Path string `json:"path,omitempty"`
 	// Status holds the value of the "status" field.
@@ -116,9 +118,9 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldStatus, menu.FieldSequence:
+		case menu.FieldType, menu.FieldStatus, menu.FieldSequence:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldID, menu.FieldCode, menu.FieldName, menu.FieldDescription, menu.FieldType, menu.FieldPath, menu.FieldParentID, menu.FieldParentPath, menu.FieldProperties:
+		case menu.FieldID, menu.FieldKeyword, menu.FieldName, menu.FieldDescription, menu.FieldIcon, menu.FieldPath, menu.FieldParentID, menu.FieldParentPath, menu.FieldProperties:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreateTime, menu.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -155,11 +157,11 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.UpdateTime = value.Time
 			}
-		case menu.FieldCode:
+		case menu.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field code", values[i])
+				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				m.Code = value.String
+				m.Keyword = value.String
 			}
 		case menu.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -174,10 +176,16 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				m.Description = value.String
 			}
 		case menu.FieldType:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				m.Type = value.String
+				m.Type = uint8(value.Int64)
+			}
+		case menu.FieldIcon:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field icon", values[i])
+			} else if value.Valid {
+				m.Icon = value.String
 			}
 		case menu.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -282,8 +290,8 @@ func (m *Menu) String() string {
 	builder.WriteString("update_time=")
 	builder.WriteString(m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("code=")
-	builder.WriteString(m.Code)
+	builder.WriteString("keyword=")
+	builder.WriteString(m.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(m.Name)
@@ -292,7 +300,10 @@ func (m *Menu) String() string {
 	builder.WriteString(m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(m.Type)
+	builder.WriteString(fmt.Sprintf("%v", m.Type))
+	builder.WriteString(", ")
+	builder.WriteString("icon=")
+	builder.WriteString(m.Icon)
 	builder.WriteString(", ")
 	builder.WriteString("path=")
 	builder.WriteString(m.Path)

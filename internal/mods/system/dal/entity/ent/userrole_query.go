@@ -337,12 +337,12 @@ func (urq *UserRoleQuery) WithRole(opts ...func(*RoleQuery)) *UserRoleQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.UserRole.Query().
-//		GroupBy(userrole.FieldCreateTime).
+//		GroupBy(userrole.FieldUserID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (urq *UserRoleQuery) GroupBy(field string, fields ...string) *UserRoleGroupBy {
@@ -360,11 +360,11 @@ func (urq *UserRoleQuery) GroupBy(field string, fields ...string) *UserRoleGroup
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserRole.Query().
-//		Select(userrole.FieldCreateTime).
+//		Select(userrole.FieldUserID).
 //		Scan(ctx, &v)
 func (urq *UserRoleQuery) Select(fields ...string) *UserRoleSelect {
 	urq.ctx.Fields = append(urq.ctx.Fields, fields...)
@@ -639,20 +639,14 @@ func (urq *UserRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *UserRoleSe
 // Example:
 //
 //	var v []struct {
-//	  CreateTime time.Time `json:"create_time,omitempty"`
-//	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  UserID string `json:"user_id,omitempty"`
 //	  RoleID string `json:"role_id,omitempty"`
-//	  RoleName string `json:"role_name,omitempty"`
 //	}
 //
 //	client.UserRole.Query().
 //	  Omit(
-//	  userrole.FieldCreateTime,
-//	  userrole.FieldUpdateTime,
 //	  userrole.FieldUserID,
 //	  userrole.FieldRoleID,
-//	  userrole.FieldRoleName,
 //	  ).
 //	  Scan(ctx, &v)
 func (urq *UserRoleQuery) Omit(fields ...string) *UserRoleSelect {

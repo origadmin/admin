@@ -8,7 +8,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"strings"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -19,10 +18,6 @@ type RoleMenu struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
-	UpdateTime time.Time `json:"update_time,omitempty"`
 	// RoleID holds the value of the "role_id" field.
 	RoleID string `json:"role_id,omitempty"`
 	// MenuID holds the value of the "menu_id" field.
@@ -73,8 +68,6 @@ func (*RoleMenu) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case rolemenu.FieldID, rolemenu.FieldRoleID, rolemenu.FieldMenuID:
 			values[i] = new(sql.NullString)
-		case rolemenu.FieldCreateTime, rolemenu.FieldUpdateTime:
-			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -95,18 +88,6 @@ func (rm *RoleMenu) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				rm.ID = value.String
-			}
-		case rolemenu.FieldCreateTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field create_time", values[i])
-			} else if value.Valid {
-				rm.CreateTime = value.Time
-			}
-		case rolemenu.FieldUpdateTime:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field update_time", values[i])
-			} else if value.Valid {
-				rm.UpdateTime = value.Time
 			}
 		case rolemenu.FieldRoleID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -166,12 +147,6 @@ func (rm *RoleMenu) String() string {
 	var builder strings.Builder
 	builder.WriteString("RoleMenu(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", rm.ID))
-	builder.WriteString("create_time=")
-	builder.WriteString(rm.CreateTime.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("update_time=")
-	builder.WriteString(rm.UpdateTime.Format(time.ANSIC))
-	builder.WriteString(", ")
 	builder.WriteString("role_id=")
 	builder.WriteString(rm.RoleID)
 	builder.WriteString(", ")

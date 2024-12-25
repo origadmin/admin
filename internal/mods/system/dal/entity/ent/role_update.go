@@ -39,16 +39,16 @@ func (ru *RoleUpdate) SetUpdateTime(t time.Time) *RoleUpdate {
 	return ru
 }
 
-// SetCode sets the "code" field.
-func (ru *RoleUpdate) SetCode(s string) *RoleUpdate {
-	ru.mutation.SetCode(s)
+// SetKeyword sets the "keyword" field.
+func (ru *RoleUpdate) SetKeyword(s string) *RoleUpdate {
+	ru.mutation.SetKeyword(s)
 	return ru
 }
 
-// SetNillableCode sets the "code" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableCode(s *string) *RoleUpdate {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableKeyword(s *string) *RoleUpdate {
 	if s != nil {
-		ru.SetCode(*s)
+		ru.SetKeyword(*s)
 	}
 	return ru
 }
@@ -310,9 +310,9 @@ func (ru *RoleUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ru *RoleUpdate) check() error {
-	if v, ok := ru.mutation.Code(); ok {
-		if err := role.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Role.code": %w`, err)}
+	if v, ok := ru.mutation.Keyword(); ok {
+		if err := role.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Role.keyword": %w`, err)}
 		}
 	}
 	if v, ok := ru.mutation.Name(); ok {
@@ -349,8 +349,8 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.UpdateTime(); ok {
 		_spec.SetField(role.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := ru.mutation.Code(); ok {
-		_spec.SetField(role.FieldCode, field.TypeString, value)
+	if value, ok := ru.mutation.Keyword(); ok {
+		_spec.SetField(role.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
@@ -381,10 +381,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
-		createE := &RoleMenuCreate{config: ru.config, mutation: newRoleMenuMutation(ru.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ru.mutation.RemovedMenusIDs(); len(nodes) > 0 && !ru.mutation.MenusCleared() {
@@ -401,10 +397,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: ru.config, mutation: newRoleMenuMutation(ru.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ru.mutation.MenusIDs(); len(nodes) > 0 {
@@ -421,10 +413,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: ru.config, mutation: newRoleMenuMutation(ru.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if ru.mutation.UsersCleared() {
@@ -438,10 +426,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
-		createE := &UserRoleCreate{config: ru.config, mutation: newUserRoleMutation(ru.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ru.mutation.RemovedUsersIDs(); len(nodes) > 0 && !ru.mutation.UsersCleared() {
@@ -458,10 +442,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: ru.config, mutation: newUserRoleMutation(ru.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ru.mutation.UsersIDs(); len(nodes) > 0 {
@@ -478,10 +458,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: ru.config, mutation: newUserRoleMutation(ru.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if ru.mutation.RoleMenusCleared() {
@@ -602,16 +578,16 @@ func (ruo *RoleUpdateOne) SetUpdateTime(t time.Time) *RoleUpdateOne {
 	return ruo
 }
 
-// SetCode sets the "code" field.
-func (ruo *RoleUpdateOne) SetCode(s string) *RoleUpdateOne {
-	ruo.mutation.SetCode(s)
+// SetKeyword sets the "keyword" field.
+func (ruo *RoleUpdateOne) SetKeyword(s string) *RoleUpdateOne {
+	ruo.mutation.SetKeyword(s)
 	return ruo
 }
 
-// SetNillableCode sets the "code" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableCode(s *string) *RoleUpdateOne {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableKeyword(s *string) *RoleUpdateOne {
 	if s != nil {
-		ruo.SetCode(*s)
+		ruo.SetKeyword(*s)
 	}
 	return ruo
 }
@@ -886,9 +862,9 @@ func (ruo *RoleUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ruo *RoleUpdateOne) check() error {
-	if v, ok := ruo.mutation.Code(); ok {
-		if err := role.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Role.code": %w`, err)}
+	if v, ok := ruo.mutation.Keyword(); ok {
+		if err := role.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Role.keyword": %w`, err)}
 		}
 	}
 	if v, ok := ruo.mutation.Name(); ok {
@@ -942,8 +918,8 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	if value, ok := ruo.mutation.UpdateTime(); ok {
 		_spec.SetField(role.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := ruo.mutation.Code(); ok {
-		_spec.SetField(role.FieldCode, field.TypeString, value)
+	if value, ok := ruo.mutation.Keyword(); ok {
+		_spec.SetField(role.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(role.FieldName, field.TypeString, value)
@@ -974,10 +950,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
-		createE := &RoleMenuCreate{config: ruo.config, mutation: newRoleMenuMutation(ruo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ruo.mutation.RemovedMenusIDs(); len(nodes) > 0 && !ruo.mutation.MenusCleared() {
@@ -994,10 +966,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: ruo.config, mutation: newRoleMenuMutation(ruo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ruo.mutation.MenusIDs(); len(nodes) > 0 {
@@ -1014,10 +982,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: ruo.config, mutation: newRoleMenuMutation(ruo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if ruo.mutation.UsersCleared() {
@@ -1031,10 +995,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
-		createE := &UserRoleCreate{config: ruo.config, mutation: newUserRoleMutation(ruo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ruo.mutation.RemovedUsersIDs(); len(nodes) > 0 && !ruo.mutation.UsersCleared() {
@@ -1051,10 +1011,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: ruo.config, mutation: newUserRoleMutation(ruo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ruo.mutation.UsersIDs(); len(nodes) > 0 {
@@ -1071,10 +1027,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: ruo.config, mutation: newUserRoleMutation(ruo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if ruo.mutation.RoleMenusCleared() {
@@ -1186,14 +1138,40 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 // SetRole set the Role
 func (ru *RoleUpdate) SetRole(input *Role, fields ...string) *RoleUpdate {
 	m := ru.mutation
+	if len(fields) == 0 {
+		fields = role.OmitColumns(role.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return ru
+}
+
+// SetRoleWithZero set the Role
+func (ru *RoleUpdate) SetRoleWithZero(input *Role, fields ...string) *RoleUpdate {
+	m := ru.mutation
+	if len(fields) == 0 {
+		fields = role.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return ru
 }
 
 // SetRole set the Role
 func (ruo *RoleUpdateOne) SetRole(input *Role, fields ...string) *RoleUpdateOne {
 	m := ruo.mutation
+	if len(fields) == 0 {
+		fields = role.OmitColumns(role.FieldID)
+	}
 	_ = m.SetFields(input, fields...)
+	return ruo
+}
+
+// SetRoleWithZero set the Role
+func (ruo *RoleUpdateOne) SetRoleWithZero(input *Role, fields ...string) *RoleUpdateOne {
+	m := ruo.mutation
+	if len(fields) == 0 {
+		fields = role.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return ruo
 }
 

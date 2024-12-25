@@ -75,9 +75,9 @@ func UpdateTime(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldUpdateTime, v))
 }
 
-// Code applies equality check predicate on the "code" field. It's identical to CodeEQ.
-func Code(v string) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldCode, v))
+// Keyword applies equality check predicate on the "keyword" field. It's identical to KeywordEQ.
+func Keyword(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldKeyword, v))
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
@@ -180,69 +180,69 @@ func UpdateTimeLTE(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldLTE(FieldUpdateTime, v))
 }
 
-// CodeEQ applies the EQ predicate on the "code" field.
-func CodeEQ(v string) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldCode, v))
+// KeywordEQ applies the EQ predicate on the "keyword" field.
+func KeywordEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldKeyword, v))
 }
 
-// CodeNEQ applies the NEQ predicate on the "code" field.
-func CodeNEQ(v string) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldCode, v))
+// KeywordNEQ applies the NEQ predicate on the "keyword" field.
+func KeywordNEQ(v string) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldKeyword, v))
 }
 
-// CodeIn applies the In predicate on the "code" field.
-func CodeIn(vs ...string) predicate.Role {
-	return predicate.Role(sql.FieldIn(FieldCode, vs...))
+// KeywordIn applies the In predicate on the "keyword" field.
+func KeywordIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldKeyword, vs...))
 }
 
-// CodeNotIn applies the NotIn predicate on the "code" field.
-func CodeNotIn(vs ...string) predicate.Role {
-	return predicate.Role(sql.FieldNotIn(FieldCode, vs...))
+// KeywordNotIn applies the NotIn predicate on the "keyword" field.
+func KeywordNotIn(vs ...string) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldKeyword, vs...))
 }
 
-// CodeGT applies the GT predicate on the "code" field.
-func CodeGT(v string) predicate.Role {
-	return predicate.Role(sql.FieldGT(FieldCode, v))
+// KeywordGT applies the GT predicate on the "keyword" field.
+func KeywordGT(v string) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldKeyword, v))
 }
 
-// CodeGTE applies the GTE predicate on the "code" field.
-func CodeGTE(v string) predicate.Role {
-	return predicate.Role(sql.FieldGTE(FieldCode, v))
+// KeywordGTE applies the GTE predicate on the "keyword" field.
+func KeywordGTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldKeyword, v))
 }
 
-// CodeLT applies the LT predicate on the "code" field.
-func CodeLT(v string) predicate.Role {
-	return predicate.Role(sql.FieldLT(FieldCode, v))
+// KeywordLT applies the LT predicate on the "keyword" field.
+func KeywordLT(v string) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldKeyword, v))
 }
 
-// CodeLTE applies the LTE predicate on the "code" field.
-func CodeLTE(v string) predicate.Role {
-	return predicate.Role(sql.FieldLTE(FieldCode, v))
+// KeywordLTE applies the LTE predicate on the "keyword" field.
+func KeywordLTE(v string) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldKeyword, v))
 }
 
-// CodeContains applies the Contains predicate on the "code" field.
-func CodeContains(v string) predicate.Role {
-	return predicate.Role(sql.FieldContains(FieldCode, v))
+// KeywordContains applies the Contains predicate on the "keyword" field.
+func KeywordContains(v string) predicate.Role {
+	return predicate.Role(sql.FieldContains(FieldKeyword, v))
 }
 
-// CodeHasPrefix applies the HasPrefix predicate on the "code" field.
-func CodeHasPrefix(v string) predicate.Role {
-	return predicate.Role(sql.FieldHasPrefix(FieldCode, v))
+// KeywordHasPrefix applies the HasPrefix predicate on the "keyword" field.
+func KeywordHasPrefix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasPrefix(FieldKeyword, v))
 }
 
-// CodeHasSuffix applies the HasSuffix predicate on the "code" field.
-func CodeHasSuffix(v string) predicate.Role {
-	return predicate.Role(sql.FieldHasSuffix(FieldCode, v))
+// KeywordHasSuffix applies the HasSuffix predicate on the "keyword" field.
+func KeywordHasSuffix(v string) predicate.Role {
+	return predicate.Role(sql.FieldHasSuffix(FieldKeyword, v))
 }
 
-// CodeEqualFold applies the EqualFold predicate on the "code" field.
-func CodeEqualFold(v string) predicate.Role {
-	return predicate.Role(sql.FieldEqualFold(FieldCode, v))
+// KeywordEqualFold applies the EqualFold predicate on the "keyword" field.
+func KeywordEqualFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldEqualFold(FieldKeyword, v))
 }
 
-// CodeContainsFold applies the ContainsFold predicate on the "code" field.
-func CodeContainsFold(v string) predicate.Role {
-	return predicate.Role(sql.FieldContainsFold(FieldCode, v))
+// KeywordContainsFold applies the ContainsFold predicate on the "keyword" field.
+func KeywordContainsFold(v string) predicate.Role {
+	return predicate.Role(sql.FieldContainsFold(FieldKeyword, v))
 }
 
 // NameEQ applies the EQ predicate on the "name" field.

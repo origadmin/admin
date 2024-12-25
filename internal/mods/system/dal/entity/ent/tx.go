@@ -12,6 +12,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Department is the client for interacting with the Department builders.
+	Department *DepartmentClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
 	// Resource is the client for interacting with the Resource builders.
@@ -22,6 +24,8 @@ type Tx struct {
 	RoleMenu *RoleMenuClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserDepartment is the client for interacting with the UserDepartment builders.
+	UserDepartment *UserDepartmentClient
 	// UserRole is the client for interacting with the UserRole builders.
 	UserRole *UserRoleClient
 
@@ -155,11 +159,13 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Department = NewDepartmentClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.RoleMenu = NewRoleMenuClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserDepartment = NewUserDepartmentClient(tx.config)
 	tx.UserRole = NewUserRoleClient(tx.config)
 }
 
@@ -170,7 +176,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Menu.QueryXXX(), the query will be executed
+// applies a query, for example: Department.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

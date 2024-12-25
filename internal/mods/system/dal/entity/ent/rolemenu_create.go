@@ -9,7 +9,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
-	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -20,34 +19,6 @@ type RoleMenuCreate struct {
 	config
 	mutation *RoleMenuMutation
 	hooks    []Hook
-}
-
-// SetCreateTime sets the "create_time" field.
-func (rmc *RoleMenuCreate) SetCreateTime(t time.Time) *RoleMenuCreate {
-	rmc.mutation.SetCreateTime(t)
-	return rmc
-}
-
-// SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (rmc *RoleMenuCreate) SetNillableCreateTime(t *time.Time) *RoleMenuCreate {
-	if t != nil {
-		rmc.SetCreateTime(*t)
-	}
-	return rmc
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (rmc *RoleMenuCreate) SetUpdateTime(t time.Time) *RoleMenuCreate {
-	rmc.mutation.SetUpdateTime(t)
-	return rmc
-}
-
-// SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (rmc *RoleMenuCreate) SetNillableUpdateTime(t *time.Time) *RoleMenuCreate {
-	if t != nil {
-		rmc.SetUpdateTime(*t)
-	}
-	return rmc
 }
 
 // SetRoleID sets the "role_id" field.
@@ -85,7 +56,6 @@ func (rmc *RoleMenuCreate) Mutation() *RoleMenuMutation {
 
 // Save creates the RoleMenu in the database.
 func (rmc *RoleMenuCreate) Save(ctx context.Context) (*RoleMenu, error) {
-	rmc.defaults()
 	return withHooks(ctx, rmc.sqlSave, rmc.mutation, rmc.hooks)
 }
 
@@ -111,26 +81,8 @@ func (rmc *RoleMenuCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (rmc *RoleMenuCreate) defaults() {
-	if _, ok := rmc.mutation.CreateTime(); !ok {
-		v := rolemenu.DefaultCreateTime()
-		rmc.mutation.SetCreateTime(v)
-	}
-	if _, ok := rmc.mutation.UpdateTime(); !ok {
-		v := rolemenu.DefaultUpdateTime()
-		rmc.mutation.SetUpdateTime(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (rmc *RoleMenuCreate) check() error {
-	if _, ok := rmc.mutation.CreateTime(); !ok {
-		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "RoleMenu.create_time"`)}
-	}
-	if _, ok := rmc.mutation.UpdateTime(); !ok {
-		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "RoleMenu.update_time"`)}
-	}
 	if _, ok := rmc.mutation.RoleID(); !ok {
 		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "RoleMenu.role_id"`)}
 	}
@@ -193,14 +145,6 @@ func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := rmc.mutation.CreateTime(); ok {
-		_spec.SetField(rolemenu.FieldCreateTime, field.TypeTime, value)
-		_node.CreateTime = value
-	}
-	if value, ok := rmc.mutation.UpdateTime(); ok {
-		_spec.SetField(rolemenu.FieldUpdateTime, field.TypeTime, value)
-		_node.UpdateTime = value
-	}
 	if nodes := rmc.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -241,7 +185,20 @@ func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 // SetRoleMenu set the RoleMenu
 func (rmc *RoleMenuCreate) SetRoleMenu(input *RoleMenu, fields ...string) *RoleMenuCreate {
 	m := rmc.mutation
+	if len(fields) == 0 {
+		fields = rolemenu.Columns
+	}
 	_ = m.SetFields(input, fields...)
+	return rmc
+}
+
+// SetRoleMenuWithZero set the RoleMenu
+func (rmc *RoleMenuCreate) SetRoleMenuWithZero(input *RoleMenu, fields ...string) *RoleMenuCreate {
+	m := rmc.mutation
+	if len(fields) == 0 {
+		fields = rolemenu.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return rmc
 }
 
@@ -263,7 +220,6 @@ func (rmcb *RoleMenuCreateBulk) Save(ctx context.Context) ([]*RoleMenu, error) {
 	for i := range rmcb.builders {
 		func(i int, root context.Context) {
 			builder := rmcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*RoleMenuMutation)
 				if !ok {

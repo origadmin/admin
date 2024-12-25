@@ -6,8 +6,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"time"
 
@@ -84,20 +86,6 @@ func (uc *UserCreate) SetIndex(i int) *UserCreate {
 	return uc
 }
 
-// SetDepartment sets the "department" field.
-func (uc *UserCreate) SetDepartment(s string) *UserCreate {
-	uc.mutation.SetDepartment(s)
-	return uc
-}
-
-// SetNillableDepartment sets the "department" field if the given value is not nil.
-func (uc *UserCreate) SetNillableDepartment(s *string) *UserCreate {
-	if s != nil {
-		uc.SetDepartment(*s)
-	}
-	return uc
-}
-
 // SetAllowedIP sets the "allowed_ip" field.
 func (uc *UserCreate) SetAllowedIP(s string) *UserCreate {
 	uc.mutation.SetAllowedIP(s)
@@ -126,30 +114,16 @@ func (uc *UserCreate) SetNillableUsername(s *string) *UserCreate {
 	return uc
 }
 
-// SetName sets the "name" field.
-func (uc *UserCreate) SetName(s string) *UserCreate {
-	uc.mutation.SetName(s)
+// SetNickname sets the "nickname" field.
+func (uc *UserCreate) SetNickname(s string) *UserCreate {
+	uc.mutation.SetNickname(s)
 	return uc
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (uc *UserCreate) SetNillableName(s *string) *UserCreate {
+// SetNillableNickname sets the "nickname" field if the given value is not nil.
+func (uc *UserCreate) SetNillableNickname(s *string) *UserCreate {
 	if s != nil {
-		uc.SetName(*s)
-	}
-	return uc
-}
-
-// SetUserID sets the "user_id" field.
-func (uc *UserCreate) SetUserID(s string) *UserCreate {
-	uc.mutation.SetUserID(s)
-	return uc
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uc *UserCreate) SetNillableUserID(s *string) *UserCreate {
-	if s != nil {
-		uc.SetUserID(*s)
+		uc.SetNickname(*s)
 	}
 	return uc
 }
@@ -164,6 +138,34 @@ func (uc *UserCreate) SetAvatar(s string) *UserCreate {
 func (uc *UserCreate) SetNillableAvatar(s *string) *UserCreate {
 	if s != nil {
 		uc.SetAvatar(*s)
+	}
+	return uc
+}
+
+// SetName sets the "name" field.
+func (uc *UserCreate) SetName(s string) *UserCreate {
+	uc.mutation.SetName(s)
+	return uc
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uc *UserCreate) SetNillableName(s *string) *UserCreate {
+	if s != nil {
+		uc.SetName(*s)
+	}
+	return uc
+}
+
+// SetGender sets the "gender" field.
+func (uc *UserCreate) SetGender(s string) *UserCreate {
+	uc.mutation.SetGender(s)
+	return uc
+}
+
+// SetNillableGender sets the "gender" field if the given value is not nil.
+func (uc *UserCreate) SetNillableGender(s *string) *UserCreate {
+	if s != nil {
+		uc.SetGender(*s)
 	}
 	return uc
 }
@@ -238,6 +240,48 @@ func (uc *UserCreate) SetNillableRemark(s *string) *UserCreate {
 	return uc
 }
 
+// SetToken sets the "token" field.
+func (uc *UserCreate) SetToken(s string) *UserCreate {
+	uc.mutation.SetToken(s)
+	return uc
+}
+
+// SetNillableToken sets the "token" field if the given value is not nil.
+func (uc *UserCreate) SetNillableToken(s *string) *UserCreate {
+	if s != nil {
+		uc.SetToken(*s)
+	}
+	return uc
+}
+
+// SetStatus sets the "status" field.
+func (uc *UserCreate) SetStatus(i int8) *UserCreate {
+	uc.mutation.SetStatus(i)
+	return uc
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (uc *UserCreate) SetNillableStatus(i *int8) *UserCreate {
+	if i != nil {
+		uc.SetStatus(*i)
+	}
+	return uc
+}
+
+// SetLastLoginIP sets the "last_login_ip" field.
+func (uc *UserCreate) SetLastLoginIP(s string) *UserCreate {
+	uc.mutation.SetLastLoginIP(s)
+	return uc
+}
+
+// SetNillableLastLoginIP sets the "last_login_ip" field if the given value is not nil.
+func (uc *UserCreate) SetNillableLastLoginIP(s *string) *UserCreate {
+	if s != nil {
+		uc.SetLastLoginIP(*s)
+	}
+	return uc
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (uc *UserCreate) SetLastLoginTime(t time.Time) *UserCreate {
 	uc.mutation.SetLastLoginTime(t)
@@ -266,16 +310,16 @@ func (uc *UserCreate) SetNillableSanctionDate(t *time.Time) *UserCreate {
 	return uc
 }
 
-// SetStatus sets the "status" field.
-func (uc *UserCreate) SetStatus(i int8) *UserCreate {
-	uc.mutation.SetStatus(i)
+// SetDepartmentID sets the "department_id" field.
+func (uc *UserCreate) SetDepartmentID(s string) *UserCreate {
+	uc.mutation.SetDepartmentID(s)
 	return uc
 }
 
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (uc *UserCreate) SetNillableStatus(i *int8) *UserCreate {
-	if i != nil {
-		uc.SetStatus(*i)
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (uc *UserCreate) SetNillableDepartmentID(s *string) *UserCreate {
+	if s != nil {
+		uc.SetDepartmentID(*s)
 	}
 	return uc
 }
@@ -329,6 +373,21 @@ func (uc *UserCreate) AddRoles(r ...*Role) *UserCreate {
 	return uc.AddRoleIDs(ids...)
 }
 
+// AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
+func (uc *UserCreate) AddDepartmentIDs(ids ...string) *UserCreate {
+	uc.mutation.AddDepartmentIDs(ids...)
+	return uc
+}
+
+// AddDepartments adds the "departments" edges to the Department entity.
+func (uc *UserCreate) AddDepartments(d ...*Department) *UserCreate {
+	ids := make([]string, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return uc.AddDepartmentIDs(ids...)
+}
+
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
 func (uc *UserCreate) AddUserRoleIDs(ids ...string) *UserCreate {
 	uc.mutation.AddUserRoleIDs(ids...)
@@ -342,6 +401,21 @@ func (uc *UserCreate) AddUserRoles(u ...*UserRole) *UserCreate {
 		ids[i] = u[i].ID
 	}
 	return uc.AddUserRoleIDs(ids...)
+}
+
+// AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
+func (uc *UserCreate) AddUserDepartmentIDs(ids ...string) *UserCreate {
+	uc.mutation.AddUserDepartmentIDs(ids...)
+	return uc
+}
+
+// AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
+func (uc *UserCreate) AddUserDepartments(u ...*UserDepartment) *UserCreate {
+	ids := make([]string, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uc.AddUserDepartmentIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -395,10 +469,6 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultUpdateTime()
 		uc.mutation.SetUpdateTime(v)
 	}
-	if _, ok := uc.mutation.Department(); !ok {
-		v := user.DefaultDepartment
-		uc.mutation.SetDepartment(v)
-	}
 	if _, ok := uc.mutation.AllowedIP(); !ok {
 		v := user.DefaultAllowedIP
 		uc.mutation.SetAllowedIP(v)
@@ -407,17 +477,21 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultUsername
 		uc.mutation.SetUsername(v)
 	}
-	if _, ok := uc.mutation.Name(); !ok {
-		v := user.DefaultName
-		uc.mutation.SetName(v)
-	}
-	if _, ok := uc.mutation.UserID(); !ok {
-		v := user.DefaultUserID
-		uc.mutation.SetUserID(v)
+	if _, ok := uc.mutation.Nickname(); !ok {
+		v := user.DefaultNickname
+		uc.mutation.SetNickname(v)
 	}
 	if _, ok := uc.mutation.Avatar(); !ok {
 		v := user.DefaultAvatar
 		uc.mutation.SetAvatar(v)
+	}
+	if _, ok := uc.mutation.Name(); !ok {
+		v := user.DefaultName
+		uc.mutation.SetName(v)
+	}
+	if _, ok := uc.mutation.Gender(); !ok {
+		v := user.DefaultGender
+		uc.mutation.SetGender(v)
 	}
 	if _, ok := uc.mutation.Password(); !ok {
 		v := user.DefaultPassword
@@ -439,6 +513,18 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultRemark
 		uc.mutation.SetRemark(v)
 	}
+	if _, ok := uc.mutation.Token(); !ok {
+		v := user.DefaultToken
+		uc.mutation.SetToken(v)
+	}
+	if _, ok := uc.mutation.Status(); !ok {
+		v := user.DefaultStatus
+		uc.mutation.SetStatus(v)
+	}
+	if _, ok := uc.mutation.LastLoginIP(); !ok {
+		v := user.DefaultLastLoginIP
+		uc.mutation.SetLastLoginIP(v)
+	}
 	if _, ok := uc.mutation.LastLoginTime(); !ok {
 		v := user.DefaultLastLoginTime()
 		uc.mutation.SetLastLoginTime(v)
@@ -446,10 +532,6 @@ func (uc *UserCreate) defaults() {
 	if _, ok := uc.mutation.SanctionDate(); !ok {
 		v := user.DefaultSanctionDate()
 		uc.mutation.SetSanctionDate(v)
-	}
-	if _, ok := uc.mutation.Status(); !ok {
-		v := user.DefaultStatus
-		uc.mutation.SetStatus(v)
 	}
 	if _, ok := uc.mutation.Manager(); !ok {
 		v := user.DefaultManager
@@ -474,9 +556,6 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Index(); !ok {
 		return &ValidationError{Name: "index", err: errors.New(`ent: missing required field "User.index"`)}
 	}
-	if _, ok := uc.mutation.Department(); !ok {
-		return &ValidationError{Name: "department", err: errors.New(`ent: missing required field "User.department"`)}
-	}
 	if _, ok := uc.mutation.AllowedIP(); !ok {
 		return &ValidationError{Name: "allowed_ip", err: errors.New(`ent: missing required field "User.allowed_ip"`)}
 	}
@@ -488,6 +567,22 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Nickname(); !ok {
+		return &ValidationError{Name: "nickname", err: errors.New(`ent: missing required field "User.nickname"`)}
+	}
+	if v, ok := uc.mutation.Nickname(); ok {
+		if err := user.NicknameValidator(v); err != nil {
+			return &ValidationError{Name: "nickname", err: fmt.Errorf(`ent: validator failed for field "User.nickname": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Avatar(); !ok {
+		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "User.avatar"`)}
+	}
+	if v, ok := uc.mutation.Avatar(); ok {
+		if err := user.AvatarValidator(v); err != nil {
+			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
+		}
+	}
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
@@ -496,15 +591,12 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "User.name": %w`, err)}
 		}
 	}
-	if _, ok := uc.mutation.UserID(); !ok {
-		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "User.user_id"`)}
+	if _, ok := uc.mutation.Gender(); !ok {
+		return &ValidationError{Name: "gender", err: errors.New(`ent: missing required field "User.gender"`)}
 	}
-	if _, ok := uc.mutation.Avatar(); !ok {
-		return &ValidationError{Name: "avatar", err: errors.New(`ent: missing required field "User.avatar"`)}
-	}
-	if v, ok := uc.mutation.Avatar(); ok {
-		if err := user.AvatarValidator(v); err != nil {
-			return &ValidationError{Name: "avatar", err: fmt.Errorf(`ent: validator failed for field "User.avatar": %w`, err)}
+	if v, ok := uc.mutation.Gender(); ok {
+		if err := user.GenderValidator(v); err != nil {
+			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.Password(); !ok {
@@ -547,14 +639,35 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
 		}
 	}
+	if _, ok := uc.mutation.Token(); !ok {
+		return &ValidationError{Name: "token", err: errors.New(`ent: missing required field "User.token"`)}
+	}
+	if v, ok := uc.mutation.Token(); ok {
+		if err := user.TokenValidator(v); err != nil {
+			return &ValidationError{Name: "token", err: fmt.Errorf(`ent: validator failed for field "User.token": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "User.status"`)}
+	}
+	if _, ok := uc.mutation.LastLoginIP(); !ok {
+		return &ValidationError{Name: "last_login_ip", err: errors.New(`ent: missing required field "User.last_login_ip"`)}
+	}
+	if v, ok := uc.mutation.LastLoginIP(); ok {
+		if err := user.LastLoginIPValidator(v); err != nil {
+			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
+		}
+	}
 	if _, ok := uc.mutation.LastLoginTime(); !ok {
 		return &ValidationError{Name: "last_login_time", err: errors.New(`ent: missing required field "User.last_login_time"`)}
 	}
 	if _, ok := uc.mutation.SanctionDate(); !ok {
 		return &ValidationError{Name: "sanction_date", err: errors.New(`ent: missing required field "User.sanction_date"`)}
 	}
-	if _, ok := uc.mutation.Status(); !ok {
-		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "User.status"`)}
+	if v, ok := uc.mutation.DepartmentID(); ok {
+		if err := user.DepartmentIDValidator(v); err != nil {
+			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "User.department_id": %w`, err)}
+		}
 	}
 	if v, ok := uc.mutation.ManagerID(); ok {
 		if err := user.ManagerIDValidator(v); err != nil {
@@ -624,10 +737,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldIndex, field.TypeInt, value)
 		_node.Index = value
 	}
-	if value, ok := uc.mutation.Department(); ok {
-		_spec.SetField(user.FieldDepartment, field.TypeString, value)
-		_node.Department = value
-	}
 	if value, ok := uc.mutation.AllowedIP(); ok {
 		_spec.SetField(user.FieldAllowedIP, field.TypeString, value)
 		_node.AllowedIP = value
@@ -636,17 +745,21 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldUsername, field.TypeString, value)
 		_node.Username = value
 	}
-	if value, ok := uc.mutation.Name(); ok {
-		_spec.SetField(user.FieldName, field.TypeString, value)
-		_node.Name = value
-	}
-	if value, ok := uc.mutation.UserID(); ok {
-		_spec.SetField(user.FieldUserID, field.TypeString, value)
-		_node.UserID = value
+	if value, ok := uc.mutation.Nickname(); ok {
+		_spec.SetField(user.FieldNickname, field.TypeString, value)
+		_node.Nickname = value
 	}
 	if value, ok := uc.mutation.Avatar(); ok {
 		_spec.SetField(user.FieldAvatar, field.TypeString, value)
 		_node.Avatar = value
+	}
+	if value, ok := uc.mutation.Name(); ok {
+		_spec.SetField(user.FieldName, field.TypeString, value)
+		_node.Name = value
+	}
+	if value, ok := uc.mutation.Gender(); ok {
+		_spec.SetField(user.FieldGender, field.TypeString, value)
+		_node.Gender = value
 	}
 	if value, ok := uc.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
@@ -668,6 +781,18 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldRemark, field.TypeString, value)
 		_node.Remark = value
 	}
+	if value, ok := uc.mutation.Token(); ok {
+		_spec.SetField(user.FieldToken, field.TypeString, value)
+		_node.Token = value
+	}
+	if value, ok := uc.mutation.Status(); ok {
+		_spec.SetField(user.FieldStatus, field.TypeInt8, value)
+		_node.Status = value
+	}
+	if value, ok := uc.mutation.LastLoginIP(); ok {
+		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+		_node.LastLoginIP = value
+	}
 	if value, ok := uc.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
 		_node.LastLoginTime = value
@@ -676,9 +801,9 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
 		_node.SanctionDate = value
 	}
-	if value, ok := uc.mutation.Status(); ok {
-		_spec.SetField(user.FieldStatus, field.TypeInt8, value)
-		_node.Status = value
+	if value, ok := uc.mutation.DepartmentID(); ok {
+		_spec.SetField(user.FieldDepartmentID, field.TypeString, value)
+		_node.DepartmentID = value
 	}
 	if value, ok := uc.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeString, value)
@@ -702,10 +827,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: uc.config, mutation: newUserRoleMutation(uc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.DepartmentsTable,
+			Columns: user.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.UserRolesIDs(); len(nodes) > 0 {
@@ -724,13 +861,42 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := uc.mutation.UserDepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserDepartmentsTable,
+			Columns: []string{user.UserDepartmentsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	return _node, _spec
 }
 
 // SetUser set the User
 func (uc *UserCreate) SetUser(input *User, fields ...string) *UserCreate {
 	m := uc.mutation
+	if len(fields) == 0 {
+		fields = user.Columns
+	}
 	_ = m.SetFields(input, fields...)
+	return uc
+}
+
+// SetUserWithZero set the User
+func (uc *UserCreate) SetUserWithZero(input *User, fields ...string) *UserCreate {
+	m := uc.mutation
+	if len(fields) == 0 {
+		fields = user.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return uc
 }
 

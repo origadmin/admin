@@ -4,13 +4,95 @@ package ent
 
 import (
 	"fmt"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 )
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *DepartmentMutation) SetFields(input *Department, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case department.FieldCreateTime:
+			if !input.CreateTime.IsZero() {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case department.FieldUpdateTime:
+			if !input.UpdateTime.IsZero() {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case department.FieldKeyword:
+			// check string if it is empty
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
+			}
+		case department.FieldName:
+			// check string if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case department.FieldDescription:
+			// check string if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
+			}
+		case department.FieldSequence:
+			// check int if it is zero
+			if input.Sequence != 0 {
+				m.SetSequence(input.Sequence)
+			}
+		case department.FieldStatus:
+			var zero int8
+			if input.Status != zero {
+				m.SetStatus(input.Status)
+			}
+		case department.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown Department field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case department.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case department.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case department.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case department.FieldName:
+			m.SetName(input.Name)
+		case department.FieldDescription:
+			m.SetDescription(input.Description)
+		case department.FieldSequence:
+			m.SetSequence(input.Sequence)
+		case department.FieldStatus:
+			m.SetStatus(input.Status)
+		case department.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown Department field %s", fields[i])
+		}
+	}
+	return nil
+}
 
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
@@ -26,14 +108,93 @@ func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
 			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case menu.FieldCode:
-			m.SetCode(input.Code)
+		case menu.FieldKeyword:
+			// check string if it is empty
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
+			}
+		case menu.FieldName:
+			// check string if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case menu.FieldDescription:
+			// check string if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
+			}
+		case menu.FieldType:
+			var zero uint8
+			if input.Type != zero {
+				m.SetType(input.Type)
+			}
+		case menu.FieldIcon:
+			// check string if it is empty
+			if input.Icon != "" {
+				m.SetIcon(input.Icon)
+			}
+		case menu.FieldPath:
+			// check string if it is empty
+			if input.Path != "" {
+				m.SetPath(input.Path)
+			}
+		case menu.FieldStatus:
+			var zero int8
+			if input.Status != zero {
+				m.SetStatus(input.Status)
+			}
+		case menu.FieldParentID:
+			// check string if it is empty
+			if input.ParentID != "" {
+				m.SetParentID(input.ParentID)
+			}
+		case menu.FieldParentPath:
+			// check string if it is empty
+			if input.ParentPath != "" {
+				m.SetParentPath(input.ParentPath)
+			}
+		case menu.FieldSequence:
+			// check int if it is zero
+			if input.Sequence != 0 {
+				m.SetSequence(input.Sequence)
+			}
+		case menu.FieldProperties:
+			// check string if it is empty
+			if input.Properties != "" {
+				m.SetProperties(input.Properties)
+			}
+		case menu.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown Menu field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *MenuMutation) SetFieldsWithZero(input *Menu, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case menu.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case menu.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case menu.FieldKeyword:
+			m.SetKeyword(input.Keyword)
 		case menu.FieldName:
 			m.SetName(input.Name)
 		case menu.FieldDescription:
 			m.SetDescription(input.Description)
 		case menu.FieldType:
 			m.SetType(input.Type)
+		case menu.FieldIcon:
+			m.SetIcon(input.Icon)
 		case menu.FieldPath:
 			m.SetPath(input.Path)
 		case menu.FieldStatus:
@@ -46,6 +207,8 @@ func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
 			m.SetSequence(input.Sequence)
 		case menu.FieldProperties:
 			m.SetProperties(input.Properties)
+		case menu.FieldID:
+			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Menu field %s", fields[i])
 		}
@@ -68,11 +231,57 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case resource.FieldMenuID:
+			// check string if it is empty
+			if input.MenuID != "" {
+				m.SetMenuID(input.MenuID)
+			}
+		case resource.FieldMethod:
+			// check string if it is empty
+			if input.Method != "" {
+				m.SetMethod(input.Method)
+			}
+		case resource.FieldOperation:
+			// check string if it is empty
+			if input.Operation != "" {
+				m.SetOperation(input.Operation)
+			}
+		case resource.FieldPath:
+			// check string if it is empty
+			if input.Path != "" {
+				m.SetPath(input.Path)
+			}
+		case resource.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown Resource field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case resource.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case resource.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case resource.FieldMenuID:
 			m.SetMenuID(input.MenuID)
 		case resource.FieldMethod:
 			m.SetMethod(input.Method)
+		case resource.FieldOperation:
+			m.SetOperation(input.Operation)
 		case resource.FieldPath:
 			m.SetPath(input.Path)
+		case resource.FieldID:
+			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Resource field %s", fields[i])
 		}
@@ -94,8 +303,55 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 			if !input.UpdateTime.IsZero() {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case role.FieldCode:
-			m.SetCode(input.Code)
+		case role.FieldKeyword:
+			// check string if it is empty
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
+			}
+		case role.FieldName:
+			// check string if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case role.FieldDescription:
+			// check string if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
+			}
+		case role.FieldSequence:
+			// check int if it is zero
+			if input.Sequence != 0 {
+				m.SetSequence(input.Sequence)
+			}
+		case role.FieldStatus:
+			var zero int8
+			if input.Status != zero {
+				m.SetStatus(input.Status)
+			}
+		case role.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown Role field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *RoleMutation) SetFieldsWithZero(input *Role, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case role.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case role.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case role.FieldKeyword:
+			m.SetKeyword(input.Keyword)
 		case role.FieldName:
 			m.SetName(input.Name)
 		case role.FieldDescription:
@@ -104,6 +360,8 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 			m.SetSequence(input.Sequence)
 		case role.FieldStatus:
 			m.SetStatus(input.Status)
+		case role.FieldID:
+			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Role field %s", fields[i])
 		}
@@ -117,18 +375,40 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 func (m *RoleMenuMutation) SetFields(input *RoleMenu, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case rolemenu.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
-				m.SetCreateTime(input.CreateTime)
+		case rolemenu.FieldRoleID:
+			// check string if it is empty
+			if input.RoleID != "" {
+				m.SetRoleID(input.RoleID)
 			}
-		case rolemenu.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
-				m.SetUpdateTime(input.UpdateTime)
+		case rolemenu.FieldMenuID:
+			// check string if it is empty
+			if input.MenuID != "" {
+				m.SetMenuID(input.MenuID)
 			}
+		case rolemenu.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown RoleMenu field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *RoleMenuMutation) SetFieldsWithZero(input *RoleMenu, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
 		case rolemenu.FieldRoleID:
 			m.SetRoleID(input.RoleID)
 		case rolemenu.FieldMenuID:
 			m.SetMenuID(input.MenuID)
+		case rolemenu.FieldID:
+			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown RoleMenu field %s", fields[i])
 		}
@@ -143,9 +423,15 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case user.FieldCreateAuthor:
-			m.SetCreateAuthor(input.CreateAuthor)
+			// check string if it is empty
+			if input.CreateAuthor != "" {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
 		case user.FieldUpdateAuthor:
-			m.SetUpdateAuthor(input.UpdateAuthor)
+			// check string if it is empty
+			if input.UpdateAuthor != "" {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
 		case user.FieldCreateTime:
 			if !input.CreateTime.IsZero() {
 				m.SetCreateTime(input.CreateTime)
@@ -155,19 +441,143 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case user.FieldIndex:
+			// check int if it is zero
+			if input.Index != 0 {
+				m.SetIndex(input.Index)
+			}
+		case user.FieldAllowedIP:
+			// check string if it is empty
+			if input.AllowedIP != "" {
+				m.SetAllowedIP(input.AllowedIP)
+			}
+		case user.FieldUsername:
+			// check string if it is empty
+			if input.Username != "" {
+				m.SetUsername(input.Username)
+			}
+		case user.FieldNickname:
+			// check string if it is empty
+			if input.Nickname != "" {
+				m.SetNickname(input.Nickname)
+			}
+		case user.FieldAvatar:
+			// check string if it is empty
+			if input.Avatar != "" {
+				m.SetAvatar(input.Avatar)
+			}
+		case user.FieldName:
+			// check string if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case user.FieldGender:
+			// check string if it is empty
+			if input.Gender != "" {
+				m.SetGender(input.Gender)
+			}
+		case user.FieldPassword:
+			// check string if it is empty
+			if input.Password != "" {
+				m.SetPassword(input.Password)
+			}
+		case user.FieldSalt:
+			// check string if it is empty
+			if input.Salt != "" {
+				m.SetSalt(input.Salt)
+			}
+		case user.FieldPhone:
+			// check string if it is empty
+			if input.Phone != "" {
+				m.SetPhone(input.Phone)
+			}
+		case user.FieldEmail:
+			// check string if it is empty
+			if input.Email != "" {
+				m.SetEmail(input.Email)
+			}
+		case user.FieldRemark:
+			// check string if it is empty
+			if input.Remark != "" {
+				m.SetRemark(input.Remark)
+			}
+		case user.FieldToken:
+			// check string if it is empty
+			if input.Token != "" {
+				m.SetToken(input.Token)
+			}
+		case user.FieldStatus:
+			var zero int8
+			if input.Status != zero {
+				m.SetStatus(input.Status)
+			}
+		case user.FieldLastLoginIP:
+			// check string if it is empty
+			if input.LastLoginIP != "" {
+				m.SetLastLoginIP(input.LastLoginIP)
+			}
+		case user.FieldLastLoginTime:
+			if !input.LastLoginTime.IsZero() {
+				m.SetLastLoginTime(input.LastLoginTime)
+			}
+		case user.FieldSanctionDate:
+			if !input.SanctionDate.IsZero() {
+				m.SetSanctionDate(input.SanctionDate)
+			}
+		case user.FieldDepartmentID:
+			// check string if it is empty
+			if input.DepartmentID != "" {
+				m.SetDepartmentID(input.DepartmentID)
+			}
+		case user.FieldManagerID:
+			// check string if it is empty
+			if input.ManagerID != "" {
+				m.SetManagerID(input.ManagerID)
+			}
+		case user.FieldManager:
+			// check string if it is empty
+			if input.Manager != "" {
+				m.SetManager(input.Manager)
+			}
+		case user.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown User field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case user.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case user.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case user.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case user.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case user.FieldIndex:
 			m.SetIndex(input.Index)
-		case user.FieldDepartment:
-			m.SetDepartment(input.Department)
 		case user.FieldAllowedIP:
 			m.SetAllowedIP(input.AllowedIP)
 		case user.FieldUsername:
 			m.SetUsername(input.Username)
-		case user.FieldName:
-			m.SetName(input.Name)
-		case user.FieldUserID:
-			m.SetUserID(input.UserID)
+		case user.FieldNickname:
+			m.SetNickname(input.Nickname)
 		case user.FieldAvatar:
 			m.SetAvatar(input.Avatar)
+		case user.FieldName:
+			m.SetName(input.Name)
+		case user.FieldGender:
+			m.SetGender(input.Gender)
 		case user.FieldPassword:
 			m.SetPassword(input.Password)
 		case user.FieldSalt:
@@ -178,22 +588,73 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetEmail(input.Email)
 		case user.FieldRemark:
 			m.SetRemark(input.Remark)
-		case user.FieldLastLoginTime:
-			if !input.LastLoginTime.IsZero() {
-				m.SetLastLoginTime(input.LastLoginTime)
-			}
-		case user.FieldSanctionDate:
-			if !input.SanctionDate.IsZero() {
-				m.SetSanctionDate(input.SanctionDate)
-			}
+		case user.FieldToken:
+			m.SetToken(input.Token)
 		case user.FieldStatus:
 			m.SetStatus(input.Status)
+		case user.FieldLastLoginIP:
+			m.SetLastLoginIP(input.LastLoginIP)
+		case user.FieldLastLoginTime:
+			m.SetLastLoginTime(input.LastLoginTime)
+		case user.FieldSanctionDate:
+			m.SetSanctionDate(input.SanctionDate)
+		case user.FieldDepartmentID:
+			m.SetDepartmentID(input.DepartmentID)
 		case user.FieldManagerID:
 			m.SetManagerID(input.ManagerID)
 		case user.FieldManager:
 			m.SetManager(input.Manager)
+		case user.FieldID:
+			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown User field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case userdepartment.FieldUserID:
+			// check string if it is empty
+			if input.UserID != "" {
+				m.SetUserID(input.UserID)
+			}
+		case userdepartment.FieldDepartmentID:
+			// check string if it is empty
+			if input.DepartmentID != "" {
+				m.SetDepartmentID(input.DepartmentID)
+			}
+		case userdepartment.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *UserDepartmentMutation) SetFieldsWithZero(input *UserDepartment, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case userdepartment.FieldUserID:
+			m.SetUserID(input.UserID)
+		case userdepartment.FieldDepartmentID:
+			m.SetDepartmentID(input.DepartmentID)
+		case userdepartment.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
 		}
 	}
 	return nil
@@ -205,20 +666,40 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case userrole.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
-				m.SetCreateTime(input.CreateTime)
+		case userrole.FieldUserID:
+			// check string if it is empty
+			if input.UserID != "" {
+				m.SetUserID(input.UserID)
 			}
-		case userrole.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
-				m.SetUpdateTime(input.UpdateTime)
+		case userrole.FieldRoleID:
+			// check string if it is empty
+			if input.RoleID != "" {
+				m.SetRoleID(input.RoleID)
 			}
+		case userrole.FieldID:
+			// check string if it is empty
+			if input.ID != "" {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown UserRole field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *UserRoleMutation) SetFieldsWithZero(input *UserRole, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
 		case userrole.FieldUserID:
 			m.SetUserID(input.UserID)
 		case userrole.FieldRoleID:
 			m.SetRoleID(input.RoleID)
-		case userrole.FieldRoleName:
-			m.SetRoleName(input.RoleName)
+		case userrole.FieldID:
+			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown UserRole field %s", fields[i])
 		}

@@ -18,14 +18,16 @@ const (
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
 	FieldUpdateTime = "update_time"
-	// FieldCode holds the string denoting the code field in the database.
-	FieldCode = "code"
+	// FieldKeyword holds the string denoting the keyword field in the database.
+	FieldKeyword = "keyword"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
+	// FieldIcon holds the string denoting the icon field in the database.
+	FieldIcon = "icon"
 	// FieldPath holds the string denoting the path field in the database.
 	FieldPath = "path"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -84,10 +86,11 @@ var Columns = []string{
 	FieldID,
 	FieldCreateTime,
 	FieldUpdateTime,
-	FieldCode,
+	FieldKeyword,
 	FieldName,
 	FieldDescription,
 	FieldType,
+	FieldIcon,
 	FieldPath,
 	FieldStatus,
 	FieldParentID,
@@ -119,10 +122,10 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// DefaultCode holds the default value on creation for the "code" field.
-	DefaultCode string
-	// CodeValidator is a validator for the "code" field. It is called by the builders before save.
-	CodeValidator func(string) error
+	// DefaultKeyword holds the default value on creation for the "keyword" field.
+	DefaultKeyword string
+	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
+	KeywordValidator func(string) error
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
@@ -132,21 +135,29 @@ var (
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
 	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType string
-	// TypeValidator is a validator for the "type" field. It is called by the builders before save.
-	TypeValidator func(string) error
+	DefaultType uint8
+	// DefaultIcon holds the default value on creation for the "icon" field.
+	DefaultIcon string
+	// IconValidator is a validator for the "icon" field. It is called by the builders before save.
+	IconValidator func(string) error
 	// DefaultPath holds the default value on creation for the "path" field.
 	DefaultPath string
 	// PathValidator is a validator for the "path" field. It is called by the builders before save.
 	PathValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
+	// DefaultParentID holds the default value on creation for the "parent_id" field.
+	DefaultParentID string
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	ParentIDValidator func(string) error
 	// DefaultParentPath holds the default value on creation for the "parent_path" field.
 	DefaultParentPath string
 	// ParentPathValidator is a validator for the "parent_path" field. It is called by the builders before save.
 	ParentPathValidator func(string) error
+	// DefaultSequence holds the default value on creation for the "sequence" field.
+	DefaultSequence int
+	// DefaultProperties holds the default value on creation for the "properties" field.
+	DefaultProperties string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(string) error
 )
@@ -169,9 +180,9 @@ func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
-// ByCode orders the results by the code field.
-func ByCode(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCode, opts...).ToFunc()
+// ByKeyword orders the results by the keyword field.
+func ByKeyword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldKeyword, opts...).ToFunc()
 }
 
 // ByName orders the results by the name field.
@@ -187,6 +198,11 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByType orders the results by the type field.
 func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
+}
+
+// ByIcon orders the results by the icon field.
+func ByIcon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIcon, opts...).ToFunc()
 }
 
 // ByPath orders the results by the path field.
@@ -318,7 +334,7 @@ func newRoleMenusStep() *sqlgraph.Step {
 }
 
 // SelectColumns returns all selected fields.
-func SelectColumns(fields ...string) []string {
+func SelectColumns(fields []string) []string {
 	// Default removal FieldID
 	filteredFields := make([]string, 0, len(fields))
 	for _, field := range fields {

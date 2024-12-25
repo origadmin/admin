@@ -16,14 +16,10 @@ import (
 )
 
 type (
-	Resource                = ent.Resource
-	ResourcePB              = pb.Resource
-	ResourceEdges           = ent.ResourceEdges
-	ResourceEdgesPB         = pb.ResourceEdges
-	ResourceResource        = ent.ResourceResource
-	ResourceResourcePB      = pb.ResourceResource
-	ResourceResourceEdges   = ent.ResourceResourceEdges
-	ResourceResourceEdgesPB = pb.ResourceResourceEdges
+	Resource        = ent.Resource
+	ResourcePB      = pb.Resource
+	ResourceEdges   = ent.ResourceEdges
+	ResourceEdgesPB = pb.ResourceEdges
 
 	ListResourcesRequest  = pb.ListResourcesRequest
 	ListResourcesResponse = pb.ListResourcesResponse
@@ -34,7 +30,12 @@ func ResourceObject(resource *ResourcePB) *Resource {
 		return nil
 	}
 	return &Resource{
-		ID: resource.Id,
+		ID:         resource.Id,
+		CreateTime: resource.CreateTime.AsTime(),
+		UpdateTime: resource.UpdateTime.AsTime(),
+		MenuID:     resource.MenuId,
+		Method:     resource.Method,
+		Path:       resource.Path,
 	}
 }
 
@@ -91,14 +92,6 @@ func ConvertResources(resources []*Resource) []*ResourcePB {
 	var result []*ResourcePB
 	for _, resource := range resources {
 		result = append(result, ConvertResource2PB(resource))
-	}
-	return result
-}
-
-func ConvertResourceResources(resources []*ResourceResource) []*ResourceResourcePB {
-	var result []*ResourceResourcePB
-	for _, resource := range resources {
-		result = append(result, ConvertResourceResource2PB(resource))
 	}
 	return result
 }

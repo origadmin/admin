@@ -21,10 +21,17 @@ var (
 )
 
 const (
-	// UserStatusActivated represents the activated status of a user
 	UserStatusActivated = schema.UserStatusActivated
-	// UserStatusFreezed represents the freezed status of a user
-	UserStatusFreezed = schema.UserStatusFreezed
+	UserStatusFreezed   = schema.UserStatusFreezed
+
+	MenuStatusActivated = schema.MenuStatusActivated
+	MenuStatusFreezed   = schema.MenuStatusFreezed
+
+	MenuTypeAction = schema.MenuTypeAction
+	MenuTypeButton = schema.MenuTypeButton
+	MenuTypeLink   = schema.MenuTypeLink
+	MenuTypeMenu   = schema.MenuTypeMenu
+	MenuTypePage   = schema.MenuTypePage
 )
 
 // ConvertMenu2PB Menu is the model entity for the Menu schema.
@@ -69,7 +76,11 @@ func ConvertRole2PB(goModel *Role) (pbModel *RolePB) {
 	pbModel.Description = goModel.Description
 	pbModel.Sequence = int32(goModel.Sequence)
 	pbModel.Status = int32(goModel.Status)
-	pbModel.Edges = ConvertRoleEdges2PB(&goModel.Edges)
+	//pbModel.Edges = ConvertRoleEdges2PB(&goModel.Edges)
+	pbModel.Menus = ConvertMenus(goModel.Edges.Menus)
+	pbModel.Users = ConvertUsers(goModel.Edges.Users)
+	//pbModel.RoleMenus = ConvertRoleMenus(goModel.Edges.RoleMenus)
+	//pbModel.UserRoles = ConvertUserRoles(goModel.Edges.UserRoles)
 	return pbModel
 }
 
@@ -98,7 +109,9 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel.Email = goModel.Email
 	pbModel.Remark = goModel.Remark
 	pbModel.Status = int32(goModel.Status)
-	pbModel.Edges = ConvertUserEdges2PB(&goModel.Edges)
+	//pbModel.Edges = ConvertUserEdges2PB(&goModel.Edges)
+	pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
+	//pbModel.UserRoles = ConvertUserRoles(goModel.Edges.UserRoles)
 	return pbModel
 }
 
@@ -119,7 +132,9 @@ func ConvertUserRole2PB(goModel *UserRole) (pbModel *UserRolePB) {
 	pbModel.UserId = goModel.UserID
 	pbModel.RoleId = goModel.RoleID
 	pbModel.RoleName = goModel.RoleName
-	pbModel.Edges = ConvertUserRoleEdges2PB(&goModel.Edges)
+	//pbModel.Edges = ConvertUserRoleEdges2PB(&goModel.Edges)
+	pbModel.User = ConvertUser2PB(goModel.Edges.User)
+	pbModel.Role = ConvertRole2PB(goModel.Edges.Role)
 	return pbModel
 }
 
@@ -139,7 +154,9 @@ func ConvertRoleMenu2PB(goModel *RoleMenu) (pbModel *RoleMenuPB) {
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.RoleId = goModel.RoleID
 	pbModel.MenuId = goModel.MenuID
-	pbModel.Edges = ConvertRoleMenuEdges2PB(&goModel.Edges)
+	//pbModel.Edges = ConvertRoleMenuEdges2PB(&goModel.Edges)
+	pbModel.Role = ConvertRole2PB(goModel.Edges.Role)
+	pbModel.Menu = ConvertMenu2PB(goModel.Edges.Menu)
 	return pbModel
 }
 
@@ -160,7 +177,8 @@ func ConvertResource2PB(goModel *Resource) (pbModel *ResourcePB) {
 	pbModel.MenuId = goModel.MenuID
 	pbModel.Method = goModel.Method
 	pbModel.Path = goModel.Path
-	pbModel.Edges = ConvertResourceEdges2PB(&goModel.Edges)
+	//pbModel.Edges = ConvertResourceEdges2PB(&goModel.Edges)
+	pbModel.Menu = ConvertMenu2PB(goModel.Edges.Menu)
 	return pbModel
 }
 

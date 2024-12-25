@@ -14,13 +14,13 @@ import (
 	"entgo.io/ent/schema/mixin"
 )
 
-// ID schema to include control and time fields.
-type ID struct {
+// UUID schema to include control and time fields.
+type UUID struct {
 	mixin.Schema
 }
 
 // Fields of the mixin.
-func (ID) Fields() []ent.Field {
+func (UUID) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").
 			MaxLen(36).
@@ -30,8 +30,22 @@ func (ID) Fields() []ent.Field {
 }
 
 // Indexes of the mixin.
-func (ID) Indexes() []ent.Index {
+func (UUID) Indexes() []ent.Index {
 	return []ent.Index{}
+}
+
+type ID struct {
+	mixin.Schema
+}
+
+// Fields of the mixin.
+func (ID) Fields() []ent.Field {
+	return []ent.Field{
+		field.Int("id").
+			Unique().
+			Positive().
+			Immutable(),
+	}
 }
 
 // Audit schema to include control and time fields.

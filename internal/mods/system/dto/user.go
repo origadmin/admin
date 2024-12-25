@@ -36,6 +36,27 @@ func UserObject(user *UserPB) *User {
 	}
 	return &User{
 		ID: user.Id,
+		//CreateAuthor:  user.CreateAuthor,
+		//UpdateAuthor:  user.UpdateAuthor,
+		CreateTime: user.CreateTime.AsTime(),
+		UpdateTime: user.UpdateTime.AsTime(),
+		//Index:         user.Index,
+		//Department:    user.Department,
+		//AllowedIP:     user.AllowedIP,
+		Username: user.Username,
+		Name:     user.Name,
+		//UserID:        user.UserID,
+		Avatar:   user.Avatar,
+		Password: user.Password,
+		Salt:     user.Salt,
+		Phone:    user.Phone,
+		Email:    user.Email,
+		Remark:   user.Remark,
+		//LastLoginTime: user.LastLoginTime.AsTime(),
+		//SanctionDate:  user.SanctionDate.AsTime(),
+		Status: int8(user.Status),
+		//ManagerID:     user.ManagerID,
+		//Manager:       user.Manager,
 	}
 }
 

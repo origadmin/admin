@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package schema implements the functions, types, and interfaces for the module.
 package schema
 
 import (
@@ -16,10 +17,8 @@ import (
 )
 
 const (
-	// UserStatusActivated represents the activated status of a user
 	UserStatusActivated = 0
-	// UserStatusFreezed represents the freezed status of a user
-	UserStatusFreezed = 1
+	UserStatusFreezed   = 1
 )
 
 // User holds the schema definition for the User domain.
@@ -30,22 +29,25 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldIndex("index"),
-		field.String("department").Default(""),
+		mixin.FieldUUID("uuid"),
 		field.String("allowed_ip").Default("0.0.0.0"),
-		field.String("username").MaxLen(64).Default(""),  // Username for login
+		field.String("username").MaxLen(32).Default(""),  // login username of user
+		field.String("nickname").MaxLen(64).Default(""),  // Nickname display name of user
+		field.String("avatar").MaxLen(256).Default(""),   // Avatar display avatar of user
 		field.String("name").MaxLen(64).Default(""),      // Name of user
-		field.String("user_id").Default(""),              // User ID
-		field.String("avatar").MaxLen(255).Default(""),   // Avatar of user
-		field.String("password").MaxLen(128).Default(""), // Password for login (encrypted)
-		field.String("salt").MaxLen(255).Default(""),     // Salt
-		field.String("phone").MaxLen(32).Default(""),     // Phone number of user
-		field.String("email").MaxLen(128).Default(""),    // Email of user
+		field.String("gender").MaxLen(16).Default(""),    // Gender of user
+		field.String("password").MaxLen(256).Default(""), // Password for login (encrypted)
+		field.String("salt").MaxLen(64).Default(""),      // Salt
+		field.String("phone").MaxLen(32).Default(""),     // login phone number of user
+		field.String("email").MaxLen(64).Default(""),     // login email of user
 		field.String("remark").MaxLen(1024).Default(""),  // Remark of user
+		field.String("token").MaxLen(512).Default(""),    // Token for login
+		field.Int8("status").Default(UserStatusActivated),
+		field.String("last_login_ip").MaxLen(32).Default(""),
 		mixin.FieldTime("last_login_time"),
 		mixin.FieldTime("sanction_date"),
-		field.Int8("status").Default(UserStatusActivated),
-		mixin.FieldID("manager_id"),         // 管理员ID
+		mixin.FieldFK("department_id"),
+		mixin.FieldFK("manager_id"),         // 管理员ID
 		field.String("manager").Default(""), // 管理员
 	}
 }
@@ -77,9 +79,17 @@ func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		// Roles of user
 		edge.To("roles", Role.Type).
-			// Ref("users").
-			// Field("role_id").
-			// Unique().
 			Through("user_roles", UserRole.Type),
+		// Posts of user
+		// edge.To("posts", Post.Type).
+		//	Through("user_posts", UserPost.Type),
+		// Departments of user
+		//edge.To("user_departments", UserDepartment.Type).
+		//	From("user").
+		//	Ref("user"),
+		//// Departments of user
+		edge.To("departments", Department.Type).
+			Through("user_departments", UserDepartment.Type),
+		//edge.To("user_departments", UserDepartment.Type),
 	}
 }

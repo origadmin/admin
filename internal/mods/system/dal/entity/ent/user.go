@@ -27,18 +27,18 @@ type User struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// Index holds the value of the "index" field.
 	Index int `json:"index,omitempty"`
-	// Department holds the value of the "department" field.
-	Department string `json:"department,omitempty"`
 	// AllowedIP holds the value of the "allowed_ip" field.
 	AllowedIP string `json:"allowed_ip,omitempty"`
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	// Nickname holds the value of the "nickname" field.
+	Nickname string `json:"nickname,omitempty"`
 	// Avatar holds the value of the "avatar" field.
 	Avatar string `json:"avatar,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
+	// Gender holds the value of the "gender" field.
+	Gender string `json:"gender,omitempty"`
 	// Password holds the value of the "password" field.
 	Password string `json:"password,omitempty"`
 	// Salt holds the value of the "salt" field.
@@ -49,12 +49,18 @@ type User struct {
 	Email string `json:"email,omitempty"`
 	// Remark holds the value of the "remark" field.
 	Remark string `json:"remark,omitempty"`
+	// Token holds the value of the "token" field.
+	Token string `json:"token,omitempty"`
+	// Status holds the value of the "status" field.
+	Status int8 `json:"status,omitempty"`
+	// LastLoginIP holds the value of the "last_login_ip" field.
+	LastLoginIP string `json:"last_login_ip,omitempty"`
 	// LastLoginTime holds the value of the "last_login_time" field.
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
 	// SanctionDate holds the value of the "sanction_date" field.
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
-	// Status holds the value of the "status" field.
-	Status int8 `json:"status,omitempty"`
+	// DepartmentID holds the value of the "department_id" field.
+	DepartmentID string `json:"department_id,omitempty"`
 	// ManagerID holds the value of the "manager_id" field.
 	ManagerID string `json:"manager_id,omitempty"`
 	// Manager holds the value of the "manager" field.
@@ -69,11 +75,15 @@ type User struct {
 type UserEdges struct {
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
+	// Departments holds the value of the departments edge.
+	Departments []*Department `json:"departments,omitempty"`
 	// UserRoles holds the value of the user_roles edge.
 	UserRoles []*UserRole `json:"user_roles,omitempty"`
+	// UserDepartments holds the value of the user_departments edge.
+	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [4]bool
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
@@ -85,13 +95,31 @@ func (e UserEdges) RolesOrErr() ([]*Role, error) {
 	return nil, &NotLoadedError{edge: "roles"}
 }
 
+// DepartmentsOrErr returns the Departments value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) DepartmentsOrErr() ([]*Department, error) {
+	if e.loadedTypes[1] {
+		return e.Departments, nil
+	}
+	return nil, &NotLoadedError{edge: "departments"}
+}
+
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
+}
+
+// UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) UserDepartmentsOrErr() ([]*UserDepartment, error) {
+	if e.loadedTypes[3] {
+		return e.UserDepartments, nil
+	}
+	return nil, &NotLoadedError{edge: "user_departments"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -101,7 +129,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldIndex, user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldDepartment, user.FieldAllowedIP, user.FieldUsername, user.FieldName, user.FieldUserID, user.FieldAvatar, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldManagerID, user.FieldManager:
+		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldDepartmentID, user.FieldManagerID, user.FieldManager:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldLastLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -156,12 +184,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Index = int(value.Int64)
 			}
-		case user.FieldDepartment:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field department", values[i])
-			} else if value.Valid {
-				u.Department = value.String
-			}
 		case user.FieldAllowedIP:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field allowed_ip", values[i])
@@ -174,23 +196,29 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Username = value.String
 			}
-		case user.FieldName:
+		case user.FieldNickname:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field name", values[i])
+				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
-				u.Name = value.String
-			}
-		case user.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				u.UserID = value.String
+				u.Nickname = value.String
 			}
 		case user.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field avatar", values[i])
 			} else if value.Valid {
 				u.Avatar = value.String
+			}
+		case user.FieldName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name", values[i])
+			} else if value.Valid {
+				u.Name = value.String
+			}
+		case user.FieldGender:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field gender", values[i])
+			} else if value.Valid {
+				u.Gender = value.String
 			}
 		case user.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -222,6 +250,24 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Remark = value.String
 			}
+		case user.FieldToken:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field token", values[i])
+			} else if value.Valid {
+				u.Token = value.String
+			}
+		case user.FieldStatus:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				u.Status = int8(value.Int64)
+			}
+		case user.FieldLastLoginIP:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field last_login_ip", values[i])
+			} else if value.Valid {
+				u.LastLoginIP = value.String
+			}
 		case user.FieldLastLoginTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field last_login_time", values[i])
@@ -234,11 +280,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.SanctionDate = value.Time
 			}
-		case user.FieldStatus:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field status", values[i])
+		case user.FieldDepartmentID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				u.Status = int8(value.Int64)
+				u.DepartmentID = value.String
 			}
 		case user.FieldManagerID:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -270,9 +316,19 @@ func (u *User) QueryRoles() *RoleQuery {
 	return NewUserClient(u.config).QueryRoles(u)
 }
 
+// QueryDepartments queries the "departments" edge of the User entity.
+func (u *User) QueryDepartments() *DepartmentQuery {
+	return NewUserClient(u.config).QueryDepartments(u)
+}
+
 // QueryUserRoles queries the "user_roles" edge of the User entity.
 func (u *User) QueryUserRoles() *UserRoleQuery {
 	return NewUserClient(u.config).QueryUserRoles(u)
+}
+
+// QueryUserDepartments queries the "user_departments" edge of the User entity.
+func (u *User) QueryUserDepartments() *UserDepartmentQuery {
+	return NewUserClient(u.config).QueryUserDepartments(u)
 }
 
 // Update returns a builder for updating this User.
@@ -313,23 +369,23 @@ func (u *User) String() string {
 	builder.WriteString("index=")
 	builder.WriteString(fmt.Sprintf("%v", u.Index))
 	builder.WriteString(", ")
-	builder.WriteString("department=")
-	builder.WriteString(u.Department)
-	builder.WriteString(", ")
 	builder.WriteString("allowed_ip=")
 	builder.WriteString(u.AllowedIP)
 	builder.WriteString(", ")
 	builder.WriteString("username=")
 	builder.WriteString(u.Username)
 	builder.WriteString(", ")
-	builder.WriteString("name=")
-	builder.WriteString(u.Name)
-	builder.WriteString(", ")
-	builder.WriteString("user_id=")
-	builder.WriteString(u.UserID)
+	builder.WriteString("nickname=")
+	builder.WriteString(u.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("avatar=")
 	builder.WriteString(u.Avatar)
+	builder.WriteString(", ")
+	builder.WriteString("name=")
+	builder.WriteString(u.Name)
+	builder.WriteString(", ")
+	builder.WriteString("gender=")
+	builder.WriteString(u.Gender)
 	builder.WriteString(", ")
 	builder.WriteString("password=")
 	builder.WriteString(u.Password)
@@ -346,14 +402,23 @@ func (u *User) String() string {
 	builder.WriteString("remark=")
 	builder.WriteString(u.Remark)
 	builder.WriteString(", ")
+	builder.WriteString("token=")
+	builder.WriteString(u.Token)
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", u.Status))
+	builder.WriteString(", ")
+	builder.WriteString("last_login_ip=")
+	builder.WriteString(u.LastLoginIP)
+	builder.WriteString(", ")
 	builder.WriteString("last_login_time=")
 	builder.WriteString(u.LastLoginTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("sanction_date=")
 	builder.WriteString(u.SanctionDate.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", u.Status))
+	builder.WriteString("department_id=")
+	builder.WriteString(u.DepartmentID)
 	builder.WriteString(", ")
 	builder.WriteString("manager_id=")
 	builder.WriteString(u.ManagerID)

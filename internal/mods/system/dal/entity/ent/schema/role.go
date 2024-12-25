@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package schema implements the functions, types, and interfaces for the module.
 package schema
 
 import (
@@ -23,7 +24,7 @@ type Role struct {
 // Fields of the Role.
 func (Role) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("code").MaxLen(32).Default(""),          // Code of role (unique)
+		field.String("keyword").MaxLen(32).Default(""),       // Code of role (unique)
 		field.String("name").MaxLen(128).Default(""),         // Display name of role
 		field.String("description").MaxLen(1024).Default(""), // Details about role
 		field.Int("sequence"),                                // Sequence for sorting
@@ -40,7 +41,7 @@ func (Role) Mixin() []ent.Mixin {
 // Indexes of the Role.
 func (Role) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("code"),
+		index.Fields("keyword"),
 		index.Fields("name"),
 		index.Fields("sequence"),
 		index.Fields("status"),
@@ -68,5 +69,8 @@ func (Role) Edges() []ent.Edge {
 			Ref("roles").
 			Through("user_roles", UserRole.Type), // .Field("user_id"),
 		// edge.From("users", User.Dialect).Ref("roles").StorageKey(edge.Table(config.c.FormatTableName("user_role")), edge.Column("role_id")).Unique(),
+		edge.To("permissions", Permission.Type).
+			StorageKey(edge.Columns("role_id", "permission_id")).
+			Through("role_permissions", RolePermission.Type),
 	}
 }

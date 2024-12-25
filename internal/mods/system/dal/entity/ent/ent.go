@@ -6,11 +6,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"reflect"
 	"sync"
@@ -78,12 +80,14 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			menu.Table:     menu.ValidColumn,
-			resource.Table: resource.ValidColumn,
-			role.Table:     role.ValidColumn,
-			rolemenu.Table: rolemenu.ValidColumn,
-			user.Table:     user.ValidColumn,
-			userrole.Table: userrole.ValidColumn,
+			department.Table:     department.ValidColumn,
+			menu.Table:           menu.ValidColumn,
+			resource.Table:       resource.ValidColumn,
+			role.Table:           role.ValidColumn,
+			rolemenu.Table:       rolemenu.ValidColumn,
+			user.Table:           user.ValidColumn,
+			userdepartment.Table: userdepartment.ValidColumn,
+			userrole.Table:       userrole.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

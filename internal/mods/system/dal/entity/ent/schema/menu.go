@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package schema implements the functions, types, and interfaces for the module.
 package schema
 
 import (
@@ -15,6 +16,19 @@ import (
 	"origadmin/application/admin/helpers/ent/mixin"
 )
 
+const (
+	MenuStatusActivated = 0
+	MenuStatusFreezed   = 1
+)
+
+const (
+	MenuTypeAction = 'A'
+	MenuTypeButton = 'B'
+	MenuTypeLink   = 'L'
+	MenuTypeMenu   = 'M'
+	MenuTypePage   = 'P'
+)
+
 // Menu holds the schema definition for the Menu domain.
 type Menu struct {
 	ent.Schema
@@ -23,16 +37,18 @@ type Menu struct {
 // Fields of the Menu.
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("code").MaxLen(32).Default(""),          // Code of menu (unique for each level)
+		field.String("keyword").MaxLen(32).Default(""),       // Code of menu (unique for each level)
 		field.String("name").MaxLen(128).Default(""),         // Display name of menu
 		field.String("description").MaxLen(1024).Default(""), // Details about menu
-		field.String("type").MaxLen(20).Default(""),          // Dialect of menu (page, button)
-		field.String("path").MaxLen(255).Default(""),         // Access path of menu
-		field.Int8("status").Default(0),
-		field.String("parent_id").MaxLen(36).Optional(),     // Parent ID (From Menu.ID)
+		field.Uint8("type").Default(MenuTypePage),            // Dialect of menu (Page,Button,Action,Menu,Link)
+		field.String("icon").MaxLen(32).Default(""),
+		field.String("path").MaxLen(255).Default(""), // Access path of menu
+		field.Int8("status").Default(MenuStatusActivated),
+		//field.String("parent_id").MaxLen(36).Default("").Optional(), // Parent UUID (From Menu.UUID)
+		mixin.FieldFKOptional("parent_id"),
 		field.String("parent_path").MaxLen(255).Default(""), // Parent path (split by .)
-		field.Int("sequence"),                               // Sequence for sorting (Order by desc)
-		field.Text("properties"),                            // Properties of menu (JSON)
+		field.Int("sequence").Default(0),                    // Sequence for sorting (Order by desc)
+		field.Text("properties").Default("").Optional(),     // Properties of menu (JSON)
 		// Resources of menu
 	}
 }
@@ -46,7 +62,7 @@ func (Menu) Mixin() []ent.Mixin {
 func (Menu) Indexes() []ent.Index {
 	return []ent.Index{
 		// Unique index
-		index.Fields("code"),
+		index.Fields("keyword"),
 		index.Fields("name"),
 		index.Fields("type"),
 		index.Fields("status"),
@@ -74,9 +90,11 @@ func (Menu) Edges() []ent.Edge {
 			Unique(),
 		edge.To("resources", Resource.Type),
 		edge.From("roles", Role.Type).
+			//Required().
 			Ref("menus").
-			// Field("role_id").
-			// Unique().
+			//Required().
+			//Field("role_id").
+			Unique().
 			Through("role_menus", RoleMenu.Type),
 	}
 }

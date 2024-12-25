@@ -51,16 +51,16 @@ func (mc *MenuCreate) SetNillableUpdateTime(t *time.Time) *MenuCreate {
 	return mc
 }
 
-// SetCode sets the "code" field.
-func (mc *MenuCreate) SetCode(s string) *MenuCreate {
-	mc.mutation.SetCode(s)
+// SetKeyword sets the "keyword" field.
+func (mc *MenuCreate) SetKeyword(s string) *MenuCreate {
+	mc.mutation.SetKeyword(s)
 	return mc
 }
 
-// SetNillableCode sets the "code" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableCode(s *string) *MenuCreate {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableKeyword(s *string) *MenuCreate {
 	if s != nil {
-		mc.SetCode(*s)
+		mc.SetKeyword(*s)
 	}
 	return mc
 }
@@ -94,15 +94,29 @@ func (mc *MenuCreate) SetNillableDescription(s *string) *MenuCreate {
 }
 
 // SetType sets the "type" field.
-func (mc *MenuCreate) SetType(s string) *MenuCreate {
-	mc.mutation.SetType(s)
+func (mc *MenuCreate) SetType(u uint8) *MenuCreate {
+	mc.mutation.SetType(u)
 	return mc
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableType(s *string) *MenuCreate {
+func (mc *MenuCreate) SetNillableType(u *uint8) *MenuCreate {
+	if u != nil {
+		mc.SetType(*u)
+	}
+	return mc
+}
+
+// SetIcon sets the "icon" field.
+func (mc *MenuCreate) SetIcon(s string) *MenuCreate {
+	mc.mutation.SetIcon(s)
+	return mc
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableIcon(s *string) *MenuCreate {
 	if s != nil {
-		mc.SetType(*s)
+		mc.SetIcon(*s)
 	}
 	return mc
 }
@@ -169,9 +183,25 @@ func (mc *MenuCreate) SetSequence(i int) *MenuCreate {
 	return mc
 }
 
+// SetNillableSequence sets the "sequence" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableSequence(i *int) *MenuCreate {
+	if i != nil {
+		mc.SetSequence(*i)
+	}
+	return mc
+}
+
 // SetProperties sets the "properties" field.
 func (mc *MenuCreate) SetProperties(s string) *MenuCreate {
 	mc.mutation.SetProperties(s)
+	return mc
+}
+
+// SetNillableProperties sets the "properties" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableProperties(s *string) *MenuCreate {
+	if s != nil {
+		mc.SetProperties(*s)
+	}
 	return mc
 }
 
@@ -289,9 +319,9 @@ func (mc *MenuCreate) defaults() {
 		v := menu.DefaultUpdateTime()
 		mc.mutation.SetUpdateTime(v)
 	}
-	if _, ok := mc.mutation.Code(); !ok {
-		v := menu.DefaultCode
-		mc.mutation.SetCode(v)
+	if _, ok := mc.mutation.Keyword(); !ok {
+		v := menu.DefaultKeyword
+		mc.mutation.SetKeyword(v)
 	}
 	if _, ok := mc.mutation.Name(); !ok {
 		v := menu.DefaultName
@@ -305,6 +335,10 @@ func (mc *MenuCreate) defaults() {
 		v := menu.DefaultType
 		mc.mutation.SetType(v)
 	}
+	if _, ok := mc.mutation.Icon(); !ok {
+		v := menu.DefaultIcon
+		mc.mutation.SetIcon(v)
+	}
 	if _, ok := mc.mutation.Path(); !ok {
 		v := menu.DefaultPath
 		mc.mutation.SetPath(v)
@@ -313,9 +347,21 @@ func (mc *MenuCreate) defaults() {
 		v := menu.DefaultStatus
 		mc.mutation.SetStatus(v)
 	}
+	if _, ok := mc.mutation.ParentID(); !ok {
+		v := menu.DefaultParentID
+		mc.mutation.SetParentID(v)
+	}
 	if _, ok := mc.mutation.ParentPath(); !ok {
 		v := menu.DefaultParentPath
 		mc.mutation.SetParentPath(v)
+	}
+	if _, ok := mc.mutation.Sequence(); !ok {
+		v := menu.DefaultSequence
+		mc.mutation.SetSequence(v)
+	}
+	if _, ok := mc.mutation.Properties(); !ok {
+		v := menu.DefaultProperties
+		mc.mutation.SetProperties(v)
 	}
 }
 
@@ -327,12 +373,12 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Menu.update_time"`)}
 	}
-	if _, ok := mc.mutation.Code(); !ok {
-		return &ValidationError{Name: "code", err: errors.New(`ent: missing required field "Menu.code"`)}
+	if _, ok := mc.mutation.Keyword(); !ok {
+		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Menu.keyword"`)}
 	}
-	if v, ok := mc.mutation.Code(); ok {
-		if err := menu.CodeValidator(v); err != nil {
-			return &ValidationError{Name: "code", err: fmt.Errorf(`ent: validator failed for field "Menu.code": %w`, err)}
+	if v, ok := mc.mutation.Keyword(); ok {
+		if err := menu.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Menu.keyword": %w`, err)}
 		}
 	}
 	if _, ok := mc.mutation.Name(); !ok {
@@ -354,9 +400,12 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Menu.type"`)}
 	}
-	if v, ok := mc.mutation.GetType(); ok {
-		if err := menu.TypeValidator(v); err != nil {
-			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Menu.type": %w`, err)}
+	if _, ok := mc.mutation.Icon(); !ok {
+		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "Menu.icon"`)}
+	}
+	if v, ok := mc.mutation.Icon(); ok {
+		if err := menu.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Menu.icon": %w`, err)}
 		}
 	}
 	if _, ok := mc.mutation.Path(); !ok {
@@ -385,9 +434,6 @@ func (mc *MenuCreate) check() error {
 	}
 	if _, ok := mc.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Menu.sequence"`)}
-	}
-	if _, ok := mc.mutation.Properties(); !ok {
-		return &ValidationError{Name: "properties", err: errors.New(`ent: missing required field "Menu.properties"`)}
 	}
 	if v, ok := mc.mutation.ID(); ok {
 		if err := menu.IDValidator(v); err != nil {
@@ -437,9 +483,9 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := mc.mutation.Code(); ok {
-		_spec.SetField(menu.FieldCode, field.TypeString, value)
-		_node.Code = value
+	if value, ok := mc.mutation.Keyword(); ok {
+		_spec.SetField(menu.FieldKeyword, field.TypeString, value)
+		_node.Keyword = value
 	}
 	if value, ok := mc.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
@@ -450,8 +496,12 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_node.Description = value
 	}
 	if value, ok := mc.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeString, value)
+		_spec.SetField(menu.FieldType, field.TypeUint8, value)
 		_node.Type = value
+	}
+	if value, ok := mc.mutation.Icon(); ok {
+		_spec.SetField(menu.FieldIcon, field.TypeString, value)
+		_node.Icon = value
 	}
 	if value, ok := mc.mutation.Path(); ok {
 		_spec.SetField(menu.FieldPath, field.TypeString, value)
@@ -536,10 +586,6 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RoleMenuCreate{config: mc.config, mutation: newRoleMenuMutation(mc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := mc.mutation.RoleMenusIDs(); len(nodes) > 0 {
@@ -564,7 +610,20 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 // SetMenu set the Menu
 func (mc *MenuCreate) SetMenu(input *Menu, fields ...string) *MenuCreate {
 	m := mc.mutation
+	if len(fields) == 0 {
+		fields = menu.Columns
+	}
 	_ = m.SetFields(input, fields...)
+	return mc
+}
+
+// SetMenuWithZero set the Menu
+func (mc *MenuCreate) SetMenuWithZero(input *Menu, fields ...string) *MenuCreate {
+	m := mc.mutation
+	if len(fields) == 0 {
+		fields = menu.Columns
+	}
+	_ = m.SetFieldsWithZero(input, fields...)
 	return mc
 }
 

@@ -4,7 +4,7 @@
 {{ define "meta/additional/fields" }}
 
 	// SelectColumns returns all selected fields.
-	func SelectColumns(fields ...string) []string  {
+	func SelectColumns(fields []string) []string  {
 	// Default removal FieldID
 	filteredFields := make([]string, 0, len(fields))
 	for _, field := range fields {
@@ -47,5 +47,4 @@
 	}
 	return false
 	}
-
 {{ end }}

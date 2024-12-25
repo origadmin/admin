@@ -16,14 +16,10 @@ import (
 )
 
 type (
-	Menu                = ent.Menu
-	MenuPB              = pb.Menu
-	MenuEdges           = ent.MenuEdges
-	MenuEdgesPB         = pb.MenuEdges
-	MenuResource        = ent.MenuResource
-	MenuResourcePB      = pb.MenuResource
-	MenuResourceEdges   = ent.MenuResourceEdges
-	MenuResourceEdgesPB = pb.MenuResourceEdges
+	Menu        = ent.Menu
+	MenuPB      = pb.Menu
+	MenuEdges   = ent.MenuEdges
+	MenuEdgesPB = pb.MenuEdges
 
 	ListMenusRequest  = pb.ListMenusRequest
 	ListMenusResponse = pb.ListMenusResponse
@@ -34,7 +30,19 @@ func MenuObject(menu *MenuPB) *Menu {
 		return nil
 	}
 	return &Menu{
-		ID: menu.Id,
+		ID:          menu.Id,
+		CreateTime:  menu.CreateTime.AsTime(),
+		UpdateTime:  menu.UpdateTime.AsTime(),
+		Code:        menu.Code,
+		Name:        menu.Name,
+		Description: menu.Description,
+		Type:        menu.Type,
+		Path:        menu.Path,
+		Status:      int8(menu.Status),
+		ParentID:    menu.ParentId,
+		ParentPath:  menu.ParentPath,
+		Sequence:    int(menu.Sequence),
+		Properties:  menu.Properties,
 	}
 }
 
@@ -91,14 +99,6 @@ func ConvertMenus(menus []*Menu) []*MenuPB {
 	var result []*MenuPB
 	for _, menu := range menus {
 		result = append(result, ConvertMenu2PB(menu))
-	}
-	return result
-}
-
-func ConvertMenuResources(resources []*MenuResource) []*MenuResourcePB {
-	var result []*MenuResourcePB
-	for _, menu := range resources {
-		result = append(result, ConvertMenuResource2PB(menu))
 	}
 	return result
 }

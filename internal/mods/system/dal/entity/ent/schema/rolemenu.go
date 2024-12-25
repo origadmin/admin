@@ -2,6 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package schema implements the functions, types, and interfaces for the module.
 package schema
 
 import (
@@ -9,7 +10,6 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
-	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
@@ -23,21 +23,25 @@ type RoleMenu struct {
 // Fields of the RoleMenu.
 func (RoleMenu) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("role_id").MaxLen(36), // From Role.ID
-		field.String("menu_id").MaxLen(36), // From Menu.ID
+		mixin.FieldFK("role_id"), // From Role.ID
+		mixin.FieldFK("menu_id"), // From Menu.ID
 	}
 }
 
 // Mixin of the RoleMenu.
 func (RoleMenu) Mixin() []ent.Mixin {
-	return mixin.ModelMixin
+	return []ent.Mixin{
+		mixin.ID{},
+	}
 }
 
 // Indexes of the RoleMenu.
 func (RoleMenu) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("role_id"),
-		index.Fields("menu_id"),
+		index.Fields("role_id"), // From Role.ID
+		index.Fields("menu_id"), // From Menu.ID
+		index.Fields("role_id", "menu_id").
+			Unique(),
 	}
 }
 
