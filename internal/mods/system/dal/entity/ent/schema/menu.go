@@ -45,7 +45,7 @@ func (Menu) Fields() []ent.Field {
 		field.String("path").MaxLen(255).Default(""), // Access path of menu
 		field.Int8("status").Default(MenuStatusActivated),
 		//field.String("parent_id").MaxLen(36).Default("").Optional(), // Parent UUID (From Menu.UUID)
-		mixin.FieldOpID("parent_id"),
+		mixin.FieldOP("parent_id"),
 		field.String("parent_path").MaxLen(255).Default(""), // Parent path (split by .)
 		field.Int("sequence").Default(0),                    // Sequence for sorting (Order by desc)
 		field.Text("properties").Default("").Optional(),     // Properties of menu (JSON)

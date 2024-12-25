@@ -46,24 +46,28 @@ type ID struct {
 }
 
 // Fields of the mixin.
-func (ID) Fields() []ent.Field {
+func (obj ID) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("id").
-			Positive().
-			Unique().
-			Immutable(),
-		//field.Int("id").
-		//	Unique().
-		//	Positive().
-		//	Immutable(),
+		obj.PK("id"),
 	}
 }
 
 func (ID) FK(name string) ent.Field {
 	return field.Int(name).
 		Positive()
-	//Optional()
-	//Immutable()
+}
+
+func (ID) PK(name string) ent.Field {
+	return field.Int(name).
+		Positive().
+		Unique().
+		Immutable()
+}
+
+func (ID) OP(name string) ent.Field {
+	return field.Int(name).
+		Positive().
+		Optional()
 }
 
 // Audit schema to include control and time fields.

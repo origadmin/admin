@@ -21,17 +21,18 @@ func FieldIndex(name string) ent.Field {
 	return field.Int(name).Unique()
 
 }
+func FieldPK(name string) ent.Field {
+	return ID{}.PK(name)
+}
 
 func FieldFK(name string) ent.Field {
 	return ID{}.FK(name)
 }
 
-// FieldOpID returns an optional string field with a maximum length of 36 characters.
-func FieldOpID(name string) ent.Field {
+// FieldOP returns an optional string field with a maximum length of 36 characters.
+func FieldOP(name string) ent.Field {
 	// Create an optional string field with the given name and maximum length.
-	return field.Int(name).
-		Positive().
-		Optional()
+	return ID{}.OP(name)
 }
 
 func FieldUUID(name string) ent.Field {
