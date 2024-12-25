@@ -20,20 +20,28 @@ type UUID struct {
 }
 
 // Fields of the mixin.
-func (UUID) Fields() []ent.Field {
+func (obj UUID) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").
-			MaxLen(36).
-			Unique().
-			Immutable(),
+		obj.PK("id"),
 	}
 }
 
-func (UUID) FK(name string) ent.Field {
+func (obj UUID) FK(name string) ent.Field {
+	return field.String(name).
+		MaxLen(36)
+}
+
+func (UUID) PK(name string) ent.Field {
 	return field.String(name).
 		MaxLen(36).
-		Optional().
+		Unique().
 		Immutable()
+}
+
+func (UUID) OP(name string) ent.Field {
+	return field.String(name).
+		MaxLen(36).
+		Optional()
 }
 
 // Indexes of the mixin.
