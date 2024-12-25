@@ -132,8 +132,8 @@ func (rmq *RoleMenuQuery) FirstX(ctx context.Context) *RoleMenu {
 
 // FirstID returns the first RoleMenu ID from the query.
 // Returns a *NotFoundError when no RoleMenu ID was found.
-func (rmq *RoleMenuQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rmq *RoleMenuQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = rmq.Limit(1).IDs(setContextOp(ctx, rmq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (rmq *RoleMenuQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rmq *RoleMenuQuery) FirstIDX(ctx context.Context) string {
+func (rmq *RoleMenuQuery) FirstIDX(ctx context.Context) int {
 	id, err := rmq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (rmq *RoleMenuQuery) OnlyX(ctx context.Context) *RoleMenu {
 // OnlyID is like Only, but returns the only RoleMenu ID in the query.
 // Returns a *NotSingularError when more than one RoleMenu ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rmq *RoleMenuQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rmq *RoleMenuQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = rmq.Limit(2).IDs(setContextOp(ctx, rmq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (rmq *RoleMenuQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rmq *RoleMenuQuery) OnlyIDX(ctx context.Context) string {
+func (rmq *RoleMenuQuery) OnlyIDX(ctx context.Context) int {
 	id, err := rmq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (rmq *RoleMenuQuery) AllX(ctx context.Context) []*RoleMenu {
 }
 
 // IDs executes the query and returns a list of RoleMenu IDs.
-func (rmq *RoleMenuQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (rmq *RoleMenuQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if rmq.ctx.Unique == nil && rmq.path != nil {
 		rmq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (rmq *RoleMenuQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rmq *RoleMenuQuery) IDsX(ctx context.Context) []string {
+func (rmq *RoleMenuQuery) IDsX(ctx context.Context) []int {
 	ids, err := rmq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,7 +337,7 @@ func (rmq *RoleMenuQuery) WithMenu(opts ...func(*MenuQuery)) *RoleMenuQuery {
 // Example:
 //
 //	var v []struct {
-//		RoleID string `json:"role_id,omitempty"`
+//		RoleID int `json:"role_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (rmq *RoleMenuQuery) GroupBy(field string, fields ...string) *RoleMenuGroup
 // Example:
 //
 //	var v []struct {
-//		RoleID string `json:"role_id,omitempty"`
+//		RoleID int `json:"role_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
@@ -451,8 +451,8 @@ func (rmq *RoleMenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Ro
 }
 
 func (rmq *RoleMenuQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*RoleMenu, init func(*RoleMenu), assign func(*RoleMenu, *Role)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RoleMenu)
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*RoleMenu)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (rmq *RoleMenuQuery) loadRole(ctx context.Context, query *RoleQuery, nodes 
 	return nil
 }
 func (rmq *RoleMenuQuery) loadMenu(ctx context.Context, query *MenuQuery, nodes []*RoleMenu, init func(*RoleMenu), assign func(*RoleMenu, *Menu)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RoleMenu)
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*RoleMenu)
 	for i := range nodes {
 		fk := nodes[i].MenuID
 		if _, ok := nodeids[fk]; !ok {
@@ -522,7 +522,7 @@ func (rmq *RoleMenuQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (rmq *RoleMenuQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(rolemenu.Table, rolemenu.Columns, sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeString))
+	_spec := sqlgraph.NewQuerySpec(rolemenu.Table, rolemenu.Columns, sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt))
 	_spec.From = rmq.sql
 	if unique := rmq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,8 +639,8 @@ func (rmq *RoleMenuQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleMenuSe
 // Example:
 //
 //	var v []struct {
-//	  RoleID string `json:"role_id,omitempty"`
-//	  MenuID string `json:"menu_id,omitempty"`
+//	  RoleID int `json:"role_id,omitempty"`
+//	  MenuID int `json:"menu_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().

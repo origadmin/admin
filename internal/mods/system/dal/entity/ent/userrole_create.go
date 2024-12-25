@@ -22,20 +22,20 @@ type UserRoleCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (urc *UserRoleCreate) SetUserID(s string) *UserRoleCreate {
-	urc.mutation.SetUserID(s)
+func (urc *UserRoleCreate) SetUserID(i int) *UserRoleCreate {
+	urc.mutation.SetUserID(i)
 	return urc
 }
 
 // SetRoleID sets the "role_id" field.
-func (urc *UserRoleCreate) SetRoleID(s string) *UserRoleCreate {
-	urc.mutation.SetRoleID(s)
+func (urc *UserRoleCreate) SetRoleID(i int) *UserRoleCreate {
+	urc.mutation.SetRoleID(i)
 	return urc
 }
 
 // SetID sets the "id" field.
-func (urc *UserRoleCreate) SetID(s string) *UserRoleCreate {
-	urc.mutation.SetID(s)
+func (urc *UserRoleCreate) SetID(i int) *UserRoleCreate {
+	urc.mutation.SetID(i)
 	return urc
 }
 
@@ -124,12 +124,9 @@ func (urc *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected UserRole.ID type: %T", _spec.ID.Value)
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
 	}
 	urc.mutation.id = &_node.ID
 	urc.mutation.done = true
@@ -139,7 +136,7 @@ func (urc *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
 func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserRole{config: urc.config}
-		_spec = sqlgraph.NewCreateSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeString))
+		_spec = sqlgraph.NewCreateSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
 	)
 	if id, ok := urc.mutation.ID(); ok {
 		_node.ID = id
@@ -153,7 +150,7 @@ func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 			Columns: []string{userrole.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -170,7 +167,7 @@ func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 			Columns: []string{userrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -246,6 +243,10 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

@@ -57,11 +57,11 @@ func ValidColumn(column string) bool {
 
 var (
 	// UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
-	UserIDValidator func(string) error
+	UserIDValidator func(int) error
 	// RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
-	RoleIDValidator func(string) error
+	RoleIDValidator func(int) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the UserRole queries.

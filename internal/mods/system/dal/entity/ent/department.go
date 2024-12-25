@@ -16,7 +16,7 @@ import (
 type Department struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
@@ -41,11 +41,13 @@ type Department struct {
 type DepartmentEdges struct {
 	// Users holds the value of the users edge.
 	Users []*User `json:"users,omitempty"`
+	// Positions holds the value of the positions edge.
+	Positions []*Position `json:"positions,omitempty"`
 	// UserDepartments holds the value of the user_departments edge.
 	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -57,10 +59,19 @@ func (e DepartmentEdges) UsersOrErr() ([]*User, error) {
 	return nil, &NotLoadedError{edge: "users"}
 }
 
+// PositionsOrErr returns the Positions value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) PositionsOrErr() ([]*Position, error) {
+	if e.loadedTypes[1] {
+		return e.Positions, nil
+	}
+	return nil, &NotLoadedError{edge: "positions"}
+}
+
 // UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) UserDepartmentsOrErr() ([]*UserDepartment, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.UserDepartments, nil
 	}
 	return nil, &NotLoadedError{edge: "user_departments"}
@@ -71,9 +82,9 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case department.FieldSequence, department.FieldStatus:
+		case department.FieldID, department.FieldSequence, department.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case department.FieldID, department.FieldKeyword, department.FieldName, department.FieldDescription:
+		case department.FieldKeyword, department.FieldName, department.FieldDescription:
 			values[i] = new(sql.NullString)
 		case department.FieldCreateTime, department.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -93,11 +104,11 @@ func (d *Department) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case department.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				d.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			d.ID = int(value.Int64)
 		case department.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -156,6 +167,11 @@ func (d *Department) Value(name string) (ent.Value, error) {
 // QueryUsers queries the "users" edge of the Department entity.
 func (d *Department) QueryUsers() *UserQuery {
 	return NewDepartmentClient(d.config).QueryUsers(d)
+}
+
+// QueryPositions queries the "positions" edge of the Department entity.
+func (d *Department) QueryPositions() *PositionQuery {
+	return NewDepartmentClient(d.config).QueryPositions(d)
 }
 
 // QueryUserDepartments queries the "user_departments" edge of the Department entity.

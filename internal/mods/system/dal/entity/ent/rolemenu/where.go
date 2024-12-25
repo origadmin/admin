@@ -10,198 +10,98 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id string) predicate.RoleMenu {
+func ID(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id string) predicate.RoleMenu {
+func IDEQ(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id string) predicate.RoleMenu {
+func IDNEQ(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...string) predicate.RoleMenu {
+func IDIn(ids ...int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...string) predicate.RoleMenu {
+func IDNotIn(ids ...int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id string) predicate.RoleMenu {
+func IDGT(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id string) predicate.RoleMenu {
+func IDGTE(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id string) predicate.RoleMenu {
+func IDLT(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id string) predicate.RoleMenu {
+func IDLTE(id int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldLTE(FieldID, id))
 }
 
-// IDEqualFold applies the EqualFold predicate on the ID field.
-func IDEqualFold(id string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldEqualFold(FieldID, id))
-}
-
-// IDContainsFold applies the ContainsFold predicate on the ID field.
-func IDContainsFold(id string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldContainsFold(FieldID, id))
-}
-
 // RoleID applies equality check predicate on the "role_id" field. It's identical to RoleIDEQ.
-func RoleID(v string) predicate.RoleMenu {
+func RoleID(v int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldEQ(FieldRoleID, v))
 }
 
 // MenuID applies equality check predicate on the "menu_id" field. It's identical to MenuIDEQ.
-func MenuID(v string) predicate.RoleMenu {
+func MenuID(v int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldEQ(FieldMenuID, v))
 }
 
 // RoleIDEQ applies the EQ predicate on the "role_id" field.
-func RoleIDEQ(v string) predicate.RoleMenu {
+func RoleIDEQ(v int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldEQ(FieldRoleID, v))
 }
 
 // RoleIDNEQ applies the NEQ predicate on the "role_id" field.
-func RoleIDNEQ(v string) predicate.RoleMenu {
+func RoleIDNEQ(v int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldNEQ(FieldRoleID, v))
 }
 
 // RoleIDIn applies the In predicate on the "role_id" field.
-func RoleIDIn(vs ...string) predicate.RoleMenu {
+func RoleIDIn(vs ...int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldIn(FieldRoleID, vs...))
 }
 
 // RoleIDNotIn applies the NotIn predicate on the "role_id" field.
-func RoleIDNotIn(vs ...string) predicate.RoleMenu {
+func RoleIDNotIn(vs ...int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldNotIn(FieldRoleID, vs...))
 }
 
-// RoleIDGT applies the GT predicate on the "role_id" field.
-func RoleIDGT(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldGT(FieldRoleID, v))
-}
-
-// RoleIDGTE applies the GTE predicate on the "role_id" field.
-func RoleIDGTE(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldGTE(FieldRoleID, v))
-}
-
-// RoleIDLT applies the LT predicate on the "role_id" field.
-func RoleIDLT(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldLT(FieldRoleID, v))
-}
-
-// RoleIDLTE applies the LTE predicate on the "role_id" field.
-func RoleIDLTE(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldLTE(FieldRoleID, v))
-}
-
-// RoleIDContains applies the Contains predicate on the "role_id" field.
-func RoleIDContains(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldContains(FieldRoleID, v))
-}
-
-// RoleIDHasPrefix applies the HasPrefix predicate on the "role_id" field.
-func RoleIDHasPrefix(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldHasPrefix(FieldRoleID, v))
-}
-
-// RoleIDHasSuffix applies the HasSuffix predicate on the "role_id" field.
-func RoleIDHasSuffix(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldHasSuffix(FieldRoleID, v))
-}
-
-// RoleIDEqualFold applies the EqualFold predicate on the "role_id" field.
-func RoleIDEqualFold(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldEqualFold(FieldRoleID, v))
-}
-
-// RoleIDContainsFold applies the ContainsFold predicate on the "role_id" field.
-func RoleIDContainsFold(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldContainsFold(FieldRoleID, v))
-}
-
 // MenuIDEQ applies the EQ predicate on the "menu_id" field.
-func MenuIDEQ(v string) predicate.RoleMenu {
+func MenuIDEQ(v int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldEQ(FieldMenuID, v))
 }
 
 // MenuIDNEQ applies the NEQ predicate on the "menu_id" field.
-func MenuIDNEQ(v string) predicate.RoleMenu {
+func MenuIDNEQ(v int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldNEQ(FieldMenuID, v))
 }
 
 // MenuIDIn applies the In predicate on the "menu_id" field.
-func MenuIDIn(vs ...string) predicate.RoleMenu {
+func MenuIDIn(vs ...int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldIn(FieldMenuID, vs...))
 }
 
 // MenuIDNotIn applies the NotIn predicate on the "menu_id" field.
-func MenuIDNotIn(vs ...string) predicate.RoleMenu {
+func MenuIDNotIn(vs ...int) predicate.RoleMenu {
 	return predicate.RoleMenu(sql.FieldNotIn(FieldMenuID, vs...))
-}
-
-// MenuIDGT applies the GT predicate on the "menu_id" field.
-func MenuIDGT(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldGT(FieldMenuID, v))
-}
-
-// MenuIDGTE applies the GTE predicate on the "menu_id" field.
-func MenuIDGTE(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldGTE(FieldMenuID, v))
-}
-
-// MenuIDLT applies the LT predicate on the "menu_id" field.
-func MenuIDLT(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldLT(FieldMenuID, v))
-}
-
-// MenuIDLTE applies the LTE predicate on the "menu_id" field.
-func MenuIDLTE(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldLTE(FieldMenuID, v))
-}
-
-// MenuIDContains applies the Contains predicate on the "menu_id" field.
-func MenuIDContains(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldContains(FieldMenuID, v))
-}
-
-// MenuIDHasPrefix applies the HasPrefix predicate on the "menu_id" field.
-func MenuIDHasPrefix(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldHasPrefix(FieldMenuID, v))
-}
-
-// MenuIDHasSuffix applies the HasSuffix predicate on the "menu_id" field.
-func MenuIDHasSuffix(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldHasSuffix(FieldMenuID, v))
-}
-
-// MenuIDEqualFold applies the EqualFold predicate on the "menu_id" field.
-func MenuIDEqualFold(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldEqualFold(FieldMenuID, v))
-}
-
-// MenuIDContainsFold applies the ContainsFold predicate on the "menu_id" field.
-func MenuIDContainsFold(v string) predicate.RoleMenu {
-	return predicate.RoleMenu(sql.FieldContainsFold(FieldMenuID, v))
 }
 
 // HasRole applies the HasEdge predicate on the "role" edge.

@@ -16,7 +16,7 @@ import (
 type Menu struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
@@ -36,7 +36,7 @@ type Menu struct {
 	// Status holds the value of the "status" field.
 	Status int8 `json:"status,omitempty"`
 	// ParentID holds the value of the "parent_id" field.
-	ParentID string `json:"parent_id,omitempty"`
+	ParentID int `json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
 	ParentPath string `json:"parent_path,omitempty"`
 	// Sequence holds the value of the "sequence" field.
@@ -118,9 +118,9 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldType, menu.FieldStatus, menu.FieldSequence:
+		case menu.FieldID, menu.FieldType, menu.FieldStatus, menu.FieldParentID, menu.FieldSequence:
 			values[i] = new(sql.NullInt64)
-		case menu.FieldID, menu.FieldKeyword, menu.FieldName, menu.FieldDescription, menu.FieldIcon, menu.FieldPath, menu.FieldParentID, menu.FieldParentPath, menu.FieldProperties:
+		case menu.FieldKeyword, menu.FieldName, menu.FieldDescription, menu.FieldIcon, menu.FieldPath, menu.FieldParentPath, menu.FieldProperties:
 			values[i] = new(sql.NullString)
 		case menu.FieldCreateTime, menu.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -140,11 +140,11 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case menu.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				m.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			m.ID = int(value.Int64)
 		case menu.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -200,10 +200,10 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				m.Status = int8(value.Int64)
 			}
 		case menu.FieldParentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				m.ParentID = value.String
+				m.ParentID = int(value.Int64)
 			}
 		case menu.FieldParentPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -312,7 +312,7 @@ func (m *Menu) String() string {
 	builder.WriteString(fmt.Sprintf("%v", m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
-	builder.WriteString(m.ParentID)
+	builder.WriteString(fmt.Sprintf("%v", m.ParentID))
 	builder.WriteString(", ")
 	builder.WriteString("parent_path=")
 	builder.WriteString(m.ParentPath)

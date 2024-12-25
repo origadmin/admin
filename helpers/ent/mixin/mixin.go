@@ -29,6 +29,13 @@ func (UUID) Fields() []ent.Field {
 	}
 }
 
+func (UUID) FK(name string) ent.Field {
+	return field.String(name).
+		MaxLen(36).
+		Optional().
+		Immutable()
+}
+
 // Indexes of the mixin.
 func (UUID) Indexes() []ent.Index {
 	return []ent.Index{}
@@ -42,10 +49,21 @@ type ID struct {
 func (ID) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").
-			Unique().
 			Positive().
+			Unique().
 			Immutable(),
+		//field.Int("id").
+		//	Unique().
+		//	Positive().
+		//	Immutable(),
 	}
+}
+
+func (ID) FK(name string) ent.Field {
+	return field.Int(name).
+		Positive()
+	//Optional()
+	//Immutable()
 }
 
 // Audit schema to include control and time fields.

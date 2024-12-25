@@ -16,16 +16,24 @@ type Tx struct {
 	Department *DepartmentClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// Permission is the client for interacting with the Permission builders.
+	Permission *PermissionClient
+	// Position is the client for interacting with the Position builders.
+	Position *PositionClient
 	// Resource is the client for interacting with the Resource builders.
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 	// RoleMenu is the client for interacting with the RoleMenu builders.
 	RoleMenu *RoleMenuClient
+	// RolePermission is the client for interacting with the RolePermission builders.
+	RolePermission *RolePermissionClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 	// UserDepartment is the client for interacting with the UserDepartment builders.
 	UserDepartment *UserDepartmentClient
+	// UserPosition is the client for interacting with the UserPosition builders.
+	UserPosition *UserPositionClient
 	// UserRole is the client for interacting with the UserRole builders.
 	UserRole *UserRoleClient
 
@@ -161,11 +169,15 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
+	tx.Permission = NewPermissionClient(tx.config)
+	tx.Position = NewPositionClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.RoleMenu = NewRoleMenuClient(tx.config)
+	tx.RolePermission = NewRolePermissionClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserDepartment = NewUserDepartmentClient(tx.config)
+	tx.UserPosition = NewUserPositionClient(tx.config)
 	tx.UserRole = NewUserRoleClient(tx.config)
 }
 

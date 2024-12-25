@@ -23,7 +23,7 @@ func (Position) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").MaxLen(64).Unique(),
 		field.String("description").MaxLen(256),
-		mixin.FieldFK("department_id"),
+		mixin.FieldOpID("department_id"),
 	}
 }
 
@@ -38,8 +38,8 @@ func (Position) Edges() []ent.Edge {
 		edge.From("department", Department.Type).
 			Ref("positions").
 			Field("department_id").
-			Unique().
-			Required(),
+			Unique(),
+		//Required(),
 		edge.To("user_positions", UserPosition.Type),
 	}
 }

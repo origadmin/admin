@@ -8,11 +8,15 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userposition"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"reflect"
 	"sync"
@@ -82,11 +86,15 @@ func checkColumn(table, column string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			department.Table:     department.ValidColumn,
 			menu.Table:           menu.ValidColumn,
+			permission.Table:     permission.ValidColumn,
+			position.Table:       position.ValidColumn,
 			resource.Table:       resource.ValidColumn,
 			role.Table:           role.ValidColumn,
 			rolemenu.Table:       rolemenu.ValidColumn,
+			rolepermission.Table: rolepermission.ValidColumn,
 			user.Table:           user.ValidColumn,
 			userdepartment.Table: userdepartment.ValidColumn,
+			userposition.Table:   userposition.ValidColumn,
 			userrole.Table:       userrole.ValidColumn,
 		})
 	})

@@ -47,12 +47,10 @@ func (RolePermission) Indexes() []ent.Index {
 func (RolePermission) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("role", Role.Type).
-			//Ref("role_permissions").
 			Field("role_id").
 			Unique().
 			Required(),
 		edge.To("permission", Permission.Type).
-			//Ref("role_permissions").
 			Field("permission_id").
 			Unique().
 			Required(),

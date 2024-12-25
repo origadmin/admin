@@ -57,19 +57,18 @@ func (RoleMenu) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("role", Role.Type).
 			Field("role_id").
-			// StorageKey(edge.Column("role_id")).
+			//Through("role_menus", RoleMenu.Type).
 			Required().
 			Unique(),
 		edge.To("menu", Menu.Type).
 			Field("menu_id").
-			// StorageKey(edge.Column("menu_id")).
 			Required().
 			Unique(),
-		// edge.From("role", Role.Type).
-		//     Ref("role_menus").
-		//     Field("role_id"),
-		// edge.From("menu", Menu.Type).
-		//     Ref("role_menus").
-		//     Field("role_id"),
+		//edge.From("role", Role.Type).
+		//	Ref("role_menus").
+		//	Field("role_id").Unique(),
+		//edge.From("menu", Menu.Type).
+		//	Ref("role_menus").
+		//	Field("menu_id").Unique(),
 	}
 }

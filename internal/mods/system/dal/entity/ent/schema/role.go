@@ -61,6 +61,9 @@ func (Role) Edges() []ent.Edge {
 		edge.To("menus", Menu.Type).
 			StorageKey(edge.Columns("role_id", "menu_id")).
 			Through("role_menus", RoleMenu.Type),
+		//edge.To("role_menus", RoleMenu.Type),
+		//Field("role_id").
+		//Unique(),
 		// edge.To("menus", Menu.Dialect).StorageKey(edge.Column("menu_id")),
 		// edge.To("users", User.Type).
 		//     StorageKey(edge.Columns("user_id", "role_id")).

@@ -8,9 +8,11 @@ import (
 	"fmt"
 	"math"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 
@@ -24,15 +26,17 @@ import (
 // RoleQuery is the builder for querying Role entities.
 type RoleQuery struct {
 	config
-	ctx           *QueryContext
-	order         []role.OrderOption
-	inters        []Interceptor
-	predicates    []predicate.Role
-	withMenus     *MenuQuery
-	withUsers     *UserQuery
-	withRoleMenus *RoleMenuQuery
-	withUserRoles *UserRoleQuery
-	modifiers     []func(*sql.Selector)
+	ctx                 *QueryContext
+	order               []role.OrderOption
+	inters              []Interceptor
+	predicates          []predicate.Role
+	withMenus           *MenuQuery
+	withUsers           *UserQuery
+	withPermissions     *PermissionQuery
+	withRoleMenus       *RoleMenuQuery
+	withUserRoles       *UserRoleQuery
+	withRolePermissions *RolePermissionQuery
+	modifiers           []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -113,6 +117,28 @@ func (rq *RoleQuery) QueryUsers() *UserQuery {
 	return query
 }
 
+// QueryPermissions chains the current query on the "permissions" edge.
+func (rq *RoleQuery) QueryPermissions() *PermissionQuery {
+	query := (&PermissionClient{config: rq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := rq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, selector),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, role.PermissionsTable, role.PermissionsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
 // QueryRoleMenus chains the current query on the "role_menus" edge.
 func (rq *RoleQuery) QueryRoleMenus() *RoleMenuQuery {
 	query := (&RoleMenuClient{config: rq.config}).Query()
@@ -157,6 +183,28 @@ func (rq *RoleQuery) QueryUserRoles() *UserRoleQuery {
 	return query
 }
 
+// QueryRolePermissions chains the current query on the "role_permissions" edge.
+func (rq *RoleQuery) QueryRolePermissions() *RolePermissionQuery {
+	query := (&RolePermissionClient{config: rq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := rq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, selector),
+			sqlgraph.To(rolepermission.Table, rolepermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, role.RolePermissionsTable, role.RolePermissionsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
 // First returns the first Role entity from the query.
 // Returns a *NotFoundError when no Role was found.
 func (rq *RoleQuery) First(ctx context.Context) (*Role, error) {
@@ -181,8 +229,8 @@ func (rq *RoleQuery) FirstX(ctx context.Context) *Role {
 
 // FirstID returns the first Role ID from the query.
 // Returns a *NotFoundError when no Role ID was found.
-func (rq *RoleQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rq *RoleQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = rq.Limit(1).IDs(setContextOp(ctx, rq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -194,7 +242,7 @@ func (rq *RoleQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RoleQuery) FirstIDX(ctx context.Context) string {
+func (rq *RoleQuery) FirstIDX(ctx context.Context) int {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -232,8 +280,8 @@ func (rq *RoleQuery) OnlyX(ctx context.Context) *Role {
 // OnlyID is like Only, but returns the only Role ID in the query.
 // Returns a *NotSingularError when more than one Role ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RoleQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rq *RoleQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = rq.Limit(2).IDs(setContextOp(ctx, rq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -249,7 +297,7 @@ func (rq *RoleQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RoleQuery) OnlyIDX(ctx context.Context) string {
+func (rq *RoleQuery) OnlyIDX(ctx context.Context) int {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -277,7 +325,7 @@ func (rq *RoleQuery) AllX(ctx context.Context) []*Role {
 }
 
 // IDs executes the query and returns a list of Role IDs.
-func (rq *RoleQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (rq *RoleQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if rq.ctx.Unique == nil && rq.path != nil {
 		rq.Unique(true)
 	}
@@ -289,7 +337,7 @@ func (rq *RoleQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RoleQuery) IDsX(ctx context.Context) []string {
+func (rq *RoleQuery) IDsX(ctx context.Context) []int {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -344,15 +392,17 @@ func (rq *RoleQuery) Clone() *RoleQuery {
 		return nil
 	}
 	return &RoleQuery{
-		config:        rq.config,
-		ctx:           rq.ctx.Clone(),
-		order:         append([]role.OrderOption{}, rq.order...),
-		inters:        append([]Interceptor{}, rq.inters...),
-		predicates:    append([]predicate.Role{}, rq.predicates...),
-		withMenus:     rq.withMenus.Clone(),
-		withUsers:     rq.withUsers.Clone(),
-		withRoleMenus: rq.withRoleMenus.Clone(),
-		withUserRoles: rq.withUserRoles.Clone(),
+		config:              rq.config,
+		ctx:                 rq.ctx.Clone(),
+		order:               append([]role.OrderOption{}, rq.order...),
+		inters:              append([]Interceptor{}, rq.inters...),
+		predicates:          append([]predicate.Role{}, rq.predicates...),
+		withMenus:           rq.withMenus.Clone(),
+		withUsers:           rq.withUsers.Clone(),
+		withPermissions:     rq.withPermissions.Clone(),
+		withRoleMenus:       rq.withRoleMenus.Clone(),
+		withUserRoles:       rq.withUserRoles.Clone(),
+		withRolePermissions: rq.withRolePermissions.Clone(),
 		// clone intermediate query.
 		sql:       rq.sql.Clone(),
 		path:      rq.path,
@@ -382,6 +432,17 @@ func (rq *RoleQuery) WithUsers(opts ...func(*UserQuery)) *RoleQuery {
 	return rq
 }
 
+// WithPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithPermissions(opts ...func(*PermissionQuery)) *RoleQuery {
+	query := (&PermissionClient{config: rq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withPermissions = query
+	return rq
+}
+
 // WithRoleMenus tells the query-builder to eager-load the nodes that are connected to
 // the "role_menus" edge. The optional arguments are used to configure the query builder of the edge.
 func (rq *RoleQuery) WithRoleMenus(opts ...func(*RoleMenuQuery)) *RoleQuery {
@@ -401,6 +462,17 @@ func (rq *RoleQuery) WithUserRoles(opts ...func(*UserRoleQuery)) *RoleQuery {
 		opt(query)
 	}
 	rq.withUserRoles = query
+	return rq
+}
+
+// WithRolePermissions tells the query-builder to eager-load the nodes that are connected to
+// the "role_permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithRolePermissions(opts ...func(*RolePermissionQuery)) *RoleQuery {
+	query := (&RolePermissionClient{config: rq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withRolePermissions = query
 	return rq
 }
 
@@ -482,11 +554,13 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	var (
 		nodes       = []*Role{}
 		_spec       = rq.querySpec()
-		loadedTypes = [4]bool{
+		loadedTypes = [6]bool{
 			rq.withMenus != nil,
 			rq.withUsers != nil,
+			rq.withPermissions != nil,
 			rq.withRoleMenus != nil,
 			rq.withUserRoles != nil,
+			rq.withRolePermissions != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -524,6 +598,13 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 			return nil, err
 		}
 	}
+	if query := rq.withPermissions; query != nil {
+		if err := rq.loadPermissions(ctx, query, nodes,
+			func(n *Role) { n.Edges.Permissions = []*Permission{} },
+			func(n *Role, e *Permission) { n.Edges.Permissions = append(n.Edges.Permissions, e) }); err != nil {
+			return nil, err
+		}
+	}
 	if query := rq.withRoleMenus; query != nil {
 		if err := rq.loadRoleMenus(ctx, query, nodes,
 			func(n *Role) { n.Edges.RoleMenus = []*RoleMenu{} },
@@ -538,13 +619,20 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 			return nil, err
 		}
 	}
+	if query := rq.withRolePermissions; query != nil {
+		if err := rq.loadRolePermissions(ctx, query, nodes,
+			func(n *Role) { n.Edges.RolePermissions = []*RolePermission{} },
+			func(n *Role, e *RolePermission) { n.Edges.RolePermissions = append(n.Edges.RolePermissions, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (rq *RoleQuery) loadMenus(ctx context.Context, query *MenuQuery, nodes []*Role, init func(*Role), assign func(*Role, *Menu)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[string]*Role)
-	nids := make(map[string]map[*Role]struct{})
+	byID := make(map[int]*Role)
+	nids := make(map[int]map[*Role]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -573,11 +661,11 @@ func (rq *RoleQuery) loadMenus(ctx context.Context, query *MenuQuery, nodes []*R
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullString)}, values...), nil
+				return append([]any{new(sql.NullInt64)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullString).String
-				inValue := values[1].(*sql.NullString).String
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Role]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -604,8 +692,8 @@ func (rq *RoleQuery) loadMenus(ctx context.Context, query *MenuQuery, nodes []*R
 }
 func (rq *RoleQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Role, init func(*Role), assign func(*Role, *User)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[string]*Role)
-	nids := make(map[string]map[*Role]struct{})
+	byID := make(map[int]*Role)
+	nids := make(map[int]map[*Role]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -634,11 +722,11 @@ func (rq *RoleQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*R
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullString)}, values...), nil
+				return append([]any{new(sql.NullInt64)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullString).String
-				inValue := values[1].(*sql.NullString).String
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Role]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -663,9 +751,70 @@ func (rq *RoleQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*R
 	}
 	return nil
 }
+func (rq *RoleQuery) loadPermissions(ctx context.Context, query *PermissionQuery, nodes []*Role, init func(*Role), assign func(*Role, *Permission)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int]*Role)
+	nids := make(map[int]map[*Role]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(role.PermissionsTable)
+		s.Join(joinT).On(s.C(permission.FieldID), joinT.C(role.PermissionsPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(role.PermissionsPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(role.PermissionsPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Role]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Permission](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "permissions" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
 func (rq *RoleQuery) loadRoleMenus(ctx context.Context, query *RoleMenuQuery, nodes []*Role, init func(*Role), assign func(*Role, *RoleMenu)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Role)
+	nodeids := make(map[int]*Role)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -695,7 +844,7 @@ func (rq *RoleQuery) loadRoleMenus(ctx context.Context, query *RoleMenuQuery, no
 }
 func (rq *RoleQuery) loadUserRoles(ctx context.Context, query *UserRoleQuery, nodes []*Role, init func(*Role), assign func(*Role, *UserRole)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Role)
+	nodeids := make(map[int]*Role)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -708,6 +857,36 @@ func (rq *RoleQuery) loadUserRoles(ctx context.Context, query *UserRoleQuery, no
 	}
 	query.Where(predicate.UserRole(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(role.UserRolesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.RoleID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "role_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (rq *RoleQuery) loadRolePermissions(ctx context.Context, query *RolePermissionQuery, nodes []*Role, init func(*Role), assign func(*Role, *RolePermission)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Role)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(rolepermission.FieldRoleID)
+	}
+	query.Where(predicate.RolePermission(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(role.RolePermissionsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -737,7 +916,7 @@ func (rq *RoleQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (rq *RoleQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(role.Table, role.Columns, sqlgraph.NewFieldSpec(role.FieldID, field.TypeString))
+	_spec := sqlgraph.NewQuerySpec(role.Table, role.Columns, sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt))
 	_spec.From = rq.sql
 	if unique := rq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

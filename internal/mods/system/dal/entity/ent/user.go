@@ -16,7 +16,7 @@ import (
 type User struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// CreateAuthor holds the value of the "create_author" field.
 	CreateAuthor string `json:"create_author,omitempty"`
 	// UpdateAuthor holds the value of the "update_author" field.
@@ -25,8 +25,8 @@ type User struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Index holds the value of the "index" field.
-	Index int `json:"index,omitempty"`
+	// UUID holds the value of the "uuid" field.
+	UUID string `json:"uuid,omitempty"`
 	// AllowedIP holds the value of the "allowed_ip" field.
 	AllowedIP string `json:"allowed_ip,omitempty"`
 	// Username holds the value of the "username" field.
@@ -60,9 +60,9 @@ type User struct {
 	// SanctionDate holds the value of the "sanction_date" field.
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
 	// DepartmentID holds the value of the "department_id" field.
-	DepartmentID string `json:"department_id,omitempty"`
+	DepartmentID int `json:"department_id,omitempty"`
 	// ManagerID holds the value of the "manager_id" field.
-	ManagerID string `json:"manager_id,omitempty"`
+	ManagerID int `json:"manager_id,omitempty"`
 	// Manager holds the value of the "manager" field.
 	Manager string `json:"manager,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -127,9 +127,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldIndex, user.FieldStatus:
+		case user.FieldID, user.FieldStatus, user.FieldDepartmentID, user.FieldManagerID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldDepartmentID, user.FieldManagerID, user.FieldManager:
+		case user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldLastLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -149,11 +149,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case user.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				u.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			u.ID = int(value.Int64)
 		case user.FieldCreateAuthor:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field create_author", values[i])
@@ -178,11 +178,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.UpdateTime = value.Time
 			}
-		case user.FieldIndex:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field index", values[i])
+		case user.FieldUUID:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field uuid", values[i])
 			} else if value.Valid {
-				u.Index = int(value.Int64)
+				u.UUID = value.String
 			}
 		case user.FieldAllowedIP:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -281,16 +281,16 @@ func (u *User) assignValues(columns []string, values []any) error {
 				u.SanctionDate = value.Time
 			}
 		case user.FieldDepartmentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				u.DepartmentID = value.String
+				u.DepartmentID = int(value.Int64)
 			}
 		case user.FieldManagerID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field manager_id", values[i])
 			} else if value.Valid {
-				u.ManagerID = value.String
+				u.ManagerID = int(value.Int64)
 			}
 		case user.FieldManager:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -366,8 +366,8 @@ func (u *User) String() string {
 	builder.WriteString("update_time=")
 	builder.WriteString(u.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("index=")
-	builder.WriteString(fmt.Sprintf("%v", u.Index))
+	builder.WriteString("uuid=")
+	builder.WriteString(u.UUID)
 	builder.WriteString(", ")
 	builder.WriteString("allowed_ip=")
 	builder.WriteString(u.AllowedIP)
@@ -418,10 +418,10 @@ func (u *User) String() string {
 	builder.WriteString(u.SanctionDate.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("department_id=")
-	builder.WriteString(u.DepartmentID)
+	builder.WriteString(fmt.Sprintf("%v", u.DepartmentID))
 	builder.WriteString(", ")
 	builder.WriteString("manager_id=")
-	builder.WriteString(u.ManagerID)
+	builder.WriteString(fmt.Sprintf("%v", u.ManagerID))
 	builder.WriteString(", ")
 	builder.WriteString("manager=")
 	builder.WriteString(u.Manager)

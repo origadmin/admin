@@ -22,8 +22,8 @@ const (
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
 	FieldUpdateTime = "update_time"
-	// FieldIndex holds the string denoting the index field in the database.
-	FieldIndex = "index"
+	// FieldUUID holds the string denoting the uuid field in the database.
+	FieldUUID = "uuid"
 	// FieldAllowedIP holds the string denoting the allowed_ip field in the database.
 	FieldAllowedIP = "allowed_ip"
 	// FieldUsername holds the string denoting the username field in the database.
@@ -81,7 +81,7 @@ const (
 	DepartmentsTable = "sys_user_departments"
 	// DepartmentsInverseTable is the table name for the Department entity.
 	// It exists in this package in order to avoid circular dependency with the "department" package.
-	DepartmentsInverseTable = "sys_Departments"
+	DepartmentsInverseTable = "sys_departments"
 	// UserRolesTable is the table that holds the user_roles relation/edge.
 	UserRolesTable = "sys_user_roles"
 	// UserRolesInverseTable is the table name for the UserRole entity.
@@ -105,7 +105,7 @@ var Columns = []string{
 	FieldUpdateAuthor,
 	FieldCreateTime,
 	FieldUpdateTime,
-	FieldIndex,
+	FieldUUID,
 	FieldAllowedIP,
 	FieldUsername,
 	FieldNickname,
@@ -157,6 +157,8 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// UUIDValidator is a validator for the "uuid" field. It is called by the builders before save.
+	UUIDValidator func(string) error
 	// DefaultAllowedIP holds the default value on creation for the "allowed_ip" field.
 	DefaultAllowedIP string
 	// DefaultUsername holds the default value on creation for the "username" field.
@@ -214,13 +216,13 @@ var (
 	// DefaultSanctionDate holds the default value on creation for the "sanction_date" field.
 	DefaultSanctionDate func() time.Time
 	// DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
-	DepartmentIDValidator func(string) error
+	DepartmentIDValidator func(int) error
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
-	ManagerIDValidator func(string) error
+	ManagerIDValidator func(int) error
 	// DefaultManager holds the default value on creation for the "manager" field.
 	DefaultManager string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the User queries.
@@ -251,9 +253,9 @@ func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
-// ByIndex orders the results by the index field.
-func ByIndex(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIndex, opts...).ToFunc()
+// ByUUID orders the results by the uuid field.
+func ByUUID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUUID, opts...).ToFunc()
 }
 
 // ByAllowedIP orders the results by the allowed_ip field.

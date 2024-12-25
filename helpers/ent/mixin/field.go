@@ -23,19 +23,11 @@ func FieldIndex(name string) ent.Field {
 }
 
 func FieldFK(name string) ent.Field {
-	return field.Int(name).
-		Positive().
-		Unique()
+	return ID{}.FK(name)
 }
 
-func FieldFKOptional(name string) ent.Field {
-	return field.Int(name).
-		Positive().
-		Optional()
-}
-
-// FieldID returns an optional string field with a maximum length of 36 characters.
-func FieldID(name string) ent.Field {
+// FieldOpID returns an optional string field with a maximum length of 36 characters.
+func FieldOpID(name string) ent.Field {
 	// Create an optional string field with the given name and maximum length.
 	return field.Int(name).
 		Positive().
@@ -48,10 +40,11 @@ func FieldUUID(name string) ent.Field {
 		MaxLen(36)
 }
 
-func FieldUUIDOptional(name string) ent.Field {
+func FieldOptionUUID(name string) ent.Field {
 	// Create an optional string field with the given name and maximum length.
 	return field.String(name).
-		MaxLen(36)
+		MaxLen(36).
+		Optional()
 }
 
 // FieldTime returns a time field with a default value of ZeroTime and a custom schema type for MySQL.

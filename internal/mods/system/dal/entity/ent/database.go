@@ -112,6 +112,16 @@ func (db *Database) Menu(ctx context.Context) *MenuClient {
 	return db.Client(ctx).Menu
 }
 
+// Permission is the client for interacting with the Permission builders.
+func (db *Database) Permission(ctx context.Context) *PermissionClient {
+	return db.Client(ctx).Permission
+}
+
+// Position is the client for interacting with the Position builders.
+func (db *Database) Position(ctx context.Context) *PositionClient {
+	return db.Client(ctx).Position
+}
+
 // Resource is the client for interacting with the Resource builders.
 func (db *Database) Resource(ctx context.Context) *ResourceClient {
 	return db.Client(ctx).Resource
@@ -127,6 +137,11 @@ func (db *Database) RoleMenu(ctx context.Context) *RoleMenuClient {
 	return db.Client(ctx).RoleMenu
 }
 
+// RolePermission is the client for interacting with the RolePermission builders.
+func (db *Database) RolePermission(ctx context.Context) *RolePermissionClient {
+	return db.Client(ctx).RolePermission
+}
+
 // User is the client for interacting with the User builders.
 func (db *Database) User(ctx context.Context) *UserClient {
 	return db.Client(ctx).User
@@ -135,6 +150,11 @@ func (db *Database) User(ctx context.Context) *UserClient {
 // UserDepartment is the client for interacting with the UserDepartment builders.
 func (db *Database) UserDepartment(ctx context.Context) *UserDepartmentClient {
 	return db.Client(ctx).UserDepartment
+}
+
+// UserPosition is the client for interacting with the UserPosition builders.
+func (db *Database) UserPosition(ctx context.Context) *UserPositionClient {
+	return db.Client(ctx).UserPosition
 }
 
 // UserRole is the client for interacting with the UserRole builders.

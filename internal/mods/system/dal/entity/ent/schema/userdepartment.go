@@ -49,12 +49,10 @@ func (UserDepartment) Indexes() []ent.Index {
 func (UserDepartment) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("user", User.Type).
-			//Ref("departments").
 			Field("user_id").
 			Unique().
 			Required(),
 		edge.To("department", Department.Type).
-			//Ref("users").
 			Field("department_id").
 			Unique().
 			Required(),

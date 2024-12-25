@@ -40,7 +40,7 @@ func (dd *DepartmentDelete) ExecX(ctx context.Context) int {
 }
 
 func (dd *DepartmentDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(department.Table, sqlgraph.NewFieldSpec(department.FieldID, field.TypeString))
+	_spec := sqlgraph.NewDeleteSpec(department.Table, sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt))
 	if ps := dd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

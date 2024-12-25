@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	// SysDepartmentsColumns holds the columns for the "sys_Departments" table.
+	// SysDepartmentsColumns holds the columns for the "sys_departments" table.
 	SysDepartmentsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
@@ -20,9 +20,9 @@ var (
 		{Name: "sequence", Type: field.TypeInt},
 		{Name: "status", Type: field.TypeInt8, Default: 0},
 	}
-	// SysDepartmentsTable holds the schema information for the "sys_Departments" table.
+	// SysDepartmentsTable holds the schema information for the "sys_departments" table.
 	SysDepartmentsTable = &schema.Table{
-		Name:       "sys_Departments",
+		Name:       "sys_departments",
 		Columns:    SysDepartmentsColumns,
 		PrimaryKey: []*schema.Column{SysDepartmentsColumns[0]},
 		Indexes: []*schema.Index{
@@ -60,7 +60,7 @@ var (
 	}
 	// SysMenusColumns holds the columns for the "sys_menus" table.
 	SysMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
@@ -73,7 +73,7 @@ var (
 		{Name: "parent_path", Type: field.TypeString, Size: 255, Default: ""},
 		{Name: "sequence", Type: field.TypeInt, Default: 0},
 		{Name: "properties", Type: field.TypeString, Nullable: true, Size: 2147483647, Default: ""},
-		{Name: "parent_id", Type: field.TypeString, Nullable: true, Size: 36, Default: ""},
+		{Name: "parent_id", Type: field.TypeInt, Nullable: true},
 	}
 	// SysMenusTable holds the schema information for the "sys_menus" table.
 	SysMenusTable = &schema.Table{
@@ -131,15 +131,76 @@ var (
 			},
 		},
 	}
+	// PermissionsColumns holds the columns for the "permissions" table.
+	PermissionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString, Unique: true, Size: 64},
+		{Name: "description", Type: field.TypeString, Size: 256},
+	}
+	// PermissionsTable holds the schema information for the "permissions" table.
+	PermissionsTable = &schema.Table{
+		Name:       "permissions",
+		Columns:    PermissionsColumns,
+		PrimaryKey: []*schema.Column{PermissionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "permission_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{PermissionsColumns[1]},
+			},
+			{
+				Name:    "permission_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{PermissionsColumns[2]},
+			},
+		},
+	}
+	// PositionsColumns holds the columns for the "positions" table.
+	PositionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString, Unique: true, Size: 64},
+		{Name: "description", Type: field.TypeString, Size: 256},
+		{Name: "department_id", Type: field.TypeInt, Nullable: true},
+	}
+	// PositionsTable holds the schema information for the "positions" table.
+	PositionsTable = &schema.Table{
+		Name:       "positions",
+		Columns:    PositionsColumns,
+		PrimaryKey: []*schema.Column{PositionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "positions_sys_departments_positions",
+				Columns:    []*schema.Column{PositionsColumns[5]},
+				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "position_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{PositionsColumns[1]},
+			},
+			{
+				Name:    "position_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{PositionsColumns[2]},
+			},
+		},
+	}
 	// SysResourcesColumns holds the columns for the "sys_resources" table.
 	SysResourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "method", Type: field.TypeString, Size: 20, Default: ""},
 		{Name: "operation", Type: field.TypeString, Size: 20, Default: ""},
 		{Name: "path", Type: field.TypeString, Size: 255},
-		{Name: "menu_id", Type: field.TypeString, Nullable: true, Size: 36},
+		{Name: "menu_id", Type: field.TypeInt, Nullable: true},
 	}
 	// SysResourcesTable holds the schema information for the "sys_resources" table.
 	SysResourcesTable = &schema.Table{
@@ -174,7 +235,7 @@ var (
 	}
 	// SysRolesColumns holds the columns for the "sys_roles" table.
 	SysRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
@@ -223,9 +284,9 @@ var (
 	}
 	// SysRoleMenusColumns holds the columns for the "sys_role_menus" table.
 	SysRoleMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "role_id", Type: field.TypeString, Size: 36},
-		{Name: "menu_id", Type: field.TypeString, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "role_id", Type: field.TypeInt},
+		{Name: "menu_id", Type: field.TypeInt},
 	}
 	// SysRoleMenusTable holds the schema information for the "sys_role_menus" table.
 	SysRoleMenusTable = &schema.Table{
@@ -264,14 +325,57 @@ var (
 			},
 		},
 	}
+	// RolePermissionsColumns holds the columns for the "role_permissions" table.
+	RolePermissionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "role_id", Type: field.TypeInt},
+		{Name: "permission_id", Type: field.TypeInt},
+	}
+	// RolePermissionsTable holds the schema information for the "role_permissions" table.
+	RolePermissionsTable = &schema.Table{
+		Name:       "role_permissions",
+		Columns:    RolePermissionsColumns,
+		PrimaryKey: []*schema.Column{RolePermissionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "role_permissions_sys_roles_role",
+				Columns:    []*schema.Column{RolePermissionsColumns[1]},
+				RefColumns: []*schema.Column{SysRolesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "role_permissions_permissions_permission",
+				Columns:    []*schema.Column{RolePermissionsColumns[2]},
+				RefColumns: []*schema.Column{PermissionsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "rolepermission_role_id",
+				Unique:  false,
+				Columns: []*schema.Column{RolePermissionsColumns[1]},
+			},
+			{
+				Name:    "rolepermission_permission_id",
+				Unique:  false,
+				Columns: []*schema.Column{RolePermissionsColumns[2]},
+			},
+			{
+				Name:    "rolepermission_role_id_permission_id",
+				Unique:  true,
+				Columns: []*schema.Column{RolePermissionsColumns[1], RolePermissionsColumns[2]},
+			},
+		},
+	}
 	// SysUsersColumns holds the columns for the "sys_users" table.
 	SysUsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_author", Type: field.TypeString, Default: ""},
 		{Name: "update_author", Type: field.TypeString, Default: ""},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
-		{Name: "index", Type: field.TypeInt, Unique: true},
+		{Name: "uuid", Type: field.TypeString, Size: 36},
 		{Name: "allowed_ip", Type: field.TypeString, Default: "0.0.0.0"},
 		{Name: "username", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "nickname", Type: field.TypeString, Size: 64, Default: ""},
@@ -288,8 +392,8 @@ var (
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "sanction_date", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "department_id", Type: field.TypeString, Nullable: true, Size: 36},
-		{Name: "manager_id", Type: field.TypeString, Nullable: true, Size: 36},
+		{Name: "department_id", Type: field.TypeInt},
+		{Name: "manager_id", Type: field.TypeInt},
 		{Name: "manager", Type: field.TypeString, Default: ""},
 	}
 	// SysUsersTable holds the schema information for the "sys_users" table.
@@ -342,9 +446,9 @@ var (
 	}
 	// SysUserDepartmentsColumns holds the columns for the "sys_user_departments" table.
 	SysUserDepartmentsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "user_id", Type: field.TypeString, Size: 36},
-		{Name: "department_id", Type: field.TypeString, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "department_id", Type: field.TypeInt},
 	}
 	// SysUserDepartmentsTable holds the schema information for the "sys_user_departments" table.
 	SysUserDepartmentsTable = &schema.Table{
@@ -359,7 +463,7 @@ var (
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "sys_user_departments_sys_Departments_department",
+				Symbol:     "sys_user_departments_sys_departments_department",
 				Columns:    []*schema.Column{SysUserDepartmentsColumns[2]},
 				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
 				OnDelete:   schema.NoAction,
@@ -383,11 +487,61 @@ var (
 			},
 		},
 	}
+	// UserPositionsColumns holds the columns for the "user_positions" table.
+	UserPositionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "position_user_positions", Type: field.TypeInt, Nullable: true},
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "position_id", Type: field.TypeInt},
+	}
+	// UserPositionsTable holds the schema information for the "user_positions" table.
+	UserPositionsTable = &schema.Table{
+		Name:       "user_positions",
+		Columns:    UserPositionsColumns,
+		PrimaryKey: []*schema.Column{UserPositionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "user_positions_positions_user_positions",
+				Columns:    []*schema.Column{UserPositionsColumns[1]},
+				RefColumns: []*schema.Column{PositionsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:     "user_positions_sys_users_user",
+				Columns:    []*schema.Column{UserPositionsColumns[2]},
+				RefColumns: []*schema.Column{SysUsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "user_positions_positions_position",
+				Columns:    []*schema.Column{UserPositionsColumns[3]},
+				RefColumns: []*schema.Column{PositionsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "userposition_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{UserPositionsColumns[2]},
+			},
+			{
+				Name:    "userposition_position_id",
+				Unique:  false,
+				Columns: []*schema.Column{UserPositionsColumns[3]},
+			},
+			{
+				Name:    "userposition_user_id_position_id",
+				Unique:  true,
+				Columns: []*schema.Column{UserPositionsColumns[2], UserPositionsColumns[3]},
+			},
+		},
+	}
 	// SysUserRolesColumns holds the columns for the "sys_user_roles" table.
 	SysUserRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString, Unique: true, Size: 36},
-		{Name: "user_id", Type: field.TypeString, Size: 36},
-		{Name: "role_id", Type: field.TypeString, Size: 36},
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "role_id", Type: field.TypeInt},
 	}
 	// SysUserRolesTable holds the schema information for the "sys_user_roles" table.
 	SysUserRolesTable = &schema.Table{
@@ -430,23 +584,28 @@ var (
 	Tables = []*schema.Table{
 		SysDepartmentsTable,
 		SysMenusTable,
+		PermissionsTable,
+		PositionsTable,
 		SysResourcesTable,
 		SysRolesTable,
 		SysRoleMenusTable,
+		RolePermissionsTable,
 		SysUsersTable,
 		SysUserDepartmentsTable,
+		UserPositionsTable,
 		SysUserRolesTable,
 	}
 )
 
 func init() {
 	SysDepartmentsTable.Annotation = &entsql.Annotation{
-		Table: "sys_Departments",
+		Table: "sys_departments",
 	}
 	SysMenusTable.ForeignKeys[0].RefTable = SysMenusTable
 	SysMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_menus",
 	}
+	PositionsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
 	SysResourcesTable.ForeignKeys[0].RefTable = SysMenusTable
 	SysResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_resources",
@@ -459,6 +618,8 @@ func init() {
 	SysRoleMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_role_menus",
 	}
+	RolePermissionsTable.ForeignKeys[0].RefTable = SysRolesTable
+	RolePermissionsTable.ForeignKeys[1].RefTable = PermissionsTable
 	SysUsersTable.Annotation = &entsql.Annotation{
 		Table: "sys_users",
 	}
@@ -467,6 +628,9 @@ func init() {
 	SysUserDepartmentsTable.Annotation = &entsql.Annotation{
 		Table: "sys_user_departments",
 	}
+	UserPositionsTable.ForeignKeys[0].RefTable = PositionsTable
+	UserPositionsTable.ForeignKeys[1].RefTable = SysUsersTable
+	UserPositionsTable.ForeignKeys[2].RefTable = PositionsTable
 	SysUserRolesTable.ForeignKeys[0].RefTable = SysUsersTable
 	SysUserRolesTable.ForeignKeys[1].RefTable = SysRolesTable
 	SysUserRolesTable.Annotation = &entsql.Annotation{

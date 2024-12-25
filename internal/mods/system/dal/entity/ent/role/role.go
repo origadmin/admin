@@ -32,10 +32,14 @@ const (
 	EdgeMenus = "menus"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
+	// EdgePermissions holds the string denoting the permissions edge name in mutations.
+	EdgePermissions = "permissions"
 	// EdgeRoleMenus holds the string denoting the role_menus edge name in mutations.
 	EdgeRoleMenus = "role_menus"
 	// EdgeUserRoles holds the string denoting the user_roles edge name in mutations.
 	EdgeUserRoles = "user_roles"
+	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
+	EdgeRolePermissions = "role_permissions"
 	// Table holds the table name of the role in the database.
 	Table = "sys_roles"
 	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
@@ -48,6 +52,11 @@ const (
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "sys_users"
+	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
+	PermissionsTable = "role_permissions"
+	// PermissionsInverseTable is the table name for the Permission entity.
+	// It exists in this package in order to avoid circular dependency with the "permission" package.
+	PermissionsInverseTable = "permissions"
 	// RoleMenusTable is the table that holds the role_menus relation/edge.
 	RoleMenusTable = "sys_role_menus"
 	// RoleMenusInverseTable is the table name for the RoleMenu entity.
@@ -62,6 +71,13 @@ const (
 	UserRolesInverseTable = "sys_user_roles"
 	// UserRolesColumn is the table column denoting the user_roles relation/edge.
 	UserRolesColumn = "role_id"
+	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
+	RolePermissionsTable = "role_permissions"
+	// RolePermissionsInverseTable is the table name for the RolePermission entity.
+	// It exists in this package in order to avoid circular dependency with the "rolepermission" package.
+	RolePermissionsInverseTable = "role_permissions"
+	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
+	RolePermissionsColumn = "role_id"
 )
 
 // Columns holds all SQL columns for role fields.
@@ -83,6 +99,9 @@ var (
 	// UsersPrimaryKey and UsersColumn2 are the table columns denoting the
 	// primary key for the users relation (M2M).
 	UsersPrimaryKey = []string{"user_id", "role_id"}
+	// PermissionsPrimaryKey and PermissionsColumn2 are the table columns denoting the
+	// primary key for the permissions relation (M2M).
+	PermissionsPrimaryKey = []string{"role_id", "permission_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -117,7 +136,7 @@ var (
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the Role queries.
@@ -191,6 +210,20 @@ func ByUsers(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByPermissionsCount orders the results by permissions count.
+func ByPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionsStep(), opts...)
+	}
+}
+
+// ByPermissions orders the results by permissions terms.
+func ByPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByRoleMenusCount orders the results by role_menus count.
 func ByRoleMenusCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -218,6 +251,20 @@ func ByUserRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newUserRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByRolePermissionsCount orders the results by role_permissions count.
+func ByRolePermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newRolePermissionsStep(), opts...)
+	}
+}
+
+// ByRolePermissions orders the results by role_permissions terms.
+func ByRolePermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRolePermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newMenusStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -232,6 +279,13 @@ func newUsersStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, true, UsersTable, UsersPrimaryKey...),
 	)
 }
+func newPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, PermissionsTable, PermissionsPrimaryKey...),
+	)
+}
 func newRoleMenusStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -244,6 +298,13 @@ func newUserRolesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UserRolesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, UserRolesTable, UserRolesColumn),
+	)
+}
+func newRolePermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RolePermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, RolePermissionsTable, RolePermissionsColumn),
 	)
 }
 

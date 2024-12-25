@@ -40,7 +40,7 @@ func (urd *UserRoleDelete) ExecX(ctx context.Context) int {
 }
 
 func (urd *UserRoleDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeString))
+	_spec := sqlgraph.NewDeleteSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
 	if ps := urd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

@@ -57,11 +57,11 @@ func ValidColumn(column string) bool {
 
 var (
 	// RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
-	RoleIDValidator func(string) error
+	RoleIDValidator func(int) error
 	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
-	MenuIDValidator func(string) error
+	MenuIDValidator func(int) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the RoleMenu queries.

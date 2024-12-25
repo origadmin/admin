@@ -16,7 +16,7 @@ import (
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
@@ -43,13 +43,17 @@ type RoleEdges struct {
 	Menus []*Menu `json:"menus,omitempty"`
 	// Users holds the value of the users edge.
 	Users []*User `json:"users,omitempty"`
+	// Permissions holds the value of the permissions edge.
+	Permissions []*Permission `json:"permissions,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
 	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
 	// UserRoles holds the value of the user_roles edge.
 	UserRoles []*UserRole `json:"user_roles,omitempty"`
+	// RolePermissions holds the value of the role_permissions edge.
+	RolePermissions []*RolePermission `json:"role_permissions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [6]bool
 }
 
 // MenusOrErr returns the Menus value or an error if the edge
@@ -70,10 +74,19 @@ func (e RoleEdges) UsersOrErr() ([]*User, error) {
 	return nil, &NotLoadedError{edge: "users"}
 }
 
+// PermissionsOrErr returns the Permissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) PermissionsOrErr() ([]*Permission, error) {
+	if e.loadedTypes[2] {
+		return e.Permissions, nil
+	}
+	return nil, &NotLoadedError{edge: "permissions"}
+}
+
 // RoleMenusOrErr returns the RoleMenus value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.RoleMenus, nil
 	}
 	return nil, &NotLoadedError{edge: "role_menus"}
@@ -82,10 +95,19 @@ func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
+}
+
+// RolePermissionsOrErr returns the RolePermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
+	if e.loadedTypes[5] {
+		return e.RolePermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "role_permissions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -93,9 +115,9 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldSequence, role.FieldStatus:
+		case role.FieldID, role.FieldSequence, role.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case role.FieldID, role.FieldKeyword, role.FieldName, role.FieldDescription:
+		case role.FieldKeyword, role.FieldName, role.FieldDescription:
 			values[i] = new(sql.NullString)
 		case role.FieldCreateTime, role.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -115,11 +137,11 @@ func (r *Role) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case role.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				r.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			r.ID = int(value.Int64)
 		case role.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -185,6 +207,11 @@ func (r *Role) QueryUsers() *UserQuery {
 	return NewRoleClient(r.config).QueryUsers(r)
 }
 
+// QueryPermissions queries the "permissions" edge of the Role entity.
+func (r *Role) QueryPermissions() *PermissionQuery {
+	return NewRoleClient(r.config).QueryPermissions(r)
+}
+
 // QueryRoleMenus queries the "role_menus" edge of the Role entity.
 func (r *Role) QueryRoleMenus() *RoleMenuQuery {
 	return NewRoleClient(r.config).QueryRoleMenus(r)
@@ -193,6 +220,11 @@ func (r *Role) QueryRoleMenus() *RoleMenuQuery {
 // QueryUserRoles queries the "user_roles" edge of the Role entity.
 func (r *Role) QueryUserRoles() *UserRoleQuery {
 	return NewRoleClient(r.config).QueryUserRoles(r)
+}
+
+// QueryRolePermissions queries the "role_permissions" edge of the Role entity.
+func (r *Role) QueryRolePermissions() *RolePermissionQuery {
+	return NewRoleClient(r.config).QueryRolePermissions(r)
 }
 
 // Update returns a builder for updating this Role.

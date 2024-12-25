@@ -203,8 +203,8 @@ func (mq *MenuQuery) FirstX(ctx context.Context) *Menu {
 
 // FirstID returns the first Menu ID from the query.
 // Returns a *NotFoundError when no Menu ID was found.
-func (mq *MenuQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (mq *MenuQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = mq.Limit(1).IDs(setContextOp(ctx, mq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -216,7 +216,7 @@ func (mq *MenuQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (mq *MenuQuery) FirstIDX(ctx context.Context) string {
+func (mq *MenuQuery) FirstIDX(ctx context.Context) int {
 	id, err := mq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -254,8 +254,8 @@ func (mq *MenuQuery) OnlyX(ctx context.Context) *Menu {
 // OnlyID is like Only, but returns the only Menu ID in the query.
 // Returns a *NotSingularError when more than one Menu ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (mq *MenuQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (mq *MenuQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = mq.Limit(2).IDs(setContextOp(ctx, mq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -271,7 +271,7 @@ func (mq *MenuQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (mq *MenuQuery) OnlyIDX(ctx context.Context) string {
+func (mq *MenuQuery) OnlyIDX(ctx context.Context) int {
 	id, err := mq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -299,7 +299,7 @@ func (mq *MenuQuery) AllX(ctx context.Context) []*Menu {
 }
 
 // IDs executes the query and returns a list of Menu IDs.
-func (mq *MenuQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (mq *MenuQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if mq.ctx.Unique == nil && mq.path != nil {
 		mq.Unique(true)
 	}
@@ -311,7 +311,7 @@ func (mq *MenuQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (mq *MenuQuery) IDsX(ctx context.Context) []string {
+func (mq *MenuQuery) IDsX(ctx context.Context) []int {
 	ids, err := mq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -584,7 +584,7 @@ func (mq *MenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Menu, e
 
 func (mq *MenuQuery) loadChildren(ctx context.Context, query *MenuQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Menu)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Menu)
+	nodeids := make(map[int]*Menu)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -613,8 +613,8 @@ func (mq *MenuQuery) loadChildren(ctx context.Context, query *MenuQuery, nodes [
 	return nil
 }
 func (mq *MenuQuery) loadParent(ctx context.Context, query *MenuQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Menu)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Menu)
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Menu)
 	for i := range nodes {
 		fk := nodes[i].ParentID
 		if _, ok := nodeids[fk]; !ok {
@@ -643,7 +643,7 @@ func (mq *MenuQuery) loadParent(ctx context.Context, query *MenuQuery, nodes []*
 }
 func (mq *MenuQuery) loadResources(ctx context.Context, query *ResourceQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Resource)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Menu)
+	nodeids := make(map[int]*Menu)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -673,8 +673,8 @@ func (mq *MenuQuery) loadResources(ctx context.Context, query *ResourceQuery, no
 }
 func (mq *MenuQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *Role)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[string]*Menu)
-	nids := make(map[string]map[*Menu]struct{})
+	byID := make(map[int]*Menu)
+	nids := make(map[int]map[*Menu]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -703,11 +703,11 @@ func (mq *MenuQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*M
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullString)}, values...), nil
+				return append([]any{new(sql.NullInt64)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullString).String
-				inValue := values[1].(*sql.NullString).String
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Menu]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -734,7 +734,7 @@ func (mq *MenuQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*M
 }
 func (mq *MenuQuery) loadRoleMenus(ctx context.Context, query *RoleMenuQuery, nodes []*Menu, init func(*Menu), assign func(*Menu, *RoleMenu)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Menu)
+	nodeids := make(map[int]*Menu)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -776,7 +776,7 @@ func (mq *MenuQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (mq *MenuQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(menu.Table, menu.Columns, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString))
+	_spec := sqlgraph.NewQuerySpec(menu.Table, menu.Columns, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt))
 	_spec.From = mq.sql
 	if unique := mq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -899,7 +899,7 @@ func (mq *MenuQuery) Modify(modifiers ...func(s *sql.Selector)) *MenuSelect {
 //	  Icon string `json:"icon,omitempty"`
 //	  Path string `json:"path,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
-//	  ParentID string `json:"parent_id,omitempty"`
+//	  ParentID int `json:"parent_id,omitempty"`
 //	  ParentPath string `json:"parent_path,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Properties string `json:"properties,omitempty"`

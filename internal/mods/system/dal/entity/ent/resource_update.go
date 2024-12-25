@@ -36,26 +36,6 @@ func (ru *ResourceUpdate) SetUpdateTime(t time.Time) *ResourceUpdate {
 	return ru
 }
 
-// SetMenuID sets the "menu_id" field.
-func (ru *ResourceUpdate) SetMenuID(s string) *ResourceUpdate {
-	ru.mutation.SetMenuID(s)
-	return ru
-}
-
-// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableMenuID(s *string) *ResourceUpdate {
-	if s != nil {
-		ru.SetMenuID(*s)
-	}
-	return ru
-}
-
-// ClearMenuID clears the value of the "menu_id" field.
-func (ru *ResourceUpdate) ClearMenuID() *ResourceUpdate {
-	ru.mutation.ClearMenuID()
-	return ru
-}
-
 // SetMethod sets the "method" field.
 func (ru *ResourceUpdate) SetMethod(s string) *ResourceUpdate {
 	ru.mutation.SetMethod(s)
@@ -95,6 +75,26 @@ func (ru *ResourceUpdate) SetNillablePath(s *string) *ResourceUpdate {
 	if s != nil {
 		ru.SetPath(*s)
 	}
+	return ru
+}
+
+// SetMenuID sets the "menu_id" field.
+func (ru *ResourceUpdate) SetMenuID(i int) *ResourceUpdate {
+	ru.mutation.SetMenuID(i)
+	return ru
+}
+
+// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableMenuID(i *int) *ResourceUpdate {
+	if i != nil {
+		ru.SetMenuID(*i)
+	}
+	return ru
+}
+
+// ClearMenuID clears the value of the "menu_id" field.
+func (ru *ResourceUpdate) ClearMenuID() *ResourceUpdate {
+	ru.mutation.ClearMenuID()
 	return ru
 }
 
@@ -152,11 +152,6 @@ func (ru *ResourceUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ru *ResourceUpdate) check() error {
-	if v, ok := ru.mutation.MenuID(); ok {
-		if err := resource.MenuIDValidator(v); err != nil {
-			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
-		}
-	}
 	if v, ok := ru.mutation.Method(); ok {
 		if err := resource.MethodValidator(v); err != nil {
 			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
@@ -172,6 +167,11 @@ func (ru *ResourceUpdate) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.MenuID(); ok {
+		if err := resource.MenuIDValidator(v); err != nil {
+			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -185,7 +185,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := ru.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt))
 	if ps := ru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -213,7 +213,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -226,7 +226,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -259,26 +259,6 @@ type ResourceUpdateOne struct {
 // SetUpdateTime sets the "update_time" field.
 func (ruo *ResourceUpdateOne) SetUpdateTime(t time.Time) *ResourceUpdateOne {
 	ruo.mutation.SetUpdateTime(t)
-	return ruo
-}
-
-// SetMenuID sets the "menu_id" field.
-func (ruo *ResourceUpdateOne) SetMenuID(s string) *ResourceUpdateOne {
-	ruo.mutation.SetMenuID(s)
-	return ruo
-}
-
-// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableMenuID(s *string) *ResourceUpdateOne {
-	if s != nil {
-		ruo.SetMenuID(*s)
-	}
-	return ruo
-}
-
-// ClearMenuID clears the value of the "menu_id" field.
-func (ruo *ResourceUpdateOne) ClearMenuID() *ResourceUpdateOne {
-	ruo.mutation.ClearMenuID()
 	return ruo
 }
 
@@ -321,6 +301,26 @@ func (ruo *ResourceUpdateOne) SetNillablePath(s *string) *ResourceUpdateOne {
 	if s != nil {
 		ruo.SetPath(*s)
 	}
+	return ruo
+}
+
+// SetMenuID sets the "menu_id" field.
+func (ruo *ResourceUpdateOne) SetMenuID(i int) *ResourceUpdateOne {
+	ruo.mutation.SetMenuID(i)
+	return ruo
+}
+
+// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableMenuID(i *int) *ResourceUpdateOne {
+	if i != nil {
+		ruo.SetMenuID(*i)
+	}
+	return ruo
+}
+
+// ClearMenuID clears the value of the "menu_id" field.
+func (ruo *ResourceUpdateOne) ClearMenuID() *ResourceUpdateOne {
+	ruo.mutation.ClearMenuID()
 	return ruo
 }
 
@@ -391,11 +391,6 @@ func (ruo *ResourceUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ruo *ResourceUpdateOne) check() error {
-	if v, ok := ruo.mutation.MenuID(); ok {
-		if err := resource.MenuIDValidator(v); err != nil {
-			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
-		}
-	}
 	if v, ok := ruo.mutation.Method(); ok {
 		if err := resource.MethodValidator(v); err != nil {
 			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
@@ -411,6 +406,11 @@ func (ruo *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.MenuID(); ok {
+		if err := resource.MenuIDValidator(v); err != nil {
+			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -424,7 +424,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	if err := ruo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt))
 	id, ok := ruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Resource.id" for update`)}
@@ -469,7 +469,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -482,7 +482,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

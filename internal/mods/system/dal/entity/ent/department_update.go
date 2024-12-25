@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
@@ -122,29 +123,44 @@ func (du *DepartmentUpdate) AddStatus(i int8) *DepartmentUpdate {
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (du *DepartmentUpdate) AddUserIDs(ids ...string) *DepartmentUpdate {
+func (du *DepartmentUpdate) AddUserIDs(ids ...int) *DepartmentUpdate {
 	du.mutation.AddUserIDs(ids...)
 	return du
 }
 
 // AddUsers adds the "users" edges to the User entity.
 func (du *DepartmentUpdate) AddUsers(u ...*User) *DepartmentUpdate {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
 	return du.AddUserIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (du *DepartmentUpdate) AddPositionIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.AddPositionIDs(ids...)
+	return du
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (du *DepartmentUpdate) AddPositions(p ...*Position) *DepartmentUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return du.AddPositionIDs(ids...)
+}
+
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
-func (du *DepartmentUpdate) AddUserDepartmentIDs(ids ...string) *DepartmentUpdate {
+func (du *DepartmentUpdate) AddUserDepartmentIDs(ids ...int) *DepartmentUpdate {
 	du.mutation.AddUserDepartmentIDs(ids...)
 	return du
 }
 
 // AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
 func (du *DepartmentUpdate) AddUserDepartments(u ...*UserDepartment) *DepartmentUpdate {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -163,18 +179,39 @@ func (du *DepartmentUpdate) ClearUsers() *DepartmentUpdate {
 }
 
 // RemoveUserIDs removes the "users" edge to User entities by IDs.
-func (du *DepartmentUpdate) RemoveUserIDs(ids ...string) *DepartmentUpdate {
+func (du *DepartmentUpdate) RemoveUserIDs(ids ...int) *DepartmentUpdate {
 	du.mutation.RemoveUserIDs(ids...)
 	return du
 }
 
 // RemoveUsers removes "users" edges to User entities.
 func (du *DepartmentUpdate) RemoveUsers(u ...*User) *DepartmentUpdate {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
 	return du.RemoveUserIDs(ids...)
+}
+
+// ClearPositions clears all "positions" edges to the Position entity.
+func (du *DepartmentUpdate) ClearPositions() *DepartmentUpdate {
+	du.mutation.ClearPositions()
+	return du
+}
+
+// RemovePositionIDs removes the "positions" edge to Position entities by IDs.
+func (du *DepartmentUpdate) RemovePositionIDs(ids ...int) *DepartmentUpdate {
+	du.mutation.RemovePositionIDs(ids...)
+	return du
+}
+
+// RemovePositions removes "positions" edges to Position entities.
+func (du *DepartmentUpdate) RemovePositions(p ...*Position) *DepartmentUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return du.RemovePositionIDs(ids...)
 }
 
 // ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
@@ -184,14 +221,14 @@ func (du *DepartmentUpdate) ClearUserDepartments() *DepartmentUpdate {
 }
 
 // RemoveUserDepartmentIDs removes the "user_departments" edge to UserDepartment entities by IDs.
-func (du *DepartmentUpdate) RemoveUserDepartmentIDs(ids ...string) *DepartmentUpdate {
+func (du *DepartmentUpdate) RemoveUserDepartmentIDs(ids ...int) *DepartmentUpdate {
 	du.mutation.RemoveUserDepartmentIDs(ids...)
 	return du
 }
 
 // RemoveUserDepartments removes "user_departments" edges to UserDepartment entities.
 func (du *DepartmentUpdate) RemoveUserDepartments(u ...*UserDepartment) *DepartmentUpdate {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -264,7 +301,7 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := du.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt))
 	if ps := du.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -304,7 +341,7 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -317,7 +354,7 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -333,7 +370,52 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.PositionsTable,
+			Columns: []string{department.PositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.RemovedPositionsIDs(); len(nodes) > 0 && !du.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.PositionsTable,
+			Columns: []string{department.PositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.PositionsTable,
+			Columns: []string{department.PositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -349,7 +431,7 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -362,7 +444,7 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -378,7 +460,7 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -499,29 +581,44 @@ func (duo *DepartmentUpdateOne) AddStatus(i int8) *DepartmentUpdateOne {
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (duo *DepartmentUpdateOne) AddUserIDs(ids ...string) *DepartmentUpdateOne {
+func (duo *DepartmentUpdateOne) AddUserIDs(ids ...int) *DepartmentUpdateOne {
 	duo.mutation.AddUserIDs(ids...)
 	return duo
 }
 
 // AddUsers adds the "users" edges to the User entity.
 func (duo *DepartmentUpdateOne) AddUsers(u ...*User) *DepartmentUpdateOne {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
 	return duo.AddUserIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (duo *DepartmentUpdateOne) AddPositionIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.AddPositionIDs(ids...)
+	return duo
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (duo *DepartmentUpdateOne) AddPositions(p ...*Position) *DepartmentUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return duo.AddPositionIDs(ids...)
+}
+
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
-func (duo *DepartmentUpdateOne) AddUserDepartmentIDs(ids ...string) *DepartmentUpdateOne {
+func (duo *DepartmentUpdateOne) AddUserDepartmentIDs(ids ...int) *DepartmentUpdateOne {
 	duo.mutation.AddUserDepartmentIDs(ids...)
 	return duo
 }
 
 // AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
 func (duo *DepartmentUpdateOne) AddUserDepartments(u ...*UserDepartment) *DepartmentUpdateOne {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -540,18 +637,39 @@ func (duo *DepartmentUpdateOne) ClearUsers() *DepartmentUpdateOne {
 }
 
 // RemoveUserIDs removes the "users" edge to User entities by IDs.
-func (duo *DepartmentUpdateOne) RemoveUserIDs(ids ...string) *DepartmentUpdateOne {
+func (duo *DepartmentUpdateOne) RemoveUserIDs(ids ...int) *DepartmentUpdateOne {
 	duo.mutation.RemoveUserIDs(ids...)
 	return duo
 }
 
 // RemoveUsers removes "users" edges to User entities.
 func (duo *DepartmentUpdateOne) RemoveUsers(u ...*User) *DepartmentUpdateOne {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
 	return duo.RemoveUserIDs(ids...)
+}
+
+// ClearPositions clears all "positions" edges to the Position entity.
+func (duo *DepartmentUpdateOne) ClearPositions() *DepartmentUpdateOne {
+	duo.mutation.ClearPositions()
+	return duo
+}
+
+// RemovePositionIDs removes the "positions" edge to Position entities by IDs.
+func (duo *DepartmentUpdateOne) RemovePositionIDs(ids ...int) *DepartmentUpdateOne {
+	duo.mutation.RemovePositionIDs(ids...)
+	return duo
+}
+
+// RemovePositions removes "positions" edges to Position entities.
+func (duo *DepartmentUpdateOne) RemovePositions(p ...*Position) *DepartmentUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return duo.RemovePositionIDs(ids...)
 }
 
 // ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
@@ -561,14 +679,14 @@ func (duo *DepartmentUpdateOne) ClearUserDepartments() *DepartmentUpdateOne {
 }
 
 // RemoveUserDepartmentIDs removes the "user_departments" edge to UserDepartment entities by IDs.
-func (duo *DepartmentUpdateOne) RemoveUserDepartmentIDs(ids ...string) *DepartmentUpdateOne {
+func (duo *DepartmentUpdateOne) RemoveUserDepartmentIDs(ids ...int) *DepartmentUpdateOne {
 	duo.mutation.RemoveUserDepartmentIDs(ids...)
 	return duo
 }
 
 // RemoveUserDepartments removes "user_departments" edges to UserDepartment entities.
 func (duo *DepartmentUpdateOne) RemoveUserDepartments(u ...*UserDepartment) *DepartmentUpdateOne {
-	ids := make([]string, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -654,7 +772,7 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 	if err := duo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt))
 	id, ok := duo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Department.id" for update`)}
@@ -711,7 +829,7 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -724,7 +842,7 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -740,7 +858,52 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.PositionsTable,
+			Columns: []string{department.PositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.RemovedPositionsIDs(); len(nodes) > 0 && !duo.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.PositionsTable,
+			Columns: []string{department.PositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.PositionsTable,
+			Columns: []string{department.PositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -756,7 +919,7 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -769,7 +932,7 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -785,7 +948,7 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

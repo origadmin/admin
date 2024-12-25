@@ -18,14 +18,14 @@ const (
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
 	FieldUpdateTime = "update_time"
-	// FieldMenuID holds the string denoting the menu_id field in the database.
-	FieldMenuID = "menu_id"
 	// FieldMethod holds the string denoting the method field in the database.
 	FieldMethod = "method"
 	// FieldOperation holds the string denoting the operation field in the database.
 	FieldOperation = "operation"
 	// FieldPath holds the string denoting the path field in the database.
 	FieldPath = "path"
+	// FieldMenuID holds the string denoting the menu_id field in the database.
+	FieldMenuID = "menu_id"
 	// EdgeMenu holds the string denoting the menu edge name in mutations.
 	EdgeMenu = "menu"
 	// Table holds the table name of the resource in the database.
@@ -44,10 +44,10 @@ var Columns = []string{
 	FieldID,
 	FieldCreateTime,
 	FieldUpdateTime,
-	FieldMenuID,
 	FieldMethod,
 	FieldOperation,
 	FieldPath,
+	FieldMenuID,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -67,8 +67,6 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
-	MenuIDValidator func(string) error
 	// DefaultMethod holds the default value on creation for the "method" field.
 	DefaultMethod string
 	// MethodValidator is a validator for the "method" field. It is called by the builders before save.
@@ -79,8 +77,10 @@ var (
 	OperationValidator func(string) error
 	// PathValidator is a validator for the "path" field. It is called by the builders before save.
 	PathValidator func(string) error
+	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
+	MenuIDValidator func(int) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the Resource queries.
@@ -101,11 +101,6 @@ func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
-// ByMenuID orders the results by the menu_id field.
-func ByMenuID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMenuID, opts...).ToFunc()
-}
-
 // ByMethod orders the results by the method field.
 func ByMethod(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldMethod, opts...).ToFunc()
@@ -119,6 +114,11 @@ func ByOperation(opts ...sql.OrderTermOption) OrderOption {
 // ByPath orders the results by the path field.
 func ByPath(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPath, opts...).ToFunc()
+}
+
+// ByMenuID orders the results by the menu_id field.
+func ByMenuID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMenuID, opts...).ToFunc()
 }
 
 // ByMenuField orders the results by menu field.

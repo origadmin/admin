@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
@@ -27,6 +28,7 @@ type DepartmentQuery struct {
 	inters              []Interceptor
 	predicates          []predicate.Department
 	withUsers           *UserQuery
+	withPositions       *PositionQuery
 	withUserDepartments *UserDepartmentQuery
 	modifiers           []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
@@ -87,6 +89,28 @@ func (dq *DepartmentQuery) QueryUsers() *UserQuery {
 	return query
 }
 
+// QueryPositions chains the current query on the "positions" edge.
+func (dq *DepartmentQuery) QueryPositions() *PositionQuery {
+	query := (&PositionClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, selector),
+			sqlgraph.To(position.Table, position.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.PositionsTable, department.PositionsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
 // QueryUserDepartments chains the current query on the "user_departments" edge.
 func (dq *DepartmentQuery) QueryUserDepartments() *UserDepartmentQuery {
 	query := (&UserDepartmentClient{config: dq.config}).Query()
@@ -133,8 +157,8 @@ func (dq *DepartmentQuery) FirstX(ctx context.Context) *Department {
 
 // FirstID returns the first Department ID from the query.
 // Returns a *NotFoundError when no Department ID was found.
-func (dq *DepartmentQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (dq *DepartmentQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = dq.Limit(1).IDs(setContextOp(ctx, dq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -146,7 +170,7 @@ func (dq *DepartmentQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (dq *DepartmentQuery) FirstIDX(ctx context.Context) string {
+func (dq *DepartmentQuery) FirstIDX(ctx context.Context) int {
 	id, err := dq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -184,8 +208,8 @@ func (dq *DepartmentQuery) OnlyX(ctx context.Context) *Department {
 // OnlyID is like Only, but returns the only Department ID in the query.
 // Returns a *NotSingularError when more than one Department ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (dq *DepartmentQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (dq *DepartmentQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = dq.Limit(2).IDs(setContextOp(ctx, dq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -201,7 +225,7 @@ func (dq *DepartmentQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (dq *DepartmentQuery) OnlyIDX(ctx context.Context) string {
+func (dq *DepartmentQuery) OnlyIDX(ctx context.Context) int {
 	id, err := dq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -229,7 +253,7 @@ func (dq *DepartmentQuery) AllX(ctx context.Context) []*Department {
 }
 
 // IDs executes the query and returns a list of Department IDs.
-func (dq *DepartmentQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (dq *DepartmentQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if dq.ctx.Unique == nil && dq.path != nil {
 		dq.Unique(true)
 	}
@@ -241,7 +265,7 @@ func (dq *DepartmentQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (dq *DepartmentQuery) IDsX(ctx context.Context) []string {
+func (dq *DepartmentQuery) IDsX(ctx context.Context) []int {
 	ids, err := dq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -302,6 +326,7 @@ func (dq *DepartmentQuery) Clone() *DepartmentQuery {
 		inters:              append([]Interceptor{}, dq.inters...),
 		predicates:          append([]predicate.Department{}, dq.predicates...),
 		withUsers:           dq.withUsers.Clone(),
+		withPositions:       dq.withPositions.Clone(),
 		withUserDepartments: dq.withUserDepartments.Clone(),
 		// clone intermediate query.
 		sql:       dq.sql.Clone(),
@@ -318,6 +343,17 @@ func (dq *DepartmentQuery) WithUsers(opts ...func(*UserQuery)) *DepartmentQuery 
 		opt(query)
 	}
 	dq.withUsers = query
+	return dq
+}
+
+// WithPositions tells the query-builder to eager-load the nodes that are connected to
+// the "positions" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithPositions(opts ...func(*PositionQuery)) *DepartmentQuery {
+	query := (&PositionClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withPositions = query
 	return dq
 }
 
@@ -410,8 +446,9 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*D
 	var (
 		nodes       = []*Department{}
 		_spec       = dq.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			dq.withUsers != nil,
+			dq.withPositions != nil,
 			dq.withUserDepartments != nil,
 		}
 	)
@@ -443,6 +480,13 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*D
 			return nil, err
 		}
 	}
+	if query := dq.withPositions; query != nil {
+		if err := dq.loadPositions(ctx, query, nodes,
+			func(n *Department) { n.Edges.Positions = []*Position{} },
+			func(n *Department, e *Position) { n.Edges.Positions = append(n.Edges.Positions, e) }); err != nil {
+			return nil, err
+		}
+	}
 	if query := dq.withUserDepartments; query != nil {
 		if err := dq.loadUserDepartments(ctx, query, nodes,
 			func(n *Department) { n.Edges.UserDepartments = []*UserDepartment{} },
@@ -455,8 +499,8 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*D
 
 func (dq *DepartmentQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Department, init func(*Department), assign func(*Department, *User)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[string]*Department)
-	nids := make(map[string]map[*Department]struct{})
+	byID := make(map[int]*Department)
+	nids := make(map[int]map[*Department]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -485,11 +529,11 @@ func (dq *DepartmentQuery) loadUsers(ctx context.Context, query *UserQuery, node
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullString)}, values...), nil
+				return append([]any{new(sql.NullInt64)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullString).String
-				inValue := values[1].(*sql.NullString).String
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Department]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -514,9 +558,39 @@ func (dq *DepartmentQuery) loadUsers(ctx context.Context, query *UserQuery, node
 	}
 	return nil
 }
+func (dq *DepartmentQuery) loadPositions(ctx context.Context, query *PositionQuery, nodes []*Department, init func(*Department), assign func(*Department, *Position)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Department)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(position.FieldDepartmentID)
+	}
+	query.Where(predicate.Position(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(department.PositionsColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.DepartmentID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "department_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
 func (dq *DepartmentQuery) loadUserDepartments(ctx context.Context, query *UserDepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *UserDepartment)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Department)
+	nodeids := make(map[int]*Department)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -558,7 +632,7 @@ func (dq *DepartmentQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (dq *DepartmentQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeString))
+	_spec := sqlgraph.NewQuerySpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt))
 	_spec.From = dq.sql
 	if unique := dq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

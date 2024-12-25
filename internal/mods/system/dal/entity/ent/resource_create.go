@@ -49,20 +49,6 @@ func (rc *ResourceCreate) SetNillableUpdateTime(t *time.Time) *ResourceCreate {
 	return rc
 }
 
-// SetMenuID sets the "menu_id" field.
-func (rc *ResourceCreate) SetMenuID(s string) *ResourceCreate {
-	rc.mutation.SetMenuID(s)
-	return rc
-}
-
-// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableMenuID(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetMenuID(*s)
-	}
-	return rc
-}
-
 // SetMethod sets the "method" field.
 func (rc *ResourceCreate) SetMethod(s string) *ResourceCreate {
 	rc.mutation.SetMethod(s)
@@ -97,9 +83,23 @@ func (rc *ResourceCreate) SetPath(s string) *ResourceCreate {
 	return rc
 }
 
+// SetMenuID sets the "menu_id" field.
+func (rc *ResourceCreate) SetMenuID(i int) *ResourceCreate {
+	rc.mutation.SetMenuID(i)
+	return rc
+}
+
+// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillableMenuID(i *int) *ResourceCreate {
+	if i != nil {
+		rc.SetMenuID(*i)
+	}
+	return rc
+}
+
 // SetID sets the "id" field.
-func (rc *ResourceCreate) SetID(s string) *ResourceCreate {
-	rc.mutation.SetID(s)
+func (rc *ResourceCreate) SetID(i int) *ResourceCreate {
+	rc.mutation.SetID(i)
 	return rc
 }
 
@@ -169,11 +169,6 @@ func (rc *ResourceCreate) check() error {
 	if _, ok := rc.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Resource.update_time"`)}
 	}
-	if v, ok := rc.mutation.MenuID(); ok {
-		if err := resource.MenuIDValidator(v); err != nil {
-			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
-		}
-	}
 	if _, ok := rc.mutation.Method(); !ok {
 		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "Resource.method"`)}
 	}
@@ -198,6 +193,11 @@ func (rc *ResourceCreate) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
+	if v, ok := rc.mutation.MenuID(); ok {
+		if err := resource.MenuIDValidator(v); err != nil {
+			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
+		}
+	}
 	if v, ok := rc.mutation.ID(); ok {
 		if err := resource.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Resource.id": %w`, err)}
@@ -217,12 +217,9 @@ func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Resource.ID type: %T", _spec.ID.Value)
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int(id)
 	}
 	rc.mutation.id = &_node.ID
 	rc.mutation.done = true
@@ -232,7 +229,7 @@ func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
 func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Resource{config: rc.config}
-		_spec = sqlgraph.NewCreateSpec(resource.Table, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
+		_spec = sqlgraph.NewCreateSpec(resource.Table, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt))
 	)
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
@@ -266,7 +263,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -343,6 +340,10 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

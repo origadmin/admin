@@ -34,6 +34,11 @@ func (Permission) Mixin() []ent.Mixin {
 // Edges of the Permission.
 func (Permission) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("role_permissions", RolePermission.Type),
+		//edge.To("role_permissions", RolePermission.Type),
+		edge.From("roles", Role.Type).
+			Ref("permissions").
+			//Field("role_id").
+			//Unique().
+			Through("role_permissions", RolePermission.Type),
 	}
 }

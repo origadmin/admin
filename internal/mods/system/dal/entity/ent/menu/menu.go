@@ -146,10 +146,8 @@ var (
 	PathValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
-	// DefaultParentID holds the default value on creation for the "parent_id" field.
-	DefaultParentID string
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(string) error
+	ParentIDValidator func(int) error
 	// DefaultParentPath holds the default value on creation for the "parent_path" field.
 	DefaultParentPath string
 	// ParentPathValidator is a validator for the "parent_path" field. It is called by the builders before save.
@@ -159,7 +157,7 @@ var (
 	// DefaultProperties holds the default value on creation for the "properties" field.
 	DefaultProperties string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int) error
 )
 
 // OrderOption defines the ordering options for the Menu queries.

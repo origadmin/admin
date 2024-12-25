@@ -24,10 +24,10 @@ type Resource struct {
 // Fields of the Resource.
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldFK("menu_id"),                      // From Menu.UUID
 		field.String("method").MaxLen(20).Default(""), // HTTP method
 		field.String("operation").MaxLen(20).Default(""),
 		field.String("path").MaxLen(255), // API request path (e.g. /users/:id or /users/{id})
+		mixin.FieldOpID("menu_id"),       // From Menu.ID
 	}
 }
 

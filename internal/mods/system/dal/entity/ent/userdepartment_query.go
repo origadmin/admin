@@ -132,8 +132,8 @@ func (udq *UserDepartmentQuery) FirstX(ctx context.Context) *UserDepartment {
 
 // FirstID returns the first UserDepartment ID from the query.
 // Returns a *NotFoundError when no UserDepartment ID was found.
-func (udq *UserDepartmentQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (udq *UserDepartmentQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = udq.Limit(1).IDs(setContextOp(ctx, udq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (udq *UserDepartmentQuery) FirstID(ctx context.Context) (id string, err err
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (udq *UserDepartmentQuery) FirstIDX(ctx context.Context) string {
+func (udq *UserDepartmentQuery) FirstIDX(ctx context.Context) int {
 	id, err := udq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (udq *UserDepartmentQuery) OnlyX(ctx context.Context) *UserDepartment {
 // OnlyID is like Only, but returns the only UserDepartment ID in the query.
 // Returns a *NotSingularError when more than one UserDepartment ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (udq *UserDepartmentQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (udq *UserDepartmentQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = udq.Limit(2).IDs(setContextOp(ctx, udq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (udq *UserDepartmentQuery) OnlyID(ctx context.Context) (id string, err erro
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (udq *UserDepartmentQuery) OnlyIDX(ctx context.Context) string {
+func (udq *UserDepartmentQuery) OnlyIDX(ctx context.Context) int {
 	id, err := udq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (udq *UserDepartmentQuery) AllX(ctx context.Context) []*UserDepartment {
 }
 
 // IDs executes the query and returns a list of UserDepartment IDs.
-func (udq *UserDepartmentQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (udq *UserDepartmentQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if udq.ctx.Unique == nil && udq.path != nil {
 		udq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (udq *UserDepartmentQuery) IDs(ctx context.Context) (ids []string, err erro
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (udq *UserDepartmentQuery) IDsX(ctx context.Context) []string {
+func (udq *UserDepartmentQuery) IDsX(ctx context.Context) []int {
 	ids, err := udq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,7 +337,7 @@ func (udq *UserDepartmentQuery) WithDepartment(opts ...func(*DepartmentQuery)) *
 // Example:
 //
 //	var v []struct {
-//		UserID string `json:"user_id,omitempty"`
+//		UserID int `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (udq *UserDepartmentQuery) GroupBy(field string, fields ...string) *UserDep
 // Example:
 //
 //	var v []struct {
-//		UserID string `json:"user_id,omitempty"`
+//		UserID int `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserDepartment.Query().
@@ -451,8 +451,8 @@ func (udq *UserDepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (udq *UserDepartmentQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*UserDepartment, init func(*UserDepartment), assign func(*UserDepartment, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*UserDepartment)
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*UserDepartment)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (udq *UserDepartmentQuery) loadUser(ctx context.Context, query *UserQuery, 
 	return nil
 }
 func (udq *UserDepartmentQuery) loadDepartment(ctx context.Context, query *DepartmentQuery, nodes []*UserDepartment, init func(*UserDepartment), assign func(*UserDepartment, *Department)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*UserDepartment)
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*UserDepartment)
 	for i := range nodes {
 		fk := nodes[i].DepartmentID
 		if _, ok := nodeids[fk]; !ok {
@@ -522,7 +522,7 @@ func (udq *UserDepartmentQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (udq *UserDepartmentQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeString))
+	_spec := sqlgraph.NewQuerySpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
 	_spec.From = udq.sql
 	if unique := udq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,8 +639,8 @@ func (udq *UserDepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *User
 // Example:
 //
 //	var v []struct {
-//	  UserID string `json:"user_id,omitempty"`
-//	  DepartmentID string `json:"department_id,omitempty"`
+//	  UserID int `json:"user_id,omitempty"`
+//	  DepartmentID int `json:"department_id,omitempty"`
 //	}
 //
 //	client.UserDepartment.Query().
