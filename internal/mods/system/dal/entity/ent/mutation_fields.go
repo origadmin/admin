@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -223,6 +225,53 @@ func (m *MenuMutation) SetFieldsWithZero(input *Menu, fields ...string) error {
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
 // field type.
+func (m *MenuPermissionMutation) SetFields(input *MenuPermission, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case menupermission.FieldMenuID:
+			// check int if it is zero
+			if input.MenuID != 0 {
+				m.SetMenuID(input.MenuID)
+			}
+		case menupermission.FieldPermissionID:
+			// check int if it is zero
+			if input.PermissionID != 0 {
+				m.SetPermissionID(input.PermissionID)
+			}
+		case menupermission.FieldID:
+			// check int if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown MenuPermission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *MenuPermissionMutation) SetFieldsWithZero(input *MenuPermission, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case menupermission.FieldMenuID:
+			m.SetMenuID(input.MenuID)
+		case menupermission.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case menupermission.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown MenuPermission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
 func (m *PermissionMutation) SetFields(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -274,6 +323,53 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Permission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case permissionresource.FieldPermissionID:
+			// check int if it is zero
+			if input.PermissionID != 0 {
+				m.SetPermissionID(input.PermissionID)
+			}
+		case permissionresource.FieldResourceID:
+			// check int if it is zero
+			if input.ResourceID != 0 {
+				m.SetResourceID(input.ResourceID)
+			}
+		case permissionresource.FieldID:
+			// check int if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *PermissionResourceMutation) SetFieldsWithZero(input *PermissionResource, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case permissionresource.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case permissionresource.FieldResourceID:
+			m.SetResourceID(input.ResourceID)
+		case permissionresource.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
 		}
 	}
 	return nil

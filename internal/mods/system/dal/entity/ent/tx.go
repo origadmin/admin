@@ -16,8 +16,12 @@ type Tx struct {
 	Department *DepartmentClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// MenuPermission is the client for interacting with the MenuPermission builders.
+	MenuPermission *MenuPermissionClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
+	// PermissionResource is the client for interacting with the PermissionResource builders.
+	PermissionResource *PermissionResourceClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Resource is the client for interacting with the Resource builders.
@@ -169,7 +173,9 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Department = NewDepartmentClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
+	tx.MenuPermission = NewMenuPermissionClient(tx.config)
 	tx.Permission = NewPermissionClient(tx.config)
+	tx.PermissionResource = NewPermissionResourceClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)

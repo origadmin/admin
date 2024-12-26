@@ -24,8 +24,16 @@ const (
 	FieldDescription = "description"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
+	// EdgeMenus holds the string denoting the menus edge name in mutations.
+	EdgeMenus = "menus"
+	// EdgeResources holds the string denoting the resources edge name in mutations.
+	EdgeResources = "resources"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
 	EdgeRolePermissions = "role_permissions"
+	// EdgeMenuPermissions holds the string denoting the menu_permissions edge name in mutations.
+	EdgeMenuPermissions = "menu_permissions"
+	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
+	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the permission in the database.
 	Table = "permissions"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
@@ -33,6 +41,16 @@ const (
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "sys_roles"
+	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
+	MenusTable = "sys_menu_permissions"
+	// MenusInverseTable is the table name for the Menu entity.
+	// It exists in this package in order to avoid circular dependency with the "menu" package.
+	MenusInverseTable = "sys_menus"
+	// ResourcesTable is the table that holds the resources relation/edge. The primary key declared below.
+	ResourcesTable = "sys_permission_resources"
+	// ResourcesInverseTable is the table name for the Resource entity.
+	// It exists in this package in order to avoid circular dependency with the "resource" package.
+	ResourcesInverseTable = "sys_resources"
 	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
 	RolePermissionsTable = "role_permissions"
 	// RolePermissionsInverseTable is the table name for the RolePermission entity.
@@ -40,6 +58,20 @@ const (
 	RolePermissionsInverseTable = "role_permissions"
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "permission_id"
+	// MenuPermissionsTable is the table that holds the menu_permissions relation/edge.
+	MenuPermissionsTable = "sys_menu_permissions"
+	// MenuPermissionsInverseTable is the table name for the MenuPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "menupermission" package.
+	MenuPermissionsInverseTable = "sys_menu_permissions"
+	// MenuPermissionsColumn is the table column denoting the menu_permissions relation/edge.
+	MenuPermissionsColumn = "permission_id"
+	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
+	PermissionResourcesTable = "sys_permission_resources"
+	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.
+	// It exists in this package in order to avoid circular dependency with the "permissionresource" package.
+	PermissionResourcesInverseTable = "sys_permission_resources"
+	// PermissionResourcesColumn is the table column denoting the permission_resources relation/edge.
+	PermissionResourcesColumn = "permission_id"
 )
 
 // Columns holds all SQL columns for permission fields.
@@ -55,6 +87,12 @@ var (
 	// RolesPrimaryKey and RolesColumn2 are the table columns denoting the
 	// primary key for the roles relation (M2M).
 	RolesPrimaryKey = []string{"role_id", "permission_id"}
+	// MenusPrimaryKey and MenusColumn2 are the table columns denoting the
+	// primary key for the menus relation (M2M).
+	MenusPrimaryKey = []string{"menu_id", "permission_id"}
+	// ResourcesPrimaryKey and ResourcesColumn2 are the table columns denoting the
+	// primary key for the resources relation (M2M).
+	ResourcesPrimaryKey = []string{"permission_id", "resource_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -124,6 +162,34 @@ func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByMenusCount orders the results by menus count.
+func ByMenusCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newMenusStep(), opts...)
+	}
+}
+
+// ByMenus orders the results by menus terms.
+func ByMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByResourcesCount orders the results by resources count.
+func ByResourcesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newResourcesStep(), opts...)
+	}
+}
+
+// ByResources orders the results by resources terms.
+func ByResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByRolePermissionsCount orders the results by role_permissions count.
 func ByRolePermissionsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -137,6 +203,34 @@ func ByRolePermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newRolePermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByMenuPermissionsCount orders the results by menu_permissions count.
+func ByMenuPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newMenuPermissionsStep(), opts...)
+	}
+}
+
+// ByMenuPermissions orders the results by menu_permissions terms.
+func ByMenuPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMenuPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByPermissionResourcesCount orders the results by permission_resources count.
+func ByPermissionResourcesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionResourcesStep(), opts...)
+	}
+}
+
+// ByPermissionResources orders the results by permission_resources terms.
+func ByPermissionResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -144,11 +238,39 @@ func newRolesStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, true, RolesTable, RolesPrimaryKey...),
 	)
 }
+func newMenusStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(MenusInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, MenusTable, MenusPrimaryKey...),
+	)
+}
+func newResourcesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ResourcesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, ResourcesTable, ResourcesPrimaryKey...),
+	)
+}
 func newRolePermissionsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(RolePermissionsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, RolePermissionsTable, RolePermissionsColumn),
+	)
+}
+func newMenuPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(MenuPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, MenuPermissionsTable, MenuPermissionsColumn),
+	)
+}
+func newPermissionResourcesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionResourcesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, PermissionResourcesTable, PermissionResourcesColumn),
 	)
 }
 

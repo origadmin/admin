@@ -5,7 +5,9 @@ package ent
 import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -147,6 +149,23 @@ func init() {
 	menuDescID := menuMixinFields0[0].Descriptor()
 	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	menu.IDValidator = menuDescID.Validators[0].(func(int) error)
+	menupermissionMixin := schema.MenuPermission{}.Mixin()
+	menupermissionMixinFields0 := menupermissionMixin[0].Fields()
+	_ = menupermissionMixinFields0
+	menupermissionFields := schema.MenuPermission{}.Fields()
+	_ = menupermissionFields
+	// menupermissionDescMenuID is the schema descriptor for menu_id field.
+	menupermissionDescMenuID := menupermissionFields[0].Descriptor()
+	// menupermission.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
+	menupermission.MenuIDValidator = menupermissionDescMenuID.Validators[0].(func(int) error)
+	// menupermissionDescPermissionID is the schema descriptor for permission_id field.
+	menupermissionDescPermissionID := menupermissionFields[1].Descriptor()
+	// menupermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
+	menupermission.PermissionIDValidator = menupermissionDescPermissionID.Validators[0].(func(int) error)
+	// menupermissionDescID is the schema descriptor for id field.
+	menupermissionDescID := menupermissionMixinFields0[0].Descriptor()
+	// menupermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	menupermission.IDValidator = menupermissionDescID.Validators[0].(func(int) error)
 	permissionMixin := schema.Permission{}.Mixin()
 	permissionMixinFields0 := permissionMixin[0].Fields()
 	_ = permissionMixinFields0
@@ -178,6 +197,23 @@ func init() {
 	permissionDescID := permissionMixinFields0[0].Descriptor()
 	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	permission.IDValidator = permissionDescID.Validators[0].(func(int) error)
+	permissionresourceMixin := schema.PermissionResource{}.Mixin()
+	permissionresourceMixinFields0 := permissionresourceMixin[0].Fields()
+	_ = permissionresourceMixinFields0
+	permissionresourceFields := schema.PermissionResource{}.Fields()
+	_ = permissionresourceFields
+	// permissionresourceDescPermissionID is the schema descriptor for permission_id field.
+	permissionresourceDescPermissionID := permissionresourceFields[0].Descriptor()
+	// permissionresource.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
+	permissionresource.PermissionIDValidator = permissionresourceDescPermissionID.Validators[0].(func(int) error)
+	// permissionresourceDescResourceID is the schema descriptor for resource_id field.
+	permissionresourceDescResourceID := permissionresourceFields[1].Descriptor()
+	// permissionresource.ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
+	permissionresource.ResourceIDValidator = permissionresourceDescResourceID.Validators[0].(func(int) error)
+	// permissionresourceDescID is the schema descriptor for id field.
+	permissionresourceDescID := permissionresourceMixinFields0[0].Descriptor()
+	// permissionresource.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	permissionresource.IDValidator = permissionresourceDescID.Validators[0].(func(int) error)
 	positionMixin := schema.Position{}.Mixin()
 	positionMixinFields0 := positionMixin[0].Fields()
 	_ = positionMixinFields0

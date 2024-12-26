@@ -131,6 +131,49 @@ var (
 			},
 		},
 	}
+	// SysMenuPermissionsColumns holds the columns for the "sys_menu_permissions" table.
+	SysMenuPermissionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "menu_id", Type: field.TypeInt},
+		{Name: "permission_id", Type: field.TypeInt},
+	}
+	// SysMenuPermissionsTable holds the schema information for the "sys_menu_permissions" table.
+	SysMenuPermissionsTable = &schema.Table{
+		Name:       "sys_menu_permissions",
+		Columns:    SysMenuPermissionsColumns,
+		PrimaryKey: []*schema.Column{SysMenuPermissionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_menu_permissions_sys_menus_menu",
+				Columns:    []*schema.Column{SysMenuPermissionsColumns[1]},
+				RefColumns: []*schema.Column{SysMenusColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "sys_menu_permissions_permissions_permission",
+				Columns:    []*schema.Column{SysMenuPermissionsColumns[2]},
+				RefColumns: []*schema.Column{PermissionsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "menupermission_menu_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysMenuPermissionsColumns[1]},
+			},
+			{
+				Name:    "menupermission_permission_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysMenuPermissionsColumns[2]},
+			},
+			{
+				Name:    "menupermission_menu_id_permission_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysMenuPermissionsColumns[1], SysMenuPermissionsColumns[2]},
+			},
+		},
+	}
 	// PermissionsColumns holds the columns for the "permissions" table.
 	PermissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -154,6 +197,49 @@ var (
 				Name:    "permission_update_time",
 				Unique:  false,
 				Columns: []*schema.Column{PermissionsColumns[2]},
+			},
+		},
+	}
+	// SysPermissionResourcesColumns holds the columns for the "sys_permission_resources" table.
+	SysPermissionResourcesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "permission_id", Type: field.TypeInt},
+		{Name: "resource_id", Type: field.TypeInt},
+	}
+	// SysPermissionResourcesTable holds the schema information for the "sys_permission_resources" table.
+	SysPermissionResourcesTable = &schema.Table{
+		Name:       "sys_permission_resources",
+		Columns:    SysPermissionResourcesColumns,
+		PrimaryKey: []*schema.Column{SysPermissionResourcesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_permission_resources_permissions_permission",
+				Columns:    []*schema.Column{SysPermissionResourcesColumns[1]},
+				RefColumns: []*schema.Column{PermissionsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "sys_permission_resources_sys_resources_resource",
+				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
+				RefColumns: []*schema.Column{SysResourcesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "permissionresource_permission_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysPermissionResourcesColumns[1]},
+			},
+			{
+				Name:    "permissionresource_resource_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysPermissionResourcesColumns[2]},
+			},
+			{
+				Name:    "permissionresource_permission_id_resource_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysPermissionResourcesColumns[1], SysPermissionResourcesColumns[2]},
 			},
 		},
 	}
@@ -487,34 +573,34 @@ var (
 			},
 		},
 	}
-	// UserPositionsColumns holds the columns for the "user_positions" table.
-	UserPositionsColumns = []*schema.Column{
+	// SysUserPositionsColumns holds the columns for the "sys_user_positions" table.
+	SysUserPositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "position_user_positions", Type: field.TypeInt, Nullable: true},
 		{Name: "user_id", Type: field.TypeInt},
 		{Name: "position_id", Type: field.TypeInt},
 	}
-	// UserPositionsTable holds the schema information for the "user_positions" table.
-	UserPositionsTable = &schema.Table{
-		Name:       "user_positions",
-		Columns:    UserPositionsColumns,
-		PrimaryKey: []*schema.Column{UserPositionsColumns[0]},
+	// SysUserPositionsTable holds the schema information for the "sys_user_positions" table.
+	SysUserPositionsTable = &schema.Table{
+		Name:       "sys_user_positions",
+		Columns:    SysUserPositionsColumns,
+		PrimaryKey: []*schema.Column{SysUserPositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "user_positions_positions_user_positions",
-				Columns:    []*schema.Column{UserPositionsColumns[1]},
+				Symbol:     "sys_user_positions_positions_user_positions",
+				Columns:    []*schema.Column{SysUserPositionsColumns[1]},
 				RefColumns: []*schema.Column{PositionsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:     "user_positions_sys_users_user",
-				Columns:    []*schema.Column{UserPositionsColumns[2]},
+				Symbol:     "sys_user_positions_sys_users_user",
+				Columns:    []*schema.Column{SysUserPositionsColumns[2]},
 				RefColumns: []*schema.Column{SysUsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "user_positions_positions_position",
-				Columns:    []*schema.Column{UserPositionsColumns[3]},
+				Symbol:     "sys_user_positions_positions_position",
+				Columns:    []*schema.Column{SysUserPositionsColumns[3]},
 				RefColumns: []*schema.Column{PositionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -523,17 +609,17 @@ var (
 			{
 				Name:    "userposition_user_id",
 				Unique:  false,
-				Columns: []*schema.Column{UserPositionsColumns[2]},
+				Columns: []*schema.Column{SysUserPositionsColumns[2]},
 			},
 			{
 				Name:    "userposition_position_id",
 				Unique:  false,
-				Columns: []*schema.Column{UserPositionsColumns[3]},
+				Columns: []*schema.Column{SysUserPositionsColumns[3]},
 			},
 			{
 				Name:    "userposition_user_id_position_id",
 				Unique:  true,
-				Columns: []*schema.Column{UserPositionsColumns[2], UserPositionsColumns[3]},
+				Columns: []*schema.Column{SysUserPositionsColumns[2], SysUserPositionsColumns[3]},
 			},
 		},
 	}
@@ -584,7 +670,9 @@ var (
 	Tables = []*schema.Table{
 		SysDepartmentsTable,
 		SysMenusTable,
+		SysMenuPermissionsTable,
 		PermissionsTable,
+		SysPermissionResourcesTable,
 		PositionsTable,
 		SysResourcesTable,
 		SysRolesTable,
@@ -592,7 +680,7 @@ var (
 		RolePermissionsTable,
 		SysUsersTable,
 		SysUserDepartmentsTable,
-		UserPositionsTable,
+		SysUserPositionsTable,
 		SysUserRolesTable,
 	}
 )
@@ -604,6 +692,16 @@ func init() {
 	SysMenusTable.ForeignKeys[0].RefTable = SysMenusTable
 	SysMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_menus",
+	}
+	SysMenuPermissionsTable.ForeignKeys[0].RefTable = SysMenusTable
+	SysMenuPermissionsTable.ForeignKeys[1].RefTable = PermissionsTable
+	SysMenuPermissionsTable.Annotation = &entsql.Annotation{
+		Table: "sys_menu_permissions",
+	}
+	SysPermissionResourcesTable.ForeignKeys[0].RefTable = PermissionsTable
+	SysPermissionResourcesTable.ForeignKeys[1].RefTable = SysResourcesTable
+	SysPermissionResourcesTable.Annotation = &entsql.Annotation{
+		Table: "sys_permission_resources",
 	}
 	PositionsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
 	SysResourcesTable.ForeignKeys[0].RefTable = SysMenusTable
@@ -628,9 +726,12 @@ func init() {
 	SysUserDepartmentsTable.Annotation = &entsql.Annotation{
 		Table: "sys_user_departments",
 	}
-	UserPositionsTable.ForeignKeys[0].RefTable = PositionsTable
-	UserPositionsTable.ForeignKeys[1].RefTable = SysUsersTable
-	UserPositionsTable.ForeignKeys[2].RefTable = PositionsTable
+	SysUserPositionsTable.ForeignKeys[0].RefTable = PositionsTable
+	SysUserPositionsTable.ForeignKeys[1].RefTable = SysUsersTable
+	SysUserPositionsTable.ForeignKeys[2].RefTable = PositionsTable
+	SysUserPositionsTable.Annotation = &entsql.Annotation{
+		Table: "sys_user_positions",
+	}
 	SysUserRolesTable.ForeignKeys[0].RefTable = SysUsersTable
 	SysUserRolesTable.ForeignKeys[1].RefTable = SysRolesTable
 	SysUserRolesTable.Annotation = &entsql.Annotation{

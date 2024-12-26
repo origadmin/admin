@@ -413,6 +413,52 @@ func HasMenuWith(preds ...predicate.Menu) predicate.Resource {
 	})
 }
 
+// HasPermission applies the HasEdge predicate on the "permission" edge.
+func HasPermission() predicate.Resource {
+	return predicate.Resource(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, PermissionTable, PermissionPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPermissionWith applies the HasEdge predicate on the "permission" edge with a given conditions (other predicates).
+func HasPermissionWith(preds ...predicate.Permission) predicate.Resource {
+	return predicate.Resource(func(s *sql.Selector) {
+		step := newPermissionStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasPermissionResources applies the HasEdge predicate on the "permission_resources" edge.
+func HasPermissionResources() predicate.Resource {
+	return predicate.Resource(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, PermissionResourcesTable, PermissionResourcesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPermissionResourcesWith applies the HasEdge predicate on the "permission_resources" edge with a given conditions (other predicates).
+func HasPermissionResourcesWith(preds ...predicate.PermissionResource) predicate.Resource {
+	return predicate.Resource(func(s *sql.Selector) {
+		step := newPermissionResourcesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Resource) predicate.Resource {
 	return predicate.Resource(sql.AndPredicates(predicates...))

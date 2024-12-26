@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"time"
 
@@ -106,6 +108,36 @@ func (rc *ResourceCreate) SetID(i int) *ResourceCreate {
 // SetMenu sets the "menu" edge to the Menu entity.
 func (rc *ResourceCreate) SetMenu(m *Menu) *ResourceCreate {
 	return rc.SetMenuID(m.ID)
+}
+
+// AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
+func (rc *ResourceCreate) AddPermissionIDs(ids ...int) *ResourceCreate {
+	rc.mutation.AddPermissionIDs(ids...)
+	return rc
+}
+
+// AddPermission adds the "permission" edges to the Permission entity.
+func (rc *ResourceCreate) AddPermission(p ...*Permission) *ResourceCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return rc.AddPermissionIDs(ids...)
+}
+
+// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
+func (rc *ResourceCreate) AddPermissionResourceIDs(ids ...int) *ResourceCreate {
+	rc.mutation.AddPermissionResourceIDs(ids...)
+	return rc
+}
+
+// AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
+func (rc *ResourceCreate) AddPermissionResources(p ...*PermissionResource) *ResourceCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return rc.AddPermissionResourceIDs(ids...)
 }
 
 // Mutation returns the ResourceMutation object of the builder.
@@ -270,6 +302,38 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.MenuID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.PermissionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

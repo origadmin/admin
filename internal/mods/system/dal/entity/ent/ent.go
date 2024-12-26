@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -84,18 +86,20 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			department.Table:     department.ValidColumn,
-			menu.Table:           menu.ValidColumn,
-			permission.Table:     permission.ValidColumn,
-			position.Table:       position.ValidColumn,
-			resource.Table:       resource.ValidColumn,
-			role.Table:           role.ValidColumn,
-			rolemenu.Table:       rolemenu.ValidColumn,
-			rolepermission.Table: rolepermission.ValidColumn,
-			user.Table:           user.ValidColumn,
-			userdepartment.Table: userdepartment.ValidColumn,
-			userposition.Table:   userposition.ValidColumn,
-			userrole.Table:       userrole.ValidColumn,
+			department.Table:         department.ValidColumn,
+			menu.Table:               menu.ValidColumn,
+			menupermission.Table:     menupermission.ValidColumn,
+			permission.Table:         permission.ValidColumn,
+			permissionresource.Table: permissionresource.ValidColumn,
+			position.Table:           position.ValidColumn,
+			resource.Table:           resource.ValidColumn,
+			role.Table:               role.ValidColumn,
+			rolemenu.Table:           rolemenu.ValidColumn,
+			rolepermission.Table:     rolepermission.ValidColumn,
+			user.Table:               user.ValidColumn,
+			userdepartment.Table:     userdepartment.ValidColumn,
+			userposition.Table:       userposition.ValidColumn,
+			userrole.Table:           userrole.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

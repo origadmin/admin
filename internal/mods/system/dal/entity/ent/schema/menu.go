@@ -37,7 +37,6 @@ type Menu struct {
 // Fields of the Menu.
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
-
 		field.String("keyword").MaxLen(32).Default(""),       // Code of menu (unique for each level)
 		field.String("name").MaxLen(128).Default(""),         // Display name of menu
 		field.String("description").MaxLen(1024).Default(""), // Details about menu
@@ -92,8 +91,9 @@ func (Menu) Edges() []ent.Edge {
 		edge.To("resources", Resource.Type),
 		edge.From("roles", Role.Type).
 			Ref("menus").
-			//Field("role_id").
-			//Unique().
 			Through("role_menus", RoleMenu.Type),
+		edge.To("permissions", Permission.Type).
+			StorageKey(edge.Columns("menu_id", "permission_id")).
+			Through("menu_permissions", MenuPermission.Type),
 	}
 }

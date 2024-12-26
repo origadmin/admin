@@ -7,6 +7,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/index"
 
@@ -56,5 +58,12 @@ func (UserPosition) Edges() []ent.Edge {
 			Field("position_id").
 			Unique().
 			Required(),
+	}
+}
+
+// Annotations of the UserPosition
+func (UserPosition) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_user_positions"),
 	}
 }

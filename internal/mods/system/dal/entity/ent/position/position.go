@@ -38,10 +38,10 @@ const (
 	// DepartmentColumn is the table column denoting the department relation/edge.
 	DepartmentColumn = "department_id"
 	// UserPositionsTable is the table that holds the user_positions relation/edge.
-	UserPositionsTable = "user_positions"
+	UserPositionsTable = "sys_user_positions"
 	// UserPositionsInverseTable is the table name for the UserPosition entity.
 	// It exists in this package in order to avoid circular dependency with the "userposition" package.
-	UserPositionsInverseTable = "user_positions"
+	UserPositionsInverseTable = "sys_user_positions"
 	// UserPositionsColumn is the table column denoting the user_positions relation/edge.
 	UserPositionsColumn = "position_user_positions"
 )

@@ -40,9 +40,13 @@ type Resource struct {
 type ResourceEdges struct {
 	// Menu holds the value of the menu edge.
 	Menu *Menu `json:"menu,omitempty"`
+	// Permission holds the value of the permission edge.
+	Permission []*Permission `json:"permission,omitempty"`
+	// PermissionResources holds the value of the permission_resources edge.
+	PermissionResources []*PermissionResource `json:"permission_resources,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [3]bool
 }
 
 // MenuOrErr returns the Menu value or an error if the edge
@@ -54,6 +58,24 @@ func (e ResourceEdges) MenuOrErr() (*Menu, error) {
 		return nil, &NotFoundError{label: menu.Label}
 	}
 	return nil, &NotLoadedError{edge: "menu"}
+}
+
+// PermissionOrErr returns the Permission value or an error if the edge
+// was not loaded in eager-loading.
+func (e ResourceEdges) PermissionOrErr() ([]*Permission, error) {
+	if e.loadedTypes[1] {
+		return e.Permission, nil
+	}
+	return nil, &NotLoadedError{edge: "permission"}
+}
+
+// PermissionResourcesOrErr returns the PermissionResources value or an error if the edge
+// was not loaded in eager-loading.
+func (e ResourceEdges) PermissionResourcesOrErr() ([]*PermissionResource, error) {
+	if e.loadedTypes[2] {
+		return e.PermissionResources, nil
+	}
+	return nil, &NotLoadedError{edge: "permission_resources"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -140,6 +162,16 @@ func (r *Resource) Value(name string) (ent.Value, error) {
 // QueryMenu queries the "menu" edge of the Resource entity.
 func (r *Resource) QueryMenu() *MenuQuery {
 	return NewResourceClient(r.config).QueryMenu(r)
+}
+
+// QueryPermission queries the "permission" edge of the Resource entity.
+func (r *Resource) QueryPermission() *PermissionQuery {
+	return NewResourceClient(r.config).QueryPermission(r)
+}
+
+// QueryPermissionResources queries the "permission_resources" edge of the Resource entity.
+func (r *Resource) QueryPermissionResources() *PermissionResourceQuery {
+	return NewResourceClient(r.config).QueryPermissionResources(r)
 }
 
 // Update returns a builder for updating this Resource.

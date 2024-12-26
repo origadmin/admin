@@ -13,7 +13,9 @@ import (
 
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -39,8 +41,12 @@ type Client struct {
 	Department *DepartmentClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
+	// MenuPermission is the client for interacting with the MenuPermission builders.
+	MenuPermission *MenuPermissionClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
+	// PermissionResource is the client for interacting with the PermissionResource builders.
+	PermissionResource *PermissionResourceClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
 	// Resource is the client for interacting with the Resource builders.
@@ -72,7 +78,9 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Department = NewDepartmentClient(c.config)
 	c.Menu = NewMenuClient(c.config)
+	c.MenuPermission = NewMenuPermissionClient(c.config)
 	c.Permission = NewPermissionClient(c.config)
+	c.PermissionResource = NewPermissionResourceClient(c.config)
 	c.Position = NewPositionClient(c.config)
 	c.Resource = NewResourceClient(c.config)
 	c.Role = NewRoleClient(c.config)
@@ -172,20 +180,22 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		Department:     NewDepartmentClient(cfg),
-		Menu:           NewMenuClient(cfg),
-		Permission:     NewPermissionClient(cfg),
-		Position:       NewPositionClient(cfg),
-		Resource:       NewResourceClient(cfg),
-		Role:           NewRoleClient(cfg),
-		RoleMenu:       NewRoleMenuClient(cfg),
-		RolePermission: NewRolePermissionClient(cfg),
-		User:           NewUserClient(cfg),
-		UserDepartment: NewUserDepartmentClient(cfg),
-		UserPosition:   NewUserPositionClient(cfg),
-		UserRole:       NewUserRoleClient(cfg),
+		ctx:                ctx,
+		config:             cfg,
+		Department:         NewDepartmentClient(cfg),
+		Menu:               NewMenuClient(cfg),
+		MenuPermission:     NewMenuPermissionClient(cfg),
+		Permission:         NewPermissionClient(cfg),
+		PermissionResource: NewPermissionResourceClient(cfg),
+		Position:           NewPositionClient(cfg),
+		Resource:           NewResourceClient(cfg),
+		Role:               NewRoleClient(cfg),
+		RoleMenu:           NewRoleMenuClient(cfg),
+		RolePermission:     NewRolePermissionClient(cfg),
+		User:               NewUserClient(cfg),
+		UserDepartment:     NewUserDepartmentClient(cfg),
+		UserPosition:       NewUserPositionClient(cfg),
+		UserRole:           NewUserRoleClient(cfg),
 	}, nil
 }
 
@@ -203,20 +213,22 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:            ctx,
-		config:         cfg,
-		Department:     NewDepartmentClient(cfg),
-		Menu:           NewMenuClient(cfg),
-		Permission:     NewPermissionClient(cfg),
-		Position:       NewPositionClient(cfg),
-		Resource:       NewResourceClient(cfg),
-		Role:           NewRoleClient(cfg),
-		RoleMenu:       NewRoleMenuClient(cfg),
-		RolePermission: NewRolePermissionClient(cfg),
-		User:           NewUserClient(cfg),
-		UserDepartment: NewUserDepartmentClient(cfg),
-		UserPosition:   NewUserPositionClient(cfg),
-		UserRole:       NewUserRoleClient(cfg),
+		ctx:                ctx,
+		config:             cfg,
+		Department:         NewDepartmentClient(cfg),
+		Menu:               NewMenuClient(cfg),
+		MenuPermission:     NewMenuPermissionClient(cfg),
+		Permission:         NewPermissionClient(cfg),
+		PermissionResource: NewPermissionResourceClient(cfg),
+		Position:           NewPositionClient(cfg),
+		Resource:           NewResourceClient(cfg),
+		Role:               NewRoleClient(cfg),
+		RoleMenu:           NewRoleMenuClient(cfg),
+		RolePermission:     NewRolePermissionClient(cfg),
+		User:               NewUserClient(cfg),
+		UserDepartment:     NewUserDepartmentClient(cfg),
+		UserPosition:       NewUserPositionClient(cfg),
+		UserRole:           NewUserRoleClient(cfg),
 	}, nil
 }
 
@@ -246,8 +258,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Department, c.Menu, c.Permission, c.Position, c.Resource, c.Role, c.RoleMenu,
-		c.RolePermission, c.User, c.UserDepartment, c.UserPosition, c.UserRole,
+		c.Department, c.Menu, c.MenuPermission, c.Permission, c.PermissionResource,
+		c.Position, c.Resource, c.Role, c.RoleMenu, c.RolePermission, c.User,
+		c.UserDepartment, c.UserPosition, c.UserRole,
 	} {
 		n.Use(hooks...)
 	}
@@ -257,8 +270,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Department, c.Menu, c.Permission, c.Position, c.Resource, c.Role, c.RoleMenu,
-		c.RolePermission, c.User, c.UserDepartment, c.UserPosition, c.UserRole,
+		c.Department, c.Menu, c.MenuPermission, c.Permission, c.PermissionResource,
+		c.Position, c.Resource, c.Role, c.RoleMenu, c.RolePermission, c.User,
+		c.UserDepartment, c.UserPosition, c.UserRole,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -271,8 +285,12 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Department.mutate(ctx, m)
 	case *MenuMutation:
 		return c.Menu.mutate(ctx, m)
+	case *MenuPermissionMutation:
+		return c.MenuPermission.mutate(ctx, m)
 	case *PermissionMutation:
 		return c.Permission.mutate(ctx, m)
+	case *PermissionResourceMutation:
+		return c.PermissionResource.mutate(ctx, m)
 	case *PositionMutation:
 		return c.Position.mutate(ctx, m)
 	case *ResourceMutation:
@@ -649,6 +667,22 @@ func (c *MenuClient) QueryRoles(m *Menu) *RoleQuery {
 	return query
 }
 
+// QueryPermissions queries the permissions edge of a Menu.
+func (c *MenuClient) QueryPermissions(m *Menu) *PermissionQuery {
+	query := (&PermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(menu.Table, menu.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, menu.PermissionsTable, menu.PermissionsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryRoleMenus queries the role_menus edge of a Menu.
 func (c *MenuClient) QueryRoleMenus(m *Menu) *RoleMenuQuery {
 	query := (&RoleMenuClient{config: c.config}).Query()
@@ -658,6 +692,22 @@ func (c *MenuClient) QueryRoleMenus(m *Menu) *RoleMenuQuery {
 			sqlgraph.From(menu.Table, menu.FieldID, id),
 			sqlgraph.To(rolemenu.Table, rolemenu.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, menu.RoleMenusTable, menu.RoleMenusColumn),
+		)
+		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryMenuPermissions queries the menu_permissions edge of a Menu.
+func (c *MenuClient) QueryMenuPermissions(m *Menu) *MenuPermissionQuery {
+	query := (&MenuPermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(menu.Table, menu.FieldID, id),
+			sqlgraph.To(menupermission.Table, menupermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, menu.MenuPermissionsTable, menu.MenuPermissionsColumn),
 		)
 		fromV = sqlgraph.Neighbors(m.driver.Dialect(), step)
 		return fromV, nil
@@ -687,6 +737,171 @@ func (c *MenuClient) mutate(ctx context.Context, m *MenuMutation) (Value, error)
 		return (&MenuDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Menu mutation op: %q", m.Op())
+	}
+}
+
+// MenuPermissionClient is a client for the MenuPermission schema.
+type MenuPermissionClient struct {
+	config
+}
+
+// NewMenuPermissionClient returns a client for the MenuPermission from the given config.
+func NewMenuPermissionClient(c config) *MenuPermissionClient {
+	return &MenuPermissionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `menupermission.Hooks(f(g(h())))`.
+func (c *MenuPermissionClient) Use(hooks ...Hook) {
+	c.hooks.MenuPermission = append(c.hooks.MenuPermission, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `menupermission.Intercept(f(g(h())))`.
+func (c *MenuPermissionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.MenuPermission = append(c.inters.MenuPermission, interceptors...)
+}
+
+// Create returns a builder for creating a MenuPermission entity.
+func (c *MenuPermissionClient) Create() *MenuPermissionCreate {
+	mutation := newMenuPermissionMutation(c.config, OpCreate)
+	return &MenuPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MenuPermission entities.
+func (c *MenuPermissionClient) CreateBulk(builders ...*MenuPermissionCreate) *MenuPermissionCreateBulk {
+	return &MenuPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *MenuPermissionClient) MapCreateBulk(slice any, setFunc func(*MenuPermissionCreate, int)) *MenuPermissionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &MenuPermissionCreateBulk{err: fmt.Errorf("calling to MenuPermissionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*MenuPermissionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &MenuPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MenuPermission.
+func (c *MenuPermissionClient) Update() *MenuPermissionUpdate {
+	mutation := newMenuPermissionMutation(c.config, OpUpdate)
+	return &MenuPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MenuPermissionClient) UpdateOne(mp *MenuPermission) *MenuPermissionUpdateOne {
+	mutation := newMenuPermissionMutation(c.config, OpUpdateOne, withMenuPermission(mp))
+	return &MenuPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MenuPermissionClient) UpdateOneID(id int) *MenuPermissionUpdateOne {
+	mutation := newMenuPermissionMutation(c.config, OpUpdateOne, withMenuPermissionID(id))
+	return &MenuPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MenuPermission.
+func (c *MenuPermissionClient) Delete() *MenuPermissionDelete {
+	mutation := newMenuPermissionMutation(c.config, OpDelete)
+	return &MenuPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MenuPermissionClient) DeleteOne(mp *MenuPermission) *MenuPermissionDeleteOne {
+	return c.DeleteOneID(mp.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *MenuPermissionClient) DeleteOneID(id int) *MenuPermissionDeleteOne {
+	builder := c.Delete().Where(menupermission.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MenuPermissionDeleteOne{builder}
+}
+
+// Query returns a query builder for MenuPermission.
+func (c *MenuPermissionClient) Query() *MenuPermissionQuery {
+	return &MenuPermissionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeMenuPermission},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a MenuPermission entity by its id.
+func (c *MenuPermissionClient) Get(ctx context.Context, id int) (*MenuPermission, error) {
+	return c.Query().Where(menupermission.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MenuPermissionClient) GetX(ctx context.Context, id int) *MenuPermission {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryMenu queries the menu edge of a MenuPermission.
+func (c *MenuPermissionClient) QueryMenu(mp *MenuPermission) *MenuQuery {
+	query := (&MenuClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := mp.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(menupermission.Table, menupermission.FieldID, id),
+			sqlgraph.To(menu.Table, menu.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, menupermission.MenuTable, menupermission.MenuColumn),
+		)
+		fromV = sqlgraph.Neighbors(mp.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermission queries the permission edge of a MenuPermission.
+func (c *MenuPermissionClient) QueryPermission(mp *MenuPermission) *PermissionQuery {
+	query := (&PermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := mp.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(menupermission.Table, menupermission.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, menupermission.PermissionTable, menupermission.PermissionColumn),
+		)
+		fromV = sqlgraph.Neighbors(mp.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *MenuPermissionClient) Hooks() []Hook {
+	return c.hooks.MenuPermission
+}
+
+// Interceptors returns the client interceptors.
+func (c *MenuPermissionClient) Interceptors() []Interceptor {
+	return c.inters.MenuPermission
+}
+
+func (c *MenuPermissionClient) mutate(ctx context.Context, m *MenuPermissionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MenuPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MenuPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MenuPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MenuPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown MenuPermission mutation op: %q", m.Op())
 	}
 }
 
@@ -814,6 +1029,38 @@ func (c *PermissionClient) QueryRoles(pe *Permission) *RoleQuery {
 	return query
 }
 
+// QueryMenus queries the menus edge of a Permission.
+func (c *PermissionClient) QueryMenus(pe *Permission) *MenuQuery {
+	query := (&MenuClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(menu.Table, menu.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, permission.MenusTable, permission.MenusPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryResources queries the resources edge of a Permission.
+func (c *PermissionClient) QueryResources(pe *Permission) *ResourceQuery {
+	query := (&ResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryRolePermissions queries the role_permissions edge of a Permission.
 func (c *PermissionClient) QueryRolePermissions(pe *Permission) *RolePermissionQuery {
 	query := (&RolePermissionClient{config: c.config}).Query()
@@ -823,6 +1070,38 @@ func (c *PermissionClient) QueryRolePermissions(pe *Permission) *RolePermissionQ
 			sqlgraph.From(permission.Table, permission.FieldID, id),
 			sqlgraph.To(rolepermission.Table, rolepermission.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, permission.RolePermissionsTable, permission.RolePermissionsColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryMenuPermissions queries the menu_permissions edge of a Permission.
+func (c *PermissionClient) QueryMenuPermissions(pe *Permission) *MenuPermissionQuery {
+	query := (&MenuPermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(menupermission.Table, menupermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, permission.MenuPermissionsTable, permission.MenuPermissionsColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermissionResources queries the permission_resources edge of a Permission.
+func (c *PermissionClient) QueryPermissionResources(pe *Permission) *PermissionResourceQuery {
+	query := (&PermissionResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
 		)
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil
@@ -852,6 +1131,171 @@ func (c *PermissionClient) mutate(ctx context.Context, m *PermissionMutation) (V
 		return (&PermissionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Permission mutation op: %q", m.Op())
+	}
+}
+
+// PermissionResourceClient is a client for the PermissionResource schema.
+type PermissionResourceClient struct {
+	config
+}
+
+// NewPermissionResourceClient returns a client for the PermissionResource from the given config.
+func NewPermissionResourceClient(c config) *PermissionResourceClient {
+	return &PermissionResourceClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `permissionresource.Hooks(f(g(h())))`.
+func (c *PermissionResourceClient) Use(hooks ...Hook) {
+	c.hooks.PermissionResource = append(c.hooks.PermissionResource, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `permissionresource.Intercept(f(g(h())))`.
+func (c *PermissionResourceClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PermissionResource = append(c.inters.PermissionResource, interceptors...)
+}
+
+// Create returns a builder for creating a PermissionResource entity.
+func (c *PermissionResourceClient) Create() *PermissionResourceCreate {
+	mutation := newPermissionResourceMutation(c.config, OpCreate)
+	return &PermissionResourceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PermissionResource entities.
+func (c *PermissionResourceClient) CreateBulk(builders ...*PermissionResourceCreate) *PermissionResourceCreateBulk {
+	return &PermissionResourceCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PermissionResourceClient) MapCreateBulk(slice any, setFunc func(*PermissionResourceCreate, int)) *PermissionResourceCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PermissionResourceCreateBulk{err: fmt.Errorf("calling to PermissionResourceClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PermissionResourceCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PermissionResourceCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PermissionResource.
+func (c *PermissionResourceClient) Update() *PermissionResourceUpdate {
+	mutation := newPermissionResourceMutation(c.config, OpUpdate)
+	return &PermissionResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PermissionResourceClient) UpdateOne(pr *PermissionResource) *PermissionResourceUpdateOne {
+	mutation := newPermissionResourceMutation(c.config, OpUpdateOne, withPermissionResource(pr))
+	return &PermissionResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PermissionResourceClient) UpdateOneID(id int) *PermissionResourceUpdateOne {
+	mutation := newPermissionResourceMutation(c.config, OpUpdateOne, withPermissionResourceID(id))
+	return &PermissionResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PermissionResource.
+func (c *PermissionResourceClient) Delete() *PermissionResourceDelete {
+	mutation := newPermissionResourceMutation(c.config, OpDelete)
+	return &PermissionResourceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PermissionResourceClient) DeleteOne(pr *PermissionResource) *PermissionResourceDeleteOne {
+	return c.DeleteOneID(pr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PermissionResourceClient) DeleteOneID(id int) *PermissionResourceDeleteOne {
+	builder := c.Delete().Where(permissionresource.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PermissionResourceDeleteOne{builder}
+}
+
+// Query returns a query builder for PermissionResource.
+func (c *PermissionResourceClient) Query() *PermissionResourceQuery {
+	return &PermissionResourceQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePermissionResource},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PermissionResource entity by its id.
+func (c *PermissionResourceClient) Get(ctx context.Context, id int) (*PermissionResource, error) {
+	return c.Query().Where(permissionresource.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PermissionResourceClient) GetX(ctx context.Context, id int) *PermissionResource {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryPermission queries the permission edge of a PermissionResource.
+func (c *PermissionResourceClient) QueryPermission(pr *PermissionResource) *PermissionQuery {
+	query := (&PermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permissionresource.Table, permissionresource.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, permissionresource.PermissionTable, permissionresource.PermissionColumn),
+		)
+		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryResource queries the resource edge of a PermissionResource.
+func (c *PermissionResourceClient) QueryResource(pr *PermissionResource) *ResourceQuery {
+	query := (&ResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permissionresource.Table, permissionresource.FieldID, id),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, permissionresource.ResourceTable, permissionresource.ResourceColumn),
+		)
+		fromV = sqlgraph.Neighbors(pr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PermissionResourceClient) Hooks() []Hook {
+	return c.hooks.PermissionResource
+}
+
+// Interceptors returns the client interceptors.
+func (c *PermissionResourceClient) Interceptors() []Interceptor {
+	return c.inters.PermissionResource
+}
+
+func (c *PermissionResourceClient) mutate(ctx context.Context, m *PermissionResourceMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PermissionResourceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PermissionResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PermissionResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PermissionResourceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PermissionResource mutation op: %q", m.Op())
 	}
 }
 
@@ -1137,6 +1581,38 @@ func (c *ResourceClient) QueryMenu(r *Resource) *MenuQuery {
 			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(menu.Table, menu.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, resource.MenuTable, resource.MenuColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermission queries the permission edge of a Resource.
+func (c *ResourceClient) QueryPermission(r *Resource) *PermissionQuery {
+	query := (&PermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, resource.PermissionTable, resource.PermissionPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermissionResources queries the permission_resources edge of a Resource.
+func (c *ResourceClient) QueryPermissionResources(r *Resource) *PermissionResourceQuery {
+	query := (&PermissionResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, id),
+			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, resource.PermissionResourcesTable, resource.PermissionResourcesColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -2423,11 +2899,13 @@ func (c *UserRoleClient) mutate(ctx context.Context, m *UserRoleMutation) (Value
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Department, Menu, Permission, Position, Resource, Role, RoleMenu,
-		RolePermission, User, UserDepartment, UserPosition, UserRole []ent.Hook
+		Department, Menu, MenuPermission, Permission, PermissionResource, Position,
+		Resource, Role, RoleMenu, RolePermission, User, UserDepartment, UserPosition,
+		UserRole []ent.Hook
 	}
 	inters struct {
-		Department, Menu, Permission, Position, Resource, Role, RoleMenu,
-		RolePermission, User, UserDepartment, UserPosition, UserRole []ent.Interceptor
+		Department, Menu, MenuPermission, Permission, PermissionResource, Position,
+		Resource, Role, RoleMenu, RolePermission, User, UserDepartment, UserPosition,
+		UserRole []ent.Interceptor
 	}
 )

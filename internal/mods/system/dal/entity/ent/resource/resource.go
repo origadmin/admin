@@ -28,6 +28,10 @@ const (
 	FieldMenuID = "menu_id"
 	// EdgeMenu holds the string denoting the menu edge name in mutations.
 	EdgeMenu = "menu"
+	// EdgePermission holds the string denoting the permission edge name in mutations.
+	EdgePermission = "permission"
+	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
+	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the resource in the database.
 	Table = "sys_resources"
 	// MenuTable is the table that holds the menu relation/edge.
@@ -37,6 +41,18 @@ const (
 	MenuInverseTable = "sys_menus"
 	// MenuColumn is the table column denoting the menu relation/edge.
 	MenuColumn = "menu_id"
+	// PermissionTable is the table that holds the permission relation/edge. The primary key declared below.
+	PermissionTable = "sys_permission_resources"
+	// PermissionInverseTable is the table name for the Permission entity.
+	// It exists in this package in order to avoid circular dependency with the "permission" package.
+	PermissionInverseTable = "permissions"
+	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
+	PermissionResourcesTable = "sys_permission_resources"
+	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.
+	// It exists in this package in order to avoid circular dependency with the "permissionresource" package.
+	PermissionResourcesInverseTable = "sys_permission_resources"
+	// PermissionResourcesColumn is the table column denoting the permission_resources relation/edge.
+	PermissionResourcesColumn = "resource_id"
 )
 
 // Columns holds all SQL columns for resource fields.
@@ -49,6 +65,12 @@ var Columns = []string{
 	FieldPath,
 	FieldMenuID,
 }
+
+var (
+	// PermissionPrimaryKey and PermissionColumn2 are the table columns denoting the
+	// primary key for the permission relation (M2M).
+	PermissionPrimaryKey = []string{"permission_id", "resource_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -127,11 +149,53 @@ func ByMenuField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newMenuStep(), sql.OrderByField(field, opts...))
 	}
 }
+
+// ByPermissionCount orders the results by permission count.
+func ByPermissionCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionStep(), opts...)
+	}
+}
+
+// ByPermission orders the results by permission terms.
+func ByPermission(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByPermissionResourcesCount orders the results by permission_resources count.
+func ByPermissionResourcesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionResourcesStep(), opts...)
+	}
+}
+
+// ByPermissionResources orders the results by permission_resources terms.
+func ByPermissionResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newMenuStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(MenuInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, MenuTable, MenuColumn),
+	)
+}
+func newPermissionStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, PermissionTable, PermissionPrimaryKey...),
+	)
+}
+func newPermissionResourcesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionResourcesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, PermissionResourcesTable, PermissionResourcesColumn),
 	)
 }
 

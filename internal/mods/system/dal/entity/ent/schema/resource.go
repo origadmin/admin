@@ -24,10 +24,10 @@ type Resource struct {
 // Fields of the Resource.
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("method").MaxLen(20).Default(""), // HTTP method
-		field.String("operation").MaxLen(20).Default(""),
-		field.String("path").MaxLen(255), // API request path (e.g. /users/:id or /users/{id})
-		mixin.OP("menu_id"),              // From Menu.ID
+		field.String("method").MaxLen(20).Default(""),    // HTTP method (e.g. GET, POST, PUT, DELETE)
+		field.String("operation").MaxLen(20).Default(""), // grpc operation (e.g. CreateUser, GetUser, UpdateUser, DeleteUser)
+		field.String("path").MaxLen(255),                 // API request path (e.g. /users/:id or /users/{id})
+		mixin.OP("menu_id"),                              // From Menu.ID
 	}
 }
 
@@ -53,6 +53,12 @@ func (Resource) Annotations() []schema.Annotation {
 // Edges of the Resource.
 func (Resource) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("menu", Menu.Type).Ref("resources").Field("menu_id").Unique(),
+		edge.From("menu", Menu.Type).
+			Ref("resources").
+			Field("menu_id").
+			Unique(),
+		edge.From("permission", Permission.Type).
+			Ref("resources").
+			Through("permission_resources", PermissionResource.Type),
 	}
 }

@@ -907,6 +907,29 @@ func HasRolesWith(preds ...predicate.Role) predicate.Menu {
 	})
 }
 
+// HasPermissions applies the HasEdge predicate on the "permissions" edge.
+func HasPermissions() predicate.Menu {
+	return predicate.Menu(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, PermissionsTable, PermissionsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPermissionsWith applies the HasEdge predicate on the "permissions" edge with a given conditions (other predicates).
+func HasPermissionsWith(preds ...predicate.Permission) predicate.Menu {
+	return predicate.Menu(func(s *sql.Selector) {
+		step := newPermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasRoleMenus applies the HasEdge predicate on the "role_menus" edge.
 func HasRoleMenus() predicate.Menu {
 	return predicate.Menu(func(s *sql.Selector) {
@@ -922,6 +945,29 @@ func HasRoleMenus() predicate.Menu {
 func HasRoleMenusWith(preds ...predicate.RoleMenu) predicate.Menu {
 	return predicate.Menu(func(s *sql.Selector) {
 		step := newRoleMenusStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasMenuPermissions applies the HasEdge predicate on the "menu_permissions" edge.
+func HasMenuPermissions() predicate.Menu {
+	return predicate.Menu(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, MenuPermissionsTable, MenuPermissionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasMenuPermissionsWith applies the HasEdge predicate on the "menu_permissions" edge with a given conditions (other predicates).
+func HasMenuPermissionsWith(preds ...predicate.MenuPermission) predicate.Menu {
+	return predicate.Menu(func(s *sql.Selector) {
+		step := newMenuPermissionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

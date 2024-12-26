@@ -59,11 +59,15 @@ type MenuEdges struct {
 	Resources []*Resource `json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
+	// Permissions holds the value of the permissions edge.
+	Permissions []*Permission `json:"permissions,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
 	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
+	// MenuPermissions holds the value of the menu_permissions edge.
+	MenuPermissions []*MenuPermission `json:"menu_permissions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [7]bool
 }
 
 // ChildrenOrErr returns the Children value or an error if the edge
@@ -104,13 +108,31 @@ func (e MenuEdges) RolesOrErr() ([]*Role, error) {
 	return nil, &NotLoadedError{edge: "roles"}
 }
 
+// PermissionsOrErr returns the Permissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e MenuEdges) PermissionsOrErr() ([]*Permission, error) {
+	if e.loadedTypes[4] {
+		return e.Permissions, nil
+	}
+	return nil, &NotLoadedError{edge: "permissions"}
+}
+
 // RoleMenusOrErr returns the RoleMenus value or an error if the edge
 // was not loaded in eager-loading.
 func (e MenuEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[5] {
 		return e.RoleMenus, nil
 	}
 	return nil, &NotLoadedError{edge: "role_menus"}
+}
+
+// MenuPermissionsOrErr returns the MenuPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e MenuEdges) MenuPermissionsOrErr() ([]*MenuPermission, error) {
+	if e.loadedTypes[6] {
+		return e.MenuPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "menu_permissions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -256,9 +278,19 @@ func (m *Menu) QueryRoles() *RoleQuery {
 	return NewMenuClient(m.config).QueryRoles(m)
 }
 
+// QueryPermissions queries the "permissions" edge of the Menu entity.
+func (m *Menu) QueryPermissions() *PermissionQuery {
+	return NewMenuClient(m.config).QueryPermissions(m)
+}
+
 // QueryRoleMenus queries the "role_menus" edge of the Menu entity.
 func (m *Menu) QueryRoleMenus() *RoleMenuQuery {
 	return NewMenuClient(m.config).QueryRoleMenus(m)
+}
+
+// QueryMenuPermissions queries the "menu_permissions" edge of the Menu entity.
+func (m *Menu) QueryMenuPermissions() *MenuPermissionQuery {
+	return NewMenuClient(m.config).QueryMenuPermissions(m)
 }
 
 // Update returns a builder for updating this Menu.

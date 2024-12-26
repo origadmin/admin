@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"time"
@@ -103,6 +105,36 @@ func (ru *ResourceUpdate) SetMenu(m *Menu) *ResourceUpdate {
 	return ru.SetMenuID(m.ID)
 }
 
+// AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
+func (ru *ResourceUpdate) AddPermissionIDs(ids ...int) *ResourceUpdate {
+	ru.mutation.AddPermissionIDs(ids...)
+	return ru
+}
+
+// AddPermission adds the "permission" edges to the Permission entity.
+func (ru *ResourceUpdate) AddPermission(p ...*Permission) *ResourceUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ru.AddPermissionIDs(ids...)
+}
+
+// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
+func (ru *ResourceUpdate) AddPermissionResourceIDs(ids ...int) *ResourceUpdate {
+	ru.mutation.AddPermissionResourceIDs(ids...)
+	return ru
+}
+
+// AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
+func (ru *ResourceUpdate) AddPermissionResources(p ...*PermissionResource) *ResourceUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ru.AddPermissionResourceIDs(ids...)
+}
+
 // Mutation returns the ResourceMutation object of the builder.
 func (ru *ResourceUpdate) Mutation() *ResourceMutation {
 	return ru.mutation
@@ -112,6 +144,48 @@ func (ru *ResourceUpdate) Mutation() *ResourceMutation {
 func (ru *ResourceUpdate) ClearMenu() *ResourceUpdate {
 	ru.mutation.ClearMenu()
 	return ru
+}
+
+// ClearPermission clears all "permission" edges to the Permission entity.
+func (ru *ResourceUpdate) ClearPermission() *ResourceUpdate {
+	ru.mutation.ClearPermission()
+	return ru
+}
+
+// RemovePermissionIDs removes the "permission" edge to Permission entities by IDs.
+func (ru *ResourceUpdate) RemovePermissionIDs(ids ...int) *ResourceUpdate {
+	ru.mutation.RemovePermissionIDs(ids...)
+	return ru
+}
+
+// RemovePermission removes "permission" edges to Permission entities.
+func (ru *ResourceUpdate) RemovePermission(p ...*Permission) *ResourceUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ru.RemovePermissionIDs(ids...)
+}
+
+// ClearPermissionResources clears all "permission_resources" edges to the PermissionResource entity.
+func (ru *ResourceUpdate) ClearPermissionResources() *ResourceUpdate {
+	ru.mutation.ClearPermissionResources()
+	return ru
+}
+
+// RemovePermissionResourceIDs removes the "permission_resources" edge to PermissionResource entities by IDs.
+func (ru *ResourceUpdate) RemovePermissionResourceIDs(ids ...int) *ResourceUpdate {
+	ru.mutation.RemovePermissionResourceIDs(ids...)
+	return ru
+}
+
+// RemovePermissionResources removes "permission_resources" edges to PermissionResource entities.
+func (ru *ResourceUpdate) RemovePermissionResources(p ...*PermissionResource) *ResourceUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ru.RemovePermissionResourceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -234,6 +308,96 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.PermissionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedPermissionIDs(); len(nodes) > 0 && !ru.mutation.PermissionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.PermissionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ru.mutation.PermissionResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedPermissionResourcesIDs(); len(nodes) > 0 && !ru.mutation.PermissionResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	_spec.AddModifiers(ru.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -329,6 +493,36 @@ func (ruo *ResourceUpdateOne) SetMenu(m *Menu) *ResourceUpdateOne {
 	return ruo.SetMenuID(m.ID)
 }
 
+// AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
+func (ruo *ResourceUpdateOne) AddPermissionIDs(ids ...int) *ResourceUpdateOne {
+	ruo.mutation.AddPermissionIDs(ids...)
+	return ruo
+}
+
+// AddPermission adds the "permission" edges to the Permission entity.
+func (ruo *ResourceUpdateOne) AddPermission(p ...*Permission) *ResourceUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ruo.AddPermissionIDs(ids...)
+}
+
+// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
+func (ruo *ResourceUpdateOne) AddPermissionResourceIDs(ids ...int) *ResourceUpdateOne {
+	ruo.mutation.AddPermissionResourceIDs(ids...)
+	return ruo
+}
+
+// AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
+func (ruo *ResourceUpdateOne) AddPermissionResources(p ...*PermissionResource) *ResourceUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ruo.AddPermissionResourceIDs(ids...)
+}
+
 // Mutation returns the ResourceMutation object of the builder.
 func (ruo *ResourceUpdateOne) Mutation() *ResourceMutation {
 	return ruo.mutation
@@ -338,6 +532,48 @@ func (ruo *ResourceUpdateOne) Mutation() *ResourceMutation {
 func (ruo *ResourceUpdateOne) ClearMenu() *ResourceUpdateOne {
 	ruo.mutation.ClearMenu()
 	return ruo
+}
+
+// ClearPermission clears all "permission" edges to the Permission entity.
+func (ruo *ResourceUpdateOne) ClearPermission() *ResourceUpdateOne {
+	ruo.mutation.ClearPermission()
+	return ruo
+}
+
+// RemovePermissionIDs removes the "permission" edge to Permission entities by IDs.
+func (ruo *ResourceUpdateOne) RemovePermissionIDs(ids ...int) *ResourceUpdateOne {
+	ruo.mutation.RemovePermissionIDs(ids...)
+	return ruo
+}
+
+// RemovePermission removes "permission" edges to Permission entities.
+func (ruo *ResourceUpdateOne) RemovePermission(p ...*Permission) *ResourceUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ruo.RemovePermissionIDs(ids...)
+}
+
+// ClearPermissionResources clears all "permission_resources" edges to the PermissionResource entity.
+func (ruo *ResourceUpdateOne) ClearPermissionResources() *ResourceUpdateOne {
+	ruo.mutation.ClearPermissionResources()
+	return ruo
+}
+
+// RemovePermissionResourceIDs removes the "permission_resources" edge to PermissionResource entities by IDs.
+func (ruo *ResourceUpdateOne) RemovePermissionResourceIDs(ids ...int) *ResourceUpdateOne {
+	ruo.mutation.RemovePermissionResourceIDs(ids...)
+	return ruo
+}
+
+// RemovePermissionResources removes "permission_resources" edges to PermissionResource entities.
+func (ruo *ResourceUpdateOne) RemovePermissionResources(p ...*PermissionResource) *ResourceUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return ruo.RemovePermissionResourceIDs(ids...)
 }
 
 // Where appends a list predicates to the ResourceUpdate builder.
@@ -483,6 +719,96 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.PermissionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedPermissionIDs(); len(nodes) > 0 && !ruo.mutation.PermissionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.PermissionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   resource.PermissionTable,
+			Columns: resource.PermissionPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.PermissionResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedPermissionResourcesIDs(); len(nodes) > 0 && !ruo.mutation.PermissionResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.PermissionResourcesTable,
+			Columns: []string{resource.PermissionResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

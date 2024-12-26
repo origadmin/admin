@@ -21,16 +21,16 @@ const (
 	// EdgePosition holds the string denoting the position edge name in mutations.
 	EdgePosition = "position"
 	// Table holds the table name of the userposition in the database.
-	Table = "user_positions"
+	Table = "sys_user_positions"
 	// UserTable is the table that holds the user relation/edge.
-	UserTable = "user_positions"
+	UserTable = "sys_user_positions"
 	// UserInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UserInverseTable = "sys_users"
 	// UserColumn is the table column denoting the user relation/edge.
 	UserColumn = "user_id"
 	// PositionTable is the table that holds the position relation/edge.
-	PositionTable = "user_positions"
+	PositionTable = "sys_user_positions"
 	// PositionInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
 	PositionInverseTable = "positions"
@@ -45,7 +45,7 @@ var Columns = []string{
 	FieldPositionID,
 }
 
-// ForeignKeys holds the SQL foreign-keys that are owned by the "user_positions"
+// ForeignKeys holds the SQL foreign-keys that are owned by the "sys_user_positions"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
 	"position_user_positions",
