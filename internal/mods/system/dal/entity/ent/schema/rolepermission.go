@@ -21,8 +21,8 @@ type RolePermission struct {
 // Fields of the RolePermission.
 func (RolePermission) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldFK("role_id"),       // From Role.ID
-		mixin.FieldFK("permission_id"), // From Permission.ID
+		mixin.FK("role_id"),       // From Role.ID
+		mixin.FK("permission_id"), // From Permission.ID
 	}
 }
 

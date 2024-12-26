@@ -21,8 +21,8 @@ type UserPosition struct {
 // Fields of the UserPosition.
 func (UserPosition) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldFK("user_id"),     // From User.ID
-		mixin.FieldFK("position_id"), // From Position.ID
+		mixin.FK("user_id"),     // From User.ID
+		mixin.FK("position_id"), // From Position.ID
 	}
 }
 

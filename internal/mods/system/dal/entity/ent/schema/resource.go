@@ -27,7 +27,7 @@ func (Resource) Fields() []ent.Field {
 		field.String("method").MaxLen(20).Default(""), // HTTP method
 		field.String("operation").MaxLen(20).Default(""),
 		field.String("path").MaxLen(255), // API request path (e.g. /users/:id or /users/{id})
-		mixin.FieldOP("menu_id"),         // From Menu.ID
+		mixin.OP("menu_id"),              // From Menu.ID
 	}
 }
 

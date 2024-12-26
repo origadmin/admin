@@ -37,6 +37,7 @@ type Menu struct {
 // Fields of the Menu.
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
+
 		field.String("keyword").MaxLen(32).Default(""),       // Code of menu (unique for each level)
 		field.String("name").MaxLen(128).Default(""),         // Display name of menu
 		field.String("description").MaxLen(1024).Default(""), // Details about menu
@@ -45,7 +46,7 @@ func (Menu) Fields() []ent.Field {
 		field.String("path").MaxLen(255).Default(""), // Access path of menu
 		field.Int8("status").Default(MenuStatusActivated),
 		//field.String("parent_id").MaxLen(36).Default("").Optional(), // Parent UUID (From Menu.UUID)
-		mixin.FieldOP("parent_id"),
+		mixin.OP("parent_id"),
 		field.String("parent_path").MaxLen(255).Default(""), // Parent path (split by .)
 		field.Int("sequence").Default(0),                    // Sequence for sorting (Order by desc)
 		field.Text("properties").Default("").Optional(),     // Properties of menu (JSON)

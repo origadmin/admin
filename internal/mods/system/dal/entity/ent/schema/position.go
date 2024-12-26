@@ -23,7 +23,7 @@ func (Position) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").MaxLen(64).Unique(),
 		field.String("description").MaxLen(256),
-		mixin.FieldOP("department_id"),
+		mixin.OP("department_id"),
 	}
 }
 

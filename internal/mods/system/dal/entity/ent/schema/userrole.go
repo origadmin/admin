@@ -23,8 +23,8 @@ type UserRole struct {
 // Fields of the UserRole.
 func (UserRole) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldFK("user_id"), // From User.ID
-		mixin.FieldFK("role_id"), // From Role.ID
+		mixin.FK("user_id"), // From User.ID
+		mixin.FK("role_id"), // From Role.ID
 	}
 }
 

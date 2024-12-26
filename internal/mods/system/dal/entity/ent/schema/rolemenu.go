@@ -23,8 +23,8 @@ type RoleMenu struct {
 // Fields of the RoleMenu.
 func (RoleMenu) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldFK("role_id"), // From Role.ID
-		mixin.FieldFK("menu_id"), // From Menu.ID
+		mixin.FK("role_id"), // From Role.ID
+		mixin.FK("menu_id"), // From Menu.ID
 	}
 }
 

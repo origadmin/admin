@@ -15,6 +15,19 @@ import (
 
 // ZeroTime represents the zero value for time.Time.
 var ZeroTime = time.Time{}
+var _id = ID{}
+
+func PK(name string) ent.Field {
+	return _id.PK(name)
+}
+
+func FK(name string) ent.Field {
+	return _id.FK(name)
+}
+
+func OP(name string) ent.Field {
+	return _id.OP(name)
+}
 
 // FieldIndex returns a field with index
 func FieldIndex(name string) ent.Field {

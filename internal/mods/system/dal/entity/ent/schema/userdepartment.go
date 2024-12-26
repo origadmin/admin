@@ -23,8 +23,8 @@ type UserDepartment struct {
 // Fields of the UserDepartment.
 func (UserDepartment) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldFK("user_id"),       // From User.ID
-		mixin.FieldFK("department_id"), // From Department.ID
+		mixin.FK("user_id"),       // From User.ID
+		mixin.FK("department_id"), // From Department.ID
 	}
 }
 

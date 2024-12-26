@@ -29,7 +29,7 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldUUID("uuid"),
+		mixin.FieldUUIDFK("uuid"),
 		field.String("allowed_ip").Default("0.0.0.0"),
 		field.String("username").MaxLen(32).Default(""),  // login username of user
 		field.String("nickname").MaxLen(64).Default(""),  // Nickname display name of user
@@ -46,8 +46,8 @@ func (User) Fields() []ent.Field {
 		field.String("last_login_ip").MaxLen(32).Default(""),
 		mixin.FieldTime("last_login_time"),
 		mixin.FieldTime("sanction_date"),
-		mixin.FieldFK("department_id"),
-		mixin.FieldFK("manager_id"),         // 管理员ID
+		mixin.FK("department_id"),
+		mixin.FK("manager_id"),              // 管理员ID
 		field.String("manager").Default(""), // 管理员
 	}
 }
