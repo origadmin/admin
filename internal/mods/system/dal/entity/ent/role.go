@@ -27,10 +27,14 @@ type Role struct {
 	Name string `json:"name,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
+	// 角色类型：1-系统角色 2-用户角色 3-部门角色
+	Type int8 `json:"type,omitempty"`
 	// Sequence holds the value of the "sequence" field.
 	Sequence int `json:"sequence,omitempty"`
 	// Status holds the value of the "status" field.
 	Status int8 `json:"status,omitempty"`
+	// 是否系统内置（系统内置角色不可删除）
+	IsSystem bool `json:"is_system,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -45,15 +49,19 @@ type RoleEdges struct {
 	Users []*User `json:"users,omitempty"`
 	// Permissions holds the value of the permissions edge.
 	Permissions []*Permission `json:"permissions,omitempty"`
+	// Departments holds the value of the departments edge.
+	Departments []*Department `json:"departments,omitempty"`
 	// RoleMenus holds the value of the role_menus edge.
 	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
 	// UserRoles holds the value of the user_roles edge.
 	UserRoles []*UserRole `json:"user_roles,omitempty"`
 	// RolePermissions holds the value of the role_permissions edge.
 	RolePermissions []*RolePermission `json:"role_permissions,omitempty"`
+	// DepartmentRoles holds the value of the department_roles edge.
+	DepartmentRoles []*DepartmentRole `json:"department_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [8]bool
 }
 
 // MenusOrErr returns the Menus value or an error if the edge
@@ -83,10 +91,19 @@ func (e RoleEdges) PermissionsOrErr() ([]*Permission, error) {
 	return nil, &NotLoadedError{edge: "permissions"}
 }
 
+// DepartmentsOrErr returns the Departments value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) DepartmentsOrErr() ([]*Department, error) {
+	if e.loadedTypes[3] {
+		return e.Departments, nil
+	}
+	return nil, &NotLoadedError{edge: "departments"}
+}
+
 // RoleMenusOrErr returns the RoleMenus value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		return e.RoleMenus, nil
 	}
 	return nil, &NotLoadedError{edge: "role_menus"}
@@ -95,7 +112,7 @@ func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[5] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
@@ -104,10 +121,19 @@ func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
 // RolePermissionsOrErr returns the RolePermissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[6] {
 		return e.RolePermissions, nil
 	}
 	return nil, &NotLoadedError{edge: "role_permissions"}
+}
+
+// DepartmentRolesOrErr returns the DepartmentRoles value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoleEdges) DepartmentRolesOrErr() ([]*DepartmentRole, error) {
+	if e.loadedTypes[7] {
+		return e.DepartmentRoles, nil
+	}
+	return nil, &NotLoadedError{edge: "department_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -115,7 +141,9 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldID, role.FieldSequence, role.FieldStatus:
+		case role.FieldIsSystem:
+			values[i] = new(sql.NullBool)
+		case role.FieldID, role.FieldType, role.FieldSequence, role.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case role.FieldKeyword, role.FieldName, role.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -172,6 +200,12 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.Description = value.String
 			}
+		case role.FieldType:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field type", values[i])
+			} else if value.Valid {
+				r.Type = int8(value.Int64)
+			}
 		case role.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sequence", values[i])
@@ -183,6 +217,12 @@ func (r *Role) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
 				r.Status = int8(value.Int64)
+			}
+		case role.FieldIsSystem:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_system", values[i])
+			} else if value.Valid {
+				r.IsSystem = value.Bool
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -212,6 +252,11 @@ func (r *Role) QueryPermissions() *PermissionQuery {
 	return NewRoleClient(r.config).QueryPermissions(r)
 }
 
+// QueryDepartments queries the "departments" edge of the Role entity.
+func (r *Role) QueryDepartments() *DepartmentQuery {
+	return NewRoleClient(r.config).QueryDepartments(r)
+}
+
 // QueryRoleMenus queries the "role_menus" edge of the Role entity.
 func (r *Role) QueryRoleMenus() *RoleMenuQuery {
 	return NewRoleClient(r.config).QueryRoleMenus(r)
@@ -225,6 +270,11 @@ func (r *Role) QueryUserRoles() *UserRoleQuery {
 // QueryRolePermissions queries the "role_permissions" edge of the Role entity.
 func (r *Role) QueryRolePermissions() *RolePermissionQuery {
 	return NewRoleClient(r.config).QueryRolePermissions(r)
+}
+
+// QueryDepartmentRoles queries the "department_roles" edge of the Role entity.
+func (r *Role) QueryDepartmentRoles() *DepartmentRoleQuery {
+	return NewRoleClient(r.config).QueryDepartmentRoles(r)
 }
 
 // Update returns a builder for updating this Role.
@@ -265,11 +315,17 @@ func (r *Role) String() string {
 	builder.WriteString("description=")
 	builder.WriteString(r.Description)
 	builder.WriteString(", ")
+	builder.WriteString("type=")
+	builder.WriteString(fmt.Sprintf("%v", r.Type))
+	builder.WriteString(", ")
 	builder.WriteString("sequence=")
 	builder.WriteString(fmt.Sprintf("%v", r.Sequence))
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", r.Status))
+	builder.WriteString(", ")
+	builder.WriteString("is_system=")
+	builder.WriteString(fmt.Sprintf("%v", r.IsSystem))
 	builder.WriteByte(')')
 	return builder.String()
 }

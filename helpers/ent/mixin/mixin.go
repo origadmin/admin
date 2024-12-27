@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package mixin is the mixin package
+// Package mixin implements the functions, types, and interfaces for the module.
 package mixin
 
 import (
@@ -14,68 +14,11 @@ import (
 	"entgo.io/ent/schema/mixin"
 )
 
-// UUID schema to include control and time fields.
-type UUID struct {
-	mixin.Schema
-}
-
-// Fields of the mixin.
-func (obj UUID) Fields() []ent.Field {
-	return []ent.Field{
-		obj.PK("id"),
-	}
-}
-
-func (obj UUID) FK(name string) ent.Field {
-	return field.String(name).
-		MaxLen(36)
-}
-
-func (UUID) PK(name string) ent.Field {
-	return field.String(name).
-		MaxLen(36).
-		Unique().
-		Immutable()
-}
-
-func (UUID) OP(name string) ent.Field {
-	return field.String(name).
-		MaxLen(36).
-		Optional()
-}
-
-// Indexes of the mixin.
-func (UUID) Indexes() []ent.Index {
-	return []ent.Index{}
-}
-
-type ID struct {
-	mixin.Schema
-}
-
-// Fields of the mixin.
-func (obj ID) Fields() []ent.Field {
-	return []ent.Field{
-		obj.PK("id"),
-	}
-}
-
-func (ID) FK(name string) ent.Field {
-	return field.Int(name).
-		Positive()
-}
-
-func (ID) PK(name string) ent.Field {
-	return field.Int(name).
-		Positive().
-		Unique().
-		Immutable()
-}
-
-func (ID) OP(name string) ent.Field {
-	return field.Int(name).
-		Positive().
-		Optional()
+type Ider interface {
+	Comment(key string) Ider
+	OP(name string) ent.Field
+	FK(name string) ent.Field
+	PK(name string) ent.Field
 }
 
 // Audit schema to include control and time fields.

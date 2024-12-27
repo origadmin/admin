@@ -81,7 +81,7 @@ func Description(v string) predicate.Menu {
 }
 
 // Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
-func Type(v uint8) predicate.Menu {
+func Type(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldType, v))
 }
 
@@ -100,11 +100,6 @@ func Status(v int8) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldStatus, v))
 }
 
-// ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
-func ParentID(v int) predicate.Menu {
-	return predicate.Menu(sql.FieldEQ(FieldParentID, v))
-}
-
 // ParentPath applies equality check predicate on the "parent_path" field. It's identical to ParentPathEQ.
 func ParentPath(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldParentPath, v))
@@ -118,6 +113,11 @@ func Sequence(v int) predicate.Menu {
 // Properties applies equality check predicate on the "properties" field. It's identical to PropertiesEQ.
 func Properties(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldProperties, v))
+}
+
+// ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
+func ParentID(v int) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldParentID, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -396,42 +396,42 @@ func DescriptionContainsFold(v string) predicate.Menu {
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
-func TypeEQ(v uint8) predicate.Menu {
+func TypeEQ(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldType, v))
 }
 
 // TypeNEQ applies the NEQ predicate on the "type" field.
-func TypeNEQ(v uint8) predicate.Menu {
+func TypeNEQ(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldType, v))
 }
 
 // TypeIn applies the In predicate on the "type" field.
-func TypeIn(vs ...uint8) predicate.Menu {
+func TypeIn(vs ...int32) predicate.Menu {
 	return predicate.Menu(sql.FieldIn(FieldType, vs...))
 }
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
-func TypeNotIn(vs ...uint8) predicate.Menu {
+func TypeNotIn(vs ...int32) predicate.Menu {
 	return predicate.Menu(sql.FieldNotIn(FieldType, vs...))
 }
 
 // TypeGT applies the GT predicate on the "type" field.
-func TypeGT(v uint8) predicate.Menu {
+func TypeGT(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldGT(FieldType, v))
 }
 
 // TypeGTE applies the GTE predicate on the "type" field.
-func TypeGTE(v uint8) predicate.Menu {
+func TypeGTE(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldGTE(FieldType, v))
 }
 
 // TypeLT applies the LT predicate on the "type" field.
-func TypeLT(v uint8) predicate.Menu {
+func TypeLT(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldLT(FieldType, v))
 }
 
 // TypeLTE applies the LTE predicate on the "type" field.
-func TypeLTE(v uint8) predicate.Menu {
+func TypeLTE(v int32) predicate.Menu {
 	return predicate.Menu(sql.FieldLTE(FieldType, v))
 }
 
@@ -603,36 +603,6 @@ func StatusLT(v int8) predicate.Menu {
 // StatusLTE applies the LTE predicate on the "status" field.
 func StatusLTE(v int8) predicate.Menu {
 	return predicate.Menu(sql.FieldLTE(FieldStatus, v))
-}
-
-// ParentIDEQ applies the EQ predicate on the "parent_id" field.
-func ParentIDEQ(v int) predicate.Menu {
-	return predicate.Menu(sql.FieldEQ(FieldParentID, v))
-}
-
-// ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
-func ParentIDNEQ(v int) predicate.Menu {
-	return predicate.Menu(sql.FieldNEQ(FieldParentID, v))
-}
-
-// ParentIDIn applies the In predicate on the "parent_id" field.
-func ParentIDIn(vs ...int) predicate.Menu {
-	return predicate.Menu(sql.FieldIn(FieldParentID, vs...))
-}
-
-// ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
-func ParentIDNotIn(vs ...int) predicate.Menu {
-	return predicate.Menu(sql.FieldNotIn(FieldParentID, vs...))
-}
-
-// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
-func ParentIDIsNil() predicate.Menu {
-	return predicate.Menu(sql.FieldIsNull(FieldParentID))
-}
-
-// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
-func ParentIDNotNil() predicate.Menu {
-	return predicate.Menu(sql.FieldNotNull(FieldParentID))
 }
 
 // ParentPathEQ applies the EQ predicate on the "parent_path" field.
@@ -813,6 +783,36 @@ func PropertiesEqualFold(v string) predicate.Menu {
 // PropertiesContainsFold applies the ContainsFold predicate on the "properties" field.
 func PropertiesContainsFold(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldContainsFold(FieldProperties, v))
+}
+
+// ParentIDEQ applies the EQ predicate on the "parent_id" field.
+func ParentIDEQ(v int) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldParentID, v))
+}
+
+// ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
+func ParentIDNEQ(v int) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldParentID, v))
+}
+
+// ParentIDIn applies the In predicate on the "parent_id" field.
+func ParentIDIn(vs ...int) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldParentID, vs...))
+}
+
+// ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
+func ParentIDNotIn(vs ...int) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldParentID, vs...))
+}
+
+// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
+func ParentIDIsNil() predicate.Menu {
+	return predicate.Menu(sql.FieldIsNull(FieldParentID))
+}
+
+// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
+func ParentIDNotNil() predicate.Menu {
+	return predicate.Menu(sql.FieldNotNull(FieldParentID))
 }
 
 // HasChildren applies the HasEdge predicate on the "children" edge.

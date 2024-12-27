@@ -869,7 +869,6 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
 //	  LastLoginTime time.Time `json:"last_login_time,omitempty"`
 //	  SanctionDate time.Time `json:"sanction_date,omitempty"`
-//	  DepartmentID int `json:"department_id,omitempty"`
 //	  ManagerID int `json:"manager_id,omitempty"`
 //	  Manager string `json:"manager,omitempty"`
 //	}
@@ -897,7 +896,6 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldLastLoginIP,
 //	  user.FieldLastLoginTime,
 //	  user.FieldSanctionDate,
-//	  user.FieldDepartmentID,
 //	  user.FieldManagerID,
 //	  user.FieldManager,
 //	  ).

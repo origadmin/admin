@@ -21,16 +21,22 @@ type Department struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Keyword holds the value of the "keyword" field.
+	// Keyword of Department
 	Keyword string `json:"keyword,omitempty"`
-	// Name holds the value of the "name" field.
+	// Display name of Department
 	Name string `json:"name,omitempty"`
-	// Description holds the value of the "description" field.
+	// Details about Department
 	Description string `json:"description,omitempty"`
-	// Sequence holds the value of the "sequence" field.
+	// Sequence for sorting
 	Sequence int `json:"sequence,omitempty"`
-	// Status holds the value of the "status" field.
+	// Status of the department
 	Status int8 `json:"status,omitempty"`
+	// Ancestor list (format: ,1,2,3,)
+	Ancestors string `json:"ancestors,omitempty"`
+	// Parent department ID
+	ParentID int `json:"parent_id,omitempty"`
+	// Department level
+	Level int `json:"level,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DepartmentQuery when eager-loading is set.
 	Edges        DepartmentEdges `json:"edges"`
@@ -43,11 +49,19 @@ type DepartmentEdges struct {
 	Users []*User `json:"users,omitempty"`
 	// Positions holds the value of the positions edge.
 	Positions []*Position `json:"positions,omitempty"`
+	// Roles holds the value of the roles edge.
+	Roles []*Role `json:"roles,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Department `json:"children,omitempty"`
+	// Parent holds the value of the parent edge.
+	Parent *Department `json:"parent,omitempty"`
 	// UserDepartments holds the value of the user_departments edge.
 	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
+	// DepartmentRoles holds the value of the department_roles edge.
+	DepartmentRoles []*DepartmentRole `json:"department_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [7]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -68,13 +82,51 @@ func (e DepartmentEdges) PositionsOrErr() ([]*Position, error) {
 	return nil, &NotLoadedError{edge: "positions"}
 }
 
+// RolesOrErr returns the Roles value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) RolesOrErr() ([]*Role, error) {
+	if e.loadedTypes[2] {
+		return e.Roles, nil
+	}
+	return nil, &NotLoadedError{edge: "roles"}
+}
+
+// ChildrenOrErr returns the Children value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) ChildrenOrErr() ([]*Department, error) {
+	if e.loadedTypes[3] {
+		return e.Children, nil
+	}
+	return nil, &NotLoadedError{edge: "children"}
+}
+
+// ParentOrErr returns the Parent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e DepartmentEdges) ParentOrErr() (*Department, error) {
+	if e.Parent != nil {
+		return e.Parent, nil
+	} else if e.loadedTypes[4] {
+		return nil, &NotFoundError{label: department.Label}
+	}
+	return nil, &NotLoadedError{edge: "parent"}
+}
+
 // UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) UserDepartmentsOrErr() ([]*UserDepartment, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[5] {
 		return e.UserDepartments, nil
 	}
 	return nil, &NotLoadedError{edge: "user_departments"}
+}
+
+// DepartmentRolesOrErr returns the DepartmentRoles value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) DepartmentRolesOrErr() ([]*DepartmentRole, error) {
+	if e.loadedTypes[6] {
+		return e.DepartmentRoles, nil
+	}
+	return nil, &NotLoadedError{edge: "department_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -82,9 +134,9 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case department.FieldID, department.FieldSequence, department.FieldStatus:
+		case department.FieldID, department.FieldSequence, department.FieldStatus, department.FieldParentID, department.FieldLevel:
 			values[i] = new(sql.NullInt64)
-		case department.FieldKeyword, department.FieldName, department.FieldDescription:
+		case department.FieldKeyword, department.FieldName, department.FieldDescription, department.FieldAncestors:
 			values[i] = new(sql.NullString)
 		case department.FieldCreateTime, department.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -151,6 +203,24 @@ func (d *Department) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				d.Status = int8(value.Int64)
 			}
+		case department.FieldAncestors:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field ancestors", values[i])
+			} else if value.Valid {
+				d.Ancestors = value.String
+			}
+		case department.FieldParentID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				d.ParentID = int(value.Int64)
+			}
+		case department.FieldLevel:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field level", values[i])
+			} else if value.Valid {
+				d.Level = int(value.Int64)
+			}
 		default:
 			d.selectValues.Set(columns[i], values[i])
 		}
@@ -174,9 +244,29 @@ func (d *Department) QueryPositions() *PositionQuery {
 	return NewDepartmentClient(d.config).QueryPositions(d)
 }
 
+// QueryRoles queries the "roles" edge of the Department entity.
+func (d *Department) QueryRoles() *RoleQuery {
+	return NewDepartmentClient(d.config).QueryRoles(d)
+}
+
+// QueryChildren queries the "children" edge of the Department entity.
+func (d *Department) QueryChildren() *DepartmentQuery {
+	return NewDepartmentClient(d.config).QueryChildren(d)
+}
+
+// QueryParent queries the "parent" edge of the Department entity.
+func (d *Department) QueryParent() *DepartmentQuery {
+	return NewDepartmentClient(d.config).QueryParent(d)
+}
+
 // QueryUserDepartments queries the "user_departments" edge of the Department entity.
 func (d *Department) QueryUserDepartments() *UserDepartmentQuery {
 	return NewDepartmentClient(d.config).QueryUserDepartments(d)
+}
+
+// QueryDepartmentRoles queries the "department_roles" edge of the Department entity.
+func (d *Department) QueryDepartmentRoles() *DepartmentRoleQuery {
+	return NewDepartmentClient(d.config).QueryDepartmentRoles(d)
 }
 
 // Update returns a builder for updating this Department.
@@ -222,6 +312,15 @@ func (d *Department) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", d.Status))
+	builder.WriteString(", ")
+	builder.WriteString("ancestors=")
+	builder.WriteString(d.Ancestors)
+	builder.WriteString(", ")
+	builder.WriteString("parent_id=")
+	builder.WriteString(fmt.Sprintf("%v", d.ParentID))
+	builder.WriteString(", ")
+	builder.WriteString("level=")
+	builder.WriteString(fmt.Sprintf("%v", d.Level))
 	builder.WriteByte(')')
 	return builder.String()
 }

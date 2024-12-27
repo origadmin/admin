@@ -80,6 +80,11 @@ func Description(v string) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldDescription, v))
 }
 
+// Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
+func Type(v int8) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldType, v))
+}
+
 // Sequence applies equality check predicate on the "sequence" field. It's identical to SequenceEQ.
 func Sequence(v int) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldSequence, v))
@@ -88,6 +93,11 @@ func Sequence(v int) predicate.Role {
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
 func Status(v int8) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldStatus, v))
+}
+
+// IsSystem applies equality check predicate on the "is_system" field. It's identical to IsSystemEQ.
+func IsSystem(v bool) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldIsSystem, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -365,6 +375,46 @@ func DescriptionContainsFold(v string) predicate.Role {
 	return predicate.Role(sql.FieldContainsFold(FieldDescription, v))
 }
 
+// TypeEQ applies the EQ predicate on the "type" field.
+func TypeEQ(v int8) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldType, v))
+}
+
+// TypeNEQ applies the NEQ predicate on the "type" field.
+func TypeNEQ(v int8) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldType, v))
+}
+
+// TypeIn applies the In predicate on the "type" field.
+func TypeIn(vs ...int8) predicate.Role {
+	return predicate.Role(sql.FieldIn(FieldType, vs...))
+}
+
+// TypeNotIn applies the NotIn predicate on the "type" field.
+func TypeNotIn(vs ...int8) predicate.Role {
+	return predicate.Role(sql.FieldNotIn(FieldType, vs...))
+}
+
+// TypeGT applies the GT predicate on the "type" field.
+func TypeGT(v int8) predicate.Role {
+	return predicate.Role(sql.FieldGT(FieldType, v))
+}
+
+// TypeGTE applies the GTE predicate on the "type" field.
+func TypeGTE(v int8) predicate.Role {
+	return predicate.Role(sql.FieldGTE(FieldType, v))
+}
+
+// TypeLT applies the LT predicate on the "type" field.
+func TypeLT(v int8) predicate.Role {
+	return predicate.Role(sql.FieldLT(FieldType, v))
+}
+
+// TypeLTE applies the LTE predicate on the "type" field.
+func TypeLTE(v int8) predicate.Role {
+	return predicate.Role(sql.FieldLTE(FieldType, v))
+}
+
 // SequenceEQ applies the EQ predicate on the "sequence" field.
 func SequenceEQ(v int) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldSequence, v))
@@ -445,6 +495,16 @@ func StatusLTE(v int8) predicate.Role {
 	return predicate.Role(sql.FieldLTE(FieldStatus, v))
 }
 
+// IsSystemEQ applies the EQ predicate on the "is_system" field.
+func IsSystemEQ(v bool) predicate.Role {
+	return predicate.Role(sql.FieldEQ(FieldIsSystem, v))
+}
+
+// IsSystemNEQ applies the NEQ predicate on the "is_system" field.
+func IsSystemNEQ(v bool) predicate.Role {
+	return predicate.Role(sql.FieldNEQ(FieldIsSystem, v))
+}
+
 // HasMenus applies the HasEdge predicate on the "menus" edge.
 func HasMenus() predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
@@ -514,6 +574,29 @@ func HasPermissionsWith(preds ...predicate.Permission) predicate.Role {
 	})
 }
 
+// HasDepartments applies the HasEdge predicate on the "departments" edge.
+func HasDepartments() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, DepartmentsTable, DepartmentsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDepartmentsWith applies the HasEdge predicate on the "departments" edge with a given conditions (other predicates).
+func HasDepartmentsWith(preds ...predicate.Department) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newDepartmentsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasRoleMenus applies the HasEdge predicate on the "role_menus" edge.
 func HasRoleMenus() predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
@@ -575,6 +658,29 @@ func HasRolePermissions() predicate.Role {
 func HasRolePermissionsWith(preds ...predicate.RolePermission) predicate.Role {
 	return predicate.Role(func(s *sql.Selector) {
 		step := newRolePermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDepartmentRoles applies the HasEdge predicate on the "department_roles" edge.
+func HasDepartmentRoles() predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, DepartmentRolesTable, DepartmentRolesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDepartmentRolesWith applies the HasEdge predicate on the "department_roles" edge with a given conditions (other predicates).
+func HasDepartmentRolesWith(preds ...predicate.DepartmentRole) predicate.Role {
+	return predicate.Role(func(s *sql.Selector) {
+		step := newDepartmentRolesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

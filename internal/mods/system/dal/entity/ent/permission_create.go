@@ -60,9 +60,63 @@ func (pc *PermissionCreate) SetName(s string) *PermissionCreate {
 	return pc
 }
 
+// SetKeyword sets the "keyword" field.
+func (pc *PermissionCreate) SetKeyword(s string) *PermissionCreate {
+	pc.mutation.SetKeyword(s)
+	return pc
+}
+
 // SetDescription sets the "description" field.
 func (pc *PermissionCreate) SetDescription(s string) *PermissionCreate {
 	pc.mutation.SetDescription(s)
+	return pc
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableDescription(s *string) *PermissionCreate {
+	if s != nil {
+		pc.SetDescription(*s)
+	}
+	return pc
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (pc *PermissionCreate) SetI18nKey(s string) *PermissionCreate {
+	pc.mutation.SetI18nKey(s)
+	return pc
+}
+
+// SetType sets the "type" field.
+func (pc *PermissionCreate) SetType(i int8) *PermissionCreate {
+	pc.mutation.SetType(i)
+	return pc
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableType(i *int8) *PermissionCreate {
+	if i != nil {
+		pc.SetType(*i)
+	}
+	return pc
+}
+
+// SetScope sets the "scope" field.
+func (pc *PermissionCreate) SetScope(s string) *PermissionCreate {
+	pc.mutation.SetScope(s)
+	return pc
+}
+
+// SetNillableScope sets the "scope" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableScope(s *string) *PermissionCreate {
+	if s != nil {
+		pc.SetScope(*s)
+	}
+	return pc
+}
+
+// SetScopeDepts sets the "scope_depts" field.
+func (pc *PermissionCreate) SetScopeDepts(s []string) *PermissionCreate {
+	pc.mutation.SetScopeDepts(s)
 	return pc
 }
 
@@ -205,6 +259,14 @@ func (pc *PermissionCreate) defaults() {
 		v := permission.DefaultUpdateTime()
 		pc.mutation.SetUpdateTime(v)
 	}
+	if _, ok := pc.mutation.GetType(); !ok {
+		v := permission.DefaultType
+		pc.mutation.SetType(v)
+	}
+	if _, ok := pc.mutation.Scope(); !ok {
+		v := permission.DefaultScope
+		pc.mutation.SetScope(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -223,13 +285,32 @@ func (pc *PermissionCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Permission.name": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Permission.description"`)}
+	if _, ok := pc.mutation.Keyword(); !ok {
+		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Permission.keyword"`)}
+	}
+	if v, ok := pc.mutation.Keyword(); ok {
+		if err := permission.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Permission.keyword": %w`, err)}
+		}
 	}
 	if v, ok := pc.mutation.Description(); ok {
 		if err := permission.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
+	}
+	if _, ok := pc.mutation.I18nKey(); !ok {
+		return &ValidationError{Name: "i18n_key", err: errors.New(`ent: missing required field "Permission.i18n_key"`)}
+	}
+	if v, ok := pc.mutation.I18nKey(); ok {
+		if err := permission.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Permission.i18n_key": %w`, err)}
+		}
+	}
+	if _, ok := pc.mutation.GetType(); !ok {
+		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Permission.type"`)}
+	}
+	if _, ok := pc.mutation.Scope(); !ok {
+		return &ValidationError{Name: "scope", err: errors.New(`ent: missing required field "Permission.scope"`)}
 	}
 	if v, ok := pc.mutation.ID(); ok {
 		if err := permission.IDValidator(v); err != nil {
@@ -280,9 +361,29 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
+	if value, ok := pc.mutation.Keyword(); ok {
+		_spec.SetField(permission.FieldKeyword, field.TypeString, value)
+		_node.Keyword = value
+	}
 	if value, ok := pc.mutation.Description(); ok {
 		_spec.SetField(permission.FieldDescription, field.TypeString, value)
 		_node.Description = value
+	}
+	if value, ok := pc.mutation.I18nKey(); ok {
+		_spec.SetField(permission.FieldI18nKey, field.TypeString, value)
+		_node.I18nKey = value
+	}
+	if value, ok := pc.mutation.GetType(); ok {
+		_spec.SetField(permission.FieldType, field.TypeInt8, value)
+		_node.Type = value
+	}
+	if value, ok := pc.mutation.Scope(); ok {
+		_spec.SetField(permission.FieldScope, field.TypeString, value)
+		_node.Scope = value
+	}
+	if value, ok := pc.mutation.ScopeDepts(); ok {
+		_spec.SetField(permission.FieldScopeDepts, field.TypeJSON, value)
+		_node.ScopeDepts = value
 	}
 	if nodes := pc.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

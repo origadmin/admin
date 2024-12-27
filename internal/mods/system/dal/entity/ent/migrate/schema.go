@@ -19,12 +19,23 @@ var (
 		{Name: "description", Type: field.TypeString, Size: 256, Default: ""},
 		{Name: "sequence", Type: field.TypeInt},
 		{Name: "status", Type: field.TypeInt8, Default: 0},
+		{Name: "ancestors", Type: field.TypeString, Size: 1024, Default: ""},
+		{Name: "level", Type: field.TypeInt, Default: 1},
+		{Name: "parent_id", Type: field.TypeInt, Nullable: true},
 	}
 	// SysDepartmentsTable holds the schema information for the "sys_departments" table.
 	SysDepartmentsTable = &schema.Table{
 		Name:       "sys_departments",
 		Columns:    SysDepartmentsColumns,
 		PrimaryKey: []*schema.Column{SysDepartmentsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_departments_sys_departments_children",
+				Columns:    []*schema.Column{SysDepartmentsColumns[10]},
+				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 		Indexes: []*schema.Index{
 			{
 				Name:    "department_create_time",
@@ -58,6 +69,49 @@ var (
 			},
 		},
 	}
+	// SysDepartmentRolesColumns holds the columns for the "sys_department_roles" table.
+	SysDepartmentRolesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "department_id", Type: field.TypeInt},
+		{Name: "role_id", Type: field.TypeInt},
+	}
+	// SysDepartmentRolesTable holds the schema information for the "sys_department_roles" table.
+	SysDepartmentRolesTable = &schema.Table{
+		Name:       "sys_department_roles",
+		Columns:    SysDepartmentRolesColumns,
+		PrimaryKey: []*schema.Column{SysDepartmentRolesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_department_roles_sys_departments_department",
+				Columns:    []*schema.Column{SysDepartmentRolesColumns[1]},
+				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "sys_department_roles_sys_roles_role",
+				Columns:    []*schema.Column{SysDepartmentRolesColumns[2]},
+				RefColumns: []*schema.Column{SysRolesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "departmentrole_department_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentRolesColumns[1]},
+			},
+			{
+				Name:    "departmentrole_role_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysDepartmentRolesColumns[2]},
+			},
+			{
+				Name:    "departmentrole_department_id_role_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysDepartmentRolesColumns[1], SysDepartmentRolesColumns[2]},
+			},
+		},
+	}
 	// SysMenusColumns holds the columns for the "sys_menus" table.
 	SysMenusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -66,7 +120,7 @@ var (
 		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 128, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Default: ""},
-		{Name: "type", Type: field.TypeUint8, Default: 80},
+		{Name: "type", Type: field.TypeInt32, Default: 80},
 		{Name: "icon", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "path", Type: field.TypeString, Size: 255, Default: ""},
 		{Name: "status", Type: field.TypeInt8, Default: 0},
@@ -179,8 +233,13 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
-		{Name: "name", Type: field.TypeString, Unique: true, Size: 64},
-		{Name: "description", Type: field.TypeString, Size: 256},
+		{Name: "name", Type: field.TypeString, Size: 64},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256},
+		{Name: "i18n_key", Type: field.TypeString, Unique: true, Size: 128},
+		{Name: "type", Type: field.TypeInt8, Default: 2},
+		{Name: "scope", Type: field.TypeString, Default: "self"},
+		{Name: "scope_depts", Type: field.TypeJSON, Nullable: true},
 	}
 	// PermissionsTable holds the schema information for the "permissions" table.
 	PermissionsTable = &schema.Table{
@@ -250,7 +309,7 @@ var (
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 64},
 		{Name: "description", Type: field.TypeString, Size: 256},
-		{Name: "department_id", Type: field.TypeInt, Nullable: true},
+		{Name: "department_id", Type: field.TypeInt},
 	}
 	// PositionsTable holds the schema information for the "positions" table.
 	PositionsTable = &schema.Table{
@@ -262,7 +321,7 @@ var (
 				Symbol:     "positions_sys_departments_positions",
 				Columns:    []*schema.Column{PositionsColumns[5]},
 				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
-				OnDelete:   schema.SetNull,
+				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
@@ -327,8 +386,10 @@ var (
 		{Name: "keyword", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 128, Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Default: ""},
+		{Name: "type", Type: field.TypeInt8, Default: 2},
 		{Name: "sequence", Type: field.TypeInt},
 		{Name: "status", Type: field.TypeInt8, Default: 0},
+		{Name: "is_system", Type: field.TypeBool, Default: false},
 	}
 	// SysRolesTable holds the schema information for the "sys_roles" table.
 	SysRolesTable = &schema.Table{
@@ -359,12 +420,12 @@ var (
 			{
 				Name:    "role_sequence",
 				Unique:  false,
-				Columns: []*schema.Column{SysRolesColumns[6]},
+				Columns: []*schema.Column{SysRolesColumns[7]},
 			},
 			{
 				Name:    "role_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysRolesColumns[7]},
+				Columns: []*schema.Column{SysRolesColumns[8]},
 			},
 		},
 	}
@@ -478,7 +539,6 @@ var (
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "sanction_date", Type: field.TypeTime, SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "department_id", Type: field.TypeInt},
 		{Name: "manager_id", Type: field.TypeInt},
 		{Name: "manager", Type: field.TypeString, Default: ""},
 	}
@@ -669,6 +729,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		SysDepartmentsTable,
+		SysDepartmentRolesTable,
 		SysMenusTable,
 		SysMenuPermissionsTable,
 		PermissionsTable,
@@ -686,8 +747,14 @@ var (
 )
 
 func init() {
+	SysDepartmentsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
 	SysDepartmentsTable.Annotation = &entsql.Annotation{
 		Table: "sys_departments",
+	}
+	SysDepartmentRolesTable.ForeignKeys[0].RefTable = SysDepartmentsTable
+	SysDepartmentRolesTable.ForeignKeys[1].RefTable = SysRolesTable
+	SysDepartmentRolesTable.Annotation = &entsql.Annotation{
+		Table: "sys_department_roles",
 	}
 	SysMenusTable.ForeignKeys[0].RefTable = SysMenusTable
 	SysMenusTable.Annotation = &entsql.Annotation{

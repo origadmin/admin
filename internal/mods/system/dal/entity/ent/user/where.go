@@ -160,11 +160,6 @@ func SanctionDate(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldSanctionDate, v))
 }
 
-// DepartmentID applies equality check predicate on the "department_id" field. It's identical to DepartmentIDEQ.
-func DepartmentID(v int) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldDepartmentID, v))
-}
-
 // ManagerID applies equality check predicate on the "manager_id" field. It's identical to ManagerIDEQ.
 func ManagerID(v int) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldManagerID, v))
@@ -1413,46 +1408,6 @@ func SanctionDateLT(v time.Time) predicate.User {
 // SanctionDateLTE applies the LTE predicate on the "sanction_date" field.
 func SanctionDateLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldSanctionDate, v))
-}
-
-// DepartmentIDEQ applies the EQ predicate on the "department_id" field.
-func DepartmentIDEQ(v int) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldDepartmentID, v))
-}
-
-// DepartmentIDNEQ applies the NEQ predicate on the "department_id" field.
-func DepartmentIDNEQ(v int) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldDepartmentID, v))
-}
-
-// DepartmentIDIn applies the In predicate on the "department_id" field.
-func DepartmentIDIn(vs ...int) predicate.User {
-	return predicate.User(sql.FieldIn(FieldDepartmentID, vs...))
-}
-
-// DepartmentIDNotIn applies the NotIn predicate on the "department_id" field.
-func DepartmentIDNotIn(vs ...int) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldDepartmentID, vs...))
-}
-
-// DepartmentIDGT applies the GT predicate on the "department_id" field.
-func DepartmentIDGT(v int) predicate.User {
-	return predicate.User(sql.FieldGT(FieldDepartmentID, v))
-}
-
-// DepartmentIDGTE applies the GTE predicate on the "department_id" field.
-func DepartmentIDGTE(v int) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldDepartmentID, v))
-}
-
-// DepartmentIDLT applies the LT predicate on the "department_id" field.
-func DepartmentIDLT(v int) predicate.User {
-	return predicate.User(sql.FieldLT(FieldDepartmentID, v))
-}
-
-// DepartmentIDLTE applies the LTE predicate on the "department_id" field.
-func DepartmentIDLTE(v int) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldDepartmentID, v))
 }
 
 // ManagerIDEQ applies the EQ predicate on the "manager_id" field.

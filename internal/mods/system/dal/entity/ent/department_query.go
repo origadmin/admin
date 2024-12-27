@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"math"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 
@@ -29,7 +31,11 @@ type DepartmentQuery struct {
 	predicates          []predicate.Department
 	withUsers           *UserQuery
 	withPositions       *PositionQuery
+	withRoles           *RoleQuery
+	withChildren        *DepartmentQuery
+	withParent          *DepartmentQuery
 	withUserDepartments *UserDepartmentQuery
+	withDepartmentRoles *DepartmentRoleQuery
 	modifiers           []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -111,6 +117,72 @@ func (dq *DepartmentQuery) QueryPositions() *PositionQuery {
 	return query
 }
 
+// QueryRoles chains the current query on the "roles" edge.
+func (dq *DepartmentQuery) QueryRoles() *RoleQuery {
+	query := (&RoleClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, selector),
+			sqlgraph.To(role.Table, role.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, department.RolesTable, department.RolesPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryChildren chains the current query on the "children" edge.
+func (dq *DepartmentQuery) QueryChildren() *DepartmentQuery {
+	query := (&DepartmentClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, selector),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.ChildrenTable, department.ChildrenColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryParent chains the current query on the "parent" edge.
+func (dq *DepartmentQuery) QueryParent() *DepartmentQuery {
+	query := (&DepartmentClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, selector),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, department.ParentTable, department.ParentColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
 // QueryUserDepartments chains the current query on the "user_departments" edge.
 func (dq *DepartmentQuery) QueryUserDepartments() *UserDepartmentQuery {
 	query := (&UserDepartmentClient{config: dq.config}).Query()
@@ -126,6 +198,28 @@ func (dq *DepartmentQuery) QueryUserDepartments() *UserDepartmentQuery {
 			sqlgraph.From(department.Table, department.FieldID, selector),
 			sqlgraph.To(userdepartment.Table, userdepartment.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, department.UserDepartmentsTable, department.UserDepartmentsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryDepartmentRoles chains the current query on the "department_roles" edge.
+func (dq *DepartmentQuery) QueryDepartmentRoles() *DepartmentRoleQuery {
+	query := (&DepartmentRoleClient{config: dq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := dq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := dq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, selector),
+			sqlgraph.To(departmentrole.Table, departmentrole.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, department.DepartmentRolesTable, department.DepartmentRolesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(dq.driver.Dialect(), step)
 		return fromU, nil
@@ -327,7 +421,11 @@ func (dq *DepartmentQuery) Clone() *DepartmentQuery {
 		predicates:          append([]predicate.Department{}, dq.predicates...),
 		withUsers:           dq.withUsers.Clone(),
 		withPositions:       dq.withPositions.Clone(),
+		withRoles:           dq.withRoles.Clone(),
+		withChildren:        dq.withChildren.Clone(),
+		withParent:          dq.withParent.Clone(),
 		withUserDepartments: dq.withUserDepartments.Clone(),
+		withDepartmentRoles: dq.withDepartmentRoles.Clone(),
 		// clone intermediate query.
 		sql:       dq.sql.Clone(),
 		path:      dq.path,
@@ -357,6 +455,39 @@ func (dq *DepartmentQuery) WithPositions(opts ...func(*PositionQuery)) *Departme
 	return dq
 }
 
+// WithRoles tells the query-builder to eager-load the nodes that are connected to
+// the "roles" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithRoles(opts ...func(*RoleQuery)) *DepartmentQuery {
+	query := (&RoleClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withRoles = query
+	return dq
+}
+
+// WithChildren tells the query-builder to eager-load the nodes that are connected to
+// the "children" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithChildren(opts ...func(*DepartmentQuery)) *DepartmentQuery {
+	query := (&DepartmentClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withChildren = query
+	return dq
+}
+
+// WithParent tells the query-builder to eager-load the nodes that are connected to
+// the "parent" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithParent(opts ...func(*DepartmentQuery)) *DepartmentQuery {
+	query := (&DepartmentClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withParent = query
+	return dq
+}
+
 // WithUserDepartments tells the query-builder to eager-load the nodes that are connected to
 // the "user_departments" edge. The optional arguments are used to configure the query builder of the edge.
 func (dq *DepartmentQuery) WithUserDepartments(opts ...func(*UserDepartmentQuery)) *DepartmentQuery {
@@ -365,6 +496,17 @@ func (dq *DepartmentQuery) WithUserDepartments(opts ...func(*UserDepartmentQuery
 		opt(query)
 	}
 	dq.withUserDepartments = query
+	return dq
+}
+
+// WithDepartmentRoles tells the query-builder to eager-load the nodes that are connected to
+// the "department_roles" edge. The optional arguments are used to configure the query builder of the edge.
+func (dq *DepartmentQuery) WithDepartmentRoles(opts ...func(*DepartmentRoleQuery)) *DepartmentQuery {
+	query := (&DepartmentRoleClient{config: dq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	dq.withDepartmentRoles = query
 	return dq
 }
 
@@ -446,10 +588,14 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*D
 	var (
 		nodes       = []*Department{}
 		_spec       = dq.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [7]bool{
 			dq.withUsers != nil,
 			dq.withPositions != nil,
+			dq.withRoles != nil,
+			dq.withChildren != nil,
+			dq.withParent != nil,
 			dq.withUserDepartments != nil,
+			dq.withDepartmentRoles != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -487,10 +633,37 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*D
 			return nil, err
 		}
 	}
+	if query := dq.withRoles; query != nil {
+		if err := dq.loadRoles(ctx, query, nodes,
+			func(n *Department) { n.Edges.Roles = []*Role{} },
+			func(n *Department, e *Role) { n.Edges.Roles = append(n.Edges.Roles, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := dq.withChildren; query != nil {
+		if err := dq.loadChildren(ctx, query, nodes,
+			func(n *Department) { n.Edges.Children = []*Department{} },
+			func(n *Department, e *Department) { n.Edges.Children = append(n.Edges.Children, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := dq.withParent; query != nil {
+		if err := dq.loadParent(ctx, query, nodes, nil,
+			func(n *Department, e *Department) { n.Edges.Parent = e }); err != nil {
+			return nil, err
+		}
+	}
 	if query := dq.withUserDepartments; query != nil {
 		if err := dq.loadUserDepartments(ctx, query, nodes,
 			func(n *Department) { n.Edges.UserDepartments = []*UserDepartment{} },
 			func(n *Department, e *UserDepartment) { n.Edges.UserDepartments = append(n.Edges.UserDepartments, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := dq.withDepartmentRoles; query != nil {
+		if err := dq.loadDepartmentRoles(ctx, query, nodes,
+			func(n *Department) { n.Edges.DepartmentRoles = []*DepartmentRole{} },
+			func(n *Department, e *DepartmentRole) { n.Edges.DepartmentRoles = append(n.Edges.DepartmentRoles, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -588,6 +761,126 @@ func (dq *DepartmentQuery) loadPositions(ctx context.Context, query *PositionQue
 	}
 	return nil
 }
+func (dq *DepartmentQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*Department, init func(*Department), assign func(*Department, *Role)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int]*Department)
+	nids := make(map[int]map[*Department]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(department.RolesTable)
+		s.Join(joinT).On(s.C(role.FieldID), joinT.C(department.RolesPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(department.RolesPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(department.RolesPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Department]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Role](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "roles" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (dq *DepartmentQuery) loadChildren(ctx context.Context, query *DepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *Department)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Department)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(department.FieldParentID)
+	}
+	query.Where(predicate.Department(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(department.ChildrenColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ParentID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "parent_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (dq *DepartmentQuery) loadParent(ctx context.Context, query *DepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *Department)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*Department)
+	for i := range nodes {
+		fk := nodes[i].ParentID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(department.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "parent_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
 func (dq *DepartmentQuery) loadUserDepartments(ctx context.Context, query *UserDepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *UserDepartment)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int]*Department)
@@ -603,6 +896,36 @@ func (dq *DepartmentQuery) loadUserDepartments(ctx context.Context, query *UserD
 	}
 	query.Where(predicate.UserDepartment(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(department.UserDepartmentsColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.DepartmentID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "department_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (dq *DepartmentQuery) loadDepartmentRoles(ctx context.Context, query *DepartmentRoleQuery, nodes []*Department, init func(*Department), assign func(*Department, *DepartmentRole)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*Department)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(departmentrole.FieldDepartmentID)
+	}
+	query.Where(predicate.DepartmentRole(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(department.DepartmentRolesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -646,6 +969,9 @@ func (dq *DepartmentQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != department.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
+		}
+		if dq.withParent != nil {
+			_spec.Node.AddColumnOnce(department.FieldParentID)
 		}
 	}
 	if ps := dq.predicates; len(ps) > 0 {
@@ -750,6 +1076,9 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  Description string `json:"description,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
+//	  Ancestors string `json:"ancestors,omitempty"`
+//	  ParentID int `json:"parent_id,omitempty"`
+//	  Level int `json:"level,omitempty"`
 //	}
 //
 //	client.Department.Query().
@@ -761,6 +1090,9 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  department.FieldDescription,
 //	  department.FieldSequence,
 //	  department.FieldStatus,
+//	  department.FieldAncestors,
+//	  department.FieldParentID,
+//	  department.FieldLevel,
 //	  ).
 //	  Scan(ctx, &v)
 func (dq *DepartmentQuery) Omit(fields ...string) *DepartmentSelect {

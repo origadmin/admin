@@ -805,3 +805,5 @@ sketch
 # typescript
 next-env.d.ts
 
+/.idea/copyright/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml

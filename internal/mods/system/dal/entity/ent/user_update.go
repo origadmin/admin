@@ -312,27 +312,6 @@ func (uu *UserUpdate) SetNillableSanctionDate(t *time.Time) *UserUpdate {
 	return uu
 }
 
-// SetDepartmentID sets the "department_id" field.
-func (uu *UserUpdate) SetDepartmentID(i int) *UserUpdate {
-	uu.mutation.ResetDepartmentID()
-	uu.mutation.SetDepartmentID(i)
-	return uu
-}
-
-// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableDepartmentID(i *int) *UserUpdate {
-	if i != nil {
-		uu.SetDepartmentID(*i)
-	}
-	return uu
-}
-
-// AddDepartmentID adds i to the "department_id" field.
-func (uu *UserUpdate) AddDepartmentID(i int) *UserUpdate {
-	uu.mutation.AddDepartmentID(i)
-	return uu
-}
-
 // SetManagerID sets the "manager_id" field.
 func (uu *UserUpdate) SetManagerID(i int) *UserUpdate {
 	uu.mutation.ResetManagerID()
@@ -620,11 +599,6 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
 		}
 	}
-	if v, ok := uu.mutation.DepartmentID(); ok {
-		if err := user.DepartmentIDValidator(v); err != nil {
-			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "User.department_id": %w`, err)}
-		}
-	}
 	if v, ok := uu.mutation.ManagerID(); ok {
 		if err := user.ManagerIDValidator(v); err != nil {
 			return &ValidationError{Name: "manager_id", err: fmt.Errorf(`ent: validator failed for field "User.manager_id": %w`, err)}
@@ -713,12 +687,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
-	}
-	if value, ok := uu.mutation.DepartmentID(); ok {
-		_spec.SetField(user.FieldDepartmentID, field.TypeInt, value)
-	}
-	if value, ok := uu.mutation.AddedDepartmentID(); ok {
-		_spec.AddField(user.FieldDepartmentID, field.TypeInt, value)
 	}
 	if value, ok := uu.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeInt, value)
@@ -1210,27 +1178,6 @@ func (uuo *UserUpdateOne) SetNillableSanctionDate(t *time.Time) *UserUpdateOne {
 	return uuo
 }
 
-// SetDepartmentID sets the "department_id" field.
-func (uuo *UserUpdateOne) SetDepartmentID(i int) *UserUpdateOne {
-	uuo.mutation.ResetDepartmentID()
-	uuo.mutation.SetDepartmentID(i)
-	return uuo
-}
-
-// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableDepartmentID(i *int) *UserUpdateOne {
-	if i != nil {
-		uuo.SetDepartmentID(*i)
-	}
-	return uuo
-}
-
-// AddDepartmentID adds i to the "department_id" field.
-func (uuo *UserUpdateOne) AddDepartmentID(i int) *UserUpdateOne {
-	uuo.mutation.AddDepartmentID(i)
-	return uuo
-}
-
 // SetManagerID sets the "manager_id" field.
 func (uuo *UserUpdateOne) SetManagerID(i int) *UserUpdateOne {
 	uuo.mutation.ResetManagerID()
@@ -1531,11 +1478,6 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
 		}
 	}
-	if v, ok := uuo.mutation.DepartmentID(); ok {
-		if err := user.DepartmentIDValidator(v); err != nil {
-			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "User.department_id": %w`, err)}
-		}
-	}
 	if v, ok := uuo.mutation.ManagerID(); ok {
 		if err := user.ManagerIDValidator(v); err != nil {
 			return &ValidationError{Name: "manager_id", err: fmt.Errorf(`ent: validator failed for field "User.manager_id": %w`, err)}
@@ -1641,12 +1583,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
-	}
-	if value, ok := uuo.mutation.DepartmentID(); ok {
-		_spec.SetField(user.FieldDepartmentID, field.TypeInt, value)
-	}
-	if value, ok := uuo.mutation.AddedDepartmentID(); ok {
-		_spec.AddField(user.FieldDepartmentID, field.TypeInt, value)
 	}
 	if value, ok := uuo.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeInt, value)

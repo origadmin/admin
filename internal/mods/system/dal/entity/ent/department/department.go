@@ -28,12 +28,26 @@ const (
 	FieldSequence = "sequence"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
+	// FieldAncestors holds the string denoting the ancestors field in the database.
+	FieldAncestors = "ancestors"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
+	// FieldLevel holds the string denoting the level field in the database.
+	FieldLevel = "level"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
 	EdgePositions = "positions"
+	// EdgeRoles holds the string denoting the roles edge name in mutations.
+	EdgeRoles = "roles"
+	// EdgeChildren holds the string denoting the children edge name in mutations.
+	EdgeChildren = "children"
+	// EdgeParent holds the string denoting the parent edge name in mutations.
+	EdgeParent = "parent"
 	// EdgeUserDepartments holds the string denoting the user_departments edge name in mutations.
 	EdgeUserDepartments = "user_departments"
+	// EdgeDepartmentRoles holds the string denoting the department_roles edge name in mutations.
+	EdgeDepartmentRoles = "department_roles"
 	// Table holds the table name of the department in the database.
 	Table = "sys_departments"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
@@ -48,6 +62,19 @@ const (
 	PositionsInverseTable = "positions"
 	// PositionsColumn is the table column denoting the positions relation/edge.
 	PositionsColumn = "department_id"
+	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
+	RolesTable = "sys_department_roles"
+	// RolesInverseTable is the table name for the Role entity.
+	// It exists in this package in order to avoid circular dependency with the "role" package.
+	RolesInverseTable = "sys_roles"
+	// ChildrenTable is the table that holds the children relation/edge.
+	ChildrenTable = "sys_departments"
+	// ChildrenColumn is the table column denoting the children relation/edge.
+	ChildrenColumn = "parent_id"
+	// ParentTable is the table that holds the parent relation/edge.
+	ParentTable = "sys_departments"
+	// ParentColumn is the table column denoting the parent relation/edge.
+	ParentColumn = "parent_id"
 	// UserDepartmentsTable is the table that holds the user_departments relation/edge.
 	UserDepartmentsTable = "sys_user_departments"
 	// UserDepartmentsInverseTable is the table name for the UserDepartment entity.
@@ -55,6 +82,13 @@ const (
 	UserDepartmentsInverseTable = "sys_user_departments"
 	// UserDepartmentsColumn is the table column denoting the user_departments relation/edge.
 	UserDepartmentsColumn = "department_id"
+	// DepartmentRolesTable is the table that holds the department_roles relation/edge.
+	DepartmentRolesTable = "sys_department_roles"
+	// DepartmentRolesInverseTable is the table name for the DepartmentRole entity.
+	// It exists in this package in order to avoid circular dependency with the "departmentrole" package.
+	DepartmentRolesInverseTable = "sys_department_roles"
+	// DepartmentRolesColumn is the table column denoting the department_roles relation/edge.
+	DepartmentRolesColumn = "department_id"
 )
 
 // Columns holds all SQL columns for department fields.
@@ -67,12 +101,18 @@ var Columns = []string{
 	FieldDescription,
 	FieldSequence,
 	FieldStatus,
+	FieldAncestors,
+	FieldParentID,
+	FieldLevel,
 }
 
 var (
 	// UsersPrimaryKey and UsersColumn2 are the table columns denoting the
 	// primary key for the users relation (M2M).
 	UsersPrimaryKey = []string{"user_id", "department_id"}
+	// RolesPrimaryKey and RolesColumn2 are the table columns denoting the
+	// primary key for the roles relation (M2M).
+	RolesPrimaryKey = []string{"department_id", "role_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -106,6 +146,14 @@ var (
 	DescriptionValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
+	// DefaultAncestors holds the default value on creation for the "ancestors" field.
+	DefaultAncestors string
+	// AncestorsValidator is a validator for the "ancestors" field. It is called by the builders before save.
+	AncestorsValidator func(string) error
+	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
+	ParentIDValidator func(int) error
+	// DefaultLevel holds the default value on creation for the "level" field.
+	DefaultLevel int
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -153,6 +201,21 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
+// ByAncestors orders the results by the ancestors field.
+func ByAncestors(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAncestors, opts...).ToFunc()
+}
+
+// ByParentID orders the results by the parent_id field.
+func ByParentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParentID, opts...).ToFunc()
+}
+
+// ByLevel orders the results by the level field.
+func ByLevel(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLevel, opts...).ToFunc()
+}
+
 // ByUsersCount orders the results by users count.
 func ByUsersCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -181,6 +244,41 @@ func ByPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByRolesCount orders the results by roles count.
+func ByRolesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newRolesStep(), opts...)
+	}
+}
+
+// ByRoles orders the results by roles terms.
+func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByChildrenCount orders the results by children count.
+func ByChildrenCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newChildrenStep(), opts...)
+	}
+}
+
+// ByChildren orders the results by children terms.
+func ByChildren(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newChildrenStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByParentField orders the results by parent field.
+func ByParentField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newParentStep(), sql.OrderByField(field, opts...))
+	}
+}
+
 // ByUserDepartmentsCount orders the results by user_departments count.
 func ByUserDepartmentsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -192,6 +290,20 @@ func ByUserDepartmentsCount(opts ...sql.OrderTermOption) OrderOption {
 func ByUserDepartments(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newUserDepartmentsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByDepartmentRolesCount orders the results by department_roles count.
+func ByDepartmentRolesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newDepartmentRolesStep(), opts...)
+	}
+}
+
+// ByDepartmentRoles orders the results by department_roles terms.
+func ByDepartmentRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newDepartmentRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 func newUsersStep() *sqlgraph.Step {
@@ -208,11 +320,39 @@ func newPositionsStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.O2M, false, PositionsTable, PositionsColumn),
 	)
 }
+func newRolesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RolesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, RolesTable, RolesPrimaryKey...),
+	)
+}
+func newChildrenStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
+	)
+}
+func newParentStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, ParentTable, ParentColumn),
+	)
+}
 func newUserDepartmentsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UserDepartmentsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, UserDepartmentsTable, UserDepartmentsColumn),
+	)
+}
+func newDepartmentRolesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(DepartmentRolesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, DepartmentRolesTable, DepartmentRolesColumn),
 	)
 }
 

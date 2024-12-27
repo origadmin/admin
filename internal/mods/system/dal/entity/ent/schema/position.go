@@ -23,7 +23,7 @@ func (Position) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").MaxLen(64).Unique(),
 		field.String("description").MaxLen(256),
-		mixin.OP("department_id"),
+		mixin.FK("department_id"),
 	}
 }
 
@@ -38,8 +38,8 @@ func (Position) Edges() []ent.Edge {
 		edge.From("department", Department.Type).
 			Ref("positions").
 			Field("department_id").
-			Unique(),
-		//Required(),
+			Unique().
+			Required(), // Required() must set with Field Optional(), comment it if the field is not Optional() Field
 		edge.To("user_positions", UserPosition.Type),
 	}
 }

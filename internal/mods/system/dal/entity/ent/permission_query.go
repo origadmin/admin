@@ -1032,7 +1032,12 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Name string `json:"name,omitempty"`
+//	  Keyword string `json:"keyword,omitempty"`
 //	  Description string `json:"description,omitempty"`
+//	  I18nKey string `json:"i18n_key,omitempty"`
+//	  Type int8 `json:"type,omitempty"`
+//	  Scope string `json:"scope,omitempty"`
+//	  ScopeDepts []string `json:"scope_depts,omitempty"`
 //	}
 //
 //	client.Permission.Query().
@@ -1040,7 +1045,12 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  permission.FieldCreateTime,
 //	  permission.FieldUpdateTime,
 //	  permission.FieldName,
+//	  permission.FieldKeyword,
 //	  permission.FieldDescription,
+//	  permission.FieldI18nKey,
+//	  permission.FieldType,
+//	  permission.FieldScope,
+//	  permission.FieldScopeDepts,
 //	  ).
 //	  Scan(ctx, &v)
 func (pq *PermissionQuery) Omit(fields ...string) *PermissionSelect {

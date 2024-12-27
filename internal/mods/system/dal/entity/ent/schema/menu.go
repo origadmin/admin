@@ -14,19 +14,20 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 const (
 	MenuStatusActivated = 0
-	MenuStatusFreezed   = 1
+	MenuStatusFrozen    = 1
 )
 
 const (
-	MenuTypeAction = 'A'
-	MenuTypeButton = 'B'
-	MenuTypeLink   = 'L'
-	MenuTypeMenu   = 'M'
-	MenuTypePage   = 'P'
+	MenuTypeAction rune = 'A'
+	MenuTypeButton rune = 'B'
+	MenuTypeLink   rune = 'L'
+	MenuTypeMenu   rune = 'M'
+	MenuTypePage   rune = 'P'
 )
 
 // Menu holds the schema definition for the Menu domain.
@@ -37,19 +38,18 @@ type Menu struct {
 // Fields of the Menu.
 func (Menu) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("keyword").MaxLen(32).Default(""),       // Code of menu (unique for each level)
-		field.String("name").MaxLen(128).Default(""),         // Display name of menu
-		field.String("description").MaxLen(1024).Default(""), // Details about menu
-		field.Uint8("type").Default(MenuTypePage),            // Dialect of menu (Page,Button,Action,Menu,Link)
-		field.String("icon").MaxLen(32).Default(""),
-		field.String("path").MaxLen(255).Default(""), // Access path of menu
-		field.Int8("status").Default(MenuStatusActivated),
-		//field.String("parent_id").MaxLen(36).Default("").Optional(), // Parent UUID (From Menu.UUID)
-		mixin.OP("parent_id"),
-		field.String("parent_path").MaxLen(255).Default(""), // Parent path (split by .)
-		field.Int("sequence").Default(0),                    // Sequence for sorting (Order by desc)
-		field.Text("properties").Default("").Optional(),     // Properties of menu (JSON)
-		// Resources of menu
+		field.String("keyword").MaxLen(32).Default("").Comment(i18n.Text("menu:keyword")),           // Unique keyword for the menu item
+		field.String("name").MaxLen(128).Default("").Comment(i18n.Text("menu:name")),                // Display name of the menu item
+		field.String("description").MaxLen(1024).Default("").Comment(i18n.Text("menu:description")), // Description of the menu item
+		field.Int32("type").Default(MenuTypePage).Comment(i18n.Text("menu:type")),                   // Type of the menu item (e.g., page, link)
+		field.String("icon").MaxLen(32).Default("").Comment(i18n.Text("menu:icon")),                 // Icon for the menu item
+		field.String("path").MaxLen(255).Default("").Comment(i18n.Text("menu:path")),                // Path associated with the menu item
+		field.Int8("status").Default(MenuStatusActivated).Comment(i18n.Text("menu:status")),         // Status of the menu item (e.g., activated, deactivated)
+		field.String("parent_path").MaxLen(255).Default("").Comment(i18n.Text("menu:parent_path")),  // Parent path of the menu item
+		field.Int("sequence").Default(0).Comment(i18n.Text("menu:sequence")),                        // Sequence for sorting the menu item
+		field.Text("properties").Default("").Optional().Comment(i18n.Text("menu:properties")),       // Additional properties of the menu item
+		mixin.OP("parent_id", "menu:parent_id"),                                                     // Parent ID of the menu item
+
 	}
 }
 

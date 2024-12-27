@@ -79,12 +79,6 @@ func (pu *PositionUpdate) SetNillableDepartmentID(i *int) *PositionUpdate {
 	return pu
 }
 
-// ClearDepartmentID clears the value of the "department_id" field.
-func (pu *PositionUpdate) ClearDepartmentID() *PositionUpdate {
-	pu.mutation.ClearDepartmentID()
-	return pu
-}
-
 // SetDepartment sets the "department" edge to the Department entity.
 func (pu *PositionUpdate) SetDepartment(d *Department) *PositionUpdate {
 	return pu.SetDepartmentID(d.ID)
@@ -189,6 +183,9 @@ func (pu *PositionUpdate) check() error {
 		if err := position.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "Position.department_id": %w`, err)}
 		}
+	}
+	if pu.mutation.DepartmentCleared() && len(pu.mutation.DepartmentIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "Position.department"`)
 	}
 	return nil
 }
@@ -364,12 +361,6 @@ func (puo *PositionUpdateOne) SetNillableDepartmentID(i *int) *PositionUpdateOne
 	return puo
 }
 
-// ClearDepartmentID clears the value of the "department_id" field.
-func (puo *PositionUpdateOne) ClearDepartmentID() *PositionUpdateOne {
-	puo.mutation.ClearDepartmentID()
-	return puo
-}
-
 // SetDepartment sets the "department" edge to the Department entity.
 func (puo *PositionUpdateOne) SetDepartment(d *Department) *PositionUpdateOne {
 	return puo.SetDepartmentID(d.ID)
@@ -487,6 +478,9 @@ func (puo *PositionUpdateOne) check() error {
 		if err := position.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "Position.department_id": %w`, err)}
 		}
+	}
+	if puo.mutation.DepartmentCleared() && len(puo.mutation.DepartmentIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "Position.department"`)
 	}
 	return nil
 }

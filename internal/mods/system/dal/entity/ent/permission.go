@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"strings"
@@ -21,10 +22,20 @@ type Permission struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Name holds the value of the "name" field.
+	// 权限名称
 	Name string `json:"name,omitempty"`
-	// Description holds the value of the "description" field.
+	// 权限标识符
+	Keyword string `json:"keyword,omitempty"`
+	// 权限描述
 	Description string `json:"description,omitempty"`
+	// 国际化标识符(如：permission.system.user.manage)
+	I18nKey string `json:"i18n_key,omitempty"`
+	// 权限类型：1-系统 2-菜单 3-数据 4-部门 5-资源
+	Type int8 `json:"type,omitempty"`
+	// 数据范围：self-仅本人 dept-本部门 sub_dept-本部门及下级 custom-自定义部门 all-所有
+	Scope string `json:"scope,omitempty"`
+	// 自定义数据范围的部门ID列表，当scope为custom时有效
+	ScopeDepts []string `json:"scope_depts,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionQuery when eager-loading is set.
 	Edges        PermissionEdges `json:"edges"`
@@ -109,9 +120,11 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case permission.FieldID:
+		case permission.FieldScopeDepts:
+			values[i] = new([]byte)
+		case permission.FieldID, permission.FieldType:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldName, permission.FieldDescription:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldI18nKey, permission.FieldScope:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -154,11 +167,43 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pe.Name = value.String
 			}
+		case permission.FieldKeyword:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field keyword", values[i])
+			} else if value.Valid {
+				pe.Keyword = value.String
+			}
 		case permission.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				pe.Description = value.String
+			}
+		case permission.FieldI18nKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field i18n_key", values[i])
+			} else if value.Valid {
+				pe.I18nKey = value.String
+			}
+		case permission.FieldType:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field type", values[i])
+			} else if value.Valid {
+				pe.Type = int8(value.Int64)
+			}
+		case permission.FieldScope:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field scope", values[i])
+			} else if value.Valid {
+				pe.Scope = value.String
+			}
+		case permission.FieldScopeDepts:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field scope_depts", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &pe.ScopeDepts); err != nil {
+					return fmt.Errorf("unmarshal field scope_depts: %w", err)
+				}
 			}
 		default:
 			pe.selectValues.Set(columns[i], values[i])
@@ -235,8 +280,23 @@ func (pe *Permission) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(pe.Name)
 	builder.WriteString(", ")
+	builder.WriteString("keyword=")
+	builder.WriteString(pe.Keyword)
+	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(pe.Description)
+	builder.WriteString(", ")
+	builder.WriteString("i18n_key=")
+	builder.WriteString(pe.I18nKey)
+	builder.WriteString(", ")
+	builder.WriteString("type=")
+	builder.WriteString(fmt.Sprintf("%v", pe.Type))
+	builder.WriteString(", ")
+	builder.WriteString("scope=")
+	builder.WriteString(pe.Scope)
+	builder.WriteString(", ")
+	builder.WriteString("scope_depts=")
+	builder.WriteString(fmt.Sprintf("%v", pe.ScopeDepts))
 	builder.WriteByte(')')
 	return builder.String()
 }

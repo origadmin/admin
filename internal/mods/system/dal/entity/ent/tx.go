@@ -14,6 +14,8 @@ type Tx struct {
 	config
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
+	// DepartmentRole is the client for interacting with the DepartmentRole builders.
+	DepartmentRole *DepartmentRoleClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
 	// MenuPermission is the client for interacting with the MenuPermission builders.
@@ -172,6 +174,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Department = NewDepartmentClient(tx.config)
+	tx.DepartmentRole = NewDepartmentRoleClient(tx.config)
 	tx.Menu = NewMenuClient(tx.config)
 	tx.MenuPermission = NewMenuPermissionClient(tx.config)
 	tx.Permission = NewPermissionClient(tx.config)

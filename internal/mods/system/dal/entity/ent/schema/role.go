@@ -16,6 +16,13 @@ import (
 	"origadmin/application/admin/helpers/ent/mixin"
 )
 
+// 角色类型常量
+const (
+	RoleTypeSystem     int8 = 1 // 系统角色（如：超级管理员、访客）
+	RoleTypeUser       int8 = 2 // 用户角色（如：普通用户、运营、客服）
+	RoleTypeDepartment int8 = 3 // 部门角色（如：部门主管、部门成员）
+)
+
 // Role holds the schema definition for the Role domain.
 type Role struct {
 	ent.Schema
@@ -27,9 +34,14 @@ func (Role) Fields() []ent.Field {
 		field.String("keyword").MaxLen(32).Default(""),       // Code of role (unique)
 		field.String("name").MaxLen(128).Default(""),         // Display name of role
 		field.String("description").MaxLen(1024).Default(""), // Details about role
-		field.Int("sequence"),                                // Sequence for sorting
+		field.Int8("type").
+			Default(RoleTypeUser).
+			Comment("角色类型：1-系统角色 2-用户角色 3-部门角色"),
+		field.Int("sequence"), // Sequence for sorting
 		field.Int8("status").Default(0),
-		// Role menu list
+		field.Bool("is_system").
+			Default(false).
+			Comment("是否系统内置（系统内置角色不可删除）"),
 	}
 }
 
@@ -61,19 +73,14 @@ func (Role) Edges() []ent.Edge {
 		edge.To("menus", Menu.Type).
 			StorageKey(edge.Columns("role_id", "menu_id")).
 			Through("role_menus", RoleMenu.Type),
-		//edge.To("role_menus", RoleMenu.Type),
-		//Field("role_id").
-		//Unique(),
-		// edge.To("menus", Menu.Dialect).StorageKey(edge.Column("menu_id")),
-		// edge.To("users", User.Type).
-		//     StorageKey(edge.Columns("user_id", "role_id")).
-		//     Through("user_role", UserRole.Type), // .Field("user_id"),
 		edge.From("users", User.Type).
 			Ref("roles").
-			Through("user_roles", UserRole.Type), // .Field("user_id"),
-		// edge.From("users", User.Dialect).Ref("roles").StorageKey(edge.Table(config.c.FormatTableName("user_role")), edge.Column("role_id")).Unique(),
+			Through("user_roles", UserRole.Type),
 		edge.To("permissions", Permission.Type).
 			StorageKey(edge.Columns("role_id", "permission_id")).
 			Through("role_permissions", RolePermission.Type),
+		edge.From("departments", Department.Type).
+			Ref("roles").
+			Through("department_roles", DepartmentRole.Type),
 	}
 }

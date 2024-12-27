@@ -6,6 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
@@ -83,6 +85,27 @@ func (ru *RoleUpdate) SetNillableDescription(s *string) *RoleUpdate {
 	return ru
 }
 
+// SetType sets the "type" field.
+func (ru *RoleUpdate) SetType(i int8) *RoleUpdate {
+	ru.mutation.ResetType()
+	ru.mutation.SetType(i)
+	return ru
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableType(i *int8) *RoleUpdate {
+	if i != nil {
+		ru.SetType(*i)
+	}
+	return ru
+}
+
+// AddType adds i to the "type" field.
+func (ru *RoleUpdate) AddType(i int8) *RoleUpdate {
+	ru.mutation.AddType(i)
+	return ru
+}
+
 // SetSequence sets the "sequence" field.
 func (ru *RoleUpdate) SetSequence(i int) *RoleUpdate {
 	ru.mutation.ResetSequence()
@@ -122,6 +145,20 @@ func (ru *RoleUpdate) SetNillableStatus(i *int8) *RoleUpdate {
 // AddStatus adds i to the "status" field.
 func (ru *RoleUpdate) AddStatus(i int8) *RoleUpdate {
 	ru.mutation.AddStatus(i)
+	return ru
+}
+
+// SetIsSystem sets the "is_system" field.
+func (ru *RoleUpdate) SetIsSystem(b bool) *RoleUpdate {
+	ru.mutation.SetIsSystem(b)
+	return ru
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (ru *RoleUpdate) SetNillableIsSystem(b *bool) *RoleUpdate {
+	if b != nil {
+		ru.SetIsSystem(*b)
+	}
 	return ru
 }
 
@@ -170,6 +207,21 @@ func (ru *RoleUpdate) AddPermissions(p ...*Permission) *RoleUpdate {
 	return ru.AddPermissionIDs(ids...)
 }
 
+// AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
+func (ru *RoleUpdate) AddDepartmentIDs(ids ...int) *RoleUpdate {
+	ru.mutation.AddDepartmentIDs(ids...)
+	return ru
+}
+
+// AddDepartments adds the "departments" edges to the Department entity.
+func (ru *RoleUpdate) AddDepartments(d ...*Department) *RoleUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ru.AddDepartmentIDs(ids...)
+}
+
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
 func (ru *RoleUpdate) AddRoleMenuIDs(ids ...int) *RoleUpdate {
 	ru.mutation.AddRoleMenuIDs(ids...)
@@ -213,6 +265,21 @@ func (ru *RoleUpdate) AddRolePermissions(r ...*RolePermission) *RoleUpdate {
 		ids[i] = r[i].ID
 	}
 	return ru.AddRolePermissionIDs(ids...)
+}
+
+// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
+func (ru *RoleUpdate) AddDepartmentRoleIDs(ids ...int) *RoleUpdate {
+	ru.mutation.AddDepartmentRoleIDs(ids...)
+	return ru
+}
+
+// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
+func (ru *RoleUpdate) AddDepartmentRoles(d ...*DepartmentRole) *RoleUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ru.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -283,6 +350,27 @@ func (ru *RoleUpdate) RemovePermissions(p ...*Permission) *RoleUpdate {
 	return ru.RemovePermissionIDs(ids...)
 }
 
+// ClearDepartments clears all "departments" edges to the Department entity.
+func (ru *RoleUpdate) ClearDepartments() *RoleUpdate {
+	ru.mutation.ClearDepartments()
+	return ru
+}
+
+// RemoveDepartmentIDs removes the "departments" edge to Department entities by IDs.
+func (ru *RoleUpdate) RemoveDepartmentIDs(ids ...int) *RoleUpdate {
+	ru.mutation.RemoveDepartmentIDs(ids...)
+	return ru
+}
+
+// RemoveDepartments removes "departments" edges to Department entities.
+func (ru *RoleUpdate) RemoveDepartments(d ...*Department) *RoleUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ru.RemoveDepartmentIDs(ids...)
+}
+
 // ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
 func (ru *RoleUpdate) ClearRoleMenus() *RoleUpdate {
 	ru.mutation.ClearRoleMenus()
@@ -344,6 +432,27 @@ func (ru *RoleUpdate) RemoveRolePermissions(r ...*RolePermission) *RoleUpdate {
 		ids[i] = r[i].ID
 	}
 	return ru.RemoveRolePermissionIDs(ids...)
+}
+
+// ClearDepartmentRoles clears all "department_roles" edges to the DepartmentRole entity.
+func (ru *RoleUpdate) ClearDepartmentRoles() *RoleUpdate {
+	ru.mutation.ClearDepartmentRoles()
+	return ru
+}
+
+// RemoveDepartmentRoleIDs removes the "department_roles" edge to DepartmentRole entities by IDs.
+func (ru *RoleUpdate) RemoveDepartmentRoleIDs(ids ...int) *RoleUpdate {
+	ru.mutation.RemoveDepartmentRoleIDs(ids...)
+	return ru
+}
+
+// RemoveDepartmentRoles removes "department_roles" edges to DepartmentRole entities.
+func (ru *RoleUpdate) RemoveDepartmentRoles(d ...*DepartmentRole) *RoleUpdate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ru.RemoveDepartmentRoleIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -432,6 +541,12 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.Description(); ok {
 		_spec.SetField(role.FieldDescription, field.TypeString, value)
 	}
+	if value, ok := ru.mutation.GetType(); ok {
+		_spec.SetField(role.FieldType, field.TypeInt8, value)
+	}
+	if value, ok := ru.mutation.AddedType(); ok {
+		_spec.AddField(role.FieldType, field.TypeInt8, value)
+	}
 	if value, ok := ru.mutation.Sequence(); ok {
 		_spec.SetField(role.FieldSequence, field.TypeInt, value)
 	}
@@ -443,6 +558,9 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.AddedStatus(); ok {
 		_spec.AddField(role.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := ru.mutation.IsSystem(); ok {
+		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 	}
 	if ru.mutation.MenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -572,6 +690,51 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ru.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 && !ru.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -714,6 +877,51 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ru.mutation.DepartmentRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedDepartmentRolesIDs(); len(nodes) > 0 && !ru.mutation.DepartmentRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	_spec.AddModifiers(ru.modifiers...)
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -784,6 +992,27 @@ func (ruo *RoleUpdateOne) SetNillableDescription(s *string) *RoleUpdateOne {
 	return ruo
 }
 
+// SetType sets the "type" field.
+func (ruo *RoleUpdateOne) SetType(i int8) *RoleUpdateOne {
+	ruo.mutation.ResetType()
+	ruo.mutation.SetType(i)
+	return ruo
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableType(i *int8) *RoleUpdateOne {
+	if i != nil {
+		ruo.SetType(*i)
+	}
+	return ruo
+}
+
+// AddType adds i to the "type" field.
+func (ruo *RoleUpdateOne) AddType(i int8) *RoleUpdateOne {
+	ruo.mutation.AddType(i)
+	return ruo
+}
+
 // SetSequence sets the "sequence" field.
 func (ruo *RoleUpdateOne) SetSequence(i int) *RoleUpdateOne {
 	ruo.mutation.ResetSequence()
@@ -823,6 +1052,20 @@ func (ruo *RoleUpdateOne) SetNillableStatus(i *int8) *RoleUpdateOne {
 // AddStatus adds i to the "status" field.
 func (ruo *RoleUpdateOne) AddStatus(i int8) *RoleUpdateOne {
 	ruo.mutation.AddStatus(i)
+	return ruo
+}
+
+// SetIsSystem sets the "is_system" field.
+func (ruo *RoleUpdateOne) SetIsSystem(b bool) *RoleUpdateOne {
+	ruo.mutation.SetIsSystem(b)
+	return ruo
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (ruo *RoleUpdateOne) SetNillableIsSystem(b *bool) *RoleUpdateOne {
+	if b != nil {
+		ruo.SetIsSystem(*b)
+	}
 	return ruo
 }
 
@@ -871,6 +1114,21 @@ func (ruo *RoleUpdateOne) AddPermissions(p ...*Permission) *RoleUpdateOne {
 	return ruo.AddPermissionIDs(ids...)
 }
 
+// AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
+func (ruo *RoleUpdateOne) AddDepartmentIDs(ids ...int) *RoleUpdateOne {
+	ruo.mutation.AddDepartmentIDs(ids...)
+	return ruo
+}
+
+// AddDepartments adds the "departments" edges to the Department entity.
+func (ruo *RoleUpdateOne) AddDepartments(d ...*Department) *RoleUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ruo.AddDepartmentIDs(ids...)
+}
+
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
 func (ruo *RoleUpdateOne) AddRoleMenuIDs(ids ...int) *RoleUpdateOne {
 	ruo.mutation.AddRoleMenuIDs(ids...)
@@ -914,6 +1172,21 @@ func (ruo *RoleUpdateOne) AddRolePermissions(r ...*RolePermission) *RoleUpdateOn
 		ids[i] = r[i].ID
 	}
 	return ruo.AddRolePermissionIDs(ids...)
+}
+
+// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
+func (ruo *RoleUpdateOne) AddDepartmentRoleIDs(ids ...int) *RoleUpdateOne {
+	ruo.mutation.AddDepartmentRoleIDs(ids...)
+	return ruo
+}
+
+// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
+func (ruo *RoleUpdateOne) AddDepartmentRoles(d ...*DepartmentRole) *RoleUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ruo.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -984,6 +1257,27 @@ func (ruo *RoleUpdateOne) RemovePermissions(p ...*Permission) *RoleUpdateOne {
 	return ruo.RemovePermissionIDs(ids...)
 }
 
+// ClearDepartments clears all "departments" edges to the Department entity.
+func (ruo *RoleUpdateOne) ClearDepartments() *RoleUpdateOne {
+	ruo.mutation.ClearDepartments()
+	return ruo
+}
+
+// RemoveDepartmentIDs removes the "departments" edge to Department entities by IDs.
+func (ruo *RoleUpdateOne) RemoveDepartmentIDs(ids ...int) *RoleUpdateOne {
+	ruo.mutation.RemoveDepartmentIDs(ids...)
+	return ruo
+}
+
+// RemoveDepartments removes "departments" edges to Department entities.
+func (ruo *RoleUpdateOne) RemoveDepartments(d ...*Department) *RoleUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ruo.RemoveDepartmentIDs(ids...)
+}
+
 // ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
 func (ruo *RoleUpdateOne) ClearRoleMenus() *RoleUpdateOne {
 	ruo.mutation.ClearRoleMenus()
@@ -1045,6 +1339,27 @@ func (ruo *RoleUpdateOne) RemoveRolePermissions(r ...*RolePermission) *RoleUpdat
 		ids[i] = r[i].ID
 	}
 	return ruo.RemoveRolePermissionIDs(ids...)
+}
+
+// ClearDepartmentRoles clears all "department_roles" edges to the DepartmentRole entity.
+func (ruo *RoleUpdateOne) ClearDepartmentRoles() *RoleUpdateOne {
+	ruo.mutation.ClearDepartmentRoles()
+	return ruo
+}
+
+// RemoveDepartmentRoleIDs removes the "department_roles" edge to DepartmentRole entities by IDs.
+func (ruo *RoleUpdateOne) RemoveDepartmentRoleIDs(ids ...int) *RoleUpdateOne {
+	ruo.mutation.RemoveDepartmentRoleIDs(ids...)
+	return ruo
+}
+
+// RemoveDepartmentRoles removes "department_roles" edges to DepartmentRole entities.
+func (ruo *RoleUpdateOne) RemoveDepartmentRoles(d ...*DepartmentRole) *RoleUpdateOne {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return ruo.RemoveDepartmentRoleIDs(ids...)
 }
 
 // Where appends a list predicates to the RoleUpdate builder.
@@ -1163,6 +1478,12 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	if value, ok := ruo.mutation.Description(); ok {
 		_spec.SetField(role.FieldDescription, field.TypeString, value)
 	}
+	if value, ok := ruo.mutation.GetType(); ok {
+		_spec.SetField(role.FieldType, field.TypeInt8, value)
+	}
+	if value, ok := ruo.mutation.AddedType(); ok {
+		_spec.AddField(role.FieldType, field.TypeInt8, value)
+	}
 	if value, ok := ruo.mutation.Sequence(); ok {
 		_spec.SetField(role.FieldSequence, field.TypeInt, value)
 	}
@@ -1174,6 +1495,9 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	}
 	if value, ok := ruo.mutation.AddedStatus(); ok {
 		_spec.AddField(role.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := ruo.mutation.IsSystem(); ok {
+		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 	}
 	if ruo.mutation.MenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1310,6 +1634,51 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if ruo.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedDepartmentsIDs(); len(nodes) > 0 && !ruo.mutation.DepartmentsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if ruo.mutation.RoleMenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -1438,6 +1807,51 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.DepartmentRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedDepartmentRolesIDs(); len(nodes) > 0 && !ruo.mutation.DepartmentRolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

@@ -310,16 +310,6 @@ func DepartmentIDNotIn(vs ...int) predicate.Position {
 	return predicate.Position(sql.FieldNotIn(FieldDepartmentID, vs...))
 }
 
-// DepartmentIDIsNil applies the IsNil predicate on the "department_id" field.
-func DepartmentIDIsNil() predicate.Position {
-	return predicate.Position(sql.FieldIsNull(FieldDepartmentID))
-}
-
-// DepartmentIDNotNil applies the NotNil predicate on the "department_id" field.
-func DepartmentIDNotNil() predicate.Position {
-	return predicate.Position(sql.FieldNotNull(FieldDepartmentID))
-}
-
 // HasDepartment applies the HasEdge predicate on the "department" edge.
 func HasDepartment() predicate.Position {
 	return predicate.Position(func(s *sql.Selector) {

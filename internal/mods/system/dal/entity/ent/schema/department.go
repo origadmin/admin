@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // Department holds the schema definition for the Department domain.
@@ -24,12 +25,14 @@ type Department struct {
 // Fields of the Department.
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("keyword").MaxLen(32).Default(""),      // Code of Department (unique)
-		field.String("name").MaxLen(64).Default(""),         // Display name of Department
-		field.String("description").MaxLen(256).Default(""), // Details about Department
-		field.Int("sequence"),                               // Sequence for sorting
-		field.Int8("status").Default(0),
-		// Department menu list
+		field.String("keyword").MaxLen(32).Default("").Comment(i18n.Text("department:keyword")),
+		field.String("name").MaxLen(64).Default("").Comment(i18n.Text("department:name")),
+		field.String("description").MaxLen(256).Default("").Comment(i18n.Text("department:description")),
+		field.Int("sequence").Comment(i18n.Text("department:sequence")),
+		field.Int8("status").Default(0).Comment(i18n.Text("department:status")),
+		field.String("ancestors").MaxLen(1024).Default("").Comment(i18n.Text("department:ancestors")),
+		mixin.OP("parent_id", "department:parent_id"),
+		field.Int("level").Default(1).Comment(i18n.Text("department:level")),
 	}
 }
 
@@ -58,20 +61,18 @@ func (Department) Annotations() []schema.Annotation {
 // Edges of the Department.
 func (Department) Edges() []ent.Edge {
 	return []ent.Edge{
-		//edge.To("menus", Menu.Type).
-		//	StorageKey(edge.Columns("department_id", "menu_id")).
-		//	Through("Department_menus", DepartmentMenu.Type),
-		// edge.To("menus", Menu.Dialect).StorageKey(edge.Column("menu_id")),
-		// edge.To("users", User.Type).
-		//     StorageKey(edge.Columns("user_id", "Department_id")).
-		//     Through("user_Department", UserDepartment.Type), // .Field("user_id"),
 		edge.From("users", User.Type).
 			Ref("departments").
-			Through("user_departments", UserDepartment.Type), // .Field("user_id"),
-		//edge.To("user_departments", UserDepartment.Type),
-		//	From("department").
-		//	Ref("department"),
-		// edge.From("users", User.Dialect).Ref("Departments").StorageKey(edge.Table(config.c.FormatTableName("user_Department")), edge.Column("Department_id")).Unique(),
+			Through("user_departments", UserDepartment.Type),
 		edge.To("positions", Position.Type),
+		edge.To("roles", Role.Type).
+			StorageKey(edge.Columns("department_id", "role_id")).
+			Through("department_roles", DepartmentRole.Type),
+		// 添加部门层级关系
+		edge.To("children", Department.Type),
+		edge.From("parent", Department.Type).
+			Ref("children").
+			Field("parent_id").
+			Unique(),
 	}
 }

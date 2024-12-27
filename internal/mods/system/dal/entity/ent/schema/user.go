@@ -31,22 +31,27 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		mixin.FieldUUIDFK("uuid"),
 		field.String("allowed_ip").Default("0.0.0.0"),
-		field.String("username").MaxLen(32).Default(""),  // login username of user
-		field.String("nickname").MaxLen(64).Default(""),  // Nickname display name of user
-		field.String("avatar").MaxLen(256).Default(""),   // Avatar display avatar of user
-		field.String("name").MaxLen(64).Default(""),      // Name of user
-		field.String("gender").MaxLen(16).Default(""),    // Gender of user
-		field.String("password").MaxLen(256).Default(""), // Password for login (encrypted)
-		field.String("salt").MaxLen(64).Default(""),      // Salt
-		field.String("phone").MaxLen(32).Default(""),     // login phone number of user
-		field.String("email").MaxLen(64).Default(""),     // login email of user
-		field.String("remark").MaxLen(1024).Default(""),  // Remark of user
-		field.String("token").MaxLen(512).Default(""),    // Token for login
+		field.String("username").MaxLen(32).Default(""), // login username of user
+		field.String("nickname").MaxLen(64).Default(""), // Nickname display name of user
+		field.String("avatar").MaxLen(256).Default(""),  // Avatar display avatar of user
+		field.String("name").MaxLen(64).Default(""),     // Name of user
+		field.String("gender").MaxLen(16).Default(""),   // Gender of user
+		field.String("password").
+			MaxLen(256).
+			Default("").
+			Sensitive(),
+		field.String("salt").
+			MaxLen(64).
+			Default("").
+			Sensitive(),
+		field.String("phone").MaxLen(32).Default(""),    // login phone number of user
+		field.String("email").MaxLen(64).Default(""),    // login email of user
+		field.String("remark").MaxLen(1024).Default(""), // Remark of user
+		field.String("token").MaxLen(512).Default(""),   // Token for login
 		field.Int8("status").Default(UserStatusActivated),
 		field.String("last_login_ip").MaxLen(32).Default(""),
 		mixin.FieldTime("last_login_time"),
 		mixin.FieldTime("sanction_date"),
-		mixin.FK("department_id"),
 		mixin.FK("manager_id"),              // 管理员ID
 		field.String("manager").Default(""), // 管理员
 	}

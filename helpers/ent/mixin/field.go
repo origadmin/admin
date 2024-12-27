@@ -17,16 +17,29 @@ import (
 var ZeroTime = time.Time{}
 var _id = ID{}
 
-func PK(name string) ent.Field {
-	return _id.PK(name)
+func Comment(key string) Ider {
+	return _id.Comment(key)
 }
 
-func FK(name string) ent.Field {
-	return _id.FK(name)
+func PK(name string, comment ...string) ent.Field {
+	if len(comment) == 0 {
+		return _id.PK(name)
+	}
+	return _id.Comment(comment[0]).PK(name)
 }
 
-func OP(name string) ent.Field {
-	return _id.OP(name)
+func FK(name string, comment ...string) ent.Field {
+	if len(comment) == 0 {
+		return _id.FK(name)
+	}
+	return _id.Comment(comment[0]).FK(name)
+}
+
+func OP(name string, comment ...string) ent.Field {
+	if len(comment) == 0 {
+		return _id.OP(name)
+	}
+	return _id.Comment(comment[0]).OP(name)
 }
 
 // FieldIndex returns a field with index

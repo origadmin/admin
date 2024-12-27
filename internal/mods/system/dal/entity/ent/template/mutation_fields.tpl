@@ -40,32 +40,37 @@
 				switch fields[i] {
         {{- range $f := $fields }}
             {{- $const := print $n.Package "." $f.Constant }}
+            {{- $setter := print "Set" $f.StructField }}
 						case {{ $const }}:
             {{- if $f.Nillable}}
 							if input.{{ $f.StructField }} != nil {
-              {{- $setter := print "Set" $f.StructField }}
-              {{ $mutation }}.{{ $setter }}(*input.{{ $f.StructField }})
+							m.{{ $setter }}(*input.{{ $f.StructField }})
+							}
+            {{- else if $f.IsBool}}
+							if input.{{ $f.StructField }} {
+							m.{{ $setter }}(input.{{ $f.StructField }})
 							}
             {{- else if  $f.IsTime}}
-                {{- $setter := print "Set" $f.StructField }}
-								if !input.{{ $f.StructField }}.IsZero() {
-								m.{{ $setter }}(input.{{ $f.StructField }})
-								}
+							if !input.{{ $f.StructField }}.IsZero() {
+							m.{{ $setter }}(input.{{ $f.StructField }})
+							}
+            {{- else if $f.IsJSON}}
+							if len(input.{{ $f.StructField }}) > 0 {
+							m.{{ $setter }}(input.{{ $f.StructField }})
+							}
             {{- else if $f.IsString}}
-                {{- $setter := print "Set" $f.StructField }}
-								// check string if it is empty
-								if input.{{ $f.StructField }} != "" {
-								m.{{ $setter }}(input.{{ $f.StructField }})
-								}
-            {{- else if or $f.IsInt $f.IsInt64}}
-                {{- $setter := print "Set" $f.StructField }}
-								// check int if it is zero
-								if input.{{ $f.StructField }} != 0 {
-								m.{{ $setter }}(input.{{ $f.StructField }})
-								}
-            {{- else}}
+							// check {{$f.Type}} with {{$f.ScanType}} if it is empty
+							if input.{{ $f.StructField }} != "" {
+							m.{{ $setter }}(input.{{ $f.StructField }})
+							}
+            {{- else if $f.Type.Numeric}}
+							// check {{$f.Type}} with {{$f.ScanType}} if it is zero
+							if input.{{ $f.StructField }} != 0 {
+							m.{{ $setter }}(input.{{ $f.StructField }})
+							}
+            {{- else }}
 							var zero {{ $f.Type }}
-              {{- $setter := print "Set" $f.StructField }}
+							// check {{$f.Type}} with {{$f.ScanType}} if it is empty
 							if input.{{ $f.StructField }} != zero {
 							m.{{ $setter }}(input.{{ $f.StructField }})
 							}
@@ -86,21 +91,16 @@
 				switch fields[i] {
         {{- range $f := $fields }}
             {{- $const := print $n.Package "." $f.Constant }}
+            {{- $setter := print "Set" $f.StructField }}
+            {{- $clear := print "Reset" $f.StructField }}
 						case {{ $const }}:
             {{- if $f.Nillable}}
-                {{- $setter := print "Set" $f.StructField }}
-                {{ $mutation }}.{{ $setter }}(*input.{{ $f.StructField }})
-            {{- else if  $f.IsTime}}
-                {{- $setter := print "Set" $f.StructField }}
-								m.{{ $setter }}(input.{{ $f.StructField }})
-            {{- else if $f.IsString}}
-                {{- $setter := print "Set" $f.StructField }}
-								m.{{ $setter }}(input.{{ $f.StructField }})
-            {{- else if or $f.IsInt $f.IsInt64}}
-                {{- $setter := print "Set" $f.StructField }}
-								m.{{ $setter }}(input.{{ $f.StructField }})
+							if input.{{ $f.StructField }}!= nil {
+							m.{{ $setter }}(*input.{{ $f.StructField }})
+							}else{
+							m.{{ $clear }}()
+							}
             {{- else}}
-              {{- $setter := print "Set" $f.StructField }}
 							m.{{ $setter }}(input.{{ $f.StructField }})
             {{- end}}
         {{- end }}

@@ -1074,14 +1074,14 @@ func (mq *MenuQuery) Modify(modifiers ...func(s *sql.Selector)) *MenuSelect {
 //	  Keyword string `json:"keyword,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Description string `json:"description,omitempty"`
-//	  Type uint8 `json:"type,omitempty"`
+//	  Type int32 `json:"type,omitempty"`
 //	  Icon string `json:"icon,omitempty"`
 //	  Path string `json:"path,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
-//	  ParentID int `json:"parent_id,omitempty"`
 //	  ParentPath string `json:"parent_path,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Properties string `json:"properties,omitempty"`
+//	  ParentID int `json:"parent_id,omitempty"`
 //	}
 //
 //	client.Menu.Query().
@@ -1095,10 +1095,10 @@ func (mq *MenuQuery) Modify(modifiers ...func(s *sql.Selector)) *MenuSelect {
 //	  menu.FieldIcon,
 //	  menu.FieldPath,
 //	  menu.FieldStatus,
-//	  menu.FieldParentID,
 //	  menu.FieldParentPath,
 //	  menu.FieldSequence,
 //	  menu.FieldProperties,
+//	  menu.FieldParentID,
 //	  ).
 //	  Scan(ctx, &v)
 func (mq *MenuQuery) Omit(fields ...string) *MenuSelect {

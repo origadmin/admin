@@ -25,7 +25,7 @@ const (
 	UserStatusFreezed   = schema.UserStatusFreezed
 
 	MenuStatusActivated = schema.MenuStatusActivated
-	MenuStatusFreezed   = schema.MenuStatusFreezed
+	MenuStatusFreezed   = schema.MenuStatusFrozen
 
 	MenuTypeAction = schema.MenuTypeAction
 	MenuTypeButton = schema.MenuTypeButton

@@ -814,6 +814,8 @@ github.com/go-test/deep v1.0.3/go.mod h1:wGDj63lr65AM2AQyKZd/NYHGb0R+1RLqB8NKt3a
 github.com/goccy/go-json v0.9.11/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
 github.com/goccy/go-json v0.10.4 h1:JSwxQzIqKfmFX1swYPpUThQZp/Ka4wzJdK0LWVytLPM=
 github.com/goccy/go-json v0.10.4/go.mod h1:oq7eo15ShAhp70Anwd5lgX2pLfOS3QCiwU/PULtXL6M=
+github.com/godcong/go-locale/v2 v2.0.0 h1:08Zv/U8UtuCqYqrnRgeYFv0bxVSbzKmw3Otdb96RF+s=
+github.com/godcong/go-locale/v2 v2.0.0/go.mod h1:1ZOYuUVWqC9/18tdYVl2Tt2sWfms1RH3y/7hjRstZRE=
 github.com/goexts/generic v0.1.5 h1:dcwTieu7Vib9cjYhQVLvKa4I0Y4rVON3brZNw4YCbAE=
 github.com/goexts/generic v0.1.5/go.mod h1:j/ZjWHYt+If6VjeHWvDhYKdoP+gAiAKpm0cu3yvKmfo=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
@@ -1116,6 +1118,8 @@ github.com/origadmin/contrib/consul v0.0.18 h1:8lOvTrSTFVMd2fLZGOpJLKQTUTB0Camn8
 github.com/origadmin/contrib/consul v0.0.18/go.mod h1:ihiS7aTiUYnqLumszUkkWqWSc8TIuRYlY1b7C+OC4mE=
 github.com/origadmin/contrib/database v0.0.18 h1:QbX6+RgzyL+A0tNO1NW4cgNajLJJQ3gntC+b08yvWgI=
 github.com/origadmin/contrib/database v0.0.18/go.mod h1:/a2siApkE3ubp2U0WmVEip6BpsYT8XxtnkkU/m2zjPA=
+github.com/origadmin/contrib/i18n v0.0.24 h1:lzCu4N5/3Lb/3D+HPo1u/JuwpzH0Rmkau1jFZBOJZy4=
+github.com/origadmin/contrib/i18n v0.0.24/go.mod h1:s9NFmWfdyDkIVuA2l0dTilgxQhf+7x+A6mS3JvbEPXk=
 github.com/origadmin/contrib/replacer v0.0.18 h1:B2xYDhk0koc2dqBkHdxKPnW4SGJyeTFaX0sGeYp6gO0=
 github.com/origadmin/contrib/replacer v0.0.18/go.mod h1:jurYEMtifyFy3MBAMVnjUVbyFe4v99voQQQPAqsUCRg=
 github.com/origadmin/contrib/transport/gins v0.0.18 h1:ic7vSxhmcMXnGf9f+2t1Vi9n/lAzeT7GsngVIihGr+w=
@@ -1128,8 +1132,8 @@ github.com/origadmin/slog-kratos v1.0.4 h1:1et3TBy61Uwf5N1ZbEBFhMqCjgxqfRXmz2w0Q
 github.com/origadmin/slog-kratos v1.0.4/go.mod h1:WUdhcWLyN0i8TbdemqE2Y/muoj0GaZ86OcdpumAWHPo=
 github.com/origadmin/toolkits v0.1.24 h1:J/OFSq5iPjsA6TN2sxdXGTmXuftQz2AKlAANXj6hvBk=
 github.com/origadmin/toolkits v0.1.24/go.mod h1:+BZ3uvvrsJIqRMbga6zalMinuTldHut/yaJbvVW4994=
-github.com/origadmin/toolkits/codec v0.0.54 h1:PkpfxbkkVqIiYpwgX/tBpJKBdIjk7CgZKKomCTtGnc8=
-github.com/origadmin/toolkits/codec v0.0.54/go.mod h1:KouXvcRysdeDe6syxc3XL3two0yIIsk47bjZy6bhOoo=
+github.com/origadmin/toolkits/codec v0.0.88 h1:PNrUB3Tq/Pgt6oZcyXTio/XmwV925bo9usp5PUZ2O1A=
+github.com/origadmin/toolkits/codec v0.0.88/go.mod h1:d5OiBZnxhX+pOFPp6NJDSHiflFimp2CCLualbgil2z0=
 github.com/origadmin/toolkits/errors v0.0.36 h1:B7WS42rL1jDpo/EqWIeOtAA2qSIkbCeUSYcxCMvmKNI=
 github.com/origadmin/toolkits/errors v0.0.36/go.mod h1:6DM+lY0GU/UWobF66Fh/zeLJl3zF6Ll9+8ujHjSCwFQ=
 github.com/origadmin/toolkits/idgen v0.0.21 h1:hEJbp9Z2I/nJ2JGhF95E8h8/SA7Xipnrl/xrAmHMKoM=

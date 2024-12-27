@@ -12,6 +12,7 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/migrate"
 
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
@@ -39,6 +40,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
+	// DepartmentRole is the client for interacting with the DepartmentRole builders.
+	DepartmentRole *DepartmentRoleClient
 	// Menu is the client for interacting with the Menu builders.
 	Menu *MenuClient
 	// MenuPermission is the client for interacting with the MenuPermission builders.
@@ -77,6 +80,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Department = NewDepartmentClient(c.config)
+	c.DepartmentRole = NewDepartmentRoleClient(c.config)
 	c.Menu = NewMenuClient(c.config)
 	c.MenuPermission = NewMenuPermissionClient(c.config)
 	c.Permission = NewPermissionClient(c.config)
@@ -183,6 +187,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:                ctx,
 		config:             cfg,
 		Department:         NewDepartmentClient(cfg),
+		DepartmentRole:     NewDepartmentRoleClient(cfg),
 		Menu:               NewMenuClient(cfg),
 		MenuPermission:     NewMenuPermissionClient(cfg),
 		Permission:         NewPermissionClient(cfg),
@@ -216,6 +221,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:                ctx,
 		config:             cfg,
 		Department:         NewDepartmentClient(cfg),
+		DepartmentRole:     NewDepartmentRoleClient(cfg),
 		Menu:               NewMenuClient(cfg),
 		MenuPermission:     NewMenuPermissionClient(cfg),
 		Permission:         NewPermissionClient(cfg),
@@ -258,9 +264,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Department, c.Menu, c.MenuPermission, c.Permission, c.PermissionResource,
-		c.Position, c.Resource, c.Role, c.RoleMenu, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole,
+		c.Department, c.DepartmentRole, c.Menu, c.MenuPermission, c.Permission,
+		c.PermissionResource, c.Position, c.Resource, c.Role, c.RoleMenu,
+		c.RolePermission, c.User, c.UserDepartment, c.UserPosition, c.UserRole,
 	} {
 		n.Use(hooks...)
 	}
@@ -270,9 +276,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Department, c.Menu, c.MenuPermission, c.Permission, c.PermissionResource,
-		c.Position, c.Resource, c.Role, c.RoleMenu, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole,
+		c.Department, c.DepartmentRole, c.Menu, c.MenuPermission, c.Permission,
+		c.PermissionResource, c.Position, c.Resource, c.Role, c.RoleMenu,
+		c.RolePermission, c.User, c.UserDepartment, c.UserPosition, c.UserRole,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -283,6 +289,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *DepartmentMutation:
 		return c.Department.mutate(ctx, m)
+	case *DepartmentRoleMutation:
+		return c.DepartmentRole.mutate(ctx, m)
 	case *MenuMutation:
 		return c.Menu.mutate(ctx, m)
 	case *MenuPermissionMutation:
@@ -454,6 +462,54 @@ func (c *DepartmentClient) QueryPositions(d *Department) *PositionQuery {
 	return query
 }
 
+// QueryRoles queries the roles edge of a Department.
+func (c *DepartmentClient) QueryRoles(d *Department) *RoleQuery {
+	query := (&RoleClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(role.Table, role.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, department.RolesTable, department.RolesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryChildren queries the children edge of a Department.
+func (c *DepartmentClient) QueryChildren(d *Department) *DepartmentQuery {
+	query := (&DepartmentClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, department.ChildrenTable, department.ChildrenColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryParent queries the parent edge of a Department.
+func (c *DepartmentClient) QueryParent(d *Department) *DepartmentQuery {
+	query := (&DepartmentClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, department.ParentTable, department.ParentColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryUserDepartments queries the user_departments edge of a Department.
 func (c *DepartmentClient) QueryUserDepartments(d *Department) *UserDepartmentQuery {
 	query := (&UserDepartmentClient{config: c.config}).Query()
@@ -463,6 +519,22 @@ func (c *DepartmentClient) QueryUserDepartments(d *Department) *UserDepartmentQu
 			sqlgraph.From(department.Table, department.FieldID, id),
 			sqlgraph.To(userdepartment.Table, userdepartment.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, department.UserDepartmentsTable, department.UserDepartmentsColumn),
+		)
+		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDepartmentRoles queries the department_roles edge of a Department.
+func (c *DepartmentClient) QueryDepartmentRoles(d *Department) *DepartmentRoleQuery {
+	query := (&DepartmentRoleClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := d.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(department.Table, department.FieldID, id),
+			sqlgraph.To(departmentrole.Table, departmentrole.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, department.DepartmentRolesTable, department.DepartmentRolesColumn),
 		)
 		fromV = sqlgraph.Neighbors(d.driver.Dialect(), step)
 		return fromV, nil
@@ -492,6 +564,171 @@ func (c *DepartmentClient) mutate(ctx context.Context, m *DepartmentMutation) (V
 		return (&DepartmentDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Department mutation op: %q", m.Op())
+	}
+}
+
+// DepartmentRoleClient is a client for the DepartmentRole schema.
+type DepartmentRoleClient struct {
+	config
+}
+
+// NewDepartmentRoleClient returns a client for the DepartmentRole from the given config.
+func NewDepartmentRoleClient(c config) *DepartmentRoleClient {
+	return &DepartmentRoleClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `departmentrole.Hooks(f(g(h())))`.
+func (c *DepartmentRoleClient) Use(hooks ...Hook) {
+	c.hooks.DepartmentRole = append(c.hooks.DepartmentRole, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `departmentrole.Intercept(f(g(h())))`.
+func (c *DepartmentRoleClient) Intercept(interceptors ...Interceptor) {
+	c.inters.DepartmentRole = append(c.inters.DepartmentRole, interceptors...)
+}
+
+// Create returns a builder for creating a DepartmentRole entity.
+func (c *DepartmentRoleClient) Create() *DepartmentRoleCreate {
+	mutation := newDepartmentRoleMutation(c.config, OpCreate)
+	return &DepartmentRoleCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of DepartmentRole entities.
+func (c *DepartmentRoleClient) CreateBulk(builders ...*DepartmentRoleCreate) *DepartmentRoleCreateBulk {
+	return &DepartmentRoleCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *DepartmentRoleClient) MapCreateBulk(slice any, setFunc func(*DepartmentRoleCreate, int)) *DepartmentRoleCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &DepartmentRoleCreateBulk{err: fmt.Errorf("calling to DepartmentRoleClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*DepartmentRoleCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &DepartmentRoleCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for DepartmentRole.
+func (c *DepartmentRoleClient) Update() *DepartmentRoleUpdate {
+	mutation := newDepartmentRoleMutation(c.config, OpUpdate)
+	return &DepartmentRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *DepartmentRoleClient) UpdateOne(dr *DepartmentRole) *DepartmentRoleUpdateOne {
+	mutation := newDepartmentRoleMutation(c.config, OpUpdateOne, withDepartmentRole(dr))
+	return &DepartmentRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *DepartmentRoleClient) UpdateOneID(id int) *DepartmentRoleUpdateOne {
+	mutation := newDepartmentRoleMutation(c.config, OpUpdateOne, withDepartmentRoleID(id))
+	return &DepartmentRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for DepartmentRole.
+func (c *DepartmentRoleClient) Delete() *DepartmentRoleDelete {
+	mutation := newDepartmentRoleMutation(c.config, OpDelete)
+	return &DepartmentRoleDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *DepartmentRoleClient) DeleteOne(dr *DepartmentRole) *DepartmentRoleDeleteOne {
+	return c.DeleteOneID(dr.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *DepartmentRoleClient) DeleteOneID(id int) *DepartmentRoleDeleteOne {
+	builder := c.Delete().Where(departmentrole.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &DepartmentRoleDeleteOne{builder}
+}
+
+// Query returns a query builder for DepartmentRole.
+func (c *DepartmentRoleClient) Query() *DepartmentRoleQuery {
+	return &DepartmentRoleQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeDepartmentRole},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a DepartmentRole entity by its id.
+func (c *DepartmentRoleClient) Get(ctx context.Context, id int) (*DepartmentRole, error) {
+	return c.Query().Where(departmentrole.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *DepartmentRoleClient) GetX(ctx context.Context, id int) *DepartmentRole {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryDepartment queries the department edge of a DepartmentRole.
+func (c *DepartmentRoleClient) QueryDepartment(dr *DepartmentRole) *DepartmentQuery {
+	query := (&DepartmentClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := dr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(departmentrole.Table, departmentrole.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, departmentrole.DepartmentTable, departmentrole.DepartmentColumn),
+		)
+		fromV = sqlgraph.Neighbors(dr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRole queries the role edge of a DepartmentRole.
+func (c *DepartmentRoleClient) QueryRole(dr *DepartmentRole) *RoleQuery {
+	query := (&RoleClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := dr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(departmentrole.Table, departmentrole.FieldID, id),
+			sqlgraph.To(role.Table, role.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, departmentrole.RoleTable, departmentrole.RoleColumn),
+		)
+		fromV = sqlgraph.Neighbors(dr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *DepartmentRoleClient) Hooks() []Hook {
+	return c.hooks.DepartmentRole
+}
+
+// Interceptors returns the client interceptors.
+func (c *DepartmentRoleClient) Interceptors() []Interceptor {
+	return c.inters.DepartmentRole
+}
+
+func (c *DepartmentRoleClient) mutate(ctx context.Context, m *DepartmentRoleMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&DepartmentRoleCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&DepartmentRoleUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&DepartmentRoleUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&DepartmentRoleDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown DepartmentRole mutation op: %q", m.Op())
 	}
 }
 
@@ -1801,6 +2038,22 @@ func (c *RoleClient) QueryPermissions(r *Role) *PermissionQuery {
 	return query
 }
 
+// QueryDepartments queries the departments edge of a Role.
+func (c *RoleClient) QueryDepartments(r *Role) *DepartmentQuery {
+	query := (&DepartmentClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, id),
+			sqlgraph.To(department.Table, department.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, role.DepartmentsTable, role.DepartmentsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryRoleMenus queries the role_menus edge of a Role.
 func (c *RoleClient) QueryRoleMenus(r *Role) *RoleMenuQuery {
 	query := (&RoleMenuClient{config: c.config}).Query()
@@ -1842,6 +2095,22 @@ func (c *RoleClient) QueryRolePermissions(r *Role) *RolePermissionQuery {
 			sqlgraph.From(role.Table, role.FieldID, id),
 			sqlgraph.To(rolepermission.Table, rolepermission.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, role.RolePermissionsTable, role.RolePermissionsColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryDepartmentRoles queries the department_roles edge of a Role.
+func (c *RoleClient) QueryDepartmentRoles(r *Role) *DepartmentRoleQuery {
+	query := (&DepartmentRoleClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, id),
+			sqlgraph.To(departmentrole.Table, departmentrole.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, role.DepartmentRolesTable, role.DepartmentRolesColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -2899,13 +3168,13 @@ func (c *UserRoleClient) mutate(ctx context.Context, m *UserRoleMutation) (Value
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Department, Menu, MenuPermission, Permission, PermissionResource, Position,
-		Resource, Role, RoleMenu, RolePermission, User, UserDepartment, UserPosition,
-		UserRole []ent.Hook
+		Department, DepartmentRole, Menu, MenuPermission, Permission,
+		PermissionResource, Position, Resource, Role, RoleMenu, RolePermission, User,
+		UserDepartment, UserPosition, UserRole []ent.Hook
 	}
 	inters struct {
-		Department, Menu, MenuPermission, Permission, PermissionResource, Position,
-		Resource, Role, RoleMenu, RolePermission, User, UserDepartment, UserPosition,
-		UserRole []ent.Interceptor
+		Department, DepartmentRole, Menu, MenuPermission, Permission,
+		PermissionResource, Position, Resource, Role, RoleMenu, RolePermission, User,
+		UserDepartment, UserPosition, UserRole []ent.Interceptor
 	}
 )

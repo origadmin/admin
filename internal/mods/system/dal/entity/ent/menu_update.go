@@ -83,23 +83,23 @@ func (mu *MenuUpdate) SetNillableDescription(s *string) *MenuUpdate {
 }
 
 // SetType sets the "type" field.
-func (mu *MenuUpdate) SetType(u uint8) *MenuUpdate {
+func (mu *MenuUpdate) SetType(i int32) *MenuUpdate {
 	mu.mutation.ResetType()
-	mu.mutation.SetType(u)
+	mu.mutation.SetType(i)
 	return mu
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableType(u *uint8) *MenuUpdate {
-	if u != nil {
-		mu.SetType(*u)
+func (mu *MenuUpdate) SetNillableType(i *int32) *MenuUpdate {
+	if i != nil {
+		mu.SetType(*i)
 	}
 	return mu
 }
 
-// AddType adds u to the "type" field.
-func (mu *MenuUpdate) AddType(u int8) *MenuUpdate {
-	mu.mutation.AddType(u)
+// AddType adds i to the "type" field.
+func (mu *MenuUpdate) AddType(i int32) *MenuUpdate {
+	mu.mutation.AddType(i)
 	return mu
 }
 
@@ -149,26 +149,6 @@ func (mu *MenuUpdate) SetNillableStatus(i *int8) *MenuUpdate {
 // AddStatus adds i to the "status" field.
 func (mu *MenuUpdate) AddStatus(i int8) *MenuUpdate {
 	mu.mutation.AddStatus(i)
-	return mu
-}
-
-// SetParentID sets the "parent_id" field.
-func (mu *MenuUpdate) SetParentID(i int) *MenuUpdate {
-	mu.mutation.SetParentID(i)
-	return mu
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableParentID(i *int) *MenuUpdate {
-	if i != nil {
-		mu.SetParentID(*i)
-	}
-	return mu
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (mu *MenuUpdate) ClearParentID() *MenuUpdate {
-	mu.mutation.ClearParentID()
 	return mu
 }
 
@@ -224,6 +204,26 @@ func (mu *MenuUpdate) SetNillableProperties(s *string) *MenuUpdate {
 // ClearProperties clears the value of the "properties" field.
 func (mu *MenuUpdate) ClearProperties() *MenuUpdate {
 	mu.mutation.ClearProperties()
+	return mu
+}
+
+// SetParentID sets the "parent_id" field.
+func (mu *MenuUpdate) SetParentID(i int) *MenuUpdate {
+	mu.mutation.SetParentID(i)
+	return mu
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableParentID(i *int) *MenuUpdate {
+	if i != nil {
+		mu.SetParentID(*i)
+	}
+	return mu
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (mu *MenuUpdate) ClearParentID() *MenuUpdate {
+	mu.mutation.ClearParentID()
 	return mu
 }
 
@@ -522,14 +522,14 @@ func (mu *MenuUpdate) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Menu.path": %w`, err)}
 		}
 	}
-	if v, ok := mu.mutation.ParentID(); ok {
-		if err := menu.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_id": %w`, err)}
-		}
-	}
 	if v, ok := mu.mutation.ParentPath(); ok {
 		if err := menu.ParentPathValidator(v); err != nil {
 			return &ValidationError{Name: "parent_path", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_path": %w`, err)}
+		}
+	}
+	if v, ok := mu.mutation.ParentID(); ok {
+		if err := menu.ParentIDValidator(v); err != nil {
+			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_id": %w`, err)}
 		}
 	}
 	return nil
@@ -566,10 +566,10 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(menu.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeUint8, value)
+		_spec.SetField(menu.FieldType, field.TypeInt32, value)
 	}
 	if value, ok := mu.mutation.AddedType(); ok {
-		_spec.AddField(menu.FieldType, field.TypeUint8, value)
+		_spec.AddField(menu.FieldType, field.TypeInt32, value)
 	}
 	if value, ok := mu.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
@@ -968,23 +968,23 @@ func (muo *MenuUpdateOne) SetNillableDescription(s *string) *MenuUpdateOne {
 }
 
 // SetType sets the "type" field.
-func (muo *MenuUpdateOne) SetType(u uint8) *MenuUpdateOne {
+func (muo *MenuUpdateOne) SetType(i int32) *MenuUpdateOne {
 	muo.mutation.ResetType()
-	muo.mutation.SetType(u)
+	muo.mutation.SetType(i)
 	return muo
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableType(u *uint8) *MenuUpdateOne {
-	if u != nil {
-		muo.SetType(*u)
+func (muo *MenuUpdateOne) SetNillableType(i *int32) *MenuUpdateOne {
+	if i != nil {
+		muo.SetType(*i)
 	}
 	return muo
 }
 
-// AddType adds u to the "type" field.
-func (muo *MenuUpdateOne) AddType(u int8) *MenuUpdateOne {
-	muo.mutation.AddType(u)
+// AddType adds i to the "type" field.
+func (muo *MenuUpdateOne) AddType(i int32) *MenuUpdateOne {
+	muo.mutation.AddType(i)
 	return muo
 }
 
@@ -1034,26 +1034,6 @@ func (muo *MenuUpdateOne) SetNillableStatus(i *int8) *MenuUpdateOne {
 // AddStatus adds i to the "status" field.
 func (muo *MenuUpdateOne) AddStatus(i int8) *MenuUpdateOne {
 	muo.mutation.AddStatus(i)
-	return muo
-}
-
-// SetParentID sets the "parent_id" field.
-func (muo *MenuUpdateOne) SetParentID(i int) *MenuUpdateOne {
-	muo.mutation.SetParentID(i)
-	return muo
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableParentID(i *int) *MenuUpdateOne {
-	if i != nil {
-		muo.SetParentID(*i)
-	}
-	return muo
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (muo *MenuUpdateOne) ClearParentID() *MenuUpdateOne {
-	muo.mutation.ClearParentID()
 	return muo
 }
 
@@ -1109,6 +1089,26 @@ func (muo *MenuUpdateOne) SetNillableProperties(s *string) *MenuUpdateOne {
 // ClearProperties clears the value of the "properties" field.
 func (muo *MenuUpdateOne) ClearProperties() *MenuUpdateOne {
 	muo.mutation.ClearProperties()
+	return muo
+}
+
+// SetParentID sets the "parent_id" field.
+func (muo *MenuUpdateOne) SetParentID(i int) *MenuUpdateOne {
+	muo.mutation.SetParentID(i)
+	return muo
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableParentID(i *int) *MenuUpdateOne {
+	if i != nil {
+		muo.SetParentID(*i)
+	}
+	return muo
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (muo *MenuUpdateOne) ClearParentID() *MenuUpdateOne {
+	muo.mutation.ClearParentID()
 	return muo
 }
 
@@ -1420,14 +1420,14 @@ func (muo *MenuUpdateOne) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Menu.path": %w`, err)}
 		}
 	}
-	if v, ok := muo.mutation.ParentID(); ok {
-		if err := menu.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_id": %w`, err)}
-		}
-	}
 	if v, ok := muo.mutation.ParentPath(); ok {
 		if err := menu.ParentPathValidator(v); err != nil {
 			return &ValidationError{Name: "parent_path", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_path": %w`, err)}
+		}
+	}
+	if v, ok := muo.mutation.ParentID(); ok {
+		if err := menu.ParentIDValidator(v); err != nil {
+			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_id": %w`, err)}
 		}
 	}
 	return nil
@@ -1481,10 +1481,10 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		_spec.SetField(menu.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeUint8, value)
+		_spec.SetField(menu.FieldType, field.TypeInt32, value)
 	}
 	if value, ok := muo.mutation.AddedType(); ok {
-		_spec.AddField(menu.FieldType, field.TypeUint8, value)
+		_spec.AddField(menu.FieldType, field.TypeInt32, value)
 	}
 	if value, ok := muo.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)

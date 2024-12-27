@@ -6,6 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -96,6 +98,20 @@ func (rc *RoleCreate) SetNillableDescription(s *string) *RoleCreate {
 	return rc
 }
 
+// SetType sets the "type" field.
+func (rc *RoleCreate) SetType(i int8) *RoleCreate {
+	rc.mutation.SetType(i)
+	return rc
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableType(i *int8) *RoleCreate {
+	if i != nil {
+		rc.SetType(*i)
+	}
+	return rc
+}
+
 // SetSequence sets the "sequence" field.
 func (rc *RoleCreate) SetSequence(i int) *RoleCreate {
 	rc.mutation.SetSequence(i)
@@ -112,6 +128,20 @@ func (rc *RoleCreate) SetStatus(i int8) *RoleCreate {
 func (rc *RoleCreate) SetNillableStatus(i *int8) *RoleCreate {
 	if i != nil {
 		rc.SetStatus(*i)
+	}
+	return rc
+}
+
+// SetIsSystem sets the "is_system" field.
+func (rc *RoleCreate) SetIsSystem(b bool) *RoleCreate {
+	rc.mutation.SetIsSystem(b)
+	return rc
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableIsSystem(b *bool) *RoleCreate {
+	if b != nil {
+		rc.SetIsSystem(*b)
 	}
 	return rc
 }
@@ -167,6 +197,21 @@ func (rc *RoleCreate) AddPermissions(p ...*Permission) *RoleCreate {
 	return rc.AddPermissionIDs(ids...)
 }
 
+// AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
+func (rc *RoleCreate) AddDepartmentIDs(ids ...int) *RoleCreate {
+	rc.mutation.AddDepartmentIDs(ids...)
+	return rc
+}
+
+// AddDepartments adds the "departments" edges to the Department entity.
+func (rc *RoleCreate) AddDepartments(d ...*Department) *RoleCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return rc.AddDepartmentIDs(ids...)
+}
+
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
 func (rc *RoleCreate) AddRoleMenuIDs(ids ...int) *RoleCreate {
 	rc.mutation.AddRoleMenuIDs(ids...)
@@ -210,6 +255,21 @@ func (rc *RoleCreate) AddRolePermissions(r ...*RolePermission) *RoleCreate {
 		ids[i] = r[i].ID
 	}
 	return rc.AddRolePermissionIDs(ids...)
+}
+
+// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
+func (rc *RoleCreate) AddDepartmentRoleIDs(ids ...int) *RoleCreate {
+	rc.mutation.AddDepartmentRoleIDs(ids...)
+	return rc
+}
+
+// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
+func (rc *RoleCreate) AddDepartmentRoles(d ...*DepartmentRole) *RoleCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return rc.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the RoleMutation object of the builder.
@@ -267,9 +327,17 @@ func (rc *RoleCreate) defaults() {
 		v := role.DefaultDescription
 		rc.mutation.SetDescription(v)
 	}
+	if _, ok := rc.mutation.GetType(); !ok {
+		v := role.DefaultType
+		rc.mutation.SetType(v)
+	}
 	if _, ok := rc.mutation.Status(); !ok {
 		v := role.DefaultStatus
 		rc.mutation.SetStatus(v)
+	}
+	if _, ok := rc.mutation.IsSystem(); !ok {
+		v := role.DefaultIsSystem
+		rc.mutation.SetIsSystem(v)
 	}
 }
 
@@ -305,11 +373,17 @@ func (rc *RoleCreate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Role.description": %w`, err)}
 		}
 	}
+	if _, ok := rc.mutation.GetType(); !ok {
+		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Role.type"`)}
+	}
 	if _, ok := rc.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Role.sequence"`)}
 	}
 	if _, ok := rc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Role.status"`)}
+	}
+	if _, ok := rc.mutation.IsSystem(); !ok {
+		return &ValidationError{Name: "is_system", err: errors.New(`ent: missing required field "Role.is_system"`)}
 	}
 	if v, ok := rc.mutation.ID(); ok {
 		if err := role.IDValidator(v); err != nil {
@@ -368,6 +442,10 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
+	if value, ok := rc.mutation.GetType(); ok {
+		_spec.SetField(role.FieldType, field.TypeInt8, value)
+		_node.Type = value
+	}
 	if value, ok := rc.mutation.Sequence(); ok {
 		_spec.SetField(role.FieldSequence, field.TypeInt, value)
 		_node.Sequence = value
@@ -375,6 +453,10 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
+	}
+	if value, ok := rc.mutation.IsSystem(); ok {
+		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
+		_node.IsSystem = value
 	}
 	if nodes := rc.mutation.MenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -424,6 +506,22 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := rc.mutation.DepartmentsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   role.DepartmentsTable,
+			Columns: role.DepartmentsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := rc.mutation.RoleMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -465,6 +563,22 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   role.DepartmentRolesTable,
+			Columns: []string{role.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

@@ -68,14 +68,6 @@ func (pc *PositionCreate) SetDepartmentID(i int) *PositionCreate {
 	return pc
 }
 
-// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (pc *PositionCreate) SetNillableDepartmentID(i *int) *PositionCreate {
-	if i != nil {
-		pc.SetDepartmentID(*i)
-	}
-	return pc
-}
-
 // SetID sets the "id" field.
 func (pc *PositionCreate) SetID(i int) *PositionCreate {
 	pc.mutation.SetID(i)
@@ -171,6 +163,9 @@ func (pc *PositionCreate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.DepartmentID(); !ok {
+		return &ValidationError{Name: "department_id", err: errors.New(`ent: missing required field "Position.department_id"`)}
+	}
 	if v, ok := pc.mutation.DepartmentID(); ok {
 		if err := position.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "Position.department_id": %w`, err)}
@@ -180,6 +175,9 @@ func (pc *PositionCreate) check() error {
 		if err := position.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Position.id": %w`, err)}
 		}
+	}
+	if len(pc.mutation.DepartmentIDs()) == 0 {
+		return &ValidationError{Name: "department", err: errors.New(`ent: missing required edge "Position.department"`)}
 	}
 	return nil
 }

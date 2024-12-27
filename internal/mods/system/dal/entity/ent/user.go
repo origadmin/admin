@@ -40,9 +40,9 @@ type User struct {
 	// Gender holds the value of the "gender" field.
 	Gender string `json:"gender,omitempty"`
 	// Password holds the value of the "password" field.
-	Password string `json:"password,omitempty"`
+	Password string `json:"-"`
 	// Salt holds the value of the "salt" field.
-	Salt string `json:"salt,omitempty"`
+	Salt string `json:"-"`
 	// Phone holds the value of the "phone" field.
 	Phone string `json:"phone,omitempty"`
 	// Email holds the value of the "email" field.
@@ -59,8 +59,6 @@ type User struct {
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
 	// SanctionDate holds the value of the "sanction_date" field.
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
-	// DepartmentID holds the value of the "department_id" field.
-	DepartmentID int `json:"department_id,omitempty"`
 	// ManagerID holds the value of the "manager_id" field.
 	ManagerID int `json:"manager_id,omitempty"`
 	// Manager holds the value of the "manager" field.
@@ -127,7 +125,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldStatus, user.FieldDepartmentID, user.FieldManagerID:
+		case user.FieldID, user.FieldStatus, user.FieldManagerID:
 			values[i] = new(sql.NullInt64)
 		case user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
 			values[i] = new(sql.NullString)
@@ -280,12 +278,6 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.SanctionDate = value.Time
 			}
-		case user.FieldDepartmentID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field department_id", values[i])
-			} else if value.Valid {
-				u.DepartmentID = int(value.Int64)
-			}
 		case user.FieldManagerID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field manager_id", values[i])
@@ -387,11 +379,9 @@ func (u *User) String() string {
 	builder.WriteString("gender=")
 	builder.WriteString(u.Gender)
 	builder.WriteString(", ")
-	builder.WriteString("password=")
-	builder.WriteString(u.Password)
+	builder.WriteString("password=<sensitive>")
 	builder.WriteString(", ")
-	builder.WriteString("salt=")
-	builder.WriteString(u.Salt)
+	builder.WriteString("salt=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("phone=")
 	builder.WriteString(u.Phone)
@@ -416,9 +406,6 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("sanction_date=")
 	builder.WriteString(u.SanctionDate.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("department_id=")
-	builder.WriteString(fmt.Sprintf("%v", u.DepartmentID))
 	builder.WriteString(", ")
 	builder.WriteString("manager_id=")
 	builder.WriteString(fmt.Sprintf("%v", u.ManagerID))

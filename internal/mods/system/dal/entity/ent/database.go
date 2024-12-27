@@ -107,6 +107,11 @@ func (db *Database) Department(ctx context.Context) *DepartmentClient {
 	return db.Client(ctx).Department
 }
 
+// DepartmentRole is the client for interacting with the DepartmentRole builders.
+func (db *Database) DepartmentRole(ctx context.Context) *DepartmentRoleClient {
+	return db.Client(ctx).DepartmentRole
+}
+
 // Menu is the client for interacting with the Menu builders.
 func (db *Database) Menu(ctx context.Context) *MenuClient {
 	return db.Client(ctx).Menu

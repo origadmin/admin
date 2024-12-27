@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
@@ -35,32 +36,47 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case department.FieldKeyword:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Keyword != "" {
 				m.SetKeyword(input.Keyword)
 			}
 		case department.FieldName:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
 		case department.FieldDescription:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
 		case department.FieldSequence:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.Sequence != 0 {
 				m.SetSequence(input.Sequence)
 			}
 		case department.FieldStatus:
-			var zero int8
-			if input.Status != zero {
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
+		case department.FieldAncestors:
+			// check string with sql.NullString if it is empty
+			if input.Ancestors != "" {
+				m.SetAncestors(input.Ancestors)
+			}
+		case department.FieldParentID:
+			// check int with sql.NullInt64 if it is zero
+			if input.ParentID != 0 {
+				m.SetParentID(input.ParentID)
+			}
+		case department.FieldLevel:
+			// check int with sql.NullInt64 if it is zero
+			if input.Level != 0 {
+				m.SetLevel(input.Level)
+			}
 		case department.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -91,10 +107,63 @@ func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...stri
 			m.SetSequence(input.Sequence)
 		case department.FieldStatus:
 			m.SetStatus(input.Status)
+		case department.FieldAncestors:
+			m.SetAncestors(input.Ancestors)
+		case department.FieldParentID:
+			m.SetParentID(input.ParentID)
+		case department.FieldLevel:
+			m.SetLevel(input.Level)
 		case department.FieldID:
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Department field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *DepartmentRoleMutation) SetFields(input *DepartmentRole, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case departmentrole.FieldDepartmentID:
+			// check int with sql.NullInt64 if it is zero
+			if input.DepartmentID != 0 {
+				m.SetDepartmentID(input.DepartmentID)
+			}
+		case departmentrole.FieldRoleID:
+			// check int with sql.NullInt64 if it is zero
+			if input.RoleID != 0 {
+				m.SetRoleID(input.RoleID)
+			}
+		case departmentrole.FieldID:
+			// check int with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown DepartmentRole field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *DepartmentRoleMutation) SetFieldsWithZero(input *DepartmentRole, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case departmentrole.FieldDepartmentID:
+			m.SetDepartmentID(input.DepartmentID)
+		case departmentrole.FieldRoleID:
+			m.SetRoleID(input.RoleID)
+		case departmentrole.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown DepartmentRole field %s", fields[i])
 		}
 	}
 	return nil
@@ -115,62 +184,62 @@ func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case menu.FieldKeyword:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Keyword != "" {
 				m.SetKeyword(input.Keyword)
 			}
 		case menu.FieldName:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
 		case menu.FieldDescription:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
 		case menu.FieldType:
-			var zero uint8
-			if input.Type != zero {
+			// check int32 with sql.NullInt64 if it is zero
+			if input.Type != 0 {
 				m.SetType(input.Type)
 			}
 		case menu.FieldIcon:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Icon != "" {
 				m.SetIcon(input.Icon)
 			}
 		case menu.FieldPath:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Path != "" {
 				m.SetPath(input.Path)
 			}
 		case menu.FieldStatus:
-			var zero int8
-			if input.Status != zero {
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
-		case menu.FieldParentID:
-			// check int if it is zero
-			if input.ParentID != 0 {
-				m.SetParentID(input.ParentID)
-			}
 		case menu.FieldParentPath:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.ParentPath != "" {
 				m.SetParentPath(input.ParentPath)
 			}
 		case menu.FieldSequence:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.Sequence != 0 {
 				m.SetSequence(input.Sequence)
 			}
 		case menu.FieldProperties:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Properties != "" {
 				m.SetProperties(input.Properties)
 			}
+		case menu.FieldParentID:
+			// check int with sql.NullInt64 if it is zero
+			if input.ParentID != 0 {
+				m.SetParentID(input.ParentID)
+			}
 		case menu.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -205,14 +274,14 @@ func (m *MenuMutation) SetFieldsWithZero(input *Menu, fields ...string) error {
 			m.SetPath(input.Path)
 		case menu.FieldStatus:
 			m.SetStatus(input.Status)
-		case menu.FieldParentID:
-			m.SetParentID(input.ParentID)
 		case menu.FieldParentPath:
 			m.SetParentPath(input.ParentPath)
 		case menu.FieldSequence:
 			m.SetSequence(input.Sequence)
 		case menu.FieldProperties:
 			m.SetProperties(input.Properties)
+		case menu.FieldParentID:
+			m.SetParentID(input.ParentID)
 		case menu.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -229,17 +298,17 @@ func (m *MenuPermissionMutation) SetFields(input *MenuPermission, fields ...stri
 	for i := range fields {
 		switch fields[i] {
 		case menupermission.FieldMenuID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.MenuID != 0 {
 				m.SetMenuID(input.MenuID)
 			}
 		case menupermission.FieldPermissionID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.PermissionID != 0 {
 				m.SetPermissionID(input.PermissionID)
 			}
 		case menupermission.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -284,17 +353,41 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case permission.FieldName:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
+		case permission.FieldKeyword:
+			// check string with sql.NullString if it is empty
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
+			}
 		case permission.FieldDescription:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
+		case permission.FieldI18nKey:
+			// check string with sql.NullString if it is empty
+			if input.I18nKey != "" {
+				m.SetI18nKey(input.I18nKey)
+			}
+		case permission.FieldType:
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Type != 0 {
+				m.SetType(input.Type)
+			}
+		case permission.FieldScope:
+			// check string with sql.NullString if it is empty
+			if input.Scope != "" {
+				m.SetScope(input.Scope)
+			}
+		case permission.FieldScopeDepts:
+			if len(input.ScopeDepts) > 0 {
+				m.SetScopeDepts(input.ScopeDepts)
+			}
 		case permission.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -317,8 +410,18 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetUpdateTime(input.UpdateTime)
 		case permission.FieldName:
 			m.SetName(input.Name)
+		case permission.FieldKeyword:
+			m.SetKeyword(input.Keyword)
 		case permission.FieldDescription:
 			m.SetDescription(input.Description)
+		case permission.FieldI18nKey:
+			m.SetI18nKey(input.I18nKey)
+		case permission.FieldType:
+			m.SetType(input.Type)
+		case permission.FieldScope:
+			m.SetScope(input.Scope)
+		case permission.FieldScopeDepts:
+			m.SetScopeDepts(input.ScopeDepts)
 		case permission.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -335,17 +438,17 @@ func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields
 	for i := range fields {
 		switch fields[i] {
 		case permissionresource.FieldPermissionID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.PermissionID != 0 {
 				m.SetPermissionID(input.PermissionID)
 			}
 		case permissionresource.FieldResourceID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ResourceID != 0 {
 				m.SetResourceID(input.ResourceID)
 			}
 		case permissionresource.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -390,22 +493,22 @@ func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case position.FieldName:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
 		case position.FieldDescription:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
 		case position.FieldDepartmentID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.DepartmentID != 0 {
 				m.SetDepartmentID(input.DepartmentID)
 			}
 		case position.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -456,27 +559,27 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case resource.FieldMethod:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Method != "" {
 				m.SetMethod(input.Method)
 			}
 		case resource.FieldOperation:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Operation != "" {
 				m.SetOperation(input.Operation)
 			}
 		case resource.FieldPath:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Path != "" {
 				m.SetPath(input.Path)
 			}
 		case resource.FieldMenuID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.MenuID != 0 {
 				m.SetMenuID(input.MenuID)
 			}
 		case resource.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -529,32 +632,41 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case role.FieldKeyword:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Keyword != "" {
 				m.SetKeyword(input.Keyword)
 			}
 		case role.FieldName:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
 		case role.FieldDescription:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
+		case role.FieldType:
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Type != 0 {
+				m.SetType(input.Type)
+			}
 		case role.FieldSequence:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.Sequence != 0 {
 				m.SetSequence(input.Sequence)
 			}
 		case role.FieldStatus:
-			var zero int8
-			if input.Status != zero {
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
+		case role.FieldIsSystem:
+			if input.IsSystem {
+				m.SetIsSystem(input.IsSystem)
+			}
 		case role.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -581,10 +693,14 @@ func (m *RoleMutation) SetFieldsWithZero(input *Role, fields ...string) error {
 			m.SetName(input.Name)
 		case role.FieldDescription:
 			m.SetDescription(input.Description)
+		case role.FieldType:
+			m.SetType(input.Type)
 		case role.FieldSequence:
 			m.SetSequence(input.Sequence)
 		case role.FieldStatus:
 			m.SetStatus(input.Status)
+		case role.FieldIsSystem:
+			m.SetIsSystem(input.IsSystem)
 		case role.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -601,17 +717,17 @@ func (m *RoleMenuMutation) SetFields(input *RoleMenu, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case rolemenu.FieldRoleID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.RoleID != 0 {
 				m.SetRoleID(input.RoleID)
 			}
 		case rolemenu.FieldMenuID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.MenuID != 0 {
 				m.SetMenuID(input.MenuID)
 			}
 		case rolemenu.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -648,17 +764,17 @@ func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...stri
 	for i := range fields {
 		switch fields[i] {
 		case rolepermission.FieldRoleID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.RoleID != 0 {
 				m.SetRoleID(input.RoleID)
 			}
 		case rolepermission.FieldPermissionID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.PermissionID != 0 {
 				m.SetPermissionID(input.PermissionID)
 			}
 		case rolepermission.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -695,12 +811,12 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case user.FieldCreateAuthor:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.CreateAuthor != "" {
 				m.SetCreateAuthor(input.CreateAuthor)
 			}
 		case user.FieldUpdateAuthor:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.UpdateAuthor != "" {
 				m.SetUpdateAuthor(input.UpdateAuthor)
 			}
@@ -713,77 +829,77 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case user.FieldUUID:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.UUID != "" {
 				m.SetUUID(input.UUID)
 			}
 		case user.FieldAllowedIP:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.AllowedIP != "" {
 				m.SetAllowedIP(input.AllowedIP)
 			}
 		case user.FieldUsername:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Username != "" {
 				m.SetUsername(input.Username)
 			}
 		case user.FieldNickname:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Nickname != "" {
 				m.SetNickname(input.Nickname)
 			}
 		case user.FieldAvatar:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Avatar != "" {
 				m.SetAvatar(input.Avatar)
 			}
 		case user.FieldName:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
 		case user.FieldGender:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Gender != "" {
 				m.SetGender(input.Gender)
 			}
 		case user.FieldPassword:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Password != "" {
 				m.SetPassword(input.Password)
 			}
 		case user.FieldSalt:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Salt != "" {
 				m.SetSalt(input.Salt)
 			}
 		case user.FieldPhone:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Phone != "" {
 				m.SetPhone(input.Phone)
 			}
 		case user.FieldEmail:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Email != "" {
 				m.SetEmail(input.Email)
 			}
 		case user.FieldRemark:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Remark != "" {
 				m.SetRemark(input.Remark)
 			}
 		case user.FieldToken:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Token != "" {
 				m.SetToken(input.Token)
 			}
 		case user.FieldStatus:
-			var zero int8
-			if input.Status != zero {
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
 		case user.FieldLastLoginIP:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.LastLoginIP != "" {
 				m.SetLastLoginIP(input.LastLoginIP)
 			}
@@ -795,23 +911,18 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			if !input.SanctionDate.IsZero() {
 				m.SetSanctionDate(input.SanctionDate)
 			}
-		case user.FieldDepartmentID:
-			// check int if it is zero
-			if input.DepartmentID != 0 {
-				m.SetDepartmentID(input.DepartmentID)
-			}
 		case user.FieldManagerID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ManagerID != 0 {
 				m.SetManagerID(input.ManagerID)
 			}
 		case user.FieldManager:
-			// check string if it is empty
+			// check string with sql.NullString if it is empty
 			if input.Manager != "" {
 				m.SetManager(input.Manager)
 			}
 		case user.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -870,8 +981,6 @@ func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
 			m.SetLastLoginTime(input.LastLoginTime)
 		case user.FieldSanctionDate:
 			m.SetSanctionDate(input.SanctionDate)
-		case user.FieldDepartmentID:
-			m.SetDepartmentID(input.DepartmentID)
 		case user.FieldManagerID:
 			m.SetManagerID(input.ManagerID)
 		case user.FieldManager:
@@ -892,17 +1001,17 @@ func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...stri
 	for i := range fields {
 		switch fields[i] {
 		case userdepartment.FieldUserID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.UserID != 0 {
 				m.SetUserID(input.UserID)
 			}
 		case userdepartment.FieldDepartmentID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.DepartmentID != 0 {
 				m.SetDepartmentID(input.DepartmentID)
 			}
 		case userdepartment.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -939,17 +1048,17 @@ func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) 
 	for i := range fields {
 		switch fields[i] {
 		case userposition.FieldUserID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.UserID != 0 {
 				m.SetUserID(input.UserID)
 			}
 		case userposition.FieldPositionID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.PositionID != 0 {
 				m.SetPositionID(input.PositionID)
 			}
 		case userposition.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
@@ -986,17 +1095,17 @@ func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case userrole.FieldUserID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.UserID != 0 {
 				m.SetUserID(input.UserID)
 			}
 		case userrole.FieldRoleID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.RoleID != 0 {
 				m.SetRoleID(input.RoleID)
 			}
 		case userrole.FieldID:
-			// check int if it is zero
+			// check int with sql.NullInt64 if it is zero
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}

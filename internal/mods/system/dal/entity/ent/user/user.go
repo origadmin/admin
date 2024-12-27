@@ -56,8 +56,6 @@ const (
 	FieldLastLoginTime = "last_login_time"
 	// FieldSanctionDate holds the string denoting the sanction_date field in the database.
 	FieldSanctionDate = "sanction_date"
-	// FieldDepartmentID holds the string denoting the department_id field in the database.
-	FieldDepartmentID = "department_id"
 	// FieldManagerID holds the string denoting the manager_id field in the database.
 	FieldManagerID = "manager_id"
 	// FieldManager holds the string denoting the manager field in the database.
@@ -122,7 +120,6 @@ var Columns = []string{
 	FieldLastLoginIP,
 	FieldLastLoginTime,
 	FieldSanctionDate,
-	FieldDepartmentID,
 	FieldManagerID,
 	FieldManager,
 }
@@ -215,8 +212,6 @@ var (
 	DefaultLastLoginTime func() time.Time
 	// DefaultSanctionDate holds the default value on creation for the "sanction_date" field.
 	DefaultSanctionDate func() time.Time
-	// DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
-	DepartmentIDValidator func(int) error
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	ManagerIDValidator func(int) error
 	// DefaultManager holds the default value on creation for the "manager" field.
@@ -336,11 +331,6 @@ func ByLastLoginTime(opts ...sql.OrderTermOption) OrderOption {
 // BySanctionDate orders the results by the sanction_date field.
 func BySanctionDate(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSanctionDate, opts...).ToFunc()
-}
-
-// ByDepartmentID orders the results by the department_id field.
-func ByDepartmentID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDepartmentID, opts...).ToFunc()
 }
 
 // ByManagerID orders the results by the manager_id field.

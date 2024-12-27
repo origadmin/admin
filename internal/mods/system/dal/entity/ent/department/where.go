@@ -90,6 +90,21 @@ func Status(v int8) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldStatus, v))
 }
 
+// Ancestors applies equality check predicate on the "ancestors" field. It's identical to AncestorsEQ.
+func Ancestors(v string) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldAncestors, v))
+}
+
+// ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
+func ParentID(v int) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldParentID, v))
+}
+
+// Level applies equality check predicate on the "level" field. It's identical to LevelEQ.
+func Level(v int) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldLevel, v))
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldCreateTime, v))
@@ -445,6 +460,141 @@ func StatusLTE(v int8) predicate.Department {
 	return predicate.Department(sql.FieldLTE(FieldStatus, v))
 }
 
+// AncestorsEQ applies the EQ predicate on the "ancestors" field.
+func AncestorsEQ(v string) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldAncestors, v))
+}
+
+// AncestorsNEQ applies the NEQ predicate on the "ancestors" field.
+func AncestorsNEQ(v string) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldAncestors, v))
+}
+
+// AncestorsIn applies the In predicate on the "ancestors" field.
+func AncestorsIn(vs ...string) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldAncestors, vs...))
+}
+
+// AncestorsNotIn applies the NotIn predicate on the "ancestors" field.
+func AncestorsNotIn(vs ...string) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldAncestors, vs...))
+}
+
+// AncestorsGT applies the GT predicate on the "ancestors" field.
+func AncestorsGT(v string) predicate.Department {
+	return predicate.Department(sql.FieldGT(FieldAncestors, v))
+}
+
+// AncestorsGTE applies the GTE predicate on the "ancestors" field.
+func AncestorsGTE(v string) predicate.Department {
+	return predicate.Department(sql.FieldGTE(FieldAncestors, v))
+}
+
+// AncestorsLT applies the LT predicate on the "ancestors" field.
+func AncestorsLT(v string) predicate.Department {
+	return predicate.Department(sql.FieldLT(FieldAncestors, v))
+}
+
+// AncestorsLTE applies the LTE predicate on the "ancestors" field.
+func AncestorsLTE(v string) predicate.Department {
+	return predicate.Department(sql.FieldLTE(FieldAncestors, v))
+}
+
+// AncestorsContains applies the Contains predicate on the "ancestors" field.
+func AncestorsContains(v string) predicate.Department {
+	return predicate.Department(sql.FieldContains(FieldAncestors, v))
+}
+
+// AncestorsHasPrefix applies the HasPrefix predicate on the "ancestors" field.
+func AncestorsHasPrefix(v string) predicate.Department {
+	return predicate.Department(sql.FieldHasPrefix(FieldAncestors, v))
+}
+
+// AncestorsHasSuffix applies the HasSuffix predicate on the "ancestors" field.
+func AncestorsHasSuffix(v string) predicate.Department {
+	return predicate.Department(sql.FieldHasSuffix(FieldAncestors, v))
+}
+
+// AncestorsEqualFold applies the EqualFold predicate on the "ancestors" field.
+func AncestorsEqualFold(v string) predicate.Department {
+	return predicate.Department(sql.FieldEqualFold(FieldAncestors, v))
+}
+
+// AncestorsContainsFold applies the ContainsFold predicate on the "ancestors" field.
+func AncestorsContainsFold(v string) predicate.Department {
+	return predicate.Department(sql.FieldContainsFold(FieldAncestors, v))
+}
+
+// ParentIDEQ applies the EQ predicate on the "parent_id" field.
+func ParentIDEQ(v int) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldParentID, v))
+}
+
+// ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
+func ParentIDNEQ(v int) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldParentID, v))
+}
+
+// ParentIDIn applies the In predicate on the "parent_id" field.
+func ParentIDIn(vs ...int) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldParentID, vs...))
+}
+
+// ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
+func ParentIDNotIn(vs ...int) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldParentID, vs...))
+}
+
+// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
+func ParentIDIsNil() predicate.Department {
+	return predicate.Department(sql.FieldIsNull(FieldParentID))
+}
+
+// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
+func ParentIDNotNil() predicate.Department {
+	return predicate.Department(sql.FieldNotNull(FieldParentID))
+}
+
+// LevelEQ applies the EQ predicate on the "level" field.
+func LevelEQ(v int) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldLevel, v))
+}
+
+// LevelNEQ applies the NEQ predicate on the "level" field.
+func LevelNEQ(v int) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldLevel, v))
+}
+
+// LevelIn applies the In predicate on the "level" field.
+func LevelIn(vs ...int) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldLevel, vs...))
+}
+
+// LevelNotIn applies the NotIn predicate on the "level" field.
+func LevelNotIn(vs ...int) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldLevel, vs...))
+}
+
+// LevelGT applies the GT predicate on the "level" field.
+func LevelGT(v int) predicate.Department {
+	return predicate.Department(sql.FieldGT(FieldLevel, v))
+}
+
+// LevelGTE applies the GTE predicate on the "level" field.
+func LevelGTE(v int) predicate.Department {
+	return predicate.Department(sql.FieldGTE(FieldLevel, v))
+}
+
+// LevelLT applies the LT predicate on the "level" field.
+func LevelLT(v int) predicate.Department {
+	return predicate.Department(sql.FieldLT(FieldLevel, v))
+}
+
+// LevelLTE applies the LTE predicate on the "level" field.
+func LevelLTE(v int) predicate.Department {
+	return predicate.Department(sql.FieldLTE(FieldLevel, v))
+}
+
 // HasUsers applies the HasEdge predicate on the "users" edge.
 func HasUsers() predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
@@ -491,6 +641,75 @@ func HasPositionsWith(preds ...predicate.Position) predicate.Department {
 	})
 }
 
+// HasRoles applies the HasEdge predicate on the "roles" edge.
+func HasRoles() predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, RolesTable, RolesPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasRolesWith applies the HasEdge predicate on the "roles" edge with a given conditions (other predicates).
+func HasRolesWith(preds ...predicate.Role) predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := newRolesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasChildren applies the HasEdge predicate on the "children" edge.
+func HasChildren() predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasChildrenWith applies the HasEdge predicate on the "children" edge with a given conditions (other predicates).
+func HasChildrenWith(preds ...predicate.Department) predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := newChildrenStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasParent applies the HasEdge predicate on the "parent" edge.
+func HasParent() predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ParentTable, ParentColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasParentWith applies the HasEdge predicate on the "parent" edge with a given conditions (other predicates).
+func HasParentWith(preds ...predicate.Department) predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := newParentStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasUserDepartments applies the HasEdge predicate on the "user_departments" edge.
 func HasUserDepartments() predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
@@ -506,6 +725,29 @@ func HasUserDepartments() predicate.Department {
 func HasUserDepartmentsWith(preds ...predicate.UserDepartment) predicate.Department {
 	return predicate.Department(func(s *sql.Selector) {
 		step := newUserDepartmentsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDepartmentRoles applies the HasEdge predicate on the "department_roles" edge.
+func HasDepartmentRoles() predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, DepartmentRolesTable, DepartmentRolesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDepartmentRolesWith applies the HasEdge predicate on the "department_roles" edge with a given conditions (other predicates).
+func HasDepartmentRolesWith(preds ...predicate.DepartmentRole) predicate.Department {
+	return predicate.Department(func(s *sql.Selector) {
+		step := newDepartmentRolesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

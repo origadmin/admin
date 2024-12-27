@@ -20,8 +20,18 @@ const (
 	FieldUpdateTime = "update_time"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldKeyword holds the string denoting the keyword field in the database.
+	FieldKeyword = "keyword"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
+	// FieldI18nKey holds the string denoting the i18n_key field in the database.
+	FieldI18nKey = "i18n_key"
+	// FieldType holds the string denoting the type field in the database.
+	FieldType = "type"
+	// FieldScope holds the string denoting the scope field in the database.
+	FieldScope = "scope"
+	// FieldScopeDepts holds the string denoting the scope_depts field in the database.
+	FieldScopeDepts = "scope_depts"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// EdgeMenus holds the string denoting the menus edge name in mutations.
@@ -80,7 +90,12 @@ var Columns = []string{
 	FieldCreateTime,
 	FieldUpdateTime,
 	FieldName,
+	FieldKeyword,
 	FieldDescription,
+	FieldI18nKey,
+	FieldType,
+	FieldScope,
+	FieldScopeDepts,
 }
 
 var (
@@ -114,8 +129,16 @@ var (
 	UpdateDefaultUpdateTime func() time.Time
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
+	KeywordValidator func(string) error
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
+	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
+	I18nKeyValidator func(string) error
+	// DefaultType holds the default value on creation for the "type" field.
+	DefaultType int8
+	// DefaultScope holds the default value on creation for the "scope" field.
+	DefaultScope string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -143,9 +166,29 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
+// ByKeyword orders the results by the keyword field.
+func ByKeyword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldKeyword, opts...).ToFunc()
+}
+
 // ByDescription orders the results by the description field.
 func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByI18nKey orders the results by the i18n_key field.
+func ByI18nKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18nKey, opts...).ToFunc()
+}
+
+// ByType orders the results by the type field.
+func ByType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldType, opts...).ToFunc()
+}
+
+// ByScope orders the results by the scope field.
+func ByScope(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldScope, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

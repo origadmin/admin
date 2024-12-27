@@ -310,12 +310,6 @@ func (uc *UserCreate) SetNillableSanctionDate(t *time.Time) *UserCreate {
 	return uc
 }
 
-// SetDepartmentID sets the "department_id" field.
-func (uc *UserCreate) SetDepartmentID(i int) *UserCreate {
-	uc.mutation.SetDepartmentID(i)
-	return uc
-}
-
 // SetManagerID sets the "manager_id" field.
 func (uc *UserCreate) SetManagerID(i int) *UserCreate {
 	uc.mutation.SetManagerID(i)
@@ -653,14 +647,6 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.SanctionDate(); !ok {
 		return &ValidationError{Name: "sanction_date", err: errors.New(`ent: missing required field "User.sanction_date"`)}
 	}
-	if _, ok := uc.mutation.DepartmentID(); !ok {
-		return &ValidationError{Name: "department_id", err: errors.New(`ent: missing required field "User.department_id"`)}
-	}
-	if v, ok := uc.mutation.DepartmentID(); ok {
-		if err := user.DepartmentIDValidator(v); err != nil {
-			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "User.department_id": %w`, err)}
-		}
-	}
 	if _, ok := uc.mutation.ManagerID(); !ok {
 		return &ValidationError{Name: "manager_id", err: errors.New(`ent: missing required field "User.manager_id"`)}
 	}
@@ -792,10 +778,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
 		_node.SanctionDate = value
-	}
-	if value, ok := uc.mutation.DepartmentID(); ok {
-		_spec.SetField(user.FieldDepartmentID, field.TypeInt, value)
-		_node.DepartmentID = value
 	}
 	if value, ok := uc.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeInt, value)

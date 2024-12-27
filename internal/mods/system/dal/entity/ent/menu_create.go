@@ -96,15 +96,15 @@ func (mc *MenuCreate) SetNillableDescription(s *string) *MenuCreate {
 }
 
 // SetType sets the "type" field.
-func (mc *MenuCreate) SetType(u uint8) *MenuCreate {
-	mc.mutation.SetType(u)
+func (mc *MenuCreate) SetType(i int32) *MenuCreate {
+	mc.mutation.SetType(i)
 	return mc
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableType(u *uint8) *MenuCreate {
-	if u != nil {
-		mc.SetType(*u)
+func (mc *MenuCreate) SetNillableType(i *int32) *MenuCreate {
+	if i != nil {
+		mc.SetType(*i)
 	}
 	return mc
 }
@@ -151,20 +151,6 @@ func (mc *MenuCreate) SetNillableStatus(i *int8) *MenuCreate {
 	return mc
 }
 
-// SetParentID sets the "parent_id" field.
-func (mc *MenuCreate) SetParentID(i int) *MenuCreate {
-	mc.mutation.SetParentID(i)
-	return mc
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (mc *MenuCreate) SetNillableParentID(i *int) *MenuCreate {
-	if i != nil {
-		mc.SetParentID(*i)
-	}
-	return mc
-}
-
 // SetParentPath sets the "parent_path" field.
 func (mc *MenuCreate) SetParentPath(s string) *MenuCreate {
 	mc.mutation.SetParentPath(s)
@@ -203,6 +189,20 @@ func (mc *MenuCreate) SetProperties(s string) *MenuCreate {
 func (mc *MenuCreate) SetNillableProperties(s *string) *MenuCreate {
 	if s != nil {
 		mc.SetProperties(*s)
+	}
+	return mc
+}
+
+// SetParentID sets the "parent_id" field.
+func (mc *MenuCreate) SetParentID(i int) *MenuCreate {
+	mc.mutation.SetParentID(i)
+	return mc
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableParentID(i *int) *MenuCreate {
+	if i != nil {
+		mc.SetParentID(*i)
 	}
 	return mc
 }
@@ -447,11 +447,6 @@ func (mc *MenuCreate) check() error {
 	if _, ok := mc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Menu.status"`)}
 	}
-	if v, ok := mc.mutation.ParentID(); ok {
-		if err := menu.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_id": %w`, err)}
-		}
-	}
 	if _, ok := mc.mutation.ParentPath(); !ok {
 		return &ValidationError{Name: "parent_path", err: errors.New(`ent: missing required field "Menu.parent_path"`)}
 	}
@@ -462,6 +457,11 @@ func (mc *MenuCreate) check() error {
 	}
 	if _, ok := mc.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Menu.sequence"`)}
+	}
+	if v, ok := mc.mutation.ParentID(); ok {
+		if err := menu.ParentIDValidator(v); err != nil {
+			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Menu.parent_id": %w`, err)}
+		}
 	}
 	if v, ok := mc.mutation.ID(); ok {
 		if err := menu.IDValidator(v); err != nil {
@@ -521,7 +521,7 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_node.Description = value
 	}
 	if value, ok := mc.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeUint8, value)
+		_spec.SetField(menu.FieldType, field.TypeInt32, value)
 		_node.Type = value
 	}
 	if value, ok := mc.mutation.Icon(); ok {

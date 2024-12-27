@@ -21,28 +21,28 @@ type Menu struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Keyword holds the value of the "keyword" field.
+	// Unique keyword for the menu item
 	Keyword string `json:"keyword,omitempty"`
-	// Name holds the value of the "name" field.
+	// Display name of the menu item
 	Name string `json:"name,omitempty"`
-	// Description holds the value of the "description" field.
+	// Description of the menu item
 	Description string `json:"description,omitempty"`
-	// Type holds the value of the "type" field.
-	Type uint8 `json:"type,omitempty"`
-	// Icon holds the value of the "icon" field.
+	// Type of the menu item (e.g., page, link)
+	Type int32 `json:"type,omitempty"`
+	// Icon for the menu item
 	Icon string `json:"icon,omitempty"`
-	// Path holds the value of the "path" field.
+	// Path associated with the menu item
 	Path string `json:"path,omitempty"`
-	// Status holds the value of the "status" field.
+	// Status of the menu item (e.g., activated, deactivated)
 	Status int8 `json:"status,omitempty"`
-	// ParentID holds the value of the "parent_id" field.
-	ParentID int `json:"parent_id,omitempty"`
-	// ParentPath holds the value of the "parent_path" field.
+	// Parent path of the menu item
 	ParentPath string `json:"parent_path,omitempty"`
-	// Sequence holds the value of the "sequence" field.
+	// Sequence for sorting the menu item
 	Sequence int `json:"sequence,omitempty"`
-	// Properties holds the value of the "properties" field.
+	// Additional properties of the menu item
 	Properties string `json:"properties,omitempty"`
+	// Parent ID of the menu item
+	ParentID int `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuQuery when eager-loading is set.
 	Edges        MenuEdges `json:"edges"`
@@ -140,7 +140,7 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menu.FieldID, menu.FieldType, menu.FieldStatus, menu.FieldParentID, menu.FieldSequence:
+		case menu.FieldID, menu.FieldType, menu.FieldStatus, menu.FieldSequence, menu.FieldParentID:
 			values[i] = new(sql.NullInt64)
 		case menu.FieldKeyword, menu.FieldName, menu.FieldDescription, menu.FieldIcon, menu.FieldPath, menu.FieldParentPath, menu.FieldProperties:
 			values[i] = new(sql.NullString)
@@ -201,7 +201,7 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				m.Type = uint8(value.Int64)
+				m.Type = int32(value.Int64)
 			}
 		case menu.FieldIcon:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -221,12 +221,6 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Status = int8(value.Int64)
 			}
-		case menu.FieldParentID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
-			} else if value.Valid {
-				m.ParentID = int(value.Int64)
-			}
 		case menu.FieldParentPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_path", values[i])
@@ -244,6 +238,12 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field properties", values[i])
 			} else if value.Valid {
 				m.Properties = value.String
+			}
+		case menu.FieldParentID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				m.ParentID = int(value.Int64)
 			}
 		default:
 			m.selectValues.Set(columns[i], values[i])
@@ -343,9 +343,6 @@ func (m *Menu) String() string {
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", m.Status))
 	builder.WriteString(", ")
-	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", m.ParentID))
-	builder.WriteString(", ")
 	builder.WriteString("parent_path=")
 	builder.WriteString(m.ParentPath)
 	builder.WriteString(", ")
@@ -354,6 +351,9 @@ func (m *Menu) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("properties=")
 	builder.WriteString(m.Properties)
+	builder.WriteString(", ")
+	builder.WriteString("parent_id=")
+	builder.WriteString(fmt.Sprintf("%v", m.ParentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

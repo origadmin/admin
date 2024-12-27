@@ -18,6 +18,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 )
 
@@ -55,6 +56,20 @@ func (pu *PermissionUpdate) SetNillableName(s *string) *PermissionUpdate {
 	return pu
 }
 
+// SetKeyword sets the "keyword" field.
+func (pu *PermissionUpdate) SetKeyword(s string) *PermissionUpdate {
+	pu.mutation.SetKeyword(s)
+	return pu
+}
+
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (pu *PermissionUpdate) SetNillableKeyword(s *string) *PermissionUpdate {
+	if s != nil {
+		pu.SetKeyword(*s)
+	}
+	return pu
+}
+
 // SetDescription sets the "description" field.
 func (pu *PermissionUpdate) SetDescription(s string) *PermissionUpdate {
 	pu.mutation.SetDescription(s)
@@ -66,6 +81,79 @@ func (pu *PermissionUpdate) SetNillableDescription(s *string) *PermissionUpdate 
 	if s != nil {
 		pu.SetDescription(*s)
 	}
+	return pu
+}
+
+// ClearDescription clears the value of the "description" field.
+func (pu *PermissionUpdate) ClearDescription() *PermissionUpdate {
+	pu.mutation.ClearDescription()
+	return pu
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (pu *PermissionUpdate) SetI18nKey(s string) *PermissionUpdate {
+	pu.mutation.SetI18nKey(s)
+	return pu
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (pu *PermissionUpdate) SetNillableI18nKey(s *string) *PermissionUpdate {
+	if s != nil {
+		pu.SetI18nKey(*s)
+	}
+	return pu
+}
+
+// SetType sets the "type" field.
+func (pu *PermissionUpdate) SetType(i int8) *PermissionUpdate {
+	pu.mutation.ResetType()
+	pu.mutation.SetType(i)
+	return pu
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (pu *PermissionUpdate) SetNillableType(i *int8) *PermissionUpdate {
+	if i != nil {
+		pu.SetType(*i)
+	}
+	return pu
+}
+
+// AddType adds i to the "type" field.
+func (pu *PermissionUpdate) AddType(i int8) *PermissionUpdate {
+	pu.mutation.AddType(i)
+	return pu
+}
+
+// SetScope sets the "scope" field.
+func (pu *PermissionUpdate) SetScope(s string) *PermissionUpdate {
+	pu.mutation.SetScope(s)
+	return pu
+}
+
+// SetNillableScope sets the "scope" field if the given value is not nil.
+func (pu *PermissionUpdate) SetNillableScope(s *string) *PermissionUpdate {
+	if s != nil {
+		pu.SetScope(*s)
+	}
+	return pu
+}
+
+// SetScopeDepts sets the "scope_depts" field.
+func (pu *PermissionUpdate) SetScopeDepts(s []string) *PermissionUpdate {
+	pu.mutation.SetScopeDepts(s)
+	return pu
+}
+
+// AppendScopeDepts appends s to the "scope_depts" field.
+func (pu *PermissionUpdate) AppendScopeDepts(s []string) *PermissionUpdate {
+	pu.mutation.AppendScopeDepts(s)
+	return pu
+}
+
+// ClearScopeDepts clears the value of the "scope_depts" field.
+func (pu *PermissionUpdate) ClearScopeDepts() *PermissionUpdate {
+	pu.mutation.ClearScopeDepts()
 	return pu
 }
 
@@ -333,9 +421,19 @@ func (pu *PermissionUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Permission.name": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.Keyword(); ok {
+		if err := permission.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Permission.keyword": %w`, err)}
+		}
+	}
 	if v, ok := pu.mutation.Description(); ok {
 		if err := permission.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
+		}
+	}
+	if v, ok := pu.mutation.I18nKey(); ok {
+		if err := permission.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Permission.i18n_key": %w`, err)}
 		}
 	}
 	return nil
@@ -365,8 +463,37 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := pu.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 	}
+	if value, ok := pu.mutation.Keyword(); ok {
+		_spec.SetField(permission.FieldKeyword, field.TypeString, value)
+	}
 	if value, ok := pu.mutation.Description(); ok {
 		_spec.SetField(permission.FieldDescription, field.TypeString, value)
+	}
+	if pu.mutation.DescriptionCleared() {
+		_spec.ClearField(permission.FieldDescription, field.TypeString)
+	}
+	if value, ok := pu.mutation.I18nKey(); ok {
+		_spec.SetField(permission.FieldI18nKey, field.TypeString, value)
+	}
+	if value, ok := pu.mutation.GetType(); ok {
+		_spec.SetField(permission.FieldType, field.TypeInt8, value)
+	}
+	if value, ok := pu.mutation.AddedType(); ok {
+		_spec.AddField(permission.FieldType, field.TypeInt8, value)
+	}
+	if value, ok := pu.mutation.Scope(); ok {
+		_spec.SetField(permission.FieldScope, field.TypeString, value)
+	}
+	if value, ok := pu.mutation.ScopeDepts(); ok {
+		_spec.SetField(permission.FieldScopeDepts, field.TypeJSON, value)
+	}
+	if value, ok := pu.mutation.AppendedScopeDepts(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, permission.FieldScopeDepts, value)
+		})
+	}
+	if pu.mutation.ScopeDeptsCleared() {
+		_spec.ClearField(permission.FieldScopeDepts, field.TypeJSON)
 	}
 	if pu.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -680,6 +807,20 @@ func (puo *PermissionUpdateOne) SetNillableName(s *string) *PermissionUpdateOne 
 	return puo
 }
 
+// SetKeyword sets the "keyword" field.
+func (puo *PermissionUpdateOne) SetKeyword(s string) *PermissionUpdateOne {
+	puo.mutation.SetKeyword(s)
+	return puo
+}
+
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (puo *PermissionUpdateOne) SetNillableKeyword(s *string) *PermissionUpdateOne {
+	if s != nil {
+		puo.SetKeyword(*s)
+	}
+	return puo
+}
+
 // SetDescription sets the "description" field.
 func (puo *PermissionUpdateOne) SetDescription(s string) *PermissionUpdateOne {
 	puo.mutation.SetDescription(s)
@@ -691,6 +832,79 @@ func (puo *PermissionUpdateOne) SetNillableDescription(s *string) *PermissionUpd
 	if s != nil {
 		puo.SetDescription(*s)
 	}
+	return puo
+}
+
+// ClearDescription clears the value of the "description" field.
+func (puo *PermissionUpdateOne) ClearDescription() *PermissionUpdateOne {
+	puo.mutation.ClearDescription()
+	return puo
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (puo *PermissionUpdateOne) SetI18nKey(s string) *PermissionUpdateOne {
+	puo.mutation.SetI18nKey(s)
+	return puo
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (puo *PermissionUpdateOne) SetNillableI18nKey(s *string) *PermissionUpdateOne {
+	if s != nil {
+		puo.SetI18nKey(*s)
+	}
+	return puo
+}
+
+// SetType sets the "type" field.
+func (puo *PermissionUpdateOne) SetType(i int8) *PermissionUpdateOne {
+	puo.mutation.ResetType()
+	puo.mutation.SetType(i)
+	return puo
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (puo *PermissionUpdateOne) SetNillableType(i *int8) *PermissionUpdateOne {
+	if i != nil {
+		puo.SetType(*i)
+	}
+	return puo
+}
+
+// AddType adds i to the "type" field.
+func (puo *PermissionUpdateOne) AddType(i int8) *PermissionUpdateOne {
+	puo.mutation.AddType(i)
+	return puo
+}
+
+// SetScope sets the "scope" field.
+func (puo *PermissionUpdateOne) SetScope(s string) *PermissionUpdateOne {
+	puo.mutation.SetScope(s)
+	return puo
+}
+
+// SetNillableScope sets the "scope" field if the given value is not nil.
+func (puo *PermissionUpdateOne) SetNillableScope(s *string) *PermissionUpdateOne {
+	if s != nil {
+		puo.SetScope(*s)
+	}
+	return puo
+}
+
+// SetScopeDepts sets the "scope_depts" field.
+func (puo *PermissionUpdateOne) SetScopeDepts(s []string) *PermissionUpdateOne {
+	puo.mutation.SetScopeDepts(s)
+	return puo
+}
+
+// AppendScopeDepts appends s to the "scope_depts" field.
+func (puo *PermissionUpdateOne) AppendScopeDepts(s []string) *PermissionUpdateOne {
+	puo.mutation.AppendScopeDepts(s)
+	return puo
+}
+
+// ClearScopeDepts clears the value of the "scope_depts" field.
+func (puo *PermissionUpdateOne) ClearScopeDepts() *PermissionUpdateOne {
+	puo.mutation.ClearScopeDepts()
 	return puo
 }
 
@@ -971,9 +1185,19 @@ func (puo *PermissionUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Permission.name": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.Keyword(); ok {
+		if err := permission.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Permission.keyword": %w`, err)}
+		}
+	}
 	if v, ok := puo.mutation.Description(); ok {
 		if err := permission.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
+		}
+	}
+	if v, ok := puo.mutation.I18nKey(); ok {
+		if err := permission.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Permission.i18n_key": %w`, err)}
 		}
 	}
 	return nil
@@ -1020,8 +1244,37 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 	if value, ok := puo.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 	}
+	if value, ok := puo.mutation.Keyword(); ok {
+		_spec.SetField(permission.FieldKeyword, field.TypeString, value)
+	}
 	if value, ok := puo.mutation.Description(); ok {
 		_spec.SetField(permission.FieldDescription, field.TypeString, value)
+	}
+	if puo.mutation.DescriptionCleared() {
+		_spec.ClearField(permission.FieldDescription, field.TypeString)
+	}
+	if value, ok := puo.mutation.I18nKey(); ok {
+		_spec.SetField(permission.FieldI18nKey, field.TypeString, value)
+	}
+	if value, ok := puo.mutation.GetType(); ok {
+		_spec.SetField(permission.FieldType, field.TypeInt8, value)
+	}
+	if value, ok := puo.mutation.AddedType(); ok {
+		_spec.AddField(permission.FieldType, field.TypeInt8, value)
+	}
+	if value, ok := puo.mutation.Scope(); ok {
+		_spec.SetField(permission.FieldScope, field.TypeString, value)
+	}
+	if value, ok := puo.mutation.ScopeDepts(); ok {
+		_spec.SetField(permission.FieldScopeDepts, field.TypeJSON, value)
+	}
+	if value, ok := puo.mutation.AppendedScopeDepts(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, permission.FieldScopeDepts, value)
+		})
+	}
+	if puo.mutation.ScopeDeptsCleared() {
+		_spec.ClearField(permission.FieldScopeDepts, field.TypeJSON)
 	}
 	if puo.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -7,7 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"time"
@@ -113,6 +115,48 @@ func (dc *DepartmentCreate) SetNillableStatus(i *int8) *DepartmentCreate {
 	return dc
 }
 
+// SetAncestors sets the "ancestors" field.
+func (dc *DepartmentCreate) SetAncestors(s string) *DepartmentCreate {
+	dc.mutation.SetAncestors(s)
+	return dc
+}
+
+// SetNillableAncestors sets the "ancestors" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableAncestors(s *string) *DepartmentCreate {
+	if s != nil {
+		dc.SetAncestors(*s)
+	}
+	return dc
+}
+
+// SetParentID sets the "parent_id" field.
+func (dc *DepartmentCreate) SetParentID(i int) *DepartmentCreate {
+	dc.mutation.SetParentID(i)
+	return dc
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableParentID(i *int) *DepartmentCreate {
+	if i != nil {
+		dc.SetParentID(*i)
+	}
+	return dc
+}
+
+// SetLevel sets the "level" field.
+func (dc *DepartmentCreate) SetLevel(i int) *DepartmentCreate {
+	dc.mutation.SetLevel(i)
+	return dc
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableLevel(i *int) *DepartmentCreate {
+	if i != nil {
+		dc.SetLevel(*i)
+	}
+	return dc
+}
+
 // SetID sets the "id" field.
 func (dc *DepartmentCreate) SetID(i int) *DepartmentCreate {
 	dc.mutation.SetID(i)
@@ -149,6 +193,41 @@ func (dc *DepartmentCreate) AddPositions(p ...*Position) *DepartmentCreate {
 	return dc.AddPositionIDs(ids...)
 }
 
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (dc *DepartmentCreate) AddRoleIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddRoleIDs(ids...)
+	return dc
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (dc *DepartmentCreate) AddRoles(r ...*Role) *DepartmentCreate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return dc.AddRoleIDs(ids...)
+}
+
+// AddChildIDs adds the "children" edge to the Department entity by IDs.
+func (dc *DepartmentCreate) AddChildIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddChildIDs(ids...)
+	return dc
+}
+
+// AddChildren adds the "children" edges to the Department entity.
+func (dc *DepartmentCreate) AddChildren(d ...*Department) *DepartmentCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return dc.AddChildIDs(ids...)
+}
+
+// SetParent sets the "parent" edge to the Department entity.
+func (dc *DepartmentCreate) SetParent(d *Department) *DepartmentCreate {
+	return dc.SetParentID(d.ID)
+}
+
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
 func (dc *DepartmentCreate) AddUserDepartmentIDs(ids ...int) *DepartmentCreate {
 	dc.mutation.AddUserDepartmentIDs(ids...)
@@ -162,6 +241,21 @@ func (dc *DepartmentCreate) AddUserDepartments(u ...*UserDepartment) *Department
 		ids[i] = u[i].ID
 	}
 	return dc.AddUserDepartmentIDs(ids...)
+}
+
+// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
+func (dc *DepartmentCreate) AddDepartmentRoleIDs(ids ...int) *DepartmentCreate {
+	dc.mutation.AddDepartmentRoleIDs(ids...)
+	return dc
+}
+
+// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
+func (dc *DepartmentCreate) AddDepartmentRoles(d ...*DepartmentRole) *DepartmentCreate {
+	ids := make([]int, len(d))
+	for i := range d {
+		ids[i] = d[i].ID
+	}
+	return dc.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -223,6 +317,14 @@ func (dc *DepartmentCreate) defaults() {
 		v := department.DefaultStatus
 		dc.mutation.SetStatus(v)
 	}
+	if _, ok := dc.mutation.Ancestors(); !ok {
+		v := department.DefaultAncestors
+		dc.mutation.SetAncestors(v)
+	}
+	if _, ok := dc.mutation.Level(); !ok {
+		v := department.DefaultLevel
+		dc.mutation.SetLevel(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -262,6 +364,22 @@ func (dc *DepartmentCreate) check() error {
 	}
 	if _, ok := dc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Department.status"`)}
+	}
+	if _, ok := dc.mutation.Ancestors(); !ok {
+		return &ValidationError{Name: "ancestors", err: errors.New(`ent: missing required field "Department.ancestors"`)}
+	}
+	if v, ok := dc.mutation.Ancestors(); ok {
+		if err := department.AncestorsValidator(v); err != nil {
+			return &ValidationError{Name: "ancestors", err: fmt.Errorf(`ent: validator failed for field "Department.ancestors": %w`, err)}
+		}
+	}
+	if v, ok := dc.mutation.ParentID(); ok {
+		if err := department.ParentIDValidator(v); err != nil {
+			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Department.parent_id": %w`, err)}
+		}
+	}
+	if _, ok := dc.mutation.Level(); !ok {
+		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Department.level"`)}
 	}
 	if v, ok := dc.mutation.ID(); ok {
 		if err := department.IDValidator(v); err != nil {
@@ -328,6 +446,14 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		_spec.SetField(department.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
+	if value, ok := dc.mutation.Ancestors(); ok {
+		_spec.SetField(department.FieldAncestors, field.TypeString, value)
+		_node.Ancestors = value
+	}
+	if value, ok := dc.mutation.Level(); ok {
+		_spec.SetField(department.FieldLevel, field.TypeInt, value)
+		_node.Level = value
+	}
 	if nodes := dc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -360,6 +486,55 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := dc.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   department.RolesTable,
+			Columns: department.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   department.ParentTable,
+			Columns: []string{department.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.ParentID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := dc.mutation.UserDepartmentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -369,6 +544,22 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   department.DepartmentRolesTable,
+			Columns: []string{department.DepartmentRolesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

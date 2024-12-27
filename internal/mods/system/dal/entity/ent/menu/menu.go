@@ -32,14 +32,14 @@ const (
 	FieldPath = "path"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldParentID holds the string denoting the parent_id field in the database.
-	FieldParentID = "parent_id"
 	// FieldParentPath holds the string denoting the parent_path field in the database.
 	FieldParentPath = "parent_path"
 	// FieldSequence holds the string denoting the sequence field in the database.
 	FieldSequence = "sequence"
 	// FieldProperties holds the string denoting the properties field in the database.
 	FieldProperties = "properties"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
 	// EdgeChildren holds the string denoting the children edge name in mutations.
 	EdgeChildren = "children"
 	// EdgeParent holds the string denoting the parent edge name in mutations.
@@ -109,10 +109,10 @@ var Columns = []string{
 	FieldIcon,
 	FieldPath,
 	FieldStatus,
-	FieldParentID,
 	FieldParentPath,
 	FieldSequence,
 	FieldProperties,
+	FieldParentID,
 }
 
 var (
@@ -154,7 +154,7 @@ var (
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
 	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType uint8
+	DefaultType int32
 	// DefaultIcon holds the default value on creation for the "icon" field.
 	DefaultIcon string
 	// IconValidator is a validator for the "icon" field. It is called by the builders before save.
@@ -165,8 +165,6 @@ var (
 	PathValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
-	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(int) error
 	// DefaultParentPath holds the default value on creation for the "parent_path" field.
 	DefaultParentPath string
 	// ParentPathValidator is a validator for the "parent_path" field. It is called by the builders before save.
@@ -175,6 +173,8 @@ var (
 	DefaultSequence int
 	// DefaultProperties holds the default value on creation for the "properties" field.
 	DefaultProperties string
+	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
+	ParentIDValidator func(int) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )
@@ -232,11 +232,6 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
-// ByParentID orders the results by the parent_id field.
-func ByParentID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldParentID, opts...).ToFunc()
-}
-
 // ByParentPath orders the results by the parent_path field.
 func ByParentPath(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldParentPath, opts...).ToFunc()
@@ -250,6 +245,11 @@ func BySequence(opts ...sql.OrderTermOption) OrderOption {
 // ByProperties orders the results by the properties field.
 func ByProperties(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldProperties, opts...).ToFunc()
+}
+
+// ByParentID orders the results by the parent_id field.
+func ByParentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParentID, opts...).ToFunc()
 }
 
 // ByChildrenCount orders the results by children count.

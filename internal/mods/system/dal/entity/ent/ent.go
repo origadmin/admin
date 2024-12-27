@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
@@ -87,6 +88,7 @@ func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			department.Table:         department.ValidColumn,
+			departmentrole.Table:     departmentrole.ValidColumn,
 			menu.Table:               menu.ValidColumn,
 			menupermission.Table:     menupermission.ValidColumn,
 			permission.Table:         permission.ValidColumn,
