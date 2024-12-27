@@ -479,27 +479,27 @@ var (
 			},
 		},
 	}
-	// RolePermissionsColumns holds the columns for the "role_permissions" table.
-	RolePermissionsColumns = []*schema.Column{
+	// SysRolePermissionColumns holds the columns for the "sys_role_permission" table.
+	SysRolePermissionColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Increment: true},
 		{Name: "role_id", Type: field.TypeInt64},
 		{Name: "permission_id", Type: field.TypeInt64},
 	}
-	// RolePermissionsTable holds the schema information for the "role_permissions" table.
-	RolePermissionsTable = &schema.Table{
-		Name:       "role_permissions",
-		Columns:    RolePermissionsColumns,
-		PrimaryKey: []*schema.Column{RolePermissionsColumns[0]},
+	// SysRolePermissionTable holds the schema information for the "sys_role_permission" table.
+	SysRolePermissionTable = &schema.Table{
+		Name:       "sys_role_permission",
+		Columns:    SysRolePermissionColumns,
+		PrimaryKey: []*schema.Column{SysRolePermissionColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "role_permissions_sys_roles_role",
-				Columns:    []*schema.Column{RolePermissionsColumns[1]},
+				Symbol:     "sys_role_permission_sys_roles_role",
+				Columns:    []*schema.Column{SysRolePermissionColumns[1]},
 				RefColumns: []*schema.Column{SysRolesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "role_permissions_sys_permissions_permission",
-				Columns:    []*schema.Column{RolePermissionsColumns[2]},
+				Symbol:     "sys_role_permission_sys_permissions_permission",
+				Columns:    []*schema.Column{SysRolePermissionColumns[2]},
 				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -508,17 +508,17 @@ var (
 			{
 				Name:    "rolepermission_role_id",
 				Unique:  false,
-				Columns: []*schema.Column{RolePermissionsColumns[1]},
+				Columns: []*schema.Column{SysRolePermissionColumns[1]},
 			},
 			{
 				Name:    "rolepermission_permission_id",
 				Unique:  false,
-				Columns: []*schema.Column{RolePermissionsColumns[2]},
+				Columns: []*schema.Column{SysRolePermissionColumns[2]},
 			},
 			{
 				Name:    "rolepermission_role_id_permission_id",
 				Unique:  true,
-				Columns: []*schema.Column{RolePermissionsColumns[1], RolePermissionsColumns[2]},
+				Columns: []*schema.Column{SysRolePermissionColumns[1], SysRolePermissionColumns[2]},
 			},
 		},
 	}
@@ -746,7 +746,7 @@ var (
 		SysResourcesTable,
 		SysRolesTable,
 		SysRoleMenusTable,
-		RolePermissionsTable,
+		SysRolePermissionTable,
 		SysUsersTable,
 		SysUserDepartmentsTable,
 		SysUserPositionsTable,
@@ -797,8 +797,11 @@ func init() {
 	SysRoleMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_role_menus",
 	}
-	RolePermissionsTable.ForeignKeys[0].RefTable = SysRolesTable
-	RolePermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
+	SysRolePermissionTable.ForeignKeys[0].RefTable = SysRolesTable
+	SysRolePermissionTable.ForeignKeys[1].RefTable = SysPermissionsTable
+	SysRolePermissionTable.Annotation = &entsql.Annotation{
+		Table: "sys_role_permission",
+	}
 	SysUsersTable.Annotation = &entsql.Annotation{
 		Table: "sys_users",
 	}

@@ -73,6 +73,7 @@ func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.L
 	//	return nil, err
 	//}
 	//s.Bytes(context, http.StatusOK, bytes)
+
 	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,

@@ -16,6 +16,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.8.3
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/goexts/generic v0.1.5
+	github.com/gogo/protobuf v1.3.2
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/gnostic v0.7.0
 	github.com/google/wire v0.6.0

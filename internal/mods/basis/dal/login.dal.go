@@ -21,7 +21,6 @@ import (
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/errors/httperr"
 	"github.com/origadmin/toolkits/security"
-	"google.golang.org/protobuf/types/known/anypb"
 
 	"origadmin/application/admin/api/v1/services/basis"
 	"origadmin/application/admin/api/v1/services/system"
@@ -180,12 +179,8 @@ func (repo loginRepo) CurrentMenus(ctx context.Context, in *dto.CurrentMenusRequ
 	if err != nil {
 		return nil, err
 	}
-	var anyMenus []*anypb.Any
-	for i, menu := range menus {
-		anyMenus[i] = resp.Any(menu)
-	}
 	return &dto.CurrentMenusResponse{
-		Data: anyMenus,
+		Data: resp.Proto2AnyPBArray(menus...),
 	}, nil
 }
 

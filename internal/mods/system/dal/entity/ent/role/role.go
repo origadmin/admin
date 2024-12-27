@@ -61,7 +61,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "sys_users"
 	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
-	PermissionsTable = "role_permissions"
+	PermissionsTable = "sys_role_permission"
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionsInverseTable = "sys_permissions"
@@ -85,10 +85,10 @@ const (
 	// UserRolesColumn is the table column denoting the user_roles relation/edge.
 	UserRolesColumn = "role_id"
 	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
-	RolePermissionsTable = "role_permissions"
+	RolePermissionsTable = "sys_role_permission"
 	// RolePermissionsInverseTable is the table name for the RolePermission entity.
 	// It exists in this package in order to avoid circular dependency with the "rolepermission" package.
-	RolePermissionsInverseTable = "role_permissions"
+	RolePermissionsInverseTable = "sys_role_permission"
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "role_id"
 	// DepartmentRolesTable is the table that holds the department_roles relation/edge.

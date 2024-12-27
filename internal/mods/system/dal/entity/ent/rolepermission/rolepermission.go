@@ -21,16 +21,16 @@ const (
 	// EdgePermission holds the string denoting the permission edge name in mutations.
 	EdgePermission = "permission"
 	// Table holds the table name of the rolepermission in the database.
-	Table = "role_permissions"
+	Table = "sys_role_permission"
 	// RoleTable is the table that holds the role relation/edge.
-	RoleTable = "role_permissions"
+	RoleTable = "sys_role_permission"
 	// RoleInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RoleInverseTable = "sys_roles"
 	// RoleColumn is the table column denoting the role relation/edge.
 	RoleColumn = "role_id"
 	// PermissionTable is the table that holds the permission relation/edge.
-	PermissionTable = "role_permissions"
+	PermissionTable = "sys_role_permission"
 	// PermissionInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionInverseTable = "sys_permissions"

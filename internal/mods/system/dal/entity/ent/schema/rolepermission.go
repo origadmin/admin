@@ -7,6 +7,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/index"
 
@@ -40,6 +42,13 @@ func (RolePermission) Indexes() []ent.Index {
 		index.Fields("permission_id"), // From Permission.ID
 		index.Fields("role_id", "permission_id").
 			Unique(),
+	}
+}
+
+// Annotations of the RolePermission.
+func (RolePermission) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_role_permission"),
 	}
 }
 
