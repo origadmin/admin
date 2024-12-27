@@ -26,11 +26,13 @@ func (obj ID) Fields() []ent.Field {
 
 func (ID) FK(name string) ent.Field {
 	return field.Int(name).
+		Comment(i18n.Text("foreign_key:comment")).
 		Positive()
 }
 
 func (ID) PK(name string) ent.Field {
 	return field.Int(name).
+		Comment(i18n.Text("primary_key:comment")).
 		Positive().
 		Unique().
 		Immutable()
@@ -38,6 +40,7 @@ func (ID) PK(name string) ent.Field {
 
 func (ID) OP(name string) ent.Field {
 	return field.Int(name).
+		Comment(i18n.Text("optional_key:comment")).
 		Positive().
 		Optional()
 }

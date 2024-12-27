@@ -76,6 +76,8 @@ func (Menu) Indexes() []ent.Index {
 func (Menu) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_menus"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("menu:table:comment")),
 	}
 }
 

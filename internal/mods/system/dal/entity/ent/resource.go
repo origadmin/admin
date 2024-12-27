@@ -13,14 +13,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Resource is the model entity for the Resource schema.
+// resource:table:comment
 type Resource struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID string `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
+	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
+	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// Method holds the value of the "method" field.
 	Method string `json:"method,omitempty"`
@@ -28,7 +29,7 @@ type Resource struct {
 	Operation string `json:"operation,omitempty"`
 	// Path holds the value of the "path" field.
 	Path string `json:"path,omitempty"`
-	// MenuID holds the value of the "menu_id" field.
+	// optional_key:comment
 	MenuID string `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.

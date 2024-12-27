@@ -17,10 +17,11 @@ import (
 type RoleMenu struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID int `json:"id,omitempty"`
-	// RoleID holds the value of the "role_id" field.
+	// foreign_key:comment
 	RoleID string `json:"role_id,omitempty"`
-	// MenuID holds the value of the "menu_id" field.
+	// foreign_key:comment
 	MenuID string `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleMenuQuery when eager-loading is set.

@@ -7,10 +7,13 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // Position holds the schema definition for the Position entity.
@@ -30,6 +33,15 @@ func (Position) Fields() []ent.Field {
 // Mixin of the Position.
 func (Position) Mixin() []ent.Mixin {
 	return mixin.ModelMixin
+}
+
+// Annotations of the Position.
+func (Position) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_positions"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("position:table:comment")),
+	}
 }
 
 // Edges of the Position.

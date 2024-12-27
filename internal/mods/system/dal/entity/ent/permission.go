@@ -13,14 +13,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Permission is the model entity for the Permission schema.
+// permission:table:comment
 type Permission struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID string `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
+	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
+	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// 权限名称
 	Name string `json:"name,omitempty"`

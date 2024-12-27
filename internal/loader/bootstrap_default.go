@@ -117,10 +117,16 @@ func DefaultServiceWebsocket() *configv1.WebSocket {
 func DefaultData() *configv1.Data {
 	return &configv1.Data{
 		Database: &configv1.Data_Database{
-			Debug:                 false,
-			Driver:                "sqlite3",
-			Source:                "data/admin.db",
-			Migrate:               true,
+			Debug:   false,
+			Dialect: "sqlite3",
+			Source:  "data/admin.db",
+			Migration: &configv1.Migration{
+				Enabled: false,
+				Path:    "",
+				Names:   nil,
+				Version: "",
+				Mode:    "",
+			},
 			EnableTrace:           false,
 			EnableMetrics:         false,
 			MaxIdleConnections:    0,

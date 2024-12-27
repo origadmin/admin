@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // 角色类型常量
@@ -64,6 +65,8 @@ func (Role) Indexes() []ent.Index {
 func (Role) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_roles"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("role:table:comment")),
 	}
 }
 

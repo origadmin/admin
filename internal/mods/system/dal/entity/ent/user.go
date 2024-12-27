@@ -12,20 +12,21 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// User is the model entity for the User schema.
+// user:table:comment
 type User struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID string `json:"id,omitempty"`
-	// CreateAuthor holds the value of the "create_author" field.
+	// create_author:comment
 	CreateAuthor string `json:"create_author,omitempty"`
-	// UpdateAuthor holds the value of the "update_author" field.
+	// update_author:comment
 	UpdateAuthor string `json:"update_author,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
+	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
+	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// UUID holds the value of the "uuid" field.
+	// foreign_key:comment
 	UUID string `json:"uuid,omitempty"`
 	// AllowedIP holds the value of the "allowed_ip" field.
 	AllowedIP string `json:"allowed_ip,omitempty"`
@@ -55,11 +56,11 @@ type User struct {
 	Status int8 `json:"status,omitempty"`
 	// LastLoginIP holds the value of the "last_login_ip" field.
 	LastLoginIP string `json:"last_login_ip,omitempty"`
-	// LastLoginTime holds the value of the "last_login_time" field.
+	// user:field:last_login_time
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
-	// SanctionDate holds the value of the "sanction_date" field.
+	// user:field:sanction_date
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
-	// ManagerID holds the value of the "manager_id" field.
+	// foreign_key:comment
 	ManagerID string `json:"manager_id,omitempty"`
 	// Manager holds the value of the "manager" field.
 	Manager string `json:"manager,omitempty"`

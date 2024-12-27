@@ -12,6 +12,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/mixin"
+
+	"origadmin/application/admin/helpers/i18n"
 )
 
 type Ider interface {
@@ -29,8 +31,12 @@ type Audit struct {
 // Fields of the mixin.
 func (Audit) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("create_author").Default(""),
-		field.String("update_author").Default(""),
+		field.String("create_author").
+			Comment(i18n.Text("create_author:comment")).
+			Default(""),
+		field.String("update_author").
+			Comment(i18n.Text("update_author:comment")).
+			Default(""),
 	}
 }
 
@@ -51,9 +57,11 @@ type ManagerSchema struct {
 func (ManagerSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("manager_id").
+			Comment(i18n.Text("manager_id:comment")).
 			MaxLen(36).
 			Optional(),
 		field.String("manager_name").
+			Comment(i18n.Text("manager_name:comment")).
 			Default(""),
 	}
 }
@@ -95,6 +103,7 @@ type CreateSchema struct {
 func (CreateSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("create_time").
+			Comment(i18n.Text("create_time:comment")).
 			Default(time.Now).
 			Immutable(),
 	}
@@ -116,6 +125,7 @@ type UpdateSchema struct {
 func (UpdateSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("update_time").
+			Comment(i18n.Text("update_time:comment")).
 			Default(time.Now).
 			UpdateDefault(time.Now),
 	}
@@ -137,6 +147,7 @@ type DeleteSchema struct {
 func (DeleteSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("delete_time").
+			Comment(i18n.Text("delete_time:comment")).
 			Optional().
 			Nillable(),
 	}

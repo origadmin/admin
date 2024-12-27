@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 const (
@@ -50,8 +51,8 @@ func (User) Fields() []ent.Field {
 		field.String("token").MaxLen(512).Default(""),   // Token for login
 		field.Int8("status").Default(UserStatusActivated),
 		field.String("last_login_ip").MaxLen(32).Default(""),
-		mixin.FieldTime("last_login_time"),
-		mixin.FieldTime("sanction_date"),
+		mixin.Time("last_login_time", i18n.Text("user:field:last_login_time")),
+		mixin.Time("sanction_date", i18n.Text("user:field:sanction_date")),
 		mixin.FK("manager_id"),              // 管理员ID
 		field.String("manager").Default(""), // 管理员
 	}
@@ -76,6 +77,8 @@ func (User) Indexes() []ent.Index {
 func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_users"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("user:table:comment")),
 	}
 }
 

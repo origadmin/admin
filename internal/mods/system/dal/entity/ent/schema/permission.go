@@ -7,10 +7,13 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // Permission holds the schema definition for the Permission entity.
@@ -91,6 +94,15 @@ func (Permission) Fields() []ent.Field {
 		field.JSON("scope_depts", []string{}).
 			Optional().
 			Comment("自定义数据范围的部门ID列表，当scope为custom时有效"),
+	}
+}
+
+// Annotations of the Permission.
+func (Permission) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_permissions"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("permission:table:comment")),
 	}
 }
 

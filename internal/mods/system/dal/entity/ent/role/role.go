@@ -64,7 +64,7 @@ const (
 	PermissionsTable = "role_permissions"
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
-	PermissionsInverseTable = "permissions"
+	PermissionsInverseTable = "sys_permissions"
 	// DepartmentsTable is the table that holds the departments relation/edge. The primary key declared below.
 	DepartmentsTable = "sys_department_roles"
 	// DepartmentsInverseTable is the table name for the Department entity.

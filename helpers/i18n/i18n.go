@@ -99,6 +99,7 @@ func LocaleText(locale string, key string) string {
 	// Chinese is used by default
 	if translations, ok := KeyTextMap[locale]; ok {
 		if text, exists := translations[key]; exists {
+			//fmt.Println("locale:", locale, "key:", key, "text:", text)
 			return text
 		}
 	}
@@ -106,13 +107,16 @@ func LocaleText(locale string, key string) string {
 	// the language is the default language,
 	// the key itself is returned
 	if locale == DefaultLanguage {
+		//fmt.Println("locale:", locale, "key:", key, "text:", "default")
 		return key
 	}
 	if translations, ok := KeyTextMap[DefaultLanguage]; ok {
 		if text, exists := translations[key]; exists {
+			//fmt.Println("locale:", "default", "key:", key, "text:", text)
 			return text
 		}
 	}
+	//fmt.Println("locale:", "default", "key:", key, "text:", "default")
 	return key
 }
 

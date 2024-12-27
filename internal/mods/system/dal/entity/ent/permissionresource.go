@@ -17,10 +17,11 @@ import (
 type PermissionResource struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID int `json:"id,omitempty"`
-	// PermissionID holds the value of the "permission_id" field.
+	// foreign_key:comment
 	PermissionID string `json:"permission_id,omitempty"`
-	// ResourceID holds the value of the "resource_id" field.
+	// foreign_key:comment
 	ResourceID string `json:"resource_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionResourceQuery when eager-loading is set.

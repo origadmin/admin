@@ -45,7 +45,7 @@ const (
 	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
 	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the permission in the database.
-	Table = "permissions"
+	Table = "sys_permissions"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
 	RolesTable = "role_permissions"
 	// RolesInverseTable is the table name for the Role entity.

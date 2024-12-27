@@ -15,7 +15,7 @@ import (
 )
 
 type Option struct {
-	cache             security.TokenCacheService
+	cache             security.TokenService
 	schemeType        security.Scheme
 	signingMethod     jwtv5.SigningMethod
 	keyFunc           func(token *jwtv5.Token) (any, error)
@@ -145,7 +145,7 @@ func WithExtraClaims(extras map[string]string) Setting {
 }
 
 // WithCache returns a Setting function that sets the token cache service for an Authenticator.
-func WithCache(cache security.TokenCacheService) Setting {
+func WithCache(cache security.TokenService) Setting {
 	// Return a function that sets the token cache service for an Authenticator.
 	return func(option *Option) {
 		// Set the token cache service for the Authenticator.

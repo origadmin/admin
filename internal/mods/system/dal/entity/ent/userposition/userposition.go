@@ -33,7 +33,7 @@ const (
 	PositionTable = "sys_user_positions"
 	// PositionInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionInverseTable = "positions"
+	PositionInverseTable = "sys_positions"
 	// PositionColumn is the table column denoting the position relation/edge.
 	PositionColumn = "position_id"
 )

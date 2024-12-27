@@ -32,7 +32,7 @@ const (
 type Authenticator struct {
 	*Option
 	//// cache is the token cache service.
-	cache security.TokenCacheService
+	cache security.TokenService
 	//issuer   string
 	//audience []string
 }

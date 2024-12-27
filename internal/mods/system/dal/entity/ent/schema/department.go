@@ -55,6 +55,10 @@ func (Department) Indexes() []ent.Index {
 func (Department) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_departments"),
+		// Adding this annotation to the schema enables
+		// comments for the table and all its fields.
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("department:table:comment")),
 	}
 }
 

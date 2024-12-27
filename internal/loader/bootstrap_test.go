@@ -167,7 +167,7 @@ func TestData_InitFromFile(t *testing.T) {
 		{
 			name: "test",
 			fields: fields{
-				Bootstrap: DefaultBootstrap(),
+				//Bootstrap: DefaultBootstrap(),
 			},
 			args: args{
 				filename: "../../resources/data/menu.json",
@@ -175,8 +175,23 @@ func TestData_InitFromFile(t *testing.T) {
 			wantErr: false,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			if tt.fields.Bootstrap == nil {
+				abs, err := filepath.Abs("../../resources/configs/system/bootstrap.toml")
+				if err != nil {
+					return
+				}
+				log.Infof("abs: %s", abs)
+				bs, err := LoadFileBootstrap("../../resources/configs/system/bootstrap.toml")
+				if err != nil {
+					t.Fatal(err)
+					return
+				}
+				tt.fields.Bootstrap = bs
+			}
+
 			d, cleanup, err := dal.NewData(tt.fields.Bootstrap, log.DefaultLogger)
 			if err != nil {
 				t.Errorf("NewData() error = %v", err)

@@ -45,7 +45,7 @@ const (
 	PermissionTable = "sys_permission_resources"
 	// PermissionInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
-	PermissionInverseTable = "permissions"
+	PermissionInverseTable = "sys_permissions"
 	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
 	PermissionResourcesTable = "sys_permission_resources"
 	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.

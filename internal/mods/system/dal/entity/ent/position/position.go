@@ -29,9 +29,9 @@ const (
 	// EdgeUserPositions holds the string denoting the user_positions edge name in mutations.
 	EdgeUserPositions = "user_positions"
 	// Table holds the table name of the position in the database.
-	Table = "positions"
+	Table = "sys_positions"
 	// DepartmentTable is the table that holds the department relation/edge.
-	DepartmentTable = "positions"
+	DepartmentTable = "sys_positions"
 	// DepartmentInverseTable is the table name for the Department entity.
 	// It exists in this package in order to avoid circular dependency with the "department" package.
 	DepartmentInverseTable = "sys_departments"

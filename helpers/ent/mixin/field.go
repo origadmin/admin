@@ -11,6 +11,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
+
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // ZeroTime represents the zero value for time.Time.
@@ -19,6 +21,10 @@ var _id = UUID{}
 
 func Comment(key string) Ider {
 	return _id.Comment(key)
+}
+
+func I18nComment(key string) Ider {
+	return _id.Comment(i18n.Text(key))
 }
 
 func PK(name string, comment ...string) ent.Field {
@@ -40,6 +46,24 @@ func OP(name string, comment ...string) ent.Field {
 		return _id.OP(name)
 	}
 	return _id.Comment(comment[0]).OP(name)
+}
+
+// Time returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
+func Time(name string, comment ...string) ent.Field {
+	if len(comment) == 0 {
+		return FieldTime(name)
+	}
+	// Create a time field with the given name and a default value of ZeroTime.
+	return field.Time(name).
+		Comment(comment[0]).
+		// Set the default value of the field to ZeroTime.
+		Default(func() time.Time {
+			return ZeroTime
+		}).
+		// Set the schema type of the field to "datetime" for MySQL dialect.
+		SchemaType(map[string]string{
+			dialect.MySQL: "datetime",
+		})
 }
 
 // FieldIndex returns a field with index
@@ -78,7 +102,6 @@ func FieldUUIDOP(name string) ent.Field {
 
 // FieldTime returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
 func FieldTime(name string) ent.Field {
-	// Create a time field with the given name and a default value of ZeroTime.
 	return field.Time(name).
 		// Set the default value of the field to ZeroTime.
 		Default(func() time.Time {

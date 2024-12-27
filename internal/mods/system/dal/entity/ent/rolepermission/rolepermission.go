@@ -33,7 +33,7 @@ const (
 	PermissionTable = "role_permissions"
 	// PermissionInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
-	PermissionInverseTable = "permissions"
+	PermissionInverseTable = "sys_permissions"
 	// PermissionColumn is the table column denoting the permission relation/edge.
 	PermissionColumn = "permission_id"
 )

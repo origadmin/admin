@@ -14,10 +14,11 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
+	"github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
-	"github.com/origadmin/toolkits/database"
 	"github.com/origadmin/toolkits/idgen"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -41,9 +42,9 @@ type Data struct {
 var ProviderSet = wire.NewSet(NewData, NewAuthRepo, NewCurrentRepo, NewMenuRepo, NewRoleRepo, NewUserRepo)
 
 // NewTrans returns a transaction wit data
-func NewTrans(data *Data) database.Trans {
-	return data
-}
+//func NewTrans(data *Data) database.Trans {
+//	return data
+//}
 
 const FKSuffix = "_fk=1"
 
@@ -76,13 +77,18 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
 	}
-	cfg.Source = FixSource(cfg.GetSource())
-	drv, err := sql.Open(
-		cfg.Driver,
-		cfg.Source,
-	)
+	if cfg.Dialect == "sqlite3" {
+		cfg.Source = FixSource(cfg.GetSource())
+	}
+	sourceConfig, err := mysql.ParseDSN(cfg.Source)
 	if err != nil {
-		log.Errorw("failed opening connection to sqlite", "error", err)
+		return nil, nil, err
+	}
+	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", sourceConfig.Addr)
+	drv, err := database.Open(cfg)
+	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
+	if err != nil {
+		log.Errorw("msg", "failed opening connection to database", "error", err)
 		return nil, nil, err
 	}
 	//err = drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
@@ -90,14 +96,15 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	//	return nil, nil, err
 	//}
 	// Run the auto migration tool.
-	client := ent.NewClient(ent.Driver(drv))
-	if cfg.GetMigrate() {
+
+	client := ent.NewClient(ent.Driver(sql.OpenDB(cfg.Dialect, drv)))
+	if true || cfg.GetMigration().GetEnabled() {
 		if err := client.Schema.Create(
 			context.Background(),
 			schema.WithDropIndex(true),
 			schema.WithDropColumn(true),
 			schema.WithForeignKeys(false)); err != nil {
-			log.Errorw("failed creating schema resources", "error", err)
+			log.Errorw("msg", "failed creating schema resources", "error", err)
 			return nil, nil, err
 		}
 	}
@@ -105,7 +112,6 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	d := &Data{
 		Database: ent.NewDatabase(client),
 	}
-	cfg.GetSource()
 	return d, func() {
 		log.Info("closing the data resources")
 		if err := drv.Close(); err != nil {

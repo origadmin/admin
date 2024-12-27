@@ -33,11 +33,13 @@ func (obj UUID) Fields() []ent.Field {
 
 func (obj UUID) FK(name string) ent.Field {
 	return field.String(name).
+		Comment(i18n.Text("foreign_key:comment")).
 		MaxLen(36)
 }
 
 func (UUID) PK(name string) ent.Field {
 	return field.String(name).
+		Comment(i18n.Text("primary_key:comment")).
 		MaxLen(36).
 		Unique().
 		Immutable()
@@ -45,6 +47,7 @@ func (UUID) PK(name string) ent.Field {
 
 func (UUID) OP(name string) ent.Field {
 	return field.String(name).
+		Comment(i18n.Text("optional_key:comment")).
 		MaxLen(36).
 		Optional()
 }

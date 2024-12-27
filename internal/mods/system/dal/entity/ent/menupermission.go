@@ -17,10 +17,11 @@ import (
 type MenuPermission struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID int `json:"id,omitempty"`
-	// MenuID holds the value of the "menu_id" field.
+	// foreign_key:comment
 	MenuID string `json:"menu_id,omitempty"`
-	// PermissionID holds the value of the "permission_id" field.
+	// foreign_key:comment
 	PermissionID string `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuPermissionQuery when eager-loading is set.

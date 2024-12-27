@@ -82,7 +82,7 @@ const (
 	PermissionsTable = "sys_menu_permissions"
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
-	PermissionsInverseTable = "permissions"
+	PermissionsInverseTable = "sys_permissions"
 	// RoleMenusTable is the table that holds the role_menus relation/edge.
 	RoleMenusTable = "sys_role_menus"
 	// RoleMenusInverseTable is the table name for the RoleMenu entity.

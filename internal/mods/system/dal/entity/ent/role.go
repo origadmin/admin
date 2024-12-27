@@ -12,14 +12,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Role is the model entity for the Role schema.
+// role:table:comment
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
+	// primary_key:comment
 	ID string `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
+	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
+	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// Keyword holds the value of the "keyword" field.
 	Keyword string `json:"keyword,omitempty"`

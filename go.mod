@@ -18,17 +18,16 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/gnostic v0.7.0
 	github.com/google/wire v0.6.0
-	github.com/origadmin/contrib/consul v0.0.18
-	github.com/origadmin/contrib/database v0.0.18
-	github.com/origadmin/contrib/i18n v0.0.24
-	github.com/origadmin/contrib/replacer v0.0.18
-	github.com/origadmin/contrib/transport/gins v0.0.18
-	github.com/origadmin/runtime v0.1.38
+	github.com/origadmin/contrib/consul v0.0.26
+	github.com/origadmin/contrib/database v0.0.26
+	github.com/origadmin/contrib/replacer v0.0.26
+	github.com/origadmin/contrib/transport/gins v0.0.26
+	github.com/origadmin/runtime v0.1.39
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.1.24
+	github.com/origadmin/toolkits v0.1.45
 	github.com/origadmin/toolkits/codec v0.0.88
-	github.com/origadmin/toolkits/errors v0.0.36
-	github.com/origadmin/toolkits/idgen v0.0.21
+	github.com/origadmin/toolkits/errors v0.0.70
+	github.com/origadmin/toolkits/idgen v0.0.81
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/net v0.33.0
@@ -78,7 +77,6 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/goccy/go-json v0.10.4 // indirect
-	github.com/godcong/go-locale/v2 v2.0.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/google/cel-go v0.22.1 // indirect

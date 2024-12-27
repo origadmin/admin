@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // Resource holds the schema definition for the Resource domain.
@@ -47,6 +48,8 @@ func (Resource) Indexes() []ent.Index {
 func (Resource) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_resources"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("resource:table:comment")),
 	}
 }
 

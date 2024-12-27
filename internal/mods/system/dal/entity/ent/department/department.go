@@ -56,10 +56,10 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "sys_users"
 	// PositionsTable is the table that holds the positions relation/edge.
-	PositionsTable = "positions"
+	PositionsTable = "sys_positions"
 	// PositionsInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
-	PositionsInverseTable = "positions"
+	PositionsInverseTable = "sys_positions"
 	// PositionsColumn is the table column denoting the positions relation/edge.
 	PositionsColumn = "department_id"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
