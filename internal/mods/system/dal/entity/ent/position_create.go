@@ -63,14 +63,14 @@ func (pc *PositionCreate) SetDescription(s string) *PositionCreate {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (pc *PositionCreate) SetDepartmentID(s string) *PositionCreate {
-	pc.mutation.SetDepartmentID(s)
+func (pc *PositionCreate) SetDepartmentID(i int64) *PositionCreate {
+	pc.mutation.SetDepartmentID(i)
 	return pc
 }
 
 // SetID sets the "id" field.
-func (pc *PositionCreate) SetID(s string) *PositionCreate {
-	pc.mutation.SetID(s)
+func (pc *PositionCreate) SetID(i int64) *PositionCreate {
+	pc.mutation.SetID(i)
 	return pc
 }
 
@@ -80,14 +80,14 @@ func (pc *PositionCreate) SetDepartment(d *Department) *PositionCreate {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (pc *PositionCreate) AddUserPositionIDs(ids ...int) *PositionCreate {
+func (pc *PositionCreate) AddUserPositionIDs(ids ...int64) *PositionCreate {
 	pc.mutation.AddUserPositionIDs(ids...)
 	return pc
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (pc *PositionCreate) AddUserPositions(u ...*UserPosition) *PositionCreate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -193,12 +193,9 @@ func (pc *PositionCreate) sqlSave(ctx context.Context) (*Position, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Position.ID type: %T", _spec.ID.Value)
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
 	}
 	pc.mutation.id = &_node.ID
 	pc.mutation.done = true
@@ -208,7 +205,7 @@ func (pc *PositionCreate) sqlSave(ctx context.Context) (*Position, error) {
 func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Position{config: pc.config}
-		_spec = sqlgraph.NewCreateSpec(position.Table, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
+		_spec = sqlgraph.NewCreateSpec(position.Table, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64))
 	)
 	if id, ok := pc.mutation.ID(); ok {
 		_node.ID = id
@@ -238,7 +235,7 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -255,7 +252,7 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -331,6 +328,10 @@ func (pcb *PositionCreateBulk) Save(ctx context.Context) ([]*Position, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int64(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

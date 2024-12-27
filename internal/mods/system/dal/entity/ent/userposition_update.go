@@ -31,29 +31,29 @@ func (upu *UserPositionUpdate) Where(ps ...predicate.UserPosition) *UserPosition
 }
 
 // SetUserID sets the "user_id" field.
-func (upu *UserPositionUpdate) SetUserID(s string) *UserPositionUpdate {
-	upu.mutation.SetUserID(s)
+func (upu *UserPositionUpdate) SetUserID(i int64) *UserPositionUpdate {
+	upu.mutation.SetUserID(i)
 	return upu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (upu *UserPositionUpdate) SetNillableUserID(s *string) *UserPositionUpdate {
-	if s != nil {
-		upu.SetUserID(*s)
+func (upu *UserPositionUpdate) SetNillableUserID(i *int64) *UserPositionUpdate {
+	if i != nil {
+		upu.SetUserID(*i)
 	}
 	return upu
 }
 
 // SetPositionID sets the "position_id" field.
-func (upu *UserPositionUpdate) SetPositionID(s string) *UserPositionUpdate {
-	upu.mutation.SetPositionID(s)
+func (upu *UserPositionUpdate) SetPositionID(i int64) *UserPositionUpdate {
+	upu.mutation.SetPositionID(i)
 	return upu
 }
 
 // SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (upu *UserPositionUpdate) SetNillablePositionID(s *string) *UserPositionUpdate {
-	if s != nil {
-		upu.SetPositionID(*s)
+func (upu *UserPositionUpdate) SetNillablePositionID(i *int64) *UserPositionUpdate {
+	if i != nil {
+		upu.SetPositionID(*i)
 	}
 	return upu
 }
@@ -143,7 +143,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := upu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
 	if ps := upu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -159,7 +159,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{userposition.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{userposition.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{userposition.PositionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{userposition.PositionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type UserPositionUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (upuo *UserPositionUpdateOne) SetUserID(s string) *UserPositionUpdateOne {
-	upuo.mutation.SetUserID(s)
+func (upuo *UserPositionUpdateOne) SetUserID(i int64) *UserPositionUpdateOne {
+	upuo.mutation.SetUserID(i)
 	return upuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (upuo *UserPositionUpdateOne) SetNillableUserID(s *string) *UserPositionUpdateOne {
-	if s != nil {
-		upuo.SetUserID(*s)
+func (upuo *UserPositionUpdateOne) SetNillableUserID(i *int64) *UserPositionUpdateOne {
+	if i != nil {
+		upuo.SetUserID(*i)
 	}
 	return upuo
 }
 
 // SetPositionID sets the "position_id" field.
-func (upuo *UserPositionUpdateOne) SetPositionID(s string) *UserPositionUpdateOne {
-	upuo.mutation.SetPositionID(s)
+func (upuo *UserPositionUpdateOne) SetPositionID(i int64) *UserPositionUpdateOne {
+	upuo.mutation.SetPositionID(i)
 	return upuo
 }
 
 // SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (upuo *UserPositionUpdateOne) SetNillablePositionID(s *string) *UserPositionUpdateOne {
-	if s != nil {
-		upuo.SetPositionID(*s)
+func (upuo *UserPositionUpdateOne) SetNillablePositionID(i *int64) *UserPositionUpdateOne {
+	if i != nil {
+		upuo.SetPositionID(*i)
 	}
 	return upuo
 }
@@ -357,7 +357,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 	if err := upuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
 	id, ok := upuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserPosition.id" for update`)}
@@ -390,7 +390,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 			Columns: []string{userposition.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 			Columns: []string{userposition.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 			Columns: []string{userposition.PositionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 			Columns: []string{userposition.PositionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

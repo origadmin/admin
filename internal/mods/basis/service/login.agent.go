@@ -7,7 +7,6 @@ package service
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/log"
@@ -35,9 +34,9 @@ func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.Re
 		log.Errorf("Register error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -48,9 +47,9 @@ func (s LoginAPIAgentService) CaptchaResource(context transhttp.Context, request
 		log.Errorf("CaptchaResource error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -61,9 +60,9 @@ func (s LoginAPIAgentService) CaptchaResources(context transhttp.Context, reques
 		log.Errorf("CaptchaResources error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -76,7 +75,8 @@ func (s LoginAPIAgentService) CaptchaID(context transhttp.Context, request *pb.C
 		log.Errorf("CaptchaImage error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+
+	s.JSON(context, http.StatusOK, &resp.StringResult{
 		Success: true,
 		Data:    response.Data,
 	})
@@ -114,7 +114,7 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 //		log.Errorf("CurrentMenus error: %v", err)
 //		return nil, err
 //	}
-//	s.JSON(context, http.StatusOK, &resp.Result{
+//	s.JSON(context, http.StatusOK, &resp.Data{
 //		Success: true,
 //		Data:    response,
 //	})
@@ -127,7 +127,7 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 //		log.Errorf("CurrentUser error: %v", err)
 //		return nil, err
 //	}
-//	s.JSON(context, http.StatusOK, &resp.Result{
+//	s.JSON(context, http.StatusOK, &resp.Data{
 //		Success: true,
 //		Data:    response,
 //	})
@@ -140,14 +140,9 @@ func (s LoginAPIAgentService) TokenRefresh(context transhttp.Context, request *p
 		log.Errorf("Refresh error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data: gin.H{
-			"user_id":       response.Token.GetUserId(),
-			"access_token":  response.Token.GetAccessToken(),
-			"refresh_token": response.Token.GetRefreshToken(),
-			"expires_at":    response.Token.GetExpirationTime(),
-		},
+		Data:    resp.Any2AnyPB(resp.FromToken(response.Token)),
 	})
 	return nil, nil
 }
@@ -158,14 +153,11 @@ func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.Login
 		log.Errorf("Login error: %v", err)
 		return nil, err
 	}
+	token := resp.FromToken(response.Token)
+	log.Debugf("Login: Token:%+v", token)
 	s.JSON(context, http.StatusOK, &resp.Result{
 		Success: true,
-		Data: gin.H{
-			"user_id":       response.Token.GetUserId(),
-			"access_token":  response.Token.GetAccessToken(),
-			"refresh_token": response.Token.GetRefreshToken(),
-			"expires_at":    response.Token.GetExpirationTime(),
-		},
+		Data:    token,
 	})
 	return nil, nil
 }
@@ -176,9 +168,9 @@ func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.Logo
 		log.Errorf("Logout error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }

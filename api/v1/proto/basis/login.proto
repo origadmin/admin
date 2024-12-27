@@ -103,7 +103,7 @@ message LoginResponse {
 }
 
 message CurrentUserRequestQuery {
-  string user_id = 1 [json_name = "user_id"];
+  int64 user_id = 1 [json_name = "user_id"];
 }
 
 message CurrentUserRequest {
@@ -143,7 +143,7 @@ message CaptchaImageResponse {
 }
 
 message CurrentMenusRequest {
-  string user_id = 1 [json_name = "user_id"];
+  int64 user_id = 1 [json_name = "user_id"];
   google.protobuf.Any data = 2 [json_name = "data"];
 }
 message CurrentMenusResponse {
@@ -152,7 +152,7 @@ message CurrentMenusResponse {
 }
 
 message CaptchaResourcesRequest {
-  string id = 1 [json_name = "id"];
+  int64 id = 1 [json_name = "id"];
 }
 
 message CaptchaResourcesResponse {

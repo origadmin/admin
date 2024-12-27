@@ -22,19 +22,19 @@ type DepartmentRoleCreate struct {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (drc *DepartmentRoleCreate) SetDepartmentID(s string) *DepartmentRoleCreate {
-	drc.mutation.SetDepartmentID(s)
+func (drc *DepartmentRoleCreate) SetDepartmentID(i int64) *DepartmentRoleCreate {
+	drc.mutation.SetDepartmentID(i)
 	return drc
 }
 
 // SetRoleID sets the "role_id" field.
-func (drc *DepartmentRoleCreate) SetRoleID(s string) *DepartmentRoleCreate {
-	drc.mutation.SetRoleID(s)
+func (drc *DepartmentRoleCreate) SetRoleID(i int64) *DepartmentRoleCreate {
+	drc.mutation.SetRoleID(i)
 	return drc
 }
 
 // SetID sets the "id" field.
-func (drc *DepartmentRoleCreate) SetID(i int) *DepartmentRoleCreate {
+func (drc *DepartmentRoleCreate) SetID(i int64) *DepartmentRoleCreate {
 	drc.mutation.SetID(i)
 	return drc
 }
@@ -126,7 +126,7 @@ func (drc *DepartmentRoleCreate) sqlSave(ctx context.Context) (*DepartmentRole, 
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	drc.mutation.id = &_node.ID
 	drc.mutation.done = true
@@ -136,7 +136,7 @@ func (drc *DepartmentRoleCreate) sqlSave(ctx context.Context) (*DepartmentRole, 
 func (drc *DepartmentRoleCreate) createSpec() (*DepartmentRole, *sqlgraph.CreateSpec) {
 	var (
 		_node = &DepartmentRole{config: drc.config}
-		_spec = sqlgraph.NewCreateSpec(departmentrole.Table, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(departmentrole.Table, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64))
 	)
 	if id, ok := drc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (drc *DepartmentRoleCreate) createSpec() (*DepartmentRole, *sqlgraph.Create
 			Columns: []string{departmentrole.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (drc *DepartmentRoleCreate) createSpec() (*DepartmentRole, *sqlgraph.Create
 			Columns: []string{departmentrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (drcb *DepartmentRoleCreateBulk) Save(ctx context.Context) ([]*DepartmentRo
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

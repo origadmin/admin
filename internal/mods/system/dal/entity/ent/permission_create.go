@@ -121,20 +121,20 @@ func (pc *PermissionCreate) SetScopeDepts(s []string) *PermissionCreate {
 }
 
 // SetID sets the "id" field.
-func (pc *PermissionCreate) SetID(s string) *PermissionCreate {
-	pc.mutation.SetID(s)
+func (pc *PermissionCreate) SetID(i int64) *PermissionCreate {
+	pc.mutation.SetID(i)
 	return pc
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (pc *PermissionCreate) AddRoleIDs(ids ...string) *PermissionCreate {
+func (pc *PermissionCreate) AddRoleIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddRoleIDs(ids...)
 	return pc
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (pc *PermissionCreate) AddRoles(r ...*Role) *PermissionCreate {
-	ids := make([]string, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -142,14 +142,14 @@ func (pc *PermissionCreate) AddRoles(r ...*Role) *PermissionCreate {
 }
 
 // AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
-func (pc *PermissionCreate) AddMenuIDs(ids ...string) *PermissionCreate {
+func (pc *PermissionCreate) AddMenuIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddMenuIDs(ids...)
 	return pc
 }
 
 // AddMenus adds the "menus" edges to the Menu entity.
 func (pc *PermissionCreate) AddMenus(m ...*Menu) *PermissionCreate {
-	ids := make([]string, len(m))
+	ids := make([]int64, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -157,14 +157,14 @@ func (pc *PermissionCreate) AddMenus(m ...*Menu) *PermissionCreate {
 }
 
 // AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
-func (pc *PermissionCreate) AddResourceIDs(ids ...string) *PermissionCreate {
+func (pc *PermissionCreate) AddResourceIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddResourceIDs(ids...)
 	return pc
 }
 
 // AddResources adds the "resources" edges to the Resource entity.
 func (pc *PermissionCreate) AddResources(r ...*Resource) *PermissionCreate {
-	ids := make([]string, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -172,14 +172,14 @@ func (pc *PermissionCreate) AddResources(r ...*Resource) *PermissionCreate {
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
-func (pc *PermissionCreate) AddRolePermissionIDs(ids ...int) *PermissionCreate {
+func (pc *PermissionCreate) AddRolePermissionIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddRolePermissionIDs(ids...)
 	return pc
 }
 
 // AddRolePermissions adds the "role_permissions" edges to the RolePermission entity.
 func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *PermissionCreate {
-	ids := make([]int, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -187,14 +187,14 @@ func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *Permission
 }
 
 // AddMenuPermissionIDs adds the "menu_permissions" edge to the MenuPermission entity by IDs.
-func (pc *PermissionCreate) AddMenuPermissionIDs(ids ...int) *PermissionCreate {
+func (pc *PermissionCreate) AddMenuPermissionIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddMenuPermissionIDs(ids...)
 	return pc
 }
 
 // AddMenuPermissions adds the "menu_permissions" edges to the MenuPermission entity.
 func (pc *PermissionCreate) AddMenuPermissions(m ...*MenuPermission) *PermissionCreate {
-	ids := make([]int, len(m))
+	ids := make([]int64, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -202,14 +202,14 @@ func (pc *PermissionCreate) AddMenuPermissions(m ...*MenuPermission) *Permission
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (pc *PermissionCreate) AddPermissionResourceIDs(ids ...int) *PermissionCreate {
+func (pc *PermissionCreate) AddPermissionResourceIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddPermissionResourceIDs(ids...)
 	return pc
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
 func (pc *PermissionCreate) AddPermissionResources(p ...*PermissionResource) *PermissionCreate {
-	ids := make([]int, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -331,12 +331,9 @@ func (pc *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Permission.ID type: %T", _spec.ID.Value)
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
 	}
 	pc.mutation.id = &_node.ID
 	pc.mutation.done = true
@@ -346,7 +343,7 @@ func (pc *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Permission{config: pc.config}
-		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString))
+		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64))
 	)
 	if id, ok := pc.mutation.ID(); ok {
 		_node.ID = id
@@ -396,7 +393,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: permission.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -412,7 +409,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: permission.MenusPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -428,7 +425,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: permission.ResourcesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -444,7 +441,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.RolePermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -460,7 +457,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.MenuPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -476,7 +473,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -552,6 +549,10 @@ func (pcb *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int64(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

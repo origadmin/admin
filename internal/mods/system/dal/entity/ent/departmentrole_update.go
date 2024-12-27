@@ -31,29 +31,29 @@ func (dru *DepartmentRoleUpdate) Where(ps ...predicate.DepartmentRole) *Departme
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (dru *DepartmentRoleUpdate) SetDepartmentID(s string) *DepartmentRoleUpdate {
-	dru.mutation.SetDepartmentID(s)
+func (dru *DepartmentRoleUpdate) SetDepartmentID(i int64) *DepartmentRoleUpdate {
+	dru.mutation.SetDepartmentID(i)
 	return dru
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (dru *DepartmentRoleUpdate) SetNillableDepartmentID(s *string) *DepartmentRoleUpdate {
-	if s != nil {
-		dru.SetDepartmentID(*s)
+func (dru *DepartmentRoleUpdate) SetNillableDepartmentID(i *int64) *DepartmentRoleUpdate {
+	if i != nil {
+		dru.SetDepartmentID(*i)
 	}
 	return dru
 }
 
 // SetRoleID sets the "role_id" field.
-func (dru *DepartmentRoleUpdate) SetRoleID(s string) *DepartmentRoleUpdate {
-	dru.mutation.SetRoleID(s)
+func (dru *DepartmentRoleUpdate) SetRoleID(i int64) *DepartmentRoleUpdate {
+	dru.mutation.SetRoleID(i)
 	return dru
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (dru *DepartmentRoleUpdate) SetNillableRoleID(s *string) *DepartmentRoleUpdate {
-	if s != nil {
-		dru.SetRoleID(*s)
+func (dru *DepartmentRoleUpdate) SetNillableRoleID(i *int64) *DepartmentRoleUpdate {
+	if i != nil {
+		dru.SetRoleID(*i)
 	}
 	return dru
 }
@@ -143,7 +143,7 @@ func (dru *DepartmentRoleUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if err := dru.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(departmentrole.Table, departmentrole.Columns, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(departmentrole.Table, departmentrole.Columns, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64))
 	if ps := dru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -159,7 +159,7 @@ func (dru *DepartmentRoleUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{departmentrole.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (dru *DepartmentRoleUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{departmentrole.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (dru *DepartmentRoleUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{departmentrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (dru *DepartmentRoleUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{departmentrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type DepartmentRoleUpdateOne struct {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (druo *DepartmentRoleUpdateOne) SetDepartmentID(s string) *DepartmentRoleUpdateOne {
-	druo.mutation.SetDepartmentID(s)
+func (druo *DepartmentRoleUpdateOne) SetDepartmentID(i int64) *DepartmentRoleUpdateOne {
+	druo.mutation.SetDepartmentID(i)
 	return druo
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (druo *DepartmentRoleUpdateOne) SetNillableDepartmentID(s *string) *DepartmentRoleUpdateOne {
-	if s != nil {
-		druo.SetDepartmentID(*s)
+func (druo *DepartmentRoleUpdateOne) SetNillableDepartmentID(i *int64) *DepartmentRoleUpdateOne {
+	if i != nil {
+		druo.SetDepartmentID(*i)
 	}
 	return druo
 }
 
 // SetRoleID sets the "role_id" field.
-func (druo *DepartmentRoleUpdateOne) SetRoleID(s string) *DepartmentRoleUpdateOne {
-	druo.mutation.SetRoleID(s)
+func (druo *DepartmentRoleUpdateOne) SetRoleID(i int64) *DepartmentRoleUpdateOne {
+	druo.mutation.SetRoleID(i)
 	return druo
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (druo *DepartmentRoleUpdateOne) SetNillableRoleID(s *string) *DepartmentRoleUpdateOne {
-	if s != nil {
-		druo.SetRoleID(*s)
+func (druo *DepartmentRoleUpdateOne) SetNillableRoleID(i *int64) *DepartmentRoleUpdateOne {
+	if i != nil {
+		druo.SetRoleID(*i)
 	}
 	return druo
 }
@@ -357,7 +357,7 @@ func (druo *DepartmentRoleUpdateOne) sqlSave(ctx context.Context) (_node *Depart
 	if err := druo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(departmentrole.Table, departmentrole.Columns, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(departmentrole.Table, departmentrole.Columns, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64))
 	id, ok := druo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "DepartmentRole.id" for update`)}
@@ -390,7 +390,7 @@ func (druo *DepartmentRoleUpdateOne) sqlSave(ctx context.Context) (_node *Depart
 			Columns: []string{departmentrole.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (druo *DepartmentRoleUpdateOne) sqlSave(ctx context.Context) (_node *Depart
 			Columns: []string{departmentrole.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (druo *DepartmentRoleUpdateOne) sqlSave(ctx context.Context) (_node *Depart
 			Columns: []string{departmentrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (druo *DepartmentRoleUpdateOne) sqlSave(ctx context.Context) (_node *Depart
 			Columns: []string{departmentrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

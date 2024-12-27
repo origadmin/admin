@@ -17,7 +17,7 @@ type Department struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID string `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
@@ -35,7 +35,7 @@ type Department struct {
 	// Ancestor list (format: ,1,2,3,)
 	Ancestors string `json:"ancestors,omitempty"`
 	// Parent department ID
-	ParentID string `json:"parent_id,omitempty"`
+	ParentID int64 `json:"parent_id,omitempty"`
 	// Department level
 	Level int `json:"level,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -135,9 +135,9 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case department.FieldSequence, department.FieldStatus, department.FieldLevel:
+		case department.FieldID, department.FieldSequence, department.FieldStatus, department.FieldParentID, department.FieldLevel:
 			values[i] = new(sql.NullInt64)
-		case department.FieldID, department.FieldKeyword, department.FieldName, department.FieldDescription, department.FieldAncestors, department.FieldParentID:
+		case department.FieldKeyword, department.FieldName, department.FieldDescription, department.FieldAncestors:
 			values[i] = new(sql.NullString)
 		case department.FieldCreateTime, department.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -157,11 +157,11 @@ func (d *Department) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case department.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				d.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			d.ID = int64(value.Int64)
 		case department.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -211,10 +211,10 @@ func (d *Department) assignValues(columns []string, values []any) error {
 				d.Ancestors = value.String
 			}
 		case department.FieldParentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				d.ParentID = value.String
+				d.ParentID = value.Int64
 			}
 		case department.FieldLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -318,7 +318,7 @@ func (d *Department) String() string {
 	builder.WriteString(d.Ancestors)
 	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
-	builder.WriteString(d.ParentID)
+	builder.WriteString(fmt.Sprintf("%v", d.ParentID))
 	builder.WriteString(", ")
 	builder.WriteString("level=")
 	builder.WriteString(fmt.Sprintf("%v", d.Level))

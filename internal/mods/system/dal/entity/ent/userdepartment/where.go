@@ -10,188 +10,98 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.UserDepartment {
+func ID(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.UserDepartment {
+func IDEQ(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.UserDepartment {
+func IDNEQ(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.UserDepartment {
+func IDIn(ids ...int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.UserDepartment {
+func IDNotIn(ids ...int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.UserDepartment {
+func IDGT(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.UserDepartment {
+func IDGTE(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.UserDepartment {
+func IDLT(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.UserDepartment {
+func IDLTE(id int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldLTE(FieldID, id))
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v string) predicate.UserDepartment {
+func UserID(v int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldEQ(FieldUserID, v))
 }
 
 // DepartmentID applies equality check predicate on the "department_id" field. It's identical to DepartmentIDEQ.
-func DepartmentID(v string) predicate.UserDepartment {
+func DepartmentID(v int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldEQ(FieldDepartmentID, v))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v string) predicate.UserDepartment {
+func UserIDEQ(v int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v string) predicate.UserDepartment {
+func UserIDNEQ(v int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...string) predicate.UserDepartment {
+func UserIDIn(vs ...int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...string) predicate.UserDepartment {
+func UserIDNotIn(vs ...int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldNotIn(FieldUserID, vs...))
 }
 
-// UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldGT(FieldUserID, v))
-}
-
-// UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldGTE(FieldUserID, v))
-}
-
-// UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldLT(FieldUserID, v))
-}
-
-// UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldLTE(FieldUserID, v))
-}
-
-// UserIDContains applies the Contains predicate on the "user_id" field.
-func UserIDContains(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldContains(FieldUserID, v))
-}
-
-// UserIDHasPrefix applies the HasPrefix predicate on the "user_id" field.
-func UserIDHasPrefix(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldHasPrefix(FieldUserID, v))
-}
-
-// UserIDHasSuffix applies the HasSuffix predicate on the "user_id" field.
-func UserIDHasSuffix(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldHasSuffix(FieldUserID, v))
-}
-
-// UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
-func UserIDEqualFold(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldEqualFold(FieldUserID, v))
-}
-
-// UserIDContainsFold applies the ContainsFold predicate on the "user_id" field.
-func UserIDContainsFold(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldContainsFold(FieldUserID, v))
-}
-
 // DepartmentIDEQ applies the EQ predicate on the "department_id" field.
-func DepartmentIDEQ(v string) predicate.UserDepartment {
+func DepartmentIDEQ(v int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldEQ(FieldDepartmentID, v))
 }
 
 // DepartmentIDNEQ applies the NEQ predicate on the "department_id" field.
-func DepartmentIDNEQ(v string) predicate.UserDepartment {
+func DepartmentIDNEQ(v int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldNEQ(FieldDepartmentID, v))
 }
 
 // DepartmentIDIn applies the In predicate on the "department_id" field.
-func DepartmentIDIn(vs ...string) predicate.UserDepartment {
+func DepartmentIDIn(vs ...int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldIn(FieldDepartmentID, vs...))
 }
 
 // DepartmentIDNotIn applies the NotIn predicate on the "department_id" field.
-func DepartmentIDNotIn(vs ...string) predicate.UserDepartment {
+func DepartmentIDNotIn(vs ...int64) predicate.UserDepartment {
 	return predicate.UserDepartment(sql.FieldNotIn(FieldDepartmentID, vs...))
-}
-
-// DepartmentIDGT applies the GT predicate on the "department_id" field.
-func DepartmentIDGT(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldGT(FieldDepartmentID, v))
-}
-
-// DepartmentIDGTE applies the GTE predicate on the "department_id" field.
-func DepartmentIDGTE(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldGTE(FieldDepartmentID, v))
-}
-
-// DepartmentIDLT applies the LT predicate on the "department_id" field.
-func DepartmentIDLT(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldLT(FieldDepartmentID, v))
-}
-
-// DepartmentIDLTE applies the LTE predicate on the "department_id" field.
-func DepartmentIDLTE(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldLTE(FieldDepartmentID, v))
-}
-
-// DepartmentIDContains applies the Contains predicate on the "department_id" field.
-func DepartmentIDContains(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldContains(FieldDepartmentID, v))
-}
-
-// DepartmentIDHasPrefix applies the HasPrefix predicate on the "department_id" field.
-func DepartmentIDHasPrefix(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldHasPrefix(FieldDepartmentID, v))
-}
-
-// DepartmentIDHasSuffix applies the HasSuffix predicate on the "department_id" field.
-func DepartmentIDHasSuffix(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldHasSuffix(FieldDepartmentID, v))
-}
-
-// DepartmentIDEqualFold applies the EqualFold predicate on the "department_id" field.
-func DepartmentIDEqualFold(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldEqualFold(FieldDepartmentID, v))
-}
-
-// DepartmentIDContainsFold applies the ContainsFold predicate on the "department_id" field.
-func DepartmentIDContainsFold(v string) predicate.UserDepartment {
-	return predicate.UserDepartment(sql.FieldContainsFold(FieldDepartmentID, v))
 }
 
 // HasUser applies the HasEdge predicate on the "user" edge.

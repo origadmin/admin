@@ -18,11 +18,11 @@ type UserDepartment struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// foreign_key:comment
-	UserID string `json:"user_id,omitempty"`
+	UserID int64 `json:"user_id,omitempty"`
 	// foreign_key:comment
-	DepartmentID string `json:"department_id,omitempty"`
+	DepartmentID int64 `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserDepartmentQuery when eager-loading is set.
 	Edges        UserDepartmentEdges `json:"edges"`
@@ -67,10 +67,8 @@ func (*UserDepartment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userdepartment.FieldID:
+		case userdepartment.FieldID, userdepartment.FieldUserID, userdepartment.FieldDepartmentID:
 			values[i] = new(sql.NullInt64)
-		case userdepartment.FieldUserID, userdepartment.FieldDepartmentID:
-			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -91,18 +89,18 @@ func (ud *UserDepartment) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			ud.ID = int(value.Int64)
+			ud.ID = int64(value.Int64)
 		case userdepartment.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				ud.UserID = value.String
+				ud.UserID = value.Int64
 			}
 		case userdepartment.FieldDepartmentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				ud.DepartmentID = value.String
+				ud.DepartmentID = value.Int64
 			}
 		default:
 			ud.selectValues.Set(columns[i], values[i])
@@ -151,10 +149,10 @@ func (ud *UserDepartment) String() string {
 	builder.WriteString("UserDepartment(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", ud.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(ud.UserID)
+	builder.WriteString(fmt.Sprintf("%v", ud.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("department_id=")
-	builder.WriteString(ud.DepartmentID)
+	builder.WriteString(fmt.Sprintf("%v", ud.DepartmentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

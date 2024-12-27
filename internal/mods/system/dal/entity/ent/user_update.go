@@ -313,16 +313,23 @@ func (uu *UserUpdate) SetNillableSanctionDate(t *time.Time) *UserUpdate {
 }
 
 // SetManagerID sets the "manager_id" field.
-func (uu *UserUpdate) SetManagerID(s string) *UserUpdate {
-	uu.mutation.SetManagerID(s)
+func (uu *UserUpdate) SetManagerID(i int64) *UserUpdate {
+	uu.mutation.ResetManagerID()
+	uu.mutation.SetManagerID(i)
 	return uu
 }
 
 // SetNillableManagerID sets the "manager_id" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableManagerID(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetManagerID(*s)
+func (uu *UserUpdate) SetNillableManagerID(i *int64) *UserUpdate {
+	if i != nil {
+		uu.SetManagerID(*i)
 	}
+	return uu
+}
+
+// AddManagerID adds i to the "manager_id" field.
+func (uu *UserUpdate) AddManagerID(i int64) *UserUpdate {
+	uu.mutation.AddManagerID(i)
 	return uu
 }
 
@@ -341,14 +348,14 @@ func (uu *UserUpdate) SetNillableManager(s *string) *UserUpdate {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (uu *UserUpdate) AddRoleIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddRoleIDs(ids ...int64) *UserUpdate {
 	uu.mutation.AddRoleIDs(ids...)
 	return uu
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (uu *UserUpdate) AddRoles(r ...*Role) *UserUpdate {
-	ids := make([]string, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -356,14 +363,14 @@ func (uu *UserUpdate) AddRoles(r ...*Role) *UserUpdate {
 }
 
 // AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
-func (uu *UserUpdate) AddDepartmentIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddDepartmentIDs(ids ...int64) *UserUpdate {
 	uu.mutation.AddDepartmentIDs(ids...)
 	return uu
 }
 
 // AddDepartments adds the "departments" edges to the Department entity.
 func (uu *UserUpdate) AddDepartments(d ...*Department) *UserUpdate {
-	ids := make([]string, len(d))
+	ids := make([]int64, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -371,14 +378,14 @@ func (uu *UserUpdate) AddDepartments(d ...*Department) *UserUpdate {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
-func (uu *UserUpdate) AddUserRoleIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) AddUserRoleIDs(ids ...int64) *UserUpdate {
 	uu.mutation.AddUserRoleIDs(ids...)
 	return uu
 }
 
 // AddUserRoles adds the "user_roles" edges to the UserRole entity.
 func (uu *UserUpdate) AddUserRoles(u ...*UserRole) *UserUpdate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -386,14 +393,14 @@ func (uu *UserUpdate) AddUserRoles(u ...*UserRole) *UserUpdate {
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
-func (uu *UserUpdate) AddUserDepartmentIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) AddUserDepartmentIDs(ids ...int64) *UserUpdate {
 	uu.mutation.AddUserDepartmentIDs(ids...)
 	return uu
 }
 
 // AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
 func (uu *UserUpdate) AddUserDepartments(u ...*UserDepartment) *UserUpdate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -412,14 +419,14 @@ func (uu *UserUpdate) ClearRoles() *UserUpdate {
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (uu *UserUpdate) RemoveRoleIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveRoleIDs(ids ...int64) *UserUpdate {
 	uu.mutation.RemoveRoleIDs(ids...)
 	return uu
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
 func (uu *UserUpdate) RemoveRoles(r ...*Role) *UserUpdate {
-	ids := make([]string, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -433,14 +440,14 @@ func (uu *UserUpdate) ClearDepartments() *UserUpdate {
 }
 
 // RemoveDepartmentIDs removes the "departments" edge to Department entities by IDs.
-func (uu *UserUpdate) RemoveDepartmentIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveDepartmentIDs(ids ...int64) *UserUpdate {
 	uu.mutation.RemoveDepartmentIDs(ids...)
 	return uu
 }
 
 // RemoveDepartments removes "departments" edges to Department entities.
 func (uu *UserUpdate) RemoveDepartments(d ...*Department) *UserUpdate {
-	ids := make([]string, len(d))
+	ids := make([]int64, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -454,14 +461,14 @@ func (uu *UserUpdate) ClearUserRoles() *UserUpdate {
 }
 
 // RemoveUserRoleIDs removes the "user_roles" edge to UserRole entities by IDs.
-func (uu *UserUpdate) RemoveUserRoleIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) RemoveUserRoleIDs(ids ...int64) *UserUpdate {
 	uu.mutation.RemoveUserRoleIDs(ids...)
 	return uu
 }
 
 // RemoveUserRoles removes "user_roles" edges to UserRole entities.
 func (uu *UserUpdate) RemoveUserRoles(u ...*UserRole) *UserUpdate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -475,14 +482,14 @@ func (uu *UserUpdate) ClearUserDepartments() *UserUpdate {
 }
 
 // RemoveUserDepartmentIDs removes the "user_departments" edge to UserDepartment entities by IDs.
-func (uu *UserUpdate) RemoveUserDepartmentIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) RemoveUserDepartmentIDs(ids ...int64) *UserUpdate {
 	uu.mutation.RemoveUserDepartmentIDs(ids...)
 	return uu
 }
 
 // RemoveUserDepartments removes "user_departments" edges to UserDepartment entities.
 func (uu *UserUpdate) RemoveUserDepartments(u ...*UserDepartment) *UserUpdate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -610,7 +617,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := uu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64))
 	if ps := uu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -682,7 +689,10 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.ManagerID(); ok {
-		_spec.SetField(user.FieldManagerID, field.TypeString, value)
+		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)
+	}
+	if value, ok := uu.mutation.AddedManagerID(); ok {
+		_spec.AddField(user.FieldManagerID, field.TypeInt64, value)
 	}
 	if value, ok := uu.mutation.Manager(); ok {
 		_spec.SetField(user.FieldManager, field.TypeString, value)
@@ -695,7 +705,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -708,7 +718,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -724,7 +734,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -740,7 +750,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -753,7 +763,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -769,7 +779,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: user.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -785,7 +795,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -798,7 +808,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -814,7 +824,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -830,7 +840,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -843,7 +853,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -859,7 +869,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1169,16 +1179,23 @@ func (uuo *UserUpdateOne) SetNillableSanctionDate(t *time.Time) *UserUpdateOne {
 }
 
 // SetManagerID sets the "manager_id" field.
-func (uuo *UserUpdateOne) SetManagerID(s string) *UserUpdateOne {
-	uuo.mutation.SetManagerID(s)
+func (uuo *UserUpdateOne) SetManagerID(i int64) *UserUpdateOne {
+	uuo.mutation.ResetManagerID()
+	uuo.mutation.SetManagerID(i)
 	return uuo
 }
 
 // SetNillableManagerID sets the "manager_id" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableManagerID(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetManagerID(*s)
+func (uuo *UserUpdateOne) SetNillableManagerID(i *int64) *UserUpdateOne {
+	if i != nil {
+		uuo.SetManagerID(*i)
 	}
+	return uuo
+}
+
+// AddManagerID adds i to the "manager_id" field.
+func (uuo *UserUpdateOne) AddManagerID(i int64) *UserUpdateOne {
+	uuo.mutation.AddManagerID(i)
 	return uuo
 }
 
@@ -1197,14 +1214,14 @@ func (uuo *UserUpdateOne) SetNillableManager(s *string) *UserUpdateOne {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (uuo *UserUpdateOne) AddRoleIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddRoleIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.AddRoleIDs(ids...)
 	return uuo
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (uuo *UserUpdateOne) AddRoles(r ...*Role) *UserUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1212,14 +1229,14 @@ func (uuo *UserUpdateOne) AddRoles(r ...*Role) *UserUpdateOne {
 }
 
 // AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
-func (uuo *UserUpdateOne) AddDepartmentIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddDepartmentIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.AddDepartmentIDs(ids...)
 	return uuo
 }
 
 // AddDepartments adds the "departments" edges to the Department entity.
 func (uuo *UserUpdateOne) AddDepartments(d ...*Department) *UserUpdateOne {
-	ids := make([]string, len(d))
+	ids := make([]int64, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -1227,14 +1244,14 @@ func (uuo *UserUpdateOne) AddDepartments(d ...*Department) *UserUpdateOne {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
-func (uuo *UserUpdateOne) AddUserRoleIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddUserRoleIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.AddUserRoleIDs(ids...)
 	return uuo
 }
 
 // AddUserRoles adds the "user_roles" edges to the UserRole entity.
 func (uuo *UserUpdateOne) AddUserRoles(u ...*UserRole) *UserUpdateOne {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -1242,14 +1259,14 @@ func (uuo *UserUpdateOne) AddUserRoles(u ...*UserRole) *UserUpdateOne {
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
-func (uuo *UserUpdateOne) AddUserDepartmentIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddUserDepartmentIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.AddUserDepartmentIDs(ids...)
 	return uuo
 }
 
 // AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
 func (uuo *UserUpdateOne) AddUserDepartments(u ...*UserDepartment) *UserUpdateOne {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -1268,14 +1285,14 @@ func (uuo *UserUpdateOne) ClearRoles() *UserUpdateOne {
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (uuo *UserUpdateOne) RemoveRoleIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveRoleIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.RemoveRoleIDs(ids...)
 	return uuo
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
 func (uuo *UserUpdateOne) RemoveRoles(r ...*Role) *UserUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1289,14 +1306,14 @@ func (uuo *UserUpdateOne) ClearDepartments() *UserUpdateOne {
 }
 
 // RemoveDepartmentIDs removes the "departments" edge to Department entities by IDs.
-func (uuo *UserUpdateOne) RemoveDepartmentIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveDepartmentIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.RemoveDepartmentIDs(ids...)
 	return uuo
 }
 
 // RemoveDepartments removes "departments" edges to Department entities.
 func (uuo *UserUpdateOne) RemoveDepartments(d ...*Department) *UserUpdateOne {
-	ids := make([]string, len(d))
+	ids := make([]int64, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -1310,14 +1327,14 @@ func (uuo *UserUpdateOne) ClearUserRoles() *UserUpdateOne {
 }
 
 // RemoveUserRoleIDs removes the "user_roles" edge to UserRole entities by IDs.
-func (uuo *UserUpdateOne) RemoveUserRoleIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveUserRoleIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.RemoveUserRoleIDs(ids...)
 	return uuo
 }
 
 // RemoveUserRoles removes "user_roles" edges to UserRole entities.
 func (uuo *UserUpdateOne) RemoveUserRoles(u ...*UserRole) *UserUpdateOne {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -1331,14 +1348,14 @@ func (uuo *UserUpdateOne) ClearUserDepartments() *UserUpdateOne {
 }
 
 // RemoveUserDepartmentIDs removes the "user_departments" edge to UserDepartment entities by IDs.
-func (uuo *UserUpdateOne) RemoveUserDepartmentIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveUserDepartmentIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.RemoveUserDepartmentIDs(ids...)
 	return uuo
 }
 
 // RemoveUserDepartments removes "user_departments" edges to UserDepartment entities.
 func (uuo *UserUpdateOne) RemoveUserDepartments(u ...*UserDepartment) *UserUpdateOne {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -1479,7 +1496,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if err := uuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64))
 	id, ok := uuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "User.id" for update`)}
@@ -1568,7 +1585,10 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.ManagerID(); ok {
-		_spec.SetField(user.FieldManagerID, field.TypeString, value)
+		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)
+	}
+	if value, ok := uuo.mutation.AddedManagerID(); ok {
+		_spec.AddField(user.FieldManagerID, field.TypeInt64, value)
 	}
 	if value, ok := uuo.mutation.Manager(); ok {
 		_spec.SetField(user.FieldManager, field.TypeString, value)
@@ -1581,7 +1601,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1594,7 +1614,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1610,7 +1630,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1626,7 +1646,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1639,7 +1659,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1655,7 +1675,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: user.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1671,7 +1691,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1684,7 +1704,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1700,7 +1720,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1716,7 +1736,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1729,7 +1749,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1745,7 +1765,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

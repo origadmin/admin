@@ -95,9 +95,9 @@ message UpdateCurrentUserPasswordRequest {
 message UpdateCurrentUserPasswordResponse {}
 
 message CurrentPasswordRestRequest {
-  string id = 1 [
+  int64 id = 1 [
     json_name = "id",
-    (validate.rules).string = {min_len: 1}
+    (validate.rules).int64 = {gt: 0}
   ];
 }
 

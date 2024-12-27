@@ -40,7 +40,7 @@ func (upd *UserPositionDelete) ExecX(ctx context.Context) int {
 }
 
 func (upd *UserPositionDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
 	if ps := upd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

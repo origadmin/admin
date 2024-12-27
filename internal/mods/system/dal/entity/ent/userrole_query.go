@@ -132,8 +132,8 @@ func (urq *UserRoleQuery) FirstX(ctx context.Context) *UserRole {
 
 // FirstID returns the first UserRole ID from the query.
 // Returns a *NotFoundError when no UserRole ID was found.
-func (urq *UserRoleQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (urq *UserRoleQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = urq.Limit(1).IDs(setContextOp(ctx, urq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (urq *UserRoleQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (urq *UserRoleQuery) FirstIDX(ctx context.Context) int {
+func (urq *UserRoleQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := urq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (urq *UserRoleQuery) OnlyX(ctx context.Context) *UserRole {
 // OnlyID is like Only, but returns the only UserRole ID in the query.
 // Returns a *NotSingularError when more than one UserRole ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (urq *UserRoleQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (urq *UserRoleQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = urq.Limit(2).IDs(setContextOp(ctx, urq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (urq *UserRoleQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (urq *UserRoleQuery) OnlyIDX(ctx context.Context) int {
+func (urq *UserRoleQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := urq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (urq *UserRoleQuery) AllX(ctx context.Context) []*UserRole {
 }
 
 // IDs executes the query and returns a list of UserRole IDs.
-func (urq *UserRoleQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (urq *UserRoleQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if urq.ctx.Unique == nil && urq.path != nil {
 		urq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (urq *UserRoleQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (urq *UserRoleQuery) IDsX(ctx context.Context) []int {
+func (urq *UserRoleQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := urq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,7 +337,7 @@ func (urq *UserRoleQuery) WithRole(opts ...func(*RoleQuery)) *UserRoleQuery {
 // Example:
 //
 //	var v []struct {
-//		UserID string `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (urq *UserRoleQuery) GroupBy(field string, fields ...string) *UserRoleGroup
 // Example:
 //
 //	var v []struct {
-//		UserID string `json:"user_id,omitempty"`
+//		UserID int64 `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserRole.Query().
@@ -451,8 +451,8 @@ func (urq *UserRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Us
 }
 
 func (urq *UserRoleQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*UserRole, init func(*UserRole), assign func(*UserRole, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*UserRole)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*UserRole)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (urq *UserRoleQuery) loadUser(ctx context.Context, query *UserQuery, nodes 
 	return nil
 }
 func (urq *UserRoleQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*UserRole, init func(*UserRole), assign func(*UserRole, *Role)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*UserRole)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*UserRole)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -522,7 +522,7 @@ func (urq *UserRoleQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (urq *UserRoleQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64))
 	_spec.From = urq.sql
 	if unique := urq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,8 +639,8 @@ func (urq *UserRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *UserRoleSe
 // Example:
 //
 //	var v []struct {
-//	  UserID string `json:"user_id,omitempty"`
-//	  RoleID string `json:"role_id,omitempty"`
+//	  UserID int64 `json:"user_id,omitempty"`
+//	  RoleID int64 `json:"role_id,omitempty"`
 //	}
 //
 //	client.UserRole.Query().

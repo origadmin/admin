@@ -22,19 +22,19 @@ type PermissionResourceCreate struct {
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (prc *PermissionResourceCreate) SetPermissionID(s string) *PermissionResourceCreate {
-	prc.mutation.SetPermissionID(s)
+func (prc *PermissionResourceCreate) SetPermissionID(i int64) *PermissionResourceCreate {
+	prc.mutation.SetPermissionID(i)
 	return prc
 }
 
 // SetResourceID sets the "resource_id" field.
-func (prc *PermissionResourceCreate) SetResourceID(s string) *PermissionResourceCreate {
-	prc.mutation.SetResourceID(s)
+func (prc *PermissionResourceCreate) SetResourceID(i int64) *PermissionResourceCreate {
+	prc.mutation.SetResourceID(i)
 	return prc
 }
 
 // SetID sets the "id" field.
-func (prc *PermissionResourceCreate) SetID(i int) *PermissionResourceCreate {
+func (prc *PermissionResourceCreate) SetID(i int64) *PermissionResourceCreate {
 	prc.mutation.SetID(i)
 	return prc
 }
@@ -126,7 +126,7 @@ func (prc *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionRe
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	prc.mutation.id = &_node.ID
 	prc.mutation.done = true
@@ -136,7 +136,7 @@ func (prc *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionRe
 func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgraph.CreateSpec) {
 	var (
 		_node = &PermissionResource{config: prc.config}
-		_spec = sqlgraph.NewCreateSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64))
 	)
 	if id, ok := prc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 			Columns: []string{permissionresource.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 			Columns: []string{permissionresource.ResourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

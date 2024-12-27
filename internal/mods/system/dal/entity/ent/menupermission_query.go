@@ -132,8 +132,8 @@ func (mpq *MenuPermissionQuery) FirstX(ctx context.Context) *MenuPermission {
 
 // FirstID returns the first MenuPermission ID from the query.
 // Returns a *NotFoundError when no MenuPermission ID was found.
-func (mpq *MenuPermissionQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (mpq *MenuPermissionQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = mpq.Limit(1).IDs(setContextOp(ctx, mpq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (mpq *MenuPermissionQuery) FirstID(ctx context.Context) (id int, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (mpq *MenuPermissionQuery) FirstIDX(ctx context.Context) int {
+func (mpq *MenuPermissionQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := mpq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (mpq *MenuPermissionQuery) OnlyX(ctx context.Context) *MenuPermission {
 // OnlyID is like Only, but returns the only MenuPermission ID in the query.
 // Returns a *NotSingularError when more than one MenuPermission ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (mpq *MenuPermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (mpq *MenuPermissionQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = mpq.Limit(2).IDs(setContextOp(ctx, mpq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (mpq *MenuPermissionQuery) OnlyID(ctx context.Context) (id int, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (mpq *MenuPermissionQuery) OnlyIDX(ctx context.Context) int {
+func (mpq *MenuPermissionQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := mpq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (mpq *MenuPermissionQuery) AllX(ctx context.Context) []*MenuPermission {
 }
 
 // IDs executes the query and returns a list of MenuPermission IDs.
-func (mpq *MenuPermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (mpq *MenuPermissionQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if mpq.ctx.Unique == nil && mpq.path != nil {
 		mpq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (mpq *MenuPermissionQuery) IDs(ctx context.Context) (ids []int, err error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (mpq *MenuPermissionQuery) IDsX(ctx context.Context) []int {
+func (mpq *MenuPermissionQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := mpq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,7 +337,7 @@ func (mpq *MenuPermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *
 // Example:
 //
 //	var v []struct {
-//		MenuID string `json:"menu_id,omitempty"`
+//		MenuID int64 `json:"menu_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (mpq *MenuPermissionQuery) GroupBy(field string, fields ...string) *MenuPer
 // Example:
 //
 //	var v []struct {
-//		MenuID string `json:"menu_id,omitempty"`
+//		MenuID int64 `json:"menu_id,omitempty"`
 //	}
 //
 //	client.MenuPermission.Query().
@@ -451,8 +451,8 @@ func (mpq *MenuPermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (mpq *MenuPermissionQuery) loadMenu(ctx context.Context, query *MenuQuery, nodes []*MenuPermission, init func(*MenuPermission), assign func(*MenuPermission, *Menu)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*MenuPermission)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*MenuPermission)
 	for i := range nodes {
 		fk := nodes[i].MenuID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (mpq *MenuPermissionQuery) loadMenu(ctx context.Context, query *MenuQuery, 
 	return nil
 }
 func (mpq *MenuPermissionQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*MenuPermission, init func(*MenuPermission), assign func(*MenuPermission, *Permission)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*MenuPermission)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*MenuPermission)
 	for i := range nodes {
 		fk := nodes[i].PermissionID
 		if _, ok := nodeids[fk]; !ok {
@@ -522,7 +522,7 @@ func (mpq *MenuPermissionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (mpq *MenuPermissionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(menupermission.Table, menupermission.Columns, sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(menupermission.Table, menupermission.Columns, sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64))
 	_spec.From = mpq.sql
 	if unique := mpq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,8 +639,8 @@ func (mpq *MenuPermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Menu
 // Example:
 //
 //	var v []struct {
-//	  MenuID string `json:"menu_id,omitempty"`
-//	  PermissionID string `json:"permission_id,omitempty"`
+//	  MenuID int64 `json:"menu_id,omitempty"`
+//	  PermissionID int64 `json:"permission_id,omitempty"`
 //	}
 //
 //	client.MenuPermission.Query().

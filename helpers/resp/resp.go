@@ -13,6 +13,8 @@ import (
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
+
+	datav1 "origadmin/application/admin/helpers/resp/data/v1"
 )
 
 const (
@@ -34,18 +36,24 @@ type Response struct {
 }
 
 func (r Response) result(context transhttp.Context, status int, data any) {
-	if msg, ok := data.(proto.Message); ok {
-		err := r.resultProtoJSON(context, status, msg)
-		if err != nil {
+	if v, ok := data.(Message); ok {
+		if err := r.resultProtoJSON(context, status, v.Message()); err != nil {
 			r.Error(context, status, err)
-			return
 		}
-	}
-	err := r.resultJSON(context, status, data)
-	if err != nil {
-		r.Error(context, status, err)
 		return
 	}
+
+	if msg, ok := data.(proto.Message); ok {
+		if err := r.resultProtoJSON(context, status, msg); err != nil {
+			r.Error(context, status, err)
+		}
+		return
+	}
+
+	if err := r.resultJSON(context, status, data); err != nil {
+		r.Error(context, status, err)
+	}
+	return
 }
 
 func (r Response) resultJSON(context transhttp.Context, status int, data any) error {
@@ -68,25 +76,18 @@ func (r Response) resultProtoJSON(context transhttp.Context, status int, msg pro
 
 func (r Response) Error(context transhttp.Context, status int, err error) {
 	code, herr := decodeError(r.alwaysSucceed, status, err)
-	r.result(context, code, &Result{
+	r.result(context, code, &Data{
 		Success: false,
-		Error:   herr,
+		Error:   (*datav1.Error)(herr),
 	})
 }
 
 func (r Response) JSON(context transhttp.Context, status int, data any) {
-	if v, ok := data.(*Result); ok {
-		_ = r.resultJSON(context, status, v)
-		return
-	}
-	if v, ok := data.(proto.Message); ok {
-		_ = r.resultProtoJSON(context, status, v)
-		return
-	}
-	r.result(context, status, &Result{
-		Success: true,
-		Data:    data,
-	})
+	r.result(context, status, data)
+}
+
+func (r Response) Bytes(context transhttp.Context, status int, data []byte) {
+	responseJSON(context.Response(), status, data)
 }
 
 func (r Response) Any(context transhttp.Context, status int, data any, err error) {

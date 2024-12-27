@@ -9,6 +9,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,9 +20,9 @@ import (
 	"github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
-	"github.com/origadmin/toolkits/idgen"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
@@ -153,14 +154,14 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 
 	for i, item := range items {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
-		var pid string
+		var pid int64
 		if parent != nil {
 			pid = parent.Id
 			log.Infow("msg", "Parent ID set", "parentId", pid)
 		}
 		founded := false
 		switch {
-		case item.Id != "":
+		case item.Id != 0:
 			log.Infow("Checking item by ID", "itemId", item.Id)
 			exists, err := obj.Menu(ctx).Query().Where(menu.ID(item.Id)).Exist(ctx)
 			if err != nil {
@@ -210,8 +211,8 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 		}
 
 		if !founded {
-			if item.Id == "" {
-				item.Id = idgen.GenID()
+			if item.Id == 0 {
+				item.Id = id.Gen()
 				log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 			}
 			if item.Status == 0 {
@@ -225,7 +226,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 
 			item.ParentId = pid
 			if parent != nil {
-				item.ParentPath = parent.ParentPath + pid + TreePathDelimiter
+				item.ParentPath = parent.ParentPath + strconv.Itoa(int(pid)) + TreePathDelimiter
 				log.Infow("msg", "Setting parent path for item", "itemId", item.Id, "parentPath", item.ParentPath)
 			}
 			item.CreateTime = timestamppb.New(time.Now())
@@ -244,7 +245,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 		for _, res := range item.Resources {
 			log.Infow("msg", "Processing resource", "resourceId", res.Id, "resourcePath", res.Path, "resourceMethod", res.Method)
 
-			if res.Id != "" {
+			if res.Id != 0 {
 				log.Infow("msg", "Checking resource by ID", "resourceId", res.Id)
 				exists, err := obj.Resource(ctx).Query().Where(resource.ID(res.Id)).Exist(ctx)
 				if err != nil {
@@ -267,8 +268,8 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 					continue
 				}
 			}
-			if res.Id == "" {
-				res.Id = idgen.GenID()
+			if res.Id == 0 {
+				res.Id = id.Gen()
 				log.Infow("msg", "Generated new ID for resource", "resourceId", res.Id)
 			}
 			res.MenuId = item.Id

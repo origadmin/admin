@@ -41,9 +41,9 @@ func ResourceObject(resource *ResourcePB) *Resource {
 
 // ResourceRepo is a Resource repository interface.
 type ResourceRepo interface {
-	Get(context.Context, string, ...ResourceQueryOption) (*ResourcePB, error)
+	Get(context.Context, int64, ...ResourceQueryOption) (*ResourcePB, error)
 	Create(context.Context, *ResourcePB, ...ResourceQueryOption) (*ResourcePB, error)
-	Delete(context.Context, string) error
+	Delete(context.Context, int64) error
 	Update(context.Context, *ResourcePB, ...ResourceQueryOption) (*ResourcePB, error)
 	List(context.Context, *ListResourcesRequest, ...ResourceQueryOption) ([]*ResourcePB, int32, error)
 }

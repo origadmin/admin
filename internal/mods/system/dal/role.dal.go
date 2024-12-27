@@ -20,7 +20,7 @@ type roleRepo struct {
 	db *Data
 }
 
-func (repo roleRepo) Get(ctx context.Context, id string, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
+func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
 	var option dto.RoleQueryOption
 	if len(options) > 0 {
 		option = options[0]
@@ -48,7 +48,7 @@ func (repo roleRepo) Create(ctx context.Context, role *dto.RolePB, options ...dt
 	return dto.ConvertRole2PB(saved), nil
 }
 
-func (repo roleRepo) Delete(ctx context.Context, id string) error {
+func (repo roleRepo) Delete(ctx context.Context, id int64) error {
 	return repo.db.Role(ctx).DeleteOneID(id).Exec(ctx)
 }
 

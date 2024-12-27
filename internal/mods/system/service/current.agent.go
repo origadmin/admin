@@ -28,9 +28,9 @@ func (s CurrentAPIAgentService) GetCurrentUser(context transhttp.Context, reques
 		log.Errorf("GetCurrentUser error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -41,9 +41,9 @@ func (s CurrentAPIAgentService) CurrentLogout(context transhttp.Context, request
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -54,9 +54,9 @@ func (s CurrentAPIAgentService) ListCurrentMenus(context transhttp.Context, requ
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -67,9 +67,9 @@ func (s CurrentAPIAgentService) ListCurrentRoles(context transhttp.Context, requ
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
-		Data:    response,
+		Data:    resp.Proto2AnyPBArray(response.Roles...),
 	})
 	return nil, nil
 }
@@ -80,9 +80,9 @@ func (s CurrentAPIAgentService) UpdateCurrentSetting(context transhttp.Context, 
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -93,9 +93,9 @@ func (s CurrentAPIAgentService) UpdateCurrentUser(context transhttp.Context, req
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -106,9 +106,9 @@ func (s CurrentAPIAgentService) UpdateCurrentUserPassword(context transhttp.Cont
 		log.Errorf("CurrentMenus error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response,
+		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
@@ -119,7 +119,7 @@ func (s CurrentAPIAgentService) UpdateCurrentUserPassword(context transhttp.Cont
 //		log.Errorf("CurrentMenus error: %v", err)
 //		return nil, err
 //	}
-//	s.JSON(context, http.StatusOK, &resp.Result{
+//	s.JSON(context, http.StatusOK, &resp.Data{
 //		Success: true,
 //		Data:    response,
 //	})
@@ -132,7 +132,7 @@ func (s CurrentAPIAgentService) UpdateCurrentUserPassword(context transhttp.Cont
 //		log.Errorf("CurrentUser error: %v", err)
 //		return nil, err
 //	}
-//	s.JSON(context, http.StatusOK, &resp.Result{
+//	s.JSON(context, http.StatusOK, &resp.Data{
 //		Success: true,
 //		Data:    response,
 //	})
@@ -145,7 +145,7 @@ func (s CurrentAPIAgentService) UpdateCurrentUserPassword(context transhttp.Cont
 //		log.Errorf("Logout error: %v", err)
 //		return nil, err
 //	}
-//	s.JSON(context, http.StatusOK, &resp.Result{
+//	s.JSON(context, http.StatusOK, &resp.Data{
 //		Success: true,
 //		Data:    response,
 //	})

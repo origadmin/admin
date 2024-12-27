@@ -8,9 +8,12 @@ package resp
 import (
 	"encoding/json"
 
-	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
+	"google.golang.org/protobuf/types/known/structpb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
+
+	datav1 "origadmin/application/admin/helpers/resp/data/v1"
 )
 
 // Any converts the given arguments into a protobuf Any type.
@@ -20,29 +23,89 @@ func Any(args ...any) *anypb.Any {
 	}
 	if len(args) == 1 {
 		if message, ok := args[0].(proto.Message); ok {
-			return marshalProto(message)
+			return Proto2Any(message)
 		}
-		return marshalAny(args[0])
+		return Any2AnyPB(args[0])
 	}
-	return marshalAny(args)
+	var protos []proto.Message
+	for i := range args {
+		message, ok := args[i].(proto.Message)
+		if !ok {
+			return Any2AnyPB(args)
+		}
+		protos = append(protos, message)
+	}
+	if len(protos) == len(args) {
+		return ProtoArray2AnyPB(protos...)
+	}
+	return Any2AnyPB(args)
 }
 
-func marshalProto(message proto.Message) *anypb.Any {
-	extra := &anypb.Any{}
-	if err := extra.MarshalFrom(message); err != nil {
+func ProtoArray2AnyPB(args ...proto.Message) *anypb.Any {
+	if len(args) == 0 {
 		return Empty
 	}
-	return extra
+	vals := &datav1.AnyData{Value: Proto2AnyPBArray(args...)}
+	val, err := anypb.New(vals)
+	if err != nil {
+		return Empty
+	}
+	return val
 }
 
-func marshalAny(message any) *anypb.Any {
-	extra := &anypb.Any{}
+// Proto2AnyPBArray converts the given arguments into a protobuf Any type.
+func Proto2AnyPBArray[T proto.Message](args ...T) []*anypb.Any {
+	if len(args) == 0 {
+		return nil
+	}
+
+	var result []*anypb.Any
+	for _, arg := range args {
+		result = append(result, Proto2Any(arg))
+	}
+	return result
+}
+
+func Proto2Struct[T proto.Message](args ...T) *structpb.Value {
+	if len(args) == 0 {
+		return nil
+	}
+
+	var result []any
+	for _, arg := range args {
+		result = append(result, arg)
+	}
+	list, err := structpb.NewList(result)
+	if err != nil {
+		return nil
+	}
+	return structpb.NewListValue(list)
+}
+
+func Proto2Any(message proto.Message) *anypb.Any {
+	val, err := anypb.New(message)
+	if err != nil {
+		return Empty
+	}
+	return val
+}
+
+func Any2AnyPB(message any) *anypb.Any {
+	if message == nil {
+		return Empty
+	}
+	if v, ok := message.(proto.Message); ok {
+		return Proto2Any(v)
+	}
+
 	marshal, err := json.Marshal(message)
 	if err != nil {
 		return Empty
 	}
-	if err := protojson.Unmarshal(marshal, extra); err != nil {
+	bytes := wrapperspb.Bytes(marshal)
+	val, err := anypb.New(bytes)
+	if err != nil {
 		return Empty
 	}
-	return extra
+	return val
 }

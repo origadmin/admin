@@ -22,7 +22,7 @@ type menuRepo struct {
 	db *Data
 }
 
-func (repo menuRepo) Get(ctx context.Context, id string, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
+func (repo menuRepo) Get(ctx context.Context, id int64, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
 	var option dto.MenuQueryOption
 	if len(options) > 0 {
 		option = options[0]
@@ -50,7 +50,7 @@ func (repo menuRepo) Create(ctx context.Context, menu *dto.MenuPB, options ...dt
 	return dto.ConvertMenu2PB(saved), nil
 }
 
-func (repo menuRepo) Delete(ctx context.Context, id string) error {
+func (repo menuRepo) Delete(ctx context.Context, id int64) error {
 	return repo.db.Menu(ctx).DeleteOneID(id).Exec(ctx)
 }
 
@@ -74,10 +74,10 @@ func (repo menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options
 	if option.IncludeResources {
 		query = query.WithResources()
 	}
-	if v := option.UserID; len(v) > 0 {
+	if v := option.UserID; v > 0 {
 		query = query.Where(menu.HasRolesWith(role.HasUsersWith(user.ID(v))))
 	}
-	if v := option.RoleID; len(v) > 0 {
+	if v := option.RoleID; v > 0 {
 		query = query.Where(menu.HasRolesWith(role.ID(v)))
 	}
 	if v := option.InIDs; len(v) > 0 {
@@ -89,7 +89,7 @@ func (repo menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options
 	if v := option.Status; v > 0 {
 		query = query.Where(menu.StatusEQ(v))
 	}
-	if v := option.ParentID; len(v) > 0 {
+	if v := option.ParentID; v > 0 {
 		query = query.Where(menu.ParentID(v))
 	}
 	if v := option.ParentPathPrefix; len(v) > 0 {
@@ -114,14 +114,13 @@ func menuPageQuery(ctx context.Context, query *ent.MenuQuery, in *pb.ListMenusRe
 		}
 		return nil, int32(count), nil
 	}
-
-	query = menuQueryPage(query, in)
-	query = menuQueryOptions(query, option)
-	count, err := query.Count(ctx)
+	count, err := query.Clone().Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
-	result, err := query.All(ctx)
+	query = menuQueryPage(query, in)
+	query = menuQueryOptions(query, option)
+	result, err := query.Clone().All(ctx)
 	return dto.ConvertMenus(result), int32(count), err
 }
 

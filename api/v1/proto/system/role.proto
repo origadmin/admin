@@ -40,7 +40,7 @@ service RoleAPI {
 
 message ListRolesRequest {
   // The parent resource id, for example, "shelves/shelf1".
-  string id = 1;
+  int64 id = 1;
   // The current page number.
   int32 current = 2;
   // The maximum number of items to return.
@@ -73,7 +73,7 @@ message ListRolesResponse {
 message GetRoleRequest {
   // The field will contain id of the resource requested, for example:
   // "shelves/shelf1/roles/role2"
-  string id = 1;
+  int64 id = 1;
 }
 
 message GetRoleResponse {
@@ -108,7 +108,7 @@ message UpdateRoleResponse {
 message DeleteRoleRequest {
   // The resource id of the role to be deleted, for example:
   // "shelves/shelf1/roles/role2"
-  string id = 1;
+  int64 id = 1;
 }
 
 message DeleteRoleResponse {

@@ -18,7 +18,7 @@ type Permission struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID string `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
@@ -123,9 +123,9 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case permission.FieldScopeDepts:
 			values[i] = new([]byte)
-		case permission.FieldType:
+		case permission.FieldID, permission.FieldType:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldID, permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldI18nKey, permission.FieldScope:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldI18nKey, permission.FieldScope:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -145,11 +145,11 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case permission.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				pe.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			pe.ID = int64(value.Int64)
 		case permission.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])

@@ -22,19 +22,19 @@ type RoleMenuCreate struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rmc *RoleMenuCreate) SetRoleID(s string) *RoleMenuCreate {
-	rmc.mutation.SetRoleID(s)
+func (rmc *RoleMenuCreate) SetRoleID(i int64) *RoleMenuCreate {
+	rmc.mutation.SetRoleID(i)
 	return rmc
 }
 
 // SetMenuID sets the "menu_id" field.
-func (rmc *RoleMenuCreate) SetMenuID(s string) *RoleMenuCreate {
-	rmc.mutation.SetMenuID(s)
+func (rmc *RoleMenuCreate) SetMenuID(i int64) *RoleMenuCreate {
+	rmc.mutation.SetMenuID(i)
 	return rmc
 }
 
 // SetID sets the "id" field.
-func (rmc *RoleMenuCreate) SetID(i int) *RoleMenuCreate {
+func (rmc *RoleMenuCreate) SetID(i int64) *RoleMenuCreate {
 	rmc.mutation.SetID(i)
 	return rmc
 }
@@ -126,7 +126,7 @@ func (rmc *RoleMenuCreate) sqlSave(ctx context.Context) (*RoleMenu, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	rmc.mutation.id = &_node.ID
 	rmc.mutation.done = true
@@ -136,7 +136,7 @@ func (rmc *RoleMenuCreate) sqlSave(ctx context.Context) (*RoleMenu, error) {
 func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 	var (
 		_node = &RoleMenu{config: rmc.config}
-		_spec = sqlgraph.NewCreateSpec(rolemenu.Table, sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(rolemenu.Table, sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64))
 	)
 	if id, ok := rmc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 			Columns: []string{rolemenu.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 			Columns: []string{rolemenu.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (rmcb *RoleMenuCreateBulk) Save(ctx context.Context) ([]*RoleMenu, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

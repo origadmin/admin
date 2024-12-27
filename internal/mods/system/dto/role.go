@@ -49,17 +49,17 @@ func RoleObject(menu *RolePB) *Role {
 
 // RoleRepo is a RolePB repository interface.
 type RoleRepo interface {
-	Get(context.Context, string, ...RoleQueryOption) (*RolePB, error)
+	Get(context.Context, int64, ...RoleQueryOption) (*RolePB, error)
 	Create(context.Context, *RolePB, ...RoleQueryOption) (*RolePB, error)
-	Delete(context.Context, string) error
+	Delete(context.Context, int64) error
 	Update(context.Context, *RolePB, ...RoleQueryOption) (*RolePB, error)
 	List(context.Context, *ListRolesRequest, ...RoleQueryOption) ([]*RolePB, int32, error)
 }
 
 type RoleQueryOption struct {
-	Name         string   `form:"name" json:"name,omitempty"`
-	Status       int8     `form:"status" json:"status,omitempty"`
-	InIDs        []string `form:"-" json:"-"`
+	Name         string  `form:"name" json:"name,omitempty"`
+	Status       int8    `form:"status" json:"status,omitempty"`
+	InIDs        []int64 `form:"-" json:"-"`
 	UpdateTimeGT *time.Time
 	SelectFields []string
 	OmitFields   []string

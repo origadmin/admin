@@ -22,19 +22,19 @@ type RolePermissionCreate struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rpc *RolePermissionCreate) SetRoleID(s string) *RolePermissionCreate {
-	rpc.mutation.SetRoleID(s)
+func (rpc *RolePermissionCreate) SetRoleID(i int64) *RolePermissionCreate {
+	rpc.mutation.SetRoleID(i)
 	return rpc
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (rpc *RolePermissionCreate) SetPermissionID(s string) *RolePermissionCreate {
-	rpc.mutation.SetPermissionID(s)
+func (rpc *RolePermissionCreate) SetPermissionID(i int64) *RolePermissionCreate {
+	rpc.mutation.SetPermissionID(i)
 	return rpc
 }
 
 // SetID sets the "id" field.
-func (rpc *RolePermissionCreate) SetID(i int) *RolePermissionCreate {
+func (rpc *RolePermissionCreate) SetID(i int64) *RolePermissionCreate {
 	rpc.mutation.SetID(i)
 	return rpc
 }
@@ -126,7 +126,7 @@ func (rpc *RolePermissionCreate) sqlSave(ctx context.Context) (*RolePermission, 
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	rpc.mutation.id = &_node.ID
 	rpc.mutation.done = true
@@ -136,7 +136,7 @@ func (rpc *RolePermissionCreate) sqlSave(ctx context.Context) (*RolePermission, 
 func (rpc *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &RolePermission{config: rpc.config}
-		_spec = sqlgraph.NewCreateSpec(rolepermission.Table, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(rolepermission.Table, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
 	)
 	if id, ok := rpc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (rpc *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.Create
 			Columns: []string{rolepermission.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (rpc *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.Create
 			Columns: []string{rolepermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (rpcb *RolePermissionCreateBulk) Save(ctx context.Context) ([]*RolePermissi
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

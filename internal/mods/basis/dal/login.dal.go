@@ -48,7 +48,7 @@ func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequ
 func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
 	log.Debugf("Register request received with data: %+v", in.GetData())
 	_, err := repo.User.Create(ctx, &system.User{
-		Id:         "",
+		Id:         0,
 		CreateTime: nil,
 		UpdateTime: nil,
 		Username:   "",
@@ -126,13 +126,13 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		return nil, dto.ErrInvalidPassword
 	}
 
-	userID := user.Id
+	userUUID := user.Uuid
 	username := user.Username
-	ctx = context.NewID(ctx, userID)
+	ctx = context.NewID(ctx, userUUID)
 
 	// set user cache with role ids
 	log.Debugf("Getting role IDs for user %s", username)
-	roleIDs, err := repo.User.GetRoleIDs(ctx, userID)
+	roleIDs, err := repo.User.GetRoleIDs(ctx, user.Id)
 	if err != nil {
 		log.Errorf("Error getting role IDs: %v", err)
 		return nil, kerr.Newf(404, "UNKNOWN", "failed to get user role ids: %v", err)
@@ -141,7 +141,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	log.Infof("User %s logged in successfully with role ids: %v", username, roleIDs)
 	// generate token
 	log.Debugf("Generating token for user %s", username)
-	return repo.genToken(ctx, userID)
+	return repo.genToken(ctx, userUUID)
 }
 
 func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) (*dto.CaptchaImageResponse, error) {

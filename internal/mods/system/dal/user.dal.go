@@ -24,11 +24,11 @@ func (repo userRepo) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStat
 	return nil, nil
 }
 
-func (repo userRepo) Current(ctx context.Context, id string) (*dto.UserPB, error) {
+func (repo userRepo) Current(ctx context.Context, id int64) (*dto.UserPB, error) {
 	return repo.Get(ctx, id)
 }
 
-func (repo userRepo) ListMenuByUserID(ctx context.Context, id string) ([]*dto.MenuPB, error) {
+func (repo userRepo) ListMenuByUserID(ctx context.Context, id int64) ([]*dto.MenuPB, error) {
 	menus, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryMenus().All(ctx)
 	if err != nil {
 		return nil, err
@@ -50,11 +50,11 @@ func (repo userRepo) GetByUserName(ctx context.Context, username string, fields 
 	return dto.ConvertUser2PB(result), nil
 }
 
-func (repo userRepo) GetRoleIDs(ctx context.Context, id string) ([]string, error) {
+func (repo userRepo) GetRoleIDs(ctx context.Context, id int64) ([]int64, error) {
 	return repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().IDs(ctx)
 }
 
-func (repo userRepo) Get(ctx context.Context, id string, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+func (repo userRepo) Get(ctx context.Context, id int64, options ...dto.UserQueryOption) (*dto.UserPB, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {
 		option = options[0]
@@ -82,7 +82,7 @@ func (repo userRepo) Create(ctx context.Context, user *dto.UserPB, options ...dt
 	return dto.ConvertUser2PB(saved), nil
 }
 
-func (repo userRepo) Delete(ctx context.Context, id string) error {
+func (repo userRepo) Delete(ctx context.Context, id int64) error {
 	return repo.db.User(ctx).DeleteOneID(id).Exec(ctx)
 }
 

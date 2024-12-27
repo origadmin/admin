@@ -27,9 +27,9 @@ func (s RoleAPIGINRPCService) CreateRole(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Role,
+		Data:    resp.Proto2Any(response.Role),
 	})
 	return nil, nil
 }
@@ -39,9 +39,9 @@ func (s RoleAPIGINRPCService) DeleteRole(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Empty,
+		Data:    resp.Proto2Any(response.Empty),
 	})
 	return nil, nil
 }
@@ -51,9 +51,9 @@ func (s RoleAPIGINRPCService) GetRole(context transhttp.Context, request *pb.Get
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Role,
+		Data:    resp.Proto2Any(response.Role),
 	})
 	return nil, nil
 }
@@ -63,10 +63,10 @@ func (s RoleAPIGINRPCService) ListRoles(context transhttp.Context, request *pb.L
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
-		Data:    response.Roles,
+		Data:    resp.Proto2AnyPBArray(response.Roles...),
 	})
 	return nil, nil
 }
@@ -76,9 +76,9 @@ func (s RoleAPIGINRPCService) UpdateRole(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Role,
+		Data:    resp.Any2AnyPB(response.Role),
 	})
 	return nil, nil
 }

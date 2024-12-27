@@ -22,17 +22,17 @@ type AuthsBiz struct {
 	log     *log.KHelper
 }
 
-func (biz AuthsBiz) ListResources(ctx context.Context, in *pb.ListResourcesRequest, opts ...grpc.CallOption) (*pb.ListResourcesResponse, error) {
-	var option dto.ResourceQueryOption
+func (biz AuthsBiz) ListAuthResources(ctx context.Context, in *pb.ListAuthResourcesRequest, opts ...grpc.CallOption) (*pb.ListAuthResourcesResponse, error) {
+	var option dto.AuthResourceQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
 	log.Info("ListAuths")
-	result, total, err := biz.dao.ListResources(ctx, in, option)
+	result, total, err := biz.dao.ListAuthResources(ctx, in, option)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ToListResourcesResponse(result, in, total)
+	return dto.ToListAuthResourcesResponse(result, in, total)
 }
 
 // NewAuthsBiz new a Auth use case.

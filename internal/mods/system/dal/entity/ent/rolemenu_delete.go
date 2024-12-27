@@ -40,7 +40,7 @@ func (rmd *RoleMenuDelete) ExecX(ctx context.Context) int {
 }
 
 func (rmd *RoleMenuDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(rolemenu.Table, sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(rolemenu.Table, sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64))
 	if ps := rmd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

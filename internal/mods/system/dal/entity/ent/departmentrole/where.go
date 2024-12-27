@@ -10,188 +10,98 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.DepartmentRole {
+func ID(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.DepartmentRole {
+func IDEQ(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.DepartmentRole {
+func IDNEQ(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.DepartmentRole {
+func IDIn(ids ...int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.DepartmentRole {
+func IDNotIn(ids ...int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.DepartmentRole {
+func IDGT(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.DepartmentRole {
+func IDGTE(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.DepartmentRole {
+func IDLT(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.DepartmentRole {
+func IDLTE(id int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldLTE(FieldID, id))
 }
 
 // DepartmentID applies equality check predicate on the "department_id" field. It's identical to DepartmentIDEQ.
-func DepartmentID(v string) predicate.DepartmentRole {
+func DepartmentID(v int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldEQ(FieldDepartmentID, v))
 }
 
 // RoleID applies equality check predicate on the "role_id" field. It's identical to RoleIDEQ.
-func RoleID(v string) predicate.DepartmentRole {
+func RoleID(v int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldEQ(FieldRoleID, v))
 }
 
 // DepartmentIDEQ applies the EQ predicate on the "department_id" field.
-func DepartmentIDEQ(v string) predicate.DepartmentRole {
+func DepartmentIDEQ(v int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldEQ(FieldDepartmentID, v))
 }
 
 // DepartmentIDNEQ applies the NEQ predicate on the "department_id" field.
-func DepartmentIDNEQ(v string) predicate.DepartmentRole {
+func DepartmentIDNEQ(v int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldNEQ(FieldDepartmentID, v))
 }
 
 // DepartmentIDIn applies the In predicate on the "department_id" field.
-func DepartmentIDIn(vs ...string) predicate.DepartmentRole {
+func DepartmentIDIn(vs ...int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldIn(FieldDepartmentID, vs...))
 }
 
 // DepartmentIDNotIn applies the NotIn predicate on the "department_id" field.
-func DepartmentIDNotIn(vs ...string) predicate.DepartmentRole {
+func DepartmentIDNotIn(vs ...int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldNotIn(FieldDepartmentID, vs...))
 }
 
-// DepartmentIDGT applies the GT predicate on the "department_id" field.
-func DepartmentIDGT(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldGT(FieldDepartmentID, v))
-}
-
-// DepartmentIDGTE applies the GTE predicate on the "department_id" field.
-func DepartmentIDGTE(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldGTE(FieldDepartmentID, v))
-}
-
-// DepartmentIDLT applies the LT predicate on the "department_id" field.
-func DepartmentIDLT(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldLT(FieldDepartmentID, v))
-}
-
-// DepartmentIDLTE applies the LTE predicate on the "department_id" field.
-func DepartmentIDLTE(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldLTE(FieldDepartmentID, v))
-}
-
-// DepartmentIDContains applies the Contains predicate on the "department_id" field.
-func DepartmentIDContains(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldContains(FieldDepartmentID, v))
-}
-
-// DepartmentIDHasPrefix applies the HasPrefix predicate on the "department_id" field.
-func DepartmentIDHasPrefix(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldHasPrefix(FieldDepartmentID, v))
-}
-
-// DepartmentIDHasSuffix applies the HasSuffix predicate on the "department_id" field.
-func DepartmentIDHasSuffix(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldHasSuffix(FieldDepartmentID, v))
-}
-
-// DepartmentIDEqualFold applies the EqualFold predicate on the "department_id" field.
-func DepartmentIDEqualFold(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldEqualFold(FieldDepartmentID, v))
-}
-
-// DepartmentIDContainsFold applies the ContainsFold predicate on the "department_id" field.
-func DepartmentIDContainsFold(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldContainsFold(FieldDepartmentID, v))
-}
-
 // RoleIDEQ applies the EQ predicate on the "role_id" field.
-func RoleIDEQ(v string) predicate.DepartmentRole {
+func RoleIDEQ(v int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldEQ(FieldRoleID, v))
 }
 
 // RoleIDNEQ applies the NEQ predicate on the "role_id" field.
-func RoleIDNEQ(v string) predicate.DepartmentRole {
+func RoleIDNEQ(v int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldNEQ(FieldRoleID, v))
 }
 
 // RoleIDIn applies the In predicate on the "role_id" field.
-func RoleIDIn(vs ...string) predicate.DepartmentRole {
+func RoleIDIn(vs ...int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldIn(FieldRoleID, vs...))
 }
 
 // RoleIDNotIn applies the NotIn predicate on the "role_id" field.
-func RoleIDNotIn(vs ...string) predicate.DepartmentRole {
+func RoleIDNotIn(vs ...int64) predicate.DepartmentRole {
 	return predicate.DepartmentRole(sql.FieldNotIn(FieldRoleID, vs...))
-}
-
-// RoleIDGT applies the GT predicate on the "role_id" field.
-func RoleIDGT(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldGT(FieldRoleID, v))
-}
-
-// RoleIDGTE applies the GTE predicate on the "role_id" field.
-func RoleIDGTE(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldGTE(FieldRoleID, v))
-}
-
-// RoleIDLT applies the LT predicate on the "role_id" field.
-func RoleIDLT(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldLT(FieldRoleID, v))
-}
-
-// RoleIDLTE applies the LTE predicate on the "role_id" field.
-func RoleIDLTE(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldLTE(FieldRoleID, v))
-}
-
-// RoleIDContains applies the Contains predicate on the "role_id" field.
-func RoleIDContains(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldContains(FieldRoleID, v))
-}
-
-// RoleIDHasPrefix applies the HasPrefix predicate on the "role_id" field.
-func RoleIDHasPrefix(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldHasPrefix(FieldRoleID, v))
-}
-
-// RoleIDHasSuffix applies the HasSuffix predicate on the "role_id" field.
-func RoleIDHasSuffix(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldHasSuffix(FieldRoleID, v))
-}
-
-// RoleIDEqualFold applies the EqualFold predicate on the "role_id" field.
-func RoleIDEqualFold(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldEqualFold(FieldRoleID, v))
-}
-
-// RoleIDContainsFold applies the ContainsFold predicate on the "role_id" field.
-func RoleIDContainsFold(v string) predicate.DepartmentRole {
-	return predicate.DepartmentRole(sql.FieldContainsFold(FieldRoleID, v))
 }
 
 // HasDepartment applies the HasEdge predicate on the "department" edge.

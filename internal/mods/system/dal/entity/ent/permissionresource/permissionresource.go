@@ -57,11 +57,11 @@ func ValidColumn(column string) bool {
 
 var (
 	// PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
-	PermissionIDValidator func(string) error
+	PermissionIDValidator func(int64) error
 	// ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
-	ResourceIDValidator func(string) error
+	ResourceIDValidator func(int64) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int) error
+	IDValidator func(int64) error
 )
 
 // OrderOption defines the ordering options for the PermissionResource queries.

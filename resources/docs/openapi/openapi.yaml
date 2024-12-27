@@ -1780,6 +1780,8 @@ components:
                     type: integer
                     description: Status holds the value of the "status" field.
                     format: int32
+                uuid:
+                    type: string
                 roles:
                     type: array
                     items:

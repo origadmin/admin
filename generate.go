@@ -38,3 +38,5 @@ package main
 //go:generate buf dep update
 //go:generate buf build
 //go:generate buf generate
+
+//go:generate protoc -I. -I./third_party --go_out=paths=source_relative:. ./helpers/resp/data/v1/*.proto

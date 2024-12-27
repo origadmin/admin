@@ -11,58 +11,48 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id string) predicate.User {
+func ID(id int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id string) predicate.User {
+func IDEQ(id int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id string) predicate.User {
+func IDNEQ(id int64) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...string) predicate.User {
+func IDIn(ids ...int64) predicate.User {
 	return predicate.User(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...string) predicate.User {
+func IDNotIn(ids ...int64) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id string) predicate.User {
+func IDGT(id int64) predicate.User {
 	return predicate.User(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id string) predicate.User {
+func IDGTE(id int64) predicate.User {
 	return predicate.User(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id string) predicate.User {
+func IDLT(id int64) predicate.User {
 	return predicate.User(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id string) predicate.User {
+func IDLTE(id int64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldID, id))
-}
-
-// IDEqualFold applies the EqualFold predicate on the ID field.
-func IDEqualFold(id string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldID, id))
-}
-
-// IDContainsFold applies the ContainsFold predicate on the ID field.
-func IDContainsFold(id string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldID, id))
 }
 
 // CreateAuthor applies equality check predicate on the "create_author" field. It's identical to CreateAuthorEQ.
@@ -171,7 +161,7 @@ func SanctionDate(v time.Time) predicate.User {
 }
 
 // ManagerID applies equality check predicate on the "manager_id" field. It's identical to ManagerIDEQ.
-func ManagerID(v string) predicate.User {
+func ManagerID(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldManagerID, v))
 }
 
@@ -1421,68 +1411,43 @@ func SanctionDateLTE(v time.Time) predicate.User {
 }
 
 // ManagerIDEQ applies the EQ predicate on the "manager_id" field.
-func ManagerIDEQ(v string) predicate.User {
+func ManagerIDEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldManagerID, v))
 }
 
 // ManagerIDNEQ applies the NEQ predicate on the "manager_id" field.
-func ManagerIDNEQ(v string) predicate.User {
+func ManagerIDNEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldManagerID, v))
 }
 
 // ManagerIDIn applies the In predicate on the "manager_id" field.
-func ManagerIDIn(vs ...string) predicate.User {
+func ManagerIDIn(vs ...int64) predicate.User {
 	return predicate.User(sql.FieldIn(FieldManagerID, vs...))
 }
 
 // ManagerIDNotIn applies the NotIn predicate on the "manager_id" field.
-func ManagerIDNotIn(vs ...string) predicate.User {
+func ManagerIDNotIn(vs ...int64) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldManagerID, vs...))
 }
 
 // ManagerIDGT applies the GT predicate on the "manager_id" field.
-func ManagerIDGT(v string) predicate.User {
+func ManagerIDGT(v int64) predicate.User {
 	return predicate.User(sql.FieldGT(FieldManagerID, v))
 }
 
 // ManagerIDGTE applies the GTE predicate on the "manager_id" field.
-func ManagerIDGTE(v string) predicate.User {
+func ManagerIDGTE(v int64) predicate.User {
 	return predicate.User(sql.FieldGTE(FieldManagerID, v))
 }
 
 // ManagerIDLT applies the LT predicate on the "manager_id" field.
-func ManagerIDLT(v string) predicate.User {
+func ManagerIDLT(v int64) predicate.User {
 	return predicate.User(sql.FieldLT(FieldManagerID, v))
 }
 
 // ManagerIDLTE applies the LTE predicate on the "manager_id" field.
-func ManagerIDLTE(v string) predicate.User {
+func ManagerIDLTE(v int64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldManagerID, v))
-}
-
-// ManagerIDContains applies the Contains predicate on the "manager_id" field.
-func ManagerIDContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldManagerID, v))
-}
-
-// ManagerIDHasPrefix applies the HasPrefix predicate on the "manager_id" field.
-func ManagerIDHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldManagerID, v))
-}
-
-// ManagerIDHasSuffix applies the HasSuffix predicate on the "manager_id" field.
-func ManagerIDHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldManagerID, v))
-}
-
-// ManagerIDEqualFold applies the EqualFold predicate on the "manager_id" field.
-func ManagerIDEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldManagerID, v))
-}
-
-// ManagerIDContainsFold applies the ContainsFold predicate on the "manager_id" field.
-func ManagerIDContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldManagerID, v))
 }
 
 // ManagerEQ applies the EQ predicate on the "manager" field.

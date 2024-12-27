@@ -18,11 +18,11 @@ type RoleMenu struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// foreign_key:comment
-	RoleID string `json:"role_id,omitempty"`
+	RoleID int64 `json:"role_id,omitempty"`
 	// foreign_key:comment
-	MenuID string `json:"menu_id,omitempty"`
+	MenuID int64 `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleMenuQuery when eager-loading is set.
 	Edges        RoleMenuEdges `json:"edges"`
@@ -67,10 +67,8 @@ func (*RoleMenu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case rolemenu.FieldID:
+		case rolemenu.FieldID, rolemenu.FieldRoleID, rolemenu.FieldMenuID:
 			values[i] = new(sql.NullInt64)
-		case rolemenu.FieldRoleID, rolemenu.FieldMenuID:
-			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -91,18 +89,18 @@ func (rm *RoleMenu) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			rm.ID = int(value.Int64)
+			rm.ID = int64(value.Int64)
 		case rolemenu.FieldRoleID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
-				rm.RoleID = value.String
+				rm.RoleID = value.Int64
 			}
 		case rolemenu.FieldMenuID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
 			} else if value.Valid {
-				rm.MenuID = value.String
+				rm.MenuID = value.Int64
 			}
 		default:
 			rm.selectValues.Set(columns[i], values[i])
@@ -151,10 +149,10 @@ func (rm *RoleMenu) String() string {
 	builder.WriteString("RoleMenu(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", rm.ID))
 	builder.WriteString("role_id=")
-	builder.WriteString(rm.RoleID)
+	builder.WriteString(fmt.Sprintf("%v", rm.RoleID))
 	builder.WriteString(", ")
 	builder.WriteString("menu_id=")
-	builder.WriteString(rm.MenuID)
+	builder.WriteString(fmt.Sprintf("%v", rm.MenuID))
 	builder.WriteByte(')')
 	return builder.String()
 }

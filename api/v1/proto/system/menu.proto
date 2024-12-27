@@ -41,7 +41,7 @@ service MenuAPI {
 // ListMenusRequest is the request for the MenuService.ListMenus method.
 message ListMenusRequest {
   // The parent resource id, for example, "shelves/shelf1".
-  string id = 1;
+  int64 id = 1;
   // The current page number.
   int32 current = 2;
   // The maximum number of items to return.
@@ -76,7 +76,7 @@ message ListMenusResponse {
 message GetMenuRequest {
   // The field will contain id of the resource requested, for example:
   // "shelves/shelf1/menus/menu2"
-  string id = 1;
+  int64 id = 1;
 }
 
 // GetMenuResponse is the response for the MenuService.GetMenu method.
@@ -118,7 +118,7 @@ message UpdateMenuResponse {
 message DeleteMenuRequest {
   // The resource id of the menu to be deleted, for example:
   // "shelves/shelf1/menus/menu2"
-  string id = 1;
+  int64 id = 1;
 }
 
 // DeleteMenuResponse is the response for the MenuService.DeleteMenu method.

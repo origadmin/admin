@@ -16,57 +16,57 @@ option objc_class_prefix = "APIServiceSystemType";
 // Menu is the model entity for the Menu schema.
 message Menu {
   // ID of the ent.
-  string id = 1;
+  int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // Code holds the value of the "code" field.
-  string keyword = 4;
+  string keyword = 4 [json_name = "code"];
   // Name holds the value of the "name" field.
-  string name = 5;
+  string name = 5 [json_name = "name"];
   // Description holds the value of the "description" field.
-  string description = 6;
+  string description = 6 [json_name = "description"];
   // Sequence holds the value of the "sequence" field.
-  int32 sequence = 7;
+  int32 sequence = 7 [json_name = "sequence"];
   // Type holds the value of the "type" field.
-  string type = 8;
+  string type = 8 [json_name = "type"];
   // Path holds the value of the "path" field.
-  string path = 9;
+  string path = 9 [json_name = "path"];
   // Properties holds the value of the "properties" field.
-  string properties = 10;
+  string properties = 10 [json_name = "properties"];
   // Status holds the value of the "status" field.
-  int32 status = 11;
+  int32 status = 11 [json_name = "status"];
   // ParentID holds the value of the "parent_id" field.
-  string parent_id = 12;
+  int64 parent_id = 12 [json_name = "parent_id"];
   // ParentPath holds the value of the "parent_path" field.
-  string parent_path = 13;
+  string parent_path = 13 [json_name = "parent_path"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the MenuQuery when eager-loading is set.
   //  MenuEdges edges = 14;
   //    selectValues = 15;
   // Children holds the value of the children edge.
-  repeated Menu children = 21;
+  repeated Menu children = 21 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Menu parent = 22;
+  Menu parent = 22 [json_name = "parent"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 23;
+  repeated Resource resources = 23 [json_name = "resources"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 24;
+  repeated Role roles = 24 [json_name = "roles"];
 }
 
 // MenuEdges holds the relations/edges for other nodes in the graph.
 message MenuEdges {
   // Children holds the value of the children edge.
-  repeated Menu children = 1;
+  repeated Menu children = 1 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Menu parent = 2;
+  Menu parent = 2 [json_name = "parent"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 3;
+  repeated Resource resources = 3 [json_name = "resources"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 4;
+  repeated Role roles = 4 [json_name = "roles"];
   // RoleMenu holds the value of the role_menu edge.
-  repeated RoleMenu role_menus = 5;
+  repeated RoleMenu role_menus = 5 [json_name = "role_menus"];
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 6;
@@ -75,41 +75,41 @@ message MenuEdges {
 // Role is the model entity for the Role schema.
 message Role {
   // ID of the ent.
-  string id = 1;
+  int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // Code holds the value of the "code" field.
-  string keyword = 4;
+  string keyword = 4 [json_name = "code"];
   // Name holds the value of the "name" field.
-  string name = 5;
+  string name = 5 [json_name = "name"];
   // Description holds the value of the "description" field.
-  string description = 6;
+  string description = 6 [json_name = "description"];
   // Sequence holds the value of the "sequence" field.
-  int32 sequence = 7;
+  int32 sequence = 7 [json_name = "sequence"];
   // Status holds the value of the "status" field.
-  int32 status = 8;
+  int32 status = 8 [json_name = "status"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the RoleQuery when eager-loading is set.
   //  RoleEdges edges = 9;
   //    selectValues = 10;
   // Menus holds the value of the menus edge.
-  repeated Menu menus = 21;
+  repeated Menu menus = 21 [json_name = "menus"];
   // Users holds the value of the users edge.
-  repeated User users = 22;
+  repeated User users = 22 [json_name = "users"];
 }
 
 // RoleEdges holds the relations/edges for other nodes in the graph.
 message RoleEdges {
   // Menus holds the value of the menus edge.
-  repeated Menu menus = 1;
+  repeated Menu menus = 1 [json_name = "menus"];
   // Users holds the value of the users edge.
-  repeated User users = 2;
+  repeated User users = 2 [json_name = "users"];
   // RoleMenu holds the value of the role_menu edge.
-  repeated RoleMenu role_menus = 3;
+  repeated RoleMenu role_menus = 3 [json_name = "role_menus"];
   // UserRole holds the value of the user_role edge.
-  repeated UserRole user_roles = 4;
+  repeated UserRole user_roles = 4 [json_name = "user_roles"];
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 5;
@@ -118,43 +118,45 @@ message RoleEdges {
 // User is the model entity for the User schema.
 message User {
   // ID of the ent.
-  string id = 1;
+  int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // Username holds the value of the "username" field.
-  string username = 4;
+  string username = 4 [json_name = "username"];
   // Name holds the value of the "name" field.
-  string name = 5;
+  string name = 5 [json_name = "name"];
   // Avatar holds the value of the "avatar" field.
-  string avatar = 6;
+  string avatar = 6 [json_name = "avatar"];
   // Password holds the value of the "password" field.
-  string password = 7;
+  string password = 7 [json_name = "password"];
   // Salt holds the value of the "salt" field.
-  string salt = 8;
+  string salt = 8 [json_name = "salt"];
   // Phone holds the value of the "phone" field.
-  string phone = 9;
+  string phone = 9 [json_name = "phone"];
   // Email holds the value of the "email" field.
-  string email = 10;
+  string email = 10 [json_name = "email"];
   // Remark holds the value of the "remark" field.
-  string remark = 11;
+  string remark = 11 [json_name = "remark"];
   // Status holds the value of the "status" field.
-  int32 status = 12;
+  int32 status = 12 [json_name = "status"];
+
+  string uuid = 13 [json_name = "uuid"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the UserQuery when eager-loading is set.
   //  UserEdges edges = 13;
   //    selectValues = 14;
   // Roles holds the value of the roles edge.
-  repeated Role roles = 21;
+  repeated Role roles = 21 [json_name = "roles"];
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.
 message UserEdges {
   // Roles holds the value of the roles edge.
-  repeated Role roles = 1;
+  repeated Role roles = 1 [json_name = "roles"];
   // UserRole holds the value of the user_role edge.
-  repeated UserRole user_roles = 2;
+  repeated UserRole user_roles = 2 [json_name = "user_roles"];
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 3;
@@ -163,33 +165,33 @@ message UserEdges {
 // UserRole is the model entity for the UserRole schema.
 message UserRole {
   // ID of the ent.
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // UserID holds the value of the "user_id" field.
-  string user_id = 4;
+  int64 user_id = 4 [json_name = "user_id"];
   // RoleID holds the value of the "role_id" field.
-  string role_id = 5;
+  int64 role_id = 5 [json_name = "role_id"];
   // RoleName holds the value of the "role_name" field.
-  string role_name = 6;
+  string role_name = 6 [json_name = "role_name"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the UserRoleQuery when eager-loading is set.
   //  UserRoleEdges edges = 7;
   //    selectValues = 8;
   // User holds the value of the user edge.
-  User user = 21;
+  User user = 21 [json_name = "user"];
   // Role holds the value of the role edge.
-  Role role = 22;
+  Role role = 22 [json_name = "role"];
 }
 
 // UserRoleEdges holds the relations/edges for other nodes in the graph.
 message UserRoleEdges {
   // User holds the value of the user edge.
-  User user = 1;
+  User user = 1 [json_name = "user"];
   // Role holds the value of the role edge.
-  Role role = 2;
+  Role role = 2 [json_name = "role"];
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 3;
@@ -198,31 +200,31 @@ message UserRoleEdges {
 // RoleMenu is the model entity for the RoleMenu schema.
 message RoleMenu {
   // ID of the ent.
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // RoleID holds the value of the "role_id" field.
-  string role_id = 4;
+  int64 role_id = 4 [json_name = "role_id"];
   // MenuID holds the value of the "menu_id" field.
-  string menu_id = 5;
+  int64 menu_id = 5 [json_name = "menu_id"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the RoleMenuQuery when eager-loading is set.
   //  RoleMenuEdges edges = 6;
   //    selectValues = 7;
   // Role holds the value of the role edge.
-  Role role = 21;
+  Role role = 21 [json_name = "role"];
   // Menu holds the value of the menu edge.
-  Menu menu = 22;
+  Menu menu = 22 [json_name = "menu"];
 }
 
 // RoleMenuEdges holds the relations/edges for other nodes in the graph.
 message RoleMenuEdges {
   // Role holds the value of the role edge.
-  Role role = 1;
+  Role role = 1 [json_name = "role"];
   // Menu holds the value of the menu edge.
-  Menu menu = 2;
+  Menu menu = 2 [json_name = "menu"];
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 3;
@@ -231,30 +233,30 @@ message RoleMenuEdges {
 // Resource is the model entity for the Resource schema.
 message Resource {
   // ID of the ent.
-  string id = 1;
+  int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
-  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
-  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // MenuID holds the value of the "menu_id" field.
-  string menu_id = 4;
+  int64 menu_id = 4 [json_name = "menu_id"];
   // Method holds the value of the "method" field.
-  string method = 5;
+  string method = 5 [json_name = "method"];
   // Path holds the value of the "path" field.
-  string path = 6;
+  string path = 6 [json_name = "path"];
   // Operation holds the value of the "operation" field.
-  string operation = 7;
+  string operation = 7 [json_name = "operation"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the ResourceQuery when eager-loading is set.
   //  ResourceEdges edges = 8;
   //    selectValues = 8;
-  Menu menu = 21;
+  Menu menu = 21 [json_name = "menu"];
 }
 
 // ResourceEdges holds the relations/edges for other nodes in the graph.
 message ResourceEdges {
   // Menu holds the value of the menu edge.
-  Menu menu = 1;
+  Menu menu = 1 [json_name = "menu"];
   // loadedTypes holds the information for reporting if a
   //    type was loaded (or requested) in eager-loading or not.
   //        repeated bool loadedTypes = 2;

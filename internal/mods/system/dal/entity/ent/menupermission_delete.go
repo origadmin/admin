@@ -40,7 +40,7 @@ func (mpd *MenuPermissionDelete) ExecX(ctx context.Context) int {
 }
 
 func (mpd *MenuPermissionDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(menupermission.Table, sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(menupermission.Table, sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64))
 	if ps := mpd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

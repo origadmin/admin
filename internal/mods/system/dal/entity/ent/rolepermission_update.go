@@ -31,29 +31,29 @@ func (rpu *RolePermissionUpdate) Where(ps ...predicate.RolePermission) *RolePerm
 }
 
 // SetRoleID sets the "role_id" field.
-func (rpu *RolePermissionUpdate) SetRoleID(s string) *RolePermissionUpdate {
-	rpu.mutation.SetRoleID(s)
+func (rpu *RolePermissionUpdate) SetRoleID(i int64) *RolePermissionUpdate {
+	rpu.mutation.SetRoleID(i)
 	return rpu
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (rpu *RolePermissionUpdate) SetNillableRoleID(s *string) *RolePermissionUpdate {
-	if s != nil {
-		rpu.SetRoleID(*s)
+func (rpu *RolePermissionUpdate) SetNillableRoleID(i *int64) *RolePermissionUpdate {
+	if i != nil {
+		rpu.SetRoleID(*i)
 	}
 	return rpu
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (rpu *RolePermissionUpdate) SetPermissionID(s string) *RolePermissionUpdate {
-	rpu.mutation.SetPermissionID(s)
+func (rpu *RolePermissionUpdate) SetPermissionID(i int64) *RolePermissionUpdate {
+	rpu.mutation.SetPermissionID(i)
 	return rpu
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (rpu *RolePermissionUpdate) SetNillablePermissionID(s *string) *RolePermissionUpdate {
-	if s != nil {
-		rpu.SetPermissionID(*s)
+func (rpu *RolePermissionUpdate) SetNillablePermissionID(i *int64) *RolePermissionUpdate {
+	if i != nil {
+		rpu.SetPermissionID(*i)
 	}
 	return rpu
 }
@@ -143,7 +143,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if err := rpu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
 	if ps := rpu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -159,7 +159,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{rolepermission.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{rolepermission.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{rolepermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{rolepermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type RolePermissionUpdateOne struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rpuo *RolePermissionUpdateOne) SetRoleID(s string) *RolePermissionUpdateOne {
-	rpuo.mutation.SetRoleID(s)
+func (rpuo *RolePermissionUpdateOne) SetRoleID(i int64) *RolePermissionUpdateOne {
+	rpuo.mutation.SetRoleID(i)
 	return rpuo
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (rpuo *RolePermissionUpdateOne) SetNillableRoleID(s *string) *RolePermissionUpdateOne {
-	if s != nil {
-		rpuo.SetRoleID(*s)
+func (rpuo *RolePermissionUpdateOne) SetNillableRoleID(i *int64) *RolePermissionUpdateOne {
+	if i != nil {
+		rpuo.SetRoleID(*i)
 	}
 	return rpuo
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (rpuo *RolePermissionUpdateOne) SetPermissionID(s string) *RolePermissionUpdateOne {
-	rpuo.mutation.SetPermissionID(s)
+func (rpuo *RolePermissionUpdateOne) SetPermissionID(i int64) *RolePermissionUpdateOne {
+	rpuo.mutation.SetPermissionID(i)
 	return rpuo
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (rpuo *RolePermissionUpdateOne) SetNillablePermissionID(s *string) *RolePermissionUpdateOne {
-	if s != nil {
-		rpuo.SetPermissionID(*s)
+func (rpuo *RolePermissionUpdateOne) SetNillablePermissionID(i *int64) *RolePermissionUpdateOne {
+	if i != nil {
+		rpuo.SetPermissionID(*i)
 	}
 	return rpuo
 }
@@ -357,7 +357,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 	if err := rpuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
 	id, ok := rpuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "RolePermission.id" for update`)}
@@ -390,7 +390,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 			Columns: []string{rolepermission.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 			Columns: []string{rolepermission.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 			Columns: []string{rolepermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 			Columns: []string{rolepermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

@@ -22,19 +22,19 @@ type MenuPermissionCreate struct {
 }
 
 // SetMenuID sets the "menu_id" field.
-func (mpc *MenuPermissionCreate) SetMenuID(s string) *MenuPermissionCreate {
-	mpc.mutation.SetMenuID(s)
+func (mpc *MenuPermissionCreate) SetMenuID(i int64) *MenuPermissionCreate {
+	mpc.mutation.SetMenuID(i)
 	return mpc
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (mpc *MenuPermissionCreate) SetPermissionID(s string) *MenuPermissionCreate {
-	mpc.mutation.SetPermissionID(s)
+func (mpc *MenuPermissionCreate) SetPermissionID(i int64) *MenuPermissionCreate {
+	mpc.mutation.SetPermissionID(i)
 	return mpc
 }
 
 // SetID sets the "id" field.
-func (mpc *MenuPermissionCreate) SetID(i int) *MenuPermissionCreate {
+func (mpc *MenuPermissionCreate) SetID(i int64) *MenuPermissionCreate {
 	mpc.mutation.SetID(i)
 	return mpc
 }
@@ -126,7 +126,7 @@ func (mpc *MenuPermissionCreate) sqlSave(ctx context.Context) (*MenuPermission, 
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	mpc.mutation.id = &_node.ID
 	mpc.mutation.done = true
@@ -136,7 +136,7 @@ func (mpc *MenuPermissionCreate) sqlSave(ctx context.Context) (*MenuPermission, 
 func (mpc *MenuPermissionCreate) createSpec() (*MenuPermission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &MenuPermission{config: mpc.config}
-		_spec = sqlgraph.NewCreateSpec(menupermission.Table, sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(menupermission.Table, sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64))
 	)
 	if id, ok := mpc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (mpc *MenuPermissionCreate) createSpec() (*MenuPermission, *sqlgraph.Create
 			Columns: []string{menupermission.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (mpc *MenuPermissionCreate) createSpec() (*MenuPermission, *sqlgraph.Create
 			Columns: []string{menupermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (mpcb *MenuPermissionCreateBulk) Save(ctx context.Context) ([]*MenuPermissi
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

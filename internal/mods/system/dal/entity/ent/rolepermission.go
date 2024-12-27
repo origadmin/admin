@@ -18,11 +18,11 @@ type RolePermission struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// foreign_key:comment
-	RoleID string `json:"role_id,omitempty"`
+	RoleID int64 `json:"role_id,omitempty"`
 	// foreign_key:comment
-	PermissionID string `json:"permission_id,omitempty"`
+	PermissionID int64 `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RolePermissionQuery when eager-loading is set.
 	Edges        RolePermissionEdges `json:"edges"`
@@ -67,10 +67,8 @@ func (*RolePermission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case rolepermission.FieldID:
+		case rolepermission.FieldID, rolepermission.FieldRoleID, rolepermission.FieldPermissionID:
 			values[i] = new(sql.NullInt64)
-		case rolepermission.FieldRoleID, rolepermission.FieldPermissionID:
-			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -91,18 +89,18 @@ func (rp *RolePermission) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			rp.ID = int(value.Int64)
+			rp.ID = int64(value.Int64)
 		case rolepermission.FieldRoleID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
-				rp.RoleID = value.String
+				rp.RoleID = value.Int64
 			}
 		case rolepermission.FieldPermissionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				rp.PermissionID = value.String
+				rp.PermissionID = value.Int64
 			}
 		default:
 			rp.selectValues.Set(columns[i], values[i])
@@ -151,10 +149,10 @@ func (rp *RolePermission) String() string {
 	builder.WriteString("RolePermission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", rp.ID))
 	builder.WriteString("role_id=")
-	builder.WriteString(rp.RoleID)
+	builder.WriteString(fmt.Sprintf("%v", rp.RoleID))
 	builder.WriteString(", ")
 	builder.WriteString("permission_id=")
-	builder.WriteString(rp.PermissionID)
+	builder.WriteString(fmt.Sprintf("%v", rp.PermissionID))
 	builder.WriteByte(')')
 	return builder.String()
 }

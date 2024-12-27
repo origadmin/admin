@@ -132,8 +132,8 @@ func (rpq *RolePermissionQuery) FirstX(ctx context.Context) *RolePermission {
 
 // FirstID returns the first RolePermission ID from the query.
 // Returns a *NotFoundError when no RolePermission ID was found.
-func (rpq *RolePermissionQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rpq *RolePermissionQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = rpq.Limit(1).IDs(setContextOp(ctx, rpq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (rpq *RolePermissionQuery) FirstID(ctx context.Context) (id int, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rpq *RolePermissionQuery) FirstIDX(ctx context.Context) int {
+func (rpq *RolePermissionQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := rpq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (rpq *RolePermissionQuery) OnlyX(ctx context.Context) *RolePermission {
 // OnlyID is like Only, but returns the only RolePermission ID in the query.
 // Returns a *NotSingularError when more than one RolePermission ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rpq *RolePermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (rpq *RolePermissionQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = rpq.Limit(2).IDs(setContextOp(ctx, rpq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (rpq *RolePermissionQuery) OnlyID(ctx context.Context) (id int, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rpq *RolePermissionQuery) OnlyIDX(ctx context.Context) int {
+func (rpq *RolePermissionQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := rpq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (rpq *RolePermissionQuery) AllX(ctx context.Context) []*RolePermission {
 }
 
 // IDs executes the query and returns a list of RolePermission IDs.
-func (rpq *RolePermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (rpq *RolePermissionQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if rpq.ctx.Unique == nil && rpq.path != nil {
 		rpq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (rpq *RolePermissionQuery) IDs(ctx context.Context) (ids []int, err error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rpq *RolePermissionQuery) IDsX(ctx context.Context) []int {
+func (rpq *RolePermissionQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := rpq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,7 +337,7 @@ func (rpq *RolePermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *
 // Example:
 //
 //	var v []struct {
-//		RoleID string `json:"role_id,omitempty"`
+//		RoleID int64 `json:"role_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (rpq *RolePermissionQuery) GroupBy(field string, fields ...string) *RolePer
 // Example:
 //
 //	var v []struct {
-//		RoleID string `json:"role_id,omitempty"`
+//		RoleID int64 `json:"role_id,omitempty"`
 //	}
 //
 //	client.RolePermission.Query().
@@ -451,8 +451,8 @@ func (rpq *RolePermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (rpq *RolePermissionQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*RolePermission, init func(*RolePermission), assign func(*RolePermission, *Role)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RolePermission)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*RolePermission)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (rpq *RolePermissionQuery) loadRole(ctx context.Context, query *RoleQuery, 
 	return nil
 }
 func (rpq *RolePermissionQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*RolePermission, init func(*RolePermission), assign func(*RolePermission, *Permission)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RolePermission)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*RolePermission)
 	for i := range nodes {
 		fk := nodes[i].PermissionID
 		if _, ok := nodeids[fk]; !ok {
@@ -522,7 +522,7 @@ func (rpq *RolePermissionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (rpq *RolePermissionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
 	_spec.From = rpq.sql
 	if unique := rpq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,8 +639,8 @@ func (rpq *RolePermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Role
 // Example:
 //
 //	var v []struct {
-//	  RoleID string `json:"role_id,omitempty"`
-//	  PermissionID string `json:"permission_id,omitempty"`
+//	  RoleID int64 `json:"role_id,omitempty"`
+//	  PermissionID int64 `json:"permission_id,omitempty"`
 //	}
 //
 //	client.RolePermission.Query().

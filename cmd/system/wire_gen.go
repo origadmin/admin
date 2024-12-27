@@ -10,7 +10,6 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime/log"
-	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	biz2 "origadmin/application/admin/internal/mods/basis/biz"
@@ -63,7 +62,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		Current: currentAPIServer,
 	}
 	basisConfig := loader.NewBasisConfig(bootstrap)
-	authenticator, err := securityx.NewAuthenticator(bootstrap)
+	authenticator, err := loader.NewAuthenticator(bootstrap)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -82,7 +81,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		Login: loginAPIServer,
 	}
 	v2 := server.NewRegisterServer(registerServer, serviceRegisterServer)
-	v3 := server.NewSystemServer(v2, bootstrap, arg)
+	v3 := server.NewSystemServer(bootstrap, v2, arg)
 	injectorServer := &loader.InjectorServer{
 		Logger:    arg,
 		Bootstrap: bootstrap,

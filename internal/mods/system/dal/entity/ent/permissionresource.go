@@ -18,11 +18,11 @@ type PermissionResource struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// foreign_key:comment
-	PermissionID string `json:"permission_id,omitempty"`
+	PermissionID int64 `json:"permission_id,omitempty"`
 	// foreign_key:comment
-	ResourceID string `json:"resource_id,omitempty"`
+	ResourceID int64 `json:"resource_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionResourceQuery when eager-loading is set.
 	Edges        PermissionResourceEdges `json:"edges"`
@@ -67,10 +67,8 @@ func (*PermissionResource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case permissionresource.FieldID:
+		case permissionresource.FieldID, permissionresource.FieldPermissionID, permissionresource.FieldResourceID:
 			values[i] = new(sql.NullInt64)
-		case permissionresource.FieldPermissionID, permissionresource.FieldResourceID:
-			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -91,18 +89,18 @@ func (pr *PermissionResource) assignValues(columns []string, values []any) error
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pr.ID = int(value.Int64)
+			pr.ID = int64(value.Int64)
 		case permissionresource.FieldPermissionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				pr.PermissionID = value.String
+				pr.PermissionID = value.Int64
 			}
 		case permissionresource.FieldResourceID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field resource_id", values[i])
 			} else if value.Valid {
-				pr.ResourceID = value.String
+				pr.ResourceID = value.Int64
 			}
 		default:
 			pr.selectValues.Set(columns[i], values[i])
@@ -151,10 +149,10 @@ func (pr *PermissionResource) String() string {
 	builder.WriteString("PermissionResource(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", pr.ID))
 	builder.WriteString("permission_id=")
-	builder.WriteString(pr.PermissionID)
+	builder.WriteString(fmt.Sprintf("%v", pr.PermissionID))
 	builder.WriteString(", ")
 	builder.WriteString("resource_id=")
-	builder.WriteString(pr.ResourceID)
+	builder.WriteString(fmt.Sprintf("%v", pr.ResourceID))
 	builder.WriteByte(')')
 	return builder.String()
 }

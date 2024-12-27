@@ -20,7 +20,7 @@ type resourceRepo struct {
 	db *Data
 }
 
-func (repo resourceRepo) Get(ctx context.Context, id string, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
+func (repo resourceRepo) Get(ctx context.Context, id int64, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
 	var option dto.ResourceQueryOption
 	if len(options) > 0 {
 		option = options[0]
@@ -48,7 +48,7 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 	return dto.ConvertResource2PB(saved), nil
 }
 
-func (repo resourceRepo) Delete(ctx context.Context, id string) error {
+func (repo resourceRepo) Delete(ctx context.Context, id int64) error {
 	return repo.db.Resource(ctx).DeleteOneID(id).Exec(ctx)
 }
 

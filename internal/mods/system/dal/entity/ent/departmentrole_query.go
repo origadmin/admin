@@ -132,8 +132,8 @@ func (drq *DepartmentRoleQuery) FirstX(ctx context.Context) *DepartmentRole {
 
 // FirstID returns the first DepartmentRole ID from the query.
 // Returns a *NotFoundError when no DepartmentRole ID was found.
-func (drq *DepartmentRoleQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (drq *DepartmentRoleQuery) FirstID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = drq.Limit(1).IDs(setContextOp(ctx, drq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (drq *DepartmentRoleQuery) FirstID(ctx context.Context) (id int, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (drq *DepartmentRoleQuery) FirstIDX(ctx context.Context) int {
+func (drq *DepartmentRoleQuery) FirstIDX(ctx context.Context) int64 {
 	id, err := drq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (drq *DepartmentRoleQuery) OnlyX(ctx context.Context) *DepartmentRole {
 // OnlyID is like Only, but returns the only DepartmentRole ID in the query.
 // Returns a *NotSingularError when more than one DepartmentRole ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (drq *DepartmentRoleQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (drq *DepartmentRoleQuery) OnlyID(ctx context.Context) (id int64, err error) {
+	var ids []int64
 	if ids, err = drq.Limit(2).IDs(setContextOp(ctx, drq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (drq *DepartmentRoleQuery) OnlyID(ctx context.Context) (id int, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (drq *DepartmentRoleQuery) OnlyIDX(ctx context.Context) int {
+func (drq *DepartmentRoleQuery) OnlyIDX(ctx context.Context) int64 {
 	id, err := drq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (drq *DepartmentRoleQuery) AllX(ctx context.Context) []*DepartmentRole {
 }
 
 // IDs executes the query and returns a list of DepartmentRole IDs.
-func (drq *DepartmentRoleQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (drq *DepartmentRoleQuery) IDs(ctx context.Context) (ids []int64, err error) {
 	if drq.ctx.Unique == nil && drq.path != nil {
 		drq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (drq *DepartmentRoleQuery) IDs(ctx context.Context) (ids []int, err error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (drq *DepartmentRoleQuery) IDsX(ctx context.Context) []int {
+func (drq *DepartmentRoleQuery) IDsX(ctx context.Context) []int64 {
 	ids, err := drq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -337,7 +337,7 @@ func (drq *DepartmentRoleQuery) WithRole(opts ...func(*RoleQuery)) *DepartmentRo
 // Example:
 //
 //	var v []struct {
-//		DepartmentID string `json:"department_id,omitempty"`
+//		DepartmentID int64 `json:"department_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (drq *DepartmentRoleQuery) GroupBy(field string, fields ...string) *Departm
 // Example:
 //
 //	var v []struct {
-//		DepartmentID string `json:"department_id,omitempty"`
+//		DepartmentID int64 `json:"department_id,omitempty"`
 //	}
 //
 //	client.DepartmentRole.Query().
@@ -451,8 +451,8 @@ func (drq *DepartmentRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (drq *DepartmentRoleQuery) loadDepartment(ctx context.Context, query *DepartmentQuery, nodes []*DepartmentRole, init func(*DepartmentRole), assign func(*DepartmentRole, *Department)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*DepartmentRole)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*DepartmentRole)
 	for i := range nodes {
 		fk := nodes[i].DepartmentID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (drq *DepartmentRoleQuery) loadDepartment(ctx context.Context, query *Depar
 	return nil
 }
 func (drq *DepartmentRoleQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*DepartmentRole, init func(*DepartmentRole), assign func(*DepartmentRole, *Role)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*DepartmentRole)
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*DepartmentRole)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -522,7 +522,7 @@ func (drq *DepartmentRoleQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (drq *DepartmentRoleQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(departmentrole.Table, departmentrole.Columns, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(departmentrole.Table, departmentrole.Columns, sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64))
 	_spec.From = drq.sql
 	if unique := drq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -639,8 +639,8 @@ func (drq *DepartmentRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *Depa
 // Example:
 //
 //	var v []struct {
-//	  DepartmentID string `json:"department_id,omitempty"`
-//	  RoleID string `json:"role_id,omitempty"`
+//	  DepartmentID int64 `json:"department_id,omitempty"`
+//	  RoleID int64 `json:"role_id,omitempty"`
 //	}
 //
 //	client.DepartmentRole.Query().

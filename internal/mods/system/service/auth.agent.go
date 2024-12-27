@@ -26,10 +26,10 @@ func (s AuthAPIGINRPCService) ListAuthResources(context transhttp.Context, reque
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
-		Data:    response.Resources,
+		Data:    resp.Proto2AnyPBArray(response.Resources...),
 	})
 	return nil, nil
 }

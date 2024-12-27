@@ -22,19 +22,19 @@ type UserDepartmentCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (udc *UserDepartmentCreate) SetUserID(s string) *UserDepartmentCreate {
-	udc.mutation.SetUserID(s)
+func (udc *UserDepartmentCreate) SetUserID(i int64) *UserDepartmentCreate {
+	udc.mutation.SetUserID(i)
 	return udc
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (udc *UserDepartmentCreate) SetDepartmentID(s string) *UserDepartmentCreate {
-	udc.mutation.SetDepartmentID(s)
+func (udc *UserDepartmentCreate) SetDepartmentID(i int64) *UserDepartmentCreate {
+	udc.mutation.SetDepartmentID(i)
 	return udc
 }
 
 // SetID sets the "id" field.
-func (udc *UserDepartmentCreate) SetID(i int) *UserDepartmentCreate {
+func (udc *UserDepartmentCreate) SetID(i int64) *UserDepartmentCreate {
 	udc.mutation.SetID(i)
 	return udc
 }
@@ -126,7 +126,7 @@ func (udc *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, 
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	udc.mutation.id = &_node.ID
 	udc.mutation.done = true
@@ -136,7 +136,7 @@ func (udc *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, 
 func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserDepartment{config: udc.config}
-		_spec = sqlgraph.NewCreateSpec(userdepartment.Table, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(userdepartment.Table, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64))
 	)
 	if id, ok := udc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.Create
 			Columns: []string{userdepartment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.Create
 			Columns: []string{userdepartment.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

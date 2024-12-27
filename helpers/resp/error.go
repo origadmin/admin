@@ -12,11 +12,10 @@ import (
 
 	kerr "github.com/go-kratos/kratos/v2/errors"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/errors/httperr"
 )
 
-func decodeError(alwaysSucceed bool, code int, err error) (int, *httperr.Error) {
-	var ierr *httperr.Error
+func decodeError(alwaysSucceed bool, code int, err error) (int, *Error) {
+	var ierr (*Error)
 	var status int
 	if ok := errors.As(err, &ierr); ok {
 		status = int(ierr.Code)
@@ -25,15 +24,15 @@ func decodeError(alwaysSucceed bool, code int, err error) (int, *httperr.Error) 
 		if ke.Reason == "" {
 			ke.Reason = "UNKNOWN_REASON"
 		}
-		ierr = &httperr.Error{
-			ID:     HTTPErrorPrefix + ke.Reason,
+		ierr = &Error{
+			Id:     HTTPErrorPrefix + ke.Reason,
 			Code:   ke.Code,
 			Detail: ke.Message,
 		}
 	} else {
 		status = http.StatusInternalServerError
-		ierr = &httperr.Error{
-			ID:     HTTPErrorPrefix + "UNKNOWN",
+		ierr = &Error{
+			Id:     HTTPErrorPrefix + "UNKNOWN",
 			Code:   http.StatusInternalServerError,
 			Detail: fmt.Sprintf("unhandled error: %v", err),
 		}

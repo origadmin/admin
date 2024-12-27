@@ -15,6 +15,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/registry"
 	"github.com/origadmin/runtime/service"
+	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
@@ -24,8 +25,8 @@ var (
 	ProviderSet = wire.NewSet(
 		NewBasisConfig,
 		NewRegistrar,
-		securityx.NewAuthenticator,
-		securityx.NewAuthorizer,
+		NewAuthenticator,
+		NewAuthorizer,
 		wire.Struct(new(InjectorServer), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)
@@ -53,6 +54,14 @@ type InjectorServer struct {
 func init() {
 	runtime.RegisterConfigFunc("file", NewFileConfig)
 	runtime.RegisterService("ORIGADMIN_SERVICE", service.DefaultServiceBuilder)
+}
+
+func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, error) {
+	return securityx.NewAuthenticator(bootstrap)
+}
+
+func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
+	return securityx.NewAuthorizer(bootstrap)
 }
 
 func NewBasisConfig(bootstrap *configs.Bootstrap) *configs.BasisConfig {

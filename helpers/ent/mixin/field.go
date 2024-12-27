@@ -17,7 +17,7 @@ import (
 
 // ZeroTime represents the zero value for time.Time.
 var ZeroTime = time.Time{}
-var _id = UUID{}
+var _id = ID{}
 
 func Comment(key string) Ider {
 	return _id.Comment(key)

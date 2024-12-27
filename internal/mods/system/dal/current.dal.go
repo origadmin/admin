@@ -21,6 +21,31 @@ type currentRepo struct {
 	db *Data
 }
 
+func (repo currentRepo) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (repo currentRepo) ListCurrentRoles(ctx context.Context, in *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (repo currentRepo) UpdateCurrentUserPassword(ctx context.Context, in *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (repo currentRepo) UpdateCurrentUser(ctx context.Context, in *pb.UpdateCurrentUserRequest) (*pb.UpdateCurrentUserResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (repo currentRepo) ListCurrentMenus(ctx context.Context, in *pb.ListCurrentMenusRequest) (*pb.ListCurrentMenusResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (repo currentRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
 	var option dto.ResourceQueryOption
 	if len(options) > 0 {

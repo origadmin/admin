@@ -181,9 +181,9 @@ var (
 	// DefaultProperties holds the default value on creation for the "properties" field.
 	DefaultProperties string
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(string) error
+	ParentIDValidator func(int64) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int64) error
 )
 
 // OrderOption defines the ordering options for the Menu queries.

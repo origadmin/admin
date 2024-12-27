@@ -18,7 +18,7 @@ type Position struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID string `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// create_time:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
@@ -28,7 +28,7 @@ type Position struct {
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// foreign_key:comment
-	DepartmentID string `json:"department_id,omitempty"`
+	DepartmentID int64 `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PositionQuery when eager-loading is set.
 	Edges        PositionEdges `json:"edges"`
@@ -71,7 +71,9 @@ func (*Position) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case position.FieldID, position.FieldName, position.FieldDescription, position.FieldDepartmentID:
+		case position.FieldID, position.FieldDepartmentID:
+			values[i] = new(sql.NullInt64)
+		case position.FieldName, position.FieldDescription:
 			values[i] = new(sql.NullString)
 		case position.FieldCreateTime, position.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -91,11 +93,11 @@ func (po *Position) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case position.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				po.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			po.ID = int64(value.Int64)
 		case position.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -121,10 +123,10 @@ func (po *Position) assignValues(columns []string, values []any) error {
 				po.Description = value.String
 			}
 		case position.FieldDepartmentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				po.DepartmentID = value.String
+				po.DepartmentID = value.Int64
 			}
 		default:
 			po.selectValues.Set(columns[i], values[i])
@@ -185,7 +187,7 @@ func (po *Position) String() string {
 	builder.WriteString(po.Description)
 	builder.WriteString(", ")
 	builder.WriteString("department_id=")
-	builder.WriteString(po.DepartmentID)
+	builder.WriteString(fmt.Sprintf("%v", po.DepartmentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

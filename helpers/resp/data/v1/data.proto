@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package data.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "origadmin/application/admin/helpers/resp/data/v1;datav1";
+
+// PageResponse general result
+message Page {
+  bool success = 1 [json_name = "success"];
+  // The total number of items in the list.
+  int32 total = 2 [json_name = "total"];
+  // The paging data
+  repeated google.protobuf.Any data = 3 [json_name = "data"];
+  // The current page number.
+  optional int32 current = 4 [json_name = "current"];
+  // The maximum number of items to return.
+  optional int32 page_size = 5 [json_name = "page_size"];
+  // Additional information about this response.
+  // content to be added without destroying the current data format
+  map<string, google.protobuf.Struct> extra = 6 [json_name = "extra"];
+  google.protobuf.Value value = 7 [json_name = "value"];
+  google.protobuf.Struct struct = 8 [json_name = "struct"];
+}
+
+message Error {
+  string id = 1 [json_name = "id"];
+  int32 code = 2 [json_name = "code"];
+  string message = 3 [json_name = "message"];
+  string detail = 4 [json_name = "detail"];
+}
+
+message Data {
+  bool success = 1 [json_name = "success"];
+  google.protobuf.Any data = 3 [json_name = "data"];
+  map<string, google.protobuf.Any> extra = 4 [json_name = "extra"];
+  Error error = 5 [json_name = "error"];
+}
+
+message StringData {
+  bool success = 1 [json_name = "success"];
+  string data = 3 [json_name = "data"];
+}
+
+message Token {
+  //  "user_id":       response.Token.GetUserId(),
+  //  "access_token":  response.Token.GetAccessToken(),
+  //  "refresh_token": response.Token.GetRefreshToken(),
+  //  "expires_at":    response.Token.GetExpirationTime(),
+  string user_id = 1 [json_name = "user_id"];
+  string access_token = 2 [json_name = "access_token"];
+  string refresh_token = 3 [json_name = "refresh_token"];
+  int64 expires_at = 4 [json_name = "expires_at"];
+}
+
+message AnyData {
+  repeated google.protobuf.Any value = 1;
+}

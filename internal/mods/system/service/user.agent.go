@@ -37,21 +37,21 @@ func (s UserAPIGINRPCService) CreateUser(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.User,
+		Data:    resp.Any2AnyPB(response.User),
 	})
 	return nil, nil
 }
 
 func (s UserAPIGINRPCService) DeleteUser(context transhttp.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
-	response, err := s.client.DeleteUser(context, request)
+	_, err := s.client.DeleteUser(context, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Empty,
+		Data:    nil,
 	})
 	return nil, nil
 }
@@ -61,9 +61,9 @@ func (s UserAPIGINRPCService) GetUser(context transhttp.Context, request *pb.Get
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.User,
+		Data:    resp.Any2AnyPB(response.User),
 	})
 	return nil, nil
 }
@@ -73,10 +73,10 @@ func (s UserAPIGINRPCService) ListUsers(context transhttp.Context, request *pb.L
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
-		Data:    response.Users,
+		Data:    resp.Proto2AnyPBArray(response.Users...),
 	})
 	return nil, nil
 }
@@ -86,9 +86,9 @@ func (s UserAPIGINRPCService) UpdateUser(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.User,
+		Data:    resp.Any2AnyPB(response.User),
 	})
 	return nil, nil
 }

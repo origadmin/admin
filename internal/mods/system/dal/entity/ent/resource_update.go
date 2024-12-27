@@ -81,15 +81,15 @@ func (ru *ResourceUpdate) SetNillablePath(s *string) *ResourceUpdate {
 }
 
 // SetMenuID sets the "menu_id" field.
-func (ru *ResourceUpdate) SetMenuID(s string) *ResourceUpdate {
-	ru.mutation.SetMenuID(s)
+func (ru *ResourceUpdate) SetMenuID(i int64) *ResourceUpdate {
+	ru.mutation.SetMenuID(i)
 	return ru
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableMenuID(s *string) *ResourceUpdate {
-	if s != nil {
-		ru.SetMenuID(*s)
+func (ru *ResourceUpdate) SetNillableMenuID(i *int64) *ResourceUpdate {
+	if i != nil {
+		ru.SetMenuID(*i)
 	}
 	return ru
 }
@@ -106,14 +106,14 @@ func (ru *ResourceUpdate) SetMenu(m *Menu) *ResourceUpdate {
 }
 
 // AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
-func (ru *ResourceUpdate) AddPermissionIDs(ids ...string) *ResourceUpdate {
+func (ru *ResourceUpdate) AddPermissionIDs(ids ...int64) *ResourceUpdate {
 	ru.mutation.AddPermissionIDs(ids...)
 	return ru
 }
 
 // AddPermission adds the "permission" edges to the Permission entity.
 func (ru *ResourceUpdate) AddPermission(p ...*Permission) *ResourceUpdate {
-	ids := make([]string, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -121,14 +121,14 @@ func (ru *ResourceUpdate) AddPermission(p ...*Permission) *ResourceUpdate {
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (ru *ResourceUpdate) AddPermissionResourceIDs(ids ...int) *ResourceUpdate {
+func (ru *ResourceUpdate) AddPermissionResourceIDs(ids ...int64) *ResourceUpdate {
 	ru.mutation.AddPermissionResourceIDs(ids...)
 	return ru
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
 func (ru *ResourceUpdate) AddPermissionResources(p ...*PermissionResource) *ResourceUpdate {
-	ids := make([]int, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -153,14 +153,14 @@ func (ru *ResourceUpdate) ClearPermission() *ResourceUpdate {
 }
 
 // RemovePermissionIDs removes the "permission" edge to Permission entities by IDs.
-func (ru *ResourceUpdate) RemovePermissionIDs(ids ...string) *ResourceUpdate {
+func (ru *ResourceUpdate) RemovePermissionIDs(ids ...int64) *ResourceUpdate {
 	ru.mutation.RemovePermissionIDs(ids...)
 	return ru
 }
 
 // RemovePermission removes "permission" edges to Permission entities.
 func (ru *ResourceUpdate) RemovePermission(p ...*Permission) *ResourceUpdate {
-	ids := make([]string, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -174,14 +174,14 @@ func (ru *ResourceUpdate) ClearPermissionResources() *ResourceUpdate {
 }
 
 // RemovePermissionResourceIDs removes the "permission_resources" edge to PermissionResource entities by IDs.
-func (ru *ResourceUpdate) RemovePermissionResourceIDs(ids ...int) *ResourceUpdate {
+func (ru *ResourceUpdate) RemovePermissionResourceIDs(ids ...int64) *ResourceUpdate {
 	ru.mutation.RemovePermissionResourceIDs(ids...)
 	return ru
 }
 
 // RemovePermissionResources removes "permission_resources" edges to PermissionResource entities.
 func (ru *ResourceUpdate) RemovePermissionResources(p ...*PermissionResource) *ResourceUpdate {
-	ids := make([]int, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -259,7 +259,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := ru.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64))
 	if ps := ru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -287,7 +287,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -300,7 +300,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -316,7 +316,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -329,7 +329,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -345,7 +345,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -361,7 +361,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -374,7 +374,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -390,7 +390,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -469,15 +469,15 @@ func (ruo *ResourceUpdateOne) SetNillablePath(s *string) *ResourceUpdateOne {
 }
 
 // SetMenuID sets the "menu_id" field.
-func (ruo *ResourceUpdateOne) SetMenuID(s string) *ResourceUpdateOne {
-	ruo.mutation.SetMenuID(s)
+func (ruo *ResourceUpdateOne) SetMenuID(i int64) *ResourceUpdateOne {
+	ruo.mutation.SetMenuID(i)
 	return ruo
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableMenuID(s *string) *ResourceUpdateOne {
-	if s != nil {
-		ruo.SetMenuID(*s)
+func (ruo *ResourceUpdateOne) SetNillableMenuID(i *int64) *ResourceUpdateOne {
+	if i != nil {
+		ruo.SetMenuID(*i)
 	}
 	return ruo
 }
@@ -494,14 +494,14 @@ func (ruo *ResourceUpdateOne) SetMenu(m *Menu) *ResourceUpdateOne {
 }
 
 // AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
-func (ruo *ResourceUpdateOne) AddPermissionIDs(ids ...string) *ResourceUpdateOne {
+func (ruo *ResourceUpdateOne) AddPermissionIDs(ids ...int64) *ResourceUpdateOne {
 	ruo.mutation.AddPermissionIDs(ids...)
 	return ruo
 }
 
 // AddPermission adds the "permission" edges to the Permission entity.
 func (ruo *ResourceUpdateOne) AddPermission(p ...*Permission) *ResourceUpdateOne {
-	ids := make([]string, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -509,14 +509,14 @@ func (ruo *ResourceUpdateOne) AddPermission(p ...*Permission) *ResourceUpdateOne
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (ruo *ResourceUpdateOne) AddPermissionResourceIDs(ids ...int) *ResourceUpdateOne {
+func (ruo *ResourceUpdateOne) AddPermissionResourceIDs(ids ...int64) *ResourceUpdateOne {
 	ruo.mutation.AddPermissionResourceIDs(ids...)
 	return ruo
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
 func (ruo *ResourceUpdateOne) AddPermissionResources(p ...*PermissionResource) *ResourceUpdateOne {
-	ids := make([]int, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -541,14 +541,14 @@ func (ruo *ResourceUpdateOne) ClearPermission() *ResourceUpdateOne {
 }
 
 // RemovePermissionIDs removes the "permission" edge to Permission entities by IDs.
-func (ruo *ResourceUpdateOne) RemovePermissionIDs(ids ...string) *ResourceUpdateOne {
+func (ruo *ResourceUpdateOne) RemovePermissionIDs(ids ...int64) *ResourceUpdateOne {
 	ruo.mutation.RemovePermissionIDs(ids...)
 	return ruo
 }
 
 // RemovePermission removes "permission" edges to Permission entities.
 func (ruo *ResourceUpdateOne) RemovePermission(p ...*Permission) *ResourceUpdateOne {
-	ids := make([]string, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -562,14 +562,14 @@ func (ruo *ResourceUpdateOne) ClearPermissionResources() *ResourceUpdateOne {
 }
 
 // RemovePermissionResourceIDs removes the "permission_resources" edge to PermissionResource entities by IDs.
-func (ruo *ResourceUpdateOne) RemovePermissionResourceIDs(ids ...int) *ResourceUpdateOne {
+func (ruo *ResourceUpdateOne) RemovePermissionResourceIDs(ids ...int64) *ResourceUpdateOne {
 	ruo.mutation.RemovePermissionResourceIDs(ids...)
 	return ruo
 }
 
 // RemovePermissionResources removes "permission_resources" edges to PermissionResource entities.
 func (ruo *ResourceUpdateOne) RemovePermissionResources(p ...*PermissionResource) *ResourceUpdateOne {
-	ids := make([]int, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -660,7 +660,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	if err := ruo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(resource.Table, resource.Columns, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64))
 	id, ok := ruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Resource.id" for update`)}
@@ -705,7 +705,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -718,7 +718,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -734,7 +734,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -747,7 +747,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -763,7 +763,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -779,7 +779,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -792,7 +792,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -808,7 +808,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

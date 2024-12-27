@@ -23,34 +23,32 @@ type CurrentBiz struct {
 	log     *log.KHelper
 }
 
+func (biz CurrentBiz) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUserRequest, opts ...grpc.CallOption) (*pb.GetCurrentUserResponse, error) {
+	return biz.dao.GetCurrentUser(ctx, in)
+}
+
+func (biz CurrentBiz) ListCurrentRoles(ctx context.Context, in *pb.ListCurrentRolesRequest, opts ...grpc.CallOption) (*pb.ListCurrentRolesResponse, error) {
+	return biz.dao.ListCurrentRoles(ctx, in)
+}
+
 func (biz CurrentBiz) CurrentLogout(ctx context.Context, in *pb.CurrentLogoutRequest, opts ...grpc.CallOption) (*pb.CurrentLogoutResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &pb.CurrentLogoutResponse{}, nil
 }
 
 func (biz CurrentBiz) UpdateCurrentUserPassword(ctx context.Context, in *pb.UpdateCurrentUserPasswordRequest, opts ...grpc.CallOption) (*pb.UpdateCurrentUserPasswordResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return biz.dao.UpdateCurrentUserPassword(ctx, in)
 }
 
 func (biz CurrentBiz) UpdateCurrentUser(ctx context.Context, in *pb.UpdateCurrentUserRequest, opts ...grpc.CallOption) (*pb.UpdateCurrentUserResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return biz.dao.UpdateCurrentUser(ctx, in)
 }
 
 func (biz CurrentBiz) ListCurrentMenus(ctx context.Context, in *pb.ListCurrentMenusRequest, opts ...grpc.CallOption) (*pb.ListCurrentMenusResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (biz CurrentBiz) UpdateCurrentRoles(ctx context.Context, in *pb.UpdateCurrentRolesRequest, opts ...grpc.CallOption) (*pb.UpdateCurrentRolesResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return biz.dao.ListCurrentMenus(ctx, in)
 }
 
 func (biz CurrentBiz) UpdateCurrentSetting(ctx context.Context, in *pb.UpdateCurrentSettingRequest, opts ...grpc.CallOption) (*pb.UpdateCurrentSettingResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &pb.UpdateCurrentSettingResponse{}, nil
 }
 
 // NewCurrentBiz new a Current use case.

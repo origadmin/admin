@@ -18,15 +18,15 @@ type UserPosition struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// foreign_key:comment
-	UserID string `json:"user_id,omitempty"`
+	UserID int64 `json:"user_id,omitempty"`
 	// foreign_key:comment
-	PositionID string `json:"position_id,omitempty"`
+	PositionID int64 `json:"position_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserPositionQuery when eager-loading is set.
 	Edges                   UserPositionEdges `json:"edges"`
-	position_user_positions *string
+	position_user_positions *int64
 	selectValues            sql.SelectValues
 }
 
@@ -68,12 +68,10 @@ func (*UserPosition) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userposition.FieldID:
+		case userposition.FieldID, userposition.FieldUserID, userposition.FieldPositionID:
 			values[i] = new(sql.NullInt64)
-		case userposition.FieldUserID, userposition.FieldPositionID:
-			values[i] = new(sql.NullString)
 		case userposition.ForeignKeys[0]: // position_user_positions
-			values[i] = new(sql.NullString)
+			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -94,25 +92,25 @@ func (up *UserPosition) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			up.ID = int(value.Int64)
+			up.ID = int64(value.Int64)
 		case userposition.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				up.UserID = value.String
+				up.UserID = value.Int64
 			}
 		case userposition.FieldPositionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field position_id", values[i])
 			} else if value.Valid {
-				up.PositionID = value.String
+				up.PositionID = value.Int64
 			}
 		case userposition.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field position_user_positions", values[i])
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for edge-field position_user_positions", value)
 			} else if value.Valid {
-				up.position_user_positions = new(string)
-				*up.position_user_positions = value.String
+				up.position_user_positions = new(int64)
+				*up.position_user_positions = int64(value.Int64)
 			}
 		default:
 			up.selectValues.Set(columns[i], values[i])
@@ -161,10 +159,10 @@ func (up *UserPosition) String() string {
 	builder.WriteString("UserPosition(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", up.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(up.UserID)
+	builder.WriteString(fmt.Sprintf("%v", up.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("position_id=")
-	builder.WriteString(up.PositionID)
+	builder.WriteString(fmt.Sprintf("%v", up.PositionID))
 	builder.WriteByte(')')
 	return builder.String()
 }

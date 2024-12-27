@@ -18,11 +18,11 @@ type MenuPermission struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID int `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// foreign_key:comment
-	MenuID string `json:"menu_id,omitempty"`
+	MenuID int64 `json:"menu_id,omitempty"`
 	// foreign_key:comment
-	PermissionID string `json:"permission_id,omitempty"`
+	PermissionID int64 `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuPermissionQuery when eager-loading is set.
 	Edges        MenuPermissionEdges `json:"edges"`
@@ -67,10 +67,8 @@ func (*MenuPermission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menupermission.FieldID:
+		case menupermission.FieldID, menupermission.FieldMenuID, menupermission.FieldPermissionID:
 			values[i] = new(sql.NullInt64)
-		case menupermission.FieldMenuID, menupermission.FieldPermissionID:
-			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -91,18 +89,18 @@ func (mp *MenuPermission) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			mp.ID = int(value.Int64)
+			mp.ID = int64(value.Int64)
 		case menupermission.FieldMenuID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
 			} else if value.Valid {
-				mp.MenuID = value.String
+				mp.MenuID = value.Int64
 			}
 		case menupermission.FieldPermissionID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				mp.PermissionID = value.String
+				mp.PermissionID = value.Int64
 			}
 		default:
 			mp.selectValues.Set(columns[i], values[i])
@@ -151,10 +149,10 @@ func (mp *MenuPermission) String() string {
 	builder.WriteString("MenuPermission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", mp.ID))
 	builder.WriteString("menu_id=")
-	builder.WriteString(mp.MenuID)
+	builder.WriteString(fmt.Sprintf("%v", mp.MenuID))
 	builder.WriteString(", ")
 	builder.WriteString("permission_id=")
-	builder.WriteString(mp.PermissionID)
+	builder.WriteString(fmt.Sprintf("%v", mp.PermissionID))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -10,188 +10,98 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.MenuPermission {
+func ID(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.MenuPermission {
+func IDEQ(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.MenuPermission {
+func IDNEQ(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.MenuPermission {
+func IDIn(ids ...int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.MenuPermission {
+func IDNotIn(ids ...int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.MenuPermission {
+func IDGT(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.MenuPermission {
+func IDGTE(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.MenuPermission {
+func IDLT(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.MenuPermission {
+func IDLTE(id int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldLTE(FieldID, id))
 }
 
 // MenuID applies equality check predicate on the "menu_id" field. It's identical to MenuIDEQ.
-func MenuID(v string) predicate.MenuPermission {
+func MenuID(v int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldEQ(FieldMenuID, v))
 }
 
 // PermissionID applies equality check predicate on the "permission_id" field. It's identical to PermissionIDEQ.
-func PermissionID(v string) predicate.MenuPermission {
+func PermissionID(v int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldEQ(FieldPermissionID, v))
 }
 
 // MenuIDEQ applies the EQ predicate on the "menu_id" field.
-func MenuIDEQ(v string) predicate.MenuPermission {
+func MenuIDEQ(v int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldEQ(FieldMenuID, v))
 }
 
 // MenuIDNEQ applies the NEQ predicate on the "menu_id" field.
-func MenuIDNEQ(v string) predicate.MenuPermission {
+func MenuIDNEQ(v int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldNEQ(FieldMenuID, v))
 }
 
 // MenuIDIn applies the In predicate on the "menu_id" field.
-func MenuIDIn(vs ...string) predicate.MenuPermission {
+func MenuIDIn(vs ...int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldIn(FieldMenuID, vs...))
 }
 
 // MenuIDNotIn applies the NotIn predicate on the "menu_id" field.
-func MenuIDNotIn(vs ...string) predicate.MenuPermission {
+func MenuIDNotIn(vs ...int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldNotIn(FieldMenuID, vs...))
 }
 
-// MenuIDGT applies the GT predicate on the "menu_id" field.
-func MenuIDGT(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldGT(FieldMenuID, v))
-}
-
-// MenuIDGTE applies the GTE predicate on the "menu_id" field.
-func MenuIDGTE(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldGTE(FieldMenuID, v))
-}
-
-// MenuIDLT applies the LT predicate on the "menu_id" field.
-func MenuIDLT(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldLT(FieldMenuID, v))
-}
-
-// MenuIDLTE applies the LTE predicate on the "menu_id" field.
-func MenuIDLTE(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldLTE(FieldMenuID, v))
-}
-
-// MenuIDContains applies the Contains predicate on the "menu_id" field.
-func MenuIDContains(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldContains(FieldMenuID, v))
-}
-
-// MenuIDHasPrefix applies the HasPrefix predicate on the "menu_id" field.
-func MenuIDHasPrefix(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldHasPrefix(FieldMenuID, v))
-}
-
-// MenuIDHasSuffix applies the HasSuffix predicate on the "menu_id" field.
-func MenuIDHasSuffix(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldHasSuffix(FieldMenuID, v))
-}
-
-// MenuIDEqualFold applies the EqualFold predicate on the "menu_id" field.
-func MenuIDEqualFold(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldEqualFold(FieldMenuID, v))
-}
-
-// MenuIDContainsFold applies the ContainsFold predicate on the "menu_id" field.
-func MenuIDContainsFold(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldContainsFold(FieldMenuID, v))
-}
-
 // PermissionIDEQ applies the EQ predicate on the "permission_id" field.
-func PermissionIDEQ(v string) predicate.MenuPermission {
+func PermissionIDEQ(v int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldEQ(FieldPermissionID, v))
 }
 
 // PermissionIDNEQ applies the NEQ predicate on the "permission_id" field.
-func PermissionIDNEQ(v string) predicate.MenuPermission {
+func PermissionIDNEQ(v int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldNEQ(FieldPermissionID, v))
 }
 
 // PermissionIDIn applies the In predicate on the "permission_id" field.
-func PermissionIDIn(vs ...string) predicate.MenuPermission {
+func PermissionIDIn(vs ...int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldIn(FieldPermissionID, vs...))
 }
 
 // PermissionIDNotIn applies the NotIn predicate on the "permission_id" field.
-func PermissionIDNotIn(vs ...string) predicate.MenuPermission {
+func PermissionIDNotIn(vs ...int64) predicate.MenuPermission {
 	return predicate.MenuPermission(sql.FieldNotIn(FieldPermissionID, vs...))
-}
-
-// PermissionIDGT applies the GT predicate on the "permission_id" field.
-func PermissionIDGT(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldGT(FieldPermissionID, v))
-}
-
-// PermissionIDGTE applies the GTE predicate on the "permission_id" field.
-func PermissionIDGTE(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldGTE(FieldPermissionID, v))
-}
-
-// PermissionIDLT applies the LT predicate on the "permission_id" field.
-func PermissionIDLT(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldLT(FieldPermissionID, v))
-}
-
-// PermissionIDLTE applies the LTE predicate on the "permission_id" field.
-func PermissionIDLTE(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldLTE(FieldPermissionID, v))
-}
-
-// PermissionIDContains applies the Contains predicate on the "permission_id" field.
-func PermissionIDContains(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldContains(FieldPermissionID, v))
-}
-
-// PermissionIDHasPrefix applies the HasPrefix predicate on the "permission_id" field.
-func PermissionIDHasPrefix(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldHasPrefix(FieldPermissionID, v))
-}
-
-// PermissionIDHasSuffix applies the HasSuffix predicate on the "permission_id" field.
-func PermissionIDHasSuffix(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldHasSuffix(FieldPermissionID, v))
-}
-
-// PermissionIDEqualFold applies the EqualFold predicate on the "permission_id" field.
-func PermissionIDEqualFold(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldEqualFold(FieldPermissionID, v))
-}
-
-// PermissionIDContainsFold applies the ContainsFold predicate on the "permission_id" field.
-func PermissionIDContainsFold(v string) predicate.MenuPermission {
-	return predicate.MenuPermission(sql.FieldContainsFold(FieldPermissionID, v))
 }
 
 // HasMenu applies the HasEdge predicate on the "menu" edge.

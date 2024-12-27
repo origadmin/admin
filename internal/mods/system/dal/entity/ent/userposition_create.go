@@ -22,19 +22,19 @@ type UserPositionCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (upc *UserPositionCreate) SetUserID(s string) *UserPositionCreate {
-	upc.mutation.SetUserID(s)
+func (upc *UserPositionCreate) SetUserID(i int64) *UserPositionCreate {
+	upc.mutation.SetUserID(i)
 	return upc
 }
 
 // SetPositionID sets the "position_id" field.
-func (upc *UserPositionCreate) SetPositionID(s string) *UserPositionCreate {
-	upc.mutation.SetPositionID(s)
+func (upc *UserPositionCreate) SetPositionID(i int64) *UserPositionCreate {
+	upc.mutation.SetPositionID(i)
 	return upc
 }
 
 // SetID sets the "id" field.
-func (upc *UserPositionCreate) SetID(i int) *UserPositionCreate {
+func (upc *UserPositionCreate) SetID(i int64) *UserPositionCreate {
 	upc.mutation.SetID(i)
 	return upc
 }
@@ -126,7 +126,7 @@ func (upc *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, erro
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+		_node.ID = int64(id)
 	}
 	upc.mutation.id = &_node.ID
 	upc.mutation.done = true
@@ -136,7 +136,7 @@ func (upc *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, erro
 func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserPosition{config: upc.config}
-		_spec = sqlgraph.NewCreateSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
 	)
 	if id, ok := upc.mutation.ID(); ok {
 		_node.ID = id
@@ -150,7 +150,7 @@ func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec
 			Columns: []string{userposition.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec
 			Columns: []string{userposition.PositionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -245,7 +245,7 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

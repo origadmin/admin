@@ -7,42 +7,66 @@ package resp
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 	"github.com/origadmin/toolkits/errors/httperr"
-	"github.com/origadmin/toolkits/net/pagination"
 	"google.golang.org/protobuf/proto"
+
+	datav1 "origadmin/application/admin/helpers/resp/data/v1"
 )
 
-type Result struct {
-	pagination.UnimplementedResponder
-	Success bool           `json:"success"`
-	Total   int32          `json:"total,omitempty"`
-	Data    any            `json:"data,omitempty"`
-	Extra   any            `json:"extra,omitempty"`
-	Error   *httperr.Error `json:"error,omitempty"`
+type Message interface {
+	Message() proto.Message
 }
 
-func (r Result) GetSuccess() bool {
+type Error datav1.Error
+
+type Data datav1.Data
+type Page = datav1.Page
+type Token = datav1.Token
+type StringResult = datav1.StringData
+
+type Result struct {
+	Success bool           `json:"success,omitempty"`
+	Data    any            `json:"data,omitempty"`
+	Error   *httperr.Error `json:"error,omitempty"`
+	Extra   any            `json:"extra,omitempty"`
+}
+
+type ResultBytes struct {
+	Success bool   `json:"success,omitempty"`
+	Data    []byte `json:"data,omitempty"`
+	Error   []byte `json:"error,omitempty"`
+	Extra   []byte `json:"extra,omitempty"`
+}
+
+func (e *Error) Error() string {
+	return fmt.Sprintf("error: %s, code: %d, message: %s, detail: %s", e.Message, e.Code, e.Message, e.Detail)
+}
+
+func (r *Data) GetSuccess() bool {
 	return r.Success
 }
 
-func (r Result) GetTotal() int32 {
-	return r.Total
-}
-
-func (r Result) GetData() any {
+func (r *Data) GetData() any {
 	return r.Data
 }
 
-func (r Result) GetError() error {
-	return r.Error
+func (r *Data) GetError() error {
+	return (*Error)(r.Error)
 }
+
+func (r *Data) Message() proto.Message {
+	return (*datav1.Data)(r)
+}
+
 func ResultError(rw http.ResponseWriter, status int, err error) {
 	code, herr := decodeError(false, status, err)
-	_ = resultResult(rw, code, &Result{
+	_ = resultResult(rw, code, &Data{
 		Success: false,
-		Error:   herr,
+		Error:   (*datav1.Error)(herr),
 	})
 }
 
@@ -82,4 +106,13 @@ func resultJSON(rw http.ResponseWriter, status int, data any) error {
 	rw.WriteHeader(status)
 	_, _ = rw.Write(v)
 	return nil
+}
+
+func FromToken(token *jwtv1.Token) *Token {
+	return &Token{
+		UserId:       token.UserId,
+		AccessToken:  token.AccessToken,
+		RefreshToken: token.RefreshToken,
+		ExpiresAt:    token.ExpirationTime,
+	}
 }

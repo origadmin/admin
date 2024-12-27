@@ -62,15 +62,15 @@ func UserObject(user *UserPB) *User {
 
 // UserRepo is a UserPB repository interface.
 type UserRepo interface {
-	Get(context.Context, string, ...UserQueryOption) (*UserPB, error)
+	Get(context.Context, int64, ...UserQueryOption) (*UserPB, error)
 	Create(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
-	Delete(context.Context, string) error
+	Delete(context.Context, int64) error
 	Update(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
 	GetByUserName(context.Context, string, ...string) (*UserPB, error)
-	GetRoleIDs(context.Context, string) ([]string, error)
-	ListMenuByUserID(context.Context, string) ([]*MenuPB, error)
-	Current(context.Context, string) (*UserPB, error)
+	GetRoleIDs(context.Context, int64) ([]int64, error)
+	ListMenuByUserID(context.Context, int64) ([]*MenuPB, error)
+	Current(context.Context, int64) (*UserPB, error)
 	UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option UserQueryOption) (*pb.UpdateUserStatusResponse, error)
 }
 

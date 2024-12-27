@@ -40,7 +40,7 @@ func (prd *PermissionResourceDelete) ExecX(ctx context.Context) int {
 }
 
 func (prd *PermissionResourceDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewDeleteSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64))
 	if ps := prd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

@@ -165,7 +165,7 @@ var (
 	// DefaultIsSystem holds the default value on creation for the "is_system" field.
 	DefaultIsSystem bool
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(string) error
+	IDValidator func(int64) error
 )
 
 // OrderOption defines the ordering options for the Role queries.

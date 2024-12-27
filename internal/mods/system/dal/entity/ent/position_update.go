@@ -66,15 +66,15 @@ func (pu *PositionUpdate) SetNillableDescription(s *string) *PositionUpdate {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (pu *PositionUpdate) SetDepartmentID(s string) *PositionUpdate {
-	pu.mutation.SetDepartmentID(s)
+func (pu *PositionUpdate) SetDepartmentID(i int64) *PositionUpdate {
+	pu.mutation.SetDepartmentID(i)
 	return pu
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (pu *PositionUpdate) SetNillableDepartmentID(s *string) *PositionUpdate {
-	if s != nil {
-		pu.SetDepartmentID(*s)
+func (pu *PositionUpdate) SetNillableDepartmentID(i *int64) *PositionUpdate {
+	if i != nil {
+		pu.SetDepartmentID(*i)
 	}
 	return pu
 }
@@ -85,14 +85,14 @@ func (pu *PositionUpdate) SetDepartment(d *Department) *PositionUpdate {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (pu *PositionUpdate) AddUserPositionIDs(ids ...int) *PositionUpdate {
+func (pu *PositionUpdate) AddUserPositionIDs(ids ...int64) *PositionUpdate {
 	pu.mutation.AddUserPositionIDs(ids...)
 	return pu
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (pu *PositionUpdate) AddUserPositions(u ...*UserPosition) *PositionUpdate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -117,14 +117,14 @@ func (pu *PositionUpdate) ClearUserPositions() *PositionUpdate {
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
-func (pu *PositionUpdate) RemoveUserPositionIDs(ids ...int) *PositionUpdate {
+func (pu *PositionUpdate) RemoveUserPositionIDs(ids ...int64) *PositionUpdate {
 	pu.mutation.RemoveUserPositionIDs(ids...)
 	return pu
 }
 
 // RemoveUserPositions removes "user_positions" edges to UserPosition entities.
 func (pu *PositionUpdate) RemoveUserPositions(u ...*UserPosition) *PositionUpdate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -200,7 +200,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := pu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64))
 	if ps := pu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -225,7 +225,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -238,7 +238,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -254,7 +254,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -267,7 +267,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -283,7 +283,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -348,15 +348,15 @@ func (puo *PositionUpdateOne) SetNillableDescription(s *string) *PositionUpdateO
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (puo *PositionUpdateOne) SetDepartmentID(s string) *PositionUpdateOne {
-	puo.mutation.SetDepartmentID(s)
+func (puo *PositionUpdateOne) SetDepartmentID(i int64) *PositionUpdateOne {
+	puo.mutation.SetDepartmentID(i)
 	return puo
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (puo *PositionUpdateOne) SetNillableDepartmentID(s *string) *PositionUpdateOne {
-	if s != nil {
-		puo.SetDepartmentID(*s)
+func (puo *PositionUpdateOne) SetNillableDepartmentID(i *int64) *PositionUpdateOne {
+	if i != nil {
+		puo.SetDepartmentID(*i)
 	}
 	return puo
 }
@@ -367,14 +367,14 @@ func (puo *PositionUpdateOne) SetDepartment(d *Department) *PositionUpdateOne {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (puo *PositionUpdateOne) AddUserPositionIDs(ids ...int) *PositionUpdateOne {
+func (puo *PositionUpdateOne) AddUserPositionIDs(ids ...int64) *PositionUpdateOne {
 	puo.mutation.AddUserPositionIDs(ids...)
 	return puo
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (puo *PositionUpdateOne) AddUserPositions(u ...*UserPosition) *PositionUpdateOne {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -399,14 +399,14 @@ func (puo *PositionUpdateOne) ClearUserPositions() *PositionUpdateOne {
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
-func (puo *PositionUpdateOne) RemoveUserPositionIDs(ids ...int) *PositionUpdateOne {
+func (puo *PositionUpdateOne) RemoveUserPositionIDs(ids ...int64) *PositionUpdateOne {
 	puo.mutation.RemoveUserPositionIDs(ids...)
 	return puo
 }
 
 // RemoveUserPositions removes "user_positions" edges to UserPosition entities.
 func (puo *PositionUpdateOne) RemoveUserPositions(u ...*UserPosition) *PositionUpdateOne {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -495,7 +495,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 	if err := puo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
+	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64))
 	id, ok := puo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Position.id" for update`)}
@@ -537,7 +537,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -550,7 +550,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -566,7 +566,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -579,7 +579,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -595,7 +595,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

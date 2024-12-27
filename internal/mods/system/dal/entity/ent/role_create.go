@@ -147,20 +147,20 @@ func (rc *RoleCreate) SetNillableIsSystem(b *bool) *RoleCreate {
 }
 
 // SetID sets the "id" field.
-func (rc *RoleCreate) SetID(s string) *RoleCreate {
-	rc.mutation.SetID(s)
+func (rc *RoleCreate) SetID(i int64) *RoleCreate {
+	rc.mutation.SetID(i)
 	return rc
 }
 
 // AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
-func (rc *RoleCreate) AddMenuIDs(ids ...string) *RoleCreate {
+func (rc *RoleCreate) AddMenuIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddMenuIDs(ids...)
 	return rc
 }
 
 // AddMenus adds the "menus" edges to the Menu entity.
 func (rc *RoleCreate) AddMenus(m ...*Menu) *RoleCreate {
-	ids := make([]string, len(m))
+	ids := make([]int64, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -168,14 +168,14 @@ func (rc *RoleCreate) AddMenus(m ...*Menu) *RoleCreate {
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (rc *RoleCreate) AddUserIDs(ids ...string) *RoleCreate {
+func (rc *RoleCreate) AddUserIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddUserIDs(ids...)
 	return rc
 }
 
 // AddUsers adds the "users" edges to the User entity.
 func (rc *RoleCreate) AddUsers(u ...*User) *RoleCreate {
-	ids := make([]string, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -183,14 +183,14 @@ func (rc *RoleCreate) AddUsers(u ...*User) *RoleCreate {
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (rc *RoleCreate) AddPermissionIDs(ids ...string) *RoleCreate {
+func (rc *RoleCreate) AddPermissionIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddPermissionIDs(ids...)
 	return rc
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
 func (rc *RoleCreate) AddPermissions(p ...*Permission) *RoleCreate {
-	ids := make([]string, len(p))
+	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -198,14 +198,14 @@ func (rc *RoleCreate) AddPermissions(p ...*Permission) *RoleCreate {
 }
 
 // AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
-func (rc *RoleCreate) AddDepartmentIDs(ids ...string) *RoleCreate {
+func (rc *RoleCreate) AddDepartmentIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddDepartmentIDs(ids...)
 	return rc
 }
 
 // AddDepartments adds the "departments" edges to the Department entity.
 func (rc *RoleCreate) AddDepartments(d ...*Department) *RoleCreate {
-	ids := make([]string, len(d))
+	ids := make([]int64, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -213,14 +213,14 @@ func (rc *RoleCreate) AddDepartments(d ...*Department) *RoleCreate {
 }
 
 // AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
-func (rc *RoleCreate) AddRoleMenuIDs(ids ...int) *RoleCreate {
+func (rc *RoleCreate) AddRoleMenuIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddRoleMenuIDs(ids...)
 	return rc
 }
 
 // AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
 func (rc *RoleCreate) AddRoleMenus(r ...*RoleMenu) *RoleCreate {
-	ids := make([]int, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -228,14 +228,14 @@ func (rc *RoleCreate) AddRoleMenus(r ...*RoleMenu) *RoleCreate {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
-func (rc *RoleCreate) AddUserRoleIDs(ids ...int) *RoleCreate {
+func (rc *RoleCreate) AddUserRoleIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddUserRoleIDs(ids...)
 	return rc
 }
 
 // AddUserRoles adds the "user_roles" edges to the UserRole entity.
 func (rc *RoleCreate) AddUserRoles(u ...*UserRole) *RoleCreate {
-	ids := make([]int, len(u))
+	ids := make([]int64, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -243,14 +243,14 @@ func (rc *RoleCreate) AddUserRoles(u ...*UserRole) *RoleCreate {
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
-func (rc *RoleCreate) AddRolePermissionIDs(ids ...int) *RoleCreate {
+func (rc *RoleCreate) AddRolePermissionIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddRolePermissionIDs(ids...)
 	return rc
 }
 
 // AddRolePermissions adds the "role_permissions" edges to the RolePermission entity.
 func (rc *RoleCreate) AddRolePermissions(r ...*RolePermission) *RoleCreate {
-	ids := make([]int, len(r))
+	ids := make([]int64, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -258,14 +258,14 @@ func (rc *RoleCreate) AddRolePermissions(r ...*RolePermission) *RoleCreate {
 }
 
 // AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
-func (rc *RoleCreate) AddDepartmentRoleIDs(ids ...int) *RoleCreate {
+func (rc *RoleCreate) AddDepartmentRoleIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddDepartmentRoleIDs(ids...)
 	return rc
 }
 
 // AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
 func (rc *RoleCreate) AddDepartmentRoles(d ...*DepartmentRole) *RoleCreate {
-	ids := make([]int, len(d))
+	ids := make([]int64, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -404,12 +404,9 @@ func (rc *RoleCreate) sqlSave(ctx context.Context) (*Role, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Role.ID type: %T", _spec.ID.Value)
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int64(id)
 	}
 	rc.mutation.id = &_node.ID
 	rc.mutation.done = true
@@ -419,7 +416,7 @@ func (rc *RoleCreate) sqlSave(ctx context.Context) (*Role, error) {
 func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Role{config: rc.config}
-		_spec = sqlgraph.NewCreateSpec(role.Table, sqlgraph.NewFieldSpec(role.FieldID, field.TypeString))
+		_spec = sqlgraph.NewCreateSpec(role.Table, sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64))
 	)
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
@@ -469,7 +466,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: role.MenusPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -485,7 +482,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: role.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -501,7 +498,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: role.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -517,7 +514,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: role.DepartmentsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -533,7 +530,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: []string{role.RoleMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -549,7 +546,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: []string{role.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -565,7 +562,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: []string{role.RolePermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -581,7 +578,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: []string{role.DepartmentRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -657,6 +654,10 @@ func (rcb *RoleCreateBulk) Save(ctx context.Context) ([]*Role, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int64(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})

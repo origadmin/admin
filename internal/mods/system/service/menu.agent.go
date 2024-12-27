@@ -26,21 +26,21 @@ func (s MenuAPIGINRPCService) CreateMenu(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Menu,
+		Data:    resp.Proto2Any(response.Menu),
 	})
 	return nil, nil
 }
 
 func (s MenuAPIGINRPCService) DeleteMenu(context transhttp.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
-	response, err := s.client.DeleteMenu(context, request)
+	_, err := s.client.DeleteMenu(context, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Empty,
+		Data:    nil,
 	})
 	return nil, nil
 }
@@ -50,9 +50,9 @@ func (s MenuAPIGINRPCService) GetMenu(context transhttp.Context, request *pb.Get
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Menu,
+		Data:    resp.Proto2Any(response.Menu),
 	})
 	return nil, nil
 }
@@ -62,10 +62,23 @@ func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.L
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	//bytes, err := protojson.Marshal(response)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//var pbs structpb.Struct
+	//_ = pbs.UnmarshalJSON(bytes)
+	//marshal, err := json.Marshal(&pbs)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//s.Bytes(context, http.StatusOK, bytes)
+	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
-		Data:    response.Menus,
+		Data:    resp.Proto2AnyPBArray(response.Menus...),
+		//Struct: &pbs,
+		//Struct:  &pbs,
 	})
 	return nil, nil
 }
@@ -75,9 +88,9 @@ func (s MenuAPIGINRPCService) UpdateMenu(context transhttp.Context, request *pb.
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(context, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    response.Menu,
+		Data:    resp.Proto2Any(response.Menu),
 	})
 	return nil, nil
 }

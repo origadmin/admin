@@ -25,13 +25,13 @@ func (obj ID) Fields() []ent.Field {
 }
 
 func (ID) FK(name string) ent.Field {
-	return field.Int(name).
+	return field.Int64(name).
 		Comment(i18n.Text("foreign_key:comment")).
 		Positive()
 }
 
 func (ID) PK(name string) ent.Field {
-	return field.Int(name).
+	return field.Int64(name).
 		Comment(i18n.Text("primary_key:comment")).
 		Positive().
 		Unique().
@@ -39,7 +39,7 @@ func (ID) PK(name string) ent.Field {
 }
 
 func (ID) OP(name string) ent.Field {
-	return field.Int(name).
+	return field.Int64(name).
 		Comment(i18n.Text("optional_key:comment")).
 		Positive().
 		Optional()
@@ -61,20 +61,20 @@ func (c CommentedID) Comment(key string) Ider {
 }
 
 func (c CommentedID) OP(name string) ent.Field {
-	return field.Int(name).
+	return field.Int64(name).
 		Comment(i18n.Text(c.CommentKey)).
 		Positive().
 		Optional()
 }
 
 func (c CommentedID) FK(name string) ent.Field {
-	return field.Int(name).
+	return field.Int64(name).
 		Comment(i18n.Text(c.CommentKey)).
 		Positive()
 }
 
 func (c CommentedID) PK(name string) ent.Field {
-	return field.Int(name).
+	return field.Int64(name).
 		Comment(i18n.Text(c.CommentKey)).
 		Positive().
 		Unique().

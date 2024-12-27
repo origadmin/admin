@@ -17,7 +17,7 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
-	ID string `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// create_author:comment
 	CreateAuthor string `json:"create_author,omitempty"`
 	// update_author:comment
@@ -61,7 +61,7 @@ type User struct {
 	// user:field:sanction_date
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
 	// foreign_key:comment
-	ManagerID string `json:"manager_id,omitempty"`
+	ManagerID int64 `json:"manager_id,omitempty"`
 	// Manager holds the value of the "manager" field.
 	Manager string `json:"manager,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -126,9 +126,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldStatus:
+		case user.FieldID, user.FieldStatus, user.FieldManagerID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManagerID, user.FieldManager:
+		case user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldLastLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -148,11 +148,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case user.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				u.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			u.ID = int64(value.Int64)
 		case user.FieldCreateAuthor:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field create_author", values[i])
@@ -280,10 +280,10 @@ func (u *User) assignValues(columns []string, values []any) error {
 				u.SanctionDate = value.Time
 			}
 		case user.FieldManagerID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field manager_id", values[i])
 			} else if value.Valid {
-				u.ManagerID = value.String
+				u.ManagerID = value.Int64
 			}
 		case user.FieldManager:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -409,7 +409,7 @@ func (u *User) String() string {
 	builder.WriteString(u.SanctionDate.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("manager_id=")
-	builder.WriteString(u.ManagerID)
+	builder.WriteString(fmt.Sprintf("%v", u.ManagerID))
 	builder.WriteString(", ")
 	builder.WriteString("manager=")
 	builder.WriteString(u.Manager)
