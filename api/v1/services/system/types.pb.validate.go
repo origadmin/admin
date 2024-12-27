@@ -116,7 +116,7 @@ func (m *Menu) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for Code
+	// no validation rules for Keyword
 
 	// no validation rules for Name
 
@@ -689,7 +689,7 @@ func (m *Role) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for Code
+	// no validation rules for Keyword
 
 	// no validation rules for Name
 

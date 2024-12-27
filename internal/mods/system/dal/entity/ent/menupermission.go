@@ -19,9 +19,9 @@ type MenuPermission struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// MenuID holds the value of the "menu_id" field.
-	MenuID int `json:"menu_id,omitempty"`
+	MenuID string `json:"menu_id,omitempty"`
 	// PermissionID holds the value of the "permission_id" field.
-	PermissionID int `json:"permission_id,omitempty"`
+	PermissionID string `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuPermissionQuery when eager-loading is set.
 	Edges        MenuPermissionEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*MenuPermission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case menupermission.FieldID, menupermission.FieldMenuID, menupermission.FieldPermissionID:
+		case menupermission.FieldID:
 			values[i] = new(sql.NullInt64)
+		case menupermission.FieldMenuID, menupermission.FieldPermissionID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (mp *MenuPermission) assignValues(columns []string, values []any) error {
 			}
 			mp.ID = int(value.Int64)
 		case menupermission.FieldMenuID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
 			} else if value.Valid {
-				mp.MenuID = int(value.Int64)
+				mp.MenuID = value.String
 			}
 		case menupermission.FieldPermissionID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				mp.PermissionID = int(value.Int64)
+				mp.PermissionID = value.String
 			}
 		default:
 			mp.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (mp *MenuPermission) String() string {
 	builder.WriteString("MenuPermission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", mp.ID))
 	builder.WriteString("menu_id=")
-	builder.WriteString(fmt.Sprintf("%v", mp.MenuID))
+	builder.WriteString(mp.MenuID)
 	builder.WriteString(", ")
 	builder.WriteString("permission_id=")
-	builder.WriteString(fmt.Sprintf("%v", mp.PermissionID))
+	builder.WriteString(mp.PermissionID)
 	builder.WriteByte(')')
 	return builder.String()
 }

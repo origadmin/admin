@@ -17,7 +17,7 @@ import (
 type Resource struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
@@ -29,7 +29,7 @@ type Resource struct {
 	// Path holds the value of the "path" field.
 	Path string `json:"path,omitempty"`
 	// MenuID holds the value of the "menu_id" field.
-	MenuID int `json:"menu_id,omitempty"`
+	MenuID string `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.
 	Edges        ResourceEdges `json:"edges"`
@@ -83,9 +83,7 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case resource.FieldID, resource.FieldMenuID:
-			values[i] = new(sql.NullInt64)
-		case resource.FieldMethod, resource.FieldOperation, resource.FieldPath:
+		case resource.FieldID, resource.FieldMethod, resource.FieldOperation, resource.FieldPath, resource.FieldMenuID:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -105,11 +103,11 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case resource.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value.Valid {
+				r.ID = value.String
 			}
-			r.ID = int(value.Int64)
 		case resource.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
@@ -141,10 +139,10 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 				r.Path = value.String
 			}
 		case resource.FieldMenuID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
 			} else if value.Valid {
-				r.MenuID = int(value.Int64)
+				r.MenuID = value.String
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -213,7 +211,7 @@ func (r *Resource) String() string {
 	builder.WriteString(r.Path)
 	builder.WriteString(", ")
 	builder.WriteString("menu_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.MenuID))
+	builder.WriteString(r.MenuID)
 	builder.WriteByte(')')
 	return builder.String()
 }

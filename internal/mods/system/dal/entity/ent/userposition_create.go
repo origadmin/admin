@@ -22,14 +22,14 @@ type UserPositionCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (upc *UserPositionCreate) SetUserID(i int) *UserPositionCreate {
-	upc.mutation.SetUserID(i)
+func (upc *UserPositionCreate) SetUserID(s string) *UserPositionCreate {
+	upc.mutation.SetUserID(s)
 	return upc
 }
 
 // SetPositionID sets the "position_id" field.
-func (upc *UserPositionCreate) SetPositionID(i int) *UserPositionCreate {
-	upc.mutation.SetPositionID(i)
+func (upc *UserPositionCreate) SetPositionID(s string) *UserPositionCreate {
+	upc.mutation.SetPositionID(s)
 	return upc
 }
 
@@ -150,7 +150,7 @@ func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec
 			Columns: []string{userposition.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec
 			Columns: []string{userposition.PositionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

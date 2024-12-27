@@ -22,14 +22,14 @@ type RolePermissionCreate struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rpc *RolePermissionCreate) SetRoleID(i int) *RolePermissionCreate {
-	rpc.mutation.SetRoleID(i)
+func (rpc *RolePermissionCreate) SetRoleID(s string) *RolePermissionCreate {
+	rpc.mutation.SetRoleID(s)
 	return rpc
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (rpc *RolePermissionCreate) SetPermissionID(i int) *RolePermissionCreate {
-	rpc.mutation.SetPermissionID(i)
+func (rpc *RolePermissionCreate) SetPermissionID(s string) *RolePermissionCreate {
+	rpc.mutation.SetPermissionID(s)
 	return rpc
 }
 
@@ -150,7 +150,7 @@ func (rpc *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.Create
 			Columns: []string{rolepermission.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (rpc *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.Create
 			Columns: []string{rolepermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

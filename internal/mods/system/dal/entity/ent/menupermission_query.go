@@ -337,7 +337,7 @@ func (mpq *MenuPermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *
 // Example:
 //
 //	var v []struct {
-//		MenuID int `json:"menu_id,omitempty"`
+//		MenuID string `json:"menu_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (mpq *MenuPermissionQuery) GroupBy(field string, fields ...string) *MenuPer
 // Example:
 //
 //	var v []struct {
-//		MenuID int `json:"menu_id,omitempty"`
+//		MenuID string `json:"menu_id,omitempty"`
 //	}
 //
 //	client.MenuPermission.Query().
@@ -451,8 +451,8 @@ func (mpq *MenuPermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (mpq *MenuPermissionQuery) loadMenu(ctx context.Context, query *MenuQuery, nodes []*MenuPermission, init func(*MenuPermission), assign func(*MenuPermission, *Menu)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*MenuPermission)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*MenuPermission)
 	for i := range nodes {
 		fk := nodes[i].MenuID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (mpq *MenuPermissionQuery) loadMenu(ctx context.Context, query *MenuQuery, 
 	return nil
 }
 func (mpq *MenuPermissionQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*MenuPermission, init func(*MenuPermission), assign func(*MenuPermission, *Permission)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*MenuPermission)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*MenuPermission)
 	for i := range nodes {
 		fk := nodes[i].PermissionID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (mpq *MenuPermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Menu
 // Example:
 //
 //	var v []struct {
-//	  MenuID int `json:"menu_id,omitempty"`
-//	  PermissionID int `json:"permission_id,omitempty"`
+//	  MenuID string `json:"menu_id,omitempty"`
+//	  PermissionID string `json:"permission_id,omitempty"`
 //	}
 //
 //	client.MenuPermission.Query().

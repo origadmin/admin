@@ -86,22 +86,22 @@ func (rc *ResourceCreate) SetPath(s string) *ResourceCreate {
 }
 
 // SetMenuID sets the "menu_id" field.
-func (rc *ResourceCreate) SetMenuID(i int) *ResourceCreate {
-	rc.mutation.SetMenuID(i)
+func (rc *ResourceCreate) SetMenuID(s string) *ResourceCreate {
+	rc.mutation.SetMenuID(s)
 	return rc
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableMenuID(i *int) *ResourceCreate {
-	if i != nil {
-		rc.SetMenuID(*i)
+func (rc *ResourceCreate) SetNillableMenuID(s *string) *ResourceCreate {
+	if s != nil {
+		rc.SetMenuID(*s)
 	}
 	return rc
 }
 
 // SetID sets the "id" field.
-func (rc *ResourceCreate) SetID(i int) *ResourceCreate {
-	rc.mutation.SetID(i)
+func (rc *ResourceCreate) SetID(s string) *ResourceCreate {
+	rc.mutation.SetID(s)
 	return rc
 }
 
@@ -111,14 +111,14 @@ func (rc *ResourceCreate) SetMenu(m *Menu) *ResourceCreate {
 }
 
 // AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
-func (rc *ResourceCreate) AddPermissionIDs(ids ...int) *ResourceCreate {
+func (rc *ResourceCreate) AddPermissionIDs(ids ...string) *ResourceCreate {
 	rc.mutation.AddPermissionIDs(ids...)
 	return rc
 }
 
 // AddPermission adds the "permission" edges to the Permission entity.
 func (rc *ResourceCreate) AddPermission(p ...*Permission) *ResourceCreate {
-	ids := make([]int, len(p))
+	ids := make([]string, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -249,9 +249,12 @@ func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(string); ok {
+			_node.ID = id
+		} else {
+			return nil, fmt.Errorf("unexpected Resource.ID type: %T", _spec.ID.Value)
+		}
 	}
 	rc.mutation.id = &_node.ID
 	rc.mutation.done = true
@@ -261,7 +264,7 @@ func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
 func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Resource{config: rc.config}
-		_spec = sqlgraph.NewCreateSpec(resource.Table, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(resource.Table, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString))
 	)
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
@@ -295,7 +298,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Columns: []string{resource.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -312,7 +315,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Columns: resource.PermissionPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -404,10 +407,6 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

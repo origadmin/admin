@@ -22,14 +22,14 @@ type RoleMenuCreate struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rmc *RoleMenuCreate) SetRoleID(i int) *RoleMenuCreate {
-	rmc.mutation.SetRoleID(i)
+func (rmc *RoleMenuCreate) SetRoleID(s string) *RoleMenuCreate {
+	rmc.mutation.SetRoleID(s)
 	return rmc
 }
 
 // SetMenuID sets the "menu_id" field.
-func (rmc *RoleMenuCreate) SetMenuID(i int) *RoleMenuCreate {
-	rmc.mutation.SetMenuID(i)
+func (rmc *RoleMenuCreate) SetMenuID(s string) *RoleMenuCreate {
+	rmc.mutation.SetMenuID(s)
 	return rmc
 }
 
@@ -150,7 +150,7 @@ func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 			Columns: []string{rolemenu.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (rmc *RoleMenuCreate) createSpec() (*RoleMenu, *sqlgraph.CreateSpec) {
 			Columns: []string{rolemenu.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

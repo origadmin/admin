@@ -151,12 +151,12 @@ func (DeleteSchema) Indexes() []ent.Index {
 
 var (
 	ModelMixin = []ent.Mixin{
-		ID{},
+		_id,
 		CreateSchema{},
 		UpdateSchema{},
 	}
 	AuditModelMixin = []ent.Mixin{
-		ID{},
+		_id,
 		Audit{},
 		CreateSchema{},
 		UpdateSchema{},

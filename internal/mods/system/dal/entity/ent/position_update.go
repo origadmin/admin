@@ -66,15 +66,15 @@ func (pu *PositionUpdate) SetNillableDescription(s *string) *PositionUpdate {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (pu *PositionUpdate) SetDepartmentID(i int) *PositionUpdate {
-	pu.mutation.SetDepartmentID(i)
+func (pu *PositionUpdate) SetDepartmentID(s string) *PositionUpdate {
+	pu.mutation.SetDepartmentID(s)
 	return pu
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (pu *PositionUpdate) SetNillableDepartmentID(i *int) *PositionUpdate {
-	if i != nil {
-		pu.SetDepartmentID(*i)
+func (pu *PositionUpdate) SetNillableDepartmentID(s *string) *PositionUpdate {
+	if s != nil {
+		pu.SetDepartmentID(*s)
 	}
 	return pu
 }
@@ -200,7 +200,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := pu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
 	if ps := pu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -225,7 +225,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -238,7 +238,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -348,15 +348,15 @@ func (puo *PositionUpdateOne) SetNillableDescription(s *string) *PositionUpdateO
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (puo *PositionUpdateOne) SetDepartmentID(i int) *PositionUpdateOne {
-	puo.mutation.SetDepartmentID(i)
+func (puo *PositionUpdateOne) SetDepartmentID(s string) *PositionUpdateOne {
+	puo.mutation.SetDepartmentID(s)
 	return puo
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (puo *PositionUpdateOne) SetNillableDepartmentID(i *int) *PositionUpdateOne {
-	if i != nil {
-		puo.SetDepartmentID(*i)
+func (puo *PositionUpdateOne) SetNillableDepartmentID(s *string) *PositionUpdateOne {
+	if s != nil {
+		puo.SetDepartmentID(*s)
 	}
 	return puo
 }
@@ -495,7 +495,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 	if err := puo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
 	id, ok := puo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Position.id" for update`)}
@@ -537,7 +537,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -550,7 +550,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

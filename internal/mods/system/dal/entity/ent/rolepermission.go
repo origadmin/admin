@@ -19,9 +19,9 @@ type RolePermission struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// RoleID holds the value of the "role_id" field.
-	RoleID int `json:"role_id,omitempty"`
+	RoleID string `json:"role_id,omitempty"`
 	// PermissionID holds the value of the "permission_id" field.
-	PermissionID int `json:"permission_id,omitempty"`
+	PermissionID string `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RolePermissionQuery when eager-loading is set.
 	Edges        RolePermissionEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*RolePermission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case rolepermission.FieldID, rolepermission.FieldRoleID, rolepermission.FieldPermissionID:
+		case rolepermission.FieldID:
 			values[i] = new(sql.NullInt64)
+		case rolepermission.FieldRoleID, rolepermission.FieldPermissionID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (rp *RolePermission) assignValues(columns []string, values []any) error {
 			}
 			rp.ID = int(value.Int64)
 		case rolepermission.FieldRoleID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
-				rp.RoleID = int(value.Int64)
+				rp.RoleID = value.String
 			}
 		case rolepermission.FieldPermissionID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				rp.PermissionID = int(value.Int64)
+				rp.PermissionID = value.String
 			}
 		default:
 			rp.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (rp *RolePermission) String() string {
 	builder.WriteString("RolePermission(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", rp.ID))
 	builder.WriteString("role_id=")
-	builder.WriteString(fmt.Sprintf("%v", rp.RoleID))
+	builder.WriteString(rp.RoleID)
 	builder.WriteString(", ")
 	builder.WriteString("permission_id=")
-	builder.WriteString(fmt.Sprintf("%v", rp.PermissionID))
+	builder.WriteString(rp.PermissionID)
 	builder.WriteByte(')')
 	return builder.String()
 }

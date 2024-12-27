@@ -31,29 +31,29 @@ func (pru *PermissionResourceUpdate) Where(ps ...predicate.PermissionResource) *
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (pru *PermissionResourceUpdate) SetPermissionID(i int) *PermissionResourceUpdate {
-	pru.mutation.SetPermissionID(i)
+func (pru *PermissionResourceUpdate) SetPermissionID(s string) *PermissionResourceUpdate {
+	pru.mutation.SetPermissionID(s)
 	return pru
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (pru *PermissionResourceUpdate) SetNillablePermissionID(i *int) *PermissionResourceUpdate {
-	if i != nil {
-		pru.SetPermissionID(*i)
+func (pru *PermissionResourceUpdate) SetNillablePermissionID(s *string) *PermissionResourceUpdate {
+	if s != nil {
+		pru.SetPermissionID(*s)
 	}
 	return pru
 }
 
 // SetResourceID sets the "resource_id" field.
-func (pru *PermissionResourceUpdate) SetResourceID(i int) *PermissionResourceUpdate {
-	pru.mutation.SetResourceID(i)
+func (pru *PermissionResourceUpdate) SetResourceID(s string) *PermissionResourceUpdate {
+	pru.mutation.SetResourceID(s)
 	return pru
 }
 
 // SetNillableResourceID sets the "resource_id" field if the given value is not nil.
-func (pru *PermissionResourceUpdate) SetNillableResourceID(i *int) *PermissionResourceUpdate {
-	if i != nil {
-		pru.SetResourceID(*i)
+func (pru *PermissionResourceUpdate) SetNillableResourceID(s *string) *PermissionResourceUpdate {
+	if s != nil {
+		pru.SetResourceID(*s)
 	}
 	return pru
 }
@@ -159,7 +159,7 @@ func (pru *PermissionResourceUpdate) sqlSave(ctx context.Context) (n int, err er
 			Columns: []string{permissionresource.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (pru *PermissionResourceUpdate) sqlSave(ctx context.Context) (n int, err er
 			Columns: []string{permissionresource.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (pru *PermissionResourceUpdate) sqlSave(ctx context.Context) (n int, err er
 			Columns: []string{permissionresource.ResourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (pru *PermissionResourceUpdate) sqlSave(ctx context.Context) (n int, err er
 			Columns: []string{permissionresource.ResourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type PermissionResourceUpdateOne struct {
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (pruo *PermissionResourceUpdateOne) SetPermissionID(i int) *PermissionResourceUpdateOne {
-	pruo.mutation.SetPermissionID(i)
+func (pruo *PermissionResourceUpdateOne) SetPermissionID(s string) *PermissionResourceUpdateOne {
+	pruo.mutation.SetPermissionID(s)
 	return pruo
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (pruo *PermissionResourceUpdateOne) SetNillablePermissionID(i *int) *PermissionResourceUpdateOne {
-	if i != nil {
-		pruo.SetPermissionID(*i)
+func (pruo *PermissionResourceUpdateOne) SetNillablePermissionID(s *string) *PermissionResourceUpdateOne {
+	if s != nil {
+		pruo.SetPermissionID(*s)
 	}
 	return pruo
 }
 
 // SetResourceID sets the "resource_id" field.
-func (pruo *PermissionResourceUpdateOne) SetResourceID(i int) *PermissionResourceUpdateOne {
-	pruo.mutation.SetResourceID(i)
+func (pruo *PermissionResourceUpdateOne) SetResourceID(s string) *PermissionResourceUpdateOne {
+	pruo.mutation.SetResourceID(s)
 	return pruo
 }
 
 // SetNillableResourceID sets the "resource_id" field if the given value is not nil.
-func (pruo *PermissionResourceUpdateOne) SetNillableResourceID(i *int) *PermissionResourceUpdateOne {
-	if i != nil {
-		pruo.SetResourceID(*i)
+func (pruo *PermissionResourceUpdateOne) SetNillableResourceID(s *string) *PermissionResourceUpdateOne {
+	if s != nil {
+		pruo.SetResourceID(*s)
 	}
 	return pruo
 }
@@ -390,7 +390,7 @@ func (pruo *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Pe
 			Columns: []string{permissionresource.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (pruo *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Pe
 			Columns: []string{permissionresource.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (pruo *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Pe
 			Columns: []string{permissionresource.ResourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (pruo *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Pe
 			Columns: []string{permissionresource.ResourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

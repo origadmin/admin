@@ -19,9 +19,9 @@ type PermissionResource struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// PermissionID holds the value of the "permission_id" field.
-	PermissionID int `json:"permission_id,omitempty"`
+	PermissionID string `json:"permission_id,omitempty"`
 	// ResourceID holds the value of the "resource_id" field.
-	ResourceID int `json:"resource_id,omitempty"`
+	ResourceID string `json:"resource_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionResourceQuery when eager-loading is set.
 	Edges        PermissionResourceEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*PermissionResource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case permissionresource.FieldID, permissionresource.FieldPermissionID, permissionresource.FieldResourceID:
+		case permissionresource.FieldID:
 			values[i] = new(sql.NullInt64)
+		case permissionresource.FieldPermissionID, permissionresource.FieldResourceID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (pr *PermissionResource) assignValues(columns []string, values []any) error
 			}
 			pr.ID = int(value.Int64)
 		case permissionresource.FieldPermissionID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				pr.PermissionID = int(value.Int64)
+				pr.PermissionID = value.String
 			}
 		case permissionresource.FieldResourceID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field resource_id", values[i])
 			} else if value.Valid {
-				pr.ResourceID = int(value.Int64)
+				pr.ResourceID = value.String
 			}
 		default:
 			pr.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (pr *PermissionResource) String() string {
 	builder.WriteString("PermissionResource(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", pr.ID))
 	builder.WriteString("permission_id=")
-	builder.WriteString(fmt.Sprintf("%v", pr.PermissionID))
+	builder.WriteString(pr.PermissionID)
 	builder.WriteString(", ")
 	builder.WriteString("resource_id=")
-	builder.WriteString(fmt.Sprintf("%v", pr.ResourceID))
+	builder.WriteString(pr.ResourceID)
 	builder.WriteByte(')')
 	return builder.String()
 }

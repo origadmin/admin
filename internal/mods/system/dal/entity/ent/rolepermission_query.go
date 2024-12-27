@@ -337,7 +337,7 @@ func (rpq *RolePermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *
 // Example:
 //
 //	var v []struct {
-//		RoleID int `json:"role_id,omitempty"`
+//		RoleID string `json:"role_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (rpq *RolePermissionQuery) GroupBy(field string, fields ...string) *RolePer
 // Example:
 //
 //	var v []struct {
-//		RoleID int `json:"role_id,omitempty"`
+//		RoleID string `json:"role_id,omitempty"`
 //	}
 //
 //	client.RolePermission.Query().
@@ -451,8 +451,8 @@ func (rpq *RolePermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (rpq *RolePermissionQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*RolePermission, init func(*RolePermission), assign func(*RolePermission, *Role)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*RolePermission)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*RolePermission)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (rpq *RolePermissionQuery) loadRole(ctx context.Context, query *RoleQuery, 
 	return nil
 }
 func (rpq *RolePermissionQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*RolePermission, init func(*RolePermission), assign func(*RolePermission, *Permission)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*RolePermission)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*RolePermission)
 	for i := range nodes {
 		fk := nodes[i].PermissionID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (rpq *RolePermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Role
 // Example:
 //
 //	var v []struct {
-//	  RoleID int `json:"role_id,omitempty"`
-//	  PermissionID int `json:"permission_id,omitempty"`
+//	  RoleID string `json:"role_id,omitempty"`
+//	  PermissionID string `json:"permission_id,omitempty"`
 //	}
 //
 //	client.RolePermission.Query().

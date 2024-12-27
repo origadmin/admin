@@ -63,14 +63,14 @@ func (pc *PositionCreate) SetDescription(s string) *PositionCreate {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (pc *PositionCreate) SetDepartmentID(i int) *PositionCreate {
-	pc.mutation.SetDepartmentID(i)
+func (pc *PositionCreate) SetDepartmentID(s string) *PositionCreate {
+	pc.mutation.SetDepartmentID(s)
 	return pc
 }
 
 // SetID sets the "id" field.
-func (pc *PositionCreate) SetID(i int) *PositionCreate {
-	pc.mutation.SetID(i)
+func (pc *PositionCreate) SetID(s string) *PositionCreate {
+	pc.mutation.SetID(s)
 	return pc
 }
 
@@ -193,9 +193,12 @@ func (pc *PositionCreate) sqlSave(ctx context.Context) (*Position, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(string); ok {
+			_node.ID = id
+		} else {
+			return nil, fmt.Errorf("unexpected Position.ID type: %T", _spec.ID.Value)
+		}
 	}
 	pc.mutation.id = &_node.ID
 	pc.mutation.done = true
@@ -205,7 +208,7 @@ func (pc *PositionCreate) sqlSave(ctx context.Context) (*Position, error) {
 func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Position{config: pc.config}
-		_spec = sqlgraph.NewCreateSpec(position.Table, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(position.Table, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
 	)
 	if id, ok := pc.mutation.ID(); ok {
 		_node.ID = id
@@ -235,7 +238,7 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			Columns: []string{position.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -328,10 +331,6 @@ func (pcb *PositionCreateBulk) Save(ctx context.Context) ([]*Position, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

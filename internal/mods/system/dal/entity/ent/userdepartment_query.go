@@ -337,7 +337,7 @@ func (udq *UserDepartmentQuery) WithDepartment(opts ...func(*DepartmentQuery)) *
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (udq *UserDepartmentQuery) GroupBy(field string, fields ...string) *UserDep
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserDepartment.Query().
@@ -451,8 +451,8 @@ func (udq *UserDepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (udq *UserDepartmentQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*UserDepartment, init func(*UserDepartment), assign func(*UserDepartment, *User)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*UserDepartment)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserDepartment)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (udq *UserDepartmentQuery) loadUser(ctx context.Context, query *UserQuery, 
 	return nil
 }
 func (udq *UserDepartmentQuery) loadDepartment(ctx context.Context, query *DepartmentQuery, nodes []*UserDepartment, init func(*UserDepartment), assign func(*UserDepartment, *Department)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*UserDepartment)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserDepartment)
 	for i := range nodes {
 		fk := nodes[i].DepartmentID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (udq *UserDepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *User
 // Example:
 //
 //	var v []struct {
-//	  UserID int `json:"user_id,omitempty"`
-//	  DepartmentID int `json:"department_id,omitempty"`
+//	  UserID string `json:"user_id,omitempty"`
+//	  DepartmentID string `json:"department_id,omitempty"`
 //	}
 //
 //	client.UserDepartment.Query().

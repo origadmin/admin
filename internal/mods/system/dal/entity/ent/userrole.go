@@ -19,9 +19,9 @@ type UserRole struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
+	UserID string `json:"user_id,omitempty"`
 	// RoleID holds the value of the "role_id" field.
-	RoleID int `json:"role_id,omitempty"`
+	RoleID string `json:"role_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserRoleQuery when eager-loading is set.
 	Edges        UserRoleEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*UserRole) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userrole.FieldID, userrole.FieldUserID, userrole.FieldRoleID:
+		case userrole.FieldID:
 			values[i] = new(sql.NullInt64)
+		case userrole.FieldUserID, userrole.FieldRoleID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (ur *UserRole) assignValues(columns []string, values []any) error {
 			}
 			ur.ID = int(value.Int64)
 		case userrole.FieldUserID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				ur.UserID = int(value.Int64)
+				ur.UserID = value.String
 			}
 		case userrole.FieldRoleID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
-				ur.RoleID = int(value.Int64)
+				ur.RoleID = value.String
 			}
 		default:
 			ur.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (ur *UserRole) String() string {
 	builder.WriteString("UserRole(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", ur.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", ur.UserID))
+	builder.WriteString(ur.UserID)
 	builder.WriteString(", ")
 	builder.WriteString("role_id=")
-	builder.WriteString(fmt.Sprintf("%v", ur.RoleID))
+	builder.WriteString(ur.RoleID)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -121,20 +121,20 @@ func (pc *PermissionCreate) SetScopeDepts(s []string) *PermissionCreate {
 }
 
 // SetID sets the "id" field.
-func (pc *PermissionCreate) SetID(i int) *PermissionCreate {
-	pc.mutation.SetID(i)
+func (pc *PermissionCreate) SetID(s string) *PermissionCreate {
+	pc.mutation.SetID(s)
 	return pc
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (pc *PermissionCreate) AddRoleIDs(ids ...int) *PermissionCreate {
+func (pc *PermissionCreate) AddRoleIDs(ids ...string) *PermissionCreate {
 	pc.mutation.AddRoleIDs(ids...)
 	return pc
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (pc *PermissionCreate) AddRoles(r ...*Role) *PermissionCreate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -142,14 +142,14 @@ func (pc *PermissionCreate) AddRoles(r ...*Role) *PermissionCreate {
 }
 
 // AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
-func (pc *PermissionCreate) AddMenuIDs(ids ...int) *PermissionCreate {
+func (pc *PermissionCreate) AddMenuIDs(ids ...string) *PermissionCreate {
 	pc.mutation.AddMenuIDs(ids...)
 	return pc
 }
 
 // AddMenus adds the "menus" edges to the Menu entity.
 func (pc *PermissionCreate) AddMenus(m ...*Menu) *PermissionCreate {
-	ids := make([]int, len(m))
+	ids := make([]string, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -157,14 +157,14 @@ func (pc *PermissionCreate) AddMenus(m ...*Menu) *PermissionCreate {
 }
 
 // AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
-func (pc *PermissionCreate) AddResourceIDs(ids ...int) *PermissionCreate {
+func (pc *PermissionCreate) AddResourceIDs(ids ...string) *PermissionCreate {
 	pc.mutation.AddResourceIDs(ids...)
 	return pc
 }
 
 // AddResources adds the "resources" edges to the Resource entity.
 func (pc *PermissionCreate) AddResources(r ...*Resource) *PermissionCreate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -331,9 +331,12 @@ func (pc *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(string); ok {
+			_node.ID = id
+		} else {
+			return nil, fmt.Errorf("unexpected Permission.ID type: %T", _spec.ID.Value)
+		}
 	}
 	pc.mutation.id = &_node.ID
 	pc.mutation.done = true
@@ -343,7 +346,7 @@ func (pc *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Permission{config: pc.config}
-		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString))
 	)
 	if id, ok := pc.mutation.ID(); ok {
 		_node.ID = id
@@ -393,7 +396,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: permission.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -409,7 +412,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: permission.MenusPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -425,7 +428,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: permission.ResourcesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -549,10 +552,6 @@ func (pcb *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

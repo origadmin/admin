@@ -11,48 +11,58 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Position {
+func ID(id string) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Position {
+func IDEQ(id string) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Position {
+func IDNEQ(id string) predicate.Position {
 	return predicate.Position(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Position {
+func IDIn(ids ...string) predicate.Position {
 	return predicate.Position(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Position {
+func IDNotIn(ids ...string) predicate.Position {
 	return predicate.Position(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Position {
+func IDGT(id string) predicate.Position {
 	return predicate.Position(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Position {
+func IDGTE(id string) predicate.Position {
 	return predicate.Position(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Position {
+func IDLT(id string) predicate.Position {
 	return predicate.Position(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Position {
+func IDLTE(id string) predicate.Position {
 	return predicate.Position(sql.FieldLTE(FieldID, id))
+}
+
+// IDEqualFold applies the EqualFold predicate on the ID field.
+func IDEqualFold(id string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldID, id))
+}
+
+// IDContainsFold applies the ContainsFold predicate on the ID field.
+func IDContainsFold(id string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldID, id))
 }
 
 // CreateTime applies equality check predicate on the "create_time" field. It's identical to CreateTimeEQ.
@@ -76,7 +86,7 @@ func Description(v string) predicate.Position {
 }
 
 // DepartmentID applies equality check predicate on the "department_id" field. It's identical to DepartmentIDEQ.
-func DepartmentID(v int) predicate.Position {
+func DepartmentID(v string) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldDepartmentID, v))
 }
 
@@ -291,23 +301,68 @@ func DescriptionContainsFold(v string) predicate.Position {
 }
 
 // DepartmentIDEQ applies the EQ predicate on the "department_id" field.
-func DepartmentIDEQ(v int) predicate.Position {
+func DepartmentIDEQ(v string) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldDepartmentID, v))
 }
 
 // DepartmentIDNEQ applies the NEQ predicate on the "department_id" field.
-func DepartmentIDNEQ(v int) predicate.Position {
+func DepartmentIDNEQ(v string) predicate.Position {
 	return predicate.Position(sql.FieldNEQ(FieldDepartmentID, v))
 }
 
 // DepartmentIDIn applies the In predicate on the "department_id" field.
-func DepartmentIDIn(vs ...int) predicate.Position {
+func DepartmentIDIn(vs ...string) predicate.Position {
 	return predicate.Position(sql.FieldIn(FieldDepartmentID, vs...))
 }
 
 // DepartmentIDNotIn applies the NotIn predicate on the "department_id" field.
-func DepartmentIDNotIn(vs ...int) predicate.Position {
+func DepartmentIDNotIn(vs ...string) predicate.Position {
 	return predicate.Position(sql.FieldNotIn(FieldDepartmentID, vs...))
+}
+
+// DepartmentIDGT applies the GT predicate on the "department_id" field.
+func DepartmentIDGT(v string) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldDepartmentID, v))
+}
+
+// DepartmentIDGTE applies the GTE predicate on the "department_id" field.
+func DepartmentIDGTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldDepartmentID, v))
+}
+
+// DepartmentIDLT applies the LT predicate on the "department_id" field.
+func DepartmentIDLT(v string) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldDepartmentID, v))
+}
+
+// DepartmentIDLTE applies the LTE predicate on the "department_id" field.
+func DepartmentIDLTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldDepartmentID, v))
+}
+
+// DepartmentIDContains applies the Contains predicate on the "department_id" field.
+func DepartmentIDContains(v string) predicate.Position {
+	return predicate.Position(sql.FieldContains(FieldDepartmentID, v))
+}
+
+// DepartmentIDHasPrefix applies the HasPrefix predicate on the "department_id" field.
+func DepartmentIDHasPrefix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasPrefix(FieldDepartmentID, v))
+}
+
+// DepartmentIDHasSuffix applies the HasSuffix predicate on the "department_id" field.
+func DepartmentIDHasSuffix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasSuffix(FieldDepartmentID, v))
+}
+
+// DepartmentIDEqualFold applies the EqualFold predicate on the "department_id" field.
+func DepartmentIDEqualFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldDepartmentID, v))
+}
+
+// DepartmentIDContainsFold applies the ContainsFold predicate on the "department_id" field.
+func DepartmentIDContainsFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldDepartmentID, v))
 }
 
 // HasDepartment applies the HasEdge predicate on the "department" edge.

@@ -31,29 +31,29 @@ func (rmu *RoleMenuUpdate) Where(ps ...predicate.RoleMenu) *RoleMenuUpdate {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rmu *RoleMenuUpdate) SetRoleID(i int) *RoleMenuUpdate {
-	rmu.mutation.SetRoleID(i)
+func (rmu *RoleMenuUpdate) SetRoleID(s string) *RoleMenuUpdate {
+	rmu.mutation.SetRoleID(s)
 	return rmu
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (rmu *RoleMenuUpdate) SetNillableRoleID(i *int) *RoleMenuUpdate {
-	if i != nil {
-		rmu.SetRoleID(*i)
+func (rmu *RoleMenuUpdate) SetNillableRoleID(s *string) *RoleMenuUpdate {
+	if s != nil {
+		rmu.SetRoleID(*s)
 	}
 	return rmu
 }
 
 // SetMenuID sets the "menu_id" field.
-func (rmu *RoleMenuUpdate) SetMenuID(i int) *RoleMenuUpdate {
-	rmu.mutation.SetMenuID(i)
+func (rmu *RoleMenuUpdate) SetMenuID(s string) *RoleMenuUpdate {
+	rmu.mutation.SetMenuID(s)
 	return rmu
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (rmu *RoleMenuUpdate) SetNillableMenuID(i *int) *RoleMenuUpdate {
-	if i != nil {
-		rmu.SetMenuID(*i)
+func (rmu *RoleMenuUpdate) SetNillableMenuID(s *string) *RoleMenuUpdate {
+	if s != nil {
+		rmu.SetMenuID(*s)
 	}
 	return rmu
 }
@@ -159,7 +159,7 @@ func (rmu *RoleMenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{rolemenu.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (rmu *RoleMenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{rolemenu.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (rmu *RoleMenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{rolemenu.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (rmu *RoleMenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{rolemenu.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type RoleMenuUpdateOne struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rmuo *RoleMenuUpdateOne) SetRoleID(i int) *RoleMenuUpdateOne {
-	rmuo.mutation.SetRoleID(i)
+func (rmuo *RoleMenuUpdateOne) SetRoleID(s string) *RoleMenuUpdateOne {
+	rmuo.mutation.SetRoleID(s)
 	return rmuo
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (rmuo *RoleMenuUpdateOne) SetNillableRoleID(i *int) *RoleMenuUpdateOne {
-	if i != nil {
-		rmuo.SetRoleID(*i)
+func (rmuo *RoleMenuUpdateOne) SetNillableRoleID(s *string) *RoleMenuUpdateOne {
+	if s != nil {
+		rmuo.SetRoleID(*s)
 	}
 	return rmuo
 }
 
 // SetMenuID sets the "menu_id" field.
-func (rmuo *RoleMenuUpdateOne) SetMenuID(i int) *RoleMenuUpdateOne {
-	rmuo.mutation.SetMenuID(i)
+func (rmuo *RoleMenuUpdateOne) SetMenuID(s string) *RoleMenuUpdateOne {
+	rmuo.mutation.SetMenuID(s)
 	return rmuo
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (rmuo *RoleMenuUpdateOne) SetNillableMenuID(i *int) *RoleMenuUpdateOne {
-	if i != nil {
-		rmuo.SetMenuID(*i)
+func (rmuo *RoleMenuUpdateOne) SetNillableMenuID(s *string) *RoleMenuUpdateOne {
+	if s != nil {
+		rmuo.SetMenuID(*s)
 	}
 	return rmuo
 }
@@ -390,7 +390,7 @@ func (rmuo *RoleMenuUpdateOne) sqlSave(ctx context.Context) (_node *RoleMenu, er
 			Columns: []string{rolemenu.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (rmuo *RoleMenuUpdateOne) sqlSave(ctx context.Context) (_node *RoleMenu, er
 			Columns: []string{rolemenu.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (rmuo *RoleMenuUpdateOne) sqlSave(ctx context.Context) (_node *RoleMenu, er
 			Columns: []string{rolemenu.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (rmuo *RoleMenuUpdateOne) sqlSave(ctx context.Context) (_node *RoleMenu, er
 			Columns: []string{rolemenu.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

@@ -337,7 +337,7 @@ func (drq *DepartmentRoleQuery) WithRole(opts ...func(*RoleQuery)) *DepartmentRo
 // Example:
 //
 //	var v []struct {
-//		DepartmentID int `json:"department_id,omitempty"`
+//		DepartmentID string `json:"department_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (drq *DepartmentRoleQuery) GroupBy(field string, fields ...string) *Departm
 // Example:
 //
 //	var v []struct {
-//		DepartmentID int `json:"department_id,omitempty"`
+//		DepartmentID string `json:"department_id,omitempty"`
 //	}
 //
 //	client.DepartmentRole.Query().
@@ -451,8 +451,8 @@ func (drq *DepartmentRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) 
 }
 
 func (drq *DepartmentRoleQuery) loadDepartment(ctx context.Context, query *DepartmentQuery, nodes []*DepartmentRole, init func(*DepartmentRole), assign func(*DepartmentRole, *Department)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*DepartmentRole)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*DepartmentRole)
 	for i := range nodes {
 		fk := nodes[i].DepartmentID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (drq *DepartmentRoleQuery) loadDepartment(ctx context.Context, query *Depar
 	return nil
 }
 func (drq *DepartmentRoleQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*DepartmentRole, init func(*DepartmentRole), assign func(*DepartmentRole, *Role)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*DepartmentRole)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*DepartmentRole)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (drq *DepartmentRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *Depa
 // Example:
 //
 //	var v []struct {
-//	  DepartmentID int `json:"department_id,omitempty"`
-//	  RoleID int `json:"role_id,omitempty"`
+//	  DepartmentID string `json:"department_id,omitempty"`
+//	  RoleID string `json:"role_id,omitempty"`
 //	}
 //
 //	client.DepartmentRole.Query().

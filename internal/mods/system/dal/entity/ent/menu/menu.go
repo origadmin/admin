@@ -22,6 +22,8 @@ const (
 	FieldKeyword = "keyword"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldI18nKey holds the string denoting the i18n_key field in the database.
+	FieldI18nKey = "i18n_key"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
 	// FieldType holds the string denoting the type field in the database.
@@ -104,6 +106,7 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldKeyword,
 	FieldName,
+	FieldI18nKey,
 	FieldDescription,
 	FieldType,
 	FieldIcon,
@@ -149,12 +152,16 @@ var (
 	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultI18nKey holds the default value on creation for the "i18n_key" field.
+	DefaultI18nKey string
+	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
+	I18nKeyValidator func(string) error
 	// DefaultDescription holds the default value on creation for the "description" field.
 	DefaultDescription string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
 	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType int32
+	DefaultType string
 	// DefaultIcon holds the default value on creation for the "icon" field.
 	DefaultIcon string
 	// IconValidator is a validator for the "icon" field. It is called by the builders before save.
@@ -174,9 +181,9 @@ var (
 	// DefaultProperties holds the default value on creation for the "properties" field.
 	DefaultProperties string
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(int) error
+	ParentIDValidator func(string) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int) error
+	IDValidator func(string) error
 )
 
 // OrderOption defines the ordering options for the Menu queries.
@@ -205,6 +212,11 @@ func ByKeyword(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByI18nKey orders the results by the i18n_key field.
+func ByI18nKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18nKey, opts...).ToFunc()
 }
 
 // ByDescription orders the results by the description field.

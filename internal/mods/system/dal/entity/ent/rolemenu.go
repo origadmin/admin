@@ -19,9 +19,9 @@ type RoleMenu struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// RoleID holds the value of the "role_id" field.
-	RoleID int `json:"role_id,omitempty"`
+	RoleID string `json:"role_id,omitempty"`
 	// MenuID holds the value of the "menu_id" field.
-	MenuID int `json:"menu_id,omitempty"`
+	MenuID string `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleMenuQuery when eager-loading is set.
 	Edges        RoleMenuEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*RoleMenu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case rolemenu.FieldID, rolemenu.FieldRoleID, rolemenu.FieldMenuID:
+		case rolemenu.FieldID:
 			values[i] = new(sql.NullInt64)
+		case rolemenu.FieldRoleID, rolemenu.FieldMenuID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (rm *RoleMenu) assignValues(columns []string, values []any) error {
 			}
 			rm.ID = int(value.Int64)
 		case rolemenu.FieldRoleID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
-				rm.RoleID = int(value.Int64)
+				rm.RoleID = value.String
 			}
 		case rolemenu.FieldMenuID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
 			} else if value.Valid {
-				rm.MenuID = int(value.Int64)
+				rm.MenuID = value.String
 			}
 		default:
 			rm.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (rm *RoleMenu) String() string {
 	builder.WriteString("RoleMenu(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", rm.ID))
 	builder.WriteString("role_id=")
-	builder.WriteString(fmt.Sprintf("%v", rm.RoleID))
+	builder.WriteString(rm.RoleID)
 	builder.WriteString(", ")
 	builder.WriteString("menu_id=")
-	builder.WriteString(fmt.Sprintf("%v", rm.MenuID))
+	builder.WriteString(rm.MenuID)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -16,7 +16,7 @@ import (
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 	// CreateTime holds the value of the "create_time" field.
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// UpdateTime holds the value of the "update_time" field.
@@ -143,9 +143,9 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case role.FieldIsSystem:
 			values[i] = new(sql.NullBool)
-		case role.FieldID, role.FieldType, role.FieldSequence, role.FieldStatus:
+		case role.FieldType, role.FieldSequence, role.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case role.FieldKeyword, role.FieldName, role.FieldDescription:
+		case role.FieldID, role.FieldKeyword, role.FieldName, role.FieldDescription:
 			values[i] = new(sql.NullString)
 		case role.FieldCreateTime, role.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -165,11 +165,11 @@ func (r *Role) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case role.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value.Valid {
+				r.ID = value.String
 			}
-			r.ID = int(value.Int64)
 		case role.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])

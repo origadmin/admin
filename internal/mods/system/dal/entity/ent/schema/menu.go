@@ -40,8 +40,9 @@ func (Menu) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("keyword").MaxLen(32).Default("").Comment(i18n.Text("menu:keyword")),           // Unique keyword for the menu item
 		field.String("name").MaxLen(128).Default("").Comment(i18n.Text("menu:name")),                // Display name of the menu item
+		field.String("i18n_key").MaxLen(128).Default("").Comment(i18n.Text("menu.i18n_key")),        // I18n key for the menu item
 		field.String("description").MaxLen(1024).Default("").Comment(i18n.Text("menu:description")), // Description of the menu item
-		field.Int32("type").Default(MenuTypePage).Comment(i18n.Text("menu:type")),                   // Type of the menu item (e.g., page, link)
+		field.String("type").Default("page").Comment(i18n.Text("menu:type")),                        // Type of the menu item (e.g., Page,Button,Action,Menu,Link)
 		field.String("icon").MaxLen(32).Default("").Comment(i18n.Text("menu:icon")),                 // Icon for the menu item
 		field.String("path").MaxLen(255).Default("").Comment(i18n.Text("menu:path")),                // Path associated with the menu item
 		field.Int8("status").Default(MenuStatusActivated).Comment(i18n.Text("menu:status")),         // Status of the menu item (e.g., activated, deactivated)

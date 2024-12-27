@@ -19,9 +19,9 @@ type UserDepartment struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
+	UserID string `json:"user_id,omitempty"`
 	// DepartmentID holds the value of the "department_id" field.
-	DepartmentID int `json:"department_id,omitempty"`
+	DepartmentID string `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserDepartmentQuery when eager-loading is set.
 	Edges        UserDepartmentEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*UserDepartment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case userdepartment.FieldID, userdepartment.FieldUserID, userdepartment.FieldDepartmentID:
+		case userdepartment.FieldID:
 			values[i] = new(sql.NullInt64)
+		case userdepartment.FieldUserID, userdepartment.FieldDepartmentID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (ud *UserDepartment) assignValues(columns []string, values []any) error {
 			}
 			ud.ID = int(value.Int64)
 		case userdepartment.FieldUserID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				ud.UserID = int(value.Int64)
+				ud.UserID = value.String
 			}
 		case userdepartment.FieldDepartmentID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				ud.DepartmentID = int(value.Int64)
+				ud.DepartmentID = value.String
 			}
 		default:
 			ud.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (ud *UserDepartment) String() string {
 	builder.WriteString("UserDepartment(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", ud.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", ud.UserID))
+	builder.WriteString(ud.UserID)
 	builder.WriteString(", ")
 	builder.WriteString("department_id=")
-	builder.WriteString(fmt.Sprintf("%v", ud.DepartmentID))
+	builder.WriteString(ud.DepartmentID)
 	builder.WriteByte(')')
 	return builder.String()
 }

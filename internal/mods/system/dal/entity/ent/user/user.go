@@ -213,11 +213,11 @@ var (
 	// DefaultSanctionDate holds the default value on creation for the "sanction_date" field.
 	DefaultSanctionDate func() time.Time
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
-	ManagerIDValidator func(int) error
+	ManagerIDValidator func(string) error
 	// DefaultManager holds the default value on creation for the "manager" field.
 	DefaultManager string
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int) error
+	IDValidator func(string) error
 )
 
 // OrderOption defines the ordering options for the User queries.

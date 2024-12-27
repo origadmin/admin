@@ -251,8 +251,8 @@ func (dq *DepartmentQuery) FirstX(ctx context.Context) *Department {
 
 // FirstID returns the first Department ID from the query.
 // Returns a *NotFoundError when no Department ID was found.
-func (dq *DepartmentQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (dq *DepartmentQuery) FirstID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = dq.Limit(1).IDs(setContextOp(ctx, dq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -264,7 +264,7 @@ func (dq *DepartmentQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (dq *DepartmentQuery) FirstIDX(ctx context.Context) int {
+func (dq *DepartmentQuery) FirstIDX(ctx context.Context) string {
 	id, err := dq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -302,8 +302,8 @@ func (dq *DepartmentQuery) OnlyX(ctx context.Context) *Department {
 // OnlyID is like Only, but returns the only Department ID in the query.
 // Returns a *NotSingularError when more than one Department ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (dq *DepartmentQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (dq *DepartmentQuery) OnlyID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = dq.Limit(2).IDs(setContextOp(ctx, dq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -319,7 +319,7 @@ func (dq *DepartmentQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (dq *DepartmentQuery) OnlyIDX(ctx context.Context) int {
+func (dq *DepartmentQuery) OnlyIDX(ctx context.Context) string {
 	id, err := dq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -347,7 +347,7 @@ func (dq *DepartmentQuery) AllX(ctx context.Context) []*Department {
 }
 
 // IDs executes the query and returns a list of Department IDs.
-func (dq *DepartmentQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (dq *DepartmentQuery) IDs(ctx context.Context) (ids []string, err error) {
 	if dq.ctx.Unique == nil && dq.path != nil {
 		dq.Unique(true)
 	}
@@ -359,7 +359,7 @@ func (dq *DepartmentQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (dq *DepartmentQuery) IDsX(ctx context.Context) []int {
+func (dq *DepartmentQuery) IDsX(ctx context.Context) []string {
 	ids, err := dq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -672,8 +672,8 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*D
 
 func (dq *DepartmentQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Department, init func(*Department), assign func(*Department, *User)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[int]*Department)
-	nids := make(map[int]map[*Department]struct{})
+	byID := make(map[string]*Department)
+	nids := make(map[string]map[*Department]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -702,11 +702,11 @@ func (dq *DepartmentQuery) loadUsers(ctx context.Context, query *UserQuery, node
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullInt64)}, values...), nil
+				return append([]any{new(sql.NullString)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := int(values[0].(*sql.NullInt64).Int64)
-				inValue := int(values[1].(*sql.NullInt64).Int64)
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Department]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -733,7 +733,7 @@ func (dq *DepartmentQuery) loadUsers(ctx context.Context, query *UserQuery, node
 }
 func (dq *DepartmentQuery) loadPositions(ctx context.Context, query *PositionQuery, nodes []*Department, init func(*Department), assign func(*Department, *Position)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Department)
+	nodeids := make(map[string]*Department)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -763,8 +763,8 @@ func (dq *DepartmentQuery) loadPositions(ctx context.Context, query *PositionQue
 }
 func (dq *DepartmentQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*Department, init func(*Department), assign func(*Department, *Role)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[int]*Department)
-	nids := make(map[int]map[*Department]struct{})
+	byID := make(map[string]*Department)
+	nids := make(map[string]map[*Department]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -793,11 +793,11 @@ func (dq *DepartmentQuery) loadRoles(ctx context.Context, query *RoleQuery, node
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullInt64)}, values...), nil
+				return append([]any{new(sql.NullString)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := int(values[0].(*sql.NullInt64).Int64)
-				inValue := int(values[1].(*sql.NullInt64).Int64)
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Department]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -824,7 +824,7 @@ func (dq *DepartmentQuery) loadRoles(ctx context.Context, query *RoleQuery, node
 }
 func (dq *DepartmentQuery) loadChildren(ctx context.Context, query *DepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *Department)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Department)
+	nodeids := make(map[string]*Department)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -853,8 +853,8 @@ func (dq *DepartmentQuery) loadChildren(ctx context.Context, query *DepartmentQu
 	return nil
 }
 func (dq *DepartmentQuery) loadParent(ctx context.Context, query *DepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *Department)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*Department)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*Department)
 	for i := range nodes {
 		fk := nodes[i].ParentID
 		if _, ok := nodeids[fk]; !ok {
@@ -883,7 +883,7 @@ func (dq *DepartmentQuery) loadParent(ctx context.Context, query *DepartmentQuer
 }
 func (dq *DepartmentQuery) loadUserDepartments(ctx context.Context, query *UserDepartmentQuery, nodes []*Department, init func(*Department), assign func(*Department, *UserDepartment)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Department)
+	nodeids := make(map[string]*Department)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -913,7 +913,7 @@ func (dq *DepartmentQuery) loadUserDepartments(ctx context.Context, query *UserD
 }
 func (dq *DepartmentQuery) loadDepartmentRoles(ctx context.Context, query *DepartmentRoleQuery, nodes []*Department, init func(*Department), assign func(*Department, *DepartmentRole)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Department)
+	nodeids := make(map[string]*Department)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -955,7 +955,7 @@ func (dq *DepartmentQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (dq *DepartmentQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(department.Table, department.Columns, sqlgraph.NewFieldSpec(department.FieldID, field.TypeString))
 	_spec.From = dq.sql
 	if unique := dq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -1077,7 +1077,7 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
 //	  Ancestors string `json:"ancestors,omitempty"`
-//	  ParentID int `json:"parent_id,omitempty"`
+//	  ParentID string `json:"parent_id,omitempty"`
 //	  Level int `json:"level,omitempty"`
 //	}
 //

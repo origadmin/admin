@@ -40,7 +40,7 @@ func ConvertMenu2PB(goModel *Menu) (pbModel *MenuPB) {
 	pbModel.Id = goModel.ID
 	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
-	pbModel.Code = goModel.Code
+	pbModel.Keyword = goModel.Keyword
 	pbModel.Name = goModel.Name
 	pbModel.Description = goModel.Description
 	pbModel.Sequence = int32(goModel.Sequence)
@@ -71,7 +71,7 @@ func ConvertRole2PB(goModel *Role) (pbModel *RolePB) {
 	pbModel.Id = goModel.ID
 	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
-	pbModel.Code = goModel.Code
+	pbModel.Keyword = goModel.Keyword
 	pbModel.Name = goModel.Name
 	pbModel.Description = goModel.Description
 	pbModel.Sequence = int32(goModel.Sequence)
@@ -126,12 +126,12 @@ func ConvertUserEdges2PB(goModel *UserEdges) (pbModel *UserEdgesPB) {
 // ConvertUserRole2PB UserRole is the model entity for the UserRole schema.
 func ConvertUserRole2PB(goModel *UserRole) (pbModel *UserRolePB) {
 	pbModel = &UserRolePB{}
-	pbModel.Id = goModel.ID
-	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
-	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
+	pbModel.Id = int64(goModel.ID)
+	//pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
+	//pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.UserId = goModel.UserID
 	pbModel.RoleId = goModel.RoleID
-	pbModel.RoleName = goModel.RoleName
+	//pbModel.RoleName = goModel.RoleName
 	//pbModel.Edges = ConvertUserRoleEdges2PB(&goModel.Edges)
 	pbModel.User = ConvertUser2PB(goModel.Edges.User)
 	pbModel.Role = ConvertRole2PB(goModel.Edges.Role)
@@ -149,9 +149,9 @@ func ConvertUserRoleEdges2PB(goModel *UserRoleEdges) (pbModel *UserRoleEdgesPB) 
 // ConvertRoleMenu2PB RoleMenu is the model entity for the RoleMenu schema.
 func ConvertRoleMenu2PB(goModel *RoleMenu) (pbModel *RoleMenuPB) {
 	pbModel = &RoleMenuPB{}
-	pbModel.Id = goModel.ID
-	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
-	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
+	pbModel.Id = int64(goModel.ID)
+	//pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
+	//pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.RoleId = goModel.RoleID
 	pbModel.MenuId = goModel.MenuID
 	//pbModel.Edges = ConvertRoleMenuEdges2PB(&goModel.Edges)

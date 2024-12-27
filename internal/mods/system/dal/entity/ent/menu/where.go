@@ -11,48 +11,58 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Menu {
+func ID(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Menu {
+func IDEQ(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Menu {
+func IDNEQ(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Menu {
+func IDIn(ids ...string) predicate.Menu {
 	return predicate.Menu(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Menu {
+func IDNotIn(ids ...string) predicate.Menu {
 	return predicate.Menu(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Menu {
+func IDGT(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Menu {
+func IDGTE(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Menu {
+func IDLT(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Menu {
+func IDLTE(id string) predicate.Menu {
 	return predicate.Menu(sql.FieldLTE(FieldID, id))
+}
+
+// IDEqualFold applies the EqualFold predicate on the ID field.
+func IDEqualFold(id string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldID, id))
+}
+
+// IDContainsFold applies the ContainsFold predicate on the ID field.
+func IDContainsFold(id string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldID, id))
 }
 
 // CreateTime applies equality check predicate on the "create_time" field. It's identical to CreateTimeEQ.
@@ -75,13 +85,18 @@ func Name(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldName, v))
 }
 
+// I18nKey applies equality check predicate on the "i18n_key" field. It's identical to I18nKeyEQ.
+func I18nKey(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldI18nKey, v))
+}
+
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
 func Description(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldDescription, v))
 }
 
 // Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
-func Type(v int32) predicate.Menu {
+func Type(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldType, v))
 }
 
@@ -116,7 +131,7 @@ func Properties(v string) predicate.Menu {
 }
 
 // ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
-func ParentID(v int) predicate.Menu {
+func ParentID(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldParentID, v))
 }
 
@@ -330,6 +345,71 @@ func NameContainsFold(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldContainsFold(FieldName, v))
 }
 
+// I18nKeyEQ applies the EQ predicate on the "i18n_key" field.
+func I18nKeyEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEQ(FieldI18nKey, v))
+}
+
+// I18nKeyNEQ applies the NEQ predicate on the "i18n_key" field.
+func I18nKeyNEQ(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldNEQ(FieldI18nKey, v))
+}
+
+// I18nKeyIn applies the In predicate on the "i18n_key" field.
+func I18nKeyIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldIn(FieldI18nKey, vs...))
+}
+
+// I18nKeyNotIn applies the NotIn predicate on the "i18n_key" field.
+func I18nKeyNotIn(vs ...string) predicate.Menu {
+	return predicate.Menu(sql.FieldNotIn(FieldI18nKey, vs...))
+}
+
+// I18nKeyGT applies the GT predicate on the "i18n_key" field.
+func I18nKeyGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldI18nKey, v))
+}
+
+// I18nKeyGTE applies the GTE predicate on the "i18n_key" field.
+func I18nKeyGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldI18nKey, v))
+}
+
+// I18nKeyLT applies the LT predicate on the "i18n_key" field.
+func I18nKeyLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldI18nKey, v))
+}
+
+// I18nKeyLTE applies the LTE predicate on the "i18n_key" field.
+func I18nKeyLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldI18nKey, v))
+}
+
+// I18nKeyContains applies the Contains predicate on the "i18n_key" field.
+func I18nKeyContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldI18nKey, v))
+}
+
+// I18nKeyHasPrefix applies the HasPrefix predicate on the "i18n_key" field.
+func I18nKeyHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldI18nKey, v))
+}
+
+// I18nKeyHasSuffix applies the HasSuffix predicate on the "i18n_key" field.
+func I18nKeyHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldI18nKey, v))
+}
+
+// I18nKeyEqualFold applies the EqualFold predicate on the "i18n_key" field.
+func I18nKeyEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldI18nKey, v))
+}
+
+// I18nKeyContainsFold applies the ContainsFold predicate on the "i18n_key" field.
+func I18nKeyContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldI18nKey, v))
+}
+
 // DescriptionEQ applies the EQ predicate on the "description" field.
 func DescriptionEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldDescription, v))
@@ -396,43 +476,68 @@ func DescriptionContainsFold(v string) predicate.Menu {
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
-func TypeEQ(v int32) predicate.Menu {
+func TypeEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldType, v))
 }
 
 // TypeNEQ applies the NEQ predicate on the "type" field.
-func TypeNEQ(v int32) predicate.Menu {
+func TypeNEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldType, v))
 }
 
 // TypeIn applies the In predicate on the "type" field.
-func TypeIn(vs ...int32) predicate.Menu {
+func TypeIn(vs ...string) predicate.Menu {
 	return predicate.Menu(sql.FieldIn(FieldType, vs...))
 }
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
-func TypeNotIn(vs ...int32) predicate.Menu {
+func TypeNotIn(vs ...string) predicate.Menu {
 	return predicate.Menu(sql.FieldNotIn(FieldType, vs...))
 }
 
 // TypeGT applies the GT predicate on the "type" field.
-func TypeGT(v int32) predicate.Menu {
+func TypeGT(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldGT(FieldType, v))
 }
 
 // TypeGTE applies the GTE predicate on the "type" field.
-func TypeGTE(v int32) predicate.Menu {
+func TypeGTE(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldGTE(FieldType, v))
 }
 
 // TypeLT applies the LT predicate on the "type" field.
-func TypeLT(v int32) predicate.Menu {
+func TypeLT(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldLT(FieldType, v))
 }
 
 // TypeLTE applies the LTE predicate on the "type" field.
-func TypeLTE(v int32) predicate.Menu {
+func TypeLTE(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldLTE(FieldType, v))
+}
+
+// TypeContains applies the Contains predicate on the "type" field.
+func TypeContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldType, v))
+}
+
+// TypeHasPrefix applies the HasPrefix predicate on the "type" field.
+func TypeHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldType, v))
+}
+
+// TypeHasSuffix applies the HasSuffix predicate on the "type" field.
+func TypeHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldType, v))
+}
+
+// TypeEqualFold applies the EqualFold predicate on the "type" field.
+func TypeEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldType, v))
+}
+
+// TypeContainsFold applies the ContainsFold predicate on the "type" field.
+func TypeContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldType, v))
 }
 
 // IconEQ applies the EQ predicate on the "icon" field.
@@ -786,23 +891,58 @@ func PropertiesContainsFold(v string) predicate.Menu {
 }
 
 // ParentIDEQ applies the EQ predicate on the "parent_id" field.
-func ParentIDEQ(v int) predicate.Menu {
+func ParentIDEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldEQ(FieldParentID, v))
 }
 
 // ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
-func ParentIDNEQ(v int) predicate.Menu {
+func ParentIDNEQ(v string) predicate.Menu {
 	return predicate.Menu(sql.FieldNEQ(FieldParentID, v))
 }
 
 // ParentIDIn applies the In predicate on the "parent_id" field.
-func ParentIDIn(vs ...int) predicate.Menu {
+func ParentIDIn(vs ...string) predicate.Menu {
 	return predicate.Menu(sql.FieldIn(FieldParentID, vs...))
 }
 
 // ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
-func ParentIDNotIn(vs ...int) predicate.Menu {
+func ParentIDNotIn(vs ...string) predicate.Menu {
 	return predicate.Menu(sql.FieldNotIn(FieldParentID, vs...))
+}
+
+// ParentIDGT applies the GT predicate on the "parent_id" field.
+func ParentIDGT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGT(FieldParentID, v))
+}
+
+// ParentIDGTE applies the GTE predicate on the "parent_id" field.
+func ParentIDGTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldGTE(FieldParentID, v))
+}
+
+// ParentIDLT applies the LT predicate on the "parent_id" field.
+func ParentIDLT(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLT(FieldParentID, v))
+}
+
+// ParentIDLTE applies the LTE predicate on the "parent_id" field.
+func ParentIDLTE(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldLTE(FieldParentID, v))
+}
+
+// ParentIDContains applies the Contains predicate on the "parent_id" field.
+func ParentIDContains(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContains(FieldParentID, v))
+}
+
+// ParentIDHasPrefix applies the HasPrefix predicate on the "parent_id" field.
+func ParentIDHasPrefix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasPrefix(FieldParentID, v))
+}
+
+// ParentIDHasSuffix applies the HasSuffix predicate on the "parent_id" field.
+func ParentIDHasSuffix(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldHasSuffix(FieldParentID, v))
 }
 
 // ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
@@ -813,6 +953,16 @@ func ParentIDIsNil() predicate.Menu {
 // ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
 func ParentIDNotNil() predicate.Menu {
 	return predicate.Menu(sql.FieldNotNull(FieldParentID))
+}
+
+// ParentIDEqualFold applies the EqualFold predicate on the "parent_id" field.
+func ParentIDEqualFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldEqualFold(FieldParentID, v))
+}
+
+// ParentIDContainsFold applies the ContainsFold predicate on the "parent_id" field.
+func ParentIDContainsFold(v string) predicate.Menu {
+	return predicate.Menu(sql.FieldContainsFold(FieldParentID, v))
 }
 
 // HasChildren applies the HasEdge predicate on the "children" edge.

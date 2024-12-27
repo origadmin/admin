@@ -129,10 +129,10 @@ func (obj *Data) InitFromFile(ctx context.Context, filename string) error {
 		return err
 	}
 	for i, pb := range menus {
-		log.Infow("msg", "Processing menu", "index", i, "menuId", pb.Id, "menuCode", pb.Code, "menuName", pb.Name)
+		log.Infow("msg", "Processing menu", "index", i, "menuId", pb.Id, "menuKeyword", pb.Keyword, "menuName", pb.Name)
 		if pb.Children != nil {
 			for i2, child := range pb.Children {
-				log.Infow("msg", "Processing child", "index", i2, "childId", child.Id, "childCode", child.Code, "childName", child.Name)
+				log.Infow("msg", "Processing child", "index", i2, "childId", child.Id, "childKeyword", child.Keyword, "childName", child.Name)
 			}
 		}
 	}
@@ -146,7 +146,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 	log.Infow("msg", "Starting createInBatchByParent", "totalItems", total)
 
 	for i, item := range items {
-		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemCode", item.Code, "itemName", item.Name)
+		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
 		var pid string
 		if parent != nil {
 			pid = parent.Id
@@ -165,22 +165,22 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 				log.Infow("msg", "Item already exists by ID", "itemId", item.Id)
 				continue
 			}
-		case item.Code != "":
-			log.Infow("msg", "Checking item by Code", "itemCode", item.Code, "parentId", pid)
-			exists, err := obj.Menu(ctx).Query().Where(menu.Code(item.Code), menu.ParentID(pid)).Exist(ctx)
+		case item.Keyword != "":
+			log.Infow("msg", "Checking item by Keyword", "itemKeyword", item.Keyword, "parentId", pid)
+			exists, err := obj.Menu(ctx).Query().Where(menu.Keyword(item.Keyword), menu.ParentID(pid)).Exist(ctx)
 			if err != nil {
-				log.Errorw("msg", "Error checking item by Code", "itemCode", item.Code, "parentId", pid, "error", err)
+				log.Errorw("msg", "Error checking item by Keyword", "itemKeyword", item.Keyword, "parentId", pid, "error", err)
 				return err
 			}
 			if exists {
-				menuItem, err := obj.Menu(ctx).Query().Where(menu.Code(item.Code), menu.ParentID(pid)).First(ctx)
+				menuItem, err := obj.Menu(ctx).Query().Where(menu.Keyword(item.Keyword), menu.ParentID(pid)).First(ctx)
 				if err != nil {
-					log.Errorw("msg", "Error fetching item by Code", "itemCode", item.Code, "parentId", pid, "error", err)
+					log.Errorw("msg", "Error fetching item by Keyword", "itemKeyword", item.Keyword, "parentId", pid, "error", err)
 					return err
 				}
 				founded = true
 				item.Id = menuItem.ID
-				log.Infow("msg", "Item found by Code", "itemCode", item.Code, "itemId", item.Id)
+				log.Infow("msg", "Item found by Keyword", "itemKeyword", item.Keyword, "itemId", item.Id)
 			}
 		case item.Name != "":
 			log.Infow("msg", "Checking item by Name", "itemName", item.Name, "parentId", pid)
@@ -200,7 +200,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 				log.Infow("msg", "Item found by Name", "itemName", item.Name, "itemId", item.Id)
 			}
 		default:
-			log.Infow("msg", "No ID, Code, or Name provided for item")
+			log.Infow("msg", "No ID, Keyword, or Name provided for item")
 		}
 
 		if !founded {
@@ -209,7 +209,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 				log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 			}
 			if item.Status == 0 {
-				item.Status = dto.MenuStatusEnabled
+				item.Status = dto.MenuStatusActivated
 				log.Infow("msg", "Setting default status for item", "itemId", item.Id, "status", item.Status)
 			}
 			if item.Sequence == 0 {

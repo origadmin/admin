@@ -22,14 +22,14 @@ type PermissionResourceCreate struct {
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (prc *PermissionResourceCreate) SetPermissionID(i int) *PermissionResourceCreate {
-	prc.mutation.SetPermissionID(i)
+func (prc *PermissionResourceCreate) SetPermissionID(s string) *PermissionResourceCreate {
+	prc.mutation.SetPermissionID(s)
 	return prc
 }
 
 // SetResourceID sets the "resource_id" field.
-func (prc *PermissionResourceCreate) SetResourceID(i int) *PermissionResourceCreate {
-	prc.mutation.SetResourceID(i)
+func (prc *PermissionResourceCreate) SetResourceID(s string) *PermissionResourceCreate {
+	prc.mutation.SetResourceID(s)
 	return prc
 }
 
@@ -150,7 +150,7 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 			Columns: []string{permissionresource.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 			Columns: []string{permissionresource.ResourceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

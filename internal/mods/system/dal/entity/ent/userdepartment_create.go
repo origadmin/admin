@@ -22,14 +22,14 @@ type UserDepartmentCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (udc *UserDepartmentCreate) SetUserID(i int) *UserDepartmentCreate {
-	udc.mutation.SetUserID(i)
+func (udc *UserDepartmentCreate) SetUserID(s string) *UserDepartmentCreate {
+	udc.mutation.SetUserID(s)
 	return udc
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (udc *UserDepartmentCreate) SetDepartmentID(i int) *UserDepartmentCreate {
-	udc.mutation.SetDepartmentID(i)
+func (udc *UserDepartmentCreate) SetDepartmentID(s string) *UserDepartmentCreate {
+	udc.mutation.SetDepartmentID(s)
 	return udc
 }
 
@@ -150,7 +150,7 @@ func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.Create
 			Columns: []string{userdepartment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.Create
 			Columns: []string{userdepartment.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

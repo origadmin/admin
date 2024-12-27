@@ -31,29 +31,29 @@ func (mpu *MenuPermissionUpdate) Where(ps ...predicate.MenuPermission) *MenuPerm
 }
 
 // SetMenuID sets the "menu_id" field.
-func (mpu *MenuPermissionUpdate) SetMenuID(i int) *MenuPermissionUpdate {
-	mpu.mutation.SetMenuID(i)
+func (mpu *MenuPermissionUpdate) SetMenuID(s string) *MenuPermissionUpdate {
+	mpu.mutation.SetMenuID(s)
 	return mpu
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (mpu *MenuPermissionUpdate) SetNillableMenuID(i *int) *MenuPermissionUpdate {
-	if i != nil {
-		mpu.SetMenuID(*i)
+func (mpu *MenuPermissionUpdate) SetNillableMenuID(s *string) *MenuPermissionUpdate {
+	if s != nil {
+		mpu.SetMenuID(*s)
 	}
 	return mpu
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (mpu *MenuPermissionUpdate) SetPermissionID(i int) *MenuPermissionUpdate {
-	mpu.mutation.SetPermissionID(i)
+func (mpu *MenuPermissionUpdate) SetPermissionID(s string) *MenuPermissionUpdate {
+	mpu.mutation.SetPermissionID(s)
 	return mpu
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (mpu *MenuPermissionUpdate) SetNillablePermissionID(i *int) *MenuPermissionUpdate {
-	if i != nil {
-		mpu.SetPermissionID(*i)
+func (mpu *MenuPermissionUpdate) SetNillablePermissionID(s *string) *MenuPermissionUpdate {
+	if s != nil {
+		mpu.SetPermissionID(*s)
 	}
 	return mpu
 }
@@ -159,7 +159,7 @@ func (mpu *MenuPermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{menupermission.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (mpu *MenuPermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{menupermission.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (mpu *MenuPermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{menupermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (mpu *MenuPermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{menupermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type MenuPermissionUpdateOne struct {
 }
 
 // SetMenuID sets the "menu_id" field.
-func (mpuo *MenuPermissionUpdateOne) SetMenuID(i int) *MenuPermissionUpdateOne {
-	mpuo.mutation.SetMenuID(i)
+func (mpuo *MenuPermissionUpdateOne) SetMenuID(s string) *MenuPermissionUpdateOne {
+	mpuo.mutation.SetMenuID(s)
 	return mpuo
 }
 
 // SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (mpuo *MenuPermissionUpdateOne) SetNillableMenuID(i *int) *MenuPermissionUpdateOne {
-	if i != nil {
-		mpuo.SetMenuID(*i)
+func (mpuo *MenuPermissionUpdateOne) SetNillableMenuID(s *string) *MenuPermissionUpdateOne {
+	if s != nil {
+		mpuo.SetMenuID(*s)
 	}
 	return mpuo
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (mpuo *MenuPermissionUpdateOne) SetPermissionID(i int) *MenuPermissionUpdateOne {
-	mpuo.mutation.SetPermissionID(i)
+func (mpuo *MenuPermissionUpdateOne) SetPermissionID(s string) *MenuPermissionUpdateOne {
+	mpuo.mutation.SetPermissionID(s)
 	return mpuo
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (mpuo *MenuPermissionUpdateOne) SetNillablePermissionID(i *int) *MenuPermissionUpdateOne {
-	if i != nil {
-		mpuo.SetPermissionID(*i)
+func (mpuo *MenuPermissionUpdateOne) SetNillablePermissionID(s *string) *MenuPermissionUpdateOne {
+	if s != nil {
+		mpuo.SetPermissionID(*s)
 	}
 	return mpuo
 }
@@ -390,7 +390,7 @@ func (mpuo *MenuPermissionUpdateOne) sqlSave(ctx context.Context) (_node *MenuPe
 			Columns: []string{menupermission.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (mpuo *MenuPermissionUpdateOne) sqlSave(ctx context.Context) (_node *MenuPe
 			Columns: []string{menupermission.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (mpuo *MenuPermissionUpdateOne) sqlSave(ctx context.Context) (_node *MenuPe
 			Columns: []string{menupermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (mpuo *MenuPermissionUpdateOne) sqlSave(ctx context.Context) (_node *MenuPe
 			Columns: []string{menupermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

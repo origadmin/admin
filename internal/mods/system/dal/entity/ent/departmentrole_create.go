@@ -22,14 +22,14 @@ type DepartmentRoleCreate struct {
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (drc *DepartmentRoleCreate) SetDepartmentID(i int) *DepartmentRoleCreate {
-	drc.mutation.SetDepartmentID(i)
+func (drc *DepartmentRoleCreate) SetDepartmentID(s string) *DepartmentRoleCreate {
+	drc.mutation.SetDepartmentID(s)
 	return drc
 }
 
 // SetRoleID sets the "role_id" field.
-func (drc *DepartmentRoleCreate) SetRoleID(i int) *DepartmentRoleCreate {
-	drc.mutation.SetRoleID(i)
+func (drc *DepartmentRoleCreate) SetRoleID(s string) *DepartmentRoleCreate {
+	drc.mutation.SetRoleID(s)
 	return drc
 }
 
@@ -150,7 +150,7 @@ func (drc *DepartmentRoleCreate) createSpec() (*DepartmentRole, *sqlgraph.Create
 			Columns: []string{departmentrole.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (drc *DepartmentRoleCreate) createSpec() (*DepartmentRole, *sqlgraph.Create
 			Columns: []string{departmentrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

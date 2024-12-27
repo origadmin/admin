@@ -181,8 +181,8 @@ func (uq *UserQuery) FirstX(ctx context.Context) *User {
 
 // FirstID returns the first User ID from the query.
 // Returns a *NotFoundError when no User ID was found.
-func (uq *UserQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (uq *UserQuery) FirstID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = uq.Limit(1).IDs(setContextOp(ctx, uq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -194,7 +194,7 @@ func (uq *UserQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (uq *UserQuery) FirstIDX(ctx context.Context) int {
+func (uq *UserQuery) FirstIDX(ctx context.Context) string {
 	id, err := uq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -232,8 +232,8 @@ func (uq *UserQuery) OnlyX(ctx context.Context) *User {
 // OnlyID is like Only, but returns the only User ID in the query.
 // Returns a *NotSingularError when more than one User ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (uq *UserQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (uq *UserQuery) OnlyID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = uq.Limit(2).IDs(setContextOp(ctx, uq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -249,7 +249,7 @@ func (uq *UserQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (uq *UserQuery) OnlyIDX(ctx context.Context) int {
+func (uq *UserQuery) OnlyIDX(ctx context.Context) string {
 	id, err := uq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -277,7 +277,7 @@ func (uq *UserQuery) AllX(ctx context.Context) []*User {
 }
 
 // IDs executes the query and returns a list of User IDs.
-func (uq *UserQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (uq *UserQuery) IDs(ctx context.Context) (ids []string, err error) {
 	if uq.ctx.Unique == nil && uq.path != nil {
 		uq.Unique(true)
 	}
@@ -289,7 +289,7 @@ func (uq *UserQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (uq *UserQuery) IDsX(ctx context.Context) []int {
+func (uq *UserQuery) IDsX(ctx context.Context) []string {
 	ids, err := uq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -543,8 +543,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 
 func (uq *UserQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*User, init func(*User), assign func(*User, *Role)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[int]*User)
-	nids := make(map[int]map[*User]struct{})
+	byID := make(map[string]*User)
+	nids := make(map[string]map[*User]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -573,11 +573,11 @@ func (uq *UserQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*U
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullInt64)}, values...), nil
+				return append([]any{new(sql.NullString)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := int(values[0].(*sql.NullInt64).Int64)
-				inValue := int(values[1].(*sql.NullInt64).Int64)
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
 				if nids[inValue] == nil {
 					nids[inValue] = map[*User]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -604,8 +604,8 @@ func (uq *UserQuery) loadRoles(ctx context.Context, query *RoleQuery, nodes []*U
 }
 func (uq *UserQuery) loadDepartments(ctx context.Context, query *DepartmentQuery, nodes []*User, init func(*User), assign func(*User, *Department)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[int]*User)
-	nids := make(map[int]map[*User]struct{})
+	byID := make(map[string]*User)
+	nids := make(map[string]map[*User]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -634,11 +634,11 @@ func (uq *UserQuery) loadDepartments(ctx context.Context, query *DepartmentQuery
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullInt64)}, values...), nil
+				return append([]any{new(sql.NullString)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := int(values[0].(*sql.NullInt64).Int64)
-				inValue := int(values[1].(*sql.NullInt64).Int64)
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
 				if nids[inValue] == nil {
 					nids[inValue] = map[*User]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -665,7 +665,7 @@ func (uq *UserQuery) loadDepartments(ctx context.Context, query *DepartmentQuery
 }
 func (uq *UserQuery) loadUserRoles(ctx context.Context, query *UserRoleQuery, nodes []*User, init func(*User), assign func(*User, *UserRole)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*User)
+	nodeids := make(map[string]*User)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -695,7 +695,7 @@ func (uq *UserQuery) loadUserRoles(ctx context.Context, query *UserRoleQuery, no
 }
 func (uq *UserQuery) loadUserDepartments(ctx context.Context, query *UserDepartmentQuery, nodes []*User, init func(*User), assign func(*User, *UserDepartment)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*User)
+	nodeids := make(map[string]*User)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -737,7 +737,7 @@ func (uq *UserQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (uq *UserQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	_spec.From = uq.sql
 	if unique := uq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -869,7 +869,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
 //	  LastLoginTime time.Time `json:"last_login_time,omitempty"`
 //	  SanctionDate time.Time `json:"sanction_date,omitempty"`
-//	  ManagerID int `json:"manager_id,omitempty"`
+//	  ManagerID string `json:"manager_id,omitempty"`
 //	  Manager string `json:"manager,omitempty"`
 //	}
 //

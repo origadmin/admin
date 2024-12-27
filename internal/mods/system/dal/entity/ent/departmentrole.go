@@ -19,9 +19,9 @@ type DepartmentRole struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Foreign key of Department
-	DepartmentID int `json:"department_id,omitempty"`
+	DepartmentID string `json:"department_id,omitempty"`
 	// role:role_id
-	RoleID int `json:"role_id,omitempty"`
+	RoleID string `json:"role_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DepartmentRoleQuery when eager-loading is set.
 	Edges        DepartmentRoleEdges `json:"edges"`
@@ -66,8 +66,10 @@ func (*DepartmentRole) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case departmentrole.FieldID, departmentrole.FieldDepartmentID, departmentrole.FieldRoleID:
+		case departmentrole.FieldID:
 			values[i] = new(sql.NullInt64)
+		case departmentrole.FieldDepartmentID, departmentrole.FieldRoleID:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -90,16 +92,16 @@ func (dr *DepartmentRole) assignValues(columns []string, values []any) error {
 			}
 			dr.ID = int(value.Int64)
 		case departmentrole.FieldDepartmentID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				dr.DepartmentID = int(value.Int64)
+				dr.DepartmentID = value.String
 			}
 		case departmentrole.FieldRoleID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])
 			} else if value.Valid {
-				dr.RoleID = int(value.Int64)
+				dr.RoleID = value.String
 			}
 		default:
 			dr.selectValues.Set(columns[i], values[i])
@@ -148,10 +150,10 @@ func (dr *DepartmentRole) String() string {
 	builder.WriteString("DepartmentRole(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", dr.ID))
 	builder.WriteString("department_id=")
-	builder.WriteString(fmt.Sprintf("%v", dr.DepartmentID))
+	builder.WriteString(dr.DepartmentID)
 	builder.WriteString(", ")
 	builder.WriteString("role_id=")
-	builder.WriteString(fmt.Sprintf("%v", dr.RoleID))
+	builder.WriteString(dr.RoleID)
 	builder.WriteByte(')')
 	return builder.String()
 }

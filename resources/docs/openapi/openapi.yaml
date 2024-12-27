@@ -1562,7 +1562,7 @@ components:
                     type: string
                     description: UpdateTime holds the value of the "update_time" field.
                     format: date-time
-                code:
+                keyword:
                     type: string
                     description: Code holds the value of the "code" field.
                 name:
@@ -1671,7 +1671,7 @@ components:
                     type: string
                     description: UpdateTime holds the value of the "update_time" field.
                     format: date-time
-                code:
+                keyword:
                     type: string
                     description: Code holds the value of the "code" field.
                 name:

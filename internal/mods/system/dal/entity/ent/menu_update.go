@@ -68,6 +68,20 @@ func (mu *MenuUpdate) SetNillableName(s *string) *MenuUpdate {
 	return mu
 }
 
+// SetI18nKey sets the "i18n_key" field.
+func (mu *MenuUpdate) SetI18nKey(s string) *MenuUpdate {
+	mu.mutation.SetI18nKey(s)
+	return mu
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableI18nKey(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetI18nKey(*s)
+	}
+	return mu
+}
+
 // SetDescription sets the "description" field.
 func (mu *MenuUpdate) SetDescription(s string) *MenuUpdate {
 	mu.mutation.SetDescription(s)
@@ -83,23 +97,16 @@ func (mu *MenuUpdate) SetNillableDescription(s *string) *MenuUpdate {
 }
 
 // SetType sets the "type" field.
-func (mu *MenuUpdate) SetType(i int32) *MenuUpdate {
-	mu.mutation.ResetType()
-	mu.mutation.SetType(i)
+func (mu *MenuUpdate) SetType(s string) *MenuUpdate {
+	mu.mutation.SetType(s)
 	return mu
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableType(i *int32) *MenuUpdate {
-	if i != nil {
-		mu.SetType(*i)
+func (mu *MenuUpdate) SetNillableType(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetType(*s)
 	}
-	return mu
-}
-
-// AddType adds i to the "type" field.
-func (mu *MenuUpdate) AddType(i int32) *MenuUpdate {
-	mu.mutation.AddType(i)
 	return mu
 }
 
@@ -208,15 +215,15 @@ func (mu *MenuUpdate) ClearProperties() *MenuUpdate {
 }
 
 // SetParentID sets the "parent_id" field.
-func (mu *MenuUpdate) SetParentID(i int) *MenuUpdate {
-	mu.mutation.SetParentID(i)
+func (mu *MenuUpdate) SetParentID(s string) *MenuUpdate {
+	mu.mutation.SetParentID(s)
 	return mu
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (mu *MenuUpdate) SetNillableParentID(i *int) *MenuUpdate {
-	if i != nil {
-		mu.SetParentID(*i)
+func (mu *MenuUpdate) SetNillableParentID(s *string) *MenuUpdate {
+	if s != nil {
+		mu.SetParentID(*s)
 	}
 	return mu
 }
@@ -228,14 +235,14 @@ func (mu *MenuUpdate) ClearParentID() *MenuUpdate {
 }
 
 // AddChildIDs adds the "children" edge to the Menu entity by IDs.
-func (mu *MenuUpdate) AddChildIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) AddChildIDs(ids ...string) *MenuUpdate {
 	mu.mutation.AddChildIDs(ids...)
 	return mu
 }
 
 // AddChildren adds the "children" edges to the Menu entity.
 func (mu *MenuUpdate) AddChildren(m ...*Menu) *MenuUpdate {
-	ids := make([]int, len(m))
+	ids := make([]string, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -248,14 +255,14 @@ func (mu *MenuUpdate) SetParent(m *Menu) *MenuUpdate {
 }
 
 // AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
-func (mu *MenuUpdate) AddResourceIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) AddResourceIDs(ids ...string) *MenuUpdate {
 	mu.mutation.AddResourceIDs(ids...)
 	return mu
 }
 
 // AddResources adds the "resources" edges to the Resource entity.
 func (mu *MenuUpdate) AddResources(r ...*Resource) *MenuUpdate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -263,14 +270,14 @@ func (mu *MenuUpdate) AddResources(r ...*Resource) *MenuUpdate {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (mu *MenuUpdate) AddRoleIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) AddRoleIDs(ids ...string) *MenuUpdate {
 	mu.mutation.AddRoleIDs(ids...)
 	return mu
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (mu *MenuUpdate) AddRoles(r ...*Role) *MenuUpdate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -278,14 +285,14 @@ func (mu *MenuUpdate) AddRoles(r ...*Role) *MenuUpdate {
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (mu *MenuUpdate) AddPermissionIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) AddPermissionIDs(ids ...string) *MenuUpdate {
 	mu.mutation.AddPermissionIDs(ids...)
 	return mu
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
 func (mu *MenuUpdate) AddPermissions(p ...*Permission) *MenuUpdate {
-	ids := make([]int, len(p))
+	ids := make([]string, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -334,14 +341,14 @@ func (mu *MenuUpdate) ClearChildren() *MenuUpdate {
 }
 
 // RemoveChildIDs removes the "children" edge to Menu entities by IDs.
-func (mu *MenuUpdate) RemoveChildIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) RemoveChildIDs(ids ...string) *MenuUpdate {
 	mu.mutation.RemoveChildIDs(ids...)
 	return mu
 }
 
 // RemoveChildren removes "children" edges to Menu entities.
 func (mu *MenuUpdate) RemoveChildren(m ...*Menu) *MenuUpdate {
-	ids := make([]int, len(m))
+	ids := make([]string, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -361,14 +368,14 @@ func (mu *MenuUpdate) ClearResources() *MenuUpdate {
 }
 
 // RemoveResourceIDs removes the "resources" edge to Resource entities by IDs.
-func (mu *MenuUpdate) RemoveResourceIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) RemoveResourceIDs(ids ...string) *MenuUpdate {
 	mu.mutation.RemoveResourceIDs(ids...)
 	return mu
 }
 
 // RemoveResources removes "resources" edges to Resource entities.
 func (mu *MenuUpdate) RemoveResources(r ...*Resource) *MenuUpdate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -382,14 +389,14 @@ func (mu *MenuUpdate) ClearRoles() *MenuUpdate {
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (mu *MenuUpdate) RemoveRoleIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) RemoveRoleIDs(ids ...string) *MenuUpdate {
 	mu.mutation.RemoveRoleIDs(ids...)
 	return mu
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
 func (mu *MenuUpdate) RemoveRoles(r ...*Role) *MenuUpdate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -403,14 +410,14 @@ func (mu *MenuUpdate) ClearPermissions() *MenuUpdate {
 }
 
 // RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
-func (mu *MenuUpdate) RemovePermissionIDs(ids ...int) *MenuUpdate {
+func (mu *MenuUpdate) RemovePermissionIDs(ids ...string) *MenuUpdate {
 	mu.mutation.RemovePermissionIDs(ids...)
 	return mu
 }
 
 // RemovePermissions removes "permissions" edges to Permission entities.
 func (mu *MenuUpdate) RemovePermissions(p ...*Permission) *MenuUpdate {
-	ids := make([]int, len(p))
+	ids := make([]string, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -507,6 +514,11 @@ func (mu *MenuUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
 		}
 	}
+	if v, ok := mu.mutation.I18nKey(); ok {
+		if err := menu.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Menu.i18n_key": %w`, err)}
+		}
+	}
 	if v, ok := mu.mutation.Description(); ok {
 		if err := menu.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Menu.description": %w`, err)}
@@ -545,7 +557,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := mu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(menu.Table, menu.Columns, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(menu.Table, menu.Columns, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString))
 	if ps := mu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -562,14 +574,14 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
+	if value, ok := mu.mutation.I18nKey(); ok {
+		_spec.SetField(menu.FieldI18nKey, field.TypeString, value)
+	}
 	if value, ok := mu.mutation.Description(); ok {
 		_spec.SetField(menu.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeInt32, value)
-	}
-	if value, ok := mu.mutation.AddedType(); ok {
-		_spec.AddField(menu.FieldType, field.TypeInt32, value)
+		_spec.SetField(menu.FieldType, field.TypeString, value)
 	}
 	if value, ok := mu.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
@@ -606,7 +618,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -619,7 +631,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -635,7 +647,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -651,7 +663,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -664,7 +676,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -680,7 +692,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -693,7 +705,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -709,7 +721,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -725,7 +737,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: menu.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -738,7 +750,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: menu.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -754,7 +766,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: menu.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -770,7 +782,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -783,7 +795,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -799,7 +811,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -953,6 +965,20 @@ func (muo *MenuUpdateOne) SetNillableName(s *string) *MenuUpdateOne {
 	return muo
 }
 
+// SetI18nKey sets the "i18n_key" field.
+func (muo *MenuUpdateOne) SetI18nKey(s string) *MenuUpdateOne {
+	muo.mutation.SetI18nKey(s)
+	return muo
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableI18nKey(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetI18nKey(*s)
+	}
+	return muo
+}
+
 // SetDescription sets the "description" field.
 func (muo *MenuUpdateOne) SetDescription(s string) *MenuUpdateOne {
 	muo.mutation.SetDescription(s)
@@ -968,23 +994,16 @@ func (muo *MenuUpdateOne) SetNillableDescription(s *string) *MenuUpdateOne {
 }
 
 // SetType sets the "type" field.
-func (muo *MenuUpdateOne) SetType(i int32) *MenuUpdateOne {
-	muo.mutation.ResetType()
-	muo.mutation.SetType(i)
+func (muo *MenuUpdateOne) SetType(s string) *MenuUpdateOne {
+	muo.mutation.SetType(s)
 	return muo
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableType(i *int32) *MenuUpdateOne {
-	if i != nil {
-		muo.SetType(*i)
+func (muo *MenuUpdateOne) SetNillableType(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetType(*s)
 	}
-	return muo
-}
-
-// AddType adds i to the "type" field.
-func (muo *MenuUpdateOne) AddType(i int32) *MenuUpdateOne {
-	muo.mutation.AddType(i)
 	return muo
 }
 
@@ -1093,15 +1112,15 @@ func (muo *MenuUpdateOne) ClearProperties() *MenuUpdateOne {
 }
 
 // SetParentID sets the "parent_id" field.
-func (muo *MenuUpdateOne) SetParentID(i int) *MenuUpdateOne {
-	muo.mutation.SetParentID(i)
+func (muo *MenuUpdateOne) SetParentID(s string) *MenuUpdateOne {
+	muo.mutation.SetParentID(s)
 	return muo
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (muo *MenuUpdateOne) SetNillableParentID(i *int) *MenuUpdateOne {
-	if i != nil {
-		muo.SetParentID(*i)
+func (muo *MenuUpdateOne) SetNillableParentID(s *string) *MenuUpdateOne {
+	if s != nil {
+		muo.SetParentID(*s)
 	}
 	return muo
 }
@@ -1113,14 +1132,14 @@ func (muo *MenuUpdateOne) ClearParentID() *MenuUpdateOne {
 }
 
 // AddChildIDs adds the "children" edge to the Menu entity by IDs.
-func (muo *MenuUpdateOne) AddChildIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) AddChildIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.AddChildIDs(ids...)
 	return muo
 }
 
 // AddChildren adds the "children" edges to the Menu entity.
 func (muo *MenuUpdateOne) AddChildren(m ...*Menu) *MenuUpdateOne {
-	ids := make([]int, len(m))
+	ids := make([]string, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -1133,14 +1152,14 @@ func (muo *MenuUpdateOne) SetParent(m *Menu) *MenuUpdateOne {
 }
 
 // AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
-func (muo *MenuUpdateOne) AddResourceIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) AddResourceIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.AddResourceIDs(ids...)
 	return muo
 }
 
 // AddResources adds the "resources" edges to the Resource entity.
 func (muo *MenuUpdateOne) AddResources(r ...*Resource) *MenuUpdateOne {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1148,14 +1167,14 @@ func (muo *MenuUpdateOne) AddResources(r ...*Resource) *MenuUpdateOne {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (muo *MenuUpdateOne) AddRoleIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) AddRoleIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.AddRoleIDs(ids...)
 	return muo
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (muo *MenuUpdateOne) AddRoles(r ...*Role) *MenuUpdateOne {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1163,14 +1182,14 @@ func (muo *MenuUpdateOne) AddRoles(r ...*Role) *MenuUpdateOne {
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (muo *MenuUpdateOne) AddPermissionIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) AddPermissionIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.AddPermissionIDs(ids...)
 	return muo
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
 func (muo *MenuUpdateOne) AddPermissions(p ...*Permission) *MenuUpdateOne {
-	ids := make([]int, len(p))
+	ids := make([]string, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -1219,14 +1238,14 @@ func (muo *MenuUpdateOne) ClearChildren() *MenuUpdateOne {
 }
 
 // RemoveChildIDs removes the "children" edge to Menu entities by IDs.
-func (muo *MenuUpdateOne) RemoveChildIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) RemoveChildIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.RemoveChildIDs(ids...)
 	return muo
 }
 
 // RemoveChildren removes "children" edges to Menu entities.
 func (muo *MenuUpdateOne) RemoveChildren(m ...*Menu) *MenuUpdateOne {
-	ids := make([]int, len(m))
+	ids := make([]string, len(m))
 	for i := range m {
 		ids[i] = m[i].ID
 	}
@@ -1246,14 +1265,14 @@ func (muo *MenuUpdateOne) ClearResources() *MenuUpdateOne {
 }
 
 // RemoveResourceIDs removes the "resources" edge to Resource entities by IDs.
-func (muo *MenuUpdateOne) RemoveResourceIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) RemoveResourceIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.RemoveResourceIDs(ids...)
 	return muo
 }
 
 // RemoveResources removes "resources" edges to Resource entities.
 func (muo *MenuUpdateOne) RemoveResources(r ...*Resource) *MenuUpdateOne {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1267,14 +1286,14 @@ func (muo *MenuUpdateOne) ClearRoles() *MenuUpdateOne {
 }
 
 // RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (muo *MenuUpdateOne) RemoveRoleIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) RemoveRoleIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.RemoveRoleIDs(ids...)
 	return muo
 }
 
 // RemoveRoles removes "roles" edges to Role entities.
 func (muo *MenuUpdateOne) RemoveRoles(r ...*Role) *MenuUpdateOne {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1288,14 +1307,14 @@ func (muo *MenuUpdateOne) ClearPermissions() *MenuUpdateOne {
 }
 
 // RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
-func (muo *MenuUpdateOne) RemovePermissionIDs(ids ...int) *MenuUpdateOne {
+func (muo *MenuUpdateOne) RemovePermissionIDs(ids ...string) *MenuUpdateOne {
 	muo.mutation.RemovePermissionIDs(ids...)
 	return muo
 }
 
 // RemovePermissions removes "permissions" edges to Permission entities.
 func (muo *MenuUpdateOne) RemovePermissions(p ...*Permission) *MenuUpdateOne {
-	ids := make([]int, len(p))
+	ids := make([]string, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -1405,6 +1424,11 @@ func (muo *MenuUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Menu.name": %w`, err)}
 		}
 	}
+	if v, ok := muo.mutation.I18nKey(); ok {
+		if err := menu.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Menu.i18n_key": %w`, err)}
+		}
+	}
 	if v, ok := muo.mutation.Description(); ok {
 		if err := menu.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Menu.description": %w`, err)}
@@ -1443,7 +1467,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if err := muo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(menu.Table, menu.Columns, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewUpdateSpec(menu.Table, menu.Columns, sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString))
 	id, ok := muo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Menu.id" for update`)}
@@ -1477,14 +1501,14 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.Name(); ok {
 		_spec.SetField(menu.FieldName, field.TypeString, value)
 	}
+	if value, ok := muo.mutation.I18nKey(); ok {
+		_spec.SetField(menu.FieldI18nKey, field.TypeString, value)
+	}
 	if value, ok := muo.mutation.Description(); ok {
 		_spec.SetField(menu.FieldDescription, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.GetType(); ok {
-		_spec.SetField(menu.FieldType, field.TypeInt32, value)
-	}
-	if value, ok := muo.mutation.AddedType(); ok {
-		_spec.AddField(menu.FieldType, field.TypeInt32, value)
+		_spec.SetField(menu.FieldType, field.TypeString, value)
 	}
 	if value, ok := muo.mutation.Icon(); ok {
 		_spec.SetField(menu.FieldIcon, field.TypeString, value)
@@ -1521,7 +1545,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1534,7 +1558,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1550,7 +1574,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1566,7 +1590,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1579,7 +1603,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1595,7 +1619,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1608,7 +1632,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1624,7 +1648,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: []string{menu.ResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1640,7 +1664,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: menu.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1653,7 +1677,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: menu.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1669,7 +1693,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: menu.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1685,7 +1709,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1698,7 +1722,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1714,7 +1738,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

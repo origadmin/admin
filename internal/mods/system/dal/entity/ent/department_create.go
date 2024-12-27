@@ -130,15 +130,15 @@ func (dc *DepartmentCreate) SetNillableAncestors(s *string) *DepartmentCreate {
 }
 
 // SetParentID sets the "parent_id" field.
-func (dc *DepartmentCreate) SetParentID(i int) *DepartmentCreate {
-	dc.mutation.SetParentID(i)
+func (dc *DepartmentCreate) SetParentID(s string) *DepartmentCreate {
+	dc.mutation.SetParentID(s)
 	return dc
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableParentID(i *int) *DepartmentCreate {
-	if i != nil {
-		dc.SetParentID(*i)
+func (dc *DepartmentCreate) SetNillableParentID(s *string) *DepartmentCreate {
+	if s != nil {
+		dc.SetParentID(*s)
 	}
 	return dc
 }
@@ -158,20 +158,20 @@ func (dc *DepartmentCreate) SetNillableLevel(i *int) *DepartmentCreate {
 }
 
 // SetID sets the "id" field.
-func (dc *DepartmentCreate) SetID(i int) *DepartmentCreate {
-	dc.mutation.SetID(i)
+func (dc *DepartmentCreate) SetID(s string) *DepartmentCreate {
+	dc.mutation.SetID(s)
 	return dc
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (dc *DepartmentCreate) AddUserIDs(ids ...int) *DepartmentCreate {
+func (dc *DepartmentCreate) AddUserIDs(ids ...string) *DepartmentCreate {
 	dc.mutation.AddUserIDs(ids...)
 	return dc
 }
 
 // AddUsers adds the "users" edges to the User entity.
 func (dc *DepartmentCreate) AddUsers(u ...*User) *DepartmentCreate {
-	ids := make([]int, len(u))
+	ids := make([]string, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -179,14 +179,14 @@ func (dc *DepartmentCreate) AddUsers(u ...*User) *DepartmentCreate {
 }
 
 // AddPositionIDs adds the "positions" edge to the Position entity by IDs.
-func (dc *DepartmentCreate) AddPositionIDs(ids ...int) *DepartmentCreate {
+func (dc *DepartmentCreate) AddPositionIDs(ids ...string) *DepartmentCreate {
 	dc.mutation.AddPositionIDs(ids...)
 	return dc
 }
 
 // AddPositions adds the "positions" edges to the Position entity.
 func (dc *DepartmentCreate) AddPositions(p ...*Position) *DepartmentCreate {
-	ids := make([]int, len(p))
+	ids := make([]string, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -194,14 +194,14 @@ func (dc *DepartmentCreate) AddPositions(p ...*Position) *DepartmentCreate {
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (dc *DepartmentCreate) AddRoleIDs(ids ...int) *DepartmentCreate {
+func (dc *DepartmentCreate) AddRoleIDs(ids ...string) *DepartmentCreate {
 	dc.mutation.AddRoleIDs(ids...)
 	return dc
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
 func (dc *DepartmentCreate) AddRoles(r ...*Role) *DepartmentCreate {
-	ids := make([]int, len(r))
+	ids := make([]string, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -209,14 +209,14 @@ func (dc *DepartmentCreate) AddRoles(r ...*Role) *DepartmentCreate {
 }
 
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
-func (dc *DepartmentCreate) AddChildIDs(ids ...int) *DepartmentCreate {
+func (dc *DepartmentCreate) AddChildIDs(ids ...string) *DepartmentCreate {
 	dc.mutation.AddChildIDs(ids...)
 	return dc
 }
 
 // AddChildren adds the "children" edges to the Department entity.
 func (dc *DepartmentCreate) AddChildren(d ...*Department) *DepartmentCreate {
-	ids := make([]int, len(d))
+	ids := make([]string, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
@@ -400,9 +400,12 @@ func (dc *DepartmentCreate) sqlSave(ctx context.Context) (*Department, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(string); ok {
+			_node.ID = id
+		} else {
+			return nil, fmt.Errorf("unexpected Department.ID type: %T", _spec.ID.Value)
+		}
 	}
 	dc.mutation.id = &_node.ID
 	dc.mutation.done = true
@@ -412,7 +415,7 @@ func (dc *DepartmentCreate) sqlSave(ctx context.Context) (*Department, error) {
 func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Department{config: dc.config}
-		_spec = sqlgraph.NewCreateSpec(department.Table, sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(department.Table, sqlgraph.NewFieldSpec(department.FieldID, field.TypeString))
 	)
 	if id, ok := dc.mutation.ID(); ok {
 		_node.ID = id
@@ -462,7 +465,7 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Columns: department.UsersPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -478,7 +481,7 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Columns: []string{department.PositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -494,7 +497,7 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Columns: department.RolesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -510,7 +513,7 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Columns: []string{department.ChildrenColumn},
 			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -526,7 +529,7 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Columns: []string{department.ParentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -635,10 +638,6 @@ func (dcb *DepartmentCreateBulk) Save(ctx context.Context) ([]*Department, error
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

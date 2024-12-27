@@ -338,7 +338,7 @@ func (upq *UserPositionQuery) WithPosition(opts ...func(*PositionQuery)) *UserPo
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -361,7 +361,7 @@ func (upq *UserPositionQuery) GroupBy(field string, fields ...string) *UserPosit
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserPosition.Query().
@@ -456,8 +456,8 @@ func (upq *UserPositionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 }
 
 func (upq *UserPositionQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*UserPosition, init func(*UserPosition), assign func(*UserPosition, *User)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*UserPosition)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserPosition)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -485,8 +485,8 @@ func (upq *UserPositionQuery) loadUser(ctx context.Context, query *UserQuery, no
 	return nil
 }
 func (upq *UserPositionQuery) loadPosition(ctx context.Context, query *PositionQuery, nodes []*UserPosition, init func(*UserPosition), assign func(*UserPosition, *Position)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*UserPosition)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserPosition)
 	for i := range nodes {
 		fk := nodes[i].PositionID
 		if _, ok := nodeids[fk]; !ok {
@@ -644,8 +644,8 @@ func (upq *UserPositionQuery) Modify(modifiers ...func(s *sql.Selector)) *UserPo
 // Example:
 //
 //	var v []struct {
-//	  UserID int `json:"user_id,omitempty"`
-//	  PositionID int `json:"position_id,omitempty"`
+//	  UserID string `json:"user_id,omitempty"`
+//	  PositionID string `json:"position_id,omitempty"`
 //	}
 //
 //	client.UserPosition.Query().

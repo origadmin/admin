@@ -57,9 +57,9 @@ func ValidColumn(column string) bool {
 
 var (
 	// DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
-	DepartmentIDValidator func(int) error
+	DepartmentIDValidator func(string) error
 	// RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
-	RoleIDValidator func(int) error
+	RoleIDValidator func(string) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int) error
 )

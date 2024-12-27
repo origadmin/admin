@@ -33,7 +33,7 @@ func MenuObject(menu *MenuPB) *Menu {
 		ID:          menu.Id,
 		CreateTime:  menu.CreateTime.AsTime(),
 		UpdateTime:  menu.UpdateTime.AsTime(),
-		Code:        menu.Code,
+		Keyword:     menu.Keyword,
 		Name:        menu.Name,
 		Description: menu.Description,
 		Type:        menu.Type,

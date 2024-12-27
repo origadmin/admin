@@ -11,48 +11,58 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Resource {
+func ID(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Resource {
+func IDEQ(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Resource {
+func IDNEQ(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Resource {
+func IDIn(ids ...string) predicate.Resource {
 	return predicate.Resource(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Resource {
+func IDNotIn(ids ...string) predicate.Resource {
 	return predicate.Resource(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Resource {
+func IDGT(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Resource {
+func IDGTE(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Resource {
+func IDLT(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Resource {
+func IDLTE(id string) predicate.Resource {
 	return predicate.Resource(sql.FieldLTE(FieldID, id))
+}
+
+// IDEqualFold applies the EqualFold predicate on the ID field.
+func IDEqualFold(id string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldID, id))
+}
+
+// IDContainsFold applies the ContainsFold predicate on the ID field.
+func IDContainsFold(id string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldID, id))
 }
 
 // CreateTime applies equality check predicate on the "create_time" field. It's identical to CreateTimeEQ.
@@ -81,7 +91,7 @@ func Path(v string) predicate.Resource {
 }
 
 // MenuID applies equality check predicate on the "menu_id" field. It's identical to MenuIDEQ.
-func MenuID(v int) predicate.Resource {
+func MenuID(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldMenuID, v))
 }
 
@@ -361,23 +371,58 @@ func PathContainsFold(v string) predicate.Resource {
 }
 
 // MenuIDEQ applies the EQ predicate on the "menu_id" field.
-func MenuIDEQ(v int) predicate.Resource {
+func MenuIDEQ(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldMenuID, v))
 }
 
 // MenuIDNEQ applies the NEQ predicate on the "menu_id" field.
-func MenuIDNEQ(v int) predicate.Resource {
+func MenuIDNEQ(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldNEQ(FieldMenuID, v))
 }
 
 // MenuIDIn applies the In predicate on the "menu_id" field.
-func MenuIDIn(vs ...int) predicate.Resource {
+func MenuIDIn(vs ...string) predicate.Resource {
 	return predicate.Resource(sql.FieldIn(FieldMenuID, vs...))
 }
 
 // MenuIDNotIn applies the NotIn predicate on the "menu_id" field.
-func MenuIDNotIn(vs ...int) predicate.Resource {
+func MenuIDNotIn(vs ...string) predicate.Resource {
 	return predicate.Resource(sql.FieldNotIn(FieldMenuID, vs...))
+}
+
+// MenuIDGT applies the GT predicate on the "menu_id" field.
+func MenuIDGT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldMenuID, v))
+}
+
+// MenuIDGTE applies the GTE predicate on the "menu_id" field.
+func MenuIDGTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldMenuID, v))
+}
+
+// MenuIDLT applies the LT predicate on the "menu_id" field.
+func MenuIDLT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldMenuID, v))
+}
+
+// MenuIDLTE applies the LTE predicate on the "menu_id" field.
+func MenuIDLTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldMenuID, v))
+}
+
+// MenuIDContains applies the Contains predicate on the "menu_id" field.
+func MenuIDContains(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContains(FieldMenuID, v))
+}
+
+// MenuIDHasPrefix applies the HasPrefix predicate on the "menu_id" field.
+func MenuIDHasPrefix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasPrefix(FieldMenuID, v))
+}
+
+// MenuIDHasSuffix applies the HasSuffix predicate on the "menu_id" field.
+func MenuIDHasSuffix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasSuffix(FieldMenuID, v))
 }
 
 // MenuIDIsNil applies the IsNil predicate on the "menu_id" field.
@@ -388,6 +433,16 @@ func MenuIDIsNil() predicate.Resource {
 // MenuIDNotNil applies the NotNil predicate on the "menu_id" field.
 func MenuIDNotNil() predicate.Resource {
 	return predicate.Resource(sql.FieldNotNull(FieldMenuID))
+}
+
+// MenuIDEqualFold applies the EqualFold predicate on the "menu_id" field.
+func MenuIDEqualFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldMenuID, v))
+}
+
+// MenuIDContainsFold applies the ContainsFold predicate on the "menu_id" field.
+func MenuIDContainsFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldMenuID, v))
 }
 
 // HasMenu applies the HasEdge predicate on the "menu" edge.

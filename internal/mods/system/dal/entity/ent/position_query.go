@@ -133,8 +133,8 @@ func (pq *PositionQuery) FirstX(ctx context.Context) *Position {
 
 // FirstID returns the first Position ID from the query.
 // Returns a *NotFoundError when no Position ID was found.
-func (pq *PositionQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (pq *PositionQuery) FirstID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = pq.Limit(1).IDs(setContextOp(ctx, pq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -146,7 +146,7 @@ func (pq *PositionQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (pq *PositionQuery) FirstIDX(ctx context.Context) int {
+func (pq *PositionQuery) FirstIDX(ctx context.Context) string {
 	id, err := pq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -184,8 +184,8 @@ func (pq *PositionQuery) OnlyX(ctx context.Context) *Position {
 // OnlyID is like Only, but returns the only Position ID in the query.
 // Returns a *NotSingularError when more than one Position ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (pq *PositionQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (pq *PositionQuery) OnlyID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = pq.Limit(2).IDs(setContextOp(ctx, pq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -201,7 +201,7 @@ func (pq *PositionQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (pq *PositionQuery) OnlyIDX(ctx context.Context) int {
+func (pq *PositionQuery) OnlyIDX(ctx context.Context) string {
 	id, err := pq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -229,7 +229,7 @@ func (pq *PositionQuery) AllX(ctx context.Context) []*Position {
 }
 
 // IDs executes the query and returns a list of Position IDs.
-func (pq *PositionQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (pq *PositionQuery) IDs(ctx context.Context) (ids []string, err error) {
 	if pq.ctx.Unique == nil && pq.path != nil {
 		pq.Unique(true)
 	}
@@ -241,7 +241,7 @@ func (pq *PositionQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (pq *PositionQuery) IDsX(ctx context.Context) []int {
+func (pq *PositionQuery) IDsX(ctx context.Context) []string {
 	ids, err := pq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -453,8 +453,8 @@ func (pq *PositionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Pos
 }
 
 func (pq *PositionQuery) loadDepartment(ctx context.Context, query *DepartmentQuery, nodes []*Position, init func(*Position), assign func(*Position, *Department)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*Position)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*Position)
 	for i := range nodes {
 		fk := nodes[i].DepartmentID
 		if _, ok := nodeids[fk]; !ok {
@@ -483,7 +483,7 @@ func (pq *PositionQuery) loadDepartment(ctx context.Context, query *DepartmentQu
 }
 func (pq *PositionQuery) loadUserPositions(ctx context.Context, query *UserPositionQuery, nodes []*Position, init func(*Position), assign func(*Position, *UserPosition)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int]*Position)
+	nodeids := make(map[string]*Position)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -526,7 +526,7 @@ func (pq *PositionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (pq *PositionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeString))
 	_spec.From = pq.sql
 	if unique := pq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
@@ -644,7 +644,7 @@ func (pq *PositionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionSel
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Description string `json:"description,omitempty"`
-//	  DepartmentID int `json:"department_id,omitempty"`
+//	  DepartmentID string `json:"department_id,omitempty"`
 //	}
 //
 //	client.Position.Query().

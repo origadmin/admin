@@ -337,7 +337,7 @@ func (urq *UserRoleQuery) WithRole(opts ...func(*RoleQuery)) *UserRoleQuery {
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (urq *UserRoleQuery) GroupBy(field string, fields ...string) *UserRoleGroup
 // Example:
 //
 //	var v []struct {
-//		UserID int `json:"user_id,omitempty"`
+//		UserID string `json:"user_id,omitempty"`
 //	}
 //
 //	client.UserRole.Query().
@@ -451,8 +451,8 @@ func (urq *UserRoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Us
 }
 
 func (urq *UserRoleQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*UserRole, init func(*UserRole), assign func(*UserRole, *User)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*UserRole)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserRole)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (urq *UserRoleQuery) loadUser(ctx context.Context, query *UserQuery, nodes 
 	return nil
 }
 func (urq *UserRoleQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*UserRole, init func(*UserRole), assign func(*UserRole, *Role)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*UserRole)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*UserRole)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (urq *UserRoleQuery) Modify(modifiers ...func(s *sql.Selector)) *UserRoleSe
 // Example:
 //
 //	var v []struct {
-//	  UserID int `json:"user_id,omitempty"`
-//	  RoleID int `json:"role_id,omitempty"`
+//	  UserID string `json:"user_id,omitempty"`
+//	  RoleID string `json:"role_id,omitempty"`
 //	}
 //
 //	client.UserRole.Query().

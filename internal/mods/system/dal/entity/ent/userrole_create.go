@@ -22,14 +22,14 @@ type UserRoleCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (urc *UserRoleCreate) SetUserID(i int) *UserRoleCreate {
-	urc.mutation.SetUserID(i)
+func (urc *UserRoleCreate) SetUserID(s string) *UserRoleCreate {
+	urc.mutation.SetUserID(s)
 	return urc
 }
 
 // SetRoleID sets the "role_id" field.
-func (urc *UserRoleCreate) SetRoleID(i int) *UserRoleCreate {
-	urc.mutation.SetRoleID(i)
+func (urc *UserRoleCreate) SetRoleID(s string) *UserRoleCreate {
+	urc.mutation.SetRoleID(s)
 	return urc
 }
 
@@ -150,7 +150,7 @@ func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 			Columns: []string{userrole.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 			Columns: []string{userrole.RoleColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

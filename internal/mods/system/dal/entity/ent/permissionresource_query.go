@@ -337,7 +337,7 @@ func (prq *PermissionResourceQuery) WithResource(opts ...func(*ResourceQuery)) *
 // Example:
 //
 //	var v []struct {
-//		PermissionID int `json:"permission_id,omitempty"`
+//		PermissionID string `json:"permission_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (prq *PermissionResourceQuery) GroupBy(field string, fields ...string) *Per
 // Example:
 //
 //	var v []struct {
-//		PermissionID int `json:"permission_id,omitempty"`
+//		PermissionID string `json:"permission_id,omitempty"`
 //	}
 //
 //	client.PermissionResource.Query().
@@ -451,8 +451,8 @@ func (prq *PermissionResourceQuery) sqlAll(ctx context.Context, hooks ...queryHo
 }
 
 func (prq *PermissionResourceQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*PermissionResource, init func(*PermissionResource), assign func(*PermissionResource, *Permission)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*PermissionResource)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*PermissionResource)
 	for i := range nodes {
 		fk := nodes[i].PermissionID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (prq *PermissionResourceQuery) loadPermission(ctx context.Context, query *P
 	return nil
 }
 func (prq *PermissionResourceQuery) loadResource(ctx context.Context, query *ResourceQuery, nodes []*PermissionResource, init func(*PermissionResource), assign func(*PermissionResource, *Resource)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*PermissionResource)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*PermissionResource)
 	for i := range nodes {
 		fk := nodes[i].ResourceID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (prq *PermissionResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *
 // Example:
 //
 //	var v []struct {
-//	  PermissionID int `json:"permission_id,omitempty"`
-//	  ResourceID int `json:"resource_id,omitempty"`
+//	  PermissionID string `json:"permission_id,omitempty"`
+//	  ResourceID string `json:"resource_id,omitempty"`
 //	}
 //
 //	client.PermissionResource.Query().

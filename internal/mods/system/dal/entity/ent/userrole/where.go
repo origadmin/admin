@@ -55,53 +55,143 @@ func IDLTE(id int) predicate.UserRole {
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v int) predicate.UserRole {
+func UserID(v string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldEQ(FieldUserID, v))
 }
 
 // RoleID applies equality check predicate on the "role_id" field. It's identical to RoleIDEQ.
-func RoleID(v int) predicate.UserRole {
+func RoleID(v string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldEQ(FieldRoleID, v))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v int) predicate.UserRole {
+func UserIDEQ(v string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v int) predicate.UserRole {
+func UserIDNEQ(v string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...int) predicate.UserRole {
+func UserIDIn(vs ...string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...int) predicate.UserRole {
+func UserIDNotIn(vs ...string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldNotIn(FieldUserID, vs...))
 }
 
+// UserIDGT applies the GT predicate on the "user_id" field.
+func UserIDGT(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldGT(FieldUserID, v))
+}
+
+// UserIDGTE applies the GTE predicate on the "user_id" field.
+func UserIDGTE(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldGTE(FieldUserID, v))
+}
+
+// UserIDLT applies the LT predicate on the "user_id" field.
+func UserIDLT(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldLT(FieldUserID, v))
+}
+
+// UserIDLTE applies the LTE predicate on the "user_id" field.
+func UserIDLTE(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldLTE(FieldUserID, v))
+}
+
+// UserIDContains applies the Contains predicate on the "user_id" field.
+func UserIDContains(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldContains(FieldUserID, v))
+}
+
+// UserIDHasPrefix applies the HasPrefix predicate on the "user_id" field.
+func UserIDHasPrefix(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldHasPrefix(FieldUserID, v))
+}
+
+// UserIDHasSuffix applies the HasSuffix predicate on the "user_id" field.
+func UserIDHasSuffix(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldHasSuffix(FieldUserID, v))
+}
+
+// UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
+func UserIDEqualFold(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldEqualFold(FieldUserID, v))
+}
+
+// UserIDContainsFold applies the ContainsFold predicate on the "user_id" field.
+func UserIDContainsFold(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldContainsFold(FieldUserID, v))
+}
+
 // RoleIDEQ applies the EQ predicate on the "role_id" field.
-func RoleIDEQ(v int) predicate.UserRole {
+func RoleIDEQ(v string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldEQ(FieldRoleID, v))
 }
 
 // RoleIDNEQ applies the NEQ predicate on the "role_id" field.
-func RoleIDNEQ(v int) predicate.UserRole {
+func RoleIDNEQ(v string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldNEQ(FieldRoleID, v))
 }
 
 // RoleIDIn applies the In predicate on the "role_id" field.
-func RoleIDIn(vs ...int) predicate.UserRole {
+func RoleIDIn(vs ...string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldIn(FieldRoleID, vs...))
 }
 
 // RoleIDNotIn applies the NotIn predicate on the "role_id" field.
-func RoleIDNotIn(vs ...int) predicate.UserRole {
+func RoleIDNotIn(vs ...string) predicate.UserRole {
 	return predicate.UserRole(sql.FieldNotIn(FieldRoleID, vs...))
+}
+
+// RoleIDGT applies the GT predicate on the "role_id" field.
+func RoleIDGT(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldGT(FieldRoleID, v))
+}
+
+// RoleIDGTE applies the GTE predicate on the "role_id" field.
+func RoleIDGTE(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldGTE(FieldRoleID, v))
+}
+
+// RoleIDLT applies the LT predicate on the "role_id" field.
+func RoleIDLT(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldLT(FieldRoleID, v))
+}
+
+// RoleIDLTE applies the LTE predicate on the "role_id" field.
+func RoleIDLTE(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldLTE(FieldRoleID, v))
+}
+
+// RoleIDContains applies the Contains predicate on the "role_id" field.
+func RoleIDContains(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldContains(FieldRoleID, v))
+}
+
+// RoleIDHasPrefix applies the HasPrefix predicate on the "role_id" field.
+func RoleIDHasPrefix(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldHasPrefix(FieldRoleID, v))
+}
+
+// RoleIDHasSuffix applies the HasSuffix predicate on the "role_id" field.
+func RoleIDHasSuffix(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldHasSuffix(FieldRoleID, v))
+}
+
+// RoleIDEqualFold applies the EqualFold predicate on the "role_id" field.
+func RoleIDEqualFold(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldEqualFold(FieldRoleID, v))
+}
+
+// RoleIDContainsFold applies the ContainsFold predicate on the "role_id" field.
+func RoleIDContainsFold(v string) predicate.UserRole {
+	return predicate.UserRole(sql.FieldContainsFold(FieldRoleID, v))
 }
 
 // HasUser applies the HasEdge predicate on the "user" edge.

@@ -151,11 +151,11 @@ var (
 	// AncestorsValidator is a validator for the "ancestors" field. It is called by the builders before save.
 	AncestorsValidator func(string) error
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(int) error
+	ParentIDValidator func(string) error
 	// DefaultLevel holds the default value on creation for the "level" field.
 	DefaultLevel int
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int) error
+	IDValidator func(string) error
 )
 
 // OrderOption defines the ordering options for the Department queries.

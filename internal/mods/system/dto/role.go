@@ -39,7 +39,7 @@ func RoleObject(menu *RolePB) *Role {
 		ID:          menu.Id,
 		CreateTime:  menu.CreateTime.AsTime(),
 		UpdateTime:  menu.UpdateTime.AsTime(),
-		Code:        menu.Code,
+		Keyword:     menu.Keyword,
 		Name:        menu.Name,
 		Description: menu.Description,
 		Sequence:    int(menu.Sequence),

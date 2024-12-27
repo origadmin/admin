@@ -31,29 +31,29 @@ func (udu *UserDepartmentUpdate) Where(ps ...predicate.UserDepartment) *UserDepa
 }
 
 // SetUserID sets the "user_id" field.
-func (udu *UserDepartmentUpdate) SetUserID(i int) *UserDepartmentUpdate {
-	udu.mutation.SetUserID(i)
+func (udu *UserDepartmentUpdate) SetUserID(s string) *UserDepartmentUpdate {
+	udu.mutation.SetUserID(s)
 	return udu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (udu *UserDepartmentUpdate) SetNillableUserID(i *int) *UserDepartmentUpdate {
-	if i != nil {
-		udu.SetUserID(*i)
+func (udu *UserDepartmentUpdate) SetNillableUserID(s *string) *UserDepartmentUpdate {
+	if s != nil {
+		udu.SetUserID(*s)
 	}
 	return udu
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (udu *UserDepartmentUpdate) SetDepartmentID(i int) *UserDepartmentUpdate {
-	udu.mutation.SetDepartmentID(i)
+func (udu *UserDepartmentUpdate) SetDepartmentID(s string) *UserDepartmentUpdate {
+	udu.mutation.SetDepartmentID(s)
 	return udu
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (udu *UserDepartmentUpdate) SetNillableDepartmentID(i *int) *UserDepartmentUpdate {
-	if i != nil {
-		udu.SetDepartmentID(*i)
+func (udu *UserDepartmentUpdate) SetNillableDepartmentID(s *string) *UserDepartmentUpdate {
+	if s != nil {
+		udu.SetDepartmentID(*s)
 	}
 	return udu
 }
@@ -159,7 +159,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{userdepartment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -172,7 +172,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{userdepartment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -188,7 +188,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{userdepartment.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -201,7 +201,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Columns: []string{userdepartment.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -232,29 +232,29 @@ type UserDepartmentUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (uduo *UserDepartmentUpdateOne) SetUserID(i int) *UserDepartmentUpdateOne {
-	uduo.mutation.SetUserID(i)
+func (uduo *UserDepartmentUpdateOne) SetUserID(s string) *UserDepartmentUpdateOne {
+	uduo.mutation.SetUserID(s)
 	return uduo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uduo *UserDepartmentUpdateOne) SetNillableUserID(i *int) *UserDepartmentUpdateOne {
-	if i != nil {
-		uduo.SetUserID(*i)
+func (uduo *UserDepartmentUpdateOne) SetNillableUserID(s *string) *UserDepartmentUpdateOne {
+	if s != nil {
+		uduo.SetUserID(*s)
 	}
 	return uduo
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (uduo *UserDepartmentUpdateOne) SetDepartmentID(i int) *UserDepartmentUpdateOne {
-	uduo.mutation.SetDepartmentID(i)
+func (uduo *UserDepartmentUpdateOne) SetDepartmentID(s string) *UserDepartmentUpdateOne {
+	uduo.mutation.SetDepartmentID(s)
 	return uduo
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (uduo *UserDepartmentUpdateOne) SetNillableDepartmentID(i *int) *UserDepartmentUpdateOne {
-	if i != nil {
-		uduo.SetDepartmentID(*i)
+func (uduo *UserDepartmentUpdateOne) SetNillableDepartmentID(s *string) *UserDepartmentUpdateOne {
+	if s != nil {
+		uduo.SetDepartmentID(*s)
 	}
 	return uduo
 }
@@ -390,7 +390,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 			Columns: []string{userdepartment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -403,7 +403,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 			Columns: []string{userdepartment.UserColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -419,7 +419,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 			Columns: []string{userdepartment.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -432,7 +432,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 			Columns: []string{userdepartment.DepartmentColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

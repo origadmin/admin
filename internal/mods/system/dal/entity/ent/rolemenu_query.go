@@ -337,7 +337,7 @@ func (rmq *RoleMenuQuery) WithMenu(opts ...func(*MenuQuery)) *RoleMenuQuery {
 // Example:
 //
 //	var v []struct {
-//		RoleID int `json:"role_id,omitempty"`
+//		RoleID string `json:"role_id,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -360,7 +360,7 @@ func (rmq *RoleMenuQuery) GroupBy(field string, fields ...string) *RoleMenuGroup
 // Example:
 //
 //	var v []struct {
-//		RoleID int `json:"role_id,omitempty"`
+//		RoleID string `json:"role_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().
@@ -451,8 +451,8 @@ func (rmq *RoleMenuQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Ro
 }
 
 func (rmq *RoleMenuQuery) loadRole(ctx context.Context, query *RoleQuery, nodes []*RoleMenu, init func(*RoleMenu), assign func(*RoleMenu, *Role)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*RoleMenu)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*RoleMenu)
 	for i := range nodes {
 		fk := nodes[i].RoleID
 		if _, ok := nodeids[fk]; !ok {
@@ -480,8 +480,8 @@ func (rmq *RoleMenuQuery) loadRole(ctx context.Context, query *RoleQuery, nodes 
 	return nil
 }
 func (rmq *RoleMenuQuery) loadMenu(ctx context.Context, query *MenuQuery, nodes []*RoleMenu, init func(*RoleMenu), assign func(*RoleMenu, *Menu)) error {
-	ids := make([]int, 0, len(nodes))
-	nodeids := make(map[int][]*RoleMenu)
+	ids := make([]string, 0, len(nodes))
+	nodeids := make(map[string][]*RoleMenu)
 	for i := range nodes {
 		fk := nodes[i].MenuID
 		if _, ok := nodeids[fk]; !ok {
@@ -639,8 +639,8 @@ func (rmq *RoleMenuQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleMenuSe
 // Example:
 //
 //	var v []struct {
-//	  RoleID int `json:"role_id,omitempty"`
-//	  MenuID int `json:"menu_id,omitempty"`
+//	  RoleID string `json:"role_id,omitempty"`
+//	  MenuID string `json:"menu_id,omitempty"`
 //	}
 //
 //	client.RoleMenu.Query().

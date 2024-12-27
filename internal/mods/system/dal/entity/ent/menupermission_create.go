@@ -22,14 +22,14 @@ type MenuPermissionCreate struct {
 }
 
 // SetMenuID sets the "menu_id" field.
-func (mpc *MenuPermissionCreate) SetMenuID(i int) *MenuPermissionCreate {
-	mpc.mutation.SetMenuID(i)
+func (mpc *MenuPermissionCreate) SetMenuID(s string) *MenuPermissionCreate {
+	mpc.mutation.SetMenuID(s)
 	return mpc
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (mpc *MenuPermissionCreate) SetPermissionID(i int) *MenuPermissionCreate {
-	mpc.mutation.SetPermissionID(i)
+func (mpc *MenuPermissionCreate) SetPermissionID(s string) *MenuPermissionCreate {
+	mpc.mutation.SetPermissionID(s)
 	return mpc
 }
 
@@ -150,7 +150,7 @@ func (mpc *MenuPermissionCreate) createSpec() (*MenuPermission, *sqlgraph.Create
 			Columns: []string{menupermission.MenuColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -167,7 +167,7 @@ func (mpc *MenuPermissionCreate) createSpec() (*MenuPermission, *sqlgraph.Create
 			Columns: []string{menupermission.PermissionColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
