@@ -7,7 +7,6 @@ package mixin
 
 import (
 	"entgo.io/ent"
-	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 
@@ -17,16 +16,15 @@ import (
 // UUID schema to include control and time fields.
 type UUID struct {
 	mixin.Schema
-	Key                  string
-	MaxLen               int
-	CommentKey           string
-	Optional             bool
-	Positive             bool
-	Unique               bool
-	Immutable            bool
-	UseDefault           bool
-	DefaultFunc          func() string
-	UseCustomIDGenerator bool
+	Key         string
+	MaxLen      int
+	CommentKey  string
+	Optional    bool
+	Positive    bool
+	Unique      bool
+	Immutable   bool
+	UseDefault  bool
+	DefaultFunc func() string
 }
 
 func (obj UUID) ToField() ent.Field {
@@ -49,11 +47,6 @@ func (obj UUID) ToField() ent.Field {
 	if obj.DefaultFunc != nil {
 		builder = builder.DefaultFunc(obj.DefaultFunc)
 		// string will not be incremented by the database.
-	}
-	if obj.UseCustomIDGenerator {
-		builder = builder.Annotations(entsql.Annotation{
-			Incremental: &obj.UseCustomIDGenerator,
-		})
 	}
 	if obj.MaxLen > 0 {
 		builder = builder.MaxLen(obj.MaxLen)
@@ -104,7 +97,6 @@ func (obj UUID) OP(name string) ent.Field {
 
 func (obj UUID) UserDefaultFunc(f func() string) IDGenerator {
 	return UUID{
-		DefaultFunc:          f,
-		UseCustomIDGenerator: true,
+		DefaultFunc: f,
 	}
 }

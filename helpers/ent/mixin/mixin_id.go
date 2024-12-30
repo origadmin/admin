@@ -50,9 +50,9 @@ func (obj ID) ToField() ent.Field {
 	}
 	if obj.DefaultFunc != nil {
 		builder = builder.DefaultFunc(obj.DefaultFunc)
-		obj.UseCustomIDGenerator = true
+		obj.UseCustomIDGenerator = false
 	}
-	if obj.UseCustomIDGenerator {
+	if !obj.UseCustomIDGenerator {
 		builder = builder.Annotations(entsql.Annotation{
 			Incremental: &obj.UseCustomIDGenerator,
 		})

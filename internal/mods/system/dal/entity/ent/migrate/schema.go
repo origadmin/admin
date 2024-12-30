@@ -11,7 +11,7 @@ import (
 var (
 	// SysDepartmentsColumns holds the columns for the "sys_departments" table.
 	SysDepartmentsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time:field:comment"},
 		{Name: "keyword", Type: field.TypeString, Size: 32, Comment: "department:field:keyword", Default: ""},
@@ -72,7 +72,7 @@ var (
 	}
 	// SysDepartmentRolesColumns holds the columns for the "sys_department_roles" table.
 	SysDepartmentRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "department_role:field:department_id"},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "department_role:field:role_id"},
 	}
@@ -116,7 +116,7 @@ var (
 	}
 	// SysMenusColumns holds the columns for the "sys_menus" table.
 	SysMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time:field:comment"},
 		{Name: "keyword", Type: field.TypeString, Size: 32, Comment: "menu:field:keyword", Default: ""},
@@ -191,7 +191,7 @@ var (
 	}
 	// SysMenuPermissionsColumns holds the columns for the "sys_menu_permissions" table.
 	SysMenuPermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "menu_id", Type: field.TypeInt64, Comment: "menu_permission:field:menu_id"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "menu_permission:field:permission_id"},
 	}
@@ -235,7 +235,7 @@ var (
 	}
 	// SysPermissionsColumns holds the columns for the "sys_permissions" table.
 	SysPermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time:field:comment"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "permission:field:name"},
@@ -267,7 +267,7 @@ var (
 	}
 	// SysPermissionResourcesColumns holds the columns for the "sys_permission_resources" table.
 	SysPermissionResourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 		{Name: "resource_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 	}
@@ -311,7 +311,7 @@ var (
 	}
 	// SysPositionsColumns holds the columns for the "sys_positions" table.
 	SysPositionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time:field:comment"},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "position:field:name"},
@@ -347,7 +347,7 @@ var (
 	}
 	// SysResourcesColumns holds the columns for the "sys_resources" table.
 	SysResourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time:field:comment"},
 		{Name: "method", Type: field.TypeString, Size: 20, Comment: "resource:field:method", Default: ""},
@@ -389,7 +389,7 @@ var (
 	}
 	// SysRolesColumns holds the columns for the "sys_roles" table.
 	SysRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time:field:comment"},
 		{Name: "keyword", Type: field.TypeString, Size: 32, Comment: "role:field:keyword", Default: ""},
@@ -441,7 +441,7 @@ var (
 	}
 	// SysRoleMenusColumns holds the columns for the "sys_role_menus" table.
 	SysRoleMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "role_menu:field:role_id"},
 		{Name: "menu_id", Type: field.TypeInt64, Comment: "role_menu:field:menu_id"},
 	}
@@ -485,7 +485,7 @@ var (
 	}
 	// SysRolePermissionsColumns holds the columns for the "sys_role_permissions" table.
 	SysRolePermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 	}
@@ -529,7 +529,7 @@ var (
 	}
 	// SysUsersColumns holds the columns for the "sys_users" table.
 	SysUsersColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author:field:comment", Default: 0},
 		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author:field:comment", Default: 0},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time:field:comment"},
@@ -605,7 +605,7 @@ var (
 	}
 	// SysUserDepartmentsColumns holds the columns for the "sys_user_departments" table.
 	SysUserDepartmentsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 	}
@@ -649,7 +649,7 @@ var (
 	}
 	// SysUserPositionsColumns holds the columns for the "sys_user_positions" table.
 	SysUserPositionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "position_user_positions", Type: field.TypeInt64, Nullable: true},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 		{Name: "position_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
@@ -700,7 +700,7 @@ var (
 	}
 	// SysUserRolesColumns holds the columns for the "sys_user_roles" table.
 	SysUserRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Increment: true, Comment: "field:primary_key:comment"},
+		{Name: "id", Type: field.TypeInt64, Comment: "field:primary_key:comment"},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "field:foreign_key:comment"},
 	}
