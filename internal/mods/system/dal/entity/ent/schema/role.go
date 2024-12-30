@@ -17,11 +17,11 @@ import (
 	"origadmin/application/admin/helpers/i18n"
 )
 
-// 角色类型常量
+// Role type constant
 const (
-	RoleTypeSystem     int8 = 1 // 系统角色（如：超级管理员、访客）
-	RoleTypeUser       int8 = 2 // 用户角色（如：普通用户、运营、客服）
-	RoleTypeDepartment int8 = 3 // 部门角色（如：部门主管、部门成员）
+	RoleTypeSystem     int8 = 1 // System roles (e.g., Super Administrator, Guest)
+	RoleTypeUser       int8 = 2 // User roles (e.g., general user, operation, customer service)
+	RoleTypeDepartment int8 = 3 // Department roles (e.g., department heads, department members)
 )
 
 // Role holds the schema definition for the Role domain.
@@ -46,7 +46,7 @@ func (Role) Fields() []ent.Field {
 			Comment("role:field:description"), // Details about role
 		field.Int8("type").
 			Default(RoleTypeUser).
-			Comment("role:field:type"), //("角色类型：1-系统角色 2-用户角色 3-部门角色"),
+			Comment("role:field:type"), //("Role type: 1 - System role 2 - User role 3 - Department role"),
 		field.Int("sequence").
 			Default(0).
 			Comment("role:field:sequence"), // Sequence for sorting
@@ -55,7 +55,7 @@ func (Role) Fields() []ent.Field {
 			Comment("role:field:status"),
 		field.Bool("is_system").
 			Default(false).
-			Comment("role:field:is_system"), //("是否系统内置（系统内置角色不可删除）"),
+			Comment("role:field:is_system"), //("Whether the system is built-in (the built-in role cannot be deleted)"),
 	}
 }
 

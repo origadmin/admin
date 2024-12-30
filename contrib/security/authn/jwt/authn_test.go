@@ -256,7 +256,8 @@ func TestAuth(t *testing.T) {
 			},
 		},
 	}
-	jwtAuth, err := NewAuthenticator(cfg, WithCache(security.DefaultTokenCacheService()))
+	//WithCache(security.DefaultTokenCacheService())
+	jwtAuth, err := NewAuthenticator(cfg)
 	assert.Nil(t, err)
 	if err != nil {
 		t.Fatal(err)

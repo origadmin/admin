@@ -14,12 +14,10 @@ import (
 	"github.com/dchest/uniuri"
 	"github.com/goexts/generic/settings"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
-	middlewaresecurity "github.com/origadmin/runtime/agent/middleware/security"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/security"
-	"github.com/origadmin/toolkits/storage/cache"
 )
 
 const (
@@ -31,10 +29,6 @@ const (
 // Authenticator is a struct that implements the Authenticator interface.
 type Authenticator struct {
 	*Option
-	//// cache is the token cache service.
-	cache security.TokenService
-	//issuer   string
-	//audience []string
 }
 
 func (obj *Authenticator) CreateIdentityClaims(_ context.Context, id string, refresh bool) (security.Claims, error) {
@@ -66,33 +60,8 @@ func (obj *Authenticator) CreateIdentityClaims(_ context.Context, id string, ref
 	return claims, nil
 }
 
-func (obj *Authenticator) CreateIdentityClaimsContext(ctx context.Context, tokenType security.TokenType, id string) (context.Context, error) {
-	// Create the claims.
-	claims, err := obj.CreateIdentityClaims(ctx, id, false)
-	if err != nil {
-		return ctx, err
-	}
-
-	// Add the token to the context.
-	ctx = middlewaresecurity.NewClaimsContext(ctx, claims)
-	return ctx, nil
-}
-
 func (obj *Authenticator) Authenticate(ctx context.Context, tokenStr string) (security.Claims, error) {
 	log.Debugf("Authenticating token string: %s", tokenStr)
-	// If the token cache service is not nil, validate the token.
-	if obj.cache != nil {
-		log.Debugf("Validating token using cache service")
-		ok, err := obj.cache.Validate(ctx, tokenStr)
-		switch {
-		case err != nil:
-			log.Errorf("Error validating token: %v", err)
-			return nil, ErrInvalidToken
-		case !ok:
-			log.Debugf("Token not found in cache")
-			return nil, ErrTokenNotFound
-		}
-	}
 	// Parse the token string.
 	log.Debugf("Parsing token string")
 	jwtToken, err := obj.parseToken(tokenStr)
@@ -151,30 +120,6 @@ func (obj *Authenticator) Authenticate(ctx context.Context, tokenStr string) (se
 	return securityClaims, nil
 }
 
-func (obj *Authenticator) AuthenticateContext(ctx context.Context, tokenType security.TokenType) (security.Claims, error) {
-	log.Debugf("Entering AuthenticateContext with tokenType: %s", tokenType)
-	// Get the token string from the context.
-	tokenStr, err := middlewaresecurity.TokenFromTypeContext(ctx, tokenType, obj.schemeString())
-	if err != nil {
-		log.Errorf("Error getting token from context: %v", err)
-	} else if tokenStr == "" {
-		log.Debugf("Token string is empty")
-	}
-	if err != nil || tokenStr == "" {
-		log.Errorf("Invalid token or token string is empty")
-		return nil, ErrInvalidToken
-	}
-	log.Debugf("Token string retrieved from context: %s", tokenStr)
-	// Authenticate the token string.
-	log.Debugf("Authenticating token string")
-	claims, err := obj.Authenticate(ctx, tokenStr)
-	if err != nil {
-		log.Errorf("Error authenticating token: %v", err)
-	}
-	log.Debugf("Authentication result: %+v", claims)
-	return claims, err
-}
-
 func (obj *Authenticator) Verify(ctx context.Context, tokenStr string) (bool, error) {
 	// Authenticate the token string.
 	_, err := obj.Authenticate(ctx, tokenStr)
@@ -184,21 +129,6 @@ func (obj *Authenticator) Verify(ctx context.Context, tokenStr string) (bool, er
 	}
 	// Otherwise, return true.
 	return true, nil
-}
-
-func (obj *Authenticator) VerifyContext(ctx context.Context, tokenType security.TokenType) (bool, error) {
-	// Get the token string from the context.
-	tokenStr, err := middlewaresecurity.TokenFromTypeContext(ctx, tokenType, obj.schemeString())
-	if err != nil || tokenStr == "" {
-		return false, ErrInvalidToken
-	}
-	// Authenticate the token string.
-	return obj.Verify(ctx, tokenStr)
-}
-
-// schemeString returns the scheme type as a string.
-func (obj *Authenticator) schemeString() string {
-	return obj.schemeType.String()
 }
 
 // CreateToken creates a token string from the claims.
@@ -211,15 +141,6 @@ func (obj *Authenticator) CreateToken(ctx context.Context, claims security.Claim
 	if err != nil || tokenStr == "" {
 		return "", err
 	}
-
-	// If the token cache service is not nil, store the token.
-	if obj.cache != nil {
-		// Get the expiration time from the claims.
-		exp := time.Duration(claims.GetExpiration().UnixMilli())
-		if err := obj.cache.Store(ctx, tokenStr, exp); err != nil {
-			return tokenStr, err
-		}
-	}
 	return tokenStr, nil
 }
 
@@ -228,50 +149,6 @@ func getExpiration(obj *Authenticator, refresh bool) time.Duration {
 		return obj.expirationRefresh
 	}
 	return obj.expirationAccess
-}
-
-// CreateTokenContext creates a token string from the claims and adds it to the context.
-func (obj *Authenticator) CreateTokenContext(ctx context.Context, tokenType security.TokenType, claims security.Claims) (context.Context, error) {
-	// Create the token string.
-	tokenStr, err := obj.CreateToken(ctx, claims)
-	if err != nil {
-		return ctx, err
-	}
-	// Add the token string to the context.
-	ctx = middlewaresecurity.TokenToTypeContext(ctx, tokenType, obj.schemeString(), tokenStr)
-	return ctx, nil
-}
-
-// DestroyToken destroys the token string.
-func (obj *Authenticator) DestroyToken(ctx context.Context, tokenStr string) error {
-	// If the token cache service is not nil, remove the token.
-	if obj.cache != nil {
-		err := obj.cache.Remove(ctx, tokenStr)
-		if err != nil && !errors.Is(err, cache.ErrNotFound) {
-			return err
-		}
-	}
-	return nil
-}
-
-// DestroyTokenContext destroys the token string from the context.
-func (obj *Authenticator) DestroyTokenContext(ctx context.Context, token security.TokenType) error {
-	// Get the token string from the context.
-	tokenStr, err := middlewaresecurity.TokenFromTypeContext(ctx, token, obj.schemeString())
-	if err != nil || tokenStr == "" {
-		return ErrInvalidToken
-	}
-	// Destroy the token string.
-	return obj.DestroyToken(ctx, tokenStr)
-}
-
-// Close closes the token cache service.
-func (obj *Authenticator) Close(ctx context.Context) error {
-	// If the token cache service is not nil, close it.
-	if obj.cache != nil {
-		return obj.cache.Close(ctx)
-	}
-	return nil
 }
 
 // parseToken parses the token string and returns the token.
@@ -330,7 +207,6 @@ func NewAuthenticator(cfg *configv1.Security, ss ...Setting) (security.Authentic
 		return nil, errors.New("authenticator jwt config is empty")
 	}
 	option := settings.Apply(&Option{
-		schemeType:        security.SchemeBearer,
 		expirationAccess:  defaultExpirationAccess,
 		expirationRefresh: defaultExpirationRefresh,
 		issuer:            defaultIssuerDomain,
@@ -340,9 +216,7 @@ func NewAuthenticator(cfg *configv1.Security, ss ...Setting) (security.Authentic
 		return nil, err
 	}
 	return &Authenticator{
-		//option: option,
 		Option: option,
-		cache:  option.cache,
 	}, nil
 }
 

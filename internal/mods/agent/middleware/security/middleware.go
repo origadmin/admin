@@ -22,12 +22,10 @@ import (
 )
 
 type Option struct {
-	Authenticator   security.Authenticator
-	Authorizer      security.Authorizer
-	Skipper         func(path string) bool
-	Parser          func(c *gin.Context, subject string) (security.UserClaims, error)
-	Scheme          string
-	HeaderAuthorize string
+	Authenticator security.Authenticator
+	Authorizer    security.Authorizer
+	Skipper       func(path string) bool
+	Parser        func(c *gin.Context, subject string) (security.UserClaims, error)
 }
 
 type Setting = func(m *Option)
@@ -37,8 +35,6 @@ func New(cfg *configv1.Security, opts ...Setting) gins.HandlerFunc {
 		Parser: func(c *gin.Context, subject string) (security.UserClaims, error) {
 			return nil, errors.New("not implemented")
 		},
-		Scheme:          "Bearer",
-		HeaderAuthorize: "Authorization",
 	}, opts)
 	if cfg == nil {
 		return EmptyMiddleware

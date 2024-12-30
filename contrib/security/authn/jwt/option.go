@@ -11,12 +11,9 @@ import (
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/toolkits/errors"
-	"github.com/origadmin/toolkits/security"
 )
 
 type Option struct {
-	cache             security.TokenService
-	schemeType        security.Scheme
 	signingMethod     jwtv5.SigningMethod
 	keyFunc           func(token *jwtv5.Token) (any, error)
 	enabledJTI        bool
@@ -57,6 +54,14 @@ func (option *Option) WithConfig(config *configv1.AuthNConfig_JWTConfig) error {
 		// Set the signing method and key function.
 		option.signingMethod = signingMethod
 	}
+
+	if config.ExpireTime > 0 {
+		option.expirationAccess = time.Duration(config.ExpireTime) * time.Second
+	}
+	if config.RefreshTime > 0 {
+		option.expirationRefresh = time.Duration(config.RefreshTime) * time.Second
+	}
+
 	return nil
 }
 
@@ -141,24 +146,6 @@ func WithExtraClaims(extras map[string]string) Setting {
 	return func(option *Option) {
 		// Set the extra keys for the Authenticator.
 		option.extraClaims = extras
-	}
-}
-
-// WithCache returns a Setting function that sets the token cache service for an Authenticator.
-func WithCache(cache security.TokenService) Setting {
-	// Return a function that sets the token cache service for an Authenticator.
-	return func(option *Option) {
-		// Set the token cache service for the Authenticator.
-		option.cache = cache
-	}
-}
-
-// WithScheme returns a Setting function that sets the scheme for an Authenticator.
-func WithScheme(scheme security.Scheme) Setting {
-	// Return a function that sets the scheme for an Authenticator.
-	return func(option *Option) {
-		// Set the scheme for the Authenticator.
-		option.schemeType = scheme
 	}
 }
 

@@ -10,10 +10,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/log"
 
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
-
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 

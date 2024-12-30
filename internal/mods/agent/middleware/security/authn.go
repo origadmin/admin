@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	middlewaresecurity "github.com/origadmin/runtime/agent/middleware/security"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/security"
@@ -30,7 +29,7 @@ func NewAuthN(config *configv1.Security, option *Option) gin.HandlerFunc {
 	//	option.TokenParser,
 	//	FromTransportClient(option.HeaderAuthorize, option.Scheme),
 	//	FromTransportServer(option.HeaderAuthorize, option.Scheme))
-	tokenParser := FromHeader(option.HeaderAuthorize, option.Scheme)
+	tokenParser := func(c *gin.Context) string { return "" }
 	return func(c *gin.Context) {
 		log.Debugf("NewAuthN: handling request: %+v", c.Request)
 		if IsSkipped(c) {
@@ -75,6 +74,6 @@ func FromHeader(header string, scheme string) func(ctx *gin.Context) string {
 }
 
 func NewClaimsContext(c *gin.Context, claims security.Claims) *http.Request {
-	return c.Request.WithContext(middlewaresecurity.NewClaimsContext(c.Request.Context(), claims))
+	return c.Request.WithContext(security.NewClaimsContext(c.Request.Context(), claims))
 
 }

@@ -143,13 +143,13 @@ func (obj *Data) InitFromFile(ctx context.Context, filename string) error {
 		}
 	}
 	return obj.Tx(ctx, func(ctx context.Context) error {
-		return obj.createInBatchByParent(ctx, menus, nil)
+		return obj.batchCreateWithParent(ctx, menus, nil)
 	})
 }
 
-func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB, parent *dto.MenuPB) error {
+func (obj *Data) batchCreateWithParent(ctx context.Context, items []*dto.MenuPB, parent *dto.MenuPB) error {
 	total := len(items)
-	log.Infow("msg", "Starting createInBatchByParent", "totalItems", total)
+	log.Infow("msg", "Starting batchCreateWithParent", "totalItems", total)
 
 	for i, item := range items {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
@@ -297,7 +297,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 
 		if len(item.Children) != 0 {
 			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))
-			if err := obj.createInBatchByParent(ctx, item.Children, item); err != nil {
+			if err := obj.batchCreateWithParent(ctx, item.Children, item); err != nil {
 				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
 				return err
 			}
@@ -305,6 +305,6 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 		}
 	}
 
-	log.Infow("msg", "Finished createInBatchByParent")
+	log.Infow("msg", "Finished batchCreateWithParent")
 	return nil
 }

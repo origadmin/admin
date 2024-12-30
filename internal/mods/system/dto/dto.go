@@ -22,10 +22,10 @@ var (
 
 const (
 	UserStatusActivated = schema.UserStatusActivated
-	UserStatusFreezed   = schema.UserStatusFreezed
+	UserStatusFrozen    = schema.UserStatusFrozen
 
 	MenuStatusActivated = schema.MenuStatusActivated
-	MenuStatusFreezed   = schema.MenuStatusFrozen
+	MenuStatusFrozen    = schema.MenuStatusFrozen
 
 	MenuTypeAction = schema.MenuTypeAction
 	MenuTypeButton = schema.MenuTypeButton

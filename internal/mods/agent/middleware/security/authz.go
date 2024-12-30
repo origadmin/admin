@@ -10,9 +10,9 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/origadmin/runtime/agent/middleware/security"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/toolkits/security"
 )
 
 func NewAuthZ(config *configv1.Security, option *Option) gin.HandlerFunc {

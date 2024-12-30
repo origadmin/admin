@@ -9,32 +9,33 @@ require (
 	entgo.io/ent v0.14.1
 	github.com/LyricTian/captcha v1.2.0
 	github.com/caarlos0/go-version v0.2.0
-	github.com/casbin/casbin/v2 v2.102.0
+	github.com/casbin/casbin/v2 v2.103.0
 	github.com/dchest/uniuri v1.2.0
 	github.com/envoyproxy/protoc-gen-validate v1.1.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/v2 v2.8.3
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/goexts/generic v0.1.5
+	github.com/goexts/generic v0.1.6
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/gnostic v0.7.0
+	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/origadmin/contrib/consul v0.0.26
 	github.com/origadmin/contrib/database v0.0.26
 	github.com/origadmin/contrib/replacer v0.0.26
 	github.com/origadmin/contrib/transport/gins v0.0.26
-	github.com/origadmin/entslog/v3 v3.0.4
-	github.com/origadmin/runtime v0.1.39
+	github.com/origadmin/entslog/v3 v3.0.6
+	github.com/origadmin/runtime v0.1.40
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.1.45
-	github.com/origadmin/toolkits/codec v0.0.88
-	github.com/origadmin/toolkits/errors v0.0.70
-	github.com/origadmin/toolkits/idgen v0.0.81
+	github.com/origadmin/toolkits v0.2.2
+	github.com/origadmin/toolkits/codec v0.2.2
+	github.com/origadmin/toolkits/errors v0.2.2
+	github.com/origadmin/toolkits/idgen v0.2.2
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/net v0.33.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20241223144023-3abc09e42ca8
+	google.golang.org/genproto/googleapis/api v0.0.0-20241230172942-26aa7a208def
 	google.golang.org/grpc v1.69.2
 	google.golang.org/protobuf v1.36.1
 )
@@ -51,10 +52,10 @@ require (
 	github.com/armon/go-metrics v0.5.4 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.7.1 // indirect
-	github.com/bufbuild/protovalidate-go v0.8.0 // indirect
+	github.com/bufbuild/protovalidate-go v0.8.2 // indirect
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect
-	github.com/casbin/govaluate v1.2.0 // indirect
+	github.com/casbin/govaluate v1.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
@@ -84,7 +85,7 @@ require (
 	github.com/google/cel-go v0.22.1 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
+	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/consul/api v1.31.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -144,14 +145,14 @@ require (
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20241223144023-3abc09e42ca8 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20241230172942-26aa7a208def // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20241223112719-96e2e1e4408d // indirect
-	modernc.org/libc v1.61.5 // indirect
-	modernc.org/mathutil v1.7.0 // indirect
+	modernc.org/libc v1.61.6 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/sqlite v1.34.4 // indirect
-	modernc.org/strutil v1.2.0 // indirect
+	modernc.org/strutil v1.2.1 // indirect
 	modernc.org/token v1.1.0 // indirect
 )

@@ -7,11 +7,13 @@ package dal
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"sync"
-	"time"
 
 	"github.com/LyricTian/captcha"
 	kerr "github.com/go-kratos/kratos/v2/errors"
+	"github.com/goexts/generic"
+	"github.com/google/uuid"
 	"github.com/origadmin/runtime/context"
 	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
@@ -24,19 +26,17 @@ import (
 
 	"origadmin/application/admin/api/v1/services/basis"
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/basis/dto"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	systemdto "origadmin/application/admin/internal/mods/system/dto"
 )
 
 type loginRepo struct {
 	*LoginData
 	bufpool *sync.Pool
-	//Menu          systemdto.MenuRepo
-	//Role          systemdto.RoleRepo
-	//User          systemdto.UserRepo
-	//Authenticator security.Authenticator
 }
 
 func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequest) (*dto.TokenRefreshResponse, error) {
@@ -46,21 +46,22 @@ func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequ
 
 func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
 	log.Debugf("Register request received with data: %+v", in.GetData())
-	_, err := repo.User.Create(ctx, &system.User{
-		Id:         0,
-		CreateTime: nil,
-		UpdateTime: nil,
-		Username:   "",
-		Name:       "",
-		Avatar:     "",
-		Password:   "",
-		Salt:       "",
-		Phone:      "",
-		Email:      "",
-		Remark:     "",
-		Status:     0,
-	})
+	data := in.GetData()
+	registerID := id.Gen()
+	salt := rand.GenerateSalt()
+	passwd, err := hash.Generate(data.GetPassword(), salt)
 	if err != nil {
+		return nil, err
+	}
+	if _, err := repo.User.Create(ctx, &system.User{
+		Id:       registerID,
+		Uuid:     generic.Must(uuid.NewRandom()).String(),
+		Username: data.GetUsername(),
+		Name:     "user_" + strconv.Itoa(int(registerID)),
+		Password: passwd,
+		Salt:     salt,
+		Status:   1,
+	}); err != nil {
 		return nil, err
 	}
 	return &dto.RegisterResponse{
@@ -83,63 +84,63 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	}
 
 	if root := repo.cfg().RootUser; root.GetEnabled() {
-		log.Debugf("Root user is enabled, checking if username matches")
+		log.Debugf("Root userData is enabled, checking if username matches")
 		// login by root
 		username := root.Username
 		if data.Username == username {
 			log.Debugf("Username matches, checking password")
 			if err := hash.Compare(root.Password, data.Password, root.Salt); err != nil {
-				log.Warnf("Invalid password for root user")
+				log.Warnf("Invalid password for root userData")
 				return nil, dto.ErrInvalidPassword
 			}
 
 			userID := root.Id
 			ctx = context.NewID(ctx, root.Id)
-			log.Infof("Login by root successful, user ID: %s", userID)
+			log.Infof("Login by root successful, userData ID: %s", userID)
 			return repo.genToken(ctx, userID)
 		}
 	}
 
 	// get user info
-	log.Debugf("Getting user info for username %s", data.Username)
-	user, err := repo.User.GetByUserName(ctx, data.Username, "id", "password", "salt", "status")
+	log.Debugf("Getting userData info for username %s", data.Username)
+	userData, err := repo.User.GetByUserName(ctx, data.Username, user.FieldID, user.FieldPassword, user.FieldSalt, user.FieldStatus)
 	if err != nil {
-		log.Errorf("Error getting user info: %v", err)
+		log.Errorf("Error getting userData info: %v", err)
 		return nil, err
 	}
 	switch {
-	case user == nil:
+	case userData == nil:
 		log.Warnf("User not found with username %s", data.Username)
 		return nil, dto.ErrInvalidUsername
-	case user.Status != systemdto.UserStatusActivated:
+	case userData.Status != systemdto.UserStatusActivated:
 		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:
-		log.Debugf("User found with ID %s and status %s", user.Id, user.Status)
+		log.Debugf("User found with ID %s and status %s", userData.Id, userData.Status)
 	}
 
 	// check password
-	log.Debugf("Comparing password for user %s", data.Username)
-	if err := hash.Compare(user.Password, data.Password, user.Salt); err != nil {
-		log.Warnf("Invalid password for user %s", data.Username)
+	log.Debugf("Comparing password for userData %s", data.Username)
+	if err := hash.Compare(userData.Password, data.Password, userData.Salt); err != nil {
+		log.Warnf("Invalid password for userData %s", data.Username)
 		return nil, dto.ErrInvalidPassword
 	}
 
-	userUUID := user.Uuid
-	username := user.Username
+	userUUID := userData.Uuid
+	username := userData.Username
 	ctx = context.NewID(ctx, userUUID)
 
-	// set user cache with role ids
-	log.Debugf("Getting role IDs for user %s", username)
-	roleIDs, err := repo.User.GetRoleIDs(ctx, user.Id)
+	// set userData cache with role ids
+	log.Debugf("Getting role IDs for userData %s", username)
+	roleIDs, err := repo.User.GetRoleIDs(ctx, userData.Id)
 	if err != nil {
 		log.Errorf("Error getting role IDs: %v", err)
-		return nil, kerr.Newf(404, "UNKNOWN", "failed to get user role ids: %v", err)
+		return nil, kerr.Newf(404, "UNKNOWN", "failed to get userData role ids: %v", err)
 	}
 
 	log.Infof("User %s logged in successfully with role ids: %v", username, roleIDs)
 	// generate token
-	log.Debugf("Generating token for user %s", username)
+	log.Debugf("Generating token for userData %s", username)
 	return repo.genToken(ctx, userUUID)
 }
 
@@ -185,12 +186,12 @@ func (repo loginRepo) CurrentMenus(ctx context.Context, in *dto.CurrentMenusRequ
 }
 
 func (repo loginRepo) CurrentUser(ctx context.Context, in *dto.CurrentUserRequest) (*dto.CurrentUserResponse, error) {
-	user, err := repo.User.Current(ctx, in.GetData().GetUserId())
+	current, err := repo.User.Current(ctx, in.GetData().GetUserId())
 	if err != nil {
 		return nil, err
 	}
 	return &dto.CurrentUserResponse{
-		Data: resp.Any(user),
+		Data: resp.Any(current),
 	}, nil
 }
 
@@ -221,13 +222,6 @@ func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.Toke
 	claims, err := repo.Authenticator.Authenticate(ctx, token)
 	if err != nil {
 		return nil, err
-	}
-	if claims.GetExpiration().Before(time.Now()) {
-		if err := repo.Authenticator.DestroyToken(ctx, token); err != nil {
-			log.Errorf("Error destroying token: %v", err)
-			return nil, err
-		}
-		return nil, fmt.Errorf("token expired")
 	}
 	genToken, err := repo.genToken(ctx, claims.GetSubject())
 	if err != nil {
@@ -261,7 +255,6 @@ func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginRespon
 			AccessToken:    token,
 			RefreshToken:   refreshToken,
 			ExpirationTime: claims.GetExpiration().Unix(),
-			//Claims:         fromSecurityClaims(claims),
 		},
 	}, nil
 }

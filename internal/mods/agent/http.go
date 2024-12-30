@@ -43,6 +43,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	if err != nil {
 		panic(err)
 	}
+	tokenizer := securityx.NewTokenizer(authenticator)
 	adapter := casbin.NewAdapter()
 	authorizer, err := securityx.NewAuthorizer(bootstrap, casbin.WithPolicyAdapter(adapter))
 	if err != nil {
@@ -50,7 +51,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	}
 	options := []msecurity.OptionSetting{
 		msecurity.WithAuthorizer(authorizer),
-		msecurity.WithAuthenticator(authenticator),
+		msecurity.WithTokenizer(tokenizer),
 		func(option *msecurity.Option) {
 			option.IsRoot = func(ctx context.Context, claims security.Claims) bool {
 				return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
@@ -71,7 +72,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 				if !ok {
 					return nil, errors.New("no request in context")
 				}
-				c := msecurity.ClaimsFromContext(ctx)
+				c := security.ClaimsFromContext(ctx)
 				if c == nil {
 					return nil, errors.New("no token in context")
 				}
@@ -127,11 +128,7 @@ func DefaultPaths() []string {
 		basis.OperationLoginAPICaptchaImage,
 		basis.OperationLoginAPICaptchaResource,
 		basis.OperationLoginAPICaptchaResources,
-		//basis.OperationLoginAPICurrentMenus,
-		//basis.OperationLoginAPICurrentUser,
 		basis.OperationLoginAPILogin,
-		//basis.OperationLoginAPILogout,
-		//basis.OperationLoginAPIRefresh,
 		basis.OperationLoginAPIRegister,
 	}
 }

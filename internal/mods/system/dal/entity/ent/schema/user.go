@@ -19,7 +19,7 @@ import (
 
 const (
 	UserStatusActivated = 0
-	UserStatusFreezed   = 1
+	UserStatusFrozen    = 1
 )
 
 // User holds the schema definition for the User domain.

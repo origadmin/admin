@@ -25,8 +25,9 @@ var (
 	ProviderSet = wire.NewSet(
 		NewBasisConfig,
 		NewRegistrar,
-		NewAuthenticator,
+		NewTokenizer,
 		NewAuthorizer,
+		NewAuthenticator,
 		wire.Struct(new(InjectorServer), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)
@@ -58,6 +59,14 @@ func init() {
 
 func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, error) {
 	return securityx.NewAuthenticator(bootstrap)
+}
+
+func NewTokenizer(bootstrap *configs.Bootstrap) (security.Tokenizer, error) {
+	authenticator, err := securityx.NewAuthenticator(bootstrap)
+	if err != nil {
+		return nil, err
+	}
+	return securityx.NewTokenizer(authenticator), nil
 }
 
 func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
