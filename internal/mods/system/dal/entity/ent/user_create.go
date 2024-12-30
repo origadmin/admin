@@ -25,29 +25,29 @@ type UserCreate struct {
 }
 
 // SetCreateAuthor sets the "create_author" field.
-func (uc *UserCreate) SetCreateAuthor(s string) *UserCreate {
-	uc.mutation.SetCreateAuthor(s)
+func (uc *UserCreate) SetCreateAuthor(i int64) *UserCreate {
+	uc.mutation.SetCreateAuthor(i)
 	return uc
 }
 
 // SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (uc *UserCreate) SetNillableCreateAuthor(s *string) *UserCreate {
-	if s != nil {
-		uc.SetCreateAuthor(*s)
+func (uc *UserCreate) SetNillableCreateAuthor(i *int64) *UserCreate {
+	if i != nil {
+		uc.SetCreateAuthor(*i)
 	}
 	return uc
 }
 
 // SetUpdateAuthor sets the "update_author" field.
-func (uc *UserCreate) SetUpdateAuthor(s string) *UserCreate {
-	uc.mutation.SetUpdateAuthor(s)
+func (uc *UserCreate) SetUpdateAuthor(i int64) *UserCreate {
+	uc.mutation.SetUpdateAuthor(i)
 	return uc
 }
 
 // SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (uc *UserCreate) SetNillableUpdateAuthor(s *string) *UserCreate {
-	if s != nil {
-		uc.SetUpdateAuthor(*s)
+func (uc *UserCreate) SetNillableUpdateAuthor(i *int64) *UserCreate {
+	if i != nil {
+		uc.SetUpdateAuthor(*i)
 	}
 	return uc
 }
@@ -316,6 +316,14 @@ func (uc *UserCreate) SetManagerID(i int64) *UserCreate {
 	return uc
 }
 
+// SetNillableManagerID sets the "manager_id" field if the given value is not nil.
+func (uc *UserCreate) SetNillableManagerID(i *int64) *UserCreate {
+	if i != nil {
+		uc.SetManagerID(*i)
+	}
+	return uc
+}
+
 // SetManager sets the "manager" field.
 func (uc *UserCreate) SetManager(s string) *UserCreate {
 	uc.mutation.SetManager(s)
@@ -519,6 +527,10 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultSanctionDate()
 		uc.mutation.SetSanctionDate(v)
 	}
+	if _, ok := uc.mutation.ManagerID(); !ok {
+		v := user.DefaultManagerID()
+		uc.mutation.SetManagerID(v)
+	}
 	if _, ok := uc.mutation.Manager(); !ok {
 		v := user.DefaultManager
 		uc.mutation.SetManager(v)
@@ -531,12 +543,6 @@ func (uc *UserCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (uc *UserCreate) check() error {
-	if _, ok := uc.mutation.CreateAuthor(); !ok {
-		return &ValidationError{Name: "create_author", err: errors.New(`ent: missing required field "User.create_author"`)}
-	}
-	if _, ok := uc.mutation.UpdateAuthor(); !ok {
-		return &ValidationError{Name: "update_author", err: errors.New(`ent: missing required field "User.update_author"`)}
-	}
 	if _, ok := uc.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "User.create_time"`)}
 	}
@@ -708,11 +714,11 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := uc.mutation.CreateAuthor(); ok {
-		_spec.SetField(user.FieldCreateAuthor, field.TypeString, value)
+		_spec.SetField(user.FieldCreateAuthor, field.TypeInt64, value)
 		_node.CreateAuthor = value
 	}
 	if value, ok := uc.mutation.UpdateAuthor(); ok {
-		_spec.SetField(user.FieldUpdateAuthor, field.TypeString, value)
+		_spec.SetField(user.FieldUpdateAuthor, field.TypeInt64, value)
 		_node.UpdateAuthor = value
 	}
 	if value, ok := uc.mutation.CreateTime(); ok {

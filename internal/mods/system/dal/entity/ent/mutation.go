@@ -10145,8 +10145,10 @@ type UserMutation struct {
 	op                      Op
 	typ                     string
 	id                      *int64
-	create_author           *string
-	update_author           *string
+	create_author           *int64
+	addcreate_author        *int64
+	update_author           *int64
+	addupdate_author        *int64
 	create_time             *time.Time
 	update_time             *time.Time
 	uuid                    *string
@@ -10293,12 +10295,13 @@ func (m *UserMutation) IDs(ctx context.Context) ([]int64, error) {
 }
 
 // SetCreateAuthor sets the "create_author" field.
-func (m *UserMutation) SetCreateAuthor(s string) {
-	m.create_author = &s
+func (m *UserMutation) SetCreateAuthor(i int64) {
+	m.create_author = &i
+	m.addcreate_author = nil
 }
 
 // CreateAuthor returns the value of the "create_author" field in the mutation.
-func (m *UserMutation) CreateAuthor() (r string, exists bool) {
+func (m *UserMutation) CreateAuthor() (r int64, exists bool) {
 	v := m.create_author
 	if v == nil {
 		return
@@ -10309,7 +10312,7 @@ func (m *UserMutation) CreateAuthor() (r string, exists bool) {
 // OldCreateAuthor returns the old "create_author" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldCreateAuthor(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldCreateAuthor(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreateAuthor is only allowed on UpdateOne operations")
 	}
@@ -10323,18 +10326,52 @@ func (m *UserMutation) OldCreateAuthor(ctx context.Context) (v string, err error
 	return oldValue.CreateAuthor, nil
 }
 
+// AddCreateAuthor adds i to the "create_author" field.
+func (m *UserMutation) AddCreateAuthor(i int64) {
+	if m.addcreate_author != nil {
+		*m.addcreate_author += i
+	} else {
+		m.addcreate_author = &i
+	}
+}
+
+// AddedCreateAuthor returns the value that was added to the "create_author" field in this mutation.
+func (m *UserMutation) AddedCreateAuthor() (r int64, exists bool) {
+	v := m.addcreate_author
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearCreateAuthor clears the value of the "create_author" field.
+func (m *UserMutation) ClearCreateAuthor() {
+	m.create_author = nil
+	m.addcreate_author = nil
+	m.clearedFields[user.FieldCreateAuthor] = struct{}{}
+}
+
+// CreateAuthorCleared returns if the "create_author" field was cleared in this mutation.
+func (m *UserMutation) CreateAuthorCleared() bool {
+	_, ok := m.clearedFields[user.FieldCreateAuthor]
+	return ok
+}
+
 // ResetCreateAuthor resets all changes to the "create_author" field.
 func (m *UserMutation) ResetCreateAuthor() {
 	m.create_author = nil
+	m.addcreate_author = nil
+	delete(m.clearedFields, user.FieldCreateAuthor)
 }
 
 // SetUpdateAuthor sets the "update_author" field.
-func (m *UserMutation) SetUpdateAuthor(s string) {
-	m.update_author = &s
+func (m *UserMutation) SetUpdateAuthor(i int64) {
+	m.update_author = &i
+	m.addupdate_author = nil
 }
 
 // UpdateAuthor returns the value of the "update_author" field in the mutation.
-func (m *UserMutation) UpdateAuthor() (r string, exists bool) {
+func (m *UserMutation) UpdateAuthor() (r int64, exists bool) {
 	v := m.update_author
 	if v == nil {
 		return
@@ -10345,7 +10382,7 @@ func (m *UserMutation) UpdateAuthor() (r string, exists bool) {
 // OldUpdateAuthor returns the old "update_author" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldUpdateAuthor(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldUpdateAuthor(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUpdateAuthor is only allowed on UpdateOne operations")
 	}
@@ -10359,9 +10396,42 @@ func (m *UserMutation) OldUpdateAuthor(ctx context.Context) (v string, err error
 	return oldValue.UpdateAuthor, nil
 }
 
+// AddUpdateAuthor adds i to the "update_author" field.
+func (m *UserMutation) AddUpdateAuthor(i int64) {
+	if m.addupdate_author != nil {
+		*m.addupdate_author += i
+	} else {
+		m.addupdate_author = &i
+	}
+}
+
+// AddedUpdateAuthor returns the value that was added to the "update_author" field in this mutation.
+func (m *UserMutation) AddedUpdateAuthor() (r int64, exists bool) {
+	v := m.addupdate_author
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (m *UserMutation) ClearUpdateAuthor() {
+	m.update_author = nil
+	m.addupdate_author = nil
+	m.clearedFields[user.FieldUpdateAuthor] = struct{}{}
+}
+
+// UpdateAuthorCleared returns if the "update_author" field was cleared in this mutation.
+func (m *UserMutation) UpdateAuthorCleared() bool {
+	_, ok := m.clearedFields[user.FieldUpdateAuthor]
+	return ok
+}
+
 // ResetUpdateAuthor resets all changes to the "update_author" field.
 func (m *UserMutation) ResetUpdateAuthor() {
 	m.update_author = nil
+	m.addupdate_author = nil
+	delete(m.clearedFields, user.FieldUpdateAuthor)
 }
 
 // SetCreateTime sets the "create_time" field.
@@ -11599,14 +11669,14 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 func (m *UserMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case user.FieldCreateAuthor:
-		v, ok := value.(string)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreateAuthor(v)
 		return nil
 	case user.FieldUpdateAuthor:
-		v, ok := value.(string)
+		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -11767,6 +11837,12 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
 	var fields []string
+	if m.addcreate_author != nil {
+		fields = append(fields, user.FieldCreateAuthor)
+	}
+	if m.addupdate_author != nil {
+		fields = append(fields, user.FieldUpdateAuthor)
+	}
 	if m.addstatus != nil {
 		fields = append(fields, user.FieldStatus)
 	}
@@ -11781,6 +11857,10 @@ func (m *UserMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case user.FieldCreateAuthor:
+		return m.AddedCreateAuthor()
+	case user.FieldUpdateAuthor:
+		return m.AddedUpdateAuthor()
 	case user.FieldStatus:
 		return m.AddedStatus()
 	case user.FieldManagerID:
@@ -11794,6 +11874,20 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldCreateAuthor:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreateAuthor(v)
+		return nil
+	case user.FieldUpdateAuthor:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdateAuthor(v)
+		return nil
 	case user.FieldStatus:
 		v, ok := value.(int8)
 		if !ok {
@@ -11815,7 +11909,14 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(user.FieldCreateAuthor) {
+		fields = append(fields, user.FieldCreateAuthor)
+	}
+	if m.FieldCleared(user.FieldUpdateAuthor) {
+		fields = append(fields, user.FieldUpdateAuthor)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -11828,6 +11929,14 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
+	switch name {
+	case user.FieldCreateAuthor:
+		m.ClearCreateAuthor()
+		return nil
+	case user.FieldUpdateAuthor:
+		m.ClearUpdateAuthor()
+		return nil
+	}
 	return fmt.Errorf("unknown User nullable field %s", name)
 }
 

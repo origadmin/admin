@@ -16,15 +16,15 @@ import (
 type User struct {
 	config `json:"-"`
 	// ID of the ent.
-	// primary_key:comment
+	// field:primary_key:comment
 	ID int64 `json:"id,omitempty"`
-	// create_author:comment
-	CreateAuthor string `json:"create_author,omitempty"`
-	// update_author:comment
-	UpdateAuthor string `json:"update_author,omitempty"`
-	// create_time:comment
+	// create_author:field:comment
+	CreateAuthor int64 `json:"create_author,omitempty"`
+	// update_author:field:comment
+	UpdateAuthor int64 `json:"update_author,omitempty"`
+	// create_time:field:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:comment
+	// update_time:field:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// user:field:uuid
 	UUID string `json:"uuid,omitempty"`
@@ -126,9 +126,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldStatus, user.FieldManagerID:
+		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus, user.FieldManagerID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldLastLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -154,16 +154,16 @@ func (u *User) assignValues(columns []string, values []any) error {
 			}
 			u.ID = int64(value.Int64)
 		case user.FieldCreateAuthor:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_author", values[i])
 			} else if value.Valid {
-				u.CreateAuthor = value.String
+				u.CreateAuthor = value.Int64
 			}
 		case user.FieldUpdateAuthor:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field update_author", values[i])
 			} else if value.Valid {
-				u.UpdateAuthor = value.String
+				u.UpdateAuthor = value.Int64
 			}
 		case user.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -348,10 +348,10 @@ func (u *User) String() string {
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
 	builder.WriteString("create_author=")
-	builder.WriteString(u.CreateAuthor)
+	builder.WriteString(fmt.Sprintf("%v", u.CreateAuthor))
 	builder.WriteString(", ")
 	builder.WriteString("update_author=")
-	builder.WriteString(u.UpdateAuthor)
+	builder.WriteString(fmt.Sprintf("%v", u.UpdateAuthor))
 	builder.WriteString(", ")
 	builder.WriteString("create_time=")
 	builder.WriteString(u.CreateTime.Format(time.ANSIC))

@@ -17,7 +17,7 @@ import (
 type MenuPermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// primary_key:comment
+	// field:primary_key:comment
 	ID int64 `json:"id,omitempty"`
 	// menu_permission:field:menu_id
 	MenuID int64 `json:"menu_id,omitempty"`

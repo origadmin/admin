@@ -17,7 +17,7 @@ import (
 type DepartmentRole struct {
 	config `json:"-"`
 	// ID of the ent.
-	// primary_key:comment
+	// field:primary_key:comment
 	ID int64 `json:"id,omitempty"`
 	// department_role:field:department_id
 	DepartmentID int64 `json:"department_id,omitempty"`

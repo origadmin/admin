@@ -145,9 +145,9 @@ func ValidColumn(column string) bool {
 
 var (
 	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
-	DefaultCreateAuthor string
+	DefaultCreateAuthor int64
 	// DefaultUpdateAuthor holds the default value on creation for the "update_author" field.
-	DefaultUpdateAuthor string
+	DefaultUpdateAuthor int64
 	// DefaultCreateTime holds the default value on creation for the "create_time" field.
 	DefaultCreateTime func() time.Time
 	// DefaultUpdateTime holds the default value on creation for the "update_time" field.
@@ -212,6 +212,8 @@ var (
 	DefaultLastLoginTime func() time.Time
 	// DefaultSanctionDate holds the default value on creation for the "sanction_date" field.
 	DefaultSanctionDate func() time.Time
+	// DefaultManagerID holds the default value on creation for the "manager_id" field.
+	DefaultManagerID func() int64
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	ManagerIDValidator func(int64) error
 	// DefaultManager holds the default value on creation for the "manager" field.

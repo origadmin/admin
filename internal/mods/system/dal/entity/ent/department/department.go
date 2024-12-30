@@ -152,6 +152,8 @@ var (
 	AncestorsValidator func(string) error
 	// DefaultLevel holds the default value on creation for the "level" field.
 	DefaultLevel int
+	// DefaultParentID holds the default value on creation for the "parent_id" field.
+	DefaultParentID func() int64
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	ParentIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.

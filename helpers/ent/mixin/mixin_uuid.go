@@ -7,6 +7,7 @@ package mixin
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 
@@ -16,10 +17,53 @@ import (
 // UUID schema to include control and time fields.
 type UUID struct {
 	mixin.Schema
+	Key                  string
+	MaxLen               int
+	CommentKey           string
+	Optional             bool
+	Positive             bool
+	Unique               bool
+	Immutable            bool
+	UseDefault           bool
+	DefaultFunc          func() string
+	UseCustomIDGenerator bool
 }
 
-func (obj UUID) Comment(key string) Ider {
-	return CommentedUUID{
+func (obj UUID) ToField() ent.Field {
+	builder := field.String(obj.Key)
+	if obj.UseDefault {
+		builder = builder.Default("")
+	}
+	if obj.Unique {
+		builder = builder.Unique()
+	}
+	if obj.Immutable {
+		builder = builder.Immutable()
+	}
+	if obj.Optional {
+		builder = builder.Optional()
+	}
+	if obj.CommentKey != "" {
+		builder = builder.Comment(i18n.Text(obj.CommentKey))
+	}
+	if obj.DefaultFunc != nil {
+		builder = builder.DefaultFunc(obj.DefaultFunc)
+		// string will not be incremented by the database.
+	}
+	if obj.UseCustomIDGenerator {
+		builder = builder.Annotations(entsql.Annotation{
+			Incremental: &obj.UseCustomIDGenerator,
+		})
+	}
+	if obj.MaxLen > 0 {
+		builder = builder.MaxLen(obj.MaxLen)
+	} else {
+		builder = builder.MaxLen(36)
+	}
+	return builder
+}
+func (obj UUID) Comment(key string) IDGenerator {
+	return UUID{
 		CommentKey: key,
 	}
 }
@@ -32,57 +76,35 @@ func (obj UUID) Fields() []ent.Field {
 }
 
 func (obj UUID) FK(name string) ent.Field {
-	return field.String(name).
-		Comment(i18n.Text("foreign_key:comment")).
-		MaxLen(36)
+	obj.Key = name
+	if obj.CommentKey == "" {
+		obj.CommentKey = "field:foreign_key:comment"
+	}
+	return obj.ToField()
 }
 
-func (UUID) PK(name string) ent.Field {
-	return field.String(name).
-		Comment(i18n.Text("primary_key:comment")).
-		MaxLen(36).
-		Unique().
-		Immutable()
+func (obj UUID) PK(name string) ent.Field {
+	obj.Key = name
+	obj.Unique = true
+	obj.Immutable = true
+	if obj.CommentKey == "" {
+		obj.CommentKey = "field:primary_key:comment"
+	}
+	return obj.ToField()
 }
 
-func (UUID) OP(name string) ent.Field {
-	return field.String(name).
-		Comment(i18n.Text("optional_key:comment")).
-		MaxLen(36).
-		Optional()
+func (obj UUID) OP(name string) ent.Field {
+	obj.Key = name
+	obj.Optional = true
+	if obj.CommentKey == "" {
+		obj.CommentKey = "field:optional_key:comment"
+	}
+	return obj.ToField()
 }
 
-// Indexes of the mixin.
-func (UUID) Indexes() []ent.Index {
-	return []ent.Index{}
-}
-
-type CommentedUUID struct {
-	CommentKey string
-	mixin.Schema
-}
-
-func (c CommentedUUID) Comment(key string) Ider {
-	return c
-}
-
-func (c CommentedUUID) OP(name string) ent.Field {
-	return field.String(name).
-		Comment(i18n.Text(c.CommentKey)).
-		MaxLen(36).
-		Optional()
-}
-
-func (c CommentedUUID) FK(name string) ent.Field {
-	return field.String(name).
-		Comment(i18n.Text(c.CommentKey)).
-		MaxLen(36)
-}
-
-func (c CommentedUUID) PK(name string) ent.Field {
-	return field.String(name).
-		Comment(i18n.Text(c.CommentKey)).
-		MaxLen(36).
-		Unique().
-		Immutable()
+func (obj UUID) UserDefaultFunc(f func() string) IDGenerator {
+	return UUID{
+		DefaultFunc:          f,
+		UseCustomIDGenerator: true,
+	}
 }

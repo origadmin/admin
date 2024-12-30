@@ -77,6 +77,8 @@ var (
 	NameValidator func(string) error
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
+	// DefaultDepartmentID holds the default value on creation for the "department_id" field.
+	DefaultDepartmentID func() int64
 	// DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	DepartmentIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.

@@ -34,30 +34,56 @@ func (uu *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 }
 
 // SetCreateAuthor sets the "create_author" field.
-func (uu *UserUpdate) SetCreateAuthor(s string) *UserUpdate {
-	uu.mutation.SetCreateAuthor(s)
+func (uu *UserUpdate) SetCreateAuthor(i int64) *UserUpdate {
+	uu.mutation.ResetCreateAuthor()
+	uu.mutation.SetCreateAuthor(i)
 	return uu
 }
 
 // SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableCreateAuthor(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetCreateAuthor(*s)
+func (uu *UserUpdate) SetNillableCreateAuthor(i *int64) *UserUpdate {
+	if i != nil {
+		uu.SetCreateAuthor(*i)
 	}
+	return uu
+}
+
+// AddCreateAuthor adds i to the "create_author" field.
+func (uu *UserUpdate) AddCreateAuthor(i int64) *UserUpdate {
+	uu.mutation.AddCreateAuthor(i)
+	return uu
+}
+
+// ClearCreateAuthor clears the value of the "create_author" field.
+func (uu *UserUpdate) ClearCreateAuthor() *UserUpdate {
+	uu.mutation.ClearCreateAuthor()
 	return uu
 }
 
 // SetUpdateAuthor sets the "update_author" field.
-func (uu *UserUpdate) SetUpdateAuthor(s string) *UserUpdate {
-	uu.mutation.SetUpdateAuthor(s)
+func (uu *UserUpdate) SetUpdateAuthor(i int64) *UserUpdate {
+	uu.mutation.ResetUpdateAuthor()
+	uu.mutation.SetUpdateAuthor(i)
 	return uu
 }
 
 // SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableUpdateAuthor(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetUpdateAuthor(*s)
+func (uu *UserUpdate) SetNillableUpdateAuthor(i *int64) *UserUpdate {
+	if i != nil {
+		uu.SetUpdateAuthor(*i)
 	}
+	return uu
+}
+
+// AddUpdateAuthor adds i to the "update_author" field.
+func (uu *UserUpdate) AddUpdateAuthor(i int64) *UserUpdate {
+	uu.mutation.AddUpdateAuthor(i)
+	return uu
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (uu *UserUpdate) ClearUpdateAuthor() *UserUpdate {
+	uu.mutation.ClearUpdateAuthor()
 	return uu
 }
 
@@ -626,10 +652,22 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := uu.mutation.CreateAuthor(); ok {
-		_spec.SetField(user.FieldCreateAuthor, field.TypeString, value)
+		_spec.SetField(user.FieldCreateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := uu.mutation.AddedCreateAuthor(); ok {
+		_spec.AddField(user.FieldCreateAuthor, field.TypeInt64, value)
+	}
+	if uu.mutation.CreateAuthorCleared() {
+		_spec.ClearField(user.FieldCreateAuthor, field.TypeInt64)
 	}
 	if value, ok := uu.mutation.UpdateAuthor(); ok {
-		_spec.SetField(user.FieldUpdateAuthor, field.TypeString, value)
+		_spec.SetField(user.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := uu.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(user.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if uu.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(user.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := uu.mutation.UpdateTime(); ok {
 		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)
@@ -942,30 +980,56 @@ type UserUpdateOne struct {
 }
 
 // SetCreateAuthor sets the "create_author" field.
-func (uuo *UserUpdateOne) SetCreateAuthor(s string) *UserUpdateOne {
-	uuo.mutation.SetCreateAuthor(s)
+func (uuo *UserUpdateOne) SetCreateAuthor(i int64) *UserUpdateOne {
+	uuo.mutation.ResetCreateAuthor()
+	uuo.mutation.SetCreateAuthor(i)
 	return uuo
 }
 
 // SetNillableCreateAuthor sets the "create_author" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableCreateAuthor(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetCreateAuthor(*s)
+func (uuo *UserUpdateOne) SetNillableCreateAuthor(i *int64) *UserUpdateOne {
+	if i != nil {
+		uuo.SetCreateAuthor(*i)
 	}
+	return uuo
+}
+
+// AddCreateAuthor adds i to the "create_author" field.
+func (uuo *UserUpdateOne) AddCreateAuthor(i int64) *UserUpdateOne {
+	uuo.mutation.AddCreateAuthor(i)
+	return uuo
+}
+
+// ClearCreateAuthor clears the value of the "create_author" field.
+func (uuo *UserUpdateOne) ClearCreateAuthor() *UserUpdateOne {
+	uuo.mutation.ClearCreateAuthor()
 	return uuo
 }
 
 // SetUpdateAuthor sets the "update_author" field.
-func (uuo *UserUpdateOne) SetUpdateAuthor(s string) *UserUpdateOne {
-	uuo.mutation.SetUpdateAuthor(s)
+func (uuo *UserUpdateOne) SetUpdateAuthor(i int64) *UserUpdateOne {
+	uuo.mutation.ResetUpdateAuthor()
+	uuo.mutation.SetUpdateAuthor(i)
 	return uuo
 }
 
 // SetNillableUpdateAuthor sets the "update_author" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableUpdateAuthor(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetUpdateAuthor(*s)
+func (uuo *UserUpdateOne) SetNillableUpdateAuthor(i *int64) *UserUpdateOne {
+	if i != nil {
+		uuo.SetUpdateAuthor(*i)
 	}
+	return uuo
+}
+
+// AddUpdateAuthor adds i to the "update_author" field.
+func (uuo *UserUpdateOne) AddUpdateAuthor(i int64) *UserUpdateOne {
+	uuo.mutation.AddUpdateAuthor(i)
+	return uuo
+}
+
+// ClearUpdateAuthor clears the value of the "update_author" field.
+func (uuo *UserUpdateOne) ClearUpdateAuthor() *UserUpdateOne {
+	uuo.mutation.ClearUpdateAuthor()
 	return uuo
 }
 
@@ -1564,10 +1628,22 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		}
 	}
 	if value, ok := uuo.mutation.CreateAuthor(); ok {
-		_spec.SetField(user.FieldCreateAuthor, field.TypeString, value)
+		_spec.SetField(user.FieldCreateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := uuo.mutation.AddedCreateAuthor(); ok {
+		_spec.AddField(user.FieldCreateAuthor, field.TypeInt64, value)
+	}
+	if uuo.mutation.CreateAuthorCleared() {
+		_spec.ClearField(user.FieldCreateAuthor, field.TypeInt64)
 	}
 	if value, ok := uuo.mutation.UpdateAuthor(); ok {
-		_spec.SetField(user.FieldUpdateAuthor, field.TypeString, value)
+		_spec.SetField(user.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if value, ok := uuo.mutation.AddedUpdateAuthor(); ok {
+		_spec.AddField(user.FieldUpdateAuthor, field.TypeInt64, value)
+	}
+	if uuo.mutation.UpdateAuthorCleared() {
+		_spec.ClearField(user.FieldUpdateAuthor, field.TypeInt64)
 	}
 	if value, ok := uuo.mutation.UpdateTime(); ok {
 		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)

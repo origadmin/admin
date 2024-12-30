@@ -17,11 +17,11 @@ import (
 type UserDepartment struct {
 	config `json:"-"`
 	// ID of the ent.
-	// primary_key:comment
+	// field:primary_key:comment
 	ID int64 `json:"id,omitempty"`
-	// foreign_key:comment
+	// field:foreign_key:comment
 	UserID int64 `json:"user_id,omitempty"`
-	// foreign_key:comment
+	// field:foreign_key:comment
 	DepartmentID int64 `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserDepartmentQuery when eager-loading is set.

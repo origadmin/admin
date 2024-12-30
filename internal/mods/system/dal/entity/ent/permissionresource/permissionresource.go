@@ -56,8 +56,12 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultPermissionID holds the default value on creation for the "permission_id" field.
+	DefaultPermissionID func() int64
 	// PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	PermissionIDValidator func(int64) error
+	// DefaultResourceID holds the default value on creation for the "resource_id" field.
+	DefaultResourceID func() int64
 	// ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
 	ResourceIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.

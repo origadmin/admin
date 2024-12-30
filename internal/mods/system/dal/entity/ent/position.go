@@ -17,11 +17,11 @@ import (
 type Position struct {
 	config `json:"-"`
 	// ID of the ent.
-	// primary_key:comment
+	// field:primary_key:comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:comment
+	// create_time:field:comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:comment
+	// update_time:field:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// position:field:name
 	Name string `json:"name,omitempty"`

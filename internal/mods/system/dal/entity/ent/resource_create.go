@@ -211,6 +211,10 @@ func (rc *ResourceCreate) defaults() {
 		v := resource.DefaultPath
 		rc.mutation.SetPath(v)
 	}
+	if _, ok := rc.mutation.MenuID(); !ok {
+		v := resource.DefaultMenuID()
+		rc.mutation.SetMenuID(v)
+	}
 	if _, ok := rc.mutation.ID(); !ok {
 		v := resource.DefaultID()
 		rc.mutation.SetID(v)

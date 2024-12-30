@@ -333,6 +333,10 @@ func (dc *DepartmentCreate) defaults() {
 		v := department.DefaultLevel
 		dc.mutation.SetLevel(v)
 	}
+	if _, ok := dc.mutation.ParentID(); !ok {
+		v := department.DefaultParentID()
+		dc.mutation.SetParentID(v)
+	}
 	if _, ok := dc.mutation.ID(); !ok {
 		v := department.DefaultID()
 		dc.mutation.SetID(v)

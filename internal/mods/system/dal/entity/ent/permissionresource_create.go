@@ -27,9 +27,25 @@ func (prc *PermissionResourceCreate) SetPermissionID(i int64) *PermissionResourc
 	return prc
 }
 
+// SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
+func (prc *PermissionResourceCreate) SetNillablePermissionID(i *int64) *PermissionResourceCreate {
+	if i != nil {
+		prc.SetPermissionID(*i)
+	}
+	return prc
+}
+
 // SetResourceID sets the "resource_id" field.
 func (prc *PermissionResourceCreate) SetResourceID(i int64) *PermissionResourceCreate {
 	prc.mutation.SetResourceID(i)
+	return prc
+}
+
+// SetNillableResourceID sets the "resource_id" field if the given value is not nil.
+func (prc *PermissionResourceCreate) SetNillableResourceID(i *int64) *PermissionResourceCreate {
+	if i != nil {
+		prc.SetResourceID(*i)
+	}
 	return prc
 }
 
@@ -92,6 +108,14 @@ func (prc *PermissionResourceCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (prc *PermissionResourceCreate) defaults() {
+	if _, ok := prc.mutation.PermissionID(); !ok {
+		v := permissionresource.DefaultPermissionID()
+		prc.mutation.SetPermissionID(v)
+	}
+	if _, ok := prc.mutation.ResourceID(); !ok {
+		v := permissionresource.DefaultResourceID()
+		prc.mutation.SetResourceID(v)
+	}
 	if _, ok := prc.mutation.ID(); !ok {
 		v := permissionresource.DefaultID()
 		prc.mutation.SetID(v)

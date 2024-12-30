@@ -68,6 +68,14 @@ func (pc *PositionCreate) SetDepartmentID(i int64) *PositionCreate {
 	return pc
 }
 
+// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
+func (pc *PositionCreate) SetNillableDepartmentID(i *int64) *PositionCreate {
+	if i != nil {
+		pc.SetDepartmentID(*i)
+	}
+	return pc
+}
+
 // SetID sets the "id" field.
 func (pc *PositionCreate) SetID(i int64) *PositionCreate {
 	pc.mutation.SetID(i)
@@ -144,6 +152,10 @@ func (pc *PositionCreate) defaults() {
 	if _, ok := pc.mutation.UpdateTime(); !ok {
 		v := position.DefaultUpdateTime()
 		pc.mutation.SetUpdateTime(v)
+	}
+	if _, ok := pc.mutation.DepartmentID(); !ok {
+		v := position.DefaultDepartmentID()
+		pc.mutation.SetDepartmentID(v)
 	}
 	if _, ok := pc.mutation.ID(); !ok {
 		v := position.DefaultID()

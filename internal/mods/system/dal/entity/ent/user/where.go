@@ -56,12 +56,12 @@ func IDLTE(id int64) predicate.User {
 }
 
 // CreateAuthor applies equality check predicate on the "create_author" field. It's identical to CreateAuthorEQ.
-func CreateAuthor(v string) predicate.User {
+func CreateAuthor(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreateAuthor, v))
 }
 
 // UpdateAuthor applies equality check predicate on the "update_author" field. It's identical to UpdateAuthorEQ.
-func UpdateAuthor(v string) predicate.User {
+func UpdateAuthor(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldUpdateAuthor, v))
 }
 
@@ -171,133 +171,103 @@ func Manager(v string) predicate.User {
 }
 
 // CreateAuthorEQ applies the EQ predicate on the "create_author" field.
-func CreateAuthorEQ(v string) predicate.User {
+func CreateAuthorEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreateAuthor, v))
 }
 
 // CreateAuthorNEQ applies the NEQ predicate on the "create_author" field.
-func CreateAuthorNEQ(v string) predicate.User {
+func CreateAuthorNEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldCreateAuthor, v))
 }
 
 // CreateAuthorIn applies the In predicate on the "create_author" field.
-func CreateAuthorIn(vs ...string) predicate.User {
+func CreateAuthorIn(vs ...int64) predicate.User {
 	return predicate.User(sql.FieldIn(FieldCreateAuthor, vs...))
 }
 
 // CreateAuthorNotIn applies the NotIn predicate on the "create_author" field.
-func CreateAuthorNotIn(vs ...string) predicate.User {
+func CreateAuthorNotIn(vs ...int64) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldCreateAuthor, vs...))
 }
 
 // CreateAuthorGT applies the GT predicate on the "create_author" field.
-func CreateAuthorGT(v string) predicate.User {
+func CreateAuthorGT(v int64) predicate.User {
 	return predicate.User(sql.FieldGT(FieldCreateAuthor, v))
 }
 
 // CreateAuthorGTE applies the GTE predicate on the "create_author" field.
-func CreateAuthorGTE(v string) predicate.User {
+func CreateAuthorGTE(v int64) predicate.User {
 	return predicate.User(sql.FieldGTE(FieldCreateAuthor, v))
 }
 
 // CreateAuthorLT applies the LT predicate on the "create_author" field.
-func CreateAuthorLT(v string) predicate.User {
+func CreateAuthorLT(v int64) predicate.User {
 	return predicate.User(sql.FieldLT(FieldCreateAuthor, v))
 }
 
 // CreateAuthorLTE applies the LTE predicate on the "create_author" field.
-func CreateAuthorLTE(v string) predicate.User {
+func CreateAuthorLTE(v int64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldCreateAuthor, v))
 }
 
-// CreateAuthorContains applies the Contains predicate on the "create_author" field.
-func CreateAuthorContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldCreateAuthor, v))
+// CreateAuthorIsNil applies the IsNil predicate on the "create_author" field.
+func CreateAuthorIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldCreateAuthor))
 }
 
-// CreateAuthorHasPrefix applies the HasPrefix predicate on the "create_author" field.
-func CreateAuthorHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldCreateAuthor, v))
-}
-
-// CreateAuthorHasSuffix applies the HasSuffix predicate on the "create_author" field.
-func CreateAuthorHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldCreateAuthor, v))
-}
-
-// CreateAuthorEqualFold applies the EqualFold predicate on the "create_author" field.
-func CreateAuthorEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldCreateAuthor, v))
-}
-
-// CreateAuthorContainsFold applies the ContainsFold predicate on the "create_author" field.
-func CreateAuthorContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldCreateAuthor, v))
+// CreateAuthorNotNil applies the NotNil predicate on the "create_author" field.
+func CreateAuthorNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldCreateAuthor))
 }
 
 // UpdateAuthorEQ applies the EQ predicate on the "update_author" field.
-func UpdateAuthorEQ(v string) predicate.User {
+func UpdateAuthorEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldUpdateAuthor, v))
 }
 
 // UpdateAuthorNEQ applies the NEQ predicate on the "update_author" field.
-func UpdateAuthorNEQ(v string) predicate.User {
+func UpdateAuthorNEQ(v int64) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldUpdateAuthor, v))
 }
 
 // UpdateAuthorIn applies the In predicate on the "update_author" field.
-func UpdateAuthorIn(vs ...string) predicate.User {
+func UpdateAuthorIn(vs ...int64) predicate.User {
 	return predicate.User(sql.FieldIn(FieldUpdateAuthor, vs...))
 }
 
 // UpdateAuthorNotIn applies the NotIn predicate on the "update_author" field.
-func UpdateAuthorNotIn(vs ...string) predicate.User {
+func UpdateAuthorNotIn(vs ...int64) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldUpdateAuthor, vs...))
 }
 
 // UpdateAuthorGT applies the GT predicate on the "update_author" field.
-func UpdateAuthorGT(v string) predicate.User {
+func UpdateAuthorGT(v int64) predicate.User {
 	return predicate.User(sql.FieldGT(FieldUpdateAuthor, v))
 }
 
 // UpdateAuthorGTE applies the GTE predicate on the "update_author" field.
-func UpdateAuthorGTE(v string) predicate.User {
+func UpdateAuthorGTE(v int64) predicate.User {
 	return predicate.User(sql.FieldGTE(FieldUpdateAuthor, v))
 }
 
 // UpdateAuthorLT applies the LT predicate on the "update_author" field.
-func UpdateAuthorLT(v string) predicate.User {
+func UpdateAuthorLT(v int64) predicate.User {
 	return predicate.User(sql.FieldLT(FieldUpdateAuthor, v))
 }
 
 // UpdateAuthorLTE applies the LTE predicate on the "update_author" field.
-func UpdateAuthorLTE(v string) predicate.User {
+func UpdateAuthorLTE(v int64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldUpdateAuthor, v))
 }
 
-// UpdateAuthorContains applies the Contains predicate on the "update_author" field.
-func UpdateAuthorContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldUpdateAuthor, v))
+// UpdateAuthorIsNil applies the IsNil predicate on the "update_author" field.
+func UpdateAuthorIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldUpdateAuthor))
 }
 
-// UpdateAuthorHasPrefix applies the HasPrefix predicate on the "update_author" field.
-func UpdateAuthorHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorHasSuffix applies the HasSuffix predicate on the "update_author" field.
-func UpdateAuthorHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorEqualFold applies the EqualFold predicate on the "update_author" field.
-func UpdateAuthorEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldUpdateAuthor, v))
-}
-
-// UpdateAuthorContainsFold applies the ContainsFold predicate on the "update_author" field.
-func UpdateAuthorContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldUpdateAuthor, v))
+// UpdateAuthorNotNil applies the NotNil predicate on the "update_author" field.
+func UpdateAuthorNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldUpdateAuthor))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.

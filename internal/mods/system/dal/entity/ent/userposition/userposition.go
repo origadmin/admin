@@ -67,8 +67,12 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultUserID holds the default value on creation for the "user_id" field.
+	DefaultUserID func() int64
 	// UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
 	UserIDValidator func(int64) error
+	// DefaultPositionID holds the default value on creation for the "position_id" field.
+	DefaultPositionID func() int64
 	// PositionIDValidator is a validator for the "position_id" field. It is called by the builders before save.
 	PositionIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.

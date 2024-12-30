@@ -410,7 +410,7 @@ func (uq *UserQuery) WithUserDepartments(opts ...func(*UserDepartmentQuery)) *Us
 // Example:
 //
 //	var v []struct {
-//		CreateAuthor string `json:"create_author,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -433,7 +433,7 @@ func (uq *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 // Example:
 //
 //	var v []struct {
-//		CreateAuthor string `json:"create_author,omitempty"`
+//		CreateAuthor int64 `json:"create_author,omitempty"`
 //	}
 //
 //	client.User.Query().
@@ -848,8 +848,8 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 // Example:
 //
 //	var v []struct {
-//	  CreateAuthor string `json:"create_author,omitempty"`
-//	  UpdateAuthor string `json:"update_author,omitempty"`
+//	  CreateAuthor int64 `json:"create_author,omitempty"`
+//	  UpdateAuthor int64 `json:"update_author,omitempty"`
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  UUID string `json:"uuid,omitempty"`

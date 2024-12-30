@@ -16,8 +16,8 @@ import (
 	"origadmin/application/admin/helpers/i18n"
 )
 
-type Ider interface {
-	Comment(key string) Ider
+type IDGenerator interface {
+	Comment(key string) IDGenerator
 	OP(name string) ent.Field
 	FK(name string) ent.Field
 	PK(name string) ent.Field
@@ -30,13 +30,19 @@ type Audit struct {
 
 // Fields of the mixin.
 func (Audit) Fields() []ent.Field {
+	auditCreate := _id
+	auditCreate.Key = "create_author"
+	auditCreate.CommentKey = i18n.Text("create_author:field:comment")
+	auditCreate.UseDefault = true
+	auditCreate.Optional = true
+	auditUpdate := _id
+	auditUpdate.Key = "update_author"
+	auditUpdate.CommentKey = i18n.Text("update_author:field:comment")
+	auditUpdate.UseDefault = true
+	auditUpdate.Optional = true
 	return []ent.Field{
-		field.String("create_author").
-			Comment(i18n.Text("create_author:comment")).
-			Default(""),
-		field.String("update_author").
-			Comment(i18n.Text("update_author:comment")).
-			Default(""),
+		auditCreate.ToField(),
+		auditUpdate.ToField(),
 	}
 }
 
@@ -55,13 +61,15 @@ type ManagerSchema struct {
 
 // Fields of the Model.
 func (ManagerSchema) Fields() []ent.Field {
+	manager := _id
+	manager.Key = "manager_id"
+	manager.CommentKey = i18n.Text("manager_id:field:comment")
+	manager.Optional = true
+	manager.UseDefault = true
 	return []ent.Field{
-		field.String("manager_id").
-			Comment(i18n.Text("manager_id:comment")).
-			MaxLen(36).
-			Optional(),
+		manager.ToField(),
 		field.String("manager_name").
-			Comment(i18n.Text("manager_name:comment")).
+			Comment(i18n.Text("manager_name:field:comment")).
 			Default(""),
 	}
 }
@@ -103,7 +111,7 @@ type CreateSchema struct {
 func (CreateSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("create_time").
-			Comment(i18n.Text("create_time:comment")).
+			Comment(i18n.Text("create_time:field:comment")).
 			Default(time.Now).
 			Immutable(),
 	}
@@ -125,7 +133,7 @@ type UpdateSchema struct {
 func (UpdateSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("update_time").
-			Comment(i18n.Text("update_time:comment")).
+			Comment(i18n.Text("update_time:field:comment")).
 			Default(time.Now).
 			UpdateDefault(time.Now),
 	}
@@ -147,7 +155,7 @@ type DeleteSchema struct {
 func (DeleteSchema) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("delete_time").
-			Comment(i18n.Text("delete_time:comment")).
+			Comment(i18n.Text("delete_time:field:comment")).
 			Optional().
 			Nillable(),
 	}

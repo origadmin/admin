@@ -818,13 +818,13 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case user.FieldCreateAuthor:
-			// check string with sql.NullString if it is empty
-			if input.CreateAuthor != "" {
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
 				m.SetCreateAuthor(input.CreateAuthor)
 			}
 		case user.FieldUpdateAuthor:
-			// check string with sql.NullString if it is empty
-			if input.UpdateAuthor != "" {
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
 				m.SetUpdateAuthor(input.UpdateAuthor)
 			}
 		case user.FieldCreateTime:

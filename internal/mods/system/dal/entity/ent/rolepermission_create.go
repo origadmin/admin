@@ -27,9 +27,25 @@ func (rpc *RolePermissionCreate) SetRoleID(i int64) *RolePermissionCreate {
 	return rpc
 }
 
+// SetNillableRoleID sets the "role_id" field if the given value is not nil.
+func (rpc *RolePermissionCreate) SetNillableRoleID(i *int64) *RolePermissionCreate {
+	if i != nil {
+		rpc.SetRoleID(*i)
+	}
+	return rpc
+}
+
 // SetPermissionID sets the "permission_id" field.
 func (rpc *RolePermissionCreate) SetPermissionID(i int64) *RolePermissionCreate {
 	rpc.mutation.SetPermissionID(i)
+	return rpc
+}
+
+// SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
+func (rpc *RolePermissionCreate) SetNillablePermissionID(i *int64) *RolePermissionCreate {
+	if i != nil {
+		rpc.SetPermissionID(*i)
+	}
 	return rpc
 }
 
@@ -92,6 +108,14 @@ func (rpc *RolePermissionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (rpc *RolePermissionCreate) defaults() {
+	if _, ok := rpc.mutation.RoleID(); !ok {
+		v := rolepermission.DefaultRoleID()
+		rpc.mutation.SetRoleID(v)
+	}
+	if _, ok := rpc.mutation.PermissionID(); !ok {
+		v := rolepermission.DefaultPermissionID()
+		rpc.mutation.SetPermissionID(v)
+	}
 	if _, ok := rpc.mutation.ID(); !ok {
 		v := rolepermission.DefaultID()
 		rpc.mutation.SetID(v)

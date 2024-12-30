@@ -19,11 +19,11 @@ import (
 var ZeroTime = time.Time{}
 var _id = ID{}
 
-func Comment(key string) Ider {
+func Comment(key string) IDGenerator {
 	return _id.Comment(key)
 }
 
-func I18nComment(key string) Ider {
+func I18nComment(key string) IDGenerator {
 	return _id.Comment(i18n.Text(key))
 }
 
@@ -90,7 +90,7 @@ func FieldUUIDPK(name string, comment ...string) ent.Field {
 		return UUID{}.PK(name)
 	}
 	// Create an optional string field with the given name and maximum length.
-	return CommentedUUID{CommentKey: comment[0]}.PK(name)
+	return UUID{}.Comment(comment[0]).PK(name)
 }
 
 func FieldUUIDFK(name string, comment ...string) ent.Field {
@@ -98,7 +98,7 @@ func FieldUUIDFK(name string, comment ...string) ent.Field {
 		return UUID{}.FK(name)
 	}
 	// Create an optional string field with the given name and maximum length.
-	return CommentedUUID{CommentKey: comment[0]}.FK(name)
+	return UUID{}.Comment(comment[0]).FK(name)
 }
 
 func FieldUUIDOP(name string, comment ...string) ent.Field {
@@ -106,7 +106,7 @@ func FieldUUIDOP(name string, comment ...string) ent.Field {
 		return UUID{}.OP(name)
 	}
 	// Create an optional string field with the given name and maximum length.
-	return CommentedUUID{CommentKey: comment[0]}.OP(name)
+	return UUID{}.Comment(comment[0]).OP(name)
 }
 
 // FieldTime returns a time field with a default value of ZeroTime and a custom schema type for MySQL.

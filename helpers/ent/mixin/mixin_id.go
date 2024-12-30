@@ -15,10 +15,49 @@ import (
 	"origadmin/application/admin/helpers/id"
 )
 
-var IncrementalEnabled = true
-
 type ID struct {
 	mixin.Schema
+	Key                  string
+	CommentKey           string
+	Optional             bool
+	Positive             bool
+	Unique               bool
+	Immutable            bool
+	UseDefault           bool
+	DefaultFunc          func() int64
+	UseCustomIDGenerator bool
+}
+
+func (obj ID) ToField() ent.Field {
+	builder := field.Int64(obj.Key)
+	if obj.UseDefault {
+		builder = builder.Default(0)
+	}
+	if obj.Positive {
+		builder = builder.Positive()
+	}
+	if obj.Unique {
+		builder = builder.Unique()
+	}
+	if obj.Immutable {
+		builder = builder.Immutable()
+	}
+	if obj.Optional {
+		builder = builder.Optional()
+	}
+	if obj.CommentKey != "" {
+		builder = builder.Comment(i18n.Text(obj.CommentKey))
+	}
+	if obj.DefaultFunc != nil {
+		builder = builder.DefaultFunc(obj.DefaultFunc)
+		obj.UseCustomIDGenerator = true
+	}
+	if obj.UseCustomIDGenerator {
+		builder = builder.Annotations(entsql.Annotation{
+			Incremental: &obj.UseCustomIDGenerator,
+		})
+	}
+	return builder
 }
 
 // Fields of the mixin.
@@ -28,71 +67,48 @@ func (obj ID) Fields() []ent.Field {
 	}
 }
 
-func (ID) FK(name string) ent.Field {
-	return field.Int64(name).
-		Comment(i18n.Text("foreign_key:comment")).
-		Positive()
+func (obj ID) FK(name string) ent.Field {
+	obj.Key = name
+	obj.Positive = true
+	obj.DefaultFunc = id.Gen
+	if obj.CommentKey == "" {
+		obj.CommentKey = "field:foreign_key:comment"
+	}
+	return obj.ToField()
 }
 
-func (ID) PK(name string) ent.Field {
-	return field.Int64(name).
-		Comment(i18n.Text("primary_key:comment")).
-		Annotations(entsql.Annotation{
-			Incremental: &IncrementalEnabled,
-		}).
-		DefaultFunc(func() int64 {
-			return id.Gen()
-		}).
-		Positive().
-		Unique().
-		Immutable()
+func (obj ID) PK(name string) ent.Field {
+	obj.Key = name
+	obj.Unique = true
+	obj.Positive = true
+	obj.Immutable = true
+	obj.DefaultFunc = id.Gen
+	if obj.CommentKey == "" {
+		obj.CommentKey = "field:primary_key:comment"
+	}
+	return obj.ToField()
 }
 
-func (ID) OP(name string) ent.Field {
-	return field.Int64(name).
-		Comment(i18n.Text("optional_key:comment")).
-		Positive().
-		Optional()
+func (obj ID) OP(name string) ent.Field {
+	obj.Key = name
+	obj.Positive = true
+	obj.Optional = true
+	obj.DefaultFunc = id.Gen
+	if obj.CommentKey == "" {
+		obj.CommentKey = "field:optional_key:comment"
+	}
+	return obj.ToField()
 }
 
-func (ID) Comment(key string) Ider {
-	return CommentedID{
+func (obj ID) Comment(key string) IDGenerator {
+	return ID{
 		CommentKey: key,
 	}
 }
 
-type CommentedID struct {
-	CommentKey string
-	mixin.Schema
-}
-
-func (c CommentedID) Comment(key string) Ider {
-	return c
-}
-
-func (c CommentedID) OP(name string) ent.Field {
-	return field.Int64(name).
-		Comment(i18n.Text(c.CommentKey)).
-		Positive().
-		Optional()
-}
-
-func (c CommentedID) FK(name string) ent.Field {
-	return field.Int64(name).
-		Comment(i18n.Text(c.CommentKey)).
-		Positive()
-}
-
-func (c CommentedID) PK(name string) ent.Field {
-	return field.Int64(name).
-		Comment(i18n.Text(c.CommentKey)).
-		Annotations(entsql.Annotation{
-			Incremental: &IncrementalEnabled,
-		}).
-		DefaultFunc(func() int64 {
-			return id.Gen()
-		}).
-		Positive().
-		Unique().
-		Immutable()
+func (obj ID) UserDefaultFunc(f func() int64) IDGenerator {
+	return ID{
+		DefaultFunc:          f,
+		UseCustomIDGenerator: true,
+	}
 }

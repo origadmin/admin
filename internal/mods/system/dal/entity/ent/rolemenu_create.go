@@ -27,9 +27,25 @@ func (rmc *RoleMenuCreate) SetRoleID(i int64) *RoleMenuCreate {
 	return rmc
 }
 
+// SetNillableRoleID sets the "role_id" field if the given value is not nil.
+func (rmc *RoleMenuCreate) SetNillableRoleID(i *int64) *RoleMenuCreate {
+	if i != nil {
+		rmc.SetRoleID(*i)
+	}
+	return rmc
+}
+
 // SetMenuID sets the "menu_id" field.
 func (rmc *RoleMenuCreate) SetMenuID(i int64) *RoleMenuCreate {
 	rmc.mutation.SetMenuID(i)
+	return rmc
+}
+
+// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
+func (rmc *RoleMenuCreate) SetNillableMenuID(i *int64) *RoleMenuCreate {
+	if i != nil {
+		rmc.SetMenuID(*i)
+	}
 	return rmc
 }
 
@@ -92,6 +108,14 @@ func (rmc *RoleMenuCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (rmc *RoleMenuCreate) defaults() {
+	if _, ok := rmc.mutation.RoleID(); !ok {
+		v := rolemenu.DefaultRoleID()
+		rmc.mutation.SetRoleID(v)
+	}
+	if _, ok := rmc.mutation.MenuID(); !ok {
+		v := rolemenu.DefaultMenuID()
+		rmc.mutation.SetMenuID(v)
+	}
 	if _, ok := rmc.mutation.ID(); !ok {
 		v := rolemenu.DefaultID()
 		rmc.mutation.SetID(v)
