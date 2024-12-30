@@ -531,55 +531,6 @@ func (m *DepartmentMutation) ResetAncestors() {
 	m.ancestors = nil
 }
 
-// SetParentID sets the "parent_id" field.
-func (m *DepartmentMutation) SetParentID(i int64) {
-	m.parent = &i
-}
-
-// ParentID returns the value of the "parent_id" field in the mutation.
-func (m *DepartmentMutation) ParentID() (r int64, exists bool) {
-	v := m.parent
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldParentID returns the old "parent_id" field's value of the Department entity.
-// If the Department object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DepartmentMutation) OldParentID(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldParentID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
-	}
-	return oldValue.ParentID, nil
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (m *DepartmentMutation) ClearParentID() {
-	m.parent = nil
-	m.clearedFields[department.FieldParentID] = struct{}{}
-}
-
-// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
-func (m *DepartmentMutation) ParentIDCleared() bool {
-	_, ok := m.clearedFields[department.FieldParentID]
-	return ok
-}
-
-// ResetParentID resets all changes to the "parent_id" field.
-func (m *DepartmentMutation) ResetParentID() {
-	m.parent = nil
-	delete(m.clearedFields, department.FieldParentID)
-}
-
 // SetLevel sets the "level" field.
 func (m *DepartmentMutation) SetLevel(i int) {
 	m.level = &i
@@ -634,6 +585,55 @@ func (m *DepartmentMutation) AddedLevel() (r int, exists bool) {
 func (m *DepartmentMutation) ResetLevel() {
 	m.level = nil
 	m.addlevel = nil
+}
+
+// SetParentID sets the "parent_id" field.
+func (m *DepartmentMutation) SetParentID(i int64) {
+	m.parent = &i
+}
+
+// ParentID returns the value of the "parent_id" field in the mutation.
+func (m *DepartmentMutation) ParentID() (r int64, exists bool) {
+	v := m.parent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldParentID returns the old "parent_id" field's value of the Department entity.
+// If the Department object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DepartmentMutation) OldParentID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldParentID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
+	}
+	return oldValue.ParentID, nil
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (m *DepartmentMutation) ClearParentID() {
+	m.parent = nil
+	m.clearedFields[department.FieldParentID] = struct{}{}
+}
+
+// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
+func (m *DepartmentMutation) ParentIDCleared() bool {
+	_, ok := m.clearedFields[department.FieldParentID]
+	return ok
+}
+
+// ResetParentID resets all changes to the "parent_id" field.
+func (m *DepartmentMutation) ResetParentID() {
+	m.parent = nil
+	delete(m.clearedFields, department.FieldParentID)
 }
 
 // AddUserIDs adds the "users" edge to the User entity by ids.
@@ -1046,11 +1046,11 @@ func (m *DepartmentMutation) Fields() []string {
 	if m.ancestors != nil {
 		fields = append(fields, department.FieldAncestors)
 	}
-	if m.parent != nil {
-		fields = append(fields, department.FieldParentID)
-	}
 	if m.level != nil {
 		fields = append(fields, department.FieldLevel)
+	}
+	if m.parent != nil {
+		fields = append(fields, department.FieldParentID)
 	}
 	return fields
 }
@@ -1076,10 +1076,10 @@ func (m *DepartmentMutation) Field(name string) (ent.Value, bool) {
 		return m.Status()
 	case department.FieldAncestors:
 		return m.Ancestors()
-	case department.FieldParentID:
-		return m.ParentID()
 	case department.FieldLevel:
 		return m.Level()
+	case department.FieldParentID:
+		return m.ParentID()
 	}
 	return nil, false
 }
@@ -1105,10 +1105,10 @@ func (m *DepartmentMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldStatus(ctx)
 	case department.FieldAncestors:
 		return m.OldAncestors(ctx)
-	case department.FieldParentID:
-		return m.OldParentID(ctx)
 	case department.FieldLevel:
 		return m.OldLevel(ctx)
+	case department.FieldParentID:
+		return m.OldParentID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Department field %s", name)
 }
@@ -1174,19 +1174,19 @@ func (m *DepartmentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAncestors(v)
 		return nil
-	case department.FieldParentID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetParentID(v)
-		return nil
 	case department.FieldLevel:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLevel(v)
+		return nil
+	case department.FieldParentID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetParentID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Department field %s", name)
@@ -1309,11 +1309,11 @@ func (m *DepartmentMutation) ResetField(name string) error {
 	case department.FieldAncestors:
 		m.ResetAncestors()
 		return nil
-	case department.FieldParentID:
-		m.ResetParentID()
-		return nil
 	case department.FieldLevel:
 		m.ResetLevel()
+		return nil
+	case department.FieldParentID:
+		m.ResetParentID()
 		return nil
 	}
 	return fmt.Errorf("unknown Department field %s", name)

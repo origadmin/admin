@@ -61,7 +61,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "sys_users"
 	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
-	PermissionsTable = "sys_role_permission"
+	PermissionsTable = "sys_role_permissions"
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionsInverseTable = "sys_permissions"
@@ -85,10 +85,10 @@ const (
 	// UserRolesColumn is the table column denoting the user_roles relation/edge.
 	UserRolesColumn = "role_id"
 	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
-	RolePermissionsTable = "sys_role_permission"
+	RolePermissionsTable = "sys_role_permissions"
 	// RolePermissionsInverseTable is the table name for the RolePermission entity.
 	// It exists in this package in order to avoid circular dependency with the "rolepermission" package.
-	RolePermissionsInverseTable = "sys_role_permission"
+	RolePermissionsInverseTable = "sys_role_permissions"
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "role_id"
 	// DepartmentRolesTable is the table that holds the department_roles relation/edge.
@@ -160,6 +160,8 @@ var (
 	DescriptionValidator func(string) error
 	// DefaultType holds the default value on creation for the "type" field.
 	DefaultType int8
+	// DefaultSequence holds the default value on creation for the "sequence" field.
+	DefaultSequence int
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
 	// DefaultIsSystem holds the default value on creation for the "is_system" field.

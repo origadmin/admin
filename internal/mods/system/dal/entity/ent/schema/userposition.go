@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // UserPosition holds the schema definition for the UserPosition entity.
@@ -45,6 +46,15 @@ func (UserPosition) Indexes() []ent.Index {
 	}
 }
 
+// Annotations of the UserPosition
+func (UserPosition) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_user_positions"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("user_position:table:comment")),
+	}
+}
+
 // Edges of the UserPosition.
 func (UserPosition) Edges() []ent.Edge {
 	return []ent.Edge{
@@ -58,12 +68,5 @@ func (UserPosition) Edges() []ent.Edge {
 			Field("position_id").
 			Unique().
 			Required(),
-	}
-}
-
-// Annotations of the UserPosition
-func (UserPosition) Annotations() []schema.Annotation {
-	return []schema.Annotation{
-		entsql.Table("sys_user_positions"),
 	}
 }

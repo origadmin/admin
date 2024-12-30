@@ -25,10 +25,19 @@ type Resource struct {
 // Fields of the Resource.
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("method").MaxLen(20).Default(""),    // HTTP method (e.g. GET, POST, PUT, DELETE)
-		field.String("operation").MaxLen(20).Default(""), // grpc operation (e.g. CreateUser, GetUser, UpdateUser, DeleteUser)
-		field.String("path").MaxLen(255),                 // API request path (e.g. /users/:id or /users/{id})
-		mixin.OP("menu_id"),                              // From Menu.ID
+		field.String("method").
+			MaxLen(20).
+			Default("").
+			Comment(i18n.Text("resource:field:method")), // HTTP method (e.g. GET, POST, PUT, DELETE)
+		field.String("operation").
+			MaxLen(20).
+			Default("").
+			Comment(i18n.Text("resource:field:operation")), // grpc operation (e.g. CreateUser, GetUser, UpdateUser, DeleteUser)
+		field.String("path").
+			MaxLen(255).
+			Default("").
+			Comment(i18n.Text("resource:field:path")), // API request path (e.g. /users/:id or /users/{id})
+		mixin.OP("menu_id", "resource:field:menu_id"), // From Menu.ID
 	}
 }
 

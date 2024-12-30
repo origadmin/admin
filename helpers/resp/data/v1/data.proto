@@ -25,6 +25,22 @@ message Page {
   google.protobuf.Struct struct = 8 [json_name = "struct"];
 }
 
+// SourcePage
+message SourcePage {
+  bool success = 1 [json_name = "success"];
+  // The total number of items in the list.
+  int32 total = 2 [json_name = "total"];
+  // The paging data
+  string data = 3 [json_name = "data"];
+  // The current page number.
+  optional int32 current = 4 [json_name = "current"];
+  // The maximum number of items to return.
+  optional int32 page_size = 5 [json_name = "page_size"];
+  // Additional information about this response.
+  // content to be added without destroying the current data format
+  string extra = 6 [json_name = "extra"];
+}
+
 message Error {
   string id = 1 [json_name = "id"];
   int32 code = 2 [json_name = "code"];
@@ -42,6 +58,11 @@ message Data {
 message StringData {
   bool success = 1 [json_name = "success"];
   string data = 3 [json_name = "data"];
+}
+
+message BytesData {
+  bool success = 1 [json_name = "success"];
+  bytes data = 3 [json_name = "data"];
 }
 
 message Token {

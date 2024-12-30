@@ -22,22 +22,22 @@ type Department struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Keyword of Department
+	// department:field:keyword
 	Keyword string `json:"keyword,omitempty"`
-	// Display name of Department
+	// department:field:name
 	Name string `json:"name,omitempty"`
-	// Details about Department
+	// department:field:description
 	Description string `json:"description,omitempty"`
-	// Sequence for sorting
+	// department:field:sequence
 	Sequence int `json:"sequence,omitempty"`
-	// Status of the department
+	// department:field:status
 	Status int8 `json:"status,omitempty"`
-	// Ancestor list (format: ,1,2,3,)
+	// department:field:ancestors
 	Ancestors string `json:"ancestors,omitempty"`
-	// Parent department ID
-	ParentID int64 `json:"parent_id,omitempty"`
-	// Department level
+	// department:field:level
 	Level int `json:"level,omitempty"`
+	// department:field:parent_id
+	ParentID int64 `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DepartmentQuery when eager-loading is set.
 	Edges        DepartmentEdges `json:"edges"`
@@ -135,7 +135,7 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case department.FieldID, department.FieldSequence, department.FieldStatus, department.FieldParentID, department.FieldLevel:
+		case department.FieldID, department.FieldSequence, department.FieldStatus, department.FieldLevel, department.FieldParentID:
 			values[i] = new(sql.NullInt64)
 		case department.FieldKeyword, department.FieldName, department.FieldDescription, department.FieldAncestors:
 			values[i] = new(sql.NullString)
@@ -210,17 +210,17 @@ func (d *Department) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				d.Ancestors = value.String
 			}
-		case department.FieldParentID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
-			} else if value.Valid {
-				d.ParentID = value.Int64
-			}
 		case department.FieldLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field level", values[i])
 			} else if value.Valid {
 				d.Level = int(value.Int64)
+			}
+		case department.FieldParentID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				d.ParentID = value.Int64
 			}
 		default:
 			d.selectValues.Set(columns[i], values[i])
@@ -317,11 +317,11 @@ func (d *Department) String() string {
 	builder.WriteString("ancestors=")
 	builder.WriteString(d.Ancestors)
 	builder.WriteString(", ")
-	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.ParentID))
-	builder.WriteString(", ")
 	builder.WriteString("level=")
 	builder.WriteString(fmt.Sprintf("%v", d.Level))
+	builder.WriteString(", ")
+	builder.WriteString("parent_id=")
+	builder.WriteString(fmt.Sprintf("%v", d.ParentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

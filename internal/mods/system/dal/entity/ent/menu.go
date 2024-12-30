@@ -22,29 +22,29 @@ type Menu struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Unique keyword for the menu item
+	// menu:field:keyword
 	Keyword string `json:"keyword,omitempty"`
-	// Display name of the menu item
+	// menu:field:name
 	Name string `json:"name,omitempty"`
-	// menu.i18n_key
+	// menu:field:i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
-	// Description of the menu item
+	// menu:field:description
 	Description string `json:"description,omitempty"`
-	// Type of the menu item (e.g., page, link)
+	// menu:field:type
 	Type string `json:"type,omitempty"`
-	// Icon for the menu item
+	// menu:field:icon
 	Icon string `json:"icon,omitempty"`
-	// Path associated with the menu item
+	// menu:field:path
 	Path string `json:"path,omitempty"`
-	// Status of the menu item (e.g., activated, deactivated)
+	// menu:field:status
 	Status int8 `json:"status,omitempty"`
-	// Parent path of the menu item
+	// menu:field:parent_path
 	ParentPath string `json:"parent_path,omitempty"`
-	// Sequence for sorting the menu item
+	// menu:field:sequence
 	Sequence int `json:"sequence,omitempty"`
-	// Additional properties of the menu item
+	// menu:field:properties
 	Properties string `json:"properties,omitempty"`
-	// Parent ID of the menu item
+	// menu:field:parent_id
 	ParentID int64 `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuQuery when eager-loading is set.

@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// UserDepartment is the model entity for the UserDepartment schema.
+// user_department:table:comment
 type UserDepartment struct {
 	config `json:"-"`
 	// ID of the ent.

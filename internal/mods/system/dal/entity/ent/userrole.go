@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// UserRole is the model entity for the UserRole schema.
+// user_role:table:comment
 type UserRole struct {
 	config `json:"-"`
 	// ID of the ent.

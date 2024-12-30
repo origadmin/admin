@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // MenuPermission holds the schema definition for the MenuPermission domain.
@@ -23,8 +24,8 @@ type MenuPermission struct {
 // Fields of the MenuPermission.
 func (MenuPermission) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FK("menu_id"),       // From Menu.ID
-		mixin.FK("permission_id"), // From Permission.ID
+		mixin.FK("menu_id", "menu_permission:field:menu_id"),             // From Menu.ID
+		mixin.FK("permission_id", "menu_permission:field:permission_id"), // From Permission.ID
 	}
 }
 
@@ -49,6 +50,8 @@ func (MenuPermission) Indexes() []ent.Index {
 func (MenuPermission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_menu_permissions"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("menu_permission:table:comment")),
 	}
 }
 

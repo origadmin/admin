@@ -1077,8 +1077,8 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
 //	  Ancestors string `json:"ancestors,omitempty"`
-//	  ParentID int64 `json:"parent_id,omitempty"`
 //	  Level int `json:"level,omitempty"`
+//	  ParentID int64 `json:"parent_id,omitempty"`
 //	}
 //
 //	client.Department.Query().
@@ -1091,8 +1091,8 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  department.FieldSequence,
 //	  department.FieldStatus,
 //	  department.FieldAncestors,
-//	  department.FieldParentID,
 //	  department.FieldLevel,
+//	  department.FieldParentID,
 //	  ).
 //	  Scan(ctx, &v)
 func (dq *DepartmentQuery) Omit(fields ...string) *DepartmentSelect {

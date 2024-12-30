@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// PermissionResource is the model entity for the PermissionResource schema.
+// permission_resource:table:comment
 type PermissionResource struct {
 	config `json:"-"`
 	// ID of the ent.

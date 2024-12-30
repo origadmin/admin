@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // UserDepartment holds the schema definition for the UserDepartment domain.
@@ -45,6 +46,15 @@ func (UserDepartment) Indexes() []ent.Index {
 	}
 }
 
+// Annotations of the UserDepartment.
+func (UserDepartment) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_user_departments"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("user_department:table:comment")),
+	}
+}
+
 // Edges of the UserDepartment.
 func (UserDepartment) Edges() []ent.Edge {
 	return []ent.Edge{
@@ -56,12 +66,5 @@ func (UserDepartment) Edges() []ent.Edge {
 			Field("department_id").
 			Unique().
 			Required(),
-	}
-}
-
-// Annotations of the UserDepartment.
-func (UserDepartment) Annotations() []schema.Annotation {
-	return []schema.Annotation{
-		entsql.Table("sys_user_departments"),
 	}
 }

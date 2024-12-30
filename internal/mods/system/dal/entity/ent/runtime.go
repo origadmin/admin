@@ -73,14 +73,14 @@ func init() {
 	department.DefaultAncestors = departmentDescAncestors.Default.(string)
 	// department.AncestorsValidator is a validator for the "ancestors" field. It is called by the builders before save.
 	department.AncestorsValidator = departmentDescAncestors.Validators[0].(func(string) error)
-	// departmentDescParentID is the schema descriptor for parent_id field.
-	departmentDescParentID := departmentFields[6].Descriptor()
-	// department.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	department.ParentIDValidator = departmentDescParentID.Validators[0].(func(int64) error)
 	// departmentDescLevel is the schema descriptor for level field.
-	departmentDescLevel := departmentFields[7].Descriptor()
+	departmentDescLevel := departmentFields[6].Descriptor()
 	// department.DefaultLevel holds the default value on creation for the level field.
 	department.DefaultLevel = departmentDescLevel.Default.(int)
+	// departmentDescParentID is the schema descriptor for parent_id field.
+	departmentDescParentID := departmentFields[7].Descriptor()
+	// department.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
+	department.ParentIDValidator = departmentDescParentID.Validators[0].(func(int64) error)
 	// departmentDescID is the schema descriptor for id field.
 	departmentDescID := departmentMixinFields0[0].Descriptor()
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -350,6 +350,8 @@ func init() {
 	resource.OperationValidator = resourceDescOperation.Validators[0].(func(string) error)
 	// resourceDescPath is the schema descriptor for path field.
 	resourceDescPath := resourceFields[2].Descriptor()
+	// resource.DefaultPath holds the default value on creation for the path field.
+	resource.DefaultPath = resourceDescPath.Default.(string)
 	// resource.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	resource.PathValidator = resourceDescPath.Validators[0].(func(string) error)
 	// resourceDescMenuID is the schema descriptor for menu_id field.
@@ -401,6 +403,10 @@ func init() {
 	roleDescType := roleFields[3].Descriptor()
 	// role.DefaultType holds the default value on creation for the type field.
 	role.DefaultType = roleDescType.Default.(int8)
+	// roleDescSequence is the schema descriptor for sequence field.
+	roleDescSequence := roleFields[4].Descriptor()
+	// role.DefaultSequence holds the default value on creation for the sequence field.
+	role.DefaultSequence = roleDescSequence.Default.(int)
 	// roleDescStatus is the schema descriptor for status field.
 	roleDescStatus := roleFields[5].Descriptor()
 	// role.DefaultStatus holds the default value on creation for the status field.

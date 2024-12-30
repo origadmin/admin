@@ -97,6 +97,8 @@ var (
 	DefaultOperation string
 	// OperationValidator is a validator for the "operation" field. It is called by the builders before save.
 	OperationValidator func(string) error
+	// DefaultPath holds the default value on creation for the "path" field.
+	DefaultPath string
 	// PathValidator is a validator for the "path" field. It is called by the builders before save.
 	PathValidator func(string) error
 	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.

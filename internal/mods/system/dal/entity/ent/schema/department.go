@@ -25,14 +25,31 @@ type Department struct {
 // Fields of the Department.
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("keyword").MaxLen(32).Default("").Comment(i18n.Text("department:keyword")),
-		field.String("name").MaxLen(64).Default("").Comment(i18n.Text("department:name")),
-		field.String("description").MaxLen(256).Default("").Comment(i18n.Text("department:description")),
-		field.Int("sequence").Comment(i18n.Text("department:sequence")),
-		field.Int8("status").Default(0).Comment(i18n.Text("department:status")),
-		field.String("ancestors").MaxLen(1024).Default("").Comment(i18n.Text("department:ancestors")),
-		mixin.OP("parent_id", "department:parent_id"),
-		field.Int("level").Default(1).Comment(i18n.Text("department:level")),
+		field.String("keyword").
+			MaxLen(32).
+			Default("").
+			Comment(i18n.Text("department:field:keyword")),
+		field.String("name").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("department:field:name")),
+		field.String("description").
+			MaxLen(256).
+			Default("").
+			Comment(i18n.Text("department:field:description")),
+		field.Int("sequence").
+			Comment(i18n.Text("department:field:sequence")),
+		field.Int8("status").
+			Default(0).
+			Comment(i18n.Text("department:field:status")),
+		field.String("ancestors").
+			MaxLen(1024).
+			Default("").
+			Comment(i18n.Text("department:field:ancestors")),
+		field.Int("level").
+			Default(1).
+			Comment(i18n.Text("department:field:level")),
+		mixin.OP("parent_id", "department:field:parent_id"),
 	}
 }
 

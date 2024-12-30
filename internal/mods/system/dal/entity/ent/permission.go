@@ -23,19 +23,19 @@ type Permission struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// 权限名称
+	// permission:field:name
 	Name string `json:"name,omitempty"`
-	// 权限标识符
+	// permission:field:keyword
 	Keyword string `json:"keyword,omitempty"`
-	// 权限描述
+	// permission:field:description
 	Description string `json:"description,omitempty"`
-	// 国际化标识符(如：permission.system.user.manage)
+	// permission:field:i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
-	// 权限类型：1-系统 2-菜单 3-数据 4-部门 5-资源
+	// permission:field:type
 	Type int8 `json:"type,omitempty"`
-	// 数据范围：self-仅本人 dept-本部门 sub_dept-本部门及下级 custom-自定义部门 all-所有
+	// permission:field:scope
 	Scope string `json:"scope,omitempty"`
-	// 自定义数据范围的部门ID列表，当scope为custom时有效
+	// permission:field:scope_depts
 	ScopeDepts []string `json:"scope_depts,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionQuery when eager-loading is set.

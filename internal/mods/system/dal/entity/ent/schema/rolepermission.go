@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // RolePermission holds the schema definition for the RolePermission entity.
@@ -48,7 +49,9 @@ func (RolePermission) Indexes() []ent.Index {
 // Annotations of the RolePermission.
 func (RolePermission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entsql.Table("sys_role_permission"),
+		entsql.Table("sys_role_permissions"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("role_permission:table:comment")),
 	}
 }
 

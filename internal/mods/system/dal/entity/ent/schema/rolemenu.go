@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // RoleMenu holds the schema definition for the RoleMenu domain.
@@ -23,8 +24,8 @@ type RoleMenu struct {
 // Fields of the RoleMenu.
 func (RoleMenu) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FK("role_id"), // From Role.ID
-		mixin.FK("menu_id"), // From Menu.ID
+		mixin.FK("role_id", "role_menu:field:role_id"), // From Role.ID
+		mixin.FK("menu_id", "role_menu:field:menu_id"), // From Menu.ID
 	}
 }
 
@@ -49,6 +50,8 @@ func (RoleMenu) Indexes() []ent.Index {
 func (RoleMenu) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_role_menus"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("role_menu:table:comment")),
 	}
 }
 

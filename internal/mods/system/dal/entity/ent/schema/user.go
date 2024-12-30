@@ -30,31 +30,67 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldUUIDFK("uuid"),
-		field.String("allowed_ip").Default("0.0.0.0"),
-		field.String("username").MaxLen(32).Default(""), // login username of user
-		field.String("nickname").MaxLen(64).Default(""), // Nickname display name of user
-		field.String("avatar").MaxLen(256).Default(""),  // Avatar display avatar of user
-		field.String("name").MaxLen(64).Default(""),     // Name of user
-		field.String("gender").MaxLen(16).Default(""),   // Gender of user
+		mixin.FieldUUIDFK("uuid", i18n.Text("user:field:uuid")),
+		field.String("allowed_ip").
+			Default("0.0.0.0").
+			Comment(i18n.Text("user:field:allowed_ip")),
+		field.String("username").
+			MaxLen(32).
+			Default("").
+			Comment(i18n.Text("user:field:username")), // login username of user
+		field.String("nickname").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("user:field:nickname")), // Nickname display name of user
+		field.String("avatar").
+			MaxLen(256).
+			Default("").
+			Comment("user:field:avatar"), // Avatar display avatar of user
+		field.String("name").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("user:field:nickname")), // Name of user
+		field.String("gender").
+			MaxLen(16).
+			Default("").
+			Comment(i18n.Text("user:field:gender")), // Gender of user
 		field.String("password").
 			MaxLen(256).
 			Default("").
-			Sensitive(),
+			Comment(i18n.Text("user:field:password")),
 		field.String("salt").
 			MaxLen(64).
 			Default("").
-			Sensitive(),
-		field.String("phone").MaxLen(32).Default(""),    // login phone number of user
-		field.String("email").MaxLen(64).Default(""),    // login email of user
-		field.String("remark").MaxLen(1024).Default(""), // Remark of user
-		field.String("token").MaxLen(512).Default(""),   // Token for login
-		field.Int8("status").Default(UserStatusActivated),
-		field.String("last_login_ip").MaxLen(32).Default(""),
+			Comment(i18n.Text("user:field:salt")),
+		field.String("phone").
+			MaxLen(32).
+			Default("").
+			Comment(i18n.Text("user:field:phone")), // login phone number of user
+		field.String("email").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("user:field:email")), // login email of user
+		field.String("remark").
+			MaxLen(1024).
+			Default("").
+			Comment(i18n.Text("user:field:remark")), // Remark of user
+		field.String("token").
+			MaxLen(512).
+			Default("").
+			Comment(i18n.Text("user:field:token")), // Token for login
+		field.Int8("status").
+			Default(UserStatusActivated).
+			Comment(i18n.Text("user:field:status")),
+		field.String("last_login_ip").
+			MaxLen(32).
+			Default("").
+			Comment(i18n.Text("user:field:last_login_ip")),
 		mixin.Time("last_login_time", i18n.Text("user:field:last_login_time")),
 		mixin.Time("sanction_date", i18n.Text("user:field:sanction_date")),
-		mixin.FK("manager_id"),              // 管理员ID
-		field.String("manager").Default(""), // 管理员
+		mixin.FK("manager_id", i18n.Text("user:field:manager_id")), // 管理员ID
+		field.String("manager").
+			Default("").
+			Comment(i18n.Text("user:field:manager")), // 管理员
 	}
 }
 

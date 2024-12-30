@@ -24,9 +24,14 @@ type Position struct {
 // Fields of the Position.
 func (Position) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").MaxLen(64).Unique(),
-		field.String("description").MaxLen(256),
-		mixin.FK("department_id"),
+		field.String("name").
+			MaxLen(64).
+			Unique().
+			Comment(i18n.Text("position:field:name")),
+		field.String("description").
+			MaxLen(256).
+			Comment(i18n.Text("position:field:description")),
+		mixin.FK("department_id", i18n.Text("department:field:department_id")),
 	}
 }
 

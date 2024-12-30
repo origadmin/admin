@@ -22,19 +22,19 @@ type Role struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Keyword holds the value of the "keyword" field.
+	// role:field:keyword
 	Keyword string `json:"keyword,omitempty"`
-	// Name holds the value of the "name" field.
+	// role:field:name
 	Name string `json:"name,omitempty"`
-	// Description holds the value of the "description" field.
+	// role:field:description
 	Description string `json:"description,omitempty"`
-	// 角色类型：1-系统角色 2-用户角色 3-部门角色
+	// role:field:type
 	Type int8 `json:"type,omitempty"`
-	// Sequence holds the value of the "sequence" field.
+	// role:field:sequence
 	Sequence int `json:"sequence,omitempty"`
-	// Status holds the value of the "status" field.
+	// role:field:status
 	Status int8 `json:"status,omitempty"`
-	// 是否系统内置（系统内置角色不可删除）
+	// role:field:is_system
 	IsSystem bool `json:"is_system,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.

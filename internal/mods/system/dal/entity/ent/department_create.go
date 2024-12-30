@@ -129,20 +129,6 @@ func (dc *DepartmentCreate) SetNillableAncestors(s *string) *DepartmentCreate {
 	return dc
 }
 
-// SetParentID sets the "parent_id" field.
-func (dc *DepartmentCreate) SetParentID(i int64) *DepartmentCreate {
-	dc.mutation.SetParentID(i)
-	return dc
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableParentID(i *int64) *DepartmentCreate {
-	if i != nil {
-		dc.SetParentID(*i)
-	}
-	return dc
-}
-
 // SetLevel sets the "level" field.
 func (dc *DepartmentCreate) SetLevel(i int) *DepartmentCreate {
 	dc.mutation.SetLevel(i)
@@ -153,6 +139,20 @@ func (dc *DepartmentCreate) SetLevel(i int) *DepartmentCreate {
 func (dc *DepartmentCreate) SetNillableLevel(i *int) *DepartmentCreate {
 	if i != nil {
 		dc.SetLevel(*i)
+	}
+	return dc
+}
+
+// SetParentID sets the "parent_id" field.
+func (dc *DepartmentCreate) SetParentID(i int64) *DepartmentCreate {
+	dc.mutation.SetParentID(i)
+	return dc
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableParentID(i *int64) *DepartmentCreate {
+	if i != nil {
+		dc.SetParentID(*i)
 	}
 	return dc
 }
@@ -373,13 +373,13 @@ func (dc *DepartmentCreate) check() error {
 			return &ValidationError{Name: "ancestors", err: fmt.Errorf(`ent: validator failed for field "Department.ancestors": %w`, err)}
 		}
 	}
+	if _, ok := dc.mutation.Level(); !ok {
+		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Department.level"`)}
+	}
 	if v, ok := dc.mutation.ParentID(); ok {
 		if err := department.ParentIDValidator(v); err != nil {
 			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Department.parent_id": %w`, err)}
 		}
-	}
-	if _, ok := dc.mutation.Level(); !ok {
-		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Department.level"`)}
 	}
 	if v, ok := dc.mutation.ID(); ok {
 		if err := department.IDValidator(v); err != nil {

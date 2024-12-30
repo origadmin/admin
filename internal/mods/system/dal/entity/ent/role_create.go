@@ -118,6 +118,14 @@ func (rc *RoleCreate) SetSequence(i int) *RoleCreate {
 	return rc
 }
 
+// SetNillableSequence sets the "sequence" field if the given value is not nil.
+func (rc *RoleCreate) SetNillableSequence(i *int) *RoleCreate {
+	if i != nil {
+		rc.SetSequence(*i)
+	}
+	return rc
+}
+
 // SetStatus sets the "status" field.
 func (rc *RoleCreate) SetStatus(i int8) *RoleCreate {
 	rc.mutation.SetStatus(i)
@@ -330,6 +338,10 @@ func (rc *RoleCreate) defaults() {
 	if _, ok := rc.mutation.GetType(); !ok {
 		v := role.DefaultType
 		rc.mutation.SetType(v)
+	}
+	if _, ok := rc.mutation.Sequence(); !ok {
+		v := role.DefaultSequence
+		rc.mutation.SetSequence(v)
 	}
 	if _, ok := rc.mutation.Status(); !ok {
 		v := role.DefaultStatus

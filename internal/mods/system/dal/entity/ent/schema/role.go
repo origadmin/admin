@@ -32,17 +32,30 @@ type Role struct {
 // Fields of the Role.
 func (Role) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("keyword").MaxLen(32).Default(""),       // Code of role (unique)
-		field.String("name").MaxLen(128).Default(""),         // Display name of role
-		field.String("description").MaxLen(1024).Default(""), // Details about role
+		field.String("keyword").
+			MaxLen(32).
+			Default("").
+			Comment("role:field:keyword"), // Code of role (unique)
+		field.String("name").
+			MaxLen(128).
+			Default("").
+			Comment("role:field:name"), // Display name of role
+		field.String("description").
+			MaxLen(1024).
+			Default("").
+			Comment("role:field:description"), // Details about role
 		field.Int8("type").
 			Default(RoleTypeUser).
-			Comment("角色类型：1-系统角色 2-用户角色 3-部门角色"),
-		field.Int("sequence"), // Sequence for sorting
-		field.Int8("status").Default(0),
+			Comment("role:field:type"), //("角色类型：1-系统角色 2-用户角色 3-部门角色"),
+		field.Int("sequence").
+			Default(0).
+			Comment("role:field:sequence"), // Sequence for sorting
+		field.Int8("status").
+			Default(0).
+			Comment("role:field:status"),
 		field.Bool("is_system").
 			Default(false).
-			Comment("是否系统内置（系统内置角色不可删除）"),
+			Comment("role:field:is_system"), //("是否系统内置（系统内置角色不可删除）"),
 	}
 }
 

@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// UserPosition is the model entity for the UserPosition schema.
+// user_position:table:comment
 type UserPosition struct {
 	config `json:"-"`
 	// ID of the ent.

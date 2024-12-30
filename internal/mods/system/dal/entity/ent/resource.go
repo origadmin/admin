@@ -23,13 +23,13 @@ type Resource struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Method holds the value of the "method" field.
+	// resource:field:method
 	Method string `json:"method,omitempty"`
-	// Operation holds the value of the "operation" field.
+	// resource:field:operation
 	Operation string `json:"operation,omitempty"`
-	// Path holds the value of the "path" field.
+	// resource:field:path
 	Path string `json:"path,omitempty"`
-	// optional_key:comment
+	// resource:field:menu_id
 	MenuID int64 `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.

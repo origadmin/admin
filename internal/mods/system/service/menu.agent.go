@@ -62,24 +62,11 @@ func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.L
 	if err != nil {
 		return nil, err
 	}
-	//bytes, err := protojson.Marshal(response)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//var pbs structpb.Struct
-	//_ = pbs.UnmarshalJSON(bytes)
-	//marshal, err := json.Marshal(&pbs)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//s.Bytes(context, http.StatusOK, bytes)
 
 	s.JSON(context, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
 		Data:    resp.Proto2AnyPBArray(response.Menus...),
-		//Struct: &pbs,
-		//Struct:  &pbs,
 	})
 	return nil, nil
 }

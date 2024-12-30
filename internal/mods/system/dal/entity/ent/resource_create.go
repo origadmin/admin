@@ -85,6 +85,14 @@ func (rc *ResourceCreate) SetPath(s string) *ResourceCreate {
 	return rc
 }
 
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillablePath(s *string) *ResourceCreate {
+	if s != nil {
+		rc.SetPath(*s)
+	}
+	return rc
+}
+
 // SetMenuID sets the "menu_id" field.
 func (rc *ResourceCreate) SetMenuID(i int64) *ResourceCreate {
 	rc.mutation.SetMenuID(i)
@@ -190,6 +198,10 @@ func (rc *ResourceCreate) defaults() {
 	if _, ok := rc.mutation.Operation(); !ok {
 		v := resource.DefaultOperation
 		rc.mutation.SetOperation(v)
+	}
+	if _, ok := rc.mutation.Path(); !ok {
+		v := resource.DefaultPath
+		rc.mutation.SetPath(v)
 	}
 }
 

@@ -138,26 +138,6 @@ func (du *DepartmentUpdate) SetNillableAncestors(s *string) *DepartmentUpdate {
 	return du
 }
 
-// SetParentID sets the "parent_id" field.
-func (du *DepartmentUpdate) SetParentID(i int64) *DepartmentUpdate {
-	du.mutation.SetParentID(i)
-	return du
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (du *DepartmentUpdate) SetNillableParentID(i *int64) *DepartmentUpdate {
-	if i != nil {
-		du.SetParentID(*i)
-	}
-	return du
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (du *DepartmentUpdate) ClearParentID() *DepartmentUpdate {
-	du.mutation.ClearParentID()
-	return du
-}
-
 // SetLevel sets the "level" field.
 func (du *DepartmentUpdate) SetLevel(i int) *DepartmentUpdate {
 	du.mutation.ResetLevel()
@@ -176,6 +156,26 @@ func (du *DepartmentUpdate) SetNillableLevel(i *int) *DepartmentUpdate {
 // AddLevel adds i to the "level" field.
 func (du *DepartmentUpdate) AddLevel(i int) *DepartmentUpdate {
 	du.mutation.AddLevel(i)
+	return du
+}
+
+// SetParentID sets the "parent_id" field.
+func (du *DepartmentUpdate) SetParentID(i int64) *DepartmentUpdate {
+	du.mutation.SetParentID(i)
+	return du
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (du *DepartmentUpdate) SetNillableParentID(i *int64) *DepartmentUpdate {
+	if i != nil {
+		du.SetParentID(*i)
+	}
+	return du
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (du *DepartmentUpdate) ClearParentID() *DepartmentUpdate {
+	du.mutation.ClearParentID()
 	return du
 }
 
@@ -953,26 +953,6 @@ func (duo *DepartmentUpdateOne) SetNillableAncestors(s *string) *DepartmentUpdat
 	return duo
 }
 
-// SetParentID sets the "parent_id" field.
-func (duo *DepartmentUpdateOne) SetParentID(i int64) *DepartmentUpdateOne {
-	duo.mutation.SetParentID(i)
-	return duo
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (duo *DepartmentUpdateOne) SetNillableParentID(i *int64) *DepartmentUpdateOne {
-	if i != nil {
-		duo.SetParentID(*i)
-	}
-	return duo
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (duo *DepartmentUpdateOne) ClearParentID() *DepartmentUpdateOne {
-	duo.mutation.ClearParentID()
-	return duo
-}
-
 // SetLevel sets the "level" field.
 func (duo *DepartmentUpdateOne) SetLevel(i int) *DepartmentUpdateOne {
 	duo.mutation.ResetLevel()
@@ -991,6 +971,26 @@ func (duo *DepartmentUpdateOne) SetNillableLevel(i *int) *DepartmentUpdateOne {
 // AddLevel adds i to the "level" field.
 func (duo *DepartmentUpdateOne) AddLevel(i int) *DepartmentUpdateOne {
 	duo.mutation.AddLevel(i)
+	return duo
+}
+
+// SetParentID sets the "parent_id" field.
+func (duo *DepartmentUpdateOne) SetParentID(i int64) *DepartmentUpdateOne {
+	duo.mutation.SetParentID(i)
+	return duo
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (duo *DepartmentUpdateOne) SetNillableParentID(i *int64) *DepartmentUpdateOne {
+	if i != nil {
+		duo.SetParentID(*i)
+	}
+	return duo
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (duo *DepartmentUpdateOne) ClearParentID() *DepartmentUpdateOne {
+	duo.mutation.ClearParentID()
 	return duo
 }
 

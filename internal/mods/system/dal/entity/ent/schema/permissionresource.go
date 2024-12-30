@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 type PermissionResource struct {
@@ -44,6 +45,8 @@ func (PermissionResource) Indexes() []ent.Index {
 func (PermissionResource) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_permission_resources"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("permission_resource:table:comment")),
 	}
 }
 

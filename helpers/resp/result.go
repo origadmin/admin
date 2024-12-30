@@ -25,11 +25,13 @@ type Error datav1.Error
 
 type Data datav1.Data
 type Page = datav1.Page
+type SourcePage = datav1.SourcePage
 type Token = datav1.Token
 type StringResult = datav1.StringData
 
 type Result struct {
 	Success bool           `json:"success,omitempty"`
+	Total   int32          `json:"total,omitempty"`
 	Data    any            `json:"data,omitempty"`
 	Error   *httperr.Error `json:"error,omitempty"`
 	Extra   any            `json:"extra,omitempty"`

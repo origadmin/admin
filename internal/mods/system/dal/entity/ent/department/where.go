@@ -95,14 +95,14 @@ func Ancestors(v string) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldAncestors, v))
 }
 
-// ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
-func ParentID(v int64) predicate.Department {
-	return predicate.Department(sql.FieldEQ(FieldParentID, v))
-}
-
 // Level applies equality check predicate on the "level" field. It's identical to LevelEQ.
 func Level(v int) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldLevel, v))
+}
+
+// ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
+func ParentID(v int64) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldParentID, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -525,36 +525,6 @@ func AncestorsContainsFold(v string) predicate.Department {
 	return predicate.Department(sql.FieldContainsFold(FieldAncestors, v))
 }
 
-// ParentIDEQ applies the EQ predicate on the "parent_id" field.
-func ParentIDEQ(v int64) predicate.Department {
-	return predicate.Department(sql.FieldEQ(FieldParentID, v))
-}
-
-// ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
-func ParentIDNEQ(v int64) predicate.Department {
-	return predicate.Department(sql.FieldNEQ(FieldParentID, v))
-}
-
-// ParentIDIn applies the In predicate on the "parent_id" field.
-func ParentIDIn(vs ...int64) predicate.Department {
-	return predicate.Department(sql.FieldIn(FieldParentID, vs...))
-}
-
-// ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
-func ParentIDNotIn(vs ...int64) predicate.Department {
-	return predicate.Department(sql.FieldNotIn(FieldParentID, vs...))
-}
-
-// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
-func ParentIDIsNil() predicate.Department {
-	return predicate.Department(sql.FieldIsNull(FieldParentID))
-}
-
-// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
-func ParentIDNotNil() predicate.Department {
-	return predicate.Department(sql.FieldNotNull(FieldParentID))
-}
-
 // LevelEQ applies the EQ predicate on the "level" field.
 func LevelEQ(v int) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldLevel, v))
@@ -593,6 +563,36 @@ func LevelLT(v int) predicate.Department {
 // LevelLTE applies the LTE predicate on the "level" field.
 func LevelLTE(v int) predicate.Department {
 	return predicate.Department(sql.FieldLTE(FieldLevel, v))
+}
+
+// ParentIDEQ applies the EQ predicate on the "parent_id" field.
+func ParentIDEQ(v int64) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldParentID, v))
+}
+
+// ParentIDNEQ applies the NEQ predicate on the "parent_id" field.
+func ParentIDNEQ(v int64) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldParentID, v))
+}
+
+// ParentIDIn applies the In predicate on the "parent_id" field.
+func ParentIDIn(vs ...int64) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldParentID, vs...))
+}
+
+// ParentIDNotIn applies the NotIn predicate on the "parent_id" field.
+func ParentIDNotIn(vs ...int64) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldParentID, vs...))
+}
+
+// ParentIDIsNil applies the IsNil predicate on the "parent_id" field.
+func ParentIDIsNil() predicate.Department {
+	return predicate.Department(sql.FieldIsNull(FieldParentID))
+}
+
+// ParentIDNotNil applies the NotNil predicate on the "parent_id" field.
+func ParentIDNotNil() predicate.Department {
+	return predicate.Department(sql.FieldNotNull(FieldParentID))
 }
 
 // HasUsers applies the HasEdge predicate on the "users" edge.

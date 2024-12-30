@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // UserRole holds the schema definition for the UserRole domain.
@@ -49,6 +50,8 @@ func (UserRole) Indexes() []ent.Index {
 func (UserRole) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_user_roles"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("user_role:table:comment")),
 	}
 }
 

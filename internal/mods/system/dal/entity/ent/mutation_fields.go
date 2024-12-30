@@ -65,15 +65,15 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 			if input.Ancestors != "" {
 				m.SetAncestors(input.Ancestors)
 			}
-		case department.FieldParentID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ParentID != 0 {
-				m.SetParentID(input.ParentID)
-			}
 		case department.FieldLevel:
 			// check int with sql.NullInt64 if it is zero
 			if input.Level != 0 {
 				m.SetLevel(input.Level)
+			}
+		case department.FieldParentID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ParentID != 0 {
+				m.SetParentID(input.ParentID)
 			}
 		case department.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -109,10 +109,10 @@ func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...stri
 			m.SetStatus(input.Status)
 		case department.FieldAncestors:
 			m.SetAncestors(input.Ancestors)
-		case department.FieldParentID:
-			m.SetParentID(input.ParentID)
 		case department.FieldLevel:
 			m.SetLevel(input.Level)
+		case department.FieldParentID:
+			m.SetParentID(input.ParentID)
 		case department.FieldID:
 			m.SetID(input.ID)
 		default:

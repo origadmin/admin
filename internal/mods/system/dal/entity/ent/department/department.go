@@ -30,10 +30,10 @@ const (
 	FieldStatus = "status"
 	// FieldAncestors holds the string denoting the ancestors field in the database.
 	FieldAncestors = "ancestors"
-	// FieldParentID holds the string denoting the parent_id field in the database.
-	FieldParentID = "parent_id"
 	// FieldLevel holds the string denoting the level field in the database.
 	FieldLevel = "level"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
@@ -102,8 +102,8 @@ var Columns = []string{
 	FieldSequence,
 	FieldStatus,
 	FieldAncestors,
-	FieldParentID,
 	FieldLevel,
+	FieldParentID,
 }
 
 var (
@@ -150,10 +150,10 @@ var (
 	DefaultAncestors string
 	// AncestorsValidator is a validator for the "ancestors" field. It is called by the builders before save.
 	AncestorsValidator func(string) error
-	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(int64) error
 	// DefaultLevel holds the default value on creation for the "level" field.
 	DefaultLevel int
+	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
+	ParentIDValidator func(int64) error
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )
@@ -206,14 +206,14 @@ func ByAncestors(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAncestors, opts...).ToFunc()
 }
 
-// ByParentID orders the results by the parent_id field.
-func ByParentID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldParentID, opts...).ToFunc()
-}
-
 // ByLevel orders the results by the level field.
 func ByLevel(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLevel, opts...).ToFunc()
+}
+
+// ByParentID orders the results by the parent_id field.
+func ByParentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParentID, opts...).ToFunc()
 }
 
 // ByUsersCount orders the results by users count.

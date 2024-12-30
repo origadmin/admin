@@ -23,11 +23,11 @@ type Position struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Name holds the value of the "name" field.
+	// position:field:name
 	Name string `json:"name,omitempty"`
-	// Description holds the value of the "description" field.
+	// position:field:description
 	Description string `json:"description,omitempty"`
-	// foreign_key:comment
+	// department:field:department_id
 	DepartmentID int64 `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PositionQuery when eager-loading is set.

@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/helpers/i18n"
 )
 
 // DepartmentRole holds the schema definition for the DepartmentRole domain.
@@ -23,8 +24,8 @@ type DepartmentRole struct {
 // Fields of the DepartmentRole.
 func (DepartmentRole) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FK("department_id", "department:department_id"), // From Department.ID
-		mixin.FK("role_id", "role:role_id"),                   // From Role.ID
+		mixin.FK("department_id", "department_role:field:department_id"), // From Department.ID
+		mixin.FK("role_id", "department_role:field:role_id"),             // From Role.ID
 	}
 }
 
@@ -49,6 +50,8 @@ func (DepartmentRole) Indexes() []ent.Index {
 func (DepartmentRole) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_department_roles"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("department_role:table:comment")),
 	}
 }
 

@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// RolePermission is the model entity for the RolePermission schema.
+// role_permission:table:comment
 type RolePermission struct {
 	config `json:"-"`
 	// ID of the ent.

@@ -13,15 +13,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// DepartmentRole is the model entity for the DepartmentRole schema.
+// department_role:table:comment
 type DepartmentRole struct {
 	config `json:"-"`
 	// ID of the ent.
 	// primary_key:comment
 	ID int64 `json:"id,omitempty"`
-	// Foreign key of Department
+	// department_role:field:department_id
 	DepartmentID int64 `json:"department_id,omitempty"`
-	// role:role_id
+	// department_role:field:role_id
 	RoleID int64 `json:"role_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DepartmentRoleQuery when eager-loading is set.

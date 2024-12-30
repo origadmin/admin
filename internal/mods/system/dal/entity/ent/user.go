@@ -26,43 +26,43 @@ type User struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time:comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// foreign_key:comment
+	// user:field:uuid
 	UUID string `json:"uuid,omitempty"`
-	// AllowedIP holds the value of the "allowed_ip" field.
+	// user:field:allowed_ip
 	AllowedIP string `json:"allowed_ip,omitempty"`
-	// Username holds the value of the "username" field.
+	// user:field:username
 	Username string `json:"username,omitempty"`
-	// Nickname holds the value of the "nickname" field.
+	// user:field:nickname
 	Nickname string `json:"nickname,omitempty"`
-	// Avatar holds the value of the "avatar" field.
+	// user:field:avatar
 	Avatar string `json:"avatar,omitempty"`
-	// Name holds the value of the "name" field.
+	// user:field:nickname
 	Name string `json:"name,omitempty"`
-	// Gender holds the value of the "gender" field.
+	// user:field:gender
 	Gender string `json:"gender,omitempty"`
-	// Password holds the value of the "password" field.
-	Password string `json:"-"`
-	// Salt holds the value of the "salt" field.
-	Salt string `json:"-"`
-	// Phone holds the value of the "phone" field.
+	// user:field:password
+	Password string `json:"password,omitempty"`
+	// user:field:salt
+	Salt string `json:"salt,omitempty"`
+	// user:field:phone
 	Phone string `json:"phone,omitempty"`
-	// Email holds the value of the "email" field.
+	// user:field:email
 	Email string `json:"email,omitempty"`
-	// Remark holds the value of the "remark" field.
+	// user:field:remark
 	Remark string `json:"remark,omitempty"`
-	// Token holds the value of the "token" field.
+	// user:field:token
 	Token string `json:"token,omitempty"`
-	// Status holds the value of the "status" field.
+	// user:field:status
 	Status int8 `json:"status,omitempty"`
-	// LastLoginIP holds the value of the "last_login_ip" field.
+	// user:field:last_login_ip
 	LastLoginIP string `json:"last_login_ip,omitempty"`
 	// user:field:last_login_time
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
 	// user:field:sanction_date
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
-	// foreign_key:comment
+	// user:field:manager_id
 	ManagerID int64 `json:"manager_id,omitempty"`
-	// Manager holds the value of the "manager" field.
+	// user:field:manager
 	Manager string `json:"manager,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
@@ -380,9 +380,11 @@ func (u *User) String() string {
 	builder.WriteString("gender=")
 	builder.WriteString(u.Gender)
 	builder.WriteString(", ")
-	builder.WriteString("password=<sensitive>")
+	builder.WriteString("password=")
+	builder.WriteString(u.Password)
 	builder.WriteString(", ")
-	builder.WriteString("salt=<sensitive>")
+	builder.WriteString("salt=")
+	builder.WriteString(u.Salt)
 	builder.WriteString(", ")
 	builder.WriteString("phone=")
 	builder.WriteString(u.Phone)
