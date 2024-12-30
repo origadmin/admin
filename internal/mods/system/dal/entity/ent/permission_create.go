@@ -126,6 +126,14 @@ func (pc *PermissionCreate) SetID(i int64) *PermissionCreate {
 	return pc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableID(i *int64) *PermissionCreate {
+	if i != nil {
+		pc.SetID(*i)
+	}
+	return pc
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (pc *PermissionCreate) AddRoleIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddRoleIDs(ids...)
@@ -267,6 +275,10 @@ func (pc *PermissionCreate) defaults() {
 		v := permission.DefaultScope
 		pc.mutation.SetScope(v)
 	}
+	if _, ok := pc.mutation.ID(); !ok {
+		v := permission.DefaultID()
+		pc.mutation.SetID(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -399,6 +411,13 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &RolePermissionCreate{config: pc.config, mutation: newRolePermissionMutation(pc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.MenusIDs(); len(nodes) > 0 {
@@ -415,6 +434,13 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &MenuPermissionCreate{config: pc.config, mutation: newMenuPermissionMutation(pc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.ResourcesIDs(); len(nodes) > 0 {
@@ -430,6 +456,13 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PermissionResourceCreate{config: pc.config, mutation: newPermissionResourceMutation(pc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}

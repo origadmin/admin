@@ -1564,7 +1564,7 @@ components:
                     format: date-time
                 keyword:
                     type: string
-                    description: Code holds the value of the "code" field.
+                    description: Code holds the value of the "keyword" field.
                 name:
                     type: string
                     description: Name holds the value of the "name" field.
@@ -1673,7 +1673,7 @@ components:
                     format: date-time
                 keyword:
                     type: string
-                    description: Code holds the value of the "code" field.
+                    description: Code holds the value of the "keyword" field.
                 name:
                     type: string
                     description: Name holds the value of the "name" field.

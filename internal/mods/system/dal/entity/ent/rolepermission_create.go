@@ -39,6 +39,14 @@ func (rpc *RolePermissionCreate) SetID(i int64) *RolePermissionCreate {
 	return rpc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (rpc *RolePermissionCreate) SetNillableID(i *int64) *RolePermissionCreate {
+	if i != nil {
+		rpc.SetID(*i)
+	}
+	return rpc
+}
+
 // SetRole sets the "role" edge to the Role entity.
 func (rpc *RolePermissionCreate) SetRole(r *Role) *RolePermissionCreate {
 	return rpc.SetRoleID(r.ID)
@@ -56,6 +64,7 @@ func (rpc *RolePermissionCreate) Mutation() *RolePermissionMutation {
 
 // Save creates the RolePermission in the database.
 func (rpc *RolePermissionCreate) Save(ctx context.Context) (*RolePermission, error) {
+	rpc.defaults()
 	return withHooks(ctx, rpc.sqlSave, rpc.mutation, rpc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (rpc *RolePermissionCreate) Exec(ctx context.Context) error {
 func (rpc *RolePermissionCreate) ExecX(ctx context.Context) {
 	if err := rpc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (rpc *RolePermissionCreate) defaults() {
+	if _, ok := rpc.mutation.ID(); !ok {
+		v := rolepermission.DefaultID()
+		rpc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (rpcb *RolePermissionCreateBulk) Save(ctx context.Context) ([]*RolePermissi
 	for i := range rpcb.builders {
 		func(i int, root context.Context) {
 			builder := rpcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*RolePermissionMutation)
 				if !ok {

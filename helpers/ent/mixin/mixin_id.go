@@ -7,11 +7,15 @@ package mixin
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 
 	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/helpers/id"
 )
+
+var IncrementalEnabled = true
 
 type ID struct {
 	mixin.Schema
@@ -33,6 +37,12 @@ func (ID) FK(name string) ent.Field {
 func (ID) PK(name string) ent.Field {
 	return field.Int64(name).
 		Comment(i18n.Text("primary_key:comment")).
+		Annotations(entsql.Annotation{
+			Incremental: &IncrementalEnabled,
+		}).
+		DefaultFunc(func() int64 {
+			return id.Gen()
+		}).
 		Positive().
 		Unique().
 		Immutable()
@@ -76,6 +86,12 @@ func (c CommentedID) FK(name string) ent.Field {
 func (c CommentedID) PK(name string) ent.Field {
 	return field.Int64(name).
 		Comment(i18n.Text(c.CommentKey)).
+		Annotations(entsql.Annotation{
+			Incremental: &IncrementalEnabled,
+		}).
+		DefaultFunc(func() int64 {
+			return id.Gen()
+		}).
 		Positive().
 		Unique().
 		Immutable()

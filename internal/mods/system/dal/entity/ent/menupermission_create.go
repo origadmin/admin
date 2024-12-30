@@ -39,6 +39,14 @@ func (mpc *MenuPermissionCreate) SetID(i int64) *MenuPermissionCreate {
 	return mpc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (mpc *MenuPermissionCreate) SetNillableID(i *int64) *MenuPermissionCreate {
+	if i != nil {
+		mpc.SetID(*i)
+	}
+	return mpc
+}
+
 // SetMenu sets the "menu" edge to the Menu entity.
 func (mpc *MenuPermissionCreate) SetMenu(m *Menu) *MenuPermissionCreate {
 	return mpc.SetMenuID(m.ID)
@@ -56,6 +64,7 @@ func (mpc *MenuPermissionCreate) Mutation() *MenuPermissionMutation {
 
 // Save creates the MenuPermission in the database.
 func (mpc *MenuPermissionCreate) Save(ctx context.Context) (*MenuPermission, error) {
+	mpc.defaults()
 	return withHooks(ctx, mpc.sqlSave, mpc.mutation, mpc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (mpc *MenuPermissionCreate) Exec(ctx context.Context) error {
 func (mpc *MenuPermissionCreate) ExecX(ctx context.Context) {
 	if err := mpc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (mpc *MenuPermissionCreate) defaults() {
+	if _, ok := mpc.mutation.ID(); !ok {
+		v := menupermission.DefaultID()
+		mpc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (mpcb *MenuPermissionCreateBulk) Save(ctx context.Context) ([]*MenuPermissi
 	for i := range mpcb.builders {
 		func(i int, root context.Context) {
 			builder := mpcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*MenuPermissionMutation)
 				if !ok {

@@ -39,6 +39,14 @@ func (prc *PermissionResourceCreate) SetID(i int64) *PermissionResourceCreate {
 	return prc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (prc *PermissionResourceCreate) SetNillableID(i *int64) *PermissionResourceCreate {
+	if i != nil {
+		prc.SetID(*i)
+	}
+	return prc
+}
+
 // SetPermission sets the "permission" edge to the Permission entity.
 func (prc *PermissionResourceCreate) SetPermission(p *Permission) *PermissionResourceCreate {
 	return prc.SetPermissionID(p.ID)
@@ -56,6 +64,7 @@ func (prc *PermissionResourceCreate) Mutation() *PermissionResourceMutation {
 
 // Save creates the PermissionResource in the database.
 func (prc *PermissionResourceCreate) Save(ctx context.Context) (*PermissionResource, error) {
+	prc.defaults()
 	return withHooks(ctx, prc.sqlSave, prc.mutation, prc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (prc *PermissionResourceCreate) Exec(ctx context.Context) error {
 func (prc *PermissionResourceCreate) ExecX(ctx context.Context) {
 	if err := prc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (prc *PermissionResourceCreate) defaults() {
+	if _, ok := prc.mutation.ID(); !ok {
+		v := permissionresource.DefaultID()
+		prc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 	for i := range prcb.builders {
 		func(i int, root context.Context) {
 			builder := prcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PermissionResourceMutation)
 				if !ok {

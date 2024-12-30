@@ -39,6 +39,14 @@ func (urc *UserRoleCreate) SetID(i int64) *UserRoleCreate {
 	return urc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (urc *UserRoleCreate) SetNillableID(i *int64) *UserRoleCreate {
+	if i != nil {
+		urc.SetID(*i)
+	}
+	return urc
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (urc *UserRoleCreate) SetUser(u *User) *UserRoleCreate {
 	return urc.SetUserID(u.ID)
@@ -56,6 +64,7 @@ func (urc *UserRoleCreate) Mutation() *UserRoleMutation {
 
 // Save creates the UserRole in the database.
 func (urc *UserRoleCreate) Save(ctx context.Context) (*UserRole, error) {
+	urc.defaults()
 	return withHooks(ctx, urc.sqlSave, urc.mutation, urc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (urc *UserRoleCreate) Exec(ctx context.Context) error {
 func (urc *UserRoleCreate) ExecX(ctx context.Context) {
 	if err := urc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (urc *UserRoleCreate) defaults() {
+	if _, ok := urc.mutation.ID(); !ok {
+		v := userrole.DefaultID()
+		urc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 	for i := range urcb.builders {
 		func(i int, root context.Context) {
 			builder := urcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserRoleMutation)
 				if !ok {

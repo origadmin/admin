@@ -60,6 +60,8 @@ var (
 	MenuIDValidator func(int64) error
 	// PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	PermissionIDValidator func(int64) error
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )

@@ -21,8 +21,8 @@ message Menu {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // Code holds the value of the "code" field.
-  string keyword = 4 [json_name = "code"];
+  // Code holds the value of the "keyword" field.
+  string keyword = 4 [json_name = "keyword"];
   // Name holds the value of the "name" field.
   string name = 5 [json_name = "name"];
   // Description holds the value of the "description" field.
@@ -80,8 +80,8 @@ message Role {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // UpdateTime holds the value of the "update_time" field.
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // Code holds the value of the "code" field.
-  string keyword = 4 [json_name = "code"];
+  // Code holds the value of the "keyword" field.
+  string keyword = 4 [json_name = "keyword"];
   // Name holds the value of the "name" field.
   string name = 5 [json_name = "name"];
   // Description holds the value of the "description" field.

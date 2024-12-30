@@ -39,6 +39,14 @@ func (rmc *RoleMenuCreate) SetID(i int64) *RoleMenuCreate {
 	return rmc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (rmc *RoleMenuCreate) SetNillableID(i *int64) *RoleMenuCreate {
+	if i != nil {
+		rmc.SetID(*i)
+	}
+	return rmc
+}
+
 // SetRole sets the "role" edge to the Role entity.
 func (rmc *RoleMenuCreate) SetRole(r *Role) *RoleMenuCreate {
 	return rmc.SetRoleID(r.ID)
@@ -56,6 +64,7 @@ func (rmc *RoleMenuCreate) Mutation() *RoleMenuMutation {
 
 // Save creates the RoleMenu in the database.
 func (rmc *RoleMenuCreate) Save(ctx context.Context) (*RoleMenu, error) {
+	rmc.defaults()
 	return withHooks(ctx, rmc.sqlSave, rmc.mutation, rmc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (rmc *RoleMenuCreate) Exec(ctx context.Context) error {
 func (rmc *RoleMenuCreate) ExecX(ctx context.Context) {
 	if err := rmc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (rmc *RoleMenuCreate) defaults() {
+	if _, ok := rmc.mutation.ID(); !ok {
+		v := rolemenu.DefaultID()
+		rmc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (rmcb *RoleMenuCreateBulk) Save(ctx context.Context) ([]*RoleMenu, error) {
 	for i := range rmcb.builders {
 		func(i int, root context.Context) {
 			builder := rmcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*RoleMenuMutation)
 				if !ok {

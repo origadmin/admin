@@ -113,6 +113,14 @@ func (rc *ResourceCreate) SetID(i int64) *ResourceCreate {
 	return rc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillableID(i *int64) *ResourceCreate {
+	if i != nil {
+		rc.SetID(*i)
+	}
+	return rc
+}
+
 // SetMenu sets the "menu" edge to the Menu entity.
 func (rc *ResourceCreate) SetMenu(m *Menu) *ResourceCreate {
 	return rc.SetMenuID(m.ID)
@@ -202,6 +210,10 @@ func (rc *ResourceCreate) defaults() {
 	if _, ok := rc.mutation.Path(); !ok {
 		v := resource.DefaultPath
 		rc.mutation.SetPath(v)
+	}
+	if _, ok := rc.mutation.ID(); !ok {
+		v := resource.DefaultID()
+		rc.mutation.SetID(v)
 	}
 }
 
@@ -329,6 +341,13 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PermissionResourceCreate{config: rc.config, mutation: newPermissionResourceMutation(rc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}

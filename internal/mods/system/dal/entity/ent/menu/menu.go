@@ -182,6 +182,8 @@ var (
 	DefaultProperties string
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	ParentIDValidator func(int64) error
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )

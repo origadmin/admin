@@ -39,6 +39,14 @@ func (drc *DepartmentRoleCreate) SetID(i int64) *DepartmentRoleCreate {
 	return drc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (drc *DepartmentRoleCreate) SetNillableID(i *int64) *DepartmentRoleCreate {
+	if i != nil {
+		drc.SetID(*i)
+	}
+	return drc
+}
+
 // SetDepartment sets the "department" edge to the Department entity.
 func (drc *DepartmentRoleCreate) SetDepartment(d *Department) *DepartmentRoleCreate {
 	return drc.SetDepartmentID(d.ID)
@@ -56,6 +64,7 @@ func (drc *DepartmentRoleCreate) Mutation() *DepartmentRoleMutation {
 
 // Save creates the DepartmentRole in the database.
 func (drc *DepartmentRoleCreate) Save(ctx context.Context) (*DepartmentRole, error) {
+	drc.defaults()
 	return withHooks(ctx, drc.sqlSave, drc.mutation, drc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (drc *DepartmentRoleCreate) Exec(ctx context.Context) error {
 func (drc *DepartmentRoleCreate) ExecX(ctx context.Context) {
 	if err := drc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (drc *DepartmentRoleCreate) defaults() {
+	if _, ok := drc.mutation.ID(); !ok {
+		v := departmentrole.DefaultID()
+		drc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (drcb *DepartmentRoleCreateBulk) Save(ctx context.Context) ([]*DepartmentRo
 	for i := range drcb.builders {
 		func(i int, root context.Context) {
 			builder := drcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*DepartmentRoleMutation)
 				if !ok {

@@ -216,6 +216,8 @@ var (
 	ManagerIDValidator func(int64) error
 	// DefaultManager holds the default value on creation for the "manager" field.
 	DefaultManager string
+	// DefaultID holds the default value on creation for the "id" field.
+	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )

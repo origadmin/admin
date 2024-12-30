@@ -83,6 +83,8 @@ func init() {
 	department.ParentIDValidator = departmentDescParentID.Validators[0].(func(int64) error)
 	// departmentDescID is the schema descriptor for id field.
 	departmentDescID := departmentMixinFields0[0].Descriptor()
+	// department.DefaultID holds the default value on creation for the id field.
+	department.DefaultID = departmentDescID.Default.(func() int64)
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	department.IDValidator = departmentDescID.Validators[0].(func(int64) error)
 	departmentroleMixin := schema.DepartmentRole{}.Mixin()
@@ -100,6 +102,8 @@ func init() {
 	departmentrole.RoleIDValidator = departmentroleDescRoleID.Validators[0].(func(int64) error)
 	// departmentroleDescID is the schema descriptor for id field.
 	departmentroleDescID := departmentroleMixinFields0[0].Descriptor()
+	// departmentrole.DefaultID holds the default value on creation for the id field.
+	departmentrole.DefaultID = departmentroleDescID.Default.(func() int64)
 	// departmentrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	departmentrole.IDValidator = departmentroleDescID.Validators[0].(func(int64) error)
 	menuMixin := schema.Menu{}.Mixin()
@@ -185,6 +189,8 @@ func init() {
 	menu.ParentIDValidator = menuDescParentID.Validators[0].(func(int64) error)
 	// menuDescID is the schema descriptor for id field.
 	menuDescID := menuMixinFields0[0].Descriptor()
+	// menu.DefaultID holds the default value on creation for the id field.
+	menu.DefaultID = menuDescID.Default.(func() int64)
 	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	menu.IDValidator = menuDescID.Validators[0].(func(int64) error)
 	menupermissionMixin := schema.MenuPermission{}.Mixin()
@@ -202,6 +208,8 @@ func init() {
 	menupermission.PermissionIDValidator = menupermissionDescPermissionID.Validators[0].(func(int64) error)
 	// menupermissionDescID is the schema descriptor for id field.
 	menupermissionDescID := menupermissionMixinFields0[0].Descriptor()
+	// menupermission.DefaultID holds the default value on creation for the id field.
+	menupermission.DefaultID = menupermissionDescID.Default.(func() int64)
 	// menupermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	menupermission.IDValidator = menupermissionDescID.Validators[0].(func(int64) error)
 	permissionMixin := schema.Permission{}.Mixin()
@@ -263,6 +271,8 @@ func init() {
 	permission.DefaultScope = permissionDescScope.Default.(string)
 	// permissionDescID is the schema descriptor for id field.
 	permissionDescID := permissionMixinFields0[0].Descriptor()
+	// permission.DefaultID holds the default value on creation for the id field.
+	permission.DefaultID = permissionDescID.Default.(func() int64)
 	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	permission.IDValidator = permissionDescID.Validators[0].(func(int64) error)
 	permissionresourceMixin := schema.PermissionResource{}.Mixin()
@@ -280,6 +290,8 @@ func init() {
 	permissionresource.ResourceIDValidator = permissionresourceDescResourceID.Validators[0].(func(int64) error)
 	// permissionresourceDescID is the schema descriptor for id field.
 	permissionresourceDescID := permissionresourceMixinFields0[0].Descriptor()
+	// permissionresource.DefaultID holds the default value on creation for the id field.
+	permissionresource.DefaultID = permissionresourceDescID.Default.(func() int64)
 	// permissionresource.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	permissionresource.IDValidator = permissionresourceDescID.Validators[0].(func(int64) error)
 	positionMixin := schema.Position{}.Mixin()
@@ -315,6 +327,8 @@ func init() {
 	position.DepartmentIDValidator = positionDescDepartmentID.Validators[0].(func(int64) error)
 	// positionDescID is the schema descriptor for id field.
 	positionDescID := positionMixinFields0[0].Descriptor()
+	// position.DefaultID holds the default value on creation for the id field.
+	position.DefaultID = positionDescID.Default.(func() int64)
 	// position.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	position.IDValidator = positionDescID.Validators[0].(func(int64) error)
 	resourceMixin := schema.Resource{}.Mixin()
@@ -360,6 +374,8 @@ func init() {
 	resource.MenuIDValidator = resourceDescMenuID.Validators[0].(func(int64) error)
 	// resourceDescID is the schema descriptor for id field.
 	resourceDescID := resourceMixinFields0[0].Descriptor()
+	// resource.DefaultID holds the default value on creation for the id field.
+	resource.DefaultID = resourceDescID.Default.(func() int64)
 	// resource.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	resource.IDValidator = resourceDescID.Validators[0].(func(int64) error)
 	roleMixin := schema.Role{}.Mixin()
@@ -417,6 +433,8 @@ func init() {
 	role.DefaultIsSystem = roleDescIsSystem.Default.(bool)
 	// roleDescID is the schema descriptor for id field.
 	roleDescID := roleMixinFields0[0].Descriptor()
+	// role.DefaultID holds the default value on creation for the id field.
+	role.DefaultID = roleDescID.Default.(func() int64)
 	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	role.IDValidator = roleDescID.Validators[0].(func(int64) error)
 	rolemenuMixin := schema.RoleMenu{}.Mixin()
@@ -434,6 +452,8 @@ func init() {
 	rolemenu.MenuIDValidator = rolemenuDescMenuID.Validators[0].(func(int64) error)
 	// rolemenuDescID is the schema descriptor for id field.
 	rolemenuDescID := rolemenuMixinFields0[0].Descriptor()
+	// rolemenu.DefaultID holds the default value on creation for the id field.
+	rolemenu.DefaultID = rolemenuDescID.Default.(func() int64)
 	// rolemenu.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	rolemenu.IDValidator = rolemenuDescID.Validators[0].(func(int64) error)
 	rolepermissionMixin := schema.RolePermission{}.Mixin()
@@ -451,6 +471,8 @@ func init() {
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
 	// rolepermissionDescID is the schema descriptor for id field.
 	rolepermissionDescID := rolepermissionMixinFields0[0].Descriptor()
+	// rolepermission.DefaultID holds the default value on creation for the id field.
+	rolepermission.DefaultID = rolepermissionDescID.Default.(func() int64)
 	// rolepermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	rolepermission.IDValidator = rolepermissionDescID.Validators[0].(func(int64) error)
 	userMixin := schema.User{}.Mixin()
@@ -584,6 +606,8 @@ func init() {
 	user.DefaultManager = userDescManager.Default.(string)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userMixinFields0[0].Descriptor()
+	// user.DefaultID holds the default value on creation for the id field.
+	user.DefaultID = userDescID.Default.(func() int64)
 	// user.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	user.IDValidator = userDescID.Validators[0].(func(int64) error)
 	userdepartmentMixin := schema.UserDepartment{}.Mixin()
@@ -601,6 +625,8 @@ func init() {
 	userdepartment.DepartmentIDValidator = userdepartmentDescDepartmentID.Validators[0].(func(int64) error)
 	// userdepartmentDescID is the schema descriptor for id field.
 	userdepartmentDescID := userdepartmentMixinFields0[0].Descriptor()
+	// userdepartment.DefaultID holds the default value on creation for the id field.
+	userdepartment.DefaultID = userdepartmentDescID.Default.(func() int64)
 	// userdepartment.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	userdepartment.IDValidator = userdepartmentDescID.Validators[0].(func(int64) error)
 	userpositionMixin := schema.UserPosition{}.Mixin()
@@ -618,6 +644,8 @@ func init() {
 	userposition.PositionIDValidator = userpositionDescPositionID.Validators[0].(func(int64) error)
 	// userpositionDescID is the schema descriptor for id field.
 	userpositionDescID := userpositionMixinFields0[0].Descriptor()
+	// userposition.DefaultID holds the default value on creation for the id field.
+	userposition.DefaultID = userpositionDescID.Default.(func() int64)
 	// userposition.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	userposition.IDValidator = userpositionDescID.Validators[0].(func(int64) error)
 	userroleMixin := schema.UserRole{}.Mixin()
@@ -635,6 +663,8 @@ func init() {
 	userrole.RoleIDValidator = userroleDescRoleID.Validators[0].(func(int64) error)
 	// userroleDescID is the schema descriptor for id field.
 	userroleDescID := userroleMixinFields0[0].Descriptor()
+	// userrole.DefaultID holds the default value on creation for the id field.
+	userrole.DefaultID = userroleDescID.Default.(func() int64)
 	// userrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	userrole.IDValidator = userroleDescID.Validators[0].(func(int64) error)
 }

@@ -39,6 +39,14 @@ func (udc *UserDepartmentCreate) SetID(i int64) *UserDepartmentCreate {
 	return udc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (udc *UserDepartmentCreate) SetNillableID(i *int64) *UserDepartmentCreate {
+	if i != nil {
+		udc.SetID(*i)
+	}
+	return udc
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (udc *UserDepartmentCreate) SetUser(u *User) *UserDepartmentCreate {
 	return udc.SetUserID(u.ID)
@@ -56,6 +64,7 @@ func (udc *UserDepartmentCreate) Mutation() *UserDepartmentMutation {
 
 // Save creates the UserDepartment in the database.
 func (udc *UserDepartmentCreate) Save(ctx context.Context) (*UserDepartment, error) {
+	udc.defaults()
 	return withHooks(ctx, udc.sqlSave, udc.mutation, udc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (udc *UserDepartmentCreate) Exec(ctx context.Context) error {
 func (udc *UserDepartmentCreate) ExecX(ctx context.Context) {
 	if err := udc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (udc *UserDepartmentCreate) defaults() {
+	if _, ok := udc.mutation.ID(); !ok {
+		v := userdepartment.DefaultID()
+		udc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 	for i := range udcb.builders {
 		func(i int, root context.Context) {
 			builder := udcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserDepartmentMutation)
 				if !ok {

@@ -336,6 +336,14 @@ func (uc *UserCreate) SetID(i int64) *UserCreate {
 	return uc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (uc *UserCreate) SetNillableID(i *int64) *UserCreate {
+	if i != nil {
+		uc.SetID(*i)
+	}
+	return uc
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (uc *UserCreate) AddRoleIDs(ids ...int64) *UserCreate {
 	uc.mutation.AddRoleIDs(ids...)
@@ -514,6 +522,10 @@ func (uc *UserCreate) defaults() {
 	if _, ok := uc.mutation.Manager(); !ok {
 		v := user.DefaultManager
 		uc.mutation.SetManager(v)
+	}
+	if _, ok := uc.mutation.ID(); !ok {
+		v := user.DefaultID()
+		uc.mutation.SetID(v)
 	}
 }
 
@@ -801,6 +813,13 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &UserRoleCreate{config: uc.config, mutation: newUserRoleMutation(uc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.DepartmentsIDs(); len(nodes) > 0 {
@@ -816,6 +835,13 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &UserDepartmentCreate{config: uc.config, mutation: newUserDepartmentMutation(uc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}

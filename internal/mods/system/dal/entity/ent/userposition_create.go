@@ -39,6 +39,14 @@ func (upc *UserPositionCreate) SetID(i int64) *UserPositionCreate {
 	return upc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (upc *UserPositionCreate) SetNillableID(i *int64) *UserPositionCreate {
+	if i != nil {
+		upc.SetID(*i)
+	}
+	return upc
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (upc *UserPositionCreate) SetUser(u *User) *UserPositionCreate {
 	return upc.SetUserID(u.ID)
@@ -56,6 +64,7 @@ func (upc *UserPositionCreate) Mutation() *UserPositionMutation {
 
 // Save creates the UserPosition in the database.
 func (upc *UserPositionCreate) Save(ctx context.Context) (*UserPosition, error) {
+	upc.defaults()
 	return withHooks(ctx, upc.sqlSave, upc.mutation, upc.hooks)
 }
 
@@ -78,6 +87,14 @@ func (upc *UserPositionCreate) Exec(ctx context.Context) error {
 func (upc *UserPositionCreate) ExecX(ctx context.Context) {
 	if err := upc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (upc *UserPositionCreate) defaults() {
+	if _, ok := upc.mutation.ID(); !ok {
+		v := userposition.DefaultID()
+		upc.mutation.SetID(v)
 	}
 }
 
@@ -217,6 +234,7 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 	for i := range upcb.builders {
 		func(i int, root context.Context) {
 			builder := upcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserPositionMutation)
 				if !ok {

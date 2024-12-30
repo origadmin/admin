@@ -227,6 +227,14 @@ func (mc *MenuCreate) SetID(i int64) *MenuCreate {
 	return mc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableID(i *int64) *MenuCreate {
+	if i != nil {
+		mc.SetID(*i)
+	}
+	return mc
+}
+
 // AddChildIDs adds the "children" edge to the Menu entity by IDs.
 func (mc *MenuCreate) AddChildIDs(ids ...int64) *MenuCreate {
 	mc.mutation.AddChildIDs(ids...)
@@ -408,6 +416,10 @@ func (mc *MenuCreate) defaults() {
 	if _, ok := mc.mutation.Properties(); !ok {
 		v := menu.DefaultProperties
 		mc.mutation.SetProperties(v)
+	}
+	if _, ok := mc.mutation.ID(); !ok {
+		v := menu.DefaultID()
+		mc.mutation.SetID(v)
 	}
 }
 
@@ -641,6 +653,13 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &RoleMenuCreate{config: mc.config, mutation: newRoleMenuMutation(mc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := mc.mutation.PermissionsIDs(); len(nodes) > 0 {
@@ -656,6 +675,13 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &MenuPermissionCreate{config: mc.config, mutation: newMenuPermissionMutation(mc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}

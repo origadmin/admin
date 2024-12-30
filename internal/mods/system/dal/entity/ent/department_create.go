@@ -163,6 +163,14 @@ func (dc *DepartmentCreate) SetID(i int64) *DepartmentCreate {
 	return dc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableID(i *int64) *DepartmentCreate {
+	if i != nil {
+		dc.SetID(*i)
+	}
+	return dc
+}
+
 // AddUserIDs adds the "users" edge to the User entity by IDs.
 func (dc *DepartmentCreate) AddUserIDs(ids ...int64) *DepartmentCreate {
 	dc.mutation.AddUserIDs(ids...)
@@ -325,6 +333,10 @@ func (dc *DepartmentCreate) defaults() {
 		v := department.DefaultLevel
 		dc.mutation.SetLevel(v)
 	}
+	if _, ok := dc.mutation.ID(); !ok {
+		v := department.DefaultID()
+		dc.mutation.SetID(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -468,6 +480,13 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &UserDepartmentCreate{config: dc.config, mutation: newUserDepartmentMutation(dc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := dc.mutation.PositionsIDs(); len(nodes) > 0 {
@@ -499,6 +518,13 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &DepartmentRoleCreate{config: dc.config, mutation: newDepartmentRoleMutation(dc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
