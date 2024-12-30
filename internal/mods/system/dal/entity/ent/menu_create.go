@@ -417,10 +417,6 @@ func (mc *MenuCreate) defaults() {
 		v := menu.DefaultProperties
 		mc.mutation.SetProperties(v)
 	}
-	if _, ok := mc.mutation.ParentID(); !ok {
-		v := menu.DefaultParentID()
-		mc.mutation.SetParentID(v)
-	}
 	if _, ok := mc.mutation.ID(); !ok {
 		v := menu.DefaultID()
 		mc.mutation.SetID(v)

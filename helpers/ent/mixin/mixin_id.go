@@ -70,7 +70,6 @@ func (obj ID) Fields() []ent.Field {
 func (obj ID) FK(name string) ent.Field {
 	obj.Key = name
 	obj.Positive = true
-	obj.DefaultFunc = id.Gen
 	if obj.CommentKey == "" {
 		obj.CommentKey = "field:foreign_key:comment"
 	}
@@ -93,7 +92,6 @@ func (obj ID) OP(name string) ent.Field {
 	obj.Key = name
 	obj.Positive = true
 	obj.Optional = true
-	obj.DefaultFunc = id.Gen
 	if obj.CommentKey == "" {
 		obj.CommentKey = "field:optional_key:comment"
 	}

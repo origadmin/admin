@@ -16,7 +16,6 @@ require (
 	github.com/go-kratos/kratos/v2 v2.8.3
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/goexts/generic v0.1.5
-	github.com/gogo/protobuf v1.3.2
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/gnostic v0.7.0
 	github.com/google/wire v0.6.0
@@ -24,6 +23,7 @@ require (
 	github.com/origadmin/contrib/database v0.0.26
 	github.com/origadmin/contrib/replacer v0.0.26
 	github.com/origadmin/contrib/transport/gins v0.0.26
+	github.com/origadmin/entslog/v3 v3.0.4
 	github.com/origadmin/runtime v0.1.39
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.1.45

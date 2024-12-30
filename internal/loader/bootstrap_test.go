@@ -16,6 +16,7 @@ import (
 
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/idgen/uuid"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -151,6 +152,7 @@ func TestLoadConfig(t *testing.T) {
 }
 
 func TestData_InitFromFile(t *testing.T) {
+	log.SetLogger(slog.NewLogger())
 	_ = uuid.UUID{}
 	type fields struct {
 		Bootstrap *configs.Bootstrap

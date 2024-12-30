@@ -79,8 +79,6 @@ func init() {
 	department.DefaultLevel = departmentDescLevel.Default.(int)
 	// departmentDescParentID is the schema descriptor for parent_id field.
 	departmentDescParentID := departmentFields[7].Descriptor()
-	// department.DefaultParentID holds the default value on creation for the parent_id field.
-	department.DefaultParentID = departmentDescParentID.Default.(func() int64)
 	// department.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	department.ParentIDValidator = departmentDescParentID.Validators[0].(func(int64) error)
 	// departmentDescID is the schema descriptor for id field.
@@ -96,14 +94,10 @@ func init() {
 	_ = departmentroleFields
 	// departmentroleDescDepartmentID is the schema descriptor for department_id field.
 	departmentroleDescDepartmentID := departmentroleFields[0].Descriptor()
-	// departmentrole.DefaultDepartmentID holds the default value on creation for the department_id field.
-	departmentrole.DefaultDepartmentID = departmentroleDescDepartmentID.Default.(func() int64)
 	// departmentrole.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	departmentrole.DepartmentIDValidator = departmentroleDescDepartmentID.Validators[0].(func(int64) error)
 	// departmentroleDescRoleID is the schema descriptor for role_id field.
 	departmentroleDescRoleID := departmentroleFields[1].Descriptor()
-	// departmentrole.DefaultRoleID holds the default value on creation for the role_id field.
-	departmentrole.DefaultRoleID = departmentroleDescRoleID.Default.(func() int64)
 	// departmentrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	departmentrole.RoleIDValidator = departmentroleDescRoleID.Validators[0].(func(int64) error)
 	// departmentroleDescID is the schema descriptor for id field.
@@ -191,8 +185,6 @@ func init() {
 	menu.DefaultProperties = menuDescProperties.Default.(string)
 	// menuDescParentID is the schema descriptor for parent_id field.
 	menuDescParentID := menuFields[11].Descriptor()
-	// menu.DefaultParentID holds the default value on creation for the parent_id field.
-	menu.DefaultParentID = menuDescParentID.Default.(func() int64)
 	// menu.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	menu.ParentIDValidator = menuDescParentID.Validators[0].(func(int64) error)
 	// menuDescID is the schema descriptor for id field.
@@ -208,14 +200,10 @@ func init() {
 	_ = menupermissionFields
 	// menupermissionDescMenuID is the schema descriptor for menu_id field.
 	menupermissionDescMenuID := menupermissionFields[0].Descriptor()
-	// menupermission.DefaultMenuID holds the default value on creation for the menu_id field.
-	menupermission.DefaultMenuID = menupermissionDescMenuID.Default.(func() int64)
 	// menupermission.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
 	menupermission.MenuIDValidator = menupermissionDescMenuID.Validators[0].(func(int64) error)
 	// menupermissionDescPermissionID is the schema descriptor for permission_id field.
 	menupermissionDescPermissionID := menupermissionFields[1].Descriptor()
-	// menupermission.DefaultPermissionID holds the default value on creation for the permission_id field.
-	menupermission.DefaultPermissionID = menupermissionDescPermissionID.Default.(func() int64)
 	// menupermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	menupermission.PermissionIDValidator = menupermissionDescPermissionID.Validators[0].(func(int64) error)
 	// menupermissionDescID is the schema descriptor for id field.
@@ -294,14 +282,10 @@ func init() {
 	_ = permissionresourceFields
 	// permissionresourceDescPermissionID is the schema descriptor for permission_id field.
 	permissionresourceDescPermissionID := permissionresourceFields[0].Descriptor()
-	// permissionresource.DefaultPermissionID holds the default value on creation for the permission_id field.
-	permissionresource.DefaultPermissionID = permissionresourceDescPermissionID.Default.(func() int64)
 	// permissionresource.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	permissionresource.PermissionIDValidator = permissionresourceDescPermissionID.Validators[0].(func(int64) error)
 	// permissionresourceDescResourceID is the schema descriptor for resource_id field.
 	permissionresourceDescResourceID := permissionresourceFields[1].Descriptor()
-	// permissionresource.DefaultResourceID holds the default value on creation for the resource_id field.
-	permissionresource.DefaultResourceID = permissionresourceDescResourceID.Default.(func() int64)
 	// permissionresource.ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
 	permissionresource.ResourceIDValidator = permissionresourceDescResourceID.Validators[0].(func(int64) error)
 	// permissionresourceDescID is the schema descriptor for id field.
@@ -339,8 +323,6 @@ func init() {
 	position.DescriptionValidator = positionDescDescription.Validators[0].(func(string) error)
 	// positionDescDepartmentID is the schema descriptor for department_id field.
 	positionDescDepartmentID := positionFields[2].Descriptor()
-	// position.DefaultDepartmentID holds the default value on creation for the department_id field.
-	position.DefaultDepartmentID = positionDescDepartmentID.Default.(func() int64)
 	// position.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	position.DepartmentIDValidator = positionDescDepartmentID.Validators[0].(func(int64) error)
 	// positionDescID is the schema descriptor for id field.
@@ -388,8 +370,6 @@ func init() {
 	resource.PathValidator = resourceDescPath.Validators[0].(func(string) error)
 	// resourceDescMenuID is the schema descriptor for menu_id field.
 	resourceDescMenuID := resourceFields[3].Descriptor()
-	// resource.DefaultMenuID holds the default value on creation for the menu_id field.
-	resource.DefaultMenuID = resourceDescMenuID.Default.(func() int64)
 	// resource.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
 	resource.MenuIDValidator = resourceDescMenuID.Validators[0].(func(int64) error)
 	// resourceDescID is the schema descriptor for id field.
@@ -464,14 +444,10 @@ func init() {
 	_ = rolemenuFields
 	// rolemenuDescRoleID is the schema descriptor for role_id field.
 	rolemenuDescRoleID := rolemenuFields[0].Descriptor()
-	// rolemenu.DefaultRoleID holds the default value on creation for the role_id field.
-	rolemenu.DefaultRoleID = rolemenuDescRoleID.Default.(func() int64)
 	// rolemenu.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	rolemenu.RoleIDValidator = rolemenuDescRoleID.Validators[0].(func(int64) error)
 	// rolemenuDescMenuID is the schema descriptor for menu_id field.
 	rolemenuDescMenuID := rolemenuFields[1].Descriptor()
-	// rolemenu.DefaultMenuID holds the default value on creation for the menu_id field.
-	rolemenu.DefaultMenuID = rolemenuDescMenuID.Default.(func() int64)
 	// rolemenu.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
 	rolemenu.MenuIDValidator = rolemenuDescMenuID.Validators[0].(func(int64) error)
 	// rolemenuDescID is the schema descriptor for id field.
@@ -487,14 +463,10 @@ func init() {
 	_ = rolepermissionFields
 	// rolepermissionDescRoleID is the schema descriptor for role_id field.
 	rolepermissionDescRoleID := rolepermissionFields[0].Descriptor()
-	// rolepermission.DefaultRoleID holds the default value on creation for the role_id field.
-	rolepermission.DefaultRoleID = rolepermissionDescRoleID.Default.(func() int64)
 	// rolepermission.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	rolepermission.RoleIDValidator = rolepermissionDescRoleID.Validators[0].(func(int64) error)
 	// rolepermissionDescPermissionID is the schema descriptor for permission_id field.
 	rolepermissionDescPermissionID := rolepermissionFields[1].Descriptor()
-	// rolepermission.DefaultPermissionID holds the default value on creation for the permission_id field.
-	rolepermission.DefaultPermissionID = rolepermissionDescPermissionID.Default.(func() int64)
 	// rolepermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
 	// rolepermissionDescID is the schema descriptor for id field.
@@ -626,8 +598,6 @@ func init() {
 	user.DefaultSanctionDate = userDescSanctionDate.Default.(func() time.Time)
 	// userDescManagerID is the schema descriptor for manager_id field.
 	userDescManagerID := userFields[17].Descriptor()
-	// user.DefaultManagerID holds the default value on creation for the manager_id field.
-	user.DefaultManagerID = userDescManagerID.Default.(func() int64)
 	// user.ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	user.ManagerIDValidator = userDescManagerID.Validators[0].(func(int64) error)
 	// userDescManager is the schema descriptor for manager field.
@@ -647,14 +617,10 @@ func init() {
 	_ = userdepartmentFields
 	// userdepartmentDescUserID is the schema descriptor for user_id field.
 	userdepartmentDescUserID := userdepartmentFields[0].Descriptor()
-	// userdepartment.DefaultUserID holds the default value on creation for the user_id field.
-	userdepartment.DefaultUserID = userdepartmentDescUserID.Default.(func() int64)
 	// userdepartment.UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
 	userdepartment.UserIDValidator = userdepartmentDescUserID.Validators[0].(func(int64) error)
 	// userdepartmentDescDepartmentID is the schema descriptor for department_id field.
 	userdepartmentDescDepartmentID := userdepartmentFields[1].Descriptor()
-	// userdepartment.DefaultDepartmentID holds the default value on creation for the department_id field.
-	userdepartment.DefaultDepartmentID = userdepartmentDescDepartmentID.Default.(func() int64)
 	// userdepartment.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	userdepartment.DepartmentIDValidator = userdepartmentDescDepartmentID.Validators[0].(func(int64) error)
 	// userdepartmentDescID is the schema descriptor for id field.
@@ -670,14 +636,10 @@ func init() {
 	_ = userpositionFields
 	// userpositionDescUserID is the schema descriptor for user_id field.
 	userpositionDescUserID := userpositionFields[0].Descriptor()
-	// userposition.DefaultUserID holds the default value on creation for the user_id field.
-	userposition.DefaultUserID = userpositionDescUserID.Default.(func() int64)
 	// userposition.UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
 	userposition.UserIDValidator = userpositionDescUserID.Validators[0].(func(int64) error)
 	// userpositionDescPositionID is the schema descriptor for position_id field.
 	userpositionDescPositionID := userpositionFields[1].Descriptor()
-	// userposition.DefaultPositionID holds the default value on creation for the position_id field.
-	userposition.DefaultPositionID = userpositionDescPositionID.Default.(func() int64)
 	// userposition.PositionIDValidator is a validator for the "position_id" field. It is called by the builders before save.
 	userposition.PositionIDValidator = userpositionDescPositionID.Validators[0].(func(int64) error)
 	// userpositionDescID is the schema descriptor for id field.
@@ -693,14 +655,10 @@ func init() {
 	_ = userroleFields
 	// userroleDescUserID is the schema descriptor for user_id field.
 	userroleDescUserID := userroleFields[0].Descriptor()
-	// userrole.DefaultUserID holds the default value on creation for the user_id field.
-	userrole.DefaultUserID = userroleDescUserID.Default.(func() int64)
 	// userrole.UserIDValidator is a validator for the "user_id" field. It is called by the builders before save.
 	userrole.UserIDValidator = userroleDescUserID.Validators[0].(func(int64) error)
 	// userroleDescRoleID is the schema descriptor for role_id field.
 	userroleDescRoleID := userroleFields[1].Descriptor()
-	// userrole.DefaultRoleID holds the default value on creation for the role_id field.
-	userrole.DefaultRoleID = userroleDescRoleID.Default.(func() int64)
 	// userrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	userrole.RoleIDValidator = userroleDescRoleID.Validators[0].(func(int64) error)
 	// userroleDescID is the schema descriptor for id field.

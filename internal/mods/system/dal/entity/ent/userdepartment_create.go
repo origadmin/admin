@@ -27,25 +27,9 @@ func (udc *UserDepartmentCreate) SetUserID(i int64) *UserDepartmentCreate {
 	return udc
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (udc *UserDepartmentCreate) SetNillableUserID(i *int64) *UserDepartmentCreate {
-	if i != nil {
-		udc.SetUserID(*i)
-	}
-	return udc
-}
-
 // SetDepartmentID sets the "department_id" field.
 func (udc *UserDepartmentCreate) SetDepartmentID(i int64) *UserDepartmentCreate {
 	udc.mutation.SetDepartmentID(i)
-	return udc
-}
-
-// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (udc *UserDepartmentCreate) SetNillableDepartmentID(i *int64) *UserDepartmentCreate {
-	if i != nil {
-		udc.SetDepartmentID(*i)
-	}
 	return udc
 }
 
@@ -108,14 +92,6 @@ func (udc *UserDepartmentCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (udc *UserDepartmentCreate) defaults() {
-	if _, ok := udc.mutation.UserID(); !ok {
-		v := userdepartment.DefaultUserID()
-		udc.mutation.SetUserID(v)
-	}
-	if _, ok := udc.mutation.DepartmentID(); !ok {
-		v := userdepartment.DefaultDepartmentID()
-		udc.mutation.SetDepartmentID(v)
-	}
 	if _, ok := udc.mutation.ID(); !ok {
 		v := userdepartment.DefaultID()
 		udc.mutation.SetID(v)

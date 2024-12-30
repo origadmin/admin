@@ -27,25 +27,9 @@ func (upc *UserPositionCreate) SetUserID(i int64) *UserPositionCreate {
 	return upc
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (upc *UserPositionCreate) SetNillableUserID(i *int64) *UserPositionCreate {
-	if i != nil {
-		upc.SetUserID(*i)
-	}
-	return upc
-}
-
 // SetPositionID sets the "position_id" field.
 func (upc *UserPositionCreate) SetPositionID(i int64) *UserPositionCreate {
 	upc.mutation.SetPositionID(i)
-	return upc
-}
-
-// SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (upc *UserPositionCreate) SetNillablePositionID(i *int64) *UserPositionCreate {
-	if i != nil {
-		upc.SetPositionID(*i)
-	}
 	return upc
 }
 
@@ -108,14 +92,6 @@ func (upc *UserPositionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (upc *UserPositionCreate) defaults() {
-	if _, ok := upc.mutation.UserID(); !ok {
-		v := userposition.DefaultUserID()
-		upc.mutation.SetUserID(v)
-	}
-	if _, ok := upc.mutation.PositionID(); !ok {
-		v := userposition.DefaultPositionID()
-		upc.mutation.SetPositionID(v)
-	}
 	if _, ok := upc.mutation.ID(); !ok {
 		v := userposition.DefaultID()
 		upc.mutation.SetID(v)

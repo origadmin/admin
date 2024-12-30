@@ -27,25 +27,9 @@ func (urc *UserRoleCreate) SetUserID(i int64) *UserRoleCreate {
 	return urc
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (urc *UserRoleCreate) SetNillableUserID(i *int64) *UserRoleCreate {
-	if i != nil {
-		urc.SetUserID(*i)
-	}
-	return urc
-}
-
 // SetRoleID sets the "role_id" field.
 func (urc *UserRoleCreate) SetRoleID(i int64) *UserRoleCreate {
 	urc.mutation.SetRoleID(i)
-	return urc
-}
-
-// SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (urc *UserRoleCreate) SetNillableRoleID(i *int64) *UserRoleCreate {
-	if i != nil {
-		urc.SetRoleID(*i)
-	}
 	return urc
 }
 
@@ -108,14 +92,6 @@ func (urc *UserRoleCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (urc *UserRoleCreate) defaults() {
-	if _, ok := urc.mutation.UserID(); !ok {
-		v := userrole.DefaultUserID()
-		urc.mutation.SetUserID(v)
-	}
-	if _, ok := urc.mutation.RoleID(); !ok {
-		v := userrole.DefaultRoleID()
-		urc.mutation.SetRoleID(v)
-	}
 	if _, ok := urc.mutation.ID(); !ok {
 		v := userrole.DefaultID()
 		urc.mutation.SetID(v)

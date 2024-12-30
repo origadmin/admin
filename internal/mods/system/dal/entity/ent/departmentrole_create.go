@@ -27,25 +27,9 @@ func (drc *DepartmentRoleCreate) SetDepartmentID(i int64) *DepartmentRoleCreate 
 	return drc
 }
 
-// SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (drc *DepartmentRoleCreate) SetNillableDepartmentID(i *int64) *DepartmentRoleCreate {
-	if i != nil {
-		drc.SetDepartmentID(*i)
-	}
-	return drc
-}
-
 // SetRoleID sets the "role_id" field.
 func (drc *DepartmentRoleCreate) SetRoleID(i int64) *DepartmentRoleCreate {
 	drc.mutation.SetRoleID(i)
-	return drc
-}
-
-// SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (drc *DepartmentRoleCreate) SetNillableRoleID(i *int64) *DepartmentRoleCreate {
-	if i != nil {
-		drc.SetRoleID(*i)
-	}
 	return drc
 }
 
@@ -108,14 +92,6 @@ func (drc *DepartmentRoleCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (drc *DepartmentRoleCreate) defaults() {
-	if _, ok := drc.mutation.DepartmentID(); !ok {
-		v := departmentrole.DefaultDepartmentID()
-		drc.mutation.SetDepartmentID(v)
-	}
-	if _, ok := drc.mutation.RoleID(); !ok {
-		v := departmentrole.DefaultRoleID()
-		drc.mutation.SetRoleID(v)
-	}
 	if _, ok := drc.mutation.ID(); !ok {
 		v := departmentrole.DefaultID()
 		drc.mutation.SetID(v)

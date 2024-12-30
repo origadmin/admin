@@ -316,14 +316,6 @@ func (uc *UserCreate) SetManagerID(i int64) *UserCreate {
 	return uc
 }
 
-// SetNillableManagerID sets the "manager_id" field if the given value is not nil.
-func (uc *UserCreate) SetNillableManagerID(i *int64) *UserCreate {
-	if i != nil {
-		uc.SetManagerID(*i)
-	}
-	return uc
-}
-
 // SetManager sets the "manager" field.
 func (uc *UserCreate) SetManager(s string) *UserCreate {
 	uc.mutation.SetManager(s)
@@ -526,10 +518,6 @@ func (uc *UserCreate) defaults() {
 	if _, ok := uc.mutation.SanctionDate(); !ok {
 		v := user.DefaultSanctionDate()
 		uc.mutation.SetSanctionDate(v)
-	}
-	if _, ok := uc.mutation.ManagerID(); !ok {
-		v := user.DefaultManagerID()
-		uc.mutation.SetManagerID(v)
 	}
 	if _, ok := uc.mutation.Manager(); !ok {
 		v := user.DefaultManager

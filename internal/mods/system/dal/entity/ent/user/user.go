@@ -212,8 +212,6 @@ var (
 	DefaultLastLoginTime func() time.Time
 	// DefaultSanctionDate holds the default value on creation for the "sanction_date" field.
 	DefaultSanctionDate func() time.Time
-	// DefaultManagerID holds the default value on creation for the "manager_id" field.
-	DefaultManagerID func() int64
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	ManagerIDValidator func(int64) error
 	// DefaultManager holds the default value on creation for the "manager" field.

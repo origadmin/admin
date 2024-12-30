@@ -101,8 +101,6 @@ var (
 	DefaultPath string
 	// PathValidator is a validator for the "path" field. It is called by the builders before save.
 	PathValidator func(string) error
-	// DefaultMenuID holds the default value on creation for the "menu_id" field.
-	DefaultMenuID func() int64
 	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
 	MenuIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.

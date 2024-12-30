@@ -27,25 +27,9 @@ func (mpc *MenuPermissionCreate) SetMenuID(i int64) *MenuPermissionCreate {
 	return mpc
 }
 
-// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (mpc *MenuPermissionCreate) SetNillableMenuID(i *int64) *MenuPermissionCreate {
-	if i != nil {
-		mpc.SetMenuID(*i)
-	}
-	return mpc
-}
-
 // SetPermissionID sets the "permission_id" field.
 func (mpc *MenuPermissionCreate) SetPermissionID(i int64) *MenuPermissionCreate {
 	mpc.mutation.SetPermissionID(i)
-	return mpc
-}
-
-// SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (mpc *MenuPermissionCreate) SetNillablePermissionID(i *int64) *MenuPermissionCreate {
-	if i != nil {
-		mpc.SetPermissionID(*i)
-	}
 	return mpc
 }
 
@@ -108,14 +92,6 @@ func (mpc *MenuPermissionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (mpc *MenuPermissionCreate) defaults() {
-	if _, ok := mpc.mutation.MenuID(); !ok {
-		v := menupermission.DefaultMenuID()
-		mpc.mutation.SetMenuID(v)
-	}
-	if _, ok := mpc.mutation.PermissionID(); !ok {
-		v := menupermission.DefaultPermissionID()
-		mpc.mutation.SetPermissionID(v)
-	}
 	if _, ok := mpc.mutation.ID(); !ok {
 		v := menupermission.DefaultID()
 		mpc.mutation.SetID(v)

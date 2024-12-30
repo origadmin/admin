@@ -18,6 +18,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/database"
+	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -26,6 +27,7 @@ import (
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
@@ -71,9 +73,6 @@ func FixSource(source string) string {
 
 // NewData .
 func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), error) {
-	log := log.NewHelper(logger)
-
-	//s := data.NewService(bootstrap.GetData(), nil)
 	cfg := bootstrap.GetData().GetDatabase()
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
@@ -97,8 +96,8 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	//	return nil, nil, err
 	//}
 	// Run the auto migration tool.
-
-	client := ent.NewClient(ent.Driver(sql.OpenDB(cfg.Dialect, drv)))
+	debugDrv := entslog.New(sql.OpenDB(cfg.Dialect, drv))
+	client := ent.NewClient(ent.Driver(debugDrv))
 	if true || cfg.GetMigration().GetEnabled() {
 		if err := client.Schema.Create(
 			context.Background(),
@@ -109,7 +108,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 			return nil, nil, err
 		}
 	}
-	client = client.Debug()
+
 	d := &Data{
 		Database: ent.NewDatabase(client),
 	}
@@ -174,13 +173,19 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 			}
 		case item.Keyword != "":
 			log.Infow("msg", "Checking item by Keyword", "itemKeyword", item.Keyword, "parentId", pid)
-			exists, err := obj.Menu(ctx).Query().Where(menu.Keyword(item.Keyword), menu.ParentID(pid)).Exist(ctx)
+			var wheres = []predicate.Menu{
+				menu.Keyword(item.Keyword),
+			}
+			if pid != 0 {
+				wheres = append(wheres, menu.ParentID(pid))
+			}
+			exists, err := obj.Menu(ctx).Query().Where(wheres...).Exist(ctx)
 			if err != nil {
 				log.Errorw("msg", "Error checking item by Keyword", "itemKeyword", item.Keyword, "parentId", pid, "error", err)
 				return err
 			}
 			if exists {
-				menuItem, err := obj.Menu(ctx).Query().Where(menu.Keyword(item.Keyword), menu.ParentID(pid)).First(ctx)
+				menuItem, err := obj.Menu(ctx).Query().Where(wheres...).First(ctx)
 				if err != nil {
 					log.Errorw("msg", "Error fetching item by Keyword", "itemKeyword", item.Keyword, "parentId", pid, "error", err)
 					return err
@@ -191,13 +196,19 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 			}
 		case item.Name != "":
 			log.Infow("msg", "Checking item by Name", "itemName", item.Name, "parentId", pid)
-			exists, err := obj.Menu(ctx).Query().Where(menu.Name(item.Name), menu.ParentID(pid)).Exist(ctx)
+			var wheres = []predicate.Menu{
+				menu.Name(item.Name),
+			}
+			if pid != 0 {
+				wheres = append(wheres, menu.ParentID(pid))
+			}
+			exists, err := obj.Menu(ctx).Query().Where(wheres...).Exist(ctx)
 			if err != nil {
 				log.Errorw("msg", "Error checking item by Name", "itemName", item.Name, "parentId", pid, "error", err)
 				return err
 			}
 			if exists {
-				menuItem, err := obj.Menu(ctx).Query().Where(menu.Name(item.Name), menu.ParentID(pid)).First(ctx)
+				menuItem, err := obj.Menu(ctx).Query().Where(wheres...).First(ctx)
 				if err != nil {
 					log.Errorw("msg", "Error fetching item by Name", "itemName", item.Name, "parentId", pid, "error", err)
 					return err
@@ -258,6 +269,7 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 			}
 			if res.Path != "" {
 				log.Infow("msg", "Checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "menuId", item.Id)
+
 				exists, err := obj.Resource(ctx).Query().Where(resource.Path(res.Path), resource.Method(res.Method), resource.ID(res.Id)).Exist(ctx)
 				if err != nil {
 					log.Errorw("msg", "Error checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "resourceId", res.Id, "error", err)
@@ -289,10 +301,10 @@ func (obj *Data) createInBatchByParent(ctx context.Context, items []*dto.MenuPB,
 				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
 				return err
 			}
-			log.Infow("Children processed successfully", "itemId", item.Id)
+			log.Infow("msg", "Children processed successfully", "itemId", item.Id)
 		}
 	}
 
-	log.Infow("Finished createInBatchByParent")
+	log.Infow("msg", "Finished createInBatchByParent")
 	return nil
 }
