@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package api.v1.services.auth;
+
+import "errors/errors.proto";
+
+option go_package = "v1/services/auth;auth";
+option java_multiple_files = true;
+option java_package = "com.origadmin.api.v1.admin.services.auth";
+option objc_class_prefix = "APIV1ServicesAuth";
+
+enum AuthErrorReason {
+  option (errors.default_code) = 500;
+  BASIS_ERROR_REASON_UNSPECIFIED = 0;
+  BASIS_ERROR_REASON_INVALID_TOKEN = 1050 [(errors.code) = 400];
+  BASIS_ERROR_REASON_INVALID_CLAIMS = 1051 [(errors.code) = 400];
+  BASIS_ERROR_REASON_INVALID_AUTHENTICATION = 1052 [(errors.code) = 400];
+  BASIS_ERROR_REASON_INVALID_AUTHORIZATION = 1053 [(errors.code) = 400];
+  BASIS_ERROR_REASON_MISSING_TOKEN = 1054 [(errors.code) = 400];
+  BASIS_ERROR_REASON_TOKEN_NOT_FOUND = 1055 [(errors.code) = 400];
+}
