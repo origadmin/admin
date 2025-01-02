@@ -34,3 +34,147 @@ func IsSystemErrorReasonUserNotFound(err error) bool {
 func ErrorSystemErrorReasonUserNotFound(format string, args ...interface{}) *errors.Error {
 	return errors.New(404, SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), fmt.Sprintf(format, args...))
 }
+
+func IsSystemErrorReasonUserAlreadyExists(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_USER_ALREADY_EXISTS.String() && e.Code == 409
+}
+
+func ErrorSystemErrorReasonUserAlreadyExists(format string, args ...interface{}) *errors.Error {
+	return errors.New(409, SystemErrorReason_SYSTEM_ERROR_REASON_USER_ALREADY_EXISTS.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonUserNotLoggedIn(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_LOGGED_IN.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonUserNotLoggedIn(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_LOGGED_IN.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonUserNotLoggedOut(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_LOGGED_OUT.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonUserNotLoggedOut(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_LOGGED_OUT.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonTokenExpired(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_TOKEN_EXPIRED.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonTokenExpired(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_TOKEN_EXPIRED.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonTokenNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_TOKEN_NOT_FOUND.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonTokenNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_TOKEN_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidToken(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_TOKEN.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonInvalidToken(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_TOKEN.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidClaims(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CLAIMS.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonInvalidClaims(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CLAIMS.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidAuthentication(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_AUTHENTICATION.String() && e.Code == 401
+}
+
+func ErrorSystemErrorReasonInvalidAuthentication(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_AUTHENTICATION.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidAuthorization(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_AUTHORIZATION.String() && e.Code == 403
+}
+
+func ErrorSystemErrorReasonInvalidAuthorization(format string, args ...interface{}) *errors.Error {
+	return errors.New(403, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_AUTHORIZATION.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidRequest(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_REQUEST.String() && e.Code == 400
+}
+
+func ErrorSystemErrorReasonInvalidRequest(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_REQUEST.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidResponse(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_RESPONSE.String() && e.Code == 500
+}
+
+func ErrorSystemErrorReasonInvalidResponse(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_RESPONSE.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidServer(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_SERVER.String() && e.Code == 500
+}
+
+func ErrorSystemErrorReasonInvalidServer(format string, args ...interface{}) *errors.Error {
+	return errors.New(500, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_SERVER.String(), fmt.Sprintf(format, args...))
+}

@@ -14,11 +14,65 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
+var (
+	ErrorInvalidToken = pb.ErrorSystemErrorReasonInvalidToken("invalid token")
+)
+
 // AuthAPIGINRPCService is a menu service.
 type AuthAPIGINRPCService struct {
 	resp.Response
 
 	client pb.AuthAPIClient
+}
+
+func (s AuthAPIGINRPCService) Authenticate(context transhttp.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
+	response, err := s.client.Authenticate(context, request)
+	if err != nil {
+		return nil, err
+	}
+	if !response.IsValid {
+		return nil, ErrorInvalidToken
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+	})
+	return nil, nil
+}
+
+func (s AuthAPIGINRPCService) CreateToken(context transhttp.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
+	response, err := s.client.CreateToken(context, request)
+	if err != nil {
+		return nil, err
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+	return nil, nil
+}
+
+func (s AuthAPIGINRPCService) DestroyToken(context transhttp.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
+	response, err := s.client.DestroyToken(context, request)
+	if err != nil {
+		return nil, err
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+	return nil, nil
+}
+
+func (s AuthAPIGINRPCService) VerifyToken(context transhttp.Context, request *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error) {
+	response, err := s.client.VerifyToken(context, request)
+	if err != nil {
+		return nil, err
+	}
+	s.JSON(context, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+	return nil, nil
 }
 
 func (s AuthAPIGINRPCService) ListAuthResources(context transhttp.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {

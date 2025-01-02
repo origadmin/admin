@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-agent unknown
 // - protoc             (unknown)
-// source: basis/login.proto
+// source: system/login.proto
 
-package basis
+package system
 
 import (
 	context "context"

@@ -20,6 +20,10 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	AuthAPI_ListAuthResources_FullMethodName = "/api.v1.services.system.AuthAPI/ListAuthResources"
+	AuthAPI_CreateToken_FullMethodName       = "/api.v1.services.system.AuthAPI/CreateToken"
+	AuthAPI_VerifyToken_FullMethodName       = "/api.v1.services.system.AuthAPI/VerifyToken"
+	AuthAPI_DestroyToken_FullMethodName      = "/api.v1.services.system.AuthAPI/DestroyToken"
+	AuthAPI_Authenticate_FullMethodName      = "/api.v1.services.system.AuthAPI/Authenticate"
 )
 
 // AuthAPIClient is the client API for AuthAPI service.
@@ -27,6 +31,13 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthAPIClient interface {
 	ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error)
+	// CreateToken generates a new JWT token for the given user.
+	CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*CreateTokenResponse, error)
+	// VerifyToken verifies the validity of a JWT token.
+	VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenResponse, error)
+	// DestroyToken invalidates a JWT token.
+	DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error)
+	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
 }
 
 type authAPIClient struct {
@@ -47,11 +58,58 @@ func (c *authAPIClient) ListAuthResources(ctx context.Context, in *ListAuthResou
 	return out, nil
 }
 
+func (c *authAPIClient) CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*CreateTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateTokenResponse)
+	err := c.cc.Invoke(ctx, AuthAPI_CreateToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authAPIClient) VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(VerifyTokenResponse)
+	err := c.cc.Invoke(ctx, AuthAPI_VerifyToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authAPIClient) DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DestroyTokenResponse)
+	err := c.cc.Invoke(ctx, AuthAPI_DestroyToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authAPIClient) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AuthenticateResponse)
+	err := c.cc.Invoke(ctx, AuthAPI_Authenticate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthAPIServer is the server API for AuthAPI service.
 // All implementations must embed UnimplementedAuthAPIServer
 // for forward compatibility.
 type AuthAPIServer interface {
 	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
+	// CreateToken generates a new JWT token for the given user.
+	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
+	// VerifyToken verifies the validity of a JWT token.
+	VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error)
+	// DestroyToken invalidates a JWT token.
+	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
+	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	mustEmbedUnimplementedAuthAPIServer()
 }
 
@@ -64,6 +122,18 @@ type UnimplementedAuthAPIServer struct{}
 
 func (UnimplementedAuthAPIServer) ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuthResources not implemented")
+}
+func (UnimplementedAuthAPIServer) CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateToken not implemented")
+}
+func (UnimplementedAuthAPIServer) VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyToken not implemented")
+}
+func (UnimplementedAuthAPIServer) DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DestroyToken not implemented")
+}
+func (UnimplementedAuthAPIServer) Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
 }
 func (UnimplementedAuthAPIServer) mustEmbedUnimplementedAuthAPIServer() {}
 func (UnimplementedAuthAPIServer) testEmbeddedByValue()                 {}
@@ -104,6 +174,78 @@ func _AuthAPI_ListAuthResources_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthAPI_CreateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthAPIServer).CreateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthAPI_CreateToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthAPIServer).CreateToken(ctx, req.(*CreateTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthAPI_VerifyToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthAPIServer).VerifyToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthAPI_VerifyToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthAPIServer).VerifyToken(ctx, req.(*VerifyTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthAPI_DestroyToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DestroyTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthAPIServer).DestroyToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthAPI_DestroyToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthAPIServer).DestroyToken(ctx, req.(*DestroyTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthAPI_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthenticateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthAPIServer).Authenticate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthAPI_Authenticate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthAPIServer).Authenticate(ctx, req.(*AuthenticateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthAPI_ServiceDesc is the grpc.ServiceDesc for AuthAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +256,22 @@ var AuthAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAuthResources",
 			Handler:    _AuthAPI_ListAuthResources_Handler,
+		},
+		{
+			MethodName: "CreateToken",
+			Handler:    _AuthAPI_CreateToken_Handler,
+		},
+		{
+			MethodName: "VerifyToken",
+			Handler:    _AuthAPI_VerifyToken_Handler,
+		},
+		{
+			MethodName: "DestroyToken",
+			Handler:    _AuthAPI_DestroyToken_Handler,
+		},
+		{
+			MethodName: "Authenticate",
+			Handler:    _AuthAPI_Authenticate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

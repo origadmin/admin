@@ -6,18 +6,68 @@ package dal
 
 import (
 	"context"
+	"sync"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/toolkits/security"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
 type authRepo struct {
-	db *Data
+	DB         *Data
+	BufPool    *sync.Pool
+	Tokenizer  security.Tokenizer
+	Authorizer security.Authorizer
+}
+
+func (repo authRepo) CreateToken(ctx context.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
+	claims := security.ClaimsFromContext(ctx)
+	token, err := repo.Tokenizer.CreateToken(ctx, claims)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateTokenResponse{
+		Token: token,
+	}, nil
+}
+
+func (repo authRepo) VerifyToken(ctx context.Context, request *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error) {
+	valid, err := repo.Tokenizer.Verify(ctx, request.Token)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.VerifyTokenResponse{
+		IsValid: valid,
+	}, nil
+}
+
+func (repo authRepo) DestroyToken(ctx context.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
+	err := repo.Tokenizer.DestroyToken(ctx, request.Token)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DestroyTokenResponse{}, nil
+}
+
+func (repo authRepo) Authenticate(ctx context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
+	claims, err := repo.Tokenizer.Authenticate(ctx, request.Token)
+	if err != nil {
+		return nil, err
+	}
+	authorized, err := repo.Authorizer.Authorized(ctx, fromClaims(claims, request.Method, request.Path))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.AuthenticateResponse{
+		IsValid: authorized,
+		//Claims: fromClaims(claims),
+	}, nil
 }
 
 func (repo authRepo) ListAuthResources(ctx context.Context, in *dto.ListAuthResourcesRequest, options ...dto.AuthResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
@@ -25,14 +75,24 @@ func (repo authRepo) ListAuthResources(ctx context.Context, in *dto.ListAuthReso
 	if len(options) > 0 {
 		option = options[0]
 	}
-	query := repo.db.Resource(ctx).Query()
+	query := repo.DB.Resource(ctx).Query()
 	return authResourcePageQuery(ctx, query, in, option)
+}
+
+func fromClaims(claims security.Claims, method, path string) security.UserClaims {
+	return &securityx.CasbinUserClaims{
+		Subject: claims.GetSubject(),
+		Method:  method,
+		Path:    path,
+		Claims:  claims,
+	}
 }
 
 // NewAuthRepo .
 func NewAuthRepo(db *Data, logger log.KLogger) dto.AuthRepo {
 	return &authRepo{
-		db: db,
+		DB:      db,
+		BufPool: BufPool(),
 	}
 }
 

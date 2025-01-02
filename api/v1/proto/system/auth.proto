@@ -17,6 +17,33 @@ service AuthAPI {
   rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
     option (google.api.http) = {get: "/sys/auth/resources"};
   }
+  // CreateToken generates a new JWT token for the given user.
+  rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {
+    option (google.api.http) = {
+      post: "/sys/auth/token"
+      body: "data"
+    };
+  }
+
+  // VerifyToken verifies the validity of a JWT token.
+  rpc VerifyToken(VerifyTokenRequest) returns (VerifyTokenResponse) {
+    option (google.api.http) = {get: "/sys/auth/verify"};
+  }
+
+  // DestroyToken invalidates a JWT token.
+  rpc DestroyToken(DestroyTokenRequest) returns (DestroyTokenResponse) {
+    option (google.api.http) = {
+      post: "/sys/auth/destroy"
+      body: "data"
+    };
+  }
+
+  rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {
+    option (google.api.http) = {
+      post: "/sys/auth/authenticate"
+      body: "data"
+    };
+  }
 }
 
 message ListAuthResourcesRequest {
@@ -35,4 +62,47 @@ message ListAuthResourcesResponse {
   repeated Resource resources = 1;
   // The total number of Auths in the result set.
   int32 total_size = 2;
+}
+
+// CreateTokenRequest contains the information needed to create a token.
+message CreateTokenRequest {
+  string user_id = 1;
+  repeated string scopes = 2;
+}
+
+// CreateTokenResponse contains the generated token.
+message CreateTokenResponse {
+  string token = 1;
+}
+
+// VerifyTokenRequest contains the token to be verified.
+message VerifyTokenRequest {
+  string token = 1;
+}
+
+// VerifyTokenResponse contains the result of the verification.
+message VerifyTokenResponse {
+  bool is_valid = 1;
+  map<string, string> claims = 2;
+}
+
+// DestroyTokenRequest contains the token to be invalidated.
+message DestroyTokenRequest {
+  string token = 1;
+}
+
+// DestroyTokenResponse contains the result of the invalidation.
+message DestroyTokenResponse {
+  google.protobuf.Empty empty = 1;
+}
+
+message AuthenticateRequest {
+  string token = 1;
+  string path = 3;
+  string method = 4;
+  string operation = 5;
+}
+
+message AuthenticateResponse {
+  bool is_valid = 1;
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
-	pb "origadmin/application/admin/api/v1/services/basis"
+	pb "origadmin/application/admin/api/v1/services/system"
 )
 
 // ProviderSet is service providers.

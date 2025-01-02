@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: basis/login.proto
+// source: system/login.proto
 
-package basis
+package system
 
 import (
 	context "context"
@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LoginAPI_CaptchaID_FullMethodName        = "/api.v1.services.basis.LoginAPI/CaptchaID"
-	LoginAPI_CaptchaImage_FullMethodName     = "/api.v1.services.basis.LoginAPI/CaptchaImage"
-	LoginAPI_CaptchaResource_FullMethodName  = "/api.v1.services.basis.LoginAPI/CaptchaResource"
-	LoginAPI_CaptchaResources_FullMethodName = "/api.v1.services.basis.LoginAPI/CaptchaResources"
-	LoginAPI_Login_FullMethodName            = "/api.v1.services.basis.LoginAPI/Login"
-	LoginAPI_Logout_FullMethodName           = "/api.v1.services.basis.LoginAPI/Logout"
-	LoginAPI_Register_FullMethodName         = "/api.v1.services.basis.LoginAPI/Register"
-	LoginAPI_TokenRefresh_FullMethodName     = "/api.v1.services.basis.LoginAPI/TokenRefresh"
+	LoginAPI_CaptchaID_FullMethodName        = "/api.v1.services.system.LoginAPI/CaptchaID"
+	LoginAPI_CaptchaImage_FullMethodName     = "/api.v1.services.system.LoginAPI/CaptchaImage"
+	LoginAPI_CaptchaResource_FullMethodName  = "/api.v1.services.system.LoginAPI/CaptchaResource"
+	LoginAPI_CaptchaResources_FullMethodName = "/api.v1.services.system.LoginAPI/CaptchaResources"
+	LoginAPI_Login_FullMethodName            = "/api.v1.services.system.LoginAPI/Login"
+	LoginAPI_Logout_FullMethodName           = "/api.v1.services.system.LoginAPI/Logout"
+	LoginAPI_Register_FullMethodName         = "/api.v1.services.system.LoginAPI/Register"
+	LoginAPI_TokenRefresh_FullMethodName     = "/api.v1.services.system.LoginAPI/TokenRefresh"
 )
 
 // LoginAPIClient is the client API for LoginAPI service.
@@ -350,7 +350,7 @@ func _LoginAPI_TokenRefresh_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var LoginAPI_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.basis.LoginAPI",
+	ServiceName: "api.v1.services.system.LoginAPI",
 	HandlerType: (*LoginAPIServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -387,5 +387,5 @@ var LoginAPI_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "basis/login.proto",
+	Metadata: "system/login.proto",
 }

@@ -67,18 +67,12 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 		}
 		servers = append(servers, serv)
 	}
-	//if serv := NewGINSServer(bootstrap, l, service.WithHTTP(
-	//	servicehttp.WithMiddlewares(middlewares...)),
-	//); serv != nil {
-	//	serv = register.GINS(serv)
-	//	serv = register2.GINS(serv)
-	//	servers = append(servers, serv)
-	//}
 	return servers
 }
 
 type RegisterAgent struct {
 	Auth    pb.AuthAPIAgent
+	Login   pb.LoginAPIAgent
 	Current pb.CurrentAPIAgent
 	Menu    pb.MenuAPIAgent
 	Role    pb.RoleAPIAgent
@@ -93,6 +87,7 @@ func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServe
 	log.Info("http server system init")
 	ag := agent.NewHTTP(server)
 	pb.RegisterAuthAPIAgent(ag, s.Auth)
+	pb.RegisterLoginAPIAgent(ag, s.Login)
 	pb.RegisterCurrentAPIAgent(ag, s.Current)
 	pb.RegisterMenuAPIAgent(ag, s.Menu)
 	pb.RegisterRoleAPIAgent(ag, s.Role)
@@ -104,35 +99,14 @@ func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServe
 	s.GRPCServer(ctx, grpcServer)
 }
 
-//
-//func (s RegisterAgent) HTTP(server *http.Server) {
-//	log.Info("http server system init")
-//	log.Info("gin server system init")
-//	for _, register := range s.basisRegisters {
-//		register(server)
-//	}
-//	ag := agent.NewHTTP(server)
-//	pb.RegisterAuthAPIAgent(ag, s.Auth)
-//	pb.RegisterCurrentAPIAgent(ag, s.Current)
-//	pb.RegisterMenuAPIAgent(ag, s.Menu)
-//	pb.RegisterRoleAPIAgent(ag, s.Role)
-//	pb.RegisterUserAPIAgent(ag, s.User)
-//}
-
 func NewSystemServerAgent(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
-	//client, err := NewSystemClient(bootstrap, l)
-	//if err != nil {
-	//	return nil, err
-	//}
 	register := RegisterAgent{
 		Auth:    systemservice.NewAuthServerAgent(client),
+		Login:   systemservice.NewLoginServerAgent(client),
 		Current: systemservice.NewCurrentServerAgent(client),
 		Menu:    systemservice.NewMenuServerAgent(client),
 		Role:    systemservice.NewRoleServerAgent(client),
 		User:    systemservice.NewUserServerAgent(client),
-		//basisRegisters: []func(server *http.Server){
-		//	basisservice.NewLoginServerAgentGINRegister(client),
-		//},
 	}
 	return &register, nil
 }
@@ -188,14 +162,5 @@ func NewRegisterServer(s1 *systemservice.RegisterServer, s2 *basisservice.Regist
 		s1, s2,
 	}
 }
-
-//func NewMenuHTTPServerAgent(service *configv1.Service) (pb.MenuAPIAgent, error) {
-//	client, err := runtime.NewHTTPServiceClient(context.Background(), service)
-//	if err != nil {
-//		return nil, errors.Wrap(err, "create menu http client")
-//	}
-//	cli := pb.NewMenuAPIHTTPClient(client)
-//	return systemservice.NewMenuAPIAgent(cli), nil
-//}
 
 var _ service.ServerRegister = (*RegisterAgent)(nil)

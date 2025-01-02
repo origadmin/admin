@@ -24,8 +24,16 @@ type LoginAPIAgentService struct {
 }
 
 func (s LoginAPIAgentService) CurrentLogout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	response, err := s.client.Logout(context, request)
+	if err != nil {
+		log.Errorf("Logout error: %v", err)
+		return nil, err
+	}
+	s.JSON(context, http.StatusOK, &resp.Data{
+		Success: true,
+		Data:    resp.Any2AnyPB(response),
+	})
+	return nil, nil
 }
 
 func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
@@ -107,32 +115,6 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	log.Debugf("CaptchaImage: Completed successfully")
 	return nil, nil
 }
-
-//func (s LoginAPIAgentService) CurrentMenus(context transhttp.Context, request *pb.CurrentMenusRequest) (*pb.CurrentMenusResponse, error) {
-//	response, err := s.client.CurrentMenus(context, request)
-//	if err != nil {
-//		log.Errorf("CurrentMenus error: %v", err)
-//		return nil, err
-//	}
-//	s.JSON(context, http.StatusOK, &resp.Data{
-//		Success: true,
-//		Data:    response,
-//	})
-//	return nil, nil
-//}
-
-//func (s LoginAPIAgentService) CurrentUser(context transhttp.Context, request *pb.CurrentUserRequest) (*pb.CurrentUserResponse, error) {
-//	response, err := s.client.CurrentUser(context, request)
-//	if err != nil {
-//		log.Errorf("CurrentUser error: %v", err)
-//		return nil, err
-//	}
-//	s.JSON(context, http.StatusOK, &resp.Data{
-//		Success: true,
-//		Data:    response,
-//	})
-//	return nil, nil
-//}
 
 func (s LoginAPIAgentService) TokenRefresh(context transhttp.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
 	response, err := s.client.TokenRefresh(context, request)

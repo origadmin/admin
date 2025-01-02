@@ -22,7 +22,14 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type AuthAPIAgent interface {
+	Authenticate(http.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
+	// CreateToken CreateToken generates a new JWT token for the given user.
+	CreateToken(http.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
+	// DestroyToken DestroyToken invalidates a JWT token.
+	DestroyToken(http.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
 	ListAuthResources(http.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
+	// VerifyToken VerifyToken verifies the validity of a JWT token.
+	VerifyToken(http.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error)
 }
 
 func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
@@ -47,7 +54,108 @@ func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.Handle
 	}
 }
 
+func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in CreateTokenRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthAPICreateToken)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateTokenResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthAPI_VerifyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in VerifyTokenRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthAPIVerifyToken)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.VerifyToken(ctx, req.(*VerifyTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*VerifyTokenResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in DestroyTokenRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthAPIDestroyToken)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DestroyTokenResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
+func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in AuthenticateRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthAPIAuthenticate)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AuthenticateResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
 func RegisterAuthAPIAgent(ag agent.HTTPAgent, srv AuthAPIAgent) {
 	r := ag.Route()
 	r.GET("/sys/auth/resources", _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/token", _AuthAPI_CreateToken0_HTTPAgent_Handler(srv))
+	r.GET("/sys/auth/verify", _AuthAPI_VerifyToken0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/destroy", _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/authenticate", _AuthAPI_Authenticate0_HTTPAgent_Handler(srv))
 }

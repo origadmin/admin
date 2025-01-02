@@ -24,8 +24,8 @@ type MenuPermission struct {
 // Fields of the MenuPermission.
 func (MenuPermission) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FK("menu_id", "menu_permission:field:menu_id"),             // From Menu.ID
-		mixin.FK("permission_id", "menu_permission:field:permission_id"), // From Permission.ID
+		mixin.FK("menu_id", "menu_permission.field.menu_id"),             // From Menu.ID
+		mixin.FK("permission_id", "menu_permission.field.permission_id"), // From Permission.ID
 	}
 }
 
@@ -51,7 +51,7 @@ func (MenuPermission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_menu_permissions"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("menu_permission:table:comment")),
+		schema.Comment(i18n.Text("menu_permission.table.comment")),
 	}
 }
 

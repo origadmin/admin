@@ -35,27 +35,27 @@ func (Role) Fields() []ent.Field {
 		field.String("keyword").
 			MaxLen(32).
 			Default("").
-			Comment("role:field:keyword"), // Code of role (unique)
+			Comment("role.field.keyword"), // Code of role (unique)
 		field.String("name").
 			MaxLen(128).
 			Default("").
-			Comment("role:field:name"), // Display name of role
+			Comment("role.field.name"), // Display name of role
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment("role:field:description"), // Details about role
+			Comment("role.field.description"), // Details about role
 		field.Int8("type").
 			Default(RoleTypeUser).
-			Comment("role:field:type"), //("Role type: 1 - System role 2 - User role 3 - Department role"),
+			Comment("role.field.type"), //("Role type: 1 - System role 2 - User role 3 - Department role"),
 		field.Int("sequence").
 			Default(0).
-			Comment("role:field:sequence"), // Sequence for sorting
+			Comment("role.field.sequence"), // Sequence for sorting
 		field.Int8("status").
 			Default(0).
-			Comment("role:field:status"),
+			Comment("role.field.status"),
 		field.Bool("is_system").
 			Default(false).
-			Comment("role:field:is_system"), //("Whether the system is built-in (the built-in role cannot be deleted)"),
+			Comment("role.field.is_system"), //("Whether the system is built-in (the built-in role cannot be deleted)"),
 	}
 }
 
@@ -79,7 +79,7 @@ func (Role) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_roles"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("role:table:comment")),
+		schema.Comment(i18n.Text("role.table.comment")),
 	}
 }
 

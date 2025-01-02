@@ -34,7 +34,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaIDResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.CaptchaIDResponse'
                 default:
                     description: Default error response
                     content:
@@ -58,7 +58,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaResourcesResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.CaptchaResourcesResponse'
                 default:
                     description: Default error response
                     content:
@@ -87,7 +87,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaResourceResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.CaptchaResourceResponse'
                 default:
                     description: Default error response
                     content:
@@ -153,7 +153,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.CaptchaImageResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.CaptchaImageResponse'
                 default:
                     description: Default error response
                     content:
@@ -169,7 +169,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.LoginRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.system.LoginRequest_Data'
                 required: true
             responses:
                 "200":
@@ -177,7 +177,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.LoginResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.LoginResponse'
                 default:
                     description: Default error response
                     content:
@@ -201,7 +201,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.LogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.LogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -217,7 +217,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.RegisterRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.system.RegisterRequest_Data'
                 required: true
             responses:
                 "200":
@@ -225,7 +225,74 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.RegisterResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.RegisterResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/auth/authenticate:
+        post:
+            tags:
+                - AuthAPI
+            operationId: AuthAPI_Authenticate
+            parameters:
+                - name: token
+                  in: query
+                  schema:
+                    type: string
+                - name: path
+                  in: query
+                  schema:
+                    type: string
+                - name: method
+                  in: query
+                  schema:
+                    type: string
+                - name: options
+                  in: query
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.AuthenticateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/auth/destroy:
+        post:
+            tags:
+                - AuthAPI
+            description: DestroyToken invalidates a JWT token.
+            operationId: AuthAPI_DestroyToken
+            parameters:
+                - name: token
+                  in: query
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DestroyTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -267,6 +334,64 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.ListAuthResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/auth/token:
+        post:
+            tags:
+                - AuthAPI
+            description: CreateToken generates a new JWT token for the given user.
+            operationId: AuthAPI_CreateToken
+            parameters:
+                - name: user_id
+                  in: query
+                  schema:
+                    type: string
+                - name: scopes
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreateTokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/auth/verify:
+        get:
+            tags:
+                - AuthAPI
+            description: VerifyToken verifies the validity of a JWT token.
+            operationId: AuthAPI_VerifyToken
+            parameters:
+                - name: token
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.VerifyTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -1205,7 +1330,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.basis.TokenRefreshRequest'
+                            $ref: '#/components/schemas/api.v1.services.system.TokenRefreshRequest'
                 required: true
             responses:
                 "200":
@@ -1213,7 +1338,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.basis.TokenRefreshResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.TokenRefreshResponse'
                 default:
                     description: Default error response
                     content:
@@ -1222,12 +1347,17 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
-        api.v1.services.basis.CaptchaIDResponse:
+        api.v1.services.system.AuthenticateResponse:
+            type: object
+            properties:
+                is_valid:
+                    type: boolean
+        api.v1.services.system.CaptchaIDResponse:
             type: object
             properties:
                 data:
                     type: string
-        api.v1.services.basis.CaptchaImageResponse:
+        api.v1.services.system.CaptchaImageResponse:
             type: object
             properties:
                 headers:
@@ -1238,7 +1368,7 @@ components:
                     type: string
                     format: bytes
             description: The response message containing the greetings
-        api.v1.services.basis.CaptchaResourceResponse:
+        api.v1.services.system.CaptchaResourceResponse:
             type: object
             properties:
                 headers:
@@ -1248,7 +1378,7 @@ components:
                 data:
                     type: string
                     format: bytes
-        api.v1.services.basis.CaptchaResourcesResponse:
+        api.v1.services.system.CaptchaResourcesResponse:
             type: object
             properties:
                 image:
@@ -1265,65 +1395,6 @@ components:
                 audio_type:
                     type: integer
                     format: enum
-        api.v1.services.basis.LoginRequest_Data:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captcha_id:
-                    type: string
-                captcha_code:
-                    type: string
-        api.v1.services.basis.LoginResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.basis.LogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-        api.v1.services.basis.RegisterRequest_Data:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captcha_id:
-                    type: string
-                captcha_code:
-                    type: string
-        api.v1.services.basis.RegisterResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                data:
-                    $ref: '#/components/schemas/api.v1.services.basis.RegisterResponse_Data'
-        api.v1.services.basis.RegisterResponse_Data:
-            type: object
-            properties:
-                redirect:
-                    type: string
-        api.v1.services.basis.TokenRefreshRequest:
-            type: object
-            properties:
-                data:
-                    $ref: '#/components/schemas/api.v1.services.basis.TokenRefreshRequest_Data'
-        api.v1.services.basis.TokenRefreshRequest_Data:
-            type: object
-            properties:
-                refresh_token:
-                    type: string
-        api.v1.services.basis.TokenRefreshResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:
@@ -1341,6 +1412,12 @@ components:
             properties:
                 role:
                     $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.CreateTokenResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+            description: CreateTokenResponse contains the generated token.
         api.v1.services.system.CreateUserResponse:
             type: object
             properties:
@@ -1365,6 +1442,10 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
+        api.v1.services.system.DestroyTokenResponse:
+            type: object
+            properties: {}
+            description: DestroyTokenResponse contains the result of the invalidation.
         api.v1.services.system.GetCurrentUserResponse:
             type: object
             properties:
@@ -1548,6 +1629,27 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
+        api.v1.services.system.LoginRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.system.LoginResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
+        api.v1.services.system.LogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.v1.services.system.Menu:
             type: object
             properties:
@@ -1619,6 +1721,29 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
             description: Menu is the model entity for the Menu schema.
+        api.v1.services.system.RegisterRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.system.RegisterResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                data:
+                    $ref: '#/components/schemas/api.v1.services.system.RegisterResponse_Data'
+        api.v1.services.system.RegisterResponse_Data:
+            type: object
+            properties:
+                redirect:
+                    type: string
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
@@ -1704,6 +1829,21 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.User'
                     description: Users holds the value of the users edge.
             description: Role is the model entity for the Role schema.
+        api.v1.services.system.TokenRefreshRequest:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.system.TokenRefreshRequest_Data'
+        api.v1.services.system.TokenRefreshRequest_Data:
+            type: object
+            properties:
+                refresh_token:
+                    type: string
+        api.v1.services.system.TokenRefreshResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.system.UpdateCurrentSettingResponse:
             type: object
             properties: {}
@@ -1793,6 +1933,16 @@ components:
                             selectValues = 14;
                          Roles holds the value of the roles edge.
             description: User is the model entity for the User schema.
+        api.v1.services.system.VerifyTokenResponse:
+            type: object
+            properties:
+                is_valid:
+                    type: boolean
+                claims:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: VerifyTokenResponse contains the result of the verification.
         google.protobuf.Any:
             type: object
             properties:

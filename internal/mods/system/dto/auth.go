@@ -21,6 +21,10 @@ type (
 // AuthRepo is a Auth repository interface.
 type AuthRepo interface {
 	ListAuthResources(context.Context, *ListAuthResourcesRequest, ...AuthResourceQueryOption) ([]*ResourcePB, int32, error)
+	CreateToken(context.Context, *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error)
+	VerifyToken(context.Context, *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error)
+	DestroyToken(context.Context, *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error)
+	Authenticate(context.Context, *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error)
 }
 
 type AuthResourceQueryOption struct {

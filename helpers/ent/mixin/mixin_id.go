@@ -71,7 +71,7 @@ func (obj ID) FK(name string) ent.Field {
 	obj.Key = name
 	obj.Positive = true
 	if obj.CommentKey == "" {
-		obj.CommentKey = "field:foreign_key:comment"
+		obj.CommentKey = "field.foreign_key.comment"
 	}
 	return obj.ToField()
 }
@@ -83,7 +83,7 @@ func (obj ID) PK(name string) ent.Field {
 	obj.Immutable = true
 	obj.DefaultFunc = id.Gen
 	if obj.CommentKey == "" {
-		obj.CommentKey = "field:primary_key:comment"
+		obj.CommentKey = "field.primary_key.comment"
 	}
 	return obj.ToField()
 }
@@ -93,7 +93,7 @@ func (obj ID) OP(name string) ent.Field {
 	obj.Positive = true
 	obj.Optional = true
 	if obj.CommentKey == "" {
-		obj.CommentKey = "field:optional_key:comment"
+		obj.CommentKey = "field.optional_key.comment"
 	}
 	return obj.ToField()
 }

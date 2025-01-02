@@ -21,7 +21,7 @@ import (
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/security"
 
-	"origadmin/application/admin/api/v1/services/basis"
+	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/helpers/securityx"
@@ -124,11 +124,11 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 
 func DefaultPaths() []string {
 	return []string{
-		basis.OperationLoginAPICaptchaID,
-		basis.OperationLoginAPICaptchaImage,
-		basis.OperationLoginAPICaptchaResource,
-		basis.OperationLoginAPICaptchaResources,
-		basis.OperationLoginAPILogin,
-		basis.OperationLoginAPIRegister,
+		system.OperationLoginAPICaptchaID,
+		system.OperationLoginAPICaptchaImage,
+		system.OperationLoginAPICaptchaResource,
+		system.OperationLoginAPICaptchaResources,
+		system.OperationLoginAPILogin,
+		system.OperationLoginAPIRegister,
 	}
 }

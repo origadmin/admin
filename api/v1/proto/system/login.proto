@@ -1,16 +1,16 @@
 syntax = "proto3";
 
-package api.v1.services.basis;
+package api.v1.services.system;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "security/jwt/v1/token.proto";
 import "validate/validate.proto";
 
-option go_package = "v1/services/basis;basis";
+option go_package = "v1/services/system;system";
 option java_multiple_files = true;
-option java_outer_classname = "APIV1ServicesBasisProto";
-option java_package = "com.origadmin.api.v1.admin.services.basis";
+option java_outer_classname = "APIV1ServicesSystemProto";
+option java_package = "com.origadmin.api.v1.admin.services.system";
 
 // The login service definition.
 service LoginAPI {

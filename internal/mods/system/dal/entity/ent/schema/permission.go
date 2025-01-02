@@ -44,7 +44,7 @@ const (
 //
 //	{
 //	    "name": "部门人员管理",
-//	    "keyword": "dept:user:manage",
+//	    "keyword": "dept.user.manage",
 //	    "type": PermTypeDept,
 //	    "scope": ScopeSubDept,
 //	}
@@ -53,7 +53,7 @@ const (
 //
 //	{
 //	    "name": "指定部门资源管理",
-//	    "keyword": "dept:resource:manage",
+//	    "keyword": "dept.resource.manage",
 //	    "type": PermTypeDept,
 //	    "scope": ScopeCustomDept,
 //	    "scope_depts": ["dept1", "dept2"]
@@ -63,7 +63,7 @@ const (
 //
 //	{
 //	    "name": "查看财务数据",
-//	    "keyword": "finance:view",
+//	    "keyword": "finance.view",
 //	    "type": PermTypeData,
 //	    "scope": ScopeDept,
 //	}
@@ -71,27 +71,27 @@ func (Permission) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").
 			MaxLen(64).
-			Comment("permission:field:name"),
+			Comment("permission.field.name"),
 		field.String("keyword").
 			MaxLen(64).
 			Unique().
-			Comment("permission:field:keyword"),
+			Comment("permission.field.keyword"),
 		field.String("description").
 			MaxLen(256).
 			Optional().
-			Comment("permission:field:description"),
+			Comment("permission.field.description"),
 		field.String("i18n_key").
 			MaxLen(128).
 			NotEmpty().
-			Comment("permission:field:i18n_key"). //Comment("国际化标识符(如：permission.system.user.manage)").
+			Comment("permission.field.i18n_key"). //Comment("国际化标识符(如：permission.system.user.manage)").
 			Unique(),
 		field.Int8("type").
-			Default(PermTypeMenu).Comment("permission:field:type"), //Comment("权限类型：1-系统 2-菜单 3-数据 4-部门 5-资源"),
+			Default(PermTypeMenu).Comment("permission.field.type"), //Comment("权限类型：1-系统 2-菜单 3-数据 4-部门 5-资源"),
 		field.String("scope").
-			Default(ScopeSelf).Comment("permission:field:scope"), //Comment("数据范围：self-仅本人 dept-本部门 sub_dept-本部门及下级 custom-自定义部门 all-所有"),
+			Default(ScopeSelf).Comment("permission.field.scope"), //Comment("数据范围：self-仅本人 dept-本部门 sub_dept-本部门及下级 custom-自定义部门 all-所有"),
 		field.JSON("scope_depts", []string{}).
 			Optional().
-			Comment("permission:field:scope_depts"), //Comment("自定义数据范围的部门ID列表，当scope为custom时有效"),
+			Comment("permission.field.scope_depts"), //Comment("自定义数据范围的部门ID列表，当scope为custom时有效"),
 	}
 }
 
@@ -100,7 +100,7 @@ func (Permission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_permissions"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("permission:table:comment")),
+		schema.Comment(i18n.Text("permission.table.comment")),
 	}
 }
 

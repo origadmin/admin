@@ -6,11 +6,11 @@
 package i18n
 
 const (
-	// DefaultLanguage 默认语言
+	// DefaultLanguage defines the default language for the system
 	DefaultLanguage = "en_US"
 )
 
-// KeyTextMap 定义了系统中使用的所有国际化键值对
+// KeyTextMap defines all internationalized key-value pairs used in the system
 var KeyTextMap = map[string]map[string]string{
 	"zh_CN": {
 		"test": "测试",

@@ -22,6 +22,22 @@ type AuthsBiz struct {
 	log     *log.KHelper
 }
 
+func (biz AuthsBiz) CreateToken(ctx context.Context, in *pb.CreateTokenRequest, opts ...grpc.CallOption) (*pb.CreateTokenResponse, error) {
+	return biz.dao.CreateToken(ctx, in)
+}
+
+func (biz AuthsBiz) VerifyToken(ctx context.Context, in *pb.VerifyTokenRequest, opts ...grpc.CallOption) (*pb.VerifyTokenResponse, error) {
+	return biz.dao.VerifyToken(ctx, in)
+}
+
+func (biz AuthsBiz) DestroyToken(ctx context.Context, in *pb.DestroyTokenRequest, opts ...grpc.CallOption) (*pb.DestroyTokenResponse, error) {
+	return biz.dao.DestroyToken(ctx, in)
+}
+
+func (biz AuthsBiz) Authenticate(ctx context.Context, in *pb.AuthenticateRequest, opts ...grpc.CallOption) (*pb.AuthenticateResponse, error) {
+	return biz.dao.Authenticate(ctx, in)
+}
+
 func (biz AuthsBiz) ListAuthResources(ctx context.Context, in *pb.ListAuthResourcesRequest, opts ...grpc.CallOption) (*pb.ListAuthResourcesResponse, error) {
 	var option dto.AuthResourceQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {

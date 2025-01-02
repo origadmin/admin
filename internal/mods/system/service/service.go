@@ -17,6 +17,8 @@ import (
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
+	NewLoginAPIService,
+	NewLoginAPIServer,
 	NewMenuAPIServer,
 	NewMenuAPIService,
 	NewRoleAPIServer,
@@ -34,6 +36,7 @@ type RegisterServer struct {
 	Role    pb.RoleAPIServer
 	User    pb.UserAPIServer
 	Auth    pb.AuthAPIServer
+	Login   pb.LoginAPIServer
 	Current pb.CurrentAPIServer
 }
 
@@ -43,6 +46,7 @@ func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServ
 	pb.RegisterRoleAPIServer(server, s.Role)
 	pb.RegisterUserAPIServer(server, s.User)
 	pb.RegisterAuthAPIServer(server, s.Auth)
+	pb.RegisterLoginAPIServer(server, s.Login)
 	pb.RegisterCurrentAPIServer(server, s.Current)
 }
 
@@ -52,6 +56,7 @@ func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServ
 	pb.RegisterRoleAPIHTTPServer(server, s.Role)
 	pb.RegisterUserAPIHTTPServer(server, s.User)
 	pb.RegisterAuthAPIHTTPServer(server, s.Auth)
+	pb.RegisterLoginAPIHTTPServer(server, s.Login)
 	pb.RegisterCurrentAPIHTTPServer(server, s.Current)
 }
 

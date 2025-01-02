@@ -51,7 +51,7 @@ func (RolePermission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_role_permissions"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("role_permission:table:comment")),
+		schema.Comment(i18n.Text("role_permission.table.comment")),
 	}
 }
 

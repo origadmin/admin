@@ -24,8 +24,8 @@ type RoleMenu struct {
 // Fields of the RoleMenu.
 func (RoleMenu) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FK("role_id", "role_menu:field:role_id"), // From Role.ID
-		mixin.FK("menu_id", "role_menu:field:menu_id"), // From Menu.ID
+		mixin.FK("role_id", "role_menu.field.role_id"), // From Role.ID
+		mixin.FK("menu_id", "role_menu.field.menu_id"), // From Menu.ID
 	}
 }
 
@@ -51,7 +51,7 @@ func (RoleMenu) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_role_menus"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("role_menu:table:comment")),
+		schema.Comment(i18n.Text("role_menu.table.comment")),
 	}
 }
 

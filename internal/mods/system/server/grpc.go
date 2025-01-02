@@ -20,8 +20,3 @@ func NewGRPCServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.Op
 	}
 	return srv
 }
-
-//func RegisterGRPCServer(srv *grpc.Server, menus pb.MenuAPIServer, login basis.LoginAPIServer) {
-//	basis.RegisterLoginAPIServer(srv, login)
-//	pb.RegisterMenuAPIServer(srv, menus)
-//}

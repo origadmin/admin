@@ -20,8 +20,3 @@ func NewHTTPServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.Op
 	}
 	return srv
 }
-
-//func RegisterHTTPServer(srv *http.Register, menus pb.MenuAPIServer, login basis.LoginAPIServer) {
-//	basis.RegisterLoginAPIHTTPServer(srv, login)
-//	pb.RegisterMenuAPIHTTPServer(srv, menus)
-//}

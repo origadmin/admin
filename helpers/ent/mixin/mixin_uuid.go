@@ -71,7 +71,7 @@ func (obj UUID) Fields() []ent.Field {
 func (obj UUID) FK(name string) ent.Field {
 	obj.Key = name
 	if obj.CommentKey == "" {
-		obj.CommentKey = "field:foreign_key:comment"
+		obj.CommentKey = "field.foreign_key.comment"
 	}
 	return obj.ToField()
 }
@@ -81,7 +81,7 @@ func (obj UUID) PK(name string) ent.Field {
 	obj.Unique = true
 	obj.Immutable = true
 	if obj.CommentKey == "" {
-		obj.CommentKey = "field:primary_key:comment"
+		obj.CommentKey = "field.primary_key.comment"
 	}
 	return obj.ToField()
 }
@@ -90,7 +90,7 @@ func (obj UUID) OP(name string) ent.Field {
 	obj.Key = name
 	obj.Optional = true
 	if obj.CommentKey == "" {
-		obj.CommentKey = "field:optional_key:comment"
+		obj.CommentKey = "field.optional_key.comment"
 	}
 	return obj.ToField()
 }

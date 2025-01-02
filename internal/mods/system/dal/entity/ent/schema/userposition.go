@@ -51,7 +51,7 @@ func (UserPosition) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_user_positions"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("user_position:table:comment")),
+		schema.Comment(i18n.Text("user_position.table.comment")),
 	}
 }
 

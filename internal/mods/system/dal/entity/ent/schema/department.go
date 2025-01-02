@@ -28,28 +28,28 @@ func (Department) Fields() []ent.Field {
 		field.String("keyword").
 			MaxLen(32).
 			Default("").
-			Comment(i18n.Text("department:field:keyword")),
+			Comment(i18n.Text("department.field.keyword")),
 		field.String("name").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("department:field:name")),
+			Comment(i18n.Text("department.field.name")),
 		field.String("description").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("department:field:description")),
+			Comment(i18n.Text("department.field.description")),
 		field.Int("sequence").
-			Comment(i18n.Text("department:field:sequence")),
+			Comment(i18n.Text("department.field.sequence")),
 		field.Int8("status").
 			Default(0).
-			Comment(i18n.Text("department:field:status")),
+			Comment(i18n.Text("department.field.status")),
 		field.String("ancestors").
 			MaxLen(1024).
 			Default("").
-			Comment(i18n.Text("department:field:ancestors")),
+			Comment(i18n.Text("department.field.ancestors")),
 		field.Int("level").
 			Default(1).
-			Comment(i18n.Text("department:field:level")),
-		mixin.OP("parent_id", "department:field:parent_id"),
+			Comment(i18n.Text("department.field.level")),
+		mixin.OP("parent_id", "department.field.parent_id"),
 	}
 }
 
@@ -75,7 +75,7 @@ func (Department) Annotations() []schema.Annotation {
 		// Adding this annotation to the schema enables
 		// comments for the table and all its fields.
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("department:table:comment")),
+		schema.Comment(i18n.Text("department.table.comment")),
 	}
 }
 

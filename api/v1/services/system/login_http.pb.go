@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.8.2
 // - protoc             (unknown)
-// source: basis/login.proto
+// source: system/login.proto
 
-package basis
+package system
 
 import (
 	context "context"
@@ -19,14 +19,14 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationLoginAPICaptchaID = "/api.v1.services.basis.LoginAPI/CaptchaID"
-const OperationLoginAPICaptchaImage = "/api.v1.services.basis.LoginAPI/CaptchaImage"
-const OperationLoginAPICaptchaResource = "/api.v1.services.basis.LoginAPI/CaptchaResource"
-const OperationLoginAPICaptchaResources = "/api.v1.services.basis.LoginAPI/CaptchaResources"
-const OperationLoginAPILogin = "/api.v1.services.basis.LoginAPI/Login"
-const OperationLoginAPILogout = "/api.v1.services.basis.LoginAPI/Logout"
-const OperationLoginAPIRegister = "/api.v1.services.basis.LoginAPI/Register"
-const OperationLoginAPITokenRefresh = "/api.v1.services.basis.LoginAPI/TokenRefresh"
+const OperationLoginAPICaptchaID = "/api.v1.services.system.LoginAPI/CaptchaID"
+const OperationLoginAPICaptchaImage = "/api.v1.services.system.LoginAPI/CaptchaImage"
+const OperationLoginAPICaptchaResource = "/api.v1.services.system.LoginAPI/CaptchaResource"
+const OperationLoginAPICaptchaResources = "/api.v1.services.system.LoginAPI/CaptchaResources"
+const OperationLoginAPILogin = "/api.v1.services.system.LoginAPI/Login"
+const OperationLoginAPILogout = "/api.v1.services.system.LoginAPI/Logout"
+const OperationLoginAPIRegister = "/api.v1.services.system.LoginAPI/Register"
+const OperationLoginAPITokenRefresh = "/api.v1.services.system.LoginAPI/TokenRefresh"
 
 type LoginAPIHTTPServer interface {
 	CaptchaID(context.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error)
