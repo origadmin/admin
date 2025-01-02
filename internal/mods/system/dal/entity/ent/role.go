@@ -12,29 +12,29 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// role:table:comment
+// role.table.comment
 type Role struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:field:comment
+	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:field:comment
+	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// role:field:keyword
+	// role.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// role:field:name
+	// role.field.name
 	Name string `json:"name,omitempty"`
-	// role:field:description
+	// role.field.description
 	Description string `json:"description,omitempty"`
-	// role:field:type
+	// role.field.type
 	Type int8 `json:"type,omitempty"`
-	// role:field:sequence
+	// role.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// role:field:status
+	// role.field.status
 	Status int8 `json:"status,omitempty"`
-	// role:field:is_system
+	// role.field.is_system
 	IsSystem bool `json:"is_system,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.

@@ -13,15 +13,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// role_menu:table:comment
+// role_menu.table.comment
 type RoleMenu struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// role_menu:field:role_id
+	// role_menu.field.role_id
 	RoleID int64 `json:"role_id,omitempty"`
-	// role_menu:field:menu_id
+	// role_menu.field.menu_id
 	MenuID int64 `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleMenuQuery when eager-loading is set.

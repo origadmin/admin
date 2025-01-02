@@ -12,31 +12,31 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// department:table:comment
+// department.table.comment
 type Department struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:field:comment
+	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:field:comment
+	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// department:field:keyword
+	// department.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// department:field:name
+	// department.field.name
 	Name string `json:"name,omitempty"`
-	// department:field:description
+	// department.field.description
 	Description string `json:"description,omitempty"`
-	// department:field:sequence
+	// department.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// department:field:status
+	// department.field.status
 	Status int8 `json:"status,omitempty"`
-	// department:field:ancestors
+	// department.field.ancestors
 	Ancestors string `json:"ancestors,omitempty"`
-	// department:field:level
+	// department.field.level
 	Level int `json:"level,omitempty"`
-	// department:field:parent_id
+	// department.field.parent_id
 	ParentID int64 `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DepartmentQuery when eager-loading is set.

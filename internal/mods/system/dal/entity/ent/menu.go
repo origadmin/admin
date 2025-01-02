@@ -12,39 +12,39 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// menu:table:comment
+// menu.table.comment
 type Menu struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:field:comment
+	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:field:comment
+	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// menu:field:keyword
+	// menu.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// menu:field:name
+	// menu.field.name
 	Name string `json:"name,omitempty"`
-	// menu:field:i18n_key
+	// menu.field.i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
-	// menu:field:description
+	// menu.field.description
 	Description string `json:"description,omitempty"`
-	// menu:field:type
+	// menu.field.type
 	Type string `json:"type,omitempty"`
-	// menu:field:icon
+	// menu.field.icon
 	Icon string `json:"icon,omitempty"`
-	// menu:field:path
+	// menu.field.path
 	Path string `json:"path,omitempty"`
-	// menu:field:status
+	// menu.field.status
 	Status int8 `json:"status,omitempty"`
-	// menu:field:parent_path
+	// menu.field.parent_path
 	ParentPath string `json:"parent_path,omitempty"`
-	// menu:field:sequence
+	// menu.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// menu:field:properties
+	// menu.field.properties
 	Properties string `json:"properties,omitempty"`
-	// menu:field:parent_id
+	// menu.field.parent_id
 	ParentID int64 `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuQuery when eager-loading is set.

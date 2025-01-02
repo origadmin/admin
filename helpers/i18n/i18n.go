@@ -64,32 +64,32 @@ var KeyTextMap = map[string]map[string]string{
 		"field.updated_at":  "Updated At",
 
 		// Department
-		"department:id":            "Primary key of Department",
-		"department:department_id": "Foreign key of Department",
-		"department:keyword":       "Keyword of Department",
-		"department:name":          "Display name of Department",
-		"department:description":   "Details about Department",
-		"department:sequence":      "Sequence for sorting",
-		"department:status":        "Status of the department",
-		"department:inherit_roles": "Whether to inherit roles from the parent department",
-		"department:ancestors":     "Ancestor list (format: ,1,2,3,)",
-		"department:parent_id":     "Parent department ID",
-		"department:level":         "Department level",
+		"department.id":            "Primary key of Department",
+		"department.department_id": "Foreign key of Department",
+		"department.keyword":       "Keyword of Department",
+		"department.name":          "Display name of Department",
+		"department.description":   "Details about Department",
+		"department.sequence":      "Sequence for sorting",
+		"department.status":        "Status of the department",
+		"department.inherit_roles": "Whether to inherit roles from the parent department",
+		"department.ancestors":     "Ancestor list (format: ,1,2,3,)",
+		"department.parent_id":     "Parent department ID",
+		"department.level":         "Department level",
 
 		// Menu
-		"menu:id":          "Primary key of the menu item",
-		"menu:menu_id":     "Foreign key of the menu item",
-		"menu:keyword":     "Unique keyword for the menu item",
-		"menu:name":        "Display name of the menu item",
-		"menu:description": "Description of the menu item",
-		"menu:type":        "Type of the menu item (e.g., page, link)",
-		"menu:icon":        "Icon for the menu item",
-		"menu:path":        "Path associated with the menu item",
-		"menu:status":      "Status of the menu item (e.g., activated, deactivated)",
-		"menu:parent_path": "Parent path of the menu item",
-		"menu:sequence":    "Sequence for sorting the menu item",
-		"menu:properties":  "Additional properties of the menu item",
-		"menu:parent_id":   "Parent ID of the menu item",
+		"menu.id":          "Primary key of the menu item",
+		"menu.menu_id":     "Foreign key of the menu item",
+		"menu.keyword":     "Unique keyword for the menu item",
+		"menu.name":        "Display name of the menu item",
+		"menu.description": "Description of the menu item",
+		"menu.type":        "Type of the menu item (e.g., page, link)",
+		"menu.icon":        "Icon for the menu item",
+		"menu.path":        "Path associated with the menu item",
+		"menu.status":      "Status of the menu item (e.g., activated, deactivated)",
+		"menu.parent_path": "Parent path of the menu item",
+		"menu.sequence":    "Sequence for sorting the menu item",
+		"menu.properties":  "Additional properties of the menu item",
+		"menu.parent_id":   "Parent ID of the menu item",
 	},
 }
 
@@ -99,7 +99,7 @@ func LocaleText(locale string, key string) string {
 	// Chinese is used by default
 	if translations, ok := KeyTextMap[locale]; ok {
 		if text, exists := translations[key]; exists {
-			//fmt.Println("locale:", locale, "key:", key, "text:", text)
+			//fmt.Println("locale.", locale, "key.", key, "text.", text)
 			return text
 		}
 	}
@@ -107,16 +107,16 @@ func LocaleText(locale string, key string) string {
 	// the language is the default language,
 	// the key itself is returned
 	if locale == DefaultLanguage {
-		//fmt.Println("locale:", locale, "key:", key, "text:", "default")
+		//fmt.Println("locale.", locale, "key.", key, "text.", "default")
 		return key
 	}
 	if translations, ok := KeyTextMap[DefaultLanguage]; ok {
 		if text, exists := translations[key]; exists {
-			//fmt.Println("locale:", "default", "key:", key, "text:", text)
+			//fmt.Println("locale.", "default", "key.", key, "text.", text)
 			return text
 		}
 	}
-	//fmt.Println("locale:", "default", "key:", key, "text:", "default")
+	//fmt.Println("locale.", "default", "key.", key, "text.", "default")
 	return key
 }
 

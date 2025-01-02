@@ -13,23 +13,23 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// resource:table:comment
+// resource.table.comment
 type Resource struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:field:comment
+	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:field:comment
+	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// resource:field:method
+	// resource.field.method
 	Method string `json:"method,omitempty"`
-	// resource:field:operation
+	// resource.field.operation
 	Operation string `json:"operation,omitempty"`
-	// resource:field:path
+	// resource.field.path
 	Path string `json:"path,omitempty"`
-	// resource:field:menu_id
+	// resource.field.menu_id
 	MenuID int64 `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.

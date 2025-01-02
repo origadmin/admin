@@ -13,29 +13,29 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// permission:table:comment
+// permission.table.comment
 type Permission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:field:comment
+	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:field:comment
+	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// permission:field:name
+	// permission.field.name
 	Name string `json:"name,omitempty"`
-	// permission:field:keyword
+	// permission.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// permission:field:description
+	// permission.field.description
 	Description string `json:"description,omitempty"`
-	// permission:field:i18n_key
+	// permission.field.i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
-	// permission:field:type
+	// permission.field.type
 	Type int8 `json:"type,omitempty"`
-	// permission:field:scope
+	// permission.field.scope
 	Scope string `json:"scope,omitempty"`
-	// permission:field:scope_depts
+	// permission.field.scope_depts
 	ScopeDepts []string `json:"scope_depts,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionQuery when eager-loading is set.

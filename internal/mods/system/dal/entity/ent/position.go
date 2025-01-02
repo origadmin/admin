@@ -13,21 +13,21 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// position:table:comment
+// position.table.comment
 type Position struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// create_time:field:comment
+	// create_time.field.comment
 	CreateTime time.Time `json:"create_time,omitempty"`
-	// update_time:field:comment
+	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// position:field:name
+	// position.field.name
 	Name string `json:"name,omitempty"`
-	// position:field:description
+	// position.field.description
 	Description string `json:"description,omitempty"`
-	// department:field:department_id
+	// department.field.department_id
 	DepartmentID int64 `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PositionQuery when eager-loading is set.

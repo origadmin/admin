@@ -13,15 +13,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// menu_permission:table:comment
+// menu_permission.table.comment
 type MenuPermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// menu_permission:field:menu_id
+	// menu_permission.field.menu_id
 	MenuID int64 `json:"menu_id,omitempty"`
-	// menu_permission:field:permission_id
+	// menu_permission.field.permission_id
 	PermissionID int64 `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MenuPermissionQuery when eager-loading is set.

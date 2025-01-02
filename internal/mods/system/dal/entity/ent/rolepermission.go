@@ -13,15 +13,15 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// role_permission:table:comment
+// role_permission.table.comment
 type RolePermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field:primary_key:comment
+	// field.primary_key.comment
 	ID int64 `json:"id,omitempty"`
-	// field:foreign_key:comment
+	// field.foreign_key.comment
 	RoleID int64 `json:"role_id,omitempty"`
-	// field:foreign_key:comment
+	// field.foreign_key.comment
 	PermissionID int64 `json:"permission_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RolePermissionQuery when eager-loading is set.
