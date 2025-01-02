@@ -41,10 +41,6 @@ message Menu {
   int64 parent_id = 12 [json_name = "parent_id"];
   // ParentPath holds the value of the "parent_path" field.
   string parent_path = 13 [json_name = "parent_path"];
-  // Edges holds the relations/edges for other nodes in the graph.
-  //    The values are being populated by the MenuQuery when eager-loading is set.
-  //  MenuEdges edges = 14;
-  //    selectValues = 15;
   // Children holds the value of the children edge.
   repeated Menu children = 21 [json_name = "children"];
   // Parent holds the value of the parent edge.

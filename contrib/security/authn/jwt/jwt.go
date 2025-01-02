@@ -26,41 +26,16 @@ const (
 	defaultExpirationRefresh = 14 * 24 * time.Hour
 )
 
-// Authenticator is a struct that implements the Authenticator interface.
-type Authenticator struct {
-	*Option
+// Tokenizer is a struct that implements the Tokenizer interface.
+type Tokenizer struct {
+	Option            *Option
+	keyFunc           func(token *jwtv5.Token) (any, error)
+	signingMethod     jwtv5.SigningMethod
+	expirationAccess  time.Duration
+	expirationRefresh time.Duration
 }
 
-func (obj *Authenticator) CreateIdentityClaims(_ context.Context, id string, refresh bool) (security.Claims, error) {
-	expiration := getExpiration(obj, refresh)
-	now := time.Now()
-	// Create a new claims object with the base claims and the user ID.
-	claims := &SecurityClaims{
-		Claims: &securityv1.Claims{
-			Sub:    id,
-			Iss:    obj.issuer,
-			Aud:    obj.audience,
-			Exp:    now.Add(expiration).Unix(),
-			Nbf:    now.Unix(),
-			Iat:    now.Unix(),
-			Jti:    obj.generateJTI(),
-			Scopes: make(map[string]bool),
-		},
-		Extra: make(map[string]string),
-	}
-
-	// Add the extra keys to the claims.
-	claims.Extra = maps.Clone(obj.extraClaims)
-
-	// If the token is scoped, add the scope to the claims.
-	if obj.scoped {
-		claims.Claims.Scopes = maps.Clone(obj.scopes)
-	}
-
-	return claims, nil
-}
-
-func (obj *Authenticator) Authenticate(ctx context.Context, tokenStr string) (security.Claims, error) {
+func (obj *Tokenizer) ParseClaims(_ context.Context, tokenStr string) (security.Claims, error) {
 	log.Debugf("Authenticating token string: %s", tokenStr)
 	// Parse the token string.
 	log.Debugf("Parsing token string")
@@ -111,7 +86,7 @@ func (obj *Authenticator) Authenticate(ctx context.Context, tokenStr string) (se
 
 	// Convert the claims to security.Claims.
 	log.Debugf("Converting claims to security.Claims")
-	securityClaims, err := ToClaims(jwtToken.Claims, obj.extraClaims)
+	securityClaims, err := ToClaims(jwtToken.Claims, obj.Option.extraClaims)
 	if err != nil {
 		log.Errorf("Error converting claims: %v", err)
 		return nil, err
@@ -120,9 +95,72 @@ func (obj *Authenticator) Authenticate(ctx context.Context, tokenStr string) (se
 	return securityClaims, nil
 }
 
-func (obj *Authenticator) Verify(ctx context.Context, tokenStr string) (bool, error) {
+func (obj *Tokenizer) DestroyRefreshToken(ctx context.Context, s string) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (obj *Tokenizer) CreateRefreshClaims(_ context.Context, id string) (security.Claims, error) {
+	expiration := obj.expirationRefresh
+	now := time.Now()
+	// Create a new claims object with the base claims and the user ID.
+	claims := &SecurityClaims{
+		Claims: &securityv1.Claims{
+			Sub:    id,
+			Iss:    obj.Option.issuer,
+			Aud:    obj.Option.audience,
+			Exp:    now.Add(expiration).Unix(),
+			Nbf:    now.Unix(),
+			Iat:    now.Unix(),
+			Jti:    obj.generateJTI(),
+			Scopes: make(map[string]bool),
+		},
+		Extra: make(map[string]string),
+	}
+
+	// Add the extra keys to the claims.
+	claims.Extra = maps.Clone(obj.Option.extraClaims)
+
+	// If the token is scoped, add the scope to the claims.
+	if obj.Option.scoped {
+		claims.Claims.Scopes = maps.Clone(obj.Option.scopes)
+	}
+
+	return claims, nil
+}
+
+func (obj *Tokenizer) CreateClaims(_ context.Context, id string) (security.Claims, error) {
+	expiration := obj.expirationAccess
+	now := time.Now()
+	// Create a new claims object with the base claims and the user ID.
+	claims := &SecurityClaims{
+		Claims: &securityv1.Claims{
+			Sub:    id,
+			Iss:    obj.Option.issuer,
+			Aud:    obj.Option.audience,
+			Exp:    now.Add(expiration).Unix(),
+			Nbf:    now.Unix(),
+			Iat:    now.Unix(),
+			Jti:    obj.generateJTI(),
+			Scopes: make(map[string]bool),
+		},
+		Extra: make(map[string]string),
+	}
+
+	// Add the extra keys to the claims.
+	claims.Extra = maps.Clone(obj.Option.extraClaims)
+
+	// If the token is scoped, add the scope to the claims.
+	if obj.Option.scoped {
+		claims.Claims.Scopes = maps.Clone(obj.Option.scopes)
+	}
+
+	return claims, nil
+}
+
+func (obj *Tokenizer) Validate(ctx context.Context, tokenStr string) (bool, error) {
 	// Authenticate the token string.
-	_, err := obj.Authenticate(ctx, tokenStr)
+	_, err := obj.ParseClaims(ctx, tokenStr)
 	// If there is an error, return false and the error.
 	if err != nil {
 		return false, err
@@ -132,7 +170,7 @@ func (obj *Authenticator) Verify(ctx context.Context, tokenStr string) (bool, er
 }
 
 // CreateToken creates a token string from the claims.
-func (obj *Authenticator) CreateToken(ctx context.Context, claims security.Claims) (string, error) {
+func (obj *Tokenizer) CreateToken(ctx context.Context, claims security.Claims) (string, error) {
 	// Create a new token with the claims.
 	jwtToken := jwtv5.NewWithClaims(obj.signingMethod, ClaimsToJwtClaims(claims))
 
@@ -144,21 +182,14 @@ func (obj *Authenticator) CreateToken(ctx context.Context, claims security.Claim
 	return tokenStr, nil
 }
 
-func getExpiration(obj *Authenticator, refresh bool) time.Duration {
-	if refresh {
-		return obj.expirationRefresh
-	}
-	return obj.expirationAccess
-}
-
 // parseToken parses the token string and returns the token.
-func (obj *Authenticator) parseToken(token string) (*jwtv5.Token, error) {
+func (obj *Tokenizer) parseToken(token string) (*jwtv5.Token, error) {
 	// If the key function is nil, return an error.
 	if obj.keyFunc == nil {
 		return nil, ErrMissingKeyFunc
 	}
 	// If the extra keys are nil, parse the token with the key function.
-	if len(obj.extraClaims) == 0 && !obj.scoped {
+	if len(obj.Option.extraClaims) == 0 && !obj.Option.scoped {
 		return jwtv5.ParseWithClaims(token, &jwtv5.RegisteredClaims{}, obj.keyFunc)
 	}
 
@@ -167,7 +198,7 @@ func (obj *Authenticator) parseToken(token string) (*jwtv5.Token, error) {
 }
 
 // generateToken generates a signed token string from the token.
-func (obj *Authenticator) generateToken(jwtToken *jwtv5.Token) (string, error) {
+func (obj *Tokenizer) generateToken(jwtToken *jwtv5.Token) (string, error) {
 	// If the key function is nil, return an error.
 	if obj.keyFunc == nil {
 		return "", ErrMissingKeyFunc
@@ -188,36 +219,61 @@ func (obj *Authenticator) generateToken(jwtToken *jwtv5.Token) (string, error) {
 	return strToken, nil
 }
 
-func (obj *Authenticator) generateJTI() string {
-	if !obj.enabledJTI {
+func (obj *Tokenizer) generateJTI() string {
+	if !obj.Option.enabledJTI {
 		return ""
 	}
-	if obj.genJTI != nil {
-		return obj.genJTI()
+	if obj.Option.genJTI != nil {
+		return obj.Option.genJTI()
 	}
 	// Encode the random byte slice in base64.
 	return uniuri.New()
 }
 
-// NewAuthenticator creates a new Authenticator.
-func NewAuthenticator(cfg *configv1.Security, ss ...Setting) (security.Authenticator, error) {
+func (obj *Tokenizer) WithConfig(config *configv1.AuthNConfig_JWTConfig) error {
+	// If the signing key is empty, return an error.
+	signingKey := config.SigningKey
+	if signingKey == "" && (obj.signingMethod == nil || obj.keyFunc == nil) {
+		return errors.New("signing key is empty")
+	}
+
+	// Get the signing method and key function from the signing key.
+	signingMethod, keyFunc, err := getSigningMethodAndKeyFunc(config.Algorithm, config.SigningKey)
+	if err != nil {
+		return err
+	}
+	obj.signingMethod = signingMethod
+	obj.keyFunc = keyFunc
+	if config.ExpireTime > 0 {
+		obj.expirationAccess = time.Duration(config.ExpireTime) * time.Second
+	}
+	if config.RefreshTime > 0 {
+		obj.expirationRefresh = time.Duration(config.RefreshTime) * time.Second
+	}
+
+	return nil
+}
+
+// NewTokenizer creates a new Tokenizer.
+func NewTokenizer(cfg *configv1.Security, ss ...Setting) (security.RefreshTokenizer, error) {
 	// Get the JWT config from the security config.
 	config := cfg.GetAuthn().GetJwt()
 	if config == nil {
 		return nil, errors.New("authenticator jwt config is empty")
 	}
 	option := settings.Apply(&Option{
+		issuer: defaultIssuerDomain,
+	}, ss)
+	tokenizer := &Tokenizer{
+		Option:            option,
 		expirationAccess:  defaultExpirationAccess,
 		expirationRefresh: defaultExpirationRefresh,
-		issuer:            defaultIssuerDomain,
-	}, ss)
-	err := option.WithConfig(config)
+	}
+	err := tokenizer.WithConfig(config)
 	if err != nil {
 		return nil, err
 	}
-	return &Authenticator{
-		Option: option,
-	}, nil
+	return tokenizer, nil
 }
 
-var _ security.Authenticator = (*Authenticator)(nil)
+var _ security.RefreshTokenizer = (*Tokenizer)(nil)

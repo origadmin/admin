@@ -80,7 +80,7 @@ func (repo authRepo) ListAuthResources(ctx context.Context, in *dto.ListAuthReso
 }
 
 func fromClaims(claims security.Claims, method, path string) security.UserClaims {
-	return &securityx.CasbinUserClaims{
+	return &securityx.CasbinPolicy{
 		Subject: claims.GetSubject(),
 		Method:  method,
 		Path:    path,

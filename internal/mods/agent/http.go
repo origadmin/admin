@@ -76,7 +76,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 				if c == nil {
 					return nil, errors.New("no token in context")
 				}
-				return &securityx.CasbinUserClaims{
+				return &securityx.CasbinPolicy{
 					Claims:  c,
 					Subject: c.GetSubject(),
 					Method:  req.Method,

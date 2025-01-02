@@ -8,7 +8,6 @@ package jwt
 import (
 	"bytes"
 	"strings"
-	"time"
 
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
@@ -53,19 +52,19 @@ func (s *SecurityClaims) GetAudience() []string {
 	return s.Claims.Aud
 }
 
-func (s *SecurityClaims) GetExpiration() time.Time {
-	return time.Unix(s.Claims.Exp, 0)
+func (s *SecurityClaims) GetExpiration() int64 {
+	return s.Claims.Exp
 }
 
-func (s *SecurityClaims) GetNotBefore() time.Time {
-	return time.Unix(s.Claims.Nbf, 0)
+func (s *SecurityClaims) GetNotBefore() int64 {
+	return s.Claims.Nbf
 }
 
-func (s *SecurityClaims) GetIssuedAt() time.Time {
-	return time.Unix(s.Claims.Iat, 0)
+func (s *SecurityClaims) GetIssuedAt() int64 {
+	return s.Claims.Iat
 }
 
-func (s *SecurityClaims) GetJWTID() string {
+func (s *SecurityClaims) GetID() string {
 	return s.Claims.Jti
 }
 
@@ -88,13 +87,15 @@ func ClaimsToJwtClaims(raw security.Claims) jwtv5.Claims {
 	if aud := raw.GetAudience(); len(aud) > 0 {
 		mapClaims["aud"] = aud
 	}
-	if exp := raw.GetExpiration(); !exp.IsZero() {
-		mapClaims["exp"] = exp.UnixMilli()
+	if exp := raw.GetExpiration(); exp > 0 {
+		mapClaims["exp"] = exp
 	}
 
-	extras := raw.GetExtra()
-	for key, val := range extras {
-		mapClaims[key] = val
+	if extras, ok := security.ExtraObject(raw); ok {
+		extraMap := extras.GetExtra()
+		for key, val := range extraMap {
+			mapClaims[key] = val
+		}
 	}
 
 	var buffer bytes.Buffer

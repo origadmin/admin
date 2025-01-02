@@ -27,10 +27,10 @@ require (
 	github.com/origadmin/entslog/v3 v3.0.6
 	github.com/origadmin/runtime v0.1.40
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.2.2
-	github.com/origadmin/toolkits/codec v0.2.2
-	github.com/origadmin/toolkits/errors v0.2.2
-	github.com/origadmin/toolkits/idgen v0.2.2
+	github.com/origadmin/toolkits v0.2.5
+	github.com/origadmin/toolkits/codec v0.2.5
+	github.com/origadmin/toolkits/errors v0.2.5
+	github.com/origadmin/toolkits/idgen v0.2.5
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
@@ -85,7 +85,6 @@ require (
 	github.com/google/cel-go v0.22.1 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/subcommands v1.2.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/hashicorp/consul/api v1.31.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
