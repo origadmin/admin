@@ -34,7 +34,7 @@ service UserAPI {
     };
   }
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
-    option (google.api.http) = {delete: "/sys/users/{id}"};
+    option (google.api.http) = {delete: "/sys/users/{user.id}"};
   }
   // UpdateUserStatus Update the status of the user information
   rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
@@ -124,6 +124,7 @@ message CreateUserRequest {
   User user = 2;
   // The user id to use for this user.
   string user_id = 3 [json_name = "user_id"];
+
   bool is_admin = 4 [json_name = "is_admin"];
 
   bool random_password = 5 [json_name = "random_password"];
@@ -145,7 +146,7 @@ message UpdateUserResponse {
 message DeleteUserRequest {
   // The resource id of the user to be deleted, for example:
   // "shelves/shelf1/users/user2"
-  int64 id = 1;
+  User user = 1;
 }
 
 message DeleteUserResponse {
@@ -155,6 +156,7 @@ message DeleteUserResponse {
 message UpdateUserRolesRequest {
   User user = 1 [json_name = "user"];
   repeated int64 role_ids = 2 [json_name = "role_ids"];
+  bool is_add = 3 [json_name = "is_add"];
 }
 
 message UpdateUserRolesResponse {

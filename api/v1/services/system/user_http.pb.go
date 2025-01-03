@@ -48,7 +48,7 @@ func RegisterUserAPIHTTPServer(s *http.Server, srv UserAPIHTTPServer) {
 	r.GET("/sys/users/{id}", _UserAPI_GetUser0_HTTP_Handler(srv))
 	r.POST("/sys/users", _UserAPI_CreateUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}", _UserAPI_UpdateUser0_HTTP_Handler(srv))
-	r.DELETE("/sys/users/{id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
+	r.DELETE("/sys/users/{user.id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}/status", _UserAPI_UpdateUserStatus0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}/roles", _UserAPI_UpdateUserRoles0_HTTP_Handler(srv))
 	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTP_Handler(srv))
@@ -270,7 +270,7 @@ func (c *UserAPIHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRe
 
 func (c *UserAPIHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*DeleteUserResponse, error) {
 	var out DeleteUserResponse
-	pattern := "/sys/users/{id}"
+	pattern := "/sys/users/{user.id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserAPIDeleteUser))
 	opts = append(opts, http.PathTemplate(pattern))

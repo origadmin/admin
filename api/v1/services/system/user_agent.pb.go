@@ -247,7 +247,7 @@ func RegisterUserAPIAgent(ag agent.HTTPAgent, srv UserAPIAgent) {
 	r.GET("/sys/users/:id", _UserAPI_GetUser0_HTTPAgent_Handler(srv))
 	r.POST("/sys/users", _UserAPI_CreateUser0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/users/:user.id", _UserAPI_DeleteUser0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/:user.id/status", _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/:user.id/roles", _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv))
 	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv))
