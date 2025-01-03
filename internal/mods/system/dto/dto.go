@@ -102,13 +102,14 @@ func ConvertRoleEdges2PB(goModel *RoleEdges) (pbModel *RoleEdgesPB) {
 func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel = &UserPB{}
 	pbModel.Id = goModel.ID
+	pbModel.Uuid = goModel.UUID
 	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.Username = goModel.Username
 	pbModel.Name = goModel.Name
 	pbModel.Avatar = goModel.Avatar
-	pbModel.Password = goModel.Password
-	pbModel.Salt = goModel.Salt
+	//pbModel.Password = goModel.Password
+	//pbModel.Salt = goModel.Salt
 	pbModel.Phone = goModel.Phone
 	pbModel.Email = goModel.Email
 	pbModel.Remark = goModel.Remark

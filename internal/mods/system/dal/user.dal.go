@@ -7,9 +7,9 @@ package dal
 
 import (
 	"errors"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/uuid"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 
@@ -78,17 +78,16 @@ func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...
 	}
 
 	var err error
-	if userPB.Uuid == "" {
-		userPB.Uuid = uuid.Must(uuid.NewRandom()).String()
-	}
 	exist, err := repo.db.User(ctx).Query().Where(user.UsernameEQ(userPB.Username)).Exist(ctx)
 	if err != nil || exist {
 		return nil, errors.New("user already exists")
 	}
-
+	obj := dto.UserObject(userPB)
+	obj.CreateTime = time.Now()
+	obj.UpdateTime = time.Now()
 	err = repo.db.Tx(ctx, func(ctx context.Context) error {
 		create := repo.db.User(ctx).Create()
-		create.SetUser(dto.UserObject(userPB), option.Fields...)
+		create.SetUser(obj, option.Fields...)
 		saved, err := create.Save(ctx)
 		if err != nil {
 			return err
@@ -109,9 +108,11 @@ func (repo userRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+	obj := dto.UserObject(userPB)
+	obj.UpdateTime = time.Now()
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.User(ctx).UpdateOneID(userPB.Id)
-		update.SetUser(dto.UserObject(userPB))
+		update.SetUser(obj)
 		saved, err := update.Save(ctx)
 		if err != nil {
 			return err

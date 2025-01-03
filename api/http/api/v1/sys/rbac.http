@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzU5MTY1NjcsImlzcyI6ImxvY2FsaG9zdCIsInN1YiI6ImFkbWluIn0.KRI4fHNqsEJJJmjlt5LcVDk4bFk8oFOS7yl5SNfgDe7JE348BRyDNnJVcQgXJbdVgpLSjEirfEXppgHiwlUnfQ
+@token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzU5MjU5ODcsImlzcyI6ImxvY2FsaG9zdCIsInN1YiI6ImFkbWluIn0.k8TT_XPrWkABqh4WUh-K20uNRhxssi8l0VhA3xa6AVCYabK6KpiCdQvLK7yFHsE4TgfETuvEpihWcRlv-CjLRw
 @host = http://127.0.0.1:25100
 
 ### GET request to example server
@@ -184,7 +184,7 @@ Content-Type: application/json
   "id": "1",
   "create_time": "2023-07-20T12:00:00Z",
   "update_time": "2023-07-20T12:00:00Z",
-  "username": "user1",
+  "username": "user5",
   "name": "User One",
   "avatar": "avatar1.jpg",
   "password": "password1",

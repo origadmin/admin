@@ -9,7 +9,6 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/goexts/generic"
 	"github.com/google/uuid"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
@@ -41,11 +40,12 @@ func UserObject(user *UserPB) *User {
 		return nil
 	}
 	return &User{
-		ID: user.Id,
+		ID:   user.Id,
+		UUID: user.Uuid,
 		//CreateAuthor:  user.CreateAuthor,
 		//UpdateAuthor:  user.UpdateAuthor,
-		CreateTime: user.CreateTime.AsTime(),
-		UpdateTime: user.UpdateTime.AsTime(),
+		//CreateTime: user.CreateTime.AsTime(),
+		//UpdateTime: user.UpdateTime.AsTime(),
 		//Index:         user.Index,
 		//Department:    user.Department,
 		//AllowedIP:     user.AllowedIP,
@@ -168,7 +168,7 @@ func CreateUser(user *UserPB, username, password string, option UserQueryOption)
 		}
 	}
 	user.Id = registerID
-	user.Uuid = generic.Must(uuid.NewRandom()).String()
+	user.Uuid = uuid.Must(uuid.NewRandom()).String()
 	user.Username = username
 	user.Name = "user_" + strconv.Itoa(int(registerID))
 	user.Password = passwd
