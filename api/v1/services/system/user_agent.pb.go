@@ -29,6 +29,8 @@ type UserAPIAgent interface {
 	// ResetUserPassword ResetUserPassword reset the user s password
 	ResetUserPassword(http.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(http.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// UpdateUserRoles UpdateUserRoles update the user roles
+	UpdateUserRoles(http.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// UpdateUserStatus UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(http.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
@@ -186,6 +188,34 @@ func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.Handler
 	}
 }
 
+func _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in UpdateUserRolesRequest
+		if err := ctx.Bind(&in.Roles); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAPIUpdateUserRoles)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserRoles(ctx, req.(*UpdateUserRolesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserRolesResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
 func _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in ResetUserPasswordRequest
@@ -219,5 +249,6 @@ func RegisterUserAPIAgent(ag agent.HTTPAgent, srv UserAPIAgent) {
 	r.PUT("/sys/users/:user.id", _UserAPI_UpdateUser0_HTTPAgent_Handler(srv))
 	r.DELETE("/sys/users/:id", _UserAPI_DeleteUser0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/:user.id/status", _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/users/:user.id/roles", _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv))
 	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv))
 }

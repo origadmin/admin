@@ -74,6 +74,7 @@ type UserRepo interface {
 	Delete(context.Context, int64) error
 	Update(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
+	AddRoleIDs(context.Context, int64, []int64) error
 	GetByUserName(context.Context, string, ...string) (*UserPB, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
 	ListMenuByUserID(context.Context, int64) ([]*MenuPB, error)

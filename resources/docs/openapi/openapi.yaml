@@ -1271,6 +1271,114 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{user.id}/roles:
+        put:
+            tags:
+                - UserAPI
+            description: UpdateUserRoles update the user roles
+            operationId: UserAPI_UpdateUserRoles
+            parameters:
+                - name: user.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: user.id
+                  in: query
+                  description: ID of the ent.
+                  schema:
+                    type: string
+                - name: user.create_time
+                  in: query
+                  description: CreateTime holds the value of the "create_time" field.
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.update_time
+                  in: query
+                  description: UpdateTime holds the value of the "update_time" field.
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.username
+                  in: query
+                  description: Username holds the value of the "username" field.
+                  schema:
+                    type: string
+                - name: user.name
+                  in: query
+                  description: Name holds the value of the "name" field.
+                  schema:
+                    type: string
+                - name: user.avatar
+                  in: query
+                  description: Avatar holds the value of the "avatar" field.
+                  schema:
+                    type: string
+                - name: user.password
+                  in: query
+                  description: Password holds the value of the "password" field.
+                  schema:
+                    type: string
+                - name: user.salt
+                  in: query
+                  description: Salt holds the value of the "salt" field.
+                  schema:
+                    type: string
+                - name: user.phone
+                  in: query
+                  description: Phone holds the value of the "phone" field.
+                  schema:
+                    type: string
+                - name: user.email
+                  in: query
+                  description: Email holds the value of the "email" field.
+                  schema:
+                    type: string
+                - name: user.remark
+                  in: query
+                  description: Remark holds the value of the "remark" field.
+                  schema:
+                    type: string
+                - name: user.status
+                  in: query
+                  description: Status holds the value of the "status" field.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: user.gender
+                  in: query
+                  description: Gender holds the value of the "gender" field.
+                  schema:
+                    type: string
+                - name: user.uuid
+                  in: query
+                  description: Uuid holds the value of the "uuid" field.
+                  schema:
+                    type: string
+                - name: role_ids
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateUserRolesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{user.id}/status:
         put:
             tags:
@@ -1873,6 +1981,11 @@ components:
                 role:
                     $ref: '#/components/schemas/api.v1.services.system.Role'
         api.v1.services.system.UpdateUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.UpdateUserRolesResponse:
             type: object
             properties:
                 user:

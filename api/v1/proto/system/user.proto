@@ -44,6 +44,14 @@ service UserAPI {
     };
   }
 
+  // UpdateUserRoles update the user roles
+  rpc UpdateUserRoles(UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
+    option (google.api.http) = {
+      put: "/sys/users/{user.id}/roles"
+      body: "roles"
+    };
+  }
+
   // ResetUserPassword reset the user s password
   rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
     option (google.api.http) = {
@@ -117,6 +125,7 @@ message CreateUserRequest {
   // The user id to use for this user.
   string user_id = 3 [json_name = "user_id"];
   bool is_admin = 4 [json_name = "is_admin"];
+
   bool random_password = 5 [json_name = "random_password"];
 }
 
@@ -141,4 +150,13 @@ message DeleteUserRequest {
 
 message DeleteUserResponse {
   google.protobuf.Empty empty = 1;
+}
+
+message UpdateUserRolesRequest {
+  User user = 1 [json_name = "user"];
+  repeated int64 role_ids = 2 [json_name = "role_ids"];
+}
+
+message UpdateUserRolesResponse {
+  User user = 1 [json_name = "user"];
 }

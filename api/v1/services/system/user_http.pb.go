@@ -25,6 +25,7 @@ const OperationUserAPIGetUser = "/api.v1.services.system.UserAPI/GetUser"
 const OperationUserAPIListUsers = "/api.v1.services.system.UserAPI/ListUsers"
 const OperationUserAPIResetUserPassword = "/api.v1.services.system.UserAPI/ResetUserPassword"
 const OperationUserAPIUpdateUser = "/api.v1.services.system.UserAPI/UpdateUser"
+const OperationUserAPIUpdateUserRoles = "/api.v1.services.system.UserAPI/UpdateUserRoles"
 const OperationUserAPIUpdateUserStatus = "/api.v1.services.system.UserAPI/UpdateUserStatus"
 
 type UserAPIHTTPServer interface {
@@ -35,6 +36,8 @@ type UserAPIHTTPServer interface {
 	// ResetUserPassword ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	// UpdateUserRoles UpdateUserRoles update the user roles
+	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// UpdateUserStatus UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
@@ -47,6 +50,7 @@ func RegisterUserAPIHTTPServer(s *http.Server, srv UserAPIHTTPServer) {
 	r.PUT("/sys/users/{user.id}", _UserAPI_UpdateUser0_HTTP_Handler(srv))
 	r.DELETE("/sys/users/{id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}/status", _UserAPI_UpdateUserStatus0_HTTP_Handler(srv))
+	r.PUT("/sys/users/{user.id}/roles", _UserAPI_UpdateUserRoles0_HTTP_Handler(srv))
 	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTP_Handler(srv))
 }
 
@@ -185,6 +189,31 @@ func _UserAPI_UpdateUserStatus0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx htt
 	}
 }
 
+func _UserAPI_UpdateUserRoles0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserRolesRequest
+		if err := ctx.Bind(&in.Roles); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserAPIUpdateUserRoles)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserRoles(ctx, req.(*UpdateUserRolesRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserRolesResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _UserAPI_ResetUserPassword0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetUserPasswordRequest
@@ -214,6 +243,7 @@ type UserAPIHTTPClient interface {
 	ListUsers(ctx context.Context, req *ListUsersRequest, opts ...http.CallOption) (rsp *ListUsersResponse, err error)
 	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *ResetUserPasswordResponse, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserResponse, err error)
+	UpdateUserRoles(ctx context.Context, req *UpdateUserRolesRequest, opts ...http.CallOption) (rsp *UpdateUserRolesResponse, err error)
 	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *UpdateUserStatusResponse, err error)
 }
 
@@ -297,6 +327,19 @@ func (c *UserAPIHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRe
 	opts = append(opts, http.Operation(OperationUserAPIUpdateUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserAPIHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...http.CallOption) (*UpdateUserRolesResponse, error) {
+	var out UpdateUserRolesResponse
+	pattern := "/sys/users/{user.id}/roles"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserAPIUpdateUserRoles))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in.Roles, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
