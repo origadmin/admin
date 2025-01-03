@@ -17,19 +17,19 @@ type RoleAPIHTTPService struct {
 }
 
 func (s RoleAPIHTTPService) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
-	return &pb.ListRolesResponse{}, nil
+	return s.client.ListRoles(ctx, req)
 }
 func (s RoleAPIHTTPService) GetRole(ctx context.Context, req *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
-	return &pb.GetRoleResponse{}, nil
+	return s.client.GetRole(ctx, req)
 }
 func (s RoleAPIHTTPService) CreateRole(ctx context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
-	return &pb.CreateRoleResponse{}, nil
+	return s.client.CreateRole(ctx, req)
 }
 func (s RoleAPIHTTPService) UpdateRole(ctx context.Context, req *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
-	return &pb.UpdateRoleResponse{}, nil
+	return s.client.UpdateRole(ctx, req)
 }
 func (s RoleAPIHTTPService) DeleteRole(ctx context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
-	return &pb.DeleteRoleResponse{}, nil
+	return s.client.DeleteRole(ctx, req)
 }
 
 // NewRoleAPIHTTPService new a role service.

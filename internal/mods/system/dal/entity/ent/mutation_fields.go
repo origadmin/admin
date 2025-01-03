@@ -28,11 +28,11 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 	for i := range fields {
 		switch fields[i] {
 		case department.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case department.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case department.FieldKeyword:
@@ -176,11 +176,11 @@ func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case menu.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case menu.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case menu.FieldKeyword:
@@ -352,11 +352,11 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 	for i := range fields {
 		switch fields[i] {
 		case permission.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case permission.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case permission.FieldName:
@@ -492,11 +492,11 @@ func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case position.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case position.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case position.FieldName:
@@ -558,11 +558,11 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case resource.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case resource.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case resource.FieldMethod:
@@ -631,11 +631,11 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case role.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case role.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case role.FieldKeyword:
@@ -828,11 +828,11 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 				m.SetUpdateAuthor(input.UpdateAuthor)
 			}
 		case user.FieldCreateTime:
-			if !input.CreateTime.IsZero() {
+			if input.CreateTime.Unix() != 0 {
 				m.SetCreateTime(input.CreateTime)
 			}
 		case user.FieldUpdateTime:
-			if !input.UpdateTime.IsZero() {
+			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
 		case user.FieldUUID:
@@ -911,11 +911,11 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 				m.SetLastLoginIP(input.LastLoginIP)
 			}
 		case user.FieldLastLoginTime:
-			if !input.LastLoginTime.IsZero() {
+			if input.LastLoginTime.Unix() != 0 {
 				m.SetLastLoginTime(input.LastLoginTime)
 			}
 		case user.FieldSanctionDate:
-			if !input.SanctionDate.IsZero() {
+			if input.SanctionDate.Unix() != 0 {
 				m.SetSanctionDate(input.SanctionDate)
 			}
 		case user.FieldManagerID:

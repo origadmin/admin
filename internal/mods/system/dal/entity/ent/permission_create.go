@@ -86,6 +86,14 @@ func (pc *PermissionCreate) SetI18nKey(s string) *PermissionCreate {
 	return pc
 }
 
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableI18nKey(s *string) *PermissionCreate {
+	if s != nil {
+		pc.SetI18nKey(*s)
+	}
+	return pc
+}
+
 // SetType sets the "type" field.
 func (pc *PermissionCreate) SetType(i int8) *PermissionCreate {
 	pc.mutation.SetType(i)
@@ -266,6 +274,10 @@ func (pc *PermissionCreate) defaults() {
 	if _, ok := pc.mutation.UpdateTime(); !ok {
 		v := permission.DefaultUpdateTime()
 		pc.mutation.SetUpdateTime(v)
+	}
+	if _, ok := pc.mutation.I18nKey(); !ok {
+		v := permission.DefaultI18nKey
+		pc.mutation.SetI18nKey(v)
 	}
 	if _, ok := pc.mutation.GetType(); !ok {
 		v := permission.DefaultType

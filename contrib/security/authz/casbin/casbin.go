@@ -8,6 +8,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
+	"github.com/goexts/generic/cmp"
 	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/runtime/log"
@@ -27,6 +28,61 @@ type Authorizer struct {
 	wildcardItem string
 }
 
+func (auth *Authorizer) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {
+	log.Debugf("Authorizing user with policy: %+v", policy)
+	var err error
+	var allowed bool
+	if object == "" {
+		object = policy.GetObject()
+	}
+	if action == "" {
+		action = policy.GetAction()
+	}
+	if allowed, err = auth.enforcer.Enforce(policy.GetSubject(), object, action); err != nil {
+		log.Errorf("Authorization failed with error: %v", err)
+		return false, err
+	} else if allowed {
+		log.Debugf("Authorization successful for user with policy: %+v", policy)
+		return true, nil
+	}
+	log.Debugf("Authorization failed for user with policy: %+v", policy)
+	return false, nil
+}
+
+func (auth *Authorizer) AuthorizedWithDomain(ctx context.Context, policy security.Policy, domain string, object string, action string) (bool, error) {
+	log.Debugf("Authorizing user with policy: %+v", policy)
+	domain = cmp.Or(domain, policy.GetDomain(), auth.wildcardItem)
+	object = cmp.Or(object, policy.GetObject())
+	action = cmp.Or(action, policy.GetAction())
+
+	if allowed, err := auth.enforcer.Enforce(policy.GetSubject(), object, action, domain); err != nil {
+		log.Errorf("Authorization failed with error: %v", err)
+		return false, err
+	} else if allowed {
+		log.Debugf("Authorization successful for user with policy: %+v", policy)
+		return true, nil
+	}
+	log.Debugf("Authorization failed for user with policy: %+v", policy)
+	return false, nil
+}
+
+func (auth *Authorizer) AuthorizedWithExtra(ctx context.Context, data security.ExtraData) (bool, error) {
+	log.Debugf("Authorizing user with extra data: %+v", data)
+	policy, ok := data.GetPolicy()
+	if !ok {
+		return false, errors.New("policy is empty")
+	}
+	if allowed, err := auth.enforcer.Enforce(policy.GetSubject(), policy.GetObject(), policy.GetAction(), policy.GetDomain()); err != nil {
+		log.Errorf("Authorization failed with error: %v", err)
+		return false, err
+	} else if allowed {
+		log.Debugf("Authorization successful for user with policy: %+v", policy)
+		return true, nil
+	}
+	log.Debugf("Authorization failed for user with policy: %+v", policy)
+	return false, nil
+}
+
 func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any, roles map[string]any) error {
 	p := maps.Transform(policies, func(k string, v any) (string, [][]string, bool) {
 		if vv, ok := v.([][]string); ok {
@@ -42,26 +98,6 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 	return nil
 }
 
-func (auth *Authorizer) Authorized(ctx context.Context, claims security.UserClaims) (bool, error) {
-	log.Debugf("Authorizing user with claims: %+v", claims)
-	domain := claims.GetDomain()
-	if len(domain) == 0 {
-		log.Debugf("Domain is empty, using wildcard item: %s", auth.wildcardItem)
-		domain = auth.wildcardItem
-	}
-
-	var err error
-	var allowed bool
-	if allowed, err = auth.enforcer.Enforce(claims.GetSubject(), claims.GetObject(), claims.GetAction(), domain); err != nil {
-		log.Errorf("Authorization failed with error: %v", err)
-		return false, err
-	} else if allowed {
-		log.Debugf("Authorization successful for user with claims: %+v", claims)
-		return true, nil
-	}
-	log.Debugf("Authorization failed for user with claims: %+v", claims)
-	return false, nil
-}
 func (auth *Authorizer) ApplyDefaults() error {
 	if auth.policy == nil {
 		return errors.New("policy adapter is nil")

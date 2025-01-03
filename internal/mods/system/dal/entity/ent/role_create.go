@@ -62,14 +62,6 @@ func (rc *RoleCreate) SetKeyword(s string) *RoleCreate {
 	return rc
 }
 
-// SetNillableKeyword sets the "keyword" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableKeyword(s *string) *RoleCreate {
-	if s != nil {
-		rc.SetKeyword(*s)
-	}
-	return rc
-}
-
 // SetName sets the "name" field.
 func (rc *RoleCreate) SetName(s string) *RoleCreate {
 	rc.mutation.SetName(s)
@@ -330,10 +322,6 @@ func (rc *RoleCreate) defaults() {
 	if _, ok := rc.mutation.UpdateTime(); !ok {
 		v := role.DefaultUpdateTime()
 		rc.mutation.SetUpdateTime(v)
-	}
-	if _, ok := rc.mutation.Keyword(); !ok {
-		v := role.DefaultKeyword
-		rc.mutation.SetKeyword(v)
 	}
 	if _, ok := rc.mutation.Name(); !ok {
 		v := role.DefaultName

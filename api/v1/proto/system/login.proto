@@ -10,7 +10,7 @@ import "validate/validate.proto";
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
 option java_outer_classname = "APIV1ServicesSystemProto";
-option java_package = "com.origadmin.api.v1.admin.services.system";
+option java_package = "com.origadmin.api.v1.services.system";
 
 // The login service definition.
 service LoginAPI {
@@ -57,7 +57,7 @@ service LoginAPI {
   rpc TokenRefresh(TokenRefreshRequest) returns (TokenRefreshResponse) {
     option (google.api.http) = {
       post: "/token/refresh"
-      body: "*"
+      body: "data"
     };
   }
 }

@@ -18,7 +18,6 @@ import (
 	sjwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 
 	"origadmin/application/admin/internal/configs"
-	basisserver "origadmin/application/admin/internal/mods/basis/server"
 	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
@@ -34,7 +33,6 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
 		Servers: map[string]string{
-			basisserver.ServiceName:  "origadmin.service.basis.v1",
 			systemserver.ServiceName: "origadmin.service.system.v1",
 		},
 		Id: "",
@@ -69,13 +67,13 @@ func DefaultBootstrap() *configs.Bootstrap {
 				"/api/v1/register",
 				"/api/v1/current/logout",
 				"/api/v1/refresh_token",
-				"/api.v1.services.basis.LoginAPI/CaptchaID",
-				"/api.v1.services.basis.LoginAPI/CaptchaImage",
-				"/api.v1.services.basis.LoginAPI/CaptchaResource",
-				"/api.v1.services.basis.LoginAPI/CaptchaResources",
-				"/api.v1.services.basis.LoginAPI/Login",
-				"/api.v1.services.basis.LoginAPI/Register",
-				"/api.v1.services.basis.LoginAPI/Refresh",
+				"/api.v1.services.system.LoginAPI/CaptchaID",
+				"/api.v1.services.system.LoginAPI/CaptchaImage",
+				"/api.v1.services.system.LoginAPI/CaptchaResource",
+				"/api.v1.services.system.LoginAPI/CaptchaResources",
+				"/api.v1.services.system.LoginAPI/Login",
+				"/api.v1.services.system.LoginAPI/Register",
+				"/api.v1.services.system.LoginAPI/Refresh",
 				//"/api.v1.services.basis.LoginAPI/Logout",
 				//"/api.v1.services.basis.LoginAPI/CurrentUser",
 				//"/api.v1.services.basis.LoginAPI/CurrentMenus",
@@ -317,7 +315,7 @@ func DefaultServiceMiddleware() *middlewarev1.Middleware {
 				TokenType:            "Bearer",
 			},
 		},
-		// Middleware filters
+		// BuildMiddleware filters
 		Selector: &selectorv1.Selector{
 			Enabled: false,
 		},

@@ -9,7 +9,6 @@ import (
 	"github.com/google/wire"
 	"github.com/origadmin/runtime/service"
 
-	basisserver "origadmin/application/admin/internal/mods/basis/server"
 	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
@@ -20,8 +19,8 @@ var ProviderSet = wire.NewSet(
 
 type ServerRegisterAgent service.ServerRegister
 
-func NewRegisterAgent(s1 *systemserver.RegisterAgent, s2 *basisserver.RegisterAgent) []ServerRegisterAgent {
+func NewRegisterAgent(s1 *systemserver.RegisterAgent) []ServerRegisterAgent {
 	return []ServerRegisterAgent{
-		s1, s2,
+		s1,
 	}
 }

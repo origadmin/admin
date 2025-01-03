@@ -1,0 +1,201 @@
+@token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzU5MTY1NjcsImlzcyI6ImxvY2FsaG9zdCIsInN1YiI6ImFkbWluIn0.KRI4fHNqsEJJJmjlt5LcVDk4bFk8oFOS7yl5SNfgDe7JE348BRyDNnJVcQgXJbdVgpLSjEirfEXppgHiwlUnfQ
+@host = http://127.0.0.1:25100
+
+### GET request to example server
+GET {{host}}/api/v1/sys/menus
+    ?generated-in=GoLand
+Authorization: Bearer {{token}}
+
+###
+
+### Create role resource
+POST {{host}}/api/v1/sys/roles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "keyword": "",
+  "name": "admin",
+  "description": "管理员",
+  "sequence": 8,
+  "status": 1
+}
+
+###
+
+#[
+#{
+#    "id": "1",
+#    "create_time": "2023-07-20T12:00:00Z",
+#    "update_time": "2023-07-20T12:00:00Z",
+#    "username": "user1",
+#    "name": "User One",
+#    "avatar": "avatar1.jpg",
+#    "password": "password1",
+#    "salt": "salt1",
+#    "phone": "1234567890",
+#    "email": "user1@example.com",
+#    "remark": "Remark for User One",
+#    "status": "active",
+#    "edges": {}
+#  },
+#  {
+#    "id": "2",
+#    "create_time": "2023-07-20T13:00:00Z",
+#    "update_time": "2023-07-20T13:00:00Z",
+#    "username": "user2",
+#    "name": "User Two",
+#    "avatar": "avatar2.jpg",
+#    "password": "password2",
+#    "salt": "salt2",
+#    "phone": "0987654321",
+#    "email": "user2@example.com",
+#    "remark": "Remark for User Two",
+#    "status": "inactive",
+#    "edges": {}
+#  },
+#  {
+#    "id": "3",
+#    "create_time": "2023-07-20T14:00:00Z",
+#    "update_time": "2023-07-20T14:00:00Z",
+#    "username": "user3",
+#    "name": "User Three",
+#    "avatar": "avatar3.jpg",
+#    "password": "password3",
+#    "salt": "salt3",
+#    "phone": "1111111111",
+#    "email": "user3@example.com",
+#    "remark": "Remark for User Three",
+#    "status": "active",
+#    "edges": {}
+#  },
+#  {
+#    "id": "4",
+#    "create_time": "2023-07-20T15:00:00Z",
+#    "update_time": "2023-07-20T15:00:00Z",
+#    "username": "user4",
+#    "name": "User Four",
+#    "avatar": "avatar4.jpg",
+#    "password": "password4",
+#    "salt": "salt4",
+#    "phone": "2222222222",
+#    "email": "user4@example.com",
+#    "remark": "Remark for User Four",
+#    "status": "inactive",
+#    "edges": {}
+#  },
+#  {
+#    "id": "5",
+#    "create_time": "2023-07-20T16:00:00Z",
+#    "update_time": "2023-07-20T16:00:00Z",
+#    "username": "user5",
+#    "name": "User Five",
+#    "avatar": "avatar5.jpg",
+#    "password": "password5",
+#    "salt": "salt5",
+#    "phone": "3333333333",
+#    "email": "user5@example.com",
+#    "remark": "Remark for User Five",
+#    "status": "active",
+#    "edges": {}
+#  },
+#  {
+#    "id": "6",
+#    "create_time": "2023-07-20T17:00:00Z",
+#    "update_time": "2023-07-20T17:00:00Z",
+#    "username": "user6",
+#    "name": "User Six",
+#    "avatar": "avatar6.jpg",
+#    "password": "password6",
+#    "salt": "salt6",
+#    "phone": "4444444444",
+#    "email": "user6@example.com",
+#    "remark": "Remark for User Six",
+#    "status": "inactive",
+#    "edges": {}
+#  },
+#  {
+#    "id": "7",
+#    "create_time": "2023-07-20T18:00:00Z",
+#    "update_time": "2023-07-20T18:00:00Z",
+#    "username": "user7",
+#    "name": "User Seven",
+#    "avatar": "avatar7.jpg",
+#    "password": "password7",
+#    "salt": "salt7",
+#    "phone": "5555555555",
+#    "email": "user7@example.com",
+#    "remark": "Remark for User Seven",
+#    "status": "active",
+#    "edges": {}
+#  },
+#  {
+#    "id": "8",
+#    "create_time": "2023-07-20T19:00:00Z",
+#    "update_time": "2023-07-20T19:00:00Z",
+#    "username": "user8",
+#    "name": "User Eight",
+#    "avatar": "avatar8.jpg",
+#    "password": "password8",
+#    "salt": "salt8",
+#    "phone": "6666666666",
+#    "email": "user8@example.com",
+#    "remark": "Remark for User Eight",
+#    "status": "inactive",
+#    "edges": {}
+#  },
+#  {
+#    "id": "9",
+#    "create_time": "2023-07-20T20:00:00Z",
+#    "update_time": "2023-07-20T20:00:00Z",
+#    "username": "user9",
+#    "name": "User Nine",
+#    "avatar": "avatar9.jpg",
+#    "password": "password9",
+#    "salt": "salt9",
+#    "phone": "7777777777",
+#    "email": "user9@example.com",
+#    "remark": "Remark for User Nine",
+#    "status": "active",
+#    "edges": {}
+#  },
+#  {
+#    "id": "10",
+#    "create_time": "2023-07-20T21:00:00Z",
+#    "update_time": "2023-07-20T21:00:00Z",
+#    "username": "user10",
+#    "name": "User Ten",
+#    "avatar": "avatar10.jpg",
+#    "password": "password10",
+#"salt": "salt10",
+#"phone": "8888888888",
+#"email": "user10@example.com",
+#"remark": "Remark for User Ten",
+#"status": "inactive",
+#"edges": {}
+#}
+#]
+### Create user resource
+POST {{host}}/api/v1/sys/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "1",
+  "create_time": "2023-07-20T12:00:00Z",
+  "update_time": "2023-07-20T12:00:00Z",
+  "username": "user1",
+  "name": "User One",
+  "avatar": "avatar1.jpg",
+  "password": "password1",
+  "salt": "salt1",
+  "phone": "1234567890",
+  "email": "user1@example.com",
+  "remark": "Remark for User One",
+  "status": 1,
+  "edges": {}
+}
+
+
+###
+

@@ -1420,6 +1420,16 @@ func ManagerIDLTE(v int64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldManagerID, v))
 }
 
+// ManagerIDIsNil applies the IsNil predicate on the "manager_id" field.
+func ManagerIDIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldManagerID))
+}
+
+// ManagerIDNotNil applies the NotNil predicate on the "manager_id" field.
+func ManagerIDNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldManagerID))
+}
+
 // ManagerEQ applies the EQ predicate on the "manager" field.
 func ManagerEQ(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldManager, v))

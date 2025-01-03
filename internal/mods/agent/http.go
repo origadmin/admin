@@ -18,7 +18,6 @@ import (
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
 	servicehttp "github.com/origadmin/runtime/service/http"
-	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/system"
@@ -27,6 +26,17 @@ import (
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
 )
+
+type data struct {
+}
+
+func (d data) QueryRoles(ctx context.Context, subject string) ([]string, error) {
+	return []string{}, nil
+}
+
+func (d data) QueryPermissions(ctx context.Context, subject string) ([]string, error) {
+	return []string{}, nil
+}
 
 // NewHTTPServerAgent new an HTTP server.
 func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegisterAgent, l log.KLogger) *service.HTTPServer {
@@ -43,64 +53,35 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	if err != nil {
 		panic(err)
 	}
-	tokenizer := securityx.NewTokenizer(authenticator)
 	adapter := casbin.NewAdapter()
 	authorizer, err := securityx.NewAuthorizer(bootstrap, casbin.WithPolicyAdapter(adapter))
 	if err != nil {
 		panic(err)
 	}
-	options := []msecurity.OptionSetting{
-		msecurity.WithAuthorizer(authorizer),
-		msecurity.WithTokenizer(tokenizer),
-		func(option *msecurity.Option) {
-			option.IsRoot = func(ctx context.Context, claims security.Claims) bool {
-				return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
-			}
-			option.Skipper = func(path string) bool {
-				log.Debugf("Checking if path '%s' should be skipped", path)
-				for _, p := range paths {
-					if strings.HasPrefix(path, p) {
-						log.Debugf("Path '%s' starts with '%s', skipping", path, p)
-						return true
-					}
+	bridge := securityx.SecurityBridge{
+		TokenSource:          security.TokenSourceHeader,
+		Scheme:               security.SchemeBearer,
+		AuthenticationHeader: "Authorization",
+		Authenticator:        authenticator,
+		Authorizer:           authorizer,
+		SkipKey:              "",
+		PublicPaths:          nil,
+		Skipper: func(path string) bool {
+			for _, p := range paths {
+				if strings.HasPrefix(path, p) {
+					return true
 				}
-				log.Debugf("Path '%s' does not match any public path, not skipping", path)
-				return false
 			}
-			option.Parser = func(ctx context.Context, claims security.Claims) (security.UserClaims, error) {
-				req, ok := http.RequestFromServerContext(ctx)
-				if !ok {
-					return nil, errors.New("no request in context")
-				}
-				c := security.ClaimsFromContext(ctx)
-				if c == nil {
-					return nil, errors.New("no token in context")
-				}
-				return &securityx.CasbinPolicy{
-					Claims:  c,
-					Subject: c.GetSubject(),
-					Method:  req.Method,
-					Path:    req.URL.Path,
-					Scopes:  c.GetIssuer(),
-				}, nil
-			}
+			return false
 		},
+		IsRoot: func(ctx context.Context, claims security.Claims) bool {
+			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
+		},
+		Data:        &data{},
+		TokenParser: nil,
 	}
-	s, ok := msecurity.SkipperServer(bootstrap.GetSecurity(), options...)
-	log.Debugf("Skipper: %v", ok)
-	if ok {
-		ms = append(ms, s)
-	}
-
-	n, err := msecurity.NewAuthN(bootstrap.GetSecurity(), options...)
-	if err != nil {
-		panic(err)
-	}
-	z, err := msecurity.NewAuthZ(bootstrap.GetSecurity(), options...)
-	if err != nil {
-		panic(err)
-	}
-	ms = append(ms, n, z)
+	bridge.SkipKey = msecurity.MetadataSecuritySkipKey
+	ms = append(ms, bridge.BuildMiddleware())
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
 		servicehttp.WithServerOptions(http.ErrorEncoder(resp.ResponseErrorEncoder)),

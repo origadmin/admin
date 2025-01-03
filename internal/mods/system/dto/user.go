@@ -35,7 +35,8 @@ func UserObject(user *UserPB) *User {
 		return nil
 	}
 	return &User{
-		ID: user.Id,
+		ID:   user.Id,
+		UUID: user.Uuid,
 		//CreateAuthor:  user.CreateAuthor,
 		//UpdateAuthor:  user.UpdateAuthor,
 		CreateTime: user.CreateTime.AsTime(),

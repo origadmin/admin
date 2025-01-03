@@ -62,11 +62,11 @@ func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, err
 }
 
 func NewTokenizer(bootstrap *configs.Bootstrap) (security.Tokenizer, error) {
-	authenticator, err := securityx.NewAuthenticator(bootstrap)
+	authenticator, err := securityx.NewTokenizer(bootstrap)
 	if err != nil {
 		return nil, err
 	}
-	return securityx.NewTokenizer(authenticator), nil
+	return authenticator, nil
 }
 
 func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {

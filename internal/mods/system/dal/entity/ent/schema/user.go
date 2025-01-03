@@ -87,7 +87,7 @@ func (User) Fields() []ent.Field {
 			Comment(i18n.Text("user.field.last_login_ip")),
 		mixin.Time("last_login_time", i18n.Text("user.field.last_login_time")),
 		mixin.Time("sanction_date", i18n.Text("user.field.sanction_date")),
-		mixin.FK("manager_id", i18n.Text("user.field.manager_id")), // 管理员ID
+		mixin.OP("manager_id", i18n.Text("user.field.manager_id")), // 管理员ID
 		field.String("manager").
 			Default("").
 			Comment(i18n.Text("user.field.manager")), // 管理员

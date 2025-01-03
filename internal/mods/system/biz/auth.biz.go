@@ -26,8 +26,8 @@ func (biz AuthsBiz) CreateToken(ctx context.Context, in *pb.CreateTokenRequest, 
 	return biz.dao.CreateToken(ctx, in)
 }
 
-func (biz AuthsBiz) VerifyToken(ctx context.Context, in *pb.VerifyTokenRequest, opts ...grpc.CallOption) (*pb.VerifyTokenResponse, error) {
-	return biz.dao.VerifyToken(ctx, in)
+func (biz AuthsBiz) ValidateToken(ctx context.Context, in *pb.ValidateTokenRequest, opts ...grpc.CallOption) (*pb.ValidateTokenResponse, error) {
+	return biz.dao.ValidateToken(ctx, in)
 }
 
 func (biz AuthsBiz) DestroyToken(ctx context.Context, in *pb.DestroyTokenRequest, opts ...grpc.CallOption) (*pb.DestroyTokenResponse, error) {

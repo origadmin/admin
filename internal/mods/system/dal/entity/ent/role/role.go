@@ -146,8 +146,6 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// DefaultKeyword holds the default value on creation for the "keyword" field.
-	DefaultKeyword string
 	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	KeywordValidator func(string) error
 	// DefaultName holds the default value on creation for the "name" field.
@@ -408,20 +406,37 @@ func SelectColumns(fields []string) []string {
 // OmitColumns returns all fields that are not in the list of fields.
 func OmitColumns(fields ...string) []string {
 	// Default removal FieldID
-	return omitColumns(fields, true)
+	return omitColumns(Columns, fields, true)
+}
+
+// OmitCustomColumns returns all fields that are not in the list of fields.
+func OmitCustomColumns(src []string, fields ...string) []string {
+	if len(src) == 0 {
+		src = Columns
+	}
+	// Default removal FieldID
+	return omitColumns(src, fields, true)
 }
 
 // OmitColumnsWithID returns all fields that are not in the list of fields.
 func OmitColumnsWithID(fields ...string) []string {
 	// Not remove FieldID
-	return omitColumns(fields, false)
+	return omitColumns(Columns, fields, false)
 }
 
-func omitColumns(fields []string, omitID bool) []string {
+// OmitCustomColumns returns all fields that are not in the list of fields.
+func OmitCustomColumnsWithID(src []string, fields ...string) []string {
+	if len(src) == 0 {
+		src = Columns
+	}
+	// Not remove FieldID
+	return omitColumns(src, fields, false)
+}
+
+func omitColumns(src []string, fields []string, omitID bool) []string {
 	// Default removal FieldID
-	allFields := Columns
-	filteredFields := make([]string, 0, len(allFields))
-	for _, field := range allFields {
+	filteredFields := make([]string, 0, len(src))
+	for _, field := range src {
 		if !(omitID && field == FieldID) && !contains(fields, field) {
 			filteredFields = append(filteredFields, field)
 		}

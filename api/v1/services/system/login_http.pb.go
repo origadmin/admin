@@ -202,7 +202,7 @@ func _LoginAPI_Register0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Cont
 func _LoginAPI_TokenRefresh0_HTTP_Handler(srv LoginAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in TokenRefreshRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -337,7 +337,7 @@ func (c *LoginAPIHTTPClientImpl) TokenRefresh(ctx context.Context, in *TokenRefr
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationLoginAPITokenRefresh))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -51,7 +51,7 @@
 							m.{{ $setter }}(input.{{ $f.StructField }})
 							}
             {{- else if  $f.IsTime}}
-							if !input.{{ $f.StructField }}.IsZero() {
+							if input.{{ $f.StructField }}.Unix() != 0 {
 							m.{{ $setter }}(input.{{ $f.StructField }})
 							}
             {{- else if $f.IsJSON}}

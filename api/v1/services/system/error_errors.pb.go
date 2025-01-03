@@ -178,3 +178,63 @@ func IsSystemErrorReasonInvalidServer(err error) bool {
 func ErrorSystemErrorReasonInvalidServer(format string, args ...interface{}) *errors.Error {
 	return errors.New(500, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_SERVER.String(), fmt.Sprintf(format, args...))
 }
+
+func IsSystemErrorReasonCaptchaIdNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String() && e.Code == 404
+}
+
+func ErrorSystemErrorReasonCaptchaIdNotFound(format string, args ...interface{}) *errors.Error {
+	return errors.New(404, SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidCaptchaId(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String() && e.Code == 400
+}
+
+func ErrorSystemErrorReasonInvalidCaptchaId(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidCaptchaCode(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_CODE.String() && e.Code == 400
+}
+
+func ErrorSystemErrorReasonInvalidCaptchaCode(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_CODE.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidUsername(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String() && e.Code == 400
+}
+
+func ErrorSystemErrorReasonInvalidUsername(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), fmt.Sprintf(format, args...))
+}
+
+func IsSystemErrorReasonInvalidPassword(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String() && e.Code == 400
+}
+
+func ErrorSystemErrorReasonInvalidPassword(format string, args ...interface{}) *errors.Error {
+	return errors.New(400, SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), fmt.Sprintf(format, args...))
+}

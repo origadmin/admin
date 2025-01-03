@@ -34,8 +34,8 @@ func (Role) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("keyword").
 			MaxLen(32).
-			Default("").
-			Comment("role.field.keyword"), // Code of role (unique)
+			Unique().
+			Comment("role.field.keyword"), // keyword of role (unique)
 		field.String("name").
 			MaxLen(128).
 			Default("").

@@ -13,7 +13,6 @@ import (
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/agent"
-	server2 "origadmin/application/admin/internal/mods/basis/server"
 	"origadmin/application/admin/internal/mods/system/server"
 )
 
@@ -35,11 +34,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	if err != nil {
 		return nil, nil, err
 	}
-	serverRegisterAgent, err := server2.NewBasisServerAgent(v, arg)
-	if err != nil {
-		return nil, nil, err
-	}
-	v2 := agent.NewRegisterAgent(registerAgent, serverRegisterAgent)
+	v2 := agent.NewRegisterAgent(registerAgent)
 	httpServer := agent.NewHTTPServerAgent(bootstrap, v2, arg)
 	injectorClient := &loader.InjectorClient{
 		Logger:    arg,

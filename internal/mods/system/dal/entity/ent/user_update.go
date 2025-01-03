@@ -359,6 +359,12 @@ func (uu *UserUpdate) AddManagerID(i int64) *UserUpdate {
 	return uu
 }
 
+// ClearManagerID clears the value of the "manager_id" field.
+func (uu *UserUpdate) ClearManagerID() *UserUpdate {
+	uu.mutation.ClearManagerID()
+	return uu
+}
+
 // SetManager sets the "manager" field.
 func (uu *UserUpdate) SetManager(s string) *UserUpdate {
 	uu.mutation.SetManager(s)
@@ -731,6 +737,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.AddedManagerID(); ok {
 		_spec.AddField(user.FieldManagerID, field.TypeInt64, value)
+	}
+	if uu.mutation.ManagerIDCleared() {
+		_spec.ClearField(user.FieldManagerID, field.TypeInt64)
 	}
 	if value, ok := uu.mutation.Manager(); ok {
 		_spec.SetField(user.FieldManager, field.TypeString, value)
@@ -1305,6 +1314,12 @@ func (uuo *UserUpdateOne) AddManagerID(i int64) *UserUpdateOne {
 	return uuo
 }
 
+// ClearManagerID clears the value of the "manager_id" field.
+func (uuo *UserUpdateOne) ClearManagerID() *UserUpdateOne {
+	uuo.mutation.ClearManagerID()
+	return uuo
+}
+
 // SetManager sets the "manager" field.
 func (uuo *UserUpdateOne) SetManager(s string) *UserUpdateOne {
 	uuo.mutation.SetManager(s)
@@ -1707,6 +1722,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.AddedManagerID(); ok {
 		_spec.AddField(user.FieldManagerID, field.TypeInt64, value)
+	}
+	if uuo.mutation.ManagerIDCleared() {
+		_spec.ClearField(user.FieldManagerID, field.TypeInt64)
 	}
 	if value, ok := uuo.mutation.Manager(); ok {
 		_spec.SetField(user.FieldManager, field.TypeString, value)

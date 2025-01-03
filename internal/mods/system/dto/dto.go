@@ -17,7 +17,11 @@ import (
 
 var (
 	// ErrUserNotFound is user not found.
-	ErrUserNotFound = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+	ErrUserNotFound      = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+	ErrInvalidCaptchaID  = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), http.StatusBadRequest, "invalid captcha id")
+	ErrInvalidPassword   = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), http.StatusBadRequest, "invalid password")
+	ErrInvalidUsername   = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), http.StatusBadRequest, "invalid username")
+	ErrCaptchaIDNotFound = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), http.StatusBadRequest, "captcha id not found")
 )
 
 const (

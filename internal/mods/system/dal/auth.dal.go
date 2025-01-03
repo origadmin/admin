@@ -6,6 +6,7 @@ package dal
 
 import (
 	"context"
+	"errors"
 	"sync"
 
 	"entgo.io/ent/dialect/sql"
@@ -13,7 +14,6 @@ import (
 	"github.com/origadmin/toolkits/security"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -37,30 +37,30 @@ func (repo authRepo) CreateToken(ctx context.Context, request *pb.CreateTokenReq
 	}, nil
 }
 
-func (repo authRepo) VerifyToken(ctx context.Context, request *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error) {
-	valid, err := repo.Tokenizer.Verify(ctx, request.Token)
+func (repo authRepo) ValidateToken(ctx context.Context, request *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
+	valid, err := repo.Tokenizer.Validate(ctx, request.Token)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.VerifyTokenResponse{
+	return &pb.ValidateTokenResponse{
 		IsValid: valid,
 	}, nil
 }
 
 func (repo authRepo) DestroyToken(ctx context.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
-	err := repo.Tokenizer.DestroyToken(ctx, request.Token)
-	if err != nil {
-		return nil, err
-	}
+	//err := repo.Tokenizer.DestroyToken(ctx, request.Token)
+	//if err != nil {
+	//	return nil, err
+	//}
 	return &pb.DestroyTokenResponse{}, nil
 }
 
 func (repo authRepo) Authenticate(ctx context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
-	claims, err := repo.Tokenizer.Authenticate(ctx, request.Token)
+	claims, err := repo.Tokenizer.ParseClaims(ctx, request.GetData().GetToken())
 	if err != nil {
 		return nil, err
 	}
-	authorized, err := repo.Authorizer.Authorized(ctx, fromClaims(claims, request.Method, request.Path))
+	authorized, err := repo.Authorizer.Authorized(ctx, fromClaims(claims, "", ""), request.GetData().GetMethod(), request.GetData().GetPath())
 	if err != nil {
 		return nil, err
 	}
@@ -79,12 +79,14 @@ func (repo authRepo) ListAuthResources(ctx context.Context, in *dto.ListAuthReso
 	return authResourcePageQuery(ctx, query, in, option)
 }
 
-func fromClaims(claims security.Claims, method, path string) security.UserClaims {
-	return &securityx.CasbinPolicy{
-		Subject: claims.GetSubject(),
-		Method:  method,
-		Path:    path,
-		Claims:  claims,
+func fromClaims(claims security.Claims, method, path string) security.Policy {
+	return &security.RegisteredPolicy{
+		Subject:    claims.GetSubject(),
+		Object:     path,
+		Action:     method,
+		Domain:     claims.GetIssuer(),
+		Roles:      nil,
+		Permission: nil,
 	}
 }
 
@@ -146,4 +148,34 @@ func authResourceOrderBy(fields []string, opts ...sql.OrderTermOption) []resourc
 		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
 	}
 	return orders
+}
+
+type refreshTokenizer struct {
+	tokenizer security.Tokenizer
+}
+
+func (r refreshTokenizer) CreateClaims(ctx context.Context, s string) (security.Claims, error) {
+	return r.tokenizer.CreateClaims(ctx, s)
+}
+
+func (r refreshTokenizer) CreateToken(ctx context.Context, claims security.Claims) (string, error) {
+	return r.tokenizer.CreateToken(ctx, claims)
+}
+
+func (r refreshTokenizer) ParseClaims(ctx context.Context, s string) (security.Claims, error) {
+	return r.tokenizer.ParseClaims(ctx, s)
+}
+
+func (r refreshTokenizer) Validate(ctx context.Context, s string) (bool, error) {
+	return r.tokenizer.Validate(ctx, s)
+}
+
+func (r refreshTokenizer) CreateRefreshClaims(ctx context.Context, s string) (security.Claims, error) {
+	return nil, errors.New("not implemented")
+}
+
+func wrapRefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
+	return &refreshTokenizer{
+		tokenizer: tokenizer,
+	}
 }

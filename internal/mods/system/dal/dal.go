@@ -42,7 +42,17 @@ type Data struct {
 }
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewAuthRepo, NewCurrentRepo, NewMenuRepo, NewRoleRepo, NewUserRepo)
+var ProviderSet = wire.NewSet(
+	wire.Struct(new(LoginData), "*"),
+	NewData,
+	NewAuthRepo,
+	NewLoginRepo,
+	NewCurrentRepo,
+	NewMenuRepo,
+	NewRoleRepo,
+	NewUserRepo,
+	RefreshTokenizer,
+)
 
 // NewTrans returns a transaction wit data
 //func NewTrans(data *Data) database.Trans {

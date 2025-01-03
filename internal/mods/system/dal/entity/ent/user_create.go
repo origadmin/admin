@@ -316,6 +316,14 @@ func (uc *UserCreate) SetManagerID(i int64) *UserCreate {
 	return uc
 }
 
+// SetNillableManagerID sets the "manager_id" field if the given value is not nil.
+func (uc *UserCreate) SetNillableManagerID(i *int64) *UserCreate {
+	if i != nil {
+		uc.SetManagerID(*i)
+	}
+	return uc
+}
+
 // SetManager sets the "manager" field.
 func (uc *UserCreate) SetManager(s string) *UserCreate {
 	uc.mutation.SetManager(s)
@@ -652,9 +660,6 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.SanctionDate(); !ok {
 		return &ValidationError{Name: "sanction_date", err: errors.New(`ent: missing required field "User.sanction_date"`)}
-	}
-	if _, ok := uc.mutation.ManagerID(); !ok {
-		return &ValidationError{Name: "manager_id", err: errors.New(`ent: missing required field "User.manager_id"`)}
 	}
 	if v, ok := uc.mutation.ManagerID(); ok {
 		if err := user.ManagerIDValidator(v); err != nil {

@@ -63,8 +63,8 @@ func (s AuthAPIGINRPCService) DestroyToken(context transhttp.Context, request *p
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) VerifyToken(context transhttp.Context, request *pb.VerifyTokenRequest) (*pb.VerifyTokenResponse, error) {
-	response, err := s.client.VerifyToken(context, request)
+func (s AuthAPIGINRPCService) ValidateToken(context transhttp.Context, request *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
+	response, err := s.client.ValidateToken(context, request)
 	if err != nil {
 		return nil, err
 	}

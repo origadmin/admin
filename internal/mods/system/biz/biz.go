@@ -18,6 +18,8 @@ import (
 var ProviderSet = wire.NewSet(
 	NewAuthsBiz,
 	NewAuthsClient,
+	NewLoginBiz,
+	NewLoginClient,
 	NewCurrentBiz,
 	NewCurrentClient,
 	NewMenusBiz,

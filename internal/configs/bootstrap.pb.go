@@ -444,7 +444,7 @@ var file_configs_bootstrap_proto_goTypes = []any{
 	(*v1.Service)(nil),          // 5: config.v1.Service
 	(*v1.Data)(nil),             // 6: config.v1.Data
 	(*v1.Registry)(nil),         // 7: config.v1.Registry
-	(*v11.Middleware)(nil),      // 8: middleware.v1.Middleware
+	(*v11.Middleware)(nil),      // 8: middleware.v1.BuildMiddleware
 	(*v12.AuthN)(nil),           // 9: security.v1.AuthN
 	(*v12.AuthZ)(nil),           // 10: security.v1.AuthZ
 	(*v1.Security)(nil),         // 11: config.v1.Security
@@ -457,7 +457,7 @@ var file_configs_bootstrap_proto_depIdxs = []int32{
 	5,  // 2: configs.api.Bootstrap.service:type_name -> config.v1.Service
 	6,  // 3: configs.api.Bootstrap.data:type_name -> config.v1.Data
 	7,  // 4: configs.api.Bootstrap.registry:type_name -> config.v1.Registry
-	8,  // 5: configs.api.Bootstrap.middleware:type_name -> middleware.v1.Middleware
+	8,  // 5: configs.api.Bootstrap.middleware:type_name -> middleware.v1.BuildMiddleware
 	9,  // 6: configs.api.Bootstrap.authn:type_name -> security.v1.AuthN
 	10, // 7: configs.api.Bootstrap.authz:type_name -> security.v1.AuthZ
 	11, // 8: configs.api.Bootstrap.security:type_name -> config.v1.Security

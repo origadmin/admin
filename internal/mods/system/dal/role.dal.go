@@ -6,9 +6,12 @@
 package dal
 
 import (
+	"errors"
+
 	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/toolkits/crypto/rand"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
@@ -17,7 +20,8 @@ import (
 )
 
 type roleRepo struct {
-	db *Data
+	gen *rand.Rand
+	db  *Data
 }
 
 func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
@@ -34,32 +38,69 @@ func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQuery
 	return dto.ConvertRole2PB(result), nil
 }
 
-func (repo roleRepo) Create(ctx context.Context, role *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
+func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
 	var option dto.RoleQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	create := repo.db.Role(ctx).Create()
-	create.SetRole(dto.RoleObject(role), option.Fields...)
-	saved, err := create.Save(ctx)
+	var err error
+	err = rolePB.Validate()
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertRole2PB(saved), nil
+	obj := dto.RoleObject(rolePB)
+	if obj.Keyword == "" {
+		obj.Keyword = "system:role:" + repo.gen.RandString(12)
+	}
+	exist, err := repo.db.Role(ctx).Query().Where(role.KeywordEqualFold(rolePB.Keyword)).Exist(ctx)
+	if err != nil || exist {
+		return nil, errors.New("role keyword already exists")
+	}
+	//create := repo.db.Role(ctx).Create()
+	//create.SetRole(obj, option.Fields...)
+	err = repo.db.Tx(ctx, func(ctx context.Context) error {
+		create := repo.db.Role(ctx).Create()
+		create.SetRole(obj, option.Fields...)
+		saved, err := create.Save(ctx)
+		if err != nil {
+			return err
+		}
+		rolePB = dto.ConvertRole2PB(saved)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return rolePB, nil
 }
 
 func (repo roleRepo) Delete(ctx context.Context, id int64) error {
-	return repo.db.Role(ctx).DeleteOneID(id).Exec(ctx)
+	return repo.db.Tx(ctx, func(ctx context.Context) error {
+		err := repo.db.Role(ctx).DeleteOneID(id).Exec(ctx)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 }
 
-func (repo roleRepo) Update(ctx context.Context, role *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
-	update := repo.db.Role(ctx).UpdateOneID(role.Id)
-	update.SetRole(dto.RoleObject(role))
-	saved, err := update.Save(ctx)
+func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
+	var option dto.RoleQueryOption
+	if len(options) > 0 {
+		option = options[0]
+	}
+	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+		saved, err := repo.db.Role(ctx).UpdateOneID(rolePB.Id).SetRole(dto.RoleObject(rolePB), option.Fields...).Save(ctx)
+		if err != nil {
+			return err
+		}
+		rolePB = dto.ConvertRole2PB(saved)
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertRole2PB(saved), nil
+	return rolePB, nil
 }
 
 func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options ...dto.RoleQueryOption) ([]*dto.RolePB, int32, error) {
@@ -88,7 +129,8 @@ func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options 
 // NewRoleRepo .
 func NewRoleRepo(db *Data, logger log.KLogger) dto.RoleRepo {
 	return &roleRepo{
-		db: db,
+		gen: rand.DigitAndLowerCase,
+		db:  db,
 	}
 }
 

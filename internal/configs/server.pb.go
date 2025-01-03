@@ -176,13 +176,13 @@ var file_configs_server_proto_goTypes = []any{
 	(*v1.Service)(nil),     // 1: config.v1.Service
 	(*v1.Data)(nil),        // 2: config.v1.Data
 	(*v1.Registry)(nil),    // 3: config.v1.Registry
-	(*v11.Middleware)(nil), // 4: middleware.v1.Middleware
+	(*v11.Middleware)(nil), // 4: middleware.v1.BuildMiddleware
 }
 var file_configs_server_proto_depIdxs = []int32{
 	1, // 0: origadmin.configs.api.Server.service:type_name -> config.v1.Service
 	2, // 1: origadmin.configs.api.Server.data:type_name -> config.v1.Data
 	3, // 2: origadmin.configs.api.Server.registry:type_name -> config.v1.Registry
-	4, // 3: origadmin.configs.api.Server.middleware:type_name -> middleware.v1.Middleware
+	4, // 3: origadmin.configs.api.Server.middleware:type_name -> middleware.v1.BuildMiddleware
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

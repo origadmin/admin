@@ -36,32 +36,48 @@ func (repo menuRepo) Get(ctx context.Context, id int64, options ...dto.MenuQuery
 	return dto.ConvertMenu2PB(result), nil
 }
 
-func (repo menuRepo) Create(ctx context.Context, menu *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
+func (repo menuRepo) Create(ctx context.Context, menuPB *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
 	var option dto.MenuQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	create := repo.db.Menu(ctx).Create()
-	create.SetMenu(dto.MenuObject(menu), option.Fields...)
-	saved, err := create.Save(ctx)
+	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+		create := repo.db.Menu(ctx).Create()
+		create.SetMenu(dto.MenuObject(menuPB), option.Fields...)
+		saved, err := create.Save(ctx)
+		if err != nil {
+			return err
+		}
+		menuPB = dto.ConvertMenu2PB(saved)
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertMenu2PB(saved), nil
+	return menuPB, nil
 }
 
 func (repo menuRepo) Delete(ctx context.Context, id int64) error {
-	return repo.db.Menu(ctx).DeleteOneID(id).Exec(ctx)
+	return repo.db.Tx(ctx, func(ctx context.Context) error {
+		return repo.db.Menu(ctx).DeleteOneID(id).Exec(ctx)
+	})
 }
 
-func (repo menuRepo) Update(ctx context.Context, menu *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
-	update := repo.db.Menu(ctx).UpdateOneID(menu.Id)
-	update.SetMenu(dto.MenuObject(menu))
-	saved, err := update.Save(ctx)
+func (repo menuRepo) Update(ctx context.Context, menuPB *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
+	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+		update := repo.db.Menu(ctx).UpdateOneID(menuPB.Id)
+		update.SetMenu(dto.MenuObject(menuPB))
+		saved, err := update.Save(ctx)
+		if err != nil {
+			return err
+		}
+		menuPB = dto.ConvertMenu2PB(saved)
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertMenu2PB(saved), nil
+	return menuPB, nil
 }
 
 func (repo menuRepo) List(ctx context.Context, in *dto.ListMenusRequest, options ...dto.MenuQueryOption) ([]*dto.MenuPB, int32, error) {

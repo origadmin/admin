@@ -245,22 +245,10 @@ func init() {
 	permission.DescriptionValidator = permissionDescDescription.Validators[0].(func(string) error)
 	// permissionDescI18nKey is the schema descriptor for i18n_key field.
 	permissionDescI18nKey := permissionFields[3].Descriptor()
+	// permission.DefaultI18nKey holds the default value on creation for the i18n_key field.
+	permission.DefaultI18nKey = permissionDescI18nKey.Default.(string)
 	// permission.I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
-	permission.I18nKeyValidator = func() func(string) error {
-		validators := permissionDescI18nKey.Validators
-		fns := [...]func(string) error{
-			validators[0].(func(string) error),
-			validators[1].(func(string) error),
-		}
-		return func(i18n_key string) error {
-			for _, fn := range fns {
-				if err := fn(i18n_key); err != nil {
-					return err
-				}
-			}
-			return nil
-		}
-	}()
+	permission.I18nKeyValidator = permissionDescI18nKey.Validators[0].(func(string) error)
 	// permissionDescType is the schema descriptor for type field.
 	permissionDescType := permissionFields[4].Descriptor()
 	// permission.DefaultType holds the default value on creation for the type field.
@@ -399,8 +387,6 @@ func init() {
 	role.UpdateDefaultUpdateTime = roleDescUpdateTime.UpdateDefault.(func() time.Time)
 	// roleDescKeyword is the schema descriptor for keyword field.
 	roleDescKeyword := roleFields[0].Descriptor()
-	// role.DefaultKeyword holds the default value on creation for the keyword field.
-	role.DefaultKeyword = roleDescKeyword.Default.(string)
 	// role.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	role.KeywordValidator = roleDescKeyword.Validators[0].(func(string) error)
 	// roleDescName is the schema descriptor for name field.

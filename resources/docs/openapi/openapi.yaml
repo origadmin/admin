@@ -237,26 +237,11 @@ paths:
             tags:
                 - AuthAPI
             operationId: AuthAPI_Authenticate
-            parameters:
-                - name: token
-                  in: query
-                  schema:
-                    type: string
-                - name: path
-                  in: query
-                  schema:
-                    type: string
-                - name: method
-                  in: query
-                  schema:
-                    type: string
-                - name: options
-                  in: query
-                  schema:
-                    type: string
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.AuthenticateRequest_Data'
                 required: true
             responses:
                 "200":
@@ -277,14 +262,11 @@ paths:
                 - AuthAPI
             description: DestroyToken invalidates a JWT token.
             operationId: AuthAPI_DestroyToken
-            parameters:
-                - name: token
-                  in: query
-                  schema:
-                    type: string
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.DestroyTokenRequest'
                 required: true
             responses:
                 "200":
@@ -346,20 +328,11 @@ paths:
                 - AuthAPI
             description: CreateToken generates a new JWT token for the given user.
             operationId: AuthAPI_CreateToken
-            parameters:
-                - name: user_id
-                  in: query
-                  schema:
-                    type: string
-                - name: scopes
-                  in: query
-                  schema:
-                    type: array
-                    items:
-                        type: string
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.CreateTokenRequest_Data'
                 required: true
             responses:
                 "200":
@@ -374,12 +347,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/auth/verify:
+    /sys/auth/validate:
         get:
             tags:
                 - AuthAPI
-            description: VerifyToken verifies the validity of a JWT token.
-            operationId: AuthAPI_VerifyToken
+            description: ValidateToken verifies the validity of a JWT token.
+            operationId: AuthAPI_ValidateToken
             parameters:
                 - name: token
                   in: query
@@ -391,7 +364,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.VerifyTokenResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.ValidateTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -1330,7 +1303,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.TokenRefreshRequest'
+                            $ref: '#/components/schemas/api.v1.services.system.TokenRefreshRequest_Data'
                 required: true
             responses:
                 "200":
@@ -1347,6 +1320,17 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
+        api.v1.services.system.AuthenticateRequest_Data:
+            type: object
+            properties:
+                token:
+                    type: string
+                path:
+                    type: string
+                method:
+                    type: string
+                operation:
+                    type: string
         api.v1.services.system.AuthenticateResponse:
             type: object
             properties:
@@ -1412,6 +1396,15 @@ components:
             properties:
                 role:
                     $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.CreateTokenRequest_Data:
+            type: object
+            properties:
+                user_id:
+                    type: string
+                scopes:
+                    type: array
+                    items:
+                        type: string
         api.v1.services.system.CreateTokenResponse:
             type: object
             properties:
@@ -1442,6 +1435,17 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
+        api.v1.services.system.DestroyTokenRequest:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.system.DestroyTokenRequest_Data'
+            description: DestroyTokenRequest contains the token to be invalidated.
+        api.v1.services.system.DestroyTokenRequest_Data:
+            type: object
+            properties:
+                token:
+                    type: string
         api.v1.services.system.DestroyTokenResponse:
             type: object
             properties: {}
@@ -1700,12 +1704,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the MenuQuery when eager-loading is set.
-                          MenuEdges edges = 14;
-                            selectValues = 15;
-                         Children holds the value of the children edge.
+                    description: Children holds the value of the children edge.
                 parent:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
@@ -1829,11 +1828,6 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.User'
                     description: Users holds the value of the users edge.
             description: Role is the model entity for the Role schema.
-        api.v1.services.system.TokenRefreshRequest:
-            type: object
-            properties:
-                data:
-                    $ref: '#/components/schemas/api.v1.services.system.TokenRefreshRequest_Data'
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
             properties:
@@ -1933,7 +1927,7 @@ components:
                             selectValues = 14;
                          Roles holds the value of the roles edge.
             description: User is the model entity for the User schema.
-        api.v1.services.system.VerifyTokenResponse:
+        api.v1.services.system.ValidateTokenResponse:
             type: object
             properties:
                 is_valid:

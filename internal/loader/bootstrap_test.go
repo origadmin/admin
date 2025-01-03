@@ -23,6 +23,7 @@ import (
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 )
 
 const (
@@ -204,5 +205,132 @@ func TestData_InitFromFile(t *testing.T) {
 				t.Errorf("InitFromFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
+	}
+}
+
+func setupTestDB(t *testing.T) *ent.Client {
+	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	if err != nil {
+		t.Fatalf("failed opening connection to sqlite: %v", err)
+	}
+	t.Cleanup(func() {
+		client.Close()
+	})
+
+	if err := client.Schema.Create(context.Background()); err != nil {
+		t.Fatalf("failed creating schema resources: %v", err)
+	}
+
+	return client
+}
+
+func createTestRole(t *testing.T, client *ent.Client) *ent.Role {
+	r, err := client.Role.Create().
+		SetName("test-role").
+		SetDescription("Test role for testing").
+		Save(context.Background())
+	if err != nil {
+		t.Fatalf("failed creating role: %v", err)
+	}
+	return r
+}
+
+func createTestMenu(t *testing.T, client *ent.Client) *ent.Menu {
+	m, err := client.Menu.Create().
+		SetName("test-menu").
+		SetPath("/test").
+		SetDescription("Test menu for testing").
+		Save(context.Background())
+	if err != nil {
+		t.Fatalf("failed creating menu: %v", err)
+	}
+	return m
+}
+
+func createTestPermission(t *testing.T, client *ent.Client) *ent.Permission {
+	p, err := client.Permission.Create().
+		SetName("test-permission").
+		SetDescription("Test permission for testing").
+		SetKeyword("test-permission").
+		Save(context.Background())
+	if err != nil {
+		t.Fatalf("failed creating permission: %v", err)
+	}
+	return p
+}
+func TestAddRole(t *testing.T) {
+	client := setupTestDB(t)
+	role := createTestRole(t, client)
+
+	if role.Name != "test-role" {
+		t.Errorf("Expected role name to be 'test-role', got '%s'", role.Name)
+	}
+}
+
+func TestAddMenu(t *testing.T) {
+	client := setupTestDB(t)
+	menu := createTestMenu(t, client)
+
+	if menu.Name != "test-menu" {
+		t.Errorf("Expected menu name to be 'test-menu', got '%s'", menu.Name)
+	}
+}
+
+func TestAddPermission(t *testing.T) {
+	client := setupTestDB(t)
+	permission := createTestPermission(t, client)
+
+	if permission.Name != "test-permission" {
+		t.Errorf("Expected permission name to be 'test-permission', got '%s'", permission.Name)
+	}
+}
+
+func TestAddRolePermission(t *testing.T) {
+	client := setupTestDB(t)
+	role := createTestRole(t, client)
+	permission := createTestPermission(t, client)
+
+	role, err := role.Update().
+		AddPermissions(permission).
+		Save(context.Background())
+	if err != nil {
+		t.Fatalf("failed adding permission to role: %v", err)
+	}
+	permissions := role.QueryPermissions().AllX(context.Background())
+	if len(permissions) != 1 {
+		t.Errorf("Expected role to have 1 permission, got %d", len(role.Edges.Permissions))
+	}
+}
+
+func TestAddRoleMenu(t *testing.T) {
+	client := setupTestDB(t)
+	role := createTestRole(t, client)
+	menu := createTestMenu(t, client)
+
+	role, err := role.Update().
+		AddMenus(menu).
+		Save(context.Background())
+	if err != nil {
+		t.Fatalf("failed adding menu to role: %v", err)
+	}
+	menus := role.QueryMenus().AllX(context.Background())
+	if len(menus) != 1 {
+		t.Errorf("Expected role to have 1 menu, got %d", len(role.Edges.Menus))
+	}
+}
+
+func TestDeleteRole(t *testing.T) {
+	client := setupTestDB(t)
+	role := createTestRole(t, client)
+
+	err := client.Role.DeleteOne(role).
+		Exec(context.Background())
+	if err != nil {
+		t.Fatalf("failed deleting role: %v", err)
+	}
+
+	_, err = client.Role.Get(context.Background(), role.ID)
+	if !ent.IsNotFound(err) {
+		t.Errorf("Expected role to be deleted, got %v", err)
 	}
 }

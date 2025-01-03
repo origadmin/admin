@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	AuthAPI_ListAuthResources_FullMethodName = "/api.v1.services.system.AuthAPI/ListAuthResources"
 	AuthAPI_CreateToken_FullMethodName       = "/api.v1.services.system.AuthAPI/CreateToken"
-	AuthAPI_VerifyToken_FullMethodName       = "/api.v1.services.system.AuthAPI/VerifyToken"
+	AuthAPI_ValidateToken_FullMethodName     = "/api.v1.services.system.AuthAPI/ValidateToken"
 	AuthAPI_DestroyToken_FullMethodName      = "/api.v1.services.system.AuthAPI/DestroyToken"
 	AuthAPI_Authenticate_FullMethodName      = "/api.v1.services.system.AuthAPI/Authenticate"
 )
@@ -33,8 +33,8 @@ type AuthAPIClient interface {
 	ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error)
 	// CreateToken generates a new JWT token for the given user.
 	CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*CreateTokenResponse, error)
-	// VerifyToken verifies the validity of a JWT token.
-	VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenResponse, error)
+	// ValidateToken verifies the validity of a JWT token.
+	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 	// DestroyToken invalidates a JWT token.
 	DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error)
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
@@ -68,10 +68,10 @@ func (c *authAPIClient) CreateToken(ctx context.Context, in *CreateTokenRequest,
 	return out, nil
 }
 
-func (c *authAPIClient) VerifyToken(ctx context.Context, in *VerifyTokenRequest, opts ...grpc.CallOption) (*VerifyTokenResponse, error) {
+func (c *authAPIClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(VerifyTokenResponse)
-	err := c.cc.Invoke(ctx, AuthAPI_VerifyToken_FullMethodName, in, out, cOpts...)
+	out := new(ValidateTokenResponse)
+	err := c.cc.Invoke(ctx, AuthAPI_ValidateToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +105,8 @@ type AuthAPIServer interface {
 	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 	// CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
-	// VerifyToken verifies the validity of a JWT token.
-	VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error)
+	// ValidateToken verifies the validity of a JWT token.
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	// DestroyToken invalidates a JWT token.
 	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
@@ -126,8 +126,8 @@ func (UnimplementedAuthAPIServer) ListAuthResources(context.Context, *ListAuthRe
 func (UnimplementedAuthAPIServer) CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateToken not implemented")
 }
-func (UnimplementedAuthAPIServer) VerifyToken(context.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VerifyToken not implemented")
+func (UnimplementedAuthAPIServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
 func (UnimplementedAuthAPIServer) DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DestroyToken not implemented")
@@ -192,20 +192,20 @@ func _AuthAPI_CreateToken_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthAPI_VerifyToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(VerifyTokenRequest)
+func _AuthAPI_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ValidateTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthAPIServer).VerifyToken(ctx, in)
+		return srv.(AuthAPIServer).ValidateToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthAPI_VerifyToken_FullMethodName,
+		FullMethod: AuthAPI_ValidateToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthAPIServer).VerifyToken(ctx, req.(*VerifyTokenRequest))
+		return srv.(AuthAPIServer).ValidateToken(ctx, req.(*ValidateTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -262,8 +262,8 @@ var AuthAPI_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthAPI_CreateToken_Handler,
 		},
 		{
-			MethodName: "VerifyToken",
-			Handler:    _AuthAPI_VerifyToken_Handler,
+			MethodName: "ValidateToken",
+			Handler:    _AuthAPI_ValidateToken_Handler,
 		},
 		{
 			MethodName: "DestroyToken",

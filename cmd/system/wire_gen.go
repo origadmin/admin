@@ -12,9 +12,6 @@ import (
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
-	biz2 "origadmin/application/admin/internal/mods/basis/biz"
-	dal2 "origadmin/application/admin/internal/mods/basis/dal"
-	service2 "origadmin/application/admin/internal/mods/basis/service"
 	"origadmin/application/admin/internal/mods/system/biz"
 	"origadmin/application/admin/internal/mods/system/dal"
 	"origadmin/application/admin/internal/mods/system/server"
@@ -51,6 +48,23 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	authRepo := dal.NewAuthRepo(data, arg)
 	authAPIClient := biz.NewAuthsClient(authRepo, arg)
 	authAPIServer := service.NewAuthAPIServer(authAPIClient)
+	basisConfig := loader.NewBasisConfig(bootstrap)
+	tokenizer, err := loader.NewTokenizer(bootstrap)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
+	loginData := &dal.LoginData{
+		BasisConfig: basisConfig,
+		Tokenizer:   refreshTokenizer,
+		Menu:        menuRepo,
+		Role:        roleRepo,
+		User:        userRepo,
+	}
+	loginRepo := dal.NewLoginRepo(loginData, arg)
+	loginAPIClient := biz.NewLoginClient(loginRepo, arg)
+	loginAPIServer := service.NewLoginAPIServer(loginAPIClient)
 	currentRepo := dal.NewCurrentRepo(data, arg)
 	currentAPIClient := biz.NewCurrentClient(currentRepo, arg)
 	currentAPIServer := service.NewCurrentAPIServer(currentAPIClient)
@@ -59,28 +73,10 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		Role:    roleAPIServer,
 		User:    userAPIServer,
 		Auth:    authAPIServer,
+		Login:   loginAPIServer,
 		Current: currentAPIServer,
 	}
-	basisConfig := loader.NewBasisConfig(bootstrap)
-	authenticator, err := loader.NewAuthenticator(bootstrap)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	loginData := &dal2.LoginData{
-		BasisConfig:   basisConfig,
-		Authenticator: authenticator,
-		Menu:          menuRepo,
-		Role:          roleRepo,
-		User:          userRepo,
-	}
-	loginRepo := dal2.NewLoginRepo(loginData, arg)
-	loginAPIClient := biz2.NewLoginClient(loginRepo, arg)
-	loginAPIServer := service2.NewLoginAPIServer(loginAPIClient)
-	serviceRegisterServer := &service2.RegisterServer{
-		Login: loginAPIServer,
-	}
-	v2 := server.NewRegisterServer(registerServer, serviceRegisterServer)
+	v2 := server.NewRegisterServer(registerServer)
 	v3 := server.NewSystemServer(bootstrap, v2, arg)
 	injectorServer := &loader.InjectorServer{
 		Logger:    arg,

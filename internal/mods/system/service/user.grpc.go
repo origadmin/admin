@@ -17,19 +17,23 @@ type UserAPIService struct {
 }
 
 func (s UserAPIService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
-	return &pb.ListUsersResponse{}, nil
+	return s.client.ListUsers(ctx, req)
 }
+
 func (s UserAPIService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	return &pb.GetUserResponse{}, nil
+	return s.client.GetUser(ctx, req)
 }
+
 func (s UserAPIService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	return &pb.CreateUserResponse{}, nil
+	return s.client.CreateUser(ctx, req)
 }
+
 func (s UserAPIService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	return &pb.UpdateUserResponse{}, nil
+	return s.client.UpdateUser(ctx, req)
 }
+
 func (s UserAPIService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
-	return &pb.DeleteUserResponse{}, nil
+	return s.client.DeleteUser(ctx, req)
 }
 
 // NewUserAPIService new a user service.

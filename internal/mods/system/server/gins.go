@@ -43,7 +43,7 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.Op
 
 	//middlewares, err := bootstrap.LoadMiddlewares(bootstrap.GetServiceName(), bootstrap, l)
 	//if err == nil && len(middlewares) > 0 {
-	//	opts = append(opts, http.Middleware(middlewares...))
+	//	opts = append(opts, http.BuildMiddleware(middlewares...))
 	//}
 
 	if l != nil {

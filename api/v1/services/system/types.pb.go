@@ -56,12 +56,6 @@ type Menu struct {
 	ParentId int64 `protobuf:"varint,12,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
 	ParentPath string `protobuf:"bytes,13,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	//
-	//	  The values are being populated by the MenuQuery when eager-loading is set.
-	//	MenuEdges edges = 14;
-	//	  selectValues = 15;
-	//
 	// Children holds the value of the children edge.
 	Children []*Menu `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.

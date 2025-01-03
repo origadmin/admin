@@ -11188,10 +11188,24 @@ func (m *UserMutation) AddedManagerID() (r int64, exists bool) {
 	return *v, true
 }
 
+// ClearManagerID clears the value of the "manager_id" field.
+func (m *UserMutation) ClearManagerID() {
+	m.manager_id = nil
+	m.addmanager_id = nil
+	m.clearedFields[user.FieldManagerID] = struct{}{}
+}
+
+// ManagerIDCleared returns if the "manager_id" field was cleared in this mutation.
+func (m *UserMutation) ManagerIDCleared() bool {
+	_, ok := m.clearedFields[user.FieldManagerID]
+	return ok
+}
+
 // ResetManagerID resets all changes to the "manager_id" field.
 func (m *UserMutation) ResetManagerID() {
 	m.manager_id = nil
 	m.addmanager_id = nil
+	delete(m.clearedFields, user.FieldManagerID)
 }
 
 // SetManager sets the "manager" field.
@@ -11916,6 +11930,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldUpdateAuthor) {
 		fields = append(fields, user.FieldUpdateAuthor)
 	}
+	if m.FieldCleared(user.FieldManagerID) {
+		fields = append(fields, user.FieldManagerID)
+	}
 	return fields
 }
 
@@ -11935,6 +11952,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldUpdateAuthor:
 		m.ClearUpdateAuthor()
+		return nil
+	case user.FieldManagerID:
+		m.ClearManagerID()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)

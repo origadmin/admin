@@ -204,7 +204,7 @@ func _LoginAPI_Register0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 func _LoginAPI_TokenRefresh0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in TokenRefreshRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

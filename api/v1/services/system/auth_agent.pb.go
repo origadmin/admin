@@ -28,8 +28,8 @@ type AuthAPIAgent interface {
 	// DestroyToken DestroyToken invalidates a JWT token.
 	DestroyToken(http.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
 	ListAuthResources(http.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
-	// VerifyToken VerifyToken verifies the validity of a JWT token.
-	VerifyToken(http.Context, *VerifyTokenRequest) (*VerifyTokenResponse, error)
+	// ValidateToken ValidateToken verifies the validity of a JWT token.
+	ValidateToken(http.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 }
 
 func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
@@ -79,21 +79,21 @@ func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 	}
 }
 
-func _AuthAPI_VerifyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
-		var in VerifyTokenRequest
+		var in ValidateTokenRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIVerifyToken)
+		http.SetOperation(ctx, OperationAuthAPIValidateToken)
 		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
-			return srv.VerifyToken(ctx, req.(*VerifyTokenRequest))
+			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*VerifyTokenResponse)
+		reply := out.(*ValidateTokenResponse)
 		if reply == nil {
 			return nil
 		}
@@ -104,7 +104,7 @@ func _AuthAPI_VerifyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in DestroyTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -155,7 +155,7 @@ func RegisterAuthAPIAgent(ag agent.HTTPAgent, srv AuthAPIAgent) {
 	r := ag.Route()
 	r.GET("/sys/auth/resources", _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv))
 	r.POST("/sys/auth/token", _AuthAPI_CreateToken0_HTTPAgent_Handler(srv))
-	r.GET("/sys/auth/verify", _AuthAPI_VerifyToken0_HTTPAgent_Handler(srv))
+	r.GET("/sys/auth/validate", _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv))
 	r.POST("/sys/auth/destroy", _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv))
 	r.POST("/sys/auth/authenticate", _AuthAPI_Authenticate0_HTTPAgent_Handler(srv))
 }

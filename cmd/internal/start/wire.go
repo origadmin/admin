@@ -18,7 +18,6 @@ import (
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/agent"
-	basisserver "origadmin/application/admin/internal/mods/basis/server"
 	"origadmin/application/admin/internal/mods/system/server"
 )
 
@@ -28,6 +27,6 @@ func buildInjectors(context.Context, *configs.Bootstrap, log.KLogger) (*kratos.A
 		loader.ProviderSet,
 		agent.ProviderSet,
 		server.ProviderSet,
-		basisserver.ProviderSet,
+		//basisserver.ProviderSet,
 		NewApp))
 }

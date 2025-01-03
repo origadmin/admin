@@ -27,8 +27,8 @@ func (obj Authenticator) Authenticate(ctx context.Context, s string) (security.C
 	return claims, nil
 }
 
-func (obj Authenticator) AuthenticateContext(ctx context.Context, tokenType security.TokenType) (security.Claims, error) {
-	token, err := msecurity.TokenFromTypeContext(ctx, tokenType, obj.Scheme.String())
+func (obj Authenticator) AuthenticateContext(ctx context.Context, tokenType security.TokenSource) (security.Claims, error) {
+	token, err := msecurity.TokenFromContext(ctx, tokenType, obj.Scheme.String())
 	if err != nil {
 		return nil, err
 	}

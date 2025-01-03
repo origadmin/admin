@@ -82,9 +82,8 @@ func (Permission) Fields() []ent.Field {
 			Comment("permission.field.description"),
 		field.String("i18n_key").
 			MaxLen(128).
-			NotEmpty().
-			Comment("permission.field.i18n_key"). //Comment("国际化标识符(如：permission.system.user.manage)").
-			Unique(),
+			Default("").
+			Comment("permission.field.i18n_key"), //Comment("国际化标识符(如：permission.system.user.manage)").
 		field.Int8("type").
 			Default(PermTypeMenu).Comment("permission.field.type"), //Comment("权限类型：1-系统 2-菜单 3-数据 4-部门 5-资源"),
 		field.String("scope").

@@ -5,6 +5,12 @@
 // Package main is the main package
 package main
 
+//go:generate buf dep update
+//go:generate buf build
+//go:generate buf generate
+
+//go:generate protoc -I. -I./third_party --go_out=paths=source_relative:. ./helpers/resp/data/v1/*.proto
+
 // for linux or macos you can use make generate
 // for windows you can use make this generate
 
@@ -34,9 +40,3 @@ package main
 // kratos proto server -t ./internal/agent api/v1/proto/system/menu.proto
 // kratos proto server -t ./internal/agent api/v1/proto/system/role.proto
 // kratos proto server -t ./internal/agent api/v1/proto/system/user.proto
-
-//go:generate buf dep update
-//go:generate buf build
-//go:generate buf generate
-
-//go:generate protoc -I. -I./third_party --go_out=paths=source_relative:. ./helpers/resp/data/v1/*.proto

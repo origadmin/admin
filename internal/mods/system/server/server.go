@@ -20,7 +20,6 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
-	basisservice "origadmin/application/admin/internal/mods/basis/service"
 	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
@@ -40,7 +39,7 @@ func init() {
 
 func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerRegister, l log.KLogger) []transport.Server {
 	var servers []transport.Server
-	middlewares := middleware.NewServer(bootstrap.GetMiddleware())
+	middlewares := middleware.NewServer(bootstrap.GetService().GetMiddleware())
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		return servers
@@ -157,9 +156,9 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	return client, nil
 }
 
-func NewRegisterServer(s1 *systemservice.RegisterServer, s2 *basisservice.RegisterServer) []service.ServerRegister {
+func NewRegisterServer(s1 *systemservice.RegisterServer) []service.ServerRegister {
 	return []service.ServerRegister{
-		s1, s2,
+		s1,
 	}
 }
 

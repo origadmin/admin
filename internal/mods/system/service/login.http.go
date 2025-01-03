@@ -17,6 +17,14 @@ type LoginAPIHTTPService struct {
 	client pb.LoginAPIHTTPClient
 }
 
+func (obj LoginAPIHTTPService) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	return obj.client.Logout(ctx, request)
+}
+
+func (obj LoginAPIHTTPService) TokenRefresh(ctx context.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
+	return obj.client.TokenRefresh(ctx, request)
+}
+
 func (obj LoginAPIHTTPService) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	return obj.client.Register(ctx, request)
 }

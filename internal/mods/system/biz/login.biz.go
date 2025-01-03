@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/basis/dto"
+	"origadmin/application/admin/internal/mods/system/dto"
 )
 
 // LoginBiz is a Login use case.

@@ -15,6 +15,7 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 )
 
 type (
@@ -31,19 +32,22 @@ type (
 	ListRolesResponse = pb.ListRolesResponse
 )
 
-func RoleObject(menu *RolePB) *Role {
-	if menu == nil {
+func RoleObject(rolePB *RolePB) *Role {
+	if rolePB == nil {
 		return nil
 	}
 	return &Role{
-		ID:          menu.Id,
-		CreateTime:  menu.CreateTime.AsTime(),
-		UpdateTime:  menu.UpdateTime.AsTime(),
-		Keyword:     menu.Keyword,
-		Name:        menu.Name,
-		Description: menu.Description,
-		Sequence:    int(menu.Sequence),
-		Status:      int8(menu.Status),
+		ID:          rolePB.Id,
+		CreateTime:  rolePB.CreateTime.AsTime(),
+		UpdateTime:  rolePB.UpdateTime.AsTime(),
+		Keyword:     rolePB.Keyword,
+		Name:        rolePB.Name,
+		Description: rolePB.Description,
+		Type:        schema.RoleTypeUser,
+		Sequence:    int(rolePB.Sequence),
+		Status:      int8(rolePB.Status),
+		IsSystem:    false,
+		Edges:       ent.RoleEdges{},
 	}
 }
 

@@ -91,7 +91,7 @@ func WithSkipper(paths []string) Setting {
 	}
 }
 
-//func WithMiddlewares(middlewares []middleware.Middleware) Setting {
+//func WithMiddlewares(middlewares []middleware.BuildMiddleware) Setting {
 //	return func(m *Option) {
 //		m.Middlewares = middlewares
 //	}

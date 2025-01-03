@@ -241,7 +241,7 @@ var (
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "permission.field.name"},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "permission.field.keyword"},
 		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "permission.field.description"},
-		{Name: "i18n_key", Type: field.TypeString, Unique: true, Size: 128, Comment: "permission.field.i18n_key"},
+		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "permission.field.i18n_key", Default: ""},
 		{Name: "type", Type: field.TypeInt8, Comment: "permission.field.type", Default: 2},
 		{Name: "scope", Type: field.TypeString, Comment: "permission.field.scope", Default: "self"},
 		{Name: "scope_depts", Type: field.TypeJSON, Nullable: true, Comment: "permission.field.scope_depts"},
@@ -392,7 +392,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Size: 32, Comment: "role.field.keyword", Default: ""},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 32, Comment: "role.field.keyword"},
 		{Name: "name", Type: field.TypeString, Size: 128, Comment: "role.field.name", Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "role.field.description", Default: ""},
 		{Name: "type", Type: field.TypeInt8, Comment: "role.field.type", Default: 2},
@@ -551,7 +551,7 @@ var (
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "user.field.last_login_ip", Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, Comment: "user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "sanction_date", Type: field.TypeTime, Comment: "user.field.sanction_date", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "manager_id", Type: field.TypeInt64, Comment: "user.field.manager_id"},
+		{Name: "manager_id", Type: field.TypeInt64, Nullable: true, Comment: "user.field.manager_id"},
 		{Name: "manager", Type: field.TypeString, Comment: "user.field.manager", Default: ""},
 	}
 	// SysUsersTable holds the schema information for the "sys_users" table.

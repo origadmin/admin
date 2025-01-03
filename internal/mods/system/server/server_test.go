@@ -18,7 +18,7 @@ import (
 	"github.com/origadmin/runtime/service"
 	servicegrpc "github.com/origadmin/runtime/service/grpc"
 
-	basisservice "origadmin/application/admin/internal/mods/basis/service"
+	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
 func TestNewLoginServerAgent(t *testing.T) {
@@ -69,7 +69,7 @@ func TestNewLoginServerAgent(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			//agent := NewLoginServerAgent(tt.args.client)
 			//agent.CaptchaID(nil, &dto.CaptchaIDRequest{Id: "123"})
-			if got := basisservice.NewLoginServerAgentGINRegister(tt.args.client); !reflect.DeepEqual(got, tt.want) {
+			if got := systemservice.NewLoginServerAgentGINRegister(tt.args.client); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewLoginServerAgent() = %v, want %v", got, tt.want)
 			}
 		})

@@ -7,6 +7,7 @@ package dal
 
 import (
 	"entgo.io/ent/dialect/sql"
+	"github.com/google/uuid"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 
@@ -68,32 +69,51 @@ func (repo userRepo) Get(ctx context.Context, id int64, options ...dto.UserQuery
 	return dto.ConvertUser2PB(result), nil
 }
 
-func (repo userRepo) Create(ctx context.Context, user *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
 	var option dto.UserQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	create := repo.db.User(ctx).Create()
-	create.SetUser(dto.UserObject(user), option.Fields...)
-	saved, err := create.Save(ctx)
+	if userPB.Uuid == "" {
+		userPB.Uuid = uuid.Must(uuid.NewRandom()).String()
+	}
+	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+		create := repo.db.User(ctx).Create()
+		create.SetUser(dto.UserObject(userPB), option.Fields...)
+		saved, err := create.Save(ctx)
+		if err != nil {
+			return err
+		}
+		userPB = dto.ConvertUser2PB(saved)
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertUser2PB(saved), nil
+	return userPB, nil
 }
 
 func (repo userRepo) Delete(ctx context.Context, id int64) error {
-	return repo.db.User(ctx).DeleteOneID(id).Exec(ctx)
+	return repo.db.Tx(ctx, func(ctx context.Context) error {
+		return repo.db.User(ctx).DeleteOneID(id).Exec(ctx)
+	})
 }
 
-func (repo userRepo) Update(ctx context.Context, user *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
-	update := repo.db.User(ctx).UpdateOneID(user.Id)
-	update.SetUser(dto.UserObject(user))
-	saved, err := update.Save(ctx)
+func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+		update := repo.db.User(ctx).UpdateOneID(userPB.Id)
+		update.SetUser(dto.UserObject(userPB))
+		saved, err := update.Save(ctx)
+		if err != nil {
+			return err
+		}
+		userPB = dto.ConvertUser2PB(saved)
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertUser2PB(saved), nil
+	return userPB, nil
 }
 
 func (repo userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options ...dto.UserQueryOption) ([]*dto.UserPB, int32, error) {

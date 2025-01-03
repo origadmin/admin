@@ -28,8 +28,8 @@ import (
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/basis/dto"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
+	"origadmin/application/admin/internal/mods/system/dto"
 	systemdto "origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -218,7 +218,7 @@ func (repo loginRepo) putBuf(buf *bytes.Buffer) {
 }
 
 func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.TokenRefreshResponse, error) {
-	claims, err := repo.Authenticator.Authenticate(ctx, token)
+	claims, err := repo.Tokenizer.ParseClaims(ctx, token)
 	if err != nil {
 		return nil, err
 	}
@@ -232,19 +232,20 @@ func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.Toke
 }
 
 func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginResponse, error) {
-	claims, err := repo.Authenticator.CreateIdentityClaims(ctx, id, false)
+
+	claims, err := repo.Tokenizer.CreateClaims(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	token, err := repo.Authenticator.CreateToken(ctx, claims)
+	token, err := repo.Tokenizer.CreateToken(ctx, claims)
 	if err != nil {
 		return nil, err
 	}
-	refreshClaims, err := repo.Authenticator.CreateIdentityClaims(ctx, id, true)
+	refreshClaims, err := repo.Tokenizer.CreateRefreshClaims(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	refreshToken, err := repo.Authenticator.CreateToken(ctx, refreshClaims)
+	refreshToken, err := repo.Tokenizer.CreateToken(ctx, refreshClaims)
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +254,7 @@ func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginRespon
 			UserId:         id,
 			AccessToken:    token,
 			RefreshToken:   refreshToken,
-			ExpirationTime: claims.GetExpiration().Unix(),
+			ExpirationTime: claims.GetExpiration(),
 		},
 	}, nil
 }
@@ -263,12 +264,19 @@ func fromSecurityClaims(claims security.Claims) *securityv1.Claims {
 		Sub:    claims.GetSubject(),
 		Iss:    claims.GetIssuer(),
 		Aud:    claims.GetAudience(),
-		Exp:    claims.GetExpiration().Unix(),
-		Nbf:    claims.GetNotBefore().Unix(),
-		Iat:    claims.GetIssuedAt().Unix(),
-		Jti:    claims.GetJWTID(),
+		Exp:    claims.GetExpiration(),
+		Nbf:    claims.GetNotBefore(),
+		Iat:    claims.GetIssuedAt(),
+		Jti:    claims.GetID(),
 		Scopes: claims.GetScopes(),
 	}
+}
+
+func RefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
+	if rt, ok := tokenizer.(security.RefreshTokenizer); ok {
+		return rt
+	}
+	return wrapRefreshTokenizer(tokenizer)
 }
 
 func (repo loginRepo) cfg() *configs.BasisConfig {
@@ -276,11 +284,11 @@ func (repo loginRepo) cfg() *configs.BasisConfig {
 }
 
 type LoginData struct {
-	BasisConfig   *configs.BasisConfig
-	Authenticator security.Authenticator
-	Menu          systemdto.MenuRepo
-	Role          systemdto.RoleRepo
-	User          systemdto.UserRepo
+	BasisConfig *configs.BasisConfig
+	Tokenizer   security.RefreshTokenizer
+	Menu        systemdto.MenuRepo
+	Role        systemdto.RoleRepo
+	User        systemdto.UserRepo
 }
 
 // NewLoginRepo .
