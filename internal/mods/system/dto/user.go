@@ -7,11 +7,17 @@ package dto
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/goexts/generic"
+	"github.com/google/uuid"
+	"github.com/origadmin/toolkits/crypto/hash"
+	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/net/pagination"
 	"google.golang.org/protobuf/proto"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 )
@@ -35,8 +41,7 @@ func UserObject(user *UserPB) *User {
 		return nil
 	}
 	return &User{
-		ID:   user.Id,
-		UUID: user.Uuid,
+		ID: user.Id,
 		//CreateAuthor:  user.CreateAuthor,
 		//UpdateAuthor:  user.UpdateAuthor,
 		CreateTime: user.CreateTime.AsTime(),
@@ -76,6 +81,11 @@ type UserRepo interface {
 }
 
 type UserQueryOption struct {
+	IsAdmin      bool
+	NoPasswd     bool
+	RandomPasswd bool
+	Email        string
+	Phone        string
 	Name         string `form:"name" json:"name,omitempty"`
 	Username     string `form:"username" json:"username,omitempty"`
 	Status       int8   `form:"status" json:"status,omitempty"`
@@ -93,17 +103,20 @@ type UserQueryResult struct {
 	Args     map[string]proto.Message `json:"args"`
 }
 
-func (o UserQueryOption) FromListRequest(in *ListUsersRequest, limiter pagination.PageLimiter) error {
+func (o *UserQueryOption) FromListRequest(in *ListUsersRequest, limiter pagination.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o UserQueryOption) FromGetRequest(in *pb.GetUserRequest, limiter pagination.PageLimiter) error {
+func (o *UserQueryOption) FromGetRequest(in *pb.GetUserRequest, limiter pagination.PageLimiter) error {
 	return nil
 }
 
-func (o UserQueryOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pagination.PageLimiter) error {
+func (o *UserQueryOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pagination.PageLimiter) error {
+	o.RandomPasswd = in.RandomPassword
+	//o.NoPasswd = in.NoPassword
+	o.IsAdmin = in.IsAdmin
 	return nil
 }
 
@@ -133,4 +146,33 @@ func ConvertUserRoles(roles []*UserRole) []*UserRolePB {
 		result = append(result, ConvertUserRole2PB(role))
 	}
 	return result
+}
+
+// CreateUser functions are used to create new users
+func CreateUser(user *UserPB, username, password string, option UserQueryOption) (*UserPB, string, error) {
+	var err error
+	registerID := id.Gen()
+	if !option.NoPasswd {
+		if option.RandomPasswd && (option.Email != "" || option.Phone != "") {
+			password = rand.GenerateRandom(8)
+		}
+	} else {
+		password = ""
+	}
+	var passwd, salt string
+	if password != "" {
+		salt = rand.GenerateSalt()
+		passwd, err = hash.Generate(password, salt)
+		if err != nil {
+			return nil, "", err
+		}
+	}
+	user.Id = registerID
+	user.Uuid = generic.Must(uuid.NewRandom()).String()
+	user.Username = username
+	user.Name = "user_" + strconv.Itoa(int(registerID))
+	user.Password = passwd
+	user.Salt = salt
+	user.Status = 1
+	return user, password, nil
 }

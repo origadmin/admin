@@ -66,7 +66,16 @@ func (biz UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, op
 		return nil, err
 	}
 	log.Info("CreateUser")
-	result, err := biz.dao.Create(ctx, in.User, option)
+	username := in.GetUser().GetUsername()
+	password := in.GetUser().GetPassword()
+	createUser, ps, err := dto.CreateUser(in.User, username, password, option)
+	if err != nil {
+		return nil, err
+	}
+	// TODO: Send email or sms to user
+	_ = ps
+
+	result, err := biz.dao.Create(ctx, createUser, option)
 	if err != nil {
 		return nil, err
 	}

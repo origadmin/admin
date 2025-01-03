@@ -7,13 +7,10 @@ package dal
 import (
 	"bytes"
 	"fmt"
-	"strconv"
 	"sync"
 
 	"github.com/LyricTian/captcha"
 	kerr "github.com/go-kratos/kratos/v2/errors"
-	"github.com/goexts/generic"
-	"github.com/google/uuid"
 	"github.com/origadmin/runtime/context"
 	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
@@ -25,7 +22,6 @@ import (
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
@@ -46,23 +42,16 @@ func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequ
 func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
 	log.Debugf("Register request received with data: %+v", in.GetData())
 	data := in.GetData()
-	registerID := id.Gen()
-	salt := rand.GenerateSalt()
-	passwd, err := hash.Generate(data.GetPassword(), salt)
+	var err error
+	createUser := new(dto.UserPB)
+	createUser, _, err = dto.CreateUser(createUser, data.GetUsername(), data.GetPassword(), dto.UserQueryOption{})
 	if err != nil {
 		return nil, err
 	}
-	if _, err := repo.User.Create(ctx, &system.User{
-		Id:       registerID,
-		Uuid:     generic.Must(uuid.NewRandom()).String(),
-		Username: data.GetUsername(),
-		Name:     "user_" + strconv.Itoa(int(registerID)),
-		Password: passwd,
-		Salt:     salt,
-		Status:   1,
-	}); err != nil {
+	if _, err := repo.User.Create(ctx, createUser); err != nil {
 		return nil, err
 	}
+
 	return &dto.RegisterResponse{
 		Success: true,
 		Data: &system.RegisterResponse_Data{
@@ -232,7 +221,6 @@ func (repo loginRepo) refreshToken(ctx context.Context, token string) (*dto.Toke
 }
 
 func (repo loginRepo) genToken(ctx context.Context, id string) (*dto.LoginResponse, error) {
-
 	claims, err := repo.Tokenizer.CreateClaims(ctx, id)
 	if err != nil {
 		return nil, err

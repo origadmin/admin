@@ -1161,6 +1161,14 @@ paths:
                   description: The user id to use for this user.
                   schema:
                     type: string
+                - name: is_admin
+                  in: query
+                  schema:
+                    type: boolean
+                - name: random_password
+                  in: query
+                  schema:
+                    type: boolean
             requestBody:
                 content:
                     application/json:

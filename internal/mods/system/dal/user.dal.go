@@ -6,6 +6,8 @@
 package dal
 
 import (
+	"errors"
+
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/origadmin/runtime/context"
@@ -74,10 +76,17 @@ func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...
 	if len(options) > 0 {
 		option = options[0]
 	}
+
+	var err error
 	if userPB.Uuid == "" {
 		userPB.Uuid = uuid.Must(uuid.NewRandom()).String()
 	}
-	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+	exist, err := repo.db.User(ctx).Query().Where(user.UsernameEQ(userPB.Username)).Exist(ctx)
+	if err != nil || exist {
+		return nil, errors.New("user already exists")
+	}
+
+	err = repo.db.Tx(ctx, func(ctx context.Context) error {
 		create := repo.db.User(ctx).Create()
 		create.SetUser(dto.UserObject(userPB), option.Fields...)
 		saved, err := create.Save(ctx)

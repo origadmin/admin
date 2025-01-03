@@ -111,12 +111,13 @@ message CreateUserRequest {
   // The parent resource id where the user is to be created.
   string parent = 1;
 
-  // The user id to use for this user.
-  string user_id = 3;
-
   // The user resource to create.
   // The field id should match the Noun in the method id.
   User user = 2;
+  // The user id to use for this user.
+  string user_id = 3;
+  bool is_admin = 4;
+  bool random_password = 5;
 }
 
 message CreateUserResponse {
