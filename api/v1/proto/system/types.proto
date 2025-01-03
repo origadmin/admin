@@ -137,8 +137,10 @@ message User {
   string remark = 11 [json_name = "remark"];
   // Status holds the value of the "status" field.
   int32 status = 12 [json_name = "status"];
-
-  string uuid = 13 [json_name = "uuid"];
+  // Gender holds the value of the "gender" field.
+  string gender = 13 [json_name = "gender"];
+  // Uuid holds the value of the "uuid" field.
+  string uuid = 14 [json_name = "uuid"];
   // Edges holds the relations/edges for other nodes in the graph.
   //    The values are being populated by the UserQuery when eager-loading is set.
   //  UserEdges edges = 13;

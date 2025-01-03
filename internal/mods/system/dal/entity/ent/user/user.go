@@ -3,6 +3,7 @@
 package user
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -174,10 +175,6 @@ var (
 	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
-	// DefaultGender holds the default value on creation for the "gender" field.
-	DefaultGender string
-	// GenderValidator is a validator for the "gender" field. It is called by the builders before save.
-	GenderValidator func(string) error
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
 	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
@@ -221,6 +218,33 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )
+
+// Gender defines the type for the "gender" enum field.
+type Gender string
+
+// GenderUnknown is the default value of the Gender enum.
+const DefaultGender = GenderUnknown
+
+// Gender values.
+const (
+	GenderMale    Gender = "male"
+	GenderFemale  Gender = "female"
+	GenderUnknown Gender = "unknown"
+)
+
+func (ge Gender) String() string {
+	return string(ge)
+}
+
+// GenderValidator is a validator for the "gender" field enum values. It is called by the builders before save.
+func GenderValidator(ge Gender) error {
+	switch ge {
+	case GenderMale, GenderFemale, GenderUnknown:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for gender field: %q", ge)
+	}
+}
 
 // OrderOption defines the ordering options for the User queries.
 type OrderOption func(*sql.Selector)

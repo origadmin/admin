@@ -199,3 +199,25 @@ Content-Type: application/json
 
 ###
 
+### Create user resource with random password
+POST {{host}}/api/v1/sys/users?random_password=true
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "1",
+  "create_time": "2023-07-20T12:00:00Z",
+  "update_time": "2023-07-20T12:00:00Z",
+  "username": "user6",
+  "name": "User One",
+  "avatar": "avatar1.jpg",
+  "password": "password1",
+  "salt": "salt1",
+  "phone": "1234567890",
+  "email": "user1@example.com",
+  "remark": "Remark for User One",
+  "status": 1,
+  "edges": {}
+}
+
+###

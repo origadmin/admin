@@ -1178,6 +1178,8 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Status
 
+	// no validation rules for Gender
+
 	// no validation rules for Uuid
 
 	for idx, item := range m.GetRoles() {

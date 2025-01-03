@@ -540,7 +540,7 @@ var (
 		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "user.field.nickname", Default: ""},
 		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "user.field.avatar", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "user.field.nickname", Default: ""},
-		{Name: "gender", Type: field.TypeString, Size: 16, Comment: "user.field.gender", Default: ""},
+		{Name: "gender", Type: field.TypeEnum, Comment: "user.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
 		{Name: "password", Type: field.TypeString, Size: 256, Comment: "user.field.password", Default: ""},
 		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "user.field.salt", Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "user.field.phone", Default: ""},

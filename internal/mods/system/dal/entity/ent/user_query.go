@@ -858,7 +858,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  Nickname string `json:"nickname,omitempty"`
 //	  Avatar string `json:"avatar,omitempty"`
 //	  Name string `json:"name,omitempty"`
-//	  Gender string `json:"gender,omitempty"`
+//	  Gender user.Gender `json:"gender,omitempty"`
 //	  Password string `json:"password,omitempty"`
 //	  Salt string `json:"salt,omitempty"`
 //	  Phone string `json:"phone,omitempty"`

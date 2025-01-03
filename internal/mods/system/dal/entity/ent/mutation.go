@@ -10157,7 +10157,7 @@ type UserMutation struct {
 	nickname                *string
 	avatar                  *string
 	name                    *string
-	gender                  *string
+	gender                  *user.Gender
 	password                *string
 	salt                    *string
 	phone                   *string
@@ -10723,12 +10723,12 @@ func (m *UserMutation) ResetName() {
 }
 
 // SetGender sets the "gender" field.
-func (m *UserMutation) SetGender(s string) {
-	m.gender = &s
+func (m *UserMutation) SetGender(u user.Gender) {
+	m.gender = &u
 }
 
 // Gender returns the value of the "gender" field in the mutation.
-func (m *UserMutation) Gender() (r string, exists bool) {
+func (m *UserMutation) Gender() (r user.Gender, exists bool) {
 	v := m.gender
 	if v == nil {
 		return
@@ -10739,7 +10739,7 @@ func (m *UserMutation) Gender() (r string, exists bool) {
 // OldGender returns the old "gender" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldGender(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldGender(ctx context.Context) (v user.Gender, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldGender is only allowed on UpdateOne operations")
 	}
@@ -11753,7 +11753,7 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case user.FieldGender:
-		v, ok := value.(string)
+		v, ok := value.(user.Gender)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

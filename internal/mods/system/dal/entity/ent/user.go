@@ -39,7 +39,7 @@ type User struct {
 	// user.field.nickname
 	Name string `json:"name,omitempty"`
 	// user.field.gender
-	Gender string `json:"gender,omitempty"`
+	Gender user.Gender `json:"gender,omitempty"`
 	// user.field.password
 	Password string `json:"password,omitempty"`
 	// user.field.salt
@@ -217,7 +217,7 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field gender", values[i])
 			} else if value.Valid {
-				u.Gender = value.String
+				u.Gender = user.Gender(value.String)
 			}
 		case user.FieldPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -378,7 +378,7 @@ func (u *User) String() string {
 	builder.WriteString(u.Name)
 	builder.WriteString(", ")
 	builder.WriteString("gender=")
-	builder.WriteString(u.Gender)
+	builder.WriteString(fmt.Sprintf("%v", u.Gender))
 	builder.WriteString(", ")
 	builder.WriteString("password=")
 	builder.WriteString(u.Password)

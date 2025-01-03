@@ -108,6 +108,7 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel.Username = goModel.Username
 	pbModel.Name = goModel.Name
 	pbModel.Avatar = goModel.Avatar
+	pbModel.Gender = string(goModel.Gender)
 	//pbModel.Password = goModel.Password
 	//pbModel.Salt = goModel.Salt
 	pbModel.Phone = goModel.Phone

@@ -105,11 +105,6 @@ func Name(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldName, v))
 }
 
-// Gender applies equality check predicate on the "gender" field. It's identical to GenderEQ.
-func Gender(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldGender, v))
-}
-
 // Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
 func Password(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldPassword, v))
@@ -741,68 +736,23 @@ func NameContainsFold(v string) predicate.User {
 }
 
 // GenderEQ applies the EQ predicate on the "gender" field.
-func GenderEQ(v string) predicate.User {
+func GenderEQ(v Gender) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldGender, v))
 }
 
 // GenderNEQ applies the NEQ predicate on the "gender" field.
-func GenderNEQ(v string) predicate.User {
+func GenderNEQ(v Gender) predicate.User {
 	return predicate.User(sql.FieldNEQ(FieldGender, v))
 }
 
 // GenderIn applies the In predicate on the "gender" field.
-func GenderIn(vs ...string) predicate.User {
+func GenderIn(vs ...Gender) predicate.User {
 	return predicate.User(sql.FieldIn(FieldGender, vs...))
 }
 
 // GenderNotIn applies the NotIn predicate on the "gender" field.
-func GenderNotIn(vs ...string) predicate.User {
+func GenderNotIn(vs ...Gender) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldGender, vs...))
-}
-
-// GenderGT applies the GT predicate on the "gender" field.
-func GenderGT(v string) predicate.User {
-	return predicate.User(sql.FieldGT(FieldGender, v))
-}
-
-// GenderGTE applies the GTE predicate on the "gender" field.
-func GenderGTE(v string) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldGender, v))
-}
-
-// GenderLT applies the LT predicate on the "gender" field.
-func GenderLT(v string) predicate.User {
-	return predicate.User(sql.FieldLT(FieldGender, v))
-}
-
-// GenderLTE applies the LTE predicate on the "gender" field.
-func GenderLTE(v string) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldGender, v))
-}
-
-// GenderContains applies the Contains predicate on the "gender" field.
-func GenderContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldGender, v))
-}
-
-// GenderHasPrefix applies the HasPrefix predicate on the "gender" field.
-func GenderHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldGender, v))
-}
-
-// GenderHasSuffix applies the HasSuffix predicate on the "gender" field.
-func GenderHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldGender, v))
-}
-
-// GenderEqualFold applies the EqualFold predicate on the "gender" field.
-func GenderEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldGender, v))
-}
-
-// GenderContainsFold applies the ContainsFold predicate on the "gender" field.
-func GenderContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldGender, v))
 }
 
 // PasswordEQ applies the EQ predicate on the "password" field.

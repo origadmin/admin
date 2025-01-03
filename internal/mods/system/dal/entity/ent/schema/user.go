@@ -22,6 +22,12 @@ const (
 	UserStatusFrozen    = 1
 )
 
+const (
+	UserGenderMale    = "male"
+	UserGenderFemale  = "female"
+	UserGenderUnknown = "unknown"
+)
+
 // User holds the schema definition for the User domain.
 type User struct {
 	ent.Schema
@@ -50,9 +56,9 @@ func (User) Fields() []ent.Field {
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("user.field.nickname")), // Name of user
-		field.String("gender").
-			MaxLen(16).
-			Default("").
+		field.Enum("gender").
+			Values(UserGenderMale, UserGenderFemale, UserGenderUnknown).
+			Default(UserGenderUnknown).
 			Comment(i18n.Text("user.field.gender")), // Gender of user
 		field.String("password").
 			MaxLen(256).

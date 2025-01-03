@@ -866,8 +866,9 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 				m.SetName(input.Name)
 			}
 		case user.FieldGender:
-			// check string with sql.NullString if it is empty
-			if input.Gender != "" {
+			var zero user.Gender
+			// check user.Gender with sql.NullString if it is empty
+			if input.Gender != zero {
 				m.SetGender(input.Gender)
 			}
 		case user.FieldPassword:

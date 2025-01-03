@@ -178,15 +178,15 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 }
 
 // SetGender sets the "gender" field.
-func (uu *UserUpdate) SetGender(s string) *UserUpdate {
-	uu.mutation.SetGender(s)
+func (uu *UserUpdate) SetGender(u user.Gender) *UserUpdate {
+	uu.mutation.SetGender(u)
 	return uu
 }
 
 // SetNillableGender sets the "gender" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableGender(s *string) *UserUpdate {
-	if s != nil {
-		uu.SetGender(*s)
+func (uu *UserUpdate) SetNillableGender(u *user.Gender) *UserUpdate {
+	if u != nil {
+		uu.SetGender(*u)
 	}
 	return uu
 }
@@ -697,7 +697,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Gender(); ok {
-		_spec.SetField(user.FieldGender, field.TypeString, value)
+		_spec.SetField(user.FieldGender, field.TypeEnum, value)
 	}
 	if value, ok := uu.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)
@@ -1133,15 +1133,15 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 }
 
 // SetGender sets the "gender" field.
-func (uuo *UserUpdateOne) SetGender(s string) *UserUpdateOne {
-	uuo.mutation.SetGender(s)
+func (uuo *UserUpdateOne) SetGender(u user.Gender) *UserUpdateOne {
+	uuo.mutation.SetGender(u)
 	return uuo
 }
 
 // SetNillableGender sets the "gender" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableGender(s *string) *UserUpdateOne {
-	if s != nil {
-		uuo.SetGender(*s)
+func (uuo *UserUpdateOne) SetNillableGender(u *user.Gender) *UserUpdateOne {
+	if u != nil {
+		uuo.SetGender(*u)
 	}
 	return uuo
 }
@@ -1682,7 +1682,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Gender(); ok {
-		_spec.SetField(user.FieldGender, field.TypeString, value)
+		_spec.SetField(user.FieldGender, field.TypeEnum, value)
 	}
 	if value, ok := uuo.mutation.Password(); ok {
 		_spec.SetField(user.FieldPassword, field.TypeString, value)

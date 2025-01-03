@@ -133,12 +133,12 @@ func (repo userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options 
 	}
 
 	query := repo.db.User(ctx).Query()
-	if v := option.Username; len(v) > 0 {
-		query = query.Where(user.UsernameContains(v))
-	}
-	if v := option.Name; len(v) > 0 {
-		query = query.Where(user.NameContains(v))
-	}
+	//if v := in.Username; len(v) > 0 {
+	//	query = query.Where(user.UsernameContains(v))
+	//}
+	//if v := in.Name; len(v) > 0 {
+	//	query = query.Where(user.NameContains(v))
+	//}
 	if v := option.Status; v > 0 {
 		query = query.Where(user.StatusEQ(v))
 	}

@@ -157,15 +157,15 @@ func (uc *UserCreate) SetNillableName(s *string) *UserCreate {
 }
 
 // SetGender sets the "gender" field.
-func (uc *UserCreate) SetGender(s string) *UserCreate {
-	uc.mutation.SetGender(s)
+func (uc *UserCreate) SetGender(u user.Gender) *UserCreate {
+	uc.mutation.SetGender(u)
 	return uc
 }
 
 // SetNillableGender sets the "gender" field if the given value is not nil.
-func (uc *UserCreate) SetNillableGender(s *string) *UserCreate {
-	if s != nil {
-		uc.SetGender(*s)
+func (uc *UserCreate) SetNillableGender(u *user.Gender) *UserCreate {
+	if u != nil {
+		uc.SetGender(*u)
 	}
 	return uc
 }
@@ -747,7 +747,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := uc.mutation.Gender(); ok {
-		_spec.SetField(user.FieldGender, field.TypeString, value)
+		_spec.SetField(user.FieldGender, field.TypeEnum, value)
 		_node.Gender = value
 	}
 	if value, ok := uc.mutation.Password(); ok {

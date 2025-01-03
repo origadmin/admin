@@ -1922,8 +1922,12 @@ components:
                     type: integer
                     description: Status holds the value of the "status" field.
                     format: int32
+                gender:
+                    type: string
+                    description: Gender holds the value of the "gender" field.
                 uuid:
                     type: string
+                    description: Uuid holds the value of the "uuid" field.
                 roles:
                     type: array
                     items:

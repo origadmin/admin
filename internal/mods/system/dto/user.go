@@ -19,6 +19,7 @@ import (
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 )
 
 type (
@@ -35,34 +36,34 @@ type (
 	ListUsersResponse = pb.ListUsersResponse
 )
 
-func UserObject(user *UserPB) *User {
-	if user == nil {
+func UserObject(userPB *UserPB) *User {
+	if userPB == nil {
 		return nil
 	}
 	return &User{
-		ID:   user.Id,
-		UUID: user.Uuid,
-		//CreateAuthor:  user.CreateAuthor,
-		//UpdateAuthor:  user.UpdateAuthor,
-		//CreateTime: user.CreateTime.AsTime(),
-		//UpdateTime: user.UpdateTime.AsTime(),
-		//Index:         user.Index,
-		//Department:    user.Department,
-		//AllowedIP:     user.AllowedIP,
-		Username: user.Username,
-		Name:     user.Name,
-		//UserID:        user.UserID,
-		Avatar:   user.Avatar,
-		Password: user.Password,
-		Salt:     user.Salt,
-		Phone:    user.Phone,
-		Email:    user.Email,
-		Remark:   user.Remark,
-		//LastLoginTime: user.LastLoginTime.AsTime(),
-		//SanctionDate:  user.SanctionDate.AsTime(),
-		Status: int8(user.Status),
-		//ManagerID:     user.ManagerID,
-		//Manager:       user.Manager,
+		ID:   userPB.Id,
+		UUID: userPB.Uuid,
+		//CreateAuthor:  userPB.CreateAuthor,
+		//UpdateAuthor:  userPB.UpdateAuthor,
+		//CreateTime: userPB.CreateTime.AsTime(),
+		//UpdateTime: userPB.UpdateTime.AsTime(),
+		//Index:         userPB.Index,
+		//Department:    userPB.Department,
+		//AllowedIP:     userPB.AllowedIP,
+		Username: userPB.Username,
+		Name:     userPB.Name,
+		Gender:   user.Gender(userPB.Gender),
+		Avatar:   userPB.Avatar,
+		Password: userPB.Password,
+		Salt:     userPB.Salt,
+		Phone:    userPB.Phone,
+		Email:    userPB.Email,
+		Remark:   userPB.Remark,
+		//LastLoginTime: userPB.LastLoginTime.AsTime(),
+		//SanctionDate:  userPB.SanctionDate.AsTime(),
+		Status: int8(userPB.Status),
+		//ManagerID:     userPB.ManagerID,
+		//Manager:       userPB.Manager,
 	}
 }
 
@@ -84,11 +85,7 @@ type UserQueryOption struct {
 	IsAdmin      bool
 	NoPasswd     bool
 	RandomPasswd bool
-	Email        string
-	Phone        string
-	Name         string `form:"name" json:"name,omitempty"`
-	Username     string `form:"username" json:"username,omitempty"`
-	Status       int8   `form:"status" json:"status,omitempty"`
+	Status       int8 `form:"status" json:"status,omitempty"`
 	SelectFields []string
 	OmitFields   []string
 	OrderFields  []string
@@ -151,10 +148,12 @@ func ConvertUserRoles(roles []*UserRole) []*UserRolePB {
 // CreateUser functions are used to create new users
 func CreateUser(user *UserPB, username, password string, option UserQueryOption) (*UserPB, string, error) {
 	var err error
-	registerID := id.Gen()
+
 	if !option.NoPasswd {
-		if option.RandomPasswd && (option.Email != "" || option.Phone != "") {
+		if option.RandomPasswd && (user.Email != "" || user.Phone != "") {
 			password = rand.GenerateRandom(8)
+		} else {
+			password = ""
 		}
 	} else {
 		password = ""
@@ -167,6 +166,7 @@ func CreateUser(user *UserPB, username, password string, option UserQueryOption)
 			return nil, "", err
 		}
 	}
+	registerID := id.Gen()
 	user.Id = registerID
 	user.Uuid = uuid.Must(uuid.NewRandom()).String()
 	user.Username = username
