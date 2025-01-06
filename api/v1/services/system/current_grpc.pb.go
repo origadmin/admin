@@ -26,6 +26,7 @@ const (
 	CurrentAPI_ListCurrentMenus_FullMethodName          = "/api.v1.services.system.CurrentAPI/ListCurrentMenus"
 	CurrentAPI_ListCurrentRoles_FullMethodName          = "/api.v1.services.system.CurrentAPI/ListCurrentRoles"
 	CurrentAPI_UpdateCurrentSetting_FullMethodName      = "/api.v1.services.system.CurrentAPI/UpdateCurrentSetting"
+	CurrentAPI_RefreshCurrentToken_FullMethodName       = "/api.v1.services.system.CurrentAPI/RefreshCurrentToken"
 )
 
 // CurrentAPIClient is the client API for CurrentAPI service.
@@ -47,6 +48,8 @@ type CurrentAPIClient interface {
 	ListCurrentRoles(ctx context.Context, in *ListCurrentRolesRequest, opts ...grpc.CallOption) (*ListCurrentRolesResponse, error)
 	// UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(ctx context.Context, in *UpdateCurrentSettingRequest, opts ...grpc.CallOption) (*UpdateCurrentSettingResponse, error)
+	// RefreshCurrentToken Refresh the current user's token
+	RefreshCurrentToken(ctx context.Context, in *RefreshCurrentTokenRequest, opts ...grpc.CallOption) (*RefreshCurrentTokenResponse, error)
 }
 
 type currentAPIClient struct {
@@ -127,6 +130,16 @@ func (c *currentAPIClient) UpdateCurrentSetting(ctx context.Context, in *UpdateC
 	return out, nil
 }
 
+func (c *currentAPIClient) RefreshCurrentToken(ctx context.Context, in *RefreshCurrentTokenRequest, opts ...grpc.CallOption) (*RefreshCurrentTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RefreshCurrentTokenResponse)
+	err := c.cc.Invoke(ctx, CurrentAPI_RefreshCurrentToken_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CurrentAPIServer is the server API for CurrentAPI service.
 // All implementations must embed UnimplementedCurrentAPIServer
 // for forward compatibility.
@@ -146,6 +159,8 @@ type CurrentAPIServer interface {
 	ListCurrentRoles(context.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
 	// UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(context.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
+	// RefreshCurrentToken Refresh the current user's token
+	RefreshCurrentToken(context.Context, *RefreshCurrentTokenRequest) (*RefreshCurrentTokenResponse, error)
 	mustEmbedUnimplementedCurrentAPIServer()
 }
 
@@ -176,6 +191,9 @@ func (UnimplementedCurrentAPIServer) ListCurrentRoles(context.Context, *ListCurr
 }
 func (UnimplementedCurrentAPIServer) UpdateCurrentSetting(context.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentSetting not implemented")
+}
+func (UnimplementedCurrentAPIServer) RefreshCurrentToken(context.Context, *RefreshCurrentTokenRequest) (*RefreshCurrentTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshCurrentToken not implemented")
 }
 func (UnimplementedCurrentAPIServer) mustEmbedUnimplementedCurrentAPIServer() {}
 func (UnimplementedCurrentAPIServer) testEmbeddedByValue()                    {}
@@ -324,6 +342,24 @@ func _CurrentAPI_UpdateCurrentSetting_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CurrentAPI_RefreshCurrentToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshCurrentTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CurrentAPIServer).RefreshCurrentToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CurrentAPI_RefreshCurrentToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CurrentAPIServer).RefreshCurrentToken(ctx, req.(*RefreshCurrentTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CurrentAPI_ServiceDesc is the grpc.ServiceDesc for CurrentAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -358,6 +394,10 @@ var CurrentAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCurrentSetting",
 			Handler:    _CurrentAPI_UpdateCurrentSetting_Handler,
+		},
+		{
+			MethodName: "RefreshCurrentToken",
+			Handler:    _CurrentAPI_RefreshCurrentToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

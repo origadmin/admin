@@ -104,7 +104,7 @@ func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFun
 func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in DestroyTokenRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

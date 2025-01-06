@@ -22,6 +22,11 @@ type UserAPIGINRPCService struct {
 	client pb.UserAPIClient
 }
 
+func (s UserAPIGINRPCService) UpdateUserRoles(context transhttp.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s UserAPIGINRPCService) ResetUserPassword(context transhttp.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")

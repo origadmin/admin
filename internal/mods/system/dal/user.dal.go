@@ -23,6 +23,10 @@ type userRepo struct {
 	db *Data
 }
 
+func (repo userRepo) AddRoleIDs(ctx context.Context, i int64, int64s []int64) error {
+	return nil
+}
+
 func (repo userRepo) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option dto.UserQueryOption) (*pb.UpdateUserStatusResponse, error) {
 	return nil, nil
 }

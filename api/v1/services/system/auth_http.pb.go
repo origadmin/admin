@@ -108,7 +108,7 @@ func _AuthAPI_ValidateToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.C
 func _AuthAPI_DestroyToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DestroyTokenRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -197,7 +197,7 @@ func (c *AuthAPIHTTPClientImpl) DestroyToken(ctx context.Context, in *DestroyTok
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthAPIDestroyToken))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

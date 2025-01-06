@@ -15,29 +15,29 @@ option objc_class_prefix = "APIServiceSystemUser";
 
 // The login service definition.
 service UserAPI {
-  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {get: "/sys/users"};
   }
-  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+  rpc GetUser (GetUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {get: "/sys/users/{id}"};
   }
-  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/sys/users"
       body: "user"
     };
   }
-  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}"
       body: "user"
     };
   }
-  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {delete: "/sys/users/{user.id}"};
   }
   // UpdateUserStatus Update the status of the user information
-  rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
+  rpc UpdateUserStatus (UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}/status"
       body: "user"
@@ -45,17 +45,17 @@ service UserAPI {
   }
 
   // UpdateUserRoles update the user roles
-  rpc UpdateUserRoles(UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
+  rpc UpdateUserRoles (UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}/roles"
-      body: "roles"
+      body: "data"
     };
   }
 
   // ResetUserPassword reset the user s password
-  rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
+  rpc ResetUserPassword (ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
     option (google.api.http) = {
-      post: "/sys/user/password/reset"
+      post: "/sys/users/password/reset"
       body: "data"
     };
   }
@@ -118,15 +118,13 @@ message GetUserResponse {
 message CreateUserRequest {
   // The parent resource id where the user is to be created.
   string parent = 1;
-
-  // The user resource to create.
-  // The field id should match the Noun in the method id.
+  // The user resource to be created.
   User user = 2;
   // The user id to use for this user.
   string user_id = 3 [json_name = "user_id"];
-
+  // The user is_admin to use for this user.
   bool is_admin = 4 [json_name = "is_admin"];
-
+  // The random_password is the query parameter for set only to generate a random password
   bool random_password = 5 [json_name = "random_password"];
 }
 
@@ -154,8 +152,11 @@ message DeleteUserResponse {
 }
 
 message UpdateUserRolesRequest {
+  message Data {
+    repeated int64 role_ids = 1 [json_name = "role_ids"];
+  }
   User user = 1 [json_name = "user"];
-  repeated int64 role_ids = 2 [json_name = "role_ids"];
+  Data data = 2 [json_name = "data"];
   bool is_add = 3 [json_name = "is_add"];
 }
 

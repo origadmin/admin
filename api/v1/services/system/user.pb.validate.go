@@ -1866,6 +1866,35 @@ func (m *UpdateUserRolesRequest) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateUserRolesRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateUserRolesRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateUserRolesRequestValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	// no validation rules for IsAdd
 
 	if len(errors) > 0 {
@@ -2078,3 +2107,106 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateUserRolesResponseValidationError{}
+
+// Validate checks the field values on UpdateUserRolesRequest_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateUserRolesRequest_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateUserRolesRequest_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateUserRolesRequest_DataMultiError, or nil if none found.
+func (m *UpdateUserRolesRequest_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateUserRolesRequest_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return UpdateUserRolesRequest_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateUserRolesRequest_DataMultiError is an error wrapping multiple
+// validation errors returned by UpdateUserRolesRequest_Data.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateUserRolesRequest_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateUserRolesRequest_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateUserRolesRequest_DataMultiError) AllErrors() []error { return m }
+
+// UpdateUserRolesRequest_DataValidationError is the validation error returned
+// by UpdateUserRolesRequest_Data.Validate if the designated constraints
+// aren't met.
+type UpdateUserRolesRequest_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateUserRolesRequest_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateUserRolesRequest_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateUserRolesRequest_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateUserRolesRequest_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateUserRolesRequest_DataValidationError) ErrorName() string {
+	return "UpdateUserRolesRequest_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateUserRolesRequest_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateUserRolesRequest_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateUserRolesRequest_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateUserRolesRequest_DataValidationError{}

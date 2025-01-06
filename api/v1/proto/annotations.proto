@@ -21,30 +21,30 @@ option (gnostic.openapi.v3.document) = {
     }
   }
   servers: [
-    {url: "http://localhost:10080"},
-    {url: "https://localhost:10080"}]
+  {url: "http://localhost:10080"},
+  {url: "https://localhost:10080"}]
   components: {
     security_schemes: {
       additional_properties: [
-        {
-          name: "Basic"
-          value: {
-            security_scheme: {
-              type: "http"
-              scheme: "basic"
-            }
-          }
-        },
-        {
-          name: "Bearer"
-          value: {
-            security_scheme: {
-              type: "apiKey"
-              name: "Authorization"
-              in: "header"
-            }
+      {
+        name: "Basic"
+        value: {
+          security_scheme: {
+            type: "http"
+            scheme: "basic"
           }
         }
+      },
+      {
+        name: "Bearer"
+        value: {
+          security_scheme: {
+            type: "apiKey"
+            name: "Authorization"
+            in: "header"
+          }
+        }
+      }
       ]
     }
   }

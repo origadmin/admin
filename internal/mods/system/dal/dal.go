@@ -130,7 +130,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}, nil
 }
 
-func (obj *Data) InitFromFile(ctx context.Context, filename string) error {
+func (obj *Data) InitMenuFromFile(ctx context.Context, filename string) error {
 	abs, err := filepath.Abs(filename)
 	if err != nil {
 		return err
@@ -153,13 +153,13 @@ func (obj *Data) InitFromFile(ctx context.Context, filename string) error {
 		}
 	}
 	return obj.Tx(ctx, func(ctx context.Context) error {
-		return obj.batchCreateWithParent(ctx, menus, nil)
+		return obj.createBatchWithParent(ctx, menus, nil)
 	})
 }
 
-func (obj *Data) batchCreateWithParent(ctx context.Context, items []*dto.MenuPB, parent *dto.MenuPB) error {
+func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB, parent *dto.MenuPB) error {
 	total := len(items)
-	log.Infow("msg", "Starting batchCreateWithParent", "totalItems", total)
+	log.Infow("msg", "Starting createBatchWithParent", "totalItems", total)
 
 	for i, item := range items {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
@@ -206,19 +206,19 @@ func (obj *Data) batchCreateWithParent(ctx context.Context, items []*dto.MenuPB,
 			}
 		case item.Name != "":
 			log.Infow("msg", "Checking item by Name", "itemName", item.Name, "parentId", pid)
-			var wheres = []predicate.Menu{
+			var conditions = []predicate.Menu{
 				menu.Name(item.Name),
 			}
 			if pid != 0 {
-				wheres = append(wheres, menu.ParentID(pid))
+				conditions = append(conditions, menu.ParentID(pid))
 			}
-			exists, err := obj.Menu(ctx).Query().Where(wheres...).Exist(ctx)
+			exists, err := obj.Menu(ctx).Query().Where(conditions...).Exist(ctx)
 			if err != nil {
 				log.Errorw("msg", "Error checking item by Name", "itemName", item.Name, "parentId", pid, "error", err)
 				return err
 			}
 			if exists {
-				menuItem, err := obj.Menu(ctx).Query().Where(wheres...).First(ctx)
+				menuItem, err := obj.Menu(ctx).Query().Where(conditions...).First(ctx)
 				if err != nil {
 					log.Errorw("msg", "Error fetching item by Name", "itemName", item.Name, "parentId", pid, "error", err)
 					return err
@@ -250,13 +250,14 @@ func (obj *Data) batchCreateWithParent(ctx context.Context, items []*dto.MenuPB,
 				item.ParentPath = parent.ParentPath + strconv.Itoa(int(pid)) + TreePathDelimiter
 				log.Infow("msg", "Setting parent path for item", "itemId", item.Id, "parentPath", item.ParentPath)
 			}
-			item.CreateTime = timestamppb.New(time.Now())
-			item.UpdateTime = timestamppb.New(time.Now())
+			itemObj := dto.MenuObject(item)
+			itemObj.UpdateTime = time.Now()
+			itemObj.CreateTime = time.Now()
 			//columns := menu.OmitColumns()
 			//if item.ParentId == "" {
 			//	columns = menu.OmitColumns(menu.FieldParentID)
 			//}
-			if _, err := obj.Menu(ctx).Create().SetMenu(dto.MenuObject(item)).Save(ctx); err != nil {
+			if _, err := obj.Menu(ctx).Create().SetMenu(itemObj).Save(ctx); err != nil {
 				log.Errorw("msg", "Error creating menu item", "itemId", item.Id, "sequence", item.Sequence, "error", err)
 				return err
 			}
@@ -307,7 +308,7 @@ func (obj *Data) batchCreateWithParent(ctx context.Context, items []*dto.MenuPB,
 
 		if len(item.Children) != 0 {
 			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))
-			if err := obj.batchCreateWithParent(ctx, item.Children, item); err != nil {
+			if err := obj.createBatchWithParent(ctx, item.Children, item); err != nil {
 				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
 				return err
 			}
@@ -315,6 +316,6 @@ func (obj *Data) batchCreateWithParent(ctx context.Context, items []*dto.MenuPB,
 		}
 	}
 
-	log.Infow("msg", "Finished batchCreateWithParent")
+	log.Infow("msg", "Finished createBatchWithParent")
 	return nil
 }

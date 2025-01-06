@@ -14,47 +14,47 @@ option java_package = "com.origadmin.api.v1.services.system";
 
 // The login service definition.
 service LoginAPI {
-  rpc CaptchaID(CaptchaIDRequest) returns (CaptchaIDResponse) {
+  rpc CaptchaID (CaptchaIDRequest) returns (CaptchaIDResponse) {
     option (google.api.http) = {get: "/captcha/id"};
   }
-  rpc CaptchaImage(CaptchaImageRequest) returns (CaptchaImageResponse) {
+  rpc CaptchaImage (CaptchaImageRequest) returns (CaptchaImageResponse) {
     option (google.api.http) = {
       get: "/captcha/image"
       response_body: "*"
     };
   }
-  rpc CaptchaResource(CaptchaResourceRequest) returns (CaptchaResourceResponse) {
+  rpc CaptchaResource (CaptchaResourceRequest) returns (CaptchaResourceResponse) {
     option (google.api.http) = {
       get: "/captcha/id/{id}/{resource}"
       response_body: "*"
     };
   }
-  rpc CaptchaResources(CaptchaResourcesRequest) returns (CaptchaResourcesResponse) {
+  rpc CaptchaResources (CaptchaResourcesRequest) returns (CaptchaResourcesResponse) {
     option (google.api.http) = {
       get: "/captcha/id/{id}"
       response_body: "*"
     };
   }
-  rpc Login(LoginRequest) returns (LoginResponse) {
+  rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/login"
       body: "data"
     };
   }
-  rpc Logout(LogoutRequest) returns (LogoutResponse) {
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
       post: "/logout"
       body: "data"
     };
   }
-  rpc Register(RegisterRequest) returns (RegisterResponse) {
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/register"
       body: "data"
     };
   }
 
-  rpc TokenRefresh(TokenRefreshRequest) returns (TokenRefreshResponse) {
+  rpc TokenRefresh (TokenRefreshRequest) returns (TokenRefreshResponse) {
     option (google.api.http) = {
       post: "/token/refresh"
       body: "data"
@@ -179,8 +179,8 @@ message CaptchaResourceRequest {
     json_name = "resource",
     (validate.rules).string = {
       in: [
-        "image",
-        "audio"
+          "image",
+          "audio"
       ]
     }
   ];

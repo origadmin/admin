@@ -29,6 +29,8 @@ type CurrentAPIAgent interface {
 	ListCurrentMenus(http.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
 	// ListCurrentRoles ListCurrentMenus List the current user's menu
 	ListCurrentRoles(http.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
+	// RefreshCurrentToken RefreshCurrentToken Refresh the current user's token
+	RefreshCurrentToken(http.Context, *RefreshCurrentTokenRequest) (*RefreshCurrentTokenResponse, error)
 	// UpdateCurrentSetting UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(http.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
 	// UpdateCurrentUser UpdateCurrentUser Update the current user information
@@ -203,6 +205,31 @@ func _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv CurrentAPIAgent) ht
 	}
 }
 
+func _CurrentAPI_RefreshCurrentToken0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
+	return func(ctx http.Context) error {
+		var in RefreshCurrentTokenRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCurrentAPIRefreshCurrentToken)
+		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+			return srv.RefreshCurrentToken(ctx, req.(*RefreshCurrentTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RefreshCurrentTokenResponse)
+		if reply == nil {
+			return nil
+		}
+		return ctx.Result(200, reply)
+	}
+}
+
 func RegisterCurrentAPIAgent(ag agent.HTTPAgent, srv CurrentAPIAgent) {
 	r := ag.Route()
 	r.POST("/sys/current/logout", _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv))
@@ -212,4 +239,5 @@ func RegisterCurrentAPIAgent(ag agent.HTTPAgent, srv CurrentAPIAgent) {
 	r.GET("/sys/current/menus", _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv))
 	r.GET("/sys/current/roles", _CurrentAPI_ListCurrentRoles0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/current/setting", _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv))
+	r.POST("/sys/current/token/refresh", _CurrentAPI_RefreshCurrentToken0_HTTPAgent_Handler(srv))
 }

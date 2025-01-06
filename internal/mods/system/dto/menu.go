@@ -12,15 +12,9 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 )
 
 type (
-	Menu        = ent.Menu
-	MenuPB      = pb.Menu
-	MenuEdges   = ent.MenuEdges
-	MenuEdgesPB = pb.MenuEdges
-
 	ListMenusRequest  = pb.ListMenusRequest
 	ListMenusResponse = pb.ListMenusResponse
 )
@@ -31,8 +25,6 @@ func MenuObject(menu *MenuPB) *Menu {
 	}
 	return &Menu{
 		ID:          menu.Id,
-		CreateTime:  menu.CreateTime.AsTime(),
-		UpdateTime:  menu.UpdateTime.AsTime(),
 		Keyword:     menu.Keyword,
 		Name:        menu.Name,
 		Description: menu.Description,

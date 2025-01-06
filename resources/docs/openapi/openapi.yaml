@@ -266,7 +266,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.DestroyTokenRequest'
+                            $ref: '#/components/schemas/api.v1.services.system.DestroyTokenRequest_Data'
                 required: true
             responses:
                 "200":
@@ -492,6 +492,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentSettingResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/current/token/refresh:
+        post:
+            tags:
+                - CurrentAPI
+            description: RefreshCurrentToken Refresh the current user's token
+            operationId: CurrentAPI_RefreshCurrentToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.RefreshCurrentTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -968,11 +993,61 @@ paths:
                   description: The role id to use for this role.
                   schema:
                     type: string
+                - name: role.id
+                  in: query
+                  description: |-
+                    ID of the ent.
+                     field.primary_key.comment
+                  schema:
+                    type: string
+                - name: role.create_time
+                  in: query
+                  description: create_time.field.comment
+                  schema:
+                    type: string
+                    format: date-time
+                - name: role.update_time
+                  in: query
+                  description: update_time.field.comment
+                  schema:
+                    type: string
+                    format: date-time
+                - name: role.keyword
+                  in: query
+                  description: role.field.keyword
+                  schema:
+                    type: string
+                - name: role.name
+                  in: query
+                  description: role.field.name
+                  schema:
+                    type: string
+                - name: role.description
+                  in: query
+                  description: role.field.description
+                  schema:
+                    type: string
+                - name: role.type
+                  in: query
+                  description: role.field.type
+                  schema:
+                    type: integer
+                    format: int32
+                - name: role.sequence
+                  in: query
+                  description: role.field.sequence
+                  schema:
+                    type: integer
+                    format: int32
+                - name: role.status
+                  in: query
+                  description: role.field.status
+                  schema:
+                    type: integer
+                    format: int32
             requestBody:
                 content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Role'
+                    application/json: {}
                 required: true
             responses:
                 "200":
@@ -1051,11 +1126,61 @@ paths:
                   required: true
                   schema:
                     type: string
+                - name: role.id
+                  in: query
+                  description: |-
+                    ID of the ent.
+                     field.primary_key.comment
+                  schema:
+                    type: string
+                - name: role.create_time
+                  in: query
+                  description: create_time.field.comment
+                  schema:
+                    type: string
+                    format: date-time
+                - name: role.update_time
+                  in: query
+                  description: update_time.field.comment
+                  schema:
+                    type: string
+                    format: date-time
+                - name: role.keyword
+                  in: query
+                  description: role.field.keyword
+                  schema:
+                    type: string
+                - name: role.name
+                  in: query
+                  description: role.field.name
+                  schema:
+                    type: string
+                - name: role.description
+                  in: query
+                  description: role.field.description
+                  schema:
+                    type: string
+                - name: role.type
+                  in: query
+                  description: role.field.type
+                  schema:
+                    type: integer
+                    format: int32
+                - name: role.sequence
+                  in: query
+                  description: role.field.sequence
+                  schema:
+                    type: integer
+                    format: int32
+                - name: role.status
+                  in: query
+                  description: role.field.status
+                  schema:
+                    type: integer
+                    format: int32
             requestBody:
                 content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Role'
+                    application/json: {}
                 required: true
             responses:
                 "200":
@@ -1064,31 +1189,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdateRoleResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/user/password/reset:
-        post:
-            tags:
-                - UserAPI
-            description: ResetUserPassword reset the user s password
-            operationId: UserAPI_ResetUserPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
                 default:
                     description: Default error response
                     content:
@@ -1163,10 +1263,12 @@ paths:
                     type: string
                 - name: is_admin
                   in: query
+                  description: The user is_admin to use for this user.
                   schema:
                     type: boolean
                 - name: random_password
                   in: query
+                  description: The random_password is the query parameter for set only to generate a random password
                   schema:
                     type: boolean
             requestBody:
@@ -1182,6 +1284,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.CreateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/password/reset:
+        post:
+            tags:
+                - UserAPI
+            description: ResetUserPassword reset the user s password
+            operationId: UserAPI_ResetUserPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
                 default:
                     description: Default error response
                     content:
@@ -1257,75 +1384,129 @@ paths:
                     type: string
                 - name: user.id
                   in: query
-                  description: ID of the ent.
+                  description: |-
+                    ID of the ent.
+                     field.primary_key.comment
+                  schema:
+                    type: string
+                - name: user.create_author
+                  in: query
+                  description: create_author.field.comment
+                  schema:
+                    type: string
+                - name: user.update_author
+                  in: query
+                  description: update_author.field.comment
                   schema:
                     type: string
                 - name: user.create_time
                   in: query
-                  description: CreateTime holds the value of the "create_time" field.
+                  description: create_time.field.comment
                   schema:
                     type: string
                     format: date-time
                 - name: user.update_time
                   in: query
-                  description: UpdateTime holds the value of the "update_time" field.
+                  description: update_time.field.comment
                   schema:
                     type: string
                     format: date-time
-                - name: user.username
+                - name: user.uuid
                   in: query
-                  description: Username holds the value of the "username" field.
+                  description: user.field.uuid
                   schema:
                     type: string
-                - name: user.name
+                - name: user.allowed_ip
                   in: query
-                  description: Name holds the value of the "name" field.
+                  description: user.field.allowed_ip
+                  schema:
+                    type: string
+                - name: user.username
+                  in: query
+                  description: user.field.username
+                  schema:
+                    type: string
+                - name: user.nickname
+                  in: query
+                  description: user.field.nickname
                   schema:
                     type: string
                 - name: user.avatar
                   in: query
-                  description: Avatar holds the value of the "avatar" field.
+                  description: user.field.avatar
+                  schema:
+                    type: string
+                - name: user.name
+                  in: query
+                  description: user.field.nickname
+                  schema:
+                    type: string
+                - name: user.gender
+                  in: query
+                  description: user.field.gender
                   schema:
                     type: string
                 - name: user.password
                   in: query
-                  description: Password holds the value of the "password" field.
+                  description: user.field.password
                   schema:
                     type: string
                 - name: user.salt
                   in: query
-                  description: Salt holds the value of the "salt" field.
+                  description: user.field.salt
                   schema:
                     type: string
                 - name: user.phone
                   in: query
-                  description: Phone holds the value of the "phone" field.
+                  description: user.field.phone
                   schema:
                     type: string
                 - name: user.email
                   in: query
-                  description: Email holds the value of the "email" field.
+                  description: user.field.email
                   schema:
                     type: string
                 - name: user.remark
                   in: query
-                  description: Remark holds the value of the "remark" field.
+                  description: user.field.remark
+                  schema:
+                    type: string
+                - name: user.token
+                  in: query
+                  description: user.field.token
                   schema:
                     type: string
                 - name: user.status
                   in: query
-                  description: Status holds the value of the "status" field.
+                  description: user.field.status
                   schema:
                     type: integer
                     format: int32
-                - name: user.gender
+                - name: user.last_login_ip
                   in: query
-                  description: Gender holds the value of the "gender" field.
+                  description: user.field.last_login_ip
                   schema:
                     type: string
-                - name: user.uuid
+                - name: user.last_login_time
                   in: query
-                  description: Uuid holds the value of the "uuid" field.
+                  description: user.field.last_login_time
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.sanction_date
+                  in: query
+                  description: user.field.sanction_date
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.manager_id
+                  in: query
+                  description: user.field.manager_id
+                  schema:
+                    type: string
+                - name: user.manager
+                  in: query
+                  description: user.field.manager
                   schema:
                     type: string
             responses:
@@ -1355,90 +1536,140 @@ paths:
                     type: string
                 - name: user.id
                   in: query
-                  description: ID of the ent.
+                  description: |-
+                    ID of the ent.
+                     field.primary_key.comment
+                  schema:
+                    type: string
+                - name: user.create_author
+                  in: query
+                  description: create_author.field.comment
+                  schema:
+                    type: string
+                - name: user.update_author
+                  in: query
+                  description: update_author.field.comment
                   schema:
                     type: string
                 - name: user.create_time
                   in: query
-                  description: CreateTime holds the value of the "create_time" field.
+                  description: create_time.field.comment
                   schema:
                     type: string
                     format: date-time
                 - name: user.update_time
                   in: query
-                  description: UpdateTime holds the value of the "update_time" field.
+                  description: update_time.field.comment
                   schema:
                     type: string
                     format: date-time
-                - name: user.username
+                - name: user.uuid
                   in: query
-                  description: Username holds the value of the "username" field.
+                  description: user.field.uuid
                   schema:
                     type: string
-                - name: user.name
+                - name: user.allowed_ip
                   in: query
-                  description: Name holds the value of the "name" field.
+                  description: user.field.allowed_ip
+                  schema:
+                    type: string
+                - name: user.username
+                  in: query
+                  description: user.field.username
+                  schema:
+                    type: string
+                - name: user.nickname
+                  in: query
+                  description: user.field.nickname
                   schema:
                     type: string
                 - name: user.avatar
                   in: query
-                  description: Avatar holds the value of the "avatar" field.
+                  description: user.field.avatar
+                  schema:
+                    type: string
+                - name: user.name
+                  in: query
+                  description: user.field.nickname
+                  schema:
+                    type: string
+                - name: user.gender
+                  in: query
+                  description: user.field.gender
                   schema:
                     type: string
                 - name: user.password
                   in: query
-                  description: Password holds the value of the "password" field.
+                  description: user.field.password
                   schema:
                     type: string
                 - name: user.salt
                   in: query
-                  description: Salt holds the value of the "salt" field.
+                  description: user.field.salt
                   schema:
                     type: string
                 - name: user.phone
                   in: query
-                  description: Phone holds the value of the "phone" field.
+                  description: user.field.phone
                   schema:
                     type: string
                 - name: user.email
                   in: query
-                  description: Email holds the value of the "email" field.
+                  description: user.field.email
                   schema:
                     type: string
                 - name: user.remark
                   in: query
-                  description: Remark holds the value of the "remark" field.
+                  description: user.field.remark
+                  schema:
+                    type: string
+                - name: user.token
+                  in: query
+                  description: user.field.token
                   schema:
                     type: string
                 - name: user.status
                   in: query
-                  description: Status holds the value of the "status" field.
+                  description: user.field.status
                   schema:
                     type: integer
                     format: int32
-                - name: user.gender
+                - name: user.last_login_ip
                   in: query
-                  description: Gender holds the value of the "gender" field.
+                  description: user.field.last_login_ip
                   schema:
                     type: string
-                - name: user.uuid
+                - name: user.last_login_time
                   in: query
-                  description: Uuid holds the value of the "uuid" field.
+                  description: user.field.last_login_time
                   schema:
                     type: string
-                - name: role_ids
+                    format: date-time
+                - name: user.sanction_date
                   in: query
+                  description: user.field.sanction_date
                   schema:
-                    type: array
-                    items:
-                        type: string
+                    type: string
+                    format: date-time
+                - name: user.manager_id
+                  in: query
+                  description: user.field.manager_id
+                  schema:
+                    type: string
+                - name: user.manager
+                  in: query
+                  description: user.field.manager
+                  schema:
+                    type: string
                 - name: is_add
                   in: query
                   schema:
                     type: boolean
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateUserRolesRequest_Data'
                 required: true
             responses:
                 "200":
@@ -1625,12 +1856,6 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
-        api.v1.services.system.DestroyTokenRequest:
-            type: object
-            properties:
-                data:
-                    $ref: '#/components/schemas/api.v1.services.system.DestroyTokenRequest_Data'
-            description: DestroyTokenRequest contains the token to be invalidated.
         api.v1.services.system.DestroyTokenRequest_Data:
             type: object
             properties:
@@ -1864,6 +2089,9 @@ components:
                 name:
                     type: string
                     description: Name holds the value of the "name" field.
+                i18n_key:
+                    type: string
+                    description: I18nKey holds the value
                 description:
                     type: string
                     description: Description holds the value of the "description" field.
@@ -1874,6 +2102,9 @@ components:
                 type:
                     type: string
                     description: Type holds the value of the "type" field.
+                icon:
+                    type: string
+                    description: Icon holds the value of the "icon" field.
                 path:
                     type: string
                     description: Path holds the value of the "path" field.
@@ -1910,6 +2141,11 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
             description: Menu is the model entity for the Menu schema.
+        api.v1.services.system.RefreshCurrentTokenResponse:
+            type: object
+            properties:
+                token:
+                    type: string
         api.v1.services.system.RegisterRequest_Data:
             type: object
             properties:
@@ -1969,9 +2205,88 @@ components:
                         Edges holds the relations/edges for other nodes in the graph.
                             The values are being populated by the ResourceQuery when eager-loading is set.
                           ResourceEdges edges = 8;
-                            selectValues = 8;
             description: Resource is the model entity for the Resource schema.
         api.v1.services.system.Role:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: |-
+                        ID of the ent.
+                         field.primary_key.comment
+                create_time:
+                    type: string
+                    description: create_time.field.comment
+                    format: date-time
+                update_time:
+                    type: string
+                    description: update_time.field.comment
+                    format: date-time
+                keyword:
+                    type: string
+                    description: role.field.keyword
+                name:
+                    type: string
+                    description: role.field.name
+                description:
+                    type: string
+                    description: role.field.description
+                type:
+                    type: integer
+                    description: role.field.type
+                    format: int32
+                sequence:
+                    type: integer
+                    description: role.field.sequence
+                    format: int32
+                status:
+                    type: integer
+                    description: role.field.status
+                    format: int32
+                edges:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.RoleEdges'
+                    description: |-
+                        role.field.is_system
+                         bool is_system = 10 [json_name = "is_system"];
+                         Edges holds the relations/edges for other nodes in the graph.
+                         The values are being populated by the RoleQuery when eager-loading is set.
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menus holds the value of the menus edge.
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.User'
+                    description: Users holds the value of the users edge.
+            description: Role is the model entity for the Role schema.
+        api.v1.services.system.RoleEdges:
+            type: object
+            properties:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menus holds the value of the menus edge.
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.User'
+                    description: Users holds the value of the users edge.
+                role_menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
+                    description: RoleMenu holds the value of the role_menu edge.
+                user_roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
+                    description: UserRole holds the value of the user_role edge.
+            description: RoleEdges holds the relations/edges for other nodes in the graph.
+        api.v1.services.system.RoleMenu:
             type: object
             properties:
                 id:
@@ -1985,39 +2300,25 @@ components:
                     type: string
                     description: UpdateTime holds the value of the "update_time" field.
                     format: date-time
-                keyword:
+                role_id:
                     type: string
-                    description: Code holds the value of the "keyword" field.
-                name:
+                    description: RoleID holds the value of the "role_id" field.
+                menu_id:
                     type: string
-                    description: Name holds the value of the "name" field.
-                description:
-                    type: string
-                    description: Description holds the value of the "description" field.
-                sequence:
-                    type: integer
-                    description: Sequence holds the value of the "sequence" field.
-                    format: int32
-                status:
-                    type: integer
-                    description: Status holds the value of the "status" field.
-                    format: int32
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: MenuID holds the value of the "menu_id" field.
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: |-
                         Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the RoleQuery when eager-loading is set.
-                          RoleEdges edges = 9;
-                            selectValues = 10;
-                         Menus holds the value of the menus edge.
-                users:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.User'
-                    description: Users holds the value of the users edge.
-            description: Role is the model entity for the Role schema.
+                            The values are being populated by the RoleMenuQuery when eager-loading is set.
+                          RoleMenuEdges edges = 6;
+                         Role holds the value of the role edge.
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    description: Menu holds the value of the menu edge.
+            description: RoleMenu is the model entity for the RoleMenu schema.
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
             properties:
@@ -2059,6 +2360,13 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.UpdateUserRolesRequest_Data:
+            type: object
+            properties:
+                role_ids:
+                    type: array
+                    items:
+                        type: string
         api.v1.services.system.UpdateUserRolesResponse:
             type: object
             properties:
@@ -2072,6 +2380,89 @@ components:
             properties:
                 id:
                     type: string
+                    description: |-
+                        ID of the ent.
+                         field.primary_key.comment
+                create_author:
+                    type: string
+                    description: create_author.field.comment
+                update_author:
+                    type: string
+                    description: update_author.field.comment
+                create_time:
+                    type: string
+                    description: create_time.field.comment
+                    format: date-time
+                update_time:
+                    type: string
+                    description: update_time.field.comment
+                    format: date-time
+                uuid:
+                    type: string
+                    description: user.field.uuid
+                allowed_ip:
+                    type: string
+                    description: user.field.allowed_ip
+                username:
+                    type: string
+                    description: user.field.username
+                nickname:
+                    type: string
+                    description: user.field.nickname
+                avatar:
+                    type: string
+                    description: user.field.avatar
+                name:
+                    type: string
+                    description: user.field.nickname
+                gender:
+                    type: string
+                    description: user.field.gender
+                password:
+                    type: string
+                    description: user.field.password
+                salt:
+                    type: string
+                    description: user.field.salt
+                phone:
+                    type: string
+                    description: user.field.phone
+                email:
+                    type: string
+                    description: user.field.email
+                remark:
+                    type: string
+                    description: user.field.remark
+                token:
+                    type: string
+                    description: user.field.token
+                status:
+                    type: integer
+                    description: user.field.status
+                    format: int32
+                last_login_ip:
+                    type: string
+                    description: user.field.last_login_ip
+                last_login_time:
+                    type: string
+                    description: user.field.last_login_time
+                    format: date-time
+                sanction_date:
+                    type: string
+                    description: user.field.sanction_date
+                    format: date-time
+                manager_id:
+                    type: string
+                    description: user.field.manager_id
+                manager:
+                    type: string
+                    description: user.field.manager
+            description: User is the model entity for the User schema.
+        api.v1.services.system.UserRole:
+            type: object
+            properties:
+                id:
+                    type: string
                     description: ID of the ent.
                 create_time:
                     type: string
@@ -2081,51 +2472,28 @@ components:
                     type: string
                     description: UpdateTime holds the value of the "update_time" field.
                     format: date-time
-                username:
+                user_id:
                     type: string
-                    description: Username holds the value of the "username" field.
-                name:
+                    description: UserID holds the value of the "user_id" field.
+                role_id:
                     type: string
-                    description: Name holds the value of the "name" field.
-                avatar:
+                    description: RoleID holds the value of the "role_id" field.
+                role_name:
                     type: string
-                    description: Avatar holds the value of the "avatar" field.
-                password:
-                    type: string
-                    description: Password holds the value of the "password" field.
-                salt:
-                    type: string
-                    description: Salt holds the value of the "salt" field.
-                phone:
-                    type: string
-                    description: Phone holds the value of the "phone" field.
-                email:
-                    type: string
-                    description: Email holds the value of the "email" field.
-                remark:
-                    type: string
-                    description: Remark holds the value of the "remark" field.
-                status:
-                    type: integer
-                    description: Status holds the value of the "status" field.
-                    format: int32
-                gender:
-                    type: string
-                    description: Gender holds the value of the "gender" field.
-                uuid:
-                    type: string
-                    description: Uuid holds the value of the "uuid" field.
-                roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: RoleName holds the value of the "role_name" field.
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.User'
                     description: |-
                         Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the UserQuery when eager-loading is set.
-                          UserEdges edges = 13;
-                            selectValues = 14;
-                         Roles holds the value of the roles edge.
-            description: User is the model entity for the User schema.
+                            The values are being populated by the UserRoleQuery when eager-loading is set.
+                          UserRoleEdges edges = 7;
+                         User holds the value of the user edge.
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Role holds the value of the role edge.
+            description: UserRole is the model entity for the UserRole schema.
         api.v1.services.system.ValidateTokenResponse:
             type: object
             properties:

@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemResource";
 
 // The resource service definition.
 service ResourceAPI {
-  rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
+  rpc ListResources (ListResourcesRequest) returns (ListResourcesResponse) {
     option (google.api.http) = {get: "/sys/resources"};
   }
-  rpc GetResource(GetResourceRequest) returns (GetResourceResponse) {
+  rpc GetResource (GetResourceRequest) returns (GetResourceResponse) {
     option (google.api.http) = {get: "/sys/resources/{id}"};
   }
-  rpc CreateResource(CreateResourceRequest) returns (CreateResourceResponse) {
+  rpc CreateResource (CreateResourceRequest) returns (CreateResourceResponse) {
     option (google.api.http) = {
       post: "/sys/resources"
       body: "resource"
     };
   }
-  rpc UpdateResource(UpdateResourceRequest) returns (UpdateResourceResponse) {
+  rpc UpdateResource (UpdateResourceRequest) returns (UpdateResourceResponse) {
     option (google.api.http) = {
       put: "/sys/resources/{resource.id}"
       body: "resource"
     };
   }
-  rpc DeleteResource(DeleteResourceRequest) returns (DeleteResourceResponse) {
+  rpc DeleteResource (DeleteResourceRequest) returns (DeleteResourceResponse) {
     option (google.api.http) = {delete: "/sys/resources/{id}"};
   }
 }

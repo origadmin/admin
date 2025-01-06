@@ -120,11 +120,15 @@ func (m *Menu) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for I18NKey
+
 	// no validation rules for Description
 
 	// no validation rules for Sequence
 
 	// no validation rules for Type
+
+	// no validation rules for Icon
 
 	// no validation rules for Path
 
@@ -695,9 +699,40 @@ func (m *Role) validate(all bool) error {
 
 	// no validation rules for Description
 
+	// no validation rules for Type
+
 	// no validation rules for Sequence
 
 	// no validation rules for Status
+
+	if all {
+		switch v := interface{}(m.GetEdges()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RoleValidationError{
+					field:  "Edges",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RoleValidationError{
+					field:  "Edges",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEdges()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RoleValidationError{
+				field:  "Edges",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	for idx, item := range m.GetMenus() {
 		_, _ = idx, item
@@ -1102,6 +1137,10 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for CreateAuthor
+
+	// no validation rules for UpdateAuthor
+
 	if all {
 		switch v := interface{}(m.GetCreateTime()).(type) {
 		case interface{ ValidateAll() error }:
@@ -1160,11 +1199,19 @@ func (m *User) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for Uuid
+
+	// no validation rules for AllowedIp
+
 	// no validation rules for Username
+
+	// no validation rules for Nickname
+
+	// no validation rules for Avatar
 
 	// no validation rules for Name
 
-	// no validation rules for Avatar
+	// no validation rules for Gender
 
 	// no validation rules for Password
 
@@ -1176,45 +1223,73 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Remark
 
+	// no validation rules for Token
+
 	// no validation rules for Status
 
-	// no validation rules for Gender
+	// no validation rules for LastLoginIp
 
-	// no validation rules for Uuid
-
-	for idx, item := range m.GetRoles() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, UserValidationError{
-						field:  fmt.Sprintf("Roles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, UserValidationError{
-						field:  fmt.Sprintf("Roles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return UserValidationError{
-					field:  fmt.Sprintf("Roles[%v]", idx),
+	if all {
+		switch v := interface{}(m.GetLastLoginTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "LastLoginTime",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "LastLoginTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
 			}
 		}
-
+	} else if v, ok := interface{}(m.GetLastLoginTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserValidationError{
+				field:  "LastLoginTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
+
+	if all {
+		switch v := interface{}(m.GetSanctionDate()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "SanctionDate",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserValidationError{
+					field:  "SanctionDate",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSanctionDate()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserValidationError{
+				field:  "SanctionDate",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for ManagerId
+
+	// no validation rules for Manager
 
 	if len(errors) > 0 {
 		return UserMultiError(errors)
@@ -2544,3 +2619,178 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ResourceEdgesValidationError{}
+
+// Validate checks the field values on Department with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Department) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Department with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in DepartmentMultiError, or
+// nil if none found.
+func (m *Department) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Department) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if all {
+		switch v := interface{}(m.GetCreateTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DepartmentValidationError{
+					field:  "CreateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DepartmentValidationError{
+					field:  "CreateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DepartmentValidationError{
+				field:  "CreateTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetUpdateTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DepartmentValidationError{
+					field:  "UpdateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DepartmentValidationError{
+					field:  "UpdateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DepartmentValidationError{
+				field:  "UpdateTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Keyword
+
+	// no validation rules for Name
+
+	// no validation rules for Description
+
+	// no validation rules for Sequence
+
+	// no validation rules for Status
+
+	// no validation rules for Ancestors
+
+	// no validation rules for Level
+
+	// no validation rules for ParentId
+
+	if len(errors) > 0 {
+		return DepartmentMultiError(errors)
+	}
+
+	return nil
+}
+
+// DepartmentMultiError is an error wrapping multiple validation errors
+// returned by Department.ValidateAll() if the designated constraints aren't met.
+type DepartmentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DepartmentMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DepartmentMultiError) AllErrors() []error { return m }
+
+// DepartmentValidationError is the validation error returned by
+// Department.Validate if the designated constraints aren't met.
+type DepartmentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DepartmentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DepartmentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DepartmentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DepartmentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DepartmentValidationError) ErrorName() string { return "DepartmentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DepartmentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDepartment.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DepartmentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DepartmentValidationError{}

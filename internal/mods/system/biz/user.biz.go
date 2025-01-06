@@ -24,6 +24,11 @@ type UsersBiz struct {
 	log     *log.KHelper
 }
 
+func (biz UsersBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest, opts ...grpc.CallOption) (*pb.UpdateUserRolesResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (biz UsersBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, opts ...grpc.CallOption) (*pb.UpdateUserStatusResponse, error) {
 	//TODO implement me
 	panic("implement me")
@@ -112,7 +117,7 @@ func (biz UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, op
 	//	return nil, err
 	//}
 	log.Info("DeleteUser")
-	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
+	if err := biz.dao.Delete(ctx, in.GetUser().GetId()); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteUserResponse{}, nil

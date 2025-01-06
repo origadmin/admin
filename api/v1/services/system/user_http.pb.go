@@ -51,7 +51,7 @@ func RegisterUserAPIHTTPServer(s *http.Server, srv UserAPIHTTPServer) {
 	r.DELETE("/sys/users/{user.id}", _UserAPI_DeleteUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}/status", _UserAPI_UpdateUserStatus0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}/roles", _UserAPI_UpdateUserRoles0_HTTP_Handler(srv))
-	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTP_Handler(srv))
+	r.POST("/sys/users/password/reset", _UserAPI_ResetUserPassword0_HTTP_Handler(srv))
 }
 
 func _UserAPI_ListUsers0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
@@ -192,7 +192,7 @@ func _UserAPI_UpdateUserStatus0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx htt
 func _UserAPI_UpdateUserRoles0_HTTP_Handler(srv UserAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserRolesRequest
-		if err := ctx.Bind(&in.Roles); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -309,7 +309,7 @@ func (c *UserAPIHTTPClientImpl) ListUsers(ctx context.Context, in *ListUsersRequ
 
 func (c *UserAPIHTTPClientImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest, opts ...http.CallOption) (*ResetUserPasswordResponse, error) {
 	var out ResetUserPasswordResponse
-	pattern := "/sys/user/password/reset"
+	pattern := "/sys/users/password/reset"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserAPIResetUserPassword))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -339,7 +339,7 @@ func (c *UserAPIHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *UpdateU
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserAPIUpdateUserRoles))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Roles, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

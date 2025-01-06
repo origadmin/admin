@@ -19,8 +19,6 @@ import (
 )
 
 type (
-	Role            = ent.Role
-	RolePB          = pb.Role
 	RoleEdges       = ent.RoleEdges
 	RoleEdgesPB     = pb.RoleEdges
 	RoleMenu        = ent.RoleMenu

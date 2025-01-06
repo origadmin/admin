@@ -3,7 +3,6 @@ syntax = "proto3";
 package api.v1.services.system;
 
 import "google/api/annotations.proto";
-import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "system/types.proto";
 
@@ -14,11 +13,11 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemAuth";
 
 service AuthAPI {
-  rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
+  rpc ListAuthResources (ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
     option (google.api.http) = {get: "/sys/auth/resources"};
   }
   // CreateToken generates a new JWT token for the given user.
-  rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {
+  rpc CreateToken (CreateTokenRequest) returns (CreateTokenResponse) {
     option (google.api.http) = {
       post: "/sys/auth/token"
       body: "data"
@@ -26,19 +25,19 @@ service AuthAPI {
   }
 
   // ValidateToken verifies the validity of a JWT token.
-  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse) {
     option (google.api.http) = {get: "/sys/auth/validate"};
   }
 
   // DestroyToken invalidates a JWT token.
-  rpc DestroyToken(DestroyTokenRequest) returns (DestroyTokenResponse) {
+  rpc DestroyToken (DestroyTokenRequest) returns (DestroyTokenResponse) {
     option (google.api.http) = {
       post: "/sys/auth/destroy"
-      body: "*"
+      body: "data"
     };
   }
 
-  rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {
+  rpc Authenticate (AuthenticateRequest) returns (AuthenticateResponse) {
     option (google.api.http) = {
       post: "/sys/auth/authenticate"
       body: "data"

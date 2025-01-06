@@ -23,10 +23,6 @@ import (
 )
 
 type (
-	User            = ent.User
-	UserPB          = pb.User
-	UserEdges       = ent.UserEdges
-	UserEdgesPB     = pb.UserEdges
 	UserRole        = ent.UserRole
 	UserRolePB      = pb.UserRole
 	UserRoleEdges   = ent.UserRoleEdges

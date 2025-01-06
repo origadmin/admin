@@ -79,7 +79,7 @@ func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in CreateRoleRequest
-		if err := ctx.Bind(&in.Role); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -104,7 +104,7 @@ func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateRoleRequest
-		if err := ctx.Bind(&in.Role); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

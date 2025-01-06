@@ -16,8 +16,6 @@ import (
 )
 
 type (
-	Resource        = ent.Resource
-	ResourcePB      = pb.Resource
 	ResourceEdges   = ent.ResourceEdges
 	ResourceEdgesPB = pb.ResourceEdges
 

@@ -191,7 +191,7 @@ func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.Handler
 func _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateUserRolesRequest
-		if err := ctx.Bind(&in.Roles); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -250,5 +250,5 @@ func RegisterUserAPIAgent(ag agent.HTTPAgent, srv UserAPIAgent) {
 	r.DELETE("/sys/users/:user.id", _UserAPI_DeleteUser0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/:user.id/status", _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/:user.id/roles", _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv))
-	r.POST("/sys/user/password/reset", _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv))
+	r.POST("/sys/users/password/reset", _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv))
 }

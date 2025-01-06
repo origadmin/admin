@@ -4,7 +4,6 @@ package api.v1.services.system;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
-import "security/jwt/v1/token.proto";
 import "system/types.proto";
 import "validate/validate.proto";
 
@@ -15,7 +14,7 @@ option java_package = "com.origadmin.api.v1.services.system";
 
 // The current service definition.
 service CurrentAPI {
-  rpc CurrentLogout(CurrentLogoutRequest) returns (CurrentLogoutResponse) {
+  rpc CurrentLogout (CurrentLogoutRequest) returns (CurrentLogoutResponse) {
     option (google.api.http) = {
       post: "/sys/current/logout"
       body: "data"
@@ -23,46 +22,42 @@ service CurrentAPI {
   }
 
   // UpdateCurrentUserPassword The user changes the password
-  rpc UpdateCurrentUserPassword(UpdateCurrentUserPasswordRequest) returns (UpdateCurrentUserPasswordResponse) {
+  rpc UpdateCurrentUserPassword (UpdateCurrentUserPasswordRequest) returns (UpdateCurrentUserPasswordResponse) {
     option (google.api.http) = {
       put: "/sys/current/user/password"
       body: "data"
     };
   }
   // UpdateCurrentUser Update the current user information
-  rpc UpdateCurrentUser(UpdateCurrentUserRequest) returns (UpdateCurrentUserResponse) {
+  rpc UpdateCurrentUser (UpdateCurrentUserRequest) returns (UpdateCurrentUserResponse) {
     option (google.api.http) = {
       put: "/sys/current/user"
       body: "data"
     };
   }
-
   // GetCurrentUser Update the current user information
-  rpc GetCurrentUser(GetCurrentUserRequest) returns (GetCurrentUserResponse) {
+  rpc GetCurrentUser (GetCurrentUserRequest) returns (GetCurrentUserResponse) {
     option (google.api.http) = {get: "/sys/current/user"};
   }
   // ListCurrentMenus List the current user's menu
-  rpc ListCurrentMenus(ListCurrentMenusRequest) returns (ListCurrentMenusResponse) {
+  rpc ListCurrentMenus (ListCurrentMenusRequest) returns (ListCurrentMenusResponse) {
     option (google.api.http) = {get: "/sys/current/menus"};
   }
-
   // ListCurrentMenus List the current user's menu
-  rpc ListCurrentRoles(ListCurrentRolesRequest) returns (ListCurrentRolesResponse) {
+  rpc ListCurrentRoles (ListCurrentRolesRequest) returns (ListCurrentRolesResponse) {
     option (google.api.http) = {get: "/sys/current/roles"};
   }
-
-  // UpdateCurrentRoles Switch the user's current role
-  //  rpc UpdateCurrentRole(UpdateCurrentRoleRequest) returns (UpdateCurrentRoleResponse) {
-  //    option (google.api.http) = {
-  //      put: "/sys/current/roles/{role.id}"
-  //      body: "role"
-  //    };
-  //  }
-
   // UpdateCurrentSetting User settings are saved
-  rpc UpdateCurrentSetting(UpdateCurrentSettingRequest) returns (UpdateCurrentSettingResponse) {
+  rpc UpdateCurrentSetting (UpdateCurrentSettingRequest) returns (UpdateCurrentSettingResponse) {
     option (google.api.http) = {
       put: "/sys/current/setting"
+      body: "data"
+    };
+  }
+  // RefreshCurrentToken Refresh the current user's token
+  rpc RefreshCurrentToken (RefreshCurrentTokenRequest) returns (RefreshCurrentTokenResponse) {
+    option (google.api.http) = {
+      post: "/sys/current/token/refresh"
       body: "data"
     };
   }
@@ -127,4 +122,12 @@ message GetCurrentUserRequest {}
 
 message GetCurrentUserResponse {
   User user = 1 [json_name = "user"];
+}
+
+message RefreshCurrentTokenRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message RefreshCurrentTokenResponse {
+  string token = 1 [json_name = "token"];
 }

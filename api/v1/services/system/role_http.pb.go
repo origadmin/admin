@@ -86,7 +86,7 @@ func _RoleAPI_GetRole0_HTTP_Handler(srv RoleAPIHTTPServer) func(ctx http.Context
 func _RoleAPI_CreateRole0_HTTP_Handler(srv RoleAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateRoleRequest
-		if err := ctx.Bind(&in.Role); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -108,7 +108,7 @@ func _RoleAPI_CreateRole0_HTTP_Handler(srv RoleAPIHTTPServer) func(ctx http.Cont
 func _RoleAPI_UpdateRole0_HTTP_Handler(srv RoleAPIHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateRoleRequest
-		if err := ctx.Bind(&in.Role); err != nil {
+		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -174,7 +174,7 @@ func (c *RoleAPIHTTPClientImpl) CreateRole(ctx context.Context, in *CreateRoleRe
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleAPICreateRole))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Role, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -226,7 +226,7 @@ func (c *RoleAPIHTTPClientImpl) UpdateRole(ctx context.Context, in *UpdateRoleRe
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleAPIUpdateRole))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Role, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -23,6 +23,7 @@ const OperationCurrentAPICurrentLogout = "/api.v1.services.system.CurrentAPI/Cur
 const OperationCurrentAPIGetCurrentUser = "/api.v1.services.system.CurrentAPI/GetCurrentUser"
 const OperationCurrentAPIListCurrentMenus = "/api.v1.services.system.CurrentAPI/ListCurrentMenus"
 const OperationCurrentAPIListCurrentRoles = "/api.v1.services.system.CurrentAPI/ListCurrentRoles"
+const OperationCurrentAPIRefreshCurrentToken = "/api.v1.services.system.CurrentAPI/RefreshCurrentToken"
 const OperationCurrentAPIUpdateCurrentSetting = "/api.v1.services.system.CurrentAPI/UpdateCurrentSetting"
 const OperationCurrentAPIUpdateCurrentUser = "/api.v1.services.system.CurrentAPI/UpdateCurrentUser"
 const OperationCurrentAPIUpdateCurrentUserPassword = "/api.v1.services.system.CurrentAPI/UpdateCurrentUserPassword"
@@ -35,6 +36,8 @@ type CurrentAPIHTTPServer interface {
 	ListCurrentMenus(context.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
 	// ListCurrentRoles ListCurrentMenus List the current user's menu
 	ListCurrentRoles(context.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
+	// RefreshCurrentToken RefreshCurrentToken Refresh the current user's token
+	RefreshCurrentToken(context.Context, *RefreshCurrentTokenRequest) (*RefreshCurrentTokenResponse, error)
 	// UpdateCurrentSetting UpdateCurrentSetting User settings are saved
 	UpdateCurrentSetting(context.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
 	// UpdateCurrentUser UpdateCurrentUser Update the current user information
@@ -52,6 +55,7 @@ func RegisterCurrentAPIHTTPServer(s *http.Server, srv CurrentAPIHTTPServer) {
 	r.GET("/sys/current/menus", _CurrentAPI_ListCurrentMenus0_HTTP_Handler(srv))
 	r.GET("/sys/current/roles", _CurrentAPI_ListCurrentRoles0_HTTP_Handler(srv))
 	r.PUT("/sys/current/setting", _CurrentAPI_UpdateCurrentSetting0_HTTP_Handler(srv))
+	r.POST("/sys/current/token/refresh", _CurrentAPI_RefreshCurrentToken0_HTTP_Handler(srv))
 }
 
 func _CurrentAPI_CurrentLogout0_HTTP_Handler(srv CurrentAPIHTTPServer) func(ctx http.Context) error {
@@ -199,11 +203,34 @@ func _CurrentAPI_UpdateCurrentSetting0_HTTP_Handler(srv CurrentAPIHTTPServer) fu
 	}
 }
 
+func _CurrentAPI_RefreshCurrentToken0_HTTP_Handler(srv CurrentAPIHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RefreshCurrentTokenRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationCurrentAPIRefreshCurrentToken)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RefreshCurrentToken(ctx, req.(*RefreshCurrentTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RefreshCurrentTokenResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type CurrentAPIHTTPClient interface {
 	CurrentLogout(ctx context.Context, req *CurrentLogoutRequest, opts ...http.CallOption) (rsp *CurrentLogoutResponse, err error)
 	GetCurrentUser(ctx context.Context, req *GetCurrentUserRequest, opts ...http.CallOption) (rsp *GetCurrentUserResponse, err error)
 	ListCurrentMenus(ctx context.Context, req *ListCurrentMenusRequest, opts ...http.CallOption) (rsp *ListCurrentMenusResponse, err error)
 	ListCurrentRoles(ctx context.Context, req *ListCurrentRolesRequest, opts ...http.CallOption) (rsp *ListCurrentRolesResponse, err error)
+	RefreshCurrentToken(ctx context.Context, req *RefreshCurrentTokenRequest, opts ...http.CallOption) (rsp *RefreshCurrentTokenResponse, err error)
 	UpdateCurrentSetting(ctx context.Context, req *UpdateCurrentSettingRequest, opts ...http.CallOption) (rsp *UpdateCurrentSettingResponse, err error)
 	UpdateCurrentUser(ctx context.Context, req *UpdateCurrentUserRequest, opts ...http.CallOption) (rsp *UpdateCurrentUserResponse, err error)
 	UpdateCurrentUserPassword(ctx context.Context, req *UpdateCurrentUserPasswordRequest, opts ...http.CallOption) (rsp *UpdateCurrentUserPasswordResponse, err error)
@@ -263,6 +290,19 @@ func (c *CurrentAPIHTTPClientImpl) ListCurrentRoles(ctx context.Context, in *Lis
 	opts = append(opts, http.Operation(OperationCurrentAPIListCurrentRoles))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *CurrentAPIHTTPClientImpl) RefreshCurrentToken(ctx context.Context, in *RefreshCurrentTokenRequest, opts ...http.CallOption) (*RefreshCurrentTokenResponse, error) {
+	var out RefreshCurrentTokenResponse
+	pattern := "/sys/current/token/refresh"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationCurrentAPIRefreshCurrentToken))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
