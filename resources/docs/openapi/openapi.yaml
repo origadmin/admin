@@ -993,61 +993,11 @@ paths:
                   description: The role id to use for this role.
                   schema:
                     type: string
-                - name: role.id
-                  in: query
-                  description: |-
-                    ID of the ent.
-                     field.primary_key.comment
-                  schema:
-                    type: string
-                - name: role.create_time
-                  in: query
-                  description: create_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: role.update_time
-                  in: query
-                  description: update_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: role.keyword
-                  in: query
-                  description: role.field.keyword
-                  schema:
-                    type: string
-                - name: role.name
-                  in: query
-                  description: role.field.name
-                  schema:
-                    type: string
-                - name: role.description
-                  in: query
-                  description: role.field.description
-                  schema:
-                    type: string
-                - name: role.type
-                  in: query
-                  description: role.field.type
-                  schema:
-                    type: integer
-                    format: int32
-                - name: role.sequence
-                  in: query
-                  description: role.field.sequence
-                  schema:
-                    type: integer
-                    format: int32
-                - name: role.status
-                  in: query
-                  description: role.field.status
-                  schema:
-                    type: integer
-                    format: int32
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Role'
                 required: true
             responses:
                 "200":
@@ -1126,61 +1076,11 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: role.id
-                  in: query
-                  description: |-
-                    ID of the ent.
-                     field.primary_key.comment
-                  schema:
-                    type: string
-                - name: role.create_time
-                  in: query
-                  description: create_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: role.update_time
-                  in: query
-                  description: update_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: role.keyword
-                  in: query
-                  description: role.field.keyword
-                  schema:
-                    type: string
-                - name: role.name
-                  in: query
-                  description: role.field.name
-                  schema:
-                    type: string
-                - name: role.description
-                  in: query
-                  description: role.field.description
-                  schema:
-                    type: string
-                - name: role.type
-                  in: query
-                  description: role.field.type
-                  schema:
-                    type: integer
-                    format: int32
-                - name: role.sequence
-                  in: query
-                  description: role.field.sequence
-                  schema:
-                    type: integer
-                    format: int32
-                - name: role.status
-                  in: query
-                  description: role.field.status
-                  schema:
-                    type: integer
-                    format: int32
             requestBody:
                 content:
-                    application/json: {}
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Role'
                 required: true
             responses:
                 "200":

@@ -86,7 +86,7 @@ func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...
 	if err != nil || exist {
 		return nil, errors.New("user already exists")
 	}
-	obj := dto.UserObject(userPB)
+	obj := dto.ConvertUserPB2Object(userPB)
 	obj.CreateTime = time.Now()
 	obj.UpdateTime = time.Now()
 	err = repo.db.Tx(ctx, func(ctx context.Context) error {
@@ -112,7 +112,7 @@ func (repo userRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
-	obj := dto.UserObject(userPB)
+	obj := dto.ConvertUserPB2Object(userPB)
 	obj.UpdateTime = time.Now()
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.User(ctx).UpdateOneID(userPB.Id)

@@ -23,20 +23,6 @@ type (
 	ListResourcesResponse = pb.ListResourcesResponse
 )
 
-func ResourceObject(resource *ResourcePB) *Resource {
-	if resource == nil {
-		return nil
-	}
-	return &Resource{
-		ID:         resource.Id,
-		CreateTime: resource.CreateTime.AsTime(),
-		UpdateTime: resource.UpdateTime.AsTime(),
-		MenuID:     resource.MenuId,
-		Method:     resource.Method,
-		Path:       resource.Path,
-	}
-}
-
 // ResourceRepo is a Resource repository interface.
 type ResourceRepo interface {
 	Get(context.Context, int64, ...ResourceQueryOption) (*ResourcePB, error)

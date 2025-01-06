@@ -22,17 +22,17 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type UserAPIAgent interface {
-	CreateUser(http.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	DeleteUser(http.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	GetUser(http.Context, *GetUserRequest) (*GetUserResponse, error)
-	ListUsers(http.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// ResetUserPassword ResetUserPassword reset the user s password
-	ResetUserPassword(http.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
-	UpdateUser(http.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
+	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
+	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	// UpdateUserRoles UpdateUserRoles update the user roles
-	UpdateUserRoles(http.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
+	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
 	// UpdateUserStatus UpdateUserStatus Update the status of the user information
-	UpdateUserStatus(http.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
+	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 
 func _UserAPI_ListUsers0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
@@ -42,9 +42,10 @@ func _UserAPI_ListUsers0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIListUsers)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListUsers(ctx, req.(*ListUsersRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -67,9 +68,10 @@ func _UserAPI_GetUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIGetUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUser(ctx, req.(*GetUserRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -92,9 +94,10 @@ func _UserAPI_CreateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPICreateUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateUser(ctx, req.(*CreateUserRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -120,9 +123,10 @@ func _UserAPI_UpdateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIUpdateUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -145,9 +149,10 @@ func _UserAPI_DeleteUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIDeleteUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -173,9 +178,10 @@ func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.Handler
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIUpdateUserStatus)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -201,9 +207,10 @@ func _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerF
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIUpdateUserRoles)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUserRoles(ctx, req.(*UpdateUserRolesRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -226,9 +233,10 @@ func _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv UserAPIAgent) http.Handle
 			return err
 		}
 		http.SetOperation(ctx, OperationUserAPIResetUserPassword)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err

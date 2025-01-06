@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
 	"github.com/origadmin/runtime"
@@ -42,7 +43,7 @@ func (d data) QueryPermissions(ctx context.Context, subject string) ([]string, e
 func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegisterAgent, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
-		panic("no serviceConfig")
+		panic("no service config")
 	}
 	paths := bootstrap.GetSecurity().GetPublicPaths()
 	paths = append(DefaultPaths(), paths...)
@@ -64,14 +65,9 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		AuthenticationHeader: "Authorization",
 		Authenticator:        authenticator,
 		Authorizer:           authorizer,
-		SkipKey:              "",
+		SkipKey:              msecurity.MetadataSecuritySkipKey,
 		PublicPaths:          nil,
 		Skipper: func(path string) bool {
-			for _, p := range paths {
-				if strings.HasPrefix(path, p) {
-					return true
-				}
-			}
 			return false
 		},
 		IsRoot: func(ctx context.Context, claims security.Claims) bool {
@@ -80,8 +76,16 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		Data:        &data{},
 		TokenParser: nil,
 	}
-	bridge.SkipKey = msecurity.MetadataSecuritySkipKey
-	ms = append(ms, bridge.BuildMiddleware())
+	serv := selector.Server(bridge.BuildMiddleware()).Match(func(ctx context.Context, operation string) bool {
+		for _, p := range paths {
+			if strings.HasPrefix(operation, p) {
+				log.Debugf("Operation '%s' matches public path '%s', returning true", operation, p)
+				return false
+			}
+		}
+		return true
+	})
+	ms = append(ms, serv.Build())
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
 		servicehttp.WithServerOptions(http.ErrorEncoder(resp.ResponseErrorEncoder)),

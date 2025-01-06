@@ -9,6 +9,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/transport"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
@@ -19,6 +20,7 @@ import (
 	"origadmin/application/admin/contrib/security/authn/jwt"
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/mods/system/server"
 )
 
 func NewAuthenticator(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Authenticator, error) {
@@ -157,6 +159,11 @@ func (obj SecurityBridge) BuildMiddleware() middleware.KMiddleware {
 				log.Errorf("NewAuthN: authentication failed: %s", err.Error())
 				return nil, err
 			}
+			log.Debugf("NewAuthN: setting claims to context user-id: %+v", claims.GetSubject())
+
+			md := metadata.Metadata{}
+			md.Set("x-md-global-security-user-id", claims.GetSubject())
+			ctx = server.NewAgentContext(ctx, md)
 			if obj.IsRoot(ctx, claims) {
 				ctx = security.WithRootContext(ctx)
 				log.Debugf("NewAuthN: setting root to context")
@@ -176,8 +183,6 @@ func (obj SecurityBridge) BuildMiddleware() middleware.KMiddleware {
 			} else {
 				log.Debugf("NewAuthN: authorization successful, proceeding with request")
 			}
-
-			log.Debugf("NewAuthN: setting claims to context")
 			ctx = obj.TokenTo(ctx, token)
 			log.Debugf("NewAuthN: calling next handler")
 			return handler(ctx, req)

@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -21,8 +22,17 @@ type currentRepo struct {
 }
 
 func (repo currentRepo) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	md, ok := metadata.FromServerContext(ctx)
+	if !ok {
+		log.Errorf("failed to get metadata from context")
+		return nil, nil
+	}
+	log.Infof("server user id: %+v", md)
+	md, ok = metadata.FromClientContext(ctx)
+	if ok {
+		log.Infof("user id: %+v", md)
+	}
+	return &pb.GetCurrentUserResponse{}, nil
 }
 
 func (repo currentRepo) ListCurrentRoles(ctx context.Context, in *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error) {

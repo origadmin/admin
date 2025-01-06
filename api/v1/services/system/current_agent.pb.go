@@ -22,21 +22,21 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type CurrentAPIAgent interface {
-	CurrentLogout(http.Context, *CurrentLogoutRequest) (*CurrentLogoutResponse, error)
+	CurrentLogout(context.Context, *CurrentLogoutRequest) (*CurrentLogoutResponse, error)
 	// GetCurrentUser GetCurrentUser Update the current user information
-	GetCurrentUser(http.Context, *GetCurrentUserRequest) (*GetCurrentUserResponse, error)
+	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*GetCurrentUserResponse, error)
 	// ListCurrentMenus ListCurrentMenus List the current user's menu
-	ListCurrentMenus(http.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
+	ListCurrentMenus(context.Context, *ListCurrentMenusRequest) (*ListCurrentMenusResponse, error)
 	// ListCurrentRoles ListCurrentMenus List the current user's menu
-	ListCurrentRoles(http.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
+	ListCurrentRoles(context.Context, *ListCurrentRolesRequest) (*ListCurrentRolesResponse, error)
 	// RefreshCurrentToken RefreshCurrentToken Refresh the current user's token
-	RefreshCurrentToken(http.Context, *RefreshCurrentTokenRequest) (*RefreshCurrentTokenResponse, error)
+	RefreshCurrentToken(context.Context, *RefreshCurrentTokenRequest) (*RefreshCurrentTokenResponse, error)
 	// UpdateCurrentSetting UpdateCurrentSetting User settings are saved
-	UpdateCurrentSetting(http.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
+	UpdateCurrentSetting(context.Context, *UpdateCurrentSettingRequest) (*UpdateCurrentSettingResponse, error)
 	// UpdateCurrentUser UpdateCurrentUser Update the current user information
-	UpdateCurrentUser(http.Context, *UpdateCurrentUserRequest) (*UpdateCurrentUserResponse, error)
+	UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*UpdateCurrentUserResponse, error)
 	// UpdateCurrentUserPassword UpdateCurrentUserPassword The user changes the password
-	UpdateCurrentUserPassword(http.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordResponse, error)
+	UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordResponse, error)
 }
 
 func _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv CurrentAPIAgent) http.HandlerFunc {
@@ -49,9 +49,10 @@ func _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv CurrentAPIAgent) http.Hand
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPICurrentLogout)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CurrentLogout(ctx, req.(*CurrentLogoutRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -74,9 +75,10 @@ func _CurrentAPI_UpdateCurrentUserPassword0_HTTPAgent_Handler(srv CurrentAPIAgen
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIUpdateCurrentUserPassword)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateCurrentUserPassword(ctx, req.(*UpdateCurrentUserPasswordRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -99,9 +101,10 @@ func _CurrentAPI_UpdateCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIUpdateCurrentUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateCurrentUser(ctx, req.(*UpdateCurrentUserRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -121,9 +124,10 @@ func _CurrentAPI_GetCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.Han
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIGetCurrentUser)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -143,9 +147,10 @@ func _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv CurrentAPIAgent) http.H
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIListCurrentMenus)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListCurrentMenus(ctx, req.(*ListCurrentMenusRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -165,9 +170,10 @@ func _CurrentAPI_ListCurrentRoles0_HTTPAgent_Handler(srv CurrentAPIAgent) http.H
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIListCurrentRoles)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListCurrentRoles(ctx, req.(*ListCurrentRolesRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -190,9 +196,10 @@ func _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv CurrentAPIAgent) ht
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIUpdateCurrentSetting)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateCurrentSetting(ctx, req.(*UpdateCurrentSettingRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -215,9 +222,10 @@ func _CurrentAPI_RefreshCurrentToken0_HTTPAgent_Handler(srv CurrentAPIAgent) htt
 			return err
 		}
 		http.SetOperation(ctx, OperationCurrentAPIRefreshCurrentToken)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.RefreshCurrentToken(ctx, req.(*RefreshCurrentTokenRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err

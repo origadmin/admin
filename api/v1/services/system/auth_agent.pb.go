@@ -22,14 +22,14 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type AuthAPIAgent interface {
-	Authenticate(http.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
+	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// CreateToken CreateToken generates a new JWT token for the given user.
-	CreateToken(http.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
+	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
 	// DestroyToken DestroyToken invalidates a JWT token.
-	DestroyToken(http.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
-	ListAuthResources(http.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
+	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
+	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 	// ValidateToken ValidateToken verifies the validity of a JWT token.
-	ValidateToken(http.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
+	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 }
 
 func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
@@ -39,9 +39,10 @@ func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.Handle
 			return err
 		}
 		http.SetOperation(ctx, OperationAuthAPIListAuthResources)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -64,9 +65,10 @@ func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 			return err
 		}
 		http.SetOperation(ctx, OperationAuthAPICreateToken)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -86,9 +88,10 @@ func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFun
 			return err
 		}
 		http.SetOperation(ctx, OperationAuthAPIValidateToken)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -111,9 +114,10 @@ func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 			return err
 		}
 		http.SetOperation(ctx, OperationAuthAPIDestroyToken)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -136,9 +140,10 @@ func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 			return err
 		}
 		http.SetOperation(ctx, OperationAuthAPIAuthenticate)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err

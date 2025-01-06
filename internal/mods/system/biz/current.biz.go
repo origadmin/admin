@@ -23,6 +23,11 @@ type CurrentBiz struct {
 	log     *log.KHelper
 }
 
+func (biz CurrentBiz) RefreshCurrentToken(ctx context.Context, in *pb.RefreshCurrentTokenRequest, opts ...grpc.CallOption) (*pb.RefreshCurrentTokenResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (biz CurrentBiz) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUserRequest, opts ...grpc.CallOption) (*pb.GetCurrentUserResponse, error) {
 	return biz.dao.GetCurrentUser(ctx, in)
 }

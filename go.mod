@@ -26,12 +26,12 @@ require (
 	github.com/origadmin/contrib/replacer v0.0.26
 	github.com/origadmin/contrib/transport/gins v0.0.26
 	github.com/origadmin/entslog/v3 v3.0.6
-	github.com/origadmin/runtime v0.1.42
+	github.com/origadmin/runtime v0.1.44
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.2.7
-	github.com/origadmin/toolkits/codec v0.2.7
-	github.com/origadmin/toolkits/errors v0.2.7
-	github.com/origadmin/toolkits/idgen v0.2.7
+	github.com/origadmin/toolkits v0.2.9
+	github.com/origadmin/toolkits/codec v0.2.9
+	github.com/origadmin/toolkits/errors v0.2.9
+	github.com/origadmin/toolkits/idgen v0.2.9
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0

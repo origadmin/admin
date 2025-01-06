@@ -48,7 +48,7 @@ func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...
 	if err != nil {
 		return nil, err
 	}
-	obj := dto.RoleObject(rolePB)
+	obj := dto.ConvertRolePB2Object(rolePB)
 	if obj.Keyword == "" {
 		obj.Keyword = "system:role:" + repo.gen.RandString(12)
 	}
@@ -90,7 +90,7 @@ func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...
 		option = options[0]
 	}
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
-		saved, err := repo.db.Role(ctx).UpdateOneID(rolePB.Id).SetRole(dto.RoleObject(rolePB), option.Fields...).Save(ctx)
+		saved, err := repo.db.Role(ctx).UpdateOneID(rolePB.Id).SetRole(dto.ConvertRolePB2Object(rolePB), option.Fields...).Save(ctx)
 		if err != nil {
 			return err
 		}

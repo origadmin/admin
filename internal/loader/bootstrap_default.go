@@ -26,7 +26,6 @@ const (
 )
 
 func DefaultBootstrap() *configs.Bootstrap {
-
 	return &configs.Bootstrap{
 		Name:       "origadmin.agent.service.admin.v1",
 		Mode:       "singleton",

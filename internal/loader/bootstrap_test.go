@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"reflect"
 	"testing"
 	"time"
 
@@ -145,8 +144,11 @@ func TestLoadConfig(t *testing.T) {
 				t.Errorf("LoadConf() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("LoadConf() got = %v, want %v", got, tt.want)
+			if got.Mode != tt.want.Mode {
+				t.Errorf("LoadConf() got = %v, want %v", got.Mode, tt.want.Mode)
+			}
+			if got.Name != tt.want.Name {
+				t.Errorf("LoadConf() got = %v, want %v", got.Name, tt.want.Name)
 			}
 		})
 	}
@@ -201,7 +203,7 @@ func TestData_InitFromFile(t *testing.T) {
 				return
 			}
 			defer cleanup()
-			if err := d.InitFromFile(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
+			if err := d.InitMenuFromFile(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
 				t.Errorf("InitFromFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

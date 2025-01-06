@@ -15,7 +15,6 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 )
 
 type (
@@ -29,25 +28,6 @@ type (
 	ListRolesRequest  = pb.ListRolesRequest
 	ListRolesResponse = pb.ListRolesResponse
 )
-
-func RoleObject(rolePB *RolePB) *Role {
-	if rolePB == nil {
-		return nil
-	}
-	return &Role{
-		ID:          rolePB.Id,
-		CreateTime:  rolePB.CreateTime.AsTime(),
-		UpdateTime:  rolePB.UpdateTime.AsTime(),
-		Keyword:     rolePB.Keyword,
-		Name:        rolePB.Name,
-		Description: rolePB.Description,
-		Type:        schema.RoleTypeUser,
-		Sequence:    int(rolePB.Sequence),
-		Status:      int8(rolePB.Status),
-		IsSystem:    false,
-		Edges:       ent.RoleEdges{},
-	}
-}
 
 // RoleRepo is a RolePB repository interface.
 type RoleRepo interface {
@@ -98,14 +78,6 @@ func ConvertRoles(roles []*Role) []*RolePB {
 	var result []*RolePB
 	for _, role := range roles {
 		result = append(result, ConvertRole2PB(role))
-	}
-	return result
-}
-
-func ConvertRoleMenus(menus []*RoleMenu) []*RoleMenuPB {
-	var result []*RoleMenuPB
-	for _, menu := range menus {
-		result = append(result, ConvertRoleMenu2PB(menu))
 	}
 	return result
 }

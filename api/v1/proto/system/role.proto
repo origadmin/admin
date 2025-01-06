@@ -24,13 +24,13 @@ service RoleAPI {
   rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
       post: "/sys/roles"
-      body: "data"
+      body: "role"
     };
   }
   rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
       put: "/sys/roles/{role.id}"
-      body: "data"
+      body: "role"
     };
   }
   rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse) {

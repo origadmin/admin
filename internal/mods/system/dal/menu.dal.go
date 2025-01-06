@@ -43,7 +43,7 @@ func (repo menuRepo) Create(ctx context.Context, menuPB *dto.MenuPB, options ...
 	}
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		create := repo.db.Menu(ctx).Create()
-		create.SetMenu(dto.MenuObject(menuPB), option.Fields...)
+		create.SetMenu(dto.ConvertMenuPB2Object(menuPB), option.Fields...)
 		saved, err := create.Save(ctx)
 		if err != nil {
 			return err
@@ -66,7 +66,7 @@ func (repo menuRepo) Delete(ctx context.Context, id int64) error {
 func (repo menuRepo) Update(ctx context.Context, menuPB *dto.MenuPB, options ...dto.MenuQueryOption) (*dto.MenuPB, error) {
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.Menu(ctx).UpdateOneID(menuPB.Id)
-		update.SetMenu(dto.MenuObject(menuPB))
+		update.SetMenu(dto.ConvertMenuPB2Object(menuPB))
 		saved, err := update.Save(ctx)
 		if err != nil {
 			return err

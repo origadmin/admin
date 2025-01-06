@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-kratos/kratos/v2/metadata"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/security"
@@ -57,6 +58,21 @@ func NewAuthN(config *configv1.Security, option *Option) gin.HandlerFunc {
 
 		log.Debugf("NewAuthN: setting claims to context")
 		c.Request = NewClaimsContext(c, claims)
+		md, ok := metadata.FromServerContext(c.Request.Context())
+		if ok {
+			log.Debugf("NewAuthN: metadata found in server context")
+			md.Set("x-md-global-security-user-id", claims.GetSubject())
+			log.Debugf("NewAuthN: set user ID in metadata: %s", claims.GetSubject())
+			c.Request = c.Request.WithContext(metadata.NewServerContext(c.Request.Context(), md))
+			log.Debugf("NewAuthN: updated request context with new metadata")
+		} else {
+			log.Debugf("NewAuthN: metadata not found in server context, creating new metadata")
+			md = metadata.Metadata{}
+			md.Set("x-md-global-security-user-id", claims.GetSubject())
+			log.Debugf("NewAuthN: set user ID in new metadata: %s", claims.GetSubject())
+			c.Request = c.Request.WithContext(metadata.NewServerContext(c.Request.Context(), md))
+			log.Debugf("NewAuthN: updated request context with new metadata")
+		}
 		log.Debugf("NewAuthN: calling next handler")
 		c.Next()
 	}

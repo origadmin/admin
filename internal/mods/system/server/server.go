@@ -5,6 +5,7 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/google/wire"
 	"github.com/origadmin/runtime"
@@ -141,11 +142,13 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	if err != nil {
 		return nil, errors.Wrap(err, "create discovery")
 	}
-	var ms []middleware.KMiddleware
+	ms := []middleware.KMiddleware{
+		AgentMiddleware(),
+	}
 	options := []servicegrpc.OptionSetting{
 		servicegrpc.WithDiscovery(registry.ServiceName, discovery),
 	}
-	ms = middleware.NewClient(bootstrap.GetMiddleware())
+	ms = append(ms, middleware.NewClient(bootstrap.GetMiddleware())...)
 	if len(ms) > 0 {
 		options = append(options, servicegrpc.WithMiddlewares(ms...))
 	}
@@ -154,6 +157,34 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 		return nil, errors.Wrap(err, "create menu grpc client")
 	}
 	return client, nil
+}
+
+func AgentMiddleware() middleware.KMiddleware {
+	return func(handler middleware.KHandler) middleware.KHandler {
+		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+			log.Debugf("AgentMiddleware: entering handler function")
+			if md, ok := FromAgentContext(ctx); ok {
+				log.Debugf("AgentMiddleware: found agent context metadata: %+v", md)
+				if cmd, ok := metadata.FromClientContext(ctx); ok {
+					log.Debugf("AgentMiddleware: found client context metadata: %+v", cmd)
+					for k, v := range md {
+						cmd[k] = v
+						log.Debugf("AgentMiddleware: adding key-value pair (%s, %s) to client context metadata", k, v)
+					}
+					ctx = metadata.NewClientContext(ctx, cmd)
+					log.Debugf("AgentMiddleware: updated client context metadata: %+v", cmd)
+				} else {
+					log.Debugf("AgentMiddleware: no client context metadata found")
+				}
+			} else {
+				log.Debugf("AgentMiddleware: no agent context metadata found")
+			}
+			log.Debugf("AgentMiddleware: calling handler function")
+			reply, err = handler(ctx, req)
+			log.Debugf("AgentMiddleware: handler function returned reply: %+v, error: %v", reply, err)
+			return
+		}
+	}
 }
 
 func NewRegisterServer(s1 *systemservice.RegisterServer) []service.ServerRegister {

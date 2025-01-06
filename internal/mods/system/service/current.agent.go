@@ -22,6 +22,11 @@ type CurrentAPIAgentService struct {
 	client pb.CurrentAPIClient
 }
 
+func (s CurrentAPIAgentService) RefreshCurrentToken(context transhttp.Context, request *pb.RefreshCurrentTokenRequest) (*pb.RefreshCurrentTokenResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s CurrentAPIAgentService) GetCurrentUser(context transhttp.Context, request *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
 	response, err := s.client.GetCurrentUser(context, request)
 	if err != nil {

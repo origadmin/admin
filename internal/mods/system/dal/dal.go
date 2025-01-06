@@ -250,7 +250,7 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB,
 				item.ParentPath = parent.ParentPath + strconv.Itoa(int(pid)) + TreePathDelimiter
 				log.Infow("msg", "Setting parent path for item", "itemId", item.Id, "parentPath", item.ParentPath)
 			}
-			itemObj := dto.MenuObject(item)
+			itemObj := dto.ConvertMenuPB2Object(item)
 			itemObj.UpdateTime = time.Now()
 			itemObj.CreateTime = time.Now()
 			//columns := menu.OmitColumns()
@@ -299,7 +299,7 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB,
 			res.CreateTime = timestamppb.New(time.Now())
 			res.UpdateTime = timestamppb.New(time.Now())
 			//columns := resource.OmitColumns()
-			if _, err := obj.Resource(ctx).Create().SetResource(dto.ResourceObject(res)).SetID(res.Id).Save(ctx); err != nil {
+			if _, err := obj.Resource(ctx).Create().SetResource(dto.ConvertResourcePB2Object(res)).SetID(res.Id).Save(ctx); err != nil {
 				log.Errorw("msg", "Error creating resource", "resourceId", res.Id, "error", err)
 				return err
 			}

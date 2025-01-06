@@ -19,7 +19,6 @@ import (
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 )
 
 type (
@@ -31,37 +30,6 @@ type (
 	ListUsersRequest  = pb.ListUsersRequest
 	ListUsersResponse = pb.ListUsersResponse
 )
-
-func UserObject(userPB *UserPB) *User {
-	if userPB == nil {
-		return nil
-	}
-	return &User{
-		ID:   userPB.Id,
-		UUID: userPB.Uuid,
-		//CreateAuthor:  userPB.CreateAuthor,
-		//UpdateAuthor:  userPB.UpdateAuthor,
-		//CreateTime: userPB.CreateTime.AsTime(),
-		//UpdateTime: userPB.UpdateTime.AsTime(),
-		//Index:         userPB.Index,
-		//Department:    userPB.Department,
-		//AllowedIP:     userPB.AllowedIP,
-		Username: userPB.Username,
-		Name:     userPB.Name,
-		Gender:   user.Gender(userPB.Gender),
-		Avatar:   userPB.Avatar,
-		Password: userPB.Password,
-		Salt:     userPB.Salt,
-		Phone:    userPB.Phone,
-		Email:    userPB.Email,
-		Remark:   userPB.Remark,
-		//LastLoginTime: userPB.LastLoginTime.AsTime(),
-		//SanctionDate:  userPB.SanctionDate.AsTime(),
-		Status: int8(userPB.Status),
-		//ManagerID:     userPB.ManagerID,
-		//Manager:       userPB.Manager,
-	}
-}
 
 // UserRepo is a UserPB repository interface.
 type UserRepo interface {
@@ -130,14 +98,6 @@ func ConvertUsers(users []*User) []*UserPB {
 	var result []*UserPB
 	for _, user := range users {
 		result = append(result, ConvertUser2PB(user))
-	}
-	return result
-}
-
-func ConvertUserRoles(roles []*UserRole) []*UserRolePB {
-	var result []*UserRolePB
-	for _, role := range roles {
-		result = append(result, ConvertUserRole2PB(role))
 	}
 	return result
 }

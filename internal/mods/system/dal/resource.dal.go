@@ -40,7 +40,7 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 		option = options[0]
 	}
 	create := repo.db.Resource(ctx).Create()
-	create.SetResource(dto.ResourceObject(resource), option.Fields...)
+	create.SetResource(dto.ConvertResourcePB2Object(resource), option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (repo resourceRepo) Delete(ctx context.Context, id int64) error {
 
 func (repo resourceRepo) Update(ctx context.Context, resource *dto.ResourcePB, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
 	update := repo.db.Resource(ctx).UpdateOneID(resource.Id)
-	update.SetResource(dto.ResourceObject(resource))
+	update.SetResource(dto.ConvertResourcePB2Object(resource))
 	saved, err := update.Save(ctx)
 	if err != nil {
 		return nil, err

@@ -19,25 +19,6 @@ type (
 	ListMenusResponse = pb.ListMenusResponse
 )
 
-func MenuObject(menu *MenuPB) *Menu {
-	if menu == nil {
-		return nil
-	}
-	return &Menu{
-		ID:          menu.Id,
-		Keyword:     menu.Keyword,
-		Name:        menu.Name,
-		Description: menu.Description,
-		Type:        menu.Type,
-		Path:        menu.Path,
-		Status:      int8(menu.Status),
-		ParentID:    menu.ParentId,
-		ParentPath:  menu.ParentPath,
-		Sequence:    int(menu.Sequence),
-		Properties:  menu.Properties,
-	}
-}
-
 // MenuRepo is a Menu repository interface.
 type MenuRepo interface {
 	Get(context.Context, int64, ...MenuQueryOption) (*MenuPB, error)

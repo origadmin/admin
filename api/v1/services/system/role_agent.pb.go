@@ -22,11 +22,11 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type RoleAPIAgent interface {
-	CreateRole(http.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
-	DeleteRole(http.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
-	GetRole(http.Context, *GetRoleRequest) (*GetRoleResponse, error)
-	ListRoles(http.Context, *ListRolesRequest) (*ListRolesResponse, error)
-	UpdateRole(http.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
+	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
+	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
+	GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error)
+	ListRoles(context.Context, *ListRolesRequest) (*ListRolesResponse, error)
+	UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
 }
 
 func _RoleAPI_ListRoles0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
@@ -36,9 +36,10 @@ func _RoleAPI_ListRoles0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationRoleAPIListRoles)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListRoles(ctx, req.(*ListRolesRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -61,9 +62,10 @@ func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationRoleAPIGetRole)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetRole(ctx, req.(*GetRoleRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -79,16 +81,17 @@ func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in CreateRoleRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := ctx.Bind(&in.Role); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationRoleAPICreateRole)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateRole(ctx, req.(*CreateRoleRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -104,7 +107,7 @@ func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	return func(ctx http.Context) error {
 		var in UpdateRoleRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := ctx.Bind(&in.Role); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -114,9 +117,10 @@ func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationRoleAPIUpdateRole)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateRole(ctx, req.(*UpdateRoleRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
@@ -139,9 +143,10 @@ func _RoleAPI_DeleteRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 			return err
 		}
 		http.SetOperation(ctx, OperationRoleAPIDeleteRole)
-		h := ctx.Middleware(func(_ context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteRole(ctx, req.(*DeleteRoleRequest))
 		})
+		ctx = agent.NewHTTPContext(ctx)
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
