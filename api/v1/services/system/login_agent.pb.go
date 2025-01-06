@@ -42,8 +42,8 @@ func _LoginAPI_CaptchaID0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc 
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaID(ctx, req.(*CaptchaIDRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -65,8 +65,8 @@ func _LoginAPI_CaptchaImage0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFu
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaImage(ctx, req.(*CaptchaImageRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -91,8 +91,8 @@ func _LoginAPI_CaptchaResource0_HTTPAgent_Handler(srv LoginAPIAgent) http.Handle
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaResource(ctx, req.(*CaptchaResourceRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -117,8 +117,8 @@ func _LoginAPI_CaptchaResources0_HTTPAgent_Handler(srv LoginAPIAgent) http.Handl
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CaptchaResources(ctx, req.(*CaptchaResourcesRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -143,8 +143,8 @@ func _LoginAPI_Login0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -169,8 +169,8 @@ func _LoginAPI_Logout0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Logout(ctx, req.(*LogoutRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -195,8 +195,8 @@ func _LoginAPI_Register0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Register(ctx, req.(*RegisterRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -221,8 +221,8 @@ func _LoginAPI_TokenRefresh0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFu
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.TokenRefresh(ctx, req.(*TokenRefreshRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}

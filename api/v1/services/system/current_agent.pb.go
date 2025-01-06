@@ -52,8 +52,8 @@ func _CurrentAPI_CurrentLogout0_HTTPAgent_Handler(srv CurrentAPIAgent) http.Hand
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CurrentLogout(ctx, req.(*CurrentLogoutRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -78,8 +78,8 @@ func _CurrentAPI_UpdateCurrentUserPassword0_HTTPAgent_Handler(srv CurrentAPIAgen
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateCurrentUserPassword(ctx, req.(*UpdateCurrentUserPasswordRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -104,8 +104,8 @@ func _CurrentAPI_UpdateCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateCurrentUser(ctx, req.(*UpdateCurrentUserRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -127,8 +127,8 @@ func _CurrentAPI_GetCurrentUser0_HTTPAgent_Handler(srv CurrentAPIAgent) http.Han
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -150,8 +150,8 @@ func _CurrentAPI_ListCurrentMenus0_HTTPAgent_Handler(srv CurrentAPIAgent) http.H
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListCurrentMenus(ctx, req.(*ListCurrentMenusRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -173,8 +173,8 @@ func _CurrentAPI_ListCurrentRoles0_HTTPAgent_Handler(srv CurrentAPIAgent) http.H
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListCurrentRoles(ctx, req.(*ListCurrentRolesRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -199,8 +199,8 @@ func _CurrentAPI_UpdateCurrentSetting0_HTTPAgent_Handler(srv CurrentAPIAgent) ht
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateCurrentSetting(ctx, req.(*UpdateCurrentSettingRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -225,8 +225,8 @@ func _CurrentAPI_RefreshCurrentToken0_HTTPAgent_Handler(srv CurrentAPIAgent) htt
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.RefreshCurrentToken(ctx, req.(*RefreshCurrentTokenRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}

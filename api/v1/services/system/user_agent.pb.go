@@ -45,8 +45,8 @@ func _UserAPI_ListUsers0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListUsers(ctx, req.(*ListUsersRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -71,8 +71,8 @@ func _UserAPI_GetUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUser(ctx, req.(*GetUserRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -97,8 +97,8 @@ func _UserAPI_CreateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateUser(ctx, req.(*CreateUserRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -126,8 +126,8 @@ func _UserAPI_UpdateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -152,8 +152,8 @@ func _UserAPI_DeleteUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -181,8 +181,8 @@ func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.Handler
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -210,8 +210,8 @@ func _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerF
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUserRoles(ctx, req.(*UpdateUserRolesRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -236,8 +236,8 @@ func _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv UserAPIAgent) http.Handle
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}

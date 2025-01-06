@@ -39,8 +39,8 @@ func _MenuAPI_ListMenus0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListMenus(ctx, req.(*ListMenusRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -65,8 +65,8 @@ func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetMenu(ctx, req.(*GetMenuRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -91,8 +91,8 @@ func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateMenu(ctx, req.(*CreateMenuRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -120,8 +120,8 @@ func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateMenu(ctx, req.(*UpdateMenuRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -146,8 +146,8 @@ func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}

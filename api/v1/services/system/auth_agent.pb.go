@@ -42,8 +42,8 @@ func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.Handle
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -68,8 +68,8 @@ func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -91,8 +91,8 @@ func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFun
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -117,8 +117,8 @@ func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -143,8 +143,8 @@ func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}

@@ -39,8 +39,8 @@ func _ResourceAPI_ListResources0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Ha
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListResources(ctx, req.(*ListResourcesRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -65,8 +65,8 @@ func _ResourceAPI_GetResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Hand
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetResource(ctx, req.(*GetResourceRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -91,8 +91,8 @@ func _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateResource(ctx, req.(*CreateResourceRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -120,8 +120,8 @@ func _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateResource(ctx, req.(*UpdateResourceRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -146,8 +146,8 @@ func _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteResource(ctx, req.(*DeleteResourceRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}

@@ -39,8 +39,8 @@ func _RoleAPI_ListRoles0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListRoles(ctx, req.(*ListRolesRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -65,8 +65,8 @@ func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetRole(ctx, req.(*GetRoleRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -91,8 +91,8 @@ func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateRole(ctx, req.(*CreateRoleRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -120,8 +120,8 @@ func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateRole(ctx, req.(*UpdateRoleRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
@@ -146,8 +146,8 @@ func _RoleAPI_DeleteRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DeleteRole(ctx, req.(*DeleteRoleRequest))
 		})
-		ctx = agent.NewHTTPContext(ctx)
-		out, err := h(ctx, &in)
+		cctx := agent.NewHTTPContext(ctx, ctx)
+		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
