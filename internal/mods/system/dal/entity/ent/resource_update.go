@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
@@ -38,58 +37,30 @@ func (ru *ResourceUpdate) SetUpdateTime(t time.Time) *ResourceUpdate {
 	return ru
 }
 
-// SetMethod sets the "method" field.
-func (ru *ResourceUpdate) SetMethod(s string) *ResourceUpdate {
-	ru.mutation.SetMethod(s)
+// SetName sets the "name" field.
+func (ru *ResourceUpdate) SetName(s string) *ResourceUpdate {
+	ru.mutation.SetName(s)
 	return ru
 }
 
-// SetNillableMethod sets the "method" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableMethod(s *string) *ResourceUpdate {
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableName(s *string) *ResourceUpdate {
 	if s != nil {
-		ru.SetMethod(*s)
+		ru.SetName(*s)
 	}
 	return ru
 }
 
-// SetOperation sets the "operation" field.
-func (ru *ResourceUpdate) SetOperation(s string) *ResourceUpdate {
-	ru.mutation.SetOperation(s)
+// SetKeyword sets the "keyword" field.
+func (ru *ResourceUpdate) SetKeyword(s string) *ResourceUpdate {
+	ru.mutation.SetKeyword(s)
 	return ru
 }
 
-// SetNillableOperation sets the "operation" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableOperation(s *string) *ResourceUpdate {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableKeyword(s *string) *ResourceUpdate {
 	if s != nil {
-		ru.SetOperation(*s)
-	}
-	return ru
-}
-
-// SetPath sets the "path" field.
-func (ru *ResourceUpdate) SetPath(s string) *ResourceUpdate {
-	ru.mutation.SetPath(s)
-	return ru
-}
-
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillablePath(s *string) *ResourceUpdate {
-	if s != nil {
-		ru.SetPath(*s)
-	}
-	return ru
-}
-
-// SetURI sets the "uri" field.
-func (ru *ResourceUpdate) SetURI(s string) *ResourceUpdate {
-	ru.mutation.SetURI(s)
-	return ru
-}
-
-// SetNillableURI sets the "uri" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableURI(s *string) *ResourceUpdate {
-	if s != nil {
-		ru.SetURI(*s)
+		ru.SetKeyword(*s)
 	}
 	return ru
 }
@@ -108,6 +79,179 @@ func (ru *ResourceUpdate) SetNillableI18nKey(s *string) *ResourceUpdate {
 	return ru
 }
 
+// SetType sets the "type" field.
+func (ru *ResourceUpdate) SetType(u uint32) *ResourceUpdate {
+	ru.mutation.ResetType()
+	ru.mutation.SetType(u)
+	return ru
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableType(u *uint32) *ResourceUpdate {
+	if u != nil {
+		ru.SetType(*u)
+	}
+	return ru
+}
+
+// AddType adds u to the "type" field.
+func (ru *ResourceUpdate) AddType(u int32) *ResourceUpdate {
+	ru.mutation.AddType(u)
+	return ru
+}
+
+// SetStatus sets the "status" field.
+func (ru *ResourceUpdate) SetStatus(i int8) *ResourceUpdate {
+	ru.mutation.ResetStatus()
+	ru.mutation.SetStatus(i)
+	return ru
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableStatus(i *int8) *ResourceUpdate {
+	if i != nil {
+		ru.SetStatus(*i)
+	}
+	return ru
+}
+
+// AddStatus adds i to the "status" field.
+func (ru *ResourceUpdate) AddStatus(i int8) *ResourceUpdate {
+	ru.mutation.AddStatus(i)
+	return ru
+}
+
+// SetURI sets the "uri" field.
+func (ru *ResourceUpdate) SetURI(s string) *ResourceUpdate {
+	ru.mutation.SetURI(s)
+	return ru
+}
+
+// SetNillableURI sets the "uri" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableURI(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetURI(*s)
+	}
+	return ru
+}
+
+// SetOperation sets the "operation" field.
+func (ru *ResourceUpdate) SetOperation(s string) *ResourceUpdate {
+	ru.mutation.SetOperation(s)
+	return ru
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableOperation(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetOperation(*s)
+	}
+	return ru
+}
+
+// SetMethod sets the "method" field.
+func (ru *ResourceUpdate) SetMethod(s string) *ResourceUpdate {
+	ru.mutation.SetMethod(s)
+	return ru
+}
+
+// SetNillableMethod sets the "method" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableMethod(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetMethod(*s)
+	}
+	return ru
+}
+
+// SetComponent sets the "component" field.
+func (ru *ResourceUpdate) SetComponent(s string) *ResourceUpdate {
+	ru.mutation.SetComponent(s)
+	return ru
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableComponent(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetComponent(*s)
+	}
+	return ru
+}
+
+// SetIcon sets the "icon" field.
+func (ru *ResourceUpdate) SetIcon(s string) *ResourceUpdate {
+	ru.mutation.SetIcon(s)
+	return ru
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableIcon(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetIcon(*s)
+	}
+	return ru
+}
+
+// SetSequence sets the "sequence" field.
+func (ru *ResourceUpdate) SetSequence(i int) *ResourceUpdate {
+	ru.mutation.ResetSequence()
+	ru.mutation.SetSequence(i)
+	return ru
+}
+
+// SetNillableSequence sets the "sequence" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableSequence(i *int) *ResourceUpdate {
+	if i != nil {
+		ru.SetSequence(*i)
+	}
+	return ru
+}
+
+// AddSequence adds i to the "sequence" field.
+func (ru *ResourceUpdate) AddSequence(i int) *ResourceUpdate {
+	ru.mutation.AddSequence(i)
+	return ru
+}
+
+// SetVisible sets the "visible" field.
+func (ru *ResourceUpdate) SetVisible(b bool) *ResourceUpdate {
+	ru.mutation.SetVisible(b)
+	return ru
+}
+
+// SetNillableVisible sets the "visible" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableVisible(b *bool) *ResourceUpdate {
+	if b != nil {
+		ru.SetVisible(*b)
+	}
+	return ru
+}
+
+// SetTreePath sets the "tree_path" field.
+func (ru *ResourceUpdate) SetTreePath(s string) *ResourceUpdate {
+	ru.mutation.SetTreePath(s)
+	return ru
+}
+
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableTreePath(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetTreePath(*s)
+	}
+	return ru
+}
+
+// SetProperties sets the "properties" field.
+func (ru *ResourceUpdate) SetProperties(m map[string]string) *ResourceUpdate {
+	ru.mutation.SetProperties(m)
+	return ru
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (ru *ResourceUpdate) ClearProperties() *ResourceUpdate {
+	ru.mutation.ClearProperties()
+	return ru
+}
+
 // SetDescription sets the "description" field.
 func (ru *ResourceUpdate) SetDescription(s string) *ResourceUpdate {
 	ru.mutation.SetDescription(s)
@@ -122,57 +266,54 @@ func (ru *ResourceUpdate) SetNillableDescription(s *string) *ResourceUpdate {
 	return ru
 }
 
-// ClearDescription clears the value of the "description" field.
-func (ru *ResourceUpdate) ClearDescription() *ResourceUpdate {
-	ru.mutation.ClearDescription()
+// SetParentID sets the "parent_id" field.
+func (ru *ResourceUpdate) SetParentID(i int64) *ResourceUpdate {
+	ru.mutation.SetParentID(i)
 	return ru
 }
 
-// SetMetadata sets the "metadata" field.
-func (ru *ResourceUpdate) SetMetadata(m map[string]interface{}) *ResourceUpdate {
-	ru.mutation.SetMetadata(m)
-	return ru
-}
-
-// ClearMetadata clears the value of the "metadata" field.
-func (ru *ResourceUpdate) ClearMetadata() *ResourceUpdate {
-	ru.mutation.ClearMetadata()
-	return ru
-}
-
-// SetMenuID sets the "menu_id" field.
-func (ru *ResourceUpdate) SetMenuID(i int64) *ResourceUpdate {
-	ru.mutation.SetMenuID(i)
-	return ru
-}
-
-// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableMenuID(i *int64) *ResourceUpdate {
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableParentID(i *int64) *ResourceUpdate {
 	if i != nil {
-		ru.SetMenuID(*i)
+		ru.SetParentID(*i)
 	}
 	return ru
 }
 
-// ClearMenuID clears the value of the "menu_id" field.
-func (ru *ResourceUpdate) ClearMenuID() *ResourceUpdate {
-	ru.mutation.ClearMenuID()
+// ClearParentID clears the value of the "parent_id" field.
+func (ru *ResourceUpdate) ClearParentID() *ResourceUpdate {
+	ru.mutation.ClearParentID()
 	return ru
 }
 
-// SetMenu sets the "menu" edge to the Menu entity.
-func (ru *ResourceUpdate) SetMenu(m *Menu) *ResourceUpdate {
-	return ru.SetMenuID(m.ID)
+// AddChildIDs adds the "children" edge to the Resource entity by IDs.
+func (ru *ResourceUpdate) AddChildIDs(ids ...int64) *ResourceUpdate {
+	ru.mutation.AddChildIDs(ids...)
+	return ru
 }
 
-// AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
+// AddChildren adds the "children" edges to the Resource entity.
+func (ru *ResourceUpdate) AddChildren(r ...*Resource) *ResourceUpdate {
+	ids := make([]int64, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ru.AddChildIDs(ids...)
+}
+
+// SetParent sets the "parent" edge to the Resource entity.
+func (ru *ResourceUpdate) SetParent(r *Resource) *ResourceUpdate {
+	return ru.SetParentID(r.ID)
+}
+
+// AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
 func (ru *ResourceUpdate) AddPermissionIDs(ids ...int64) *ResourceUpdate {
 	ru.mutation.AddPermissionIDs(ids...)
 	return ru
 }
 
-// AddPermission adds the "permission" edges to the Permission entity.
-func (ru *ResourceUpdate) AddPermission(p ...*Permission) *ResourceUpdate {
+// AddPermissions adds the "permissions" edges to the Permission entity.
+func (ru *ResourceUpdate) AddPermissions(p ...*Permission) *ResourceUpdate {
 	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
@@ -200,26 +341,47 @@ func (ru *ResourceUpdate) Mutation() *ResourceMutation {
 	return ru.mutation
 }
 
-// ClearMenu clears the "menu" edge to the Menu entity.
-func (ru *ResourceUpdate) ClearMenu() *ResourceUpdate {
-	ru.mutation.ClearMenu()
+// ClearChildren clears all "children" edges to the Resource entity.
+func (ru *ResourceUpdate) ClearChildren() *ResourceUpdate {
+	ru.mutation.ClearChildren()
 	return ru
 }
 
-// ClearPermission clears all "permission" edges to the Permission entity.
-func (ru *ResourceUpdate) ClearPermission() *ResourceUpdate {
-	ru.mutation.ClearPermission()
+// RemoveChildIDs removes the "children" edge to Resource entities by IDs.
+func (ru *ResourceUpdate) RemoveChildIDs(ids ...int64) *ResourceUpdate {
+	ru.mutation.RemoveChildIDs(ids...)
 	return ru
 }
 
-// RemovePermissionIDs removes the "permission" edge to Permission entities by IDs.
+// RemoveChildren removes "children" edges to Resource entities.
+func (ru *ResourceUpdate) RemoveChildren(r ...*Resource) *ResourceUpdate {
+	ids := make([]int64, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ru.RemoveChildIDs(ids...)
+}
+
+// ClearParent clears the "parent" edge to the Resource entity.
+func (ru *ResourceUpdate) ClearParent() *ResourceUpdate {
+	ru.mutation.ClearParent()
+	return ru
+}
+
+// ClearPermissions clears all "permissions" edges to the Permission entity.
+func (ru *ResourceUpdate) ClearPermissions() *ResourceUpdate {
+	ru.mutation.ClearPermissions()
+	return ru
+}
+
+// RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
 func (ru *ResourceUpdate) RemovePermissionIDs(ids ...int64) *ResourceUpdate {
 	ru.mutation.RemovePermissionIDs(ids...)
 	return ru
 }
 
-// RemovePermission removes "permission" edges to Permission entities.
-func (ru *ResourceUpdate) RemovePermission(p ...*Permission) *ResourceUpdate {
+// RemovePermissions removes "permissions" edges to Permission entities.
+func (ru *ResourceUpdate) RemovePermissions(p ...*Permission) *ResourceUpdate {
 	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
@@ -286,24 +448,14 @@ func (ru *ResourceUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ru *ResourceUpdate) check() error {
-	if v, ok := ru.mutation.Method(); ok {
-		if err := resource.MethodValidator(v); err != nil {
-			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
+	if v, ok := ru.mutation.Name(); ok {
+		if err := resource.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Resource.name": %w`, err)}
 		}
 	}
-	if v, ok := ru.mutation.Operation(); ok {
-		if err := resource.OperationValidator(v); err != nil {
-			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
-		}
-	}
-	if v, ok := ru.mutation.Path(); ok {
-		if err := resource.PathValidator(v); err != nil {
-			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
-		}
-	}
-	if v, ok := ru.mutation.URI(); ok {
-		if err := resource.URIValidator(v); err != nil {
-			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+	if v, ok := ru.mutation.Keyword(); ok {
+		if err := resource.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
 	if v, ok := ru.mutation.I18nKey(); ok {
@@ -311,14 +463,44 @@ func (ru *ResourceUpdate) check() error {
 			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.URI(); ok {
+		if err := resource.URIValidator(v); err != nil {
+			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.Operation(); ok {
+		if err := resource.OperationValidator(v); err != nil {
+			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.Method(); ok {
+		if err := resource.MethodValidator(v); err != nil {
+			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.Component(); ok {
+		if err := resource.ComponentValidator(v); err != nil {
+			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Resource.component": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.Icon(); ok {
+		if err := resource.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Resource.icon": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.TreePath(); ok {
+		if err := resource.TreePathValidator(v); err != nil {
+			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Resource.tree_path": %w`, err)}
+		}
+	}
 	if v, ok := ru.mutation.Description(); ok {
 		if err := resource.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
 		}
 	}
-	if v, ok := ru.mutation.MenuID(); ok {
-		if err := resource.MenuIDValidator(v); err != nil {
-			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
+	if v, ok := ru.mutation.ParentID(); ok {
+		if err := resource.ParentIDValidator(v); err != nil {
+			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Resource.parent_id": %w`, err)}
 		}
 	}
 	return nil
@@ -345,55 +527,101 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := ru.mutation.Method(); ok {
-		_spec.SetField(resource.FieldMethod, field.TypeString, value)
+	if value, ok := ru.mutation.Name(); ok {
+		_spec.SetField(resource.FieldName, field.TypeString, value)
 	}
-	if value, ok := ru.mutation.Operation(); ok {
-		_spec.SetField(resource.FieldOperation, field.TypeString, value)
-	}
-	if value, ok := ru.mutation.Path(); ok {
-		_spec.SetField(resource.FieldPath, field.TypeString, value)
-	}
-	if value, ok := ru.mutation.URI(); ok {
-		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	if value, ok := ru.mutation.Keyword(); ok {
+		_spec.SetField(resource.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.I18nKey(); ok {
 		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
 	}
+	if value, ok := ru.mutation.GetType(); ok {
+		_spec.SetField(resource.FieldType, field.TypeUint32, value)
+	}
+	if value, ok := ru.mutation.AddedType(); ok {
+		_spec.AddField(resource.FieldType, field.TypeUint32, value)
+	}
+	if value, ok := ru.mutation.Status(); ok {
+		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := ru.mutation.AddedStatus(); ok {
+		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := ru.mutation.URI(); ok {
+		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Method(); ok {
+		_spec.SetField(resource.FieldMethod, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Component(); ok {
+		_spec.SetField(resource.FieldComponent, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Icon(); ok {
+		_spec.SetField(resource.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Sequence(); ok {
+		_spec.SetField(resource.FieldSequence, field.TypeInt, value)
+	}
+	if value, ok := ru.mutation.AddedSequence(); ok {
+		_spec.AddField(resource.FieldSequence, field.TypeInt, value)
+	}
+	if value, ok := ru.mutation.Visible(); ok {
+		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
+	}
+	if value, ok := ru.mutation.TreePath(); ok {
+		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Properties(); ok {
+		_spec.SetField(resource.FieldProperties, field.TypeJSON, value)
+	}
+	if ru.mutation.PropertiesCleared() {
+		_spec.ClearField(resource.FieldProperties, field.TypeJSON)
+	}
 	if value, ok := ru.mutation.Description(); ok {
 		_spec.SetField(resource.FieldDescription, field.TypeString, value)
 	}
-	if ru.mutation.DescriptionCleared() {
-		_spec.ClearField(resource.FieldDescription, field.TypeString)
-	}
-	if value, ok := ru.mutation.Metadata(); ok {
-		_spec.SetField(resource.FieldMetadata, field.TypeJSON, value)
-	}
-	if ru.mutation.MetadataCleared() {
-		_spec.ClearField(resource.FieldMetadata, field.TypeJSON)
-	}
-	if ru.mutation.MenuCleared() {
+	if ru.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.MenuTable,
-			Columns: []string{resource.MenuColumn},
-			Bidi:    false,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.MenuIDs(); len(nodes) > 0 {
+	if nodes := ru.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !ru.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.MenuTable,
-			Columns: []string{resource.MenuColumn},
-			Bidi:    false,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -401,12 +629,41 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ru.mutation.PermissionCleared() {
+	if ru.mutation.ParentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   resource.ParentTable,
+			Columns: []string{resource.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   resource.ParentTable,
+			Columns: []string{resource.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ru.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   resource.PermissionTable,
-			Columns: resource.PermissionPrimaryKey,
+			Table:   resource.PermissionsTable,
+			Columns: resource.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
@@ -421,12 +678,12 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.RemovedPermissionIDs(); len(nodes) > 0 && !ru.mutation.PermissionCleared() {
+	if nodes := ru.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !ru.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   resource.PermissionTable,
-			Columns: resource.PermissionPrimaryKey,
+			Table:   resource.PermissionsTable,
+			Columns: resource.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
@@ -444,12 +701,12 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := ru.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   resource.PermissionTable,
-			Columns: resource.PermissionPrimaryKey,
+			Table:   resource.PermissionsTable,
+			Columns: resource.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
@@ -540,58 +797,30 @@ func (ruo *ResourceUpdateOne) SetUpdateTime(t time.Time) *ResourceUpdateOne {
 	return ruo
 }
 
-// SetMethod sets the "method" field.
-func (ruo *ResourceUpdateOne) SetMethod(s string) *ResourceUpdateOne {
-	ruo.mutation.SetMethod(s)
+// SetName sets the "name" field.
+func (ruo *ResourceUpdateOne) SetName(s string) *ResourceUpdateOne {
+	ruo.mutation.SetName(s)
 	return ruo
 }
 
-// SetNillableMethod sets the "method" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableMethod(s *string) *ResourceUpdateOne {
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableName(s *string) *ResourceUpdateOne {
 	if s != nil {
-		ruo.SetMethod(*s)
+		ruo.SetName(*s)
 	}
 	return ruo
 }
 
-// SetOperation sets the "operation" field.
-func (ruo *ResourceUpdateOne) SetOperation(s string) *ResourceUpdateOne {
-	ruo.mutation.SetOperation(s)
+// SetKeyword sets the "keyword" field.
+func (ruo *ResourceUpdateOne) SetKeyword(s string) *ResourceUpdateOne {
+	ruo.mutation.SetKeyword(s)
 	return ruo
 }
 
-// SetNillableOperation sets the "operation" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableOperation(s *string) *ResourceUpdateOne {
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableKeyword(s *string) *ResourceUpdateOne {
 	if s != nil {
-		ruo.SetOperation(*s)
-	}
-	return ruo
-}
-
-// SetPath sets the "path" field.
-func (ruo *ResourceUpdateOne) SetPath(s string) *ResourceUpdateOne {
-	ruo.mutation.SetPath(s)
-	return ruo
-}
-
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillablePath(s *string) *ResourceUpdateOne {
-	if s != nil {
-		ruo.SetPath(*s)
-	}
-	return ruo
-}
-
-// SetURI sets the "uri" field.
-func (ruo *ResourceUpdateOne) SetURI(s string) *ResourceUpdateOne {
-	ruo.mutation.SetURI(s)
-	return ruo
-}
-
-// SetNillableURI sets the "uri" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableURI(s *string) *ResourceUpdateOne {
-	if s != nil {
-		ruo.SetURI(*s)
+		ruo.SetKeyword(*s)
 	}
 	return ruo
 }
@@ -610,6 +839,179 @@ func (ruo *ResourceUpdateOne) SetNillableI18nKey(s *string) *ResourceUpdateOne {
 	return ruo
 }
 
+// SetType sets the "type" field.
+func (ruo *ResourceUpdateOne) SetType(u uint32) *ResourceUpdateOne {
+	ruo.mutation.ResetType()
+	ruo.mutation.SetType(u)
+	return ruo
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableType(u *uint32) *ResourceUpdateOne {
+	if u != nil {
+		ruo.SetType(*u)
+	}
+	return ruo
+}
+
+// AddType adds u to the "type" field.
+func (ruo *ResourceUpdateOne) AddType(u int32) *ResourceUpdateOne {
+	ruo.mutation.AddType(u)
+	return ruo
+}
+
+// SetStatus sets the "status" field.
+func (ruo *ResourceUpdateOne) SetStatus(i int8) *ResourceUpdateOne {
+	ruo.mutation.ResetStatus()
+	ruo.mutation.SetStatus(i)
+	return ruo
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableStatus(i *int8) *ResourceUpdateOne {
+	if i != nil {
+		ruo.SetStatus(*i)
+	}
+	return ruo
+}
+
+// AddStatus adds i to the "status" field.
+func (ruo *ResourceUpdateOne) AddStatus(i int8) *ResourceUpdateOne {
+	ruo.mutation.AddStatus(i)
+	return ruo
+}
+
+// SetURI sets the "uri" field.
+func (ruo *ResourceUpdateOne) SetURI(s string) *ResourceUpdateOne {
+	ruo.mutation.SetURI(s)
+	return ruo
+}
+
+// SetNillableURI sets the "uri" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableURI(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetURI(*s)
+	}
+	return ruo
+}
+
+// SetOperation sets the "operation" field.
+func (ruo *ResourceUpdateOne) SetOperation(s string) *ResourceUpdateOne {
+	ruo.mutation.SetOperation(s)
+	return ruo
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableOperation(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetOperation(*s)
+	}
+	return ruo
+}
+
+// SetMethod sets the "method" field.
+func (ruo *ResourceUpdateOne) SetMethod(s string) *ResourceUpdateOne {
+	ruo.mutation.SetMethod(s)
+	return ruo
+}
+
+// SetNillableMethod sets the "method" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableMethod(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetMethod(*s)
+	}
+	return ruo
+}
+
+// SetComponent sets the "component" field.
+func (ruo *ResourceUpdateOne) SetComponent(s string) *ResourceUpdateOne {
+	ruo.mutation.SetComponent(s)
+	return ruo
+}
+
+// SetNillableComponent sets the "component" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableComponent(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetComponent(*s)
+	}
+	return ruo
+}
+
+// SetIcon sets the "icon" field.
+func (ruo *ResourceUpdateOne) SetIcon(s string) *ResourceUpdateOne {
+	ruo.mutation.SetIcon(s)
+	return ruo
+}
+
+// SetNillableIcon sets the "icon" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableIcon(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetIcon(*s)
+	}
+	return ruo
+}
+
+// SetSequence sets the "sequence" field.
+func (ruo *ResourceUpdateOne) SetSequence(i int) *ResourceUpdateOne {
+	ruo.mutation.ResetSequence()
+	ruo.mutation.SetSequence(i)
+	return ruo
+}
+
+// SetNillableSequence sets the "sequence" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableSequence(i *int) *ResourceUpdateOne {
+	if i != nil {
+		ruo.SetSequence(*i)
+	}
+	return ruo
+}
+
+// AddSequence adds i to the "sequence" field.
+func (ruo *ResourceUpdateOne) AddSequence(i int) *ResourceUpdateOne {
+	ruo.mutation.AddSequence(i)
+	return ruo
+}
+
+// SetVisible sets the "visible" field.
+func (ruo *ResourceUpdateOne) SetVisible(b bool) *ResourceUpdateOne {
+	ruo.mutation.SetVisible(b)
+	return ruo
+}
+
+// SetNillableVisible sets the "visible" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableVisible(b *bool) *ResourceUpdateOne {
+	if b != nil {
+		ruo.SetVisible(*b)
+	}
+	return ruo
+}
+
+// SetTreePath sets the "tree_path" field.
+func (ruo *ResourceUpdateOne) SetTreePath(s string) *ResourceUpdateOne {
+	ruo.mutation.SetTreePath(s)
+	return ruo
+}
+
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableTreePath(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetTreePath(*s)
+	}
+	return ruo
+}
+
+// SetProperties sets the "properties" field.
+func (ruo *ResourceUpdateOne) SetProperties(m map[string]string) *ResourceUpdateOne {
+	ruo.mutation.SetProperties(m)
+	return ruo
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (ruo *ResourceUpdateOne) ClearProperties() *ResourceUpdateOne {
+	ruo.mutation.ClearProperties()
+	return ruo
+}
+
 // SetDescription sets the "description" field.
 func (ruo *ResourceUpdateOne) SetDescription(s string) *ResourceUpdateOne {
 	ruo.mutation.SetDescription(s)
@@ -624,57 +1026,54 @@ func (ruo *ResourceUpdateOne) SetNillableDescription(s *string) *ResourceUpdateO
 	return ruo
 }
 
-// ClearDescription clears the value of the "description" field.
-func (ruo *ResourceUpdateOne) ClearDescription() *ResourceUpdateOne {
-	ruo.mutation.ClearDescription()
+// SetParentID sets the "parent_id" field.
+func (ruo *ResourceUpdateOne) SetParentID(i int64) *ResourceUpdateOne {
+	ruo.mutation.SetParentID(i)
 	return ruo
 }
 
-// SetMetadata sets the "metadata" field.
-func (ruo *ResourceUpdateOne) SetMetadata(m map[string]interface{}) *ResourceUpdateOne {
-	ruo.mutation.SetMetadata(m)
-	return ruo
-}
-
-// ClearMetadata clears the value of the "metadata" field.
-func (ruo *ResourceUpdateOne) ClearMetadata() *ResourceUpdateOne {
-	ruo.mutation.ClearMetadata()
-	return ruo
-}
-
-// SetMenuID sets the "menu_id" field.
-func (ruo *ResourceUpdateOne) SetMenuID(i int64) *ResourceUpdateOne {
-	ruo.mutation.SetMenuID(i)
-	return ruo
-}
-
-// SetNillableMenuID sets the "menu_id" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableMenuID(i *int64) *ResourceUpdateOne {
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableParentID(i *int64) *ResourceUpdateOne {
 	if i != nil {
-		ruo.SetMenuID(*i)
+		ruo.SetParentID(*i)
 	}
 	return ruo
 }
 
-// ClearMenuID clears the value of the "menu_id" field.
-func (ruo *ResourceUpdateOne) ClearMenuID() *ResourceUpdateOne {
-	ruo.mutation.ClearMenuID()
+// ClearParentID clears the value of the "parent_id" field.
+func (ruo *ResourceUpdateOne) ClearParentID() *ResourceUpdateOne {
+	ruo.mutation.ClearParentID()
 	return ruo
 }
 
-// SetMenu sets the "menu" edge to the Menu entity.
-func (ruo *ResourceUpdateOne) SetMenu(m *Menu) *ResourceUpdateOne {
-	return ruo.SetMenuID(m.ID)
+// AddChildIDs adds the "children" edge to the Resource entity by IDs.
+func (ruo *ResourceUpdateOne) AddChildIDs(ids ...int64) *ResourceUpdateOne {
+	ruo.mutation.AddChildIDs(ids...)
+	return ruo
 }
 
-// AddPermissionIDs adds the "permission" edge to the Permission entity by IDs.
+// AddChildren adds the "children" edges to the Resource entity.
+func (ruo *ResourceUpdateOne) AddChildren(r ...*Resource) *ResourceUpdateOne {
+	ids := make([]int64, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ruo.AddChildIDs(ids...)
+}
+
+// SetParent sets the "parent" edge to the Resource entity.
+func (ruo *ResourceUpdateOne) SetParent(r *Resource) *ResourceUpdateOne {
+	return ruo.SetParentID(r.ID)
+}
+
+// AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
 func (ruo *ResourceUpdateOne) AddPermissionIDs(ids ...int64) *ResourceUpdateOne {
 	ruo.mutation.AddPermissionIDs(ids...)
 	return ruo
 }
 
-// AddPermission adds the "permission" edges to the Permission entity.
-func (ruo *ResourceUpdateOne) AddPermission(p ...*Permission) *ResourceUpdateOne {
+// AddPermissions adds the "permissions" edges to the Permission entity.
+func (ruo *ResourceUpdateOne) AddPermissions(p ...*Permission) *ResourceUpdateOne {
 	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
@@ -702,26 +1101,47 @@ func (ruo *ResourceUpdateOne) Mutation() *ResourceMutation {
 	return ruo.mutation
 }
 
-// ClearMenu clears the "menu" edge to the Menu entity.
-func (ruo *ResourceUpdateOne) ClearMenu() *ResourceUpdateOne {
-	ruo.mutation.ClearMenu()
+// ClearChildren clears all "children" edges to the Resource entity.
+func (ruo *ResourceUpdateOne) ClearChildren() *ResourceUpdateOne {
+	ruo.mutation.ClearChildren()
 	return ruo
 }
 
-// ClearPermission clears all "permission" edges to the Permission entity.
-func (ruo *ResourceUpdateOne) ClearPermission() *ResourceUpdateOne {
-	ruo.mutation.ClearPermission()
+// RemoveChildIDs removes the "children" edge to Resource entities by IDs.
+func (ruo *ResourceUpdateOne) RemoveChildIDs(ids ...int64) *ResourceUpdateOne {
+	ruo.mutation.RemoveChildIDs(ids...)
 	return ruo
 }
 
-// RemovePermissionIDs removes the "permission" edge to Permission entities by IDs.
+// RemoveChildren removes "children" edges to Resource entities.
+func (ruo *ResourceUpdateOne) RemoveChildren(r ...*Resource) *ResourceUpdateOne {
+	ids := make([]int64, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ruo.RemoveChildIDs(ids...)
+}
+
+// ClearParent clears the "parent" edge to the Resource entity.
+func (ruo *ResourceUpdateOne) ClearParent() *ResourceUpdateOne {
+	ruo.mutation.ClearParent()
+	return ruo
+}
+
+// ClearPermissions clears all "permissions" edges to the Permission entity.
+func (ruo *ResourceUpdateOne) ClearPermissions() *ResourceUpdateOne {
+	ruo.mutation.ClearPermissions()
+	return ruo
+}
+
+// RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
 func (ruo *ResourceUpdateOne) RemovePermissionIDs(ids ...int64) *ResourceUpdateOne {
 	ruo.mutation.RemovePermissionIDs(ids...)
 	return ruo
 }
 
-// RemovePermission removes "permission" edges to Permission entities.
-func (ruo *ResourceUpdateOne) RemovePermission(p ...*Permission) *ResourceUpdateOne {
+// RemovePermissions removes "permissions" edges to Permission entities.
+func (ruo *ResourceUpdateOne) RemovePermissions(p ...*Permission) *ResourceUpdateOne {
 	ids := make([]int64, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
@@ -801,24 +1221,14 @@ func (ruo *ResourceUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (ruo *ResourceUpdateOne) check() error {
-	if v, ok := ruo.mutation.Method(); ok {
-		if err := resource.MethodValidator(v); err != nil {
-			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
+	if v, ok := ruo.mutation.Name(); ok {
+		if err := resource.NameValidator(v); err != nil {
+			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Resource.name": %w`, err)}
 		}
 	}
-	if v, ok := ruo.mutation.Operation(); ok {
-		if err := resource.OperationValidator(v); err != nil {
-			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
-		}
-	}
-	if v, ok := ruo.mutation.Path(); ok {
-		if err := resource.PathValidator(v); err != nil {
-			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
-		}
-	}
-	if v, ok := ruo.mutation.URI(); ok {
-		if err := resource.URIValidator(v); err != nil {
-			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+	if v, ok := ruo.mutation.Keyword(); ok {
+		if err := resource.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
 	if v, ok := ruo.mutation.I18nKey(); ok {
@@ -826,14 +1236,44 @@ func (ruo *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.URI(); ok {
+		if err := resource.URIValidator(v); err != nil {
+			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.Operation(); ok {
+		if err := resource.OperationValidator(v); err != nil {
+			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.Method(); ok {
+		if err := resource.MethodValidator(v); err != nil {
+			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.Component(); ok {
+		if err := resource.ComponentValidator(v); err != nil {
+			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Resource.component": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.Icon(); ok {
+		if err := resource.IconValidator(v); err != nil {
+			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Resource.icon": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.TreePath(); ok {
+		if err := resource.TreePathValidator(v); err != nil {
+			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Resource.tree_path": %w`, err)}
+		}
+	}
 	if v, ok := ruo.mutation.Description(); ok {
 		if err := resource.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
 		}
 	}
-	if v, ok := ruo.mutation.MenuID(); ok {
-		if err := resource.MenuIDValidator(v); err != nil {
-			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
+	if v, ok := ruo.mutation.ParentID(); ok {
+		if err := resource.ParentIDValidator(v); err != nil {
+			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Resource.parent_id": %w`, err)}
 		}
 	}
 	return nil
@@ -877,55 +1317,101 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	if value, ok := ruo.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := ruo.mutation.Method(); ok {
-		_spec.SetField(resource.FieldMethod, field.TypeString, value)
+	if value, ok := ruo.mutation.Name(); ok {
+		_spec.SetField(resource.FieldName, field.TypeString, value)
 	}
-	if value, ok := ruo.mutation.Operation(); ok {
-		_spec.SetField(resource.FieldOperation, field.TypeString, value)
-	}
-	if value, ok := ruo.mutation.Path(); ok {
-		_spec.SetField(resource.FieldPath, field.TypeString, value)
-	}
-	if value, ok := ruo.mutation.URI(); ok {
-		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	if value, ok := ruo.mutation.Keyword(); ok {
+		_spec.SetField(resource.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.I18nKey(); ok {
 		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
 	}
+	if value, ok := ruo.mutation.GetType(); ok {
+		_spec.SetField(resource.FieldType, field.TypeUint32, value)
+	}
+	if value, ok := ruo.mutation.AddedType(); ok {
+		_spec.AddField(resource.FieldType, field.TypeUint32, value)
+	}
+	if value, ok := ruo.mutation.Status(); ok {
+		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := ruo.mutation.AddedStatus(); ok {
+		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := ruo.mutation.URI(); ok {
+		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Method(); ok {
+		_spec.SetField(resource.FieldMethod, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Component(); ok {
+		_spec.SetField(resource.FieldComponent, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Icon(); ok {
+		_spec.SetField(resource.FieldIcon, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Sequence(); ok {
+		_spec.SetField(resource.FieldSequence, field.TypeInt, value)
+	}
+	if value, ok := ruo.mutation.AddedSequence(); ok {
+		_spec.AddField(resource.FieldSequence, field.TypeInt, value)
+	}
+	if value, ok := ruo.mutation.Visible(); ok {
+		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
+	}
+	if value, ok := ruo.mutation.TreePath(); ok {
+		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Properties(); ok {
+		_spec.SetField(resource.FieldProperties, field.TypeJSON, value)
+	}
+	if ruo.mutation.PropertiesCleared() {
+		_spec.ClearField(resource.FieldProperties, field.TypeJSON)
+	}
 	if value, ok := ruo.mutation.Description(); ok {
 		_spec.SetField(resource.FieldDescription, field.TypeString, value)
 	}
-	if ruo.mutation.DescriptionCleared() {
-		_spec.ClearField(resource.FieldDescription, field.TypeString)
-	}
-	if value, ok := ruo.mutation.Metadata(); ok {
-		_spec.SetField(resource.FieldMetadata, field.TypeJSON, value)
-	}
-	if ruo.mutation.MetadataCleared() {
-		_spec.ClearField(resource.FieldMetadata, field.TypeJSON)
-	}
-	if ruo.mutation.MenuCleared() {
+	if ruo.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.MenuTable,
-			Columns: []string{resource.MenuColumn},
-			Bidi:    false,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.MenuIDs(); len(nodes) > 0 {
+	if nodes := ruo.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !ruo.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.MenuTable,
-			Columns: []string{resource.MenuColumn},
-			Bidi:    false,
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    true,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    true,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -933,12 +1419,41 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ruo.mutation.PermissionCleared() {
+	if ruo.mutation.ParentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   resource.ParentTable,
+			Columns: []string{resource.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   resource.ParentTable,
+			Columns: []string{resource.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   resource.PermissionTable,
-			Columns: resource.PermissionPrimaryKey,
+			Table:   resource.PermissionsTable,
+			Columns: resource.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
@@ -953,12 +1468,12 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.RemovedPermissionIDs(); len(nodes) > 0 && !ruo.mutation.PermissionCleared() {
+	if nodes := ruo.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !ruo.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   resource.PermissionTable,
-			Columns: resource.PermissionPrimaryKey,
+			Table:   resource.PermissionsTable,
+			Columns: resource.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
@@ -976,12 +1491,12 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := ruo.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   resource.PermissionTable,
-			Columns: resource.PermissionPrimaryKey,
+			Table:   resource.PermissionsTable,
+			Columns: resource.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),

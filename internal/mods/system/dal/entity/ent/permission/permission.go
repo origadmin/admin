@@ -24,24 +24,16 @@ const (
 	FieldKeyword = "keyword"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
-	// FieldI18nKey holds the string denoting the i18n_key field in the database.
-	FieldI18nKey = "i18n_key"
-	// FieldType holds the string denoting the type field in the database.
-	FieldType = "type"
-	// FieldScope holds the string denoting the scope field in the database.
-	FieldScope = "scope"
-	// FieldScopeDepts holds the string denoting the scope_depts field in the database.
-	FieldScopeDepts = "scope_depts"
+	// FieldDataScope holds the string denoting the data_scope field in the database.
+	FieldDataScope = "data_scope"
+	// FieldDataRules holds the string denoting the data_rules field in the database.
+	FieldDataRules = "data_rules"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
-	// EdgeMenus holds the string denoting the menus edge name in mutations.
-	EdgeMenus = "menus"
 	// EdgeResources holds the string denoting the resources edge name in mutations.
 	EdgeResources = "resources"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
 	EdgeRolePermissions = "role_permissions"
-	// EdgePermissionMenus holds the string denoting the permission_menus edge name in mutations.
-	EdgePermissionMenus = "permission_menus"
 	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
 	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the permission in the database.
@@ -51,11 +43,6 @@ const (
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "sys_roles"
-	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
-	MenusTable = "sys_permission_menus"
-	// MenusInverseTable is the table name for the Menu entity.
-	// It exists in this package in order to avoid circular dependency with the "menu" package.
-	MenusInverseTable = "sys_menus"
 	// ResourcesTable is the table that holds the resources relation/edge. The primary key declared below.
 	ResourcesTable = "sys_permission_resources"
 	// ResourcesInverseTable is the table name for the Resource entity.
@@ -68,13 +55,6 @@ const (
 	RolePermissionsInverseTable = "sys_role_permissions"
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "permission_id"
-	// PermissionMenusTable is the table that holds the permission_menus relation/edge.
-	PermissionMenusTable = "sys_permission_menus"
-	// PermissionMenusInverseTable is the table name for the PermissionMenu entity.
-	// It exists in this package in order to avoid circular dependency with the "permissionmenu" package.
-	PermissionMenusInverseTable = "sys_permission_menus"
-	// PermissionMenusColumn is the table column denoting the permission_menus relation/edge.
-	PermissionMenusColumn = "permission_id"
 	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
 	PermissionResourcesTable = "sys_permission_resources"
 	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.
@@ -92,19 +72,14 @@ var Columns = []string{
 	FieldName,
 	FieldKeyword,
 	FieldDescription,
-	FieldI18nKey,
-	FieldType,
-	FieldScope,
-	FieldScopeDepts,
+	FieldDataScope,
+	FieldDataRules,
 }
 
 var (
 	// RolesPrimaryKey and RolesColumn2 are the table columns denoting the
 	// primary key for the roles relation (M2M).
 	RolesPrimaryKey = []string{"role_id", "permission_id"}
-	// MenusPrimaryKey and MenusColumn2 are the table columns denoting the
-	// primary key for the menus relation (M2M).
-	MenusPrimaryKey = []string{"permission_id", "menu_id"}
 	// ResourcesPrimaryKey and ResourcesColumn2 are the table columns denoting the
 	// primary key for the resources relation (M2M).
 	ResourcesPrimaryKey = []string{"permission_id", "resource_id"}
@@ -127,20 +102,18 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
+	// DefaultName holds the default value on creation for the "name" field.
+	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
 	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	KeywordValidator func(string) error
+	// DefaultDescription holds the default value on creation for the "description" field.
+	DefaultDescription string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
-	// DefaultI18nKey holds the default value on creation for the "i18n_key" field.
-	DefaultI18nKey string
-	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
-	I18nKeyValidator func(string) error
-	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType int8
-	// DefaultScope holds the default value on creation for the "scope" field.
-	DefaultScope string
+	// DefaultDataScope holds the default value on creation for the "data_scope" field.
+	DefaultDataScope string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -180,19 +153,9 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
-// ByI18nKey orders the results by the i18n_key field.
-func ByI18nKey(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldI18nKey, opts...).ToFunc()
-}
-
-// ByType orders the results by the type field.
-func ByType(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldType, opts...).ToFunc()
-}
-
-// ByScope orders the results by the scope field.
-func ByScope(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldScope, opts...).ToFunc()
+// ByDataScope orders the results by the data_scope field.
+func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.
@@ -206,20 +169,6 @@ func ByRolesCount(opts ...sql.OrderTermOption) OrderOption {
 func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
-// ByMenusCount orders the results by menus count.
-func ByMenusCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newMenusStep(), opts...)
-	}
-}
-
-// ByMenus orders the results by menus terms.
-func ByMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
@@ -251,20 +200,6 @@ func ByRolePermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
-// ByPermissionMenusCount orders the results by permission_menus count.
-func ByPermissionMenusCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newPermissionMenusStep(), opts...)
-	}
-}
-
-// ByPermissionMenus orders the results by permission_menus terms.
-func ByPermissionMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newPermissionMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
 // ByPermissionResourcesCount orders the results by permission_resources count.
 func ByPermissionResourcesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -285,13 +220,6 @@ func newRolesStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, true, RolesTable, RolesPrimaryKey...),
 	)
 }
-func newMenusStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MenusInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
-	)
-}
 func newResourcesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -304,13 +232,6 @@ func newRolePermissionsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(RolePermissionsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, RolePermissionsTable, RolePermissionsColumn),
-	)
-}
-func newPermissionMenusStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(PermissionMenusInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, true, PermissionMenusTable, PermissionMenusColumn),
 	)
 }
 func newPermissionResourcesStep() *sqlgraph.Step {

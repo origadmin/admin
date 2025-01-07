@@ -13,7 +13,7 @@ option java_outer_classname = "APIV1ServicesSystemCurrentProto";
 option java_package = "com.origadmin.api.v1.services.system";
 
 // The current service definition.
-service CurrentAPI {
+service CurrentService {
   rpc CurrentLogout (CurrentLogoutRequest) returns (CurrentLogoutResponse) {
     option (google.api.http) = {
       post: "/sys/current/logout"
@@ -39,11 +39,11 @@ service CurrentAPI {
   rpc GetCurrentUser (GetCurrentUserRequest) returns (GetCurrentUserResponse) {
     option (google.api.http) = {get: "/sys/current/user"};
   }
-  // ListCurrentMenus List the current user's menu
-  rpc ListCurrentMenus (ListCurrentMenusRequest) returns (ListCurrentMenusResponse) {
+  // ListCurrentResources List the current user's menu
+  rpc ListCurrentResources (ListCurrentResourcesRequest) returns (ListCurrentResourcesResponse) {
     option (google.api.http) = {get: "/sys/current/menus"};
   }
-  // ListCurrentMenus List the current user's menu
+  // ListCurrentResources List the current user's menu
   rpc ListCurrentRoles (ListCurrentRolesRequest) returns (ListCurrentRolesResponse) {
     option (google.api.http) = {get: "/sys/current/roles"};
   }
@@ -75,11 +75,11 @@ message UpdateCurrentRoleRequest {
 
 message UpdateCurrentRoleResponse {}
 
-message ListCurrentMenusRequest {
+message ListCurrentResourcesRequest {
   google.protobuf.Any data = 1 [json_name = "data"];
 }
 
-message ListCurrentMenusResponse {
+message ListCurrentResourcesResponse {
   repeated system.Menu menus = 1;
 }
 

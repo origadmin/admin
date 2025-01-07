@@ -12,7 +12,7 @@ option java_outer_classname = "APIServiceSystemAuthProto";
 option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemAuth";
 
-service AuthAPI {
+service AuthService {
   rpc ListAuthResources (ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
     option (google.api.http) = {get: "/sys/auth/resources"};
   }

@@ -30,7 +30,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	if err != nil {
 		return nil, nil, err
 	}
-	registerAgent, err := server.NewSystemServerAgent(v, arg)
+	registerAgent, err := server.NewSystemServiceAgentClient(v, arg)
 	if err != nil {
 		return nil, nil, err
 	}

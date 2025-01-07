@@ -13,8 +13,8 @@ option java_outer_classname = "APIV1ServicesSystemProto";
 option java_package = "com.origadmin.api.v1.services.system";
 
 // The login service definition.
-service LoginAPI {
-  rpc CaptchaID (CaptchaIDRequest) returns (CaptchaIDResponse) {
+service LoginService {
+  rpc CaptchaId (CaptchaIdRequest) returns (CaptchaIdResponse) {
     option (google.api.http) = {get: "/captcha/id"};
   }
   rpc CaptchaImage (CaptchaImageRequest) returns (CaptchaImageResponse) {
@@ -115,12 +115,12 @@ message CurrentUserResponse {
   google.protobuf.Any data = 2 [json_name = "data"];
 }
 
-message CaptchaIDRequest {
+message CaptchaIdRequest {
   // The timestamp of the request prevent caching of the same result
   string ts = 1 [json_name = "ts"];
 }
 
-message CaptchaIDResponse {
+message CaptchaIdResponse {
   string data = 1;
 }
 
@@ -140,15 +140,6 @@ message CaptchaData {
 message CaptchaImageResponse {
   map<string, string> headers = 1;
   bytes image = 2 [json_name = "image"];
-}
-
-message CurrentMenusRequest {
-  int64 user_id = 1 [json_name = "user_id"];
-  google.protobuf.Any data = 2 [json_name = "data"];
-}
-message CurrentMenusResponse {
-  bool success = 1;
-  repeated google.protobuf.Any data = 2 [json_name = "data"];
 }
 
 message CaptchaResourcesRequest {

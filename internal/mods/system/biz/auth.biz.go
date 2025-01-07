@@ -15,30 +15,30 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-// AuthsBiz is a Auth use case.
-type AuthsBiz struct {
+// AuthServiceClientBiz is a Auth use case.
+type AuthServiceClientBiz struct {
 	dao     dto.AuthRepo
 	limiter pagination.PageLimiter
 	log     *log.KHelper
 }
 
-func (biz AuthsBiz) CreateToken(ctx context.Context, in *pb.CreateTokenRequest, opts ...grpc.CallOption) (*pb.CreateTokenResponse, error) {
+func (biz AuthServiceClientBiz) CreateToken(ctx context.Context, in *pb.CreateTokenRequest, opts ...grpc.CallOption) (*pb.CreateTokenResponse, error) {
 	return biz.dao.CreateToken(ctx, in)
 }
 
-func (biz AuthsBiz) ValidateToken(ctx context.Context, in *pb.ValidateTokenRequest, opts ...grpc.CallOption) (*pb.ValidateTokenResponse, error) {
+func (biz AuthServiceClientBiz) ValidateToken(ctx context.Context, in *pb.ValidateTokenRequest, opts ...grpc.CallOption) (*pb.ValidateTokenResponse, error) {
 	return biz.dao.ValidateToken(ctx, in)
 }
 
-func (biz AuthsBiz) DestroyToken(ctx context.Context, in *pb.DestroyTokenRequest, opts ...grpc.CallOption) (*pb.DestroyTokenResponse, error) {
+func (biz AuthServiceClientBiz) DestroyToken(ctx context.Context, in *pb.DestroyTokenRequest, opts ...grpc.CallOption) (*pb.DestroyTokenResponse, error) {
 	return biz.dao.DestroyToken(ctx, in)
 }
 
-func (biz AuthsBiz) Authenticate(ctx context.Context, in *pb.AuthenticateRequest, opts ...grpc.CallOption) (*pb.AuthenticateResponse, error) {
+func (biz AuthServiceClientBiz) Authenticate(ctx context.Context, in *pb.AuthenticateRequest, opts ...grpc.CallOption) (*pb.AuthenticateResponse, error) {
 	return biz.dao.Authenticate(ctx, in)
 }
 
-func (biz AuthsBiz) ListAuthResources(ctx context.Context, in *pb.ListAuthResourcesRequest, opts ...grpc.CallOption) (*pb.ListAuthResourcesResponse, error) {
+func (biz AuthServiceClientBiz) ListAuthResources(ctx context.Context, in *pb.ListAuthResourcesRequest, opts ...grpc.CallOption) (*pb.ListAuthResourcesResponse, error) {
 	var option dto.AuthResourceQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -51,14 +51,14 @@ func (biz AuthsBiz) ListAuthResources(ctx context.Context, in *pb.ListAuthResour
 	return dto.ToListAuthResourcesResponse(result, in, total)
 }
 
-// NewAuthsBiz new a Auth use case.
-func NewAuthsBiz(repo dto.AuthRepo, logger log.KLogger) *AuthsBiz {
-	return &AuthsBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewAuthServiceClientBiz new a Auth use case.
+func NewAuthServiceClientBiz(repo dto.AuthRepo, logger log.KLogger) *AuthServiceClientBiz {
+	return &AuthServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
-// NewAuthsClient new a Auth use case.
-func NewAuthsClient(repo dto.AuthRepo, logger log.KLogger) pb.AuthAPIClient {
-	return &AuthsBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewAuthServiceClient new a Auth use case.
+func NewAuthServiceClient(repo dto.AuthRepo, logger log.KLogger) pb.AuthServiceClient {
+	return &AuthServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
-var _ pb.AuthAPIClient = (*AuthsBiz)(nil)
+var _ pb.AuthServiceClient = (*AuthServiceClientBiz)(nil)

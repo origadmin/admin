@@ -12,14 +12,8 @@ type Department func(*sql.Selector)
 // DepartmentRole is the predicate function for departmentrole builders.
 type DepartmentRole func(*sql.Selector)
 
-// Menu is the predicate function for menu builders.
-type Menu func(*sql.Selector)
-
 // Permission is the predicate function for permission builders.
 type Permission func(*sql.Selector)
-
-// PermissionMenu is the predicate function for permissionmenu builders.
-type PermissionMenu func(*sql.Selector)
 
 // PermissionResource is the predicate function for permissionresource builders.
 type PermissionResource func(*sql.Selector)

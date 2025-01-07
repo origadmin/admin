@@ -66,7 +66,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 				"/api/v1/register",
 				"/api/v1/current/logout",
 				"/api/v1/refresh_token",
-				"/api.v1.services.system.LoginAPI/CaptchaID",
+				"/api.v1.services.system.LoginAPI/CaptchaId",
 				"/api.v1.services.system.LoginAPI/CaptchaImage",
 				"/api.v1.services.system.LoginAPI/CaptchaResource",
 				"/api.v1.services.system.LoginAPI/CaptchaResources",

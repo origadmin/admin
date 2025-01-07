@@ -8,9 +8,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
@@ -88,9 +86,7 @@ func checkColumn(table, column string) error {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			department.Table:         department.ValidColumn,
 			departmentrole.Table:     departmentrole.ValidColumn,
-			menu.Table:               menu.ValidColumn,
 			permission.Table:         permission.ValidColumn,
-			permissionmenu.Table:     permissionmenu.ValidColumn,
 			permissionresource.Table: permissionresource.ValidColumn,
 			position.Table:           position.ValidColumn,
 			resource.Table:           resource.ValidColumn,

@@ -17,29 +17,29 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-// UsersBiz is a UserPB use case.
-type UsersBiz struct {
+// UserServiceClientBiz is a UserPB use case.
+type UserServiceClientBiz struct {
 	dao     dto.UserRepo
 	limiter pagination.PageLimiter
 	log     *log.KHelper
 }
 
-func (biz UsersBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest, opts ...grpc.CallOption) (*pb.UpdateUserRolesResponse, error) {
+func (biz UserServiceClientBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest, opts ...grpc.CallOption) (*pb.UpdateUserRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (biz UsersBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, opts ...grpc.CallOption) (*pb.UpdateUserStatusResponse, error) {
+func (biz UserServiceClientBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, opts ...grpc.CallOption) (*pb.UpdateUserStatusResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (biz UsersBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUserPasswordRequest, opts ...grpc.CallOption) (*pb.ResetUserPasswordResponse, error) {
+func (biz UserServiceClientBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUserPasswordRequest, opts ...grpc.CallOption) (*pb.ResetUserPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (biz UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
+func (biz UserServiceClientBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
 	var option dto.UserQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (biz UsersBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts
 	return dto.ToListUsersResponse(result, in, total)
 }
 
-func (biz UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...grpc.CallOption) (*pb.GetUserResponse, error) {
+func (biz UserServiceClientBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...grpc.CallOption) (*pb.GetUserResponse, error) {
 	var option dto.UserQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (biz UsersBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...
 	}, nil
 }
 
-func (biz UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
+func (biz UserServiceClientBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
 	var option dto.UserQueryOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (biz UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, op
 	}, nil
 }
 
-func (biz UsersBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error) {
+func (biz UserServiceClientBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error) {
 	//var option dto.UpdateUserOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -107,7 +107,7 @@ func (biz UsersBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, op
 	}, nil
 }
 
-func (biz UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts ...grpc.CallOption) (*pb.DeleteUserResponse, error) {
+func (biz UserServiceClientBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts ...grpc.CallOption) (*pb.DeleteUserResponse, error) {
 	//var option dto.DeleteUserOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -123,14 +123,14 @@ func (biz UsersBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, op
 	return &pb.DeleteUserResponse{}, nil
 }
 
-// NewUsersBiz new a UserPB use case.
-func NewUsersBiz(repo dto.UserRepo, logger log.KLogger) *UsersBiz {
-	return &UsersBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewUserServiceClientBiz new a UserPB use case.
+func NewUserServiceClientBiz(repo dto.UserRepo, logger log.KLogger) *UserServiceClientBiz {
+	return &UserServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
-// NewUsersClient new a UserPB use case.
-func NewUsersClient(repo dto.UserRepo, logger log.KLogger) pb.UserAPIClient {
-	return &UsersBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewUserServiceClient new a UserPB use case.
+func NewUserServiceClient(repo dto.UserRepo, logger log.KLogger) pb.UserServiceClient {
+	return &UserServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
 
-var _ pb.UserAPIClient = (*UsersBiz)(nil)
+var _ pb.UserServiceClient = (*UserServiceClientBiz)(nil)

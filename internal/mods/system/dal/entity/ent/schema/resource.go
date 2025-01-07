@@ -17,6 +17,18 @@ import (
 	"origadmin/application/admin/helpers/i18n"
 )
 
+const (
+	ResourceStatusEnabled  int8 = 1 // 启用
+	ResourceStatusDisabled int8 = 2 // 禁用
+)
+const (
+	ResourceTypeMenu     = 'M' // 目录
+	ResourceTypePage     = 'P' // 页面
+	ResourceTypeButton   = 'B' // 按钮
+	ResourceTypeAPI      = 'A' // API接口
+	ResourceTypeRedirect = 'R' // 重定向
+)
+
 // Resource holds the schema definition for the Resource domain.
 type Resource struct {
 	ent.Schema
@@ -25,34 +37,65 @@ type Resource struct {
 // Fields of the Resource.
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("method").
-			MaxLen(16).
+		field.String("name").
+			MaxLen(128).
 			Default("").
-			Comment(i18n.Text("resource.field.method")), // HTTP method (e.g. GET, POST, PUT, DELETE)
-		field.String("operation").
-			MaxLen(20).
-			Default("").
-			Comment(i18n.Text("resource.field.operation")), // grpc operation (e.g. CreateUser, GetUser, UpdateUser, DeleteUser)
-		field.String("path").
-			MaxLen(255).
-			Default("").
-			Comment(i18n.Text("resource.field.path")), // API request path (e.g. /users/:id or /users/{id})
-		field.String("uri").
-			MaxLen(256).
+			Comment(i18n.Text("resource.field.name")),
+		field.String("keyword").
+			MaxLen(64).
 			Unique().
-			Comment(i18n.Text("resource.field.uri")), // resource uri (e.g. /users/:id or /users/{id})
+			Comment(i18n.Text("resource.field.keyword")),
 		field.String("i18n_key").
 			MaxLen(128).
 			Default("").
-			Comment(i18n.Text("resource.field.i18n_key")), // internationalized identifiers
-		field.String("description").
+			Comment(i18n.Text("resource.field.i18n_key")),
+		field.Uint32("type").
+			Default(ResourceTypeMenu).
+			Comment(i18n.Text("resource.field.type")),
+		field.Int8("status").
+			Default(ResourceStatusEnabled).
+			Comment(i18n.Text("resource.field.status")),
+		// API资源特有字段
+		field.String("uri").
 			MaxLen(256).
+			Default("").
+			Comment(i18n.Text("resource.field.uri")),
+		field.String("operation").
+			MaxLen(128).
+			Default("").
+			Comment(i18n.Text("resource.field.operation")),
+		field.String("method").
+			MaxLen(16).
+			Default("").
+			Comment(i18n.Text("resource.field.method")),
+		// UI资源特有字段
+		field.String("component").
+			MaxLen(128).
+			Default("").
+			Comment(i18n.Text("resource.field.component")),
+		field.String("icon").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("resource.field.icon")),
+		field.Int("sequence").
+			Default(0).
+			Comment(i18n.Text("resource.field.sequence")),
+		field.Bool("visible").
+			Default(true).
+			Comment(i18n.Text("resource.field.visible")),
+		field.String("tree_path").
+			MaxLen(256).
+			Default("").
+			Comment(i18n.Text("resource.field.tree_path")),
+		// 扩展属性
+		field.JSON("properties", map[string]string{}).
 			Optional().
+			Comment(i18n.Text("resource.field.properties")),
+		field.String("description").
+			MaxLen(1024).
+			Default("").
 			Comment(i18n.Text("resource.field.description")),
-		field.JSON("metadata", map[string]any{}).
-			Optional().
-			Comment(i18n.Text("resource.field.metadata")), // Metadata (e.g., request parameters, response format)
-		mixin.OP("menu_id", "resource.field.menu_id"),     // From Menu.ID
+		mixin.OP("parent_id", "resource.field.parent_id"),
 	}
 }
 
@@ -64,7 +107,7 @@ func (Resource) Mixin() []ent.Mixin {
 // Indexes of the Resource.
 func (Resource) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("menu_id"),
+		index.Fields("parent_id"),
 	}
 }
 
@@ -80,11 +123,12 @@ func (Resource) Annotations() []schema.Annotation {
 // Edges of the Resource.
 func (Resource) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("menu", Menu.Type).
-			Ref("resources").
-			Field("menu_id").
+		edge.To("children", Resource.Type),
+		edge.From("parent", Resource.Type).
+			Ref("children").
+			Field("parent_id").
 			Unique(),
-		edge.From("permission", Permission.Type).
+		edge.From("permissions", Permission.Type).
 			Ref("resources").
 			Through("permission_resources", PermissionResource.Type),
 	}

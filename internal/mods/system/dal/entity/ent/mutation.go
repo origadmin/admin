@@ -8,9 +8,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
@@ -39,9 +37,7 @@ const (
 	// Node types.
 	TypeDepartment         = "Department"
 	TypeDepartmentRole     = "DepartmentRole"
-	TypeMenu               = "Menu"
 	TypePermission         = "Permission"
-	TypePermissionMenu     = "PermissionMenu"
 	TypePermissionResource = "PermissionResource"
 	TypePosition           = "Position"
 	TypeResource           = "Resource"
@@ -63,14 +59,14 @@ type DepartmentMutation struct {
 	update_time             *time.Time
 	keyword                 *string
 	name                    *string
-	description             *string
+	tree_path               *string
 	sequence                *int
 	addsequence             *int
 	status                  *int8
 	addstatus               *int8
-	ancestors               *string
 	level                   *int
 	addlevel                *int
+	description             *string
 	clearedFields           map[string]struct{}
 	users                   map[int64]struct{}
 	removedusers            map[int64]struct{}
@@ -345,40 +341,40 @@ func (m *DepartmentMutation) ResetName() {
 	m.name = nil
 }
 
-// SetDescription sets the "description" field.
-func (m *DepartmentMutation) SetDescription(s string) {
-	m.description = &s
+// SetTreePath sets the "tree_path" field.
+func (m *DepartmentMutation) SetTreePath(s string) {
+	m.tree_path = &s
 }
 
-// Description returns the value of the "description" field in the mutation.
-func (m *DepartmentMutation) Description() (r string, exists bool) {
-	v := m.description
+// TreePath returns the value of the "tree_path" field in the mutation.
+func (m *DepartmentMutation) TreePath() (r string, exists bool) {
+	v := m.tree_path
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDescription returns the old "description" field's value of the Department entity.
+// OldTreePath returns the old "tree_path" field's value of the Department entity.
 // If the Department object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DepartmentMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *DepartmentMutation) OldTreePath(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+		return v, errors.New("OldTreePath is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
+		return v, errors.New("OldTreePath requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+		return v, fmt.Errorf("querying old value for OldTreePath: %w", err)
 	}
-	return oldValue.Description, nil
+	return oldValue.TreePath, nil
 }
 
-// ResetDescription resets all changes to the "description" field.
-func (m *DepartmentMutation) ResetDescription() {
-	m.description = nil
+// ResetTreePath resets all changes to the "tree_path" field.
+func (m *DepartmentMutation) ResetTreePath() {
+	m.tree_path = nil
 }
 
 // SetSequence sets the "sequence" field.
@@ -493,42 +489,6 @@ func (m *DepartmentMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
-// SetAncestors sets the "ancestors" field.
-func (m *DepartmentMutation) SetAncestors(s string) {
-	m.ancestors = &s
-}
-
-// Ancestors returns the value of the "ancestors" field in the mutation.
-func (m *DepartmentMutation) Ancestors() (r string, exists bool) {
-	v := m.ancestors
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAncestors returns the old "ancestors" field's value of the Department entity.
-// If the Department object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DepartmentMutation) OldAncestors(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAncestors is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAncestors requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAncestors: %w", err)
-	}
-	return oldValue.Ancestors, nil
-}
-
-// ResetAncestors resets all changes to the "ancestors" field.
-func (m *DepartmentMutation) ResetAncestors() {
-	m.ancestors = nil
-}
-
 // SetLevel sets the "level" field.
 func (m *DepartmentMutation) SetLevel(i int) {
 	m.level = &i
@@ -583,6 +543,42 @@ func (m *DepartmentMutation) AddedLevel() (r int, exists bool) {
 func (m *DepartmentMutation) ResetLevel() {
 	m.level = nil
 	m.addlevel = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *DepartmentMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *DepartmentMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Department entity.
+// If the Department object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *DepartmentMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *DepartmentMutation) ResetDescription() {
+	m.description = nil
 }
 
 // SetParentID sets the "parent_id" field.
@@ -1032,8 +1028,8 @@ func (m *DepartmentMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, department.FieldName)
 	}
-	if m.description != nil {
-		fields = append(fields, department.FieldDescription)
+	if m.tree_path != nil {
+		fields = append(fields, department.FieldTreePath)
 	}
 	if m.sequence != nil {
 		fields = append(fields, department.FieldSequence)
@@ -1041,11 +1037,11 @@ func (m *DepartmentMutation) Fields() []string {
 	if m.status != nil {
 		fields = append(fields, department.FieldStatus)
 	}
-	if m.ancestors != nil {
-		fields = append(fields, department.FieldAncestors)
-	}
 	if m.level != nil {
 		fields = append(fields, department.FieldLevel)
+	}
+	if m.description != nil {
+		fields = append(fields, department.FieldDescription)
 	}
 	if m.parent != nil {
 		fields = append(fields, department.FieldParentID)
@@ -1066,16 +1062,16 @@ func (m *DepartmentMutation) Field(name string) (ent.Value, bool) {
 		return m.Keyword()
 	case department.FieldName:
 		return m.Name()
-	case department.FieldDescription:
-		return m.Description()
+	case department.FieldTreePath:
+		return m.TreePath()
 	case department.FieldSequence:
 		return m.Sequence()
 	case department.FieldStatus:
 		return m.Status()
-	case department.FieldAncestors:
-		return m.Ancestors()
 	case department.FieldLevel:
 		return m.Level()
+	case department.FieldDescription:
+		return m.Description()
 	case department.FieldParentID:
 		return m.ParentID()
 	}
@@ -1095,16 +1091,16 @@ func (m *DepartmentMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldKeyword(ctx)
 	case department.FieldName:
 		return m.OldName(ctx)
-	case department.FieldDescription:
-		return m.OldDescription(ctx)
+	case department.FieldTreePath:
+		return m.OldTreePath(ctx)
 	case department.FieldSequence:
 		return m.OldSequence(ctx)
 	case department.FieldStatus:
 		return m.OldStatus(ctx)
-	case department.FieldAncestors:
-		return m.OldAncestors(ctx)
 	case department.FieldLevel:
 		return m.OldLevel(ctx)
+	case department.FieldDescription:
+		return m.OldDescription(ctx)
 	case department.FieldParentID:
 		return m.OldParentID(ctx)
 	}
@@ -1144,12 +1140,12 @@ func (m *DepartmentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case department.FieldDescription:
+	case department.FieldTreePath:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDescription(v)
+		m.SetTreePath(v)
 		return nil
 	case department.FieldSequence:
 		v, ok := value.(int)
@@ -1165,19 +1161,19 @@ func (m *DepartmentMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetStatus(v)
 		return nil
-	case department.FieldAncestors:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAncestors(v)
-		return nil
 	case department.FieldLevel:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLevel(v)
+		return nil
+	case department.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
 		return nil
 	case department.FieldParentID:
 		v, ok := value.(int64)
@@ -1295,8 +1291,8 @@ func (m *DepartmentMutation) ResetField(name string) error {
 	case department.FieldName:
 		m.ResetName()
 		return nil
-	case department.FieldDescription:
-		m.ResetDescription()
+	case department.FieldTreePath:
+		m.ResetTreePath()
 		return nil
 	case department.FieldSequence:
 		m.ResetSequence()
@@ -1304,11 +1300,11 @@ func (m *DepartmentMutation) ResetField(name string) error {
 	case department.FieldStatus:
 		m.ResetStatus()
 		return nil
-	case department.FieldAncestors:
-		m.ResetAncestors()
-		return nil
 	case department.FieldLevel:
 		m.ResetLevel()
+		return nil
+	case department.FieldDescription:
+		m.ResetDescription()
 		return nil
 	case department.FieldParentID:
 		m.ResetParentID()
@@ -2038,1592 +2034,6 @@ func (m *DepartmentRoleMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown DepartmentRole edge %s", name)
 }
 
-// MenuMutation represents an operation that mutates the Menu nodes in the graph.
-type MenuMutation struct {
-	config
-	op                      Op
-	typ                     string
-	id                      *int64
-	create_time             *time.Time
-	update_time             *time.Time
-	keyword                 *string
-	name                    *string
-	i18n_key                *string
-	description             *string
-	_type                   *string
-	icon                    *string
-	_path                   *string
-	status                  *int8
-	addstatus               *int8
-	parent_path             *string
-	sequence                *int
-	addsequence             *int
-	hidden                  *bool
-	properties              *string
-	clearedFields           map[string]struct{}
-	children                map[int64]struct{}
-	removedchildren         map[int64]struct{}
-	clearedchildren         bool
-	parent                  *int64
-	clearedparent           bool
-	resources               map[int64]struct{}
-	removedresources        map[int64]struct{}
-	clearedresources        bool
-	permissions             map[int64]struct{}
-	removedpermissions      map[int64]struct{}
-	clearedpermissions      bool
-	permission_menus        map[int64]struct{}
-	removedpermission_menus map[int64]struct{}
-	clearedpermission_menus bool
-	done                    bool
-	oldValue                func(context.Context) (*Menu, error)
-	predicates              []predicate.Menu
-}
-
-var _ ent.Mutation = (*MenuMutation)(nil)
-
-// menuOption allows management of the mutation configuration using functional options.
-type menuOption func(*MenuMutation)
-
-// newMenuMutation creates new mutation for the Menu entity.
-func newMenuMutation(c config, op Op, opts ...menuOption) *MenuMutation {
-	m := &MenuMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeMenu,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withMenuID sets the ID field of the mutation.
-func withMenuID(id int64) menuOption {
-	return func(m *MenuMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Menu
-		)
-		m.oldValue = func(ctx context.Context) (*Menu, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Menu.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withMenu sets the old Menu of the mutation.
-func withMenu(node *Menu) menuOption {
-	return func(m *MenuMutation) {
-		m.oldValue = func(context.Context) (*Menu, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m MenuMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m MenuMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Menu entities.
-func (m *MenuMutation) SetID(id int64) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *MenuMutation) ID() (id int64, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *MenuMutation) IDs(ctx context.Context) ([]int64, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int64{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().Menu.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetCreateTime sets the "create_time" field.
-func (m *MenuMutation) SetCreateTime(t time.Time) {
-	m.create_time = &t
-}
-
-// CreateTime returns the value of the "create_time" field in the mutation.
-func (m *MenuMutation) CreateTime() (r time.Time, exists bool) {
-	v := m.create_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCreateTime returns the old "create_time" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
-	}
-	return oldValue.CreateTime, nil
-}
-
-// ResetCreateTime resets all changes to the "create_time" field.
-func (m *MenuMutation) ResetCreateTime() {
-	m.create_time = nil
-}
-
-// SetUpdateTime sets the "update_time" field.
-func (m *MenuMutation) SetUpdateTime(t time.Time) {
-	m.update_time = &t
-}
-
-// UpdateTime returns the value of the "update_time" field in the mutation.
-func (m *MenuMutation) UpdateTime() (r time.Time, exists bool) {
-	v := m.update_time
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldUpdateTime returns the old "update_time" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
-	}
-	return oldValue.UpdateTime, nil
-}
-
-// ResetUpdateTime resets all changes to the "update_time" field.
-func (m *MenuMutation) ResetUpdateTime() {
-	m.update_time = nil
-}
-
-// SetKeyword sets the "keyword" field.
-func (m *MenuMutation) SetKeyword(s string) {
-	m.keyword = &s
-}
-
-// Keyword returns the value of the "keyword" field in the mutation.
-func (m *MenuMutation) Keyword() (r string, exists bool) {
-	v := m.keyword
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldKeyword returns the old "keyword" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldKeyword(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldKeyword is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldKeyword requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldKeyword: %w", err)
-	}
-	return oldValue.Keyword, nil
-}
-
-// ResetKeyword resets all changes to the "keyword" field.
-func (m *MenuMutation) ResetKeyword() {
-	m.keyword = nil
-}
-
-// SetName sets the "name" field.
-func (m *MenuMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the value of the "name" field in the mutation.
-func (m *MenuMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old "name" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
-	}
-	return oldValue.Name, nil
-}
-
-// ResetName resets all changes to the "name" field.
-func (m *MenuMutation) ResetName() {
-	m.name = nil
-}
-
-// SetI18nKey sets the "i18n_key" field.
-func (m *MenuMutation) SetI18nKey(s string) {
-	m.i18n_key = &s
-}
-
-// I18nKey returns the value of the "i18n_key" field in the mutation.
-func (m *MenuMutation) I18nKey() (r string, exists bool) {
-	v := m.i18n_key
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldI18nKey returns the old "i18n_key" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldI18nKey(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldI18nKey is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldI18nKey requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldI18nKey: %w", err)
-	}
-	return oldValue.I18nKey, nil
-}
-
-// ResetI18nKey resets all changes to the "i18n_key" field.
-func (m *MenuMutation) ResetI18nKey() {
-	m.i18n_key = nil
-}
-
-// SetDescription sets the "description" field.
-func (m *MenuMutation) SetDescription(s string) {
-	m.description = &s
-}
-
-// Description returns the value of the "description" field in the mutation.
-func (m *MenuMutation) Description() (r string, exists bool) {
-	v := m.description
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDescription returns the old "description" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldDescription(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
-	}
-	return oldValue.Description, nil
-}
-
-// ResetDescription resets all changes to the "description" field.
-func (m *MenuMutation) ResetDescription() {
-	m.description = nil
-}
-
-// SetType sets the "type" field.
-func (m *MenuMutation) SetType(s string) {
-	m._type = &s
-}
-
-// GetType returns the value of the "type" field in the mutation.
-func (m *MenuMutation) GetType() (r string, exists bool) {
-	v := m._type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldType returns the old "type" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldType: %w", err)
-	}
-	return oldValue.Type, nil
-}
-
-// ResetType resets all changes to the "type" field.
-func (m *MenuMutation) ResetType() {
-	m._type = nil
-}
-
-// SetIcon sets the "icon" field.
-func (m *MenuMutation) SetIcon(s string) {
-	m.icon = &s
-}
-
-// Icon returns the value of the "icon" field in the mutation.
-func (m *MenuMutation) Icon() (r string, exists bool) {
-	v := m.icon
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIcon returns the old "icon" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldIcon(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIcon is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIcon requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIcon: %w", err)
-	}
-	return oldValue.Icon, nil
-}
-
-// ResetIcon resets all changes to the "icon" field.
-func (m *MenuMutation) ResetIcon() {
-	m.icon = nil
-}
-
-// SetPath sets the "path" field.
-func (m *MenuMutation) SetPath(s string) {
-	m._path = &s
-}
-
-// Path returns the value of the "path" field in the mutation.
-func (m *MenuMutation) Path() (r string, exists bool) {
-	v := m._path
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPath returns the old "path" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldPath(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPath is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPath requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPath: %w", err)
-	}
-	return oldValue.Path, nil
-}
-
-// ResetPath resets all changes to the "path" field.
-func (m *MenuMutation) ResetPath() {
-	m._path = nil
-}
-
-// SetStatus sets the "status" field.
-func (m *MenuMutation) SetStatus(i int8) {
-	m.status = &i
-	m.addstatus = nil
-}
-
-// Status returns the value of the "status" field in the mutation.
-func (m *MenuMutation) Status() (r int8, exists bool) {
-	v := m.status
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldStatus returns the old "status" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldStatus(ctx context.Context) (v int8, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldStatus requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
-	}
-	return oldValue.Status, nil
-}
-
-// AddStatus adds i to the "status" field.
-func (m *MenuMutation) AddStatus(i int8) {
-	if m.addstatus != nil {
-		*m.addstatus += i
-	} else {
-		m.addstatus = &i
-	}
-}
-
-// AddedStatus returns the value that was added to the "status" field in this mutation.
-func (m *MenuMutation) AddedStatus() (r int8, exists bool) {
-	v := m.addstatus
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetStatus resets all changes to the "status" field.
-func (m *MenuMutation) ResetStatus() {
-	m.status = nil
-	m.addstatus = nil
-}
-
-// SetParentPath sets the "parent_path" field.
-func (m *MenuMutation) SetParentPath(s string) {
-	m.parent_path = &s
-}
-
-// ParentPath returns the value of the "parent_path" field in the mutation.
-func (m *MenuMutation) ParentPath() (r string, exists bool) {
-	v := m.parent_path
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldParentPath returns the old "parent_path" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldParentPath(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldParentPath is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldParentPath requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldParentPath: %w", err)
-	}
-	return oldValue.ParentPath, nil
-}
-
-// ResetParentPath resets all changes to the "parent_path" field.
-func (m *MenuMutation) ResetParentPath() {
-	m.parent_path = nil
-}
-
-// SetSequence sets the "sequence" field.
-func (m *MenuMutation) SetSequence(i int) {
-	m.sequence = &i
-	m.addsequence = nil
-}
-
-// Sequence returns the value of the "sequence" field in the mutation.
-func (m *MenuMutation) Sequence() (r int, exists bool) {
-	v := m.sequence
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSequence returns the old "sequence" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldSequence(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSequence is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSequence requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSequence: %w", err)
-	}
-	return oldValue.Sequence, nil
-}
-
-// AddSequence adds i to the "sequence" field.
-func (m *MenuMutation) AddSequence(i int) {
-	if m.addsequence != nil {
-		*m.addsequence += i
-	} else {
-		m.addsequence = &i
-	}
-}
-
-// AddedSequence returns the value that was added to the "sequence" field in this mutation.
-func (m *MenuMutation) AddedSequence() (r int, exists bool) {
-	v := m.addsequence
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetSequence resets all changes to the "sequence" field.
-func (m *MenuMutation) ResetSequence() {
-	m.sequence = nil
-	m.addsequence = nil
-}
-
-// SetHidden sets the "hidden" field.
-func (m *MenuMutation) SetHidden(b bool) {
-	m.hidden = &b
-}
-
-// Hidden returns the value of the "hidden" field in the mutation.
-func (m *MenuMutation) Hidden() (r bool, exists bool) {
-	v := m.hidden
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldHidden returns the old "hidden" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldHidden(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldHidden is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldHidden requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldHidden: %w", err)
-	}
-	return oldValue.Hidden, nil
-}
-
-// ResetHidden resets all changes to the "hidden" field.
-func (m *MenuMutation) ResetHidden() {
-	m.hidden = nil
-}
-
-// SetProperties sets the "properties" field.
-func (m *MenuMutation) SetProperties(s string) {
-	m.properties = &s
-}
-
-// Properties returns the value of the "properties" field in the mutation.
-func (m *MenuMutation) Properties() (r string, exists bool) {
-	v := m.properties
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldProperties returns the old "properties" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldProperties(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldProperties is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldProperties requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldProperties: %w", err)
-	}
-	return oldValue.Properties, nil
-}
-
-// ClearProperties clears the value of the "properties" field.
-func (m *MenuMutation) ClearProperties() {
-	m.properties = nil
-	m.clearedFields[menu.FieldProperties] = struct{}{}
-}
-
-// PropertiesCleared returns if the "properties" field was cleared in this mutation.
-func (m *MenuMutation) PropertiesCleared() bool {
-	_, ok := m.clearedFields[menu.FieldProperties]
-	return ok
-}
-
-// ResetProperties resets all changes to the "properties" field.
-func (m *MenuMutation) ResetProperties() {
-	m.properties = nil
-	delete(m.clearedFields, menu.FieldProperties)
-}
-
-// SetParentID sets the "parent_id" field.
-func (m *MenuMutation) SetParentID(i int64) {
-	m.parent = &i
-}
-
-// ParentID returns the value of the "parent_id" field in the mutation.
-func (m *MenuMutation) ParentID() (r int64, exists bool) {
-	v := m.parent
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldParentID returns the old "parent_id" field's value of the Menu entity.
-// If the Menu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MenuMutation) OldParentID(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldParentID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
-	}
-	return oldValue.ParentID, nil
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (m *MenuMutation) ClearParentID() {
-	m.parent = nil
-	m.clearedFields[menu.FieldParentID] = struct{}{}
-}
-
-// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
-func (m *MenuMutation) ParentIDCleared() bool {
-	_, ok := m.clearedFields[menu.FieldParentID]
-	return ok
-}
-
-// ResetParentID resets all changes to the "parent_id" field.
-func (m *MenuMutation) ResetParentID() {
-	m.parent = nil
-	delete(m.clearedFields, menu.FieldParentID)
-}
-
-// AddChildIDs adds the "children" edge to the Menu entity by ids.
-func (m *MenuMutation) AddChildIDs(ids ...int64) {
-	if m.children == nil {
-		m.children = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.children[ids[i]] = struct{}{}
-	}
-}
-
-// ClearChildren clears the "children" edge to the Menu entity.
-func (m *MenuMutation) ClearChildren() {
-	m.clearedchildren = true
-}
-
-// ChildrenCleared reports if the "children" edge to the Menu entity was cleared.
-func (m *MenuMutation) ChildrenCleared() bool {
-	return m.clearedchildren
-}
-
-// RemoveChildIDs removes the "children" edge to the Menu entity by IDs.
-func (m *MenuMutation) RemoveChildIDs(ids ...int64) {
-	if m.removedchildren == nil {
-		m.removedchildren = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.children, ids[i])
-		m.removedchildren[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedChildren returns the removed IDs of the "children" edge to the Menu entity.
-func (m *MenuMutation) RemovedChildrenIDs() (ids []int64) {
-	for id := range m.removedchildren {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ChildrenIDs returns the "children" edge IDs in the mutation.
-func (m *MenuMutation) ChildrenIDs() (ids []int64) {
-	for id := range m.children {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetChildren resets all changes to the "children" edge.
-func (m *MenuMutation) ResetChildren() {
-	m.children = nil
-	m.clearedchildren = false
-	m.removedchildren = nil
-}
-
-// ClearParent clears the "parent" edge to the Menu entity.
-func (m *MenuMutation) ClearParent() {
-	m.clearedparent = true
-	m.clearedFields[menu.FieldParentID] = struct{}{}
-}
-
-// ParentCleared reports if the "parent" edge to the Menu entity was cleared.
-func (m *MenuMutation) ParentCleared() bool {
-	return m.ParentIDCleared() || m.clearedparent
-}
-
-// ParentIDs returns the "parent" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// ParentID instead. It exists only for internal usage by the builders.
-func (m *MenuMutation) ParentIDs() (ids []int64) {
-	if id := m.parent; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetParent resets all changes to the "parent" edge.
-func (m *MenuMutation) ResetParent() {
-	m.parent = nil
-	m.clearedparent = false
-}
-
-// AddResourceIDs adds the "resources" edge to the Resource entity by ids.
-func (m *MenuMutation) AddResourceIDs(ids ...int64) {
-	if m.resources == nil {
-		m.resources = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.resources[ids[i]] = struct{}{}
-	}
-}
-
-// ClearResources clears the "resources" edge to the Resource entity.
-func (m *MenuMutation) ClearResources() {
-	m.clearedresources = true
-}
-
-// ResourcesCleared reports if the "resources" edge to the Resource entity was cleared.
-func (m *MenuMutation) ResourcesCleared() bool {
-	return m.clearedresources
-}
-
-// RemoveResourceIDs removes the "resources" edge to the Resource entity by IDs.
-func (m *MenuMutation) RemoveResourceIDs(ids ...int64) {
-	if m.removedresources == nil {
-		m.removedresources = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.resources, ids[i])
-		m.removedresources[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedResources returns the removed IDs of the "resources" edge to the Resource entity.
-func (m *MenuMutation) RemovedResourcesIDs() (ids []int64) {
-	for id := range m.removedresources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResourcesIDs returns the "resources" edge IDs in the mutation.
-func (m *MenuMutation) ResourcesIDs() (ids []int64) {
-	for id := range m.resources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetResources resets all changes to the "resources" edge.
-func (m *MenuMutation) ResetResources() {
-	m.resources = nil
-	m.clearedresources = false
-	m.removedresources = nil
-}
-
-// AddPermissionIDs adds the "permissions" edge to the Permission entity by ids.
-func (m *MenuMutation) AddPermissionIDs(ids ...int64) {
-	if m.permissions == nil {
-		m.permissions = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.permissions[ids[i]] = struct{}{}
-	}
-}
-
-// ClearPermissions clears the "permissions" edge to the Permission entity.
-func (m *MenuMutation) ClearPermissions() {
-	m.clearedpermissions = true
-}
-
-// PermissionsCleared reports if the "permissions" edge to the Permission entity was cleared.
-func (m *MenuMutation) PermissionsCleared() bool {
-	return m.clearedpermissions
-}
-
-// RemovePermissionIDs removes the "permissions" edge to the Permission entity by IDs.
-func (m *MenuMutation) RemovePermissionIDs(ids ...int64) {
-	if m.removedpermissions == nil {
-		m.removedpermissions = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.permissions, ids[i])
-		m.removedpermissions[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPermissions returns the removed IDs of the "permissions" edge to the Permission entity.
-func (m *MenuMutation) RemovedPermissionsIDs() (ids []int64) {
-	for id := range m.removedpermissions {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PermissionsIDs returns the "permissions" edge IDs in the mutation.
-func (m *MenuMutation) PermissionsIDs() (ids []int64) {
-	for id := range m.permissions {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPermissions resets all changes to the "permissions" edge.
-func (m *MenuMutation) ResetPermissions() {
-	m.permissions = nil
-	m.clearedpermissions = false
-	m.removedpermissions = nil
-}
-
-// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by ids.
-func (m *MenuMutation) AddPermissionMenuIDs(ids ...int64) {
-	if m.permission_menus == nil {
-		m.permission_menus = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.permission_menus[ids[i]] = struct{}{}
-	}
-}
-
-// ClearPermissionMenus clears the "permission_menus" edge to the PermissionMenu entity.
-func (m *MenuMutation) ClearPermissionMenus() {
-	m.clearedpermission_menus = true
-}
-
-// PermissionMenusCleared reports if the "permission_menus" edge to the PermissionMenu entity was cleared.
-func (m *MenuMutation) PermissionMenusCleared() bool {
-	return m.clearedpermission_menus
-}
-
-// RemovePermissionMenuIDs removes the "permission_menus" edge to the PermissionMenu entity by IDs.
-func (m *MenuMutation) RemovePermissionMenuIDs(ids ...int64) {
-	if m.removedpermission_menus == nil {
-		m.removedpermission_menus = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.permission_menus, ids[i])
-		m.removedpermission_menus[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPermissionMenus returns the removed IDs of the "permission_menus" edge to the PermissionMenu entity.
-func (m *MenuMutation) RemovedPermissionMenusIDs() (ids []int64) {
-	for id := range m.removedpermission_menus {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PermissionMenusIDs returns the "permission_menus" edge IDs in the mutation.
-func (m *MenuMutation) PermissionMenusIDs() (ids []int64) {
-	for id := range m.permission_menus {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPermissionMenus resets all changes to the "permission_menus" edge.
-func (m *MenuMutation) ResetPermissionMenus() {
-	m.permission_menus = nil
-	m.clearedpermission_menus = false
-	m.removedpermission_menus = nil
-}
-
-// Where appends a list predicates to the MenuMutation builder.
-func (m *MenuMutation) Where(ps ...predicate.Menu) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the MenuMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *MenuMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.Menu, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *MenuMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *MenuMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (Menu).
-func (m *MenuMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *MenuMutation) Fields() []string {
-	fields := make([]string, 0, 15)
-	if m.create_time != nil {
-		fields = append(fields, menu.FieldCreateTime)
-	}
-	if m.update_time != nil {
-		fields = append(fields, menu.FieldUpdateTime)
-	}
-	if m.keyword != nil {
-		fields = append(fields, menu.FieldKeyword)
-	}
-	if m.name != nil {
-		fields = append(fields, menu.FieldName)
-	}
-	if m.i18n_key != nil {
-		fields = append(fields, menu.FieldI18nKey)
-	}
-	if m.description != nil {
-		fields = append(fields, menu.FieldDescription)
-	}
-	if m._type != nil {
-		fields = append(fields, menu.FieldType)
-	}
-	if m.icon != nil {
-		fields = append(fields, menu.FieldIcon)
-	}
-	if m._path != nil {
-		fields = append(fields, menu.FieldPath)
-	}
-	if m.status != nil {
-		fields = append(fields, menu.FieldStatus)
-	}
-	if m.parent_path != nil {
-		fields = append(fields, menu.FieldParentPath)
-	}
-	if m.sequence != nil {
-		fields = append(fields, menu.FieldSequence)
-	}
-	if m.hidden != nil {
-		fields = append(fields, menu.FieldHidden)
-	}
-	if m.properties != nil {
-		fields = append(fields, menu.FieldProperties)
-	}
-	if m.parent != nil {
-		fields = append(fields, menu.FieldParentID)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *MenuMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case menu.FieldCreateTime:
-		return m.CreateTime()
-	case menu.FieldUpdateTime:
-		return m.UpdateTime()
-	case menu.FieldKeyword:
-		return m.Keyword()
-	case menu.FieldName:
-		return m.Name()
-	case menu.FieldI18nKey:
-		return m.I18nKey()
-	case menu.FieldDescription:
-		return m.Description()
-	case menu.FieldType:
-		return m.GetType()
-	case menu.FieldIcon:
-		return m.Icon()
-	case menu.FieldPath:
-		return m.Path()
-	case menu.FieldStatus:
-		return m.Status()
-	case menu.FieldParentPath:
-		return m.ParentPath()
-	case menu.FieldSequence:
-		return m.Sequence()
-	case menu.FieldHidden:
-		return m.Hidden()
-	case menu.FieldProperties:
-		return m.Properties()
-	case menu.FieldParentID:
-		return m.ParentID()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *MenuMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case menu.FieldCreateTime:
-		return m.OldCreateTime(ctx)
-	case menu.FieldUpdateTime:
-		return m.OldUpdateTime(ctx)
-	case menu.FieldKeyword:
-		return m.OldKeyword(ctx)
-	case menu.FieldName:
-		return m.OldName(ctx)
-	case menu.FieldI18nKey:
-		return m.OldI18nKey(ctx)
-	case menu.FieldDescription:
-		return m.OldDescription(ctx)
-	case menu.FieldType:
-		return m.OldType(ctx)
-	case menu.FieldIcon:
-		return m.OldIcon(ctx)
-	case menu.FieldPath:
-		return m.OldPath(ctx)
-	case menu.FieldStatus:
-		return m.OldStatus(ctx)
-	case menu.FieldParentPath:
-		return m.OldParentPath(ctx)
-	case menu.FieldSequence:
-		return m.OldSequence(ctx)
-	case menu.FieldHidden:
-		return m.OldHidden(ctx)
-	case menu.FieldProperties:
-		return m.OldProperties(ctx)
-	case menu.FieldParentID:
-		return m.OldParentID(ctx)
-	}
-	return nil, fmt.Errorf("unknown Menu field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *MenuMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case menu.FieldCreateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCreateTime(v)
-		return nil
-	case menu.FieldUpdateTime:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUpdateTime(v)
-		return nil
-	case menu.FieldKeyword:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetKeyword(v)
-		return nil
-	case menu.FieldName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetName(v)
-		return nil
-	case menu.FieldI18nKey:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetI18nKey(v)
-		return nil
-	case menu.FieldDescription:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDescription(v)
-		return nil
-	case menu.FieldType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetType(v)
-		return nil
-	case menu.FieldIcon:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIcon(v)
-		return nil
-	case menu.FieldPath:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPath(v)
-		return nil
-	case menu.FieldStatus:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetStatus(v)
-		return nil
-	case menu.FieldParentPath:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetParentPath(v)
-		return nil
-	case menu.FieldSequence:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSequence(v)
-		return nil
-	case menu.FieldHidden:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetHidden(v)
-		return nil
-	case menu.FieldProperties:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetProperties(v)
-		return nil
-	case menu.FieldParentID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetParentID(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Menu field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *MenuMutation) AddedFields() []string {
-	var fields []string
-	if m.addstatus != nil {
-		fields = append(fields, menu.FieldStatus)
-	}
-	if m.addsequence != nil {
-		fields = append(fields, menu.FieldSequence)
-	}
-	return fields
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *MenuMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case menu.FieldStatus:
-		return m.AddedStatus()
-	case menu.FieldSequence:
-		return m.AddedSequence()
-	}
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *MenuMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	case menu.FieldStatus:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddStatus(v)
-		return nil
-	case menu.FieldSequence:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddSequence(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Menu numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *MenuMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(menu.FieldProperties) {
-		fields = append(fields, menu.FieldProperties)
-	}
-	if m.FieldCleared(menu.FieldParentID) {
-		fields = append(fields, menu.FieldParentID)
-	}
-	return fields
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *MenuMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *MenuMutation) ClearField(name string) error {
-	switch name {
-	case menu.FieldProperties:
-		m.ClearProperties()
-		return nil
-	case menu.FieldParentID:
-		m.ClearParentID()
-		return nil
-	}
-	return fmt.Errorf("unknown Menu nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *MenuMutation) ResetField(name string) error {
-	switch name {
-	case menu.FieldCreateTime:
-		m.ResetCreateTime()
-		return nil
-	case menu.FieldUpdateTime:
-		m.ResetUpdateTime()
-		return nil
-	case menu.FieldKeyword:
-		m.ResetKeyword()
-		return nil
-	case menu.FieldName:
-		m.ResetName()
-		return nil
-	case menu.FieldI18nKey:
-		m.ResetI18nKey()
-		return nil
-	case menu.FieldDescription:
-		m.ResetDescription()
-		return nil
-	case menu.FieldType:
-		m.ResetType()
-		return nil
-	case menu.FieldIcon:
-		m.ResetIcon()
-		return nil
-	case menu.FieldPath:
-		m.ResetPath()
-		return nil
-	case menu.FieldStatus:
-		m.ResetStatus()
-		return nil
-	case menu.FieldParentPath:
-		m.ResetParentPath()
-		return nil
-	case menu.FieldSequence:
-		m.ResetSequence()
-		return nil
-	case menu.FieldHidden:
-		m.ResetHidden()
-		return nil
-	case menu.FieldProperties:
-		m.ResetProperties()
-		return nil
-	case menu.FieldParentID:
-		m.ResetParentID()
-		return nil
-	}
-	return fmt.Errorf("unknown Menu field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *MenuMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
-	if m.children != nil {
-		edges = append(edges, menu.EdgeChildren)
-	}
-	if m.parent != nil {
-		edges = append(edges, menu.EdgeParent)
-	}
-	if m.resources != nil {
-		edges = append(edges, menu.EdgeResources)
-	}
-	if m.permissions != nil {
-		edges = append(edges, menu.EdgePermissions)
-	}
-	if m.permission_menus != nil {
-		edges = append(edges, menu.EdgePermissionMenus)
-	}
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *MenuMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case menu.EdgeChildren:
-		ids := make([]ent.Value, 0, len(m.children))
-		for id := range m.children {
-			ids = append(ids, id)
-		}
-		return ids
-	case menu.EdgeParent:
-		if id := m.parent; id != nil {
-			return []ent.Value{*id}
-		}
-	case menu.EdgeResources:
-		ids := make([]ent.Value, 0, len(m.resources))
-		for id := range m.resources {
-			ids = append(ids, id)
-		}
-		return ids
-	case menu.EdgePermissions:
-		ids := make([]ent.Value, 0, len(m.permissions))
-		for id := range m.permissions {
-			ids = append(ids, id)
-		}
-		return ids
-	case menu.EdgePermissionMenus:
-		ids := make([]ent.Value, 0, len(m.permission_menus))
-		for id := range m.permission_menus {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *MenuMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
-	if m.removedchildren != nil {
-		edges = append(edges, menu.EdgeChildren)
-	}
-	if m.removedresources != nil {
-		edges = append(edges, menu.EdgeResources)
-	}
-	if m.removedpermissions != nil {
-		edges = append(edges, menu.EdgePermissions)
-	}
-	if m.removedpermission_menus != nil {
-		edges = append(edges, menu.EdgePermissionMenus)
-	}
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *MenuMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case menu.EdgeChildren:
-		ids := make([]ent.Value, 0, len(m.removedchildren))
-		for id := range m.removedchildren {
-			ids = append(ids, id)
-		}
-		return ids
-	case menu.EdgeResources:
-		ids := make([]ent.Value, 0, len(m.removedresources))
-		for id := range m.removedresources {
-			ids = append(ids, id)
-		}
-		return ids
-	case menu.EdgePermissions:
-		ids := make([]ent.Value, 0, len(m.removedpermissions))
-		for id := range m.removedpermissions {
-			ids = append(ids, id)
-		}
-		return ids
-	case menu.EdgePermissionMenus:
-		ids := make([]ent.Value, 0, len(m.removedpermission_menus))
-		for id := range m.removedpermission_menus {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *MenuMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
-	if m.clearedchildren {
-		edges = append(edges, menu.EdgeChildren)
-	}
-	if m.clearedparent {
-		edges = append(edges, menu.EdgeParent)
-	}
-	if m.clearedresources {
-		edges = append(edges, menu.EdgeResources)
-	}
-	if m.clearedpermissions {
-		edges = append(edges, menu.EdgePermissions)
-	}
-	if m.clearedpermission_menus {
-		edges = append(edges, menu.EdgePermissionMenus)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *MenuMutation) EdgeCleared(name string) bool {
-	switch name {
-	case menu.EdgeChildren:
-		return m.clearedchildren
-	case menu.EdgeParent:
-		return m.clearedparent
-	case menu.EdgeResources:
-		return m.clearedresources
-	case menu.EdgePermissions:
-		return m.clearedpermissions
-	case menu.EdgePermissionMenus:
-		return m.clearedpermission_menus
-	}
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *MenuMutation) ClearEdge(name string) error {
-	switch name {
-	case menu.EdgeParent:
-		m.ClearParent()
-		return nil
-	}
-	return fmt.Errorf("unknown Menu unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *MenuMutation) ResetEdge(name string) error {
-	switch name {
-	case menu.EdgeChildren:
-		m.ResetChildren()
-		return nil
-	case menu.EdgeParent:
-		m.ResetParent()
-		return nil
-	case menu.EdgeResources:
-		m.ResetResources()
-		return nil
-	case menu.EdgePermissions:
-		m.ResetPermissions()
-		return nil
-	case menu.EdgePermissionMenus:
-		m.ResetPermissionMenus()
-		return nil
-	}
-	return fmt.Errorf("unknown Menu edge %s", name)
-}
-
 // PermissionMutation represents an operation that mutates the Permission nodes in the graph.
 type PermissionMutation struct {
 	config
@@ -3635,28 +2045,19 @@ type PermissionMutation struct {
 	name                        *string
 	keyword                     *string
 	description                 *string
-	i18n_key                    *string
-	_type                       *int8
-	add_type                    *int8
-	scope                       *string
-	scope_depts                 *[]string
-	appendscope_depts           []string
+	data_scope                  *string
+	data_rules                  *[]map[string]string
+	appenddata_rules            []map[string]string
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
 	removedroles                map[int64]struct{}
 	clearedroles                bool
-	menus                       map[int64]struct{}
-	removedmenus                map[int64]struct{}
-	clearedmenus                bool
 	resources                   map[int64]struct{}
 	removedresources            map[int64]struct{}
 	clearedresources            bool
 	role_permissions            map[int64]struct{}
 	removedrole_permissions     map[int64]struct{}
 	clearedrole_permissions     bool
-	permission_menus            map[int64]struct{}
-	removedpermission_menus     map[int64]struct{}
-	clearedpermission_menus     bool
 	permission_resources        map[int64]struct{}
 	removedpermission_resources map[int64]struct{}
 	clearedpermission_resources bool
@@ -3944,215 +2345,110 @@ func (m *PermissionMutation) OldDescription(ctx context.Context) (v string, err 
 	return oldValue.Description, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *PermissionMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[permission.FieldDescription] = struct{}{}
-}
-
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *PermissionMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[permission.FieldDescription]
-	return ok
-}
-
 // ResetDescription resets all changes to the "description" field.
 func (m *PermissionMutation) ResetDescription() {
 	m.description = nil
-	delete(m.clearedFields, permission.FieldDescription)
 }
 
-// SetI18nKey sets the "i18n_key" field.
-func (m *PermissionMutation) SetI18nKey(s string) {
-	m.i18n_key = &s
+// SetDataScope sets the "data_scope" field.
+func (m *PermissionMutation) SetDataScope(s string) {
+	m.data_scope = &s
 }
 
-// I18nKey returns the value of the "i18n_key" field in the mutation.
-func (m *PermissionMutation) I18nKey() (r string, exists bool) {
-	v := m.i18n_key
+// DataScope returns the value of the "data_scope" field in the mutation.
+func (m *PermissionMutation) DataScope() (r string, exists bool) {
+	v := m.data_scope
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldI18nKey returns the old "i18n_key" field's value of the Permission entity.
+// OldDataScope returns the old "data_scope" field's value of the Permission entity.
 // If the Permission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldI18nKey(ctx context.Context) (v string, err error) {
+func (m *PermissionMutation) OldDataScope(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldI18nKey is only allowed on UpdateOne operations")
+		return v, errors.New("OldDataScope is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldI18nKey requires an ID field in the mutation")
+		return v, errors.New("OldDataScope requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldI18nKey: %w", err)
+		return v, fmt.Errorf("querying old value for OldDataScope: %w", err)
 	}
-	return oldValue.I18nKey, nil
+	return oldValue.DataScope, nil
 }
 
-// ResetI18nKey resets all changes to the "i18n_key" field.
-func (m *PermissionMutation) ResetI18nKey() {
-	m.i18n_key = nil
+// ResetDataScope resets all changes to the "data_scope" field.
+func (m *PermissionMutation) ResetDataScope() {
+	m.data_scope = nil
 }
 
-// SetType sets the "type" field.
-func (m *PermissionMutation) SetType(i int8) {
-	m._type = &i
-	m.add_type = nil
+// SetDataRules sets the "data_rules" field.
+func (m *PermissionMutation) SetDataRules(value []map[string]string) {
+	m.data_rules = &value
+	m.appenddata_rules = nil
 }
 
-// GetType returns the value of the "type" field in the mutation.
-func (m *PermissionMutation) GetType() (r int8, exists bool) {
-	v := m._type
+// DataRules returns the value of the "data_rules" field in the mutation.
+func (m *PermissionMutation) DataRules() (r []map[string]string, exists bool) {
+	v := m.data_rules
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldType returns the old "type" field's value of the Permission entity.
+// OldDataRules returns the old "data_rules" field's value of the Permission entity.
 // If the Permission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldType(ctx context.Context) (v int8, err error) {
+func (m *PermissionMutation) OldDataRules(ctx context.Context) (v []map[string]string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldType is only allowed on UpdateOne operations")
+		return v, errors.New("OldDataRules is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldType requires an ID field in the mutation")
+		return v, errors.New("OldDataRules requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldType: %w", err)
+		return v, fmt.Errorf("querying old value for OldDataRules: %w", err)
 	}
-	return oldValue.Type, nil
+	return oldValue.DataRules, nil
 }
 
-// AddType adds i to the "type" field.
-func (m *PermissionMutation) AddType(i int8) {
-	if m.add_type != nil {
-		*m.add_type += i
-	} else {
-		m.add_type = &i
-	}
+// AppendDataRules adds value to the "data_rules" field.
+func (m *PermissionMutation) AppendDataRules(value []map[string]string) {
+	m.appenddata_rules = append(m.appenddata_rules, value...)
 }
 
-// AddedType returns the value that was added to the "type" field in this mutation.
-func (m *PermissionMutation) AddedType() (r int8, exists bool) {
-	v := m.add_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetType resets all changes to the "type" field.
-func (m *PermissionMutation) ResetType() {
-	m._type = nil
-	m.add_type = nil
-}
-
-// SetScope sets the "scope" field.
-func (m *PermissionMutation) SetScope(s string) {
-	m.scope = &s
-}
-
-// Scope returns the value of the "scope" field in the mutation.
-func (m *PermissionMutation) Scope() (r string, exists bool) {
-	v := m.scope
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldScope returns the old "scope" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldScope(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldScope is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldScope requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldScope: %w", err)
-	}
-	return oldValue.Scope, nil
-}
-
-// ResetScope resets all changes to the "scope" field.
-func (m *PermissionMutation) ResetScope() {
-	m.scope = nil
-}
-
-// SetScopeDepts sets the "scope_depts" field.
-func (m *PermissionMutation) SetScopeDepts(s []string) {
-	m.scope_depts = &s
-	m.appendscope_depts = nil
-}
-
-// ScopeDepts returns the value of the "scope_depts" field in the mutation.
-func (m *PermissionMutation) ScopeDepts() (r []string, exists bool) {
-	v := m.scope_depts
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldScopeDepts returns the old "scope_depts" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldScopeDepts(ctx context.Context) (v []string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldScopeDepts is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldScopeDepts requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldScopeDepts: %w", err)
-	}
-	return oldValue.ScopeDepts, nil
-}
-
-// AppendScopeDepts adds s to the "scope_depts" field.
-func (m *PermissionMutation) AppendScopeDepts(s []string) {
-	m.appendscope_depts = append(m.appendscope_depts, s...)
-}
-
-// AppendedScopeDepts returns the list of values that were appended to the "scope_depts" field in this mutation.
-func (m *PermissionMutation) AppendedScopeDepts() ([]string, bool) {
-	if len(m.appendscope_depts) == 0 {
+// AppendedDataRules returns the list of values that were appended to the "data_rules" field in this mutation.
+func (m *PermissionMutation) AppendedDataRules() ([]map[string]string, bool) {
+	if len(m.appenddata_rules) == 0 {
 		return nil, false
 	}
-	return m.appendscope_depts, true
+	return m.appenddata_rules, true
 }
 
-// ClearScopeDepts clears the value of the "scope_depts" field.
-func (m *PermissionMutation) ClearScopeDepts() {
-	m.scope_depts = nil
-	m.appendscope_depts = nil
-	m.clearedFields[permission.FieldScopeDepts] = struct{}{}
+// ClearDataRules clears the value of the "data_rules" field.
+func (m *PermissionMutation) ClearDataRules() {
+	m.data_rules = nil
+	m.appenddata_rules = nil
+	m.clearedFields[permission.FieldDataRules] = struct{}{}
 }
 
-// ScopeDeptsCleared returns if the "scope_depts" field was cleared in this mutation.
-func (m *PermissionMutation) ScopeDeptsCleared() bool {
-	_, ok := m.clearedFields[permission.FieldScopeDepts]
+// DataRulesCleared returns if the "data_rules" field was cleared in this mutation.
+func (m *PermissionMutation) DataRulesCleared() bool {
+	_, ok := m.clearedFields[permission.FieldDataRules]
 	return ok
 }
 
-// ResetScopeDepts resets all changes to the "scope_depts" field.
-func (m *PermissionMutation) ResetScopeDepts() {
-	m.scope_depts = nil
-	m.appendscope_depts = nil
-	delete(m.clearedFields, permission.FieldScopeDepts)
+// ResetDataRules resets all changes to the "data_rules" field.
+func (m *PermissionMutation) ResetDataRules() {
+	m.data_rules = nil
+	m.appenddata_rules = nil
+	delete(m.clearedFields, permission.FieldDataRules)
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
@@ -4207,60 +2503,6 @@ func (m *PermissionMutation) ResetRoles() {
 	m.roles = nil
 	m.clearedroles = false
 	m.removedroles = nil
-}
-
-// AddMenuIDs adds the "menus" edge to the Menu entity by ids.
-func (m *PermissionMutation) AddMenuIDs(ids ...int64) {
-	if m.menus == nil {
-		m.menus = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.menus[ids[i]] = struct{}{}
-	}
-}
-
-// ClearMenus clears the "menus" edge to the Menu entity.
-func (m *PermissionMutation) ClearMenus() {
-	m.clearedmenus = true
-}
-
-// MenusCleared reports if the "menus" edge to the Menu entity was cleared.
-func (m *PermissionMutation) MenusCleared() bool {
-	return m.clearedmenus
-}
-
-// RemoveMenuIDs removes the "menus" edge to the Menu entity by IDs.
-func (m *PermissionMutation) RemoveMenuIDs(ids ...int64) {
-	if m.removedmenus == nil {
-		m.removedmenus = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.menus, ids[i])
-		m.removedmenus[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedMenus returns the removed IDs of the "menus" edge to the Menu entity.
-func (m *PermissionMutation) RemovedMenusIDs() (ids []int64) {
-	for id := range m.removedmenus {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// MenusIDs returns the "menus" edge IDs in the mutation.
-func (m *PermissionMutation) MenusIDs() (ids []int64) {
-	for id := range m.menus {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetMenus resets all changes to the "menus" edge.
-func (m *PermissionMutation) ResetMenus() {
-	m.menus = nil
-	m.clearedmenus = false
-	m.removedmenus = nil
 }
 
 // AddResourceIDs adds the "resources" edge to the Resource entity by ids.
@@ -4371,60 +2613,6 @@ func (m *PermissionMutation) ResetRolePermissions() {
 	m.removedrole_permissions = nil
 }
 
-// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by ids.
-func (m *PermissionMutation) AddPermissionMenuIDs(ids ...int64) {
-	if m.permission_menus == nil {
-		m.permission_menus = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.permission_menus[ids[i]] = struct{}{}
-	}
-}
-
-// ClearPermissionMenus clears the "permission_menus" edge to the PermissionMenu entity.
-func (m *PermissionMutation) ClearPermissionMenus() {
-	m.clearedpermission_menus = true
-}
-
-// PermissionMenusCleared reports if the "permission_menus" edge to the PermissionMenu entity was cleared.
-func (m *PermissionMutation) PermissionMenusCleared() bool {
-	return m.clearedpermission_menus
-}
-
-// RemovePermissionMenuIDs removes the "permission_menus" edge to the PermissionMenu entity by IDs.
-func (m *PermissionMutation) RemovePermissionMenuIDs(ids ...int64) {
-	if m.removedpermission_menus == nil {
-		m.removedpermission_menus = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.permission_menus, ids[i])
-		m.removedpermission_menus[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPermissionMenus returns the removed IDs of the "permission_menus" edge to the PermissionMenu entity.
-func (m *PermissionMutation) RemovedPermissionMenusIDs() (ids []int64) {
-	for id := range m.removedpermission_menus {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PermissionMenusIDs returns the "permission_menus" edge IDs in the mutation.
-func (m *PermissionMutation) PermissionMenusIDs() (ids []int64) {
-	for id := range m.permission_menus {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPermissionMenus resets all changes to the "permission_menus" edge.
-func (m *PermissionMutation) ResetPermissionMenus() {
-	m.permission_menus = nil
-	m.clearedpermission_menus = false
-	m.removedpermission_menus = nil
-}
-
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
 func (m *PermissionMutation) AddPermissionResourceIDs(ids ...int64) {
 	if m.permission_resources == nil {
@@ -4513,7 +2701,7 @@ func (m *PermissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 7)
 	if m.create_time != nil {
 		fields = append(fields, permission.FieldCreateTime)
 	}
@@ -4529,17 +2717,11 @@ func (m *PermissionMutation) Fields() []string {
 	if m.description != nil {
 		fields = append(fields, permission.FieldDescription)
 	}
-	if m.i18n_key != nil {
-		fields = append(fields, permission.FieldI18nKey)
+	if m.data_scope != nil {
+		fields = append(fields, permission.FieldDataScope)
 	}
-	if m._type != nil {
-		fields = append(fields, permission.FieldType)
-	}
-	if m.scope != nil {
-		fields = append(fields, permission.FieldScope)
-	}
-	if m.scope_depts != nil {
-		fields = append(fields, permission.FieldScopeDepts)
+	if m.data_rules != nil {
+		fields = append(fields, permission.FieldDataRules)
 	}
 	return fields
 }
@@ -4559,14 +2741,10 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 		return m.Keyword()
 	case permission.FieldDescription:
 		return m.Description()
-	case permission.FieldI18nKey:
-		return m.I18nKey()
-	case permission.FieldType:
-		return m.GetType()
-	case permission.FieldScope:
-		return m.Scope()
-	case permission.FieldScopeDepts:
-		return m.ScopeDepts()
+	case permission.FieldDataScope:
+		return m.DataScope()
+	case permission.FieldDataRules:
+		return m.DataRules()
 	}
 	return nil, false
 }
@@ -4586,14 +2764,10 @@ func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldKeyword(ctx)
 	case permission.FieldDescription:
 		return m.OldDescription(ctx)
-	case permission.FieldI18nKey:
-		return m.OldI18nKey(ctx)
-	case permission.FieldType:
-		return m.OldType(ctx)
-	case permission.FieldScope:
-		return m.OldScope(ctx)
-	case permission.FieldScopeDepts:
-		return m.OldScopeDepts(ctx)
+	case permission.FieldDataScope:
+		return m.OldDataScope(ctx)
+	case permission.FieldDataRules:
+		return m.OldDataRules(ctx)
 	}
 	return nil, fmt.Errorf("unknown Permission field %s", name)
 }
@@ -4638,33 +2812,19 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDescription(v)
 		return nil
-	case permission.FieldI18nKey:
+	case permission.FieldDataScope:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetI18nKey(v)
+		m.SetDataScope(v)
 		return nil
-	case permission.FieldType:
-		v, ok := value.(int8)
+	case permission.FieldDataRules:
+		v, ok := value.([]map[string]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetType(v)
-		return nil
-	case permission.FieldScope:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetScope(v)
-		return nil
-	case permission.FieldScopeDepts:
-		v, ok := value.([]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetScopeDepts(v)
+		m.SetDataRules(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
@@ -4673,21 +2833,13 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *PermissionMutation) AddedFields() []string {
-	var fields []string
-	if m.add_type != nil {
-		fields = append(fields, permission.FieldType)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case permission.FieldType:
-		return m.AddedType()
-	}
 	return nil, false
 }
 
@@ -4696,13 +2848,6 @@ func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PermissionMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case permission.FieldType:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddType(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Permission numeric field %s", name)
 }
@@ -4711,11 +2856,8 @@ func (m *PermissionMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *PermissionMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(permission.FieldDescription) {
-		fields = append(fields, permission.FieldDescription)
-	}
-	if m.FieldCleared(permission.FieldScopeDepts) {
-		fields = append(fields, permission.FieldScopeDepts)
+	if m.FieldCleared(permission.FieldDataRules) {
+		fields = append(fields, permission.FieldDataRules)
 	}
 	return fields
 }
@@ -4731,11 +2873,8 @@ func (m *PermissionMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *PermissionMutation) ClearField(name string) error {
 	switch name {
-	case permission.FieldDescription:
-		m.ClearDescription()
-		return nil
-	case permission.FieldScopeDepts:
-		m.ClearScopeDepts()
+	case permission.FieldDataRules:
+		m.ClearDataRules()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission nullable field %s", name)
@@ -4760,17 +2899,11 @@ func (m *PermissionMutation) ResetField(name string) error {
 	case permission.FieldDescription:
 		m.ResetDescription()
 		return nil
-	case permission.FieldI18nKey:
-		m.ResetI18nKey()
+	case permission.FieldDataScope:
+		m.ResetDataScope()
 		return nil
-	case permission.FieldType:
-		m.ResetType()
-		return nil
-	case permission.FieldScope:
-		m.ResetScope()
-		return nil
-	case permission.FieldScopeDepts:
-		m.ResetScopeDepts()
+	case permission.FieldDataRules:
+		m.ResetDataRules()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
@@ -4778,21 +2911,15 @@ func (m *PermissionMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *PermissionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 4)
 	if m.roles != nil {
 		edges = append(edges, permission.EdgeRoles)
-	}
-	if m.menus != nil {
-		edges = append(edges, permission.EdgeMenus)
 	}
 	if m.resources != nil {
 		edges = append(edges, permission.EdgeResources)
 	}
 	if m.role_permissions != nil {
 		edges = append(edges, permission.EdgeRolePermissions)
-	}
-	if m.permission_menus != nil {
-		edges = append(edges, permission.EdgePermissionMenus)
 	}
 	if m.permission_resources != nil {
 		edges = append(edges, permission.EdgePermissionResources)
@@ -4810,12 +2937,6 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case permission.EdgeMenus:
-		ids := make([]ent.Value, 0, len(m.menus))
-		for id := range m.menus {
-			ids = append(ids, id)
-		}
-		return ids
 	case permission.EdgeResources:
 		ids := make([]ent.Value, 0, len(m.resources))
 		for id := range m.resources {
@@ -4825,12 +2946,6 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 	case permission.EdgeRolePermissions:
 		ids := make([]ent.Value, 0, len(m.role_permissions))
 		for id := range m.role_permissions {
-			ids = append(ids, id)
-		}
-		return ids
-	case permission.EdgePermissionMenus:
-		ids := make([]ent.Value, 0, len(m.permission_menus))
-		for id := range m.permission_menus {
 			ids = append(ids, id)
 		}
 		return ids
@@ -4846,21 +2961,15 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *PermissionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 4)
 	if m.removedroles != nil {
 		edges = append(edges, permission.EdgeRoles)
-	}
-	if m.removedmenus != nil {
-		edges = append(edges, permission.EdgeMenus)
 	}
 	if m.removedresources != nil {
 		edges = append(edges, permission.EdgeResources)
 	}
 	if m.removedrole_permissions != nil {
 		edges = append(edges, permission.EdgeRolePermissions)
-	}
-	if m.removedpermission_menus != nil {
-		edges = append(edges, permission.EdgePermissionMenus)
 	}
 	if m.removedpermission_resources != nil {
 		edges = append(edges, permission.EdgePermissionResources)
@@ -4878,12 +2987,6 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case permission.EdgeMenus:
-		ids := make([]ent.Value, 0, len(m.removedmenus))
-		for id := range m.removedmenus {
-			ids = append(ids, id)
-		}
-		return ids
 	case permission.EdgeResources:
 		ids := make([]ent.Value, 0, len(m.removedresources))
 		for id := range m.removedresources {
@@ -4893,12 +2996,6 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 	case permission.EdgeRolePermissions:
 		ids := make([]ent.Value, 0, len(m.removedrole_permissions))
 		for id := range m.removedrole_permissions {
-			ids = append(ids, id)
-		}
-		return ids
-	case permission.EdgePermissionMenus:
-		ids := make([]ent.Value, 0, len(m.removedpermission_menus))
-		for id := range m.removedpermission_menus {
 			ids = append(ids, id)
 		}
 		return ids
@@ -4914,21 +3011,15 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *PermissionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 4)
 	if m.clearedroles {
 		edges = append(edges, permission.EdgeRoles)
-	}
-	if m.clearedmenus {
-		edges = append(edges, permission.EdgeMenus)
 	}
 	if m.clearedresources {
 		edges = append(edges, permission.EdgeResources)
 	}
 	if m.clearedrole_permissions {
 		edges = append(edges, permission.EdgeRolePermissions)
-	}
-	if m.clearedpermission_menus {
-		edges = append(edges, permission.EdgePermissionMenus)
 	}
 	if m.clearedpermission_resources {
 		edges = append(edges, permission.EdgePermissionResources)
@@ -4942,14 +3033,10 @@ func (m *PermissionMutation) EdgeCleared(name string) bool {
 	switch name {
 	case permission.EdgeRoles:
 		return m.clearedroles
-	case permission.EdgeMenus:
-		return m.clearedmenus
 	case permission.EdgeResources:
 		return m.clearedresources
 	case permission.EdgeRolePermissions:
 		return m.clearedrole_permissions
-	case permission.EdgePermissionMenus:
-		return m.clearedpermission_menus
 	case permission.EdgePermissionResources:
 		return m.clearedpermission_resources
 	}
@@ -4971,17 +3058,11 @@ func (m *PermissionMutation) ResetEdge(name string) error {
 	case permission.EdgeRoles:
 		m.ResetRoles()
 		return nil
-	case permission.EdgeMenus:
-		m.ResetMenus()
-		return nil
 	case permission.EdgeResources:
 		m.ResetResources()
 		return nil
 	case permission.EdgeRolePermissions:
 		m.ResetRolePermissions()
-		return nil
-	case permission.EdgePermissionMenus:
-		m.ResetPermissionMenus()
 		return nil
 	case permission.EdgePermissionResources:
 		m.ResetPermissionResources()
@@ -4990,501 +3071,13 @@ func (m *PermissionMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Permission edge %s", name)
 }
 
-// PermissionMenuMutation represents an operation that mutates the PermissionMenu nodes in the graph.
-type PermissionMenuMutation struct {
-	config
-	op                Op
-	typ               string
-	id                *int64
-	clearedFields     map[string]struct{}
-	permission        *int64
-	clearedpermission bool
-	menu              *int64
-	clearedmenu       bool
-	done              bool
-	oldValue          func(context.Context) (*PermissionMenu, error)
-	predicates        []predicate.PermissionMenu
-}
-
-var _ ent.Mutation = (*PermissionMenuMutation)(nil)
-
-// permissionmenuOption allows management of the mutation configuration using functional options.
-type permissionmenuOption func(*PermissionMenuMutation)
-
-// newPermissionMenuMutation creates new mutation for the PermissionMenu entity.
-func newPermissionMenuMutation(c config, op Op, opts ...permissionmenuOption) *PermissionMenuMutation {
-	m := &PermissionMenuMutation{
-		config:        c,
-		op:            op,
-		typ:           TypePermissionMenu,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withPermissionMenuID sets the ID field of the mutation.
-func withPermissionMenuID(id int64) permissionmenuOption {
-	return func(m *PermissionMenuMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *PermissionMenu
-		)
-		m.oldValue = func(ctx context.Context) (*PermissionMenu, error) {
-			once.Do(func() {
-				if m.done {
-					err = errors.New("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().PermissionMenu.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withPermissionMenu sets the old PermissionMenu of the mutation.
-func withPermissionMenu(node *PermissionMenu) permissionmenuOption {
-	return func(m *PermissionMenuMutation) {
-		m.oldValue = func(context.Context) (*PermissionMenu, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m PermissionMenuMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m PermissionMenuMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, errors.New("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of PermissionMenu entities.
-func (m *PermissionMenuMutation) SetID(id int64) {
-	m.id = &id
-}
-
-// ID returns the ID value in the mutation. Note that the ID is only available
-// if it was provided to the builder or after it was returned from the database.
-func (m *PermissionMenuMutation) ID() (id int64, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// IDs queries the database and returns the entity ids that match the mutation's predicate.
-// That means, if the mutation is applied within a transaction with an isolation level such
-// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
-// or updated by the mutation.
-func (m *PermissionMenuMutation) IDs(ctx context.Context) ([]int64, error) {
-	switch {
-	case m.op.Is(OpUpdateOne | OpDeleteOne):
-		id, exists := m.ID()
-		if exists {
-			return []int64{id}, nil
-		}
-		fallthrough
-	case m.op.Is(OpUpdate | OpDelete):
-		return m.Client().PermissionMenu.Query().Where(m.predicates...).IDs(ctx)
-	default:
-		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
-	}
-}
-
-// SetPermissionID sets the "permission_id" field.
-func (m *PermissionMenuMutation) SetPermissionID(i int64) {
-	m.permission = &i
-}
-
-// PermissionID returns the value of the "permission_id" field in the mutation.
-func (m *PermissionMenuMutation) PermissionID() (r int64, exists bool) {
-	v := m.permission
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPermissionID returns the old "permission_id" field's value of the PermissionMenu entity.
-// If the PermissionMenu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMenuMutation) OldPermissionID(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPermissionID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPermissionID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPermissionID: %w", err)
-	}
-	return oldValue.PermissionID, nil
-}
-
-// ResetPermissionID resets all changes to the "permission_id" field.
-func (m *PermissionMenuMutation) ResetPermissionID() {
-	m.permission = nil
-}
-
-// SetMenuID sets the "menu_id" field.
-func (m *PermissionMenuMutation) SetMenuID(i int64) {
-	m.menu = &i
-}
-
-// MenuID returns the value of the "menu_id" field in the mutation.
-func (m *PermissionMenuMutation) MenuID() (r int64, exists bool) {
-	v := m.menu
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldMenuID returns the old "menu_id" field's value of the PermissionMenu entity.
-// If the PermissionMenu object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMenuMutation) OldMenuID(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMenuID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMenuID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMenuID: %w", err)
-	}
-	return oldValue.MenuID, nil
-}
-
-// ResetMenuID resets all changes to the "menu_id" field.
-func (m *PermissionMenuMutation) ResetMenuID() {
-	m.menu = nil
-}
-
-// ClearPermission clears the "permission" edge to the Permission entity.
-func (m *PermissionMenuMutation) ClearPermission() {
-	m.clearedpermission = true
-	m.clearedFields[permissionmenu.FieldPermissionID] = struct{}{}
-}
-
-// PermissionCleared reports if the "permission" edge to the Permission entity was cleared.
-func (m *PermissionMenuMutation) PermissionCleared() bool {
-	return m.clearedpermission
-}
-
-// PermissionIDs returns the "permission" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// PermissionID instead. It exists only for internal usage by the builders.
-func (m *PermissionMenuMutation) PermissionIDs() (ids []int64) {
-	if id := m.permission; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetPermission resets all changes to the "permission" edge.
-func (m *PermissionMenuMutation) ResetPermission() {
-	m.permission = nil
-	m.clearedpermission = false
-}
-
-// ClearMenu clears the "menu" edge to the Menu entity.
-func (m *PermissionMenuMutation) ClearMenu() {
-	m.clearedmenu = true
-	m.clearedFields[permissionmenu.FieldMenuID] = struct{}{}
-}
-
-// MenuCleared reports if the "menu" edge to the Menu entity was cleared.
-func (m *PermissionMenuMutation) MenuCleared() bool {
-	return m.clearedmenu
-}
-
-// MenuIDs returns the "menu" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// MenuID instead. It exists only for internal usage by the builders.
-func (m *PermissionMenuMutation) MenuIDs() (ids []int64) {
-	if id := m.menu; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetMenu resets all changes to the "menu" edge.
-func (m *PermissionMenuMutation) ResetMenu() {
-	m.menu = nil
-	m.clearedmenu = false
-}
-
-// Where appends a list predicates to the PermissionMenuMutation builder.
-func (m *PermissionMenuMutation) Where(ps ...predicate.PermissionMenu) {
-	m.predicates = append(m.predicates, ps...)
-}
-
-// WhereP appends storage-level predicates to the PermissionMenuMutation builder. Using this method,
-// users can use type-assertion to append predicates that do not depend on any generated package.
-func (m *PermissionMenuMutation) WhereP(ps ...func(*sql.Selector)) {
-	p := make([]predicate.PermissionMenu, len(ps))
-	for i := range ps {
-		p[i] = ps[i]
-	}
-	m.Where(p...)
-}
-
-// Op returns the operation name.
-func (m *PermissionMenuMutation) Op() Op {
-	return m.op
-}
-
-// SetOp allows setting the mutation operation.
-func (m *PermissionMenuMutation) SetOp(op Op) {
-	m.op = op
-}
-
-// Type returns the node type of this mutation (PermissionMenu).
-func (m *PermissionMenuMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during this mutation. Note that in
-// order to get all numeric fields that were incremented/decremented, call
-// AddedFields().
-func (m *PermissionMenuMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m.permission != nil {
-		fields = append(fields, permissionmenu.FieldPermissionID)
-	}
-	if m.menu != nil {
-		fields = append(fields, permissionmenu.FieldMenuID)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name. The second boolean
-// return value indicates that this field was not set, or was not defined in the
-// schema.
-func (m *PermissionMenuMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case permissionmenu.FieldPermissionID:
-		return m.PermissionID()
-	case permissionmenu.FieldMenuID:
-		return m.MenuID()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database. An error is
-// returned if the mutation operation is not UpdateOne, or the query to the
-// database failed.
-func (m *PermissionMenuMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case permissionmenu.FieldPermissionID:
-		return m.OldPermissionID(ctx)
-	case permissionmenu.FieldMenuID:
-		return m.OldMenuID(ctx)
-	}
-	return nil, fmt.Errorf("unknown PermissionMenu field %s", name)
-}
-
-// SetField sets the value of a field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *PermissionMenuMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case permissionmenu.FieldPermissionID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPermissionID(v)
-		return nil
-	case permissionmenu.FieldMenuID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetMenuID(v)
-		return nil
-	}
-	return fmt.Errorf("unknown PermissionMenu field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented/decremented during
-// this mutation.
-func (m *PermissionMenuMutation) AddedFields() []string {
-	var fields []string
-	return fields
-}
-
-// AddedField returns the numeric value that was incremented/decremented on a field
-// with the given name. The second boolean return value indicates that this field
-// was not set, or was not defined in the schema.
-func (m *PermissionMenuMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	}
-	return nil, false
-}
-
-// AddField adds the value to the field with the given name. It returns an error if
-// the field is not defined in the schema, or if the type mismatched the field
-// type.
-func (m *PermissionMenuMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown PermissionMenu numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared during this
-// mutation.
-func (m *PermissionMenuMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicating if a field with the given name was
-// cleared in this mutation.
-func (m *PermissionMenuMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value of the field with the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *PermissionMenuMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown PermissionMenu nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation for the field with the given name.
-// It returns an error if the field is not defined in the schema.
-func (m *PermissionMenuMutation) ResetField(name string) error {
-	switch name {
-	case permissionmenu.FieldPermissionID:
-		m.ResetPermissionID()
-		return nil
-	case permissionmenu.FieldMenuID:
-		m.ResetMenuID()
-		return nil
-	}
-	return fmt.Errorf("unknown PermissionMenu field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this mutation.
-func (m *PermissionMenuMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.permission != nil {
-		edges = append(edges, permissionmenu.EdgePermission)
-	}
-	if m.menu != nil {
-		edges = append(edges, permissionmenu.EdgeMenu)
-	}
-	return edges
-}
-
-// AddedIDs returns all IDs (to other nodes) that were added for the given edge
-// name in this mutation.
-func (m *PermissionMenuMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case permissionmenu.EdgePermission:
-		if id := m.permission; id != nil {
-			return []ent.Value{*id}
-		}
-	case permissionmenu.EdgeMenu:
-		if id := m.menu; id != nil {
-			return []ent.Value{*id}
-		}
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this mutation.
-func (m *PermissionMenuMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
-	return edges
-}
-
-// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
-// the given name in this mutation.
-func (m *PermissionMenuMutation) RemovedIDs(name string) []ent.Value {
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this mutation.
-func (m *PermissionMenuMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
-	if m.clearedpermission {
-		edges = append(edges, permissionmenu.EdgePermission)
-	}
-	if m.clearedmenu {
-		edges = append(edges, permissionmenu.EdgeMenu)
-	}
-	return edges
-}
-
-// EdgeCleared returns a boolean which indicates if the edge with the given name
-// was cleared in this mutation.
-func (m *PermissionMenuMutation) EdgeCleared(name string) bool {
-	switch name {
-	case permissionmenu.EdgePermission:
-		return m.clearedpermission
-	case permissionmenu.EdgeMenu:
-		return m.clearedmenu
-	}
-	return false
-}
-
-// ClearEdge clears the value of the edge with the given name. It returns an error
-// if that edge is not defined in the schema.
-func (m *PermissionMenuMutation) ClearEdge(name string) error {
-	switch name {
-	case permissionmenu.EdgePermission:
-		m.ClearPermission()
-		return nil
-	case permissionmenu.EdgeMenu:
-		m.ClearMenu()
-		return nil
-	}
-	return fmt.Errorf("unknown PermissionMenu unique edge %s", name)
-}
-
-// ResetEdge resets all changes to the edge with the given name in this mutation.
-// It returns an error if the edge is not defined in the schema.
-func (m *PermissionMenuMutation) ResetEdge(name string) error {
-	switch name {
-	case permissionmenu.EdgePermission:
-		m.ResetPermission()
-		return nil
-	case permissionmenu.EdgeMenu:
-		m.ResetMenu()
-		return nil
-	}
-	return fmt.Errorf("unknown PermissionMenu edge %s", name)
-}
-
 // PermissionResourceMutation represents an operation that mutates the PermissionResource nodes in the graph.
 type PermissionResourceMutation struct {
 	config
 	op                Op
 	typ               string
 	id                *int64
+	actions           *string
 	clearedFields     map[string]struct{}
 	permission        *int64
 	clearedpermission bool
@@ -5671,6 +3264,42 @@ func (m *PermissionResourceMutation) ResetResourceID() {
 	m.resource = nil
 }
 
+// SetActions sets the "actions" field.
+func (m *PermissionResourceMutation) SetActions(s string) {
+	m.actions = &s
+}
+
+// Actions returns the value of the "actions" field in the mutation.
+func (m *PermissionResourceMutation) Actions() (r string, exists bool) {
+	v := m.actions
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldActions returns the old "actions" field's value of the PermissionResource entity.
+// If the PermissionResource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PermissionResourceMutation) OldActions(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldActions is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldActions requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldActions: %w", err)
+	}
+	return oldValue.Actions, nil
+}
+
+// ResetActions resets all changes to the "actions" field.
+func (m *PermissionResourceMutation) ResetActions() {
+	m.actions = nil
+}
+
 // ClearPermission clears the "permission" edge to the Permission entity.
 func (m *PermissionResourceMutation) ClearPermission() {
 	m.clearedpermission = true
@@ -5759,12 +3388,15 @@ func (m *PermissionResourceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionResourceMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
 	if m.permission != nil {
 		fields = append(fields, permissionresource.FieldPermissionID)
 	}
 	if m.resource != nil {
 		fields = append(fields, permissionresource.FieldResourceID)
+	}
+	if m.actions != nil {
+		fields = append(fields, permissionresource.FieldActions)
 	}
 	return fields
 }
@@ -5778,6 +3410,8 @@ func (m *PermissionResourceMutation) Field(name string) (ent.Value, bool) {
 		return m.PermissionID()
 	case permissionresource.FieldResourceID:
 		return m.ResourceID()
+	case permissionresource.FieldActions:
+		return m.Actions()
 	}
 	return nil, false
 }
@@ -5791,6 +3425,8 @@ func (m *PermissionResourceMutation) OldField(ctx context.Context, name string) 
 		return m.OldPermissionID(ctx)
 	case permissionresource.FieldResourceID:
 		return m.OldResourceID(ctx)
+	case permissionresource.FieldActions:
+		return m.OldActions(ctx)
 	}
 	return nil, fmt.Errorf("unknown PermissionResource field %s", name)
 }
@@ -5813,6 +3449,13 @@ func (m *PermissionResourceMutation) SetField(name string, value ent.Value) erro
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetResourceID(v)
+		return nil
+	case permissionresource.FieldActions:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetActions(v)
 		return nil
 	}
 	return fmt.Errorf("unknown PermissionResource field %s", name)
@@ -5871,6 +3514,9 @@ func (m *PermissionResourceMutation) ResetField(name string) error {
 		return nil
 	case permissionresource.FieldResourceID:
 		m.ResetResourceID()
+		return nil
+	case permissionresource.FieldActions:
+		m.ResetActions()
 		return nil
 	}
 	return fmt.Errorf("unknown PermissionResource field %s", name)
@@ -6666,19 +4312,33 @@ type ResourceMutation struct {
 	id                          *int64
 	create_time                 *time.Time
 	update_time                 *time.Time
-	method                      *string
-	operation                   *string
-	_path                       *string
-	uri                         *string
+	name                        *string
+	keyword                     *string
 	i18n_key                    *string
+	_type                       *uint32
+	add_type                    *int32
+	status                      *int8
+	addstatus                   *int8
+	uri                         *string
+	operation                   *string
+	method                      *string
+	component                   *string
+	icon                        *string
+	sequence                    *int
+	addsequence                 *int
+	visible                     *bool
+	tree_path                   *string
+	properties                  *map[string]string
 	description                 *string
-	metadata                    *map[string]interface{}
 	clearedFields               map[string]struct{}
-	menu                        *int64
-	clearedmenu                 bool
-	permission                  map[int64]struct{}
-	removedpermission           map[int64]struct{}
-	clearedpermission           bool
+	children                    map[int64]struct{}
+	removedchildren             map[int64]struct{}
+	clearedchildren             bool
+	parent                      *int64
+	clearedparent               bool
+	permissions                 map[int64]struct{}
+	removedpermissions          map[int64]struct{}
+	clearedpermissions          bool
 	permission_resources        map[int64]struct{}
 	removedpermission_resources map[int64]struct{}
 	clearedpermission_resources bool
@@ -6863,148 +4523,76 @@ func (m *ResourceMutation) ResetUpdateTime() {
 	m.update_time = nil
 }
 
-// SetMethod sets the "method" field.
-func (m *ResourceMutation) SetMethod(s string) {
-	m.method = &s
+// SetName sets the "name" field.
+func (m *ResourceMutation) SetName(s string) {
+	m.name = &s
 }
 
-// Method returns the value of the "method" field in the mutation.
-func (m *ResourceMutation) Method() (r string, exists bool) {
-	v := m.method
+// Name returns the value of the "name" field in the mutation.
+func (m *ResourceMutation) Name() (r string, exists bool) {
+	v := m.name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMethod returns the old "method" field's value of the Resource entity.
+// OldName returns the old "name" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldMethod(ctx context.Context) (v string, err error) {
+func (m *ResourceMutation) OldName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMethod requires an ID field in the mutation")
+		return v, errors.New("OldName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
 	}
-	return oldValue.Method, nil
+	return oldValue.Name, nil
 }
 
-// ResetMethod resets all changes to the "method" field.
-func (m *ResourceMutation) ResetMethod() {
-	m.method = nil
+// ResetName resets all changes to the "name" field.
+func (m *ResourceMutation) ResetName() {
+	m.name = nil
 }
 
-// SetOperation sets the "operation" field.
-func (m *ResourceMutation) SetOperation(s string) {
-	m.operation = &s
+// SetKeyword sets the "keyword" field.
+func (m *ResourceMutation) SetKeyword(s string) {
+	m.keyword = &s
 }
 
-// Operation returns the value of the "operation" field in the mutation.
-func (m *ResourceMutation) Operation() (r string, exists bool) {
-	v := m.operation
+// Keyword returns the value of the "keyword" field in the mutation.
+func (m *ResourceMutation) Keyword() (r string, exists bool) {
+	v := m.keyword
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldOperation returns the old "operation" field's value of the Resource entity.
+// OldKeyword returns the old "keyword" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldOperation(ctx context.Context) (v string, err error) {
+func (m *ResourceMutation) OldKeyword(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOperation is only allowed on UpdateOne operations")
+		return v, errors.New("OldKeyword is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOperation requires an ID field in the mutation")
+		return v, errors.New("OldKeyword requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOperation: %w", err)
+		return v, fmt.Errorf("querying old value for OldKeyword: %w", err)
 	}
-	return oldValue.Operation, nil
+	return oldValue.Keyword, nil
 }
 
-// ResetOperation resets all changes to the "operation" field.
-func (m *ResourceMutation) ResetOperation() {
-	m.operation = nil
-}
-
-// SetPath sets the "path" field.
-func (m *ResourceMutation) SetPath(s string) {
-	m._path = &s
-}
-
-// Path returns the value of the "path" field in the mutation.
-func (m *ResourceMutation) Path() (r string, exists bool) {
-	v := m._path
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPath returns the old "path" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldPath(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPath is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPath requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPath: %w", err)
-	}
-	return oldValue.Path, nil
-}
-
-// ResetPath resets all changes to the "path" field.
-func (m *ResourceMutation) ResetPath() {
-	m._path = nil
-}
-
-// SetURI sets the "uri" field.
-func (m *ResourceMutation) SetURI(s string) {
-	m.uri = &s
-}
-
-// URI returns the value of the "uri" field in the mutation.
-func (m *ResourceMutation) URI() (r string, exists bool) {
-	v := m.uri
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldURI returns the old "uri" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldURI(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldURI is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldURI requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldURI: %w", err)
-	}
-	return oldValue.URI, nil
-}
-
-// ResetURI resets all changes to the "uri" field.
-func (m *ResourceMutation) ResetURI() {
-	m.uri = nil
+// ResetKeyword resets all changes to the "keyword" field.
+func (m *ResourceMutation) ResetKeyword() {
+	m.keyword = nil
 }
 
 // SetI18nKey sets the "i18n_key" field.
@@ -7043,6 +4631,475 @@ func (m *ResourceMutation) ResetI18nKey() {
 	m.i18n_key = nil
 }
 
+// SetType sets the "type" field.
+func (m *ResourceMutation) SetType(u uint32) {
+	m._type = &u
+	m.add_type = nil
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *ResourceMutation) GetType() (r uint32, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldType(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// AddType adds u to the "type" field.
+func (m *ResourceMutation) AddType(u int32) {
+	if m.add_type != nil {
+		*m.add_type += u
+	} else {
+		m.add_type = &u
+	}
+}
+
+// AddedType returns the value that was added to the "type" field in this mutation.
+func (m *ResourceMutation) AddedType() (r int32, exists bool) {
+	v := m.add_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *ResourceMutation) ResetType() {
+	m._type = nil
+	m.add_type = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *ResourceMutation) SetStatus(i int8) {
+	m.status = &i
+	m.addstatus = nil
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *ResourceMutation) Status() (r int8, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldStatus(ctx context.Context) (v int8, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// AddStatus adds i to the "status" field.
+func (m *ResourceMutation) AddStatus(i int8) {
+	if m.addstatus != nil {
+		*m.addstatus += i
+	} else {
+		m.addstatus = &i
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *ResourceMutation) AddedStatus() (r int8, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *ResourceMutation) ResetStatus() {
+	m.status = nil
+	m.addstatus = nil
+}
+
+// SetURI sets the "uri" field.
+func (m *ResourceMutation) SetURI(s string) {
+	m.uri = &s
+}
+
+// URI returns the value of the "uri" field in the mutation.
+func (m *ResourceMutation) URI() (r string, exists bool) {
+	v := m.uri
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldURI returns the old "uri" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldURI(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldURI is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldURI requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldURI: %w", err)
+	}
+	return oldValue.URI, nil
+}
+
+// ResetURI resets all changes to the "uri" field.
+func (m *ResourceMutation) ResetURI() {
+	m.uri = nil
+}
+
+// SetOperation sets the "operation" field.
+func (m *ResourceMutation) SetOperation(s string) {
+	m.operation = &s
+}
+
+// Operation returns the value of the "operation" field in the mutation.
+func (m *ResourceMutation) Operation() (r string, exists bool) {
+	v := m.operation
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOperation returns the old "operation" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldOperation(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOperation is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOperation requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOperation: %w", err)
+	}
+	return oldValue.Operation, nil
+}
+
+// ResetOperation resets all changes to the "operation" field.
+func (m *ResourceMutation) ResetOperation() {
+	m.operation = nil
+}
+
+// SetMethod sets the "method" field.
+func (m *ResourceMutation) SetMethod(s string) {
+	m.method = &s
+}
+
+// Method returns the value of the "method" field in the mutation.
+func (m *ResourceMutation) Method() (r string, exists bool) {
+	v := m.method
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMethod returns the old "method" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldMethod(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMethod requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
+	}
+	return oldValue.Method, nil
+}
+
+// ResetMethod resets all changes to the "method" field.
+func (m *ResourceMutation) ResetMethod() {
+	m.method = nil
+}
+
+// SetComponent sets the "component" field.
+func (m *ResourceMutation) SetComponent(s string) {
+	m.component = &s
+}
+
+// Component returns the value of the "component" field in the mutation.
+func (m *ResourceMutation) Component() (r string, exists bool) {
+	v := m.component
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldComponent returns the old "component" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldComponent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldComponent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldComponent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldComponent: %w", err)
+	}
+	return oldValue.Component, nil
+}
+
+// ResetComponent resets all changes to the "component" field.
+func (m *ResourceMutation) ResetComponent() {
+	m.component = nil
+}
+
+// SetIcon sets the "icon" field.
+func (m *ResourceMutation) SetIcon(s string) {
+	m.icon = &s
+}
+
+// Icon returns the value of the "icon" field in the mutation.
+func (m *ResourceMutation) Icon() (r string, exists bool) {
+	v := m.icon
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIcon returns the old "icon" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldIcon(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIcon is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIcon requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIcon: %w", err)
+	}
+	return oldValue.Icon, nil
+}
+
+// ResetIcon resets all changes to the "icon" field.
+func (m *ResourceMutation) ResetIcon() {
+	m.icon = nil
+}
+
+// SetSequence sets the "sequence" field.
+func (m *ResourceMutation) SetSequence(i int) {
+	m.sequence = &i
+	m.addsequence = nil
+}
+
+// Sequence returns the value of the "sequence" field in the mutation.
+func (m *ResourceMutation) Sequence() (r int, exists bool) {
+	v := m.sequence
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSequence returns the old "sequence" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldSequence(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSequence is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSequence requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSequence: %w", err)
+	}
+	return oldValue.Sequence, nil
+}
+
+// AddSequence adds i to the "sequence" field.
+func (m *ResourceMutation) AddSequence(i int) {
+	if m.addsequence != nil {
+		*m.addsequence += i
+	} else {
+		m.addsequence = &i
+	}
+}
+
+// AddedSequence returns the value that was added to the "sequence" field in this mutation.
+func (m *ResourceMutation) AddedSequence() (r int, exists bool) {
+	v := m.addsequence
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSequence resets all changes to the "sequence" field.
+func (m *ResourceMutation) ResetSequence() {
+	m.sequence = nil
+	m.addsequence = nil
+}
+
+// SetVisible sets the "visible" field.
+func (m *ResourceMutation) SetVisible(b bool) {
+	m.visible = &b
+}
+
+// Visible returns the value of the "visible" field in the mutation.
+func (m *ResourceMutation) Visible() (r bool, exists bool) {
+	v := m.visible
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldVisible returns the old "visible" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldVisible(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldVisible is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldVisible requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldVisible: %w", err)
+	}
+	return oldValue.Visible, nil
+}
+
+// ResetVisible resets all changes to the "visible" field.
+func (m *ResourceMutation) ResetVisible() {
+	m.visible = nil
+}
+
+// SetTreePath sets the "tree_path" field.
+func (m *ResourceMutation) SetTreePath(s string) {
+	m.tree_path = &s
+}
+
+// TreePath returns the value of the "tree_path" field in the mutation.
+func (m *ResourceMutation) TreePath() (r string, exists bool) {
+	v := m.tree_path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTreePath returns the old "tree_path" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldTreePath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTreePath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTreePath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTreePath: %w", err)
+	}
+	return oldValue.TreePath, nil
+}
+
+// ResetTreePath resets all changes to the "tree_path" field.
+func (m *ResourceMutation) ResetTreePath() {
+	m.tree_path = nil
+}
+
+// SetProperties sets the "properties" field.
+func (m *ResourceMutation) SetProperties(value map[string]string) {
+	m.properties = &value
+}
+
+// Properties returns the value of the "properties" field in the mutation.
+func (m *ResourceMutation) Properties() (r map[string]string, exists bool) {
+	v := m.properties
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProperties returns the old "properties" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldProperties(ctx context.Context) (v map[string]string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProperties is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProperties requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProperties: %w", err)
+	}
+	return oldValue.Properties, nil
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (m *ResourceMutation) ClearProperties() {
+	m.properties = nil
+	m.clearedFields[resource.FieldProperties] = struct{}{}
+}
+
+// PropertiesCleared returns if the "properties" field was cleared in this mutation.
+func (m *ResourceMutation) PropertiesCleared() bool {
+	_, ok := m.clearedFields[resource.FieldProperties]
+	return ok
+}
+
+// ResetProperties resets all changes to the "properties" field.
+func (m *ResourceMutation) ResetProperties() {
+	m.properties = nil
+	delete(m.clearedFields, resource.FieldProperties)
+}
+
 // SetDescription sets the "description" field.
 func (m *ResourceMutation) SetDescription(s string) {
 	m.description = &s
@@ -7074,201 +5131,193 @@ func (m *ResourceMutation) OldDescription(ctx context.Context) (v string, err er
 	return oldValue.Description, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *ResourceMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[resource.FieldDescription] = struct{}{}
-}
-
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *ResourceMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[resource.FieldDescription]
-	return ok
-}
-
 // ResetDescription resets all changes to the "description" field.
 func (m *ResourceMutation) ResetDescription() {
 	m.description = nil
-	delete(m.clearedFields, resource.FieldDescription)
 }
 
-// SetMetadata sets the "metadata" field.
-func (m *ResourceMutation) SetMetadata(value map[string]interface{}) {
-	m.metadata = &value
+// SetParentID sets the "parent_id" field.
+func (m *ResourceMutation) SetParentID(i int64) {
+	m.parent = &i
 }
 
-// Metadata returns the value of the "metadata" field in the mutation.
-func (m *ResourceMutation) Metadata() (r map[string]interface{}, exists bool) {
-	v := m.metadata
+// ParentID returns the value of the "parent_id" field in the mutation.
+func (m *ResourceMutation) ParentID() (r int64, exists bool) {
+	v := m.parent
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMetadata returns the old "metadata" field's value of the Resource entity.
+// OldParentID returns the old "parent_id" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldMetadata(ctx context.Context) (v map[string]interface{}, err error) {
+func (m *ResourceMutation) OldParentID(ctx context.Context) (v int64, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMetadata is only allowed on UpdateOne operations")
+		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMetadata requires an ID field in the mutation")
+		return v, errors.New("OldParentID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMetadata: %w", err)
+		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
 	}
-	return oldValue.Metadata, nil
+	return oldValue.ParentID, nil
 }
 
-// ClearMetadata clears the value of the "metadata" field.
-func (m *ResourceMutation) ClearMetadata() {
-	m.metadata = nil
-	m.clearedFields[resource.FieldMetadata] = struct{}{}
+// ClearParentID clears the value of the "parent_id" field.
+func (m *ResourceMutation) ClearParentID() {
+	m.parent = nil
+	m.clearedFields[resource.FieldParentID] = struct{}{}
 }
 
-// MetadataCleared returns if the "metadata" field was cleared in this mutation.
-func (m *ResourceMutation) MetadataCleared() bool {
-	_, ok := m.clearedFields[resource.FieldMetadata]
+// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
+func (m *ResourceMutation) ParentIDCleared() bool {
+	_, ok := m.clearedFields[resource.FieldParentID]
 	return ok
 }
 
-// ResetMetadata resets all changes to the "metadata" field.
-func (m *ResourceMutation) ResetMetadata() {
-	m.metadata = nil
-	delete(m.clearedFields, resource.FieldMetadata)
+// ResetParentID resets all changes to the "parent_id" field.
+func (m *ResourceMutation) ResetParentID() {
+	m.parent = nil
+	delete(m.clearedFields, resource.FieldParentID)
 }
 
-// SetMenuID sets the "menu_id" field.
-func (m *ResourceMutation) SetMenuID(i int64) {
-	m.menu = &i
-}
-
-// MenuID returns the value of the "menu_id" field in the mutation.
-func (m *ResourceMutation) MenuID() (r int64, exists bool) {
-	v := m.menu
-	if v == nil {
-		return
+// AddChildIDs adds the "children" edge to the Resource entity by ids.
+func (m *ResourceMutation) AddChildIDs(ids ...int64) {
+	if m.children == nil {
+		m.children = make(map[int64]struct{})
 	}
-	return *v, true
-}
-
-// OldMenuID returns the old "menu_id" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldMenuID(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMenuID is only allowed on UpdateOne operations")
+	for i := range ids {
+		m.children[ids[i]] = struct{}{}
 	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMenuID requires an ID field in the mutation")
+}
+
+// ClearChildren clears the "children" edge to the Resource entity.
+func (m *ResourceMutation) ClearChildren() {
+	m.clearedchildren = true
+}
+
+// ChildrenCleared reports if the "children" edge to the Resource entity was cleared.
+func (m *ResourceMutation) ChildrenCleared() bool {
+	return m.clearedchildren
+}
+
+// RemoveChildIDs removes the "children" edge to the Resource entity by IDs.
+func (m *ResourceMutation) RemoveChildIDs(ids ...int64) {
+	if m.removedchildren == nil {
+		m.removedchildren = make(map[int64]struct{})
 	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMenuID: %w", err)
+	for i := range ids {
+		delete(m.children, ids[i])
+		m.removedchildren[ids[i]] = struct{}{}
 	}
-	return oldValue.MenuID, nil
 }
 
-// ClearMenuID clears the value of the "menu_id" field.
-func (m *ResourceMutation) ClearMenuID() {
-	m.menu = nil
-	m.clearedFields[resource.FieldMenuID] = struct{}{}
+// RemovedChildren returns the removed IDs of the "children" edge to the Resource entity.
+func (m *ResourceMutation) RemovedChildrenIDs() (ids []int64) {
+	for id := range m.removedchildren {
+		ids = append(ids, id)
+	}
+	return
 }
 
-// MenuIDCleared returns if the "menu_id" field was cleared in this mutation.
-func (m *ResourceMutation) MenuIDCleared() bool {
-	_, ok := m.clearedFields[resource.FieldMenuID]
-	return ok
+// ChildrenIDs returns the "children" edge IDs in the mutation.
+func (m *ResourceMutation) ChildrenIDs() (ids []int64) {
+	for id := range m.children {
+		ids = append(ids, id)
+	}
+	return
 }
 
-// ResetMenuID resets all changes to the "menu_id" field.
-func (m *ResourceMutation) ResetMenuID() {
-	m.menu = nil
-	delete(m.clearedFields, resource.FieldMenuID)
+// ResetChildren resets all changes to the "children" edge.
+func (m *ResourceMutation) ResetChildren() {
+	m.children = nil
+	m.clearedchildren = false
+	m.removedchildren = nil
 }
 
-// ClearMenu clears the "menu" edge to the Menu entity.
-func (m *ResourceMutation) ClearMenu() {
-	m.clearedmenu = true
-	m.clearedFields[resource.FieldMenuID] = struct{}{}
+// ClearParent clears the "parent" edge to the Resource entity.
+func (m *ResourceMutation) ClearParent() {
+	m.clearedparent = true
+	m.clearedFields[resource.FieldParentID] = struct{}{}
 }
 
-// MenuCleared reports if the "menu" edge to the Menu entity was cleared.
-func (m *ResourceMutation) MenuCleared() bool {
-	return m.MenuIDCleared() || m.clearedmenu
+// ParentCleared reports if the "parent" edge to the Resource entity was cleared.
+func (m *ResourceMutation) ParentCleared() bool {
+	return m.ParentIDCleared() || m.clearedparent
 }
 
-// MenuIDs returns the "menu" edge IDs in the mutation.
+// ParentIDs returns the "parent" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// MenuID instead. It exists only for internal usage by the builders.
-func (m *ResourceMutation) MenuIDs() (ids []int64) {
-	if id := m.menu; id != nil {
+// ParentID instead. It exists only for internal usage by the builders.
+func (m *ResourceMutation) ParentIDs() (ids []int64) {
+	if id := m.parent; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetMenu resets all changes to the "menu" edge.
-func (m *ResourceMutation) ResetMenu() {
-	m.menu = nil
-	m.clearedmenu = false
+// ResetParent resets all changes to the "parent" edge.
+func (m *ResourceMutation) ResetParent() {
+	m.parent = nil
+	m.clearedparent = false
 }
 
-// AddPermissionIDs adds the "permission" edge to the Permission entity by ids.
+// AddPermissionIDs adds the "permissions" edge to the Permission entity by ids.
 func (m *ResourceMutation) AddPermissionIDs(ids ...int64) {
-	if m.permission == nil {
-		m.permission = make(map[int64]struct{})
+	if m.permissions == nil {
+		m.permissions = make(map[int64]struct{})
 	}
 	for i := range ids {
-		m.permission[ids[i]] = struct{}{}
+		m.permissions[ids[i]] = struct{}{}
 	}
 }
 
-// ClearPermission clears the "permission" edge to the Permission entity.
-func (m *ResourceMutation) ClearPermission() {
-	m.clearedpermission = true
+// ClearPermissions clears the "permissions" edge to the Permission entity.
+func (m *ResourceMutation) ClearPermissions() {
+	m.clearedpermissions = true
 }
 
-// PermissionCleared reports if the "permission" edge to the Permission entity was cleared.
-func (m *ResourceMutation) PermissionCleared() bool {
-	return m.clearedpermission
+// PermissionsCleared reports if the "permissions" edge to the Permission entity was cleared.
+func (m *ResourceMutation) PermissionsCleared() bool {
+	return m.clearedpermissions
 }
 
-// RemovePermissionIDs removes the "permission" edge to the Permission entity by IDs.
+// RemovePermissionIDs removes the "permissions" edge to the Permission entity by IDs.
 func (m *ResourceMutation) RemovePermissionIDs(ids ...int64) {
-	if m.removedpermission == nil {
-		m.removedpermission = make(map[int64]struct{})
+	if m.removedpermissions == nil {
+		m.removedpermissions = make(map[int64]struct{})
 	}
 	for i := range ids {
-		delete(m.permission, ids[i])
-		m.removedpermission[ids[i]] = struct{}{}
+		delete(m.permissions, ids[i])
+		m.removedpermissions[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedPermission returns the removed IDs of the "permission" edge to the Permission entity.
-func (m *ResourceMutation) RemovedPermissionIDs() (ids []int64) {
-	for id := range m.removedpermission {
+// RemovedPermissions returns the removed IDs of the "permissions" edge to the Permission entity.
+func (m *ResourceMutation) RemovedPermissionsIDs() (ids []int64) {
+	for id := range m.removedpermissions {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// PermissionIDs returns the "permission" edge IDs in the mutation.
-func (m *ResourceMutation) PermissionIDs() (ids []int64) {
-	for id := range m.permission {
+// PermissionsIDs returns the "permissions" edge IDs in the mutation.
+func (m *ResourceMutation) PermissionsIDs() (ids []int64) {
+	for id := range m.permissions {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetPermission resets all changes to the "permission" edge.
-func (m *ResourceMutation) ResetPermission() {
-	m.permission = nil
-	m.clearedpermission = false
-	m.removedpermission = nil
+// ResetPermissions resets all changes to the "permissions" edge.
+func (m *ResourceMutation) ResetPermissions() {
+	m.permissions = nil
+	m.clearedpermissions = false
+	m.removedpermissions = nil
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
@@ -7359,36 +5408,60 @@ func (m *ResourceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ResourceMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 18)
 	if m.create_time != nil {
 		fields = append(fields, resource.FieldCreateTime)
 	}
 	if m.update_time != nil {
 		fields = append(fields, resource.FieldUpdateTime)
 	}
-	if m.method != nil {
-		fields = append(fields, resource.FieldMethod)
+	if m.name != nil {
+		fields = append(fields, resource.FieldName)
 	}
-	if m.operation != nil {
-		fields = append(fields, resource.FieldOperation)
-	}
-	if m._path != nil {
-		fields = append(fields, resource.FieldPath)
-	}
-	if m.uri != nil {
-		fields = append(fields, resource.FieldURI)
+	if m.keyword != nil {
+		fields = append(fields, resource.FieldKeyword)
 	}
 	if m.i18n_key != nil {
 		fields = append(fields, resource.FieldI18nKey)
 	}
+	if m._type != nil {
+		fields = append(fields, resource.FieldType)
+	}
+	if m.status != nil {
+		fields = append(fields, resource.FieldStatus)
+	}
+	if m.uri != nil {
+		fields = append(fields, resource.FieldURI)
+	}
+	if m.operation != nil {
+		fields = append(fields, resource.FieldOperation)
+	}
+	if m.method != nil {
+		fields = append(fields, resource.FieldMethod)
+	}
+	if m.component != nil {
+		fields = append(fields, resource.FieldComponent)
+	}
+	if m.icon != nil {
+		fields = append(fields, resource.FieldIcon)
+	}
+	if m.sequence != nil {
+		fields = append(fields, resource.FieldSequence)
+	}
+	if m.visible != nil {
+		fields = append(fields, resource.FieldVisible)
+	}
+	if m.tree_path != nil {
+		fields = append(fields, resource.FieldTreePath)
+	}
+	if m.properties != nil {
+		fields = append(fields, resource.FieldProperties)
+	}
 	if m.description != nil {
 		fields = append(fields, resource.FieldDescription)
 	}
-	if m.metadata != nil {
-		fields = append(fields, resource.FieldMetadata)
-	}
-	if m.menu != nil {
-		fields = append(fields, resource.FieldMenuID)
+	if m.parent != nil {
+		fields = append(fields, resource.FieldParentID)
 	}
 	return fields
 }
@@ -7402,22 +5475,38 @@ func (m *ResourceMutation) Field(name string) (ent.Value, bool) {
 		return m.CreateTime()
 	case resource.FieldUpdateTime:
 		return m.UpdateTime()
-	case resource.FieldMethod:
-		return m.Method()
-	case resource.FieldOperation:
-		return m.Operation()
-	case resource.FieldPath:
-		return m.Path()
-	case resource.FieldURI:
-		return m.URI()
+	case resource.FieldName:
+		return m.Name()
+	case resource.FieldKeyword:
+		return m.Keyword()
 	case resource.FieldI18nKey:
 		return m.I18nKey()
+	case resource.FieldType:
+		return m.GetType()
+	case resource.FieldStatus:
+		return m.Status()
+	case resource.FieldURI:
+		return m.URI()
+	case resource.FieldOperation:
+		return m.Operation()
+	case resource.FieldMethod:
+		return m.Method()
+	case resource.FieldComponent:
+		return m.Component()
+	case resource.FieldIcon:
+		return m.Icon()
+	case resource.FieldSequence:
+		return m.Sequence()
+	case resource.FieldVisible:
+		return m.Visible()
+	case resource.FieldTreePath:
+		return m.TreePath()
+	case resource.FieldProperties:
+		return m.Properties()
 	case resource.FieldDescription:
 		return m.Description()
-	case resource.FieldMetadata:
-		return m.Metadata()
-	case resource.FieldMenuID:
-		return m.MenuID()
+	case resource.FieldParentID:
+		return m.ParentID()
 	}
 	return nil, false
 }
@@ -7431,22 +5520,38 @@ func (m *ResourceMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldCreateTime(ctx)
 	case resource.FieldUpdateTime:
 		return m.OldUpdateTime(ctx)
-	case resource.FieldMethod:
-		return m.OldMethod(ctx)
-	case resource.FieldOperation:
-		return m.OldOperation(ctx)
-	case resource.FieldPath:
-		return m.OldPath(ctx)
-	case resource.FieldURI:
-		return m.OldURI(ctx)
+	case resource.FieldName:
+		return m.OldName(ctx)
+	case resource.FieldKeyword:
+		return m.OldKeyword(ctx)
 	case resource.FieldI18nKey:
 		return m.OldI18nKey(ctx)
+	case resource.FieldType:
+		return m.OldType(ctx)
+	case resource.FieldStatus:
+		return m.OldStatus(ctx)
+	case resource.FieldURI:
+		return m.OldURI(ctx)
+	case resource.FieldOperation:
+		return m.OldOperation(ctx)
+	case resource.FieldMethod:
+		return m.OldMethod(ctx)
+	case resource.FieldComponent:
+		return m.OldComponent(ctx)
+	case resource.FieldIcon:
+		return m.OldIcon(ctx)
+	case resource.FieldSequence:
+		return m.OldSequence(ctx)
+	case resource.FieldVisible:
+		return m.OldVisible(ctx)
+	case resource.FieldTreePath:
+		return m.OldTreePath(ctx)
+	case resource.FieldProperties:
+		return m.OldProperties(ctx)
 	case resource.FieldDescription:
 		return m.OldDescription(ctx)
-	case resource.FieldMetadata:
-		return m.OldMetadata(ctx)
-	case resource.FieldMenuID:
-		return m.OldMenuID(ctx)
+	case resource.FieldParentID:
+		return m.OldParentID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Resource field %s", name)
 }
@@ -7470,33 +5575,19 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUpdateTime(v)
 		return nil
-	case resource.FieldMethod:
+	case resource.FieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMethod(v)
+		m.SetName(v)
 		return nil
-	case resource.FieldOperation:
+	case resource.FieldKeyword:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetOperation(v)
-		return nil
-	case resource.FieldPath:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPath(v)
-		return nil
-	case resource.FieldURI:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetURI(v)
+		m.SetKeyword(v)
 		return nil
 	case resource.FieldI18nKey:
 		v, ok := value.(string)
@@ -7505,6 +5596,83 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetI18nKey(v)
 		return nil
+	case resource.FieldType:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case resource.FieldStatus:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case resource.FieldURI:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetURI(v)
+		return nil
+	case resource.FieldOperation:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOperation(v)
+		return nil
+	case resource.FieldMethod:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMethod(v)
+		return nil
+	case resource.FieldComponent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetComponent(v)
+		return nil
+	case resource.FieldIcon:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIcon(v)
+		return nil
+	case resource.FieldSequence:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSequence(v)
+		return nil
+	case resource.FieldVisible:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetVisible(v)
+		return nil
+	case resource.FieldTreePath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTreePath(v)
+		return nil
+	case resource.FieldProperties:
+		v, ok := value.(map[string]string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProperties(v)
+		return nil
 	case resource.FieldDescription:
 		v, ok := value.(string)
 		if !ok {
@@ -7512,19 +5680,12 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDescription(v)
 		return nil
-	case resource.FieldMetadata:
-		v, ok := value.(map[string]interface{})
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetMetadata(v)
-		return nil
-	case resource.FieldMenuID:
+	case resource.FieldParentID:
 		v, ok := value.(int64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMenuID(v)
+		m.SetParentID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Resource field %s", name)
@@ -7534,6 +5695,15 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *ResourceMutation) AddedFields() []string {
 	var fields []string
+	if m.add_type != nil {
+		fields = append(fields, resource.FieldType)
+	}
+	if m.addstatus != nil {
+		fields = append(fields, resource.FieldStatus)
+	}
+	if m.addsequence != nil {
+		fields = append(fields, resource.FieldSequence)
+	}
 	return fields
 }
 
@@ -7542,6 +5712,12 @@ func (m *ResourceMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
+	case resource.FieldType:
+		return m.AddedType()
+	case resource.FieldStatus:
+		return m.AddedStatus()
+	case resource.FieldSequence:
+		return m.AddedSequence()
 	}
 	return nil, false
 }
@@ -7551,6 +5727,27 @@ func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ResourceMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case resource.FieldType:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddType(v)
+		return nil
+	case resource.FieldStatus:
+		v, ok := value.(int8)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
+	case resource.FieldSequence:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSequence(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Resource numeric field %s", name)
 }
@@ -7559,14 +5756,11 @@ func (m *ResourceMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ResourceMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(resource.FieldDescription) {
-		fields = append(fields, resource.FieldDescription)
+	if m.FieldCleared(resource.FieldProperties) {
+		fields = append(fields, resource.FieldProperties)
 	}
-	if m.FieldCleared(resource.FieldMetadata) {
-		fields = append(fields, resource.FieldMetadata)
-	}
-	if m.FieldCleared(resource.FieldMenuID) {
-		fields = append(fields, resource.FieldMenuID)
+	if m.FieldCleared(resource.FieldParentID) {
+		fields = append(fields, resource.FieldParentID)
 	}
 	return fields
 }
@@ -7582,14 +5776,11 @@ func (m *ResourceMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ResourceMutation) ClearField(name string) error {
 	switch name {
-	case resource.FieldDescription:
-		m.ClearDescription()
+	case resource.FieldProperties:
+		m.ClearProperties()
 		return nil
-	case resource.FieldMetadata:
-		m.ClearMetadata()
-		return nil
-	case resource.FieldMenuID:
-		m.ClearMenuID()
+	case resource.FieldParentID:
+		m.ClearParentID()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource nullable field %s", name)
@@ -7605,29 +5796,53 @@ func (m *ResourceMutation) ResetField(name string) error {
 	case resource.FieldUpdateTime:
 		m.ResetUpdateTime()
 		return nil
-	case resource.FieldMethod:
-		m.ResetMethod()
+	case resource.FieldName:
+		m.ResetName()
 		return nil
-	case resource.FieldOperation:
-		m.ResetOperation()
-		return nil
-	case resource.FieldPath:
-		m.ResetPath()
-		return nil
-	case resource.FieldURI:
-		m.ResetURI()
+	case resource.FieldKeyword:
+		m.ResetKeyword()
 		return nil
 	case resource.FieldI18nKey:
 		m.ResetI18nKey()
 		return nil
+	case resource.FieldType:
+		m.ResetType()
+		return nil
+	case resource.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case resource.FieldURI:
+		m.ResetURI()
+		return nil
+	case resource.FieldOperation:
+		m.ResetOperation()
+		return nil
+	case resource.FieldMethod:
+		m.ResetMethod()
+		return nil
+	case resource.FieldComponent:
+		m.ResetComponent()
+		return nil
+	case resource.FieldIcon:
+		m.ResetIcon()
+		return nil
+	case resource.FieldSequence:
+		m.ResetSequence()
+		return nil
+	case resource.FieldVisible:
+		m.ResetVisible()
+		return nil
+	case resource.FieldTreePath:
+		m.ResetTreePath()
+		return nil
+	case resource.FieldProperties:
+		m.ResetProperties()
+		return nil
 	case resource.FieldDescription:
 		m.ResetDescription()
 		return nil
-	case resource.FieldMetadata:
-		m.ResetMetadata()
-		return nil
-	case resource.FieldMenuID:
-		m.ResetMenuID()
+	case resource.FieldParentID:
+		m.ResetParentID()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource field %s", name)
@@ -7635,12 +5850,15 @@ func (m *ResourceMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ResourceMutation) AddedEdges() []string {
-	edges := make([]string, 0, 3)
-	if m.menu != nil {
-		edges = append(edges, resource.EdgeMenu)
+	edges := make([]string, 0, 4)
+	if m.children != nil {
+		edges = append(edges, resource.EdgeChildren)
 	}
-	if m.permission != nil {
-		edges = append(edges, resource.EdgePermission)
+	if m.parent != nil {
+		edges = append(edges, resource.EdgeParent)
+	}
+	if m.permissions != nil {
+		edges = append(edges, resource.EdgePermissions)
 	}
 	if m.permission_resources != nil {
 		edges = append(edges, resource.EdgePermissionResources)
@@ -7652,13 +5870,19 @@ func (m *ResourceMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *ResourceMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case resource.EdgeMenu:
-		if id := m.menu; id != nil {
+	case resource.EdgeChildren:
+		ids := make([]ent.Value, 0, len(m.children))
+		for id := range m.children {
+			ids = append(ids, id)
+		}
+		return ids
+	case resource.EdgeParent:
+		if id := m.parent; id != nil {
 			return []ent.Value{*id}
 		}
-	case resource.EdgePermission:
-		ids := make([]ent.Value, 0, len(m.permission))
-		for id := range m.permission {
+	case resource.EdgePermissions:
+		ids := make([]ent.Value, 0, len(m.permissions))
+		for id := range m.permissions {
 			ids = append(ids, id)
 		}
 		return ids
@@ -7674,9 +5898,12 @@ func (m *ResourceMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ResourceMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 3)
-	if m.removedpermission != nil {
-		edges = append(edges, resource.EdgePermission)
+	edges := make([]string, 0, 4)
+	if m.removedchildren != nil {
+		edges = append(edges, resource.EdgeChildren)
+	}
+	if m.removedpermissions != nil {
+		edges = append(edges, resource.EdgePermissions)
 	}
 	if m.removedpermission_resources != nil {
 		edges = append(edges, resource.EdgePermissionResources)
@@ -7688,9 +5915,15 @@ func (m *ResourceMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *ResourceMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case resource.EdgePermission:
-		ids := make([]ent.Value, 0, len(m.removedpermission))
-		for id := range m.removedpermission {
+	case resource.EdgeChildren:
+		ids := make([]ent.Value, 0, len(m.removedchildren))
+		for id := range m.removedchildren {
+			ids = append(ids, id)
+		}
+		return ids
+	case resource.EdgePermissions:
+		ids := make([]ent.Value, 0, len(m.removedpermissions))
+		for id := range m.removedpermissions {
 			ids = append(ids, id)
 		}
 		return ids
@@ -7706,12 +5939,15 @@ func (m *ResourceMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ResourceMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 3)
-	if m.clearedmenu {
-		edges = append(edges, resource.EdgeMenu)
+	edges := make([]string, 0, 4)
+	if m.clearedchildren {
+		edges = append(edges, resource.EdgeChildren)
 	}
-	if m.clearedpermission {
-		edges = append(edges, resource.EdgePermission)
+	if m.clearedparent {
+		edges = append(edges, resource.EdgeParent)
+	}
+	if m.clearedpermissions {
+		edges = append(edges, resource.EdgePermissions)
 	}
 	if m.clearedpermission_resources {
 		edges = append(edges, resource.EdgePermissionResources)
@@ -7723,10 +5959,12 @@ func (m *ResourceMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *ResourceMutation) EdgeCleared(name string) bool {
 	switch name {
-	case resource.EdgeMenu:
-		return m.clearedmenu
-	case resource.EdgePermission:
-		return m.clearedpermission
+	case resource.EdgeChildren:
+		return m.clearedchildren
+	case resource.EdgeParent:
+		return m.clearedparent
+	case resource.EdgePermissions:
+		return m.clearedpermissions
 	case resource.EdgePermissionResources:
 		return m.clearedpermission_resources
 	}
@@ -7737,8 +5975,8 @@ func (m *ResourceMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *ResourceMutation) ClearEdge(name string) error {
 	switch name {
-	case resource.EdgeMenu:
-		m.ClearMenu()
+	case resource.EdgeParent:
+		m.ClearParent()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource unique edge %s", name)
@@ -7748,11 +5986,14 @@ func (m *ResourceMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *ResourceMutation) ResetEdge(name string) error {
 	switch name {
-	case resource.EdgeMenu:
-		m.ResetMenu()
+	case resource.EdgeChildren:
+		m.ResetChildren()
 		return nil
-	case resource.EdgePermission:
-		m.ResetPermission()
+	case resource.EdgeParent:
+		m.ResetParent()
+		return nil
+	case resource.EdgePermissions:
+		m.ResetPermissions()
 		return nil
 	case resource.EdgePermissionResources:
 		m.ResetPermissionResources()

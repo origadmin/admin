@@ -1073,11 +1073,11 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Keyword string `json:"keyword,omitempty"`
 //	  Name string `json:"name,omitempty"`
-//	  Description string `json:"description,omitempty"`
+//	  TreePath string `json:"tree_path,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
-//	  Ancestors string `json:"ancestors,omitempty"`
 //	  Level int `json:"level,omitempty"`
+//	  Description string `json:"description,omitempty"`
 //	  ParentID int64 `json:"parent_id,omitempty"`
 //	}
 //
@@ -1087,11 +1087,11 @@ func (dq *DepartmentQuery) Modify(modifiers ...func(s *sql.Selector)) *Departmen
 //	  department.FieldUpdateTime,
 //	  department.FieldKeyword,
 //	  department.FieldName,
-//	  department.FieldDescription,
+//	  department.FieldTreePath,
 //	  department.FieldSequence,
 //	  department.FieldStatus,
-//	  department.FieldAncestors,
 //	  department.FieldLevel,
+//	  department.FieldDescription,
 //	  department.FieldParentID,
 //	  ).
 //	  Scan(ctx, &v)

@@ -14,7 +14,7 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemMenu";
 
 // The menu service definition.
-service MenuAPI {
+service MenuService {
   rpc ListMenus (ListMenusRequest) returns (ListMenusResponse) {
     option (google.api.http) = {get: "/sys/menus"};
   }

@@ -12,8 +12,8 @@ import (
 )
 
 type (
-	CaptchaIDRequest     = pb.CaptchaIDRequest
-	CaptchaIDResponse    = pb.CaptchaIDResponse
+	CaptchaIDRequest     = pb.CaptchaIdRequest
+	CaptchaIDResponse    = pb.CaptchaIdResponse
 	CaptchaImageRequest  = pb.CaptchaImageRequest
 	CaptchaImageResponse = pb.CaptchaImageResponse
 	CaptchaData          = pb.CaptchaData
@@ -25,8 +25,6 @@ type (
 	TokenRefreshResponse = pb.TokenRefreshResponse
 	RegisterRequest      = pb.RegisterRequest
 	RegisterResponse     = pb.RegisterResponse
-	CurrentMenusRequest  = pb.CurrentMenusRequest
-	CurrentMenusResponse = pb.CurrentMenusResponse
 	CurrentUserRequest   = pb.CurrentUserRequest
 	CurrentUserResponse  = pb.CurrentUserResponse
 )
@@ -34,7 +32,6 @@ type (
 type LoginRepo interface {
 	CaptchaID(ctx context.Context, in *CaptchaIDRequest) (*CaptchaIDResponse, error)
 	CaptchaImage(ctx context.Context, id string, reload bool) (*CaptchaImageResponse, error)
-	CurrentMenus(ctx context.Context, in *CurrentMenusRequest) (*CurrentMenusResponse, error)
 	CurrentUser(ctx context.Context, in *CurrentUserRequest) (*CurrentUserResponse, error)
 	Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error)

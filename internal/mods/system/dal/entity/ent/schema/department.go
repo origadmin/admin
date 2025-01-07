@@ -26,17 +26,19 @@ type Department struct {
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("keyword").
-			MaxLen(32).
-			Default("").
+			MaxLen(64).
+			Unique().
 			Comment(i18n.Text("department.field.keyword")),
 		field.String("name").
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("department.field.name")),
-		field.String("description").
+		// use materialized path model to store the tree structure
+		// Parent path of the menu item
+		field.String("tree_path").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("department.field.description")),
+			Comment(i18n.Text("menu.field.tree_path")),
 		field.Int("sequence").
 			Comment(i18n.Text("department.field.sequence")),
 		field.Int8("status").
@@ -45,6 +47,10 @@ func (Department) Fields() []ent.Field {
 		field.Int("level").
 			Default(1).
 			Comment(i18n.Text("department.field.level")),
+		field.String("description").
+			MaxLen(1024).
+			Default("").
+			Comment(i18n.Text("department.field.description")),
 		mixin.OP("parent_id", "department.field.parent_id"),
 	}
 }
@@ -87,7 +93,7 @@ func (Department) Edges() []ent.Edge {
 			Through("department_roles", DepartmentRole.Type),
 		// 添加部门层级关系
 		edge.To("children", Department.Type),
-		edge.From("parent_id", Department.Type).
+		edge.From("parent", Department.Type).
 			Ref("children").
 			Field("parent_id").
 			Unique(),

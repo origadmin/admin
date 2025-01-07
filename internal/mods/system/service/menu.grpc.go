@@ -10,46 +10,46 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-// MenuAPIService is a menu service.
-type MenuAPIService struct {
-	pb.UnimplementedMenuAPIServer
+// MenuServiceServer is a menu service.
+type MenuServiceServer struct {
+	pb.UnimplementedMenuServiceServer
 
-	client pb.MenuAPIClient
+	client pb.MenuServiceClient
 }
 
-func (s MenuAPIService) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
+func (s MenuServiceServer) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
 	return s.client.ListMenus(ctx, request)
 }
 
-func (s MenuAPIService) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
+func (s MenuServiceServer) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
 	return s.client.GetMenu(ctx, request)
 }
 
-func (s MenuAPIService) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
+func (s MenuServiceServer) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
 	return s.client.CreateMenu(ctx, request)
 }
 
-func (s MenuAPIService) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
+func (s MenuServiceServer) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
 	return s.client.UpdateMenu(ctx, request)
 }
 
-func (s MenuAPIService) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
+func (s MenuServiceServer) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
 	return s.client.DeleteMenu(ctx, request)
 }
 
-//func (m MenuAPIService) mustEmbedUnimplementedMenuAPIServer() {
+//func (m MenuServiceServer) mustEmbedUnimplementedMenuServiceServer() {
 //	//TODO implement me
 //	panic("implement me")
 //}
 
-// NewMenuAPIService new a menu service.
-func NewMenuAPIService(client pb.MenuAPIClient) *MenuAPIService {
-	return &MenuAPIService{client: client}
+// NewMenuServiceServer new a menu service.
+func NewMenuServiceServer(client pb.MenuServiceClient) *MenuServiceServer {
+	return &MenuServiceServer{client: client}
 }
 
-// NewMenuAPIServer new a menu service.
-func NewMenuAPIServer(client pb.MenuAPIClient) pb.MenuAPIServer {
-	return &MenuAPIService{client: client}
+// NewMenuServiceServerPB new a menu service.
+func NewMenuServiceServerPB(client pb.MenuServiceClient) pb.MenuServiceServer {
+	return &MenuServiceServer{client: client}
 }
 
-var _ pb.MenuAPIServer = (*MenuAPIService)(nil)
+var _ pb.MenuServiceServer = (*MenuServiceServer)(nil)

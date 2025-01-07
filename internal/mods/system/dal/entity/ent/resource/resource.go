@@ -18,42 +18,61 @@ const (
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
 	FieldUpdateTime = "update_time"
-	// FieldMethod holds the string denoting the method field in the database.
-	FieldMethod = "method"
-	// FieldOperation holds the string denoting the operation field in the database.
-	FieldOperation = "operation"
-	// FieldPath holds the string denoting the path field in the database.
-	FieldPath = "path"
-	// FieldURI holds the string denoting the uri field in the database.
-	FieldURI = "uri"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldKeyword holds the string denoting the keyword field in the database.
+	FieldKeyword = "keyword"
 	// FieldI18nKey holds the string denoting the i18n_key field in the database.
 	FieldI18nKey = "i18n_key"
+	// FieldType holds the string denoting the type field in the database.
+	FieldType = "type"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
+	// FieldURI holds the string denoting the uri field in the database.
+	FieldURI = "uri"
+	// FieldOperation holds the string denoting the operation field in the database.
+	FieldOperation = "operation"
+	// FieldMethod holds the string denoting the method field in the database.
+	FieldMethod = "method"
+	// FieldComponent holds the string denoting the component field in the database.
+	FieldComponent = "component"
+	// FieldIcon holds the string denoting the icon field in the database.
+	FieldIcon = "icon"
+	// FieldSequence holds the string denoting the sequence field in the database.
+	FieldSequence = "sequence"
+	// FieldVisible holds the string denoting the visible field in the database.
+	FieldVisible = "visible"
+	// FieldTreePath holds the string denoting the tree_path field in the database.
+	FieldTreePath = "tree_path"
+	// FieldProperties holds the string denoting the properties field in the database.
+	FieldProperties = "properties"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
-	// FieldMetadata holds the string denoting the metadata field in the database.
-	FieldMetadata = "metadata"
-	// FieldMenuID holds the string denoting the menu_id field in the database.
-	FieldMenuID = "menu_id"
-	// EdgeMenu holds the string denoting the menu edge name in mutations.
-	EdgeMenu = "menu"
-	// EdgePermission holds the string denoting the permission edge name in mutations.
-	EdgePermission = "permission"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
+	// EdgeChildren holds the string denoting the children edge name in mutations.
+	EdgeChildren = "children"
+	// EdgeParent holds the string denoting the parent edge name in mutations.
+	EdgeParent = "parent"
+	// EdgePermissions holds the string denoting the permissions edge name in mutations.
+	EdgePermissions = "permissions"
 	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
 	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the resource in the database.
 	Table = "sys_resources"
-	// MenuTable is the table that holds the menu relation/edge.
-	MenuTable = "sys_resources"
-	// MenuInverseTable is the table name for the Menu entity.
-	// It exists in this package in order to avoid circular dependency with the "menu" package.
-	MenuInverseTable = "sys_menus"
-	// MenuColumn is the table column denoting the menu relation/edge.
-	MenuColumn = "menu_id"
-	// PermissionTable is the table that holds the permission relation/edge. The primary key declared below.
-	PermissionTable = "sys_permission_resources"
-	// PermissionInverseTable is the table name for the Permission entity.
+	// ChildrenTable is the table that holds the children relation/edge.
+	ChildrenTable = "sys_resources"
+	// ChildrenColumn is the table column denoting the children relation/edge.
+	ChildrenColumn = "parent_id"
+	// ParentTable is the table that holds the parent relation/edge.
+	ParentTable = "sys_resources"
+	// ParentColumn is the table column denoting the parent relation/edge.
+	ParentColumn = "parent_id"
+	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
+	PermissionsTable = "sys_permission_resources"
+	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
-	PermissionInverseTable = "sys_permissions"
+	PermissionsInverseTable = "sys_permissions"
 	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
 	PermissionResourcesTable = "sys_permission_resources"
 	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.
@@ -68,20 +87,28 @@ var Columns = []string{
 	FieldID,
 	FieldCreateTime,
 	FieldUpdateTime,
-	FieldMethod,
-	FieldOperation,
-	FieldPath,
-	FieldURI,
+	FieldName,
+	FieldKeyword,
 	FieldI18nKey,
+	FieldType,
+	FieldStatus,
+	FieldURI,
+	FieldOperation,
+	FieldMethod,
+	FieldComponent,
+	FieldIcon,
+	FieldSequence,
+	FieldVisible,
+	FieldTreePath,
+	FieldProperties,
 	FieldDescription,
-	FieldMetadata,
-	FieldMenuID,
+	FieldParentID,
 }
 
 var (
-	// PermissionPrimaryKey and PermissionColumn2 are the table columns denoting the
-	// primary key for the permission relation (M2M).
-	PermissionPrimaryKey = []string{"permission_id", "resource_id"}
+	// PermissionsPrimaryKey and PermissionsColumn2 are the table columns denoting the
+	// primary key for the permissions relation (M2M).
+	PermissionsPrimaryKey = []string{"permission_id", "resource_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -101,28 +128,54 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// DefaultMethod holds the default value on creation for the "method" field.
-	DefaultMethod string
-	// MethodValidator is a validator for the "method" field. It is called by the builders before save.
-	MethodValidator func(string) error
-	// DefaultOperation holds the default value on creation for the "operation" field.
-	DefaultOperation string
-	// OperationValidator is a validator for the "operation" field. It is called by the builders before save.
-	OperationValidator func(string) error
-	// DefaultPath holds the default value on creation for the "path" field.
-	DefaultPath string
-	// PathValidator is a validator for the "path" field. It is called by the builders before save.
-	PathValidator func(string) error
-	// URIValidator is a validator for the "uri" field. It is called by the builders before save.
-	URIValidator func(string) error
+	// DefaultName holds the default value on creation for the "name" field.
+	DefaultName string
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
+	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
+	KeywordValidator func(string) error
 	// DefaultI18nKey holds the default value on creation for the "i18n_key" field.
 	DefaultI18nKey string
 	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
 	I18nKeyValidator func(string) error
+	// DefaultType holds the default value on creation for the "type" field.
+	DefaultType uint32
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus int8
+	// DefaultURI holds the default value on creation for the "uri" field.
+	DefaultURI string
+	// URIValidator is a validator for the "uri" field. It is called by the builders before save.
+	URIValidator func(string) error
+	// DefaultOperation holds the default value on creation for the "operation" field.
+	DefaultOperation string
+	// OperationValidator is a validator for the "operation" field. It is called by the builders before save.
+	OperationValidator func(string) error
+	// DefaultMethod holds the default value on creation for the "method" field.
+	DefaultMethod string
+	// MethodValidator is a validator for the "method" field. It is called by the builders before save.
+	MethodValidator func(string) error
+	// DefaultComponent holds the default value on creation for the "component" field.
+	DefaultComponent string
+	// ComponentValidator is a validator for the "component" field. It is called by the builders before save.
+	ComponentValidator func(string) error
+	// DefaultIcon holds the default value on creation for the "icon" field.
+	DefaultIcon string
+	// IconValidator is a validator for the "icon" field. It is called by the builders before save.
+	IconValidator func(string) error
+	// DefaultSequence holds the default value on creation for the "sequence" field.
+	DefaultSequence int
+	// DefaultVisible holds the default value on creation for the "visible" field.
+	DefaultVisible bool
+	// DefaultTreePath holds the default value on creation for the "tree_path" field.
+	DefaultTreePath string
+	// TreePathValidator is a validator for the "tree_path" field. It is called by the builders before save.
+	TreePathValidator func(string) error
+	// DefaultDescription holds the default value on creation for the "description" field.
+	DefaultDescription string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
-	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
-	MenuIDValidator func(int64) error
+	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
+	ParentIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -147,24 +200,14 @@ func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
-// ByMethod orders the results by the method field.
-func ByMethod(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMethod, opts...).ToFunc()
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByOperation orders the results by the operation field.
-func ByOperation(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldOperation, opts...).ToFunc()
-}
-
-// ByPath orders the results by the path field.
-func ByPath(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPath, opts...).ToFunc()
-}
-
-// ByURI orders the results by the uri field.
-func ByURI(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldURI, opts...).ToFunc()
+// ByKeyword orders the results by the keyword field.
+func ByKeyword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldKeyword, opts...).ToFunc()
 }
 
 // ByI18nKey orders the results by the i18n_key field.
@@ -172,34 +215,98 @@ func ByI18nKey(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldI18nKey, opts...).ToFunc()
 }
 
+// ByType orders the results by the type field.
+func ByType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldType, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByURI orders the results by the uri field.
+func ByURI(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldURI, opts...).ToFunc()
+}
+
+// ByOperation orders the results by the operation field.
+func ByOperation(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOperation, opts...).ToFunc()
+}
+
+// ByMethod orders the results by the method field.
+func ByMethod(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldMethod, opts...).ToFunc()
+}
+
+// ByComponent orders the results by the component field.
+func ByComponent(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldComponent, opts...).ToFunc()
+}
+
+// ByIcon orders the results by the icon field.
+func ByIcon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIcon, opts...).ToFunc()
+}
+
+// BySequence orders the results by the sequence field.
+func BySequence(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSequence, opts...).ToFunc()
+}
+
+// ByVisible orders the results by the visible field.
+func ByVisible(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldVisible, opts...).ToFunc()
+}
+
+// ByTreePath orders the results by the tree_path field.
+func ByTreePath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTreePath, opts...).ToFunc()
+}
+
 // ByDescription orders the results by the description field.
 func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
-// ByMenuID orders the results by the menu_id field.
-func ByMenuID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMenuID, opts...).ToFunc()
+// ByParentID orders the results by the parent_id field.
+func ByParentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParentID, opts...).ToFunc()
 }
 
-// ByMenuField orders the results by menu field.
-func ByMenuField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByChildrenCount orders the results by children count.
+func ByChildrenCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMenuStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborsCount(s, newChildrenStep(), opts...)
 	}
 }
 
-// ByPermissionCount orders the results by permission count.
-func ByPermissionCount(opts ...sql.OrderTermOption) OrderOption {
+// ByChildren orders the results by children terms.
+func ByChildren(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newPermissionStep(), opts...)
+		sqlgraph.OrderByNeighborTerms(s, newChildrenStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
-// ByPermission orders the results by permission terms.
-func ByPermission(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByParentField orders the results by parent field.
+func ByParentField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newPermissionStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newParentStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByPermissionsCount orders the results by permissions count.
+func ByPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionsStep(), opts...)
+	}
+}
+
+// ByPermissions orders the results by permissions terms.
+func ByPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
@@ -216,18 +323,25 @@ func ByPermissionResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOpti
 		sqlgraph.OrderByNeighborTerms(s, newPermissionResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newMenuStep() *sqlgraph.Step {
+func newChildrenStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MenuInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, MenuTable, MenuColumn),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
 	)
 }
-func newPermissionStep() *sqlgraph.Step {
+func newParentStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(PermissionInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, true, PermissionTable, PermissionPrimaryKey...),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, ParentTable, ParentColumn),
+	)
+}
+func newPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, PermissionsTable, PermissionsPrimaryKey...),
 	)
 }
 func newPermissionResourcesStep() *sqlgraph.Step {

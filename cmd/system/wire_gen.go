@@ -37,17 +37,17 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		return nil, nil, err
 	}
 	menuRepo := dal.NewMenuRepo(data, arg)
-	menuAPIClient := biz.NewMenusClient(menuRepo, arg)
-	menuAPIServer := service.NewMenuAPIServer(menuAPIClient)
+	menuServiceClient := biz.NewMenuServiceClient(menuRepo, arg)
+	menuServiceServer := service.NewMenuServiceServerPB(menuServiceClient)
 	roleRepo := dal.NewRoleRepo(data, arg)
-	roleAPIClient := biz.NewRolesClient(roleRepo, arg)
-	roleAPIServer := service.NewRoleAPIServer(roleAPIClient)
+	roleServiceClient := biz.NewRoleServiceClient(roleRepo, arg)
+	roleServiceServer := service.NewRoleServiceServerPB(roleServiceClient)
 	userRepo := dal.NewUserRepo(data, arg)
-	userAPIClient := biz.NewUsersClient(userRepo, arg)
-	userAPIServer := service.NewUserAPIServer(userAPIClient)
+	userServiceClient := biz.NewUserServiceClient(userRepo, arg)
+	userServiceServer := service.NewUserServiceServerPB(userServiceClient)
 	authRepo := dal.NewAuthRepo(data, arg)
-	authAPIClient := biz.NewAuthsClient(authRepo, arg)
-	authAPIServer := service.NewAuthAPIServer(authAPIClient)
+	authServiceClient := biz.NewAuthServiceClient(authRepo, arg)
+	authServiceServer := service.NewAuthServiceServerPB(authServiceClient)
 	basisConfig := loader.NewBasisConfig(bootstrap)
 	tokenizer, err := loader.NewTokenizer(bootstrap)
 	if err != nil {
@@ -55,26 +55,27 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		return nil, nil, err
 	}
 	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
+	resourceRepo := dal.NewResourceRepo(data, arg)
 	loginData := &dal.LoginData{
 		BasisConfig: basisConfig,
 		Tokenizer:   refreshTokenizer,
-		Menu:        menuRepo,
+		Resource:    resourceRepo,
 		Role:        roleRepo,
 		User:        userRepo,
 	}
 	loginRepo := dal.NewLoginRepo(loginData, arg)
-	loginAPIClient := biz.NewLoginClient(loginRepo, arg)
-	loginAPIServer := service.NewLoginAPIServer(loginAPIClient)
+	loginServiceClient := biz.NewLoginServiceClient(loginRepo, arg)
+	loginServiceServer := service.NewLoginServiceServerPB(loginServiceClient)
 	currentRepo := dal.NewCurrentRepo(data, arg)
-	currentAPIClient := biz.NewCurrentClient(currentRepo, arg)
-	currentAPIServer := service.NewCurrentAPIServer(currentAPIClient)
+	currentServiceClient := biz.NewCurrentServiceClient(currentRepo, arg)
+	currentServiceServer := service.NewCurrentServiceServerPB(currentServiceClient)
 	registerServer := &service.RegisterServer{
-		Menu:    menuAPIServer,
-		Role:    roleAPIServer,
-		User:    userAPIServer,
-		Auth:    authAPIServer,
-		Login:   loginAPIServer,
-		Current: currentAPIServer,
+		Menu:    menuServiceServer,
+		Role:    roleServiceServer,
+		User:    userServiceServer,
+		Auth:    authServiceServer,
+		Login:   loginServiceServer,
+		Current: currentServiceServer,
 	}
 	v2 := server.NewRegisterServer(registerServer)
 	v3 := server.NewSystemServer(bootstrap, v2, arg)

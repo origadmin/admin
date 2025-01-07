@@ -58,6 +58,20 @@ func (pru *PermissionResourceUpdate) SetNillableResourceID(i *int64) *Permission
 	return pru
 }
 
+// SetActions sets the "actions" field.
+func (pru *PermissionResourceUpdate) SetActions(s string) *PermissionResourceUpdate {
+	pru.mutation.SetActions(s)
+	return pru
+}
+
+// SetNillableActions sets the "actions" field if the given value is not nil.
+func (pru *PermissionResourceUpdate) SetNillableActions(s *string) *PermissionResourceUpdate {
+	if s != nil {
+		pru.SetActions(*s)
+	}
+	return pru
+}
+
 // SetPermission sets the "permission" edge to the Permission entity.
 func (pru *PermissionResourceUpdate) SetPermission(p *Permission) *PermissionResourceUpdate {
 	return pru.SetPermissionID(p.ID)
@@ -150,6 +164,9 @@ func (pru *PermissionResourceUpdate) sqlSave(ctx context.Context) (n int, err er
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := pru.mutation.Actions(); ok {
+		_spec.SetField(permissionresource.FieldActions, field.TypeString, value)
 	}
 	if pru.mutation.PermissionCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -255,6 +272,20 @@ func (pruo *PermissionResourceUpdateOne) SetResourceID(i int64) *PermissionResou
 func (pruo *PermissionResourceUpdateOne) SetNillableResourceID(i *int64) *PermissionResourceUpdateOne {
 	if i != nil {
 		pruo.SetResourceID(*i)
+	}
+	return pruo
+}
+
+// SetActions sets the "actions" field.
+func (pruo *PermissionResourceUpdateOne) SetActions(s string) *PermissionResourceUpdateOne {
+	pruo.mutation.SetActions(s)
+	return pruo
+}
+
+// SetNillableActions sets the "actions" field if the given value is not nil.
+func (pruo *PermissionResourceUpdateOne) SetNillableActions(s *string) *PermissionResourceUpdateOne {
+	if s != nil {
+		pruo.SetActions(*s)
 	}
 	return pruo
 }
@@ -381,6 +412,9 @@ func (pruo *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Pe
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := pruo.mutation.Actions(); ok {
+		_spec.SetField(permissionresource.FieldActions, field.TypeString, value)
 	}
 	if pruo.mutation.PermissionCleared() {
 		edge := &sqlgraph.EdgeSpec{

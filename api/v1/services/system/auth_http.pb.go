@@ -19,13 +19,13 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAuthAPIAuthenticate = "/api.v1.services.system.AuthAPI/Authenticate"
-const OperationAuthAPICreateToken = "/api.v1.services.system.AuthAPI/CreateToken"
-const OperationAuthAPIDestroyToken = "/api.v1.services.system.AuthAPI/DestroyToken"
-const OperationAuthAPIListAuthResources = "/api.v1.services.system.AuthAPI/ListAuthResources"
-const OperationAuthAPIValidateToken = "/api.v1.services.system.AuthAPI/ValidateToken"
+const OperationAuthServiceAuthenticate = "/api.v1.services.system.AuthService/Authenticate"
+const OperationAuthServiceCreateToken = "/api.v1.services.system.AuthService/CreateToken"
+const OperationAuthServiceDestroyToken = "/api.v1.services.system.AuthService/DestroyToken"
+const OperationAuthServiceListAuthResources = "/api.v1.services.system.AuthService/ListAuthResources"
+const OperationAuthServiceValidateToken = "/api.v1.services.system.AuthService/ValidateToken"
 
-type AuthAPIHTTPServer interface {
+type AuthServiceHTTPServer interface {
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// CreateToken CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
@@ -36,22 +36,22 @@ type AuthAPIHTTPServer interface {
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 }
 
-func RegisterAuthAPIHTTPServer(s *http.Server, srv AuthAPIHTTPServer) {
+func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/sys/auth/resources", _AuthAPI_ListAuthResources0_HTTP_Handler(srv))
-	r.POST("/sys/auth/token", _AuthAPI_CreateToken0_HTTP_Handler(srv))
-	r.GET("/sys/auth/validate", _AuthAPI_ValidateToken0_HTTP_Handler(srv))
-	r.POST("/sys/auth/destroy", _AuthAPI_DestroyToken0_HTTP_Handler(srv))
-	r.POST("/sys/auth/authenticate", _AuthAPI_Authenticate0_HTTP_Handler(srv))
+	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_HTTP_Handler(srv))
+	r.POST("/sys/auth/token", _AuthService_CreateToken0_HTTP_Handler(srv))
+	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_HTTP_Handler(srv))
+	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_HTTP_Handler(srv))
+	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_HTTP_Handler(srv))
 }
 
-func _AuthAPI_ListAuthResources0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
+func _AuthService_ListAuthResources0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListAuthResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIListAuthResources)
+		http.SetOperation(ctx, OperationAuthServiceListAuthResources)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 		})
@@ -64,7 +64,7 @@ func _AuthAPI_ListAuthResources0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx ht
 	}
 }
 
-func _AuthAPI_CreateToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
+func _AuthService_CreateToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateTokenRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -73,7 +73,7 @@ func _AuthAPI_CreateToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Con
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPICreateToken)
+		http.SetOperation(ctx, OperationAuthServiceCreateToken)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
 		})
@@ -86,13 +86,13 @@ func _AuthAPI_CreateToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Con
 	}
 }
 
-func _AuthAPI_ValidateToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
+func _AuthService_ValidateToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ValidateTokenRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIValidateToken)
+		http.SetOperation(ctx, OperationAuthServiceValidateToken)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
 		})
@@ -105,7 +105,7 @@ func _AuthAPI_ValidateToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.C
 	}
 }
 
-func _AuthAPI_DestroyToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
+func _AuthService_DestroyToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DestroyTokenRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -114,7 +114,7 @@ func _AuthAPI_DestroyToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Co
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIDestroyToken)
+		http.SetOperation(ctx, OperationAuthServiceDestroyToken)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
 		})
@@ -127,7 +127,7 @@ func _AuthAPI_DestroyToken0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Co
 	}
 }
 
-func _AuthAPI_Authenticate0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Context) error {
+func _AuthService_Authenticate0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AuthenticateRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -136,7 +136,7 @@ func _AuthAPI_Authenticate0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Co
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIAuthenticate)
+		http.SetOperation(ctx, OperationAuthServiceAuthenticate)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
 		})
@@ -149,7 +149,7 @@ func _AuthAPI_Authenticate0_HTTP_Handler(srv AuthAPIHTTPServer) func(ctx http.Co
 	}
 }
 
-type AuthAPIHTTPClient interface {
+type AuthServiceHTTPClient interface {
 	Authenticate(ctx context.Context, req *AuthenticateRequest, opts ...http.CallOption) (rsp *AuthenticateResponse, err error)
 	CreateToken(ctx context.Context, req *CreateTokenRequest, opts ...http.CallOption) (rsp *CreateTokenResponse, err error)
 	DestroyToken(ctx context.Context, req *DestroyTokenRequest, opts ...http.CallOption) (rsp *DestroyTokenResponse, err error)
@@ -157,19 +157,19 @@ type AuthAPIHTTPClient interface {
 	ValidateToken(ctx context.Context, req *ValidateTokenRequest, opts ...http.CallOption) (rsp *ValidateTokenResponse, err error)
 }
 
-type AuthAPIHTTPClientImpl struct {
+type AuthServiceHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewAuthAPIHTTPClient(client *http.Client) AuthAPIHTTPClient {
-	return &AuthAPIHTTPClientImpl{client}
+func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
+	return &AuthServiceHTTPClientImpl{client}
 }
 
-func (c *AuthAPIHTTPClientImpl) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...http.CallOption) (*AuthenticateResponse, error) {
+func (c *AuthServiceHTTPClientImpl) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...http.CallOption) (*AuthenticateResponse, error) {
 	var out AuthenticateResponse
 	pattern := "/sys/auth/authenticate"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthAPIAuthenticate))
+	opts = append(opts, http.Operation(OperationAuthServiceAuthenticate))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -178,11 +178,11 @@ func (c *AuthAPIHTTPClientImpl) Authenticate(ctx context.Context, in *Authentica
 	return &out, nil
 }
 
-func (c *AuthAPIHTTPClientImpl) CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...http.CallOption) (*CreateTokenResponse, error) {
+func (c *AuthServiceHTTPClientImpl) CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...http.CallOption) (*CreateTokenResponse, error) {
 	var out CreateTokenResponse
 	pattern := "/sys/auth/token"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthAPICreateToken))
+	opts = append(opts, http.Operation(OperationAuthServiceCreateToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -191,11 +191,11 @@ func (c *AuthAPIHTTPClientImpl) CreateToken(ctx context.Context, in *CreateToken
 	return &out, nil
 }
 
-func (c *AuthAPIHTTPClientImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...http.CallOption) (*DestroyTokenResponse, error) {
+func (c *AuthServiceHTTPClientImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...http.CallOption) (*DestroyTokenResponse, error) {
 	var out DestroyTokenResponse
 	pattern := "/sys/auth/destroy"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthAPIDestroyToken))
+	opts = append(opts, http.Operation(OperationAuthServiceDestroyToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
 	if err != nil {
@@ -204,11 +204,11 @@ func (c *AuthAPIHTTPClientImpl) DestroyToken(ctx context.Context, in *DestroyTok
 	return &out, nil
 }
 
-func (c *AuthAPIHTTPClientImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...http.CallOption) (*ListAuthResourcesResponse, error) {
+func (c *AuthServiceHTTPClientImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...http.CallOption) (*ListAuthResourcesResponse, error) {
 	var out ListAuthResourcesResponse
 	pattern := "/sys/auth/resources"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthAPIListAuthResources))
+	opts = append(opts, http.Operation(OperationAuthServiceListAuthResources))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -217,11 +217,11 @@ func (c *AuthAPIHTTPClientImpl) ListAuthResources(ctx context.Context, in *ListA
 	return &out, nil
 }
 
-func (c *AuthAPIHTTPClientImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...http.CallOption) (*ValidateTokenResponse, error) {
+func (c *AuthServiceHTTPClientImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...http.CallOption) (*ValidateTokenResponse, error) {
 	var out ValidateTokenResponse
 	pattern := "/sys/auth/validate"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthAPIValidateToken))
+	opts = append(opts, http.Operation(OperationAuthServiceValidateToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

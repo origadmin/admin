@@ -42,7 +42,7 @@ type UserRepo interface {
 	AddRoleIDs(context.Context, int64, []int64) error
 	GetByUserName(context.Context, string, ...string) (*UserPB, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
-	ListMenuByUserID(context.Context, int64) ([]*MenuPB, error)
+	ListResourceByUserID(context.Context, int64) ([]*ResourcePB, error)
 	Current(context.Context, int64) (*UserPB, error)
 	UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option UserQueryOption) (*pb.UpdateUserStatusResponse, error)
 }

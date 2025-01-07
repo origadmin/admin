@@ -106,14 +106,6 @@ func (uc *UserCreate) SetUsername(s string) *UserCreate {
 	return uc
 }
 
-// SetNillableUsername sets the "username" field if the given value is not nil.
-func (uc *UserCreate) SetNillableUsername(s *string) *UserCreate {
-	if s != nil {
-		uc.SetUsername(*s)
-	}
-	return uc
-}
-
 // SetNickname sets the "nickname" field.
 func (uc *UserCreate) SetNickname(s string) *UserCreate {
 	uc.mutation.SetNickname(s)
@@ -419,7 +411,9 @@ func (uc *UserCreate) Mutation() *UserMutation {
 
 // Save creates the User in the database.
 func (uc *UserCreate) Save(ctx context.Context) (*User, error) {
-	uc.defaults()
+	if err := uc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, uc.sqlSave, uc.mutation, uc.hooks)
 }
 
@@ -446,7 +440,7 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (uc *UserCreate) defaults() {
+func (uc *UserCreate) defaults() error {
 	if _, ok := uc.mutation.CreateAuthor(); !ok {
 		v := user.DefaultCreateAuthor
 		uc.mutation.SetCreateAuthor(v)
@@ -456,20 +450,22 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetUpdateAuthor(v)
 	}
 	if _, ok := uc.mutation.CreateTime(); !ok {
+		if user.DefaultCreateTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultCreateTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultCreateTime()
 		uc.mutation.SetCreateTime(v)
 	}
 	if _, ok := uc.mutation.UpdateTime(); !ok {
+		if user.DefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultUpdateTime()
 		uc.mutation.SetUpdateTime(v)
 	}
 	if _, ok := uc.mutation.AllowedIP(); !ok {
 		v := user.DefaultAllowedIP
 		uc.mutation.SetAllowedIP(v)
-	}
-	if _, ok := uc.mutation.Username(); !ok {
-		v := user.DefaultUsername
-		uc.mutation.SetUsername(v)
 	}
 	if _, ok := uc.mutation.Nickname(); !ok {
 		v := user.DefaultNickname
@@ -520,10 +516,16 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetLastLoginIP(v)
 	}
 	if _, ok := uc.mutation.LastLoginTime(); !ok {
+		if user.DefaultLastLoginTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultLastLoginTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultLastLoginTime()
 		uc.mutation.SetLastLoginTime(v)
 	}
 	if _, ok := uc.mutation.SanctionDate(); !ok {
+		if user.DefaultSanctionDate == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultSanctionDate (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultSanctionDate()
 		uc.mutation.SetSanctionDate(v)
 	}
@@ -532,9 +534,13 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetManager(v)
 	}
 	if _, ok := uc.mutation.ID(); !ok {
+		if user.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultID()
 		uc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

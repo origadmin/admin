@@ -10,58 +10,58 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-// LoginAPIService is a login service.
-type LoginAPIService struct {
-	pb.UnimplementedLoginAPIServer
+// LoginServiceServer is a login service.
+type LoginServiceServer struct {
+	pb.UnimplementedLoginServiceServer
 
-	client pb.LoginAPIClient
+	client pb.LoginServiceClient
 }
 
-func (obj LoginAPIService) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+func (obj LoginServiceServer) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	return obj.client.Logout(ctx, request)
 }
 
-func (obj LoginAPIService) TokenRefresh(ctx context.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
+func (obj LoginServiceServer) TokenRefresh(ctx context.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
 	return obj.client.TokenRefresh(ctx, request)
 }
 
-func (obj LoginAPIService) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+func (obj LoginServiceServer) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	return obj.client.Register(ctx, request)
 }
 
-func (obj LoginAPIService) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
+func (obj LoginServiceServer) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
 	return obj.client.CaptchaResource(ctx, request)
 }
 
-func (obj LoginAPIService) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
+func (obj LoginServiceServer) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
 	return obj.client.CaptchaResources(ctx, request)
 }
 
-func (obj LoginAPIService) CaptchaID(ctx context.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
-	return obj.client.CaptchaID(ctx, request)
+func (obj LoginServiceServer) CaptchaId(ctx context.Context, request *pb.CaptchaIdRequest) (*pb.CaptchaIdResponse, error) {
+	return obj.client.CaptchaId(ctx, request)
 }
 
-func (obj LoginAPIService) CaptchaImage(ctx context.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
+func (obj LoginServiceServer) CaptchaImage(ctx context.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
 	return obj.client.CaptchaImage(ctx, request)
 }
 
-func (obj LoginAPIService) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (obj LoginServiceServer) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
 	return obj.client.Login(ctx, request)
 }
 
-//func (l LoginAPIService) mustEmbedUnimplementedLoginAPIServer() {
+//func (l LoginServiceServer) mustEmbedUnimplementedLoginServiceServer() {
 //	//TODO implement me
 //	panic("implement me")
 //}
 
-// NewLoginAPIService new a login service.
-func NewLoginAPIService(client pb.LoginAPIClient) *LoginAPIService {
-	return &LoginAPIService{client: client}
+// NewLoginServiceServer new a login service.
+func NewLoginServiceServer(client pb.LoginServiceClient) *LoginServiceServer {
+	return &LoginServiceServer{client: client}
 }
 
-// NewLoginAPIServer new a login service.
-func NewLoginAPIServer(client pb.LoginAPIClient) pb.LoginAPIServer {
-	return &LoginAPIService{client: client}
+// NewLoginServiceServerPB new a login service.
+func NewLoginServiceServerPB(client pb.LoginServiceClient) pb.LoginServiceServer {
+	return &LoginServiceServer{client: client}
 }
 
-var _ pb.LoginAPIServer = (*LoginAPIService)(nil)
+var _ pb.LoginServiceServer = (*LoginServiceServer)(nil)

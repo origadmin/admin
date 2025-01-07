@@ -21,7 +21,7 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
-type AuthAPIAgent interface {
+type AuthServiceAgent interface {
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// CreateToken CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
@@ -32,13 +32,13 @@ type AuthAPIAgent interface {
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 }
 
-func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthService_ListAuthResources0_HTTPAgent_Handler(srv AuthServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in ListAuthResourcesRequest
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationAuthAPIListAuthResources)
+		http.SetOperation(cctx, OperationAuthServiceListAuthResources)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
@@ -55,7 +55,7 @@ func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.Handle
 	}
 }
 
-func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthService_CreateToken0_HTTPAgent_Handler(srv AuthServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in CreateTokenRequest
 		if err := cctx.Bind(&in.Data); err != nil {
@@ -64,7 +64,7 @@ func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationAuthAPICreateToken)
+		http.SetOperation(cctx, OperationAuthServiceCreateToken)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
@@ -81,13 +81,13 @@ func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 	}
 }
 
-func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthService_ValidateToken0_HTTPAgent_Handler(srv AuthServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in ValidateTokenRequest
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationAuthAPIValidateToken)
+		http.SetOperation(cctx, OperationAuthServiceValidateToken)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
@@ -104,7 +104,7 @@ func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFun
 	}
 }
 
-func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthService_DestroyToken0_HTTPAgent_Handler(srv AuthServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in DestroyTokenRequest
 		if err := cctx.Bind(&in.Data); err != nil {
@@ -113,7 +113,7 @@ func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationAuthAPIDestroyToken)
+		http.SetOperation(cctx, OperationAuthServiceDestroyToken)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
@@ -130,7 +130,7 @@ func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 	}
 }
 
-func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
+func _AuthService_Authenticate0_HTTPAgent_Handler(srv AuthServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in AuthenticateRequest
 		if err := cctx.Bind(&in.Data); err != nil {
@@ -139,7 +139,7 @@ func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationAuthAPIAuthenticate)
+		http.SetOperation(cctx, OperationAuthServiceAuthenticate)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
@@ -156,11 +156,11 @@ func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 	}
 }
 
-func RegisterAuthAPIAgent(ag agent.HTTPAgent, srv AuthAPIAgent) {
+func RegisterAuthServiceAgent(ag agent.HTTPAgent, srv AuthServiceAgent) {
 	r := ag.Route()
-	r.GET("/sys/auth/resources", _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv))
-	r.POST("/sys/auth/token", _AuthAPI_CreateToken0_HTTPAgent_Handler(srv))
-	r.GET("/sys/auth/validate", _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv))
-	r.POST("/sys/auth/destroy", _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv))
-	r.POST("/sys/auth/authenticate", _AuthAPI_Authenticate0_HTTPAgent_Handler(srv))
+	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/token", _AuthService_CreateToken0_HTTPAgent_Handler(srv))
+	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_HTTPAgent_Handler(srv))
 }

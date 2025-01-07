@@ -6,12 +6,9 @@
 package dto
 
 import (
-	"context"
-
 	"github.com/origadmin/toolkits/net/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/resp"
 )
 
 type (
@@ -21,11 +18,11 @@ type (
 
 // MenuRepo is a Menu repository interface.
 type MenuRepo interface {
-	Get(context.Context, int64, ...MenuQueryOption) (*MenuPB, error)
-	Create(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
-	Delete(context.Context, int64) error
-	Update(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
-	List(context.Context, *ListMenusRequest, ...MenuQueryOption) ([]*MenuPB, int32, error)
+	//Get(context.Context, int64, ...MenuQueryOption) (*MenuPB, error)
+	//Create(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
+	//Delete(context.Context, int64) error
+	//Update(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
+	//List(context.Context, *ListMenusRequest, ...MenuQueryOption) ([]*MenuPB, int32, error)
 }
 
 type MenuQueryOption struct {
@@ -57,21 +54,22 @@ func (o MenuQueryOption) FromCreateRequest(in *pb.CreateMenuRequest, limiter pag
 	return nil
 }
 
-func ToListMenusResponse(result []*MenuPB, in *ListMenusRequest, total int32, args ...any) (*ListMenusResponse, error) {
-	response := &ListMenusResponse{
-		TotalSize: total,
-		Current:   in.Current,
-		PageSize:  in.PageSize,
-		Menus:     result,
-		Extra:     resp.Any(args...),
-	}
-	return response, nil
-}
-
-func ConvertMenus(menus []*Menu) []*MenuPB {
-	var result []*MenuPB
-	for _, menu := range menus {
-		result = append(result, ConvertMenu2PB(menu))
-	}
-	return result
-}
+//
+//func ToListMenusResponse(result []*MenuPB, in *ListMenusRequest, total int32, args ...any) (*ListMenusResponse, error) {
+//	response := &ListMenusResponse{
+//		TotalSize: total,
+//		Current:   in.Current,
+//		PageSize:  in.PageSize,
+//		Menus:     result,
+//		Extra:     resp.Any(args...),
+//	}
+//	return response, nil
+//}
+//
+//func ConvertMenus(menus []*Menu) []*MenuPB {
+//	var result []*MenuPB
+//	for _, menu := range menus {
+//		result = append(result, ConvertMenu2PB(menu))
+//	}
+//	return result
+//}

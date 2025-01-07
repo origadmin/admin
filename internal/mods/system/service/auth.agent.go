@@ -19,14 +19,14 @@ var (
 	ErrorInvalidToken = pb.ErrorSystemErrorReasonInvalidToken("invalid token")
 )
 
-// AuthAPIGINRPCService is a menu service.
-type AuthAPIGINRPCService struct {
+// AuthServiceAgent is a menu service.
+type AuthServiceAgent struct {
 	resp.Response
 
-	client pb.AuthAPIClient
+	client pb.AuthServiceClient
 }
 
-func (s AuthAPIGINRPCService) Authenticate(ctx context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
+func (s AuthServiceAgent) Authenticate(ctx context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Authenticate(ctx, request)
 	if err != nil {
@@ -41,7 +41,7 @@ func (s AuthAPIGINRPCService) Authenticate(ctx context.Context, request *pb.Auth
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) CreateToken(ctx context.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
+func (s AuthServiceAgent) CreateToken(ctx context.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreateToken(ctx, request)
 	if err != nil {
@@ -54,7 +54,7 @@ func (s AuthAPIGINRPCService) CreateToken(ctx context.Context, request *pb.Creat
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) DestroyToken(ctx context.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
+func (s AuthServiceAgent) DestroyToken(ctx context.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.DestroyToken(ctx, request)
 	if err != nil {
@@ -67,7 +67,7 @@ func (s AuthAPIGINRPCService) DestroyToken(ctx context.Context, request *pb.Dest
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) ValidateToken(ctx context.Context, request *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
+func (s AuthServiceAgent) ValidateToken(ctx context.Context, request *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ValidateToken(ctx, request)
 	if err != nil {
@@ -80,7 +80,7 @@ func (s AuthAPIGINRPCService) ValidateToken(ctx context.Context, request *pb.Val
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
+func (s AuthServiceAgent) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListAuthResources(ctx, request)
 	if err != nil {
@@ -94,18 +94,18 @@ func (s AuthAPIGINRPCService) ListAuthResources(ctx context.Context, request *pb
 	return nil, nil
 }
 
-// NewAuthAPIGINRPCService new a menu service.
-func NewAuthAPIGINRPCService(client pb.AuthAPIClient) *AuthAPIGINRPCService {
-	return &AuthAPIGINRPCService{client: client}
+// NewAuthServiceAgent new a menu service.
+func NewAuthServiceAgent(client pb.AuthServiceClient) *AuthServiceAgent {
+	return &AuthServiceAgent{client: client}
 }
 
-// NewAuthAPIAgent new a menu service.
-func NewAuthAPIAgent(client pb.AuthAPIClient) pb.AuthAPIAgent {
-	return &AuthAPIGINRPCService{client: client}
+// NewAuthServiceAgentPB new a menu service.
+func NewAuthServiceAgentPB(client pb.AuthServiceClient) pb.AuthServiceAgent {
+	return &AuthServiceAgent{client: client}
 }
-func NewAuthServerAgent(client *service.GRPCClient) pb.AuthAPIAgent {
-	cli := pb.NewAuthAPIClient(client)
-	return NewAuthAPIAgent(cli)
+func NewAuthServiceAgentClient(client *service.GRPCClient) pb.AuthServiceAgent {
+	cli := pb.NewAuthServiceClient(client)
+	return NewAuthServiceAgent(cli)
 }
 
-var _ pb.AuthAPIAgent = (*AuthAPIGINRPCService)(nil)
+var _ pb.AuthServiceAgent = (*AuthServiceAgent)(nil)

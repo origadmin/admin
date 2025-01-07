@@ -6,9 +6,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
@@ -44,10 +42,10 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
-		case department.FieldDescription:
+		case department.FieldTreePath:
 			// check string with sql.NullString if it is empty
-			if input.Description != "" {
-				m.SetDescription(input.Description)
+			if input.TreePath != "" {
+				m.SetTreePath(input.TreePath)
 			}
 		case department.FieldSequence:
 			// check int with sql.NullInt64 if it is zero
@@ -59,15 +57,15 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
-		case department.FieldAncestors:
-			// check string with sql.NullString if it is empty
-			if input.Ancestors != "" {
-				m.SetAncestors(input.Ancestors)
-			}
 		case department.FieldLevel:
 			// check int with sql.NullInt64 if it is zero
 			if input.Level != 0 {
 				m.SetLevel(input.Level)
+			}
+		case department.FieldDescription:
+			// check string with sql.NullString if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
 			}
 		case department.FieldParentID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -100,16 +98,16 @@ func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...stri
 			m.SetKeyword(input.Keyword)
 		case department.FieldName:
 			m.SetName(input.Name)
-		case department.FieldDescription:
-			m.SetDescription(input.Description)
+		case department.FieldTreePath:
+			m.SetTreePath(input.TreePath)
 		case department.FieldSequence:
 			m.SetSequence(input.Sequence)
 		case department.FieldStatus:
 			m.SetStatus(input.Status)
-		case department.FieldAncestors:
-			m.SetAncestors(input.Ancestors)
 		case department.FieldLevel:
 			m.SetLevel(input.Level)
+		case department.FieldDescription:
+			m.SetDescription(input.Description)
 		case department.FieldParentID:
 			m.SetParentID(input.ParentID)
 		case department.FieldID:
@@ -171,141 +169,6 @@ func (m *DepartmentRoleMutation) SetFieldsWithZero(input *DepartmentRole, fields
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case menu.FieldCreateTime:
-			if input.CreateTime.Unix() != 0 {
-				m.SetCreateTime(input.CreateTime)
-			}
-		case menu.FieldUpdateTime:
-			if input.UpdateTime.Unix() != 0 {
-				m.SetUpdateTime(input.UpdateTime)
-			}
-		case menu.FieldKeyword:
-			// check string with sql.NullString if it is empty
-			if input.Keyword != "" {
-				m.SetKeyword(input.Keyword)
-			}
-		case menu.FieldName:
-			// check string with sql.NullString if it is empty
-			if input.Name != "" {
-				m.SetName(input.Name)
-			}
-		case menu.FieldI18nKey:
-			// check string with sql.NullString if it is empty
-			if input.I18nKey != "" {
-				m.SetI18nKey(input.I18nKey)
-			}
-		case menu.FieldDescription:
-			// check string with sql.NullString if it is empty
-			if input.Description != "" {
-				m.SetDescription(input.Description)
-			}
-		case menu.FieldType:
-			// check string with sql.NullString if it is empty
-			if input.Type != "" {
-				m.SetType(input.Type)
-			}
-		case menu.FieldIcon:
-			// check string with sql.NullString if it is empty
-			if input.Icon != "" {
-				m.SetIcon(input.Icon)
-			}
-		case menu.FieldPath:
-			// check string with sql.NullString if it is empty
-			if input.Path != "" {
-				m.SetPath(input.Path)
-			}
-		case menu.FieldStatus:
-			// check int8 with sql.NullInt64 if it is zero
-			if input.Status != 0 {
-				m.SetStatus(input.Status)
-			}
-		case menu.FieldParentPath:
-			// check string with sql.NullString if it is empty
-			if input.ParentPath != "" {
-				m.SetParentPath(input.ParentPath)
-			}
-		case menu.FieldSequence:
-			// check int with sql.NullInt64 if it is zero
-			if input.Sequence != 0 {
-				m.SetSequence(input.Sequence)
-			}
-		case menu.FieldHidden:
-			if input.Hidden {
-				m.SetHidden(input.Hidden)
-			}
-		case menu.FieldProperties:
-			// check string with sql.NullString if it is empty
-			if input.Properties != "" {
-				m.SetProperties(input.Properties)
-			}
-		case menu.FieldParentID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ParentID != 0 {
-				m.SetParentID(input.ParentID)
-			}
-		case menu.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
-		default:
-			return fmt.Errorf("unknown Menu field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *MenuMutation) SetFieldsWithZero(input *Menu, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case menu.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case menu.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
-		case menu.FieldKeyword:
-			m.SetKeyword(input.Keyword)
-		case menu.FieldName:
-			m.SetName(input.Name)
-		case menu.FieldI18nKey:
-			m.SetI18nKey(input.I18nKey)
-		case menu.FieldDescription:
-			m.SetDescription(input.Description)
-		case menu.FieldType:
-			m.SetType(input.Type)
-		case menu.FieldIcon:
-			m.SetIcon(input.Icon)
-		case menu.FieldPath:
-			m.SetPath(input.Path)
-		case menu.FieldStatus:
-			m.SetStatus(input.Status)
-		case menu.FieldParentPath:
-			m.SetParentPath(input.ParentPath)
-		case menu.FieldSequence:
-			m.SetSequence(input.Sequence)
-		case menu.FieldHidden:
-			m.SetHidden(input.Hidden)
-		case menu.FieldProperties:
-			m.SetProperties(input.Properties)
-		case menu.FieldParentID:
-			m.SetParentID(input.ParentID)
-		case menu.FieldID:
-			m.SetID(input.ID)
-		default:
-			return fmt.Errorf("unknown Menu field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
 func (m *PermissionMutation) SetFields(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -332,24 +195,14 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
-		case permission.FieldI18nKey:
+		case permission.FieldDataScope:
 			// check string with sql.NullString if it is empty
-			if input.I18nKey != "" {
-				m.SetI18nKey(input.I18nKey)
+			if input.DataScope != "" {
+				m.SetDataScope(input.DataScope)
 			}
-		case permission.FieldType:
-			// check int8 with sql.NullInt64 if it is zero
-			if input.Type != 0 {
-				m.SetType(input.Type)
-			}
-		case permission.FieldScope:
-			// check string with sql.NullString if it is empty
-			if input.Scope != "" {
-				m.SetScope(input.Scope)
-			}
-		case permission.FieldScopeDepts:
-			if len(input.ScopeDepts) > 0 {
-				m.SetScopeDepts(input.ScopeDepts)
+		case permission.FieldDataRules:
+			if len(input.DataRules) > 0 {
+				m.SetDataRules(input.DataRules)
 			}
 		case permission.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -379,65 +232,14 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetKeyword(input.Keyword)
 		case permission.FieldDescription:
 			m.SetDescription(input.Description)
-		case permission.FieldI18nKey:
-			m.SetI18nKey(input.I18nKey)
-		case permission.FieldType:
-			m.SetType(input.Type)
-		case permission.FieldScope:
-			m.SetScope(input.Scope)
-		case permission.FieldScopeDepts:
-			m.SetScopeDepts(input.ScopeDepts)
+		case permission.FieldDataScope:
+			m.SetDataScope(input.DataScope)
+		case permission.FieldDataRules:
+			m.SetDataRules(input.DataRules)
 		case permission.FieldID:
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Permission field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *PermissionMenuMutation) SetFields(input *PermissionMenu, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case permissionmenu.FieldPermissionID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.PermissionID != 0 {
-				m.SetPermissionID(input.PermissionID)
-			}
-		case permissionmenu.FieldMenuID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.MenuID != 0 {
-				m.SetMenuID(input.MenuID)
-			}
-		case permissionmenu.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
-		default:
-			return fmt.Errorf("unknown PermissionMenu field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *PermissionMenuMutation) SetFieldsWithZero(input *PermissionMenu, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case permissionmenu.FieldPermissionID:
-			m.SetPermissionID(input.PermissionID)
-		case permissionmenu.FieldMenuID:
-			m.SetMenuID(input.MenuID)
-		case permissionmenu.FieldID:
-			m.SetID(input.ID)
-		default:
-			return fmt.Errorf("unknown PermissionMenu field %s", fields[i])
 		}
 	}
 	return nil
@@ -458,6 +260,11 @@ func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ResourceID != 0 {
 				m.SetResourceID(input.ResourceID)
+			}
+		case permissionresource.FieldActions:
+			// check string with sql.NullString if it is empty
+			if input.Actions != "" {
+				m.SetActions(input.Actions)
 			}
 		case permissionresource.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -481,6 +288,8 @@ func (m *PermissionResourceMutation) SetFieldsWithZero(input *PermissionResource
 			m.SetPermissionID(input.PermissionID)
 		case permissionresource.FieldResourceID:
 			m.SetResourceID(input.ResourceID)
+		case permissionresource.FieldActions:
+			m.SetActions(input.Actions)
 		case permissionresource.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -570,44 +379,83 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case resource.FieldMethod:
+		case resource.FieldName:
 			// check string with sql.NullString if it is empty
-			if input.Method != "" {
-				m.SetMethod(input.Method)
+			if input.Name != "" {
+				m.SetName(input.Name)
 			}
-		case resource.FieldOperation:
+		case resource.FieldKeyword:
 			// check string with sql.NullString if it is empty
-			if input.Operation != "" {
-				m.SetOperation(input.Operation)
-			}
-		case resource.FieldPath:
-			// check string with sql.NullString if it is empty
-			if input.Path != "" {
-				m.SetPath(input.Path)
-			}
-		case resource.FieldURI:
-			// check string with sql.NullString if it is empty
-			if input.URI != "" {
-				m.SetURI(input.URI)
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
 			}
 		case resource.FieldI18nKey:
 			// check string with sql.NullString if it is empty
 			if input.I18nKey != "" {
 				m.SetI18nKey(input.I18nKey)
 			}
+		case resource.FieldType:
+			// check uint32 with sql.NullInt64 if it is zero
+			if input.Type != 0 {
+				m.SetType(input.Type)
+			}
+		case resource.FieldStatus:
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Status != 0 {
+				m.SetStatus(input.Status)
+			}
+		case resource.FieldURI:
+			// check string with sql.NullString if it is empty
+			if input.URI != "" {
+				m.SetURI(input.URI)
+			}
+		case resource.FieldOperation:
+			// check string with sql.NullString if it is empty
+			if input.Operation != "" {
+				m.SetOperation(input.Operation)
+			}
+		case resource.FieldMethod:
+			// check string with sql.NullString if it is empty
+			if input.Method != "" {
+				m.SetMethod(input.Method)
+			}
+		case resource.FieldComponent:
+			// check string with sql.NullString if it is empty
+			if input.Component != "" {
+				m.SetComponent(input.Component)
+			}
+		case resource.FieldIcon:
+			// check string with sql.NullString if it is empty
+			if input.Icon != "" {
+				m.SetIcon(input.Icon)
+			}
+		case resource.FieldSequence:
+			// check int with sql.NullInt64 if it is zero
+			if input.Sequence != 0 {
+				m.SetSequence(input.Sequence)
+			}
+		case resource.FieldVisible:
+			if input.Visible {
+				m.SetVisible(input.Visible)
+			}
+		case resource.FieldTreePath:
+			// check string with sql.NullString if it is empty
+			if input.TreePath != "" {
+				m.SetTreePath(input.TreePath)
+			}
+		case resource.FieldProperties:
+			if len(input.Properties) > 0 {
+				m.SetProperties(input.Properties)
+			}
 		case resource.FieldDescription:
 			// check string with sql.NullString if it is empty
 			if input.Description != "" {
 				m.SetDescription(input.Description)
 			}
-		case resource.FieldMetadata:
-			if len(input.Metadata) > 0 {
-				m.SetMetadata(input.Metadata)
-			}
-		case resource.FieldMenuID:
+		case resource.FieldParentID:
 			// check int64 with sql.NullInt64 if it is zero
-			if input.MenuID != 0 {
-				m.SetMenuID(input.MenuID)
+			if input.ParentID != 0 {
+				m.SetParentID(input.ParentID)
 			}
 		case resource.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -631,22 +479,38 @@ func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) 
 			m.SetCreateTime(input.CreateTime)
 		case resource.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case resource.FieldMethod:
-			m.SetMethod(input.Method)
-		case resource.FieldOperation:
-			m.SetOperation(input.Operation)
-		case resource.FieldPath:
-			m.SetPath(input.Path)
-		case resource.FieldURI:
-			m.SetURI(input.URI)
+		case resource.FieldName:
+			m.SetName(input.Name)
+		case resource.FieldKeyword:
+			m.SetKeyword(input.Keyword)
 		case resource.FieldI18nKey:
 			m.SetI18nKey(input.I18nKey)
+		case resource.FieldType:
+			m.SetType(input.Type)
+		case resource.FieldStatus:
+			m.SetStatus(input.Status)
+		case resource.FieldURI:
+			m.SetURI(input.URI)
+		case resource.FieldOperation:
+			m.SetOperation(input.Operation)
+		case resource.FieldMethod:
+			m.SetMethod(input.Method)
+		case resource.FieldComponent:
+			m.SetComponent(input.Component)
+		case resource.FieldIcon:
+			m.SetIcon(input.Icon)
+		case resource.FieldSequence:
+			m.SetSequence(input.Sequence)
+		case resource.FieldVisible:
+			m.SetVisible(input.Visible)
+		case resource.FieldTreePath:
+			m.SetTreePath(input.TreePath)
+		case resource.FieldProperties:
+			m.SetProperties(input.Properties)
 		case resource.FieldDescription:
 			m.SetDescription(input.Description)
-		case resource.FieldMetadata:
-			m.SetMetadata(input.Metadata)
-		case resource.FieldMenuID:
-			m.SetMenuID(input.MenuID)
+		case resource.FieldParentID:
+			m.SetParentID(input.ParentID)
 		case resource.FieldID:
 			m.SetID(input.ID)
 		default:

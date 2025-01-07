@@ -17,47 +17,47 @@ import (
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
-	NewLoginAPIService,
-	NewLoginAPIServer,
-	NewMenuAPIServer,
-	NewMenuAPIService,
-	NewRoleAPIServer,
-	NewRoleAPIService,
-	NewUserAPIServer,
-	NewUserAPIService,
-	NewCurrentAPIServer,
-	NewCurrentAPIService,
-	NewAuthAPIServer,
-	NewAuthAPIService,
+	NewLoginServiceServerPB,
+	NewLoginServiceHTTPServerPB,
+	NewMenuServiceServerPB,
+	NewMenuServiceHTTPServerPB,
+	NewRoleServiceServerPB,
+	NewRoleServiceHTTPServerPB,
+	NewUserServiceServerPB,
+	NewUserServiceHTTPServerPB,
+	NewCurrentServiceServerPB,
+	NewCurrentServiceHTTPServerPB,
+	NewAuthServiceServerPB,
+	NewAuthServiceHTTPServerPB,
 )
 
 type RegisterServer struct {
-	Menu    pb.MenuAPIServer
-	Role    pb.RoleAPIServer
-	User    pb.UserAPIServer
-	Auth    pb.AuthAPIServer
-	Login   pb.LoginAPIServer
-	Current pb.CurrentAPIServer
+	Menu    pb.MenuServiceServer
+	Role    pb.RoleServiceServer
+	User    pb.UserServiceServer
+	Auth    pb.AuthServiceServer
+	Login   pb.LoginServiceServer
+	Current pb.CurrentServiceServer
 }
 
 func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
 	log.Info("grpc server system init")
-	pb.RegisterMenuAPIServer(server, s.Menu)
-	pb.RegisterRoleAPIServer(server, s.Role)
-	pb.RegisterUserAPIServer(server, s.User)
-	pb.RegisterAuthAPIServer(server, s.Auth)
-	pb.RegisterLoginAPIServer(server, s.Login)
-	pb.RegisterCurrentAPIServer(server, s.Current)
+	pb.RegisterMenuServiceServer(server, s.Menu)
+	pb.RegisterRoleServiceServer(server, s.Role)
+	pb.RegisterUserServiceServer(server, s.User)
+	pb.RegisterAuthServiceServer(server, s.Auth)
+	pb.RegisterLoginServiceServer(server, s.Login)
+	pb.RegisterCurrentServiceServer(server, s.Current)
 }
 
 func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server system init")
-	pb.RegisterMenuAPIHTTPServer(server, s.Menu)
-	pb.RegisterRoleAPIHTTPServer(server, s.Role)
-	pb.RegisterUserAPIHTTPServer(server, s.User)
-	pb.RegisterAuthAPIHTTPServer(server, s.Auth)
-	pb.RegisterLoginAPIHTTPServer(server, s.Login)
-	pb.RegisterCurrentAPIHTTPServer(server, s.Current)
+	pb.RegisterMenuServiceHTTPServer(server, s.Menu)
+	pb.RegisterRoleServiceHTTPServer(server, s.Role)
+	pb.RegisterUserServiceHTTPServer(server, s.User)
+	pb.RegisterAuthServiceHTTPServer(server, s.Auth)
+	pb.RegisterLoginServiceHTTPServer(server, s.Login)
+	pb.RegisterCurrentServiceHTTPServer(server, s.Current)
 }
 
 func (s RegisterServer) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {

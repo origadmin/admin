@@ -6,6 +6,7 @@
 package mixin
 
 import (
+	"context"
 	"time"
 
 	"entgo.io/ent"
@@ -182,5 +183,14 @@ var (
 	}
 )
 
-// SoftDeleteSchema schema to include control and time fields.
-type SoftDeleteSchema = DeleteSchema
+type softDeleteKey struct{}
+
+// SkipSoftDelete returns a new context that skips the soft-delete interceptor/mutators.
+func SkipSoftDelete(parent context.Context) context.Context {
+	return context.WithValue(parent, softDeleteKey{}, true)
+}
+
+func IsSkipSoftDelete(ctx context.Context) bool {
+	v, _ := ctx.Value(softDeleteKey{}).(bool)
+	return v
+}

@@ -19,19 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ResourceAPI_ListResources_FullMethodName  = "/api.v1.services.system.ResourceAPI/ListResources"
-	ResourceAPI_GetResource_FullMethodName    = "/api.v1.services.system.ResourceAPI/GetResource"
-	ResourceAPI_CreateResource_FullMethodName = "/api.v1.services.system.ResourceAPI/CreateResource"
-	ResourceAPI_UpdateResource_FullMethodName = "/api.v1.services.system.ResourceAPI/UpdateResource"
-	ResourceAPI_DeleteResource_FullMethodName = "/api.v1.services.system.ResourceAPI/DeleteResource"
+	ResourceService_ListResources_FullMethodName  = "/api.v1.services.system.ResourceService/ListResources"
+	ResourceService_GetResource_FullMethodName    = "/api.v1.services.system.ResourceService/GetResource"
+	ResourceService_CreateResource_FullMethodName = "/api.v1.services.system.ResourceService/CreateResource"
+	ResourceService_UpdateResource_FullMethodName = "/api.v1.services.system.ResourceService/UpdateResource"
+	ResourceService_DeleteResource_FullMethodName = "/api.v1.services.system.ResourceService/DeleteResource"
 )
 
-// ResourceAPIClient is the client API for ResourceAPI service.
+// ResourceServiceClient is the client API for ResourceService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // The resource service definition.
-type ResourceAPIClient interface {
+type ResourceServiceClient interface {
 	ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error)
 	GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceResponse, error)
 	CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...grpc.CallOption) (*CreateResourceResponse, error)
@@ -39,237 +39,237 @@ type ResourceAPIClient interface {
 	DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...grpc.CallOption) (*DeleteResourceResponse, error)
 }
 
-type resourceAPIClient struct {
+type resourceServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewResourceAPIClient(cc grpc.ClientConnInterface) ResourceAPIClient {
-	return &resourceAPIClient{cc}
+func NewResourceServiceClient(cc grpc.ClientConnInterface) ResourceServiceClient {
+	return &resourceServiceClient{cc}
 }
 
-func (c *resourceAPIClient) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error) {
+func (c *resourceServiceClient) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListResourcesResponse)
-	err := c.cc.Invoke(ctx, ResourceAPI_ListResources_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ResourceService_ListResources_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *resourceAPIClient) GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceResponse, error) {
+func (c *resourceServiceClient) GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetResourceResponse)
-	err := c.cc.Invoke(ctx, ResourceAPI_GetResource_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ResourceService_GetResource_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *resourceAPIClient) CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...grpc.CallOption) (*CreateResourceResponse, error) {
+func (c *resourceServiceClient) CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...grpc.CallOption) (*CreateResourceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateResourceResponse)
-	err := c.cc.Invoke(ctx, ResourceAPI_CreateResource_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ResourceService_CreateResource_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *resourceAPIClient) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...grpc.CallOption) (*UpdateResourceResponse, error) {
+func (c *resourceServiceClient) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...grpc.CallOption) (*UpdateResourceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateResourceResponse)
-	err := c.cc.Invoke(ctx, ResourceAPI_UpdateResource_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ResourceService_UpdateResource_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *resourceAPIClient) DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...grpc.CallOption) (*DeleteResourceResponse, error) {
+func (c *resourceServiceClient) DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...grpc.CallOption) (*DeleteResourceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteResourceResponse)
-	err := c.cc.Invoke(ctx, ResourceAPI_DeleteResource_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ResourceService_DeleteResource_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ResourceAPIServer is the server API for ResourceAPI service.
-// All implementations must embed UnimplementedResourceAPIServer
+// ResourceServiceServer is the server API for ResourceService service.
+// All implementations must embed UnimplementedResourceServiceServer
 // for forward compatibility.
 //
 // The resource service definition.
-type ResourceAPIServer interface {
+type ResourceServiceServer interface {
 	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
 	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
 	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error)
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
-	mustEmbedUnimplementedResourceAPIServer()
+	mustEmbedUnimplementedResourceServiceServer()
 }
 
-// UnimplementedResourceAPIServer must be embedded to have
+// UnimplementedResourceServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedResourceAPIServer struct{}
+type UnimplementedResourceServiceServer struct{}
 
-func (UnimplementedResourceAPIServer) ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error) {
+func (UnimplementedResourceServiceServer) ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListResources not implemented")
 }
-func (UnimplementedResourceAPIServer) GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error) {
+func (UnimplementedResourceServiceServer) GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetResource not implemented")
 }
-func (UnimplementedResourceAPIServer) CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error) {
+func (UnimplementedResourceServiceServer) CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateResource not implemented")
 }
-func (UnimplementedResourceAPIServer) UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error) {
+func (UnimplementedResourceServiceServer) UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
 }
-func (UnimplementedResourceAPIServer) DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+func (UnimplementedResourceServiceServer) DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteResource not implemented")
 }
-func (UnimplementedResourceAPIServer) mustEmbedUnimplementedResourceAPIServer() {}
-func (UnimplementedResourceAPIServer) testEmbeddedByValue()                     {}
+func (UnimplementedResourceServiceServer) mustEmbedUnimplementedResourceServiceServer() {}
+func (UnimplementedResourceServiceServer) testEmbeddedByValue()                         {}
 
-// UnsafeResourceAPIServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ResourceAPIServer will
+// UnsafeResourceServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ResourceServiceServer will
 // result in compilation errors.
-type UnsafeResourceAPIServer interface {
-	mustEmbedUnimplementedResourceAPIServer()
+type UnsafeResourceServiceServer interface {
+	mustEmbedUnimplementedResourceServiceServer()
 }
 
-func RegisterResourceAPIServer(s grpc.ServiceRegistrar, srv ResourceAPIServer) {
-	// If the following call pancis, it indicates UnimplementedResourceAPIServer was
+func RegisterResourceServiceServer(s grpc.ServiceRegistrar, srv ResourceServiceServer) {
+	// If the following call pancis, it indicates UnimplementedResourceServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&ResourceAPI_ServiceDesc, srv)
+	s.RegisterService(&ResourceService_ServiceDesc, srv)
 }
 
-func _ResourceAPI_ListResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ResourceService_ListResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListResourcesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResourceAPIServer).ListResources(ctx, in)
+		return srv.(ResourceServiceServer).ListResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResourceAPI_ListResources_FullMethodName,
+		FullMethod: ResourceService_ListResources_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResourceAPIServer).ListResources(ctx, req.(*ListResourcesRequest))
+		return srv.(ResourceServiceServer).ListResources(ctx, req.(*ListResourcesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ResourceAPI_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ResourceService_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResourceAPIServer).GetResource(ctx, in)
+		return srv.(ResourceServiceServer).GetResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResourceAPI_GetResource_FullMethodName,
+		FullMethod: ResourceService_GetResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResourceAPIServer).GetResource(ctx, req.(*GetResourceRequest))
+		return srv.(ResourceServiceServer).GetResource(ctx, req.(*GetResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ResourceAPI_CreateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ResourceService_CreateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResourceAPIServer).CreateResource(ctx, in)
+		return srv.(ResourceServiceServer).CreateResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResourceAPI_CreateResource_FullMethodName,
+		FullMethod: ResourceService_CreateResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResourceAPIServer).CreateResource(ctx, req.(*CreateResourceRequest))
+		return srv.(ResourceServiceServer).CreateResource(ctx, req.(*CreateResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ResourceAPI_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ResourceService_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResourceAPIServer).UpdateResource(ctx, in)
+		return srv.(ResourceServiceServer).UpdateResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResourceAPI_UpdateResource_FullMethodName,
+		FullMethod: ResourceService_UpdateResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResourceAPIServer).UpdateResource(ctx, req.(*UpdateResourceRequest))
+		return srv.(ResourceServiceServer).UpdateResource(ctx, req.(*UpdateResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ResourceAPI_DeleteResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ResourceService_DeleteResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResourceAPIServer).DeleteResource(ctx, in)
+		return srv.(ResourceServiceServer).DeleteResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ResourceAPI_DeleteResource_FullMethodName,
+		FullMethod: ResourceService_DeleteResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResourceAPIServer).DeleteResource(ctx, req.(*DeleteResourceRequest))
+		return srv.(ResourceServiceServer).DeleteResource(ctx, req.(*DeleteResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ResourceAPI_ServiceDesc is the grpc.ServiceDesc for ResourceAPI service.
+// ResourceService_ServiceDesc is the grpc.ServiceDesc for ResourceService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ResourceAPI_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.system.ResourceAPI",
-	HandlerType: (*ResourceAPIServer)(nil),
+var ResourceService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.v1.services.system.ResourceService",
+	HandlerType: (*ResourceServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ListResources",
-			Handler:    _ResourceAPI_ListResources_Handler,
+			Handler:    _ResourceService_ListResources_Handler,
 		},
 		{
 			MethodName: "GetResource",
-			Handler:    _ResourceAPI_GetResource_Handler,
+			Handler:    _ResourceService_GetResource_Handler,
 		},
 		{
 			MethodName: "CreateResource",
-			Handler:    _ResourceAPI_CreateResource_Handler,
+			Handler:    _ResourceService_CreateResource_Handler,
 		},
 		{
 			MethodName: "UpdateResource",
-			Handler:    _ResourceAPI_UpdateResource_Handler,
+			Handler:    _ResourceService_UpdateResource_Handler,
 		},
 		{
 			MethodName: "DeleteResource",
-			Handler:    _ResourceAPI_DeleteResource_Handler,
+			Handler:    _ResourceService_DeleteResource_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

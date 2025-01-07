@@ -503,22 +503,22 @@ var _ interface {
 	ErrorName() string
 } = UpdateCurrentRoleResponseValidationError{}
 
-// Validate checks the field values on ListCurrentMenusRequest with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ListCurrentResourcesRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListCurrentMenusRequest) Validate() error {
+func (m *ListCurrentResourcesRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListCurrentMenusRequest with the
+// ValidateAll checks the field values on ListCurrentResourcesRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListCurrentMenusRequestMultiError, or nil if none found.
-func (m *ListCurrentMenusRequest) ValidateAll() error {
+// ListCurrentResourcesRequestMultiError, or nil if none found.
+func (m *ListCurrentResourcesRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListCurrentMenusRequest) validate(all bool) error {
+func (m *ListCurrentResourcesRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -529,7 +529,7 @@ func (m *ListCurrentMenusRequest) validate(all bool) error {
 		switch v := interface{}(m.GetData()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ListCurrentMenusRequestValidationError{
+				errors = append(errors, ListCurrentResourcesRequestValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -537,7 +537,7 @@ func (m *ListCurrentMenusRequest) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, ListCurrentMenusRequestValidationError{
+				errors = append(errors, ListCurrentResourcesRequestValidationError{
 					field:  "Data",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -546,7 +546,7 @@ func (m *ListCurrentMenusRequest) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return ListCurrentMenusRequestValidationError{
+			return ListCurrentResourcesRequestValidationError{
 				field:  "Data",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -555,19 +555,19 @@ func (m *ListCurrentMenusRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListCurrentMenusRequestMultiError(errors)
+		return ListCurrentResourcesRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListCurrentMenusRequestMultiError is an error wrapping multiple validation
-// errors returned by ListCurrentMenusRequest.ValidateAll() if the designated
-// constraints aren't met.
-type ListCurrentMenusRequestMultiError []error
+// ListCurrentResourcesRequestMultiError is an error wrapping multiple
+// validation errors returned by ListCurrentResourcesRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ListCurrentResourcesRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListCurrentMenusRequestMultiError) Error() string {
+func (m ListCurrentResourcesRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -576,11 +576,12 @@ func (m ListCurrentMenusRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListCurrentMenusRequestMultiError) AllErrors() []error { return m }
+func (m ListCurrentResourcesRequestMultiError) AllErrors() []error { return m }
 
-// ListCurrentMenusRequestValidationError is the validation error returned by
-// ListCurrentMenusRequest.Validate if the designated constraints aren't met.
-type ListCurrentMenusRequestValidationError struct {
+// ListCurrentResourcesRequestValidationError is the validation error returned
+// by ListCurrentResourcesRequest.Validate if the designated constraints
+// aren't met.
+type ListCurrentResourcesRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -588,24 +589,24 @@ type ListCurrentMenusRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListCurrentMenusRequestValidationError) Field() string { return e.field }
+func (e ListCurrentResourcesRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListCurrentMenusRequestValidationError) Reason() string { return e.reason }
+func (e ListCurrentResourcesRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListCurrentMenusRequestValidationError) Cause() error { return e.cause }
+func (e ListCurrentResourcesRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListCurrentMenusRequestValidationError) Key() bool { return e.key }
+func (e ListCurrentResourcesRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListCurrentMenusRequestValidationError) ErrorName() string {
-	return "ListCurrentMenusRequestValidationError"
+func (e ListCurrentResourcesRequestValidationError) ErrorName() string {
+	return "ListCurrentResourcesRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListCurrentMenusRequestValidationError) Error() string {
+func (e ListCurrentResourcesRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -617,14 +618,14 @@ func (e ListCurrentMenusRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListCurrentMenusRequest.%s: %s%s",
+		"invalid %sListCurrentResourcesRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListCurrentMenusRequestValidationError{}
+var _ error = ListCurrentResourcesRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -632,24 +633,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListCurrentMenusRequestValidationError{}
+} = ListCurrentResourcesRequestValidationError{}
 
-// Validate checks the field values on ListCurrentMenusResponse with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ListCurrentResourcesResponse with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListCurrentMenusResponse) Validate() error {
+func (m *ListCurrentResourcesResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListCurrentMenusResponse with the
+// ValidateAll checks the field values on ListCurrentResourcesResponse with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListCurrentMenusResponseMultiError, or nil if none found.
-func (m *ListCurrentMenusResponse) ValidateAll() error {
+// ListCurrentResourcesResponseMultiError, or nil if none found.
+func (m *ListCurrentResourcesResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListCurrentMenusResponse) validate(all bool) error {
+func (m *ListCurrentResourcesResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -663,7 +664,7 @@ func (m *ListCurrentMenusResponse) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListCurrentMenusResponseValidationError{
+					errors = append(errors, ListCurrentResourcesResponseValidationError{
 						field:  fmt.Sprintf("Menus[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -671,7 +672,7 @@ func (m *ListCurrentMenusResponse) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListCurrentMenusResponseValidationError{
+					errors = append(errors, ListCurrentResourcesResponseValidationError{
 						field:  fmt.Sprintf("Menus[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -680,7 +681,7 @@ func (m *ListCurrentMenusResponse) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListCurrentMenusResponseValidationError{
+				return ListCurrentResourcesResponseValidationError{
 					field:  fmt.Sprintf("Menus[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -691,19 +692,19 @@ func (m *ListCurrentMenusResponse) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListCurrentMenusResponseMultiError(errors)
+		return ListCurrentResourcesResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListCurrentMenusResponseMultiError is an error wrapping multiple validation
-// errors returned by ListCurrentMenusResponse.ValidateAll() if the designated
-// constraints aren't met.
-type ListCurrentMenusResponseMultiError []error
+// ListCurrentResourcesResponseMultiError is an error wrapping multiple
+// validation errors returned by ListCurrentResourcesResponse.ValidateAll() if
+// the designated constraints aren't met.
+type ListCurrentResourcesResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListCurrentMenusResponseMultiError) Error() string {
+func (m ListCurrentResourcesResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -712,11 +713,12 @@ func (m ListCurrentMenusResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListCurrentMenusResponseMultiError) AllErrors() []error { return m }
+func (m ListCurrentResourcesResponseMultiError) AllErrors() []error { return m }
 
-// ListCurrentMenusResponseValidationError is the validation error returned by
-// ListCurrentMenusResponse.Validate if the designated constraints aren't met.
-type ListCurrentMenusResponseValidationError struct {
+// ListCurrentResourcesResponseValidationError is the validation error returned
+// by ListCurrentResourcesResponse.Validate if the designated constraints
+// aren't met.
+type ListCurrentResourcesResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -724,24 +726,24 @@ type ListCurrentMenusResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListCurrentMenusResponseValidationError) Field() string { return e.field }
+func (e ListCurrentResourcesResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListCurrentMenusResponseValidationError) Reason() string { return e.reason }
+func (e ListCurrentResourcesResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListCurrentMenusResponseValidationError) Cause() error { return e.cause }
+func (e ListCurrentResourcesResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListCurrentMenusResponseValidationError) Key() bool { return e.key }
+func (e ListCurrentResourcesResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListCurrentMenusResponseValidationError) ErrorName() string {
-	return "ListCurrentMenusResponseValidationError"
+func (e ListCurrentResourcesResponseValidationError) ErrorName() string {
+	return "ListCurrentResourcesResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListCurrentMenusResponseValidationError) Error() string {
+func (e ListCurrentResourcesResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -753,14 +755,14 @@ func (e ListCurrentMenusResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListCurrentMenusResponse.%s: %s%s",
+		"invalid %sListCurrentResourcesResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListCurrentMenusResponseValidationError{}
+var _ error = ListCurrentResourcesResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -768,7 +770,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListCurrentMenusResponseValidationError{}
+} = ListCurrentResourcesResponseValidationError{}
 
 // Validate checks the field values on UpdateCurrentUserPasswordRequest with
 // the rules defined in the proto definition for this message. If any rules

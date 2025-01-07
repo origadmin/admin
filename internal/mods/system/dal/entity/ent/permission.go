@@ -29,14 +29,10 @@ type Permission struct {
 	Keyword string `json:"keyword,omitempty"`
 	// permission.field.description
 	Description string `json:"description,omitempty"`
-	// permission.field.i18n_key
-	I18nKey string `json:"i18n_key,omitempty"`
-	// permission.field.type
-	Type int8 `json:"type,omitempty"`
-	// permission.field.scope
-	Scope string `json:"scope,omitempty"`
-	// permission.field.scope_depts
-	ScopeDepts []string `json:"scope_depts,omitempty"`
+	// permission.field.data_scope
+	DataScope string `json:"data_scope,omitempty"`
+	// permission.field.data_rules
+	DataRules []map[string]string `json:"data_rules,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionQuery when eager-loading is set.
 	Edges        PermissionEdges `json:"edges"`
@@ -47,19 +43,15 @@ type Permission struct {
 type PermissionEdges struct {
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
-	// Menus holds the value of the menus edge.
-	Menus []*Menu `json:"menus,omitempty"`
 	// Resources holds the value of the resources edge.
 	Resources []*Resource `json:"resources,omitempty"`
 	// RolePermissions holds the value of the role_permissions edge.
 	RolePermissions []*RolePermission `json:"role_permissions,omitempty"`
-	// PermissionMenus holds the value of the permission_menus edge.
-	PermissionMenus []*PermissionMenu `json:"permission_menus,omitempty"`
 	// PermissionResources holds the value of the permission_resources edge.
 	PermissionResources []*PermissionResource `json:"permission_resources,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [4]bool
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
@@ -71,19 +63,10 @@ func (e PermissionEdges) RolesOrErr() ([]*Role, error) {
 	return nil, &NotLoadedError{edge: "roles"}
 }
 
-// MenusOrErr returns the Menus value or an error if the edge
-// was not loaded in eager-loading.
-func (e PermissionEdges) MenusOrErr() ([]*Menu, error) {
-	if e.loadedTypes[1] {
-		return e.Menus, nil
-	}
-	return nil, &NotLoadedError{edge: "menus"}
-}
-
 // ResourcesOrErr returns the Resources value or an error if the edge
 // was not loaded in eager-loading.
 func (e PermissionEdges) ResourcesOrErr() ([]*Resource, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		return e.Resources, nil
 	}
 	return nil, &NotLoadedError{edge: "resources"}
@@ -92,25 +75,16 @@ func (e PermissionEdges) ResourcesOrErr() ([]*Resource, error) {
 // RolePermissionsOrErr returns the RolePermissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e PermissionEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.RolePermissions, nil
 	}
 	return nil, &NotLoadedError{edge: "role_permissions"}
 }
 
-// PermissionMenusOrErr returns the PermissionMenus value or an error if the edge
-// was not loaded in eager-loading.
-func (e PermissionEdges) PermissionMenusOrErr() ([]*PermissionMenu, error) {
-	if e.loadedTypes[4] {
-		return e.PermissionMenus, nil
-	}
-	return nil, &NotLoadedError{edge: "permission_menus"}
-}
-
 // PermissionResourcesOrErr returns the PermissionResources value or an error if the edge
 // was not loaded in eager-loading.
 func (e PermissionEdges) PermissionResourcesOrErr() ([]*PermissionResource, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[3] {
 		return e.PermissionResources, nil
 	}
 	return nil, &NotLoadedError{edge: "permission_resources"}
@@ -121,11 +95,11 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case permission.FieldScopeDepts:
+		case permission.FieldDataRules:
 			values[i] = new([]byte)
-		case permission.FieldID, permission.FieldType:
+		case permission.FieldID:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldI18nKey, permission.FieldScope:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -180,30 +154,18 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				pe.Description = value.String
 			}
-		case permission.FieldI18nKey:
+		case permission.FieldDataScope:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field i18n_key", values[i])
+				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
 			} else if value.Valid {
-				pe.I18nKey = value.String
+				pe.DataScope = value.String
 			}
-		case permission.FieldType:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field type", values[i])
-			} else if value.Valid {
-				pe.Type = int8(value.Int64)
-			}
-		case permission.FieldScope:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field scope", values[i])
-			} else if value.Valid {
-				pe.Scope = value.String
-			}
-		case permission.FieldScopeDepts:
+		case permission.FieldDataRules:
 			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field scope_depts", values[i])
+				return fmt.Errorf("unexpected type %T for field data_rules", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &pe.ScopeDepts); err != nil {
-					return fmt.Errorf("unmarshal field scope_depts: %w", err)
+				if err := json.Unmarshal(*value, &pe.DataRules); err != nil {
+					return fmt.Errorf("unmarshal field data_rules: %w", err)
 				}
 			}
 		default:
@@ -224,11 +186,6 @@ func (pe *Permission) QueryRoles() *RoleQuery {
 	return NewPermissionClient(pe.config).QueryRoles(pe)
 }
 
-// QueryMenus queries the "menus" edge of the Permission entity.
-func (pe *Permission) QueryMenus() *MenuQuery {
-	return NewPermissionClient(pe.config).QueryMenus(pe)
-}
-
 // QueryResources queries the "resources" edge of the Permission entity.
 func (pe *Permission) QueryResources() *ResourceQuery {
 	return NewPermissionClient(pe.config).QueryResources(pe)
@@ -237,11 +194,6 @@ func (pe *Permission) QueryResources() *ResourceQuery {
 // QueryRolePermissions queries the "role_permissions" edge of the Permission entity.
 func (pe *Permission) QueryRolePermissions() *RolePermissionQuery {
 	return NewPermissionClient(pe.config).QueryRolePermissions(pe)
-}
-
-// QueryPermissionMenus queries the "permission_menus" edge of the Permission entity.
-func (pe *Permission) QueryPermissionMenus() *PermissionMenuQuery {
-	return NewPermissionClient(pe.config).QueryPermissionMenus(pe)
 }
 
 // QueryPermissionResources queries the "permission_resources" edge of the Permission entity.
@@ -287,17 +239,11 @@ func (pe *Permission) String() string {
 	builder.WriteString("description=")
 	builder.WriteString(pe.Description)
 	builder.WriteString(", ")
-	builder.WriteString("i18n_key=")
-	builder.WriteString(pe.I18nKey)
+	builder.WriteString("data_scope=")
+	builder.WriteString(pe.DataScope)
 	builder.WriteString(", ")
-	builder.WriteString("type=")
-	builder.WriteString(fmt.Sprintf("%v", pe.Type))
-	builder.WriteString(", ")
-	builder.WriteString("scope=")
-	builder.WriteString(pe.Scope)
-	builder.WriteString(", ")
-	builder.WriteString("scope_depts=")
-	builder.WriteString(fmt.Sprintf("%v", pe.ScopeDepts))
+	builder.WriteString("data_rules=")
+	builder.WriteString(fmt.Sprintf("%v", pe.DataRules))
 	builder.WriteByte(')')
 	return builder.String()
 }

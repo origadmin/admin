@@ -31,7 +31,11 @@ const (
 
 var (
 	// ProviderSet is server providers.
-	ProviderSet = wire.NewSet(NewSystemClient, NewRegisterServer, NewSystemServer, NewSystemServerAgent)
+	ProviderSet = wire.NewSet(
+		NewRegisterServer,
+		NewSystemClient,
+		NewSystemServer,
+		NewSystemServiceAgentClient)
 )
 
 func init() {
@@ -71,12 +75,12 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 }
 
 type RegisterAgent struct {
-	Auth    pb.AuthAPIAgent
-	Login   pb.LoginAPIAgent
-	Current pb.CurrentAPIAgent
-	Menu    pb.MenuAPIAgent
-	Role    pb.RoleAPIAgent
-	User    pb.UserAPIAgent
+	Auth    pb.AuthServiceAgent
+	Login   pb.LoginServiceAgent
+	Current pb.CurrentServiceAgent
+	Menu    pb.MenuServiceAgent
+	Role    pb.RoleServiceAgent
+	User    pb.UserServiceAgent
 }
 
 func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
@@ -86,12 +90,12 @@ func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServe
 func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server system init")
 	ag := agent.NewHTTP(server)
-	pb.RegisterAuthAPIAgent(ag, s.Auth)
-	pb.RegisterLoginAPIAgent(ag, s.Login)
-	pb.RegisterCurrentAPIAgent(ag, s.Current)
-	pb.RegisterMenuAPIAgent(ag, s.Menu)
-	pb.RegisterRoleAPIAgent(ag, s.Role)
-	pb.RegisterUserAPIAgent(ag, s.User)
+	pb.RegisterAuthServiceAgent(ag, s.Auth)
+	pb.RegisterLoginServiceAgent(ag, s.Login)
+	pb.RegisterCurrentServiceAgent(ag, s.Current)
+	pb.RegisterMenuServiceAgent(ag, s.Menu)
+	pb.RegisterRoleServiceAgent(ag, s.Role)
+	pb.RegisterUserServiceAgent(ag, s.User)
 }
 
 func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
@@ -99,14 +103,14 @@ func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServe
 	s.GRPCServer(ctx, grpcServer)
 }
 
-func NewSystemServerAgent(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
+func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
 	register := RegisterAgent{
-		Auth:    systemservice.NewAuthServerAgent(client),
-		Login:   systemservice.NewLoginServerAgent(client),
-		Current: systemservice.NewCurrentServerAgent(client),
-		Menu:    systemservice.NewMenuServerAgent(client),
-		Role:    systemservice.NewRoleServerAgent(client),
-		User:    systemservice.NewUserServerAgent(client),
+		Auth:    systemservice.NewAuthServiceAgentClient(client),
+		Login:   systemservice.NewLoginServiceAgentClient(client),
+		Current: systemservice.NewCurrentServiceAgentClient(client),
+		Menu:    systemservice.NewMenuServiceAgentClient(client),
+		Role:    systemservice.NewRoleServiceAgentClient(client),
+		User:    systemservice.NewUserServiceAgentClient(client),
 	}
 	return &register, nil
 }

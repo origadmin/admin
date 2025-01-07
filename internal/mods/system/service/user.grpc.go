@@ -10,42 +10,42 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-type UserAPIService struct {
-	pb.UnimplementedUserAPIServer
+type UserServiceServer struct {
+	pb.UnimplementedUserServiceServer
 
-	client pb.UserAPIClient
+	client pb.UserServiceClient
 }
 
-func (s UserAPIService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+func (s UserServiceServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return s.client.ListUsers(ctx, req)
 }
 
-func (s UserAPIService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (s UserServiceServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	return s.client.GetUser(ctx, req)
 }
 
-func (s UserAPIService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (s UserServiceServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	return s.client.CreateUser(ctx, req)
 }
 
-func (s UserAPIService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+func (s UserServiceServer) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	return s.client.UpdateUser(ctx, req)
 }
 
-func (s UserAPIService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (s UserServiceServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	return s.client.DeleteUser(ctx, req)
 }
 
-// NewUserAPIService new a user service.
-func NewUserAPIService(client pb.UserAPIClient) *UserAPIService {
-	return &UserAPIService{}
+// NewUserServiceServer new a user service.
+func NewUserServiceServer(client pb.UserServiceClient) *UserServiceServer {
+	return &UserServiceServer{}
 }
 
-// NewUserAPIServer new a user service.
-func NewUserAPIServer(client pb.UserAPIClient) pb.UserAPIServer {
-	return &UserAPIService{
+// NewUserServiceServerPB new a user service.
+func NewUserServiceServerPB(client pb.UserServiceClient) pb.UserServiceServer {
+	return &UserServiceServer{
 		client: client,
 	}
 }
 
-var _ pb.UserAPIServer = (*UserAPIService)(nil)
+var _ pb.UserServiceServer = (*UserServiceServer)(nil)

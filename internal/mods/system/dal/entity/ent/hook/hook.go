@@ -32,18 +32,6 @@ func (f DepartmentRoleFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Val
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DepartmentRoleMutation", m)
 }
 
-// The MenuFunc type is an adapter to allow the use of ordinary
-// function as Menu mutator.
-type MenuFunc func(context.Context, *ent.MenuMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f MenuFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.MenuMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MenuMutation", m)
-}
-
 // The PermissionFunc type is an adapter to allow the use of ordinary
 // function as Permission mutator.
 type PermissionFunc func(context.Context, *ent.PermissionMutation) (ent.Value, error)
@@ -54,18 +42,6 @@ func (f PermissionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, 
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PermissionMutation", m)
-}
-
-// The PermissionMenuFunc type is an adapter to allow the use of ordinary
-// function as PermissionMenu mutator.
-type PermissionMenuFunc func(context.Context, *ent.PermissionMenuMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f PermissionMenuFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.PermissionMenuMutation); ok {
-		return f(ctx, mv)
-	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PermissionMenuMutation", m)
 }
 
 // The PermissionResourceFunc type is an adapter to allow the use of ordinary

@@ -68,16 +68,16 @@ func (du *DepartmentUpdate) SetNillableName(s *string) *DepartmentUpdate {
 	return du
 }
 
-// SetDescription sets the "description" field.
-func (du *DepartmentUpdate) SetDescription(s string) *DepartmentUpdate {
-	du.mutation.SetDescription(s)
+// SetTreePath sets the "tree_path" field.
+func (du *DepartmentUpdate) SetTreePath(s string) *DepartmentUpdate {
+	du.mutation.SetTreePath(s)
 	return du
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (du *DepartmentUpdate) SetNillableDescription(s *string) *DepartmentUpdate {
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (du *DepartmentUpdate) SetNillableTreePath(s *string) *DepartmentUpdate {
 	if s != nil {
-		du.SetDescription(*s)
+		du.SetTreePath(*s)
 	}
 	return du
 }
@@ -124,20 +124,6 @@ func (du *DepartmentUpdate) AddStatus(i int8) *DepartmentUpdate {
 	return du
 }
 
-// SetAncestors sets the "ancestors" field.
-func (du *DepartmentUpdate) SetAncestors(s string) *DepartmentUpdate {
-	du.mutation.SetAncestors(s)
-	return du
-}
-
-// SetNillableAncestors sets the "ancestors" field if the given value is not nil.
-func (du *DepartmentUpdate) SetNillableAncestors(s *string) *DepartmentUpdate {
-	if s != nil {
-		du.SetAncestors(*s)
-	}
-	return du
-}
-
 // SetLevel sets the "level" field.
 func (du *DepartmentUpdate) SetLevel(i int) *DepartmentUpdate {
 	du.mutation.ResetLevel()
@@ -156,6 +142,20 @@ func (du *DepartmentUpdate) SetNillableLevel(i *int) *DepartmentUpdate {
 // AddLevel adds i to the "level" field.
 func (du *DepartmentUpdate) AddLevel(i int) *DepartmentUpdate {
 	du.mutation.AddLevel(i)
+	return du
+}
+
+// SetDescription sets the "description" field.
+func (du *DepartmentUpdate) SetDescription(s string) *DepartmentUpdate {
+	du.mutation.SetDescription(s)
+	return du
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (du *DepartmentUpdate) SetNillableDescription(s *string) *DepartmentUpdate {
+	if s != nil {
+		du.SetDescription(*s)
+	}
 	return du
 }
 
@@ -459,14 +459,14 @@ func (du *DepartmentUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Department.name": %w`, err)}
 		}
 	}
+	if v, ok := du.mutation.TreePath(); ok {
+		if err := department.TreePathValidator(v); err != nil {
+			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Department.tree_path": %w`, err)}
+		}
+	}
 	if v, ok := du.mutation.Description(); ok {
 		if err := department.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
-		}
-	}
-	if v, ok := du.mutation.Ancestors(); ok {
-		if err := department.AncestorsValidator(v); err != nil {
-			return &ValidationError{Name: "ancestors", err: fmt.Errorf(`ent: validator failed for field "Department.ancestors": %w`, err)}
 		}
 	}
 	if v, ok := du.mutation.ParentID(); ok {
@@ -504,8 +504,8 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := du.mutation.Name(); ok {
 		_spec.SetField(department.FieldName, field.TypeString, value)
 	}
-	if value, ok := du.mutation.Description(); ok {
-		_spec.SetField(department.FieldDescription, field.TypeString, value)
+	if value, ok := du.mutation.TreePath(); ok {
+		_spec.SetField(department.FieldTreePath, field.TypeString, value)
 	}
 	if value, ok := du.mutation.Sequence(); ok {
 		_spec.SetField(department.FieldSequence, field.TypeInt, value)
@@ -519,14 +519,14 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := du.mutation.AddedStatus(); ok {
 		_spec.AddField(department.FieldStatus, field.TypeInt8, value)
 	}
-	if value, ok := du.mutation.Ancestors(); ok {
-		_spec.SetField(department.FieldAncestors, field.TypeString, value)
-	}
 	if value, ok := du.mutation.Level(); ok {
 		_spec.SetField(department.FieldLevel, field.TypeInt, value)
 	}
 	if value, ok := du.mutation.AddedLevel(); ok {
 		_spec.AddField(department.FieldLevel, field.TypeInt, value)
+	}
+	if value, ok := du.mutation.Description(); ok {
+		_spec.SetField(department.FieldDescription, field.TypeString, value)
 	}
 	if du.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -925,16 +925,16 @@ func (duo *DepartmentUpdateOne) SetNillableName(s *string) *DepartmentUpdateOne 
 	return duo
 }
 
-// SetDescription sets the "description" field.
-func (duo *DepartmentUpdateOne) SetDescription(s string) *DepartmentUpdateOne {
-	duo.mutation.SetDescription(s)
+// SetTreePath sets the "tree_path" field.
+func (duo *DepartmentUpdateOne) SetTreePath(s string) *DepartmentUpdateOne {
+	duo.mutation.SetTreePath(s)
 	return duo
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (duo *DepartmentUpdateOne) SetNillableDescription(s *string) *DepartmentUpdateOne {
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (duo *DepartmentUpdateOne) SetNillableTreePath(s *string) *DepartmentUpdateOne {
 	if s != nil {
-		duo.SetDescription(*s)
+		duo.SetTreePath(*s)
 	}
 	return duo
 }
@@ -981,20 +981,6 @@ func (duo *DepartmentUpdateOne) AddStatus(i int8) *DepartmentUpdateOne {
 	return duo
 }
 
-// SetAncestors sets the "ancestors" field.
-func (duo *DepartmentUpdateOne) SetAncestors(s string) *DepartmentUpdateOne {
-	duo.mutation.SetAncestors(s)
-	return duo
-}
-
-// SetNillableAncestors sets the "ancestors" field if the given value is not nil.
-func (duo *DepartmentUpdateOne) SetNillableAncestors(s *string) *DepartmentUpdateOne {
-	if s != nil {
-		duo.SetAncestors(*s)
-	}
-	return duo
-}
-
 // SetLevel sets the "level" field.
 func (duo *DepartmentUpdateOne) SetLevel(i int) *DepartmentUpdateOne {
 	duo.mutation.ResetLevel()
@@ -1013,6 +999,20 @@ func (duo *DepartmentUpdateOne) SetNillableLevel(i *int) *DepartmentUpdateOne {
 // AddLevel adds i to the "level" field.
 func (duo *DepartmentUpdateOne) AddLevel(i int) *DepartmentUpdateOne {
 	duo.mutation.AddLevel(i)
+	return duo
+}
+
+// SetDescription sets the "description" field.
+func (duo *DepartmentUpdateOne) SetDescription(s string) *DepartmentUpdateOne {
+	duo.mutation.SetDescription(s)
+	return duo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (duo *DepartmentUpdateOne) SetNillableDescription(s *string) *DepartmentUpdateOne {
+	if s != nil {
+		duo.SetDescription(*s)
+	}
 	return duo
 }
 
@@ -1329,14 +1329,14 @@ func (duo *DepartmentUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Department.name": %w`, err)}
 		}
 	}
+	if v, ok := duo.mutation.TreePath(); ok {
+		if err := department.TreePathValidator(v); err != nil {
+			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Department.tree_path": %w`, err)}
+		}
+	}
 	if v, ok := duo.mutation.Description(); ok {
 		if err := department.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
-		}
-	}
-	if v, ok := duo.mutation.Ancestors(); ok {
-		if err := department.AncestorsValidator(v); err != nil {
-			return &ValidationError{Name: "ancestors", err: fmt.Errorf(`ent: validator failed for field "Department.ancestors": %w`, err)}
 		}
 	}
 	if v, ok := duo.mutation.ParentID(); ok {
@@ -1391,8 +1391,8 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 	if value, ok := duo.mutation.Name(); ok {
 		_spec.SetField(department.FieldName, field.TypeString, value)
 	}
-	if value, ok := duo.mutation.Description(); ok {
-		_spec.SetField(department.FieldDescription, field.TypeString, value)
+	if value, ok := duo.mutation.TreePath(); ok {
+		_spec.SetField(department.FieldTreePath, field.TypeString, value)
 	}
 	if value, ok := duo.mutation.Sequence(); ok {
 		_spec.SetField(department.FieldSequence, field.TypeInt, value)
@@ -1406,14 +1406,14 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 	if value, ok := duo.mutation.AddedStatus(); ok {
 		_spec.AddField(department.FieldStatus, field.TypeInt8, value)
 	}
-	if value, ok := duo.mutation.Ancestors(); ok {
-		_spec.SetField(department.FieldAncestors, field.TypeString, value)
-	}
 	if value, ok := duo.mutation.Level(); ok {
 		_spec.SetField(department.FieldLevel, field.TypeInt, value)
 	}
 	if value, ok := duo.mutation.AddedLevel(); ok {
 		_spec.AddField(department.FieldLevel, field.TypeInt, value)
+	}
+	if value, ok := duo.mutation.Description(); ok {
+		_spec.SetField(department.FieldDescription, field.TypeString, value)
 	}
 	if duo.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{

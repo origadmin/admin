@@ -14,7 +14,7 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemUser";
 
 // The login service definition.
-service UserAPI {
+service UserService {
   rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {get: "/sys/users"};
   }

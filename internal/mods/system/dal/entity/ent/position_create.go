@@ -62,6 +62,14 @@ func (pc *PositionCreate) SetDescription(s string) *PositionCreate {
 	return pc
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (pc *PositionCreate) SetNillableDescription(s *string) *PositionCreate {
+	if s != nil {
+		pc.SetDescription(*s)
+	}
+	return pc
+}
+
 // SetDepartmentID sets the "department_id" field.
 func (pc *PositionCreate) SetDepartmentID(i int64) *PositionCreate {
 	pc.mutation.SetDepartmentID(i)
@@ -144,6 +152,10 @@ func (pc *PositionCreate) defaults() {
 	if _, ok := pc.mutation.UpdateTime(); !ok {
 		v := position.DefaultUpdateTime()
 		pc.mutation.SetUpdateTime(v)
+	}
+	if _, ok := pc.mutation.Description(); !ok {
+		v := position.DefaultDescription
+		pc.mutation.SetDescription(v)
 	}
 	if _, ok := pc.mutation.ID(); !ok {
 		v := position.DefaultID()

@@ -64,6 +64,11 @@ func ResourceID(v int64) predicate.PermissionResource {
 	return predicate.PermissionResource(sql.FieldEQ(FieldResourceID, v))
 }
 
+// Actions applies equality check predicate on the "actions" field. It's identical to ActionsEQ.
+func Actions(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldEQ(FieldActions, v))
+}
+
 // PermissionIDEQ applies the EQ predicate on the "permission_id" field.
 func PermissionIDEQ(v int64) predicate.PermissionResource {
 	return predicate.PermissionResource(sql.FieldEQ(FieldPermissionID, v))
@@ -102,6 +107,71 @@ func ResourceIDIn(vs ...int64) predicate.PermissionResource {
 // ResourceIDNotIn applies the NotIn predicate on the "resource_id" field.
 func ResourceIDNotIn(vs ...int64) predicate.PermissionResource {
 	return predicate.PermissionResource(sql.FieldNotIn(FieldResourceID, vs...))
+}
+
+// ActionsEQ applies the EQ predicate on the "actions" field.
+func ActionsEQ(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldEQ(FieldActions, v))
+}
+
+// ActionsNEQ applies the NEQ predicate on the "actions" field.
+func ActionsNEQ(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldNEQ(FieldActions, v))
+}
+
+// ActionsIn applies the In predicate on the "actions" field.
+func ActionsIn(vs ...string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldIn(FieldActions, vs...))
+}
+
+// ActionsNotIn applies the NotIn predicate on the "actions" field.
+func ActionsNotIn(vs ...string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldNotIn(FieldActions, vs...))
+}
+
+// ActionsGT applies the GT predicate on the "actions" field.
+func ActionsGT(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldGT(FieldActions, v))
+}
+
+// ActionsGTE applies the GTE predicate on the "actions" field.
+func ActionsGTE(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldGTE(FieldActions, v))
+}
+
+// ActionsLT applies the LT predicate on the "actions" field.
+func ActionsLT(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldLT(FieldActions, v))
+}
+
+// ActionsLTE applies the LTE predicate on the "actions" field.
+func ActionsLTE(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldLTE(FieldActions, v))
+}
+
+// ActionsContains applies the Contains predicate on the "actions" field.
+func ActionsContains(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldContains(FieldActions, v))
+}
+
+// ActionsHasPrefix applies the HasPrefix predicate on the "actions" field.
+func ActionsHasPrefix(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldHasPrefix(FieldActions, v))
+}
+
+// ActionsHasSuffix applies the HasSuffix predicate on the "actions" field.
+func ActionsHasSuffix(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldHasSuffix(FieldActions, v))
+}
+
+// ActionsEqualFold applies the EqualFold predicate on the "actions" field.
+func ActionsEqualFold(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldEqualFold(FieldActions, v))
+}
+
+// ActionsContainsFold applies the ContainsFold predicate on the "actions" field.
+func ActionsContainsFold(v string) predicate.PermissionResource {
+	return predicate.PermissionResource(sql.FieldContainsFold(FieldActions, v))
 }
 
 // HasPermission applies the HasEdge predicate on the "permission" edge.

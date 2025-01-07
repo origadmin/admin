@@ -26,16 +26,16 @@ type Department struct {
 	Keyword string `json:"keyword,omitempty"`
 	// department.field.name
 	Name string `json:"name,omitempty"`
-	// department.field.description
-	Description string `json:"description,omitempty"`
+	// menu.field.tree_path
+	TreePath string `json:"tree_path,omitempty"`
 	// department.field.sequence
 	Sequence int `json:"sequence,omitempty"`
 	// department.field.status
 	Status int8 `json:"status,omitempty"`
-	// department.field.ancestors
-	Ancestors string `json:"ancestors,omitempty"`
 	// department.field.level
 	Level int `json:"level,omitempty"`
+	// department.field.description
+	Description string `json:"description,omitempty"`
 	// department.field.parent_id
 	ParentID int64 `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -137,7 +137,7 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case department.FieldID, department.FieldSequence, department.FieldStatus, department.FieldLevel, department.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case department.FieldKeyword, department.FieldName, department.FieldDescription, department.FieldAncestors:
+		case department.FieldKeyword, department.FieldName, department.FieldTreePath, department.FieldDescription:
 			values[i] = new(sql.NullString)
 		case department.FieldCreateTime, department.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -186,11 +186,11 @@ func (d *Department) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				d.Name = value.String
 			}
-		case department.FieldDescription:
+		case department.FieldTreePath:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field description", values[i])
+				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
 			} else if value.Valid {
-				d.Description = value.String
+				d.TreePath = value.String
 			}
 		case department.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -204,17 +204,17 @@ func (d *Department) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				d.Status = int8(value.Int64)
 			}
-		case department.FieldAncestors:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field ancestors", values[i])
-			} else if value.Valid {
-				d.Ancestors = value.String
-			}
 		case department.FieldLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field level", values[i])
 			} else if value.Valid {
 				d.Level = int(value.Int64)
+			}
+		case department.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				d.Description = value.String
 			}
 		case department.FieldParentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -305,8 +305,8 @@ func (d *Department) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(d.Name)
 	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(d.Description)
+	builder.WriteString("tree_path=")
+	builder.WriteString(d.TreePath)
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
 	builder.WriteString(fmt.Sprintf("%v", d.Sequence))
@@ -314,11 +314,11 @@ func (d *Department) String() string {
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", d.Status))
 	builder.WriteString(", ")
-	builder.WriteString("ancestors=")
-	builder.WriteString(d.Ancestors)
-	builder.WriteString(", ")
 	builder.WriteString("level=")
 	builder.WriteString(fmt.Sprintf("%v", d.Level))
+	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(d.Description)
 	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
 	builder.WriteString(fmt.Sprintf("%v", d.ParentID))

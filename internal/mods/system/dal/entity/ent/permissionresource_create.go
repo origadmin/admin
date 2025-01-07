@@ -33,6 +33,20 @@ func (prc *PermissionResourceCreate) SetResourceID(i int64) *PermissionResourceC
 	return prc
 }
 
+// SetActions sets the "actions" field.
+func (prc *PermissionResourceCreate) SetActions(s string) *PermissionResourceCreate {
+	prc.mutation.SetActions(s)
+	return prc
+}
+
+// SetNillableActions sets the "actions" field if the given value is not nil.
+func (prc *PermissionResourceCreate) SetNillableActions(s *string) *PermissionResourceCreate {
+	if s != nil {
+		prc.SetActions(*s)
+	}
+	return prc
+}
+
 // SetID sets the "id" field.
 func (prc *PermissionResourceCreate) SetID(i int64) *PermissionResourceCreate {
 	prc.mutation.SetID(i)
@@ -92,6 +106,10 @@ func (prc *PermissionResourceCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (prc *PermissionResourceCreate) defaults() {
+	if _, ok := prc.mutation.Actions(); !ok {
+		v := permissionresource.DefaultActions
+		prc.mutation.SetActions(v)
+	}
 	if _, ok := prc.mutation.ID(); !ok {
 		v := permissionresource.DefaultID()
 		prc.mutation.SetID(v)
@@ -115,6 +133,9 @@ func (prc *PermissionResourceCreate) check() error {
 		if err := permissionresource.ResourceIDValidator(v); err != nil {
 			return &ValidationError{Name: "resource_id", err: fmt.Errorf(`ent: validator failed for field "PermissionResource.resource_id": %w`, err)}
 		}
+	}
+	if _, ok := prc.mutation.Actions(); !ok {
+		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "PermissionResource.actions"`)}
 	}
 	if v, ok := prc.mutation.ID(); ok {
 		if err := permissionresource.IDValidator(v); err != nil {
@@ -158,6 +179,10 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 	if id, ok := prc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
+	}
+	if value, ok := prc.mutation.Actions(); ok {
+		_spec.SetField(permissionresource.FieldActions, field.TypeString, value)
+		_node.Actions = value
 	}
 	if nodes := prc.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

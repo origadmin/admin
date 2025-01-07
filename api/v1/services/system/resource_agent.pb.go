@@ -21,7 +21,7 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
-type ResourceAPIAgent interface {
+type ResourceServiceAgent interface {
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
 	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
@@ -29,13 +29,13 @@ type ResourceAPIAgent interface {
 	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error)
 }
 
-func _ResourceAPI_ListResources0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
+func _ResourceService_ListResources0_HTTPAgent_Handler(srv ResourceServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in ListResourcesRequest
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationResourceAPIListResources)
+		http.SetOperation(cctx, OperationResourceServiceListResources)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListResources(ctx, req.(*ListResourcesRequest))
@@ -52,7 +52,7 @@ func _ResourceAPI_ListResources0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Ha
 	}
 }
 
-func _ResourceAPI_GetResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
+func _ResourceService_GetResource0_HTTPAgent_Handler(srv ResourceServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in GetResourceRequest
 		if err := cctx.BindQuery(&in); err != nil {
@@ -61,7 +61,7 @@ func _ResourceAPI_GetResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Hand
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationResourceAPIGetResource)
+		http.SetOperation(cctx, OperationResourceServiceGetResource)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.GetResource(ctx, req.(*GetResourceRequest))
@@ -78,7 +78,7 @@ func _ResourceAPI_GetResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Hand
 	}
 }
 
-func _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
+func _ResourceService_CreateResource0_HTTPAgent_Handler(srv ResourceServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in CreateResourceRequest
 		if err := cctx.Bind(&in.Resource); err != nil {
@@ -87,7 +87,7 @@ func _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationResourceAPICreateResource)
+		http.SetOperation(cctx, OperationResourceServiceCreateResource)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateResource(ctx, req.(*CreateResourceRequest))
@@ -104,7 +104,7 @@ func _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 	}
 }
 
-func _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
+func _ResourceService_UpdateResource0_HTTPAgent_Handler(srv ResourceServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in UpdateResourceRequest
 		if err := cctx.Bind(&in.Resource); err != nil {
@@ -116,7 +116,7 @@ func _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationResourceAPIUpdateResource)
+		http.SetOperation(cctx, OperationResourceServiceUpdateResource)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateResource(ctx, req.(*UpdateResourceRequest))
@@ -133,7 +133,7 @@ func _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 	}
 }
 
-func _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
+func _ResourceService_DeleteResource0_HTTPAgent_Handler(srv ResourceServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in DeleteResourceRequest
 		if err := cctx.BindQuery(&in); err != nil {
@@ -142,7 +142,7 @@ func _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationResourceAPIDeleteResource)
+		http.SetOperation(cctx, OperationResourceServiceDeleteResource)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DeleteResource(ctx, req.(*DeleteResourceRequest))
@@ -159,11 +159,11 @@ func _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 	}
 }
 
-func RegisterResourceAPIAgent(ag agent.HTTPAgent, srv ResourceAPIAgent) {
+func RegisterResourceServiceAgent(ag agent.HTTPAgent, srv ResourceServiceAgent) {
 	r := ag.Route()
-	r.GET("/sys/resources", _ResourceAPI_ListResources0_HTTPAgent_Handler(srv))
-	r.GET("/sys/resources/:id", _ResourceAPI_GetResource0_HTTPAgent_Handler(srv))
-	r.POST("/sys/resources", _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/resources/:resource.id", _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/resources/:id", _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv))
+	r.GET("/sys/resources", _ResourceService_ListResources0_HTTPAgent_Handler(srv))
+	r.GET("/sys/resources/:id", _ResourceService_GetResource0_HTTPAgent_Handler(srv))
+	r.POST("/sys/resources", _ResourceService_CreateResource0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/resources/:resource.id", _ResourceService_UpdateResource0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/resources/:id", _ResourceService_DeleteResource0_HTTPAgent_Handler(srv))
 }

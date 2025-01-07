@@ -21,12 +21,10 @@ import (
 	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
-	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -49,6 +47,7 @@ var ProviderSet = wire.NewSet(
 	NewLoginRepo,
 	NewCurrentRepo,
 	NewMenuRepo,
+	NewResourceRepo,
 	NewRoleRepo,
 	NewUserRepo,
 	RefreshTokenizer,
@@ -130,22 +129,22 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}, nil
 }
 
-func (obj *Data) InitMenuFromFile(ctx context.Context, filename string) error {
+func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) error {
 	abs, err := filepath.Abs(filename)
 	if err != nil {
 		return err
 	}
-	var menus []*dto.MenuPB
-	err = codec.DecodeFromFile(filename, &menus)
+	var resources []*dto.ResourcePB
+	err = codec.DecodeFromFile(filename, &resources)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			log.Warnw("Menu data file not found, skip init menu data from file", "file", abs)
+			log.Warnw("Resource data file not found, skip init resource data from file", "file", abs)
 			return nil
 		}
 		return err
 	}
-	for i, pb := range menus {
-		log.Infow("msg", "Processing menu", "index", i, "menuId", pb.Id, "menuKeyword", pb.Keyword, "menuName", pb.Name)
+	for i, pb := range resources {
+		log.Infow("msg", "Processing resource", "index", i, "resourceId", pb.Id, "resourceKeyword", pb.Keyword, "resourceName", pb.Name)
 		if pb.Children != nil {
 			for i2, child := range pb.Children {
 				log.Infow("msg", "Processing child", "index", i2, "childId", child.Id, "childKeyword", child.Keyword, "childName", child.Name)
@@ -153,11 +152,11 @@ func (obj *Data) InitMenuFromFile(ctx context.Context, filename string) error {
 		}
 	}
 	return obj.Tx(ctx, func(ctx context.Context) error {
-		return obj.createBatchWithParent(ctx, menus, nil)
+		return obj.createBatchWithParent(ctx, resources, nil)
 	})
 }
 
-func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB, parent *dto.MenuPB) error {
+func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.ResourcePB, parent *dto.ResourcePB) error {
 	total := len(items)
 	log.Infow("msg", "Starting createBatchWithParent", "totalItems", total)
 
@@ -172,7 +171,7 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB,
 		switch {
 		case item.Id != 0:
 			log.Infow("Checking item by ID", "itemId", item.Id)
-			exists, err := obj.Menu(ctx).Query().Where(menu.ID(item.Id)).Exist(ctx)
+			exists, err := obj.Resource(ctx).Query().Where(resource.ID(item.Id)).Exist(ctx)
 			if err != nil {
 				log.Errorw("msg", "Error checking item by ID", "itemId", item.Id, "error", err)
 				return err
@@ -183,48 +182,48 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB,
 			}
 		case item.Keyword != "":
 			log.Infow("msg", "Checking item by Keyword", "itemKeyword", item.Keyword, "parentId", pid)
-			var wheres = []predicate.Menu{
-				menu.Keyword(item.Keyword),
+			var wheres = []predicate.Resource{
+				resource.Keyword(item.Keyword),
 			}
 			if pid != 0 {
-				wheres = append(wheres, menu.ParentID(pid))
+				wheres = append(wheres, resource.ParentID(pid))
 			}
-			exists, err := obj.Menu(ctx).Query().Where(wheres...).Exist(ctx)
+			exists, err := obj.Resource(ctx).Query().Where(wheres...).Exist(ctx)
 			if err != nil {
 				log.Errorw("msg", "Error checking item by Keyword", "itemKeyword", item.Keyword, "parentId", pid, "error", err)
 				return err
 			}
 			if exists {
-				menuItem, err := obj.Menu(ctx).Query().Where(wheres...).First(ctx)
+				resourceItem, err := obj.Resource(ctx).Query().Where(wheres...).First(ctx)
 				if err != nil {
 					log.Errorw("msg", "Error fetching item by Keyword", "itemKeyword", item.Keyword, "parentId", pid, "error", err)
 					return err
 				}
 				founded = true
-				item.Id = menuItem.ID
+				item.Id = resourceItem.ID
 				log.Infow("msg", "Item found by Keyword", "itemKeyword", item.Keyword, "itemId", item.Id)
 			}
 		case item.Name != "":
 			log.Infow("msg", "Checking item by Name", "itemName", item.Name, "parentId", pid)
-			var conditions = []predicate.Menu{
-				menu.Name(item.Name),
+			var conditions = []predicate.Resource{
+				resource.Name(item.Name),
 			}
 			if pid != 0 {
-				conditions = append(conditions, menu.ParentID(pid))
+				conditions = append(conditions, resource.ParentID(pid))
 			}
-			exists, err := obj.Menu(ctx).Query().Where(conditions...).Exist(ctx)
+			exists, err := obj.Resource(ctx).Query().Where(conditions...).Exist(ctx)
 			if err != nil {
 				log.Errorw("msg", "Error checking item by Name", "itemName", item.Name, "parentId", pid, "error", err)
 				return err
 			}
 			if exists {
-				menuItem, err := obj.Menu(ctx).Query().Where(conditions...).First(ctx)
+				resourceItem, err := obj.Resource(ctx).Query().Where(conditions...).First(ctx)
 				if err != nil {
 					log.Errorw("msg", "Error fetching item by Name", "itemName", item.Name, "parentId", pid, "error", err)
 					return err
 				}
 				founded = true
-				item.Id = menuItem.ID
+				item.Id = resourceItem.ID
 				log.Infow("msg", "Item found by Name", "itemName", item.Name, "itemId", item.Id)
 			}
 		default:
@@ -237,7 +236,7 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB,
 				log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 			}
 			if item.Status == 0 {
-				item.Status = dto.MenuStatusActivated
+				item.Status = int32(dto.ResourceStatusEnabled)
 				log.Infow("msg", "Setting default status for item", "itemId", item.Id, "status", item.Status)
 			}
 			if item.Sequence == 0 {
@@ -247,64 +246,64 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.MenuPB,
 
 			item.ParentId = pid
 			if parent != nil {
-				item.ParentPath = parent.ParentPath + strconv.Itoa(int(pid)) + TreePathDelimiter
-				log.Infow("msg", "Setting parent path for item", "itemId", item.Id, "parentPath", item.ParentPath)
+				item.TreePath = parent.TreePath + strconv.Itoa(int(pid)) + TreePathDelimiter
+				log.Infow("msg", "Setting parent path for item", "itemId", item.Id, "treePath", item.TreePath)
 			}
-			itemObj := dto.ConvertMenuPB2Object(item)
+			itemObj := dto.ConvertResourcePB2Object(item)
 			itemObj.UpdateTime = time.Now()
 			itemObj.CreateTime = time.Now()
-			//columns := menu.OmitColumns()
-			//if item.ParentId == "" {
-			//	columns = menu.OmitColumns(menu.FieldParentID)
-			//}
-			if _, err := obj.Menu(ctx).Create().SetMenu(itemObj).Save(ctx); err != nil {
-				log.Errorw("msg", "Error creating menu item", "itemId", item.Id, "sequence", item.Sequence, "error", err)
-				return err
-			}
-			log.Infow("msg", "Menu item created successfully", "itemId", item.Id)
-		}
-
-		for _, res := range item.Resources {
-			log.Infow("msg", "Processing resource", "resourceId", res.Id, "resourcePath", res.Path, "resourceMethod", res.Method)
-
-			if res.Id != 0 {
-				log.Infow("msg", "Checking resource by ID", "resourceId", res.Id)
-				exists, err := obj.Resource(ctx).Query().Where(resource.ID(res.Id)).Exist(ctx)
-				if err != nil {
-					log.Errorw("msg", "Error checking resource by ID", "resourceId", res.Id, "error", err)
-					return err
-				} else if exists {
-					log.Infow("msg", "Resource already exists by ID", "resourceId", res.Id)
-					continue
-				}
-			}
-			if res.Path != "" {
-				log.Infow("msg", "Checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "menuId", item.Id)
-
-				exists, err := obj.Resource(ctx).Query().Where(resource.Path(res.Path), resource.Method(res.Method), resource.ID(res.Id)).Exist(ctx)
-				if err != nil {
-					log.Errorw("msg", "Error checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "resourceId", res.Id, "error", err)
-					return err
-				}
-				if exists {
-					log.Infow("msg", "Resource already exists by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method)
-					continue
-				}
-			}
-			if res.Id == 0 {
-				res.Id = id.Gen()
-				log.Infow("msg", "Generated new ID for resource", "resourceId", res.Id)
-			}
-			res.MenuId = item.Id
-			res.CreateTime = timestamppb.New(time.Now())
-			res.UpdateTime = timestamppb.New(time.Now())
 			//columns := resource.OmitColumns()
-			if _, err := obj.Resource(ctx).Create().SetResource(dto.ConvertResourcePB2Object(res)).SetID(res.Id).Save(ctx); err != nil {
-				log.Errorw("msg", "Error creating resource", "resourceId", res.Id, "error", err)
+			//if item.ParentId == "" {
+			//	columns = resource.OmitColumns(resource.FieldParentID)
+			//}
+			if _, err := obj.Resource(ctx).Create().SetResource(itemObj).Save(ctx); err != nil {
+				log.Errorw("msg", "Error creating resource item", "itemId", item.Id, "sequence", item.Sequence, "error", err)
 				return err
 			}
-			log.Infow("msg", "Resource created successfully", "resourceId", res.Id)
+			log.Infow("msg", "Resource item created successfully", "itemId", item.Id)
 		}
+
+		//for _, res := range item.Resources {
+		//	log.Infow("msg", "Processing resource", "resourceId", res.Id, "resourcePath", res.Path, "resourceMethod", res.Method)
+		//
+		//	if res.Id != 0 {
+		//		log.Infow("msg", "Checking resource by ID", "resourceId", res.Id)
+		//		exists, err := obj.Resource(ctx).Query().Where(resource.ID(res.Id)).Exist(ctx)
+		//		if err != nil {
+		//			log.Errorw("msg", "Error checking resource by ID", "resourceId", res.Id, "error", err)
+		//			return err
+		//		} else if exists {
+		//			log.Infow("msg", "Resource already exists by ID", "resourceId", res.Id)
+		//			continue
+		//		}
+		//	}
+		//	if res.Path != "" {
+		//		log.Infow("msg", "Checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "resourceId", item.Id)
+		//
+		//		exists, err := obj.Resource(ctx).Query().Where(resource.Path(res.Path), resource.Method(res.Method), resource.ID(res.Id)).Exist(ctx)
+		//		if err != nil {
+		//			log.Errorw("msg", "Error checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "resourceId", res.Id, "error", err)
+		//			return err
+		//		}
+		//		if exists {
+		//			log.Infow("msg", "Resource already exists by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method)
+		//			continue
+		//		}
+		//	}
+		//	if res.Id == 0 {
+		//		res.Id = id.Gen()
+		//		log.Infow("msg", "Generated new ID for resource", "resourceId", res.Id)
+		//	}
+		//	res.ResourceId = item.Id
+		//	res.CreateTime = timestamppb.New(time.Now())
+		//	res.UpdateTime = timestamppb.New(time.Now())
+		//	//columns := resource.OmitColumns()
+		//	if _, err := obj.Resource(ctx).Create().SetResource(dto.ConvertResourcePB2Object(res)).SetID(res.Id).Save(ctx); err != nil {
+		//		log.Errorw("msg", "Error creating resource", "resourceId", res.Id, "error", err)
+		//		return err
+		//	}
+		//	log.Infow("msg", "Resource created successfully", "resourceId", res.Id)
+		//}
 
 		if len(item.Children) != 0 {
 			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))

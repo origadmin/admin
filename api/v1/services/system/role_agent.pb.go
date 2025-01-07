@@ -21,7 +21,7 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
-type RoleAPIAgent interface {
+type RoleServiceAgent interface {
 	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
 	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
 	GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error)
@@ -29,13 +29,13 @@ type RoleAPIAgent interface {
 	UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
 }
 
-func _RoleAPI_ListRoles0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
+func _RoleService_ListRoles0_HTTPAgent_Handler(srv RoleServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in ListRolesRequest
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationRoleAPIListRoles)
+		http.SetOperation(cctx, OperationRoleServiceListRoles)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListRoles(ctx, req.(*ListRolesRequest))
@@ -52,7 +52,7 @@ func _RoleAPI_ListRoles0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
+func _RoleService_GetRole0_HTTPAgent_Handler(srv RoleServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in GetRoleRequest
 		if err := cctx.BindQuery(&in); err != nil {
@@ -61,7 +61,7 @@ func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationRoleAPIGetRole)
+		http.SetOperation(cctx, OperationRoleServiceGetRole)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.GetRole(ctx, req.(*GetRoleRequest))
@@ -78,7 +78,7 @@ func _RoleAPI_GetRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
+func _RoleService_CreateRole0_HTTPAgent_Handler(srv RoleServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in CreateRoleRequest
 		if err := cctx.Bind(&in.Role); err != nil {
@@ -87,7 +87,7 @@ func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationRoleAPICreateRole)
+		http.SetOperation(cctx, OperationRoleServiceCreateRole)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateRole(ctx, req.(*CreateRoleRequest))
@@ -104,7 +104,7 @@ func _RoleAPI_CreateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
+func _RoleService_UpdateRole0_HTTPAgent_Handler(srv RoleServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in UpdateRoleRequest
 		if err := cctx.Bind(&in.Role); err != nil {
@@ -116,7 +116,7 @@ func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationRoleAPIUpdateRole)
+		http.SetOperation(cctx, OperationRoleServiceUpdateRole)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateRole(ctx, req.(*UpdateRoleRequest))
@@ -133,7 +133,7 @@ func _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _RoleAPI_DeleteRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
+func _RoleService_DeleteRole0_HTTPAgent_Handler(srv RoleServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in DeleteRoleRequest
 		if err := cctx.BindQuery(&in); err != nil {
@@ -142,7 +142,7 @@ func _RoleAPI_DeleteRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationRoleAPIDeleteRole)
+		http.SetOperation(cctx, OperationRoleServiceDeleteRole)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DeleteRole(ctx, req.(*DeleteRoleRequest))
@@ -159,11 +159,11 @@ func _RoleAPI_DeleteRole0_HTTPAgent_Handler(srv RoleAPIAgent) http.HandlerFunc {
 	}
 }
 
-func RegisterRoleAPIAgent(ag agent.HTTPAgent, srv RoleAPIAgent) {
+func RegisterRoleServiceAgent(ag agent.HTTPAgent, srv RoleServiceAgent) {
 	r := ag.Route()
-	r.GET("/sys/roles", _RoleAPI_ListRoles0_HTTPAgent_Handler(srv))
-	r.GET("/sys/roles/:id", _RoleAPI_GetRole0_HTTPAgent_Handler(srv))
-	r.POST("/sys/roles", _RoleAPI_CreateRole0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/roles/:role.id", _RoleAPI_UpdateRole0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/roles/:id", _RoleAPI_DeleteRole0_HTTPAgent_Handler(srv))
+	r.GET("/sys/roles", _RoleService_ListRoles0_HTTPAgent_Handler(srv))
+	r.GET("/sys/roles/:id", _RoleService_GetRole0_HTTPAgent_Handler(srv))
+	r.POST("/sys/roles", _RoleService_CreateRole0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/roles/:role.id", _RoleService_UpdateRole0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/roles/:id", _RoleService_DeleteRole0_HTTPAgent_Handler(srv))
 }

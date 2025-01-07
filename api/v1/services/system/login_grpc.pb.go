@@ -19,23 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LoginAPI_CaptchaID_FullMethodName        = "/api.v1.services.system.LoginAPI/CaptchaID"
-	LoginAPI_CaptchaImage_FullMethodName     = "/api.v1.services.system.LoginAPI/CaptchaImage"
-	LoginAPI_CaptchaResource_FullMethodName  = "/api.v1.services.system.LoginAPI/CaptchaResource"
-	LoginAPI_CaptchaResources_FullMethodName = "/api.v1.services.system.LoginAPI/CaptchaResources"
-	LoginAPI_Login_FullMethodName            = "/api.v1.services.system.LoginAPI/Login"
-	LoginAPI_Logout_FullMethodName           = "/api.v1.services.system.LoginAPI/Logout"
-	LoginAPI_Register_FullMethodName         = "/api.v1.services.system.LoginAPI/Register"
-	LoginAPI_TokenRefresh_FullMethodName     = "/api.v1.services.system.LoginAPI/TokenRefresh"
+	LoginService_CaptchaId_FullMethodName        = "/api.v1.services.system.LoginService/CaptchaId"
+	LoginService_CaptchaImage_FullMethodName     = "/api.v1.services.system.LoginService/CaptchaImage"
+	LoginService_CaptchaResource_FullMethodName  = "/api.v1.services.system.LoginService/CaptchaResource"
+	LoginService_CaptchaResources_FullMethodName = "/api.v1.services.system.LoginService/CaptchaResources"
+	LoginService_Login_FullMethodName            = "/api.v1.services.system.LoginService/Login"
+	LoginService_Logout_FullMethodName           = "/api.v1.services.system.LoginService/Logout"
+	LoginService_Register_FullMethodName         = "/api.v1.services.system.LoginService/Register"
+	LoginService_TokenRefresh_FullMethodName     = "/api.v1.services.system.LoginService/TokenRefresh"
 )
 
-// LoginAPIClient is the client API for LoginAPI service.
+// LoginServiceClient is the client API for LoginService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // The login service definition.
-type LoginAPIClient interface {
-	CaptchaID(ctx context.Context, in *CaptchaIDRequest, opts ...grpc.CallOption) (*CaptchaIDResponse, error)
+type LoginServiceClient interface {
+	CaptchaId(ctx context.Context, in *CaptchaIdRequest, opts ...grpc.CallOption) (*CaptchaIdResponse, error)
 	CaptchaImage(ctx context.Context, in *CaptchaImageRequest, opts ...grpc.CallOption) (*CaptchaImageResponse, error)
 	CaptchaResource(ctx context.Context, in *CaptchaResourceRequest, opts ...grpc.CallOption) (*CaptchaResourceResponse, error)
 	CaptchaResources(ctx context.Context, in *CaptchaResourcesRequest, opts ...grpc.CallOption) (*CaptchaResourcesResponse, error)
@@ -45,101 +45,101 @@ type LoginAPIClient interface {
 	TokenRefresh(ctx context.Context, in *TokenRefreshRequest, opts ...grpc.CallOption) (*TokenRefreshResponse, error)
 }
 
-type loginAPIClient struct {
+type loginServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewLoginAPIClient(cc grpc.ClientConnInterface) LoginAPIClient {
-	return &loginAPIClient{cc}
+func NewLoginServiceClient(cc grpc.ClientConnInterface) LoginServiceClient {
+	return &loginServiceClient{cc}
 }
 
-func (c *loginAPIClient) CaptchaID(ctx context.Context, in *CaptchaIDRequest, opts ...grpc.CallOption) (*CaptchaIDResponse, error) {
+func (c *loginServiceClient) CaptchaId(ctx context.Context, in *CaptchaIdRequest, opts ...grpc.CallOption) (*CaptchaIdResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CaptchaIDResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_CaptchaID_FullMethodName, in, out, cOpts...)
+	out := new(CaptchaIdResponse)
+	err := c.cc.Invoke(ctx, LoginService_CaptchaId_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) CaptchaImage(ctx context.Context, in *CaptchaImageRequest, opts ...grpc.CallOption) (*CaptchaImageResponse, error) {
+func (c *loginServiceClient) CaptchaImage(ctx context.Context, in *CaptchaImageRequest, opts ...grpc.CallOption) (*CaptchaImageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CaptchaImageResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_CaptchaImage_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_CaptchaImage_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) CaptchaResource(ctx context.Context, in *CaptchaResourceRequest, opts ...grpc.CallOption) (*CaptchaResourceResponse, error) {
+func (c *loginServiceClient) CaptchaResource(ctx context.Context, in *CaptchaResourceRequest, opts ...grpc.CallOption) (*CaptchaResourceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CaptchaResourceResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_CaptchaResource_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_CaptchaResource_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) CaptchaResources(ctx context.Context, in *CaptchaResourcesRequest, opts ...grpc.CallOption) (*CaptchaResourcesResponse, error) {
+func (c *loginServiceClient) CaptchaResources(ctx context.Context, in *CaptchaResourcesRequest, opts ...grpc.CallOption) (*CaptchaResourcesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CaptchaResourcesResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_CaptchaResources_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_CaptchaResources_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (c *loginServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_Login_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+func (c *loginServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LogoutResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_Logout_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_Logout_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
+func (c *loginServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_Register_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *loginAPIClient) TokenRefresh(ctx context.Context, in *TokenRefreshRequest, opts ...grpc.CallOption) (*TokenRefreshResponse, error) {
+func (c *loginServiceClient) TokenRefresh(ctx context.Context, in *TokenRefreshRequest, opts ...grpc.CallOption) (*TokenRefreshResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TokenRefreshResponse)
-	err := c.cc.Invoke(ctx, LoginAPI_TokenRefresh_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, LoginService_TokenRefresh_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// LoginAPIServer is the server API for LoginAPI service.
-// All implementations must embed UnimplementedLoginAPIServer
+// LoginServiceServer is the server API for LoginService service.
+// All implementations must embed UnimplementedLoginServiceServer
 // for forward compatibility.
 //
 // The login service definition.
-type LoginAPIServer interface {
-	CaptchaID(context.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error)
+type LoginServiceServer interface {
+	CaptchaId(context.Context, *CaptchaIdRequest) (*CaptchaIdResponse, error)
 	CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error)
 	CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error)
 	CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
@@ -147,243 +147,243 @@ type LoginAPIServer interface {
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error)
-	mustEmbedUnimplementedLoginAPIServer()
+	mustEmbedUnimplementedLoginServiceServer()
 }
 
-// UnimplementedLoginAPIServer must be embedded to have
+// UnimplementedLoginServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedLoginAPIServer struct{}
+type UnimplementedLoginServiceServer struct{}
 
-func (UnimplementedLoginAPIServer) CaptchaID(context.Context, *CaptchaIDRequest) (*CaptchaIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CaptchaID not implemented")
+func (UnimplementedLoginServiceServer) CaptchaId(context.Context, *CaptchaIdRequest) (*CaptchaIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CaptchaId not implemented")
 }
-func (UnimplementedLoginAPIServer) CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error) {
+func (UnimplementedLoginServiceServer) CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CaptchaImage not implemented")
 }
-func (UnimplementedLoginAPIServer) CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error) {
+func (UnimplementedLoginServiceServer) CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CaptchaResource not implemented")
 }
-func (UnimplementedLoginAPIServer) CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error) {
+func (UnimplementedLoginServiceServer) CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CaptchaResources not implemented")
 }
-func (UnimplementedLoginAPIServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+func (UnimplementedLoginServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedLoginAPIServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+func (UnimplementedLoginServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedLoginAPIServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
+func (UnimplementedLoginServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedLoginAPIServer) TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error) {
+func (UnimplementedLoginServiceServer) TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TokenRefresh not implemented")
 }
-func (UnimplementedLoginAPIServer) mustEmbedUnimplementedLoginAPIServer() {}
-func (UnimplementedLoginAPIServer) testEmbeddedByValue()                  {}
+func (UnimplementedLoginServiceServer) mustEmbedUnimplementedLoginServiceServer() {}
+func (UnimplementedLoginServiceServer) testEmbeddedByValue()                      {}
 
-// UnsafeLoginAPIServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to LoginAPIServer will
+// UnsafeLoginServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to LoginServiceServer will
 // result in compilation errors.
-type UnsafeLoginAPIServer interface {
-	mustEmbedUnimplementedLoginAPIServer()
+type UnsafeLoginServiceServer interface {
+	mustEmbedUnimplementedLoginServiceServer()
 }
 
-func RegisterLoginAPIServer(s grpc.ServiceRegistrar, srv LoginAPIServer) {
-	// If the following call pancis, it indicates UnimplementedLoginAPIServer was
+func RegisterLoginServiceServer(s grpc.ServiceRegistrar, srv LoginServiceServer) {
+	// If the following call pancis, it indicates UnimplementedLoginServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&LoginAPI_ServiceDesc, srv)
+	s.RegisterService(&LoginService_ServiceDesc, srv)
 }
 
-func _LoginAPI_CaptchaID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CaptchaIDRequest)
+func _LoginService_CaptchaId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CaptchaIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).CaptchaID(ctx, in)
+		return srv.(LoginServiceServer).CaptchaId(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_CaptchaID_FullMethodName,
+		FullMethod: LoginService_CaptchaId_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).CaptchaID(ctx, req.(*CaptchaIDRequest))
+		return srv.(LoginServiceServer).CaptchaId(ctx, req.(*CaptchaIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_CaptchaImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_CaptchaImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CaptchaImageRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).CaptchaImage(ctx, in)
+		return srv.(LoginServiceServer).CaptchaImage(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_CaptchaImage_FullMethodName,
+		FullMethod: LoginService_CaptchaImage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).CaptchaImage(ctx, req.(*CaptchaImageRequest))
+		return srv.(LoginServiceServer).CaptchaImage(ctx, req.(*CaptchaImageRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_CaptchaResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_CaptchaResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CaptchaResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).CaptchaResource(ctx, in)
+		return srv.(LoginServiceServer).CaptchaResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_CaptchaResource_FullMethodName,
+		FullMethod: LoginService_CaptchaResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).CaptchaResource(ctx, req.(*CaptchaResourceRequest))
+		return srv.(LoginServiceServer).CaptchaResource(ctx, req.(*CaptchaResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_CaptchaResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_CaptchaResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CaptchaResourcesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).CaptchaResources(ctx, in)
+		return srv.(LoginServiceServer).CaptchaResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_CaptchaResources_FullMethodName,
+		FullMethod: LoginService_CaptchaResources_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).CaptchaResources(ctx, req.(*CaptchaResourcesRequest))
+		return srv.(LoginServiceServer).CaptchaResources(ctx, req.(*CaptchaResourcesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).Login(ctx, in)
+		return srv.(LoginServiceServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_Login_FullMethodName,
+		FullMethod: LoginService_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).Login(ctx, req.(*LoginRequest))
+		return srv.(LoginServiceServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).Logout(ctx, in)
+		return srv.(LoginServiceServer).Logout(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_Logout_FullMethodName,
+		FullMethod: LoginService_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).Logout(ctx, req.(*LogoutRequest))
+		return srv.(LoginServiceServer).Logout(ctx, req.(*LogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).Register(ctx, in)
+		return srv.(LoginServiceServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_Register_FullMethodName,
+		FullMethod: LoginService_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).Register(ctx, req.(*RegisterRequest))
+		return srv.(LoginServiceServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _LoginAPI_TokenRefresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _LoginService_TokenRefresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TokenRefreshRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(LoginAPIServer).TokenRefresh(ctx, in)
+		return srv.(LoginServiceServer).TokenRefresh(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: LoginAPI_TokenRefresh_FullMethodName,
+		FullMethod: LoginService_TokenRefresh_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(LoginAPIServer).TokenRefresh(ctx, req.(*TokenRefreshRequest))
+		return srv.(LoginServiceServer).TokenRefresh(ctx, req.(*TokenRefreshRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// LoginAPI_ServiceDesc is the grpc.ServiceDesc for LoginAPI service.
+// LoginService_ServiceDesc is the grpc.ServiceDesc for LoginService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var LoginAPI_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.system.LoginAPI",
-	HandlerType: (*LoginAPIServer)(nil),
+var LoginService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.v1.services.system.LoginService",
+	HandlerType: (*LoginServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CaptchaID",
-			Handler:    _LoginAPI_CaptchaID_Handler,
+			MethodName: "CaptchaId",
+			Handler:    _LoginService_CaptchaId_Handler,
 		},
 		{
 			MethodName: "CaptchaImage",
-			Handler:    _LoginAPI_CaptchaImage_Handler,
+			Handler:    _LoginService_CaptchaImage_Handler,
 		},
 		{
 			MethodName: "CaptchaResource",
-			Handler:    _LoginAPI_CaptchaResource_Handler,
+			Handler:    _LoginService_CaptchaResource_Handler,
 		},
 		{
 			MethodName: "CaptchaResources",
-			Handler:    _LoginAPI_CaptchaResources_Handler,
+			Handler:    _LoginService_CaptchaResources_Handler,
 		},
 		{
 			MethodName: "Login",
-			Handler:    _LoginAPI_Login_Handler,
+			Handler:    _LoginService_Login_Handler,
 		},
 		{
 			MethodName: "Logout",
-			Handler:    _LoginAPI_Logout_Handler,
+			Handler:    _LoginService_Logout_Handler,
 		},
 		{
 			MethodName: "Register",
-			Handler:    _LoginAPI_Register_Handler,
+			Handler:    _LoginService_Register_Handler,
 		},
 		{
 			MethodName: "TokenRefresh",
-			Handler:    _LoginAPI_TokenRefresh_Handler,
+			Handler:    _LoginService_TokenRefresh_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

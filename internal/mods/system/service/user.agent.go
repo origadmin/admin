@@ -16,29 +16,29 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// UserAPIGINRPCService is a menu service.
-type UserAPIGINRPCService struct {
+// UserServiceAgent is a menu service.
+type UserServiceAgent struct {
 	resp.Response
 
-	client pb.UserAPIClient
+	client pb.UserServiceClient
 }
 
-func (s UserAPIGINRPCService) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+func (s UserServiceAgent) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserAPIGINRPCService) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+func (s UserServiceAgent) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserAPIGINRPCService) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+func (s UserServiceAgent) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserAPIGINRPCService) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (s UserServiceAgent) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreateUser(ctx, request)
 	if err != nil {
@@ -52,7 +52,7 @@ func (s UserAPIGINRPCService) CreateUser(ctx context.Context, request *pb.Create
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (s UserServiceAgent) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	_, err := s.client.DeleteUser(ctx, request)
 	if err != nil {
@@ -66,7 +66,7 @@ func (s UserAPIGINRPCService) DeleteUser(ctx context.Context, request *pb.Delete
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (s UserServiceAgent) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetUser(ctx, request)
 	if err != nil {
@@ -79,7 +79,7 @@ func (s UserAPIGINRPCService) GetUser(ctx context.Context, request *pb.GetUserRe
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) ListUsers(ctx context.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+func (s UserServiceAgent) ListUsers(ctx context.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListUsers(ctx, request)
 	if err != nil {
@@ -93,7 +93,7 @@ func (s UserAPIGINRPCService) ListUsers(ctx context.Context, request *pb.ListUse
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+func (s UserServiceAgent) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdateUser(ctx, request)
 	if err != nil {
@@ -106,18 +106,18 @@ func (s UserAPIGINRPCService) UpdateUser(ctx context.Context, request *pb.Update
 	return nil, nil
 }
 
-// NewUserAPIGINRPCService new a menu service.
-func NewUserAPIGINRPCService(client pb.UserAPIClient) *UserAPIGINRPCService {
-	return &UserAPIGINRPCService{client: client}
+// NewUserServiceAgent new a menu service.
+func NewUserServiceAgent(client pb.UserServiceClient) *UserServiceAgent {
+	return &UserServiceAgent{client: client}
 }
 
-// NewUserAPIAgent new a menu service.
-func NewUserAPIAgent(client pb.UserAPIClient) pb.UserAPIAgent {
-	return &UserAPIGINRPCService{client: client}
+// NewUserServiceAgentPB new a menu service.
+func NewUserServiceAgentPB(client pb.UserServiceClient) pb.UserServiceAgent {
+	return &UserServiceAgent{client: client}
 }
-func NewUserServerAgent(client *service.GRPCClient) pb.UserAPIAgent {
-	c := pb.NewUserAPIClient(client)
-	return NewUserAPIAgent(c)
+func NewUserServiceAgentClient(client *service.GRPCClient) pb.UserServiceAgent {
+	c := pb.NewUserServiceClient(client)
+	return NewUserServiceAgent(c)
 }
 
-var _ pb.UserAPIAgent = (*UserAPIGINRPCService)(nil)
+var _ pb.UserServiceAgent = (*UserServiceAgent)(nil)

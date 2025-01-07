@@ -14,13 +14,13 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Size: 32, Comment: "department.field.keyword", Default: ""},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "department.field.keyword"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "department.field.name", Default: ""},
-		{Name: "description", Type: field.TypeString, Size: 256, Comment: "department.field.description", Default: ""},
+		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "menu.field.tree_path", Default: ""},
 		{Name: "sequence", Type: field.TypeInt, Comment: "department.field.sequence"},
 		{Name: "status", Type: field.TypeInt8, Comment: "department.field.status", Default: 0},
-		{Name: "ancestors", Type: field.TypeString, Size: 1024, Comment: "department.field.ancestors", Default: ""},
 		{Name: "level", Type: field.TypeInt, Comment: "department.field.level", Default: 1},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "department.field.description", Default: ""},
 		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "department.field.parent_id"},
 	}
 	// SysDepartmentsTable holds the schema information for the "sys_departments" table.
@@ -114,94 +114,16 @@ var (
 			},
 		},
 	}
-	// SysMenusColumns holds the columns for the "sys_menus" table.
-	SysMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
-		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Size: 32, Comment: "menu.field.keyword", Default: ""},
-		{Name: "name", Type: field.TypeString, Size: 128, Comment: "menu.field.name", Default: ""},
-		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "menu.field.i18n_key", Default: ""},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "menu.field.description", Default: ""},
-		{Name: "type", Type: field.TypeString, Comment: "menu.field.type", Default: "page"},
-		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "menu.field.icon", Default: ""},
-		{Name: "path", Type: field.TypeString, Unique: true, Size: 256, Comment: "menu.field.path"},
-		{Name: "status", Type: field.TypeInt8, Comment: "menu.field.status", Default: 0},
-		{Name: "parent_path", Type: field.TypeString, Size: 255, Comment: "menu.field.parent_path", Default: ""},
-		{Name: "sequence", Type: field.TypeInt, Comment: "menu.field.sequence", Default: 0},
-		{Name: "hidden", Type: field.TypeBool, Comment: "menu.field.hidden", Default: false},
-		{Name: "properties", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "menu.field.properties", Default: ""},
-		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "menu.field.parent_id"},
-	}
-	// SysMenusTable holds the schema information for the "sys_menus" table.
-	SysMenusTable = &schema.Table{
-		Name:       "sys_menus",
-		Comment:    "menu.table.comment",
-		Columns:    SysMenusColumns,
-		PrimaryKey: []*schema.Column{SysMenusColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "sys_menus_sys_menus_children",
-				Columns:    []*schema.Column{SysMenusColumns[15]},
-				RefColumns: []*schema.Column{SysMenusColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
-		Indexes: []*schema.Index{
-			{
-				Name:    "menu_create_time",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[1]},
-			},
-			{
-				Name:    "menu_update_time",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[2]},
-			},
-			{
-				Name:    "menu_keyword",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[3]},
-			},
-			{
-				Name:    "menu_name",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[4]},
-			},
-			{
-				Name:    "menu_type",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[7]},
-			},
-			{
-				Name:    "menu_status",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[10]},
-			},
-			{
-				Name:    "menu_parent_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[15]},
-			},
-			{
-				Name:    "menu_parent_path",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[11]},
-			},
-		},
-	}
 	// SysPermissionsColumns holds the columns for the "sys_permissions" table.
 	SysPermissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "permission.field.name"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "permission.field.name", Default: ""},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "permission.field.keyword"},
-		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "permission.field.description"},
-		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "permission.field.i18n_key", Default: ""},
-		{Name: "type", Type: field.TypeInt8, Comment: "permission.field.type", Default: 2},
-		{Name: "scope", Type: field.TypeString, Comment: "permission.field.scope", Default: "self"},
-		{Name: "scope_depts", Type: field.TypeJSON, Nullable: true, Comment: "permission.field.scope_depts"},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "permission.field.description", Default: ""},
+		{Name: "data_scope", Type: field.TypeString, Comment: "permission.field.data_scope", Default: "self"},
+		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "permission.field.data_rules"},
 	}
 	// SysPermissionsTable holds the schema information for the "sys_permissions" table.
 	SysPermissionsTable = &schema.Table{
@@ -222,53 +144,10 @@ var (
 			},
 		},
 	}
-	// SysPermissionMenusColumns holds the columns for the "sys_permission_menus" table.
-	SysPermissionMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "permission_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
-		{Name: "menu_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
-	}
-	// SysPermissionMenusTable holds the schema information for the "sys_permission_menus" table.
-	SysPermissionMenusTable = &schema.Table{
-		Name:       "sys_permission_menus",
-		Comment:    "permission_menu.table.comment",
-		Columns:    SysPermissionMenusColumns,
-		PrimaryKey: []*schema.Column{SysPermissionMenusColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "sys_permission_menus_sys_permissions_permission",
-				Columns:    []*schema.Column{SysPermissionMenusColumns[1]},
-				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-			{
-				Symbol:     "sys_permission_menus_sys_menus_menu",
-				Columns:    []*schema.Column{SysPermissionMenusColumns[2]},
-				RefColumns: []*schema.Column{SysMenusColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-		},
-		Indexes: []*schema.Index{
-			{
-				Name:    "permissionmenu_permission_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysPermissionMenusColumns[1]},
-			},
-			{
-				Name:    "permissionmenu_menu_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysPermissionMenusColumns[2]},
-			},
-			{
-				Name:    "permissionmenu_permission_id_menu_id",
-				Unique:  true,
-				Columns: []*schema.Column{SysPermissionMenusColumns[1], SysPermissionMenusColumns[2]},
-			},
-		},
-	}
 	// SysPermissionResourcesColumns holds the columns for the "sys_permission_resources" table.
 	SysPermissionResourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "actions", Type: field.TypeString, Comment: "permission_resource.field.actions", Default: "*"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "resource_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
@@ -281,32 +160,22 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_permission_resources_sys_permissions_permission",
-				Columns:    []*schema.Column{SysPermissionResourcesColumns[1]},
+				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
 				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "sys_permission_resources_sys_resources_resource",
-				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
+				Columns:    []*schema.Column{SysPermissionResourcesColumns[3]},
 				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "permissionresource_permission_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysPermissionResourcesColumns[1]},
-			},
-			{
-				Name:    "permissionresource_resource_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysPermissionResourcesColumns[2]},
-			},
-			{
 				Name:    "permissionresource_permission_id_resource_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysPermissionResourcesColumns[1], SysPermissionResourcesColumns[2]},
+				Columns: []*schema.Column{SysPermissionResourcesColumns[2], SysPermissionResourcesColumns[3]},
 			},
 		},
 	}
@@ -316,7 +185,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "position.field.name"},
-		{Name: "description", Type: field.TypeString, Size: 256, Comment: "position.field.description"},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "position.field.description", Default: ""},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "department.field.department_id"},
 	}
 	// SysPositionsTable holds the schema information for the "sys_positions" table.
@@ -351,14 +220,22 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "method", Type: field.TypeString, Size: 16, Comment: "resource.field.method", Default: ""},
-		{Name: "operation", Type: field.TypeString, Size: 20, Comment: "resource.field.operation", Default: ""},
-		{Name: "path", Type: field.TypeString, Size: 255, Comment: "resource.field.path", Default: ""},
-		{Name: "uri", Type: field.TypeString, Unique: true, Size: 256, Comment: "resource.field.uri"},
+		{Name: "name", Type: field.TypeString, Size: 128, Comment: "resource.field.name", Default: ""},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "resource.field.keyword"},
 		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "resource.field.i18n_key", Default: ""},
-		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "resource.field.description"},
-		{Name: "metadata", Type: field.TypeJSON, Nullable: true, Comment: "resource.field.metadata"},
-		{Name: "menu_id", Type: field.TypeInt64, Nullable: true, Comment: "resource.field.menu_id"},
+		{Name: "type", Type: field.TypeUint32, Comment: "resource.field.type", Default: 77},
+		{Name: "status", Type: field.TypeInt8, Comment: "resource.field.status", Default: 1},
+		{Name: "uri", Type: field.TypeString, Size: 256, Comment: "resource.field.uri", Default: ""},
+		{Name: "operation", Type: field.TypeString, Size: 128, Comment: "resource.field.operation", Default: ""},
+		{Name: "method", Type: field.TypeString, Size: 16, Comment: "resource.field.method", Default: ""},
+		{Name: "component", Type: field.TypeString, Size: 128, Comment: "resource.field.component", Default: ""},
+		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "resource.field.icon", Default: ""},
+		{Name: "sequence", Type: field.TypeInt, Comment: "resource.field.sequence", Default: 0},
+		{Name: "visible", Type: field.TypeBool, Comment: "resource.field.visible", Default: true},
+		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "resource.field.tree_path", Default: ""},
+		{Name: "properties", Type: field.TypeJSON, Nullable: true, Comment: "resource.field.properties"},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "resource.field.description", Default: ""},
+		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "resource.field.parent_id"},
 	}
 	// SysResourcesTable holds the schema information for the "sys_resources" table.
 	SysResourcesTable = &schema.Table{
@@ -368,9 +245,9 @@ var (
 		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_resources_sys_menus_resources",
-				Columns:    []*schema.Column{SysResourcesColumns[10]},
-				RefColumns: []*schema.Column{SysMenusColumns[0]},
+				Symbol:     "sys_resources_sys_resources_children",
+				Columns:    []*schema.Column{SysResourcesColumns[18]},
+				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -386,9 +263,9 @@ var (
 				Columns: []*schema.Column{SysResourcesColumns[2]},
 			},
 			{
-				Name:    "resource_menu_id",
+				Name:    "resource_parent_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[10]},
+				Columns: []*schema.Column{SysResourcesColumns[18]},
 			},
 		},
 	}
@@ -497,7 +374,7 @@ var (
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "user.field.uuid"},
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "user.field.allowed_ip", Default: "0.0.0.0"},
-		{Name: "username", Type: field.TypeString, Size: 32, Comment: "user.field.username", Default: ""},
+		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "user.field.username"},
 		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "user.field.nickname", Default: ""},
 		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "user.field.avatar", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "user.field.nickname", Default: ""},
@@ -707,9 +584,7 @@ var (
 	Tables = []*schema.Table{
 		SysDepartmentsTable,
 		SysDepartmentRolesTable,
-		SysMenusTable,
 		SysPermissionsTable,
-		SysPermissionMenusTable,
 		SysPermissionResourcesTable,
 		SysPositionsTable,
 		SysResourcesTable,
@@ -732,17 +607,8 @@ func init() {
 	SysDepartmentRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_department_roles",
 	}
-	SysMenusTable.ForeignKeys[0].RefTable = SysMenusTable
-	SysMenusTable.Annotation = &entsql.Annotation{
-		Table: "sys_menus",
-	}
 	SysPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_permissions",
-	}
-	SysPermissionMenusTable.ForeignKeys[0].RefTable = SysPermissionsTable
-	SysPermissionMenusTable.ForeignKeys[1].RefTable = SysMenusTable
-	SysPermissionMenusTable.Annotation = &entsql.Annotation{
-		Table: "sys_permission_menus",
 	}
 	SysPermissionResourcesTable.ForeignKeys[0].RefTable = SysPermissionsTable
 	SysPermissionResourcesTable.ForeignKeys[1].RefTable = SysResourcesTable
@@ -753,7 +619,7 @@ func init() {
 	SysPositionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_positions",
 	}
-	SysResourcesTable.ForeignKeys[0].RefTable = SysMenusTable
+	SysResourcesTable.ForeignKeys[0].RefTable = SysResourcesTable
 	SysResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_resources",
 	}

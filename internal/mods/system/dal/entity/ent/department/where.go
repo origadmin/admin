@@ -75,9 +75,9 @@ func Name(v string) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldName, v))
 }
 
-// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
-func Description(v string) predicate.Department {
-	return predicate.Department(sql.FieldEQ(FieldDescription, v))
+// TreePath applies equality check predicate on the "tree_path" field. It's identical to TreePathEQ.
+func TreePath(v string) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldTreePath, v))
 }
 
 // Sequence applies equality check predicate on the "sequence" field. It's identical to SequenceEQ.
@@ -90,14 +90,14 @@ func Status(v int8) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldStatus, v))
 }
 
-// Ancestors applies equality check predicate on the "ancestors" field. It's identical to AncestorsEQ.
-func Ancestors(v string) predicate.Department {
-	return predicate.Department(sql.FieldEQ(FieldAncestors, v))
-}
-
 // Level applies equality check predicate on the "level" field. It's identical to LevelEQ.
 func Level(v int) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldLevel, v))
+}
+
+// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
+func Description(v string) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldDescription, v))
 }
 
 // ParentID applies equality check predicate on the "parent_id" field. It's identical to ParentIDEQ.
@@ -315,69 +315,69 @@ func NameContainsFold(v string) predicate.Department {
 	return predicate.Department(sql.FieldContainsFold(FieldName, v))
 }
 
-// DescriptionEQ applies the EQ predicate on the "description" field.
-func DescriptionEQ(v string) predicate.Department {
-	return predicate.Department(sql.FieldEQ(FieldDescription, v))
+// TreePathEQ applies the EQ predicate on the "tree_path" field.
+func TreePathEQ(v string) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldTreePath, v))
 }
 
-// DescriptionNEQ applies the NEQ predicate on the "description" field.
-func DescriptionNEQ(v string) predicate.Department {
-	return predicate.Department(sql.FieldNEQ(FieldDescription, v))
+// TreePathNEQ applies the NEQ predicate on the "tree_path" field.
+func TreePathNEQ(v string) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldTreePath, v))
 }
 
-// DescriptionIn applies the In predicate on the "description" field.
-func DescriptionIn(vs ...string) predicate.Department {
-	return predicate.Department(sql.FieldIn(FieldDescription, vs...))
+// TreePathIn applies the In predicate on the "tree_path" field.
+func TreePathIn(vs ...string) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldTreePath, vs...))
 }
 
-// DescriptionNotIn applies the NotIn predicate on the "description" field.
-func DescriptionNotIn(vs ...string) predicate.Department {
-	return predicate.Department(sql.FieldNotIn(FieldDescription, vs...))
+// TreePathNotIn applies the NotIn predicate on the "tree_path" field.
+func TreePathNotIn(vs ...string) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldTreePath, vs...))
 }
 
-// DescriptionGT applies the GT predicate on the "description" field.
-func DescriptionGT(v string) predicate.Department {
-	return predicate.Department(sql.FieldGT(FieldDescription, v))
+// TreePathGT applies the GT predicate on the "tree_path" field.
+func TreePathGT(v string) predicate.Department {
+	return predicate.Department(sql.FieldGT(FieldTreePath, v))
 }
 
-// DescriptionGTE applies the GTE predicate on the "description" field.
-func DescriptionGTE(v string) predicate.Department {
-	return predicate.Department(sql.FieldGTE(FieldDescription, v))
+// TreePathGTE applies the GTE predicate on the "tree_path" field.
+func TreePathGTE(v string) predicate.Department {
+	return predicate.Department(sql.FieldGTE(FieldTreePath, v))
 }
 
-// DescriptionLT applies the LT predicate on the "description" field.
-func DescriptionLT(v string) predicate.Department {
-	return predicate.Department(sql.FieldLT(FieldDescription, v))
+// TreePathLT applies the LT predicate on the "tree_path" field.
+func TreePathLT(v string) predicate.Department {
+	return predicate.Department(sql.FieldLT(FieldTreePath, v))
 }
 
-// DescriptionLTE applies the LTE predicate on the "description" field.
-func DescriptionLTE(v string) predicate.Department {
-	return predicate.Department(sql.FieldLTE(FieldDescription, v))
+// TreePathLTE applies the LTE predicate on the "tree_path" field.
+func TreePathLTE(v string) predicate.Department {
+	return predicate.Department(sql.FieldLTE(FieldTreePath, v))
 }
 
-// DescriptionContains applies the Contains predicate on the "description" field.
-func DescriptionContains(v string) predicate.Department {
-	return predicate.Department(sql.FieldContains(FieldDescription, v))
+// TreePathContains applies the Contains predicate on the "tree_path" field.
+func TreePathContains(v string) predicate.Department {
+	return predicate.Department(sql.FieldContains(FieldTreePath, v))
 }
 
-// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
-func DescriptionHasPrefix(v string) predicate.Department {
-	return predicate.Department(sql.FieldHasPrefix(FieldDescription, v))
+// TreePathHasPrefix applies the HasPrefix predicate on the "tree_path" field.
+func TreePathHasPrefix(v string) predicate.Department {
+	return predicate.Department(sql.FieldHasPrefix(FieldTreePath, v))
 }
 
-// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
-func DescriptionHasSuffix(v string) predicate.Department {
-	return predicate.Department(sql.FieldHasSuffix(FieldDescription, v))
+// TreePathHasSuffix applies the HasSuffix predicate on the "tree_path" field.
+func TreePathHasSuffix(v string) predicate.Department {
+	return predicate.Department(sql.FieldHasSuffix(FieldTreePath, v))
 }
 
-// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
-func DescriptionEqualFold(v string) predicate.Department {
-	return predicate.Department(sql.FieldEqualFold(FieldDescription, v))
+// TreePathEqualFold applies the EqualFold predicate on the "tree_path" field.
+func TreePathEqualFold(v string) predicate.Department {
+	return predicate.Department(sql.FieldEqualFold(FieldTreePath, v))
 }
 
-// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
-func DescriptionContainsFold(v string) predicate.Department {
-	return predicate.Department(sql.FieldContainsFold(FieldDescription, v))
+// TreePathContainsFold applies the ContainsFold predicate on the "tree_path" field.
+func TreePathContainsFold(v string) predicate.Department {
+	return predicate.Department(sql.FieldContainsFold(FieldTreePath, v))
 }
 
 // SequenceEQ applies the EQ predicate on the "sequence" field.
@@ -460,71 +460,6 @@ func StatusLTE(v int8) predicate.Department {
 	return predicate.Department(sql.FieldLTE(FieldStatus, v))
 }
 
-// AncestorsEQ applies the EQ predicate on the "ancestors" field.
-func AncestorsEQ(v string) predicate.Department {
-	return predicate.Department(sql.FieldEQ(FieldAncestors, v))
-}
-
-// AncestorsNEQ applies the NEQ predicate on the "ancestors" field.
-func AncestorsNEQ(v string) predicate.Department {
-	return predicate.Department(sql.FieldNEQ(FieldAncestors, v))
-}
-
-// AncestorsIn applies the In predicate on the "ancestors" field.
-func AncestorsIn(vs ...string) predicate.Department {
-	return predicate.Department(sql.FieldIn(FieldAncestors, vs...))
-}
-
-// AncestorsNotIn applies the NotIn predicate on the "ancestors" field.
-func AncestorsNotIn(vs ...string) predicate.Department {
-	return predicate.Department(sql.FieldNotIn(FieldAncestors, vs...))
-}
-
-// AncestorsGT applies the GT predicate on the "ancestors" field.
-func AncestorsGT(v string) predicate.Department {
-	return predicate.Department(sql.FieldGT(FieldAncestors, v))
-}
-
-// AncestorsGTE applies the GTE predicate on the "ancestors" field.
-func AncestorsGTE(v string) predicate.Department {
-	return predicate.Department(sql.FieldGTE(FieldAncestors, v))
-}
-
-// AncestorsLT applies the LT predicate on the "ancestors" field.
-func AncestorsLT(v string) predicate.Department {
-	return predicate.Department(sql.FieldLT(FieldAncestors, v))
-}
-
-// AncestorsLTE applies the LTE predicate on the "ancestors" field.
-func AncestorsLTE(v string) predicate.Department {
-	return predicate.Department(sql.FieldLTE(FieldAncestors, v))
-}
-
-// AncestorsContains applies the Contains predicate on the "ancestors" field.
-func AncestorsContains(v string) predicate.Department {
-	return predicate.Department(sql.FieldContains(FieldAncestors, v))
-}
-
-// AncestorsHasPrefix applies the HasPrefix predicate on the "ancestors" field.
-func AncestorsHasPrefix(v string) predicate.Department {
-	return predicate.Department(sql.FieldHasPrefix(FieldAncestors, v))
-}
-
-// AncestorsHasSuffix applies the HasSuffix predicate on the "ancestors" field.
-func AncestorsHasSuffix(v string) predicate.Department {
-	return predicate.Department(sql.FieldHasSuffix(FieldAncestors, v))
-}
-
-// AncestorsEqualFold applies the EqualFold predicate on the "ancestors" field.
-func AncestorsEqualFold(v string) predicate.Department {
-	return predicate.Department(sql.FieldEqualFold(FieldAncestors, v))
-}
-
-// AncestorsContainsFold applies the ContainsFold predicate on the "ancestors" field.
-func AncestorsContainsFold(v string) predicate.Department {
-	return predicate.Department(sql.FieldContainsFold(FieldAncestors, v))
-}
-
 // LevelEQ applies the EQ predicate on the "level" field.
 func LevelEQ(v int) predicate.Department {
 	return predicate.Department(sql.FieldEQ(FieldLevel, v))
@@ -563,6 +498,71 @@ func LevelLT(v int) predicate.Department {
 // LevelLTE applies the LTE predicate on the "level" field.
 func LevelLTE(v int) predicate.Department {
 	return predicate.Department(sql.FieldLTE(FieldLevel, v))
+}
+
+// DescriptionEQ applies the EQ predicate on the "description" field.
+func DescriptionEQ(v string) predicate.Department {
+	return predicate.Department(sql.FieldEQ(FieldDescription, v))
+}
+
+// DescriptionNEQ applies the NEQ predicate on the "description" field.
+func DescriptionNEQ(v string) predicate.Department {
+	return predicate.Department(sql.FieldNEQ(FieldDescription, v))
+}
+
+// DescriptionIn applies the In predicate on the "description" field.
+func DescriptionIn(vs ...string) predicate.Department {
+	return predicate.Department(sql.FieldIn(FieldDescription, vs...))
+}
+
+// DescriptionNotIn applies the NotIn predicate on the "description" field.
+func DescriptionNotIn(vs ...string) predicate.Department {
+	return predicate.Department(sql.FieldNotIn(FieldDescription, vs...))
+}
+
+// DescriptionGT applies the GT predicate on the "description" field.
+func DescriptionGT(v string) predicate.Department {
+	return predicate.Department(sql.FieldGT(FieldDescription, v))
+}
+
+// DescriptionGTE applies the GTE predicate on the "description" field.
+func DescriptionGTE(v string) predicate.Department {
+	return predicate.Department(sql.FieldGTE(FieldDescription, v))
+}
+
+// DescriptionLT applies the LT predicate on the "description" field.
+func DescriptionLT(v string) predicate.Department {
+	return predicate.Department(sql.FieldLT(FieldDescription, v))
+}
+
+// DescriptionLTE applies the LTE predicate on the "description" field.
+func DescriptionLTE(v string) predicate.Department {
+	return predicate.Department(sql.FieldLTE(FieldDescription, v))
+}
+
+// DescriptionContains applies the Contains predicate on the "description" field.
+func DescriptionContains(v string) predicate.Department {
+	return predicate.Department(sql.FieldContains(FieldDescription, v))
+}
+
+// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
+func DescriptionHasPrefix(v string) predicate.Department {
+	return predicate.Department(sql.FieldHasPrefix(FieldDescription, v))
+}
+
+// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
+func DescriptionHasSuffix(v string) predicate.Department {
+	return predicate.Department(sql.FieldHasSuffix(FieldDescription, v))
+}
+
+// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
+func DescriptionEqualFold(v string) predicate.Department {
+	return predicate.Department(sql.FieldEqualFold(FieldDescription, v))
+}
+
+// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
+func DescriptionContainsFold(v string) predicate.Department {
+	return predicate.Department(sql.FieldContainsFold(FieldDescription, v))
 }
 
 // ParentIDEQ applies the EQ predicate on the "parent_id" field.

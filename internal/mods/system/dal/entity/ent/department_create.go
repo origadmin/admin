@@ -59,14 +59,6 @@ func (dc *DepartmentCreate) SetKeyword(s string) *DepartmentCreate {
 	return dc
 }
 
-// SetNillableKeyword sets the "keyword" field if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableKeyword(s *string) *DepartmentCreate {
-	if s != nil {
-		dc.SetKeyword(*s)
-	}
-	return dc
-}
-
 // SetName sets the "name" field.
 func (dc *DepartmentCreate) SetName(s string) *DepartmentCreate {
 	dc.mutation.SetName(s)
@@ -81,16 +73,16 @@ func (dc *DepartmentCreate) SetNillableName(s *string) *DepartmentCreate {
 	return dc
 }
 
-// SetDescription sets the "description" field.
-func (dc *DepartmentCreate) SetDescription(s string) *DepartmentCreate {
-	dc.mutation.SetDescription(s)
+// SetTreePath sets the "tree_path" field.
+func (dc *DepartmentCreate) SetTreePath(s string) *DepartmentCreate {
+	dc.mutation.SetTreePath(s)
 	return dc
 }
 
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableDescription(s *string) *DepartmentCreate {
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableTreePath(s *string) *DepartmentCreate {
 	if s != nil {
-		dc.SetDescription(*s)
+		dc.SetTreePath(*s)
 	}
 	return dc
 }
@@ -115,20 +107,6 @@ func (dc *DepartmentCreate) SetNillableStatus(i *int8) *DepartmentCreate {
 	return dc
 }
 
-// SetAncestors sets the "ancestors" field.
-func (dc *DepartmentCreate) SetAncestors(s string) *DepartmentCreate {
-	dc.mutation.SetAncestors(s)
-	return dc
-}
-
-// SetNillableAncestors sets the "ancestors" field if the given value is not nil.
-func (dc *DepartmentCreate) SetNillableAncestors(s *string) *DepartmentCreate {
-	if s != nil {
-		dc.SetAncestors(*s)
-	}
-	return dc
-}
-
 // SetLevel sets the "level" field.
 func (dc *DepartmentCreate) SetLevel(i int) *DepartmentCreate {
 	dc.mutation.SetLevel(i)
@@ -139,6 +117,20 @@ func (dc *DepartmentCreate) SetLevel(i int) *DepartmentCreate {
 func (dc *DepartmentCreate) SetNillableLevel(i *int) *DepartmentCreate {
 	if i != nil {
 		dc.SetLevel(*i)
+	}
+	return dc
+}
+
+// SetDescription sets the "description" field.
+func (dc *DepartmentCreate) SetDescription(s string) *DepartmentCreate {
+	dc.mutation.SetDescription(s)
+	return dc
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (dc *DepartmentCreate) SetNillableDescription(s *string) *DepartmentCreate {
+	if s != nil {
+		dc.SetDescription(*s)
 	}
 	return dc
 }
@@ -309,29 +301,25 @@ func (dc *DepartmentCreate) defaults() {
 		v := department.DefaultUpdateTime()
 		dc.mutation.SetUpdateTime(v)
 	}
-	if _, ok := dc.mutation.Keyword(); !ok {
-		v := department.DefaultKeyword
-		dc.mutation.SetKeyword(v)
-	}
 	if _, ok := dc.mutation.Name(); !ok {
 		v := department.DefaultName
 		dc.mutation.SetName(v)
 	}
-	if _, ok := dc.mutation.Description(); !ok {
-		v := department.DefaultDescription
-		dc.mutation.SetDescription(v)
+	if _, ok := dc.mutation.TreePath(); !ok {
+		v := department.DefaultTreePath
+		dc.mutation.SetTreePath(v)
 	}
 	if _, ok := dc.mutation.Status(); !ok {
 		v := department.DefaultStatus
 		dc.mutation.SetStatus(v)
 	}
-	if _, ok := dc.mutation.Ancestors(); !ok {
-		v := department.DefaultAncestors
-		dc.mutation.SetAncestors(v)
-	}
 	if _, ok := dc.mutation.Level(); !ok {
 		v := department.DefaultLevel
 		dc.mutation.SetLevel(v)
+	}
+	if _, ok := dc.mutation.Description(); !ok {
+		v := department.DefaultDescription
+		dc.mutation.SetDescription(v)
 	}
 	if _, ok := dc.mutation.ID(); !ok {
 		v := department.DefaultID()
@@ -363,12 +351,12 @@ func (dc *DepartmentCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Department.name": %w`, err)}
 		}
 	}
-	if _, ok := dc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Department.description"`)}
+	if _, ok := dc.mutation.TreePath(); !ok {
+		return &ValidationError{Name: "tree_path", err: errors.New(`ent: missing required field "Department.tree_path"`)}
 	}
-	if v, ok := dc.mutation.Description(); ok {
-		if err := department.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
+	if v, ok := dc.mutation.TreePath(); ok {
+		if err := department.TreePathValidator(v); err != nil {
+			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Department.tree_path": %w`, err)}
 		}
 	}
 	if _, ok := dc.mutation.Sequence(); !ok {
@@ -377,16 +365,16 @@ func (dc *DepartmentCreate) check() error {
 	if _, ok := dc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Department.status"`)}
 	}
-	if _, ok := dc.mutation.Ancestors(); !ok {
-		return &ValidationError{Name: "ancestors", err: errors.New(`ent: missing required field "Department.ancestors"`)}
-	}
-	if v, ok := dc.mutation.Ancestors(); ok {
-		if err := department.AncestorsValidator(v); err != nil {
-			return &ValidationError{Name: "ancestors", err: fmt.Errorf(`ent: validator failed for field "Department.ancestors": %w`, err)}
-		}
-	}
 	if _, ok := dc.mutation.Level(); !ok {
 		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Department.level"`)}
+	}
+	if _, ok := dc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Department.description"`)}
+	}
+	if v, ok := dc.mutation.Description(); ok {
+		if err := department.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
+		}
 	}
 	if v, ok := dc.mutation.ParentID(); ok {
 		if err := department.ParentIDValidator(v); err != nil {
@@ -446,9 +434,9 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		_spec.SetField(department.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := dc.mutation.Description(); ok {
-		_spec.SetField(department.FieldDescription, field.TypeString, value)
-		_node.Description = value
+	if value, ok := dc.mutation.TreePath(); ok {
+		_spec.SetField(department.FieldTreePath, field.TypeString, value)
+		_node.TreePath = value
 	}
 	if value, ok := dc.mutation.Sequence(); ok {
 		_spec.SetField(department.FieldSequence, field.TypeInt, value)
@@ -458,13 +446,13 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		_spec.SetField(department.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
-	if value, ok := dc.mutation.Ancestors(); ok {
-		_spec.SetField(department.FieldAncestors, field.TypeString, value)
-		_node.Ancestors = value
-	}
 	if value, ok := dc.mutation.Level(); ok {
 		_spec.SetField(department.FieldLevel, field.TypeInt, value)
 		_node.Level = value
+	}
+	if value, ok := dc.mutation.Description(); ok {
+		_spec.SetField(department.FieldDescription, field.TypeString, value)
+		_node.Description = value
 	}
 	if nodes := dc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

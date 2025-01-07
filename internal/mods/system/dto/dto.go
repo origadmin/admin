@@ -27,17 +27,11 @@ var (
 )
 
 const (
-	UserStatusActivated = schema.UserStatusActivated
-	UserStatusFrozen    = schema.UserStatusFrozen
+	UserStatusEnabled  = schema.UserStatusEnabled
+	UserStatusDisabled = schema.UserStatusDisabled
 
-	MenuStatusActivated = schema.MenuStatusActivated
-	MenuStatusFrozen    = schema.MenuStatusFrozen
-
-	MenuTypeAction = schema.MenuTypeAction
-	MenuTypeButton = schema.MenuTypeButton
-	MenuTypeLink   = schema.MenuTypeLink
-	MenuTypeMenu   = schema.MenuTypeMenu
-	MenuTypePage   = schema.MenuTypePage
+	ResourceStatusEnabled  = schema.ResourceStatusEnabled
+	ResourceStatusDisabled = schema.ResourceStatusDisabled
 )
 
 type (
@@ -117,60 +111,61 @@ func ConvertUserPB2Object(pbModel *UserPB) (goModel *User) {
 	return goModel
 }
 
-type (
-	Menu   = ent.Menu
-	MenuPB = pb.Menu
-)
-
-// ConvertMenu2PB menu.table.comment
-func ConvertMenu2PB(goModel *Menu) (pbModel *MenuPB) {
-	pbModel = &MenuPB{}
-	if goModel == nil {
-		return pbModel
-	}
-
-	pbModel.Id = int64(goModel.ID)
-	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
-	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
-	pbModel.Keyword = goModel.Keyword
-	pbModel.Name = goModel.Name
-	pbModel.I18NKey = goModel.I18nKey
-	pbModel.Description = goModel.Description
-	pbModel.Type = goModel.Type
-	pbModel.Icon = goModel.Icon
-	pbModel.Path = goModel.Path
-	pbModel.Status = int32(goModel.Status)
-	pbModel.ParentPath = goModel.ParentPath
-	pbModel.Sequence = int32(goModel.Sequence)
-	pbModel.Properties = goModel.Properties
-	pbModel.ParentId = goModel.ParentID
-	return pbModel
-}
-
-// ConvertMenuPB2Object menu.table.comment
-func ConvertMenuPB2Object(pbModel *MenuPB) (goModel *Menu) {
-	goModel = &Menu{}
-	if pbModel == nil {
-		return goModel
-	}
-
-	goModel.ID = int64(pbModel.Id)
-	goModel.CreateTime = pbModel.CreateTime.AsTime()
-	goModel.UpdateTime = pbModel.UpdateTime.AsTime()
-	goModel.Keyword = pbModel.Keyword
-	goModel.Name = pbModel.Name
-	goModel.I18nKey = pbModel.I18NKey
-	goModel.Description = pbModel.Description
-	goModel.Type = pbModel.Type
-	goModel.Icon = pbModel.Icon
-	goModel.Path = pbModel.Path
-	goModel.Status = int8(pbModel.Status)
-	goModel.ParentPath = pbModel.ParentPath
-	goModel.Sequence = int(pbModel.Sequence)
-	goModel.Properties = pbModel.Properties
-	goModel.ParentID = pbModel.ParentId
-	return goModel
-}
+//
+//type (
+//	Menu   = ent.Menu
+//	MenuPB = pb.Menu
+//)
+//
+//// ConvertMenu2PB menu.table.comment
+//func ConvertMenu2PB(goModel *Menu) (pbModel *MenuPB) {
+//	pbModel = &MenuPB{}
+//	if goModel == nil {
+//		return pbModel
+//	}
+//
+//	pbModel.Id = int64(goModel.ID)
+//	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
+//	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
+//	pbModel.Keyword = goModel.Keyword
+//	pbModel.Name = goModel.Name
+//	pbModel.I18NKey = goModel.I18nKey
+//	pbModel.Description = goModel.Description
+//	pbModel.Type = goModel.Type
+//	pbModel.Icon = goModel.Icon
+//	pbModel.Path = goModel.Path
+//	pbModel.Status = int32(goModel.Status)
+//	pbModel.ParentPath = goModel.ParentPath
+//	pbModel.Sequence = int32(goModel.Sequence)
+//	pbModel.Properties = goModel.Properties
+//	pbModel.ParentId = goModel.ParentID
+//	return pbModel
+//}
+//
+//// ConvertMenuPB2Object menu.table.comment
+//func ConvertMenuPB2Object(pbModel *MenuPB) (goModel *Menu) {
+//	goModel = &Menu{}
+//	if pbModel == nil {
+//		return goModel
+//	}
+//
+//	goModel.ID = int64(pbModel.Id)
+//	goModel.CreateTime = pbModel.CreateTime.AsTime()
+//	goModel.UpdateTime = pbModel.UpdateTime.AsTime()
+//	goModel.Keyword = pbModel.Keyword
+//	goModel.Name = pbModel.Name
+//	goModel.I18nKey = pbModel.I18NKey
+//	goModel.Description = pbModel.Description
+//	goModel.Type = pbModel.Type
+//	goModel.Icon = pbModel.Icon
+//	goModel.Path = pbModel.Path
+//	goModel.Status = int8(pbModel.Status)
+//	goModel.ParentPath = pbModel.ParentPath
+//	goModel.Sequence = int(pbModel.Sequence)
+//	goModel.Properties = pbModel.Properties
+//	goModel.ParentID = pbModel.ParentId
+//	return goModel
+//}
 
 type (
 	Resource   = ent.Resource
@@ -189,8 +184,8 @@ func ConvertResource2PB(goModel *Resource) (pbModel *ResourcePB) {
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.Method = goModel.Method
 	pbModel.Operation = goModel.Operation
-	pbModel.Path = goModel.Path
-	pbModel.MenuId = goModel.MenuID
+	pbModel.Uri = goModel.URI
+	//pbModel.MenuId = goModel.MenuID
 	return pbModel
 }
 
@@ -206,8 +201,7 @@ func ConvertResourcePB2Object(pbModel *ResourcePB) (goModel *Resource) {
 	goModel.UpdateTime = pbModel.UpdateTime.AsTime()
 	goModel.Method = pbModel.Method
 	goModel.Operation = pbModel.Operation
-	goModel.Path = pbModel.Path
-	goModel.MenuID = pbModel.MenuId
+	goModel.URI = pbModel.Uri
 	return goModel
 }
 
@@ -277,7 +271,6 @@ func ConvertDepartment2PB(goModel *Department) (pbModel *DepartmentPB) {
 	pbModel.Description = goModel.Description
 	pbModel.Sequence = int32(goModel.Sequence)
 	pbModel.Status = int32(goModel.Status)
-	pbModel.Ancestors = goModel.Ancestors
 	pbModel.Level = int32(goModel.Level)
 	pbModel.ParentId = goModel.ParentID
 	return pbModel
@@ -298,7 +291,6 @@ func ConvertDepartmentPB2Object(pbModel *DepartmentPB) (goModel *Department) {
 	goModel.Description = pbModel.Description
 	goModel.Sequence = int(pbModel.Sequence)
 	goModel.Status = int8(pbModel.Status)
-	goModel.Ancestors = pbModel.Ancestors
 	goModel.Level = int(pbModel.Level)
 	goModel.ParentID = pbModel.ParentId
 	return goModel

@@ -80,19 +80,9 @@ func Description(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldDescription, v))
 }
 
-// I18nKey applies equality check predicate on the "i18n_key" field. It's identical to I18nKeyEQ.
-func I18nKey(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldI18nKey, v))
-}
-
-// Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
-func Type(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldType, v))
-}
-
-// Scope applies equality check predicate on the "scope" field. It's identical to ScopeEQ.
-func Scope(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldScope, v))
+// DataScope applies equality check predicate on the "data_scope" field. It's identical to DataScopeEQ.
+func DataScope(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldDataScope, v))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -360,16 +350,6 @@ func DescriptionHasSuffix(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldHasSuffix(FieldDescription, v))
 }
 
-// DescriptionIsNil applies the IsNil predicate on the "description" field.
-func DescriptionIsNil() predicate.Permission {
-	return predicate.Permission(sql.FieldIsNull(FieldDescription))
-}
-
-// DescriptionNotNil applies the NotNil predicate on the "description" field.
-func DescriptionNotNil() predicate.Permission {
-	return predicate.Permission(sql.FieldNotNull(FieldDescription))
-}
-
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
 func DescriptionEqualFold(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldEqualFold(FieldDescription, v))
@@ -380,184 +360,79 @@ func DescriptionContainsFold(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldContainsFold(FieldDescription, v))
 }
 
-// I18nKeyEQ applies the EQ predicate on the "i18n_key" field.
-func I18nKeyEQ(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldI18nKey, v))
+// DataScopeEQ applies the EQ predicate on the "data_scope" field.
+func DataScopeEQ(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldDataScope, v))
 }
 
-// I18nKeyNEQ applies the NEQ predicate on the "i18n_key" field.
-func I18nKeyNEQ(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldI18nKey, v))
+// DataScopeNEQ applies the NEQ predicate on the "data_scope" field.
+func DataScopeNEQ(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldDataScope, v))
 }
 
-// I18nKeyIn applies the In predicate on the "i18n_key" field.
-func I18nKeyIn(vs ...string) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldI18nKey, vs...))
+// DataScopeIn applies the In predicate on the "data_scope" field.
+func DataScopeIn(vs ...string) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldDataScope, vs...))
 }
 
-// I18nKeyNotIn applies the NotIn predicate on the "i18n_key" field.
-func I18nKeyNotIn(vs ...string) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldI18nKey, vs...))
+// DataScopeNotIn applies the NotIn predicate on the "data_scope" field.
+func DataScopeNotIn(vs ...string) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldDataScope, vs...))
 }
 
-// I18nKeyGT applies the GT predicate on the "i18n_key" field.
-func I18nKeyGT(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldGT(FieldI18nKey, v))
+// DataScopeGT applies the GT predicate on the "data_scope" field.
+func DataScopeGT(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldGT(FieldDataScope, v))
 }
 
-// I18nKeyGTE applies the GTE predicate on the "i18n_key" field.
-func I18nKeyGTE(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldGTE(FieldI18nKey, v))
+// DataScopeGTE applies the GTE predicate on the "data_scope" field.
+func DataScopeGTE(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldGTE(FieldDataScope, v))
 }
 
-// I18nKeyLT applies the LT predicate on the "i18n_key" field.
-func I18nKeyLT(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldLT(FieldI18nKey, v))
+// DataScopeLT applies the LT predicate on the "data_scope" field.
+func DataScopeLT(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldLT(FieldDataScope, v))
 }
 
-// I18nKeyLTE applies the LTE predicate on the "i18n_key" field.
-func I18nKeyLTE(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldLTE(FieldI18nKey, v))
+// DataScopeLTE applies the LTE predicate on the "data_scope" field.
+func DataScopeLTE(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldLTE(FieldDataScope, v))
 }
 
-// I18nKeyContains applies the Contains predicate on the "i18n_key" field.
-func I18nKeyContains(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldContains(FieldI18nKey, v))
+// DataScopeContains applies the Contains predicate on the "data_scope" field.
+func DataScopeContains(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldContains(FieldDataScope, v))
 }
 
-// I18nKeyHasPrefix applies the HasPrefix predicate on the "i18n_key" field.
-func I18nKeyHasPrefix(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldHasPrefix(FieldI18nKey, v))
+// DataScopeHasPrefix applies the HasPrefix predicate on the "data_scope" field.
+func DataScopeHasPrefix(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldHasPrefix(FieldDataScope, v))
 }
 
-// I18nKeyHasSuffix applies the HasSuffix predicate on the "i18n_key" field.
-func I18nKeyHasSuffix(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldHasSuffix(FieldI18nKey, v))
+// DataScopeHasSuffix applies the HasSuffix predicate on the "data_scope" field.
+func DataScopeHasSuffix(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldHasSuffix(FieldDataScope, v))
 }
 
-// I18nKeyEqualFold applies the EqualFold predicate on the "i18n_key" field.
-func I18nKeyEqualFold(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldEqualFold(FieldI18nKey, v))
+// DataScopeEqualFold applies the EqualFold predicate on the "data_scope" field.
+func DataScopeEqualFold(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEqualFold(FieldDataScope, v))
 }
 
-// I18nKeyContainsFold applies the ContainsFold predicate on the "i18n_key" field.
-func I18nKeyContainsFold(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldContainsFold(FieldI18nKey, v))
+// DataScopeContainsFold applies the ContainsFold predicate on the "data_scope" field.
+func DataScopeContainsFold(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldContainsFold(FieldDataScope, v))
 }
 
-// TypeEQ applies the EQ predicate on the "type" field.
-func TypeEQ(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldType, v))
+// DataRulesIsNil applies the IsNil predicate on the "data_rules" field.
+func DataRulesIsNil() predicate.Permission {
+	return predicate.Permission(sql.FieldIsNull(FieldDataRules))
 }
 
-// TypeNEQ applies the NEQ predicate on the "type" field.
-func TypeNEQ(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldType, v))
-}
-
-// TypeIn applies the In predicate on the "type" field.
-func TypeIn(vs ...int8) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldType, vs...))
-}
-
-// TypeNotIn applies the NotIn predicate on the "type" field.
-func TypeNotIn(vs ...int8) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldType, vs...))
-}
-
-// TypeGT applies the GT predicate on the "type" field.
-func TypeGT(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldGT(FieldType, v))
-}
-
-// TypeGTE applies the GTE predicate on the "type" field.
-func TypeGTE(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldGTE(FieldType, v))
-}
-
-// TypeLT applies the LT predicate on the "type" field.
-func TypeLT(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldLT(FieldType, v))
-}
-
-// TypeLTE applies the LTE predicate on the "type" field.
-func TypeLTE(v int8) predicate.Permission {
-	return predicate.Permission(sql.FieldLTE(FieldType, v))
-}
-
-// ScopeEQ applies the EQ predicate on the "scope" field.
-func ScopeEQ(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldScope, v))
-}
-
-// ScopeNEQ applies the NEQ predicate on the "scope" field.
-func ScopeNEQ(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldScope, v))
-}
-
-// ScopeIn applies the In predicate on the "scope" field.
-func ScopeIn(vs ...string) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldScope, vs...))
-}
-
-// ScopeNotIn applies the NotIn predicate on the "scope" field.
-func ScopeNotIn(vs ...string) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldScope, vs...))
-}
-
-// ScopeGT applies the GT predicate on the "scope" field.
-func ScopeGT(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldGT(FieldScope, v))
-}
-
-// ScopeGTE applies the GTE predicate on the "scope" field.
-func ScopeGTE(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldGTE(FieldScope, v))
-}
-
-// ScopeLT applies the LT predicate on the "scope" field.
-func ScopeLT(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldLT(FieldScope, v))
-}
-
-// ScopeLTE applies the LTE predicate on the "scope" field.
-func ScopeLTE(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldLTE(FieldScope, v))
-}
-
-// ScopeContains applies the Contains predicate on the "scope" field.
-func ScopeContains(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldContains(FieldScope, v))
-}
-
-// ScopeHasPrefix applies the HasPrefix predicate on the "scope" field.
-func ScopeHasPrefix(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldHasPrefix(FieldScope, v))
-}
-
-// ScopeHasSuffix applies the HasSuffix predicate on the "scope" field.
-func ScopeHasSuffix(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldHasSuffix(FieldScope, v))
-}
-
-// ScopeEqualFold applies the EqualFold predicate on the "scope" field.
-func ScopeEqualFold(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldEqualFold(FieldScope, v))
-}
-
-// ScopeContainsFold applies the ContainsFold predicate on the "scope" field.
-func ScopeContainsFold(v string) predicate.Permission {
-	return predicate.Permission(sql.FieldContainsFold(FieldScope, v))
-}
-
-// ScopeDeptsIsNil applies the IsNil predicate on the "scope_depts" field.
-func ScopeDeptsIsNil() predicate.Permission {
-	return predicate.Permission(sql.FieldIsNull(FieldScopeDepts))
-}
-
-// ScopeDeptsNotNil applies the NotNil predicate on the "scope_depts" field.
-func ScopeDeptsNotNil() predicate.Permission {
-	return predicate.Permission(sql.FieldNotNull(FieldScopeDepts))
+// DataRulesNotNil applies the NotNil predicate on the "data_rules" field.
+func DataRulesNotNil() predicate.Permission {
+	return predicate.Permission(sql.FieldNotNull(FieldDataRules))
 }
 
 // HasRoles applies the HasEdge predicate on the "roles" edge.
@@ -575,29 +450,6 @@ func HasRoles() predicate.Permission {
 func HasRolesWith(preds ...predicate.Role) predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
 		step := newRolesStep()
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasMenus applies the HasEdge predicate on the "menus" edge.
-func HasMenus() predicate.Permission {
-	return predicate.Permission(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasMenusWith applies the HasEdge predicate on the "menus" edge with a given conditions (other predicates).
-func HasMenusWith(preds ...predicate.Menu) predicate.Permission {
-	return predicate.Permission(func(s *sql.Selector) {
-		step := newMenusStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -644,29 +496,6 @@ func HasRolePermissions() predicate.Permission {
 func HasRolePermissionsWith(preds ...predicate.RolePermission) predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
 		step := newRolePermissionsStep()
-		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
-			for _, p := range preds {
-				p(s)
-			}
-		})
-	})
-}
-
-// HasPermissionMenus applies the HasEdge predicate on the "permission_menus" edge.
-func HasPermissionMenus() predicate.Permission {
-	return predicate.Permission(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, PermissionMenusTable, PermissionMenusColumn),
-		)
-		sqlgraph.HasNeighbors(s, step)
-	})
-}
-
-// HasPermissionMenusWith applies the HasEdge predicate on the "permission_menus" edge with a given conditions (other predicates).
-func HasPermissionMenusWith(preds ...predicate.PermissionMenu) predicate.Permission {
-	return predicate.Permission(func(s *sql.Selector) {
-		step := newPermissionMenusStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

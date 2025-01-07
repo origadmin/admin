@@ -23,6 +23,7 @@ import (
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	_ "origadmin/application/admin/internal/mods/system/dal/entity/ent/runtime"
 )
 
 const (
@@ -203,7 +204,7 @@ func TestData_InitFromFile(t *testing.T) {
 				return
 			}
 			defer cleanup()
-			if err := d.InitMenuFromFile(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
+			if err := d.InitResourceFromFile(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
 				t.Errorf("InitFromFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -230,6 +231,7 @@ func createTestRole(t *testing.T, client *ent.Client) *ent.Role {
 	r, err := client.Role.Create().
 		SetName("test-role").
 		SetDescription("Test role for testing").
+		SetKeyword("test-role").
 		Save(context.Background())
 	if err != nil {
 		t.Fatalf("failed creating role: %v", err)
@@ -237,14 +239,19 @@ func createTestRole(t *testing.T, client *ent.Client) *ent.Role {
 	return r
 }
 
-func createTestMenu(t *testing.T, client *ent.Client) *ent.Menu {
-	m, err := client.Menu.Create().
-		SetName("test-menu").
-		SetPath("/test").
+func createTestResource(t *testing.T, client *ent.Client) *ent.Resource {
+	m, err := client.Resource.Create().
+		SetName("test-resource").
+		SetURI("/test").
 		SetDescription("Test menu for testing").
+		SetKeyword("test-resource").
+		//SetI18nKey("test-resource").
+		//SetOperation("test-resource").
+		//SetMethod("GET").
+		//SetComponent("test-resource").
 		Save(context.Background())
 	if err != nil {
-		t.Fatalf("failed creating menu: %v", err)
+		t.Fatalf("failed creating resource: %v", err)
 	}
 	return m
 }
@@ -269,9 +276,9 @@ func TestAddRole(t *testing.T) {
 	}
 }
 
-func TestAddMenu(t *testing.T) {
+func TestAddResource(t *testing.T) {
 	client := setupTestDB(t)
-	menu := createTestMenu(t, client)
+	menu := createTestResource(t, client)
 
 	if menu.Name != "test-menu" {
 		t.Errorf("Expected menu name to be 'test-menu', got '%s'", menu.Name)
@@ -293,6 +300,12 @@ func TestAddRolePermission(t *testing.T) {
 	permission := createTestPermission(t, client)
 
 	role, err := role.Update().
+		//	AddRolePermissions(ent.RolePermission{
+		//	ID:           0,
+		//	RoleID:       0,
+		//	PermissionID: 0,
+		//	Edges:        ent.RolePermissionEdges{},
+		//})
 		AddPermissions(permission).
 		Save(context.Background())
 	if err != nil {
@@ -304,21 +317,31 @@ func TestAddRolePermission(t *testing.T) {
 	}
 }
 
-func TestAddRoleMenu(t *testing.T) {
+func TestAddRoleResource(t *testing.T) {
 	client := setupTestDB(t)
 	role := createTestRole(t, client)
-	menu := createTestMenu(t, client)
-
-	role, err := role.Update().
-		AddMenus(menu).
+	perm := createTestPermission(t, client)
+	res := createTestResource(t, client)
+	pr, err := client.PermissionResource.Create().
+		SetPermission(perm).
+		SetResource(res).
+		SetActions("abc123").Save(context.Background())
+	//perm, err := perm.Update().AddPermissionResources().Save(context.Background())
+	if err != nil {
+		t.Fatalf("failed adding resource to permission: %v", err)
+	}
+	role, err = role.Update().
+		AddPermissionIDs(pr.PermissionID).
 		Save(context.Background())
 	if err != nil {
-		t.Fatalf("failed adding menu to role: %v", err)
+		t.Fatalf("failed adding permission to role: %v", err)
 	}
-	menus := role.QueryMenus().AllX(context.Background())
-	if len(menus) != 1 {
-		t.Errorf("Expected role to have 1 menu, got %d", len(role.Edges.Menus))
+	ress := role.QueryPermissions().QueryResources().AllX(context.Background())
+	if len(ress) != 1 {
+		t.Errorf("Expected role to have 1 menu, got %d", len(ress))
 	}
+	resources := role.QueryPermissions().QueryPermissionResources().AllX(context.Background())
+	t.Logf("resources: %v", resources)
 }
 
 func TestDeleteRole(t *testing.T) {

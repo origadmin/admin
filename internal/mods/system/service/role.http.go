@@ -10,40 +10,40 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-type RoleAPIHTTPService struct {
-	pb.UnimplementedRoleAPIServer
+type RoleServiceHTTPServer struct {
+	pb.UnimplementedRoleServiceServer
 
-	client pb.RoleAPIHTTPClient
+	client pb.RoleServiceHTTPClient
 }
 
-func (s RoleAPIHTTPService) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
+func (s RoleServiceHTTPServer) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	return s.client.ListRoles(ctx, req)
 }
-func (s RoleAPIHTTPService) GetRole(ctx context.Context, req *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
+func (s RoleServiceHTTPServer) GetRole(ctx context.Context, req *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
 	return s.client.GetRole(ctx, req)
 }
-func (s RoleAPIHTTPService) CreateRole(ctx context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
+func (s RoleServiceHTTPServer) CreateRole(ctx context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
 	return s.client.CreateRole(ctx, req)
 }
-func (s RoleAPIHTTPService) UpdateRole(ctx context.Context, req *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
+func (s RoleServiceHTTPServer) UpdateRole(ctx context.Context, req *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
 	return s.client.UpdateRole(ctx, req)
 }
-func (s RoleAPIHTTPService) DeleteRole(ctx context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
+func (s RoleServiceHTTPServer) DeleteRole(ctx context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	return s.client.DeleteRole(ctx, req)
 }
 
-// NewRoleAPIHTTPService new a role service.
-func NewRoleAPIHTTPService(client pb.RoleAPIHTTPClient) *RoleAPIHTTPService {
-	return &RoleAPIHTTPService{
+// NewRoleServiceHTTPServer new a role service.
+func NewRoleServiceHTTPServer(client pb.RoleServiceHTTPClient) *RoleServiceHTTPServer {
+	return &RoleServiceHTTPServer{
 		client: client,
 	}
 }
 
-// NewRoleAPIHTTPServer new a role service.
-func NewRoleAPIHTTPServer(client pb.RoleAPIHTTPClient) pb.RoleAPIHTTPServer {
-	return &RoleAPIHTTPService{
+// NewRoleServiceHTTPServerPB new a role service.
+func NewRoleServiceHTTPServerPB(client pb.RoleServiceHTTPClient) pb.RoleServiceHTTPServer {
+	return &RoleServiceHTTPServer{
 		client: client,
 	}
 }
 
-var _ pb.RoleAPIServer = (*RoleAPIHTTPService)(nil)
+var _ pb.RoleServiceServer = (*RoleServiceHTTPServer)(nil)

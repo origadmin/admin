@@ -29,7 +29,8 @@ func (Position) Fields() []ent.Field {
 			Unique().
 			Comment(i18n.Text("position.field.name")),
 		field.String("description").
-			MaxLen(256).
+			MaxLen(1024).
+			Default("").
 			Comment(i18n.Text("position.field.description")),
 		mixin.FK("department_id", i18n.Text("department.field.department_id")),
 	}

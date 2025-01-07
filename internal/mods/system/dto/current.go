@@ -16,5 +16,5 @@ type CurrentRepo interface {
 	ListCurrentRoles(ctx context.Context, in *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error)
 	UpdateCurrentUserPassword(ctx context.Context, in *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordResponse, error)
 	UpdateCurrentUser(ctx context.Context, in *pb.UpdateCurrentUserRequest) (*pb.UpdateCurrentUserResponse, error)
-	ListCurrentMenus(ctx context.Context, in *pb.ListCurrentMenusRequest) (*pb.ListCurrentMenusResponse, error)
+	ListCurrentResources(ctx context.Context, in *pb.ListCurrentResourcesRequest) (*pb.ListCurrentResourcesResponse, error)
 }

@@ -14,7 +14,7 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemRole";
 
 // The login service definition.
-service RoleAPI {
+service RoleService {
   rpc ListRoles (ListRolesRequest) returns (ListRolesResponse) {
     option (google.api.http) = {get: "/sys/roles"};
   }

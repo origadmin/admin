@@ -65,7 +65,7 @@ func (repo currentRepo) UpdateCurrentUser(ctx context.Context, in *pb.UpdateCurr
 	panic("implement me")
 }
 
-func (repo currentRepo) ListCurrentMenus(ctx context.Context, in *pb.ListCurrentMenusRequest) (*pb.ListCurrentMenusResponse, error) {
+func (repo currentRepo) ListCurrentResources(ctx context.Context, in *pb.ListCurrentResourcesRequest) (*pb.ListCurrentResourcesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

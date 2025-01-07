@@ -2377,20 +2377,78 @@ func (m *Resource) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for MenuId
+	// no validation rules for Name
 
-	// no validation rules for Method
+	// no validation rules for Keyword
 
-	// no validation rules for Path
+	// no validation rules for I_18NKey
+
+	// no validation rules for Type
+
+	// no validation rules for Status
+
+	// no validation rules for Uri
 
 	// no validation rules for Operation
 
+	// no validation rules for Method
+
+	// no validation rules for Component
+
+	// no validation rules for Icon
+
+	// no validation rules for Sequence
+
+	// no validation rules for Visible
+
+	// no validation rules for TreePath
+
+	// no validation rules for Properties
+
+	// no validation rules for Description
+
+	// no validation rules for ParentId
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ResourceValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ResourceValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ResourceValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if all {
-		switch v := interface{}(m.GetMenu()).(type) {
+		switch v := interface{}(m.GetParent()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ResourceValidationError{
-					field:  "Menu",
+					field:  "Parent",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -2398,16 +2456,16 @@ func (m *Resource) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ResourceValidationError{
-					field:  "Menu",
+					field:  "Parent",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetMenu()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetParent()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ResourceValidationError{
-				field:  "Menu",
+				field:  "Parent",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -2711,8 +2769,6 @@ func (m *Department) validate(all bool) error {
 	// no validation rules for Sequence
 
 	// no validation rules for Status
-
-	// no validation rules for Ancestors
 
 	// no validation rules for Level
 

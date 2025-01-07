@@ -10,46 +10,46 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-// MenuAPIHTTPService is a menu service.
-type MenuAPIHTTPService struct {
-	pb.UnimplementedMenuAPIServer
+// MenuServiceHTTPServer is a menu service.
+type MenuServiceHTTPServer struct {
+	pb.UnimplementedMenuServiceServer
 
-	client pb.MenuAPIHTTPClient
+	client pb.MenuServiceHTTPClient
 }
 
-func (s MenuAPIHTTPService) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
+func (s MenuServiceHTTPServer) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
 	return s.client.CreateMenu(ctx, request)
 }
 
-func (s MenuAPIHTTPService) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
+func (s MenuServiceHTTPServer) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
 	return s.client.DeleteMenu(ctx, request)
 }
 
-func (s MenuAPIHTTPService) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
+func (s MenuServiceHTTPServer) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
 	return s.client.GetMenu(ctx, request)
 }
 
-func (s MenuAPIHTTPService) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
+func (s MenuServiceHTTPServer) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
 	return s.client.ListMenus(ctx, request)
 }
 
-func (s MenuAPIHTTPService) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
+func (s MenuServiceHTTPServer) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
 	return s.client.UpdateMenu(ctx, request)
 }
 
-//func (m MenuAPIHTTPService) mustEmbedUnimplementedMenuAPIHTTPServer() {
+//func (m MenuServiceHTTPServer) mustEmbedUnimplementedMenuServiceHTTPServer() {
 //	//TODO implement me
 //	panic("implement me")
 //}
 
-// NewMenuAPIHTTPService new a menu service.
-func NewMenuAPIHTTPService(client pb.MenuAPIHTTPClient) *MenuAPIHTTPService {
-	return &MenuAPIHTTPService{client: client}
+// NewMenuServiceHTTPServer new a menu service.
+func NewMenuServiceHTTPServer(client pb.MenuServiceHTTPClient) *MenuServiceHTTPServer {
+	return &MenuServiceHTTPServer{client: client}
 }
 
-// NewMenuAPIHTTPServer new a menu service.
-func NewMenuAPIHTTPServer(client pb.MenuAPIHTTPClient) pb.MenuAPIServer {
-	return &MenuAPIHTTPService{client: client}
+// NewMenuServiceHTTPServerPB new a menu service.
+func NewMenuServiceHTTPServerPB(client pb.MenuServiceHTTPClient) pb.MenuServiceHTTPServer {
+	return &MenuServiceHTTPServer{client: client}
 }
 
-var _ pb.MenuAPIServer = (*MenuAPIHTTPService)(nil)
+var _ pb.MenuServiceServer = (*MenuServiceHTTPServer)(nil)

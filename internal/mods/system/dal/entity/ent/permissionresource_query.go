@@ -641,12 +641,14 @@ func (prq *PermissionResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *
 //	var v []struct {
 //	  PermissionID int64 `json:"permission_id,omitempty"`
 //	  ResourceID int64 `json:"resource_id,omitempty"`
+//	  Actions string `json:"actions,omitempty"`
 //	}
 //
 //	client.PermissionResource.Query().
 //	  Omit(
 //	  permissionresource.FieldPermissionID,
 //	  permissionresource.FieldResourceID,
+//	  permissionresource.FieldActions,
 //	  ).
 //	  Scan(ctx, &v)
 func (prq *PermissionResourceQuery) Omit(fields ...string) *PermissionResourceSelect {

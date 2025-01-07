@@ -18,8 +18,8 @@ import (
 )
 
 const (
-	UserStatusActivated = 0
-	UserStatusFrozen    = 1
+	UserStatusEnabled  = 0
+	UserStatusDisabled = 1
 )
 
 const (
@@ -42,7 +42,7 @@ func (User) Fields() []ent.Field {
 			Comment(i18n.Text("user.field.allowed_ip")),
 		field.String("username").
 			MaxLen(32).
-			Default("").
+			Unique().
 			Comment(i18n.Text("user.field.username")), // login username of user
 		field.String("nickname").
 			MaxLen(64).
@@ -85,7 +85,7 @@ func (User) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("user.field.token")), // Token for login
 		field.Int8("status").
-			Default(UserStatusActivated).
+			Default(UserStatusEnabled).
 			Comment(i18n.Text("user.field.status")),
 		field.String("last_login_ip").
 			MaxLen(32).
@@ -102,7 +102,7 @@ func (User) Fields() []ent.Field {
 
 // Mixin of the User.
 func (User) Mixin() []ent.Mixin {
-	return mixin.AuditModelMixin
+	return append(mixin.AuditModelMixin, SoftDelete{})
 }
 
 // Indexes of the User.

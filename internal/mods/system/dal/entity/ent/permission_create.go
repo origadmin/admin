@@ -6,9 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -60,6 +58,14 @@ func (pc *PermissionCreate) SetName(s string) *PermissionCreate {
 	return pc
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableName(s *string) *PermissionCreate {
+	if s != nil {
+		pc.SetName(*s)
+	}
+	return pc
+}
+
 // SetKeyword sets the "keyword" field.
 func (pc *PermissionCreate) SetKeyword(s string) *PermissionCreate {
 	pc.mutation.SetKeyword(s)
@@ -80,51 +86,23 @@ func (pc *PermissionCreate) SetNillableDescription(s *string) *PermissionCreate 
 	return pc
 }
 
-// SetI18nKey sets the "i18n_key" field.
-func (pc *PermissionCreate) SetI18nKey(s string) *PermissionCreate {
-	pc.mutation.SetI18nKey(s)
+// SetDataScope sets the "data_scope" field.
+func (pc *PermissionCreate) SetDataScope(s string) *PermissionCreate {
+	pc.mutation.SetDataScope(s)
 	return pc
 }
 
-// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableI18nKey(s *string) *PermissionCreate {
+// SetNillableDataScope sets the "data_scope" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableDataScope(s *string) *PermissionCreate {
 	if s != nil {
-		pc.SetI18nKey(*s)
+		pc.SetDataScope(*s)
 	}
 	return pc
 }
 
-// SetType sets the "type" field.
-func (pc *PermissionCreate) SetType(i int8) *PermissionCreate {
-	pc.mutation.SetType(i)
-	return pc
-}
-
-// SetNillableType sets the "type" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableType(i *int8) *PermissionCreate {
-	if i != nil {
-		pc.SetType(*i)
-	}
-	return pc
-}
-
-// SetScope sets the "scope" field.
-func (pc *PermissionCreate) SetScope(s string) *PermissionCreate {
-	pc.mutation.SetScope(s)
-	return pc
-}
-
-// SetNillableScope sets the "scope" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableScope(s *string) *PermissionCreate {
-	if s != nil {
-		pc.SetScope(*s)
-	}
-	return pc
-}
-
-// SetScopeDepts sets the "scope_depts" field.
-func (pc *PermissionCreate) SetScopeDepts(s []string) *PermissionCreate {
-	pc.mutation.SetScopeDepts(s)
+// SetDataRules sets the "data_rules" field.
+func (pc *PermissionCreate) SetDataRules(m []map[string]string) *PermissionCreate {
+	pc.mutation.SetDataRules(m)
 	return pc
 }
 
@@ -157,21 +135,6 @@ func (pc *PermissionCreate) AddRoles(r ...*Role) *PermissionCreate {
 	return pc.AddRoleIDs(ids...)
 }
 
-// AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
-func (pc *PermissionCreate) AddMenuIDs(ids ...int64) *PermissionCreate {
-	pc.mutation.AddMenuIDs(ids...)
-	return pc
-}
-
-// AddMenus adds the "menus" edges to the Menu entity.
-func (pc *PermissionCreate) AddMenus(m ...*Menu) *PermissionCreate {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return pc.AddMenuIDs(ids...)
-}
-
 // AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
 func (pc *PermissionCreate) AddResourceIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddResourceIDs(ids...)
@@ -200,21 +163,6 @@ func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *Permission
 		ids[i] = r[i].ID
 	}
 	return pc.AddRolePermissionIDs(ids...)
-}
-
-// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by IDs.
-func (pc *PermissionCreate) AddPermissionMenuIDs(ids ...int64) *PermissionCreate {
-	pc.mutation.AddPermissionMenuIDs(ids...)
-	return pc
-}
-
-// AddPermissionMenus adds the "permission_menus" edges to the PermissionMenu entity.
-func (pc *PermissionCreate) AddPermissionMenus(p ...*PermissionMenu) *PermissionCreate {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
-	}
-	return pc.AddPermissionMenuIDs(ids...)
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
@@ -275,17 +223,17 @@ func (pc *PermissionCreate) defaults() {
 		v := permission.DefaultUpdateTime()
 		pc.mutation.SetUpdateTime(v)
 	}
-	if _, ok := pc.mutation.I18nKey(); !ok {
-		v := permission.DefaultI18nKey
-		pc.mutation.SetI18nKey(v)
+	if _, ok := pc.mutation.Name(); !ok {
+		v := permission.DefaultName
+		pc.mutation.SetName(v)
 	}
-	if _, ok := pc.mutation.GetType(); !ok {
-		v := permission.DefaultType
-		pc.mutation.SetType(v)
+	if _, ok := pc.mutation.Description(); !ok {
+		v := permission.DefaultDescription
+		pc.mutation.SetDescription(v)
 	}
-	if _, ok := pc.mutation.Scope(); !ok {
-		v := permission.DefaultScope
-		pc.mutation.SetScope(v)
+	if _, ok := pc.mutation.DataScope(); !ok {
+		v := permission.DefaultDataScope
+		pc.mutation.SetDataScope(v)
 	}
 	if _, ok := pc.mutation.ID(); !ok {
 		v := permission.DefaultID()
@@ -317,24 +265,16 @@ func (pc *PermissionCreate) check() error {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Permission.keyword": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Permission.description"`)}
+	}
 	if v, ok := pc.mutation.Description(); ok {
 		if err := permission.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.I18nKey(); !ok {
-		return &ValidationError{Name: "i18n_key", err: errors.New(`ent: missing required field "Permission.i18n_key"`)}
-	}
-	if v, ok := pc.mutation.I18nKey(); ok {
-		if err := permission.I18nKeyValidator(v); err != nil {
-			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Permission.i18n_key": %w`, err)}
-		}
-	}
-	if _, ok := pc.mutation.GetType(); !ok {
-		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Permission.type"`)}
-	}
-	if _, ok := pc.mutation.Scope(); !ok {
-		return &ValidationError{Name: "scope", err: errors.New(`ent: missing required field "Permission.scope"`)}
+	if _, ok := pc.mutation.DataScope(); !ok {
+		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Permission.data_scope"`)}
 	}
 	if v, ok := pc.mutation.ID(); ok {
 		if err := permission.IDValidator(v); err != nil {
@@ -393,21 +333,13 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_spec.SetField(permission.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if value, ok := pc.mutation.I18nKey(); ok {
-		_spec.SetField(permission.FieldI18nKey, field.TypeString, value)
-		_node.I18nKey = value
+	if value, ok := pc.mutation.DataScope(); ok {
+		_spec.SetField(permission.FieldDataScope, field.TypeString, value)
+		_node.DataScope = value
 	}
-	if value, ok := pc.mutation.GetType(); ok {
-		_spec.SetField(permission.FieldType, field.TypeInt8, value)
-		_node.Type = value
-	}
-	if value, ok := pc.mutation.Scope(); ok {
-		_spec.SetField(permission.FieldScope, field.TypeString, value)
-		_node.Scope = value
-	}
-	if value, ok := pc.mutation.ScopeDepts(); ok {
-		_spec.SetField(permission.FieldScopeDepts, field.TypeJSON, value)
-		_node.ScopeDepts = value
+	if value, ok := pc.mutation.DataRules(); ok {
+		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
+		_node.DataRules = value
 	}
 	if nodes := pc.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -424,29 +356,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &RolePermissionCreate{config: pc.config, mutation: newRolePermissionMutation(pc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := pc.mutation.MenusIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   permission.MenusTable,
-			Columns: permission.MenusPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &PermissionMenuCreate{config: pc.config, mutation: newPermissionMenuMutation(pc.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -487,22 +396,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := pc.mutation.PermissionMenusIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   permission.PermissionMenusTable,
-			Columns: []string{permission.PermissionMenusColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

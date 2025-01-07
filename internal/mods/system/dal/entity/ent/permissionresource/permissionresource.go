@@ -16,6 +16,8 @@ const (
 	FieldPermissionID = "permission_id"
 	// FieldResourceID holds the string denoting the resource_id field in the database.
 	FieldResourceID = "resource_id"
+	// FieldActions holds the string denoting the actions field in the database.
+	FieldActions = "actions"
 	// EdgePermission holds the string denoting the permission edge name in mutations.
 	EdgePermission = "permission"
 	// EdgeResource holds the string denoting the resource edge name in mutations.
@@ -43,6 +45,7 @@ var Columns = []string{
 	FieldID,
 	FieldPermissionID,
 	FieldResourceID,
+	FieldActions,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -60,6 +63,8 @@ var (
 	PermissionIDValidator func(int64) error
 	// ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
 	ResourceIDValidator func(int64) error
+	// DefaultActions holds the default value on creation for the "actions" field.
+	DefaultActions string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -82,6 +87,11 @@ func ByPermissionID(opts ...sql.OrderTermOption) OrderOption {
 // ByResourceID orders the results by the resource_id field.
 func ByResourceID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldResourceID, opts...).ToFunc()
+}
+
+// ByActions orders the results by the actions field.
+func ByActions(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActions, opts...).ToFunc()
 }
 
 // ByPermissionField orders the results by permission field.

@@ -35,12 +35,12 @@ func (repo userRepo) Current(ctx context.Context, id int64) (*dto.UserPB, error)
 	return repo.Get(ctx, id)
 }
 
-func (repo userRepo) ListMenuByUserID(ctx context.Context, id int64) ([]*dto.MenuPB, error) {
-	menus, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryMenus().All(ctx)
+func (repo userRepo) ListResourceByUserID(ctx context.Context, id int64) ([]*dto.ResourcePB, error) {
+	menus, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryPermissions().QueryResources().All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertMenus(menus), nil
+	return dto.ConvertResources(menus), nil
 }
 
 func (repo userRepo) GetByUserName(ctx context.Context, username string, fields ...string) (*dto.UserPB, error) {

@@ -14,7 +14,7 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemResource";
 
 // The resource service definition.
-service ResourceAPI {
+service ResourceService {
   rpc ListResources (ListResourcesRequest) returns (ListResourcesResponse) {
     option (google.api.http) = {get: "/sys/resources"};
   }

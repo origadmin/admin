@@ -21,7 +21,7 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
-type MenuAPIAgent interface {
+type MenuServiceAgent interface {
 	CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error)
 	GetMenu(context.Context, *GetMenuRequest) (*GetMenuResponse, error)
@@ -29,13 +29,13 @@ type MenuAPIAgent interface {
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
 }
 
-func _MenuAPI_ListMenus0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuService_ListMenus0_HTTPAgent_Handler(srv MenuServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in ListMenusRequest
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationMenuAPIListMenus)
+		http.SetOperation(cctx, OperationMenuServiceListMenus)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListMenus(ctx, req.(*ListMenusRequest))
@@ -52,7 +52,7 @@ func _MenuAPI_ListMenus0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuService_GetMenu0_HTTPAgent_Handler(srv MenuServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in GetMenuRequest
 		if err := cctx.BindQuery(&in); err != nil {
@@ -61,7 +61,7 @@ func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationMenuAPIGetMenu)
+		http.SetOperation(cctx, OperationMenuServiceGetMenu)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.GetMenu(ctx, req.(*GetMenuRequest))
@@ -78,7 +78,7 @@ func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuService_CreateMenu0_HTTPAgent_Handler(srv MenuServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in CreateMenuRequest
 		if err := cctx.Bind(&in.Menu); err != nil {
@@ -87,7 +87,7 @@ func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationMenuAPICreateMenu)
+		http.SetOperation(cctx, OperationMenuServiceCreateMenu)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateMenu(ctx, req.(*CreateMenuRequest))
@@ -104,7 +104,7 @@ func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuService_UpdateMenu0_HTTPAgent_Handler(srv MenuServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in UpdateMenuRequest
 		if err := cctx.Bind(&in.Menu); err != nil {
@@ -116,7 +116,7 @@ func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationMenuAPIUpdateMenu)
+		http.SetOperation(cctx, OperationMenuServiceUpdateMenu)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateMenu(ctx, req.(*UpdateMenuRequest))
@@ -133,7 +133,7 @@ func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
+func _MenuService_DeleteMenu0_HTTPAgent_Handler(srv MenuServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in DeleteMenuRequest
 		if err := cctx.BindQuery(&in); err != nil {
@@ -142,7 +142,7 @@ func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(cctx, OperationMenuAPIDeleteMenu)
+		http.SetOperation(cctx, OperationMenuServiceDeleteMenu)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
@@ -159,11 +159,11 @@ func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 	}
 }
 
-func RegisterMenuAPIAgent(ag agent.HTTPAgent, srv MenuAPIAgent) {
+func RegisterMenuServiceAgent(ag agent.HTTPAgent, srv MenuServiceAgent) {
 	r := ag.Route()
-	r.GET("/sys/menus", _MenuAPI_ListMenus0_HTTPAgent_Handler(srv))
-	r.GET("/sys/menus/:id", _MenuAPI_GetMenu0_HTTPAgent_Handler(srv))
-	r.POST("/sys/menus", _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/menus/:menu.id", _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/menus/:id", _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv))
+	r.GET("/sys/menus", _MenuService_ListMenus0_HTTPAgent_Handler(srv))
+	r.GET("/sys/menus/:id", _MenuService_GetMenu0_HTTPAgent_Handler(srv))
+	r.POST("/sys/menus", _MenuService_CreateMenu0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/menus/:menu.id", _MenuService_UpdateMenu0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/menus/:id", _MenuService_DeleteMenu0_HTTPAgent_Handler(srv))
 }

@@ -100,7 +100,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	case userData == nil:
 		log.Warnf("User not found with username %s", data.Username)
 		return nil, dto.ErrInvalidUsername
-	case userData.Status != systemdto.UserStatusActivated:
+	case userData.Status != systemdto.UserStatusEnabled:
 		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:
@@ -153,24 +153,14 @@ func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) 
 	log.Debugf("Captcha image generated successfully")
 	response := new(dto.CaptchaImageResponse)
 	response.Headers = map[string]string{
-		"Cache-Control": "no-cache, no-store, must-revalidate",
-		"Pragma":        "no-cache",
-		"Expires":       "0",
-		"Content-Type":  "image/png",
+		"Cache-Control":        "no-cache, no-store, must-revalidate",
+		"Pragma":               "no-cache",
+		"Expires":              "0",
+		"Content-ResourceType": "image/png",
 	}
 	response.Image = buf.Bytes()
 	log.Debugf("Returning captcha image response with headers: %+v", response.Headers)
 	return response, nil
-}
-
-func (repo loginRepo) CurrentMenus(ctx context.Context, in *dto.CurrentMenusRequest) (*dto.CurrentMenusResponse, error) {
-	menus, err := repo.User.ListMenuByUserID(ctx, in.UserId)
-	if err != nil {
-		return nil, err
-	}
-	return &dto.CurrentMenusResponse{
-		Data: resp.Proto2AnyPBArray(menus...),
-	}, nil
 }
 
 func (repo loginRepo) CurrentUser(ctx context.Context, in *dto.CurrentUserRequest) (*dto.CurrentUserResponse, error) {
@@ -274,7 +264,7 @@ func (repo loginRepo) cfg() *configs.BasisConfig {
 type LoginData struct {
 	BasisConfig *configs.BasisConfig
 	Tokenizer   security.RefreshTokenizer
-	Menu        systemdto.MenuRepo
+	Resource    systemdto.ResourceRepo
 	Role        systemdto.RoleRepo
 	User        systemdto.UserRepo
 }

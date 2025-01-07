@@ -23,6 +23,8 @@ type PermissionResource struct {
 	PermissionID int64 `json:"permission_id,omitempty"`
 	// field.foreign_key.comment
 	ResourceID int64 `json:"resource_id,omitempty"`
+	// permission_resource.field.actions
+	Actions string `json:"actions,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionResourceQuery when eager-loading is set.
 	Edges        PermissionResourceEdges `json:"edges"`
@@ -69,6 +71,8 @@ func (*PermissionResource) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case permissionresource.FieldID, permissionresource.FieldPermissionID, permissionresource.FieldResourceID:
 			values[i] = new(sql.NullInt64)
+		case permissionresource.FieldActions:
+			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -101,6 +105,12 @@ func (pr *PermissionResource) assignValues(columns []string, values []any) error
 				return fmt.Errorf("unexpected type %T for field resource_id", values[i])
 			} else if value.Valid {
 				pr.ResourceID = value.Int64
+			}
+		case permissionresource.FieldActions:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field actions", values[i])
+			} else if value.Valid {
+				pr.Actions = value.String
 			}
 		default:
 			pr.selectValues.Set(columns[i], values[i])
@@ -153,6 +163,9 @@ func (pr *PermissionResource) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("resource_id=")
 	builder.WriteString(fmt.Sprintf("%v", pr.ResourceID))
+	builder.WriteString(", ")
+	builder.WriteString("actions=")
+	builder.WriteString(pr.Actions)
 	builder.WriteByte(')')
 	return builder.String()
 }

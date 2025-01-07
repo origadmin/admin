@@ -22,16 +22,16 @@ const (
 	FieldKeyword = "keyword"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldDescription holds the string denoting the description field in the database.
-	FieldDescription = "description"
+	// FieldTreePath holds the string denoting the tree_path field in the database.
+	FieldTreePath = "tree_path"
 	// FieldSequence holds the string denoting the sequence field in the database.
 	FieldSequence = "sequence"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldAncestors holds the string denoting the ancestors field in the database.
-	FieldAncestors = "ancestors"
 	// FieldLevel holds the string denoting the level field in the database.
 	FieldLevel = "level"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
 	// FieldParentID holds the string denoting the parent_id field in the database.
 	FieldParentID = "parent_id"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
@@ -98,11 +98,11 @@ var Columns = []string{
 	FieldUpdateTime,
 	FieldKeyword,
 	FieldName,
-	FieldDescription,
+	FieldTreePath,
 	FieldSequence,
 	FieldStatus,
-	FieldAncestors,
 	FieldLevel,
+	FieldDescription,
 	FieldParentID,
 }
 
@@ -132,26 +132,24 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// DefaultKeyword holds the default value on creation for the "keyword" field.
-	DefaultKeyword string
 	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	KeywordValidator func(string) error
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultTreePath holds the default value on creation for the "tree_path" field.
+	DefaultTreePath string
+	// TreePathValidator is a validator for the "tree_path" field. It is called by the builders before save.
+	TreePathValidator func(string) error
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus int8
+	// DefaultLevel holds the default value on creation for the "level" field.
+	DefaultLevel int
 	// DefaultDescription holds the default value on creation for the "description" field.
 	DefaultDescription string
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
-	// DefaultStatus holds the default value on creation for the "status" field.
-	DefaultStatus int8
-	// DefaultAncestors holds the default value on creation for the "ancestors" field.
-	DefaultAncestors string
-	// AncestorsValidator is a validator for the "ancestors" field. It is called by the builders before save.
-	AncestorsValidator func(string) error
-	// DefaultLevel holds the default value on creation for the "level" field.
-	DefaultLevel int
 	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	ParentIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.
@@ -188,9 +186,9 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByDescription orders the results by the description field.
-func ByDescription(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+// ByTreePath orders the results by the tree_path field.
+func ByTreePath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTreePath, opts...).ToFunc()
 }
 
 // BySequence orders the results by the sequence field.
@@ -203,14 +201,14 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
-// ByAncestors orders the results by the ancestors field.
-func ByAncestors(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAncestors, opts...).ToFunc()
-}
-
 // ByLevel orders the results by the level field.
 func ByLevel(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLevel, opts...).ToFunc()
+}
+
+// ByDescription orders the results by the description field.
+func ByDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
 // ByParentID orders the results by the parent_id field.

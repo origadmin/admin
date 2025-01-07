@@ -10,30 +10,30 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-// AuthAPIHTTPService is a menu service.
-type AuthAPIHTTPService struct {
-	pb.UnimplementedAuthAPIServer
+// AuthServiceHTTPServer is a menu service.
+type AuthServiceHTTPServer struct {
+	pb.UnimplementedAuthServiceServer
 
-	client pb.AuthAPIHTTPClient
+	client pb.AuthServiceHTTPClient
 }
 
-func (s AuthAPIHTTPService) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
+func (s AuthServiceHTTPServer) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
 	return s.client.ListAuthResources(ctx, request)
 }
 
-//func (m AuthAPIHTTPService) mustEmbedUnimplementedAuthAPIHTTPServer() {
+//func (m AuthServiceHTTPServer) mustEmbedUnimplementedAuthServiceHTTPServer() {
 //	//TODO implement me
 //	panic("implement me")
 //}
 
-// NewAuthAPIHTTPService new a menu service.
-func NewAuthAPIHTTPService(client pb.AuthAPIHTTPClient) *AuthAPIHTTPService {
-	return &AuthAPIHTTPService{client: client}
+// NewAuthServiceHTTPServer new a menu service.
+func NewAuthServiceHTTPServer(client pb.AuthServiceHTTPClient) *AuthServiceHTTPServer {
+	return &AuthServiceHTTPServer{client: client}
 }
 
-// NewAuthAPIHTTPServer new a menu service.
-func NewAuthAPIHTTPServer(client pb.AuthAPIHTTPClient) pb.AuthAPIServer {
-	return &AuthAPIHTTPService{client: client}
+// NewAuthServiceHTTPServerPB new a menu service.
+func NewAuthServiceHTTPServerPB(client pb.AuthServiceHTTPClient) pb.AuthServiceHTTPServer {
+	return &AuthServiceHTTPServer{client: client}
 }
 
-var _ pb.AuthAPIServer = (*AuthAPIHTTPService)(nil)
+var _ pb.AuthServiceServer = (*AuthServiceHTTPServer)(nil)

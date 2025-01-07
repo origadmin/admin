@@ -18,12 +18,8 @@ import (
 )
 
 type (
-	RoleEdges       = ent.RoleEdges
-	RoleEdgesPB     = pb.RoleEdges
-	RoleMenu        = ent.RoleMenu
-	RoleMenuPB      = pb.RoleMenu
-	RoleMenuEdges   = ent.RoleMenuEdges
-	RoleMenuEdgesPB = pb.RoleMenuEdges
+	RoleEdges   = ent.RoleEdges
+	RoleEdgesPB = pb.RoleEdges
 
 	ListRolesRequest  = pb.ListRolesRequest
 	ListRolesResponse = pb.ListRolesResponse

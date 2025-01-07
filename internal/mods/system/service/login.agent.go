@@ -7,7 +7,6 @@ package service
 import (
 	"net/http"
 
-	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
@@ -17,14 +16,14 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// LoginAPIAgentService is a Login service.
-type LoginAPIAgentService struct {
+// LoginServiceAgent is a Login service.
+type LoginServiceAgent struct {
 	resp.Response
 
-	client pb.LoginAPIClient
+	client pb.LoginServiceClient
 }
 
-func (s LoginAPIAgentService) CurrentLogout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+func (s LoginServiceAgent) CurrentLogout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Logout(ctx, request)
 	if err != nil {
@@ -38,7 +37,7 @@ func (s LoginAPIAgentService) CurrentLogout(ctx context.Context, request *pb.Log
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+func (s LoginServiceAgent) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Register(ctx, request)
 	if err != nil {
@@ -52,7 +51,7 @@ func (s LoginAPIAgentService) Register(ctx context.Context, request *pb.Register
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
+func (s LoginServiceAgent) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CaptchaResource(ctx, request)
 	if err != nil {
@@ -66,7 +65,7 @@ func (s LoginAPIAgentService) CaptchaResource(ctx context.Context, request *pb.C
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
+func (s LoginServiceAgent) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CaptchaResources(ctx, request)
 	if err != nil {
@@ -80,11 +79,11 @@ func (s LoginAPIAgentService) CaptchaResources(ctx context.Context, request *pb.
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaID(ctx context.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
+func (s LoginServiceAgent) CaptchaId(ctx context.Context, request *pb.CaptchaIdRequest) (*pb.CaptchaIdResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
-	log.Debugf("CaptchaID: Request:%+v", request)
-	response, err := s.client.CaptchaID(ctx, request)
-	log.Debugf("CaptchaID: Response:%+v, Error:%+v", response, err)
+	log.Debugf("CaptchaId: Request:%+v", request)
+	response, err := s.client.CaptchaId(ctx, request)
+	log.Debugf("CaptchaId: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
 		return nil, err
@@ -97,7 +96,7 @@ func (s LoginAPIAgentService) CaptchaID(ctx context.Context, request *pb.Captcha
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaImage(ctx context.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
+func (s LoginServiceAgent) CaptchaImage(ctx context.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	log.Debugf("CaptchaImage: Request:%+v", request)
 	response, err := s.client.CaptchaImage(ctx, request)
@@ -123,7 +122,7 @@ func (s LoginAPIAgentService) CaptchaImage(ctx context.Context, request *pb.Capt
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) TokenRefresh(ctx context.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
+func (s LoginServiceAgent) TokenRefresh(ctx context.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.TokenRefresh(ctx, request)
 	if err != nil {
@@ -137,7 +136,7 @@ func (s LoginAPIAgentService) TokenRefresh(ctx context.Context, request *pb.Toke
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
+func (s LoginServiceAgent) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Login(ctx, request)
 	if err != nil {
@@ -153,7 +152,7 @@ func (s LoginAPIAgentService) Login(ctx context.Context, request *pb.LoginReques
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+func (s LoginServiceAgent) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Logout(ctx, request)
 	if err != nil {
@@ -167,25 +166,18 @@ func (s LoginAPIAgentService) Logout(ctx context.Context, request *pb.LogoutRequ
 	return nil, nil
 }
 
-// NewLoginAPIAgentService new a Login service.
-func NewLoginAPIAgentService(client pb.LoginAPIClient) *LoginAPIAgentService {
-	return &LoginAPIAgentService{client: client}
+// NewLoginServiceAgent new a Login service.
+func NewLoginServiceAgent(client pb.LoginServiceClient) *LoginServiceAgent {
+	return &LoginServiceAgent{client: client}
 }
 
-// NewLoginAPIAgent new a Login service.
-func NewLoginAPIAgent(client pb.LoginAPIClient) pb.LoginAPIAgent {
-	return &LoginAPIAgentService{client: client}
+// NewLoginServiceAgentPB new a Login service.
+func NewLoginServiceAgentPB(client pb.LoginServiceClient) pb.LoginServiceAgent {
+	return &LoginServiceAgent{client: client}
 }
-func NewLoginServerAgent(client *service.GRPCClient) pb.LoginAPIAgent {
-	cli := pb.NewLoginAPIClient(client)
-	return NewLoginAPIAgent(cli)
-}
-
-func NewLoginServerAgentGINRegister(client *service.GRPCClient) func(server *transhttp.Server) {
-	cli := NewLoginServerAgent(client)
-	return func(server *transhttp.Server) {
-		pb.RegisterLoginAPIAgent(agent.NewHTTP(server), cli)
-	}
+func NewLoginServiceAgentClient(client *service.GRPCClient) pb.LoginServiceAgent {
+	cli := pb.NewLoginServiceClient(client)
+	return NewLoginServiceAgent(cli)
 }
 
-var _ pb.LoginAPIAgent = (*LoginAPIAgentService)(nil)
+var _ pb.LoginServiceAgent = (*LoginServiceAgent)(nil)

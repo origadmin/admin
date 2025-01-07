@@ -5,7 +5,6 @@ package ent
 import (
 	"encoding/json"
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"strings"
 	"time"
@@ -24,22 +23,38 @@ type Resource struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// resource.field.method
-	Method string `json:"method,omitempty"`
-	// resource.field.operation
-	Operation string `json:"operation,omitempty"`
-	// resource.field.path
-	Path string `json:"path,omitempty"`
-	// resource.field.uri
-	URI string `json:"uri,omitempty"`
+	// resource.field.name
+	Name string `json:"name,omitempty"`
+	// resource.field.keyword
+	Keyword string `json:"keyword,omitempty"`
 	// resource.field.i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
+	// resource.field.type
+	Type uint32 `json:"type,omitempty"`
+	// resource.field.status
+	Status int8 `json:"status,omitempty"`
+	// resource.field.uri
+	URI string `json:"uri,omitempty"`
+	// resource.field.operation
+	Operation string `json:"operation,omitempty"`
+	// resource.field.method
+	Method string `json:"method,omitempty"`
+	// resource.field.component
+	Component string `json:"component,omitempty"`
+	// resource.field.icon
+	Icon string `json:"icon,omitempty"`
+	// resource.field.sequence
+	Sequence int `json:"sequence,omitempty"`
+	// resource.field.visible
+	Visible bool `json:"visible,omitempty"`
+	// resource.field.tree_path
+	TreePath string `json:"tree_path,omitempty"`
+	// resource.field.properties
+	Properties map[string]string `json:"properties,omitempty"`
 	// resource.field.description
 	Description string `json:"description,omitempty"`
-	// resource.field.metadata
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
-	// resource.field.menu_id
-	MenuID int64 `json:"menu_id,omitempty"`
+	// resource.field.parent_id
+	ParentID int64 `json:"parent_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.
 	Edges        ResourceEdges `json:"edges"`
@@ -48,41 +63,52 @@ type Resource struct {
 
 // ResourceEdges holds the relations/edges for other nodes in the graph.
 type ResourceEdges struct {
-	// Menu holds the value of the menu edge.
-	Menu *Menu `json:"menu,omitempty"`
-	// Permission holds the value of the permission edge.
-	Permission []*Permission `json:"permission,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Resource `json:"children,omitempty"`
+	// Parent holds the value of the parent edge.
+	Parent *Resource `json:"parent,omitempty"`
+	// Permissions holds the value of the permissions edge.
+	Permissions []*Permission `json:"permissions,omitempty"`
 	// PermissionResources holds the value of the permission_resources edge.
 	PermissionResources []*PermissionResource `json:"permission_resources,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [4]bool
 }
 
-// MenuOrErr returns the Menu value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e ResourceEdges) MenuOrErr() (*Menu, error) {
-	if e.Menu != nil {
-		return e.Menu, nil
-	} else if e.loadedTypes[0] {
-		return nil, &NotFoundError{label: menu.Label}
-	}
-	return nil, &NotLoadedError{edge: "menu"}
-}
-
-// PermissionOrErr returns the Permission value or an error if the edge
+// ChildrenOrErr returns the Children value or an error if the edge
 // was not loaded in eager-loading.
-func (e ResourceEdges) PermissionOrErr() ([]*Permission, error) {
-	if e.loadedTypes[1] {
-		return e.Permission, nil
+func (e ResourceEdges) ChildrenOrErr() ([]*Resource, error) {
+	if e.loadedTypes[0] {
+		return e.Children, nil
 	}
-	return nil, &NotLoadedError{edge: "permission"}
+	return nil, &NotLoadedError{edge: "children"}
+}
+
+// ParentOrErr returns the Parent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ResourceEdges) ParentOrErr() (*Resource, error) {
+	if e.Parent != nil {
+		return e.Parent, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: resource.Label}
+	}
+	return nil, &NotLoadedError{edge: "parent"}
+}
+
+// PermissionsOrErr returns the Permissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e ResourceEdges) PermissionsOrErr() ([]*Permission, error) {
+	if e.loadedTypes[2] {
+		return e.Permissions, nil
+	}
+	return nil, &NotLoadedError{edge: "permissions"}
 }
 
 // PermissionResourcesOrErr returns the PermissionResources value or an error if the edge
 // was not loaded in eager-loading.
 func (e ResourceEdges) PermissionResourcesOrErr() ([]*PermissionResource, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.PermissionResources, nil
 	}
 	return nil, &NotLoadedError{edge: "permission_resources"}
@@ -93,11 +119,13 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case resource.FieldMetadata:
+		case resource.FieldProperties:
 			values[i] = new([]byte)
-		case resource.FieldID, resource.FieldMenuID:
+		case resource.FieldVisible:
+			values[i] = new(sql.NullBool)
+		case resource.FieldID, resource.FieldType, resource.FieldStatus, resource.FieldSequence, resource.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case resource.FieldMethod, resource.FieldOperation, resource.FieldPath, resource.FieldURI, resource.FieldI18nKey, resource.FieldDescription:
+		case resource.FieldName, resource.FieldKeyword, resource.FieldI18nKey, resource.FieldURI, resource.FieldOperation, resource.FieldMethod, resource.FieldComponent, resource.FieldIcon, resource.FieldTreePath, resource.FieldDescription:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -134,29 +162,17 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.UpdateTime = value.Time
 			}
-		case resource.FieldMethod:
+		case resource.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field method", values[i])
+				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Method = value.String
+				r.Name = value.String
 			}
-		case resource.FieldOperation:
+		case resource.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field operation", values[i])
+				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				r.Operation = value.String
-			}
-		case resource.FieldPath:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field path", values[i])
-			} else if value.Valid {
-				r.Path = value.String
-			}
-		case resource.FieldURI:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field uri", values[i])
-			} else if value.Valid {
-				r.URI = value.String
+				r.Keyword = value.String
 			}
 		case resource.FieldI18nKey:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -164,25 +180,85 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.I18nKey = value.String
 			}
+		case resource.FieldType:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field type", values[i])
+			} else if value.Valid {
+				r.Type = uint32(value.Int64)
+			}
+		case resource.FieldStatus:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				r.Status = int8(value.Int64)
+			}
+		case resource.FieldURI:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field uri", values[i])
+			} else if value.Valid {
+				r.URI = value.String
+			}
+		case resource.FieldOperation:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field operation", values[i])
+			} else if value.Valid {
+				r.Operation = value.String
+			}
+		case resource.FieldMethod:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field method", values[i])
+			} else if value.Valid {
+				r.Method = value.String
+			}
+		case resource.FieldComponent:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field component", values[i])
+			} else if value.Valid {
+				r.Component = value.String
+			}
+		case resource.FieldIcon:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field icon", values[i])
+			} else if value.Valid {
+				r.Icon = value.String
+			}
+		case resource.FieldSequence:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field sequence", values[i])
+			} else if value.Valid {
+				r.Sequence = int(value.Int64)
+			}
+		case resource.FieldVisible:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field visible", values[i])
+			} else if value.Valid {
+				r.Visible = value.Bool
+			}
+		case resource.FieldTreePath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
+			} else if value.Valid {
+				r.TreePath = value.String
+			}
+		case resource.FieldProperties:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field properties", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &r.Properties); err != nil {
+					return fmt.Errorf("unmarshal field properties: %w", err)
+				}
+			}
 		case resource.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				r.Description = value.String
 			}
-		case resource.FieldMetadata:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field metadata", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &r.Metadata); err != nil {
-					return fmt.Errorf("unmarshal field metadata: %w", err)
-				}
-			}
-		case resource.FieldMenuID:
+		case resource.FieldParentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field menu_id", values[i])
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				r.MenuID = value.Int64
+				r.ParentID = value.Int64
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -197,14 +273,19 @@ func (r *Resource) Value(name string) (ent.Value, error) {
 	return r.selectValues.Get(name)
 }
 
-// QueryMenu queries the "menu" edge of the Resource entity.
-func (r *Resource) QueryMenu() *MenuQuery {
-	return NewResourceClient(r.config).QueryMenu(r)
+// QueryChildren queries the "children" edge of the Resource entity.
+func (r *Resource) QueryChildren() *ResourceQuery {
+	return NewResourceClient(r.config).QueryChildren(r)
 }
 
-// QueryPermission queries the "permission" edge of the Resource entity.
-func (r *Resource) QueryPermission() *PermissionQuery {
-	return NewResourceClient(r.config).QueryPermission(r)
+// QueryParent queries the "parent" edge of the Resource entity.
+func (r *Resource) QueryParent() *ResourceQuery {
+	return NewResourceClient(r.config).QueryParent(r)
+}
+
+// QueryPermissions queries the "permissions" edge of the Resource entity.
+func (r *Resource) QueryPermissions() *PermissionQuery {
+	return NewResourceClient(r.config).QueryPermissions(r)
 }
 
 // QueryPermissionResources queries the "permission_resources" edge of the Resource entity.
@@ -241,29 +322,53 @@ func (r *Resource) String() string {
 	builder.WriteString("update_time=")
 	builder.WriteString(r.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("method=")
-	builder.WriteString(r.Method)
+	builder.WriteString("name=")
+	builder.WriteString(r.Name)
 	builder.WriteString(", ")
-	builder.WriteString("operation=")
-	builder.WriteString(r.Operation)
-	builder.WriteString(", ")
-	builder.WriteString("path=")
-	builder.WriteString(r.Path)
-	builder.WriteString(", ")
-	builder.WriteString("uri=")
-	builder.WriteString(r.URI)
+	builder.WriteString("keyword=")
+	builder.WriteString(r.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("i18n_key=")
 	builder.WriteString(r.I18nKey)
 	builder.WriteString(", ")
+	builder.WriteString("type=")
+	builder.WriteString(fmt.Sprintf("%v", r.Type))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", r.Status))
+	builder.WriteString(", ")
+	builder.WriteString("uri=")
+	builder.WriteString(r.URI)
+	builder.WriteString(", ")
+	builder.WriteString("operation=")
+	builder.WriteString(r.Operation)
+	builder.WriteString(", ")
+	builder.WriteString("method=")
+	builder.WriteString(r.Method)
+	builder.WriteString(", ")
+	builder.WriteString("component=")
+	builder.WriteString(r.Component)
+	builder.WriteString(", ")
+	builder.WriteString("icon=")
+	builder.WriteString(r.Icon)
+	builder.WriteString(", ")
+	builder.WriteString("sequence=")
+	builder.WriteString(fmt.Sprintf("%v", r.Sequence))
+	builder.WriteString(", ")
+	builder.WriteString("visible=")
+	builder.WriteString(fmt.Sprintf("%v", r.Visible))
+	builder.WriteString(", ")
+	builder.WriteString("tree_path=")
+	builder.WriteString(r.TreePath)
+	builder.WriteString(", ")
+	builder.WriteString("properties=")
+	builder.WriteString(fmt.Sprintf("%v", r.Properties))
+	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(r.Description)
 	builder.WriteString(", ")
-	builder.WriteString("metadata=")
-	builder.WriteString(fmt.Sprintf("%v", r.Metadata))
-	builder.WriteString(", ")
-	builder.WriteString("menu_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.MenuID))
+	builder.WriteString("parent_id=")
+	builder.WriteString(fmt.Sprintf("%v", r.ParentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -922,22 +922,22 @@ var _ interface {
 	ErrorName() string
 } = CurrentUserResponseValidationError{}
 
-// Validate checks the field values on CaptchaIDRequest with the rules defined
+// Validate checks the field values on CaptchaIdRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *CaptchaIDRequest) Validate() error {
+func (m *CaptchaIdRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CaptchaIDRequest with the rules
+// ValidateAll checks the field values on CaptchaIdRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CaptchaIDRequestMultiError, or nil if none found.
-func (m *CaptchaIDRequest) ValidateAll() error {
+// CaptchaIdRequestMultiError, or nil if none found.
+func (m *CaptchaIdRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CaptchaIDRequest) validate(all bool) error {
+func (m *CaptchaIdRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -947,19 +947,19 @@ func (m *CaptchaIDRequest) validate(all bool) error {
 	// no validation rules for Ts
 
 	if len(errors) > 0 {
-		return CaptchaIDRequestMultiError(errors)
+		return CaptchaIdRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CaptchaIDRequestMultiError is an error wrapping multiple validation errors
-// returned by CaptchaIDRequest.ValidateAll() if the designated constraints
+// CaptchaIdRequestMultiError is an error wrapping multiple validation errors
+// returned by CaptchaIdRequest.ValidateAll() if the designated constraints
 // aren't met.
-type CaptchaIDRequestMultiError []error
+type CaptchaIdRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CaptchaIDRequestMultiError) Error() string {
+func (m CaptchaIdRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -968,11 +968,11 @@ func (m CaptchaIDRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CaptchaIDRequestMultiError) AllErrors() []error { return m }
+func (m CaptchaIdRequestMultiError) AllErrors() []error { return m }
 
-// CaptchaIDRequestValidationError is the validation error returned by
-// CaptchaIDRequest.Validate if the designated constraints aren't met.
-type CaptchaIDRequestValidationError struct {
+// CaptchaIdRequestValidationError is the validation error returned by
+// CaptchaIdRequest.Validate if the designated constraints aren't met.
+type CaptchaIdRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -980,22 +980,22 @@ type CaptchaIDRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CaptchaIDRequestValidationError) Field() string { return e.field }
+func (e CaptchaIdRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CaptchaIDRequestValidationError) Reason() string { return e.reason }
+func (e CaptchaIdRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CaptchaIDRequestValidationError) Cause() error { return e.cause }
+func (e CaptchaIdRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CaptchaIDRequestValidationError) Key() bool { return e.key }
+func (e CaptchaIdRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CaptchaIDRequestValidationError) ErrorName() string { return "CaptchaIDRequestValidationError" }
+func (e CaptchaIdRequestValidationError) ErrorName() string { return "CaptchaIdRequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e CaptchaIDRequestValidationError) Error() string {
+func (e CaptchaIdRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1007,14 +1007,14 @@ func (e CaptchaIDRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCaptchaIDRequest.%s: %s%s",
+		"invalid %sCaptchaIdRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CaptchaIDRequestValidationError{}
+var _ error = CaptchaIdRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1022,24 +1022,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CaptchaIDRequestValidationError{}
+} = CaptchaIdRequestValidationError{}
 
-// Validate checks the field values on CaptchaIDResponse with the rules defined
+// Validate checks the field values on CaptchaIdResponse with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *CaptchaIDResponse) Validate() error {
+func (m *CaptchaIdResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CaptchaIDResponse with the rules
+// ValidateAll checks the field values on CaptchaIdResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CaptchaIDResponseMultiError, or nil if none found.
-func (m *CaptchaIDResponse) ValidateAll() error {
+// CaptchaIdResponseMultiError, or nil if none found.
+func (m *CaptchaIdResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CaptchaIDResponse) validate(all bool) error {
+func (m *CaptchaIdResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1049,19 +1049,19 @@ func (m *CaptchaIDResponse) validate(all bool) error {
 	// no validation rules for Data
 
 	if len(errors) > 0 {
-		return CaptchaIDResponseMultiError(errors)
+		return CaptchaIdResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// CaptchaIDResponseMultiError is an error wrapping multiple validation errors
-// returned by CaptchaIDResponse.ValidateAll() if the designated constraints
+// CaptchaIdResponseMultiError is an error wrapping multiple validation errors
+// returned by CaptchaIdResponse.ValidateAll() if the designated constraints
 // aren't met.
-type CaptchaIDResponseMultiError []error
+type CaptchaIdResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CaptchaIDResponseMultiError) Error() string {
+func (m CaptchaIdResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1070,11 +1070,11 @@ func (m CaptchaIDResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CaptchaIDResponseMultiError) AllErrors() []error { return m }
+func (m CaptchaIdResponseMultiError) AllErrors() []error { return m }
 
-// CaptchaIDResponseValidationError is the validation error returned by
-// CaptchaIDResponse.Validate if the designated constraints aren't met.
-type CaptchaIDResponseValidationError struct {
+// CaptchaIdResponseValidationError is the validation error returned by
+// CaptchaIdResponse.Validate if the designated constraints aren't met.
+type CaptchaIdResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1082,24 +1082,24 @@ type CaptchaIDResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e CaptchaIDResponseValidationError) Field() string { return e.field }
+func (e CaptchaIdResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CaptchaIDResponseValidationError) Reason() string { return e.reason }
+func (e CaptchaIdResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CaptchaIDResponseValidationError) Cause() error { return e.cause }
+func (e CaptchaIdResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CaptchaIDResponseValidationError) Key() bool { return e.key }
+func (e CaptchaIdResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CaptchaIDResponseValidationError) ErrorName() string {
-	return "CaptchaIDResponseValidationError"
+func (e CaptchaIdResponseValidationError) ErrorName() string {
+	return "CaptchaIdResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CaptchaIDResponseValidationError) Error() string {
+func (e CaptchaIdResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1111,14 +1111,14 @@ func (e CaptchaIDResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCaptchaIDResponse.%s: %s%s",
+		"invalid %sCaptchaIdResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CaptchaIDResponseValidationError{}
+var _ error = CaptchaIdResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -1126,7 +1126,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CaptchaIDResponseValidationError{}
+} = CaptchaIdResponseValidationError{}
 
 // Validate checks the field values on CaptchaImageRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1471,277 +1471,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CaptchaImageResponseValidationError{}
-
-// Validate checks the field values on CurrentMenusRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CurrentMenusRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CurrentMenusRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CurrentMenusRequestMultiError, or nil if none found.
-func (m *CurrentMenusRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CurrentMenusRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for UserId
-
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CurrentMenusRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CurrentMenusRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CurrentMenusRequestValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return CurrentMenusRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// CurrentMenusRequestMultiError is an error wrapping multiple validation
-// errors returned by CurrentMenusRequest.ValidateAll() if the designated
-// constraints aren't met.
-type CurrentMenusRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CurrentMenusRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CurrentMenusRequestMultiError) AllErrors() []error { return m }
-
-// CurrentMenusRequestValidationError is the validation error returned by
-// CurrentMenusRequest.Validate if the designated constraints aren't met.
-type CurrentMenusRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CurrentMenusRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CurrentMenusRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CurrentMenusRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CurrentMenusRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CurrentMenusRequestValidationError) ErrorName() string {
-	return "CurrentMenusRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CurrentMenusRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCurrentMenusRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CurrentMenusRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CurrentMenusRequestValidationError{}
-
-// Validate checks the field values on CurrentMenusResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CurrentMenusResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CurrentMenusResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CurrentMenusResponseMultiError, or nil if none found.
-func (m *CurrentMenusResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CurrentMenusResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	for idx, item := range m.GetData() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, CurrentMenusResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, CurrentMenusResponseValidationError{
-						field:  fmt.Sprintf("Data[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return CurrentMenusResponseValidationError{
-					field:  fmt.Sprintf("Data[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return CurrentMenusResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// CurrentMenusResponseMultiError is an error wrapping multiple validation
-// errors returned by CurrentMenusResponse.ValidateAll() if the designated
-// constraints aren't met.
-type CurrentMenusResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CurrentMenusResponseMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CurrentMenusResponseMultiError) AllErrors() []error { return m }
-
-// CurrentMenusResponseValidationError is the validation error returned by
-// CurrentMenusResponse.Validate if the designated constraints aren't met.
-type CurrentMenusResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CurrentMenusResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CurrentMenusResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CurrentMenusResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CurrentMenusResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CurrentMenusResponseValidationError) ErrorName() string {
-	return "CurrentMenusResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CurrentMenusResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCurrentMenusResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CurrentMenusResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CurrentMenusResponseValidationError{}
 
 // Validate checks the field values on CaptchaResourcesRequest with the rules
 // defined in the proto definition for this message. If any rules are
