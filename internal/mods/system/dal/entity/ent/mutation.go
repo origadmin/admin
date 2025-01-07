@@ -3117,6 +3117,7 @@ type PositionMutation struct {
 	create_time                 *time.Time
 	update_time                 *time.Time
 	name                        *string
+	keyword                     *string
 	description                 *string
 	clearedFields               map[string]struct{}
 	department                  *int64
@@ -3348,6 +3349,42 @@ func (m *PositionMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *PositionMutation) ResetName() {
 	m.name = nil
+}
+
+// SetKeyword sets the "keyword" field.
+func (m *PositionMutation) SetKeyword(s string) {
+	m.keyword = &s
+}
+
+// Keyword returns the value of the "keyword" field in the mutation.
+func (m *PositionMutation) Keyword() (r string, exists bool) {
+	v := m.keyword
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKeyword returns the old "keyword" field's value of the Position entity.
+// If the Position object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PositionMutation) OldKeyword(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKeyword is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKeyword requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKeyword: %w", err)
+	}
+	return oldValue.Keyword, nil
+}
+
+// ResetKeyword resets all changes to the "keyword" field.
+func (m *PositionMutation) ResetKeyword() {
+	m.keyword = nil
 }
 
 // SetDescription sets the "description" field.
@@ -3699,7 +3736,7 @@ func (m *PositionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PositionMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.create_time != nil {
 		fields = append(fields, position.FieldCreateTime)
 	}
@@ -3708,6 +3745,9 @@ func (m *PositionMutation) Fields() []string {
 	}
 	if m.name != nil {
 		fields = append(fields, position.FieldName)
+	}
+	if m.keyword != nil {
+		fields = append(fields, position.FieldKeyword)
 	}
 	if m.description != nil {
 		fields = append(fields, position.FieldDescription)
@@ -3729,6 +3769,8 @@ func (m *PositionMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdateTime()
 	case position.FieldName:
 		return m.Name()
+	case position.FieldKeyword:
+		return m.Keyword()
 	case position.FieldDescription:
 		return m.Description()
 	case position.FieldDepartmentID:
@@ -3748,6 +3790,8 @@ func (m *PositionMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldUpdateTime(ctx)
 	case position.FieldName:
 		return m.OldName(ctx)
+	case position.FieldKeyword:
+		return m.OldKeyword(ctx)
 	case position.FieldDescription:
 		return m.OldDescription(ctx)
 	case position.FieldDepartmentID:
@@ -3781,6 +3825,13 @@ func (m *PositionMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case position.FieldKeyword:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKeyword(v)
 		return nil
 	case position.FieldDescription:
 		v, ok := value.(string)
@@ -3856,6 +3907,9 @@ func (m *PositionMutation) ResetField(name string) error {
 		return nil
 	case position.FieldName:
 		m.ResetName()
+		return nil
+	case position.FieldKeyword:
+		m.ResetKeyword()
 		return nil
 	case position.FieldDescription:
 		m.ResetDescription()

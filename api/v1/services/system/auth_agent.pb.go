@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type AuthServiceAgent interface {
+	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// CreateToken CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
@@ -156,6 +157,32 @@ func _AuthService_Authenticate0_HTTPAgent_Handler(srv AuthServiceAgent) http.Han
 	}
 }
 
+func _AuthService_AuthLogout0_HTTPAgent_Handler(srv AuthServiceAgent) http.HandlerFunc {
+	return func(cctx http.Context) error {
+		var in AuthLogoutRequest
+		if err := cctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := cctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(cctx, OperationAuthServiceAuthLogout)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
+			return srv.AuthLogout(ctx, req.(*AuthLogoutRequest))
+		})
+		out, err := h(cctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AuthLogoutResponse)
+		if reply == nil {
+			return nil
+		}
+		return cctx.Result(200, reply)
+	}
+}
+
 func RegisterAuthServiceAgent(ag agent.HTTPAgent, srv AuthServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_HTTPAgent_Handler(srv))
@@ -163,4 +190,5 @@ func RegisterAuthServiceAgent(ag agent.HTTPAgent, srv AuthServiceAgent) {
 	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_HTTPAgent_Handler(srv))
 	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_HTTPAgent_Handler(srv))
 	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_HTTPAgent_Handler(srv))
+	r.POST("/sys/auth/logout", _AuthService_AuthLogout0_HTTPAgent_Handler(srv))
 }

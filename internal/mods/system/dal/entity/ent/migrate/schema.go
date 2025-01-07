@@ -141,6 +141,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "position.field.name"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "position.field.keyword"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "position.field.description", Default: ""},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "department.field.department_id"},
 	}
@@ -153,7 +154,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_positions_sys_departments_positions",
-				Columns:    []*schema.Column{SysPositionsColumns[5]},
+				Columns:    []*schema.Column{SysPositionsColumns[6]},
 				RefColumns: []*schema.Column{SysDepartmentsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

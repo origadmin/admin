@@ -35,6 +35,268 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on AuthLogoutRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *AuthLogoutRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AuthLogoutRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// AuthLogoutRequestMultiError, or nil if none found.
+func (m *AuthLogoutRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AuthLogoutRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AuthLogoutRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AuthLogoutRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AuthLogoutRequestValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return AuthLogoutRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// AuthLogoutRequestMultiError is an error wrapping multiple validation errors
+// returned by AuthLogoutRequest.ValidateAll() if the designated constraints
+// aren't met.
+type AuthLogoutRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AuthLogoutRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AuthLogoutRequestMultiError) AllErrors() []error { return m }
+
+// AuthLogoutRequestValidationError is the validation error returned by
+// AuthLogoutRequest.Validate if the designated constraints aren't met.
+type AuthLogoutRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AuthLogoutRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AuthLogoutRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AuthLogoutRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AuthLogoutRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AuthLogoutRequestValidationError) ErrorName() string {
+	return "AuthLogoutRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e AuthLogoutRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAuthLogoutRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AuthLogoutRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AuthLogoutRequestValidationError{}
+
+// Validate checks the field values on AuthLogoutResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *AuthLogoutResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AuthLogoutResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// AuthLogoutResponseMultiError, or nil if none found.
+func (m *AuthLogoutResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AuthLogoutResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetEmpty()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AuthLogoutResponseValidationError{
+					field:  "Empty",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AuthLogoutResponseValidationError{
+					field:  "Empty",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEmpty()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AuthLogoutResponseValidationError{
+				field:  "Empty",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return AuthLogoutResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// AuthLogoutResponseMultiError is an error wrapping multiple validation errors
+// returned by AuthLogoutResponse.ValidateAll() if the designated constraints
+// aren't met.
+type AuthLogoutResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AuthLogoutResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AuthLogoutResponseMultiError) AllErrors() []error { return m }
+
+// AuthLogoutResponseValidationError is the validation error returned by
+// AuthLogoutResponse.Validate if the designated constraints aren't met.
+type AuthLogoutResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AuthLogoutResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AuthLogoutResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AuthLogoutResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AuthLogoutResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AuthLogoutResponseValidationError) ErrorName() string {
+	return "AuthLogoutResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e AuthLogoutResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAuthLogoutResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AuthLogoutResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AuthLogoutResponseValidationError{}
+
 // Validate checks the field values on ListAuthResourcesRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1224,6 +1486,110 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = AuthenticateResponseValidationError{}
+
+// Validate checks the field values on AuthLogoutRequest_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *AuthLogoutRequest_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AuthLogoutRequest_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// AuthLogoutRequest_DataMultiError, or nil if none found.
+func (m *AuthLogoutRequest_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AuthLogoutRequest_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Token
+
+	if len(errors) > 0 {
+		return AuthLogoutRequest_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// AuthLogoutRequest_DataMultiError is an error wrapping multiple validation
+// errors returned by AuthLogoutRequest_Data.ValidateAll() if the designated
+// constraints aren't met.
+type AuthLogoutRequest_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AuthLogoutRequest_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AuthLogoutRequest_DataMultiError) AllErrors() []error { return m }
+
+// AuthLogoutRequest_DataValidationError is the validation error returned by
+// AuthLogoutRequest_Data.Validate if the designated constraints aren't met.
+type AuthLogoutRequest_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AuthLogoutRequest_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AuthLogoutRequest_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AuthLogoutRequest_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AuthLogoutRequest_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AuthLogoutRequest_DataValidationError) ErrorName() string {
+	return "AuthLogoutRequest_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e AuthLogoutRequest_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAuthLogoutRequest_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AuthLogoutRequest_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AuthLogoutRequest_DataValidationError{}
 
 // Validate checks the field values on CreateTokenRequest_Data with the rules
 // defined in the proto definition for this message. If any rules are

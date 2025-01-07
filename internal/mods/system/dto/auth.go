@@ -25,6 +25,7 @@ type AuthRepo interface {
 	ValidateToken(context.Context, *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error)
 	DestroyToken(context.Context, *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error)
 	Authenticate(context.Context, *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error)
+	AuthLogout(context.Context, *pb.AuthLogoutRequest) (*pb.AuthLogoutResponse, error)
 }
 
 type AuthResourceQueryOption struct {

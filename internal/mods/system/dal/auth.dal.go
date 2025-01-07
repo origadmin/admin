@@ -26,6 +26,11 @@ type authRepo struct {
 	Authorizer security.Authorizer
 }
 
+func (repo authRepo) AuthLogout(ctx context.Context, request *pb.AuthLogoutRequest) (*pb.AuthLogoutResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (repo authRepo) CreateToken(ctx context.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
 	claims := security.ClaimsFromContext(ctx)
 	token, err := repo.Tokenizer.CreateToken(ctx, claims)

@@ -26,6 +26,7 @@ import (
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -46,7 +47,7 @@ var ProviderSet = wire.NewSet(
 	NewData,
 	NewAuthRepo,
 	NewLoginRepo,
-	NewCurrentRepo,
+	NewPersonalRepo,
 	NewMenuRepo,
 	NewResourceRepo,
 	NewRoleRepo,
@@ -137,18 +138,53 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}, nil
 }
 
+// Position position.table.comment
+type Position struct {
+	Id                int64  `json:"id,omitempty"`
+	CreateTime        int64  `json:"create_time,omitempty"`
+	UpdateTime        int64  `json:"update_time,omitempty"`
+	Name              string `json:"name,omitempty"`
+	Keyword           string `json:"keyword,omitempty"`
+	Description       string `json:"description,omitempty"`
+	DepartmentId      int64  `json:"department_id,omitempty"`
+	DepartmentKeyword string `json:"department_keyword,omitempty"`
+}
+
+type DataInit struct {
+	Name string
+	Func func(ctx context.Context, filename string) error
+}
+
 func (obj *Data) InitDataFromPath(ctx context.Context, path string) error {
-	initFuncs := map[string]func(ctx context.Context, filename string) error{
-		"resource":   obj.InitResourceFromFile,
-		"role":       obj.InitRoleFromFile,
-		"user":       obj.InitUserFromFile,
-		"department": obj.InitDepartmentFromFile,
-		"position":   obj.InitPositionFromFile,
-		"permission": obj.InitPermissionFromFile,
+	initFuncs := []DataInit{
+		{
+			Name: "resource",
+			Func: obj.InitResourceFromFile,
+		},
+		{
+			Name: "role",
+			Func: obj.InitRoleFromFile,
+		},
+		{
+			Name: "user",
+			Func: obj.InitUserFromFile,
+		},
+		{
+			Name: "department",
+			Func: obj.InitDepartmentFromFile,
+		},
+		{
+			Name: "position",
+			Func: obj.InitPositionFromFile,
+		},
+		{
+			Name: "permission",
+			Func: obj.InitPermissionFromFile,
+		},
 	}
-	for name, fn := range initFuncs {
-		name = filepath.Join(path, name+".json")
-		err := fn(ctx, name)
+	for _, di := range initFuncs {
+		di.Name = filepath.Join(path, di.Name+".json")
+		err := di.Func(ctx, di.Name)
 		if err != nil {
 			return err
 		}
@@ -402,11 +438,11 @@ func (obj *Data) InitDepartmentFromFile(ctx context.Context, filename string) er
 		return err
 	}
 	return obj.Tx(ctx, func(ctx context.Context) error {
-		return obj.createDepartmentBatch(ctx, departments)
+		return obj.createDepartmentBatch(ctx, departments, nil)
 	})
 }
 
-func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.DepartmentPB) error {
+func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.DepartmentPB, parent *dto.DepartmentPB) error {
 	total := len(departments)
 	log.Infow("msg", "Starting createDepartmentBatch", "totalItems", total)
 	for i, item := range departments {
@@ -415,11 +451,25 @@ func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.D
 			item.Id = id.Gen()
 			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 		}
+		if parent != nil {
+			item.ParentId = parent.Id
+			item.TreePath = parent.TreePath + strconv.Itoa(int(parent.Id)) + TreePathDelimiter
+		}
+
 		if _, err := obj.Department(ctx).Create().SetDepartment(dto.ConvertDepartmentPB2Object(item)).Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating department item", "itemId", item.Id, "error", err)
 			return err
 		}
+
 		log.Infow("msg", "Department item created successfully", "itemId", item.Id)
+		if len(item.Children) != 0 {
+			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))
+			if err := obj.createDepartmentBatch(ctx, item.Children, item); err != nil {
+				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
+				return err
+			}
+			log.Infow("msg", "Children processed successfully", "itemId", item.Id)
+		}
 	}
 	log.Infow("msg", "Finished createDepartmentBatch")
 	return nil
@@ -430,7 +480,7 @@ func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) erro
 	if err != nil {
 		return err
 	}
-	var positions []*dto.PositionPB
+	var positions []*Position
 	err = codec.DecodeFromFile(abs, &positions)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -444,7 +494,7 @@ func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) erro
 	})
 }
 
-func (obj *Data) createPositionBatch(ctx context.Context, positions []*dto.PositionPB) error {
+func (obj *Data) createPositionBatch(ctx context.Context, positions []*Position) error {
 	total := len(positions)
 	log.Infow("msg", "Starting createPositionBatch", "totalItems", total)
 	for i, item := range positions {
@@ -453,7 +503,20 @@ func (obj *Data) createPositionBatch(ctx context.Context, positions []*dto.Posit
 			item.Id = id.Gen()
 			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 		}
-		if _, err := obj.Position(ctx).Create().SetPosition(dto.ConvertPositionPB2Object(item)).Save(ctx); err != nil {
+		dept, err := obj.Department(ctx).Query().Where(department.Keyword(item.DepartmentKeyword)).Only(ctx)
+		if err != nil {
+			return err
+		}
+
+		if _, err := obj.Position(ctx).Create().SetPosition(&dto.Position{
+			ID:           item.Id,
+			CreateTime:   time.Now(),
+			UpdateTime:   time.Now(),
+			Name:         item.Name,
+			Keyword:      item.Keyword,
+			Description:  item.Description,
+			DepartmentID: dept.ID,
+		}).Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating position item", "itemId", item.Id, "error", err)
 			return err
 		}

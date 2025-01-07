@@ -1460,16 +1460,22 @@ type Department struct {
 	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// department.field.name
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
-	// department.field.description
-	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	// menu.field.tree_path
+	TreePath string `protobuf:"bytes,6,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// department.field.sequence
 	Sequence int32 `protobuf:"varint,7,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// department.field.status
 	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
 	// department.field.level
-	Level int32 `protobuf:"varint,10,opt,name=level,proto3" json:"level,omitempty"`
+	Level int32 `protobuf:"varint,9,opt,name=level,proto3" json:"level,omitempty"`
+	// department.field.description
+	Description string `protobuf:"bytes,10,opt,name=description,proto3" json:"description,omitempty"`
 	// department.field.parent_id
 	ParentId int64 `protobuf:"varint,11,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Department `protobuf:"bytes,12,rep,name=children,proto3" json:"children,omitempty"`
+	// Parent holds the value of the parent edge.
+	Parent *Department `protobuf:"bytes,13,opt,name=parent,proto3" json:"parent,omitempty"`
 }
 
 func (x *Department) Reset() {
@@ -1537,9 +1543,9 @@ func (x *Department) GetName() string {
 	return ""
 }
 
-func (x *Department) GetDescription() string {
+func (x *Department) GetTreePath() string {
 	if x != nil {
-		return x.Description
+		return x.TreePath
 	}
 	return ""
 }
@@ -1565,11 +1571,246 @@ func (x *Department) GetLevel() int32 {
 	return 0
 }
 
+func (x *Department) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
 func (x *Department) GetParentId() int64 {
 	if x != nil {
 		return x.ParentId
 	}
 	return 0
+}
+
+func (x *Department) GetChildren() []*Department {
+	if x != nil {
+		return x.Children
+	}
+	return nil
+}
+
+func (x *Department) GetParent() *Department {
+	if x != nil {
+		return x.Parent
+	}
+	return nil
+}
+
+type DepartmentEdges struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Users holds the value of the users edge.
+	Users []*User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	// Positions holds the value of the positions edge.
+	Positions []*Position `protobuf:"bytes,2,rep,name=positions,proto3" json:"positions,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Department `protobuf:"bytes,3,rep,name=children,proto3" json:"children,omitempty"`
+	// Parent holds the value of the parent edge.
+	Parent *Department `protobuf:"bytes,4,opt,name=parent,proto3" json:"parent,omitempty"`
+	// UserDepartments holds the value of the user_departments edge.
+	UserDepartments []*UserDepartment `protobuf:"bytes,5,rep,name=user_departments,proto3" json:"user_departments,omitempty"`
+}
+
+func (x *DepartmentEdges) Reset() {
+	*x = DepartmentEdges{}
+	mi := &file_system_types_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DepartmentEdges) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DepartmentEdges) ProtoMessage() {}
+
+func (x *DepartmentEdges) ProtoReflect() protoreflect.Message {
+	mi := &file_system_types_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DepartmentEdges.ProtoReflect.Descriptor instead.
+func (*DepartmentEdges) Descriptor() ([]byte, []int) {
+	return file_system_types_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *DepartmentEdges) GetUsers() []*User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+func (x *DepartmentEdges) GetPositions() []*Position {
+	if x != nil {
+		return x.Positions
+	}
+	return nil
+}
+
+func (x *DepartmentEdges) GetChildren() []*Department {
+	if x != nil {
+		return x.Children
+	}
+	return nil
+}
+
+func (x *DepartmentEdges) GetParent() *Department {
+	if x != nil {
+		return x.Parent
+	}
+	return nil
+}
+
+func (x *DepartmentEdges) GetUserDepartments() []*UserDepartment {
+	if x != nil {
+		return x.UserDepartments
+	}
+	return nil
+}
+
+// user_department.table.comment
+type UserDepartment struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// ID of the ent.
+	// field.primary_key.comment
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// field.foreign_key.comment
+	UserId int64 `protobuf:"varint,2,opt,name=user_id,proto3" json:"user_id,omitempty"`
+	// field.foreign_key.comment
+	DepartmentId int64 `protobuf:"varint,3,opt,name=department_id,proto3" json:"department_id,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserDepartmentQuery when eager-loading is set.
+	Edges *UserDepartmentEdges `protobuf:"bytes,4,opt,name=edges,proto3" json:"edges,omitempty"`
+}
+
+func (x *UserDepartment) Reset() {
+	*x = UserDepartment{}
+	mi := &file_system_types_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserDepartment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserDepartment) ProtoMessage() {}
+
+func (x *UserDepartment) ProtoReflect() protoreflect.Message {
+	mi := &file_system_types_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserDepartment.ProtoReflect.Descriptor instead.
+func (*UserDepartment) Descriptor() ([]byte, []int) {
+	return file_system_types_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *UserDepartment) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UserDepartment) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *UserDepartment) GetDepartmentId() int64 {
+	if x != nil {
+		return x.DepartmentId
+	}
+	return 0
+}
+
+func (x *UserDepartment) GetEdges() *UserDepartmentEdges {
+	if x != nil {
+		return x.Edges
+	}
+	return nil
+}
+
+// UserDepartmentEdges holds the relations/edges for other nodes in the graph.
+type UserDepartmentEdges struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// User holds the value of the user edge.
+	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	// Department holds the value of the department edge.
+	Department *Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
+}
+
+func (x *UserDepartmentEdges) Reset() {
+	*x = UserDepartmentEdges{}
+	mi := &file_system_types_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserDepartmentEdges) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserDepartmentEdges) ProtoMessage() {}
+
+func (x *UserDepartmentEdges) ProtoReflect() protoreflect.Message {
+	mi := &file_system_types_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserDepartmentEdges.ProtoReflect.Descriptor instead.
+func (*UserDepartmentEdges) Descriptor() ([]byte, []int) {
+	return file_system_types_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *UserDepartmentEdges) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+func (x *UserDepartmentEdges) GetDepartment() *Department {
+	if x != nil {
+		return x.Department
+	}
+	return nil
 }
 
 // position.table.comment
@@ -1587,15 +1828,17 @@ type Position struct {
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
 	// position.field.name
 	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	// position.field.keyword
+	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// position.field.description
-	Description string `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
 	// department.field.department_id
-	DepartmentId int64 `protobuf:"varint,6,opt,name=department_id,proto3" json:"department_id,omitempty"`
+	DepartmentId int64 `protobuf:"varint,7,opt,name=department_id,proto3" json:"department_id,omitempty"`
 }
 
 func (x *Position) Reset() {
 	*x = Position{}
-	mi := &file_system_types_proto_msgTypes[13]
+	mi := &file_system_types_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1607,7 +1850,7 @@ func (x *Position) String() string {
 func (*Position) ProtoMessage() {}
 
 func (x *Position) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[13]
+	mi := &file_system_types_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1620,7 +1863,7 @@ func (x *Position) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Position.ProtoReflect.Descriptor instead.
 func (*Position) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{13}
+	return file_system_types_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *Position) GetId() int64 {
@@ -1647,6 +1890,13 @@ func (x *Position) GetUpdateTime() *timestamppb.Timestamp {
 func (x *Position) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *Position) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
 	}
 	return ""
 }
@@ -1685,7 +1935,7 @@ type PositionEdges struct {
 
 func (x *PositionEdges) Reset() {
 	*x = PositionEdges{}
-	mi := &file_system_types_proto_msgTypes[14]
+	mi := &file_system_types_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1697,7 +1947,7 @@ func (x *PositionEdges) String() string {
 func (*PositionEdges) ProtoMessage() {}
 
 func (x *PositionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[14]
+	mi := &file_system_types_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1710,7 +1960,7 @@ func (x *PositionEdges) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PositionEdges.ProtoReflect.Descriptor instead.
 func (*PositionEdges) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{14}
+	return file_system_types_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *PositionEdges) GetDepartment() *Department {
@@ -1775,7 +2025,7 @@ type Permission struct {
 
 func (x *Permission) Reset() {
 	*x = Permission{}
-	mi := &file_system_types_proto_msgTypes[15]
+	mi := &file_system_types_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1787,7 +2037,7 @@ func (x *Permission) String() string {
 func (*Permission) ProtoMessage() {}
 
 func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[15]
+	mi := &file_system_types_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1800,7 +2050,7 @@ func (x *Permission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Permission.ProtoReflect.Descriptor instead.
 func (*Permission) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{15}
+	return file_system_types_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *Permission) GetId() int64 {
@@ -1881,7 +2131,7 @@ type PermissionEdges struct {
 
 func (x *PermissionEdges) Reset() {
 	*x = PermissionEdges{}
-	mi := &file_system_types_proto_msgTypes[16]
+	mi := &file_system_types_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1893,7 +2143,7 @@ func (x *PermissionEdges) String() string {
 func (*PermissionEdges) ProtoMessage() {}
 
 func (x *PermissionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[16]
+	mi := &file_system_types_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1906,7 +2156,7 @@ func (x *PermissionEdges) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionEdges.ProtoReflect.Descriptor instead.
 func (*PermissionEdges) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{16}
+	return file_system_types_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *PermissionEdges) GetRoles() []*Role {
@@ -1968,7 +2218,7 @@ type UserPosition struct {
 
 func (x *UserPosition) Reset() {
 	*x = UserPosition{}
-	mi := &file_system_types_proto_msgTypes[17]
+	mi := &file_system_types_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1980,7 +2230,7 @@ func (x *UserPosition) String() string {
 func (*UserPosition) ProtoMessage() {}
 
 func (x *UserPosition) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[17]
+	mi := &file_system_types_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1993,7 +2243,7 @@ func (x *UserPosition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserPosition.ProtoReflect.Descriptor instead.
 func (*UserPosition) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{17}
+	return file_system_types_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *UserPosition) GetId() int64 {
@@ -2031,7 +2281,7 @@ type UserPositionEdges struct {
 
 func (x *UserPositionEdges) Reset() {
 	*x = UserPositionEdges{}
-	mi := &file_system_types_proto_msgTypes[18]
+	mi := &file_system_types_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2043,7 +2293,7 @@ func (x *UserPositionEdges) String() string {
 func (*UserPositionEdges) ProtoMessage() {}
 
 func (x *UserPositionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[18]
+	mi := &file_system_types_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2056,7 +2306,7 @@ func (x *UserPositionEdges) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserPositionEdges.ProtoReflect.Descriptor instead.
 func (*UserPositionEdges) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{18}
+	return file_system_types_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *UserPositionEdges) GetUser() *User {
@@ -2090,7 +2340,7 @@ type PositionPermission struct {
 
 func (x *PositionPermission) Reset() {
 	*x = PositionPermission{}
-	mi := &file_system_types_proto_msgTypes[19]
+	mi := &file_system_types_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2102,7 +2352,7 @@ func (x *PositionPermission) String() string {
 func (*PositionPermission) ProtoMessage() {}
 
 func (x *PositionPermission) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[19]
+	mi := &file_system_types_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2115,7 +2365,7 @@ func (x *PositionPermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PositionPermission.ProtoReflect.Descriptor instead.
 func (*PositionPermission) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{19}
+	return file_system_types_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *PositionPermission) GetId() int64 {
@@ -2153,7 +2403,7 @@ type PositionPermissionEdges struct {
 
 func (x *PositionPermissionEdges) Reset() {
 	*x = PositionPermissionEdges{}
-	mi := &file_system_types_proto_msgTypes[20]
+	mi := &file_system_types_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2165,7 +2415,7 @@ func (x *PositionPermissionEdges) String() string {
 func (*PositionPermissionEdges) ProtoMessage() {}
 
 func (x *PositionPermissionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[20]
+	mi := &file_system_types_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2178,7 +2428,7 @@ func (x *PositionPermissionEdges) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PositionPermissionEdges.ProtoReflect.Descriptor instead.
 func (*PositionPermissionEdges) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{20}
+	return file_system_types_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *PositionPermissionEdges) GetPosition() *Position {
@@ -2212,7 +2462,7 @@ type RolePermission struct {
 
 func (x *RolePermission) Reset() {
 	*x = RolePermission{}
-	mi := &file_system_types_proto_msgTypes[21]
+	mi := &file_system_types_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2224,7 +2474,7 @@ func (x *RolePermission) String() string {
 func (*RolePermission) ProtoMessage() {}
 
 func (x *RolePermission) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[21]
+	mi := &file_system_types_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2237,7 +2487,7 @@ func (x *RolePermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermission.ProtoReflect.Descriptor instead.
 func (*RolePermission) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{21}
+	return file_system_types_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *RolePermission) GetId() int64 {
@@ -2275,7 +2525,7 @@ type RolePermissionEdges struct {
 
 func (x *RolePermissionEdges) Reset() {
 	*x = RolePermissionEdges{}
-	mi := &file_system_types_proto_msgTypes[22]
+	mi := &file_system_types_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2287,7 +2537,7 @@ func (x *RolePermissionEdges) String() string {
 func (*RolePermissionEdges) ProtoMessage() {}
 
 func (x *RolePermissionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[22]
+	mi := &file_system_types_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2300,7 +2550,7 @@ func (x *RolePermissionEdges) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermissionEdges.ProtoReflect.Descriptor instead.
 func (*RolePermissionEdges) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{22}
+	return file_system_types_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *RolePermissionEdges) GetRole() *Role {
@@ -2336,7 +2586,7 @@ type PermissionResource struct {
 
 func (x *PermissionResource) Reset() {
 	*x = PermissionResource{}
-	mi := &file_system_types_proto_msgTypes[23]
+	mi := &file_system_types_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2348,7 +2598,7 @@ func (x *PermissionResource) String() string {
 func (*PermissionResource) ProtoMessage() {}
 
 func (x *PermissionResource) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[23]
+	mi := &file_system_types_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2361,7 +2611,7 @@ func (x *PermissionResource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionResource.ProtoReflect.Descriptor instead.
 func (*PermissionResource) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{23}
+	return file_system_types_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *PermissionResource) GetId() int64 {
@@ -2406,7 +2656,7 @@ type PermissionResourceEdges struct {
 
 func (x *PermissionResourceEdges) Reset() {
 	*x = PermissionResourceEdges{}
-	mi := &file_system_types_proto_msgTypes[24]
+	mi := &file_system_types_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2418,7 +2668,7 @@ func (x *PermissionResourceEdges) String() string {
 func (*PermissionResourceEdges) ProtoMessage() {}
 
 func (x *PermissionResourceEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_system_types_proto_msgTypes[24]
+	mi := &file_system_types_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2431,7 +2681,7 @@ func (x *PermissionResourceEdges) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionResourceEdges.ProtoReflect.Descriptor instead.
 func (*PermissionResourceEdges) Descriptor() ([]byte, []int) {
-	return file_system_types_proto_rawDescGZIP(), []int{24}
+	return file_system_types_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *PermissionResourceEdges) GetPermission() *Permission {
@@ -2728,7 +2978,7 @@ var file_system_types_proto_rawDesc = []byte{
 	0x67, 0x65, 0x73, 0x12, 0x30, 0x0a, 0x04, 0x6d, 0x65, 0x6e, 0x75, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69,
 	0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x4d, 0x65, 0x6e, 0x75, 0x52,
-	0x04, 0x6d, 0x65, 0x6e, 0x75, 0x22, 0xd0, 0x02, 0x0a, 0x0a, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74,
+	0x04, 0x6d, 0x65, 0x6e, 0x75, 0x22, 0xea, 0x03, 0x0a, 0x0a, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74,
 	0x6d, 0x65, 0x6e, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03,
 	0x52, 0x02, 0x69, 0x64, 0x12, 0x3c, 0x0a, 0x0b, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x5f, 0x74,
 	0x69, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
@@ -2740,30 +2990,82 @@ var file_system_types_proto_rawDesc = []byte{
 	0x61, 0x6d, 0x70, 0x52, 0x0b, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65,
 	0x12, 0x18, 0x0a, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
-	0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20,
-	0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x06, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-	0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x18, 0x07, 0x20, 0x01,
-	0x28, 0x05, 0x52, 0x08, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x12, 0x16, 0x0a, 0x06,
-	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74,
-	0x61, 0x74, 0x75, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x0a, 0x20,
-	0x01, 0x28, 0x05, 0x52, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x12, 0x1c, 0x0a, 0x09, 0x70, 0x61,
-	0x72, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x70,
-	0x61, 0x72, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x22, 0xf2, 0x01, 0x0a, 0x08, 0x50, 0x6f, 0x73,
-	0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x3c, 0x0a, 0x0b, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x5f,
-	0x74, 0x69, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f,
-	0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d,
-	0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x5f, 0x74,
-	0x69, 0x6d, 0x65, 0x12, 0x3c, 0x0a, 0x0b, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x69,
-	0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
-	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73,
-	0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d,
-	0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
-	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63,
+	0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1c,
+	0x0a, 0x09, 0x74, 0x72, 0x65, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x18, 0x06, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x09, 0x74, 0x72, 0x65, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x68, 0x12, 0x1a, 0x0a, 0x08,
+	0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08,
+	0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x09, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73,
+	0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x70, 0x61, 0x72, 0x65,
+	0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x0b, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x70, 0x61, 0x72,
+	0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x12, 0x3e, 0x0a, 0x08, 0x63, 0x68, 0x69, 0x6c, 0x64, 0x72,
+	0x65, 0x6e, 0x18, 0x0c, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
+	0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65,
+	0x6d, 0x2e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x08, 0x63, 0x68,
+	0x69, 0x6c, 0x64, 0x72, 0x65, 0x6e, 0x12, 0x3a, 0x0a, 0x06, 0x70, 0x61, 0x72, 0x65, 0x6e, 0x74,
+	0x18, 0x0d, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e,
+	0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x06, 0x70, 0x61, 0x72, 0x65,
+	0x6e, 0x74, 0x22, 0xd5, 0x02, 0x0a, 0x0f, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e,
+	0x74, 0x45, 0x64, 0x67, 0x65, 0x73, 0x12, 0x32, 0x0a, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18,
+	0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73,
+	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x55,
+	0x73, 0x65, 0x72, 0x52, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x12, 0x3e, 0x0a, 0x09, 0x70, 0x6f,
+	0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e,
+	0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e,
+	0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x52,
+	0x09, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x3e, 0x0a, 0x08, 0x63, 0x68,
+	0x69, 0x6c, 0x64, 0x72, 0x65, 0x6e, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73,
+	0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74,
+	0x52, 0x08, 0x63, 0x68, 0x69, 0x6c, 0x64, 0x72, 0x65, 0x6e, 0x12, 0x3a, 0x0a, 0x06, 0x70, 0x61,
+	0x72, 0x65, 0x6e, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x22, 0x2e, 0x61, 0x70, 0x69,
+	0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73,
+	0x74, 0x65, 0x6d, 0x2e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x06,
+	0x70, 0x61, 0x72, 0x65, 0x6e, 0x74, 0x12, 0x52, 0x0a, 0x10, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x64,
+	0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x26, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x44, 0x65,
+	0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x10, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x64,
+	0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0xa3, 0x01, 0x0a, 0x0e, 0x55,
+	0x73, 0x65, 0x72, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x18, 0x0a,
+	0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x07,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x12, 0x24, 0x0a, 0x0d, 0x64, 0x65, 0x70, 0x61, 0x72,
+	0x74, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0d,
+	0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x12, 0x41, 0x0a,
+	0x05, 0x65, 0x64, 0x67, 0x65, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x2b, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73,
+	0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74,
+	0x6d, 0x65, 0x6e, 0x74, 0x45, 0x64, 0x67, 0x65, 0x73, 0x52, 0x05, 0x65, 0x64, 0x67, 0x65, 0x73,
+	0x22, 0x8b, 0x01, 0x0a, 0x13, 0x55, 0x73, 0x65, 0x72, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d,
+	0x65, 0x6e, 0x74, 0x45, 0x64, 0x67, 0x65, 0x73, 0x12, 0x30, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e,
+	0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x12, 0x42, 0x0a, 0x0a, 0x64, 0x65,
+	0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x22,
+	0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73,
+	0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x44, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65,
+	0x6e, 0x74, 0x52, 0x0a, 0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x22, 0x8c,
+	0x02, 0x0a, 0x08, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x3c, 0x0a, 0x0b, 0x63,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
+	0x75, 0x66, 0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b, 0x63, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x12, 0x3c, 0x0a, 0x0b, 0x75, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a,
+	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
+	0x2e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x0b, 0x75, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x6b,
+	0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6b, 0x65,
+	0x79, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
+	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63,
 	0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x24, 0x0a, 0x0d, 0x64, 0x65, 0x70, 0x61, 0x72,
-	0x74, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0d,
+	0x74, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0d,
 	0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x22, 0xfb, 0x02,
 	0x0a, 0x0d, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x45, 0x64, 0x67, 0x65, 0x73, 0x12,
 	0x42, 0x0a, 0x0a, 0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20,
@@ -2936,7 +3238,7 @@ func file_system_types_proto_rawDescGZIP() []byte {
 	return file_system_types_proto_rawDescData
 }
 
-var file_system_types_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_system_types_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_system_types_proto_goTypes = []any{
 	(*Menu)(nil),                    // 0: api.v1.services.system.Menu
 	(*MenuEdges)(nil),               // 1: api.v1.services.system.MenuEdges
@@ -2951,25 +3253,28 @@ var file_system_types_proto_goTypes = []any{
 	(*Resource)(nil),                // 10: api.v1.services.system.Resource
 	(*ResourceEdges)(nil),           // 11: api.v1.services.system.ResourceEdges
 	(*Department)(nil),              // 12: api.v1.services.system.Department
-	(*Position)(nil),                // 13: api.v1.services.system.Position
-	(*PositionEdges)(nil),           // 14: api.v1.services.system.PositionEdges
-	(*Permission)(nil),              // 15: api.v1.services.system.Permission
-	(*PermissionEdges)(nil),         // 16: api.v1.services.system.PermissionEdges
-	(*UserPosition)(nil),            // 17: api.v1.services.system.UserPosition
-	(*UserPositionEdges)(nil),       // 18: api.v1.services.system.UserPositionEdges
-	(*PositionPermission)(nil),      // 19: api.v1.services.system.PositionPermission
-	(*PositionPermissionEdges)(nil), // 20: api.v1.services.system.PositionPermissionEdges
-	(*RolePermission)(nil),          // 21: api.v1.services.system.RolePermission
-	(*RolePermissionEdges)(nil),     // 22: api.v1.services.system.RolePermissionEdges
-	(*PermissionResource)(nil),      // 23: api.v1.services.system.PermissionResource
-	(*PermissionResourceEdges)(nil), // 24: api.v1.services.system.PermissionResourceEdges
-	nil,                             // 25: api.v1.services.system.Resource.PropertiesEntry
-	nil,                             // 26: api.v1.services.system.Permission.DataRulesEntry
-	(*timestamppb.Timestamp)(nil),   // 27: google.protobuf.Timestamp
+	(*DepartmentEdges)(nil),         // 13: api.v1.services.system.DepartmentEdges
+	(*UserDepartment)(nil),          // 14: api.v1.services.system.UserDepartment
+	(*UserDepartmentEdges)(nil),     // 15: api.v1.services.system.UserDepartmentEdges
+	(*Position)(nil),                // 16: api.v1.services.system.Position
+	(*PositionEdges)(nil),           // 17: api.v1.services.system.PositionEdges
+	(*Permission)(nil),              // 18: api.v1.services.system.Permission
+	(*PermissionEdges)(nil),         // 19: api.v1.services.system.PermissionEdges
+	(*UserPosition)(nil),            // 20: api.v1.services.system.UserPosition
+	(*UserPositionEdges)(nil),       // 21: api.v1.services.system.UserPositionEdges
+	(*PositionPermission)(nil),      // 22: api.v1.services.system.PositionPermission
+	(*PositionPermissionEdges)(nil), // 23: api.v1.services.system.PositionPermissionEdges
+	(*RolePermission)(nil),          // 24: api.v1.services.system.RolePermission
+	(*RolePermissionEdges)(nil),     // 25: api.v1.services.system.RolePermissionEdges
+	(*PermissionResource)(nil),      // 26: api.v1.services.system.PermissionResource
+	(*PermissionResourceEdges)(nil), // 27: api.v1.services.system.PermissionResourceEdges
+	nil,                             // 28: api.v1.services.system.Resource.PropertiesEntry
+	nil,                             // 29: api.v1.services.system.Permission.DataRulesEntry
+	(*timestamppb.Timestamp)(nil),   // 30: google.protobuf.Timestamp
 }
 var file_system_types_proto_depIdxs = []int32{
-	27, // 0: api.v1.services.system.Menu.create_time:type_name -> google.protobuf.Timestamp
-	27, // 1: api.v1.services.system.Menu.update_time:type_name -> google.protobuf.Timestamp
+	30, // 0: api.v1.services.system.Menu.create_time:type_name -> google.protobuf.Timestamp
+	30, // 1: api.v1.services.system.Menu.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 2: api.v1.services.system.Menu.children:type_name -> api.v1.services.system.Menu
 	0,  // 3: api.v1.services.system.Menu.parent:type_name -> api.v1.services.system.Menu
 	10, // 4: api.v1.services.system.Menu.resources:type_name -> api.v1.services.system.Resource
@@ -2979,69 +3284,79 @@ var file_system_types_proto_depIdxs = []int32{
 	10, // 8: api.v1.services.system.MenuEdges.resources:type_name -> api.v1.services.system.Resource
 	2,  // 9: api.v1.services.system.MenuEdges.roles:type_name -> api.v1.services.system.Role
 	8,  // 10: api.v1.services.system.MenuEdges.role_menus:type_name -> api.v1.services.system.RoleMenu
-	27, // 11: api.v1.services.system.Role.create_time:type_name -> google.protobuf.Timestamp
-	27, // 12: api.v1.services.system.Role.update_time:type_name -> google.protobuf.Timestamp
+	30, // 11: api.v1.services.system.Role.create_time:type_name -> google.protobuf.Timestamp
+	30, // 12: api.v1.services.system.Role.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 13: api.v1.services.system.Role.menus:type_name -> api.v1.services.system.Menu
 	4,  // 14: api.v1.services.system.Role.users:type_name -> api.v1.services.system.User
 	0,  // 15: api.v1.services.system.RoleEdges.menus:type_name -> api.v1.services.system.Menu
 	4,  // 16: api.v1.services.system.RoleEdges.users:type_name -> api.v1.services.system.User
 	8,  // 17: api.v1.services.system.RoleEdges.role_menus:type_name -> api.v1.services.system.RoleMenu
 	6,  // 18: api.v1.services.system.RoleEdges.user_roles:type_name -> api.v1.services.system.UserRole
-	27, // 19: api.v1.services.system.User.create_time:type_name -> google.protobuf.Timestamp
-	27, // 20: api.v1.services.system.User.update_time:type_name -> google.protobuf.Timestamp
-	27, // 21: api.v1.services.system.User.last_login_time:type_name -> google.protobuf.Timestamp
-	27, // 22: api.v1.services.system.User.sanction_date:type_name -> google.protobuf.Timestamp
+	30, // 19: api.v1.services.system.User.create_time:type_name -> google.protobuf.Timestamp
+	30, // 20: api.v1.services.system.User.update_time:type_name -> google.protobuf.Timestamp
+	30, // 21: api.v1.services.system.User.last_login_time:type_name -> google.protobuf.Timestamp
+	30, // 22: api.v1.services.system.User.sanction_date:type_name -> google.protobuf.Timestamp
 	2,  // 23: api.v1.services.system.UserEdges.roles:type_name -> api.v1.services.system.Role
 	6,  // 24: api.v1.services.system.UserEdges.user_roles:type_name -> api.v1.services.system.UserRole
-	27, // 25: api.v1.services.system.UserRole.create_time:type_name -> google.protobuf.Timestamp
-	27, // 26: api.v1.services.system.UserRole.update_time:type_name -> google.protobuf.Timestamp
+	30, // 25: api.v1.services.system.UserRole.create_time:type_name -> google.protobuf.Timestamp
+	30, // 26: api.v1.services.system.UserRole.update_time:type_name -> google.protobuf.Timestamp
 	4,  // 27: api.v1.services.system.UserRole.user:type_name -> api.v1.services.system.User
 	2,  // 28: api.v1.services.system.UserRole.role:type_name -> api.v1.services.system.Role
 	4,  // 29: api.v1.services.system.UserRoleEdges.user:type_name -> api.v1.services.system.User
 	2,  // 30: api.v1.services.system.UserRoleEdges.role:type_name -> api.v1.services.system.Role
-	27, // 31: api.v1.services.system.RoleMenu.create_time:type_name -> google.protobuf.Timestamp
-	27, // 32: api.v1.services.system.RoleMenu.update_time:type_name -> google.protobuf.Timestamp
+	30, // 31: api.v1.services.system.RoleMenu.create_time:type_name -> google.protobuf.Timestamp
+	30, // 32: api.v1.services.system.RoleMenu.update_time:type_name -> google.protobuf.Timestamp
 	2,  // 33: api.v1.services.system.RoleMenu.role:type_name -> api.v1.services.system.Role
 	0,  // 34: api.v1.services.system.RoleMenu.menu:type_name -> api.v1.services.system.Menu
 	2,  // 35: api.v1.services.system.RoleMenuEdges.role:type_name -> api.v1.services.system.Role
 	0,  // 36: api.v1.services.system.RoleMenuEdges.menu:type_name -> api.v1.services.system.Menu
-	27, // 37: api.v1.services.system.Resource.create_time:type_name -> google.protobuf.Timestamp
-	27, // 38: api.v1.services.system.Resource.update_time:type_name -> google.protobuf.Timestamp
-	25, // 39: api.v1.services.system.Resource.properties:type_name -> api.v1.services.system.Resource.PropertiesEntry
+	30, // 37: api.v1.services.system.Resource.create_time:type_name -> google.protobuf.Timestamp
+	30, // 38: api.v1.services.system.Resource.update_time:type_name -> google.protobuf.Timestamp
+	28, // 39: api.v1.services.system.Resource.properties:type_name -> api.v1.services.system.Resource.PropertiesEntry
 	10, // 40: api.v1.services.system.Resource.children:type_name -> api.v1.services.system.Resource
 	10, // 41: api.v1.services.system.Resource.parent:type_name -> api.v1.services.system.Resource
 	0,  // 42: api.v1.services.system.ResourceEdges.menu:type_name -> api.v1.services.system.Menu
-	27, // 43: api.v1.services.system.Department.create_time:type_name -> google.protobuf.Timestamp
-	27, // 44: api.v1.services.system.Department.update_time:type_name -> google.protobuf.Timestamp
-	27, // 45: api.v1.services.system.Position.create_time:type_name -> google.protobuf.Timestamp
-	27, // 46: api.v1.services.system.Position.update_time:type_name -> google.protobuf.Timestamp
-	12, // 47: api.v1.services.system.PositionEdges.department:type_name -> api.v1.services.system.Department
-	4,  // 48: api.v1.services.system.PositionEdges.users:type_name -> api.v1.services.system.User
-	15, // 49: api.v1.services.system.PositionEdges.permissions:type_name -> api.v1.services.system.Permission
-	17, // 50: api.v1.services.system.PositionEdges.user_positions:type_name -> api.v1.services.system.UserPosition
-	19, // 51: api.v1.services.system.PositionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
-	27, // 52: api.v1.services.system.Permission.create_time:type_name -> google.protobuf.Timestamp
-	27, // 53: api.v1.services.system.Permission.update_time:type_name -> google.protobuf.Timestamp
-	26, // 54: api.v1.services.system.Permission.data_rules:type_name -> api.v1.services.system.Permission.DataRulesEntry
-	2,  // 55: api.v1.services.system.PermissionEdges.roles:type_name -> api.v1.services.system.Role
-	10, // 56: api.v1.services.system.PermissionEdges.resources:type_name -> api.v1.services.system.Resource
-	13, // 57: api.v1.services.system.PermissionEdges.positions:type_name -> api.v1.services.system.Position
-	21, // 58: api.v1.services.system.PermissionEdges.role_permissions:type_name -> api.v1.services.system.RolePermission
-	23, // 59: api.v1.services.system.PermissionEdges.permission_resources:type_name -> api.v1.services.system.PermissionResource
-	19, // 60: api.v1.services.system.PermissionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
-	4,  // 61: api.v1.services.system.UserPositionEdges.user:type_name -> api.v1.services.system.User
-	13, // 62: api.v1.services.system.UserPositionEdges.position:type_name -> api.v1.services.system.Position
-	13, // 63: api.v1.services.system.PositionPermissionEdges.position:type_name -> api.v1.services.system.Position
-	15, // 64: api.v1.services.system.PositionPermissionEdges.permission:type_name -> api.v1.services.system.Permission
-	2,  // 65: api.v1.services.system.RolePermissionEdges.role:type_name -> api.v1.services.system.Role
-	15, // 66: api.v1.services.system.RolePermissionEdges.permission:type_name -> api.v1.services.system.Permission
-	15, // 67: api.v1.services.system.PermissionResourceEdges.permission:type_name -> api.v1.services.system.Permission
-	10, // 68: api.v1.services.system.PermissionResourceEdges.resource:type_name -> api.v1.services.system.Resource
-	69, // [69:69] is the sub-list for method output_type
-	69, // [69:69] is the sub-list for method input_type
-	69, // [69:69] is the sub-list for extension type_name
-	69, // [69:69] is the sub-list for extension extendee
-	0,  // [0:69] is the sub-list for field type_name
+	30, // 43: api.v1.services.system.Department.create_time:type_name -> google.protobuf.Timestamp
+	30, // 44: api.v1.services.system.Department.update_time:type_name -> google.protobuf.Timestamp
+	12, // 45: api.v1.services.system.Department.children:type_name -> api.v1.services.system.Department
+	12, // 46: api.v1.services.system.Department.parent:type_name -> api.v1.services.system.Department
+	4,  // 47: api.v1.services.system.DepartmentEdges.users:type_name -> api.v1.services.system.User
+	16, // 48: api.v1.services.system.DepartmentEdges.positions:type_name -> api.v1.services.system.Position
+	12, // 49: api.v1.services.system.DepartmentEdges.children:type_name -> api.v1.services.system.Department
+	12, // 50: api.v1.services.system.DepartmentEdges.parent:type_name -> api.v1.services.system.Department
+	14, // 51: api.v1.services.system.DepartmentEdges.user_departments:type_name -> api.v1.services.system.UserDepartment
+	15, // 52: api.v1.services.system.UserDepartment.edges:type_name -> api.v1.services.system.UserDepartmentEdges
+	4,  // 53: api.v1.services.system.UserDepartmentEdges.user:type_name -> api.v1.services.system.User
+	12, // 54: api.v1.services.system.UserDepartmentEdges.department:type_name -> api.v1.services.system.Department
+	30, // 55: api.v1.services.system.Position.create_time:type_name -> google.protobuf.Timestamp
+	30, // 56: api.v1.services.system.Position.update_time:type_name -> google.protobuf.Timestamp
+	12, // 57: api.v1.services.system.PositionEdges.department:type_name -> api.v1.services.system.Department
+	4,  // 58: api.v1.services.system.PositionEdges.users:type_name -> api.v1.services.system.User
+	18, // 59: api.v1.services.system.PositionEdges.permissions:type_name -> api.v1.services.system.Permission
+	20, // 60: api.v1.services.system.PositionEdges.user_positions:type_name -> api.v1.services.system.UserPosition
+	22, // 61: api.v1.services.system.PositionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
+	30, // 62: api.v1.services.system.Permission.create_time:type_name -> google.protobuf.Timestamp
+	30, // 63: api.v1.services.system.Permission.update_time:type_name -> google.protobuf.Timestamp
+	29, // 64: api.v1.services.system.Permission.data_rules:type_name -> api.v1.services.system.Permission.DataRulesEntry
+	2,  // 65: api.v1.services.system.PermissionEdges.roles:type_name -> api.v1.services.system.Role
+	10, // 66: api.v1.services.system.PermissionEdges.resources:type_name -> api.v1.services.system.Resource
+	16, // 67: api.v1.services.system.PermissionEdges.positions:type_name -> api.v1.services.system.Position
+	24, // 68: api.v1.services.system.PermissionEdges.role_permissions:type_name -> api.v1.services.system.RolePermission
+	26, // 69: api.v1.services.system.PermissionEdges.permission_resources:type_name -> api.v1.services.system.PermissionResource
+	22, // 70: api.v1.services.system.PermissionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
+	4,  // 71: api.v1.services.system.UserPositionEdges.user:type_name -> api.v1.services.system.User
+	16, // 72: api.v1.services.system.UserPositionEdges.position:type_name -> api.v1.services.system.Position
+	16, // 73: api.v1.services.system.PositionPermissionEdges.position:type_name -> api.v1.services.system.Position
+	18, // 74: api.v1.services.system.PositionPermissionEdges.permission:type_name -> api.v1.services.system.Permission
+	2,  // 75: api.v1.services.system.RolePermissionEdges.role:type_name -> api.v1.services.system.Role
+	18, // 76: api.v1.services.system.RolePermissionEdges.permission:type_name -> api.v1.services.system.Permission
+	18, // 77: api.v1.services.system.PermissionResourceEdges.permission:type_name -> api.v1.services.system.Permission
+	10, // 78: api.v1.services.system.PermissionResourceEdges.resource:type_name -> api.v1.services.system.Resource
+	79, // [79:79] is the sub-list for method output_type
+	79, // [79:79] is the sub-list for method input_type
+	79, // [79:79] is the sub-list for extension type_name
+	79, // [79:79] is the sub-list for extension extendee
+	0,  // [0:79] is the sub-list for field type_name
 }
 
 func init() { file_system_types_proto_init() }
@@ -3055,7 +3370,7 @@ func file_system_types_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_system_types_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   27,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

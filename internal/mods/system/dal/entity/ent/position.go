@@ -25,6 +25,8 @@ type Position struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// position.field.name
 	Name string `json:"name,omitempty"`
+	// position.field.keyword
+	Keyword string `json:"keyword,omitempty"`
 	// position.field.description
 	Description string `json:"description,omitempty"`
 	// department.field.department_id
@@ -106,7 +108,7 @@ func (*Position) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case position.FieldID, position.FieldDepartmentID:
 			values[i] = new(sql.NullInt64)
-		case position.FieldName, position.FieldDescription:
+		case position.FieldName, position.FieldKeyword, position.FieldDescription:
 			values[i] = new(sql.NullString)
 		case position.FieldCreateTime, position.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -148,6 +150,12 @@ func (po *Position) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				po.Name = value.String
+			}
+		case position.FieldKeyword:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field keyword", values[i])
+			} else if value.Valid {
+				po.Keyword = value.String
 			}
 		case position.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -230,6 +238,9 @@ func (po *Position) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(po.Name)
+	builder.WriteString(", ")
+	builder.WriteString("keyword=")
+	builder.WriteString(po.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(po.Description)

@@ -23,7 +23,7 @@ type LoginServiceAgent struct {
 	client pb.LoginServiceClient
 }
 
-func (s LoginServiceAgent) CurrentLogout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+func (s LoginServiceAgent) PersonalLogout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Logout(ctx, request)
 	if err != nil {

@@ -26,6 +26,11 @@ type AuthServiceAgent struct {
 	client pb.AuthServiceClient
 }
 
+func (s AuthServiceAgent) AuthLogout(ctx context.Context, request *pb.AuthLogoutRequest) (*pb.AuthLogoutResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s AuthServiceAgent) Authenticate(ctx context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.Authenticate(ctx, request)

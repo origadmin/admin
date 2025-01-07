@@ -54,6 +54,20 @@ func (pu *PositionUpdate) SetNillableName(s *string) *PositionUpdate {
 	return pu
 }
 
+// SetKeyword sets the "keyword" field.
+func (pu *PositionUpdate) SetKeyword(s string) *PositionUpdate {
+	pu.mutation.SetKeyword(s)
+	return pu
+}
+
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (pu *PositionUpdate) SetNillableKeyword(s *string) *PositionUpdate {
+	if s != nil {
+		pu.SetKeyword(*s)
+	}
+	return pu
+}
+
 // SetDescription sets the "description" field.
 func (pu *PositionUpdate) SetDescription(s string) *PositionUpdate {
 	pu.mutation.SetDescription(s)
@@ -285,6 +299,11 @@ func (pu *PositionUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Position.name": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.Keyword(); ok {
+		if err := position.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Position.keyword": %w`, err)}
+		}
+	}
 	if v, ok := pu.mutation.Description(); ok {
 		if err := position.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
@@ -324,6 +343,9 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.Name(); ok {
 		_spec.SetField(position.FieldName, field.TypeString, value)
+	}
+	if value, ok := pu.mutation.Keyword(); ok {
+		_spec.SetField(position.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.Description(); ok {
 		_spec.SetField(position.FieldDescription, field.TypeString, value)
@@ -621,6 +643,20 @@ func (puo *PositionUpdateOne) SetNillableName(s *string) *PositionUpdateOne {
 	return puo
 }
 
+// SetKeyword sets the "keyword" field.
+func (puo *PositionUpdateOne) SetKeyword(s string) *PositionUpdateOne {
+	puo.mutation.SetKeyword(s)
+	return puo
+}
+
+// SetNillableKeyword sets the "keyword" field if the given value is not nil.
+func (puo *PositionUpdateOne) SetNillableKeyword(s *string) *PositionUpdateOne {
+	if s != nil {
+		puo.SetKeyword(*s)
+	}
+	return puo
+}
+
 // SetDescription sets the "description" field.
 func (puo *PositionUpdateOne) SetDescription(s string) *PositionUpdateOne {
 	puo.mutation.SetDescription(s)
@@ -865,6 +901,11 @@ func (puo *PositionUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Position.name": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.Keyword(); ok {
+		if err := position.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Position.keyword": %w`, err)}
+		}
+	}
 	if v, ok := puo.mutation.Description(); ok {
 		if err := position.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
@@ -921,6 +962,9 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 	}
 	if value, ok := puo.mutation.Name(); ok {
 		_spec.SetField(position.FieldName, field.TypeString, value)
+	}
+	if value, ok := puo.mutation.Keyword(); ok {
+		_spec.SetField(position.FieldKeyword, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.Description(); ok {
 		_spec.SetField(position.FieldDescription, field.TypeString, value)

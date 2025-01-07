@@ -1,27 +1,32 @@
 [
   {
     "name": "技术总监",
+    "keyword": "tech",
     "description": "负责技术部整体管理",
-    "department_id": "tech"
+    "department_keyword": "tech"
   },
   {
     "name": "研发经理",
+    "keyword": "dev:manager",
     "description": "负责研发团队管理",
-    "department_id": "dev"
+    "department_keyword": "dev"
   },
   {
     "name": "高级开发工程师",
+    "keyword": "dev:senior",
     "description": "负责核心功能开发",
-    "department_id": "dev"
+    "department_keyword": "dev"
   },
   {
     "name": "运维经理",
+    "keyword": "ops:manager",
     "description": "负责运维团队管理",
-    "department_id": "ops"
+    "department_keyword": "ops"
   },
   {
     "name": "人事经理",
+    "keyword": "hr:manager",
     "description": "负责人事团队管理",
-    "department_id": "hr"
+    "department_keyword": "hr"
   }
 ] 

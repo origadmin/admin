@@ -70,6 +70,11 @@ func Name(v string) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldName, v))
 }
 
+// Keyword applies equality check predicate on the "keyword" field. It's identical to KeywordEQ.
+func Keyword(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldKeyword, v))
+}
+
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
 func Description(v string) predicate.Position {
 	return predicate.Position(sql.FieldEQ(FieldDescription, v))
@@ -223,6 +228,71 @@ func NameEqualFold(v string) predicate.Position {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Position {
 	return predicate.Position(sql.FieldContainsFold(FieldName, v))
+}
+
+// KeywordEQ applies the EQ predicate on the "keyword" field.
+func KeywordEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldEQ(FieldKeyword, v))
+}
+
+// KeywordNEQ applies the NEQ predicate on the "keyword" field.
+func KeywordNEQ(v string) predicate.Position {
+	return predicate.Position(sql.FieldNEQ(FieldKeyword, v))
+}
+
+// KeywordIn applies the In predicate on the "keyword" field.
+func KeywordIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldIn(FieldKeyword, vs...))
+}
+
+// KeywordNotIn applies the NotIn predicate on the "keyword" field.
+func KeywordNotIn(vs ...string) predicate.Position {
+	return predicate.Position(sql.FieldNotIn(FieldKeyword, vs...))
+}
+
+// KeywordGT applies the GT predicate on the "keyword" field.
+func KeywordGT(v string) predicate.Position {
+	return predicate.Position(sql.FieldGT(FieldKeyword, v))
+}
+
+// KeywordGTE applies the GTE predicate on the "keyword" field.
+func KeywordGTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldGTE(FieldKeyword, v))
+}
+
+// KeywordLT applies the LT predicate on the "keyword" field.
+func KeywordLT(v string) predicate.Position {
+	return predicate.Position(sql.FieldLT(FieldKeyword, v))
+}
+
+// KeywordLTE applies the LTE predicate on the "keyword" field.
+func KeywordLTE(v string) predicate.Position {
+	return predicate.Position(sql.FieldLTE(FieldKeyword, v))
+}
+
+// KeywordContains applies the Contains predicate on the "keyword" field.
+func KeywordContains(v string) predicate.Position {
+	return predicate.Position(sql.FieldContains(FieldKeyword, v))
+}
+
+// KeywordHasPrefix applies the HasPrefix predicate on the "keyword" field.
+func KeywordHasPrefix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasPrefix(FieldKeyword, v))
+}
+
+// KeywordHasSuffix applies the HasSuffix predicate on the "keyword" field.
+func KeywordHasSuffix(v string) predicate.Position {
+	return predicate.Position(sql.FieldHasSuffix(FieldKeyword, v))
+}
+
+// KeywordEqualFold applies the EqualFold predicate on the "keyword" field.
+func KeywordEqualFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldEqualFold(FieldKeyword, v))
+}
+
+// KeywordContainsFold applies the ContainsFold predicate on the "keyword" field.
+func KeywordContainsFold(v string) predicate.Position {
+	return predicate.Position(sql.FieldContainsFold(FieldKeyword, v))
 }
 
 // DescriptionEQ applies the EQ predicate on the "description" field.

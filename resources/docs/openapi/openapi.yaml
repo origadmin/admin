@@ -281,6 +281,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /sys/auth/logout:
+        post:
+            tags:
+                - AuthService
+            operationId: AuthService_AuthLogout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.AuthLogoutRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.AuthLogoutResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/auth/resources:
         get:
             tags:
@@ -365,226 +389,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.ValidateTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/logout:
-        post:
-            tags:
-                - CurrentService
-            operationId: CurrentService_CurrentLogout
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CurrentLogoutResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/menus:
-        get:
-            tags:
-                - CurrentService
-            description: ListCurrentResources List the current user's menu
-            operationId: CurrentService_ListCurrentResources
-            parameters:
-                - name: data.type_url
-                  in: query
-                  description: |-
-                    A URL/resource name that uniquely identifies the type of the serialized
-                     protocol buffer message. This string must contain at least
-                     one "/" character. The last segment of the URL's path must represent
-                     the fully qualified name of the type (as in
-                     `path/google.protobuf.Duration`). The name should be in a canonical form
-                     (e.g., leading "." is not accepted).
-
-                     In practice, teams usually precompile into the binary all types that they
-                     expect it to use in the context of Any. However, for URLs which use the
-                     scheme `http`, `https`, or no scheme, one can optionally set up a type
-                     server that maps type URLs to message definitions as follows:
-
-                     * If no scheme is provided, `https` is assumed.
-                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-                       value in binary format, or produce an error.
-                     * Applications are allowed to cache lookup results based on the
-                       URL, or have them precompiled into a binary to avoid any
-                       lookup. Therefore, binary compatibility needs to be preserved
-                       on changes to types. (Use versioned type names to manage
-                       breaking changes.)
-
-                     Note: this functionality is not currently available in the official
-                     protobuf release, and it is not used for type URLs beginning with
-                     type.googleapis.com. As of May 2023, there are no widely used type server
-                     implementations and no plans to implement one.
-
-                     Schemes other than `http`, `https` (or the empty scheme) might be
-                     used with implementation specific semantics.
-                  schema:
-                    type: string
-                - name: data.value
-                  in: query
-                  description: Must be a valid serialized protocol buffer of the above specified type.
-                  schema:
-                    type: string
-                    format: bytes
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListCurrentResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/roles:
-        get:
-            tags:
-                - CurrentService
-            description: ListCurrentResources List the current user's menu
-            operationId: CurrentService_ListCurrentRoles
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListCurrentRolesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/setting:
-        put:
-            tags:
-                - CurrentService
-            description: UpdateCurrentSetting User settings are saved
-            operationId: CurrentService_UpdateCurrentSetting
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentSettingResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/token/refresh:
-        post:
-            tags:
-                - CurrentService
-            description: RefreshCurrentToken Refresh the current user's token
-            operationId: CurrentService_RefreshCurrentToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.RefreshCurrentTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/user:
-        get:
-            tags:
-                - CurrentService
-            description: GetCurrentUser Update the current user information
-            operationId: CurrentService_GetCurrentUser
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.GetCurrentUserResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        put:
-            tags:
-                - CurrentService
-            description: UpdateCurrentUser Update the current user information
-            operationId: CurrentService_UpdateCurrentUser
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentUserResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/current/user/password:
-        put:
-            tags:
-                - CurrentService
-            description: UpdateCurrentUserPassword The user changes the password
-            operationId: CurrentService_UpdateCurrentUserPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdateCurrentUserPasswordResponse'
                 default:
                     description: Default error response
                     content:
@@ -1089,6 +893,226 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/logout:
+        post:
+            tags:
+                - PersonalService
+            operationId: PersonalService_PersonalLogout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.PersonalLogoutResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/menus:
+        get:
+            tags:
+                - PersonalService
+            description: ListPersonalResources List the personal user's menu
+            operationId: PersonalService_ListPersonalResources
+            parameters:
+                - name: data.type_url
+                  in: query
+                  description: |-
+                    A URL/resource name that uniquely identifies the type of the serialized
+                     protocol buffer message. This string must contain at least
+                     one "/" character. The last segment of the URL's path must represent
+                     the fully qualified name of the type (as in
+                     `path/google.protobuf.Duration`). The name should be in a canonical form
+                     (e.g., leading "." is not accepted).
+
+                     In practice, teams usually precompile into the binary all types that they
+                     expect it to use in the context of Any. However, for URLs which use the
+                     scheme `http`, `https`, or no scheme, one can optionally set up a type
+                     server that maps type URLs to message definitions as follows:
+
+                     * If no scheme is provided, `https` is assumed.
+                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                       value in binary format, or produce an error.
+                     * Applications are allowed to cache lookup results based on the
+                       URL, or have them precompiled into a binary to avoid any
+                       lookup. Therefore, binary compatibility needs to be preserved
+                       on changes to types. (Use versioned type names to manage
+                       breaking changes.)
+
+                     Note: this functionality is not currently available in the official
+                     protobuf release, and it is not used for type URLs beginning with
+                     type.googleapis.com. As of May 2023, there are no widely used type server
+                     implementations and no plans to implement one.
+
+                     Schemes other than `http`, `https` (or the empty scheme) might be
+                     used with implementation specific semantics.
+                  schema:
+                    type: string
+                - name: data.value
+                  in: query
+                  description: Must be a valid serialized protocol buffer of the above specified type.
+                  schema:
+                    type: string
+                    format: bytes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPersonalResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/password:
+        put:
+            tags:
+                - PersonalService
+            description: UpdatePersonalProfilePassword The user changes the password
+            operationId: PersonalService_UpdatePersonalPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalPasswordResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/profile:
+        get:
+            tags:
+                - PersonalService
+            description: GetPersonalProfile Update the personal user information
+            operationId: PersonalService_GetPersonalProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetPersonalProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - PersonalService
+            description: UpdatePersonalProfile Update the personal user information
+            operationId: PersonalService_UpdatePersonalProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/roles:
+        get:
+            tags:
+                - PersonalService
+            description: ListPersonalResources List the personal user's menu
+            operationId: PersonalService_ListPersonalRoles
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPersonalRolesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/setting:
+        put:
+            tags:
+                - PersonalService
+            description: UpdatePersonalSetting User settings are saved
+            operationId: PersonalService_UpdatePersonalSetting
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalSettingResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/token/refresh:
+        post:
+            tags:
+                - PersonalService
+            description: RefreshPersonalToken Refresh the personal user's token
+            operationId: PersonalService_RefreshPersonalToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.RefreshPersonalTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -2145,6 +2169,14 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
+        api.v1.services.system.AuthLogoutRequest_Data:
+            type: object
+            properties:
+                token:
+                    type: string
+        api.v1.services.system.AuthLogoutResponse:
+            type: object
+            properties: {}
         api.v1.services.system.AuthenticateRequest_Data:
             type: object
             properties:
@@ -2256,11 +2288,6 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
-        api.v1.services.system.CurrentLogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
         api.v1.services.system.DeleteDepartmentResponse:
             type: object
             properties: {}
@@ -2306,9 +2333,9 @@ components:
                 name:
                     type: string
                     description: department.field.name
-                description:
+                tree_path:
                     type: string
-                    description: department.field.description
+                    description: menu.field.tree_path
                 sequence:
                     type: integer
                     description: department.field.sequence
@@ -2321,9 +2348,21 @@ components:
                     type: integer
                     description: department.field.level
                     format: int32
+                description:
+                    type: string
+                    description: department.field.description
                 parent_id:
                     type: string
                     description: department.field.parent_id
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Department'
+                    description: Children holds the value of the children edge.
+                parent:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.system.Department'
+                    description: Parent holds the value of the parent edge.
             description: department.table.comment
         api.v1.services.system.DestroyTokenRequest_Data:
             type: object
@@ -2334,11 +2373,6 @@ components:
             type: object
             properties: {}
             description: DestroyTokenResponse contains the result of the invalidation.
-        api.v1.services.system.GetCurrentUserResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.system.User'
         api.v1.services.system.GetDepartmentResponse:
             type: object
             properties:
@@ -2357,6 +2391,11 @@ components:
             properties:
                 permission:
                     $ref: '#/components/schemas/api.v1.services.system.Permission'
+        api.v1.services.system.GetPersonalProfileResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.system.User'
         api.v1.services.system.GetPositionResponse:
             type: object
             properties:
@@ -2392,20 +2431,6 @@ components:
                     type: integer
                     description: The total number of Auths in the result set.
                     format: int32
-        api.v1.services.system.ListCurrentResourcesResponse:
-            type: object
-            properties:
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
-        api.v1.services.system.ListCurrentRolesResponse:
-            type: object
-            properties:
-                roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Role'
         api.v1.services.system.ListDepartmentsResponse:
             type: object
             properties:
@@ -2500,6 +2525,20 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
+        api.v1.services.system.ListPersonalResourcesResponse:
+            type: object
+            properties:
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+        api.v1.services.system.ListPersonalRolesResponse:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Role'
         api.v1.services.system.ListPositionsResponse:
             type: object
             properties:
@@ -2752,6 +2791,11 @@ components:
                         type: string
                     description: permission.field.data_rules
             description: permission.table.comment
+        api.v1.services.system.PersonalLogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.v1.services.system.Position:
             type: object
             properties:
@@ -2771,6 +2815,9 @@ components:
                 name:
                     type: string
                     description: position.field.name
+                keyword:
+                    type: string
+                    description: position.field.keyword
                 description:
                     type: string
                     description: position.field.description
@@ -2778,7 +2825,7 @@ components:
                     type: string
                     description: department.field.department_id
             description: position.table.comment
-        api.v1.services.system.RefreshCurrentTokenResponse:
+        api.v1.services.system.RefreshPersonalTokenResponse:
             type: object
             properties:
                 token:
@@ -2948,15 +2995,6 @@ components:
             properties:
                 token:
                     $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.system.UpdateCurrentSettingResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdateCurrentUserPasswordResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdateCurrentUserResponse:
-            type: object
-            properties: {}
         api.v1.services.system.UpdateDepartmentResponse:
             type: object
             properties:
@@ -2973,6 +3011,15 @@ components:
             properties:
                 permission:
                     $ref: '#/components/schemas/api.v1.services.system.Permission'
+        api.v1.services.system.UpdatePersonalPasswordResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdatePersonalProfileResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdatePersonalSettingResponse:
+            type: object
+            properties: {}
         api.v1.services.system.UpdatePositionResponse:
             type: object
             properties:
@@ -3155,8 +3202,6 @@ components:
             in: header
 tags:
     - name: AuthService
-    - name: CurrentService
-      description: The current service definition.
     - name: DepartmentService
       description: The login service definition.
     - name: LoginService
@@ -3165,6 +3210,8 @@ tags:
       description: The menu service definition.
     - name: PermissionService
       description: The login service definition.
+    - name: PersonalService
+      description: The personal service definition.
     - name: PositionService
       description: The login service definition.
     - name: ResourceService

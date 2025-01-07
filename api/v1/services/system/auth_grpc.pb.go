@@ -24,6 +24,7 @@ const (
 	AuthService_ValidateToken_FullMethodName     = "/api.v1.services.system.AuthService/ValidateToken"
 	AuthService_DestroyToken_FullMethodName      = "/api.v1.services.system.AuthService/DestroyToken"
 	AuthService_Authenticate_FullMethodName      = "/api.v1.services.system.AuthService/Authenticate"
+	AuthService_AuthLogout_FullMethodName        = "/api.v1.services.system.AuthService/AuthLogout"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -38,6 +39,7 @@ type AuthServiceClient interface {
 	// DestroyToken invalidates a JWT token.
 	DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error)
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
+	AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...grpc.CallOption) (*AuthLogoutResponse, error)
 }
 
 type authServiceClient struct {
@@ -98,6 +100,16 @@ func (c *authServiceClient) Authenticate(ctx context.Context, in *AuthenticateRe
 	return out, nil
 }
 
+func (c *authServiceClient) AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...grpc.CallOption) (*AuthLogoutResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AuthLogoutResponse)
+	err := c.cc.Invoke(ctx, AuthService_AuthLogout_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -110,6 +122,7 @@ type AuthServiceServer interface {
 	// DestroyToken invalidates a JWT token.
 	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
+	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -134,6 +147,9 @@ func (UnimplementedAuthServiceServer) DestroyToken(context.Context, *DestroyToke
 }
 func (UnimplementedAuthServiceServer) Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
+}
+func (UnimplementedAuthServiceServer) AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuthLogout not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -246,6 +262,24 @@ func _AuthService_Authenticate_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_AuthLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthLogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).AuthLogout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_AuthLogout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).AuthLogout(ctx, req.(*AuthLogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -272,6 +306,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Authenticate",
 			Handler:    _AuthService_Authenticate_Handler,
+		},
+		{
+			MethodName: "AuthLogout",
+			Handler:    _AuthService_AuthLogout_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

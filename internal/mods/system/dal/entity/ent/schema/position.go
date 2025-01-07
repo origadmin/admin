@@ -28,6 +28,10 @@ func (Position) Fields() []ent.Field {
 			MaxLen(64).
 			Unique().
 			Comment(i18n.Text("position.field.name")),
+		field.String("keyword").
+			MaxLen(64).
+			Unique().
+			Comment(i18n.Text("position.field.keyword")),
 		field.String("description").
 			MaxLen(1024).
 			Default("").

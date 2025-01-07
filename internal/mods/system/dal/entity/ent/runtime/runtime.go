@@ -173,14 +173,18 @@ func init() {
 	positionDescName := positionFields[0].Descriptor()
 	// position.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	position.NameValidator = positionDescName.Validators[0].(func(string) error)
+	// positionDescKeyword is the schema descriptor for keyword field.
+	positionDescKeyword := positionFields[1].Descriptor()
+	// position.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
+	position.KeywordValidator = positionDescKeyword.Validators[0].(func(string) error)
 	// positionDescDescription is the schema descriptor for description field.
-	positionDescDescription := positionFields[1].Descriptor()
+	positionDescDescription := positionFields[2].Descriptor()
 	// position.DefaultDescription holds the default value on creation for the description field.
 	position.DefaultDescription = positionDescDescription.Default.(string)
 	// position.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	position.DescriptionValidator = positionDescDescription.Validators[0].(func(string) error)
 	// positionDescDepartmentID is the schema descriptor for department_id field.
-	positionDescDepartmentID := positionFields[2].Descriptor()
+	positionDescDepartmentID := positionFields[3].Descriptor()
 	// position.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	position.DepartmentIDValidator = positionDescDepartmentID.Validators[0].(func(int64) error)
 	// positionDescID is the schema descriptor for id field.

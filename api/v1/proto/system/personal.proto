@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package api.v1.services.system;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "system/types.proto";
+import "validate/validate.proto";
+
+option go_package = "v1/services/system;system";
+option java_multiple_files = true;
+option java_outer_classname = "APIV1ServicesSystemPersonalProto";
+option java_package = "com.origadmin.api.v1.services.system";
+
+// The personal service definition.
+service PersonalService {
+  rpc PersonalLogout (PersonalLogoutRequest) returns (PersonalLogoutResponse) {
+    option (google.api.http) = {
+      post: "/sys/personal/logout"
+      body: "data"
+    };
+  }
+
+  // UpdatePersonalProfilePassword The user changes the password
+  rpc UpdatePersonalPassword (UpdatePersonalPasswordRequest) returns (UpdatePersonalPasswordResponse) {
+    option (google.api.http) = {
+      put: "/sys/personal/password"
+      body: "data"
+    };
+  }
+  // UpdatePersonalProfile Update the personal user information
+  rpc UpdatePersonalProfile (UpdatePersonalProfileRequest) returns (UpdatePersonalProfileResponse) {
+    option (google.api.http) = {
+      put: "/sys/personal/profile"
+      body: "data"
+    };
+  }
+  // GetPersonalProfile Update the personal user information
+  rpc GetPersonalProfile (GetPersonalProfileRequest) returns (GetPersonalProfileResponse) {
+    option (google.api.http) = {get: "/sys/personal/profile"};
+  }
+  // ListPersonalResources List the personal user's menu
+  rpc ListPersonalResources (ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
+    option (google.api.http) = {get: "/sys/personal/menus"};
+  }
+  // ListPersonalResources List the personal user's menu
+  rpc ListPersonalRoles (ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
+    option (google.api.http) = {get: "/sys/personal/roles"};
+  }
+  // UpdatePersonalSetting User settings are saved
+  rpc UpdatePersonalSetting (UpdatePersonalSettingRequest) returns (UpdatePersonalSettingResponse) {
+    option (google.api.http) = {
+      put: "/sys/personal/setting"
+      body: "data"
+    };
+  }
+  // RefreshPersonalToken Refresh the personal user's token
+  rpc RefreshPersonalToken (RefreshPersonalTokenRequest) returns (RefreshPersonalTokenResponse) {
+    option (google.api.http) = {
+      post: "/sys/personal/token/refresh"
+      body: "data"
+    };
+  }
+}
+
+message UpdatePersonalSettingRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdatePersonalSettingResponse {}
+
+message UpdatePersonalRoleRequest {
+  Role role = 1 [json_name = "role"];
+}
+
+message UpdatePersonalRoleResponse {}
+
+message ListPersonalResourcesRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message ListPersonalResourcesResponse {
+  repeated system.Menu menus = 1;
+}
+
+message UpdatePersonalPasswordRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdatePersonalPasswordResponse {}
+
+message PersonalPasswordRestRequest {
+  int64 id = 1 [
+    json_name = "id",
+    (validate.rules).int64 = {gt: 0}
+  ];
+}
+
+message PersonalPasswordRestResponse {}
+
+message UpdatePersonalProfileRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message UpdatePersonalProfileResponse {}
+
+message PersonalLogoutRequest {
+  google.protobuf.Any data = 2 [json_name = "data"];
+}
+
+message PersonalLogoutResponse {
+  bool success = 1;
+}
+
+message ListPersonalRolesRequest {}
+
+message ListPersonalRolesResponse {
+  repeated Role roles = 1;
+}
+
+message GetPersonalProfileRequest {}
+
+message GetPersonalProfileResponse {
+  User user = 1 [json_name = "user"];
+}
+
+message RefreshPersonalTokenRequest {
+  google.protobuf.Any data = 1 [json_name = "data"];
+}
+
+message RefreshPersonalTokenResponse {
+  string token = 1 [json_name = "token"];
+}

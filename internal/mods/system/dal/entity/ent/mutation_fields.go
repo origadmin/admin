@@ -271,6 +271,11 @@ func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
+		case position.FieldKeyword:
+			// check string with sql.NullString if it is empty
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
+			}
 		case position.FieldDescription:
 			// check string with sql.NullString if it is empty
 			if input.Description != "" {
@@ -305,6 +310,8 @@ func (m *PositionMutation) SetFieldsWithZero(input *Position, fields ...string) 
 			m.SetUpdateTime(input.UpdateTime)
 		case position.FieldName:
 			m.SetName(input.Name)
+		case position.FieldKeyword:
+			m.SetKeyword(input.Keyword)
 		case position.FieldDescription:
 			m.SetDescription(input.Description)
 		case position.FieldDepartmentID:

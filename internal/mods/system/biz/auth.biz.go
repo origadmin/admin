@@ -22,6 +22,10 @@ type AuthServiceClientBiz struct {
 	log     *log.KHelper
 }
 
+func (biz AuthServiceClientBiz) AuthLogout(ctx context.Context, in *pb.AuthLogoutRequest, opts ...grpc.CallOption) (*pb.AuthLogoutResponse, error) {
+	return biz.dao.AuthLogout(ctx, in)
+}
+
 func (biz AuthServiceClientBiz) CreateToken(ctx context.Context, in *pb.CreateTokenRequest, opts ...grpc.CallOption) (*pb.CreateTokenResponse, error) {
 	return biz.dao.CreateToken(ctx, in)
 }

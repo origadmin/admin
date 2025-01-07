@@ -2737,7 +2737,7 @@ func (m *Department) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for Description
+	// no validation rules for TreePath
 
 	// no validation rules for Sequence
 
@@ -2745,7 +2745,72 @@ func (m *Department) validate(all bool) error {
 
 	// no validation rules for Level
 
+	// no validation rules for Description
+
 	// no validation rules for ParentId
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DepartmentValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DepartmentValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DepartmentValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if all {
+		switch v := interface{}(m.GetParent()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DepartmentValidationError{
+					field:  "Parent",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DepartmentValidationError{
+					field:  "Parent",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetParent()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DepartmentValidationError{
+				field:  "Parent",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return DepartmentMultiError(errors)
@@ -2823,6 +2888,566 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DepartmentValidationError{}
+
+// Validate checks the field values on DepartmentEdges with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *DepartmentEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DepartmentEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DepartmentEdgesMultiError, or nil if none found.
+func (m *DepartmentEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DepartmentEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetUsers() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DepartmentEdgesValidationError{
+					field:  fmt.Sprintf("Users[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetPositions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("Positions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("Positions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DepartmentEdgesValidationError{
+					field:  fmt.Sprintf("Positions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DepartmentEdgesValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if all {
+		switch v := interface{}(m.GetParent()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DepartmentEdgesValidationError{
+					field:  "Parent",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DepartmentEdgesValidationError{
+					field:  "Parent",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetParent()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DepartmentEdgesValidationError{
+				field:  "Parent",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetUserDepartments() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("UserDepartments[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, DepartmentEdgesValidationError{
+						field:  fmt.Sprintf("UserDepartments[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return DepartmentEdgesValidationError{
+					field:  fmt.Sprintf("UserDepartments[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return DepartmentEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// DepartmentEdgesMultiError is an error wrapping multiple validation errors
+// returned by DepartmentEdges.ValidateAll() if the designated constraints
+// aren't met.
+type DepartmentEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DepartmentEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DepartmentEdgesMultiError) AllErrors() []error { return m }
+
+// DepartmentEdgesValidationError is the validation error returned by
+// DepartmentEdges.Validate if the designated constraints aren't met.
+type DepartmentEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DepartmentEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DepartmentEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DepartmentEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DepartmentEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DepartmentEdgesValidationError) ErrorName() string { return "DepartmentEdgesValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DepartmentEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDepartmentEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DepartmentEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DepartmentEdgesValidationError{}
+
+// Validate checks the field values on UserDepartment with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UserDepartment) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserDepartment with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UserDepartmentMultiError,
+// or nil if none found.
+func (m *UserDepartment) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserDepartment) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for UserId
+
+	// no validation rules for DepartmentId
+
+	if all {
+		switch v := interface{}(m.GetEdges()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserDepartmentValidationError{
+					field:  "Edges",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserDepartmentValidationError{
+					field:  "Edges",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEdges()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserDepartmentValidationError{
+				field:  "Edges",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UserDepartmentMultiError(errors)
+	}
+
+	return nil
+}
+
+// UserDepartmentMultiError is an error wrapping multiple validation errors
+// returned by UserDepartment.ValidateAll() if the designated constraints
+// aren't met.
+type UserDepartmentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserDepartmentMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserDepartmentMultiError) AllErrors() []error { return m }
+
+// UserDepartmentValidationError is the validation error returned by
+// UserDepartment.Validate if the designated constraints aren't met.
+type UserDepartmentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UserDepartmentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UserDepartmentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UserDepartmentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UserDepartmentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UserDepartmentValidationError) ErrorName() string { return "UserDepartmentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UserDepartmentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUserDepartment.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UserDepartmentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UserDepartmentValidationError{}
+
+// Validate checks the field values on UserDepartmentEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UserDepartmentEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserDepartmentEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UserDepartmentEdgesMultiError, or nil if none found.
+func (m *UserDepartmentEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserDepartmentEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserDepartmentEdgesValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserDepartmentEdgesValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserDepartmentEdgesValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetDepartment()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserDepartmentEdgesValidationError{
+					field:  "Department",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserDepartmentEdgesValidationError{
+					field:  "Department",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDepartment()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserDepartmentEdgesValidationError{
+				field:  "Department",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UserDepartmentEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// UserDepartmentEdgesMultiError is an error wrapping multiple validation
+// errors returned by UserDepartmentEdges.ValidateAll() if the designated
+// constraints aren't met.
+type UserDepartmentEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserDepartmentEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserDepartmentEdgesMultiError) AllErrors() []error { return m }
+
+// UserDepartmentEdgesValidationError is the validation error returned by
+// UserDepartmentEdges.Validate if the designated constraints aren't met.
+type UserDepartmentEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UserDepartmentEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UserDepartmentEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UserDepartmentEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UserDepartmentEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UserDepartmentEdgesValidationError) ErrorName() string {
+	return "UserDepartmentEdgesValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UserDepartmentEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUserDepartmentEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UserDepartmentEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UserDepartmentEdgesValidationError{}
 
 // Validate checks the field values on Position with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -2907,6 +3532,8 @@ func (m *Position) validate(all bool) error {
 	}
 
 	// no validation rules for Name
+
+	// no validation rules for Keyword
 
 	// no validation rules for Description
 

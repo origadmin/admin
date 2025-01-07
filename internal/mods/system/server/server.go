@@ -77,7 +77,7 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 type RegisterAgent struct {
 	Auth     pb.AuthServiceAgent
 	Login    pb.LoginServiceAgent
-	Current  pb.CurrentServiceAgent
+	Personal pb.PersonalServiceAgent
 	Resource pb.ResourceServiceAgent
 	Role     pb.RoleServiceAgent
 	User     pb.UserServiceAgent
@@ -92,7 +92,7 @@ func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServe
 	ag := agent.NewHTTP(server)
 	pb.RegisterAuthServiceAgent(ag, s.Auth)
 	pb.RegisterLoginServiceAgent(ag, s.Login)
-	pb.RegisterCurrentServiceAgent(ag, s.Current)
+	pb.RegisterPersonalServiceAgent(ag, s.Personal)
 	pb.RegisterResourceServiceAgent(ag, s.Resource)
 	pb.RegisterRoleServiceAgent(ag, s.Role)
 	pb.RegisterUserServiceAgent(ag, s.User)
@@ -107,7 +107,7 @@ func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*Re
 	register := RegisterAgent{
 		Auth:     systemservice.NewAuthServiceAgentClient(client),
 		Login:    systemservice.NewLoginServiceAgentClient(client),
-		Current:  systemservice.NewCurrentServiceAgentClient(client),
+		Personal: systemservice.NewPersonalServiceAgentClient(client),
 		Resource: systemservice.NewResourceServiceAgentClient(client),
 		Role:     systemservice.NewRoleServiceAgentClient(client),
 		User:     systemservice.NewUserServiceAgentClient(client),

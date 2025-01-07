@@ -928,6 +928,7 @@ func (pq *PositionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionSel
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Name string `json:"name,omitempty"`
+//	  Keyword string `json:"keyword,omitempty"`
 //	  Description string `json:"description,omitempty"`
 //	  DepartmentID int64 `json:"department_id,omitempty"`
 //	}
@@ -937,6 +938,7 @@ func (pq *PositionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionSel
 //	  position.FieldCreateTime,
 //	  position.FieldUpdateTime,
 //	  position.FieldName,
+//	  position.FieldKeyword,
 //	  position.FieldDescription,
 //	  position.FieldDepartmentID,
 //	  ).

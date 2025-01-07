@@ -176,7 +176,7 @@ func TestData_InitResourceFromFile(t *testing.T) {
 				//Bootstrap: DefaultBootstrap(),
 			},
 			args: args{
-				filename: "../../resources/data/resource.json",
+				filename: "../../resources/data",
 			},
 			wantErr: false,
 		},
@@ -204,7 +204,7 @@ func TestData_InitResourceFromFile(t *testing.T) {
 				return
 			}
 			defer cleanup()
-			if err := d.InitResourceFromFile(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
+			if err := d.InitDataFromPath(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
 				t.Errorf("InitFromFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

@@ -18,17 +18,17 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-type currentRepo struct {
+type personalRepo struct {
 	db *Data
 }
 
-func (repo currentRepo) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
+func (repo personalRepo) GetPersonalProfile(ctx context.Context, in *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
 	userid := securityx.GetUserID(ctx)
 	if userid == "" {
 		return nil, dto.ErrUserNotFound
 	}
 	if userid == "admin" {
-		return &pb.GetCurrentUserResponse{
+		return &pb.GetPersonalProfileResponse{
 			User: &pb.User{
 				Id:       0,
 				Uuid:     "admin",
@@ -45,50 +45,50 @@ func (repo currentRepo) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUse
 	if err != nil {
 		return nil, dto.ErrUserNotFound
 	}
-	return &pb.GetCurrentUserResponse{
+	return &pb.GetPersonalProfileResponse{
 		User: dto.ConvertUser2PB(userObj),
 	}, nil
 }
 
-func (repo currentRepo) ListCurrentRoles(ctx context.Context, in *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error) {
+func (repo personalRepo) ListPersonalRoles(ctx context.Context, in *pb.ListPersonalRolesRequest) (*pb.ListPersonalRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (repo currentRepo) UpdateCurrentUserPassword(ctx context.Context, in *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordResponse, error) {
+func (repo personalRepo) UpdatePersonalPassword(ctx context.Context, in *pb.UpdatePersonalPasswordRequest) (*pb.UpdatePersonalPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (repo currentRepo) UpdateCurrentUser(ctx context.Context, in *pb.UpdateCurrentUserRequest) (*pb.UpdateCurrentUserResponse, error) {
+func (repo personalRepo) UpdatePersonalProfile(ctx context.Context, in *pb.UpdatePersonalProfileRequest) (*pb.UpdatePersonalProfileResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (repo currentRepo) ListCurrentResources(ctx context.Context, in *pb.ListCurrentResourcesRequest) (*pb.ListCurrentResourcesResponse, error) {
+func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (repo currentRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+func (repo personalRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
 	var option dto.ResourceQueryOption
 	if len(options) > 0 {
 		option = options[0]
 	}
 	query := repo.db.Resource(ctx).Query()
-	return currentPageQuery(ctx, query, in, option)
+	return personalPageQuery(ctx, query, in, option)
 }
 
-// NewCurrentRepo .
-func NewCurrentRepo(db *Data, logger log.KLogger) dto.CurrentRepo {
-	return &currentRepo{
+// NewPersonalRepo .
+func NewPersonalRepo(db *Data, logger log.KLogger) dto.PersonalRepo {
+	return &personalRepo{
 		db: db,
 	}
 }
 
-func currentPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
-	query = currentQueryPage(query, in)
-	query = currentQueryOptions(query, option)
+func personalPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+	query = personalQueryPage(query, in)
+	query = personalQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
 		return nil, 0, err
@@ -97,7 +97,7 @@ func currentPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.List
 	return dto.ConvertResources(result), int32(count), err
 }
 
-func currentQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
+func personalQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
 	if in.NoPaging {
 		pageSize := in.PageSize
 		if pageSize > 0 {
@@ -117,7 +117,7 @@ func currentQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *en
 	return query
 }
 
-func currentQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
+func personalQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
 	if len(option.SelectFields) > 0 {
 		query = query.Select(option.SelectFields...).ResourceQuery
 	}
@@ -125,12 +125,12 @@ func currentQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOptio
 		query = query.Omit(option.OmitFields...).ResourceQuery
 	}
 	if len(option.OrderFields) > 0 {
-		query = query.Order(currentOrderBy(option.OrderFields)...)
+		query = query.Order(personalOrderBy(option.OrderFields)...)
 	}
 	return query
 }
 
-func currentOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
+func personalOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
 	var orders []resource.OrderOption
 	for _, field := range fields {
 		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())

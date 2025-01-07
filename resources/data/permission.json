@@ -47,6 +47,20 @@
     ]
   },
   {
+    "name": "资源管理",
+    "keyword": "system:resource",
+    "type": "role",
+    "description": "资源管理权限",
+    "data_scope": "all",
+    "resources": [
+      "system:resource",
+      "system:resource:list",
+      "system:resource:add",
+      "system:resource:edit",
+      "system:resource:delete"
+    ]
+  },
+  {
     "name": "访问日志管理",
     "keyword": "logs:access",
     "type": "role",

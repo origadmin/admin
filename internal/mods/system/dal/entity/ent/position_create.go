@@ -59,6 +59,12 @@ func (pc *PositionCreate) SetName(s string) *PositionCreate {
 	return pc
 }
 
+// SetKeyword sets the "keyword" field.
+func (pc *PositionCreate) SetKeyword(s string) *PositionCreate {
+	pc.mutation.SetKeyword(s)
+	return pc
+}
+
 // SetDescription sets the "description" field.
 func (pc *PositionCreate) SetDescription(s string) *PositionCreate {
 	pc.mutation.SetDescription(s)
@@ -227,6 +233,14 @@ func (pc *PositionCreate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Position.name": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.Keyword(); !ok {
+		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Position.keyword"`)}
+	}
+	if v, ok := pc.mutation.Keyword(); ok {
+		if err := position.KeywordValidator(v); err != nil {
+			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Position.keyword": %w`, err)}
+		}
+	}
 	if _, ok := pc.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Position.description"`)}
 	}
@@ -294,6 +308,10 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.Name(); ok {
 		_spec.SetField(position.FieldName, field.TypeString, value)
 		_node.Name = value
+	}
+	if value, ok := pc.mutation.Keyword(); ok {
+		_spec.SetField(position.FieldKeyword, field.TypeString, value)
+		_node.Keyword = value
 	}
 	if value, ok := pc.mutation.Description(); ok {
 		_spec.SetField(position.FieldDescription, field.TypeString, value)

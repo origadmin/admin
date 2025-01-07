@@ -43,6 +43,24 @@ service AuthService {
       body: "data"
     };
   }
+
+  rpc AuthLogout (AuthLogoutRequest) returns (AuthLogoutResponse) {
+    option (google.api.http) = {
+      post: "/sys/auth/logout"
+      body: "data"
+    };
+  }
+}
+
+message AuthLogoutRequest {
+  message Data {
+    string token = 1;
+  }
+  Data data = 1;
+}
+
+message AuthLogoutResponse {
+  google.protobuf.Empty empty = 1;
 }
 
 message ListAuthResourcesRequest {

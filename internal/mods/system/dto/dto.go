@@ -256,11 +256,149 @@ func ConvertDepartmentPB2Object(pbModel *DepartmentPB) (goModel *Department) {
 	goModel.UpdateTime = pbModel.UpdateTime.AsTime()
 	goModel.Keyword = pbModel.Keyword
 	goModel.Name = pbModel.Name
+	goModel.TreePath = pbModel.TreePath
 	goModel.Description = pbModel.Description
 	goModel.Sequence = int(pbModel.Sequence)
 	goModel.Status = int8(pbModel.Status)
 	goModel.Level = int(pbModel.Level)
 	goModel.ParentID = pbModel.ParentId
+	return goModel
+}
+
+type (
+	Departments   = []*ent.Department
+	DepartmentsPB = []*pb.Department
+)
+
+// ConvertDepartments2PB Children holds the value of the children edge.
+func ConvertDepartments2PB(gosModel Departments) (pbsModel DepartmentsPB) {
+	for _, model := range gosModel {
+		pbsModel = append(pbsModel, ConvertDepartment2PB(model))
+	}
+	return pbsModel
+}
+
+// ConvertDepartmentsPB2Object Children holds the value of the children edge.
+func ConvertDepartmentsPB2Object(pbsModel DepartmentsPB) (gosModel Departments) {
+	for _, model := range pbsModel {
+		gosModel = append(gosModel, ConvertDepartmentPB2Object(model))
+	}
+	return gosModel
+}
+
+type (
+	UserDepartments   = []*ent.UserDepartment
+	UserDepartmentsPB = []*pb.UserDepartment
+)
+
+// ConvertUserDepartments2PB UserDepartments holds the value of the user_departments edge.
+func ConvertUserDepartments2PB(gosModel UserDepartments) (pbsModel UserDepartmentsPB) {
+	for _, model := range gosModel {
+		pbsModel = append(pbsModel, ConvertUserDepartment2PB(model))
+	}
+	return pbsModel
+}
+
+// ConvertUserDepartmentsPB2Object UserDepartments holds the value of the user_departments edge.
+func ConvertUserDepartmentsPB2Object(pbsModel UserDepartmentsPB) (gosModel UserDepartments) {
+	for _, model := range pbsModel {
+		gosModel = append(gosModel, ConvertUserDepartmentPB2Object(model))
+	}
+	return gosModel
+}
+
+type (
+	DepartmentEdges   = ent.DepartmentEdges
+	DepartmentEdgesPB = pb.DepartmentEdges
+)
+
+// ConvertDepartmentEdges2PB DepartmentEdges holds the relations/edges for other nodes in the graph.
+func ConvertDepartmentEdges2PB(goModel *DepartmentEdges) (pbModel *DepartmentEdgesPB) {
+	pbModel = &DepartmentEdgesPB{}
+	if goModel == nil {
+		return pbModel
+	}
+
+	pbModel.Users = ConvertUsers2PB(goModel.Users)
+	pbModel.Positions = ConvertPositions2PB(goModel.Positions)
+	pbModel.Children = ConvertDepartments2PB(goModel.Children)
+	pbModel.Parent = ConvertDepartment2PB(goModel.Parent)
+	pbModel.UserDepartments = ConvertUserDepartments2PB(goModel.UserDepartments)
+	return pbModel
+}
+
+// ConvertDepartmentEdgesPB2Object DepartmentEdges holds the relations/edges for other nodes in the graph.
+func ConvertDepartmentEdgesPB2Object(pbModel *DepartmentEdgesPB) (goModel *DepartmentEdges) {
+	goModel = &DepartmentEdges{}
+	if pbModel == nil {
+		return goModel
+	}
+
+	goModel.Users = ConvertUsersPB2Object(pbModel.Users)
+	goModel.Positions = ConvertPositionsPB2Object(pbModel.Positions)
+	goModel.Children = ConvertDepartmentsPB2Object(pbModel.Children)
+	goModel.Parent = ConvertDepartmentPB2Object(pbModel.Parent)
+	goModel.UserDepartments = ConvertUserDepartmentsPB2Object(pbModel.UserDepartments)
+	return goModel
+}
+
+type (
+	UserDepartment   = ent.UserDepartment
+	UserDepartmentPB = pb.UserDepartment
+)
+
+// ConvertUserDepartment2PB user_department.table.comment
+func ConvertUserDepartment2PB(goModel *UserDepartment) (pbModel *UserDepartmentPB) {
+	pbModel = &UserDepartmentPB{}
+	if goModel == nil {
+		return pbModel
+	}
+
+	pbModel.Id = int64(goModel.ID)
+	pbModel.UserId = int64(goModel.UserID)
+	pbModel.DepartmentId = int64(goModel.DepartmentID)
+	return pbModel
+}
+
+// ConvertUserDepartmentPB2Object user_department.table.comment
+func ConvertUserDepartmentPB2Object(pbModel *UserDepartmentPB) (goModel *UserDepartment) {
+	goModel = &UserDepartment{}
+	if pbModel == nil {
+		return goModel
+	}
+
+	goModel.ID = int64(pbModel.Id)
+	goModel.UserID = int64(pbModel.UserId)
+	goModel.DepartmentID = int64(pbModel.DepartmentId)
+	return goModel
+}
+
+type (
+	UserDepartmentEdges   = ent.UserDepartmentEdges
+	UserDepartmentEdgesPB = pb.UserDepartmentEdges
+)
+
+// ConvertUserDepartmentEdges2PB UserDepartmentEdges holds the relations/edges for other nodes in the graph.
+func ConvertUserDepartmentEdges2PB(goModel *UserDepartmentEdges) (pbModel *UserDepartmentEdgesPB) {
+	pbModel = &UserDepartmentEdgesPB{}
+	if goModel == nil {
+		return pbModel
+	}
+
+	pbModel.User = ConvertUser2PB(goModel.User)
+	pbModel.Department = ConvertDepartment2PB(goModel.Department)
+	return pbModel
+}
+
+// ConvertUserDepartmentEdgesPB2Object UserDepartmentEdges holds the relations/edges for other nodes in the graph.
+func ConvertUserDepartmentEdgesPB2Object(pbModel *UserDepartmentEdgesPB) (goModel *UserDepartmentEdges) {
+	goModel = &UserDepartmentEdges{}
+	if pbModel == nil {
+		return goModel
+	}
+
+	goModel.User = ConvertUserPB2Object(pbModel.User)
+	goModel.Department = ConvertDepartmentPB2Object(pbModel.Department)
 	return goModel
 }
 

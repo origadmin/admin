@@ -289,16 +289,57 @@ message Department {
   string keyword = 4 [json_name = "keyword"];
   // department.field.name
   string name = 5 [json_name = "name"];
-  // department.field.description
-  string description = 6 [json_name = "description"];
+  // menu.field.tree_path
+  string tree_path = 6 [json_name = "tree_path"];
   // department.field.sequence
   int32 sequence = 7 [json_name = "sequence"];
   // department.field.status
   int32 status = 8 [json_name = "status"];
   // department.field.level
-  int32 level = 10 [json_name = "level"];
+  int32 level = 9 [json_name = "level"];
+  // department.field.description
+  string description = 10 [json_name = "description"];
   // department.field.parent_id
   int64 parent_id = 11 [json_name = "parent_id"];
+  // Children holds the value of the children edge.
+  repeated Department children = 12 [json_name = "children"];
+  // Parent holds the value of the parent edge.
+  Department parent = 13 [json_name = "parent"];
+}
+
+message DepartmentEdges {
+  // Users holds the value of the users edge.
+  repeated User users = 1 [json_name = "users"];
+  // Positions holds the value of the positions edge.
+  repeated Position positions = 2 [json_name = "positions"];
+  // Children holds the value of the children edge.
+  repeated Department children = 3 [json_name = "children"];
+  // Parent holds the value of the parent edge.
+  Department parent = 4 [json_name = "parent"];
+  // UserDepartments holds the value of the user_departments edge.
+  repeated UserDepartment user_departments = 5 [json_name = "user_departments"];
+}
+
+// user_department.table.comment
+message UserDepartment {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // field.foreign_key.comment
+  int64 user_id = 2 [json_name = "user_id"];
+  // field.foreign_key.comment
+  int64 department_id = 3 [json_name = "department_id"];
+  // Edges holds the relations/edges for other nodes in the graph.
+  // The values are being populated by the UserDepartmentQuery when eager-loading is set.
+  UserDepartmentEdges edges = 4 [json_name = "edges"];
+}
+
+// UserDepartmentEdges holds the relations/edges for other nodes in the graph.
+message UserDepartmentEdges {
+  // User holds the value of the user edge.
+  User user = 1 [json_name = "user"];
+  // Department holds the value of the department edge.
+  Department department = 2 [json_name = "department"];
 }
 
 // position.table.comment
@@ -312,10 +353,12 @@ message Position {
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // position.field.name
   string name = 4 [json_name = "name"];
+  // position.field.keyword
+  string keyword = 5 [json_name = "keyword"];
   // position.field.description
-  string description = 5 [json_name = "description"];
+  string description = 6 [json_name = "description"];
   // department.field.department_id
-  int64 department_id = 6 [json_name = "department_id"];
+  int64 department_id = 7 [json_name = "department_id"];
 }
 
 // PositionEdges holds the relations/edges for other nodes in the graph.

@@ -19,6 +19,7 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationAuthServiceAuthLogout = "/api.v1.services.system.AuthService/AuthLogout"
 const OperationAuthServiceAuthenticate = "/api.v1.services.system.AuthService/Authenticate"
 const OperationAuthServiceCreateToken = "/api.v1.services.system.AuthService/CreateToken"
 const OperationAuthServiceDestroyToken = "/api.v1.services.system.AuthService/DestroyToken"
@@ -26,6 +27,7 @@ const OperationAuthServiceListAuthResources = "/api.v1.services.system.AuthServi
 const OperationAuthServiceValidateToken = "/api.v1.services.system.AuthService/ValidateToken"
 
 type AuthServiceHTTPServer interface {
+	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// CreateToken CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
@@ -43,6 +45,7 @@ func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_HTTP_Handler(srv))
 	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_HTTP_Handler(srv))
 	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_HTTP_Handler(srv))
+	r.POST("/sys/auth/logout", _AuthService_AuthLogout0_HTTP_Handler(srv))
 }
 
 func _AuthService_ListAuthResources0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
@@ -149,7 +152,30 @@ func _AuthService_Authenticate0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx
 	}
 }
 
+func _AuthService_AuthLogout0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AuthLogoutRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthServiceAuthLogout)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.AuthLogout(ctx, req.(*AuthLogoutRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*AuthLogoutResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AuthServiceHTTPClient interface {
+	AuthLogout(ctx context.Context, req *AuthLogoutRequest, opts ...http.CallOption) (rsp *AuthLogoutResponse, err error)
 	Authenticate(ctx context.Context, req *AuthenticateRequest, opts ...http.CallOption) (rsp *AuthenticateResponse, err error)
 	CreateToken(ctx context.Context, req *CreateTokenRequest, opts ...http.CallOption) (rsp *CreateTokenResponse, err error)
 	DestroyToken(ctx context.Context, req *DestroyTokenRequest, opts ...http.CallOption) (rsp *DestroyTokenResponse, err error)
@@ -163,6 +189,19 @@ type AuthServiceHTTPClientImpl struct {
 
 func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
 	return &AuthServiceHTTPClientImpl{client}
+}
+
+func (c *AuthServiceHTTPClientImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...http.CallOption) (*AuthLogoutResponse, error) {
+	var out AuthLogoutResponse
+	pattern := "/sys/auth/logout"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthServiceAuthLogout))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func (c *AuthServiceHTTPClientImpl) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...http.CallOption) (*AuthenticateResponse, error) {
