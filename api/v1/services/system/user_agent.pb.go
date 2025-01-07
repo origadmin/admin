@@ -36,16 +36,16 @@ type UserAPIAgent interface {
 }
 
 func _UserAPI_ListUsers0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in ListUsersRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIListUsers)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIListUsers)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListUsers(ctx, req.(*ListUsersRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -54,24 +54,24 @@ func _UserAPI_ListUsers0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_GetUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in GetUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIGetUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIGetUser)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.GetUser(ctx, req.(*GetUserRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -80,24 +80,24 @@ func _UserAPI_GetUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_CreateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CreateUserRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := cctx.Bind(&in.User); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPICreateUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPICreateUser)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateUser(ctx, req.(*CreateUserRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -106,27 +106,27 @@ func _UserAPI_CreateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_UpdateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in UpdateUserRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := cctx.Bind(&in.User); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIUpdateUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIUpdateUser)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -135,24 +135,24 @@ func _UserAPI_UpdateUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_DeleteUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in DeleteUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIDeleteUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIDeleteUser)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -161,27 +161,27 @@ func _UserAPI_DeleteUser0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in UpdateUserStatusRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := cctx.Bind(&in.User); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIUpdateUserStatus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIUpdateUserStatus)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -190,27 +190,27 @@ func _UserAPI_UpdateUserStatus0_HTTPAgent_Handler(srv UserAPIAgent) http.Handler
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in UpdateUserRolesRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIUpdateUserRoles)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIUpdateUserRoles)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateUserRoles(ctx, req.(*UpdateUserRolesRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -219,24 +219,24 @@ func _UserAPI_UpdateUserRoles0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerF
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv UserAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in ResetUserPasswordRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationUserAPIResetUserPassword)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationUserAPIResetUserPassword)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -245,7 +245,7 @@ func _UserAPI_ResetUserPassword0_HTTPAgent_Handler(srv UserAPIAgent) http.Handle
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 

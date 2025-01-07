@@ -314,7 +314,7 @@ func DefaultServiceMiddleware() *middlewarev1.Middleware {
 				TokenType:            "Bearer",
 			},
 		},
-		// BuildMiddleware filters
+		// Build filters
 		Selector: &selectorv1.Selector{
 			Enabled: false,
 		},

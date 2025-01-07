@@ -20,13 +20,13 @@ require (
 	github.com/google/gnostic v0.7.0
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
-	github.com/origadmin/contrib/consul v0.0.26
-	github.com/origadmin/contrib/database v0.0.26
-	github.com/origadmin/contrib/i18n v0.0.26
-	github.com/origadmin/contrib/replacer v0.0.26
-	github.com/origadmin/contrib/transport/gins v0.0.26
+	github.com/origadmin/contrib/consul v0.0.28
+	github.com/origadmin/contrib/database v0.0.28
+	github.com/origadmin/contrib/i18n v0.0.28
+	github.com/origadmin/contrib/replacer v0.0.28
+	github.com/origadmin/contrib/transport/gins v0.0.28
 	github.com/origadmin/entslog/v3 v3.0.6
-	github.com/origadmin/runtime v0.1.44
+	github.com/origadmin/runtime v0.1.50
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.2.9
 	github.com/origadmin/toolkits/codec v0.2.9

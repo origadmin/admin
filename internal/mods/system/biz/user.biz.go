@@ -81,7 +81,7 @@ func (biz UsersBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, op
 	}
 	// TODO: Send email or sms to user
 	_ = ps
-	fmt.Println("Create new user username: ", username, "password: ", ps)
+	fmt.Println("Create new user username:", username, "password:", ps)
 
 	result, err := biz.dao.Create(ctx, createUser, option)
 	if err != nil {

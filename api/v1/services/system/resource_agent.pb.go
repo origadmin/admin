@@ -30,16 +30,16 @@ type ResourceAPIAgent interface {
 }
 
 func _ResourceAPI_ListResources0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in ListResourcesRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceAPIListResources)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationResourceAPIListResources)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListResources(ctx, req.(*ListResourcesRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -48,24 +48,24 @@ func _ResourceAPI_ListResources0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Ha
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _ResourceAPI_GetResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in GetResourceRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceAPIGetResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationResourceAPIGetResource)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.GetResource(ctx, req.(*GetResourceRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -74,24 +74,24 @@ func _ResourceAPI_GetResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.Hand
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CreateResourceRequest
-		if err := ctx.Bind(&in.Resource); err != nil {
+		if err := cctx.Bind(&in.Resource); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceAPICreateResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationResourceAPICreateResource)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateResource(ctx, req.(*CreateResourceRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -100,27 +100,27 @@ func _ResourceAPI_CreateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in UpdateResourceRequest
-		if err := ctx.Bind(&in.Resource); err != nil {
+		if err := cctx.Bind(&in.Resource); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceAPIUpdateResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationResourceAPIUpdateResource)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateResource(ctx, req.(*UpdateResourceRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -129,24 +129,24 @@ func _ResourceAPI_UpdateResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in DeleteResourceRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceAPIDeleteResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationResourceAPIDeleteResource)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DeleteResource(ctx, req.(*DeleteResourceRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -155,7 +155,7 @@ func _ResourceAPI_DeleteResource0_HTTPAgent_Handler(srv ResourceAPIAgent) http.H
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 

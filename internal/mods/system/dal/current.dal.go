@@ -8,12 +8,13 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -22,17 +23,31 @@ type currentRepo struct {
 }
 
 func (repo currentRepo) GetCurrentUser(ctx context.Context, in *pb.GetCurrentUserRequest) (*pb.GetCurrentUserResponse, error) {
-	md, ok := metadata.FromServerContext(ctx)
-	if !ok {
-		log.Errorf("failed to get metadata from context")
-		return nil, nil
+	userid := securityx.GetUserID(ctx)
+	if userid == "" {
+		return nil, dto.ErrUserNotFound
 	}
-	log.Infof("server user id: %+v", md)
-	md, ok = metadata.FromClientContext(ctx)
-	if ok {
-		log.Infof("user id: %+v", md)
+	if userid == "admin" {
+		return &pb.GetCurrentUserResponse{
+			User: &pb.User{
+				Id:       0,
+				Uuid:     "admin",
+				Username: "admin",
+				Email:    "admin",
+				Phone:    "admin",
+				Avatar:   "https://raw.githubusercontent.com/OrigAdmin/OrigAdmin/master/origadmin.png",
+				Nickname: "admin",
+				Status:   1,
+			},
+		}, nil
 	}
-	return &pb.GetCurrentUserResponse{}, nil
+	userObj, err := repo.db.User(ctx).Query().Where(user.UUID(userid)).First(ctx)
+	if err != nil {
+		return nil, dto.ErrUserNotFound
+	}
+	return &pb.GetCurrentUserResponse{
+		User: dto.ConvertUser2PB(userObj),
+	}, nil
 }
 
 func (repo currentRepo) ListCurrentRoles(ctx context.Context, in *pb.ListCurrentRolesRequest) (*pb.ListCurrentRolesResponse, error) {

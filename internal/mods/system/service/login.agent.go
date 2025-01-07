@@ -9,6 +9,7 @@ import (
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/agent"
+	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -23,77 +24,83 @@ type LoginAPIAgentService struct {
 	client pb.LoginAPIClient
 }
 
-func (s LoginAPIAgentService) CurrentLogout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	response, err := s.client.Logout(context, request)
+func (s LoginAPIAgentService) CurrentLogout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.Logout(ctx, request)
 	if err != nil {
 		log.Errorf("Logout error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Register(context transhttp.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
-	response, err := s.client.Register(context, request)
+func (s LoginAPIAgentService) Register(ctx context.Context, request *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.Register(ctx, request)
 	if err != nil {
 		log.Errorf("Register error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaResource(context transhttp.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
-	response, err := s.client.CaptchaResource(context, request)
+func (s LoginAPIAgentService) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.CaptchaResource(ctx, request)
 	if err != nil {
 		log.Errorf("CaptchaResource error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaResources(context transhttp.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
-	response, err := s.client.CaptchaResources(context, request)
+func (s LoginAPIAgentService) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.CaptchaResources(ctx, request)
 	if err != nil {
 		log.Errorf("CaptchaResources error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response),
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaID(context transhttp.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
+func (s LoginAPIAgentService) CaptchaID(ctx context.Context, request *pb.CaptchaIDRequest) (*pb.CaptchaIDResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
 	log.Debugf("CaptchaID: Request:%+v", request)
-	response, err := s.client.CaptchaID(context, request)
+	response, err := s.client.CaptchaID(ctx, request)
 	log.Debugf("CaptchaID: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
 		return nil, err
 	}
 
-	s.JSON(context, http.StatusOK, &resp.StringResult{
+	s.JSON(httpCtx, http.StatusOK, &resp.StringResult{
 		Success: true,
 		Data:    response.Data,
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
+func (s LoginAPIAgentService) CaptchaImage(ctx context.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
 	log.Debugf("CaptchaImage: Request:%+v", request)
-	response, err := s.client.CaptchaImage(context, request)
+	response, err := s.client.CaptchaImage(ctx, request)
 	log.Debugf("CaptchaImage: Response:%+v, Error:%+v", response, err)
 	if err != nil {
 		log.Errorf("CaptchaImage error: %v", err)
@@ -101,12 +108,12 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	}
 	log.Debugf("CaptchaImage: Setting headers: %+v", response.Headers)
 	for k, v := range response.Headers {
-		context.Response().Header().Set(k, v)
+		httpCtx.Response().Header().Set(k, v)
 	}
 	log.Debugf("CaptchaImage: Writing response headers")
-	context.Response().WriteHeader(http.StatusOK)
+	httpCtx.Response().WriteHeader(http.StatusOK)
 	log.Debugf("CaptchaImage: Writing response image")
-	if _, err := context.Response().Write(response.Image); err != nil {
+	if _, err := httpCtx.Response().Write(response.Image); err != nil {
 		log.Errorf("CaptchaImage error writing response: %v", err)
 		return nil, err
 	}
@@ -116,41 +123,44 @@ func (s LoginAPIAgentService) CaptchaImage(context transhttp.Context, request *p
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) TokenRefresh(context transhttp.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
-	response, err := s.client.TokenRefresh(context, request)
+func (s LoginAPIAgentService) TokenRefresh(ctx context.Context, request *pb.TokenRefreshRequest) (*pb.TokenRefreshResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.TokenRefresh(ctx, request)
 	if err != nil {
 		log.Errorf("Refresh error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(resp.FromToken(response.Token)),
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Login(context transhttp.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
-	response, err := s.client.Login(context, request)
+func (s LoginAPIAgentService) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.Login(ctx, request)
 	if err != nil {
 		log.Errorf("Login error: %v", err)
 		return nil, err
 	}
 	token := resp.FromToken(response.Token)
 	log.Debugf("Login: Token:%+v", token)
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(httpCtx, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    token,
 	})
 	return nil, nil
 }
 
-func (s LoginAPIAgentService) Logout(context transhttp.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-	response, err := s.client.Logout(context, request)
+func (s LoginAPIAgentService) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.Logout(ctx, request)
 	if err != nil {
 		log.Errorf("Logout error: %v", err)
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response),
 	})

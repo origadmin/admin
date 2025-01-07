@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
+	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
 	"github.com/origadmin/runtime"
@@ -76,16 +77,17 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		Data:        &data{},
 		TokenParser: nil,
 	}
-	serv := selector.Server(bridge.BuildMiddleware()).Match(func(ctx context.Context, operation string) bool {
+	serv := selector.Server(bridge.Build()).Match(func(ctx context.Context, operation string) bool {
 		for _, p := range paths {
 			if strings.HasPrefix(operation, p) {
 				log.Debugf("Operation '%s' matches public path '%s', returning true", operation, p)
 				return false
 			}
 		}
+		log.Debugf("Operation '%s' no matches public path '%s'", operation)
 		return true
 	})
-	ms = append(ms, serv.Build())
+	ms = append(ms, serv.Build(), CallerMiddleware())
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
 		servicehttp.WithServerOptions(http.ErrorEncoder(resp.ResponseErrorEncoder)),
@@ -115,5 +117,18 @@ func DefaultPaths() []string {
 		system.OperationLoginAPICaptchaResources,
 		system.OperationLoginAPILogin,
 		system.OperationLoginAPIRegister,
+	}
+}
+
+func CallerMiddleware() middleware.KMiddleware {
+	return func(handler middleware.KHandler) middleware.KHandler {
+		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+			log.Infof("CallerMiddleware: %+v", ctx)
+			tr, ok := transport.FromServerContext(ctx)
+			log.Infof("Caller Server: %+v, ok: %+v", tr, ok)
+			tr, ok = transport.FromClientContext(ctx)
+			log.Infof("Caller Client: %+v, ok: %+v", tr, ok)
+			return handler(ctx, req)
+		}
 	}
 }

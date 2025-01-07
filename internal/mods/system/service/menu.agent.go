@@ -7,7 +7,8 @@ package service
 import (
 	"net/http"
 
-	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime/agent"
+	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -21,49 +22,53 @@ type MenuAPIGINRPCService struct {
 	client pb.MenuAPIClient
 }
 
-func (s MenuAPIGINRPCService) CreateMenu(context transhttp.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
-	response, err := s.client.CreateMenu(context, request)
+func (s MenuAPIGINRPCService) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.CreateMenu(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response.Menu),
 	})
 	return nil, nil
 }
 
-func (s MenuAPIGINRPCService) DeleteMenu(context transhttp.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
-	_, err := s.client.DeleteMenu(context, request)
+func (s MenuAPIGINRPCService) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	_, err := s.client.DeleteMenu(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    nil,
 	})
 	return nil, nil
 }
 
-func (s MenuAPIGINRPCService) GetMenu(context transhttp.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
-	response, err := s.client.GetMenu(context, request)
+func (s MenuAPIGINRPCService) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.GetMenu(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response.Menu),
 	})
 	return nil, nil
 }
 
-func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
-	response, err := s.client.ListMenus(context, request)
+func (s MenuAPIGINRPCService) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.ListMenus(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
-	s.JSON(context, http.StatusOK, &resp.Page{
+	s.JSON(httpCtx, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
 		Data:    resp.Proto2AnyPBArray(response.Menus...),
@@ -71,12 +76,13 @@ func (s MenuAPIGINRPCService) ListMenus(context transhttp.Context, request *pb.L
 	return nil, nil
 }
 
-func (s MenuAPIGINRPCService) UpdateMenu(context transhttp.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
-	response, err := s.client.UpdateMenu(context, request)
+func (s MenuAPIGINRPCService) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.UpdateMenu(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response.Menu),
 	})

@@ -9,7 +9,6 @@ import (
 	"context"
 	"strings"
 
-	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/transport"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
@@ -20,7 +19,6 @@ import (
 	"origadmin/application/admin/contrib/security/authn/jwt"
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/system/server"
 )
 
 func NewAuthenticator(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Authenticator, error) {
@@ -133,7 +131,7 @@ func (obj SecurityBridge) aggregateTokenParsers(outer ...func(ctx context.Contex
 	}
 }
 
-func (obj SecurityBridge) BuildMiddleware() middleware.KMiddleware {
+func (obj SecurityBridge) Build() middleware.KMiddleware {
 	if obj.TokenParser == nil {
 		obj.TokenParser = obj.aggregateTokenParsers(
 			FromTransportClient(obj.AuthenticationHeader, obj.Scheme.String()),
@@ -161,9 +159,8 @@ func (obj SecurityBridge) BuildMiddleware() middleware.KMiddleware {
 			}
 			log.Debugf("NewAuthN: setting claims to context user-id: %+v", claims.GetSubject())
 
-			md := metadata.Metadata{}
-			md.Set("x-md-global-security-user-id", claims.GetSubject())
-			ctx = server.NewAgentContext(ctx, md)
+			ctx = AppendUserID(ctx, claims.GetSubject())
+			log.Debugf("NewAuthN: found context metadata: %+v", ctx)
 			if obj.IsRoot(ctx, claims) {
 				ctx = security.WithRootContext(ctx)
 				log.Debugf("NewAuthN: setting root to context")
@@ -220,12 +217,12 @@ func (obj SecurityBridge) PolicyParser(ctx context.Context, claims security.Clai
 		return nil, msecurity.ErrInvalidToken
 	}
 	policy := security.RegisteredPolicy{
-		Subject:    claims.GetSubject(),
-		Object:     req.URL.Path,
-		Action:     req.Method,
-		Domain:     claims.GetIssuer(),
-		Roles:      roles,
-		Permission: permissions,
+		Subject:     claims.GetSubject(),
+		Object:      req.URL.Path,
+		Action:      req.Method,
+		Domain:      claims.GetIssuer(),
+		Roles:       roles,
+		Permissions: permissions,
 	}
 	log.Debugf("PolicyParser: created policy for subject: %s, policy: %+v", claims.GetSubject(), policy)
 	return &policy, nil

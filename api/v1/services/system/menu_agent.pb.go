@@ -30,16 +30,16 @@ type MenuAPIAgent interface {
 }
 
 func _MenuAPI_ListMenus0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in ListMenusRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMenuAPIListMenus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationMenuAPIListMenus)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListMenus(ctx, req.(*ListMenusRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -48,24 +48,24 @@ func _MenuAPI_ListMenus0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in GetMenuRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMenuAPIGetMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationMenuAPIGetMenu)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.GetMenu(ctx, req.(*GetMenuRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -74,24 +74,24 @@ func _MenuAPI_GetMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CreateMenuRequest
-		if err := ctx.Bind(&in.Menu); err != nil {
+		if err := cctx.Bind(&in.Menu); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMenuAPICreateMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationMenuAPICreateMenu)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateMenu(ctx, req.(*CreateMenuRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -100,27 +100,27 @@ func _MenuAPI_CreateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in UpdateMenuRequest
-		if err := ctx.Bind(&in.Menu); err != nil {
+		if err := cctx.Bind(&in.Menu); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMenuAPIUpdateMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationMenuAPIUpdateMenu)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.UpdateMenu(ctx, req.(*UpdateMenuRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -129,24 +129,24 @@ func _MenuAPI_UpdateMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in DeleteMenuRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMenuAPIDeleteMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationMenuAPIDeleteMenu)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -155,7 +155,7 @@ func _MenuAPI_DeleteMenu0_HTTPAgent_Handler(srv MenuAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 

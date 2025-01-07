@@ -33,16 +33,16 @@ type LoginAPIAgent interface {
 }
 
 func _LoginAPI_CaptchaID0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CaptchaIDRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPICaptchaID)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPICaptchaID)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CaptchaID(ctx, req.(*CaptchaIDRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -51,21 +51,21 @@ func _LoginAPI_CaptchaID0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc 
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_CaptchaImage0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CaptchaImageRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPICaptchaImage)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPICaptchaImage)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CaptchaImage(ctx, req.(*CaptchaImageRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -74,24 +74,24 @@ func _LoginAPI_CaptchaImage0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFu
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_CaptchaResource0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CaptchaResourceRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPICaptchaResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPICaptchaResource)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CaptchaResource(ctx, req.(*CaptchaResourceRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -100,24 +100,24 @@ func _LoginAPI_CaptchaResource0_HTTPAgent_Handler(srv LoginAPIAgent) http.Handle
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_CaptchaResources0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CaptchaResourcesRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
+		if err := cctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPICaptchaResources)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPICaptchaResources)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CaptchaResources(ctx, req.(*CaptchaResourcesRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -126,24 +126,24 @@ func _LoginAPI_CaptchaResources0_HTTPAgent_Handler(srv LoginAPIAgent) http.Handl
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_Login0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in LoginRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPILogin)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPILogin)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -152,24 +152,24 @@ func _LoginAPI_Login0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_Logout0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in LogoutRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPILogout)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPILogout)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.Logout(ctx, req.(*LogoutRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -178,24 +178,24 @@ func _LoginAPI_Logout0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_Register0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in RegisterRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPIRegister)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPIRegister)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.Register(ctx, req.(*RegisterRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -204,24 +204,24 @@ func _LoginAPI_Register0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _LoginAPI_TokenRefresh0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in TokenRefreshRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationLoginAPITokenRefresh)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationLoginAPITokenRefresh)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.TokenRefresh(ctx, req.(*TokenRefreshRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -230,7 +230,7 @@ func _LoginAPI_TokenRefresh0_HTTPAgent_Handler(srv LoginAPIAgent) http.HandlerFu
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 

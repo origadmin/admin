@@ -8,7 +8,8 @@ package service
 import (
 	"net/http"
 
-	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime/agent"
+	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -22,63 +23,69 @@ type UserAPIGINRPCService struct {
 	client pb.UserAPIClient
 }
 
-func (s UserAPIGINRPCService) UpdateUserRoles(context transhttp.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+func (s UserAPIGINRPCService) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserAPIGINRPCService) ResetUserPassword(context transhttp.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+func (s UserAPIGINRPCService) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserAPIGINRPCService) UpdateUserStatus(context transhttp.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+func (s UserAPIGINRPCService) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserAPIGINRPCService) CreateUser(context transhttp.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	response, err := s.client.CreateUser(context, request)
+func (s UserAPIGINRPCService) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.CreateUser(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response.User),
 	})
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) DeleteUser(context transhttp.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
-	_, err := s.client.DeleteUser(context, request)
+func (s UserAPIGINRPCService) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	_, err := s.client.DeleteUser(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    nil,
 	})
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) GetUser(context transhttp.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	response, err := s.client.GetUser(context, request)
+func (s UserAPIGINRPCService) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.GetUser(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response.User),
 	})
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) ListUsers(context transhttp.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
-	response, err := s.client.ListUsers(context, request)
+func (s UserAPIGINRPCService) ListUsers(ctx context.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.ListUsers(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Page{
+	s.JSON(httpCtx, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
 		Data:    resp.Proto2AnyPBArray(response.Users...),
@@ -86,12 +93,13 @@ func (s UserAPIGINRPCService) ListUsers(context transhttp.Context, request *pb.L
 	return nil, nil
 }
 
-func (s UserAPIGINRPCService) UpdateUser(context transhttp.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	response, err := s.client.UpdateUser(context, request)
+func (s UserAPIGINRPCService) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.UpdateUser(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Any2AnyPB(response.User),
 	})

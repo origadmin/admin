@@ -7,7 +7,8 @@ package service
 import (
 	"net/http"
 
-	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime/agent"
+	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -25,62 +26,67 @@ type AuthAPIGINRPCService struct {
 	client pb.AuthAPIClient
 }
 
-func (s AuthAPIGINRPCService) Authenticate(context transhttp.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
-	response, err := s.client.Authenticate(context, request)
+func (s AuthAPIGINRPCService) Authenticate(ctx context.Context, request *pb.AuthenticateRequest) (*pb.AuthenticateResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.Authenticate(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 	if !response.IsValid {
 		return nil, ErrorInvalidToken
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(httpCtx, http.StatusOK, &resp.Result{
 		Success: true,
 	})
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) CreateToken(context transhttp.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
-	response, err := s.client.CreateToken(context, request)
+func (s AuthAPIGINRPCService) CreateToken(ctx context.Context, request *pb.CreateTokenRequest) (*pb.CreateTokenResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.CreateToken(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
-		Success: true,
-		Data:    response,
-	})
-	return nil, nil
-}
-
-func (s AuthAPIGINRPCService) DestroyToken(context transhttp.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
-	response, err := s.client.DestroyToken(context, request)
-	if err != nil {
-		return nil, err
-	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(httpCtx, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) ValidateToken(context transhttp.Context, request *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
-	response, err := s.client.ValidateToken(context, request)
+func (s AuthAPIGINRPCService) DestroyToken(ctx context.Context, request *pb.DestroyTokenRequest) (*pb.DestroyTokenResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.DestroyToken(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Result{
+	s.JSON(httpCtx, http.StatusOK, &resp.Result{
 		Success: true,
 		Data:    response,
 	})
 	return nil, nil
 }
 
-func (s AuthAPIGINRPCService) ListAuthResources(context transhttp.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
-	response, err := s.client.ListAuthResources(context, request)
+func (s AuthAPIGINRPCService) ValidateToken(ctx context.Context, request *pb.ValidateTokenRequest) (*pb.ValidateTokenResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.ValidateToken(ctx, request)
 	if err != nil {
 		return nil, err
 	}
-	s.JSON(context, http.StatusOK, &resp.Page{
+	s.JSON(httpCtx, http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    response,
+	})
+	return nil, nil
+}
+
+func (s AuthAPIGINRPCService) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.ListAuthResources(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	s.JSON(httpCtx, http.StatusOK, &resp.Page{
 		Success: true,
 		Total:   response.TotalSize,
 		Data:    resp.Proto2AnyPBArray(response.Resources...),

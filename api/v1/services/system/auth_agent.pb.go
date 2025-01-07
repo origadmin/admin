@@ -33,16 +33,16 @@ type AuthAPIAgent interface {
 }
 
 func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in ListAuthResourcesRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIListAuthResources)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationAuthAPIListAuthResources)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -51,24 +51,24 @@ func _AuthAPI_ListAuthResources0_HTTPAgent_Handler(srv AuthAPIAgent) http.Handle
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in CreateTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPICreateToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationAuthAPICreateToken)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -77,21 +77,21 @@ func _AuthAPI_CreateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc 
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in ValidateTokenRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIValidateToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationAuthAPIValidateToken)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -100,24 +100,24 @@ func _AuthAPI_ValidateToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFun
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in DestroyTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIDestroyToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationAuthAPIDestroyToken)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -126,24 +126,24 @@ func _AuthAPI_DestroyToken0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 
 func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc {
-	return func(ctx http.Context) error {
+	return func(cctx http.Context) error {
 		var in AuthenticateRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.Data); err != nil {
 			return err
 		}
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAPIAuthenticate)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		http.SetOperation(cctx, OperationAuthAPIAuthenticate)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
 			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
 		})
-		cctx := agent.NewHTTPContext(ctx, ctx)
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
@@ -152,7 +152,7 @@ func _AuthAPI_Authenticate0_HTTPAgent_Handler(srv AuthAPIAgent) http.HandlerFunc
 		if reply == nil {
 			return nil
 		}
-		return ctx.Result(200, reply)
+		return cctx.Result(200, reply)
 	}
 }
 

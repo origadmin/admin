@@ -81,12 +81,12 @@ func (repo authRepo) ListAuthResources(ctx context.Context, in *dto.ListAuthReso
 
 func fromClaims(claims security.Claims, method, path string) security.Policy {
 	return &security.RegisteredPolicy{
-		Subject:    claims.GetSubject(),
-		Object:     path,
-		Action:     method,
-		Domain:     claims.GetIssuer(),
-		Roles:      nil,
-		Permission: nil,
+		Subject:     claims.GetSubject(),
+		Object:      path,
+		Action:      method,
+		Domain:      claims.GetIssuer(),
+		Roles:       nil,
+		Permissions: nil,
 	}
 }
 

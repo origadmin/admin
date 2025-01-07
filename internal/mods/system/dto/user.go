@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/net/pagination"
@@ -104,24 +105,32 @@ func ConvertUsers(users []*User) []*UserPB {
 
 // CreateUser functions are used to create new users
 func CreateUser(user *UserPB, username, password string, option UserQueryOption) (*UserPB, string, error) {
-	var err error
-
+	log.Debugf("Creating user with options: %+v", option)
 	if !option.NoPasswd {
+		log.Debugf("NoPasswd is false, checking for RandomPasswd")
 		if option.RandomPasswd && (user.Email != "" || user.Phone != "") {
+			log.Debugf("RandomPasswd is true and user has email or phone, generating random password")
 			password = rand.GenerateRandom(8)
+			log.Debugf("Generated random password: %s", password)
 		} else {
-			password = ""
+			log.Debugf("RandomPasswd is false or user has no email or phone")
 		}
 	} else {
+		log.Debugf("NoPasswd is true, setting password to empty string")
 		password = ""
 	}
 	var passwd, salt string
+	var err error
 	if password != "" {
+		log.Debugf("Password is not empty, generating salt")
 		salt = rand.GenerateSalt()
+		log.Debugf("Generated salt: %s", salt)
 		passwd, err = hash.Generate(password, salt)
 		if err != nil {
+			log.Errorf("Error generating password hash: %v", err)
 			return nil, "", err
 		}
+		log.Debugf("Generated password hash: %s", passwd)
 	}
 	registerID := id.Gen()
 	user.Id = registerID

@@ -142,13 +142,12 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	if err != nil {
 		return nil, errors.Wrap(err, "create discovery")
 	}
-	ms := []middleware.KMiddleware{
-		AgentMiddleware(),
-	}
+	var ms []middleware.KMiddleware
 	options := []servicegrpc.OptionSetting{
 		servicegrpc.WithDiscovery(registry.ServiceName, discovery),
 	}
 	ms = append(ms, middleware.NewClient(bootstrap.GetMiddleware())...)
+	ms = append(ms, MiddlewareServer())
 	if len(ms) > 0 {
 		options = append(options, servicegrpc.WithMiddlewares(ms...))
 	}
@@ -159,29 +158,33 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	return client, nil
 }
 
-func AgentMiddleware() middleware.KMiddleware {
+func MiddlewareServer() middleware.KMiddleware {
 	return func(handler middleware.KHandler) middleware.KHandler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			log.Debugf("AgentMiddleware: entering handler function")
-			if md, ok := FromAgentContext(ctx); ok {
-				log.Debugf("AgentMiddleware: found agent context metadata: %+v", md)
-				if cmd, ok := metadata.FromClientContext(ctx); ok {
-					log.Debugf("AgentMiddleware: found client context metadata: %+v", cmd)
-					for k, v := range md {
-						cmd[k] = v
-						log.Debugf("AgentMiddleware: adding key-value pair (%s, %s) to client context metadata", k, v)
-					}
-					ctx = metadata.NewClientContext(ctx, cmd)
-					log.Debugf("AgentMiddleware: updated client context metadata: %+v", cmd)
-				} else {
-					log.Debugf("AgentMiddleware: no client context metadata found")
-				}
+			log.Debugf("MiddlewareServer: entering handler function")
+			//if md, ok := FromAgentContext(ctx); ok {
+			log.Debugf("MiddlewareServer: found agent context metadata: %+v", ctx)
+			if md, ok := metadata.FromClientContext(ctx); ok {
+				//	log.Debugf("MiddlewareServer: found client context metadata: %+v", cmd)
+				//	//for k, v := range md {
+				//	//	cmd[k] = v
+				//	//	log.Debugf("MiddlewareServer: adding key-value pair (%s, %s) to client context metadata", k, v)
+				//	//}
+				//	ctx = metadata.NewClientContext(ctx, cmd)
+				log.Debugf("MiddlewareServer: updated client context metadata: %+v", md)
+				//} else {
+				//	log.Debugf("MiddlewareServer: no client context metadata found")
 			} else {
-				log.Debugf("AgentMiddleware: no agent context metadata found")
+				log.Debugf("MiddlewareServer: no client context metadata found")
 			}
-			log.Debugf("AgentMiddleware: calling handler function")
+			if md, ok := metadata.FromServerContext(ctx); ok {
+				log.Debugf("MiddlewareServer: found server context metadata: %+v", md)
+			} else {
+				log.Debugf("MiddlewareServer: no server context metadata found")
+			}
+			log.Debugf("MiddlewareServer: calling handler function")
 			reply, err = handler(ctx, req)
-			log.Debugf("AgentMiddleware: handler function returned reply: %+v, error: %v", reply, err)
+			log.Debugf("MiddlewareServer: handler function returned reply: %+v, error: %v", reply, err)
 			return
 		}
 	}
