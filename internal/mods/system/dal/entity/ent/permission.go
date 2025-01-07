@@ -32,7 +32,7 @@ type Permission struct {
 	// permission.field.data_scope
 	DataScope string `json:"data_scope,omitempty"`
 	// permission.field.data_rules
-	DataRules []map[string]string `json:"data_rules,omitempty"`
+	DataRules map[string]string `json:"data_rules,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PermissionQuery when eager-loading is set.
 	Edges        PermissionEdges `json:"edges"`

@@ -591,6 +591,174 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /sys/departments:
+        get:
+            tags:
+                - DepartmentService
+            operationId: DepartmentService_ListDepartments
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListDepartmentsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - DepartmentService
+            operationId: DepartmentService_CreateDepartment
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the department is to be created.
+                  schema:
+                    type: string
+                - name: department_id
+                  in: query
+                  description: The department id to use for this department.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Department'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreateDepartmentResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/departments/{department.id}:
+        put:
+            tags:
+                - DepartmentService
+            operationId: DepartmentService_UpdateDepartment
+            parameters:
+                - name: department.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Department'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateDepartmentResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/departments/{id}:
+        get:
+            tags:
+                - DepartmentService
+            operationId: DepartmentService_GetDepartment
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/departments/department2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetDepartmentResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - DepartmentService
+            operationId: DepartmentService_DeleteDepartment
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The resource id of the department to be deleted, for example:
+                     "shelves/shelf1/departments/department2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeleteDepartmentResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/menus:
         get:
             tags:
@@ -753,6 +921,342 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdateMenuResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/permissions:
+        get:
+            tags:
+                - PermissionService
+            operationId: PermissionService_ListPermissions
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPermissionsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - PermissionService
+            operationId: PermissionService_CreatePermission
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the permission is to be created.
+                  schema:
+                    type: string
+                - name: permission_id
+                  in: query
+                  description: The permission id to use for this permission.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Permission'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreatePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/permissions/{id}:
+        get:
+            tags:
+                - PermissionService
+            operationId: PermissionService_GetPermission
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/permissions/permission2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetPermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - PermissionService
+            operationId: PermissionService_DeletePermission
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The resource id of the permission to be deleted, for example:
+                     "shelves/shelf1/permissions/permission2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeletePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/permissions/{permission.id}:
+        put:
+            tags:
+                - PermissionService
+            operationId: PermissionService_UpdatePermission
+            parameters:
+                - name: permission.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Permission'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/positions:
+        get:
+            tags:
+                - PositionService
+            operationId: PositionService_ListPositions
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPositionsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - PositionService
+            operationId: PositionService_CreatePosition
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent resource id where the position is to be created.
+                  schema:
+                    type: string
+                - name: position_id
+                  in: query
+                  description: The position id to use for this position.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Position'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CreatePositionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/positions/{id}:
+        get:
+            tags:
+                - PositionService
+            operationId: PositionService_GetPosition
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/positions/position2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.GetPositionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - PositionService
+            operationId: PositionService_DeletePosition
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The resource id of the position to be deleted, for example:
+                     "shelves/shelf1/positions/position2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeletePositionResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/positions/{position.id}:
+        put:
+            tags:
+                - PositionService
+            operationId: PositionService_UpdatePosition
+            parameters:
+                - name: position.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.Position'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdatePositionResponse'
                 default:
                     description: Default error response
                     content:
@@ -1700,12 +2204,27 @@ components:
                 audio_type:
                     type: integer
                     format: enum
+        api.v1.services.system.CreateDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.system.Department'
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:
                 menu:
                     $ref: '#/components/schemas/api.v1.services.system.Menu'
             description: CreateMenuResponse is the response for the MenuService.CreateMenu method.
+        api.v1.services.system.CreatePermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/api.v1.services.system.Permission'
+        api.v1.services.system.CreatePositionResponse:
+            type: object
+            properties:
+                position:
+                    $ref: '#/components/schemas/api.v1.services.system.Position'
         api.v1.services.system.CreateResourceResponse:
             type: object
             properties:
@@ -1742,10 +2261,19 @@ components:
             properties:
                 success:
                     type: boolean
+        api.v1.services.system.DeleteDepartmentResponse:
+            type: object
+            properties: {}
         api.v1.services.system.DeleteMenuResponse:
             type: object
             properties: {}
             description: DeleteMenuResponse is the response for the MenuService.DeleteMenu method.
+        api.v1.services.system.DeletePermissionResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.DeletePositionResponse:
+            type: object
+            properties: {}
         api.v1.services.system.DeleteResourceResponse:
             type: object
             properties: {}
@@ -1756,6 +2284,47 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
+        api.v1.services.system.Department:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: |-
+                        ID of the ent.
+                         field.primary_key.comment
+                create_time:
+                    type: string
+                    description: create_time.field.comment
+                    format: date-time
+                update_time:
+                    type: string
+                    description: update_time.field.comment
+                    format: date-time
+                keyword:
+                    type: string
+                    description: department.field.keyword
+                name:
+                    type: string
+                    description: department.field.name
+                description:
+                    type: string
+                    description: department.field.description
+                sequence:
+                    type: integer
+                    description: department.field.sequence
+                    format: int32
+                status:
+                    type: integer
+                    description: department.field.status
+                    format: int32
+                level:
+                    type: integer
+                    description: department.field.level
+                    format: int32
+                parent_id:
+                    type: string
+                    description: department.field.parent_id
+            description: department.table.comment
         api.v1.services.system.DestroyTokenRequest_Data:
             type: object
             properties:
@@ -1770,6 +2339,11 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.GetDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.system.Department'
         api.v1.services.system.GetMenuResponse:
             type: object
             properties:
@@ -1778,6 +2352,16 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.system.Menu'
                     description: The field id should match the Noun in the method id.
             description: GetMenuResponse is the response for the MenuService.GetMenu method.
+        api.v1.services.system.GetPermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/api.v1.services.system.Permission'
+        api.v1.services.system.GetPositionResponse:
+            type: object
+            properties:
+                position:
+                    $ref: '#/components/schemas/api.v1.services.system.Position'
         api.v1.services.system.GetResourceResponse:
             type: object
             properties:
@@ -1822,6 +2406,37 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.ListDepartmentsResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                departments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Department'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
@@ -1854,6 +2469,68 @@ components:
                         Additional information about this response.
                          content to be added without destroying the current data format
             description: ListMenusResponse is the response for the MenuService.ListMenus method.
+        api.v1.services.system.ListPermissionsResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                permissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Permission'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+        api.v1.services.system.ListPositionsResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                positions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Position'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
         api.v1.services.system.ListResourcesResponse:
             type: object
             properties:
@@ -2041,6 +2718,66 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
             description: Menu is the model entity for the Menu schema.
+        api.v1.services.system.Permission:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: |-
+                        ID of the ent.
+                         field.primary_key.comment
+                create_time:
+                    type: string
+                    description: create_time.field.comment
+                    format: date-time
+                update_time:
+                    type: string
+                    description: update_time.field.comment
+                    format: date-time
+                name:
+                    type: string
+                    description: permission.field.name
+                keyword:
+                    type: string
+                    description: permission.field.keyword
+                description:
+                    type: string
+                    description: permission.field.description
+                data_scope:
+                    type: string
+                    description: permission.field.data_scope
+                data_rules:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: permission.field.data_rules
+            description: permission.table.comment
+        api.v1.services.system.Position:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: |-
+                        ID of the ent.
+                         field.primary_key.comment
+                create_time:
+                    type: string
+                    description: create_time.field.comment
+                    format: date-time
+                update_time:
+                    type: string
+                    description: update_time.field.comment
+                    format: date-time
+                name:
+                    type: string
+                    description: position.field.name
+                description:
+                    type: string
+                    description: position.field.description
+                department_id:
+                    type: string
+                    description: department.field.department_id
+            description: position.table.comment
         api.v1.services.system.RefreshCurrentTokenResponse:
             type: object
             properties:
@@ -2187,14 +2924,9 @@ components:
                     type: integer
                     description: role.field.status
                     format: int32
-                edges:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.RoleEdges'
-                    description: |-
-                        role.field.is_system
-                         bool is_system = 10 [json_name = "is_system"];
-                         Edges holds the relations/edges for other nodes in the graph.
-                         The values are being populated by the RoleQuery when eager-loading is set.
+                is_system:
+                    type: boolean
+                    description: role.field.is_system
                 menus:
                     type: array
                     items:
@@ -2206,63 +2938,6 @@ components:
                         $ref: '#/components/schemas/api.v1.services.system.User'
                     description: Users holds the value of the users edge.
             description: Role is the model entity for the Role schema.
-        api.v1.services.system.RoleEdges:
-            type: object
-            properties:
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: Menus holds the value of the menus edge.
-                users:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.User'
-                    description: Users holds the value of the users edge.
-                role_menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.RoleMenu'
-                    description: RoleMenu holds the value of the role_menu edge.
-                user_roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.UserRole'
-                    description: UserRole holds the value of the user_role edge.
-            description: RoleEdges holds the relations/edges for other nodes in the graph.
-        api.v1.services.system.RoleMenu:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: ID of the ent.
-                create_time:
-                    type: string
-                    description: CreateTime holds the value of the "create_time" field.
-                    format: date-time
-                update_time:
-                    type: string
-                    description: UpdateTime holds the value of the "update_time" field.
-                    format: date-time
-                role_id:
-                    type: string
-                    description: RoleID holds the value of the "role_id" field.
-                menu_id:
-                    type: string
-                    description: MenuID holds the value of the "menu_id" field.
-                role:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the RoleMenuQuery when eager-loading is set.
-                          RoleMenuEdges edges = 6;
-                         Role holds the value of the role edge.
-                menu:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: Menu holds the value of the menu edge.
-            description: RoleMenu is the model entity for the RoleMenu schema.
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
             properties:
@@ -2282,12 +2957,27 @@ components:
         api.v1.services.system.UpdateCurrentUserResponse:
             type: object
             properties: {}
+        api.v1.services.system.UpdateDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.system.Department'
         api.v1.services.system.UpdateMenuResponse:
             type: object
             properties:
                 menu:
                     $ref: '#/components/schemas/api.v1.services.system.Menu'
             description: UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
+        api.v1.services.system.UpdatePermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/api.v1.services.system.Permission'
+        api.v1.services.system.UpdatePositionResponse:
+            type: object
+            properties:
+                position:
+                    $ref: '#/components/schemas/api.v1.services.system.Position'
         api.v1.services.system.UpdateResourceResponse:
             type: object
             properties:
@@ -2402,42 +3092,6 @@ components:
                     type: string
                     description: user.field.manager
             description: User is the model entity for the User schema.
-        api.v1.services.system.UserRole:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: ID of the ent.
-                create_time:
-                    type: string
-                    description: CreateTime holds the value of the "create_time" field.
-                    format: date-time
-                update_time:
-                    type: string
-                    description: UpdateTime holds the value of the "update_time" field.
-                    format: date-time
-                user_id:
-                    type: string
-                    description: UserID holds the value of the "user_id" field.
-                role_id:
-                    type: string
-                    description: RoleID holds the value of the "role_id" field.
-                role_name:
-                    type: string
-                    description: RoleName holds the value of the "role_name" field.
-                user:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.User'
-                    description: |-
-                        Edges holds the relations/edges for other nodes in the graph.
-                            The values are being populated by the UserRoleQuery when eager-loading is set.
-                          UserRoleEdges edges = 7;
-                         User holds the value of the user edge.
-                role:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: Role holds the value of the role edge.
-            description: UserRole is the model entity for the UserRole schema.
         api.v1.services.system.ValidateTokenResponse:
             type: object
             properties:
@@ -2503,10 +3157,16 @@ tags:
     - name: AuthService
     - name: CurrentService
       description: The current service definition.
+    - name: DepartmentService
+      description: The login service definition.
     - name: LoginService
       description: The login service definition.
     - name: MenuService
       description: The menu service definition.
+    - name: PermissionService
+      description: The login service definition.
+    - name: PositionService
+      description: The login service definition.
     - name: ResourceService
       description: The resource service definition.
     - name: RoleService

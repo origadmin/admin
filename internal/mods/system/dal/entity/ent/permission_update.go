@@ -18,7 +18,6 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 )
 
@@ -99,14 +98,8 @@ func (pu *PermissionUpdate) SetNillableDataScope(s *string) *PermissionUpdate {
 }
 
 // SetDataRules sets the "data_rules" field.
-func (pu *PermissionUpdate) SetDataRules(m []map[string]string) *PermissionUpdate {
+func (pu *PermissionUpdate) SetDataRules(m map[string]string) *PermissionUpdate {
 	pu.mutation.SetDataRules(m)
-	return pu
-}
-
-// AppendDataRules appends m to the "data_rules" field.
-func (pu *PermissionUpdate) AppendDataRules(m []map[string]string) *PermissionUpdate {
-	pu.mutation.AppendDataRules(m)
 	return pu
 }
 
@@ -428,11 +421,6 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
-	}
-	if value, ok := pu.mutation.AppendedDataRules(); ok {
-		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, permission.FieldDataRules, value)
-		})
 	}
 	if pu.mutation.DataRulesCleared() {
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
@@ -855,14 +843,8 @@ func (puo *PermissionUpdateOne) SetNillableDataScope(s *string) *PermissionUpdat
 }
 
 // SetDataRules sets the "data_rules" field.
-func (puo *PermissionUpdateOne) SetDataRules(m []map[string]string) *PermissionUpdateOne {
+func (puo *PermissionUpdateOne) SetDataRules(m map[string]string) *PermissionUpdateOne {
 	puo.mutation.SetDataRules(m)
-	return puo
-}
-
-// AppendDataRules appends m to the "data_rules" field.
-func (puo *PermissionUpdateOne) AppendDataRules(m []map[string]string) *PermissionUpdateOne {
-	puo.mutation.AppendDataRules(m)
 	return puo
 }
 
@@ -1214,11 +1196,6 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 	}
 	if value, ok := puo.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
-	}
-	if value, ok := puo.mutation.AppendedDataRules(); ok {
-		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, permission.FieldDataRules, value)
-		})
 	}
 	if puo.mutation.DataRulesCleared() {
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)

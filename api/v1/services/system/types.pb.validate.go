@@ -705,34 +705,7 @@ func (m *Role) validate(all bool) error {
 
 	// no validation rules for Status
 
-	if all {
-		switch v := interface{}(m.GetEdges()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleValidationError{
-					field:  "Edges",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleValidationError{
-					field:  "Edges",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetEdges()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return RoleValidationError{
-				field:  "Edges",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for IsSystem
 
 	for idx, item := range m.GetMenus() {
 		_, _ = idx, item
@@ -2850,3 +2823,1975 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DepartmentValidationError{}
+
+// Validate checks the field values on Position with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Position) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Position with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PositionMultiError, or nil
+// if none found.
+func (m *Position) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Position) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if all {
+		switch v := interface{}(m.GetCreateTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PositionValidationError{
+					field:  "CreateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PositionValidationError{
+					field:  "CreateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PositionValidationError{
+				field:  "CreateTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetUpdateTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PositionValidationError{
+					field:  "UpdateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PositionValidationError{
+					field:  "UpdateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PositionValidationError{
+				field:  "UpdateTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Name
+
+	// no validation rules for Description
+
+	// no validation rules for DepartmentId
+
+	if len(errors) > 0 {
+		return PositionMultiError(errors)
+	}
+
+	return nil
+}
+
+// PositionMultiError is an error wrapping multiple validation errors returned
+// by Position.ValidateAll() if the designated constraints aren't met.
+type PositionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PositionMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PositionMultiError) AllErrors() []error { return m }
+
+// PositionValidationError is the validation error returned by
+// Position.Validate if the designated constraints aren't met.
+type PositionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PositionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PositionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PositionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PositionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PositionValidationError) ErrorName() string { return "PositionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PositionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPosition.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PositionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PositionValidationError{}
+
+// Validate checks the field values on PositionEdges with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *PositionEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PositionEdges with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PositionEdgesMultiError, or
+// nil if none found.
+func (m *PositionEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PositionEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetDepartment()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PositionEdgesValidationError{
+					field:  "Department",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PositionEdgesValidationError{
+					field:  "Department",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDepartment()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PositionEdgesValidationError{
+				field:  "Department",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetUsers() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("Users[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PositionEdgesValidationError{
+					field:  fmt.Sprintf("Users[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetPermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("Permissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("Permissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PositionEdgesValidationError{
+					field:  fmt.Sprintf("Permissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetUserPositions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("UserPositions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("UserPositions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PositionEdgesValidationError{
+					field:  fmt.Sprintf("UserPositions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetPositionPermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("PositionPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PositionEdgesValidationError{
+						field:  fmt.Sprintf("PositionPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PositionEdgesValidationError{
+					field:  fmt.Sprintf("PositionPermissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return PositionEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// PositionEdgesMultiError is an error wrapping multiple validation errors
+// returned by PositionEdges.ValidateAll() if the designated constraints
+// aren't met.
+type PositionEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PositionEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PositionEdgesMultiError) AllErrors() []error { return m }
+
+// PositionEdgesValidationError is the validation error returned by
+// PositionEdges.Validate if the designated constraints aren't met.
+type PositionEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PositionEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PositionEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PositionEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PositionEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PositionEdgesValidationError) ErrorName() string { return "PositionEdgesValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PositionEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPositionEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PositionEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PositionEdgesValidationError{}
+
+// Validate checks the field values on Permission with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Permission) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Permission with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in PermissionMultiError, or
+// nil if none found.
+func (m *Permission) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Permission) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if all {
+		switch v := interface{}(m.GetCreateTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PermissionValidationError{
+					field:  "CreateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PermissionValidationError{
+					field:  "CreateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PermissionValidationError{
+				field:  "CreateTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetUpdateTime()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PermissionValidationError{
+					field:  "UpdateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PermissionValidationError{
+					field:  "UpdateTime",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PermissionValidationError{
+				field:  "UpdateTime",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Name
+
+	// no validation rules for Keyword
+
+	// no validation rules for Description
+
+	// no validation rules for DataScope
+
+	// no validation rules for DataRules
+
+	if len(errors) > 0 {
+		return PermissionMultiError(errors)
+	}
+
+	return nil
+}
+
+// PermissionMultiError is an error wrapping multiple validation errors
+// returned by Permission.ValidateAll() if the designated constraints aren't met.
+type PermissionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PermissionMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PermissionMultiError) AllErrors() []error { return m }
+
+// PermissionValidationError is the validation error returned by
+// Permission.Validate if the designated constraints aren't met.
+type PermissionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PermissionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PermissionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PermissionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PermissionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PermissionValidationError) ErrorName() string { return "PermissionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PermissionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPermission.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PermissionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PermissionValidationError{}
+
+// Validate checks the field values on PermissionEdges with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *PermissionEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PermissionEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PermissionEdgesMultiError, or nil if none found.
+func (m *PermissionEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PermissionEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetRoles() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("Roles[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PermissionEdgesValidationError{
+					field:  fmt.Sprintf("Roles[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetResources() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("Resources[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("Resources[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PermissionEdgesValidationError{
+					field:  fmt.Sprintf("Resources[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetPositions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("Positions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("Positions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PermissionEdgesValidationError{
+					field:  fmt.Sprintf("Positions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetRolePermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("RolePermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("RolePermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PermissionEdgesValidationError{
+					field:  fmt.Sprintf("RolePermissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetPermissionResources() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("PermissionResources[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("PermissionResources[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PermissionEdgesValidationError{
+					field:  fmt.Sprintf("PermissionResources[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetPositionPermissions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("PositionPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, PermissionEdgesValidationError{
+						field:  fmt.Sprintf("PositionPermissions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return PermissionEdgesValidationError{
+					field:  fmt.Sprintf("PositionPermissions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return PermissionEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// PermissionEdgesMultiError is an error wrapping multiple validation errors
+// returned by PermissionEdges.ValidateAll() if the designated constraints
+// aren't met.
+type PermissionEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PermissionEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PermissionEdgesMultiError) AllErrors() []error { return m }
+
+// PermissionEdgesValidationError is the validation error returned by
+// PermissionEdges.Validate if the designated constraints aren't met.
+type PermissionEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PermissionEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PermissionEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PermissionEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PermissionEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PermissionEdgesValidationError) ErrorName() string { return "PermissionEdgesValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PermissionEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPermissionEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PermissionEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PermissionEdgesValidationError{}
+
+// Validate checks the field values on UserPosition with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UserPosition) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserPosition with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UserPositionMultiError, or
+// nil if none found.
+func (m *UserPosition) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserPosition) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for UserId
+
+	// no validation rules for PositionId
+
+	if len(errors) > 0 {
+		return UserPositionMultiError(errors)
+	}
+
+	return nil
+}
+
+// UserPositionMultiError is an error wrapping multiple validation errors
+// returned by UserPosition.ValidateAll() if the designated constraints aren't met.
+type UserPositionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserPositionMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserPositionMultiError) AllErrors() []error { return m }
+
+// UserPositionValidationError is the validation error returned by
+// UserPosition.Validate if the designated constraints aren't met.
+type UserPositionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UserPositionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UserPositionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UserPositionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UserPositionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UserPositionValidationError) ErrorName() string { return "UserPositionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UserPositionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUserPosition.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UserPositionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UserPositionValidationError{}
+
+// Validate checks the field values on UserPositionEdges with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *UserPositionEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserPositionEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UserPositionEdgesMultiError, or nil if none found.
+func (m *UserPositionEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserPositionEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserPositionEdgesValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserPositionEdgesValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserPositionEdgesValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetPosition()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UserPositionEdgesValidationError{
+					field:  "Position",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UserPositionEdgesValidationError{
+					field:  "Position",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPosition()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UserPositionEdgesValidationError{
+				field:  "Position",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return UserPositionEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// UserPositionEdgesMultiError is an error wrapping multiple validation errors
+// returned by UserPositionEdges.ValidateAll() if the designated constraints
+// aren't met.
+type UserPositionEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserPositionEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserPositionEdgesMultiError) AllErrors() []error { return m }
+
+// UserPositionEdgesValidationError is the validation error returned by
+// UserPositionEdges.Validate if the designated constraints aren't met.
+type UserPositionEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UserPositionEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UserPositionEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UserPositionEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UserPositionEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UserPositionEdgesValidationError) ErrorName() string {
+	return "UserPositionEdgesValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UserPositionEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUserPositionEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UserPositionEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UserPositionEdgesValidationError{}
+
+// Validate checks the field values on PositionPermission with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *PositionPermission) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PositionPermission with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PositionPermissionMultiError, or nil if none found.
+func (m *PositionPermission) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PositionPermission) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for PositionId
+
+	// no validation rules for PermissionId
+
+	if len(errors) > 0 {
+		return PositionPermissionMultiError(errors)
+	}
+
+	return nil
+}
+
+// PositionPermissionMultiError is an error wrapping multiple validation errors
+// returned by PositionPermission.ValidateAll() if the designated constraints
+// aren't met.
+type PositionPermissionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PositionPermissionMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PositionPermissionMultiError) AllErrors() []error { return m }
+
+// PositionPermissionValidationError is the validation error returned by
+// PositionPermission.Validate if the designated constraints aren't met.
+type PositionPermissionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PositionPermissionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PositionPermissionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PositionPermissionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PositionPermissionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PositionPermissionValidationError) ErrorName() string {
+	return "PositionPermissionValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PositionPermissionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPositionPermission.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PositionPermissionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PositionPermissionValidationError{}
+
+// Validate checks the field values on PositionPermissionEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *PositionPermissionEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PositionPermissionEdges with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PositionPermissionEdgesMultiError, or nil if none found.
+func (m *PositionPermissionEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PositionPermissionEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetPosition()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PositionPermissionEdgesValidationError{
+					field:  "Position",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PositionPermissionEdgesValidationError{
+					field:  "Position",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPosition()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PositionPermissionEdgesValidationError{
+				field:  "Position",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetPermission()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PositionPermissionEdgesValidationError{
+					field:  "Permission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PositionPermissionEdgesValidationError{
+					field:  "Permission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPermission()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PositionPermissionEdgesValidationError{
+				field:  "Permission",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return PositionPermissionEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// PositionPermissionEdgesMultiError is an error wrapping multiple validation
+// errors returned by PositionPermissionEdges.ValidateAll() if the designated
+// constraints aren't met.
+type PositionPermissionEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PositionPermissionEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PositionPermissionEdgesMultiError) AllErrors() []error { return m }
+
+// PositionPermissionEdgesValidationError is the validation error returned by
+// PositionPermissionEdges.Validate if the designated constraints aren't met.
+type PositionPermissionEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PositionPermissionEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PositionPermissionEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PositionPermissionEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PositionPermissionEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PositionPermissionEdgesValidationError) ErrorName() string {
+	return "PositionPermissionEdgesValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PositionPermissionEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPositionPermissionEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PositionPermissionEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PositionPermissionEdgesValidationError{}
+
+// Validate checks the field values on RolePermission with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *RolePermission) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RolePermission with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in RolePermissionMultiError,
+// or nil if none found.
+func (m *RolePermission) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RolePermission) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for RoleId
+
+	// no validation rules for PermissionId
+
+	if len(errors) > 0 {
+		return RolePermissionMultiError(errors)
+	}
+
+	return nil
+}
+
+// RolePermissionMultiError is an error wrapping multiple validation errors
+// returned by RolePermission.ValidateAll() if the designated constraints
+// aren't met.
+type RolePermissionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RolePermissionMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RolePermissionMultiError) AllErrors() []error { return m }
+
+// RolePermissionValidationError is the validation error returned by
+// RolePermission.Validate if the designated constraints aren't met.
+type RolePermissionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RolePermissionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RolePermissionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RolePermissionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RolePermissionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RolePermissionValidationError) ErrorName() string { return "RolePermissionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RolePermissionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRolePermission.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RolePermissionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RolePermissionValidationError{}
+
+// Validate checks the field values on RolePermissionEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RolePermissionEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RolePermissionEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RolePermissionEdgesMultiError, or nil if none found.
+func (m *RolePermissionEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RolePermissionEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetRole()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RolePermissionEdgesValidationError{
+					field:  "Role",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RolePermissionEdgesValidationError{
+					field:  "Role",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetRole()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RolePermissionEdgesValidationError{
+				field:  "Role",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetPermission()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RolePermissionEdgesValidationError{
+					field:  "Permission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RolePermissionEdgesValidationError{
+					field:  "Permission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPermission()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RolePermissionEdgesValidationError{
+				field:  "Permission",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return RolePermissionEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// RolePermissionEdgesMultiError is an error wrapping multiple validation
+// errors returned by RolePermissionEdges.ValidateAll() if the designated
+// constraints aren't met.
+type RolePermissionEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RolePermissionEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RolePermissionEdgesMultiError) AllErrors() []error { return m }
+
+// RolePermissionEdgesValidationError is the validation error returned by
+// RolePermissionEdges.Validate if the designated constraints aren't met.
+type RolePermissionEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RolePermissionEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RolePermissionEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RolePermissionEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RolePermissionEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RolePermissionEdgesValidationError) ErrorName() string {
+	return "RolePermissionEdgesValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RolePermissionEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRolePermissionEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RolePermissionEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RolePermissionEdgesValidationError{}
+
+// Validate checks the field values on PermissionResource with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *PermissionResource) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PermissionResource with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PermissionResourceMultiError, or nil if none found.
+func (m *PermissionResource) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PermissionResource) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for PermissionId
+
+	// no validation rules for ResourceId
+
+	// no validation rules for Actions
+
+	if len(errors) > 0 {
+		return PermissionResourceMultiError(errors)
+	}
+
+	return nil
+}
+
+// PermissionResourceMultiError is an error wrapping multiple validation errors
+// returned by PermissionResource.ValidateAll() if the designated constraints
+// aren't met.
+type PermissionResourceMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PermissionResourceMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PermissionResourceMultiError) AllErrors() []error { return m }
+
+// PermissionResourceValidationError is the validation error returned by
+// PermissionResource.Validate if the designated constraints aren't met.
+type PermissionResourceValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PermissionResourceValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PermissionResourceValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PermissionResourceValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PermissionResourceValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PermissionResourceValidationError) ErrorName() string {
+	return "PermissionResourceValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PermissionResourceValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPermissionResource.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PermissionResourceValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PermissionResourceValidationError{}
+
+// Validate checks the field values on PermissionResourceEdges with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *PermissionResourceEdges) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PermissionResourceEdges with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PermissionResourceEdgesMultiError, or nil if none found.
+func (m *PermissionResourceEdges) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PermissionResourceEdges) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetPermission()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PermissionResourceEdgesValidationError{
+					field:  "Permission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PermissionResourceEdgesValidationError{
+					field:  "Permission",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetPermission()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PermissionResourceEdgesValidationError{
+				field:  "Permission",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetResource()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PermissionResourceEdgesValidationError{
+					field:  "Resource",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PermissionResourceEdgesValidationError{
+					field:  "Resource",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetResource()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PermissionResourceEdgesValidationError{
+				field:  "Resource",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return PermissionResourceEdgesMultiError(errors)
+	}
+
+	return nil
+}
+
+// PermissionResourceEdgesMultiError is an error wrapping multiple validation
+// errors returned by PermissionResourceEdges.ValidateAll() if the designated
+// constraints aren't met.
+type PermissionResourceEdgesMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PermissionResourceEdgesMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PermissionResourceEdgesMultiError) AllErrors() []error { return m }
+
+// PermissionResourceEdgesValidationError is the validation error returned by
+// PermissionResourceEdges.Validate if the designated constraints aren't met.
+type PermissionResourceEdgesValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PermissionResourceEdgesValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PermissionResourceEdgesValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PermissionResourceEdgesValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PermissionResourceEdgesValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PermissionResourceEdgesValidationError) ErrorName() string {
+	return "PermissionResourceEdgesValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PermissionResourceEdgesValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPermissionResourceEdges.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PermissionResourceEdgesValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PermissionResourceEdgesValidationError{}

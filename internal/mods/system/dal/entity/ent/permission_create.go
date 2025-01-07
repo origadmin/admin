@@ -103,7 +103,7 @@ func (pc *PermissionCreate) SetNillableDataScope(s *string) *PermissionCreate {
 }
 
 // SetDataRules sets the "data_rules" field.
-func (pc *PermissionCreate) SetDataRules(m []map[string]string) *PermissionCreate {
+func (pc *PermissionCreate) SetDataRules(m map[string]string) *PermissionCreate {
 	pc.mutation.SetDataRules(m)
 	return pc
 }

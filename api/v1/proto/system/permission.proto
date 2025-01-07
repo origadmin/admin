@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package api.v1.services.system;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "system/types.proto";
+
+option go_package = "v1/services/system;system";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceSystemPermissionProto";
+option java_package = "com.origadmin.api.v1.services.system";
+option objc_class_prefix = "APIServiceSystemPermission";
+
+// The login service definition.
+service PermissionService {
+  rpc ListPermissions (ListPermissionsRequest) returns (ListPermissionsResponse) {
+    option (google.api.http) = {get: "/sys/permissions"};
+  }
+  rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse) {
+    option (google.api.http) = {get: "/sys/permissions/{id}"};
+  }
+  rpc CreatePermission (CreatePermissionRequest) returns (CreatePermissionResponse) {
+    option (google.api.http) = {
+      post: "/sys/permissions"
+      body: "permission"
+    };
+  }
+  rpc UpdatePermission (UpdatePermissionRequest) returns (UpdatePermissionResponse) {
+    option (google.api.http) = {
+      put: "/sys/permissions/{permission.id}"
+      body: "permission"
+    };
+  }
+  rpc DeletePermission (DeletePermissionRequest) returns (DeletePermissionResponse) {
+    option (google.api.http) = {delete: "/sys/permissions/{id}"};
+  }
+}
+
+message ListPermissionsRequest {
+  // The parent resource id, for example, "shelves/shelf1".
+  int64 id = 1;
+  // The current page number.
+  int32 current = 2;
+  // The maximum number of items to return.
+  int32 page_size = 3;
+  // The next_page_token value returned from a previous List request, if any.
+  string page_token = 4;
+  // The no_paging is used to disable pagination.
+  bool no_paging = 5;
+  // The only_count is the query parameter for set only to query the total number
+  bool only_count = 6;
+}
+
+message ListPermissionsResponse {
+  // The total number of items in the list.
+  int32 total_size = 1 [json_name = "total_size"];
+  // The paging menus
+  repeated Permission permissions = 2 [json_name = "permissions"];
+  // The current page number.
+  int32 current = 3 [json_name = "current"];
+  // The maximum number of items to return.
+  int32 page_size = 4 [json_name = "page_size"];
+  // Token to retrieve the next page of results, or empty if there are no
+  // more results in the list.
+  string next_page_token = 5 [json_name = "next_page_token"];
+  // Additional information about this response.
+  // content to be added without destroying the current data format
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
+}
+
+message GetPermissionRequest {
+  // The field will contain id of the resource requested, for example:
+  // "shelves/shelf1/permissions/permission2"
+  int64 id = 1;
+}
+
+message GetPermissionResponse {
+  Permission permission = 1;
+}
+
+message CreatePermissionRequest {
+  // The parent resource id where the permission is to be created.
+  string parent = 1;
+
+  // The permission id to use for this permission.
+  string permission_id = 3;
+
+  // The permission resource to create.
+  // The field id should match the Noun in the method id.
+  Permission permission = 2;
+}
+
+message CreatePermissionResponse {
+  Permission permission = 1;
+}
+
+message UpdatePermissionRequest {
+  // The permission resource which replaces the resource on the server.
+  Permission permission = 1;
+}
+
+message UpdatePermissionResponse {
+  Permission permission = 1;
+}
+
+message DeletePermissionRequest {
+  // The resource id of the permission to be deleted, for example:
+  // "shelves/shelf1/permissions/permission2"
+  int64 id = 1;
+}
+
+message DeletePermissionResponse {
+  google.protobuf.Empty empty = 1;
+}

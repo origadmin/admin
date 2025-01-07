@@ -1391,8 +1391,7 @@ type PermissionMutation struct {
 	keyword                     *string
 	description                 *string
 	data_scope                  *string
-	data_rules                  *[]map[string]string
-	appenddata_rules            []map[string]string
+	data_rules                  *map[string]string
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
 	removedroles                map[int64]struct{}
@@ -1738,13 +1737,12 @@ func (m *PermissionMutation) ResetDataScope() {
 }
 
 // SetDataRules sets the "data_rules" field.
-func (m *PermissionMutation) SetDataRules(value []map[string]string) {
+func (m *PermissionMutation) SetDataRules(value map[string]string) {
 	m.data_rules = &value
-	m.appenddata_rules = nil
 }
 
 // DataRules returns the value of the "data_rules" field in the mutation.
-func (m *PermissionMutation) DataRules() (r []map[string]string, exists bool) {
+func (m *PermissionMutation) DataRules() (r map[string]string, exists bool) {
 	v := m.data_rules
 	if v == nil {
 		return
@@ -1755,7 +1753,7 @@ func (m *PermissionMutation) DataRules() (r []map[string]string, exists bool) {
 // OldDataRules returns the old "data_rules" field's value of the Permission entity.
 // If the Permission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldDataRules(ctx context.Context) (v []map[string]string, err error) {
+func (m *PermissionMutation) OldDataRules(ctx context.Context) (v map[string]string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldDataRules is only allowed on UpdateOne operations")
 	}
@@ -1769,23 +1767,9 @@ func (m *PermissionMutation) OldDataRules(ctx context.Context) (v []map[string]s
 	return oldValue.DataRules, nil
 }
 
-// AppendDataRules adds value to the "data_rules" field.
-func (m *PermissionMutation) AppendDataRules(value []map[string]string) {
-	m.appenddata_rules = append(m.appenddata_rules, value...)
-}
-
-// AppendedDataRules returns the list of values that were appended to the "data_rules" field in this mutation.
-func (m *PermissionMutation) AppendedDataRules() ([]map[string]string, bool) {
-	if len(m.appenddata_rules) == 0 {
-		return nil, false
-	}
-	return m.appenddata_rules, true
-}
-
 // ClearDataRules clears the value of the "data_rules" field.
 func (m *PermissionMutation) ClearDataRules() {
 	m.data_rules = nil
-	m.appenddata_rules = nil
 	m.clearedFields[permission.FieldDataRules] = struct{}{}
 }
 
@@ -1798,7 +1782,6 @@ func (m *PermissionMutation) DataRulesCleared() bool {
 // ResetDataRules resets all changes to the "data_rules" field.
 func (m *PermissionMutation) ResetDataRules() {
 	m.data_rules = nil
-	m.appenddata_rules = nil
 	delete(m.clearedFields, permission.FieldDataRules)
 }
 
@@ -2279,7 +2262,7 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		m.SetDataScope(v)
 		return nil
 	case permission.FieldDataRules:
-		v, ok := value.([]map[string]string)
+		v, ok := value.(map[string]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

@@ -1037,7 +1037,7 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  Keyword string `json:"keyword,omitempty"`
 //	  Description string `json:"description,omitempty"`
 //	  DataScope string `json:"data_scope,omitempty"`
-//	  DataRules []map[string]string `json:"data_rules,omitempty"`
+//	  DataRules map[string]string `json:"data_rules,omitempty"`
 //	}
 //
 //	client.Permission.Query().

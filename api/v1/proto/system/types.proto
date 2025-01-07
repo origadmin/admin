@@ -88,10 +88,7 @@ message Role {
   // role.field.status
   int32 status = 9 [json_name = "status"];
   // role.field.is_system
-  // bool is_system = 10 [json_name = "is_system"];
-  // Edges holds the relations/edges for other nodes in the graph.
-  // The values are being populated by the RoleQuery when eager-loading is set.
-  RoleEdges edges = 11 [json_name = "edges"];
+  bool is_system = 10 [json_name = "is_system"];
   // Menus holds the value of the menus edge.
   repeated Menu menus = 21 [json_name = "menus"];
   // Users holds the value of the users edge.
@@ -185,9 +182,6 @@ message UserRole {
   int64 role_id = 5 [json_name = "role_id"];
   // RoleName holds the value of the "role_name" field.
   string role_name = 6 [json_name = "role_name"];
-  // Edges holds the relations/edges for other nodes in the graph.
-  //    The values are being populated by the UserRoleQuery when eager-loading is set.
-  //  UserRoleEdges edges = 7;
   // User holds the value of the user edge.
   User user = 21 [json_name = "user"];
   // Role holds the value of the role edge.
@@ -214,9 +208,6 @@ message RoleMenu {
   int64 role_id = 4 [json_name = "role_id"];
   // MenuID holds the value of the "menu_id" field.
   int64 menu_id = 5 [json_name = "menu_id"];
-  // Edges holds the relations/edges for other nodes in the graph.
-  //    The values are being populated by the RoleMenuQuery when eager-loading is set.
-  //  RoleMenuEdges edges = 6;
   // Role holds the value of the role edge.
   Role role = 21 [json_name = "role"];
   // Menu holds the value of the menu edge.
@@ -308,4 +299,154 @@ message Department {
   int32 level = 10 [json_name = "level"];
   // department.field.parent_id
   int64 parent_id = 11 [json_name = "parent_id"];
+}
+
+// position.table.comment
+message Position {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // create_time.field.comment
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
+  // update_time.field.comment
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // position.field.name
+  string name = 4 [json_name = "name"];
+  // position.field.description
+  string description = 5 [json_name = "description"];
+  // department.field.department_id
+  int64 department_id = 6 [json_name = "department_id"];
+}
+
+// PositionEdges holds the relations/edges for other nodes in the graph.
+message PositionEdges {
+  // Department holds the value of the department edge.
+  Department department = 1 [json_name = "department"];
+  // Users holds the value of the users edge.
+  repeated User users = 2 [json_name = "users"];
+  // Permissions holds the value of the permissions edge.
+  repeated Permission permissions = 3 [json_name = "permissions"];
+  // UserPositions holds the value of the user_positions edge.
+  repeated UserPosition user_positions = 4 [json_name = "user_positions"];
+  // PositionPermissions holds the value of the position_permissions edge.
+  repeated PositionPermission position_permissions = 5 [json_name = "position_permissions"];
+}
+
+// permission.table.comment
+message Permission {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // create_time.field.comment
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
+  // update_time.field.comment
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // permission.field.name
+  string name = 4 [json_name = "name"];
+  // permission.field.keyword
+  string keyword = 5 [json_name = "keyword"];
+  // permission.field.description
+  string description = 6 [json_name = "description"];
+  // permission.field.data_scope
+  string data_scope = 7 [json_name = "data_scope"];
+  // permission.field.data_rules
+  map<string, string > data_rules = 8 [json_name = "data_rules"];
+
+}
+
+// PermissionEdges holds the relations/edges for other nodes in the graph.
+message PermissionEdges {
+  // Roles holds the value of the roles edge.
+  repeated Role roles = 1 [json_name = "roles"];
+  // Resources holds the value of the resources edge.
+  repeated Resource resources = 2 [json_name = "resources"];
+  // Positions holds the value of the positions edge.
+  repeated Position positions = 3 [json_name = "positions"];
+  // RolePermissions holds the value of the role_permissions edge.
+  repeated RolePermission role_permissions = 4 [json_name = "role_permissions"];
+  // PermissionResources holds the value of the permission_resources edge.
+  repeated PermissionResource permission_resources = 5 [json_name = "permission_resources"];
+  // PositionPermissions holds the value of the position_permissions edge.
+  repeated PositionPermission position_permissions = 6 [json_name = "position_permissions"];
+}
+
+// user_position.table.comment
+message UserPosition {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // field.foreign_key.comment
+  int64 user_id = 2 [json_name = "user_id"];
+  // field.foreign_key.comment
+  int64 position_id = 3 [json_name = "position_id"];
+
+}
+
+// UserPositionEdges holds the relations/edges for other nodes in the graph.
+message UserPositionEdges {
+  // User holds the value of the user edge.
+  User user = 1 [json_name = "user"];
+  // Position holds the value of the position edge.
+  Position position = 2 [json_name = "position"];
+}
+
+// position_permission.table.comment
+message PositionPermission {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // position_permission.field.position_id
+  int64 position_id = 2 [json_name = "position_id"];
+  // position_permission.field.permission_id
+  int64 permission_id = 3 [json_name = "permission_id"];
+
+}
+
+// PositionPermissionEdges holds the relations/edges for other nodes in the graph.
+message PositionPermissionEdges {
+  // Position holds the value of the position edge.
+  Position position = 1 [json_name = "position"];
+  // Permission holds the value of the permission edge.
+  Permission permission = 2 [json_name = "permission"];
+}
+
+// role_permission.table.comment
+message RolePermission {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // field.foreign_key.comment
+  int64 role_id = 2 [json_name = "role_id"];
+  // field.foreign_key.comment
+  int64 permission_id = 3 [json_name = "permission_id"];
+
+}
+
+// RolePermissionEdges holds the relations/edges for other nodes in the graph.
+message RolePermissionEdges {
+  // Role holds the value of the role edge.
+  Role role = 1 [json_name = "role"];
+  // Permission holds the value of the permission edge.
+  Permission permission = 2 [json_name = "permission"];
+}
+
+// permission_resource.table.comment
+message PermissionResource {
+  // ID of the ent.
+  // field.primary_key.comment
+  int64 id = 1 [json_name = "id"];
+  // field.foreign_key.comment
+  int64 permission_id = 2 [json_name = "permission_id"];
+  // field.foreign_key.comment
+  int64 resource_id = 3 [json_name = "resource_id"];
+  // permission_resource.field.actions
+  string actions = 4 [json_name = "actions"];
+}
+
+// PermissionResourceEdges holds the relations/edges for other nodes in the graph.
+message PermissionResourceEdges {
+  // Permission holds the value of the permission edge.
+  Permission permission = 1 [json_name = "permission"];
+  // Resource holds the value of the resource edge.
+  Resource resource = 2 [json_name = "resource"];
 }

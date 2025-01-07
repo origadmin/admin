@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/database"
 	"github.com/origadmin/entslog/v3"
@@ -137,6 +138,21 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 }
 
 func (obj *Data) InitDataFromPath(ctx context.Context, path string) error {
+	initFuncs := map[string]func(ctx context.Context, filename string) error{
+		"resource":   obj.InitResourceFromFile,
+		"role":       obj.InitRoleFromFile,
+		"user":       obj.InitUserFromFile,
+		"department": obj.InitDepartmentFromFile,
+		"position":   obj.InitPositionFromFile,
+		"permission": obj.InitPermissionFromFile,
+	}
+	for name, fn := range initFuncs {
+		name = filepath.Join(path, name+".json")
+		err := fn(ctx, name)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) error {
@@ -145,7 +161,7 @@ func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) erro
 		return err
 	}
 	var resources []*dto.ResourcePB
-	err = codec.DecodeFromFile(filename, &resources)
+	err = codec.DecodeFromFile(abs, &resources)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			log.Warnw("Resource data file not found, skip init resource data from file", "file", abs)
@@ -162,13 +178,13 @@ func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) erro
 		}
 	}
 	return obj.Tx(ctx, func(ctx context.Context) error {
-		return obj.createBatchWithParent(ctx, resources, nil)
+		return obj.createResourceBatchWithParent(ctx, resources, nil)
 	})
 }
 
-func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.ResourcePB, parent *dto.ResourcePB) error {
+func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto.ResourcePB, parent *dto.ResourcePB) error {
 	total := len(items)
-	log.Infow("msg", "Starting createBatchWithParent", "totalItems", total)
+	log.Infow("msg", "Starting createResourceBatchWithParent", "totalItems", total)
 
 	for i, item := range items {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
@@ -273,51 +289,9 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.Resourc
 			log.Infow("msg", "Resource item created successfully", "itemId", item.Id)
 		}
 
-		//for _, res := range item.Resources {
-		//	log.Infow("msg", "Processing resource", "resourceId", res.Id, "resourcePath", res.Path, "resourceMethod", res.Method)
-		//
-		//	if res.Id != 0 {
-		//		log.Infow("msg", "Checking resource by ID", "resourceId", res.Id)
-		//		exists, err := obj.Resource(ctx).Query().Where(resource.ID(res.Id)).Exist(ctx)
-		//		if err != nil {
-		//			log.Errorw("msg", "Error checking resource by ID", "resourceId", res.Id, "error", err)
-		//			return err
-		//		} else if exists {
-		//			log.Infow("msg", "Resource already exists by ID", "resourceId", res.Id)
-		//			continue
-		//		}
-		//	}
-		//	if res.Path != "" {
-		//		log.Infow("msg", "Checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "resourceId", item.Id)
-		//
-		//		exists, err := obj.Resource(ctx).Query().Where(resource.Path(res.Path), resource.Method(res.Method), resource.ID(res.Id)).Exist(ctx)
-		//		if err != nil {
-		//			log.Errorw("msg", "Error checking resource by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method, "resourceId", res.Id, "error", err)
-		//			return err
-		//		}
-		//		if exists {
-		//			log.Infow("msg", "Resource already exists by Path and Method", "resourcePath", res.Path, "resourceMethod", res.Method)
-		//			continue
-		//		}
-		//	}
-		//	if res.Id == 0 {
-		//		res.Id = id.Gen()
-		//		log.Infow("msg", "Generated new ID for resource", "resourceId", res.Id)
-		//	}
-		//	res.ResourceId = item.Id
-		//	res.CreateTime = timestamppb.New(time.Now())
-		//	res.UpdateTime = timestamppb.New(time.Now())
-		//	//columns := resource.OmitColumns()
-		//	if _, err := obj.Resource(ctx).Create().SetResource(dto.ConvertResourcePB2Object(res)).SetID(res.Id).Save(ctx); err != nil {
-		//		log.Errorw("msg", "Error creating resource", "resourceId", res.Id, "error", err)
-		//		return err
-		//	}
-		//	log.Infow("msg", "Resource created successfully", "resourceId", res.Id)
-		//}
-
 		if len(item.Children) != 0 {
 			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))
-			if err := obj.createBatchWithParent(ctx, item.Children, item); err != nil {
+			if err := obj.createResourceBatchWithParent(ctx, item.Children, item); err != nil {
 				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
 				return err
 			}
@@ -325,6 +299,204 @@ func (obj *Data) createBatchWithParent(ctx context.Context, items []*dto.Resourc
 		}
 	}
 
-	log.Infow("msg", "Finished createBatchWithParent")
+	log.Infow("msg", "Finished createResourceBatchWithParent")
+	return nil
+}
+
+func (obj *Data) InitUserFromFile(ctx context.Context, filename string) error {
+	abs, err := filepath.Abs(filename)
+	if err != nil {
+		return err
+	}
+	var users []*dto.UserPB
+	err = codec.DecodeFromFile(abs, &users)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			log.Warnw("User data file not found, skip init user data from file", "file", abs)
+			return nil
+		}
+		return err
+	}
+	return obj.Tx(ctx, func(ctx context.Context) error {
+		return obj.createUserBatch(ctx, users)
+	})
+}
+
+func (obj *Data) createUserBatch(ctx context.Context, users []*dto.UserPB) error {
+	total := len(users)
+	log.Infow("msg", "Starting createUserBatch", "totalItems", total)
+	for i, item := range users {
+		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemUsername", item.Username, "itemNickname", item.Nickname)
+		if item.Id == 0 {
+			item.Id = id.Gen()
+			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
+			item.Uuid = uuid.Must(uuid.NewRandom()).String()
+			log.Infow("msg", "Generated new UUID for item", "itemId", item.Id, "itemUuid", item.Uuid)
+			item.Password = ""
+			log.Infow("msg", "Generated new Password for item", "itemId", item.Id, "itemPassword", item.Password)
+		}
+		user, ps, err := dto.CreateUser(item, item.Username, item.Password, dto.UserQueryOption{})
+		if err != nil {
+			return err
+		}
+		if _, err := obj.User(ctx).Create().SetUser(dto.ConvertUserPB2Object(user)).SetPassword(ps).Save(ctx); err != nil {
+			log.Errorw("msg", "Error creating user item", "itemId", item.Id, "error", err)
+			return err
+		}
+		log.Infow("msg", "User item created successfully", "itemId", item.Id, "itemUuid", item.Uuid)
+	}
+	log.Infow("msg", "Finished createUserBatch")
+	return nil
+}
+
+func (obj *Data) InitRoleFromFile(ctx context.Context, filename string) error {
+	abs, err := filepath.Abs(filename)
+	if err != nil {
+		return err
+	}
+	var roles []*dto.RolePB
+	err = codec.DecodeFromFile(abs, &roles)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			log.Warnw("Role data file not found, skip init role data from file", "file", abs)
+			return nil
+		}
+		return err
+	}
+	return obj.Tx(ctx, func(ctx context.Context) error {
+		return obj.createRoleBatch(ctx, roles)
+	})
+}
+
+func (obj *Data) createRoleBatch(ctx context.Context, roles []*dto.RolePB) error {
+	total := len(roles)
+	log.Infow("msg", "Starting createRoleBatch", "totalItems", total)
+	for i, item := range roles {
+		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
+		if item.Id == 0 {
+			item.Id = id.Gen()
+			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
+		}
+		if _, err := obj.Role(ctx).Create().SetRole(dto.ConvertRolePB2Object(item)).Save(ctx); err != nil {
+			log.Errorw("msg", "Error creating role item", "itemId", item.Id, "error", err)
+			return err
+		}
+		log.Infow("msg", "Role item created successfully", "itemId", item.Id)
+	}
+	log.Infow("msg", "Finished createRoleBatch")
+	return nil
+}
+
+func (obj *Data) InitDepartmentFromFile(ctx context.Context, filename string) error {
+	abs, err := filepath.Abs(filename)
+	if err != nil {
+		return err
+	}
+	var departments []*dto.DepartmentPB
+	err = codec.DecodeFromFile(abs, &departments)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			log.Warnw("Department data file not found, skip init department data from file", "file", abs)
+			return nil
+		}
+		return err
+	}
+	return obj.Tx(ctx, func(ctx context.Context) error {
+		return obj.createDepartmentBatch(ctx, departments)
+	})
+}
+
+func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.DepartmentPB) error {
+	total := len(departments)
+	log.Infow("msg", "Starting createDepartmentBatch", "totalItems", total)
+	for i, item := range departments {
+		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
+		if item.Id == 0 {
+			item.Id = id.Gen()
+			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
+		}
+		if _, err := obj.Department(ctx).Create().SetDepartment(dto.ConvertDepartmentPB2Object(item)).Save(ctx); err != nil {
+			log.Errorw("msg", "Error creating department item", "itemId", item.Id, "error", err)
+			return err
+		}
+		log.Infow("msg", "Department item created successfully", "itemId", item.Id)
+	}
+	log.Infow("msg", "Finished createDepartmentBatch")
+	return nil
+}
+
+func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) error {
+	abs, err := filepath.Abs(filename)
+	if err != nil {
+		return err
+	}
+	var positions []*dto.PositionPB
+	err = codec.DecodeFromFile(abs, &positions)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			log.Warnw("Position data file not found, skip init position data from file", "file", abs)
+			return nil
+		}
+		return err
+	}
+	return obj.Tx(ctx, func(ctx context.Context) error {
+		return obj.createPositionBatch(ctx, positions)
+	})
+}
+
+func (obj *Data) createPositionBatch(ctx context.Context, positions []*dto.PositionPB) error {
+	total := len(positions)
+	log.Infow("msg", "Starting createPositionBatch", "totalItems", total)
+	for i, item := range positions {
+		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
+		if item.Id == 0 {
+			item.Id = id.Gen()
+			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
+		}
+		if _, err := obj.Position(ctx).Create().SetPosition(dto.ConvertPositionPB2Object(item)).Save(ctx); err != nil {
+			log.Errorw("msg", "Error creating position item", "itemId", item.Id, "error", err)
+			return err
+		}
+		log.Infow("msg", "Position item created successfully", "itemId", item.Id)
+	}
+	log.Infow("msg", "Finished createPositionBatch")
+	return nil
+}
+
+func (obj *Data) InitPermissionFromFile(ctx context.Context, filename string) error {
+	abs, err := filepath.Abs(filename)
+	if err != nil {
+		return err
+	}
+	var permissions []*dto.PermissionPB
+	err = codec.DecodeFromFile(abs, &permissions)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			log.Warnw("Permission data file not found, skip init permission data from file", "file", abs)
+			return nil
+		}
+		return err
+	}
+	return obj.Tx(ctx, func(ctx context.Context) error {
+		return obj.createPermissionBatch(ctx, permissions)
+	})
+}
+
+func (obj *Data) createPermissionBatch(ctx context.Context, permissions []*dto.PermissionPB) error {
+	total := len(permissions)
+	log.Infow("msg", "Starting createPermissionBatch", "totalItems", total)
+	for i, item := range permissions {
+		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemKeyword", item.Keyword, "itemName", item.Name)
+		if item.Id == 0 {
+			item.Id = id.Gen()
+			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
+		}
+		if _, err := obj.Permission(ctx).Create().SetPermission(dto.ConvertPermissionPB2Object(item)).Save(ctx); err != nil {
+			log.Errorw("msg", "Error creating permission item", "itemId", item.Id, "error", err)
+			return err
+		}
+		log.Infow("msg", "Permission item created successfully", "itemId", item.Id)
+	}
+	log.Infow("msg", "Finished createPermissionBatch")
 	return nil
 }
