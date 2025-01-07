@@ -40,8 +40,8 @@ const (
 	EdgeResources = "resources"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
 	EdgeRolePermissions = "role_permissions"
-	// EdgeMenuPermissions holds the string denoting the menu_permissions edge name in mutations.
-	EdgeMenuPermissions = "menu_permissions"
+	// EdgePermissionMenus holds the string denoting the permission_menus edge name in mutations.
+	EdgePermissionMenus = "permission_menus"
 	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
 	EdgePermissionResources = "permission_resources"
 	// Table holds the table name of the permission in the database.
@@ -52,7 +52,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "sys_roles"
 	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
-	MenusTable = "sys_menu_permissions"
+	MenusTable = "sys_permission_menus"
 	// MenusInverseTable is the table name for the Menu entity.
 	// It exists in this package in order to avoid circular dependency with the "menu" package.
 	MenusInverseTable = "sys_menus"
@@ -68,13 +68,13 @@ const (
 	RolePermissionsInverseTable = "sys_role_permissions"
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "permission_id"
-	// MenuPermissionsTable is the table that holds the menu_permissions relation/edge.
-	MenuPermissionsTable = "sys_menu_permissions"
-	// MenuPermissionsInverseTable is the table name for the MenuPermission entity.
-	// It exists in this package in order to avoid circular dependency with the "menupermission" package.
-	MenuPermissionsInverseTable = "sys_menu_permissions"
-	// MenuPermissionsColumn is the table column denoting the menu_permissions relation/edge.
-	MenuPermissionsColumn = "permission_id"
+	// PermissionMenusTable is the table that holds the permission_menus relation/edge.
+	PermissionMenusTable = "sys_permission_menus"
+	// PermissionMenusInverseTable is the table name for the PermissionMenu entity.
+	// It exists in this package in order to avoid circular dependency with the "permissionmenu" package.
+	PermissionMenusInverseTable = "sys_permission_menus"
+	// PermissionMenusColumn is the table column denoting the permission_menus relation/edge.
+	PermissionMenusColumn = "permission_id"
 	// PermissionResourcesTable is the table that holds the permission_resources relation/edge.
 	PermissionResourcesTable = "sys_permission_resources"
 	// PermissionResourcesInverseTable is the table name for the PermissionResource entity.
@@ -104,7 +104,7 @@ var (
 	RolesPrimaryKey = []string{"role_id", "permission_id"}
 	// MenusPrimaryKey and MenusColumn2 are the table columns denoting the
 	// primary key for the menus relation (M2M).
-	MenusPrimaryKey = []string{"menu_id", "permission_id"}
+	MenusPrimaryKey = []string{"permission_id", "menu_id"}
 	// ResourcesPrimaryKey and ResourcesColumn2 are the table columns denoting the
 	// primary key for the resources relation (M2M).
 	ResourcesPrimaryKey = []string{"permission_id", "resource_id"}
@@ -251,17 +251,17 @@ func ByRolePermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
-// ByMenuPermissionsCount orders the results by menu_permissions count.
-func ByMenuPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+// ByPermissionMenusCount orders the results by permission_menus count.
+func ByPermissionMenusCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newMenuPermissionsStep(), opts...)
+		sqlgraph.OrderByNeighborsCount(s, newPermissionMenusStep(), opts...)
 	}
 }
 
-// ByMenuPermissions orders the results by menu_permissions terms.
-func ByMenuPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+// ByPermissionMenus orders the results by permission_menus terms.
+func ByPermissionMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMenuPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+		sqlgraph.OrderByNeighborTerms(s, newPermissionMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
@@ -289,7 +289,7 @@ func newMenusStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(MenusInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, true, MenusTable, MenusPrimaryKey...),
+		sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
 	)
 }
 func newResourcesStep() *sqlgraph.Step {
@@ -306,11 +306,11 @@ func newRolePermissionsStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.O2M, true, RolePermissionsTable, RolePermissionsColumn),
 	)
 }
-func newMenuPermissionsStep() *sqlgraph.Step {
+func newPermissionMenusStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MenuPermissionsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, true, MenuPermissionsTable, MenuPermissionsColumn),
+		sqlgraph.To(PermissionMenusInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, PermissionMenusTable, PermissionMenusColumn),
 	)
 }
 func newPermissionResourcesStep() *sqlgraph.Step {

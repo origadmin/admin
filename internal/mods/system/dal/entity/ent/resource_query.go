@@ -751,6 +751,10 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  Method string `json:"method,omitempty"`
 //	  Operation string `json:"operation,omitempty"`
 //	  Path string `json:"path,omitempty"`
+//	  URI string `json:"uri,omitempty"`
+//	  I18nKey string `json:"i18n_key,omitempty"`
+//	  Description string `json:"description,omitempty"`
+//	  Metadata map[string]interface {} `json:"metadata,omitempty"`
 //	  MenuID int64 `json:"menu_id,omitempty"`
 //	}
 //
@@ -761,6 +765,10 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  resource.FieldMethod,
 //	  resource.FieldOperation,
 //	  resource.FieldPath,
+//	  resource.FieldURI,
+//	  resource.FieldI18nKey,
+//	  resource.FieldDescription,
+//	  resource.FieldMetadata,
 //	  resource.FieldMenuID,
 //	  ).
 //	  Scan(ctx, &v)

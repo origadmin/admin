@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -202,19 +202,19 @@ func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *Permission
 	return pc.AddRolePermissionIDs(ids...)
 }
 
-// AddMenuPermissionIDs adds the "menu_permissions" edge to the MenuPermission entity by IDs.
-func (pc *PermissionCreate) AddMenuPermissionIDs(ids ...int64) *PermissionCreate {
-	pc.mutation.AddMenuPermissionIDs(ids...)
+// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by IDs.
+func (pc *PermissionCreate) AddPermissionMenuIDs(ids ...int64) *PermissionCreate {
+	pc.mutation.AddPermissionMenuIDs(ids...)
 	return pc
 }
 
-// AddMenuPermissions adds the "menu_permissions" edges to the MenuPermission entity.
-func (pc *PermissionCreate) AddMenuPermissions(m ...*MenuPermission) *PermissionCreate {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
+// AddPermissionMenus adds the "permission_menus" edges to the PermissionMenu entity.
+func (pc *PermissionCreate) AddPermissionMenus(p ...*PermissionMenu) *PermissionCreate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
 	}
-	return pc.AddMenuPermissionIDs(ids...)
+	return pc.AddPermissionMenuIDs(ids...)
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
@@ -435,7 +435,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if nodes := pc.mutation.MenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: true,
+			Inverse: false,
 			Table:   permission.MenusTable,
 			Columns: permission.MenusPrimaryKey,
 			Bidi:    false,
@@ -446,7 +446,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &MenuPermissionCreate{config: pc.config, mutation: newMenuPermissionMutation(pc.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: pc.config, mutation: newPermissionMenuMutation(pc.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -494,15 +494,15 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := pc.mutation.MenuPermissionsIDs(); len(nodes) > 0 {
+	if nodes := pc.mutation.PermissionMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   permission.MenuPermissionsTable,
-			Columns: []string{permission.MenuPermissionsColumn},
+			Table:   permission.PermissionMenusTable,
+			Columns: []string{permission.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

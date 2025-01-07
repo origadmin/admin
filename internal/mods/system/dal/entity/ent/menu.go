@@ -42,6 +42,8 @@ type Menu struct {
 	ParentPath string `json:"parent_path,omitempty"`
 	// menu.field.sequence
 	Sequence int `json:"sequence,omitempty"`
+	// menu.field.hidden
+	Hidden bool `json:"hidden,omitempty"`
 	// menu.field.properties
 	Properties string `json:"properties,omitempty"`
 	// menu.field.parent_id
@@ -60,17 +62,13 @@ type MenuEdges struct {
 	Parent *Menu `json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
 	Resources []*Resource `json:"resources,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `json:"roles,omitempty"`
 	// Permissions holds the value of the permissions edge.
 	Permissions []*Permission `json:"permissions,omitempty"`
-	// RoleMenus holds the value of the role_menus edge.
-	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
-	// MenuPermissions holds the value of the menu_permissions edge.
-	MenuPermissions []*MenuPermission `json:"menu_permissions,omitempty"`
+	// PermissionMenus holds the value of the permission_menus edge.
+	PermissionMenus []*PermissionMenu `json:"permission_menus,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [7]bool
+	loadedTypes [5]bool
 }
 
 // ChildrenOrErr returns the Children value or an error if the edge
@@ -102,40 +100,22 @@ func (e MenuEdges) ResourcesOrErr() ([]*Resource, error) {
 	return nil, &NotLoadedError{edge: "resources"}
 }
 
-// RolesOrErr returns the Roles value or an error if the edge
-// was not loaded in eager-loading.
-func (e MenuEdges) RolesOrErr() ([]*Role, error) {
-	if e.loadedTypes[3] {
-		return e.Roles, nil
-	}
-	return nil, &NotLoadedError{edge: "roles"}
-}
-
 // PermissionsOrErr returns the Permissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e MenuEdges) PermissionsOrErr() ([]*Permission, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[3] {
 		return e.Permissions, nil
 	}
 	return nil, &NotLoadedError{edge: "permissions"}
 }
 
-// RoleMenusOrErr returns the RoleMenus value or an error if the edge
+// PermissionMenusOrErr returns the PermissionMenus value or an error if the edge
 // was not loaded in eager-loading.
-func (e MenuEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[5] {
-		return e.RoleMenus, nil
+func (e MenuEdges) PermissionMenusOrErr() ([]*PermissionMenu, error) {
+	if e.loadedTypes[4] {
+		return e.PermissionMenus, nil
 	}
-	return nil, &NotLoadedError{edge: "role_menus"}
-}
-
-// MenuPermissionsOrErr returns the MenuPermissions value or an error if the edge
-// was not loaded in eager-loading.
-func (e MenuEdges) MenuPermissionsOrErr() ([]*MenuPermission, error) {
-	if e.loadedTypes[6] {
-		return e.MenuPermissions, nil
-	}
-	return nil, &NotLoadedError{edge: "menu_permissions"}
+	return nil, &NotLoadedError{edge: "permission_menus"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -143,6 +123,8 @@ func (*Menu) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case menu.FieldHidden:
+			values[i] = new(sql.NullBool)
 		case menu.FieldID, menu.FieldStatus, menu.FieldSequence, menu.FieldParentID:
 			values[i] = new(sql.NullInt64)
 		case menu.FieldKeyword, menu.FieldName, menu.FieldI18nKey, menu.FieldDescription, menu.FieldType, menu.FieldIcon, menu.FieldPath, menu.FieldParentPath, menu.FieldProperties:
@@ -242,6 +224,12 @@ func (m *Menu) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				m.Sequence = int(value.Int64)
 			}
+		case menu.FieldHidden:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hidden", values[i])
+			} else if value.Valid {
+				m.Hidden = value.Bool
+			}
 		case menu.FieldProperties:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field properties", values[i])
@@ -282,24 +270,14 @@ func (m *Menu) QueryResources() *ResourceQuery {
 	return NewMenuClient(m.config).QueryResources(m)
 }
 
-// QueryRoles queries the "roles" edge of the Menu entity.
-func (m *Menu) QueryRoles() *RoleQuery {
-	return NewMenuClient(m.config).QueryRoles(m)
-}
-
 // QueryPermissions queries the "permissions" edge of the Menu entity.
 func (m *Menu) QueryPermissions() *PermissionQuery {
 	return NewMenuClient(m.config).QueryPermissions(m)
 }
 
-// QueryRoleMenus queries the "role_menus" edge of the Menu entity.
-func (m *Menu) QueryRoleMenus() *RoleMenuQuery {
-	return NewMenuClient(m.config).QueryRoleMenus(m)
-}
-
-// QueryMenuPermissions queries the "menu_permissions" edge of the Menu entity.
-func (m *Menu) QueryMenuPermissions() *MenuPermissionQuery {
-	return NewMenuClient(m.config).QueryMenuPermissions(m)
+// QueryPermissionMenus queries the "permission_menus" edge of the Menu entity.
+func (m *Menu) QueryPermissionMenus() *PermissionMenuQuery {
+	return NewMenuClient(m.config).QueryPermissionMenus(m)
 }
 
 // Update returns a builder for updating this Menu.
@@ -360,6 +338,9 @@ func (m *Menu) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
 	builder.WriteString(fmt.Sprintf("%v", m.Sequence))
+	builder.WriteString(", ")
+	builder.WriteString("hidden=")
+	builder.WriteString(fmt.Sprintf("%v", m.Hidden))
 	builder.WriteString(", ")
 	builder.WriteString("properties=")
 	builder.WriteString(m.Properties)

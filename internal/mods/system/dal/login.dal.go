@@ -104,7 +104,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:
-		log.Debugf("User found with ID %s and status %s", userData.Id, userData.Status)
+		log.Debugf("User found with ID %d and status %d", userData.Id, userData.Status)
 	}
 
 	// check password

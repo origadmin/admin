@@ -588,7 +588,7 @@ func HasMenus() predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, MenusTable, MenusPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -652,21 +652,21 @@ func HasRolePermissionsWith(preds ...predicate.RolePermission) predicate.Permiss
 	})
 }
 
-// HasMenuPermissions applies the HasEdge predicate on the "menu_permissions" edge.
-func HasMenuPermissions() predicate.Permission {
+// HasPermissionMenus applies the HasEdge predicate on the "permission_menus" edge.
+func HasPermissionMenus() predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, MenuPermissionsTable, MenuPermissionsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, true, PermissionMenusTable, PermissionMenusColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasMenuPermissionsWith applies the HasEdge predicate on the "menu_permissions" edge with a given conditions (other predicates).
-func HasMenuPermissionsWith(preds ...predicate.MenuPermission) predicate.Permission {
+// HasPermissionMenusWith applies the HasEdge predicate on the "permission_menus" edge with a given conditions (other predicates).
+func HasPermissionMenusWith(preds ...predicate.PermissionMenu) predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
-		step := newMenuPermissionsStep()
+		step := newPermissionMenusStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -26,7 +26,7 @@ type Resource struct {
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("method").
-			MaxLen(20).
+			MaxLen(16).
 			Default("").
 			Comment(i18n.Text("resource.field.method")), // HTTP method (e.g. GET, POST, PUT, DELETE)
 		field.String("operation").
@@ -37,7 +37,22 @@ func (Resource) Fields() []ent.Field {
 			MaxLen(255).
 			Default("").
 			Comment(i18n.Text("resource.field.path")), // API request path (e.g. /users/:id or /users/{id})
-		mixin.OP("menu_id", "resource.field.menu_id"), // From Menu.ID
+		field.String("uri").
+			MaxLen(256).
+			Unique().
+			Comment(i18n.Text("resource.field.uri")), // resource uri (e.g. /users/:id or /users/{id})
+		field.String("i18n_key").
+			MaxLen(128).
+			Default("").
+			Comment(i18n.Text("resource.field.i18n_key")), // internationalized identifiers
+		field.String("description").
+			MaxLen(256).
+			Optional().
+			Comment(i18n.Text("resource.field.description")),
+		field.JSON("metadata", map[string]any{}).
+			Optional().
+			Comment(i18n.Text("resource.field.metadata")), // Metadata (e.g., request parameters, response format)
+		mixin.OP("menu_id", "resource.field.menu_id"),     // From Menu.ID
 	}
 }
 

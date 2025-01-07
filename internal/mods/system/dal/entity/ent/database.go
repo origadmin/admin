@@ -117,14 +117,14 @@ func (db *Database) Menu(ctx context.Context) *MenuClient {
 	return db.Client(ctx).Menu
 }
 
-// MenuPermission is the client for interacting with the MenuPermission builders.
-func (db *Database) MenuPermission(ctx context.Context) *MenuPermissionClient {
-	return db.Client(ctx).MenuPermission
-}
-
 // Permission is the client for interacting with the Permission builders.
 func (db *Database) Permission(ctx context.Context) *PermissionClient {
 	return db.Client(ctx).Permission
+}
+
+// PermissionMenu is the client for interacting with the PermissionMenu builders.
+func (db *Database) PermissionMenu(ctx context.Context) *PermissionMenuClient {
+	return db.Client(ctx).PermissionMenu
 }
 
 // PermissionResource is the client for interacting with the PermissionResource builders.
@@ -145,11 +145,6 @@ func (db *Database) Resource(ctx context.Context) *ResourceClient {
 // Role is the client for interacting with the Role builders.
 func (db *Database) Role(ctx context.Context) *RoleClient {
 	return db.Client(ctx).Role
-}
-
-// RoleMenu is the client for interacting with the RoleMenu builders.
-func (db *Database) RoleMenu(ctx context.Context) *RoleMenuClient {
-	return db.Client(ctx).RoleMenu
 }
 
 // RolePermission is the client for interacting with the RolePermission builders.

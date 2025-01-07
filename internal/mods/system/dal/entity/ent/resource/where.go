@@ -80,6 +80,21 @@ func Path(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldPath, v))
 }
 
+// URI applies equality check predicate on the "uri" field. It's identical to URIEQ.
+func URI(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldURI, v))
+}
+
+// I18nKey applies equality check predicate on the "i18n_key" field. It's identical to I18nKeyEQ.
+func I18nKey(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldI18nKey, v))
+}
+
+// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
+func Description(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldDescription, v))
+}
+
 // MenuID applies equality check predicate on the "menu_id" field. It's identical to MenuIDEQ.
 func MenuID(v int64) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldMenuID, v))
@@ -358,6 +373,221 @@ func PathEqualFold(v string) predicate.Resource {
 // PathContainsFold applies the ContainsFold predicate on the "path" field.
 func PathContainsFold(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldContainsFold(FieldPath, v))
+}
+
+// URIEQ applies the EQ predicate on the "uri" field.
+func URIEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldURI, v))
+}
+
+// URINEQ applies the NEQ predicate on the "uri" field.
+func URINEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldURI, v))
+}
+
+// URIIn applies the In predicate on the "uri" field.
+func URIIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldURI, vs...))
+}
+
+// URINotIn applies the NotIn predicate on the "uri" field.
+func URINotIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldURI, vs...))
+}
+
+// URIGT applies the GT predicate on the "uri" field.
+func URIGT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldURI, v))
+}
+
+// URIGTE applies the GTE predicate on the "uri" field.
+func URIGTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldURI, v))
+}
+
+// URILT applies the LT predicate on the "uri" field.
+func URILT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldURI, v))
+}
+
+// URILTE applies the LTE predicate on the "uri" field.
+func URILTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldURI, v))
+}
+
+// URIContains applies the Contains predicate on the "uri" field.
+func URIContains(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContains(FieldURI, v))
+}
+
+// URIHasPrefix applies the HasPrefix predicate on the "uri" field.
+func URIHasPrefix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasPrefix(FieldURI, v))
+}
+
+// URIHasSuffix applies the HasSuffix predicate on the "uri" field.
+func URIHasSuffix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasSuffix(FieldURI, v))
+}
+
+// URIEqualFold applies the EqualFold predicate on the "uri" field.
+func URIEqualFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldURI, v))
+}
+
+// URIContainsFold applies the ContainsFold predicate on the "uri" field.
+func URIContainsFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldURI, v))
+}
+
+// I18nKeyEQ applies the EQ predicate on the "i18n_key" field.
+func I18nKeyEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldI18nKey, v))
+}
+
+// I18nKeyNEQ applies the NEQ predicate on the "i18n_key" field.
+func I18nKeyNEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldI18nKey, v))
+}
+
+// I18nKeyIn applies the In predicate on the "i18n_key" field.
+func I18nKeyIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldI18nKey, vs...))
+}
+
+// I18nKeyNotIn applies the NotIn predicate on the "i18n_key" field.
+func I18nKeyNotIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldI18nKey, vs...))
+}
+
+// I18nKeyGT applies the GT predicate on the "i18n_key" field.
+func I18nKeyGT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldI18nKey, v))
+}
+
+// I18nKeyGTE applies the GTE predicate on the "i18n_key" field.
+func I18nKeyGTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldI18nKey, v))
+}
+
+// I18nKeyLT applies the LT predicate on the "i18n_key" field.
+func I18nKeyLT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldI18nKey, v))
+}
+
+// I18nKeyLTE applies the LTE predicate on the "i18n_key" field.
+func I18nKeyLTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldI18nKey, v))
+}
+
+// I18nKeyContains applies the Contains predicate on the "i18n_key" field.
+func I18nKeyContains(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContains(FieldI18nKey, v))
+}
+
+// I18nKeyHasPrefix applies the HasPrefix predicate on the "i18n_key" field.
+func I18nKeyHasPrefix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasPrefix(FieldI18nKey, v))
+}
+
+// I18nKeyHasSuffix applies the HasSuffix predicate on the "i18n_key" field.
+func I18nKeyHasSuffix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasSuffix(FieldI18nKey, v))
+}
+
+// I18nKeyEqualFold applies the EqualFold predicate on the "i18n_key" field.
+func I18nKeyEqualFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldI18nKey, v))
+}
+
+// I18nKeyContainsFold applies the ContainsFold predicate on the "i18n_key" field.
+func I18nKeyContainsFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldI18nKey, v))
+}
+
+// DescriptionEQ applies the EQ predicate on the "description" field.
+func DescriptionEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldDescription, v))
+}
+
+// DescriptionNEQ applies the NEQ predicate on the "description" field.
+func DescriptionNEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldDescription, v))
+}
+
+// DescriptionIn applies the In predicate on the "description" field.
+func DescriptionIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldDescription, vs...))
+}
+
+// DescriptionNotIn applies the NotIn predicate on the "description" field.
+func DescriptionNotIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldDescription, vs...))
+}
+
+// DescriptionGT applies the GT predicate on the "description" field.
+func DescriptionGT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldDescription, v))
+}
+
+// DescriptionGTE applies the GTE predicate on the "description" field.
+func DescriptionGTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldDescription, v))
+}
+
+// DescriptionLT applies the LT predicate on the "description" field.
+func DescriptionLT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldDescription, v))
+}
+
+// DescriptionLTE applies the LTE predicate on the "description" field.
+func DescriptionLTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldDescription, v))
+}
+
+// DescriptionContains applies the Contains predicate on the "description" field.
+func DescriptionContains(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContains(FieldDescription, v))
+}
+
+// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
+func DescriptionHasPrefix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasPrefix(FieldDescription, v))
+}
+
+// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
+func DescriptionHasSuffix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasSuffix(FieldDescription, v))
+}
+
+// DescriptionIsNil applies the IsNil predicate on the "description" field.
+func DescriptionIsNil() predicate.Resource {
+	return predicate.Resource(sql.FieldIsNull(FieldDescription))
+}
+
+// DescriptionNotNil applies the NotNil predicate on the "description" field.
+func DescriptionNotNil() predicate.Resource {
+	return predicate.Resource(sql.FieldNotNull(FieldDescription))
+}
+
+// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
+func DescriptionEqualFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldDescription, v))
+}
+
+// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
+func DescriptionContainsFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldDescription, v))
+}
+
+// MetadataIsNil applies the IsNil predicate on the "metadata" field.
+func MetadataIsNil() predicate.Resource {
+	return predicate.Resource(sql.FieldIsNull(FieldMetadata))
+}
+
+// MetadataNotNil applies the NotNil predicate on the "metadata" field.
+func MetadataNotNil() predicate.Resource {
+	return predicate.Resource(sql.FieldNotNull(FieldMetadata))
 }
 
 // MenuIDEQ applies the EQ predicate on the "menu_id" field.

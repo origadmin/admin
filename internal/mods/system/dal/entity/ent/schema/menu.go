@@ -58,11 +58,11 @@ func (Menu) Fields() []ent.Field {
 			Default("page").
 			Comment(i18n.Text("menu.field.type")), // Type of the menu item (e.g., Page,Button,Action,Menu,Link)
 		field.String("icon").
-			MaxLen(32).Default("").
+			MaxLen(64).Default("").
 			Comment(i18n.Text("menu.field.icon")), // Icon for the menu item
 		field.String("path").
-			MaxLen(255).
-			Default("").
+			MaxLen(256).
+			Unique().
 			Comment(i18n.Text("menu.field.path")), // Path associated with the menu item
 		field.Int8("status").
 			Default(MenuStatusActivated).
@@ -74,6 +74,9 @@ func (Menu) Fields() []ent.Field {
 		field.Int("sequence").
 			Default(0).
 			Comment(i18n.Text("menu.field.sequence")), // Sequence for sorting the menu item
+		field.Bool("hidden").
+			Default(false).
+			Comment(i18n.Text("menu.field.hidden")), // whether to hide the menu
 		field.Text("properties").
 			Default("").
 			Optional().
@@ -121,11 +124,11 @@ func (Menu) Edges() []ent.Edge {
 			Field("parent_id").
 			Unique(),
 		edge.To("resources", Resource.Type),
-		edge.From("roles", Role.Type).
+		//edge.From("roles", Role.Type).
+		//	Ref("menus").
+		//	Through("role_menus", RoleMenu.Type),
+		edge.From("permissions", Permission.Type).
 			Ref("menus").
-			Through("role_menus", RoleMenu.Type),
-		edge.To("permissions", Permission.Type).
-			StorageKey(edge.Columns("menu_id", "permission_id")).
-			Through("menu_permissions", MenuPermission.Type),
+			Through("permission_menus", PermissionMenu.Type),
 	}
 }

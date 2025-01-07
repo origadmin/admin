@@ -80,6 +80,66 @@ func (ru *ResourceUpdate) SetNillablePath(s *string) *ResourceUpdate {
 	return ru
 }
 
+// SetURI sets the "uri" field.
+func (ru *ResourceUpdate) SetURI(s string) *ResourceUpdate {
+	ru.mutation.SetURI(s)
+	return ru
+}
+
+// SetNillableURI sets the "uri" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableURI(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetURI(*s)
+	}
+	return ru
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (ru *ResourceUpdate) SetI18nKey(s string) *ResourceUpdate {
+	ru.mutation.SetI18nKey(s)
+	return ru
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableI18nKey(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetI18nKey(*s)
+	}
+	return ru
+}
+
+// SetDescription sets the "description" field.
+func (ru *ResourceUpdate) SetDescription(s string) *ResourceUpdate {
+	ru.mutation.SetDescription(s)
+	return ru
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableDescription(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetDescription(*s)
+	}
+	return ru
+}
+
+// ClearDescription clears the value of the "description" field.
+func (ru *ResourceUpdate) ClearDescription() *ResourceUpdate {
+	ru.mutation.ClearDescription()
+	return ru
+}
+
+// SetMetadata sets the "metadata" field.
+func (ru *ResourceUpdate) SetMetadata(m map[string]interface{}) *ResourceUpdate {
+	ru.mutation.SetMetadata(m)
+	return ru
+}
+
+// ClearMetadata clears the value of the "metadata" field.
+func (ru *ResourceUpdate) ClearMetadata() *ResourceUpdate {
+	ru.mutation.ClearMetadata()
+	return ru
+}
+
 // SetMenuID sets the "menu_id" field.
 func (ru *ResourceUpdate) SetMenuID(i int64) *ResourceUpdate {
 	ru.mutation.SetMenuID(i)
@@ -241,6 +301,21 @@ func (ru *ResourceUpdate) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.URI(); ok {
+		if err := resource.URIValidator(v); err != nil {
+			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.I18nKey(); ok {
+		if err := resource.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
+		}
+	}
+	if v, ok := ru.mutation.Description(); ok {
+		if err := resource.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
+		}
+	}
 	if v, ok := ru.mutation.MenuID(); ok {
 		if err := resource.MenuIDValidator(v); err != nil {
 			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
@@ -278,6 +353,24 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.URI(); ok {
+		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.I18nKey(); ok {
+		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.Description(); ok {
+		_spec.SetField(resource.FieldDescription, field.TypeString, value)
+	}
+	if ru.mutation.DescriptionCleared() {
+		_spec.ClearField(resource.FieldDescription, field.TypeString)
+	}
+	if value, ok := ru.mutation.Metadata(); ok {
+		_spec.SetField(resource.FieldMetadata, field.TypeJSON, value)
+	}
+	if ru.mutation.MetadataCleared() {
+		_spec.ClearField(resource.FieldMetadata, field.TypeJSON)
 	}
 	if ru.mutation.MenuCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -489,6 +582,66 @@ func (ruo *ResourceUpdateOne) SetNillablePath(s *string) *ResourceUpdateOne {
 	return ruo
 }
 
+// SetURI sets the "uri" field.
+func (ruo *ResourceUpdateOne) SetURI(s string) *ResourceUpdateOne {
+	ruo.mutation.SetURI(s)
+	return ruo
+}
+
+// SetNillableURI sets the "uri" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableURI(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetURI(*s)
+	}
+	return ruo
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (ruo *ResourceUpdateOne) SetI18nKey(s string) *ResourceUpdateOne {
+	ruo.mutation.SetI18nKey(s)
+	return ruo
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableI18nKey(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetI18nKey(*s)
+	}
+	return ruo
+}
+
+// SetDescription sets the "description" field.
+func (ruo *ResourceUpdateOne) SetDescription(s string) *ResourceUpdateOne {
+	ruo.mutation.SetDescription(s)
+	return ruo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableDescription(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetDescription(*s)
+	}
+	return ruo
+}
+
+// ClearDescription clears the value of the "description" field.
+func (ruo *ResourceUpdateOne) ClearDescription() *ResourceUpdateOne {
+	ruo.mutation.ClearDescription()
+	return ruo
+}
+
+// SetMetadata sets the "metadata" field.
+func (ruo *ResourceUpdateOne) SetMetadata(m map[string]interface{}) *ResourceUpdateOne {
+	ruo.mutation.SetMetadata(m)
+	return ruo
+}
+
+// ClearMetadata clears the value of the "metadata" field.
+func (ruo *ResourceUpdateOne) ClearMetadata() *ResourceUpdateOne {
+	ruo.mutation.ClearMetadata()
+	return ruo
+}
+
 // SetMenuID sets the "menu_id" field.
 func (ruo *ResourceUpdateOne) SetMenuID(i int64) *ResourceUpdateOne {
 	ruo.mutation.SetMenuID(i)
@@ -663,6 +816,21 @@ func (ruo *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.URI(); ok {
+		if err := resource.URIValidator(v); err != nil {
+			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.I18nKey(); ok {
+		if err := resource.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
+		}
+	}
+	if v, ok := ruo.mutation.Description(); ok {
+		if err := resource.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
+		}
+	}
 	if v, ok := ruo.mutation.MenuID(); ok {
 		if err := resource.MenuIDValidator(v); err != nil {
 			return &ValidationError{Name: "menu_id", err: fmt.Errorf(`ent: validator failed for field "Resource.menu_id": %w`, err)}
@@ -717,6 +885,24 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	}
 	if value, ok := ruo.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.URI(); ok {
+		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.I18nKey(); ok {
+		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.Description(); ok {
+		_spec.SetField(resource.FieldDescription, field.TypeString, value)
+	}
+	if ruo.mutation.DescriptionCleared() {
+		_spec.ClearField(resource.FieldDescription, field.TypeString)
+	}
+	if value, ok := ruo.mutation.Metadata(); ok {
+		_spec.SetField(resource.FieldMetadata, field.TypeJSON, value)
+	}
+	if ruo.mutation.MetadataCleared() {
+		_spec.ClearField(resource.FieldMetadata, field.TypeJSON)
 	}
 	if ruo.mutation.MenuCleared() {
 		edge := &sqlgraph.EdgeSpec{

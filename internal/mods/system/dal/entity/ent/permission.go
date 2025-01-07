@@ -53,8 +53,8 @@ type PermissionEdges struct {
 	Resources []*Resource `json:"resources,omitempty"`
 	// RolePermissions holds the value of the role_permissions edge.
 	RolePermissions []*RolePermission `json:"role_permissions,omitempty"`
-	// MenuPermissions holds the value of the menu_permissions edge.
-	MenuPermissions []*MenuPermission `json:"menu_permissions,omitempty"`
+	// PermissionMenus holds the value of the permission_menus edge.
+	PermissionMenus []*PermissionMenu `json:"permission_menus,omitempty"`
 	// PermissionResources holds the value of the permission_resources edge.
 	PermissionResources []*PermissionResource `json:"permission_resources,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -98,13 +98,13 @@ func (e PermissionEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
 	return nil, &NotLoadedError{edge: "role_permissions"}
 }
 
-// MenuPermissionsOrErr returns the MenuPermissions value or an error if the edge
+// PermissionMenusOrErr returns the PermissionMenus value or an error if the edge
 // was not loaded in eager-loading.
-func (e PermissionEdges) MenuPermissionsOrErr() ([]*MenuPermission, error) {
+func (e PermissionEdges) PermissionMenusOrErr() ([]*PermissionMenu, error) {
 	if e.loadedTypes[4] {
-		return e.MenuPermissions, nil
+		return e.PermissionMenus, nil
 	}
-	return nil, &NotLoadedError{edge: "menu_permissions"}
+	return nil, &NotLoadedError{edge: "permission_menus"}
 }
 
 // PermissionResourcesOrErr returns the PermissionResources value or an error if the edge
@@ -239,9 +239,9 @@ func (pe *Permission) QueryRolePermissions() *RolePermissionQuery {
 	return NewPermissionClient(pe.config).QueryRolePermissions(pe)
 }
 
-// QueryMenuPermissions queries the "menu_permissions" edge of the Permission entity.
-func (pe *Permission) QueryMenuPermissions() *MenuPermissionQuery {
-	return NewPermissionClient(pe.config).QueryMenuPermissions(pe)
+// QueryPermissionMenus queries the "permission_menus" edge of the Permission entity.
+func (pe *Permission) QueryPermissionMenus() *PermissionMenuQuery {
+	return NewPermissionClient(pe.config).QueryPermissionMenus(pe)
 }
 
 // QueryPermissionResources queries the "permission_resources" edge of the Permission entity.

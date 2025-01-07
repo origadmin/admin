@@ -9,11 +9,9 @@ import (
 	"math"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
@@ -32,11 +30,9 @@ type RoleQuery struct {
 	order               []role.OrderOption
 	inters              []Interceptor
 	predicates          []predicate.Role
-	withMenus           *MenuQuery
 	withUsers           *UserQuery
 	withPermissions     *PermissionQuery
 	withDepartments     *DepartmentQuery
-	withRoleMenus       *RoleMenuQuery
 	withUserRoles       *UserRoleQuery
 	withRolePermissions *RolePermissionQuery
 	withDepartmentRoles *DepartmentRoleQuery
@@ -75,28 +71,6 @@ func (rq *RoleQuery) Unique(unique bool) *RoleQuery {
 func (rq *RoleQuery) Order(o ...role.OrderOption) *RoleQuery {
 	rq.order = append(rq.order, o...)
 	return rq
-}
-
-// QueryMenus chains the current query on the "menus" edge.
-func (rq *RoleQuery) QueryMenus() *MenuQuery {
-	query := (&MenuClient{config: rq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := rq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := rq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(role.Table, role.FieldID, selector),
-			sqlgraph.To(menu.Table, menu.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, role.MenusTable, role.MenusPrimaryKey...),
-		)
-		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // QueryUsers chains the current query on the "users" edge.
@@ -158,28 +132,6 @@ func (rq *RoleQuery) QueryDepartments() *DepartmentQuery {
 			sqlgraph.From(role.Table, role.FieldID, selector),
 			sqlgraph.To(department.Table, department.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, role.DepartmentsTable, role.DepartmentsPrimaryKey...),
-		)
-		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryRoleMenus chains the current query on the "role_menus" edge.
-func (rq *RoleQuery) QueryRoleMenus() *RoleMenuQuery {
-	query := (&RoleMenuClient{config: rq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := rq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := rq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(role.Table, role.FieldID, selector),
-			sqlgraph.To(rolemenu.Table, rolemenu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, role.RoleMenusTable, role.RoleMenusColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
 		return fromU, nil
@@ -445,11 +397,9 @@ func (rq *RoleQuery) Clone() *RoleQuery {
 		order:               append([]role.OrderOption{}, rq.order...),
 		inters:              append([]Interceptor{}, rq.inters...),
 		predicates:          append([]predicate.Role{}, rq.predicates...),
-		withMenus:           rq.withMenus.Clone(),
 		withUsers:           rq.withUsers.Clone(),
 		withPermissions:     rq.withPermissions.Clone(),
 		withDepartments:     rq.withDepartments.Clone(),
-		withRoleMenus:       rq.withRoleMenus.Clone(),
 		withUserRoles:       rq.withUserRoles.Clone(),
 		withRolePermissions: rq.withRolePermissions.Clone(),
 		withDepartmentRoles: rq.withDepartmentRoles.Clone(),
@@ -458,17 +408,6 @@ func (rq *RoleQuery) Clone() *RoleQuery {
 		path:      rq.path,
 		modifiers: append([]func(*sql.Selector){}, rq.modifiers...),
 	}
-}
-
-// WithMenus tells the query-builder to eager-load the nodes that are connected to
-// the "menus" edge. The optional arguments are used to configure the query builder of the edge.
-func (rq *RoleQuery) WithMenus(opts ...func(*MenuQuery)) *RoleQuery {
-	query := (&MenuClient{config: rq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	rq.withMenus = query
-	return rq
 }
 
 // WithUsers tells the query-builder to eager-load the nodes that are connected to
@@ -501,17 +440,6 @@ func (rq *RoleQuery) WithDepartments(opts ...func(*DepartmentQuery)) *RoleQuery 
 		opt(query)
 	}
 	rq.withDepartments = query
-	return rq
-}
-
-// WithRoleMenus tells the query-builder to eager-load the nodes that are connected to
-// the "role_menus" edge. The optional arguments are used to configure the query builder of the edge.
-func (rq *RoleQuery) WithRoleMenus(opts ...func(*RoleMenuQuery)) *RoleQuery {
-	query := (&RoleMenuClient{config: rq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	rq.withRoleMenus = query
 	return rq
 }
 
@@ -626,12 +554,10 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	var (
 		nodes       = []*Role{}
 		_spec       = rq.querySpec()
-		loadedTypes = [8]bool{
-			rq.withMenus != nil,
+		loadedTypes = [6]bool{
 			rq.withUsers != nil,
 			rq.withPermissions != nil,
 			rq.withDepartments != nil,
-			rq.withRoleMenus != nil,
 			rq.withUserRoles != nil,
 			rq.withRolePermissions != nil,
 			rq.withDepartmentRoles != nil,
@@ -658,13 +584,6 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := rq.withMenus; query != nil {
-		if err := rq.loadMenus(ctx, query, nodes,
-			func(n *Role) { n.Edges.Menus = []*Menu{} },
-			func(n *Role, e *Menu) { n.Edges.Menus = append(n.Edges.Menus, e) }); err != nil {
-			return nil, err
-		}
-	}
 	if query := rq.withUsers; query != nil {
 		if err := rq.loadUsers(ctx, query, nodes,
 			func(n *Role) { n.Edges.Users = []*User{} },
@@ -683,13 +602,6 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 		if err := rq.loadDepartments(ctx, query, nodes,
 			func(n *Role) { n.Edges.Departments = []*Department{} },
 			func(n *Role, e *Department) { n.Edges.Departments = append(n.Edges.Departments, e) }); err != nil {
-			return nil, err
-		}
-	}
-	if query := rq.withRoleMenus; query != nil {
-		if err := rq.loadRoleMenus(ctx, query, nodes,
-			func(n *Role) { n.Edges.RoleMenus = []*RoleMenu{} },
-			func(n *Role, e *RoleMenu) { n.Edges.RoleMenus = append(n.Edges.RoleMenus, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -717,67 +629,6 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	return nodes, nil
 }
 
-func (rq *RoleQuery) loadMenus(ctx context.Context, query *MenuQuery, nodes []*Role, init func(*Role), assign func(*Role, *Menu)) error {
-	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[int64]*Role)
-	nids := make(map[int64]map[*Role]struct{})
-	for i, node := range nodes {
-		edgeIDs[i] = node.ID
-		byID[node.ID] = node
-		if init != nil {
-			init(node)
-		}
-	}
-	query.Where(func(s *sql.Selector) {
-		joinT := sql.Table(role.MenusTable)
-		s.Join(joinT).On(s.C(menu.FieldID), joinT.C(role.MenusPrimaryKey[1]))
-		s.Where(sql.InValues(joinT.C(role.MenusPrimaryKey[0]), edgeIDs...))
-		columns := s.SelectedColumns()
-		s.Select(joinT.C(role.MenusPrimaryKey[0]))
-		s.AppendSelect(columns...)
-		s.SetDistinct(false)
-	})
-	if err := query.prepareQuery(ctx); err != nil {
-		return err
-	}
-	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
-		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
-			assign := spec.Assign
-			values := spec.ScanValues
-			spec.ScanValues = func(columns []string) ([]any, error) {
-				values, err := values(columns[1:])
-				if err != nil {
-					return nil, err
-				}
-				return append([]any{new(sql.NullInt64)}, values...), nil
-			}
-			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullInt64).Int64
-				inValue := values[1].(*sql.NullInt64).Int64
-				if nids[inValue] == nil {
-					nids[inValue] = map[*Role]struct{}{byID[outValue]: {}}
-					return assign(columns[1:], values[1:])
-				}
-				nids[inValue][byID[outValue]] = struct{}{}
-				return nil
-			}
-		})
-	})
-	neighbors, err := withInterceptors[[]*Menu](ctx, query, qr, query.inters)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		nodes, ok := nids[n.ID]
-		if !ok {
-			return fmt.Errorf(`unexpected "menus" node returned %v`, n.ID)
-		}
-		for kn := range nodes {
-			assign(kn, n)
-		}
-	}
-	return nil
-}
 func (rq *RoleQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Role, init func(*Role), assign func(*Role, *User)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
 	byID := make(map[int64]*Role)
@@ -958,36 +809,6 @@ func (rq *RoleQuery) loadDepartments(ctx context.Context, query *DepartmentQuery
 		for kn := range nodes {
 			assign(kn, n)
 		}
-	}
-	return nil
-}
-func (rq *RoleQuery) loadRoleMenus(ctx context.Context, query *RoleMenuQuery, nodes []*Role, init func(*Role), assign func(*Role, *RoleMenu)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int64]*Role)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
-		if init != nil {
-			init(nodes[i])
-		}
-	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(rolemenu.FieldRoleID)
-	}
-	query.Where(predicate.RoleMenu(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(role.RoleMenusColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		fk := n.RoleID
-		node, ok := nodeids[fk]
-		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "role_id" returned %v for node %v`, fk, n.ID)
-		}
-		assign(node, n)
 	}
 	return nil
 }

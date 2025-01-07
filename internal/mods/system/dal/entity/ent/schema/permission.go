@@ -114,9 +114,8 @@ func (Permission) Edges() []ent.Edge {
 		edge.From("roles", Role.Type).
 			Ref("permissions").
 			Through("role_permissions", RolePermission.Type),
-		edge.From("menus", Menu.Type).
-			Ref("permissions").
-			Through("menu_permissions", MenuPermission.Type),
+		edge.To("menus", Menu.Type).
+			Through("permission_menus", PermissionMenu.Type),
 		edge.To("resources", Resource.Type).
 			Through("permission_resources", PermissionResource.Type),
 	}

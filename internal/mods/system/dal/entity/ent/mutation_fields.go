@@ -7,13 +7,12 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
@@ -233,6 +232,10 @@ func (m *MenuMutation) SetFields(input *Menu, fields ...string) error {
 			if input.Sequence != 0 {
 				m.SetSequence(input.Sequence)
 			}
+		case menu.FieldHidden:
+			if input.Hidden {
+				m.SetHidden(input.Hidden)
+			}
 		case menu.FieldProperties:
 			// check string with sql.NullString if it is empty
 			if input.Properties != "" {
@@ -285,6 +288,8 @@ func (m *MenuMutation) SetFieldsWithZero(input *Menu, fields ...string) error {
 			m.SetParentPath(input.ParentPath)
 		case menu.FieldSequence:
 			m.SetSequence(input.Sequence)
+		case menu.FieldHidden:
+			m.SetHidden(input.Hidden)
 		case menu.FieldProperties:
 			m.SetProperties(input.Properties)
 		case menu.FieldParentID:
@@ -293,53 +298,6 @@ func (m *MenuMutation) SetFieldsWithZero(input *Menu, fields ...string) error {
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Menu field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *MenuPermissionMutation) SetFields(input *MenuPermission, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case menupermission.FieldMenuID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.MenuID != 0 {
-				m.SetMenuID(input.MenuID)
-			}
-		case menupermission.FieldPermissionID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.PermissionID != 0 {
-				m.SetPermissionID(input.PermissionID)
-			}
-		case menupermission.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
-		default:
-			return fmt.Errorf("unknown MenuPermission field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *MenuPermissionMutation) SetFieldsWithZero(input *MenuPermission, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case menupermission.FieldMenuID:
-			m.SetMenuID(input.MenuID)
-		case menupermission.FieldPermissionID:
-			m.SetPermissionID(input.PermissionID)
-		case menupermission.FieldID:
-			m.SetID(input.ID)
-		default:
-			return fmt.Errorf("unknown MenuPermission field %s", fields[i])
 		}
 	}
 	return nil
@@ -433,6 +391,53 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Permission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *PermissionMenuMutation) SetFields(input *PermissionMenu, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case permissionmenu.FieldPermissionID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.PermissionID != 0 {
+				m.SetPermissionID(input.PermissionID)
+			}
+		case permissionmenu.FieldMenuID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.MenuID != 0 {
+				m.SetMenuID(input.MenuID)
+			}
+		case permissionmenu.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown PermissionMenu field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *PermissionMenuMutation) SetFieldsWithZero(input *PermissionMenu, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case permissionmenu.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case permissionmenu.FieldMenuID:
+			m.SetMenuID(input.MenuID)
+		case permissionmenu.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown PermissionMenu field %s", fields[i])
 		}
 	}
 	return nil
@@ -580,6 +585,25 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			if input.Path != "" {
 				m.SetPath(input.Path)
 			}
+		case resource.FieldURI:
+			// check string with sql.NullString if it is empty
+			if input.URI != "" {
+				m.SetURI(input.URI)
+			}
+		case resource.FieldI18nKey:
+			// check string with sql.NullString if it is empty
+			if input.I18nKey != "" {
+				m.SetI18nKey(input.I18nKey)
+			}
+		case resource.FieldDescription:
+			// check string with sql.NullString if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
+			}
+		case resource.FieldMetadata:
+			if len(input.Metadata) > 0 {
+				m.SetMetadata(input.Metadata)
+			}
 		case resource.FieldMenuID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.MenuID != 0 {
@@ -613,6 +637,14 @@ func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) 
 			m.SetOperation(input.Operation)
 		case resource.FieldPath:
 			m.SetPath(input.Path)
+		case resource.FieldURI:
+			m.SetURI(input.URI)
+		case resource.FieldI18nKey:
+			m.SetI18nKey(input.I18nKey)
+		case resource.FieldDescription:
+			m.SetDescription(input.Description)
+		case resource.FieldMetadata:
+			m.SetMetadata(input.Metadata)
 		case resource.FieldMenuID:
 			m.SetMenuID(input.MenuID)
 		case resource.FieldID:
@@ -712,53 +744,6 @@ func (m *RoleMutation) SetFieldsWithZero(input *Role, fields ...string) error {
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Role field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *RoleMenuMutation) SetFields(input *RoleMenu, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case rolemenu.FieldRoleID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.RoleID != 0 {
-				m.SetRoleID(input.RoleID)
-			}
-		case rolemenu.FieldMenuID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.MenuID != 0 {
-				m.SetMenuID(input.MenuID)
-			}
-		case rolemenu.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
-		default:
-			return fmt.Errorf("unknown RoleMenu field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *RoleMenuMutation) SetFieldsWithZero(input *RoleMenu, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case rolemenu.FieldRoleID:
-			m.SetRoleID(input.RoleID)
-		case rolemenu.FieldMenuID:
-			m.SetMenuID(input.MenuID)
-		case rolemenu.FieldID:
-			m.SetID(input.ID)
-		default:
-			return fmt.Errorf("unknown RoleMenu field %s", fields[i])
 		}
 	}
 	return nil

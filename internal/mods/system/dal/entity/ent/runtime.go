@@ -6,13 +6,12 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
@@ -161,8 +160,6 @@ func init() {
 	menu.IconValidator = menuDescIcon.Validators[0].(func(string) error)
 	// menuDescPath is the schema descriptor for path field.
 	menuDescPath := menuFields[6].Descriptor()
-	// menu.DefaultPath holds the default value on creation for the path field.
-	menu.DefaultPath = menuDescPath.Default.(string)
 	// menu.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	menu.PathValidator = menuDescPath.Validators[0].(func(string) error)
 	// menuDescStatus is the schema descriptor for status field.
@@ -179,12 +176,16 @@ func init() {
 	menuDescSequence := menuFields[9].Descriptor()
 	// menu.DefaultSequence holds the default value on creation for the sequence field.
 	menu.DefaultSequence = menuDescSequence.Default.(int)
+	// menuDescHidden is the schema descriptor for hidden field.
+	menuDescHidden := menuFields[10].Descriptor()
+	// menu.DefaultHidden holds the default value on creation for the hidden field.
+	menu.DefaultHidden = menuDescHidden.Default.(bool)
 	// menuDescProperties is the schema descriptor for properties field.
-	menuDescProperties := menuFields[10].Descriptor()
+	menuDescProperties := menuFields[11].Descriptor()
 	// menu.DefaultProperties holds the default value on creation for the properties field.
 	menu.DefaultProperties = menuDescProperties.Default.(string)
 	// menuDescParentID is the schema descriptor for parent_id field.
-	menuDescParentID := menuFields[11].Descriptor()
+	menuDescParentID := menuFields[12].Descriptor()
 	// menu.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
 	menu.ParentIDValidator = menuDescParentID.Validators[0].(func(int64) error)
 	// menuDescID is the schema descriptor for id field.
@@ -193,25 +194,6 @@ func init() {
 	menu.DefaultID = menuDescID.Default.(func() int64)
 	// menu.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	menu.IDValidator = menuDescID.Validators[0].(func(int64) error)
-	menupermissionMixin := schema.MenuPermission{}.Mixin()
-	menupermissionMixinFields0 := menupermissionMixin[0].Fields()
-	_ = menupermissionMixinFields0
-	menupermissionFields := schema.MenuPermission{}.Fields()
-	_ = menupermissionFields
-	// menupermissionDescMenuID is the schema descriptor for menu_id field.
-	menupermissionDescMenuID := menupermissionFields[0].Descriptor()
-	// menupermission.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
-	menupermission.MenuIDValidator = menupermissionDescMenuID.Validators[0].(func(int64) error)
-	// menupermissionDescPermissionID is the schema descriptor for permission_id field.
-	menupermissionDescPermissionID := menupermissionFields[1].Descriptor()
-	// menupermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
-	menupermission.PermissionIDValidator = menupermissionDescPermissionID.Validators[0].(func(int64) error)
-	// menupermissionDescID is the schema descriptor for id field.
-	menupermissionDescID := menupermissionMixinFields0[0].Descriptor()
-	// menupermission.DefaultID holds the default value on creation for the id field.
-	menupermission.DefaultID = menupermissionDescID.Default.(func() int64)
-	// menupermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	menupermission.IDValidator = menupermissionDescID.Validators[0].(func(int64) error)
 	permissionMixin := schema.Permission{}.Mixin()
 	permissionMixinFields0 := permissionMixin[0].Fields()
 	_ = permissionMixinFields0
@@ -263,6 +245,25 @@ func init() {
 	permission.DefaultID = permissionDescID.Default.(func() int64)
 	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	permission.IDValidator = permissionDescID.Validators[0].(func(int64) error)
+	permissionmenuMixin := schema.PermissionMenu{}.Mixin()
+	permissionmenuMixinFields0 := permissionmenuMixin[0].Fields()
+	_ = permissionmenuMixinFields0
+	permissionmenuFields := schema.PermissionMenu{}.Fields()
+	_ = permissionmenuFields
+	// permissionmenuDescPermissionID is the schema descriptor for permission_id field.
+	permissionmenuDescPermissionID := permissionmenuFields[0].Descriptor()
+	// permissionmenu.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
+	permissionmenu.PermissionIDValidator = permissionmenuDescPermissionID.Validators[0].(func(int64) error)
+	// permissionmenuDescMenuID is the schema descriptor for menu_id field.
+	permissionmenuDescMenuID := permissionmenuFields[1].Descriptor()
+	// permissionmenu.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
+	permissionmenu.MenuIDValidator = permissionmenuDescMenuID.Validators[0].(func(int64) error)
+	// permissionmenuDescID is the schema descriptor for id field.
+	permissionmenuDescID := permissionmenuMixinFields0[0].Descriptor()
+	// permissionmenu.DefaultID holds the default value on creation for the id field.
+	permissionmenu.DefaultID = permissionmenuDescID.Default.(func() int64)
+	// permissionmenu.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	permissionmenu.IDValidator = permissionmenuDescID.Validators[0].(func(int64) error)
 	permissionresourceMixin := schema.PermissionResource{}.Mixin()
 	permissionresourceMixinFields0 := permissionresourceMixin[0].Fields()
 	_ = permissionresourceMixinFields0
@@ -356,8 +357,22 @@ func init() {
 	resource.DefaultPath = resourceDescPath.Default.(string)
 	// resource.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	resource.PathValidator = resourceDescPath.Validators[0].(func(string) error)
+	// resourceDescURI is the schema descriptor for uri field.
+	resourceDescURI := resourceFields[3].Descriptor()
+	// resource.URIValidator is a validator for the "uri" field. It is called by the builders before save.
+	resource.URIValidator = resourceDescURI.Validators[0].(func(string) error)
+	// resourceDescI18nKey is the schema descriptor for i18n_key field.
+	resourceDescI18nKey := resourceFields[4].Descriptor()
+	// resource.DefaultI18nKey holds the default value on creation for the i18n_key field.
+	resource.DefaultI18nKey = resourceDescI18nKey.Default.(string)
+	// resource.I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
+	resource.I18nKeyValidator = resourceDescI18nKey.Validators[0].(func(string) error)
+	// resourceDescDescription is the schema descriptor for description field.
+	resourceDescDescription := resourceFields[5].Descriptor()
+	// resource.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	resource.DescriptionValidator = resourceDescDescription.Validators[0].(func(string) error)
 	// resourceDescMenuID is the schema descriptor for menu_id field.
-	resourceDescMenuID := resourceFields[3].Descriptor()
+	resourceDescMenuID := resourceFields[7].Descriptor()
 	// resource.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
 	resource.MenuIDValidator = resourceDescMenuID.Validators[0].(func(int64) error)
 	// resourceDescID is the schema descriptor for id field.
@@ -423,25 +438,6 @@ func init() {
 	role.DefaultID = roleDescID.Default.(func() int64)
 	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	role.IDValidator = roleDescID.Validators[0].(func(int64) error)
-	rolemenuMixin := schema.RoleMenu{}.Mixin()
-	rolemenuMixinFields0 := rolemenuMixin[0].Fields()
-	_ = rolemenuMixinFields0
-	rolemenuFields := schema.RoleMenu{}.Fields()
-	_ = rolemenuFields
-	// rolemenuDescRoleID is the schema descriptor for role_id field.
-	rolemenuDescRoleID := rolemenuFields[0].Descriptor()
-	// rolemenu.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
-	rolemenu.RoleIDValidator = rolemenuDescRoleID.Validators[0].(func(int64) error)
-	// rolemenuDescMenuID is the schema descriptor for menu_id field.
-	rolemenuDescMenuID := rolemenuFields[1].Descriptor()
-	// rolemenu.MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
-	rolemenu.MenuIDValidator = rolemenuDescMenuID.Validators[0].(func(int64) error)
-	// rolemenuDescID is the schema descriptor for id field.
-	rolemenuDescID := rolemenuMixinFields0[0].Descriptor()
-	// rolemenu.DefaultID holds the default value on creation for the id field.
-	rolemenu.DefaultID = rolemenuDescID.Default.(func() int64)
-	// rolemenu.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	rolemenu.IDValidator = rolemenuDescID.Validators[0].(func(int64) error)
 	rolepermissionMixin := schema.RolePermission{}.Mixin()
 	rolepermissionMixinFields0 := rolepermissionMixin[0].Fields()
 	_ = rolepermissionMixinFields0

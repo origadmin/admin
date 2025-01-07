@@ -7,12 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -194,6 +192,20 @@ func (mu *MenuUpdate) AddSequence(i int) *MenuUpdate {
 	return mu
 }
 
+// SetHidden sets the "hidden" field.
+func (mu *MenuUpdate) SetHidden(b bool) *MenuUpdate {
+	mu.mutation.SetHidden(b)
+	return mu
+}
+
+// SetNillableHidden sets the "hidden" field if the given value is not nil.
+func (mu *MenuUpdate) SetNillableHidden(b *bool) *MenuUpdate {
+	if b != nil {
+		mu.SetHidden(*b)
+	}
+	return mu
+}
+
 // SetProperties sets the "properties" field.
 func (mu *MenuUpdate) SetProperties(s string) *MenuUpdate {
 	mu.mutation.SetProperties(s)
@@ -269,21 +281,6 @@ func (mu *MenuUpdate) AddResources(r ...*Resource) *MenuUpdate {
 	return mu.AddResourceIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (mu *MenuUpdate) AddRoleIDs(ids ...int64) *MenuUpdate {
-	mu.mutation.AddRoleIDs(ids...)
-	return mu
-}
-
-// AddRoles adds the "roles" edges to the Role entity.
-func (mu *MenuUpdate) AddRoles(r ...*Role) *MenuUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return mu.AddRoleIDs(ids...)
-}
-
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
 func (mu *MenuUpdate) AddPermissionIDs(ids ...int64) *MenuUpdate {
 	mu.mutation.AddPermissionIDs(ids...)
@@ -299,34 +296,19 @@ func (mu *MenuUpdate) AddPermissions(p ...*Permission) *MenuUpdate {
 	return mu.AddPermissionIDs(ids...)
 }
 
-// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
-func (mu *MenuUpdate) AddRoleMenuIDs(ids ...int64) *MenuUpdate {
-	mu.mutation.AddRoleMenuIDs(ids...)
+// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by IDs.
+func (mu *MenuUpdate) AddPermissionMenuIDs(ids ...int64) *MenuUpdate {
+	mu.mutation.AddPermissionMenuIDs(ids...)
 	return mu
 }
 
-// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
-func (mu *MenuUpdate) AddRoleMenus(r ...*RoleMenu) *MenuUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// AddPermissionMenus adds the "permission_menus" edges to the PermissionMenu entity.
+func (mu *MenuUpdate) AddPermissionMenus(p ...*PermissionMenu) *MenuUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
 	}
-	return mu.AddRoleMenuIDs(ids...)
-}
-
-// AddMenuPermissionIDs adds the "menu_permissions" edge to the MenuPermission entity by IDs.
-func (mu *MenuUpdate) AddMenuPermissionIDs(ids ...int64) *MenuUpdate {
-	mu.mutation.AddMenuPermissionIDs(ids...)
-	return mu
-}
-
-// AddMenuPermissions adds the "menu_permissions" edges to the MenuPermission entity.
-func (mu *MenuUpdate) AddMenuPermissions(m ...*MenuPermission) *MenuUpdate {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return mu.AddMenuPermissionIDs(ids...)
+	return mu.AddPermissionMenuIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
@@ -382,27 +364,6 @@ func (mu *MenuUpdate) RemoveResources(r ...*Resource) *MenuUpdate {
 	return mu.RemoveResourceIDs(ids...)
 }
 
-// ClearRoles clears all "roles" edges to the Role entity.
-func (mu *MenuUpdate) ClearRoles() *MenuUpdate {
-	mu.mutation.ClearRoles()
-	return mu
-}
-
-// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (mu *MenuUpdate) RemoveRoleIDs(ids ...int64) *MenuUpdate {
-	mu.mutation.RemoveRoleIDs(ids...)
-	return mu
-}
-
-// RemoveRoles removes "roles" edges to Role entities.
-func (mu *MenuUpdate) RemoveRoles(r ...*Role) *MenuUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return mu.RemoveRoleIDs(ids...)
-}
-
 // ClearPermissions clears all "permissions" edges to the Permission entity.
 func (mu *MenuUpdate) ClearPermissions() *MenuUpdate {
 	mu.mutation.ClearPermissions()
@@ -424,46 +385,25 @@ func (mu *MenuUpdate) RemovePermissions(p ...*Permission) *MenuUpdate {
 	return mu.RemovePermissionIDs(ids...)
 }
 
-// ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
-func (mu *MenuUpdate) ClearRoleMenus() *MenuUpdate {
-	mu.mutation.ClearRoleMenus()
+// ClearPermissionMenus clears all "permission_menus" edges to the PermissionMenu entity.
+func (mu *MenuUpdate) ClearPermissionMenus() *MenuUpdate {
+	mu.mutation.ClearPermissionMenus()
 	return mu
 }
 
-// RemoveRoleMenuIDs removes the "role_menus" edge to RoleMenu entities by IDs.
-func (mu *MenuUpdate) RemoveRoleMenuIDs(ids ...int64) *MenuUpdate {
-	mu.mutation.RemoveRoleMenuIDs(ids...)
+// RemovePermissionMenuIDs removes the "permission_menus" edge to PermissionMenu entities by IDs.
+func (mu *MenuUpdate) RemovePermissionMenuIDs(ids ...int64) *MenuUpdate {
+	mu.mutation.RemovePermissionMenuIDs(ids...)
 	return mu
 }
 
-// RemoveRoleMenus removes "role_menus" edges to RoleMenu entities.
-func (mu *MenuUpdate) RemoveRoleMenus(r ...*RoleMenu) *MenuUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// RemovePermissionMenus removes "permission_menus" edges to PermissionMenu entities.
+func (mu *MenuUpdate) RemovePermissionMenus(p ...*PermissionMenu) *MenuUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
 	}
-	return mu.RemoveRoleMenuIDs(ids...)
-}
-
-// ClearMenuPermissions clears all "menu_permissions" edges to the MenuPermission entity.
-func (mu *MenuUpdate) ClearMenuPermissions() *MenuUpdate {
-	mu.mutation.ClearMenuPermissions()
-	return mu
-}
-
-// RemoveMenuPermissionIDs removes the "menu_permissions" edge to MenuPermission entities by IDs.
-func (mu *MenuUpdate) RemoveMenuPermissionIDs(ids ...int64) *MenuUpdate {
-	mu.mutation.RemoveMenuPermissionIDs(ids...)
-	return mu
-}
-
-// RemoveMenuPermissions removes "menu_permissions" edges to MenuPermission entities.
-func (mu *MenuUpdate) RemoveMenuPermissions(m ...*MenuPermission) *MenuUpdate {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return mu.RemoveMenuPermissionIDs(ids...)
+	return mu.RemovePermissionMenuIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -604,6 +544,9 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mu.mutation.AddedSequence(); ok {
 		_spec.AddField(menu.FieldSequence, field.TypeInt, value)
 	}
+	if value, ok := mu.mutation.Hidden(); ok {
+		_spec.SetField(menu.FieldHidden, field.TypeBool, value)
+	}
 	if value, ok := mu.mutation.Properties(); ok {
 		_spec.SetField(menu.FieldProperties, field.TypeString, value)
 	}
@@ -729,76 +672,10 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if mu.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		createE := &RoleMenuCreate{config: mu.config, mutation: newRoleMenuMutation(mu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := mu.mutation.RemovedRolesIDs(); len(nodes) > 0 && !mu.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &RoleMenuCreate{config: mu.config, mutation: newRoleMenuMutation(mu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := mu.mutation.RolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &RoleMenuCreate{config: mu.config, mutation: newRoleMenuMutation(mu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if mu.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -806,7 +683,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &MenuPermissionCreate{config: mu.config, mutation: newMenuPermissionMutation(mu.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: mu.config, mutation: newPermissionMenuMutation(mu.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -818,7 +695,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if nodes := mu.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !mu.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -829,7 +706,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &MenuPermissionCreate{config: mu.config, mutation: newMenuPermissionMutation(mu.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: mu.config, mutation: newPermissionMenuMutation(mu.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -841,7 +718,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if nodes := mu.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -852,7 +729,7 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &MenuPermissionCreate{config: mu.config, mutation: newMenuPermissionMutation(mu.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: mu.config, mutation: newPermissionMenuMutation(mu.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -861,28 +738,28 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if mu.mutation.RoleMenusCleared() {
+	if mu.mutation.PermissionMenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.RemovedRoleMenusIDs(); len(nodes) > 0 && !mu.mutation.RoleMenusCleared() {
+	if nodes := mu.mutation.RemovedPermissionMenusIDs(); len(nodes) > 0 && !mu.mutation.PermissionMenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -890,60 +767,15 @@ func (mu *MenuUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := mu.mutation.RoleMenusIDs(); len(nodes) > 0 {
+	if nodes := mu.mutation.PermissionMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if mu.mutation.MenuPermissionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := mu.mutation.RemovedMenuPermissionsIDs(); len(nodes) > 0 && !mu.mutation.MenuPermissionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := mu.mutation.MenuPermissionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1133,6 +965,20 @@ func (muo *MenuUpdateOne) AddSequence(i int) *MenuUpdateOne {
 	return muo
 }
 
+// SetHidden sets the "hidden" field.
+func (muo *MenuUpdateOne) SetHidden(b bool) *MenuUpdateOne {
+	muo.mutation.SetHidden(b)
+	return muo
+}
+
+// SetNillableHidden sets the "hidden" field if the given value is not nil.
+func (muo *MenuUpdateOne) SetNillableHidden(b *bool) *MenuUpdateOne {
+	if b != nil {
+		muo.SetHidden(*b)
+	}
+	return muo
+}
+
 // SetProperties sets the "properties" field.
 func (muo *MenuUpdateOne) SetProperties(s string) *MenuUpdateOne {
 	muo.mutation.SetProperties(s)
@@ -1208,21 +1054,6 @@ func (muo *MenuUpdateOne) AddResources(r ...*Resource) *MenuUpdateOne {
 	return muo.AddResourceIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (muo *MenuUpdateOne) AddRoleIDs(ids ...int64) *MenuUpdateOne {
-	muo.mutation.AddRoleIDs(ids...)
-	return muo
-}
-
-// AddRoles adds the "roles" edges to the Role entity.
-func (muo *MenuUpdateOne) AddRoles(r ...*Role) *MenuUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return muo.AddRoleIDs(ids...)
-}
-
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
 func (muo *MenuUpdateOne) AddPermissionIDs(ids ...int64) *MenuUpdateOne {
 	muo.mutation.AddPermissionIDs(ids...)
@@ -1238,34 +1069,19 @@ func (muo *MenuUpdateOne) AddPermissions(p ...*Permission) *MenuUpdateOne {
 	return muo.AddPermissionIDs(ids...)
 }
 
-// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
-func (muo *MenuUpdateOne) AddRoleMenuIDs(ids ...int64) *MenuUpdateOne {
-	muo.mutation.AddRoleMenuIDs(ids...)
+// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by IDs.
+func (muo *MenuUpdateOne) AddPermissionMenuIDs(ids ...int64) *MenuUpdateOne {
+	muo.mutation.AddPermissionMenuIDs(ids...)
 	return muo
 }
 
-// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
-func (muo *MenuUpdateOne) AddRoleMenus(r ...*RoleMenu) *MenuUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// AddPermissionMenus adds the "permission_menus" edges to the PermissionMenu entity.
+func (muo *MenuUpdateOne) AddPermissionMenus(p ...*PermissionMenu) *MenuUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
 	}
-	return muo.AddRoleMenuIDs(ids...)
-}
-
-// AddMenuPermissionIDs adds the "menu_permissions" edge to the MenuPermission entity by IDs.
-func (muo *MenuUpdateOne) AddMenuPermissionIDs(ids ...int64) *MenuUpdateOne {
-	muo.mutation.AddMenuPermissionIDs(ids...)
-	return muo
-}
-
-// AddMenuPermissions adds the "menu_permissions" edges to the MenuPermission entity.
-func (muo *MenuUpdateOne) AddMenuPermissions(m ...*MenuPermission) *MenuUpdateOne {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return muo.AddMenuPermissionIDs(ids...)
+	return muo.AddPermissionMenuIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
@@ -1321,27 +1137,6 @@ func (muo *MenuUpdateOne) RemoveResources(r ...*Resource) *MenuUpdateOne {
 	return muo.RemoveResourceIDs(ids...)
 }
 
-// ClearRoles clears all "roles" edges to the Role entity.
-func (muo *MenuUpdateOne) ClearRoles() *MenuUpdateOne {
-	muo.mutation.ClearRoles()
-	return muo
-}
-
-// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (muo *MenuUpdateOne) RemoveRoleIDs(ids ...int64) *MenuUpdateOne {
-	muo.mutation.RemoveRoleIDs(ids...)
-	return muo
-}
-
-// RemoveRoles removes "roles" edges to Role entities.
-func (muo *MenuUpdateOne) RemoveRoles(r ...*Role) *MenuUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return muo.RemoveRoleIDs(ids...)
-}
-
 // ClearPermissions clears all "permissions" edges to the Permission entity.
 func (muo *MenuUpdateOne) ClearPermissions() *MenuUpdateOne {
 	muo.mutation.ClearPermissions()
@@ -1363,46 +1158,25 @@ func (muo *MenuUpdateOne) RemovePermissions(p ...*Permission) *MenuUpdateOne {
 	return muo.RemovePermissionIDs(ids...)
 }
 
-// ClearRoleMenus clears all "role_menus" edges to the RoleMenu entity.
-func (muo *MenuUpdateOne) ClearRoleMenus() *MenuUpdateOne {
-	muo.mutation.ClearRoleMenus()
+// ClearPermissionMenus clears all "permission_menus" edges to the PermissionMenu entity.
+func (muo *MenuUpdateOne) ClearPermissionMenus() *MenuUpdateOne {
+	muo.mutation.ClearPermissionMenus()
 	return muo
 }
 
-// RemoveRoleMenuIDs removes the "role_menus" edge to RoleMenu entities by IDs.
-func (muo *MenuUpdateOne) RemoveRoleMenuIDs(ids ...int64) *MenuUpdateOne {
-	muo.mutation.RemoveRoleMenuIDs(ids...)
+// RemovePermissionMenuIDs removes the "permission_menus" edge to PermissionMenu entities by IDs.
+func (muo *MenuUpdateOne) RemovePermissionMenuIDs(ids ...int64) *MenuUpdateOne {
+	muo.mutation.RemovePermissionMenuIDs(ids...)
 	return muo
 }
 
-// RemoveRoleMenus removes "role_menus" edges to RoleMenu entities.
-func (muo *MenuUpdateOne) RemoveRoleMenus(r ...*RoleMenu) *MenuUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// RemovePermissionMenus removes "permission_menus" edges to PermissionMenu entities.
+func (muo *MenuUpdateOne) RemovePermissionMenus(p ...*PermissionMenu) *MenuUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
 	}
-	return muo.RemoveRoleMenuIDs(ids...)
-}
-
-// ClearMenuPermissions clears all "menu_permissions" edges to the MenuPermission entity.
-func (muo *MenuUpdateOne) ClearMenuPermissions() *MenuUpdateOne {
-	muo.mutation.ClearMenuPermissions()
-	return muo
-}
-
-// RemoveMenuPermissionIDs removes the "menu_permissions" edge to MenuPermission entities by IDs.
-func (muo *MenuUpdateOne) RemoveMenuPermissionIDs(ids ...int64) *MenuUpdateOne {
-	muo.mutation.RemoveMenuPermissionIDs(ids...)
-	return muo
-}
-
-// RemoveMenuPermissions removes "menu_permissions" edges to MenuPermission entities.
-func (muo *MenuUpdateOne) RemoveMenuPermissions(m ...*MenuPermission) *MenuUpdateOne {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return muo.RemoveMenuPermissionIDs(ids...)
+	return muo.RemovePermissionMenuIDs(ids...)
 }
 
 // Where appends a list predicates to the MenuUpdate builder.
@@ -1573,6 +1347,9 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if value, ok := muo.mutation.AddedSequence(); ok {
 		_spec.AddField(menu.FieldSequence, field.TypeInt, value)
 	}
+	if value, ok := muo.mutation.Hidden(); ok {
+		_spec.SetField(menu.FieldHidden, field.TypeBool, value)
+	}
 	if value, ok := muo.mutation.Properties(); ok {
 		_spec.SetField(menu.FieldProperties, field.TypeString, value)
 	}
@@ -1698,76 +1475,10 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if muo.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		createE := &RoleMenuCreate{config: muo.config, mutation: newRoleMenuMutation(muo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := muo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !muo.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &RoleMenuCreate{config: muo.config, mutation: newRoleMenuMutation(muo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := muo.mutation.RolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &RoleMenuCreate{config: muo.config, mutation: newRoleMenuMutation(muo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if muo.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -1775,7 +1486,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &MenuPermissionCreate{config: muo.config, mutation: newMenuPermissionMutation(muo.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: muo.config, mutation: newPermissionMenuMutation(muo.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -1787,7 +1498,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if nodes := muo.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !muo.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -1798,7 +1509,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &MenuPermissionCreate{config: muo.config, mutation: newMenuPermissionMutation(muo.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: muo.config, mutation: newPermissionMenuMutation(muo.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -1810,7 +1521,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 	if nodes := muo.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -1821,7 +1532,7 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &MenuPermissionCreate{config: muo.config, mutation: newMenuPermissionMutation(muo.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: muo.config, mutation: newPermissionMenuMutation(muo.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -1830,28 +1541,28 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if muo.mutation.RoleMenusCleared() {
+	if muo.mutation.PermissionMenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.RemovedRoleMenusIDs(); len(nodes) > 0 && !muo.mutation.RoleMenusCleared() {
+	if nodes := muo.mutation.RemovedPermissionMenusIDs(); len(nodes) > 0 && !muo.mutation.PermissionMenusCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1859,60 +1570,15 @@ func (muo *MenuUpdateOne) sqlSave(ctx context.Context) (_node *Menu, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := muo.mutation.RoleMenusIDs(); len(nodes) > 0 {
+	if nodes := muo.mutation.PermissionMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if muo.mutation.MenuPermissionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := muo.mutation.RemovedMenuPermissionsIDs(); len(nodes) > 0 && !muo.mutation.MenuPermissionsCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := muo.mutation.MenuPermissionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

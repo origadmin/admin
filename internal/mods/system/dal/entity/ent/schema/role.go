@@ -86,9 +86,9 @@ func (Role) Annotations() []schema.Annotation {
 // Edges of the Role.
 func (Role) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("menus", Menu.Type).
-			StorageKey(edge.Columns("role_id", "menu_id")).
-			Through("role_menus", RoleMenu.Type),
+		//edge.To("menus", Menu.Type).
+		//	StorageKey(edge.Columns("role_id", "menu_id")).
+		//	Through("role_menus", RoleMenu.Type),
 		edge.From("users", User.Type).
 			Ref("roles").
 			Through("user_roles", UserRole.Type),

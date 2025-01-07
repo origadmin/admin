@@ -32,16 +32,12 @@ const (
 	FieldStatus = "status"
 	// FieldIsSystem holds the string denoting the is_system field in the database.
 	FieldIsSystem = "is_system"
-	// EdgeMenus holds the string denoting the menus edge name in mutations.
-	EdgeMenus = "menus"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
 	// EdgePermissions holds the string denoting the permissions edge name in mutations.
 	EdgePermissions = "permissions"
 	// EdgeDepartments holds the string denoting the departments edge name in mutations.
 	EdgeDepartments = "departments"
-	// EdgeRoleMenus holds the string denoting the role_menus edge name in mutations.
-	EdgeRoleMenus = "role_menus"
 	// EdgeUserRoles holds the string denoting the user_roles edge name in mutations.
 	EdgeUserRoles = "user_roles"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
@@ -50,11 +46,6 @@ const (
 	EdgeDepartmentRoles = "department_roles"
 	// Table holds the table name of the role in the database.
 	Table = "sys_roles"
-	// MenusTable is the table that holds the menus relation/edge. The primary key declared below.
-	MenusTable = "sys_role_menus"
-	// MenusInverseTable is the table name for the Menu entity.
-	// It exists in this package in order to avoid circular dependency with the "menu" package.
-	MenusInverseTable = "sys_menus"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
 	UsersTable = "sys_user_roles"
 	// UsersInverseTable is the table name for the User entity.
@@ -70,13 +61,6 @@ const (
 	// DepartmentsInverseTable is the table name for the Department entity.
 	// It exists in this package in order to avoid circular dependency with the "department" package.
 	DepartmentsInverseTable = "sys_departments"
-	// RoleMenusTable is the table that holds the role_menus relation/edge.
-	RoleMenusTable = "sys_role_menus"
-	// RoleMenusInverseTable is the table name for the RoleMenu entity.
-	// It exists in this package in order to avoid circular dependency with the "rolemenu" package.
-	RoleMenusInverseTable = "sys_role_menus"
-	// RoleMenusColumn is the table column denoting the role_menus relation/edge.
-	RoleMenusColumn = "role_id"
 	// UserRolesTable is the table that holds the user_roles relation/edge.
 	UserRolesTable = "sys_user_roles"
 	// UserRolesInverseTable is the table name for the UserRole entity.
@@ -115,9 +99,6 @@ var Columns = []string{
 }
 
 var (
-	// MenusPrimaryKey and MenusColumn2 are the table columns denoting the
-	// primary key for the menus relation (M2M).
-	MenusPrimaryKey = []string{"role_id", "menu_id"}
 	// UsersPrimaryKey and UsersColumn2 are the table columns denoting the
 	// primary key for the users relation (M2M).
 	UsersPrimaryKey = []string{"user_id", "role_id"}
@@ -223,20 +204,6 @@ func ByIsSystem(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsSystem, opts...).ToFunc()
 }
 
-// ByMenusCount orders the results by menus count.
-func ByMenusCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newMenusStep(), opts...)
-	}
-}
-
-// ByMenus orders the results by menus terms.
-func ByMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
 // ByUsersCount orders the results by users count.
 func ByUsersCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -276,20 +243,6 @@ func ByDepartmentsCount(opts ...sql.OrderTermOption) OrderOption {
 func ByDepartments(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newDepartmentsStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
-// ByRoleMenusCount orders the results by role_menus count.
-func ByRoleMenusCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newRoleMenusStep(), opts...)
-	}
-}
-
-// ByRoleMenus orders the results by role_menus terms.
-func ByRoleMenus(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newRoleMenusStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
@@ -334,13 +287,6 @@ func ByDepartmentRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newDepartmentRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-func newMenusStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(MenusInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, false, MenusTable, MenusPrimaryKey...),
-	)
-}
 func newUsersStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -360,13 +306,6 @@ func newDepartmentsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(DepartmentsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2M, true, DepartmentsTable, DepartmentsPrimaryKey...),
-	)
-}
-func newRoleMenusStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(RoleMenusInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, true, RoleMenusTable, RoleMenusColumn),
 	)
 }
 func newUserRolesStep() *sqlgraph.Step {

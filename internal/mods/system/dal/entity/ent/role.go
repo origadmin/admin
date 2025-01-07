@@ -44,16 +44,12 @@ type Role struct {
 
 // RoleEdges holds the relations/edges for other nodes in the graph.
 type RoleEdges struct {
-	// Menus holds the value of the menus edge.
-	Menus []*Menu `json:"menus,omitempty"`
 	// Users holds the value of the users edge.
 	Users []*User `json:"users,omitempty"`
 	// Permissions holds the value of the permissions edge.
 	Permissions []*Permission `json:"permissions,omitempty"`
 	// Departments holds the value of the departments edge.
 	Departments []*Department `json:"departments,omitempty"`
-	// RoleMenus holds the value of the role_menus edge.
-	RoleMenus []*RoleMenu `json:"role_menus,omitempty"`
 	// UserRoles holds the value of the user_roles edge.
 	UserRoles []*UserRole `json:"user_roles,omitempty"`
 	// RolePermissions holds the value of the role_permissions edge.
@@ -62,22 +58,13 @@ type RoleEdges struct {
 	DepartmentRoles []*DepartmentRole `json:"department_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [8]bool
-}
-
-// MenusOrErr returns the Menus value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoleEdges) MenusOrErr() ([]*Menu, error) {
-	if e.loadedTypes[0] {
-		return e.Menus, nil
-	}
-	return nil, &NotLoadedError{edge: "menus"}
+	loadedTypes [6]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) UsersOrErr() ([]*User, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[0] {
 		return e.Users, nil
 	}
 	return nil, &NotLoadedError{edge: "users"}
@@ -86,7 +73,7 @@ func (e RoleEdges) UsersOrErr() ([]*User, error) {
 // PermissionsOrErr returns the Permissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) PermissionsOrErr() ([]*Permission, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		return e.Permissions, nil
 	}
 	return nil, &NotLoadedError{edge: "permissions"}
@@ -95,25 +82,16 @@ func (e RoleEdges) PermissionsOrErr() ([]*Permission, error) {
 // DepartmentsOrErr returns the Departments value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.Departments, nil
 	}
 	return nil, &NotLoadedError{edge: "departments"}
 }
 
-// RoleMenusOrErr returns the RoleMenus value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoleEdges) RoleMenusOrErr() ([]*RoleMenu, error) {
-	if e.loadedTypes[4] {
-		return e.RoleMenus, nil
-	}
-	return nil, &NotLoadedError{edge: "role_menus"}
-}
-
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[3] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
@@ -122,7 +100,7 @@ func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
 // RolePermissionsOrErr returns the RolePermissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
-	if e.loadedTypes[6] {
+	if e.loadedTypes[4] {
 		return e.RolePermissions, nil
 	}
 	return nil, &NotLoadedError{edge: "role_permissions"}
@@ -131,7 +109,7 @@ func (e RoleEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
 // DepartmentRolesOrErr returns the DepartmentRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) DepartmentRolesOrErr() ([]*DepartmentRole, error) {
-	if e.loadedTypes[7] {
+	if e.loadedTypes[5] {
 		return e.DepartmentRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "department_roles"}
@@ -238,11 +216,6 @@ func (r *Role) Value(name string) (ent.Value, error) {
 	return r.selectValues.Get(name)
 }
 
-// QueryMenus queries the "menus" edge of the Role entity.
-func (r *Role) QueryMenus() *MenuQuery {
-	return NewRoleClient(r.config).QueryMenus(r)
-}
-
 // QueryUsers queries the "users" edge of the Role entity.
 func (r *Role) QueryUsers() *UserQuery {
 	return NewRoleClient(r.config).QueryUsers(r)
@@ -256,11 +229,6 @@ func (r *Role) QueryPermissions() *PermissionQuery {
 // QueryDepartments queries the "departments" edge of the Role entity.
 func (r *Role) QueryDepartments() *DepartmentQuery {
 	return NewRoleClient(r.config).QueryDepartments(r)
-}
-
-// QueryRoleMenus queries the "role_menus" edge of the Role entity.
-func (r *Role) QueryRoleMenus() *RoleMenuQuery {
-	return NewRoleClient(r.config).QueryRoleMenus(r)
 }
 
 // QueryUserRoles queries the "user_roles" edge of the Role entity.

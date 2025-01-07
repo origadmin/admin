@@ -24,6 +24,14 @@ const (
 	FieldOperation = "operation"
 	// FieldPath holds the string denoting the path field in the database.
 	FieldPath = "path"
+	// FieldURI holds the string denoting the uri field in the database.
+	FieldURI = "uri"
+	// FieldI18nKey holds the string denoting the i18n_key field in the database.
+	FieldI18nKey = "i18n_key"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
+	// FieldMetadata holds the string denoting the metadata field in the database.
+	FieldMetadata = "metadata"
 	// FieldMenuID holds the string denoting the menu_id field in the database.
 	FieldMenuID = "menu_id"
 	// EdgeMenu holds the string denoting the menu edge name in mutations.
@@ -63,6 +71,10 @@ var Columns = []string{
 	FieldMethod,
 	FieldOperation,
 	FieldPath,
+	FieldURI,
+	FieldI18nKey,
+	FieldDescription,
+	FieldMetadata,
 	FieldMenuID,
 }
 
@@ -101,6 +113,14 @@ var (
 	DefaultPath string
 	// PathValidator is a validator for the "path" field. It is called by the builders before save.
 	PathValidator func(string) error
+	// URIValidator is a validator for the "uri" field. It is called by the builders before save.
+	URIValidator func(string) error
+	// DefaultI18nKey holds the default value on creation for the "i18n_key" field.
+	DefaultI18nKey string
+	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
+	I18nKeyValidator func(string) error
+	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	DescriptionValidator func(string) error
 	// MenuIDValidator is a validator for the "menu_id" field. It is called by the builders before save.
 	MenuIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.
@@ -140,6 +160,21 @@ func ByOperation(opts ...sql.OrderTermOption) OrderOption {
 // ByPath orders the results by the path field.
 func ByPath(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPath, opts...).ToFunc()
+}
+
+// ByURI orders the results by the uri field.
+func ByURI(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldURI, opts...).ToFunc()
+}
+
+// ByI18nKey orders the results by the i18n_key field.
+func ByI18nKey(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18nKey, opts...).ToFunc()
+}
+
+// ByDescription orders the results by the description field.
+func ByDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDescription, opts...).ToFunc()
 }
 
 // ByMenuID orders the results by the menu_id field.

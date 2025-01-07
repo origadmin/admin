@@ -8,10 +8,8 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
@@ -160,21 +158,6 @@ func (rc *RoleCreate) SetNillableID(i *int64) *RoleCreate {
 	return rc
 }
 
-// AddMenuIDs adds the "menus" edge to the Menu entity by IDs.
-func (rc *RoleCreate) AddMenuIDs(ids ...int64) *RoleCreate {
-	rc.mutation.AddMenuIDs(ids...)
-	return rc
-}
-
-// AddMenus adds the "menus" edges to the Menu entity.
-func (rc *RoleCreate) AddMenus(m ...*Menu) *RoleCreate {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return rc.AddMenuIDs(ids...)
-}
-
 // AddUserIDs adds the "users" edge to the User entity by IDs.
 func (rc *RoleCreate) AddUserIDs(ids ...int64) *RoleCreate {
 	rc.mutation.AddUserIDs(ids...)
@@ -218,21 +201,6 @@ func (rc *RoleCreate) AddDepartments(d ...*Department) *RoleCreate {
 		ids[i] = d[i].ID
 	}
 	return rc.AddDepartmentIDs(ids...)
-}
-
-// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
-func (rc *RoleCreate) AddRoleMenuIDs(ids ...int64) *RoleCreate {
-	rc.mutation.AddRoleMenuIDs(ids...)
-	return rc
-}
-
-// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
-func (rc *RoleCreate) AddRoleMenus(r ...*RoleMenu) *RoleCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return rc.AddRoleMenuIDs(ids...)
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
@@ -470,29 +438,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 		_node.IsSystem = value
 	}
-	if nodes := rc.mutation.MenusIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   role.MenusTable,
-			Columns: role.MenusPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menu.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &RoleMenuCreate{config: rc.config, mutation: newRoleMenuMutation(rc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -559,22 +504,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
 			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := rc.mutation.RoleMenusIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   role.RoleMenusTable,
-			Columns: []string{role.RoleMenusColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}

@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
@@ -29,6 +30,14 @@ type Resource struct {
 	Operation string `json:"operation,omitempty"`
 	// resource.field.path
 	Path string `json:"path,omitempty"`
+	// resource.field.uri
+	URI string `json:"uri,omitempty"`
+	// resource.field.i18n_key
+	I18nKey string `json:"i18n_key,omitempty"`
+	// resource.field.description
+	Description string `json:"description,omitempty"`
+	// resource.field.metadata
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 	// resource.field.menu_id
 	MenuID int64 `json:"menu_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -84,9 +93,11 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case resource.FieldMetadata:
+			values[i] = new([]byte)
 		case resource.FieldID, resource.FieldMenuID:
 			values[i] = new(sql.NullInt64)
-		case resource.FieldMethod, resource.FieldOperation, resource.FieldPath:
+		case resource.FieldMethod, resource.FieldOperation, resource.FieldPath, resource.FieldURI, resource.FieldI18nKey, resource.FieldDescription:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -140,6 +151,32 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
 				r.Path = value.String
+			}
+		case resource.FieldURI:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field uri", values[i])
+			} else if value.Valid {
+				r.URI = value.String
+			}
+		case resource.FieldI18nKey:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field i18n_key", values[i])
+			} else if value.Valid {
+				r.I18nKey = value.String
+			}
+		case resource.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				r.Description = value.String
+			}
+		case resource.FieldMetadata:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field metadata", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &r.Metadata); err != nil {
+					return fmt.Errorf("unmarshal field metadata: %w", err)
+				}
 			}
 		case resource.FieldMenuID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -212,6 +249,18 @@ func (r *Resource) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("path=")
 	builder.WriteString(r.Path)
+	builder.WriteString(", ")
+	builder.WriteString("uri=")
+	builder.WriteString(r.URI)
+	builder.WriteString(", ")
+	builder.WriteString("i18n_key=")
+	builder.WriteString(r.I18nKey)
+	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(r.Description)
+	builder.WriteString(", ")
+	builder.WriteString("metadata=")
+	builder.WriteString(fmt.Sprintf("%v", r.Metadata))
 	builder.WriteString(", ")
 	builder.WriteString("menu_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.MenuID))

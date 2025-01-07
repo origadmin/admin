@@ -124,11 +124,12 @@ var (
 		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "menu.field.i18n_key", Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "menu.field.description", Default: ""},
 		{Name: "type", Type: field.TypeString, Comment: "menu.field.type", Default: "page"},
-		{Name: "icon", Type: field.TypeString, Size: 32, Comment: "menu.field.icon", Default: ""},
-		{Name: "path", Type: field.TypeString, Size: 255, Comment: "menu.field.path", Default: ""},
+		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "menu.field.icon", Default: ""},
+		{Name: "path", Type: field.TypeString, Unique: true, Size: 256, Comment: "menu.field.path"},
 		{Name: "status", Type: field.TypeInt8, Comment: "menu.field.status", Default: 0},
 		{Name: "parent_path", Type: field.TypeString, Size: 255, Comment: "menu.field.parent_path", Default: ""},
 		{Name: "sequence", Type: field.TypeInt, Comment: "menu.field.sequence", Default: 0},
+		{Name: "hidden", Type: field.TypeBool, Comment: "menu.field.hidden", Default: false},
 		{Name: "properties", Type: field.TypeString, Nullable: true, Size: 2147483647, Comment: "menu.field.properties", Default: ""},
 		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "menu.field.parent_id"},
 	}
@@ -141,7 +142,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_menus_sys_menus_children",
-				Columns:    []*schema.Column{SysMenusColumns[14]},
+				Columns:    []*schema.Column{SysMenusColumns[15]},
 				RefColumns: []*schema.Column{SysMenusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -180,56 +181,12 @@ var (
 			{
 				Name:    "menu_parent_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysMenusColumns[14]},
+				Columns: []*schema.Column{SysMenusColumns[15]},
 			},
 			{
 				Name:    "menu_parent_path",
 				Unique:  false,
 				Columns: []*schema.Column{SysMenusColumns[11]},
-			},
-		},
-	}
-	// SysMenuPermissionsColumns holds the columns for the "sys_menu_permissions" table.
-	SysMenuPermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "menu_id", Type: field.TypeInt64, Comment: "menu_permission.field.menu_id"},
-		{Name: "permission_id", Type: field.TypeInt64, Comment: "menu_permission.field.permission_id"},
-	}
-	// SysMenuPermissionsTable holds the schema information for the "sys_menu_permissions" table.
-	SysMenuPermissionsTable = &schema.Table{
-		Name:       "sys_menu_permissions",
-		Comment:    "menu_permission.table.comment",
-		Columns:    SysMenuPermissionsColumns,
-		PrimaryKey: []*schema.Column{SysMenuPermissionsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "sys_menu_permissions_sys_menus_menu",
-				Columns:    []*schema.Column{SysMenuPermissionsColumns[1]},
-				RefColumns: []*schema.Column{SysMenusColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-			{
-				Symbol:     "sys_menu_permissions_sys_permissions_permission",
-				Columns:    []*schema.Column{SysMenuPermissionsColumns[2]},
-				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-		},
-		Indexes: []*schema.Index{
-			{
-				Name:    "menupermission_menu_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenuPermissionsColumns[1]},
-			},
-			{
-				Name:    "menupermission_permission_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysMenuPermissionsColumns[2]},
-			},
-			{
-				Name:    "menupermission_menu_id_permission_id",
-				Unique:  true,
-				Columns: []*schema.Column{SysMenuPermissionsColumns[1], SysMenuPermissionsColumns[2]},
 			},
 		},
 	}
@@ -262,6 +219,50 @@ var (
 				Name:    "permission_update_time",
 				Unique:  false,
 				Columns: []*schema.Column{SysPermissionsColumns[2]},
+			},
+		},
+	}
+	// SysPermissionMenusColumns holds the columns for the "sys_permission_menus" table.
+	SysPermissionMenusColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "permission_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
+		{Name: "menu_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
+	}
+	// SysPermissionMenusTable holds the schema information for the "sys_permission_menus" table.
+	SysPermissionMenusTable = &schema.Table{
+		Name:       "sys_permission_menus",
+		Comment:    "permission_menu.table.comment",
+		Columns:    SysPermissionMenusColumns,
+		PrimaryKey: []*schema.Column{SysPermissionMenusColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_permission_menus_sys_permissions_permission",
+				Columns:    []*schema.Column{SysPermissionMenusColumns[1]},
+				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "sys_permission_menus_sys_menus_menu",
+				Columns:    []*schema.Column{SysPermissionMenusColumns[2]},
+				RefColumns: []*schema.Column{SysMenusColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "permissionmenu_permission_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysPermissionMenusColumns[1]},
+			},
+			{
+				Name:    "permissionmenu_menu_id",
+				Unique:  false,
+				Columns: []*schema.Column{SysPermissionMenusColumns[2]},
+			},
+			{
+				Name:    "permissionmenu_permission_id_menu_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysPermissionMenusColumns[1], SysPermissionMenusColumns[2]},
 			},
 		},
 	}
@@ -350,9 +351,13 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "method", Type: field.TypeString, Size: 20, Comment: "resource.field.method", Default: ""},
+		{Name: "method", Type: field.TypeString, Size: 16, Comment: "resource.field.method", Default: ""},
 		{Name: "operation", Type: field.TypeString, Size: 20, Comment: "resource.field.operation", Default: ""},
 		{Name: "path", Type: field.TypeString, Size: 255, Comment: "resource.field.path", Default: ""},
+		{Name: "uri", Type: field.TypeString, Unique: true, Size: 256, Comment: "resource.field.uri"},
+		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "resource.field.i18n_key", Default: ""},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 256, Comment: "resource.field.description"},
+		{Name: "metadata", Type: field.TypeJSON, Nullable: true, Comment: "resource.field.metadata"},
 		{Name: "menu_id", Type: field.TypeInt64, Nullable: true, Comment: "resource.field.menu_id"},
 	}
 	// SysResourcesTable holds the schema information for the "sys_resources" table.
@@ -364,7 +369,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_resources_sys_menus_resources",
-				Columns:    []*schema.Column{SysResourcesColumns[6]},
+				Columns:    []*schema.Column{SysResourcesColumns[10]},
 				RefColumns: []*schema.Column{SysMenusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -383,7 +388,7 @@ var (
 			{
 				Name:    "resource_menu_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[6]},
+				Columns: []*schema.Column{SysResourcesColumns[10]},
 			},
 		},
 	}
@@ -436,50 +441,6 @@ var (
 				Name:    "role_status",
 				Unique:  false,
 				Columns: []*schema.Column{SysRolesColumns[8]},
-			},
-		},
-	}
-	// SysRoleMenusColumns holds the columns for the "sys_role_menus" table.
-	SysRoleMenusColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "role_id", Type: field.TypeInt64, Comment: "role_menu.field.role_id"},
-		{Name: "menu_id", Type: field.TypeInt64, Comment: "role_menu.field.menu_id"},
-	}
-	// SysRoleMenusTable holds the schema information for the "sys_role_menus" table.
-	SysRoleMenusTable = &schema.Table{
-		Name:       "sys_role_menus",
-		Comment:    "role_menu.table.comment",
-		Columns:    SysRoleMenusColumns,
-		PrimaryKey: []*schema.Column{SysRoleMenusColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "sys_role_menus_sys_roles_role",
-				Columns:    []*schema.Column{SysRoleMenusColumns[1]},
-				RefColumns: []*schema.Column{SysRolesColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-			{
-				Symbol:     "sys_role_menus_sys_menus_menu",
-				Columns:    []*schema.Column{SysRoleMenusColumns[2]},
-				RefColumns: []*schema.Column{SysMenusColumns[0]},
-				OnDelete:   schema.NoAction,
-			},
-		},
-		Indexes: []*schema.Index{
-			{
-				Name:    "rolemenu_role_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysRoleMenusColumns[1]},
-			},
-			{
-				Name:    "rolemenu_menu_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysRoleMenusColumns[2]},
-			},
-			{
-				Name:    "rolemenu_role_id_menu_id",
-				Unique:  true,
-				Columns: []*schema.Column{SysRoleMenusColumns[1], SysRoleMenusColumns[2]},
 			},
 		},
 	}
@@ -747,13 +708,12 @@ var (
 		SysDepartmentsTable,
 		SysDepartmentRolesTable,
 		SysMenusTable,
-		SysMenuPermissionsTable,
 		SysPermissionsTable,
+		SysPermissionMenusTable,
 		SysPermissionResourcesTable,
 		SysPositionsTable,
 		SysResourcesTable,
 		SysRolesTable,
-		SysRoleMenusTable,
 		SysRolePermissionsTable,
 		SysUsersTable,
 		SysUserDepartmentsTable,
@@ -776,13 +736,13 @@ func init() {
 	SysMenusTable.Annotation = &entsql.Annotation{
 		Table: "sys_menus",
 	}
-	SysMenuPermissionsTable.ForeignKeys[0].RefTable = SysMenusTable
-	SysMenuPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
-	SysMenuPermissionsTable.Annotation = &entsql.Annotation{
-		Table: "sys_menu_permissions",
-	}
 	SysPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_permissions",
+	}
+	SysPermissionMenusTable.ForeignKeys[0].RefTable = SysPermissionsTable
+	SysPermissionMenusTable.ForeignKeys[1].RefTable = SysMenusTable
+	SysPermissionMenusTable.Annotation = &entsql.Annotation{
+		Table: "sys_permission_menus",
 	}
 	SysPermissionResourcesTable.ForeignKeys[0].RefTable = SysPermissionsTable
 	SysPermissionResourcesTable.ForeignKeys[1].RefTable = SysResourcesTable
@@ -799,11 +759,6 @@ func init() {
 	}
 	SysRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_roles",
-	}
-	SysRoleMenusTable.ForeignKeys[0].RefTable = SysRolesTable
-	SysRoleMenusTable.ForeignKeys[1].RefTable = SysMenusTable
-	SysRoleMenusTable.Annotation = &entsql.Annotation{
-		Table: "sys_role_menus",
 	}
 	SysRolePermissionsTable.ForeignKeys[0].RefTable = SysRolesTable
 	SysRolePermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable

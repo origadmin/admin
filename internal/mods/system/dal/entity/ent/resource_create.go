@@ -93,6 +93,46 @@ func (rc *ResourceCreate) SetNillablePath(s *string) *ResourceCreate {
 	return rc
 }
 
+// SetURI sets the "uri" field.
+func (rc *ResourceCreate) SetURI(s string) *ResourceCreate {
+	rc.mutation.SetURI(s)
+	return rc
+}
+
+// SetI18nKey sets the "i18n_key" field.
+func (rc *ResourceCreate) SetI18nKey(s string) *ResourceCreate {
+	rc.mutation.SetI18nKey(s)
+	return rc
+}
+
+// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillableI18nKey(s *string) *ResourceCreate {
+	if s != nil {
+		rc.SetI18nKey(*s)
+	}
+	return rc
+}
+
+// SetDescription sets the "description" field.
+func (rc *ResourceCreate) SetDescription(s string) *ResourceCreate {
+	rc.mutation.SetDescription(s)
+	return rc
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillableDescription(s *string) *ResourceCreate {
+	if s != nil {
+		rc.SetDescription(*s)
+	}
+	return rc
+}
+
+// SetMetadata sets the "metadata" field.
+func (rc *ResourceCreate) SetMetadata(m map[string]interface{}) *ResourceCreate {
+	rc.mutation.SetMetadata(m)
+	return rc
+}
+
 // SetMenuID sets the "menu_id" field.
 func (rc *ResourceCreate) SetMenuID(i int64) *ResourceCreate {
 	rc.mutation.SetMenuID(i)
@@ -211,6 +251,10 @@ func (rc *ResourceCreate) defaults() {
 		v := resource.DefaultPath
 		rc.mutation.SetPath(v)
 	}
+	if _, ok := rc.mutation.I18nKey(); !ok {
+		v := resource.DefaultI18nKey
+		rc.mutation.SetI18nKey(v)
+	}
 	if _, ok := rc.mutation.ID(); !ok {
 		v := resource.DefaultID()
 		rc.mutation.SetID(v)
@@ -247,6 +291,27 @@ func (rc *ResourceCreate) check() error {
 	if v, ok := rc.mutation.Path(); ok {
 		if err := resource.PathValidator(v); err != nil {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
+		}
+	}
+	if _, ok := rc.mutation.URI(); !ok {
+		return &ValidationError{Name: "uri", err: errors.New(`ent: missing required field "Resource.uri"`)}
+	}
+	if v, ok := rc.mutation.URI(); ok {
+		if err := resource.URIValidator(v); err != nil {
+			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+		}
+	}
+	if _, ok := rc.mutation.I18nKey(); !ok {
+		return &ValidationError{Name: "i18n_key", err: errors.New(`ent: missing required field "Resource.i18n_key"`)}
+	}
+	if v, ok := rc.mutation.I18nKey(); ok {
+		if err := resource.I18nKeyValidator(v); err != nil {
+			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
+		}
+	}
+	if v, ok := rc.mutation.Description(); ok {
+		if err := resource.DescriptionValidator(v); err != nil {
+			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
 		}
 	}
 	if v, ok := rc.mutation.MenuID(); ok {
@@ -310,6 +375,22 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 		_node.Path = value
+	}
+	if value, ok := rc.mutation.URI(); ok {
+		_spec.SetField(resource.FieldURI, field.TypeString, value)
+		_node.URI = value
+	}
+	if value, ok := rc.mutation.I18nKey(); ok {
+		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
+		_node.I18nKey = value
+	}
+	if value, ok := rc.mutation.Description(); ok {
+		_spec.SetField(resource.FieldDescription, field.TypeString, value)
+		_node.Description = value
+	}
+	if value, ok := rc.mutation.Metadata(); ok {
+		_spec.SetField(resource.FieldMetadata, field.TypeJSON, value)
+		_node.Metadata = value
 	}
 	if nodes := rc.mutation.MenuIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

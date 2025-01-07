@@ -7,11 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menu"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/menupermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionmenu"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolemenu"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -143,14 +141,6 @@ func (mc *MenuCreate) SetPath(s string) *MenuCreate {
 	return mc
 }
 
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (mc *MenuCreate) SetNillablePath(s *string) *MenuCreate {
-	if s != nil {
-		mc.SetPath(*s)
-	}
-	return mc
-}
-
 // SetStatus sets the "status" field.
 func (mc *MenuCreate) SetStatus(i int8) *MenuCreate {
 	mc.mutation.SetStatus(i)
@@ -189,6 +179,20 @@ func (mc *MenuCreate) SetSequence(i int) *MenuCreate {
 func (mc *MenuCreate) SetNillableSequence(i *int) *MenuCreate {
 	if i != nil {
 		mc.SetSequence(*i)
+	}
+	return mc
+}
+
+// SetHidden sets the "hidden" field.
+func (mc *MenuCreate) SetHidden(b bool) *MenuCreate {
+	mc.mutation.SetHidden(b)
+	return mc
+}
+
+// SetNillableHidden sets the "hidden" field if the given value is not nil.
+func (mc *MenuCreate) SetNillableHidden(b *bool) *MenuCreate {
+	if b != nil {
+		mc.SetHidden(*b)
 	}
 	return mc
 }
@@ -270,21 +274,6 @@ func (mc *MenuCreate) AddResources(r ...*Resource) *MenuCreate {
 	return mc.AddResourceIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (mc *MenuCreate) AddRoleIDs(ids ...int64) *MenuCreate {
-	mc.mutation.AddRoleIDs(ids...)
-	return mc
-}
-
-// AddRoles adds the "roles" edges to the Role entity.
-func (mc *MenuCreate) AddRoles(r ...*Role) *MenuCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return mc.AddRoleIDs(ids...)
-}
-
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
 func (mc *MenuCreate) AddPermissionIDs(ids ...int64) *MenuCreate {
 	mc.mutation.AddPermissionIDs(ids...)
@@ -300,34 +289,19 @@ func (mc *MenuCreate) AddPermissions(p ...*Permission) *MenuCreate {
 	return mc.AddPermissionIDs(ids...)
 }
 
-// AddRoleMenuIDs adds the "role_menus" edge to the RoleMenu entity by IDs.
-func (mc *MenuCreate) AddRoleMenuIDs(ids ...int64) *MenuCreate {
-	mc.mutation.AddRoleMenuIDs(ids...)
+// AddPermissionMenuIDs adds the "permission_menus" edge to the PermissionMenu entity by IDs.
+func (mc *MenuCreate) AddPermissionMenuIDs(ids ...int64) *MenuCreate {
+	mc.mutation.AddPermissionMenuIDs(ids...)
 	return mc
 }
 
-// AddRoleMenus adds the "role_menus" edges to the RoleMenu entity.
-func (mc *MenuCreate) AddRoleMenus(r ...*RoleMenu) *MenuCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// AddPermissionMenus adds the "permission_menus" edges to the PermissionMenu entity.
+func (mc *MenuCreate) AddPermissionMenus(p ...*PermissionMenu) *MenuCreate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
 	}
-	return mc.AddRoleMenuIDs(ids...)
-}
-
-// AddMenuPermissionIDs adds the "menu_permissions" edge to the MenuPermission entity by IDs.
-func (mc *MenuCreate) AddMenuPermissionIDs(ids ...int64) *MenuCreate {
-	mc.mutation.AddMenuPermissionIDs(ids...)
-	return mc
-}
-
-// AddMenuPermissions adds the "menu_permissions" edges to the MenuPermission entity.
-func (mc *MenuCreate) AddMenuPermissions(m ...*MenuPermission) *MenuCreate {
-	ids := make([]int64, len(m))
-	for i := range m {
-		ids[i] = m[i].ID
-	}
-	return mc.AddMenuPermissionIDs(ids...)
+	return mc.AddPermissionMenuIDs(ids...)
 }
 
 // Mutation returns the MenuMutation object of the builder.
@@ -397,10 +371,6 @@ func (mc *MenuCreate) defaults() {
 		v := menu.DefaultIcon
 		mc.mutation.SetIcon(v)
 	}
-	if _, ok := mc.mutation.Path(); !ok {
-		v := menu.DefaultPath
-		mc.mutation.SetPath(v)
-	}
 	if _, ok := mc.mutation.Status(); !ok {
 		v := menu.DefaultStatus
 		mc.mutation.SetStatus(v)
@@ -412,6 +382,10 @@ func (mc *MenuCreate) defaults() {
 	if _, ok := mc.mutation.Sequence(); !ok {
 		v := menu.DefaultSequence
 		mc.mutation.SetSequence(v)
+	}
+	if _, ok := mc.mutation.Hidden(); !ok {
+		v := menu.DefaultHidden
+		mc.mutation.SetHidden(v)
 	}
 	if _, ok := mc.mutation.Properties(); !ok {
 		v := menu.DefaultProperties
@@ -495,6 +469,9 @@ func (mc *MenuCreate) check() error {
 	}
 	if _, ok := mc.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Menu.sequence"`)}
+	}
+	if _, ok := mc.mutation.Hidden(); !ok {
+		return &ValidationError{Name: "hidden", err: errors.New(`ent: missing required field "Menu.hidden"`)}
 	}
 	if v, ok := mc.mutation.ParentID(); ok {
 		if err := menu.ParentIDValidator(v); err != nil {
@@ -586,6 +563,10 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		_spec.SetField(menu.FieldSequence, field.TypeInt, value)
 		_node.Sequence = value
 	}
+	if value, ok := mc.mutation.Hidden(); ok {
+		_spec.SetField(menu.FieldHidden, field.TypeBool, value)
+		_node.Hidden = value
+	}
 	if value, ok := mc.mutation.Properties(); ok {
 		_spec.SetField(menu.FieldProperties, field.TypeString, value)
 		_node.Properties = value
@@ -639,33 +620,10 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := mc.mutation.RolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   menu.RolesTable,
-			Columns: menu.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &RoleMenuCreate{config: mc.config, mutation: newRoleMenuMutation(mc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := mc.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   menu.PermissionsTable,
 			Columns: menu.PermissionsPrimaryKey,
 			Bidi:    false,
@@ -676,7 +634,7 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &MenuPermissionCreate{config: mc.config, mutation: newMenuPermissionMutation(mc.config, OpCreate)}
+		createE := &PermissionMenuCreate{config: mc.config, mutation: newPermissionMenuMutation(mc.config, OpCreate)}
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
@@ -685,31 +643,15 @@ func (mc *MenuCreate) createSpec() (*Menu, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := mc.mutation.RoleMenusIDs(); len(nodes) > 0 {
+	if nodes := mc.mutation.PermissionMenusIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
-			Table:   menu.RoleMenusTable,
-			Columns: []string{menu.RoleMenusColumn},
+			Table:   menu.PermissionMenusTable,
+			Columns: []string{menu.PermissionMenusColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolemenu.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := mc.mutation.MenuPermissionsIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   menu.MenuPermissionsTable,
-			Columns: []string{menu.MenuPermissionsColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(menupermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionmenu.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
