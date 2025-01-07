@@ -6,7 +6,247 @@
     "type": "M",
     "uri": "/home",
     "icon": "home",
-    "status": 1
+    "status": 1,
+    "children": [
+      {
+        "keyword": "home:dashboard",
+        "name": "仪表盘",
+        "sequence": 1,
+        "type": "P",
+        "uri": "/home/dashboard",
+        "icon": "dashboard",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "home:dashboard:workplace",
+            "name": "工作台",
+            "sequence": 1,
+            "type": "P",
+            "uri": "/home/dashboard/workplace",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "home:dashboard:workplace:view",
+                "name": "查看工作台",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/dashboard/workplace",
+                "status": 1
+              }
+            ]
+          },
+          {
+            "keyword": "home:dashboard:analysis",
+            "name": "分析页",
+            "sequence": 2,
+            "type": "P",
+            "uri": "/home/dashboard/analysis",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "home:dashboard:analysis:view",
+                "name": "查看分析",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/dashboard/analysis",
+                "status": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "keyword": "home:monitor",
+        "name": "系统监控",
+        "sequence": 2,
+        "type": "P",
+        "uri": "/home/monitor",
+        "icon": "monitor",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "home:monitor:online",
+            "name": "在线用户",
+            "sequence": 1,
+            "type": "P",
+            "uri": "/home/monitor/online",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "home:monitor:online:list",
+                "name": "在线用户列表",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/monitor/online",
+                "status": 1
+              },
+              {
+                "keyword": "home:monitor:online:kick",
+                "name": "踢出用户",
+                "sequence": 2,
+                "type": "B",
+                "method": "DELETE",
+                "uri": "/api/v1/monitor/online/:token",
+                "status": 1
+              }
+            ]
+          },
+          {
+            "keyword": "home:monitor:server",
+            "name": "服务监控",
+            "sequence": 2,
+            "type": "P",
+            "uri": "/home/monitor/server",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "home:monitor:server:info",
+                "name": "服务器信息",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/monitor/server",
+                "status": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "keyword": "user",
+        "name": "用户菜单",
+        "sequence": 99,
+        "type": "M",
+        "component": "HeaderUserMenu",
+        "hidden": true,
+        "status": 1,
+        "children": [
+          {
+            "keyword": "user:profile",
+            "name": "个人资料",
+            "sequence": 1,
+            "type": "P",
+            "uri": "/personal/profile",
+            "icon": "user",
+            "status": 1,
+            "hidden": true,
+            "children": [
+              {
+                "keyword": "user:profile:view",
+                "name": "查看资料",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/personal/profile",
+                "status": 1
+              },
+              {
+                "keyword": "user:profile:update",
+                "name": "更新资料",
+                "sequence": 2,
+                "type": "B",
+                "method": "PUT",
+                "uri": "/api/v1/personal/profile",
+                "status": 1
+              }
+            ]
+          },
+          {
+            "keyword": "user:password",
+            "name": "修改密码",
+            "sequence": 2,
+            "type": "P",
+            "uri": "/personal/password",
+            "icon": "lock",
+            "status": 1,
+            "hidden": true,
+            "children": [
+              {
+                "keyword": "user:password:update",
+                "name": "更新密码",
+                "sequence": 1,
+                "type": "B",
+                "method": "PUT",
+                "uri": "/api/v1/personal/password",
+                "status": 1
+              }
+            ]
+          },
+          {
+            "keyword": "user:logout",
+            "name": "退出登录",
+            "sequence": 3,
+            "type": "B",
+            "method": "POST",
+            "uri": "/api/v1/auth/logout",
+            "icon": "logout",
+            "status": 1,
+            "hidden": true
+          }
+        ]
+      },
+      {
+        "keyword": "home:personal",
+        "name": "个人中心",
+        "sequence": 3,
+        "type": "P",
+        "uri": "/home/personal",
+        "icon": "user",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "home:personal:profile",
+            "name": "个人资料",
+            "sequence": 1,
+            "type": "P",
+            "uri": "/home/personal/profile",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "home:personal:profile:view",
+                "name": "查看资料",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/personal/profile",
+                "status": 1
+              },
+              {
+                "keyword": "home:personal:profile:update",
+                "name": "更新资料",
+                "sequence": 2,
+                "type": "B",
+                "method": "PUT",
+                "uri": "/api/v1/personal/profile",
+                "status": 1
+              }
+            ]
+          },
+          {
+            "keyword": "home:personal:password",
+            "name": "修改密码",
+            "sequence": 2,
+            "type": "P",
+            "uri": "/home/personal/password",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "home:personal:password:update",
+                "name": "更新密码",
+                "sequence": 1,
+                "type": "B",
+                "method": "PUT",
+                "uri": "/api/v1/personal/password",
+                "status": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     "keyword": "system",
@@ -316,6 +556,102 @@
             "status": 1
           }
         ]
+      }
+    ]
+  },
+  {
+    "keyword": "logs",
+    "name": "日志管理",
+    "sequence": 3,
+    "type": "M",
+    "uri": "/logs",
+    "icon": "file-text",
+    "status": 1,
+    "children": [
+      {
+        "keyword": "logs:access",
+        "name": "访问日志",
+        "sequence": 1,
+        "type": "P",
+        "uri": "/logs/access",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "logs:access:list",
+            "name": "访问日志列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/logs/access",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "logs:login",
+        "name": "登录日志",
+        "sequence": 2,
+        "type": "P",
+        "uri": "/logs/login",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "logs:login:list",
+            "name": "登录日志列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/logs/login",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "logs:modify",
+        "name": "修改日志",
+        "sequence": 3,
+        "type": "P",
+        "uri": "/logs/modify",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "logs:modify:list",
+            "name": "修改日志列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/logs/modify",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "logs:audit",
+        "name": "审计日志",
+        "sequence": 4,
+        "type": "P",
+        "uri": "/logs/audit",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "logs:audit:list",
+            "name": "审计日志列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/logs/audit",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "logs:delete",
+        "name": "删除日志",
+        "sequence": 5,
+        "type": "B",
+        "method": "DELETE",
+        "uri": "/api/v1/logs/:id",
+        "status": 1
       }
     ]
   }
