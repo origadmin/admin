@@ -59,12 +59,10 @@ func (UserPosition) Annotations() []schema.Annotation {
 func (UserPosition) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("user", User.Type).
-			//Ref("users").
 			Field("user_id").
 			Unique().
 			Required(),
 		edge.To("position", Position.Type).
-			//Ref("positions").
 			Field("position_id").
 			Unique().
 			Required(),

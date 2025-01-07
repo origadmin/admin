@@ -85,15 +85,15 @@ func (rc *ResourceCreate) SetNillableI18nKey(s *string) *ResourceCreate {
 }
 
 // SetType sets the "type" field.
-func (rc *ResourceCreate) SetType(u uint32) *ResourceCreate {
-	rc.mutation.SetType(u)
+func (rc *ResourceCreate) SetType(s string) *ResourceCreate {
+	rc.mutation.SetType(s)
 	return rc
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableType(u *uint32) *ResourceCreate {
-	if u != nil {
-		rc.SetType(*u)
+func (rc *ResourceCreate) SetNillableType(s *string) *ResourceCreate {
+	if s != nil {
+		rc.SetType(*s)
 	}
 	return rc
 }
@@ -458,6 +458,11 @@ func (rc *ResourceCreate) check() error {
 	if _, ok := rc.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Resource.type"`)}
 	}
+	if v, ok := rc.mutation.GetType(); ok {
+		if err := resource.TypeValidator(v); err != nil {
+			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
+		}
+	}
 	if _, ok := rc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
 	}
@@ -586,7 +591,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_node.I18nKey = value
 	}
 	if value, ok := rc.mutation.GetType(); ok {
-		_spec.SetField(resource.FieldType, field.TypeUint32, value)
+		_spec.SetField(resource.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
 	if value, ok := rc.mutation.Status(); ok {

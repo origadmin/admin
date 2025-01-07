@@ -1,0 +1,322 @@
+[
+  {
+    "keyword": "home",
+    "name": "首页",
+    "sequence": 1,
+    "type": "M",
+    "uri": "/home",
+    "icon": "home",
+    "status": 1
+  },
+  {
+    "keyword": "system",
+    "name": "系统管理",
+    "sequence": 2,
+    "type": "M",
+    "uri": "/sys",
+    "icon": "setting",
+    "status": 1,
+    "children": [
+      {
+        "keyword": "system:org",
+        "name": "组织管理",
+        "sequence": 1,
+        "type": "M",
+        "uri": "/sys/org",
+        "icon": "team",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "system:org:dept",
+            "name": "部门管理",
+            "sequence": 1,
+            "type": "P",
+            "uri": "/sys/org/dept",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "system:org:dept:list",
+                "name": "部门列表",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/sys/departments",
+                "status": 1
+              },
+              {
+                "keyword": "system:org:dept:add",
+                "name": "添加部门",
+                "sequence": 2,
+                "type": "B",
+                "method": "POST",
+                "uri": "/api/v1/sys/departments",
+                "status": 1
+              },
+              {
+                "keyword": "system:org:dept:edit",
+                "name": "编辑部门",
+                "sequence": 3,
+                "type": "B",
+                "method": "PUT",
+                "uri": "/api/v1/sys/departments/:id",
+                "status": 1
+              },
+              {
+                "keyword": "system:org:dept:delete",
+                "name": "删除部门",
+                "sequence": 4,
+                "type": "B",
+                "method": "DELETE",
+                "uri": "/api/v1/sys/departments/:id",
+                "status": 1
+              }
+            ]
+          },
+          {
+            "keyword": "system:org:position",
+            "name": "岗位管理",
+            "sequence": 2,
+            "type": "P",
+            "uri": "/sys/org/position",
+            "status": 1,
+            "children": [
+              {
+                "keyword": "system:org:position:list",
+                "name": "岗位列表",
+                "sequence": 1,
+                "type": "A",
+                "method": "GET",
+                "uri": "/api/v1/sys/positions",
+                "status": 1
+              },
+              {
+                "keyword": "system:org:position:add",
+                "name": "添加岗位",
+                "sequence": 2,
+                "type": "B",
+                "method": "POST",
+                "uri": "/api/v1/sys/positions",
+                "status": 1
+              },
+              {
+                "keyword": "system:org:position:edit",
+                "name": "编辑岗位",
+                "sequence": 3,
+                "type": "B",
+                "method": "PUT",
+                "uri": "/api/v1/sys/positions/:id",
+                "status": 1
+              },
+              {
+                "keyword": "system:org:position:delete",
+                "name": "删除岗位",
+                "sequence": 4,
+                "type": "B",
+                "method": "DELETE",
+                "uri": "/api/v1/sys/positions/:id",
+                "status": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "keyword": "system:user",
+        "name": "用户管理",
+        "sequence": 2,
+        "type": "P",
+        "uri": "/sys/user",
+        "icon": "user",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "system:user:list",
+            "name": "用户列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/sys/users",
+            "status": 1
+          },
+          {
+            "keyword": "system:user:add",
+            "name": "添加用户",
+            "sequence": 2,
+            "type": "B",
+            "method": "POST",
+            "uri": "/api/v1/sys/users",
+            "status": 1
+          },
+          {
+            "keyword": "system:user:edit",
+            "name": "编辑用户",
+            "sequence": 3,
+            "type": "B",
+            "method": "PUT",
+            "uri": "/api/v1/sys/users/:id",
+            "status": 1
+          },
+          {
+            "keyword": "system:user:delete",
+            "name": "删除用户",
+            "sequence": 4,
+            "type": "B",
+            "method": "DELETE",
+            "uri": "/api/v1/sys/users/:id",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "system:role",
+        "name": "角色管理",
+        "sequence": 3,
+        "type": "P",
+        "uri": "/sys/role",
+        "icon": "safety",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "system:role:list",
+            "name": "角色列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/sys/roles",
+            "status": 1
+          },
+          {
+            "keyword": "system:role:add",
+            "name": "添加角色",
+            "sequence": 2,
+            "type": "B",
+            "method": "POST",
+            "uri": "/api/v1/sys/roles",
+            "status": 1
+          },
+          {
+            "keyword": "system:role:edit",
+            "name": "编辑角色",
+            "sequence": 3,
+            "type": "B",
+            "method": "PUT",
+            "uri": "/api/v1/sys/roles/:id",
+            "status": 1
+          },
+          {
+            "keyword": "system:role:delete",
+            "name": "删除角色",
+            "sequence": 4,
+            "type": "B",
+            "method": "DELETE",
+            "uri": "/api/v1/sys/roles/:id",
+            "status": 1
+          },
+          {
+            "keyword": "system:role:permission",
+            "name": "分配权限",
+            "sequence": 5,
+            "type": "B",
+            "method": "PUT",
+            "uri": "/api/v1/sys/roles/:id/permissions",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "system:permission",
+        "name": "权限管理",
+        "sequence": 4,
+        "type": "P",
+        "uri": "/sys/permission",
+        "icon": "lock",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "system:permission:list",
+            "name": "权限列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/sys/permissions",
+            "status": 1
+          },
+          {
+            "keyword": "system:permission:add",
+            "name": "添加权限",
+            "sequence": 2,
+            "type": "B",
+            "method": "POST",
+            "uri": "/api/v1/sys/permissions",
+            "status": 1
+          },
+          {
+            "keyword": "system:permission:edit",
+            "name": "编辑权限",
+            "sequence": 3,
+            "type": "B",
+            "method": "PUT",
+            "uri": "/api/v1/sys/permissions/:id",
+            "status": 1
+          },
+          {
+            "keyword": "system:permission:delete",
+            "name": "删除权限",
+            "sequence": 4,
+            "type": "B",
+            "method": "DELETE",
+            "uri": "/api/v1/sys/permissions/:id",
+            "status": 1
+          }
+        ]
+      },
+      {
+        "keyword": "system:resource",
+        "name": "资源管理",
+        "sequence": 5,
+        "type": "P",
+        "uri": "/sys/resource",
+        "icon": "appstore",
+        "status": 1,
+        "children": [
+          {
+            "keyword": "system:resource:list",
+            "name": "资源列表",
+            "sequence": 1,
+            "type": "A",
+            "method": "GET",
+            "uri": "/api/v1/sys/resources",
+            "status": 1
+          },
+          {
+            "keyword": "system:resource:add",
+            "name": "添加资源",
+            "sequence": 2,
+            "type": "B",
+            "method": "POST",
+            "uri": "/api/v1/sys/resources",
+            "status": 1
+          },
+          {
+            "keyword": "system:resource:edit",
+            "name": "编辑资源",
+            "sequence": 3,
+            "type": "B",
+            "method": "PUT",
+            "uri": "/api/v1/sys/resources/:id",
+            "status": 1
+          },
+          {
+            "keyword": "system:resource:delete",
+            "name": "删除资源",
+            "sequence": 4,
+            "type": "B",
+            "method": "DELETE",
+            "uri": "/api/v1/sys/resources/:id",
+            "status": 1
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -32,10 +32,14 @@ const (
 	EdgeRoles = "roles"
 	// EdgeResources holds the string denoting the resources edge name in mutations.
 	EdgeResources = "resources"
+	// EdgePositions holds the string denoting the positions edge name in mutations.
+	EdgePositions = "positions"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
 	EdgeRolePermissions = "role_permissions"
 	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
 	EdgePermissionResources = "permission_resources"
+	// EdgePositionPermissions holds the string denoting the position_permissions edge name in mutations.
+	EdgePositionPermissions = "position_permissions"
 	// Table holds the table name of the permission in the database.
 	Table = "sys_permissions"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
@@ -48,6 +52,11 @@ const (
 	// ResourcesInverseTable is the table name for the Resource entity.
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
 	ResourcesInverseTable = "sys_resources"
+	// PositionsTable is the table that holds the positions relation/edge. The primary key declared below.
+	PositionsTable = "sys_position_permissions"
+	// PositionsInverseTable is the table name for the Position entity.
+	// It exists in this package in order to avoid circular dependency with the "position" package.
+	PositionsInverseTable = "sys_positions"
 	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
 	RolePermissionsTable = "sys_role_permissions"
 	// RolePermissionsInverseTable is the table name for the RolePermission entity.
@@ -62,6 +71,13 @@ const (
 	PermissionResourcesInverseTable = "sys_permission_resources"
 	// PermissionResourcesColumn is the table column denoting the permission_resources relation/edge.
 	PermissionResourcesColumn = "permission_id"
+	// PositionPermissionsTable is the table that holds the position_permissions relation/edge.
+	PositionPermissionsTable = "sys_position_permissions"
+	// PositionPermissionsInverseTable is the table name for the PositionPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "positionpermission" package.
+	PositionPermissionsInverseTable = "sys_position_permissions"
+	// PositionPermissionsColumn is the table column denoting the position_permissions relation/edge.
+	PositionPermissionsColumn = "permission_id"
 )
 
 // Columns holds all SQL columns for permission fields.
@@ -83,6 +99,9 @@ var (
 	// ResourcesPrimaryKey and ResourcesColumn2 are the table columns denoting the
 	// primary key for the resources relation (M2M).
 	ResourcesPrimaryKey = []string{"permission_id", "resource_id"}
+	// PositionsPrimaryKey and PositionsColumn2 are the table columns denoting the
+	// primary key for the positions relation (M2M).
+	PositionsPrimaryKey = []string{"position_id", "permission_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -186,6 +205,20 @@ func ByResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByPositionsCount orders the results by positions count.
+func ByPositionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPositionsStep(), opts...)
+	}
+}
+
+// ByPositions orders the results by positions terms.
+func ByPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPositionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByRolePermissionsCount orders the results by role_permissions count.
 func ByRolePermissionsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -213,6 +246,20 @@ func ByPermissionResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOpti
 		sqlgraph.OrderByNeighborTerms(s, newPermissionResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByPositionPermissionsCount orders the results by position_permissions count.
+func ByPositionPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPositionPermissionsStep(), opts...)
+	}
+}
+
+// ByPositionPermissions orders the results by position_permissions terms.
+func ByPositionPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPositionPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -227,6 +274,13 @@ func newResourcesStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, false, ResourcesTable, ResourcesPrimaryKey...),
 	)
 }
+func newPositionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PositionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, PositionsTable, PositionsPrimaryKey...),
+	)
+}
 func newRolePermissionsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -239,6 +293,13 @@ func newPermissionResourcesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(PermissionResourcesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, PermissionResourcesTable, PermissionResourcesColumn),
+	)
+}
+func newPositionPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PositionPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, PositionPermissionsTable, PositionPermissionsColumn),
 	)
 }
 

@@ -14,14 +14,14 @@ type Tx struct {
 	config
 	// Department is the client for interacting with the Department builders.
 	Department *DepartmentClient
-	// DepartmentRole is the client for interacting with the DepartmentRole builders.
-	DepartmentRole *DepartmentRoleClient
 	// Permission is the client for interacting with the Permission builders.
 	Permission *PermissionClient
 	// PermissionResource is the client for interacting with the PermissionResource builders.
 	PermissionResource *PermissionResourceClient
 	// Position is the client for interacting with the Position builders.
 	Position *PositionClient
+	// PositionPermission is the client for interacting with the PositionPermission builders.
+	PositionPermission *PositionPermissionClient
 	// Resource is the client for interacting with the Resource builders.
 	Resource *ResourceClient
 	// Role is the client for interacting with the Role builders.
@@ -168,10 +168,10 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Department = NewDepartmentClient(tx.config)
-	tx.DepartmentRole = NewDepartmentRoleClient(tx.config)
 	tx.Permission = NewPermissionClient(tx.config)
 	tx.PermissionResource = NewPermissionResourceClient(tx.config)
 	tx.Position = NewPositionClient(tx.config)
+	tx.PositionPermission = NewPositionPermissionClient(tx.config)
 	tx.Resource = NewResourceClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 	tx.RolePermission = NewRolePermissionClient(tx.config)

@@ -26,8 +26,14 @@ const (
 	FieldDepartmentID = "department_id"
 	// EdgeDepartment holds the string denoting the department edge name in mutations.
 	EdgeDepartment = "department"
+	// EdgeUsers holds the string denoting the users edge name in mutations.
+	EdgeUsers = "users"
+	// EdgePermissions holds the string denoting the permissions edge name in mutations.
+	EdgePermissions = "permissions"
 	// EdgeUserPositions holds the string denoting the user_positions edge name in mutations.
 	EdgeUserPositions = "user_positions"
+	// EdgePositionPermissions holds the string denoting the position_permissions edge name in mutations.
+	EdgePositionPermissions = "position_permissions"
 	// Table holds the table name of the position in the database.
 	Table = "sys_positions"
 	// DepartmentTable is the table that holds the department relation/edge.
@@ -37,13 +43,30 @@ const (
 	DepartmentInverseTable = "sys_departments"
 	// DepartmentColumn is the table column denoting the department relation/edge.
 	DepartmentColumn = "department_id"
+	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
+	UsersTable = "sys_user_positions"
+	// UsersInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UsersInverseTable = "sys_users"
+	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
+	PermissionsTable = "sys_position_permissions"
+	// PermissionsInverseTable is the table name for the Permission entity.
+	// It exists in this package in order to avoid circular dependency with the "permission" package.
+	PermissionsInverseTable = "sys_permissions"
 	// UserPositionsTable is the table that holds the user_positions relation/edge.
 	UserPositionsTable = "sys_user_positions"
 	// UserPositionsInverseTable is the table name for the UserPosition entity.
 	// It exists in this package in order to avoid circular dependency with the "userposition" package.
 	UserPositionsInverseTable = "sys_user_positions"
 	// UserPositionsColumn is the table column denoting the user_positions relation/edge.
-	UserPositionsColumn = "position_user_positions"
+	UserPositionsColumn = "position_id"
+	// PositionPermissionsTable is the table that holds the position_permissions relation/edge.
+	PositionPermissionsTable = "sys_position_permissions"
+	// PositionPermissionsInverseTable is the table name for the PositionPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "positionpermission" package.
+	PositionPermissionsInverseTable = "sys_position_permissions"
+	// PositionPermissionsColumn is the table column denoting the position_permissions relation/edge.
+	PositionPermissionsColumn = "position_id"
 )
 
 // Columns holds all SQL columns for position fields.
@@ -55,6 +78,15 @@ var Columns = []string{
 	FieldDescription,
 	FieldDepartmentID,
 }
+
+var (
+	// UsersPrimaryKey and UsersColumn2 are the table columns denoting the
+	// primary key for the users relation (M2M).
+	UsersPrimaryKey = []string{"user_id", "position_id"}
+	// PermissionsPrimaryKey and PermissionsColumn2 are the table columns denoting the
+	// primary key for the permissions relation (M2M).
+	PermissionsPrimaryKey = []string{"position_id", "permission_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -127,6 +159,34 @@ func ByDepartmentField(field string, opts ...sql.OrderTermOption) OrderOption {
 	}
 }
 
+// ByUsersCount orders the results by users count.
+func ByUsersCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newUsersStep(), opts...)
+	}
+}
+
+// ByUsers orders the results by users terms.
+func ByUsers(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUsersStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByPermissionsCount orders the results by permissions count.
+func ByPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPermissionsStep(), opts...)
+	}
+}
+
+// ByPermissions orders the results by permissions terms.
+func ByPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByUserPositionsCount orders the results by user_positions count.
 func ByUserPositionsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -140,6 +200,20 @@ func ByUserPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newUserPositionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByPositionPermissionsCount orders the results by position_permissions count.
+func ByPositionPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPositionPermissionsStep(), opts...)
+	}
+}
+
+// ByPositionPermissions orders the results by position_permissions terms.
+func ByPositionPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPositionPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newDepartmentStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -147,11 +221,32 @@ func newDepartmentStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2O, true, DepartmentTable, DepartmentColumn),
 	)
 }
+func newUsersStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UsersInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, UsersTable, UsersPrimaryKey...),
+	)
+}
+func newPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, PermissionsTable, PermissionsPrimaryKey...),
+	)
+}
 func newUserPositionsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UserPositionsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, UserPositionsTable, UserPositionsColumn),
+		sqlgraph.Edge(sqlgraph.O2M, true, UserPositionsTable, UserPositionsColumn),
+	)
+}
+func newPositionPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PositionPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, PositionPermissionsTable, PositionPermissionsColumn),
 	)
 }
 

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "技术总监",
+    "description": "负责技术部整体管理",
+    "department_id": "tech"
+  },
+  {
+    "name": "研发经理",
+    "description": "负责研发团队管理",
+    "department_id": "dev"
+  },
+  {
+    "name": "高级开发工程师",
+    "description": "负责核心功能开发",
+    "department_id": "dev"
+  },
+  {
+    "name": "运维经理",
+    "description": "负责运维团队管理",
+    "department_id": "ops"
+  },
+  {
+    "name": "人事经理",
+    "description": "负责人事团队管理",
+    "department_id": "hr"
+  }
+] 

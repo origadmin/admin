@@ -7,9 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userposition"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"time"
 
@@ -359,6 +361,21 @@ func (uc *UserCreate) AddRoles(r ...*Role) *UserCreate {
 	return uc.AddRoleIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (uc *UserCreate) AddPositionIDs(ids ...int64) *UserCreate {
+	uc.mutation.AddPositionIDs(ids...)
+	return uc
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (uc *UserCreate) AddPositions(p ...*Position) *UserCreate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uc.AddPositionIDs(ids...)
+}
+
 // AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
 func (uc *UserCreate) AddDepartmentIDs(ids ...int64) *UserCreate {
 	uc.mutation.AddDepartmentIDs(ids...)
@@ -387,6 +404,21 @@ func (uc *UserCreate) AddUserRoles(u ...*UserRole) *UserCreate {
 		ids[i] = u[i].ID
 	}
 	return uc.AddUserRoleIDs(ids...)
+}
+
+// AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
+func (uc *UserCreate) AddUserPositionIDs(ids ...int64) *UserCreate {
+	uc.mutation.AddUserPositionIDs(ids...)
+	return uc
+}
+
+// AddUserPositions adds the "user_positions" edges to the UserPosition entity.
+func (uc *UserCreate) AddUserPositions(u ...*UserPosition) *UserCreate {
+	ids := make([]int64, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uc.AddUserPositionIDs(ids...)
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
@@ -827,6 +859,29 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := uc.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &UserPositionCreate{config: uc.config, mutation: newUserPositionMutation(uc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := uc.mutation.DepartmentsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -859,6 +914,22 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.UserPositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

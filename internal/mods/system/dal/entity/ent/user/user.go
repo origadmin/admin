@@ -64,10 +64,14 @@ const (
 	FieldManager = "manager"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
+	// EdgePositions holds the string denoting the positions edge name in mutations.
+	EdgePositions = "positions"
 	// EdgeDepartments holds the string denoting the departments edge name in mutations.
 	EdgeDepartments = "departments"
 	// EdgeUserRoles holds the string denoting the user_roles edge name in mutations.
 	EdgeUserRoles = "user_roles"
+	// EdgeUserPositions holds the string denoting the user_positions edge name in mutations.
+	EdgeUserPositions = "user_positions"
 	// EdgeUserDepartments holds the string denoting the user_departments edge name in mutations.
 	EdgeUserDepartments = "user_departments"
 	// Table holds the table name of the user in the database.
@@ -77,6 +81,11 @@ const (
 	// RolesInverseTable is the table name for the Role entity.
 	// It exists in this package in order to avoid circular dependency with the "role" package.
 	RolesInverseTable = "sys_roles"
+	// PositionsTable is the table that holds the positions relation/edge. The primary key declared below.
+	PositionsTable = "sys_user_positions"
+	// PositionsInverseTable is the table name for the Position entity.
+	// It exists in this package in order to avoid circular dependency with the "position" package.
+	PositionsInverseTable = "sys_positions"
 	// DepartmentsTable is the table that holds the departments relation/edge. The primary key declared below.
 	DepartmentsTable = "sys_user_departments"
 	// DepartmentsInverseTable is the table name for the Department entity.
@@ -89,6 +98,13 @@ const (
 	UserRolesInverseTable = "sys_user_roles"
 	// UserRolesColumn is the table column denoting the user_roles relation/edge.
 	UserRolesColumn = "user_id"
+	// UserPositionsTable is the table that holds the user_positions relation/edge.
+	UserPositionsTable = "sys_user_positions"
+	// UserPositionsInverseTable is the table name for the UserPosition entity.
+	// It exists in this package in order to avoid circular dependency with the "userposition" package.
+	UserPositionsInverseTable = "sys_user_positions"
+	// UserPositionsColumn is the table column denoting the user_positions relation/edge.
+	UserPositionsColumn = "user_id"
 	// UserDepartmentsTable is the table that holds the user_departments relation/edge.
 	UserDepartmentsTable = "sys_user_departments"
 	// UserDepartmentsInverseTable is the table name for the UserDepartment entity.
@@ -130,6 +146,9 @@ var (
 	// RolesPrimaryKey and RolesColumn2 are the table columns denoting the
 	// primary key for the roles relation (M2M).
 	RolesPrimaryKey = []string{"user_id", "role_id"}
+	// PositionsPrimaryKey and PositionsColumn2 are the table columns denoting the
+	// primary key for the positions relation (M2M).
+	PositionsPrimaryKey = []string{"user_id", "position_id"}
 	// DepartmentsPrimaryKey and DepartmentsColumn2 are the table columns denoting the
 	// primary key for the departments relation (M2M).
 	DepartmentsPrimaryKey = []string{"user_id", "department_id"}
@@ -389,6 +408,20 @@ func ByRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByPositionsCount orders the results by positions count.
+func ByPositionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newPositionsStep(), opts...)
+	}
+}
+
+// ByPositions orders the results by positions terms.
+func ByPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newPositionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByDepartmentsCount orders the results by departments count.
 func ByDepartmentsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -417,6 +450,20 @@ func ByUserRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByUserPositionsCount orders the results by user_positions count.
+func ByUserPositionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newUserPositionsStep(), opts...)
+	}
+}
+
+// ByUserPositions orders the results by user_positions terms.
+func ByUserPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserPositionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByUserDepartmentsCount orders the results by user_departments count.
 func ByUserDepartmentsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -437,6 +484,13 @@ func newRolesStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, false, RolesTable, RolesPrimaryKey...),
 	)
 }
+func newPositionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(PositionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, PositionsTable, PositionsPrimaryKey...),
+	)
+}
 func newDepartmentsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -449,6 +503,13 @@ func newUserRolesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UserRolesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, UserRolesTable, UserRolesColumn),
+	)
+}
+func newUserPositionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserPositionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, UserPositionsTable, UserPositionsColumn),
 	)
 }
 func newUserDepartmentsStep() *sqlgraph.Step {

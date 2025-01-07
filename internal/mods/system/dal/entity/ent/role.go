@@ -48,17 +48,13 @@ type RoleEdges struct {
 	Users []*User `json:"users,omitempty"`
 	// Permissions holds the value of the permissions edge.
 	Permissions []*Permission `json:"permissions,omitempty"`
-	// Departments holds the value of the departments edge.
-	Departments []*Department `json:"departments,omitempty"`
 	// UserRoles holds the value of the user_roles edge.
 	UserRoles []*UserRole `json:"user_roles,omitempty"`
 	// RolePermissions holds the value of the role_permissions edge.
 	RolePermissions []*RolePermission `json:"role_permissions,omitempty"`
-	// DepartmentRoles holds the value of the department_roles edge.
-	DepartmentRoles []*DepartmentRole `json:"department_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [4]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -79,19 +75,10 @@ func (e RoleEdges) PermissionsOrErr() ([]*Permission, error) {
 	return nil, &NotLoadedError{edge: "permissions"}
 }
 
-// DepartmentsOrErr returns the Departments value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoleEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[2] {
-		return e.Departments, nil
-	}
-	return nil, &NotLoadedError{edge: "departments"}
-}
-
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
@@ -100,19 +87,10 @@ func (e RoleEdges) UserRolesOrErr() ([]*UserRole, error) {
 // RolePermissionsOrErr returns the RolePermissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e RoleEdges) RolePermissionsOrErr() ([]*RolePermission, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[3] {
 		return e.RolePermissions, nil
 	}
 	return nil, &NotLoadedError{edge: "role_permissions"}
-}
-
-// DepartmentRolesOrErr returns the DepartmentRoles value or an error if the edge
-// was not loaded in eager-loading.
-func (e RoleEdges) DepartmentRolesOrErr() ([]*DepartmentRole, error) {
-	if e.loadedTypes[5] {
-		return e.DepartmentRoles, nil
-	}
-	return nil, &NotLoadedError{edge: "department_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -226,11 +204,6 @@ func (r *Role) QueryPermissions() *PermissionQuery {
 	return NewRoleClient(r.config).QueryPermissions(r)
 }
 
-// QueryDepartments queries the "departments" edge of the Role entity.
-func (r *Role) QueryDepartments() *DepartmentQuery {
-	return NewRoleClient(r.config).QueryDepartments(r)
-}
-
 // QueryUserRoles queries the "user_roles" edge of the Role entity.
 func (r *Role) QueryUserRoles() *UserRoleQuery {
 	return NewRoleClient(r.config).QueryUserRoles(r)
@@ -239,11 +212,6 @@ func (r *Role) QueryUserRoles() *UserRoleQuery {
 // QueryRolePermissions queries the "role_permissions" edge of the Role entity.
 func (r *Role) QueryRolePermissions() *RolePermissionQuery {
 	return NewRoleClient(r.config).QueryRolePermissions(r)
-}
-
-// QueryDepartmentRoles queries the "department_roles" edge of the Role entity.
-func (r *Role) QueryDepartmentRoles() *DepartmentRoleQuery {
-	return NewRoleClient(r.config).QueryDepartmentRoles(r)
 }
 
 // Update returns a builder for updating this Role.

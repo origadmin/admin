@@ -5,10 +5,10 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/positionpermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
@@ -114,53 +114,6 @@ func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...stri
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Department field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *DepartmentRoleMutation) SetFields(input *DepartmentRole, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case departmentrole.FieldDepartmentID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.DepartmentID != 0 {
-				m.SetDepartmentID(input.DepartmentID)
-			}
-		case departmentrole.FieldRoleID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.RoleID != 0 {
-				m.SetRoleID(input.RoleID)
-			}
-		case departmentrole.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
-		default:
-			return fmt.Errorf("unknown DepartmentRole field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *DepartmentRoleMutation) SetFieldsWithZero(input *DepartmentRole, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case departmentrole.FieldDepartmentID:
-			m.SetDepartmentID(input.DepartmentID)
-		case departmentrole.FieldRoleID:
-			m.SetRoleID(input.RoleID)
-		case departmentrole.FieldID:
-			m.SetID(input.ID)
-		default:
-			return fmt.Errorf("unknown DepartmentRole field %s", fields[i])
 		}
 	}
 	return nil
@@ -368,6 +321,53 @@ func (m *PositionMutation) SetFieldsWithZero(input *Position, fields ...string) 
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
 // field type.
+func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case positionpermission.FieldPositionID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.PositionID != 0 {
+				m.SetPositionID(input.PositionID)
+			}
+		case positionpermission.FieldPermissionID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.PermissionID != 0 {
+				m.SetPermissionID(input.PermissionID)
+			}
+		case positionpermission.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *PositionPermissionMutation) SetFieldsWithZero(input *PositionPermission, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case positionpermission.FieldPositionID:
+			m.SetPositionID(input.PositionID)
+		case positionpermission.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case positionpermission.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
 func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
@@ -395,8 +395,8 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 				m.SetI18nKey(input.I18nKey)
 			}
 		case resource.FieldType:
-			// check uint32 with sql.NullInt64 if it is zero
-			if input.Type != 0 {
+			// check string with sql.NullString if it is empty
+			if input.Type != "" {
 				m.SetType(input.Type)
 			}
 		case resource.FieldStatus:

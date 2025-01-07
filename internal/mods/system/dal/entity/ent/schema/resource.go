@@ -22,11 +22,13 @@ const (
 	ResourceStatusDisabled int8 = 2 // 禁用
 )
 const (
-	ResourceTypeMenu     = 'M' // 目录
-	ResourceTypePage     = 'P' // 页面
-	ResourceTypeButton   = 'B' // 按钮
-	ResourceTypeAPI      = 'A' // API接口
-	ResourceTypeRedirect = 'R' // 重定向
+	ResourceTypeUnknown  = "U" // 未知
+	ResourceTypeMenu     = "M" // 目录
+	ResourceTypePage     = "P" // 页面
+	ResourceTypeButton   = "B" // 按钮
+	ResourceTypeButtonAPI = "BA" // 按钮触发API接口
+	ResourceTypeAPI      = "A" // API接口
+	ResourceTypeRedirect = "R" // 重定向
 )
 
 // Resource holds the schema definition for the Resource domain.
@@ -49,17 +51,19 @@ func (Resource) Fields() []ent.Field {
 			MaxLen(128).
 			Default("").
 			Comment(i18n.Text("resource.field.i18n_key")),
-		field.Uint32("type").
+		field.String("type").
+			MaxLen(2).
 			Default(ResourceTypeMenu).
 			Comment(i18n.Text("resource.field.type")),
 		field.Int8("status").
 			Default(ResourceStatusEnabled).
 			Comment(i18n.Text("resource.field.status")),
-		// API资源特有字段
+		// fields that are unique to api resources
 		field.String("uri").
 			MaxLen(256).
 			Default("").
 			Comment(i18n.Text("resource.field.uri")),
+		// fields that are unique to grpc resources
 		field.String("operation").
 			MaxLen(128).
 			Default("").
@@ -68,18 +72,21 @@ func (Resource) Fields() []ent.Field {
 			MaxLen(16).
 			Default("").
 			Comment(i18n.Text("resource.field.method")),
-		// UI资源特有字段
+		// fields specific to ui resources
 		field.String("component").
 			MaxLen(128).
 			Default("").
 			Comment(i18n.Text("resource.field.component")),
+		// fields specific to ui resources
 		field.String("icon").
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("resource.field.icon")),
+		// menu sort field
 		field.Int("sequence").
 			Default(0).
 			Comment(i18n.Text("resource.field.sequence")),
+		// menu specific fields
 		field.Bool("visible").
 			Default(true).
 			Comment(i18n.Text("resource.field.visible")),
@@ -87,7 +94,7 @@ func (Resource) Fields() []ent.Field {
 			MaxLen(256).
 			Default("").
 			Comment(i18n.Text("resource.field.tree_path")),
-		// 扩展属性
+		// extended properties
 		field.JSON("properties", map[string]string{}).
 			Optional().
 			Comment(i18n.Text("resource.field.properties")),

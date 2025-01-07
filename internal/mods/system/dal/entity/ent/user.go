@@ -74,15 +74,19 @@ type User struct {
 type UserEdges struct {
 	// Roles holds the value of the roles edge.
 	Roles []*Role `json:"roles,omitempty"`
+	// Positions holds the value of the positions edge.
+	Positions []*Position `json:"positions,omitempty"`
 	// Departments holds the value of the departments edge.
 	Departments []*Department `json:"departments,omitempty"`
 	// UserRoles holds the value of the user_roles edge.
 	UserRoles []*UserRole `json:"user_roles,omitempty"`
+	// UserPositions holds the value of the user_positions edge.
+	UserPositions []*UserPosition `json:"user_positions,omitempty"`
 	// UserDepartments holds the value of the user_departments edge.
 	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [6]bool
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
@@ -94,10 +98,19 @@ func (e UserEdges) RolesOrErr() ([]*Role, error) {
 	return nil, &NotLoadedError{edge: "roles"}
 }
 
+// PositionsOrErr returns the Positions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) PositionsOrErr() ([]*Position, error) {
+	if e.loadedTypes[1] {
+		return e.Positions, nil
+	}
+	return nil, &NotLoadedError{edge: "positions"}
+}
+
 // DepartmentsOrErr returns the Departments value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) DepartmentsOrErr() ([]*Department, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.Departments, nil
 	}
 	return nil, &NotLoadedError{edge: "departments"}
@@ -106,16 +119,25 @@ func (e UserEdges) DepartmentsOrErr() ([]*Department, error) {
 // UserRolesOrErr returns the UserRoles value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserRolesOrErr() ([]*UserRole, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		return e.UserRoles, nil
 	}
 	return nil, &NotLoadedError{edge: "user_roles"}
 }
 
+// UserPositionsOrErr returns the UserPositions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) UserPositionsOrErr() ([]*UserPosition, error) {
+	if e.loadedTypes[4] {
+		return e.UserPositions, nil
+	}
+	return nil, &NotLoadedError{edge: "user_positions"}
+}
+
 // UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserDepartmentsOrErr() ([]*UserDepartment, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[5] {
 		return e.UserDepartments, nil
 	}
 	return nil, &NotLoadedError{edge: "user_departments"}
@@ -309,6 +331,11 @@ func (u *User) QueryRoles() *RoleQuery {
 	return NewUserClient(u.config).QueryRoles(u)
 }
 
+// QueryPositions queries the "positions" edge of the User entity.
+func (u *User) QueryPositions() *PositionQuery {
+	return NewUserClient(u.config).QueryPositions(u)
+}
+
 // QueryDepartments queries the "departments" edge of the User entity.
 func (u *User) QueryDepartments() *DepartmentQuery {
 	return NewUserClient(u.config).QueryDepartments(u)
@@ -317,6 +344,11 @@ func (u *User) QueryDepartments() *DepartmentQuery {
 // QueryUserRoles queries the "user_roles" edge of the User entity.
 func (u *User) QueryUserRoles() *UserRoleQuery {
 	return NewUserClient(u.config).QueryUserRoles(u)
+}
+
+// QueryUserPositions queries the "user_positions" edge of the User entity.
+func (u *User) QueryUserPositions() *UserPositionQuery {
+	return NewUserClient(u.config).QueryUserPositions(u)
 }
 
 // QueryUserDepartments queries the "user_departments" edge of the User entity.

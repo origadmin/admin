@@ -19,8 +19,8 @@ var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
 	NewLoginServiceServerPB,
 	NewLoginServiceHTTPServerPB,
-	NewMenuServiceServerPB,
-	NewMenuServiceHTTPServerPB,
+	NewResourceServiceServerPB,
+	NewResourceServiceHTTPServerPB,
 	NewRoleServiceServerPB,
 	NewRoleServiceHTTPServerPB,
 	NewUserServiceServerPB,
@@ -32,17 +32,17 @@ var ProviderSet = wire.NewSet(
 )
 
 type RegisterServer struct {
-	Menu    pb.MenuServiceServer
-	Role    pb.RoleServiceServer
-	User    pb.UserServiceServer
-	Auth    pb.AuthServiceServer
-	Login   pb.LoginServiceServer
-	Current pb.CurrentServiceServer
+	Resource pb.ResourceServiceServer
+	Role     pb.RoleServiceServer
+	User     pb.UserServiceServer
+	Auth     pb.AuthServiceServer
+	Login    pb.LoginServiceServer
+	Current  pb.CurrentServiceServer
 }
 
 func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
 	log.Info("grpc server system init")
-	pb.RegisterMenuServiceServer(server, s.Menu)
+	pb.RegisterResourceServiceServer(server, s.Resource)
 	pb.RegisterRoleServiceServer(server, s.Role)
 	pb.RegisterUserServiceServer(server, s.User)
 	pb.RegisterAuthServiceServer(server, s.Auth)
@@ -52,7 +52,7 @@ func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServ
 
 func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server system init")
-	pb.RegisterMenuServiceHTTPServer(server, s.Menu)
+	pb.RegisterResourceServiceHTTPServer(server, s.Resource)
 	pb.RegisterRoleServiceHTTPServer(server, s.Role)
 	pb.RegisterUserServiceHTTPServer(server, s.User)
 	pb.RegisterAuthServiceHTTPServer(server, s.Auth)

@@ -95,8 +95,5 @@ func (Role) Edges() []ent.Edge {
 		edge.To("permissions", Permission.Type).
 			StorageKey(edge.Columns("role_id", "permission_id")).
 			Through("role_permissions", RolePermission.Type),
-		edge.From("departments", Department.Type).
-			Ref("roles").
-			Through("department_roles", DepartmentRole.Type),
 	}
 }

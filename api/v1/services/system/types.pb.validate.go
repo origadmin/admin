@@ -2381,7 +2381,7 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Keyword
 
-	// no validation rules for I_18NKey
+	// no validation rules for I18NKey
 
 	// no validation rules for Type
 

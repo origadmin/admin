@@ -1,0 +1,24 @@
+[
+  {
+    "username": "admin",
+    "nickname": "超级管理员",
+    "password": "123456",
+    "email": "admin@example.com",
+    "phone": "13800138000",
+    "status": 1,
+    "roles": ["super_admin"],
+    "departments": ["root"],
+    "positions": ["技术总监"]
+  },
+  {
+    "username": "test",
+    "nickname": "测试用户",
+    "password": "123456",
+    "email": "test@example.com",
+    "phone": "13800138001",
+    "status": 1,
+    "roles": ["user"],
+    "departments": ["dev"],
+    "positions": ["高级开发工程师"]
+  }
+] 

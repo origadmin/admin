@@ -155,7 +155,7 @@ func TestLoadConfig(t *testing.T) {
 	}
 }
 
-func TestData_InitFromFile(t *testing.T) {
+func TestData_InitResourceFromFile(t *testing.T) {
 	log.SetLogger(slog.NewLogger())
 	_ = uuid.UUID{}
 	type fields struct {
@@ -176,7 +176,7 @@ func TestData_InitFromFile(t *testing.T) {
 				//Bootstrap: DefaultBootstrap(),
 			},
 			args: args{
-				filename: "../../resources/data/menu.json",
+				filename: "../../resources/data/resource.json",
 			},
 			wantErr: false,
 		},

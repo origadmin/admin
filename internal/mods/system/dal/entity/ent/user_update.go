@@ -7,10 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userposition"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 	"time"
 
@@ -394,6 +396,21 @@ func (uu *UserUpdate) AddRoles(r ...*Role) *UserUpdate {
 	return uu.AddRoleIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (uu *UserUpdate) AddPositionIDs(ids ...int64) *UserUpdate {
+	uu.mutation.AddPositionIDs(ids...)
+	return uu
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (uu *UserUpdate) AddPositions(p ...*Position) *UserUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uu.AddPositionIDs(ids...)
+}
+
 // AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
 func (uu *UserUpdate) AddDepartmentIDs(ids ...int64) *UserUpdate {
 	uu.mutation.AddDepartmentIDs(ids...)
@@ -422,6 +439,21 @@ func (uu *UserUpdate) AddUserRoles(u ...*UserRole) *UserUpdate {
 		ids[i] = u[i].ID
 	}
 	return uu.AddUserRoleIDs(ids...)
+}
+
+// AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
+func (uu *UserUpdate) AddUserPositionIDs(ids ...int64) *UserUpdate {
+	uu.mutation.AddUserPositionIDs(ids...)
+	return uu
+}
+
+// AddUserPositions adds the "user_positions" edges to the UserPosition entity.
+func (uu *UserUpdate) AddUserPositions(u ...*UserPosition) *UserUpdate {
+	ids := make([]int64, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uu.AddUserPositionIDs(ids...)
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
@@ -465,6 +497,27 @@ func (uu *UserUpdate) RemoveRoles(r ...*Role) *UserUpdate {
 	return uu.RemoveRoleIDs(ids...)
 }
 
+// ClearPositions clears all "positions" edges to the Position entity.
+func (uu *UserUpdate) ClearPositions() *UserUpdate {
+	uu.mutation.ClearPositions()
+	return uu
+}
+
+// RemovePositionIDs removes the "positions" edge to Position entities by IDs.
+func (uu *UserUpdate) RemovePositionIDs(ids ...int64) *UserUpdate {
+	uu.mutation.RemovePositionIDs(ids...)
+	return uu
+}
+
+// RemovePositions removes "positions" edges to Position entities.
+func (uu *UserUpdate) RemovePositions(p ...*Position) *UserUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uu.RemovePositionIDs(ids...)
+}
+
 // ClearDepartments clears all "departments" edges to the Department entity.
 func (uu *UserUpdate) ClearDepartments() *UserUpdate {
 	uu.mutation.ClearDepartments()
@@ -505,6 +558,27 @@ func (uu *UserUpdate) RemoveUserRoles(u ...*UserRole) *UserUpdate {
 		ids[i] = u[i].ID
 	}
 	return uu.RemoveUserRoleIDs(ids...)
+}
+
+// ClearUserPositions clears all "user_positions" edges to the UserPosition entity.
+func (uu *UserUpdate) ClearUserPositions() *UserUpdate {
+	uu.mutation.ClearUserPositions()
+	return uu
+}
+
+// RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
+func (uu *UserUpdate) RemoveUserPositionIDs(ids ...int64) *UserUpdate {
+	uu.mutation.RemoveUserPositionIDs(ids...)
+	return uu
+}
+
+// RemoveUserPositions removes "user_positions" edges to UserPosition entities.
+func (uu *UserUpdate) RemoveUserPositions(u ...*UserPosition) *UserUpdate {
+	ids := make([]int64, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uu.RemoveUserPositionIDs(ids...)
 }
 
 // ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
@@ -816,6 +890,72 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uu.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		createE := &UserPositionCreate{config: uu.config, mutation: newUserPositionMutation(uu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedPositionsIDs(); len(nodes) > 0 && !uu.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &UserPositionCreate{config: uu.config, mutation: newUserPositionMutation(uu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &UserPositionCreate{config: uu.config, mutation: newUserPositionMutation(uu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if uu.mutation.DepartmentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -920,6 +1060,51 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.UserPositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedUserPositionsIDs(); len(nodes) > 0 && !uu.mutation.UserPositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.UserPositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1355,6 +1540,21 @@ func (uuo *UserUpdateOne) AddRoles(r ...*Role) *UserUpdateOne {
 	return uuo.AddRoleIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (uuo *UserUpdateOne) AddPositionIDs(ids ...int64) *UserUpdateOne {
+	uuo.mutation.AddPositionIDs(ids...)
+	return uuo
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (uuo *UserUpdateOne) AddPositions(p ...*Position) *UserUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uuo.AddPositionIDs(ids...)
+}
+
 // AddDepartmentIDs adds the "departments" edge to the Department entity by IDs.
 func (uuo *UserUpdateOne) AddDepartmentIDs(ids ...int64) *UserUpdateOne {
 	uuo.mutation.AddDepartmentIDs(ids...)
@@ -1383,6 +1583,21 @@ func (uuo *UserUpdateOne) AddUserRoles(u ...*UserRole) *UserUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return uuo.AddUserRoleIDs(ids...)
+}
+
+// AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
+func (uuo *UserUpdateOne) AddUserPositionIDs(ids ...int64) *UserUpdateOne {
+	uuo.mutation.AddUserPositionIDs(ids...)
+	return uuo
+}
+
+// AddUserPositions adds the "user_positions" edges to the UserPosition entity.
+func (uuo *UserUpdateOne) AddUserPositions(u ...*UserPosition) *UserUpdateOne {
+	ids := make([]int64, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uuo.AddUserPositionIDs(ids...)
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
@@ -1426,6 +1641,27 @@ func (uuo *UserUpdateOne) RemoveRoles(r ...*Role) *UserUpdateOne {
 	return uuo.RemoveRoleIDs(ids...)
 }
 
+// ClearPositions clears all "positions" edges to the Position entity.
+func (uuo *UserUpdateOne) ClearPositions() *UserUpdateOne {
+	uuo.mutation.ClearPositions()
+	return uuo
+}
+
+// RemovePositionIDs removes the "positions" edge to Position entities by IDs.
+func (uuo *UserUpdateOne) RemovePositionIDs(ids ...int64) *UserUpdateOne {
+	uuo.mutation.RemovePositionIDs(ids...)
+	return uuo
+}
+
+// RemovePositions removes "positions" edges to Position entities.
+func (uuo *UserUpdateOne) RemovePositions(p ...*Position) *UserUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uuo.RemovePositionIDs(ids...)
+}
+
 // ClearDepartments clears all "departments" edges to the Department entity.
 func (uuo *UserUpdateOne) ClearDepartments() *UserUpdateOne {
 	uuo.mutation.ClearDepartments()
@@ -1466,6 +1702,27 @@ func (uuo *UserUpdateOne) RemoveUserRoles(u ...*UserRole) *UserUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return uuo.RemoveUserRoleIDs(ids...)
+}
+
+// ClearUserPositions clears all "user_positions" edges to the UserPosition entity.
+func (uuo *UserUpdateOne) ClearUserPositions() *UserUpdateOne {
+	uuo.mutation.ClearUserPositions()
+	return uuo
+}
+
+// RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
+func (uuo *UserUpdateOne) RemoveUserPositionIDs(ids ...int64) *UserUpdateOne {
+	uuo.mutation.RemoveUserPositionIDs(ids...)
+	return uuo
+}
+
+// RemoveUserPositions removes "user_positions" edges to UserPosition entities.
+func (uuo *UserUpdateOne) RemoveUserPositions(u ...*UserPosition) *UserUpdateOne {
+	ids := make([]int64, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return uuo.RemoveUserPositionIDs(ids...)
 }
 
 // ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
@@ -1807,6 +2064,72 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uuo.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		createE := &UserPositionCreate{config: uuo.config, mutation: newUserPositionMutation(uuo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedPositionsIDs(); len(nodes) > 0 && !uuo.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &UserPositionCreate{config: uuo.config, mutation: newUserPositionMutation(uuo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.PositionsTable,
+			Columns: user.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &UserPositionCreate{config: uuo.config, mutation: newUserPositionMutation(uuo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if uuo.mutation.DepartmentsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -1911,6 +2234,51 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.UserPositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedUserPositionsIDs(); len(nodes) > 0 && !uuo.mutation.UserPositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.UserPositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   user.UserPositionsTable,
+			Columns: []string{user.UserPositionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

@@ -9,9 +9,6 @@ import (
 // Department is the predicate function for department builders.
 type Department func(*sql.Selector)
 
-// DepartmentRole is the predicate function for departmentrole builders.
-type DepartmentRole func(*sql.Selector)
-
 // Permission is the predicate function for permission builders.
 type Permission func(*sql.Selector)
 
@@ -20,6 +17,9 @@ type PermissionResource func(*sql.Selector)
 
 // Position is the predicate function for position builders.
 type Position func(*sql.Selector)
+
+// PositionPermission is the predicate function for positionpermission builders.
+type PositionPermission func(*sql.Selector)
 
 // Resource is the predicate function for resource builders.
 type Resource func(*sql.Selector)

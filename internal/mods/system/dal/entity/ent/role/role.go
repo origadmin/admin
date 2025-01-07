@@ -36,14 +36,10 @@ const (
 	EdgeUsers = "users"
 	// EdgePermissions holds the string denoting the permissions edge name in mutations.
 	EdgePermissions = "permissions"
-	// EdgeDepartments holds the string denoting the departments edge name in mutations.
-	EdgeDepartments = "departments"
 	// EdgeUserRoles holds the string denoting the user_roles edge name in mutations.
 	EdgeUserRoles = "user_roles"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
 	EdgeRolePermissions = "role_permissions"
-	// EdgeDepartmentRoles holds the string denoting the department_roles edge name in mutations.
-	EdgeDepartmentRoles = "department_roles"
 	// Table holds the table name of the role in the database.
 	Table = "sys_roles"
 	// UsersTable is the table that holds the users relation/edge. The primary key declared below.
@@ -56,11 +52,6 @@ const (
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionsInverseTable = "sys_permissions"
-	// DepartmentsTable is the table that holds the departments relation/edge. The primary key declared below.
-	DepartmentsTable = "sys_department_roles"
-	// DepartmentsInverseTable is the table name for the Department entity.
-	// It exists in this package in order to avoid circular dependency with the "department" package.
-	DepartmentsInverseTable = "sys_departments"
 	// UserRolesTable is the table that holds the user_roles relation/edge.
 	UserRolesTable = "sys_user_roles"
 	// UserRolesInverseTable is the table name for the UserRole entity.
@@ -75,13 +66,6 @@ const (
 	RolePermissionsInverseTable = "sys_role_permissions"
 	// RolePermissionsColumn is the table column denoting the role_permissions relation/edge.
 	RolePermissionsColumn = "role_id"
-	// DepartmentRolesTable is the table that holds the department_roles relation/edge.
-	DepartmentRolesTable = "sys_department_roles"
-	// DepartmentRolesInverseTable is the table name for the DepartmentRole entity.
-	// It exists in this package in order to avoid circular dependency with the "departmentrole" package.
-	DepartmentRolesInverseTable = "sys_department_roles"
-	// DepartmentRolesColumn is the table column denoting the department_roles relation/edge.
-	DepartmentRolesColumn = "role_id"
 )
 
 // Columns holds all SQL columns for role fields.
@@ -105,9 +89,6 @@ var (
 	// PermissionsPrimaryKey and PermissionsColumn2 are the table columns denoting the
 	// primary key for the permissions relation (M2M).
 	PermissionsPrimaryKey = []string{"role_id", "permission_id"}
-	// DepartmentsPrimaryKey and DepartmentsColumn2 are the table columns denoting the
-	// primary key for the departments relation (M2M).
-	DepartmentsPrimaryKey = []string{"department_id", "role_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -232,20 +213,6 @@ func ByPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
-// ByDepartmentsCount orders the results by departments count.
-func ByDepartmentsCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newDepartmentsStep(), opts...)
-	}
-}
-
-// ByDepartments orders the results by departments terms.
-func ByDepartments(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newDepartmentsStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
 // ByUserRolesCount orders the results by user_roles count.
 func ByUserRolesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -273,20 +240,6 @@ func ByRolePermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newRolePermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-
-// ByDepartmentRolesCount orders the results by department_roles count.
-func ByDepartmentRolesCount(opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborsCount(s, newDepartmentRolesStep(), opts...)
-	}
-}
-
-// ByDepartmentRoles orders the results by department_roles terms.
-func ByDepartmentRoles(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newDepartmentRolesStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
 func newUsersStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -301,13 +254,6 @@ func newPermissionsStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2M, false, PermissionsTable, PermissionsPrimaryKey...),
 	)
 }
-func newDepartmentsStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(DepartmentsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, true, DepartmentsTable, DepartmentsPrimaryKey...),
-	)
-}
 func newUserRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -320,13 +266,6 @@ func newRolePermissionsStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(RolePermissionsInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, RolePermissionsTable, RolePermissionsColumn),
-	)
-}
-func newDepartmentRolesStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(DepartmentRolesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, true, DepartmentRolesTable, DepartmentRolesColumn),
 	)
 }
 

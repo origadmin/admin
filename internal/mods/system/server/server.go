@@ -75,12 +75,12 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 }
 
 type RegisterAgent struct {
-	Auth    pb.AuthServiceAgent
-	Login   pb.LoginServiceAgent
-	Current pb.CurrentServiceAgent
-	Menu    pb.MenuServiceAgent
-	Role    pb.RoleServiceAgent
-	User    pb.UserServiceAgent
+	Auth     pb.AuthServiceAgent
+	Login    pb.LoginServiceAgent
+	Current  pb.CurrentServiceAgent
+	Resource pb.ResourceServiceAgent
+	Role     pb.RoleServiceAgent
+	User     pb.UserServiceAgent
 }
 
 func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
@@ -93,7 +93,7 @@ func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServe
 	pb.RegisterAuthServiceAgent(ag, s.Auth)
 	pb.RegisterLoginServiceAgent(ag, s.Login)
 	pb.RegisterCurrentServiceAgent(ag, s.Current)
-	pb.RegisterMenuServiceAgent(ag, s.Menu)
+	pb.RegisterResourceServiceAgent(ag, s.Resource)
 	pb.RegisterRoleServiceAgent(ag, s.Role)
 	pb.RegisterUserServiceAgent(ag, s.User)
 }
@@ -105,12 +105,12 @@ func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServe
 
 func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
 	register := RegisterAgent{
-		Auth:    systemservice.NewAuthServiceAgentClient(client),
-		Login:   systemservice.NewLoginServiceAgentClient(client),
-		Current: systemservice.NewCurrentServiceAgentClient(client),
-		Menu:    systemservice.NewMenuServiceAgentClient(client),
-		Role:    systemservice.NewRoleServiceAgentClient(client),
-		User:    systemservice.NewUserServiceAgentClient(client),
+		Auth:     systemservice.NewAuthServiceAgentClient(client),
+		Login:    systemservice.NewLoginServiceAgentClient(client),
+		Current:  systemservice.NewCurrentServiceAgentClient(client),
+		Resource: systemservice.NewResourceServiceAgentClient(client),
+		Role:     systemservice.NewRoleServiceAgentClient(client),
+		User:     systemservice.NewUserServiceAgentClient(client),
 	}
 	return &register, nil
 }

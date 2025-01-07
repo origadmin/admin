@@ -25,9 +25,8 @@ type UserPosition struct {
 	PositionID int64 `json:"position_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserPositionQuery when eager-loading is set.
-	Edges                   UserPositionEdges `json:"edges"`
-	position_user_positions *int64
-	selectValues            sql.SelectValues
+	Edges        UserPositionEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // UserPositionEdges holds the relations/edges for other nodes in the graph.
@@ -70,8 +69,6 @@ func (*UserPosition) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case userposition.FieldID, userposition.FieldUserID, userposition.FieldPositionID:
 			values[i] = new(sql.NullInt64)
-		case userposition.ForeignKeys[0]: // position_user_positions
-			values[i] = new(sql.NullInt64)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -104,13 +101,6 @@ func (up *UserPosition) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field position_id", values[i])
 			} else if value.Valid {
 				up.PositionID = value.Int64
-			}
-		case userposition.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for edge-field position_user_positions", value)
-			} else if value.Valid {
-				up.position_user_positions = new(int64)
-				*up.position_user_positions = int64(value.Int64)
 			}
 		default:
 			up.selectValues.Set(columns[i], values[i])

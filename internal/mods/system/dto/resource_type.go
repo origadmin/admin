@@ -5,49 +5,56 @@
 // Package dto implements the functions, types, and interfaces for the module.
 package dto
 
-// ResourceType 资源类型
-type ResourceType int8
-
-const (
-	ResourceTypeMenu   ResourceType = 1 // 目录
-	ResourceTypePage   ResourceType = 2 // 页面
-	ResourceTypeButton ResourceType = 3 // 按钮
-	ResourceTypeAPI    ResourceType = 4 // API接口
+import (
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 )
 
-// String 返回资源类型的字符表示
-func (t ResourceType) String() string {
-	return string(t.Code())
-}
+const (
+	ResourceTypeUnknown   = schema.ResourceTypeUnknown
+	ResourceTypeMenu      = schema.ResourceTypeMenu
+	ResourceTypePage      = schema.ResourceTypePage
+	ResourceTypeButton    = schema.ResourceTypeButton
+	ResourceTypeAPI       = schema.ResourceTypeAPI
+	ResourceTypeButtonAPI = schema.ResourceTypeButtonAPI
+	ResourceTypeRedirect  = schema.ResourceTypeRedirect
+)
 
-// Code 返回资源类型的字符码
-func (t ResourceType) Code() rune {
-	switch t {
+// ResourceTypeName returns the name of the resource type
+func ResourceTypeName(str string) string {
+	switch str {
 	case ResourceTypeMenu:
-		return 'M'
+		return "Menu"
 	case ResourceTypePage:
-		return 'P'
+		return "Page"
 	case ResourceTypeButton:
-		return 'B'
+		return "Button"
 	case ResourceTypeAPI:
-		return 'A'
+		return "API"
+	case ResourceTypeRedirect:
+		return "Redirect"
+	case ResourceTypeButtonAPI:
+		return "ButtonAPI"
 	default:
-		return 'U' // Unknown
+		return "Unknown"
 	}
 }
 
-// Name 返回资源类型的名称
-func (t ResourceType) Name() string {
-	switch t {
-	case ResourceTypeMenu:
-		return "menu"
-	case ResourceTypePage:
-		return "page"
-	case ResourceTypeButton:
-		return "button"
-	case ResourceTypeAPI:
-		return "api"
+// ResourceTypeCode returns the code of the resource type
+func ResourceTypeCode(s string) string {
+	switch s {
+	case "Menu":
+		return ResourceTypeMenu
+	case "Page":
+		return ResourceTypePage
+	case "Button":
+		return ResourceTypeButton
+	case "API":
+		return ResourceTypeAPI
+	case "Redirect":
+		return ResourceTypeRedirect
+	case "ButtonAPI":
+		return ResourceTypeButtonAPI
 	default:
-		return "unknown"
+		return ResourceTypeUnknown
 	}
 }

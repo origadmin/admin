@@ -100,6 +100,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 		log.Errorw("msg", "failed opening connection to database", "error", err)
 		return nil, nil, err
 	}
+
 	//err = drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
 	//if err != nil {
 	//	return nil, nil, err
@@ -121,6 +122,12 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	d := &Data{
 		Database: ent.NewDatabase(client),
 	}
+	// 初始化数据
+	if err := d.InitData(context.Background(), client); err != nil {
+		log.Errorw("failed to init data", "error", err)
+		return nil, nil, err
+	}
+
 	return d, func() {
 		log.Info("closing the data resources")
 		if err := drv.Close(); err != nil {

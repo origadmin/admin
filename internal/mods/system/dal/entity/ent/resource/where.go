@@ -81,7 +81,7 @@ func I18nKey(v string) predicate.Resource {
 }
 
 // Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
-func Type(v uint32) predicate.Resource {
+func Type(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldType, v))
 }
 
@@ -416,43 +416,68 @@ func I18nKeyContainsFold(v string) predicate.Resource {
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
-func TypeEQ(v uint32) predicate.Resource {
+func TypeEQ(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldType, v))
 }
 
 // TypeNEQ applies the NEQ predicate on the "type" field.
-func TypeNEQ(v uint32) predicate.Resource {
+func TypeNEQ(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldNEQ(FieldType, v))
 }
 
 // TypeIn applies the In predicate on the "type" field.
-func TypeIn(vs ...uint32) predicate.Resource {
+func TypeIn(vs ...string) predicate.Resource {
 	return predicate.Resource(sql.FieldIn(FieldType, vs...))
 }
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
-func TypeNotIn(vs ...uint32) predicate.Resource {
+func TypeNotIn(vs ...string) predicate.Resource {
 	return predicate.Resource(sql.FieldNotIn(FieldType, vs...))
 }
 
 // TypeGT applies the GT predicate on the "type" field.
-func TypeGT(v uint32) predicate.Resource {
+func TypeGT(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldGT(FieldType, v))
 }
 
 // TypeGTE applies the GTE predicate on the "type" field.
-func TypeGTE(v uint32) predicate.Resource {
+func TypeGTE(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldGTE(FieldType, v))
 }
 
 // TypeLT applies the LT predicate on the "type" field.
-func TypeLT(v uint32) predicate.Resource {
+func TypeLT(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldLT(FieldType, v))
 }
 
 // TypeLTE applies the LTE predicate on the "type" field.
-func TypeLTE(v uint32) predicate.Resource {
+func TypeLTE(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldLTE(FieldType, v))
+}
+
+// TypeContains applies the Contains predicate on the "type" field.
+func TypeContains(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContains(FieldType, v))
+}
+
+// TypeHasPrefix applies the HasPrefix predicate on the "type" field.
+func TypeHasPrefix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasPrefix(FieldType, v))
+}
+
+// TypeHasSuffix applies the HasSuffix predicate on the "type" field.
+func TypeHasSuffix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasSuffix(FieldType, v))
+}
+
+// TypeEqualFold applies the EqualFold predicate on the "type" field.
+func TypeEqualFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldType, v))
+}
+
+// TypeContainsFold applies the ContainsFold predicate on the "type" field.
+func TypeContainsFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldType, v))
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.

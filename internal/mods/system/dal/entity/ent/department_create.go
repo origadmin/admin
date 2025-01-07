@@ -7,9 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"time"
@@ -193,21 +191,6 @@ func (dc *DepartmentCreate) AddPositions(p ...*Position) *DepartmentCreate {
 	return dc.AddPositionIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (dc *DepartmentCreate) AddRoleIDs(ids ...int64) *DepartmentCreate {
-	dc.mutation.AddRoleIDs(ids...)
-	return dc
-}
-
-// AddRoles adds the "roles" edges to the Role entity.
-func (dc *DepartmentCreate) AddRoles(r ...*Role) *DepartmentCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return dc.AddRoleIDs(ids...)
-}
-
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
 func (dc *DepartmentCreate) AddChildIDs(ids ...int64) *DepartmentCreate {
 	dc.mutation.AddChildIDs(ids...)
@@ -241,21 +224,6 @@ func (dc *DepartmentCreate) AddUserDepartments(u ...*UserDepartment) *Department
 		ids[i] = u[i].ID
 	}
 	return dc.AddUserDepartmentIDs(ids...)
-}
-
-// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
-func (dc *DepartmentCreate) AddDepartmentRoleIDs(ids ...int64) *DepartmentCreate {
-	dc.mutation.AddDepartmentRoleIDs(ids...)
-	return dc
-}
-
-// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
-func (dc *DepartmentCreate) AddDepartmentRoles(d ...*DepartmentRole) *DepartmentCreate {
-	ids := make([]int64, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return dc.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -493,29 +461,6 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.RolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &DepartmentRoleCreate{config: dc.config, mutation: newDepartmentRoleMutation(dc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := dc.mutation.ChildrenIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -558,22 +503,6 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := dc.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

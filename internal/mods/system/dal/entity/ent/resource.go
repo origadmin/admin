@@ -30,7 +30,7 @@ type Resource struct {
 	// resource.field.i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
 	// resource.field.type
-	Type uint32 `json:"type,omitempty"`
+	Type string `json:"type,omitempty"`
 	// resource.field.status
 	Status int8 `json:"status,omitempty"`
 	// resource.field.uri
@@ -123,9 +123,9 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case resource.FieldVisible:
 			values[i] = new(sql.NullBool)
-		case resource.FieldID, resource.FieldType, resource.FieldStatus, resource.FieldSequence, resource.FieldParentID:
+		case resource.FieldID, resource.FieldStatus, resource.FieldSequence, resource.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case resource.FieldName, resource.FieldKeyword, resource.FieldI18nKey, resource.FieldURI, resource.FieldOperation, resource.FieldMethod, resource.FieldComponent, resource.FieldIcon, resource.FieldTreePath, resource.FieldDescription:
+		case resource.FieldName, resource.FieldKeyword, resource.FieldI18nKey, resource.FieldType, resource.FieldURI, resource.FieldOperation, resource.FieldMethod, resource.FieldComponent, resource.FieldIcon, resource.FieldTreePath, resource.FieldDescription:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -181,10 +181,10 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 				r.I18nKey = value.String
 			}
 		case resource.FieldType:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
+			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				r.Type = uint32(value.Int64)
+				r.Type = value.String
 			}
 		case resource.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -332,7 +332,7 @@ func (r *Resource) String() string {
 	builder.WriteString(r.I18nKey)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(fmt.Sprintf("%v", r.Type))
+	builder.WriteString(r.Type)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", r.Status))

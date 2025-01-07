@@ -107,11 +107,6 @@ func (db *Database) Department(ctx context.Context) *DepartmentClient {
 	return db.Client(ctx).Department
 }
 
-// DepartmentRole is the client for interacting with the DepartmentRole builders.
-func (db *Database) DepartmentRole(ctx context.Context) *DepartmentRoleClient {
-	return db.Client(ctx).DepartmentRole
-}
-
 // Permission is the client for interacting with the Permission builders.
 func (db *Database) Permission(ctx context.Context) *PermissionClient {
 	return db.Client(ctx).Permission
@@ -125,6 +120,11 @@ func (db *Database) PermissionResource(ctx context.Context) *PermissionResourceC
 // Position is the client for interacting with the Position builders.
 func (db *Database) Position(ctx context.Context) *PositionClient {
 	return db.Client(ctx).Position
+}
+
+// PositionPermission is the client for interacting with the PositionPermission builders.
+func (db *Database) PositionPermission(ctx context.Context) *PositionPermissionClient {
+	return db.Client(ctx).PositionPermission
 }
 
 // Resource is the client for interacting with the Resource builders.

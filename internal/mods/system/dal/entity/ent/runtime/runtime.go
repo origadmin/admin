@@ -4,10 +4,10 @@ package runtime
 
 import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/positionpermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
@@ -82,25 +82,6 @@ func init() {
 	department.DefaultID = departmentDescID.Default.(func() int64)
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	department.IDValidator = departmentDescID.Validators[0].(func(int64) error)
-	departmentroleMixin := schema.DepartmentRole{}.Mixin()
-	departmentroleMixinFields0 := departmentroleMixin[0].Fields()
-	_ = departmentroleMixinFields0
-	departmentroleFields := schema.DepartmentRole{}.Fields()
-	_ = departmentroleFields
-	// departmentroleDescDepartmentID is the schema descriptor for department_id field.
-	departmentroleDescDepartmentID := departmentroleFields[0].Descriptor()
-	// departmentrole.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
-	departmentrole.DepartmentIDValidator = departmentroleDescDepartmentID.Validators[0].(func(int64) error)
-	// departmentroleDescRoleID is the schema descriptor for role_id field.
-	departmentroleDescRoleID := departmentroleFields[1].Descriptor()
-	// departmentrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
-	departmentrole.RoleIDValidator = departmentroleDescRoleID.Validators[0].(func(int64) error)
-	// departmentroleDescID is the schema descriptor for id field.
-	departmentroleDescID := departmentroleMixinFields0[0].Descriptor()
-	// departmentrole.DefaultID holds the default value on creation for the id field.
-	departmentrole.DefaultID = departmentroleDescID.Default.(func() int64)
-	// departmentrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	departmentrole.IDValidator = departmentroleDescID.Validators[0].(func(int64) error)
 	permissionMixin := schema.Permission{}.Mixin()
 	permissionMixinFields0 := permissionMixin[0].Fields()
 	_ = permissionMixinFields0
@@ -208,6 +189,25 @@ func init() {
 	position.DefaultID = positionDescID.Default.(func() int64)
 	// position.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	position.IDValidator = positionDescID.Validators[0].(func(int64) error)
+	positionpermissionMixin := schema.PositionPermission{}.Mixin()
+	positionpermissionMixinFields0 := positionpermissionMixin[0].Fields()
+	_ = positionpermissionMixinFields0
+	positionpermissionFields := schema.PositionPermission{}.Fields()
+	_ = positionpermissionFields
+	// positionpermissionDescPositionID is the schema descriptor for position_id field.
+	positionpermissionDescPositionID := positionpermissionFields[0].Descriptor()
+	// positionpermission.PositionIDValidator is a validator for the "position_id" field. It is called by the builders before save.
+	positionpermission.PositionIDValidator = positionpermissionDescPositionID.Validators[0].(func(int64) error)
+	// positionpermissionDescPermissionID is the schema descriptor for permission_id field.
+	positionpermissionDescPermissionID := positionpermissionFields[1].Descriptor()
+	// positionpermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
+	positionpermission.PermissionIDValidator = positionpermissionDescPermissionID.Validators[0].(func(int64) error)
+	// positionpermissionDescID is the schema descriptor for id field.
+	positionpermissionDescID := positionpermissionMixinFields0[0].Descriptor()
+	// positionpermission.DefaultID holds the default value on creation for the id field.
+	positionpermission.DefaultID = positionpermissionDescID.Default.(func() int64)
+	// positionpermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	positionpermission.IDValidator = positionpermissionDescID.Validators[0].(func(int64) error)
 	resourceMixin := schema.Resource{}.Mixin()
 	resourceMixinFields0 := resourceMixin[0].Fields()
 	_ = resourceMixinFields0
@@ -246,7 +246,9 @@ func init() {
 	// resourceDescType is the schema descriptor for type field.
 	resourceDescType := resourceFields[3].Descriptor()
 	// resource.DefaultType holds the default value on creation for the type field.
-	resource.DefaultType = resourceDescType.Default.(uint32)
+	resource.DefaultType = resourceDescType.Default.(string)
+	// resource.TypeValidator is a validator for the "type" field. It is called by the builders before save.
+	resource.TypeValidator = resourceDescType.Validators[0].(func(string) error)
 	// resourceDescStatus is the schema descriptor for status field.
 	resourceDescStatus := resourceFields[4].Descriptor()
 	// resource.DefaultStatus holds the default value on creation for the status field.

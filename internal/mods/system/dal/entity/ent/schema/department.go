@@ -88,9 +88,6 @@ func (Department) Edges() []ent.Edge {
 			Ref("departments").
 			Through("user_departments", UserDepartment.Type),
 		edge.To("positions", Position.Type),
-		edge.To("roles", Role.Type).
-			StorageKey(edge.Columns("department_id", "role_id")).
-			Through("department_roles", DepartmentRole.Type),
 		// 添加部门层级关系
 		edge.To("children", Department.Type),
 		edge.From("parent", Department.Type).

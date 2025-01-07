@@ -27,7 +27,6 @@ type UserPositionQuery struct {
 	predicates   []predicate.UserPosition
 	withUser     *UserQuery
 	withPosition *PositionQuery
-	withFKs      bool
 	modifiers    []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -409,16 +408,12 @@ func (upq *UserPositionQuery) prepareQuery(ctx context.Context) error {
 func (upq *UserPositionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*UserPosition, error) {
 	var (
 		nodes       = []*UserPosition{}
-		withFKs     = upq.withFKs
 		_spec       = upq.querySpec()
 		loadedTypes = [2]bool{
 			upq.withUser != nil,
 			upq.withPosition != nil,
 		}
 	)
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, userposition.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*UserPosition).scanValues(nil, columns)
 	}

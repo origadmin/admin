@@ -1,0 +1,46 @@
+[
+  {
+    "keyword": "root",
+    "name": "总公司",
+    "sequence": 1,
+    "status": 1,
+    "level": 1,
+    "description": "顶级部门",
+    "children": [
+      {
+        "keyword": "tech",
+        "name": "技术部",
+        "sequence": 1,
+        "status": 1,
+        "level": 2,
+        "description": "负责技术研发",
+        "children": [
+          {
+            "keyword": "dev",
+            "name": "研发组",
+            "sequence": 1,
+            "status": 1,
+            "level": 3,
+            "description": "负责系统研发"
+          },
+          {
+            "keyword": "ops",
+            "name": "运维组",
+            "sequence": 2,
+            "status": 1,
+            "level": 3,
+            "description": "负责系统运维"
+          }
+        ]
+      },
+      {
+        "keyword": "hr",
+        "name": "人事部",
+        "sequence": 2,
+        "status": 1,
+        "level": 2,
+        "description": "负责人事管理"
+      }
+    ]
+  }
+] 

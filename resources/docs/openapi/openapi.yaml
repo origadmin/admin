@@ -2094,13 +2094,12 @@ components:
                 keyword:
                     type: string
                     description: resource.field.keyword
-                i_18_n_key:
+                i18n_key:
                     type: string
                     description: resource.field.i18n_key
                 type:
-                    type: integer
+                    type: string
                     description: resource.field.type
-                    format: uint32
                 status:
                     type: integer
                     description: resource.field.status

@@ -139,7 +139,9 @@ var (
 	// I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
 	I18nKeyValidator func(string) error
 	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType uint32
+	DefaultType string
+	// TypeValidator is a validator for the "type" field. It is called by the builders before save.
+	TypeValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
 	// DefaultURI holds the default value on creation for the "uri" field.

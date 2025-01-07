@@ -134,9 +134,8 @@ func (User) Edges() []ent.Edge {
 		// edge.To("posts", Post.Type).
 		//	Through("user_posts", UserPost.Type),
 		// Departments of user
-		//edge.To("user_departments", UserDepartment.Type).
-		//	From("user").
-		//	Ref("user"),
+		edge.To("positions", Position.Type).
+			Through("user_positions", UserPosition.Type),
 		//// Departments of user
 		edge.To("departments", Department.Type).
 			Through("user_departments", UserDepartment.Type),

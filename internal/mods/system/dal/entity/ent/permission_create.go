@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/positionpermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
@@ -150,6 +152,21 @@ func (pc *PermissionCreate) AddResources(r ...*Resource) *PermissionCreate {
 	return pc.AddResourceIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (pc *PermissionCreate) AddPositionIDs(ids ...int64) *PermissionCreate {
+	pc.mutation.AddPositionIDs(ids...)
+	return pc
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (pc *PermissionCreate) AddPositions(p ...*Position) *PermissionCreate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pc.AddPositionIDs(ids...)
+}
+
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
 func (pc *PermissionCreate) AddRolePermissionIDs(ids ...int64) *PermissionCreate {
 	pc.mutation.AddRolePermissionIDs(ids...)
@@ -178,6 +195,21 @@ func (pc *PermissionCreate) AddPermissionResources(p ...*PermissionResource) *Pe
 		ids[i] = p[i].ID
 	}
 	return pc.AddPermissionResourceIDs(ids...)
+}
+
+// AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
+func (pc *PermissionCreate) AddPositionPermissionIDs(ids ...int64) *PermissionCreate {
+	pc.mutation.AddPositionPermissionIDs(ids...)
+	return pc
+}
+
+// AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
+func (pc *PermissionCreate) AddPositionPermissions(p ...*PositionPermission) *PermissionCreate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pc.AddPositionPermissionIDs(ids...)
 }
 
 // Mutation returns the PermissionMutation object of the builder.
@@ -387,6 +419,29 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := pc.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PositionPermissionCreate{config: pc.config, mutation: newPositionPermissionMutation(pc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := pc.mutation.RolePermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -412,6 +467,22 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := pc.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

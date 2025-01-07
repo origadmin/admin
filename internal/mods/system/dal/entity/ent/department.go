@@ -50,19 +50,15 @@ type DepartmentEdges struct {
 	Users []*User `json:"users,omitempty"`
 	// Positions holds the value of the positions edge.
 	Positions []*Position `json:"positions,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `json:"roles,omitempty"`
 	// Children holds the value of the children edge.
 	Children []*Department `json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
 	Parent *Department `json:"parent,omitempty"`
 	// UserDepartments holds the value of the user_departments edge.
 	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
-	// DepartmentRoles holds the value of the department_roles edge.
-	DepartmentRoles []*DepartmentRole `json:"department_roles,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [7]bool
+	loadedTypes [5]bool
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -83,19 +79,10 @@ func (e DepartmentEdges) PositionsOrErr() ([]*Position, error) {
 	return nil, &NotLoadedError{edge: "positions"}
 }
 
-// RolesOrErr returns the Roles value or an error if the edge
-// was not loaded in eager-loading.
-func (e DepartmentEdges) RolesOrErr() ([]*Role, error) {
-	if e.loadedTypes[2] {
-		return e.Roles, nil
-	}
-	return nil, &NotLoadedError{edge: "roles"}
-}
-
 // ChildrenOrErr returns the Children value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) ChildrenOrErr() ([]*Department, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.Children, nil
 	}
 	return nil, &NotLoadedError{edge: "children"}
@@ -106,7 +93,7 @@ func (e DepartmentEdges) ChildrenOrErr() ([]*Department, error) {
 func (e DepartmentEdges) ParentOrErr() (*Department, error) {
 	if e.Parent != nil {
 		return e.Parent, nil
-	} else if e.loadedTypes[4] {
+	} else if e.loadedTypes[3] {
 		return nil, &NotFoundError{label: department.Label}
 	}
 	return nil, &NotLoadedError{edge: "parent"}
@@ -115,19 +102,10 @@ func (e DepartmentEdges) ParentOrErr() (*Department, error) {
 // UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
 // was not loaded in eager-loading.
 func (e DepartmentEdges) UserDepartmentsOrErr() ([]*UserDepartment, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[4] {
 		return e.UserDepartments, nil
 	}
 	return nil, &NotLoadedError{edge: "user_departments"}
-}
-
-// DepartmentRolesOrErr returns the DepartmentRoles value or an error if the edge
-// was not loaded in eager-loading.
-func (e DepartmentEdges) DepartmentRolesOrErr() ([]*DepartmentRole, error) {
-	if e.loadedTypes[6] {
-		return e.DepartmentRoles, nil
-	}
-	return nil, &NotLoadedError{edge: "department_roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -245,11 +223,6 @@ func (d *Department) QueryPositions() *PositionQuery {
 	return NewDepartmentClient(d.config).QueryPositions(d)
 }
 
-// QueryRoles queries the "roles" edge of the Department entity.
-func (d *Department) QueryRoles() *RoleQuery {
-	return NewDepartmentClient(d.config).QueryRoles(d)
-}
-
 // QueryChildren queries the "children" edge of the Department entity.
 func (d *Department) QueryChildren() *DepartmentQuery {
 	return NewDepartmentClient(d.config).QueryChildren(d)
@@ -263,11 +236,6 @@ func (d *Department) QueryParent() *DepartmentQuery {
 // QueryUserDepartments queries the "user_departments" edge of the Department entity.
 func (d *Department) QueryUserDepartments() *UserDepartmentQuery {
 	return NewDepartmentClient(d.config).QueryUserDepartments(d)
-}
-
-// QueryDepartmentRoles queries the "department_roles" edge of the Department entity.
-func (d *Department) QueryDepartmentRoles() *DepartmentRoleQuery {
-	return NewDepartmentClient(d.config).QueryDepartmentRoles(d)
 }
 
 // Update returns a builder for updating this Department.

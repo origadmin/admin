@@ -823,7 +823,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  Name string `json:"name,omitempty"`
 //	  Keyword string `json:"keyword,omitempty"`
 //	  I18nKey string `json:"i18n_key,omitempty"`
-//	  Type uint32 `json:"type,omitempty"`
+//	  Type string `json:"type,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
 //	  URI string `json:"uri,omitempty"`
 //	  Operation string `json:"operation,omitempty"`

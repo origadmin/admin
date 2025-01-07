@@ -172,24 +172,34 @@ type (
 	ResourcePB = pb.Resource
 )
 
-// ConvertResource2PB resource.table.comment
 func ConvertResource2PB(goModel *Resource) (pbModel *ResourcePB) {
 	pbModel = &ResourcePB{}
 	if goModel == nil {
 		return pbModel
 	}
 
-	pbModel.Id = goModel.ID
+	pbModel.Id = int64(goModel.ID)
 	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
-	pbModel.Method = goModel.Method
-	pbModel.Operation = goModel.Operation
+	pbModel.Name = goModel.Name
+	pbModel.Keyword = goModel.Keyword
+	pbModel.I18NKey = goModel.I18nKey
+	pbModel.Type = goModel.Type
+	pbModel.Status = int32(goModel.Status)
 	pbModel.Uri = goModel.URI
-	//pbModel.MenuId = goModel.MenuID
+	pbModel.Operation = goModel.Operation
+	pbModel.Method = goModel.Method
+	pbModel.Component = goModel.Component
+	pbModel.Icon = goModel.Icon
+	pbModel.Sequence = int32(goModel.Sequence)
+	pbModel.Visible = goModel.Visible
+	pbModel.TreePath = goModel.TreePath
+	pbModel.Properties = goModel.Properties
+	pbModel.Description = goModel.Description
+	pbModel.ParentId = int64(goModel.ParentID)
 	return pbModel
 }
 
-// ConvertResourcePB2Object resource.table.comment
 func ConvertResourcePB2Object(pbModel *ResourcePB) (goModel *Resource) {
 	goModel = &Resource{}
 	if pbModel == nil {
@@ -199,9 +209,22 @@ func ConvertResourcePB2Object(pbModel *ResourcePB) (goModel *Resource) {
 	goModel.ID = pbModel.Id
 	goModel.CreateTime = pbModel.CreateTime.AsTime()
 	goModel.UpdateTime = pbModel.UpdateTime.AsTime()
-	goModel.Method = pbModel.Method
-	goModel.Operation = pbModel.Operation
+	goModel.Name = pbModel.Name
+	goModel.Keyword = pbModel.Keyword
+	goModel.I18nKey = pbModel.I18NKey
+	goModel.Type = pbModel.Type
+	goModel.Status = int8(pbModel.Status)
 	goModel.URI = pbModel.Uri
+	goModel.Operation = pbModel.Operation
+	goModel.Method = pbModel.Method
+	goModel.Component = pbModel.Component
+	goModel.Icon = pbModel.Icon
+	goModel.Sequence = int(pbModel.Sequence)
+	goModel.Visible = pbModel.Visible
+	goModel.TreePath = pbModel.TreePath
+	goModel.Properties = pbModel.Properties
+	goModel.Description = pbModel.Description
+	goModel.ParentID = pbModel.ParentId
 	return goModel
 }
 

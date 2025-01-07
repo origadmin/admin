@@ -7,10 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/departmentrole"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"time"
@@ -209,21 +207,6 @@ func (du *DepartmentUpdate) AddPositions(p ...*Position) *DepartmentUpdate {
 	return du.AddPositionIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (du *DepartmentUpdate) AddRoleIDs(ids ...int64) *DepartmentUpdate {
-	du.mutation.AddRoleIDs(ids...)
-	return du
-}
-
-// AddRoles adds the "roles" edges to the Role entity.
-func (du *DepartmentUpdate) AddRoles(r ...*Role) *DepartmentUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return du.AddRoleIDs(ids...)
-}
-
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
 func (du *DepartmentUpdate) AddChildIDs(ids ...int64) *DepartmentUpdate {
 	du.mutation.AddChildIDs(ids...)
@@ -257,21 +240,6 @@ func (du *DepartmentUpdate) AddUserDepartments(u ...*UserDepartment) *Department
 		ids[i] = u[i].ID
 	}
 	return du.AddUserDepartmentIDs(ids...)
-}
-
-// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
-func (du *DepartmentUpdate) AddDepartmentRoleIDs(ids ...int64) *DepartmentUpdate {
-	du.mutation.AddDepartmentRoleIDs(ids...)
-	return du
-}
-
-// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
-func (du *DepartmentUpdate) AddDepartmentRoles(d ...*DepartmentRole) *DepartmentUpdate {
-	ids := make([]int64, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return du.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -321,27 +289,6 @@ func (du *DepartmentUpdate) RemovePositions(p ...*Position) *DepartmentUpdate {
 	return du.RemovePositionIDs(ids...)
 }
 
-// ClearRoles clears all "roles" edges to the Role entity.
-func (du *DepartmentUpdate) ClearRoles() *DepartmentUpdate {
-	du.mutation.ClearRoles()
-	return du
-}
-
-// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (du *DepartmentUpdate) RemoveRoleIDs(ids ...int64) *DepartmentUpdate {
-	du.mutation.RemoveRoleIDs(ids...)
-	return du
-}
-
-// RemoveRoles removes "roles" edges to Role entities.
-func (du *DepartmentUpdate) RemoveRoles(r ...*Role) *DepartmentUpdate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return du.RemoveRoleIDs(ids...)
-}
-
 // ClearChildren clears all "children" edges to the Department entity.
 func (du *DepartmentUpdate) ClearChildren() *DepartmentUpdate {
 	du.mutation.ClearChildren()
@@ -388,27 +335,6 @@ func (du *DepartmentUpdate) RemoveUserDepartments(u ...*UserDepartment) *Departm
 		ids[i] = u[i].ID
 	}
 	return du.RemoveUserDepartmentIDs(ids...)
-}
-
-// ClearDepartmentRoles clears all "department_roles" edges to the DepartmentRole entity.
-func (du *DepartmentUpdate) ClearDepartmentRoles() *DepartmentUpdate {
-	du.mutation.ClearDepartmentRoles()
-	return du
-}
-
-// RemoveDepartmentRoleIDs removes the "department_roles" edge to DepartmentRole entities by IDs.
-func (du *DepartmentUpdate) RemoveDepartmentRoleIDs(ids ...int64) *DepartmentUpdate {
-	du.mutation.RemoveDepartmentRoleIDs(ids...)
-	return du
-}
-
-// RemoveDepartmentRoles removes "department_roles" edges to DepartmentRole entities.
-func (du *DepartmentUpdate) RemoveDepartmentRoles(d ...*DepartmentRole) *DepartmentUpdate {
-	ids := make([]int64, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return du.RemoveDepartmentRoleIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -639,72 +565,6 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if du.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		createE := &DepartmentRoleCreate{config: du.config, mutation: newDepartmentRoleMutation(du.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.RemovedRolesIDs(); len(nodes) > 0 && !du.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &DepartmentRoleCreate{config: du.config, mutation: newDepartmentRoleMutation(du.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.RolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &DepartmentRoleCreate{config: du.config, mutation: newDepartmentRoleMutation(du.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if du.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -817,51 +677,6 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if du.mutation.DepartmentRolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.RemovedDepartmentRolesIDs(); len(nodes) > 0 && !du.mutation.DepartmentRolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1066,21 +881,6 @@ func (duo *DepartmentUpdateOne) AddPositions(p ...*Position) *DepartmentUpdateOn
 	return duo.AddPositionIDs(ids...)
 }
 
-// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (duo *DepartmentUpdateOne) AddRoleIDs(ids ...int64) *DepartmentUpdateOne {
-	duo.mutation.AddRoleIDs(ids...)
-	return duo
-}
-
-// AddRoles adds the "roles" edges to the Role entity.
-func (duo *DepartmentUpdateOne) AddRoles(r ...*Role) *DepartmentUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return duo.AddRoleIDs(ids...)
-}
-
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
 func (duo *DepartmentUpdateOne) AddChildIDs(ids ...int64) *DepartmentUpdateOne {
 	duo.mutation.AddChildIDs(ids...)
@@ -1114,21 +914,6 @@ func (duo *DepartmentUpdateOne) AddUserDepartments(u ...*UserDepartment) *Depart
 		ids[i] = u[i].ID
 	}
 	return duo.AddUserDepartmentIDs(ids...)
-}
-
-// AddDepartmentRoleIDs adds the "department_roles" edge to the DepartmentRole entity by IDs.
-func (duo *DepartmentUpdateOne) AddDepartmentRoleIDs(ids ...int64) *DepartmentUpdateOne {
-	duo.mutation.AddDepartmentRoleIDs(ids...)
-	return duo
-}
-
-// AddDepartmentRoles adds the "department_roles" edges to the DepartmentRole entity.
-func (duo *DepartmentUpdateOne) AddDepartmentRoles(d ...*DepartmentRole) *DepartmentUpdateOne {
-	ids := make([]int64, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return duo.AddDepartmentRoleIDs(ids...)
 }
 
 // Mutation returns the DepartmentMutation object of the builder.
@@ -1178,27 +963,6 @@ func (duo *DepartmentUpdateOne) RemovePositions(p ...*Position) *DepartmentUpdat
 	return duo.RemovePositionIDs(ids...)
 }
 
-// ClearRoles clears all "roles" edges to the Role entity.
-func (duo *DepartmentUpdateOne) ClearRoles() *DepartmentUpdateOne {
-	duo.mutation.ClearRoles()
-	return duo
-}
-
-// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
-func (duo *DepartmentUpdateOne) RemoveRoleIDs(ids ...int64) *DepartmentUpdateOne {
-	duo.mutation.RemoveRoleIDs(ids...)
-	return duo
-}
-
-// RemoveRoles removes "roles" edges to Role entities.
-func (duo *DepartmentUpdateOne) RemoveRoles(r ...*Role) *DepartmentUpdateOne {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return duo.RemoveRoleIDs(ids...)
-}
-
 // ClearChildren clears all "children" edges to the Department entity.
 func (duo *DepartmentUpdateOne) ClearChildren() *DepartmentUpdateOne {
 	duo.mutation.ClearChildren()
@@ -1245,27 +1009,6 @@ func (duo *DepartmentUpdateOne) RemoveUserDepartments(u ...*UserDepartment) *Dep
 		ids[i] = u[i].ID
 	}
 	return duo.RemoveUserDepartmentIDs(ids...)
-}
-
-// ClearDepartmentRoles clears all "department_roles" edges to the DepartmentRole entity.
-func (duo *DepartmentUpdateOne) ClearDepartmentRoles() *DepartmentUpdateOne {
-	duo.mutation.ClearDepartmentRoles()
-	return duo
-}
-
-// RemoveDepartmentRoleIDs removes the "department_roles" edge to DepartmentRole entities by IDs.
-func (duo *DepartmentUpdateOne) RemoveDepartmentRoleIDs(ids ...int64) *DepartmentUpdateOne {
-	duo.mutation.RemoveDepartmentRoleIDs(ids...)
-	return duo
-}
-
-// RemoveDepartmentRoles removes "department_roles" edges to DepartmentRole entities.
-func (duo *DepartmentUpdateOne) RemoveDepartmentRoles(d ...*DepartmentRole) *DepartmentUpdateOne {
-	ids := make([]int64, len(d))
-	for i := range d {
-		ids[i] = d[i].ID
-	}
-	return duo.RemoveDepartmentRoleIDs(ids...)
 }
 
 // Where appends a list predicates to the DepartmentUpdate builder.
@@ -1526,72 +1269,6 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if duo.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		createE := &DepartmentRoleCreate{config: duo.config, mutation: newDepartmentRoleMutation(duo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !duo.mutation.RolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &DepartmentRoleCreate{config: duo.config, mutation: newDepartmentRoleMutation(duo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.RolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: false,
-			Table:   department.RolesTable,
-			Columns: department.RolesPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(role.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &DepartmentRoleCreate{config: duo.config, mutation: newDepartmentRoleMutation(duo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if duo.mutation.ChildrenCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -1704,51 +1381,6 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if duo.mutation.DepartmentRolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.RemovedDepartmentRolesIDs(); len(nodes) > 0 && !duo.mutation.DepartmentRolesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.DepartmentRolesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   department.DepartmentRolesTable,
-			Columns: []string{department.DepartmentRolesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(departmentrole.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

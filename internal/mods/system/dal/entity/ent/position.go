@@ -39,11 +39,17 @@ type Position struct {
 type PositionEdges struct {
 	// Department holds the value of the department edge.
 	Department *Department `json:"department,omitempty"`
+	// Users holds the value of the users edge.
+	Users []*User `json:"users,omitempty"`
+	// Permissions holds the value of the permissions edge.
+	Permissions []*Permission `json:"permissions,omitempty"`
 	// UserPositions holds the value of the user_positions edge.
 	UserPositions []*UserPosition `json:"user_positions,omitempty"`
+	// PositionPermissions holds the value of the position_permissions edge.
+	PositionPermissions []*PositionPermission `json:"position_permissions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [5]bool
 }
 
 // DepartmentOrErr returns the Department value or an error if the edge
@@ -57,13 +63,40 @@ func (e PositionEdges) DepartmentOrErr() (*Department, error) {
 	return nil, &NotLoadedError{edge: "department"}
 }
 
+// UsersOrErr returns the Users value or an error if the edge
+// was not loaded in eager-loading.
+func (e PositionEdges) UsersOrErr() ([]*User, error) {
+	if e.loadedTypes[1] {
+		return e.Users, nil
+	}
+	return nil, &NotLoadedError{edge: "users"}
+}
+
+// PermissionsOrErr returns the Permissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e PositionEdges) PermissionsOrErr() ([]*Permission, error) {
+	if e.loadedTypes[2] {
+		return e.Permissions, nil
+	}
+	return nil, &NotLoadedError{edge: "permissions"}
+}
+
 // UserPositionsOrErr returns the UserPositions value or an error if the edge
 // was not loaded in eager-loading.
 func (e PositionEdges) UserPositionsOrErr() ([]*UserPosition, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[3] {
 		return e.UserPositions, nil
 	}
 	return nil, &NotLoadedError{edge: "user_positions"}
+}
+
+// PositionPermissionsOrErr returns the PositionPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e PositionEdges) PositionPermissionsOrErr() ([]*PositionPermission, error) {
+	if e.loadedTypes[4] {
+		return e.PositionPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "position_permissions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -146,9 +179,24 @@ func (po *Position) QueryDepartment() *DepartmentQuery {
 	return NewPositionClient(po.config).QueryDepartment(po)
 }
 
+// QueryUsers queries the "users" edge of the Position entity.
+func (po *Position) QueryUsers() *UserQuery {
+	return NewPositionClient(po.config).QueryUsers(po)
+}
+
+// QueryPermissions queries the "permissions" edge of the Position entity.
+func (po *Position) QueryPermissions() *PermissionQuery {
+	return NewPositionClient(po.config).QueryPermissions(po)
+}
+
 // QueryUserPositions queries the "user_positions" edge of the Position entity.
 func (po *Position) QueryUserPositions() *UserPositionQuery {
 	return NewPositionClient(po.config).QueryUserPositions(po)
+}
+
+// QueryPositionPermissions queries the "position_permissions" edge of the Position entity.
+func (po *Position) QueryPositionPermissions() *PositionPermissionQuery {
+	return NewPositionClient(po.config).QueryPositionPermissions(po)
 }
 
 // Update returns a builder for updating this Position.

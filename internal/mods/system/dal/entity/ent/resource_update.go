@@ -80,23 +80,16 @@ func (ru *ResourceUpdate) SetNillableI18nKey(s *string) *ResourceUpdate {
 }
 
 // SetType sets the "type" field.
-func (ru *ResourceUpdate) SetType(u uint32) *ResourceUpdate {
-	ru.mutation.ResetType()
-	ru.mutation.SetType(u)
+func (ru *ResourceUpdate) SetType(s string) *ResourceUpdate {
+	ru.mutation.SetType(s)
 	return ru
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableType(u *uint32) *ResourceUpdate {
-	if u != nil {
-		ru.SetType(*u)
+func (ru *ResourceUpdate) SetNillableType(s *string) *ResourceUpdate {
+	if s != nil {
+		ru.SetType(*s)
 	}
-	return ru
-}
-
-// AddType adds u to the "type" field.
-func (ru *ResourceUpdate) AddType(u int32) *ResourceUpdate {
-	ru.mutation.AddType(u)
 	return ru
 }
 
@@ -463,6 +456,11 @@ func (ru *ResourceUpdate) check() error {
 			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
 		}
 	}
+	if v, ok := ru.mutation.GetType(); ok {
+		if err := resource.TypeValidator(v); err != nil {
+			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
+		}
+	}
 	if v, ok := ru.mutation.URI(); ok {
 		if err := resource.URIValidator(v); err != nil {
 			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
@@ -537,10 +535,7 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.GetType(); ok {
-		_spec.SetField(resource.FieldType, field.TypeUint32, value)
-	}
-	if value, ok := ru.mutation.AddedType(); ok {
-		_spec.AddField(resource.FieldType, field.TypeUint32, value)
+		_spec.SetField(resource.FieldType, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.Status(); ok {
 		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
@@ -840,23 +835,16 @@ func (ruo *ResourceUpdateOne) SetNillableI18nKey(s *string) *ResourceUpdateOne {
 }
 
 // SetType sets the "type" field.
-func (ruo *ResourceUpdateOne) SetType(u uint32) *ResourceUpdateOne {
-	ruo.mutation.ResetType()
-	ruo.mutation.SetType(u)
+func (ruo *ResourceUpdateOne) SetType(s string) *ResourceUpdateOne {
+	ruo.mutation.SetType(s)
 	return ruo
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableType(u *uint32) *ResourceUpdateOne {
-	if u != nil {
-		ruo.SetType(*u)
+func (ruo *ResourceUpdateOne) SetNillableType(s *string) *ResourceUpdateOne {
+	if s != nil {
+		ruo.SetType(*s)
 	}
-	return ruo
-}
-
-// AddType adds u to the "type" field.
-func (ruo *ResourceUpdateOne) AddType(u int32) *ResourceUpdateOne {
-	ruo.mutation.AddType(u)
 	return ruo
 }
 
@@ -1236,6 +1224,11 @@ func (ruo *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
 		}
 	}
+	if v, ok := ruo.mutation.GetType(); ok {
+		if err := resource.TypeValidator(v); err != nil {
+			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
+		}
+	}
 	if v, ok := ruo.mutation.URI(); ok {
 		if err := resource.URIValidator(v); err != nil {
 			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
@@ -1327,10 +1320,7 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.GetType(); ok {
-		_spec.SetField(resource.FieldType, field.TypeUint32, value)
-	}
-	if value, ok := ruo.mutation.AddedType(); ok {
-		_spec.AddField(resource.FieldType, field.TypeUint32, value)
+		_spec.SetField(resource.FieldType, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.Status(); ok {
 		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)

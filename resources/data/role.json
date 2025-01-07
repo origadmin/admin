@@ -1,0 +1,29 @@
+[
+  {
+    "keyword": "super_admin",
+    "name": "超级管理员",
+    "type": 1,
+    "sequence": 1,
+    "status": 1,
+    "is_system": true,
+    "description": "系统内置超级管理员"
+  },
+  {
+    "keyword": "admin",
+    "name": "管理员",
+    "type": 1,
+    "sequence": 2,
+    "status": 1,
+    "is_system": true,
+    "description": "系统管理员"
+  },
+  {
+    "keyword": "user",
+    "name": "普通用户",
+    "type": 2,
+    "sequence": 3,
+    "status": 1,
+    "is_system": true,
+    "description": "普通用户"
+  }
+] 

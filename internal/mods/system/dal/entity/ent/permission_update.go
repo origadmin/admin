@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/positionpermission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
@@ -144,6 +146,21 @@ func (pu *PermissionUpdate) AddResources(r ...*Resource) *PermissionUpdate {
 	return pu.AddResourceIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (pu *PermissionUpdate) AddPositionIDs(ids ...int64) *PermissionUpdate {
+	pu.mutation.AddPositionIDs(ids...)
+	return pu
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (pu *PermissionUpdate) AddPositions(p ...*Position) *PermissionUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pu.AddPositionIDs(ids...)
+}
+
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
 func (pu *PermissionUpdate) AddRolePermissionIDs(ids ...int64) *PermissionUpdate {
 	pu.mutation.AddRolePermissionIDs(ids...)
@@ -172,6 +189,21 @@ func (pu *PermissionUpdate) AddPermissionResources(p ...*PermissionResource) *Pe
 		ids[i] = p[i].ID
 	}
 	return pu.AddPermissionResourceIDs(ids...)
+}
+
+// AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
+func (pu *PermissionUpdate) AddPositionPermissionIDs(ids ...int64) *PermissionUpdate {
+	pu.mutation.AddPositionPermissionIDs(ids...)
+	return pu
+}
+
+// AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
+func (pu *PermissionUpdate) AddPositionPermissions(p ...*PositionPermission) *PermissionUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pu.AddPositionPermissionIDs(ids...)
 }
 
 // Mutation returns the PermissionMutation object of the builder.
@@ -221,6 +253,27 @@ func (pu *PermissionUpdate) RemoveResources(r ...*Resource) *PermissionUpdate {
 	return pu.RemoveResourceIDs(ids...)
 }
 
+// ClearPositions clears all "positions" edges to the Position entity.
+func (pu *PermissionUpdate) ClearPositions() *PermissionUpdate {
+	pu.mutation.ClearPositions()
+	return pu
+}
+
+// RemovePositionIDs removes the "positions" edge to Position entities by IDs.
+func (pu *PermissionUpdate) RemovePositionIDs(ids ...int64) *PermissionUpdate {
+	pu.mutation.RemovePositionIDs(ids...)
+	return pu
+}
+
+// RemovePositions removes "positions" edges to Position entities.
+func (pu *PermissionUpdate) RemovePositions(p ...*Position) *PermissionUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pu.RemovePositionIDs(ids...)
+}
+
 // ClearRolePermissions clears all "role_permissions" edges to the RolePermission entity.
 func (pu *PermissionUpdate) ClearRolePermissions() *PermissionUpdate {
 	pu.mutation.ClearRolePermissions()
@@ -261,6 +314,27 @@ func (pu *PermissionUpdate) RemovePermissionResources(p ...*PermissionResource) 
 		ids[i] = p[i].ID
 	}
 	return pu.RemovePermissionResourceIDs(ids...)
+}
+
+// ClearPositionPermissions clears all "position_permissions" edges to the PositionPermission entity.
+func (pu *PermissionUpdate) ClearPositionPermissions() *PermissionUpdate {
+	pu.mutation.ClearPositionPermissions()
+	return pu
+}
+
+// RemovePositionPermissionIDs removes the "position_permissions" edge to PositionPermission entities by IDs.
+func (pu *PermissionUpdate) RemovePositionPermissionIDs(ids ...int64) *PermissionUpdate {
+	pu.mutation.RemovePositionPermissionIDs(ids...)
+	return pu
+}
+
+// RemovePositionPermissions removes "position_permissions" edges to PositionPermission entities.
+func (pu *PermissionUpdate) RemovePositionPermissions(p ...*PositionPermission) *PermissionUpdate {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return pu.RemovePositionPermissionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -495,6 +569,72 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if pu.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		createE := &PositionPermissionCreate{config: pu.config, mutation: newPositionPermissionMutation(pu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.RemovedPositionsIDs(); len(nodes) > 0 && !pu.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PositionPermissionCreate{config: pu.config, mutation: newPositionPermissionMutation(pu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PositionPermissionCreate{config: pu.config, mutation: newPositionPermissionMutation(pu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if pu.mutation.RolePermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -578,6 +718,51 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if pu.mutation.PositionPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.RemovedPositionPermissionsIDs(); len(nodes) > 0 && !pu.mutation.PositionPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -717,6 +902,21 @@ func (puo *PermissionUpdateOne) AddResources(r ...*Resource) *PermissionUpdateOn
 	return puo.AddResourceIDs(ids...)
 }
 
+// AddPositionIDs adds the "positions" edge to the Position entity by IDs.
+func (puo *PermissionUpdateOne) AddPositionIDs(ids ...int64) *PermissionUpdateOne {
+	puo.mutation.AddPositionIDs(ids...)
+	return puo
+}
+
+// AddPositions adds the "positions" edges to the Position entity.
+func (puo *PermissionUpdateOne) AddPositions(p ...*Position) *PermissionUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return puo.AddPositionIDs(ids...)
+}
+
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
 func (puo *PermissionUpdateOne) AddRolePermissionIDs(ids ...int64) *PermissionUpdateOne {
 	puo.mutation.AddRolePermissionIDs(ids...)
@@ -745,6 +945,21 @@ func (puo *PermissionUpdateOne) AddPermissionResources(p ...*PermissionResource)
 		ids[i] = p[i].ID
 	}
 	return puo.AddPermissionResourceIDs(ids...)
+}
+
+// AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
+func (puo *PermissionUpdateOne) AddPositionPermissionIDs(ids ...int64) *PermissionUpdateOne {
+	puo.mutation.AddPositionPermissionIDs(ids...)
+	return puo
+}
+
+// AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
+func (puo *PermissionUpdateOne) AddPositionPermissions(p ...*PositionPermission) *PermissionUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return puo.AddPositionPermissionIDs(ids...)
 }
 
 // Mutation returns the PermissionMutation object of the builder.
@@ -794,6 +1009,27 @@ func (puo *PermissionUpdateOne) RemoveResources(r ...*Resource) *PermissionUpdat
 	return puo.RemoveResourceIDs(ids...)
 }
 
+// ClearPositions clears all "positions" edges to the Position entity.
+func (puo *PermissionUpdateOne) ClearPositions() *PermissionUpdateOne {
+	puo.mutation.ClearPositions()
+	return puo
+}
+
+// RemovePositionIDs removes the "positions" edge to Position entities by IDs.
+func (puo *PermissionUpdateOne) RemovePositionIDs(ids ...int64) *PermissionUpdateOne {
+	puo.mutation.RemovePositionIDs(ids...)
+	return puo
+}
+
+// RemovePositions removes "positions" edges to Position entities.
+func (puo *PermissionUpdateOne) RemovePositions(p ...*Position) *PermissionUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return puo.RemovePositionIDs(ids...)
+}
+
 // ClearRolePermissions clears all "role_permissions" edges to the RolePermission entity.
 func (puo *PermissionUpdateOne) ClearRolePermissions() *PermissionUpdateOne {
 	puo.mutation.ClearRolePermissions()
@@ -834,6 +1070,27 @@ func (puo *PermissionUpdateOne) RemovePermissionResources(p ...*PermissionResour
 		ids[i] = p[i].ID
 	}
 	return puo.RemovePermissionResourceIDs(ids...)
+}
+
+// ClearPositionPermissions clears all "position_permissions" edges to the PositionPermission entity.
+func (puo *PermissionUpdateOne) ClearPositionPermissions() *PermissionUpdateOne {
+	puo.mutation.ClearPositionPermissions()
+	return puo
+}
+
+// RemovePositionPermissionIDs removes the "position_permissions" edge to PositionPermission entities by IDs.
+func (puo *PermissionUpdateOne) RemovePositionPermissionIDs(ids ...int64) *PermissionUpdateOne {
+	puo.mutation.RemovePositionPermissionIDs(ids...)
+	return puo
+}
+
+// RemovePositionPermissions removes "position_permissions" edges to PositionPermission entities.
+func (puo *PermissionUpdateOne) RemovePositionPermissions(p ...*PositionPermission) *PermissionUpdateOne {
+	ids := make([]int64, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return puo.RemovePositionPermissionIDs(ids...)
 }
 
 // Where appends a list predicates to the PermissionUpdate builder.
@@ -1098,6 +1355,72 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if puo.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		createE := &PositionPermissionCreate{config: puo.config, mutation: newPositionPermissionMutation(puo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.RemovedPositionsIDs(); len(nodes) > 0 && !puo.mutation.PositionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PositionPermissionCreate{config: puo.config, mutation: newPositionPermissionMutation(puo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PositionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.PositionsTable,
+			Columns: permission.PositionsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &PositionPermissionCreate{config: puo.config, mutation: newPositionPermissionMutation(puo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if puo.mutation.RolePermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -1181,6 +1504,51 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if puo.mutation.PositionPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.RemovedPositionPermissionsIDs(); len(nodes) > 0 && !puo.mutation.PositionPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.PositionPermissionsTable,
+			Columns: []string{permission.PositionPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

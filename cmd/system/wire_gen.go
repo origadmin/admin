@@ -36,9 +36,9 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	if err != nil {
 		return nil, nil, err
 	}
-	menuRepo := dal.NewMenuRepo(data, arg)
-	menuServiceClient := biz.NewMenuServiceClient(menuRepo, arg)
-	menuServiceServer := service.NewMenuServiceServerPB(menuServiceClient)
+	resourceRepo := dal.NewResourceRepo(data, arg)
+	resourceServiceClient := biz.NewResourceServiceClient(resourceRepo, arg)
+	resourceServiceServer := service.NewResourceServiceServerPB(resourceServiceClient)
 	roleRepo := dal.NewRoleRepo(data, arg)
 	roleServiceClient := biz.NewRoleServiceClient(roleRepo, arg)
 	roleServiceServer := service.NewRoleServiceServerPB(roleServiceClient)
@@ -55,7 +55,6 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		return nil, nil, err
 	}
 	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
-	resourceRepo := dal.NewResourceRepo(data, arg)
 	loginData := &dal.LoginData{
 		BasisConfig: basisConfig,
 		Tokenizer:   refreshTokenizer,
@@ -70,12 +69,12 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	currentServiceClient := biz.NewCurrentServiceClient(currentRepo, arg)
 	currentServiceServer := service.NewCurrentServiceServerPB(currentServiceClient)
 	registerServer := &service.RegisterServer{
-		Menu:    menuServiceServer,
-		Role:    roleServiceServer,
-		User:    userServiceServer,
-		Auth:    authServiceServer,
-		Login:   loginServiceServer,
-		Current: currentServiceServer,
+		Resource: resourceServiceServer,
+		Role:     roleServiceServer,
+		User:     userServiceServer,
+		Auth:     authServiceServer,
+		Login:    loginServiceServer,
+		Current:  currentServiceServer,
 	}
 	v2 := server.NewRegisterServer(registerServer)
 	v3 := server.NewSystemServer(bootstrap, v2, arg)

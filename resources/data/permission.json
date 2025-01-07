@@ -1,0 +1,49 @@
+[
+  {
+    "name": "系统管理",
+    "keyword": "system",
+    "type": "role",
+    "description": "系统管理权限",
+    "data_scope": "all",
+    "resources": [
+      "system"
+    ]
+  },
+  {
+    "name": "组织管理",
+    "keyword": "system:org",
+    "type": "role",
+    "description": "组织管理权限",
+    "data_scope": "dept",
+    "resources": [
+      "system:org",
+      "system:org:dept",
+      "system:org:dept:list",
+      "system:org:position",
+      "system:org:position:list"
+    ]
+  },
+  {
+    "name": "用户管理",
+    "keyword": "system:user",
+    "type": "role",
+    "description": "用户管理权限",
+    "data_scope": "dept",
+    "resources": [
+      "system:user",
+      "system:user:list"
+    ]
+  },
+  {
+    "name": "部门管理员",
+    "keyword": "dept:admin",
+    "type": "position",
+    "description": "部门管理权限",
+    "data_scope": "dept",
+    "resources": [
+      "system:org:dept:list",
+      "system:org:dept:add",
+      "system:org:dept:edit"
+    ]
+  }
+] 
