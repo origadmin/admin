@@ -42,10 +42,6 @@ func (Department) Fields() []ent.Field {
 		field.Int8("status").
 			Default(0).
 			Comment(i18n.Text("department.field.status")),
-		field.String("ancestors").
-			MaxLen(1024).
-			Default("").
-			Comment(i18n.Text("department.field.ancestors")),
 		field.Int("level").
 			Default(1).
 			Comment(i18n.Text("department.field.level")),
@@ -91,7 +87,7 @@ func (Department) Edges() []ent.Edge {
 			Through("department_roles", DepartmentRole.Type),
 		// 添加部门层级关系
 		edge.To("children", Department.Type),
-		edge.From("parent", Department.Type).
+		edge.From("parent_id", Department.Type).
 			Ref("children").
 			Field("parent_id").
 			Unique(),
