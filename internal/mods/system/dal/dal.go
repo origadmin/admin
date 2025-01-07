@@ -123,7 +123,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 		Database: ent.NewDatabase(client),
 	}
 	// 初始化数据
-	if err := d.InitData(context.Background(), client); err != nil {
+	if err := d.InitDataFromPath(context.Background(), ""); err != nil {
 		log.Errorw("failed to init data", "error", err)
 		return nil, nil, err
 	}
@@ -136,6 +136,9 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}, nil
 }
 
+func (obj *Data) InitDataFromPath(ctx context.Context, path string) error {
+	return nil
+}
 func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) error {
 	abs, err := filepath.Abs(filename)
 	if err != nil {
