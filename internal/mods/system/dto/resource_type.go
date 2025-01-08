@@ -10,13 +10,14 @@ import (
 )
 
 const (
-	ResourceTypeUnknown   = schema.ResourceTypeUnknown
-	ResourceTypeMenu      = schema.ResourceTypeMenu
-	ResourceTypePage      = schema.ResourceTypePage
-	ResourceTypeButton    = schema.ResourceTypeButton
-	ResourceTypeAPI       = schema.ResourceTypeAPI
-	ResourceTypeButtonAPI = schema.ResourceTypeButtonAPI
-	ResourceTypeRedirect  = schema.ResourceTypeRedirect
+	ResourceTypeRoot     = schema.ResourceTypeRoot
+	ResourceTypeGroup    = schema.ResourceTypeGroup
+	ResourceTypeMenu     = schema.ResourceTypeMenu
+	ResourceTypePage     = schema.ResourceTypePage
+	ResourceTypeButton   = schema.ResourceTypeButton
+	ResourceTypeAPI      = schema.ResourceTypeAPI
+	ResourceTypeRedirect = schema.ResourceTypeRedirect
+	ResourceTypeUnknown  = schema.ResourceTypeUnknown
 )
 
 // ResourceTypeName returns the name of the resource type
@@ -32,8 +33,10 @@ func ResourceTypeName(str string) string {
 		return "API"
 	case ResourceTypeRedirect:
 		return "Redirect"
-	case ResourceTypeButtonAPI:
-		return "ButtonAPI"
+	case ResourceTypeRoot:
+		return "ROOT"
+	case ResourceTypeGroup:
+		return "Group"
 	default:
 		return "Unknown"
 	}
@@ -52,8 +55,10 @@ func ResourceTypeCode(s string) string {
 		return ResourceTypeAPI
 	case "Redirect":
 		return ResourceTypeRedirect
-	case "ButtonAPI":
-		return ResourceTypeButtonAPI
+	case "ROOT":
+		return ResourceTypeRoot
+	case "Group":
+		return ResourceTypeGroup
 	default:
 		return ResourceTypeUnknown
 	}

@@ -17,12 +17,24 @@ servers:
     - url: http://localhost:10080
     - url: https://localhost:10080
 paths:
-    /captcha/id:
+    /captcha:
         get:
             tags:
                 - LoginService
-            operationId: LoginService_CaptchaId
+            operationId: LoginService_Captcha
             parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: type
+                  in: query
+                  schema:
+                    type: string
+                - name: reload
+                  in: query
+                  schema:
+                    type: boolean
                 - name: ts
                   in: query
                   description: The timestamp of the request prevent caching of the same result
@@ -34,60 +46,101 @@ paths:
                     content:
                         application/json:
                             schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CaptchaResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /captcha/audio:
+        get:
+            tags:
+                - LoginService
+            operationId: LoginService_CaptchaAudio
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: reload
+                  in: query
+                  schema:
+                    type: string
+                - name: data.type_url
+                  in: query
+                  description: |-
+                    A URL/resource name that uniquely identifies the type of the serialized
+                     protocol buffer message. This string must contain at least
+                     one "/" character. The last segment of the URL's path must represent
+                     the fully qualified name of the type (as in
+                     `path/google.protobuf.Duration`). The name should be in a canonical form
+                     (e.g., leading "." is not accepted).
+
+                     In practice, teams usually precompile into the binary all types that they
+                     expect it to use in the context of Any. However, for URLs which use the
+                     scheme `http`, `https`, or no scheme, one can optionally set up a type
+                     server that maps type URLs to message definitions as follows:
+
+                     * If no scheme is provided, `https` is assumed.
+                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                       value in binary format, or produce an error.
+                     * Applications are allowed to cache lookup results based on the
+                       URL, or have them precompiled into a binary to avoid any
+                       lookup. Therefore, binary compatibility needs to be preserved
+                       on changes to types. (Use versioned type names to manage
+                       breaking changes.)
+
+                     Note: this functionality is not currently available in the official
+                     protobuf release, and it is not used for type URLs beginning with
+                     type.googleapis.com. As of May 2023, there are no widely used type server
+                     implementations and no plans to implement one.
+
+                     Schemes other than `http`, `https` (or the empty scheme) might be
+                     used with implementation specific semantics.
+                  schema:
+                    type: string
+                - name: data.value
+                  in: query
+                  description: Must be a valid serialized protocol buffer of the above specified type.
+                  schema:
+                    type: string
+                    format: bytes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.CaptchaAudioResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /captcha/id:
+        get:
+            tags:
+                - LoginService
+            operationId: LoginService_CaptchaId
+            parameters:
+                - name: ts
+                  in: query
+                  description: The timestamp of the request prevent caching of the same result
+                  schema:
+                    type: string
+                - name: reload
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
                                 $ref: '#/components/schemas/api.v1.services.system.CaptchaIdResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /captcha/id/{id}:
-        get:
-            tags:
-                - LoginService
-            operationId: LoginService_CaptchaResources
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CaptchaResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /captcha/id/{id}/{resource}:
-        get:
-            tags:
-                - LoginService
-            operationId: LoginService_CaptchaResource
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-                - name: resource
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CaptchaResourceResponse'
                 default:
                     description: Default error response
                     content:
@@ -2193,6 +2246,17 @@ components:
             properties:
                 is_valid:
                     type: boolean
+        api.v1.services.system.CaptchaAudioResponse:
+            type: object
+            properties:
+                headers:
+                    type: object
+                    additionalProperties:
+                        type: string
+                audio:
+                    type: string
+                    format: bytes
+            description: The response message containing the greetings
         api.v1.services.system.CaptchaIdResponse:
             type: object
             properties:
@@ -2209,33 +2273,15 @@ components:
                     type: string
                     format: bytes
             description: The response message containing the greetings
-        api.v1.services.system.CaptchaResourceResponse:
+        api.v1.services.system.CaptchaResponse:
             type: object
             properties:
-                headers:
-                    type: object
-                    additionalProperties:
-                        type: string
+                id:
+                    type: string
+                type:
+                    type: string
                 data:
                     type: string
-                    format: bytes
-        api.v1.services.system.CaptchaResourcesResponse:
-            type: object
-            properties:
-                image:
-                    type: string
-                    description: |-
-                        message AudioText {
-                            string text = 1;
-                            string lang = 2;
-                          }
-                    format: bytes
-                audio:
-                    type: string
-                    format: bytes
-                audio_type:
-                    type: integer
-                    format: enum
         api.v1.services.system.CreateDepartmentResponse:
             type: object
             properties:

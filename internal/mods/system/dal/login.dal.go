@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/LyricTian/captcha"
 	kerr "github.com/go-kratos/kratos/v2/errors"
 	"github.com/origadmin/runtime/context"
 	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
@@ -17,11 +16,11 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
-	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/errors/httperr"
 	"github.com/origadmin/toolkits/security"
 
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/captcha"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
@@ -31,6 +30,7 @@ import (
 
 type loginRepo struct {
 	*LoginData
+	captcha *captcha.Captcha
 	bufpool *sync.Pool
 }
 
@@ -66,7 +66,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 
 	// verify captcha
 	log.Debugf("Verifying captcha with id %s and code %s", data.CaptchaId, data.CaptchaCode)
-	if !captcha.VerifyString(data.CaptchaId, data.CaptchaCode) {
+	if !repo.captcha.Store.Verify(data.CaptchaId, data.CaptchaCode, true) {
 		log.Warnf("Invalid captcha id %s or code %s", data.CaptchaId, data.CaptchaCode)
 		return nil, dto.ErrInvalidCaptchaID
 	}
@@ -131,32 +131,56 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	log.Debugf("Generating token for userData %s", username)
 	return repo.genToken(ctx, userUUID)
 }
-
-func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) (*dto.CaptchaImageResponse, error) {
-	log.Debugf("Generating captcha image with id %s and reload %v", id, reload)
-	if reload && !captcha.Reload(id) {
+func (repo loginRepo) CaptchaAudio(ctx context.Context, id string, reload bool) (*dto.CaptchaAudioResponse, error) {
+	log.Debugf("Generating captcha audio with id %s and reload %v", id, reload)
+	if reload && !repo.captcha.Reload(captcha.TypeAudio, id) {
 		log.Warnf("Captcha id %s not found during reload", id)
 		return nil, dto.ErrCaptchaIDNotFound
 	}
-	buf := repo.getBuf()
-	captchaConfig := repo.cfg().Captcha
-	log.Debugf("Writing captcha image to buffer with width %d and height %d", int(captchaConfig.Width), int(captchaConfig.Height))
-	err := captcha.WriteImage(buf, id, int(repo.cfg().Captcha.Width), int(captchaConfig.Height))
+	content := repo.captcha.Store.Get(id, false)
+	item, err := repo.captcha.DriverAudio.Driver.DrawCaptcha(content)
 	if err != nil {
-		log.Errorf("Error writing captcha image: %v", err)
-		if errors.Is(err, captcha.ErrNotFound) {
-			log.Warnf("Captcha id %s not found", id)
-			return nil, dto.ErrCaptchaIDNotFound
-		}
-		return nil, kerr.Newf(400, "captcha write image", "failed to generate captcha image: %v", err)
+		return nil, err
+	}
+	buf := repo.getBuf()
+	_, err = item.WriteTo(buf)
+	if err != nil {
+		return nil, err
+	}
+	response := new(dto.CaptchaAudioResponse)
+	response.Headers = map[string]string{
+		"Cache-Control": "no-cache, no-store, must-revalidate",
+		"Pragma":        "no-cache",
+		"Expires":       "0",
+		"Content-Type":  captcha.MimeTypeAudio,
+	}
+	response.Audio = buf.Bytes()
+	return response, nil
+}
+
+func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) (*dto.CaptchaImageResponse, error) {
+	log.Debugf("Generating captcha image with id %s and reload %v", id, reload)
+	if reload && !repo.captcha.Reload(captcha.TypeDigit, id) {
+		log.Warnf("Captcha id %s not found during reload", id)
+		return nil, dto.ErrCaptchaIDNotFound
+	}
+	content := repo.captcha.Store.Get(id, false)
+	item, err := repo.captcha.DriverDigit.Driver.DrawCaptcha(content)
+	if err != nil {
+		return nil, err
+	}
+	buf := repo.getBuf()
+	_, err = item.WriteTo(buf)
+	if err != nil {
+		return nil, err
 	}
 	log.Debugf("Captcha image generated successfully")
 	response := new(dto.CaptchaImageResponse)
 	response.Headers = map[string]string{
-		"Cache-Control":        "no-cache, no-store, must-revalidate",
-		"Pragma":               "no-cache",
-		"Expires":              "0",
-		"Content-ResourceType": "image/png",
+		"Cache-Control": "no-cache, no-store, must-revalidate",
+		"Pragma":        "no-cache",
+		"Expires":       "0",
+		"Content-Type":  captcha.MimeTypeImage,
 	}
 	response.Image = buf.Bytes()
 	log.Debugf("Returning captcha image response with headers: %+v", response.Headers)
@@ -178,9 +202,50 @@ func (repo loginRepo) Logout(ctx context.Context, in *dto.LogoutRequest) (*dto.L
 }
 
 func (repo loginRepo) CaptchaID(ctx context.Context, in *dto.CaptchaIDRequest) (*dto.CaptchaIDResponse, error) {
+	id, err := repo.getCaptchaID()
+	if err != nil {
+		return nil, err
+	}
 	return &dto.CaptchaIDResponse{
-		Data: captcha.NewLen(int(repo.cfg().Captcha.Length)),
+		Data: id,
 	}, nil
+}
+
+func (repo loginRepo) Captcha(ctx context.Context, in *dto.CaptchaRequest) (*dto.CaptchaResponse, error) {
+	var err error
+	var id = in.Id
+	if id == "" {
+		id, err = repo.getCaptchaID()
+		if err != nil {
+			return nil, err
+		}
+	}
+	driver, err := repo.getCaptchaDriver(in.Type)
+	if err != nil {
+		return nil, err
+	}
+	if in.Reload && in.Id != "" && !repo.captcha.Reload(in.Type, in.Id) {
+		log.Warnf("Captcha id %s not found during reload", id)
+		return nil, dto.ErrCaptchaIDNotFound
+	}
+	data, err := repo.getCaptchaData(driver, id)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.CaptchaResponse{
+		Id:   id,
+		Type: in.Type,
+		Data: data,
+	}, nil
+}
+
+func (repo loginRepo) getCaptchaID() (string, error) {
+	id, _, answ, err := repo.captcha.DriverDigit.Generate()
+	if err != nil {
+		return "", err
+	}
+	log.Debugf("Generated captcha with id %s and answer %s", id, answ)
+	return id, nil
 }
 
 func (repo loginRepo) FreeBuf(buf *bytes.Buffer) {
@@ -261,12 +326,67 @@ func (repo loginRepo) cfg() *configs.BasisConfig {
 	return repo.LoginData.BasisConfig
 }
 
+func (repo loginRepo) getCaptchaDriver(typ string) (captcha.Driver, error) {
+	var driver captcha.Driver
+	switch typ {
+	case captcha.TypeAudio:
+		driver = repo.captcha.DriverAudio.Driver
+	default:
+		driver = repo.captcha.DriverDigit.Driver
+	}
+	log.Debugf("Captcha audio generated successfully")
+	return driver, nil
+}
+
+func (repo loginRepo) getCaptchaData(driver captcha.Driver, id string) (string, error) {
+	content := repo.captcha.Store.Get(id, false)
+	item, err := driver.DrawCaptcha(content)
+	if err != nil {
+		return "", err
+	}
+	return item.EncodeB64string(), nil
+}
+
+func (repo loginRepo) getCaptchaAudio(id string) (string, error) {
+	log.Debugf("Writing captcha audio to buffer with id %s", id)
+	content := repo.captcha.Store.Get(id, false)
+	item, err := repo.captcha.DriverAudio.Driver.DrawCaptcha(content)
+	if err != nil {
+		return "", err
+	}
+	log.Debugf("Captcha audio generated successfully")
+	return item.EncodeB64string(), nil
+}
+
+func (repo loginRepo) getCaptchaImage(id string) (string, error) {
+	log.Debugf("Writing captcha image to buffer with id %s", id)
+	content := repo.captcha.Store.Get(id, false)
+	item, err := repo.captcha.DriverDigit.Driver.DrawCaptcha(content)
+	if err != nil {
+		return "", err
+	}
+	log.Debugf("Captcha image generated successfully")
+	return item.EncodeB64string(), nil
+}
+
 type LoginData struct {
 	BasisConfig *configs.BasisConfig
 	Tokenizer   security.RefreshTokenizer
 	Resource    systemdto.ResourceRepo
 	Role        systemdto.RoleRepo
 	User        systemdto.UserRepo
+}
+
+func NewCaptcha(cfg *configs.Captcha) *captcha.Captcha {
+	return captcha.NewCaptcha(&captcha.Config{
+		DriverDigit: &captcha.DriverDigit{
+			Height:   int(cfg.Height),
+			Width:    int(cfg.Width),
+			Length:   int(cfg.Length),
+			MaxSkew:  0.7,
+			DotCount: 120,
+		},
+	})
 }
 
 // NewLoginRepo .
@@ -295,6 +415,7 @@ func NewLoginRepo(data *LoginData, logger log.KLogger) dto.LoginRepo {
 	return &loginRepo{
 		bufpool:   BufPool(),
 		LoginData: data,
+		captcha:   NewCaptcha(cfg.Captcha),
 	}
 }
 

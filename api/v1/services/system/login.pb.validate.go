@@ -946,6 +946,8 @@ func (m *CaptchaIdRequest) validate(all bool) error {
 
 	// no validation rules for Ts
 
+	// no validation rules for Reload
+
 	if len(errors) > 0 {
 		return CaptchaIdRequestMultiError(errors)
 	}
@@ -1472,22 +1474,22 @@ var _ interface {
 	ErrorName() string
 } = CaptchaImageResponseValidationError{}
 
-// Validate checks the field values on CaptchaResourcesRequest with the rules
+// Validate checks the field values on CaptchaAudioRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CaptchaResourcesRequest) Validate() error {
+func (m *CaptchaAudioRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CaptchaResourcesRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on CaptchaAudioRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CaptchaResourcesRequestMultiError, or nil if none found.
-func (m *CaptchaResourcesRequest) ValidateAll() error {
+// CaptchaAudioRequestMultiError, or nil if none found.
+func (m *CaptchaAudioRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CaptchaResourcesRequest) validate(all bool) error {
+func (m *CaptchaAudioRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1496,20 +1498,51 @@ func (m *CaptchaResourcesRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for Reload
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CaptchaAudioRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CaptchaAudioRequestValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CaptchaAudioRequestValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
-		return CaptchaResourcesRequestMultiError(errors)
+		return CaptchaAudioRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CaptchaResourcesRequestMultiError is an error wrapping multiple validation
-// errors returned by CaptchaResourcesRequest.ValidateAll() if the designated
+// CaptchaAudioRequestMultiError is an error wrapping multiple validation
+// errors returned by CaptchaAudioRequest.ValidateAll() if the designated
 // constraints aren't met.
-type CaptchaResourcesRequestMultiError []error
+type CaptchaAudioRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CaptchaResourcesRequestMultiError) Error() string {
+func (m CaptchaAudioRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1518,11 +1551,11 @@ func (m CaptchaResourcesRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CaptchaResourcesRequestMultiError) AllErrors() []error { return m }
+func (m CaptchaAudioRequestMultiError) AllErrors() []error { return m }
 
-// CaptchaResourcesRequestValidationError is the validation error returned by
-// CaptchaResourcesRequest.Validate if the designated constraints aren't met.
-type CaptchaResourcesRequestValidationError struct {
+// CaptchaAudioRequestValidationError is the validation error returned by
+// CaptchaAudioRequest.Validate if the designated constraints aren't met.
+type CaptchaAudioRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1530,24 +1563,24 @@ type CaptchaResourcesRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CaptchaResourcesRequestValidationError) Field() string { return e.field }
+func (e CaptchaAudioRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CaptchaResourcesRequestValidationError) Reason() string { return e.reason }
+func (e CaptchaAudioRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CaptchaResourcesRequestValidationError) Cause() error { return e.cause }
+func (e CaptchaAudioRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CaptchaResourcesRequestValidationError) Key() bool { return e.key }
+func (e CaptchaAudioRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CaptchaResourcesRequestValidationError) ErrorName() string {
-	return "CaptchaResourcesRequestValidationError"
+func (e CaptchaAudioRequestValidationError) ErrorName() string {
+	return "CaptchaAudioRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CaptchaResourcesRequestValidationError) Error() string {
+func (e CaptchaAudioRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1559,14 +1592,14 @@ func (e CaptchaResourcesRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCaptchaResourcesRequest.%s: %s%s",
+		"invalid %sCaptchaAudioRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CaptchaResourcesRequestValidationError{}
+var _ error = CaptchaAudioRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1574,261 +1607,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CaptchaResourcesRequestValidationError{}
+} = CaptchaAudioRequestValidationError{}
 
-// Validate checks the field values on CaptchaResourcesResponse with the rules
+// Validate checks the field values on CaptchaAudioResponse with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CaptchaResourcesResponse) Validate() error {
+func (m *CaptchaAudioResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CaptchaResourcesResponse with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on CaptchaAudioResponse with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CaptchaResourcesResponseMultiError, or nil if none found.
-func (m *CaptchaResourcesResponse) ValidateAll() error {
+// CaptchaAudioResponseMultiError, or nil if none found.
+func (m *CaptchaAudioResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CaptchaResourcesResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Image
-
-	// no validation rules for Audio
-
-	// no validation rules for AudioType
-
-	if len(errors) > 0 {
-		return CaptchaResourcesResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// CaptchaResourcesResponseMultiError is an error wrapping multiple validation
-// errors returned by CaptchaResourcesResponse.ValidateAll() if the designated
-// constraints aren't met.
-type CaptchaResourcesResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CaptchaResourcesResponseMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CaptchaResourcesResponseMultiError) AllErrors() []error { return m }
-
-// CaptchaResourcesResponseValidationError is the validation error returned by
-// CaptchaResourcesResponse.Validate if the designated constraints aren't met.
-type CaptchaResourcesResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CaptchaResourcesResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CaptchaResourcesResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CaptchaResourcesResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CaptchaResourcesResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CaptchaResourcesResponseValidationError) ErrorName() string {
-	return "CaptchaResourcesResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CaptchaResourcesResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCaptchaResourcesResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CaptchaResourcesResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CaptchaResourcesResponseValidationError{}
-
-// Validate checks the field values on CaptchaResourceRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CaptchaResourceRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CaptchaResourceRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CaptchaResourceRequestMultiError, or nil if none found.
-func (m *CaptchaResourceRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CaptchaResourceRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if utf8.RuneCountInString(m.GetId()) < 1 {
-		err := CaptchaResourceRequestValidationError{
-			field:  "Id",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if _, ok := _CaptchaResourceRequest_Resource_InLookup[m.GetResource()]; !ok {
-		err := CaptchaResourceRequestValidationError{
-			field:  "Resource",
-			reason: "value must be in list [image audio]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return CaptchaResourceRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// CaptchaResourceRequestMultiError is an error wrapping multiple validation
-// errors returned by CaptchaResourceRequest.ValidateAll() if the designated
-// constraints aren't met.
-type CaptchaResourceRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CaptchaResourceRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CaptchaResourceRequestMultiError) AllErrors() []error { return m }
-
-// CaptchaResourceRequestValidationError is the validation error returned by
-// CaptchaResourceRequest.Validate if the designated constraints aren't met.
-type CaptchaResourceRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CaptchaResourceRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CaptchaResourceRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CaptchaResourceRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CaptchaResourceRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CaptchaResourceRequestValidationError) ErrorName() string {
-	return "CaptchaResourceRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CaptchaResourceRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCaptchaResourceRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CaptchaResourceRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CaptchaResourceRequestValidationError{}
-
-var _CaptchaResourceRequest_Resource_InLookup = map[string]struct{}{
-	"image": {},
-	"audio": {},
-}
-
-// Validate checks the field values on CaptchaResourceResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CaptchaResourceResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CaptchaResourceResponse with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CaptchaResourceResponseMultiError, or nil if none found.
-func (m *CaptchaResourceResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CaptchaResourceResponse) validate(all bool) error {
+func (m *CaptchaAudioResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1837,22 +1633,22 @@ func (m *CaptchaResourceResponse) validate(all bool) error {
 
 	// no validation rules for Headers
 
-	// no validation rules for Data
+	// no validation rules for Audio
 
 	if len(errors) > 0 {
-		return CaptchaResourceResponseMultiError(errors)
+		return CaptchaAudioResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// CaptchaResourceResponseMultiError is an error wrapping multiple validation
-// errors returned by CaptchaResourceResponse.ValidateAll() if the designated
+// CaptchaAudioResponseMultiError is an error wrapping multiple validation
+// errors returned by CaptchaAudioResponse.ValidateAll() if the designated
 // constraints aren't met.
-type CaptchaResourceResponseMultiError []error
+type CaptchaAudioResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CaptchaResourceResponseMultiError) Error() string {
+func (m CaptchaAudioResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1861,11 +1657,11 @@ func (m CaptchaResourceResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CaptchaResourceResponseMultiError) AllErrors() []error { return m }
+func (m CaptchaAudioResponseMultiError) AllErrors() []error { return m }
 
-// CaptchaResourceResponseValidationError is the validation error returned by
-// CaptchaResourceResponse.Validate if the designated constraints aren't met.
-type CaptchaResourceResponseValidationError struct {
+// CaptchaAudioResponseValidationError is the validation error returned by
+// CaptchaAudioResponse.Validate if the designated constraints aren't met.
+type CaptchaAudioResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1873,24 +1669,24 @@ type CaptchaResourceResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e CaptchaResourceResponseValidationError) Field() string { return e.field }
+func (e CaptchaAudioResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CaptchaResourceResponseValidationError) Reason() string { return e.reason }
+func (e CaptchaAudioResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CaptchaResourceResponseValidationError) Cause() error { return e.cause }
+func (e CaptchaAudioResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CaptchaResourceResponseValidationError) Key() bool { return e.key }
+func (e CaptchaAudioResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CaptchaResourceResponseValidationError) ErrorName() string {
-	return "CaptchaResourceResponseValidationError"
+func (e CaptchaAudioResponseValidationError) ErrorName() string {
+	return "CaptchaAudioResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CaptchaResourceResponseValidationError) Error() string {
+func (e CaptchaAudioResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1902,14 +1698,14 @@ func (e CaptchaResourceResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCaptchaResourceResponse.%s: %s%s",
+		"invalid %sCaptchaAudioResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CaptchaResourceResponseValidationError{}
+var _ error = CaptchaAudioResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -1917,7 +1713,221 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CaptchaResourceResponseValidationError{}
+} = CaptchaAudioResponseValidationError{}
+
+// Validate checks the field values on CaptchaRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *CaptchaRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CaptchaRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in CaptchaRequestMultiError,
+// or nil if none found.
+func (m *CaptchaRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CaptchaRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Type
+
+	// no validation rules for Reload
+
+	// no validation rules for Ts
+
+	if len(errors) > 0 {
+		return CaptchaRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CaptchaRequestMultiError is an error wrapping multiple validation errors
+// returned by CaptchaRequest.ValidateAll() if the designated constraints
+// aren't met.
+type CaptchaRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CaptchaRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CaptchaRequestMultiError) AllErrors() []error { return m }
+
+// CaptchaRequestValidationError is the validation error returned by
+// CaptchaRequest.Validate if the designated constraints aren't met.
+type CaptchaRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CaptchaRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CaptchaRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CaptchaRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CaptchaRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CaptchaRequestValidationError) ErrorName() string { return "CaptchaRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CaptchaRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCaptchaRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CaptchaRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CaptchaRequestValidationError{}
+
+// Validate checks the field values on CaptchaResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *CaptchaResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CaptchaResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CaptchaResponseMultiError, or nil if none found.
+func (m *CaptchaResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CaptchaResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Type
+
+	// no validation rules for Data
+
+	if len(errors) > 0 {
+		return CaptchaResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// CaptchaResponseMultiError is an error wrapping multiple validation errors
+// returned by CaptchaResponse.ValidateAll() if the designated constraints
+// aren't met.
+type CaptchaResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CaptchaResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CaptchaResponseMultiError) AllErrors() []error { return m }
+
+// CaptchaResponseValidationError is the validation error returned by
+// CaptchaResponse.Validate if the designated constraints aren't met.
+type CaptchaResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CaptchaResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CaptchaResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CaptchaResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CaptchaResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CaptchaResponseValidationError) ErrorName() string { return "CaptchaResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CaptchaResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCaptchaResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CaptchaResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CaptchaResponseValidationError{}
 
 // Validate checks the field values on RegisterRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the

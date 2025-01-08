@@ -29,12 +29,8 @@ func (obj LoginServiceHTTPServer) Register(ctx context.Context, request *pb.Regi
 	return obj.client.Register(ctx, request)
 }
 
-func (obj LoginServiceHTTPServer) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
-	return obj.client.CaptchaResource(ctx, request)
-}
-
-func (obj LoginServiceHTTPServer) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
-	return obj.client.CaptchaResources(ctx, request)
+func (obj LoginServiceHTTPServer) Captcha(ctx context.Context, request *pb.CaptchaRequest) (*pb.CaptchaResponse, error) {
+	return obj.client.Captcha(ctx, request)
 }
 
 func (obj LoginServiceHTTPServer) CaptchaId(ctx context.Context, request *pb.CaptchaIdRequest) (*pb.CaptchaIdResponse, error) {

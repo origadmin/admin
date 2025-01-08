@@ -112,9 +112,9 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 func DefaultPaths() []string {
 	return []string{
 		system.OperationLoginServiceCaptchaId,
+		system.OperationLoginServiceCaptcha,
 		system.OperationLoginServiceCaptchaImage,
-		system.OperationLoginServiceCaptchaResource,
-		system.OperationLoginServiceCaptchaResources,
+		system.OperationLoginServiceCaptchaAudio,
 		system.OperationLoginServiceLogin,
 		system.OperationLoginServiceRegister,
 	}

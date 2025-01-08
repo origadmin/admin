@@ -22,14 +22,37 @@ const _ = http.SupportPackageIsVersion1
 const _ = agent.ApiVersionV1
 
 type LoginServiceAgent interface {
+	Captcha(context.Context, *CaptchaRequest) (*CaptchaResponse, error)
+	CaptchaAudio(context.Context, *CaptchaAudioRequest) (*CaptchaAudioResponse, error)
 	CaptchaId(context.Context, *CaptchaIdRequest) (*CaptchaIdResponse, error)
 	CaptchaImage(context.Context, *CaptchaImageRequest) (*CaptchaImageResponse, error)
-	CaptchaResource(context.Context, *CaptchaResourceRequest) (*CaptchaResourceResponse, error)
-	CaptchaResources(context.Context, *CaptchaResourcesRequest) (*CaptchaResourcesResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error)
+}
+
+func _LoginService_Captcha0_HTTPAgent_Handler(srv LoginServiceAgent) http.HandlerFunc {
+	return func(cctx http.Context) error {
+		var in CaptchaRequest
+		if err := cctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(cctx, OperationLoginServiceCaptcha)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
+			return srv.Captcha(ctx, req.(*CaptchaRequest))
+		})
+		out, err := h(cctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CaptchaResponse)
+		if reply == nil {
+			return nil
+		}
+		return cctx.Result(200, reply)
+	}
 }
 
 func _LoginService_CaptchaId0_HTTPAgent_Handler(srv LoginServiceAgent) http.HandlerFunc {
@@ -78,51 +101,22 @@ func _LoginService_CaptchaImage0_HTTPAgent_Handler(srv LoginServiceAgent) http.H
 	}
 }
 
-func _LoginService_CaptchaResource0_HTTPAgent_Handler(srv LoginServiceAgent) http.HandlerFunc {
+func _LoginService_CaptchaAudio0_HTTPAgent_Handler(srv LoginServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
-		var in CaptchaResourceRequest
+		var in CaptchaAudioRequest
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := cctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(cctx, OperationLoginServiceCaptchaResource)
+		http.SetOperation(cctx, OperationLoginServiceCaptchaAudio)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
-			return srv.CaptchaResource(ctx, req.(*CaptchaResourceRequest))
+			return srv.CaptchaAudio(ctx, req.(*CaptchaAudioRequest))
 		})
 		out, err := h(cctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CaptchaResourceResponse)
-		if reply == nil {
-			return nil
-		}
-		return cctx.Result(200, reply)
-	}
-}
-
-func _LoginService_CaptchaResources0_HTTPAgent_Handler(srv LoginServiceAgent) http.HandlerFunc {
-	return func(cctx http.Context) error {
-		var in CaptchaResourcesRequest
-		if err := cctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := cctx.BindVars(&in); err != nil {
-			return err
-		}
-		http.SetOperation(cctx, OperationLoginServiceCaptchaResources)
-		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			ctx = agent.NewHTTPContext(ctx, cctx)
-			return srv.CaptchaResources(ctx, req.(*CaptchaResourcesRequest))
-		})
-		out, err := h(cctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CaptchaResourcesResponse)
+		reply := out.(*CaptchaAudioResponse)
 		if reply == nil {
 			return nil
 		}
@@ -236,10 +230,10 @@ func _LoginService_TokenRefresh0_HTTPAgent_Handler(srv LoginServiceAgent) http.H
 
 func RegisterLoginServiceAgent(ag agent.HTTPAgent, srv LoginServiceAgent) {
 	r := ag.Route()
+	r.GET("/captcha", _LoginService_Captcha0_HTTPAgent_Handler(srv))
 	r.GET("/captcha/id", _LoginService_CaptchaId0_HTTPAgent_Handler(srv))
 	r.GET("/captcha/image", _LoginService_CaptchaImage0_HTTPAgent_Handler(srv))
-	r.GET("/captcha/id/:id/:resource", _LoginService_CaptchaResource0_HTTPAgent_Handler(srv))
-	r.GET("/captcha/id/:id", _LoginService_CaptchaResources0_HTTPAgent_Handler(srv))
+	r.GET("/captcha/audio", _LoginService_CaptchaAudio0_HTTPAgent_Handler(srv))
 	r.POST("/login", _LoginService_Login0_HTTPAgent_Handler(srv))
 	r.POST("/logout", _LoginService_Logout0_HTTPAgent_Handler(srv))
 	r.POST("/register", _LoginService_Register0_HTTPAgent_Handler(srv))

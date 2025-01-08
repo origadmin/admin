@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
@@ -78,6 +79,33 @@ func (f TraverseFunc) Traverse(ctx context.Context, q ent.Query) error {
 		return err
 	}
 	return f(ctx, query)
+}
+
+// The CasbinRuleFunc type is an adapter to allow the use of ordinary function as a Querier.
+type CasbinRuleFunc func(context.Context, *ent.CasbinRuleQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f CasbinRuleFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.CasbinRuleQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.CasbinRuleQuery", q)
+}
+
+// The TraverseCasbinRule type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseCasbinRule func(context.Context, *ent.CasbinRuleQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseCasbinRule) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseCasbinRule) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.CasbinRuleQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.CasbinRuleQuery", q)
 }
 
 // The DepartmentFunc type is an adapter to allow the use of ordinary function as a Querier.
@@ -407,6 +435,8 @@ func (f TraverseUserRole) Traverse(ctx context.Context, q ent.Query) error {
 // NewQuery returns the generic Query interface for the given typed query.
 func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
+	case *ent.CasbinRuleQuery:
+		return &query[*ent.CasbinRuleQuery, predicate.CasbinRule, casbinrule.OrderOption]{typ: ent.TypeCasbinRule, tq: q}, nil
 	case *ent.DepartmentQuery:
 		return &query[*ent.DepartmentQuery, predicate.Department, department.OrderOption]{typ: ent.TypeDepartment, tq: q}, nil
 	case *ent.PermissionQuery:

@@ -22,13 +22,15 @@ const (
 	ResourceStatusDisabled int8 = 2 // 禁用
 )
 const (
-	ResourceTypeUnknown  = "U" // 未知
-	ResourceTypeMenu     = "M" // 目录
-	ResourceTypePage     = "P" // 页面
-	ResourceTypeButton   = "B" // 按钮
-	ResourceTypeButtonAPI = "BA" // 按钮触发API接口
-	ResourceTypeAPI      = "A" // API接口
-	ResourceTypeRedirect = "R" // 重定向
+	ResourceTypeUnknown  = "U"    // 未知
+	ResourceTypeRoot     = "ROOT" // 根目录
+	ResourceTypeGroup    = "G"    // 分组
+	ResourceTypeMenu     = "M"    // 目录
+	ResourceTypePage     = "P"    // 页面
+	ResourceTypeButton   = "B"    // 按钮
+	ResourceTypeAPI      = "A"    // API接口
+	ResourceTypeRedirect = "R"    // 重定向
+
 )
 
 // Resource holds the schema definition for the Resource domain.

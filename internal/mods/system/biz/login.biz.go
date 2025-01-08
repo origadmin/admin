@@ -33,19 +33,19 @@ func (biz LoginServiceClientBiz) Register(ctx context.Context, in *pb.RegisterRe
 	return biz.dao.Register(ctx, in)
 }
 
-func (biz LoginServiceClientBiz) CaptchaResource(ctx context.Context, in *pb.CaptchaResourceRequest, opts ...grpc.CallOption) (*pb.CaptchaResourceResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (biz LoginServiceClientBiz) CaptchaResources(ctx context.Context, in *pb.CaptchaResourcesRequest, opts ...grpc.CallOption) (*pb.CaptchaResourcesResponse, error) {
-	//TODO implement me
-	panic("implement me")
+func (biz LoginServiceClientBiz) Captcha(ctx context.Context, in *pb.CaptchaRequest, opts ...grpc.CallOption) (*pb.CaptchaResponse, error) {
+	log.Info("Captcha")
+	return biz.dao.Captcha(ctx, in)
 }
 
 func (biz LoginServiceClientBiz) CaptchaImage(ctx context.Context, in *dto.CaptchaImageRequest, opts ...grpc.CallOption) (*dto.CaptchaImageResponse, error) {
 	log.Info("CaptchaImage")
 	return biz.dao.CaptchaImage(ctx, in.Id, in.Reload == "1" || in.Reload == "true")
+}
+
+func (biz LoginServiceClientBiz) CaptchaAudio(ctx context.Context, in *pb.CaptchaAudioRequest, opts ...grpc.CallOption) (*pb.CaptchaAudioResponse, error) {
+	log.Info("CaptchaAudio")
+	return biz.dao.CaptchaAudio(ctx, in.Id, in.Reload == "1" || in.Reload == "true")
 }
 
 func (biz LoginServiceClientBiz) Login(ctx context.Context, in *dto.LoginRequest, opts ...grpc.CallOption) (*dto.LoginResponse, error) {

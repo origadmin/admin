@@ -51,25 +51,11 @@ func (s LoginServiceAgent) Register(ctx context.Context, request *pb.RegisterReq
 	return nil, nil
 }
 
-func (s LoginServiceAgent) CaptchaResource(ctx context.Context, request *pb.CaptchaResourceRequest) (*pb.CaptchaResourceResponse, error) {
+func (s LoginServiceAgent) Captcha(ctx context.Context, request *pb.CaptchaRequest) (*pb.CaptchaResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CaptchaResource(ctx, request)
+	response, err := s.client.Captcha(ctx, request)
 	if err != nil {
-		log.Errorf("CaptchaResource error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Any2AnyPB(response),
-	})
-	return nil, nil
-}
-
-func (s LoginServiceAgent) CaptchaResources(ctx context.Context, request *pb.CaptchaResourcesRequest) (*pb.CaptchaResourcesResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CaptchaResources(ctx, request)
-	if err != nil {
-		log.Errorf("CaptchaResources error: %v", err)
+		log.Errorf("Captcha error: %v", err)
 		return nil, err
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
@@ -96,6 +82,14 @@ func (s LoginServiceAgent) CaptchaId(ctx context.Context, request *pb.CaptchaIdR
 	return nil, nil
 }
 
+func (s LoginServiceAgent) CaptchaAudio(ctx context.Context, request *pb.CaptchaAudioRequest) (*pb.CaptchaAudioResponse, error) {
+	_, err := s.client.CaptchaAudio(ctx, request)
+	if err != nil {
+		log.Errorf("Logout error: %v", err)
+		return nil, err
+	}
+	return nil, nil
+}
 func (s LoginServiceAgent) CaptchaImage(ctx context.Context, request *pb.CaptchaImageRequest) (*pb.CaptchaImageResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	log.Debugf("CaptchaImage: Request:%+v", request)

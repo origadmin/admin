@@ -14,6 +14,12 @@ option java_package = "com.origadmin.api.v1.services.system";
 
 // The login service definition.
 service LoginService {
+  rpc Captcha (CaptchaRequest) returns (CaptchaResponse) {
+    option (google.api.http) = {
+      get: "/captcha"
+      response_body: "*"
+    };
+  }
   rpc CaptchaId (CaptchaIdRequest) returns (CaptchaIdResponse) {
     option (google.api.http) = {get: "/captcha/id"};
   }
@@ -23,18 +29,13 @@ service LoginService {
       response_body: "*"
     };
   }
-  rpc CaptchaResource (CaptchaResourceRequest) returns (CaptchaResourceResponse) {
+  rpc CaptchaAudio (CaptchaAudioRequest) returns (CaptchaAudioResponse) {
     option (google.api.http) = {
-      get: "/captcha/id/{id}/{resource}"
+      get: "/captcha/audio"
       response_body: "*"
     };
   }
-  rpc CaptchaResources (CaptchaResourcesRequest) returns (CaptchaResourcesResponse) {
-    option (google.api.http) = {
-      get: "/captcha/id/{id}"
-      response_body: "*"
-    };
-  }
+
   rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/login"
@@ -118,6 +119,7 @@ message CurrentUserResponse {
 message CaptchaIdRequest {
   // The timestamp of the request prevent caching of the same result
   string ts = 1 [json_name = "ts"];
+  bool reload = 2 [json_name = "reload"];
 }
 
 message CaptchaIdResponse {
@@ -142,44 +144,32 @@ message CaptchaImageResponse {
   bytes image = 2 [json_name = "image"];
 }
 
-message CaptchaResourcesRequest {
-  int64 id = 1 [json_name = "id"];
+// The request message containing the user's name.
+message CaptchaAudioRequest {
+  string id = 1 [json_name = "id"];
+  string reload = 2 [json_name = "reload"];
+  google.protobuf.Any data = 3 [json_name = "data"];
 }
 
-message CaptchaResourcesResponse {
-  enum AudioType {
-    WAV = 0;
-    MP3 = 1;
-  }
-  //  message AudioText {
-  //    string text = 1;
-  //    string lang = 2;
-  //  }
-  bytes image = 2 [json_name = "image"]; // base64 encoded
-  bytes audio = 3 [json_name = "audio"]; // 16k pcm encoded
-  AudioType audio_type = 4;
-  //  AudioText audio_text = 5;
+// The response message containing the greetings
+message CaptchaAudioResponse {
+  map<string, string> headers = 1;
+  bytes audio = 2 [json_name = "audio"];
 }
 
-message CaptchaResourceRequest {
-  string id = 1 [
-    json_name = "id",
-    (validate.rules).string = {min_len: 1}
-  ];
-  string resource = 2 [
-    json_name = "resource",
-    (validate.rules).string = {
-      in: [
-          "image",
-          "audio"
-      ]
-    }
-  ];
+
+message CaptchaRequest {
+  string id = 1 [json_name = "id"];
+  string type = 2 [json_name = "type"];
+  bool reload = 3 [json_name = "reload"];
+  // The timestamp of the request prevent caching of the same result
+  string ts = 4 [json_name = "ts"];
 }
 
-message CaptchaResourceResponse {
-  map<string, string> headers = 1 [json_name = "headers"];
-  bytes data = 2 [json_name = "data"];
+message CaptchaResponse {
+  string id = 1 [json_name = "id"];
+  string type = 2 [json_name = "type"];
+  string data = 3 [json_name = "data"];
 }
 
 message RegisterRequest {

@@ -102,6 +102,11 @@ func (db *Database) Query(ctx context.Context, query string, args ...interface{}
 	return &rows, nil
 }
 
+// CasbinRule is the client for interacting with the CasbinRule builders.
+func (db *Database) CasbinRule(ctx context.Context) *CasbinRuleClient {
+	return db.Client(ctx).CasbinRule
+}
+
 // Department is the client for interacting with the Department builders.
 func (db *Database) Department(ctx context.Context) *DepartmentClient {
 	return db.Client(ctx).Department

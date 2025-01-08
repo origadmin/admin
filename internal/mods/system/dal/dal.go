@@ -138,16 +138,10 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}, nil
 }
 
-// Position position.table.comment
-type Position struct {
-	Id                int64  `json:"id,omitempty"`
-	CreateTime        int64  `json:"create_time,omitempty"`
-	UpdateTime        int64  `json:"update_time,omitempty"`
-	Name              string `json:"name,omitempty"`
-	Keyword           string `json:"keyword,omitempty"`
-	Description       string `json:"description,omitempty"`
-	DepartmentId      int64  `json:"department_id,omitempty"`
-	DepartmentKeyword string `json:"department_keyword,omitempty"`
+func NewDataWithClient(client *ent.Client) *Data {
+	return &Data{
+		Database: ent.NewDatabase(client),
+	}
 }
 
 type DataInit struct {
@@ -480,7 +474,7 @@ func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) erro
 	if err != nil {
 		return err
 	}
-	var positions []*Position
+	var positions []*dto.PositionSource
 	err = codec.DecodeFromFile(abs, &positions)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -494,7 +488,7 @@ func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) erro
 	})
 }
 
-func (obj *Data) createPositionBatch(ctx context.Context, positions []*Position) error {
+func (obj *Data) createPositionBatch(ctx context.Context, positions []*dto.PositionSource) error {
 	total := len(positions)
 	log.Infow("msg", "Starting createPositionBatch", "totalItems", total)
 	for i, item := range positions {

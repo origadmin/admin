@@ -16,6 +16,10 @@ type (
 	CaptchaIDResponse    = pb.CaptchaIdResponse
 	CaptchaImageRequest  = pb.CaptchaImageRequest
 	CaptchaImageResponse = pb.CaptchaImageResponse
+	CaptchaAudioRequest  = pb.CaptchaAudioRequest
+	CaptchaAudioResponse = pb.CaptchaAudioResponse
+	CaptchaRequest       = pb.CaptchaRequest
+	CaptchaResponse      = pb.CaptchaResponse
 	CaptchaData          = pb.CaptchaData
 	LoginRequest         = pb.LoginRequest
 	LoginResponse        = pb.LoginResponse
@@ -32,6 +36,8 @@ type (
 type LoginRepo interface {
 	CaptchaID(ctx context.Context, in *CaptchaIDRequest) (*CaptchaIDResponse, error)
 	CaptchaImage(ctx context.Context, id string, reload bool) (*CaptchaImageResponse, error)
+	CaptchaAudio(ctx context.Context, id string, reload bool) (*CaptchaAudioResponse, error)
+	Captcha(ctx context.Context, in *CaptchaRequest) (*CaptchaResponse, error)
 	CurrentUser(ctx context.Context, in *CurrentUserRequest) (*CurrentUserResponse, error)
 	Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error)
