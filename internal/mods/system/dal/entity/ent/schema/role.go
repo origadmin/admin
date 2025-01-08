@@ -53,9 +53,6 @@ func (Role) Fields() []ent.Field {
 		field.Int8("status").
 			Default(0).
 			Comment("role.field.status"),
-		field.Bool("is_system").
-			Default(false).
-			Comment("role.field.is_system"), //("Whether the system is built-in (the built-in role cannot be deleted)"),
 	}
 }
 
