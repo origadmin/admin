@@ -7,6 +7,7 @@ package dal
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -16,12 +17,12 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/go-sql-driver/mysql"
-	"github.com/google/uuid"
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/database"
 	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
+	"github.com/origadmin/toolkits/crypto/hash"
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
@@ -84,6 +85,7 @@ func FixSource(source string) string {
 
 // NewData .
 func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), error) {
+	hash.UseCrypto(hash.Type(bootstrap.GetCryptoType()))
 	cfg := bootstrap.GetData().GetDatabase()
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
@@ -144,41 +146,40 @@ func NewDataWithClient(client *ent.Client) *Data {
 	}
 }
 
-type DataInit struct {
-	Name string
-	Func func(ctx context.Context, filename string) error
-}
-
 func (obj *Data) InitDataFromPath(ctx context.Context, path string) error {
-	initFuncs := []DataInit{
+	type data struct {
+		name string
+		fn   func(ctx context.Context, filename string) error
+	}
+	initializers := []data{
 		{
-			Name: "resource",
-			Func: obj.InitResourceFromFile,
+			name: "resource",
+			fn:   obj.InitResourceFromFile,
 		},
 		{
-			Name: "role",
-			Func: obj.InitRoleFromFile,
+			name: "role",
+			fn:   obj.InitRoleFromFile,
 		},
 		{
-			Name: "user",
-			Func: obj.InitUserFromFile,
+			name: "user",
+			fn:   obj.InitUserFromFile,
 		},
 		{
-			Name: "department",
-			Func: obj.InitDepartmentFromFile,
+			name: "department",
+			fn:   obj.InitDepartmentFromFile,
 		},
 		{
-			Name: "position",
-			Func: obj.InitPositionFromFile,
+			name: "position",
+			fn:   obj.InitPositionFromFile,
 		},
 		{
-			Name: "permission",
-			Func: obj.InitPermissionFromFile,
+			name: "permission",
+			fn:   obj.InitPermissionFromFile,
 		},
 	}
-	for _, di := range initFuncs {
-		di.Name = filepath.Join(path, di.Name+".json")
-		err := di.Func(ctx, di.Name)
+	for _, di := range initializers {
+		di.name = filepath.Join(path, di.name+".json")
+		err := di.fn(ctx, di.name)
 		if err != nil {
 			return err
 		}
@@ -338,7 +339,7 @@ func (obj *Data) InitUserFromFile(ctx context.Context, filename string) error {
 	if err != nil {
 		return err
 	}
-	var users []*dto.UserPB
+	var users []*dto.UserNode
 	err = codec.DecodeFromFile(abs, &users)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -352,24 +353,25 @@ func (obj *Data) InitUserFromFile(ctx context.Context, filename string) error {
 	})
 }
 
-func (obj *Data) createUserBatch(ctx context.Context, users []*dto.UserPB) error {
+func (obj *Data) createUserBatch(ctx context.Context, users []*dto.UserNode) error {
 	total := len(users)
 	log.Infow("msg", "Starting createUserBatch", "totalItems", total)
 	for i, item := range users {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemUsername", item.Username, "itemNickname", item.Nickname)
-		if item.Id == 0 {
-			item.Id = id.Gen()
-			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
-			item.Uuid = uuid.Must(uuid.NewRandom()).String()
-			log.Infow("msg", "Generated new UUID for item", "itemId", item.Id, "itemUuid", item.Uuid)
-			item.Password = ""
-			log.Infow("msg", "Generated new Password for item", "itemId", item.Id, "itemPassword", item.Password)
-		}
-		user, ps, err := dto.CreateUser(item, item.Username, item.Password, dto.UserQueryOption{})
+		//if item.Id == 0 {
+		//	item.Id = id.Gen()
+		//	log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
+		//	item.Uuid = uuid.Must(uuid.NewRandom()).String()
+		//	log.Infow("msg", "Generated new UUID for item", "itemId", item.Id, "itemUuid", item.Uuid)
+		//	item.Password = ""
+		//	log.Infow("msg", "Generated new Password for item", "itemId", item.Id, "itemPassword", item.Password)
+		//}
+		user, ps, err := dto.CreateUser(&item.UserPB, item.Username, item.Password, dto.UserQueryOption{})
 		if err != nil {
 			return err
 		}
-		if _, err := obj.User(ctx).Create().SetUser(dto.ConvertUserPB2Object(user)).SetPassword(ps).Save(ctx); err != nil {
+		fmt.Println("generate user: ", user.Username, "with password: ", ps)
+		if _, err := obj.User(ctx).Create().SetIsSystem(item.IsSystem).SetUser(dto.ConvertUserPB2Object(user)).Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating user item", "itemId", item.Id, "error", err)
 			return err
 		}
@@ -474,7 +476,7 @@ func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) erro
 	if err != nil {
 		return err
 	}
-	var positions []*dto.PositionSource
+	var positions []*dto.PositionNode
 	err = codec.DecodeFromFile(abs, &positions)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -488,7 +490,7 @@ func (obj *Data) InitPositionFromFile(ctx context.Context, filename string) erro
 	})
 }
 
-func (obj *Data) createPositionBatch(ctx context.Context, positions []*dto.PositionSource) error {
+func (obj *Data) createPositionBatch(ctx context.Context, positions []*dto.PositionNode) error {
 	total := len(positions)
 	log.Infow("msg", "Starting createPositionBatch", "totalItems", total)
 	for i, item := range positions {

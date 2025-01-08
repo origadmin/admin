@@ -7,7 +7,6 @@ package dto
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/origadmin/runtime/log"
@@ -31,6 +30,11 @@ type (
 	ListUsersRequest  = pb.ListUsersRequest
 	ListUsersResponse = pb.ListUsersResponse
 )
+
+type UserNode struct {
+	UserPB
+	IsSystem bool `json:"is_system,omitempty"`
+}
 
 // UserRepo is a UserPB repository interface.
 type UserRepo interface {
@@ -119,26 +123,25 @@ func CreateUser(user *UserPB, username, password string, option UserQueryOption)
 		log.Debugf("NoPasswd is true, setting password to empty string")
 		password = ""
 	}
-	var passwd, salt string
 	var err error
 	if password != "" {
 		log.Debugf("Password is not empty, generating salt")
-		salt = rand.GenerateSalt()
-		log.Debugf("Generated salt: %s", salt)
-		passwd, err = hash.Generate(password, salt)
+		user.Salt = rand.GenerateSalt()
+		log.Debugf("Generated salt: %s", user.Salt)
+		user.Password, err = hash.Generate(password, user.Salt)
 		if err != nil {
 			log.Errorf("Error generating password hash: %v", err)
 			return nil, "", err
 		}
-		log.Debugf("Generated password hash: %s", passwd)
+		log.Debugf("Generated password hash: %s", user.Password)
 	}
 	registerID := id.Gen()
 	user.Id = registerID
 	user.Uuid = uuid.Must(uuid.NewRandom()).String()
 	user.Username = username
-	user.Name = "user_" + strconv.Itoa(int(registerID))
-	user.Password = passwd
-	user.Salt = salt
+	user.Name = "user_" + random.RandString(8)
 	user.Status = 1
 	return user, password, nil
 }
+
+var random = rand.NewRand(rand.KindDigit | rand.KindLowerCase | rand.KindUpperCase)

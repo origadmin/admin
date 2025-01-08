@@ -6924,7 +6924,6 @@ type RoleMutation struct {
 	addsequence             *int
 	status                  *int8
 	addstatus               *int8
-	is_system               *bool
 	clearedFields           map[string]struct{}
 	users                   map[int64]struct{}
 	removedusers            map[int64]struct{}
@@ -7395,42 +7394,6 @@ func (m *RoleMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
-// SetIsSystem sets the "is_system" field.
-func (m *RoleMutation) SetIsSystem(b bool) {
-	m.is_system = &b
-}
-
-// IsSystem returns the value of the "is_system" field in the mutation.
-func (m *RoleMutation) IsSystem() (r bool, exists bool) {
-	v := m.is_system
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIsSystem returns the old "is_system" field's value of the Role entity.
-// If the Role object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoleMutation) OldIsSystem(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIsSystem is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIsSystem requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIsSystem: %w", err)
-	}
-	return oldValue.IsSystem, nil
-}
-
-// ResetIsSystem resets all changes to the "is_system" field.
-func (m *RoleMutation) ResetIsSystem() {
-	m.is_system = nil
-}
-
 // AddUserIDs adds the "users" edge to the User entity by ids.
 func (m *RoleMutation) AddUserIDs(ids ...int64) {
 	if m.users == nil {
@@ -7681,7 +7644,7 @@ func (m *RoleMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoleMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 8)
 	if m.create_time != nil {
 		fields = append(fields, role.FieldCreateTime)
 	}
@@ -7705,9 +7668,6 @@ func (m *RoleMutation) Fields() []string {
 	}
 	if m.status != nil {
 		fields = append(fields, role.FieldStatus)
-	}
-	if m.is_system != nil {
-		fields = append(fields, role.FieldIsSystem)
 	}
 	return fields
 }
@@ -7733,8 +7693,6 @@ func (m *RoleMutation) Field(name string) (ent.Value, bool) {
 		return m.Sequence()
 	case role.FieldStatus:
 		return m.Status()
-	case role.FieldIsSystem:
-		return m.IsSystem()
 	}
 	return nil, false
 }
@@ -7760,8 +7718,6 @@ func (m *RoleMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldSequence(ctx)
 	case role.FieldStatus:
 		return m.OldStatus(ctx)
-	case role.FieldIsSystem:
-		return m.OldIsSystem(ctx)
 	}
 	return nil, fmt.Errorf("unknown Role field %s", name)
 }
@@ -7826,13 +7782,6 @@ func (m *RoleMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetStatus(v)
-		return nil
-	case role.FieldIsSystem:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIsSystem(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Role field %s", name)
@@ -7945,9 +7894,6 @@ func (m *RoleMutation) ResetField(name string) error {
 		return nil
 	case role.FieldStatus:
 		m.ResetStatus()
-		return nil
-	case role.FieldIsSystem:
-		m.ResetIsSystem()
 		return nil
 	}
 	return fmt.Errorf("unknown Role field %s", name)
@@ -8631,6 +8577,7 @@ type UserMutation struct {
 	token                   *string
 	status                  *int8
 	addstatus               *int8
+	is_system               *bool
 	last_login_ip           *string
 	last_login_time         *time.Time
 	sanction_date           *time.Time
@@ -9501,6 +9448,42 @@ func (m *UserMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
+// SetIsSystem sets the "is_system" field.
+func (m *UserMutation) SetIsSystem(b bool) {
+	m.is_system = &b
+}
+
+// IsSystem returns the value of the "is_system" field in the mutation.
+func (m *UserMutation) IsSystem() (r bool, exists bool) {
+	v := m.is_system
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsSystem returns the old "is_system" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldIsSystem(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsSystem is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsSystem requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsSystem: %w", err)
+	}
+	return oldValue.IsSystem, nil
+}
+
+// ResetIsSystem resets all changes to the "is_system" field.
+func (m *UserMutation) ResetIsSystem() {
+	m.is_system = nil
+}
+
 // SetLastLoginIP sets the "last_login_ip" field.
 func (m *UserMutation) SetLastLoginIP(s string) {
 	m.last_login_ip = &s
@@ -9604,9 +9587,22 @@ func (m *UserMutation) OldSanctionDate(ctx context.Context) (v time.Time, err er
 	return oldValue.SanctionDate, nil
 }
 
+// ClearSanctionDate clears the value of the "sanction_date" field.
+func (m *UserMutation) ClearSanctionDate() {
+	m.sanction_date = nil
+	m.clearedFields[user.FieldSanctionDate] = struct{}{}
+}
+
+// SanctionDateCleared returns if the "sanction_date" field was cleared in this mutation.
+func (m *UserMutation) SanctionDateCleared() bool {
+	_, ok := m.clearedFields[user.FieldSanctionDate]
+	return ok
+}
+
 // ResetSanctionDate resets all changes to the "sanction_date" field.
 func (m *UserMutation) ResetSanctionDate() {
 	m.sanction_date = nil
+	delete(m.clearedFields, user.FieldSanctionDate)
 }
 
 // SetManagerID sets the "manager_id" field.
@@ -10073,7 +10069,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 23)
+	fields := make([]string, 0, 24)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10127,6 +10123,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.status != nil {
 		fields = append(fields, user.FieldStatus)
+	}
+	if m.is_system != nil {
+		fields = append(fields, user.FieldIsSystem)
 	}
 	if m.last_login_ip != nil {
 		fields = append(fields, user.FieldLastLoginIP)
@@ -10187,6 +10186,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Token()
 	case user.FieldStatus:
 		return m.Status()
+	case user.FieldIsSystem:
+		return m.IsSystem()
 	case user.FieldLastLoginIP:
 		return m.LastLoginIP()
 	case user.FieldLastLoginTime:
@@ -10242,6 +10243,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldToken(ctx)
 	case user.FieldStatus:
 		return m.OldStatus(ctx)
+	case user.FieldIsSystem:
+		return m.OldIsSystem(ctx)
 	case user.FieldLastLoginIP:
 		return m.OldLastLoginIP(ctx)
 	case user.FieldLastLoginTime:
@@ -10387,6 +10390,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetStatus(v)
 		return nil
+	case user.FieldIsSystem:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsSystem(v)
+		return nil
 	case user.FieldLastLoginIP:
 		v, ok := value.(string)
 		if !ok {
@@ -10509,6 +10519,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldUpdateAuthor) {
 		fields = append(fields, user.FieldUpdateAuthor)
 	}
+	if m.FieldCleared(user.FieldSanctionDate) {
+		fields = append(fields, user.FieldSanctionDate)
+	}
 	if m.FieldCleared(user.FieldManagerID) {
 		fields = append(fields, user.FieldManagerID)
 	}
@@ -10531,6 +10544,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldUpdateAuthor:
 		m.ClearUpdateAuthor()
+		return nil
+	case user.FieldSanctionDate:
+		m.ClearSanctionDate()
 		return nil
 	case user.FieldManagerID:
 		m.ClearManagerID()
@@ -10596,6 +10612,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldStatus:
 		m.ResetStatus()
+		return nil
+	case user.FieldIsSystem:
+		m.ResetIsSystem()
 		return nil
 	case user.FieldLastLoginIP:
 		m.ResetLastLoginIP()

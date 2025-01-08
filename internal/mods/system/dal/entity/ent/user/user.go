@@ -52,6 +52,8 @@ const (
 	FieldToken = "token"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
+	// FieldIsSystem holds the string denoting the is_system field in the database.
+	FieldIsSystem = "is_system"
 	// FieldLastLoginIP holds the string denoting the last_login_ip field in the database.
 	FieldLastLoginIP = "last_login_ip"
 	// FieldLastLoginTime holds the string denoting the last_login_time field in the database.
@@ -135,6 +137,7 @@ var Columns = []string{
 	FieldRemark,
 	FieldToken,
 	FieldStatus,
+	FieldIsSystem,
 	FieldLastLoginIP,
 	FieldLastLoginTime,
 	FieldSanctionDate,
@@ -226,14 +229,14 @@ var (
 	TokenValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
+	// DefaultIsSystem holds the default value on creation for the "is_system" field.
+	DefaultIsSystem bool
 	// DefaultLastLoginIP holds the default value on creation for the "last_login_ip" field.
 	DefaultLastLoginIP string
 	// LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	LastLoginIPValidator func(string) error
 	// DefaultLastLoginTime holds the default value on creation for the "last_login_time" field.
 	DefaultLastLoginTime func() time.Time
-	// DefaultSanctionDate holds the default value on creation for the "sanction_date" field.
-	DefaultSanctionDate func() time.Time
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	ManagerIDValidator func(int64) error
 	// DefaultManager holds the default value on creation for the "manager" field.
@@ -367,6 +370,11 @@ func ByToken(opts ...sql.OrderTermOption) OrderOption {
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// ByIsSystem orders the results by the is_system field.
+func ByIsSystem(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsSystem, opts...).ToFunc()
 }
 
 // ByLastLoginIP orders the results by the last_login_ip field.

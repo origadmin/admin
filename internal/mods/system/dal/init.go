@@ -169,7 +169,6 @@ func initRoles(ctx context.Context, client *ent.Client) error {
 			SetType(int8(role.Type)).
 			SetSequence(role.Sequence).
 			SetStatus(role.Status).
-			SetIsSystem(role.IsSystem).
 			SetDescription(role.Description).
 			Save(ctx)
 		if err != nil {

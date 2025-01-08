@@ -48,6 +48,24 @@ func OP(name string, comment ...string) ent.Field {
 	return _id.Comment(comment[0]).OP(name)
 }
 
+// TimeOP returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
+func TimeOP(name string, comment ...string) ent.Field {
+	if len(comment) == 0 {
+		return field.Time(name).
+			Optional().
+			SchemaType(map[string]string{
+				dialect.MySQL: "datetime",
+			})
+	}
+	// Create a time field with the given name and a default value of ZeroTime.
+	return field.Time(name).
+		Comment(comment[0]).
+		Optional().
+		SchemaType(map[string]string{
+			dialect.MySQL: "datetime",
+		})
+}
+
 // Time returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
 func Time(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {

@@ -395,10 +395,6 @@ func init() {
 	roleDescStatus := roleFields[5].Descriptor()
 	// role.DefaultStatus holds the default value on creation for the status field.
 	role.DefaultStatus = roleDescStatus.Default.(int8)
-	// roleDescIsSystem is the schema descriptor for is_system field.
-	roleDescIsSystem := roleFields[6].Descriptor()
-	// role.DefaultIsSystem holds the default value on creation for the is_system field.
-	role.DefaultIsSystem = roleDescIsSystem.Default.(bool)
 	// roleDescID is the schema descriptor for id field.
 	roleDescID := roleMixinFields0[0].Descriptor()
 	// role.DefaultID holds the default value on creation for the id field.
@@ -527,26 +523,26 @@ func init() {
 	userDescStatus := userFields[13].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = userDescStatus.Default.(int8)
+	// userDescIsSystem is the schema descriptor for is_system field.
+	userDescIsSystem := userFields[14].Descriptor()
+	// user.DefaultIsSystem holds the default value on creation for the is_system field.
+	user.DefaultIsSystem = userDescIsSystem.Default.(bool)
 	// userDescLastLoginIP is the schema descriptor for last_login_ip field.
-	userDescLastLoginIP := userFields[14].Descriptor()
+	userDescLastLoginIP := userFields[15].Descriptor()
 	// user.DefaultLastLoginIP holds the default value on creation for the last_login_ip field.
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// user.LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	user.LastLoginIPValidator = userDescLastLoginIP.Validators[0].(func(string) error)
 	// userDescLastLoginTime is the schema descriptor for last_login_time field.
-	userDescLastLoginTime := userFields[15].Descriptor()
+	userDescLastLoginTime := userFields[16].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
-	// userDescSanctionDate is the schema descriptor for sanction_date field.
-	userDescSanctionDate := userFields[16].Descriptor()
-	// user.DefaultSanctionDate holds the default value on creation for the sanction_date field.
-	user.DefaultSanctionDate = userDescSanctionDate.Default.(func() time.Time)
 	// userDescManagerID is the schema descriptor for manager_id field.
-	userDescManagerID := userFields[17].Descriptor()
+	userDescManagerID := userFields[18].Descriptor()
 	// user.ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	user.ManagerIDValidator = userDescManagerID.Validators[0].(func(int64) error)
 	// userDescManager is the schema descriptor for manager field.
-	userDescManager := userFields[18].Descriptor()
+	userDescManager := userFields[19].Descriptor()
 	// user.DefaultManager holds the default value on creation for the manager field.
 	user.DefaultManager = userDescManager.Default.(string)
 	// userDescID is the schema descriptor for id field.

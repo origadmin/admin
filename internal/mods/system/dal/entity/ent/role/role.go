@@ -30,8 +30,6 @@ const (
 	FieldSequence = "sequence"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldIsSystem holds the string denoting the is_system field in the database.
-	FieldIsSystem = "is_system"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
 	// EdgePermissions holds the string denoting the permissions edge name in mutations.
@@ -79,7 +77,6 @@ var Columns = []string{
 	FieldType,
 	FieldSequence,
 	FieldStatus,
-	FieldIsSystem,
 }
 
 var (
@@ -124,8 +121,6 @@ var (
 	DefaultSequence int
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
-	// DefaultIsSystem holds the default value on creation for the "is_system" field.
-	DefaultIsSystem bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -178,11 +173,6 @@ func BySequence(opts ...sql.OrderTermOption) OrderOption {
 // ByStatus orders the results by the status field.
 func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
-}
-
-// ByIsSystem orders the results by the is_system field.
-func ByIsSystem(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsSystem, opts...).ToFunc()
 }
 
 // ByUsersCount orders the results by users count.

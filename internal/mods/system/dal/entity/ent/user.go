@@ -54,6 +54,8 @@ type User struct {
 	Token string `json:"token,omitempty"`
 	// user.field.status
 	Status int8 `json:"status,omitempty"`
+	// user.field.is_system
+	IsSystem bool `json:"is_system,omitempty"`
 	// user.field.last_login_ip
 	LastLoginIP string `json:"last_login_ip,omitempty"`
 	// user.field.last_login_time
@@ -148,6 +150,8 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case user.FieldIsSystem:
+			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus, user.FieldManagerID:
 			values[i] = new(sql.NullInt64)
 		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
@@ -282,6 +286,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
 				u.Status = int8(value.Int64)
+			}
+		case user.FieldIsSystem:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_system", values[i])
+			} else if value.Valid {
+				u.IsSystem = value.Bool
 			}
 		case user.FieldLastLoginIP:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -432,6 +442,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", u.Status))
+	builder.WriteString(", ")
+	builder.WriteString("is_system=")
+	builder.WriteString(fmt.Sprintf("%v", u.IsSystem))
 	builder.WriteString(", ")
 	builder.WriteString("last_login_ip=")
 	builder.WriteString(u.LastLoginIP)

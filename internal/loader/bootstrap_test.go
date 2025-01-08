@@ -155,7 +155,7 @@ func TestLoadConfig(t *testing.T) {
 	}
 }
 
-func TestData_InitResourceFromFile(t *testing.T) {
+func TestData_InitDataFromPath(t *testing.T) {
 	log.SetLogger(slog.NewLogger())
 	_ = uuid.UUID{}
 	type fields struct {

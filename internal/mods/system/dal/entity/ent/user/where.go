@@ -140,6 +140,11 @@ func Status(v int8) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldStatus, v))
 }
 
+// IsSystem applies equality check predicate on the "is_system" field. It's identical to IsSystemEQ.
+func IsSystem(v bool) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldIsSystem, v))
+}
+
 // LastLoginIP applies equality check predicate on the "last_login_ip" field. It's identical to LastLoginIPEQ.
 func LastLoginIP(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLastLoginIP, v))
@@ -1185,6 +1190,16 @@ func StatusLTE(v int8) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldStatus, v))
 }
 
+// IsSystemEQ applies the EQ predicate on the "is_system" field.
+func IsSystemEQ(v bool) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldIsSystem, v))
+}
+
+// IsSystemNEQ applies the NEQ predicate on the "is_system" field.
+func IsSystemNEQ(v bool) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldIsSystem, v))
+}
+
 // LastLoginIPEQ applies the EQ predicate on the "last_login_ip" field.
 func LastLoginIPEQ(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLastLoginIP, v))
@@ -1328,6 +1343,16 @@ func SanctionDateLT(v time.Time) predicate.User {
 // SanctionDateLTE applies the LTE predicate on the "sanction_date" field.
 func SanctionDateLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldSanctionDate, v))
+}
+
+// SanctionDateIsNil applies the IsNil predicate on the "sanction_date" field.
+func SanctionDateIsNil() predicate.User {
+	return predicate.User(sql.FieldIsNull(FieldSanctionDate))
+}
+
+// SanctionDateNotNil applies the NotNil predicate on the "sanction_date" field.
+func SanctionDateNotNil() predicate.User {
+	return predicate.User(sql.FieldNotNull(FieldSanctionDate))
 }
 
 // ManagerIDEQ applies the EQ predicate on the "manager_id" field.

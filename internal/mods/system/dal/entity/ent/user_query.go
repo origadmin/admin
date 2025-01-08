@@ -1045,6 +1045,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  Remark string `json:"remark,omitempty"`
 //	  Token string `json:"token,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
+//	  IsSystem bool `json:"is_system,omitempty"`
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
 //	  LastLoginTime time.Time `json:"last_login_time,omitempty"`
 //	  SanctionDate time.Time `json:"sanction_date,omitempty"`
@@ -1072,6 +1073,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldRemark,
 //	  user.FieldToken,
 //	  user.FieldStatus,
+//	  user.FieldIsSystem,
 //	  user.FieldLastLoginIP,
 //	  user.FieldLastLoginTime,
 //	  user.FieldSanctionDate,

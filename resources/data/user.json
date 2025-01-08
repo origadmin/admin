@@ -8,7 +8,8 @@
     "status": 1,
     "roles": ["super_admin"],
     "departments": ["root"],
-    "positions": ["技术总监"]
+    "positions": ["技术总监"],
+    "is_system": true
   },
   {
     "username": "test",

@@ -128,20 +128,6 @@ func (rc *RoleCreate) SetNillableStatus(i *int8) *RoleCreate {
 	return rc
 }
 
-// SetIsSystem sets the "is_system" field.
-func (rc *RoleCreate) SetIsSystem(b bool) *RoleCreate {
-	rc.mutation.SetIsSystem(b)
-	return rc
-}
-
-// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
-func (rc *RoleCreate) SetNillableIsSystem(b *bool) *RoleCreate {
-	if b != nil {
-		rc.SetIsSystem(*b)
-	}
-	return rc
-}
-
 // SetID sets the "id" field.
 func (rc *RoleCreate) SetID(i int64) *RoleCreate {
 	rc.mutation.SetID(i)
@@ -279,10 +265,6 @@ func (rc *RoleCreate) defaults() {
 		v := role.DefaultStatus
 		rc.mutation.SetStatus(v)
 	}
-	if _, ok := rc.mutation.IsSystem(); !ok {
-		v := role.DefaultIsSystem
-		rc.mutation.SetIsSystem(v)
-	}
 	if _, ok := rc.mutation.ID(); !ok {
 		v := role.DefaultID()
 		rc.mutation.SetID(v)
@@ -329,9 +311,6 @@ func (rc *RoleCreate) check() error {
 	}
 	if _, ok := rc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Role.status"`)}
-	}
-	if _, ok := rc.mutation.IsSystem(); !ok {
-		return &ValidationError{Name: "is_system", err: errors.New(`ent: missing required field "Role.is_system"`)}
 	}
 	if v, ok := rc.mutation.ID(); ok {
 		if err := role.IDValidator(v); err != nil {
@@ -401,10 +380,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.Status(); ok {
 		_spec.SetField(role.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
-	}
-	if value, ok := rc.mutation.IsSystem(); ok {
-		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
-		_node.IsSystem = value
 	}
 	if nodes := rc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

@@ -34,8 +34,6 @@ type Role struct {
 	Sequence int `json:"sequence,omitempty"`
 	// role.field.status
 	Status int8 `json:"status,omitempty"`
-	// role.field.is_system
-	IsSystem bool `json:"is_system,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -98,8 +96,6 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case role.FieldIsSystem:
-			values[i] = new(sql.NullBool)
 		case role.FieldID, role.FieldType, role.FieldSequence, role.FieldStatus:
 			values[i] = new(sql.NullInt64)
 		case role.FieldKeyword, role.FieldName, role.FieldDescription:
@@ -174,12 +170,6 @@ func (r *Role) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
 				r.Status = int8(value.Int64)
-			}
-		case role.FieldIsSystem:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field is_system", values[i])
-			} else if value.Valid {
-				r.IsSystem = value.Bool
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -260,9 +250,6 @@ func (r *Role) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", r.Status))
-	builder.WriteString(", ")
-	builder.WriteString("is_system=")
-	builder.WriteString(fmt.Sprintf("%v", r.IsSystem))
 	builder.WriteByte(')')
 	return builder.String()
 }

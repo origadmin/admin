@@ -95,11 +95,6 @@ func Status(v int8) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldStatus, v))
 }
 
-// IsSystem applies equality check predicate on the "is_system" field. It's identical to IsSystemEQ.
-func IsSystem(v bool) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldIsSystem, v))
-}
-
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.Role {
 	return predicate.Role(sql.FieldEQ(FieldCreateTime, v))
@@ -493,16 +488,6 @@ func StatusLT(v int8) predicate.Role {
 // StatusLTE applies the LTE predicate on the "status" field.
 func StatusLTE(v int8) predicate.Role {
 	return predicate.Role(sql.FieldLTE(FieldStatus, v))
-}
-
-// IsSystemEQ applies the EQ predicate on the "is_system" field.
-func IsSystemEQ(v bool) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldIsSystem, v))
-}
-
-// IsSystemNEQ applies the NEQ predicate on the "is_system" field.
-func IsSystemNEQ(v bool) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldIsSystem, v))
 }
 
 // HasUsers applies the HasEdge predicate on the "users" edge.

@@ -144,20 +144,6 @@ func (ru *RoleUpdate) AddStatus(i int8) *RoleUpdate {
 	return ru
 }
 
-// SetIsSystem sets the "is_system" field.
-func (ru *RoleUpdate) SetIsSystem(b bool) *RoleUpdate {
-	ru.mutation.SetIsSystem(b)
-	return ru
-}
-
-// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
-func (ru *RoleUpdate) SetNillableIsSystem(b *bool) *RoleUpdate {
-	if b != nil {
-		ru.SetIsSystem(*b)
-	}
-	return ru
-}
-
 // AddUserIDs adds the "users" edge to the User entity by IDs.
 func (ru *RoleUpdate) AddUserIDs(ids ...int64) *RoleUpdate {
 	ru.mutation.AddUserIDs(ids...)
@@ -410,9 +396,6 @@ func (ru *RoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.AddedStatus(); ok {
 		_spec.AddField(role.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := ru.mutation.IsSystem(); ok {
-		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 	}
 	if ru.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -769,20 +752,6 @@ func (ruo *RoleUpdateOne) AddStatus(i int8) *RoleUpdateOne {
 	return ruo
 }
 
-// SetIsSystem sets the "is_system" field.
-func (ruo *RoleUpdateOne) SetIsSystem(b bool) *RoleUpdateOne {
-	ruo.mutation.SetIsSystem(b)
-	return ruo
-}
-
-// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
-func (ruo *RoleUpdateOne) SetNillableIsSystem(b *bool) *RoleUpdateOne {
-	if b != nil {
-		ruo.SetIsSystem(*b)
-	}
-	return ruo
-}
-
 // AddUserIDs adds the "users" edge to the User entity by IDs.
 func (ruo *RoleUpdateOne) AddUserIDs(ids ...int64) *RoleUpdateOne {
 	ruo.mutation.AddUserIDs(ids...)
@@ -1065,9 +1034,6 @@ func (ruo *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) 
 	}
 	if value, ok := ruo.mutation.AddedStatus(); ok {
 		_spec.AddField(role.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := ruo.mutation.IsSystem(); ok {
-		_spec.SetField(role.FieldIsSystem, field.TypeBool, value)
 	}
 	if ruo.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{

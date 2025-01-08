@@ -262,6 +262,20 @@ func (uc *UserCreate) SetNillableStatus(i *int8) *UserCreate {
 	return uc
 }
 
+// SetIsSystem sets the "is_system" field.
+func (uc *UserCreate) SetIsSystem(b bool) *UserCreate {
+	uc.mutation.SetIsSystem(b)
+	return uc
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (uc *UserCreate) SetNillableIsSystem(b *bool) *UserCreate {
+	if b != nil {
+		uc.SetIsSystem(*b)
+	}
+	return uc
+}
+
 // SetLastLoginIP sets the "last_login_ip" field.
 func (uc *UserCreate) SetLastLoginIP(s string) *UserCreate {
 	uc.mutation.SetLastLoginIP(s)
@@ -543,6 +557,10 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultStatus
 		uc.mutation.SetStatus(v)
 	}
+	if _, ok := uc.mutation.IsSystem(); !ok {
+		v := user.DefaultIsSystem
+		uc.mutation.SetIsSystem(v)
+	}
 	if _, ok := uc.mutation.LastLoginIP(); !ok {
 		v := user.DefaultLastLoginIP
 		uc.mutation.SetLastLoginIP(v)
@@ -553,13 +571,6 @@ func (uc *UserCreate) defaults() error {
 		}
 		v := user.DefaultLastLoginTime()
 		uc.mutation.SetLastLoginTime(v)
-	}
-	if _, ok := uc.mutation.SanctionDate(); !ok {
-		if user.DefaultSanctionDate == nil {
-			return fmt.Errorf("ent: uninitialized user.DefaultSanctionDate (forgotten import ent/runtime?)")
-		}
-		v := user.DefaultSanctionDate()
-		uc.mutation.SetSanctionDate(v)
 	}
 	if _, ok := uc.mutation.Manager(); !ok {
 		v := user.DefaultManager
@@ -685,6 +696,9 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "User.status"`)}
 	}
+	if _, ok := uc.mutation.IsSystem(); !ok {
+		return &ValidationError{Name: "is_system", err: errors.New(`ent: missing required field "User.is_system"`)}
+	}
 	if _, ok := uc.mutation.LastLoginIP(); !ok {
 		return &ValidationError{Name: "last_login_ip", err: errors.New(`ent: missing required field "User.last_login_ip"`)}
 	}
@@ -695,9 +709,6 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.LastLoginTime(); !ok {
 		return &ValidationError{Name: "last_login_time", err: errors.New(`ent: missing required field "User.last_login_time"`)}
-	}
-	if _, ok := uc.mutation.SanctionDate(); !ok {
-		return &ValidationError{Name: "sanction_date", err: errors.New(`ent: missing required field "User.sanction_date"`)}
 	}
 	if v, ok := uc.mutation.ManagerID(); ok {
 		if err := user.ManagerIDValidator(v); err != nil {
@@ -815,6 +826,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Status(); ok {
 		_spec.SetField(user.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
+	}
+	if value, ok := uc.mutation.IsSystem(); ok {
+		_spec.SetField(user.FieldIsSystem, field.TypeBool, value)
+		_node.IsSystem = value
 	}
 	if value, ok := uc.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)

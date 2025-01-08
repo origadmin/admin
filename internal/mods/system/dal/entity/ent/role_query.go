@@ -856,7 +856,6 @@ func (rq *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 //	  Type int8 `json:"type,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
-//	  IsSystem bool `json:"is_system,omitempty"`
 //	}
 //
 //	client.Role.Query().
@@ -869,7 +868,6 @@ func (rq *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 //	  role.FieldType,
 //	  role.FieldSequence,
 //	  role.FieldStatus,
-//	  role.FieldIsSystem,
 //	  ).
 //	  Scan(ctx, &v)
 func (rq *RoleQuery) Omit(fields ...string) *RoleSelect {

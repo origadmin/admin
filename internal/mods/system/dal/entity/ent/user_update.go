@@ -298,6 +298,20 @@ func (uu *UserUpdate) AddStatus(i int8) *UserUpdate {
 	return uu
 }
 
+// SetIsSystem sets the "is_system" field.
+func (uu *UserUpdate) SetIsSystem(b bool) *UserUpdate {
+	uu.mutation.SetIsSystem(b)
+	return uu
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableIsSystem(b *bool) *UserUpdate {
+	if b != nil {
+		uu.SetIsSystem(*b)
+	}
+	return uu
+}
+
 // SetLastLoginIP sets the "last_login_ip" field.
 func (uu *UserUpdate) SetLastLoginIP(s string) *UserUpdate {
 	uu.mutation.SetLastLoginIP(s)
@@ -337,6 +351,12 @@ func (uu *UserUpdate) SetNillableSanctionDate(t *time.Time) *UserUpdate {
 	if t != nil {
 		uu.SetSanctionDate(*t)
 	}
+	return uu
+}
+
+// ClearSanctionDate clears the value of the "sanction_date" field.
+func (uu *UserUpdate) ClearSanctionDate() *UserUpdate {
+	uu.mutation.ClearSanctionDate()
 	return uu
 }
 
@@ -803,6 +823,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.AddedStatus(); ok {
 		_spec.AddField(user.FieldStatus, field.TypeInt8, value)
 	}
+	if value, ok := uu.mutation.IsSystem(); ok {
+		_spec.SetField(user.FieldIsSystem, field.TypeBool, value)
+	}
 	if value, ok := uu.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
 	}
@@ -811,6 +834,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
+	}
+	if uu.mutation.SanctionDateCleared() {
+		_spec.ClearField(user.FieldSanctionDate, field.TypeTime)
 	}
 	if value, ok := uu.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)
@@ -1442,6 +1468,20 @@ func (uuo *UserUpdateOne) AddStatus(i int8) *UserUpdateOne {
 	return uuo
 }
 
+// SetIsSystem sets the "is_system" field.
+func (uuo *UserUpdateOne) SetIsSystem(b bool) *UserUpdateOne {
+	uuo.mutation.SetIsSystem(b)
+	return uuo
+}
+
+// SetNillableIsSystem sets the "is_system" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableIsSystem(b *bool) *UserUpdateOne {
+	if b != nil {
+		uuo.SetIsSystem(*b)
+	}
+	return uuo
+}
+
 // SetLastLoginIP sets the "last_login_ip" field.
 func (uuo *UserUpdateOne) SetLastLoginIP(s string) *UserUpdateOne {
 	uuo.mutation.SetLastLoginIP(s)
@@ -1481,6 +1521,12 @@ func (uuo *UserUpdateOne) SetNillableSanctionDate(t *time.Time) *UserUpdateOne {
 	if t != nil {
 		uuo.SetSanctionDate(*t)
 	}
+	return uuo
+}
+
+// ClearSanctionDate clears the value of the "sanction_date" field.
+func (uuo *UserUpdateOne) ClearSanctionDate() *UserUpdateOne {
+	uuo.mutation.ClearSanctionDate()
 	return uuo
 }
 
@@ -1977,6 +2023,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.AddedStatus(); ok {
 		_spec.AddField(user.FieldStatus, field.TypeInt8, value)
 	}
+	if value, ok := uuo.mutation.IsSystem(); ok {
+		_spec.SetField(user.FieldIsSystem, field.TypeBool, value)
+	}
 	if value, ok := uuo.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
 	}
@@ -1985,6 +2034,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
+	}
+	if uuo.mutation.SanctionDateCleared() {
+		_spec.ClearField(user.FieldSanctionDate, field.TypeTime)
 	}
 	if value, ok := uuo.mutation.ManagerID(); ok {
 		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)

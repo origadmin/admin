@@ -647,10 +647,6 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
-		case role.FieldIsSystem:
-			if input.IsSystem {
-				m.SetIsSystem(input.IsSystem)
-			}
 		case role.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ID != 0 {
@@ -685,8 +681,6 @@ func (m *RoleMutation) SetFieldsWithZero(input *Role, fields ...string) error {
 			m.SetSequence(input.Sequence)
 		case role.FieldStatus:
 			m.SetStatus(input.Status)
-		case role.FieldIsSystem:
-			m.SetIsSystem(input.IsSystem)
 		case role.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -838,6 +832,10 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
+		case user.FieldIsSystem:
+			if input.IsSystem {
+				m.SetIsSystem(input.IsSystem)
+			}
 		case user.FieldLastLoginIP:
 			// check string with sql.NullString if it is empty
 			if input.LastLoginIP != "" {
@@ -915,6 +913,8 @@ func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
 			m.SetToken(input.Token)
 		case user.FieldStatus:
 			m.SetStatus(input.Status)
+		case user.FieldIsSystem:
+			m.SetIsSystem(input.IsSystem)
 		case user.FieldLastLoginIP:
 			m.SetLastLoginIP(input.LastLoginIP)
 		case user.FieldLastLoginTime:
