@@ -100,7 +100,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	case userData == nil:
 		log.Warnf("User not found with username %s", data.Username)
 		return nil, dto.ErrInvalidUsername
-	case userData.Status != systemdto.UserStatusEnabled:
+	case userData.Status != systemdto.UserStatusActive:
 		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:

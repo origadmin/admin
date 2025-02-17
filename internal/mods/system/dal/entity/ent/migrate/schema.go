@@ -297,7 +297,7 @@ var (
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "role.field.description", Default: ""},
 		{Name: "type", Type: field.TypeInt8, Comment: "role.field.type", Default: 2},
 		{Name: "sequence", Type: field.TypeInt, Comment: "role.field.sequence", Default: 0},
-		{Name: "status", Type: field.TypeInt8, Comment: "role.field.status", Default: 0},
+		{Name: "status", Type: field.TypeInt8, Comment: "role.field.status", Default: 1},
 	}
 	// SysRolesTable holds the schema information for the "sys_roles" table.
 	SysRolesTable = &schema.Table{
@@ -389,6 +389,7 @@ var (
 		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
 		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "user.field.uuid"},
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "user.field.allowed_ip", Default: "0.0.0.0"},
 		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "user.field.username"},
@@ -402,7 +403,7 @@ var (
 		{Name: "email", Type: field.TypeString, Size: 64, Comment: "user.field.email", Default: ""},
 		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "user.field.remark", Default: ""},
 		{Name: "token", Type: field.TypeString, Size: 512, Comment: "user.field.token", Default: ""},
-		{Name: "status", Type: field.TypeInt8, Comment: "user.field.status", Default: 0},
+		{Name: "status", Type: field.TypeInt8, Comment: "user.field.status", Default: 1},
 		{Name: "is_system", Type: field.TypeBool, Comment: "user.field.is_system", Default: false},
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "user.field.last_login_ip", Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, Comment: "user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
@@ -438,24 +439,29 @@ var (
 				Columns: []*schema.Column{SysUsersColumns[4]},
 			},
 			{
+				Name:    "user_delete_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysUsersColumns[5]},
+			},
+			{
 				Name:    "user_username",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[7]},
+				Columns: []*schema.Column{SysUsersColumns[8]},
 			},
 			{
 				Name:    "user_phone",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[14]},
+				Columns: []*schema.Column{SysUsersColumns[15]},
 			},
 			{
 				Name:    "user_email",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[15]},
+				Columns: []*schema.Column{SysUsersColumns[16]},
 			},
 			{
 				Name:    "user_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[18]},
+				Columns: []*schema.Column{SysUsersColumns[19]},
 			},
 		},
 	}

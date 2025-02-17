@@ -13,7 +13,7 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/constants"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 )
 
@@ -27,11 +27,8 @@ var (
 )
 
 const (
-	UserStatusEnabled  = schema.UserStatusEnabled
-	UserStatusDisabled = schema.UserStatusDisabled
-
-	ResourceStatusEnabled  = schema.ResourceStatusEnabled
-	ResourceStatusDisabled = schema.ResourceStatusDisabled
+	UserStatusActive = constants.Active
+	UserStatusFrozen = constants.Frozen
 )
 
 type (

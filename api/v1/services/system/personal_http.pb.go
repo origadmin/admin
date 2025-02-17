@@ -35,6 +35,7 @@ type PersonalServiceHTTPServer interface {
 	ListPersonalResources(context.Context, *ListPersonalResourcesRequest) (*ListPersonalResourcesResponse, error)
 	// ListPersonalRoles ListPersonalResources List the personal user's menu
 	ListPersonalRoles(context.Context, *ListPersonalRolesRequest) (*ListPersonalRolesResponse, error)
+	// PersonalLogout PersonalLogout Personal user logs out
 	PersonalLogout(context.Context, *PersonalLogoutRequest) (*PersonalLogoutResponse, error)
 	// RefreshPersonalToken RefreshPersonalToken Refresh the personal user's token
 	RefreshPersonalToken(context.Context, *RefreshPersonalTokenRequest) (*RefreshPersonalTokenResponse, error)
@@ -48,80 +49,14 @@ type PersonalServiceHTTPServer interface {
 
 func RegisterPersonalServiceHTTPServer(s *http.Server, srv PersonalServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/sys/personal/logout", _PersonalService_PersonalLogout0_HTTP_Handler(srv))
-	r.PUT("/sys/personal/password", _PersonalService_UpdatePersonalPassword0_HTTP_Handler(srv))
-	r.PUT("/sys/personal/profile", _PersonalService_UpdatePersonalProfile0_HTTP_Handler(srv))
 	r.GET("/sys/personal/profile", _PersonalService_GetPersonalProfile0_HTTP_Handler(srv))
 	r.GET("/sys/personal/menus", _PersonalService_ListPersonalResources0_HTTP_Handler(srv))
 	r.GET("/sys/personal/roles", _PersonalService_ListPersonalRoles0_HTTP_Handler(srv))
-	r.PUT("/sys/personal/setting", _PersonalService_UpdatePersonalSetting0_HTTP_Handler(srv))
+	r.POST("/sys/personal/logout", _PersonalService_PersonalLogout0_HTTP_Handler(srv))
 	r.POST("/sys/personal/token/refresh", _PersonalService_RefreshPersonalToken0_HTTP_Handler(srv))
-}
-
-func _PersonalService_PersonalLogout0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in PersonalLogoutRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationPersonalServicePersonalLogout)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.PersonalLogout(ctx, req.(*PersonalLogoutRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*PersonalLogoutResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _PersonalService_UpdatePersonalPassword0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdatePersonalPasswordRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationPersonalServiceUpdatePersonalPassword)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdatePersonalPassword(ctx, req.(*UpdatePersonalPasswordRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UpdatePersonalPasswordResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _PersonalService_UpdatePersonalProfile0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdatePersonalProfileRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationPersonalServiceUpdatePersonalProfile)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdatePersonalProfile(ctx, req.(*UpdatePersonalProfileRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UpdatePersonalProfileResponse)
-		return ctx.Result(200, reply)
-	}
+	r.PUT("/sys/personal/password", _PersonalService_UpdatePersonalPassword0_HTTP_Handler(srv))
+	r.PUT("/sys/personal/profile", _PersonalService_UpdatePersonalProfile0_HTTP_Handler(srv))
+	r.PUT("/sys/personal/setting", _PersonalService_UpdatePersonalSetting0_HTTP_Handler(srv))
 }
 
 func _PersonalService_GetPersonalProfile0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
@@ -181,24 +116,24 @@ func _PersonalService_ListPersonalRoles0_HTTP_Handler(srv PersonalServiceHTTPSer
 	}
 }
 
-func _PersonalService_UpdatePersonalSetting0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
+func _PersonalService_PersonalLogout0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdatePersonalSettingRequest
+		var in PersonalLogoutRequest
 		if err := ctx.Bind(&in.Data); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationPersonalServiceUpdatePersonalSetting)
+		http.SetOperation(ctx, OperationPersonalServicePersonalLogout)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.UpdatePersonalSetting(ctx, req.(*UpdatePersonalSettingRequest))
+			return srv.PersonalLogout(ctx, req.(*PersonalLogoutRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdatePersonalSettingResponse)
+		reply := out.(*PersonalLogoutResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -221,6 +156,72 @@ func _PersonalService_RefreshPersonalToken0_HTTP_Handler(srv PersonalServiceHTTP
 			return err
 		}
 		reply := out.(*RefreshPersonalTokenResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PersonalService_UpdatePersonalPassword0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdatePersonalPasswordRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPersonalServiceUpdatePersonalPassword)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdatePersonalPassword(ctx, req.(*UpdatePersonalPasswordRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdatePersonalPasswordResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PersonalService_UpdatePersonalProfile0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdatePersonalProfileRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPersonalServiceUpdatePersonalProfile)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdatePersonalProfile(ctx, req.(*UpdatePersonalProfileRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdatePersonalProfileResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _PersonalService_UpdatePersonalSetting0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdatePersonalSettingRequest
+		if err := ctx.Bind(&in.Data); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationPersonalServiceUpdatePersonalSetting)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdatePersonalSetting(ctx, req.(*UpdatePersonalSettingRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdatePersonalSettingResponse)
 		return ctx.Result(200, reply)
 	}
 }

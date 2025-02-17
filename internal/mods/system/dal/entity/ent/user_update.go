@@ -95,6 +95,26 @@ func (uu *UserUpdate) SetUpdateTime(t time.Time) *UserUpdate {
 	return uu
 }
 
+// SetDeleteTime sets the "delete_time" field.
+func (uu *UserUpdate) SetDeleteTime(t time.Time) *UserUpdate {
+	uu.mutation.SetDeleteTime(t)
+	return uu
+}
+
+// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDeleteTime(t *time.Time) *UserUpdate {
+	if t != nil {
+		uu.SetDeleteTime(*t)
+	}
+	return uu
+}
+
+// ClearDeleteTime clears the value of the "delete_time" field.
+func (uu *UserUpdate) ClearDeleteTime() *UserUpdate {
+	uu.mutation.ClearDeleteTime()
+	return uu
+}
+
 // SetUUID sets the "uuid" field.
 func (uu *UserUpdate) SetUUID(s string) *UserUpdate {
 	uu.mutation.SetUUID(s)
@@ -778,6 +798,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.UpdateTime(); ok {
 		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)
 	}
+	if value, ok := uu.mutation.DeleteTime(); ok {
+		_spec.SetField(user.FieldDeleteTime, field.TypeTime, value)
+	}
+	if uu.mutation.DeleteTimeCleared() {
+		_spec.ClearField(user.FieldDeleteTime, field.TypeTime)
+	}
 	if value, ok := uu.mutation.UUID(); ok {
 		_spec.SetField(user.FieldUUID, field.TypeString, value)
 	}
@@ -1262,6 +1288,26 @@ func (uuo *UserUpdateOne) ClearUpdateAuthor() *UserUpdateOne {
 // SetUpdateTime sets the "update_time" field.
 func (uuo *UserUpdateOne) SetUpdateTime(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetUpdateTime(t)
+	return uuo
+}
+
+// SetDeleteTime sets the "delete_time" field.
+func (uuo *UserUpdateOne) SetDeleteTime(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetDeleteTime(t)
+	return uuo
+}
+
+// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDeleteTime(t *time.Time) *UserUpdateOne {
+	if t != nil {
+		uuo.SetDeleteTime(*t)
+	}
+	return uuo
+}
+
+// ClearDeleteTime clears the value of the "delete_time" field.
+func (uuo *UserUpdateOne) ClearDeleteTime() *UserUpdateOne {
+	uuo.mutation.ClearDeleteTime()
 	return uuo
 }
 
@@ -1977,6 +2023,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.UpdateTime(); ok {
 		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)
+	}
+	if value, ok := uuo.mutation.DeleteTime(); ok {
+		_spec.SetField(user.FieldDeleteTime, field.TypeTime, value)
+	}
+	if uuo.mutation.DeleteTimeCleared() {
+		_spec.ClearField(user.FieldDeleteTime, field.TypeTime)
 	}
 	if value, ok := uuo.mutation.UUID(); ok {
 		_spec.SetField(user.FieldUUID, field.TypeString, value)

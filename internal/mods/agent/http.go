@@ -13,6 +13,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/goexts/generic/types"
+	"github.com/gorilla/handlers"
 	"github.com/origadmin/runtime"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/context"
@@ -88,9 +89,16 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		return true
 	})
 	ms = append(ms, serv.Build(), CallerMiddleware())
+
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
-		servicehttp.WithServerOptions(http.ErrorEncoder(resp.ResponseErrorEncoder)),
+		servicehttp.WithServerOptions(
+			http.ErrorEncoder(resp.ResponseErrorEncoder),
+			http.Filter(handlers.CORS(
+				handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+				handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}),
+				handlers.AllowedOrigins([]string{"*"}),
+			))),
 		servicehttp.WithMiddlewares(ms...),
 		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
 	))
@@ -128,6 +136,15 @@ func CallerMiddleware() middleware.KMiddleware {
 			log.Infof("Caller Server: %+v, ok: %+v", tr, ok)
 			tr, ok = transport.FromClientContext(ctx)
 			log.Infof("Caller Client: %+v, ok: %+v", tr, ok)
+			return handler(ctx, req)
+		}
+	}
+}
+
+func CorsMiddleware() middleware.KMiddleware {
+	return func(handler middleware.KHandler) middleware.KHandler {
+		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
+			log.Infof("CorsMiddleware: %+v", ctx)
 			return handler(ctx, req)
 		}
 	}

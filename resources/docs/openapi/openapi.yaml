@@ -956,6 +956,7 @@ paths:
         post:
             tags:
                 - PersonalService
+            description: PersonalLogout Personal user logs out
             operationId: PersonalService_PersonalLogout
             requestBody:
                 content:
@@ -3257,7 +3258,7 @@ tags:
     - name: PermissionService
       description: The login service definition.
     - name: PersonalService
-      description: The personal service definition.
+      description: PersonalService Personal user service
     - name: PositionService
       description: The login service definition.
     - name: ResourceService

@@ -15,11 +15,12 @@ import (
 
 	"origadmin/application/admin/helpers/ent/mixin"
 	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/constants"
 )
 
 const (
-	UserStatusEnabled  = 0
-	UserStatusDisabled = 1
+	UserStatusActive = constants.Active
+	UserStatusFrozen = constants.Frozen
 )
 
 const (
@@ -85,7 +86,7 @@ func (User) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("user.field.token")), // Token for login
 		field.Int8("status").
-			Default(UserStatusEnabled).
+			Default(UserStatusActive).
 			Comment(i18n.Text("user.field.status")),
 		field.Bool("is_system").
 			Default(false).

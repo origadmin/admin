@@ -12,15 +12,34 @@ option java_multiple_files = true;
 option java_outer_classname = "APIV1ServicesSystemPersonalProto";
 option java_package = "com.origadmin.api.v1.services.system";
 
-// The personal service definition.
+// PersonalService Personal user service
 service PersonalService {
+  // GetPersonalProfile Update the personal user information
+  rpc GetPersonalProfile (GetPersonalProfileRequest) returns (GetPersonalProfileResponse) {
+    option (google.api.http) = {get: "/sys/personal/profile"};
+  }
+  // ListPersonalResources List the personal user's menu
+  rpc ListPersonalResources (ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
+    option (google.api.http) = {get: "/sys/personal/menus"};
+  }
+  // ListPersonalResources List the personal user's menu
+  rpc ListPersonalRoles (ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
+    option (google.api.http) = {get: "/sys/personal/roles"};
+  }
+  // PersonalLogout Personal user logs out
   rpc PersonalLogout (PersonalLogoutRequest) returns (PersonalLogoutResponse) {
     option (google.api.http) = {
       post: "/sys/personal/logout"
       body: "data"
     };
   }
-
+  // RefreshPersonalToken Refresh the personal user's token
+  rpc RefreshPersonalToken (RefreshPersonalTokenRequest) returns (RefreshPersonalTokenResponse) {
+    option (google.api.http) = {
+      post: "/sys/personal/token/refresh"
+      body: "data"
+    };
+  }
   // UpdatePersonalProfilePassword The user changes the password
   rpc UpdatePersonalPassword (UpdatePersonalPasswordRequest) returns (UpdatePersonalPasswordResponse) {
     option (google.api.http) = {
@@ -35,29 +54,10 @@ service PersonalService {
       body: "data"
     };
   }
-  // GetPersonalProfile Update the personal user information
-  rpc GetPersonalProfile (GetPersonalProfileRequest) returns (GetPersonalProfileResponse) {
-    option (google.api.http) = {get: "/sys/personal/profile"};
-  }
-  // ListPersonalResources List the personal user's menu
-  rpc ListPersonalResources (ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
-    option (google.api.http) = {get: "/sys/personal/menus"};
-  }
-  // ListPersonalResources List the personal user's menu
-  rpc ListPersonalRoles (ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
-    option (google.api.http) = {get: "/sys/personal/roles"};
-  }
   // UpdatePersonalSetting User settings are saved
   rpc UpdatePersonalSetting (UpdatePersonalSettingRequest) returns (UpdatePersonalSettingResponse) {
     option (google.api.http) = {
       put: "/sys/personal/setting"
-      body: "data"
-    };
-  }
-  // RefreshPersonalToken Refresh the personal user's token
-  rpc RefreshPersonalToken (RefreshPersonalTokenRequest) returns (RefreshPersonalTokenResponse) {
-    option (google.api.http) = {
-      post: "/sys/personal/token/refresh"
       body: "data"
     };
   }

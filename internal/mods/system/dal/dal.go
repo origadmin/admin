@@ -293,7 +293,7 @@ func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto
 				log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 			}
 			if item.Status == 0 {
-				item.Status = int32(dto.ResourceStatusEnabled)
+				item.Status = int32(dto.UserStatusActive)
 				log.Infow("msg", "Setting default status for item", "itemId", item.Id, "status", item.Status)
 			}
 			if item.Sequence == 0 {

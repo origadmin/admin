@@ -24,6 +24,8 @@ const (
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
 	FieldUpdateTime = "update_time"
+	// FieldDeleteTime holds the string denoting the delete_time field in the database.
+	FieldDeleteTime = "delete_time"
 	// FieldUUID holds the string denoting the uuid field in the database.
 	FieldUUID = "uuid"
 	// FieldAllowedIP holds the string denoting the allowed_ip field in the database.
@@ -123,6 +125,7 @@ var Columns = []string{
 	FieldUpdateAuthor,
 	FieldCreateTime,
 	FieldUpdateTime,
+	FieldDeleteTime,
 	FieldUUID,
 	FieldAllowedIP,
 	FieldUsername,
@@ -300,6 +303,11 @@ func ByCreateTime(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdateTime orders the results by the update_time field.
 func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
+}
+
+// ByDeleteTime orders the results by the delete_time field.
+func ByDeleteTime(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeleteTime, opts...).ToFunc()
 }
 
 // ByUUID orders the results by the uuid field.

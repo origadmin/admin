@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
+	_ "origadmin/application/admin/internal/mods/system/dal/entity/ent/runtime"
 )
 
 // InitData 初始化所有数据

@@ -353,22 +353,6 @@ func DefaultServiceHttp() *configv1.Service_HTTP {
 	}
 }
 
-//func DefaultServiceGins() *configv1.Service_GINS {
-//	return &configv1.Service_GINS{
-//		Network:         "tcp",
-//		Addr:            "${gins_address:0.0.0.0:18200}",
-//		UseTls:          false,
-//		CertFile:        "",
-//		KeyFile:         "",
-//		Timeout:         durationpb.New(time.Minute * 3),
-//		ShutdownTimeout: durationpb.New(time.Minute * 3),
-//		ReadTimeout:     durationpb.New(time.Minute * 3),
-//		WriteTimeout:    durationpb.New(time.Minute * 3),
-//		IdleTimeout:     durationpb.New(time.Minute * 3),
-//		Endpoint:        "",
-//	}
-//}
-
 func DefaultEntry() *configs.Bootstrap_Entry {
 	return &configs.Bootstrap_Entry{
 		Scheme: "http",

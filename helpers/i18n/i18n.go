@@ -10,6 +10,8 @@ const (
 	DefaultLanguage = "en_US"
 )
 
+var locale = "en_US"
+
 // KeyTextMap defines all internationalized key-value pairs used in the system
 var KeyTextMap = map[string]map[string]string{
 	"zh_CN": {
@@ -139,8 +141,6 @@ func Text(key string) string {
 // button.add                        // 添加按钮
 // button.edit                       // 编辑按钮
 // button.delete                     // 删除按钮
-
-var locale = "en_US"
 
 // Locale 获取当前系统语言设置
 func Locale() string {

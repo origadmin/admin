@@ -761,6 +761,10 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
+		case user.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			}
 		case user.FieldUUID:
 			// check string with sql.NullString if it is empty
 			if input.UUID != "" {
@@ -885,6 +889,12 @@ func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
 			m.SetCreateTime(input.CreateTime)
 		case user.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
+		case user.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
 		case user.FieldUUID:
 			m.SetUUID(input.UUID)
 		case user.FieldAllowedIP:

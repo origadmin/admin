@@ -82,6 +82,20 @@ func (uc *UserCreate) SetNillableUpdateTime(t *time.Time) *UserCreate {
 	return uc
 }
 
+// SetDeleteTime sets the "delete_time" field.
+func (uc *UserCreate) SetDeleteTime(t time.Time) *UserCreate {
+	uc.mutation.SetDeleteTime(t)
+	return uc
+}
+
+// SetNillableDeleteTime sets the "delete_time" field if the given value is not nil.
+func (uc *UserCreate) SetNillableDeleteTime(t *time.Time) *UserCreate {
+	if t != nil {
+		uc.SetDeleteTime(*t)
+	}
+	return uc
+}
+
 // SetUUID sets the "uuid" field.
 func (uc *UserCreate) SetUUID(s string) *UserCreate {
 	uc.mutation.SetUUID(s)
@@ -770,6 +784,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.UpdateTime(); ok {
 		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
+	}
+	if value, ok := uc.mutation.DeleteTime(); ok {
+		_spec.SetField(user.FieldDeleteTime, field.TypeTime, value)
+		_node.DeleteTime = &value
 	}
 	if value, ok := uc.mutation.UUID(); ok {
 		_spec.SetField(user.FieldUUID, field.TypeString, value)

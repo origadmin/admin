@@ -1031,6 +1031,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  UpdateAuthor int64 `json:"update_author,omitempty"`
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
+//	  DeleteTime time.Time `json:"delete_time,omitempty"`
 //	  UUID string `json:"uuid,omitempty"`
 //	  AllowedIP string `json:"allowed_ip,omitempty"`
 //	  Username string `json:"username,omitempty"`
@@ -1059,6 +1060,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldUpdateAuthor,
 //	  user.FieldCreateTime,
 //	  user.FieldUpdateTime,
+//	  user.FieldDeleteTime,
 //	  user.FieldUUID,
 //	  user.FieldAllowedIP,
 //	  user.FieldUsername,

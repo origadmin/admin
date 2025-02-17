@@ -19,37 +19,38 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PersonalService_PersonalLogout_FullMethodName         = "/api.v1.services.system.PersonalService/PersonalLogout"
-	PersonalService_UpdatePersonalPassword_FullMethodName = "/api.v1.services.system.PersonalService/UpdatePersonalPassword"
-	PersonalService_UpdatePersonalProfile_FullMethodName  = "/api.v1.services.system.PersonalService/UpdatePersonalProfile"
 	PersonalService_GetPersonalProfile_FullMethodName     = "/api.v1.services.system.PersonalService/GetPersonalProfile"
 	PersonalService_ListPersonalResources_FullMethodName  = "/api.v1.services.system.PersonalService/ListPersonalResources"
 	PersonalService_ListPersonalRoles_FullMethodName      = "/api.v1.services.system.PersonalService/ListPersonalRoles"
-	PersonalService_UpdatePersonalSetting_FullMethodName  = "/api.v1.services.system.PersonalService/UpdatePersonalSetting"
+	PersonalService_PersonalLogout_FullMethodName         = "/api.v1.services.system.PersonalService/PersonalLogout"
 	PersonalService_RefreshPersonalToken_FullMethodName   = "/api.v1.services.system.PersonalService/RefreshPersonalToken"
+	PersonalService_UpdatePersonalPassword_FullMethodName = "/api.v1.services.system.PersonalService/UpdatePersonalPassword"
+	PersonalService_UpdatePersonalProfile_FullMethodName  = "/api.v1.services.system.PersonalService/UpdatePersonalProfile"
+	PersonalService_UpdatePersonalSetting_FullMethodName  = "/api.v1.services.system.PersonalService/UpdatePersonalSetting"
 )
 
 // PersonalServiceClient is the client API for PersonalService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// The personal service definition.
+// PersonalService Personal user service
 type PersonalServiceClient interface {
-	PersonalLogout(ctx context.Context, in *PersonalLogoutRequest, opts ...grpc.CallOption) (*PersonalLogoutResponse, error)
-	// UpdatePersonalProfilePassword The user changes the password
-	UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest, opts ...grpc.CallOption) (*UpdatePersonalPasswordResponse, error)
-	// UpdatePersonalProfile Update the personal user information
-	UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*UpdatePersonalProfileResponse, error)
 	// GetPersonalProfile Update the personal user information
 	GetPersonalProfile(ctx context.Context, in *GetPersonalProfileRequest, opts ...grpc.CallOption) (*GetPersonalProfileResponse, error)
 	// ListPersonalResources List the personal user's menu
 	ListPersonalResources(ctx context.Context, in *ListPersonalResourcesRequest, opts ...grpc.CallOption) (*ListPersonalResourcesResponse, error)
 	// ListPersonalResources List the personal user's menu
 	ListPersonalRoles(ctx context.Context, in *ListPersonalRolesRequest, opts ...grpc.CallOption) (*ListPersonalRolesResponse, error)
-	// UpdatePersonalSetting User settings are saved
-	UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest, opts ...grpc.CallOption) (*UpdatePersonalSettingResponse, error)
+	// PersonalLogout Personal user logs out
+	PersonalLogout(ctx context.Context, in *PersonalLogoutRequest, opts ...grpc.CallOption) (*PersonalLogoutResponse, error)
 	// RefreshPersonalToken Refresh the personal user's token
 	RefreshPersonalToken(ctx context.Context, in *RefreshPersonalTokenRequest, opts ...grpc.CallOption) (*RefreshPersonalTokenResponse, error)
+	// UpdatePersonalProfilePassword The user changes the password
+	UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest, opts ...grpc.CallOption) (*UpdatePersonalPasswordResponse, error)
+	// UpdatePersonalProfile Update the personal user information
+	UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*UpdatePersonalProfileResponse, error)
+	// UpdatePersonalSetting User settings are saved
+	UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest, opts ...grpc.CallOption) (*UpdatePersonalSettingResponse, error)
 }
 
 type personalServiceClient struct {
@@ -58,36 +59,6 @@ type personalServiceClient struct {
 
 func NewPersonalServiceClient(cc grpc.ClientConnInterface) PersonalServiceClient {
 	return &personalServiceClient{cc}
-}
-
-func (c *personalServiceClient) PersonalLogout(ctx context.Context, in *PersonalLogoutRequest, opts ...grpc.CallOption) (*PersonalLogoutResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PersonalLogoutResponse)
-	err := c.cc.Invoke(ctx, PersonalService_PersonalLogout_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *personalServiceClient) UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest, opts ...grpc.CallOption) (*UpdatePersonalPasswordResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdatePersonalPasswordResponse)
-	err := c.cc.Invoke(ctx, PersonalService_UpdatePersonalPassword_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *personalServiceClient) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*UpdatePersonalProfileResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdatePersonalProfileResponse)
-	err := c.cc.Invoke(ctx, PersonalService_UpdatePersonalProfile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *personalServiceClient) GetPersonalProfile(ctx context.Context, in *GetPersonalProfileRequest, opts ...grpc.CallOption) (*GetPersonalProfileResponse, error) {
@@ -120,10 +91,10 @@ func (c *personalServiceClient) ListPersonalRoles(ctx context.Context, in *ListP
 	return out, nil
 }
 
-func (c *personalServiceClient) UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest, opts ...grpc.CallOption) (*UpdatePersonalSettingResponse, error) {
+func (c *personalServiceClient) PersonalLogout(ctx context.Context, in *PersonalLogoutRequest, opts ...grpc.CallOption) (*PersonalLogoutResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdatePersonalSettingResponse)
-	err := c.cc.Invoke(ctx, PersonalService_UpdatePersonalSetting_FullMethodName, in, out, cOpts...)
+	out := new(PersonalLogoutResponse)
+	err := c.cc.Invoke(ctx, PersonalService_PersonalLogout_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -140,27 +111,58 @@ func (c *personalServiceClient) RefreshPersonalToken(ctx context.Context, in *Re
 	return out, nil
 }
 
+func (c *personalServiceClient) UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest, opts ...grpc.CallOption) (*UpdatePersonalPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePersonalPasswordResponse)
+	err := c.cc.Invoke(ctx, PersonalService_UpdatePersonalPassword_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personalServiceClient) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...grpc.CallOption) (*UpdatePersonalProfileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePersonalProfileResponse)
+	err := c.cc.Invoke(ctx, PersonalService_UpdatePersonalProfile_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personalServiceClient) UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest, opts ...grpc.CallOption) (*UpdatePersonalSettingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePersonalSettingResponse)
+	err := c.cc.Invoke(ctx, PersonalService_UpdatePersonalSetting_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PersonalServiceServer is the server API for PersonalService service.
 // All implementations must embed UnimplementedPersonalServiceServer
 // for forward compatibility.
 //
-// The personal service definition.
+// PersonalService Personal user service
 type PersonalServiceServer interface {
-	PersonalLogout(context.Context, *PersonalLogoutRequest) (*PersonalLogoutResponse, error)
-	// UpdatePersonalProfilePassword The user changes the password
-	UpdatePersonalPassword(context.Context, *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error)
-	// UpdatePersonalProfile Update the personal user information
-	UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error)
 	// GetPersonalProfile Update the personal user information
 	GetPersonalProfile(context.Context, *GetPersonalProfileRequest) (*GetPersonalProfileResponse, error)
 	// ListPersonalResources List the personal user's menu
 	ListPersonalResources(context.Context, *ListPersonalResourcesRequest) (*ListPersonalResourcesResponse, error)
 	// ListPersonalResources List the personal user's menu
 	ListPersonalRoles(context.Context, *ListPersonalRolesRequest) (*ListPersonalRolesResponse, error)
-	// UpdatePersonalSetting User settings are saved
-	UpdatePersonalSetting(context.Context, *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error)
+	// PersonalLogout Personal user logs out
+	PersonalLogout(context.Context, *PersonalLogoutRequest) (*PersonalLogoutResponse, error)
 	// RefreshPersonalToken Refresh the personal user's token
 	RefreshPersonalToken(context.Context, *RefreshPersonalTokenRequest) (*RefreshPersonalTokenResponse, error)
+	// UpdatePersonalProfilePassword The user changes the password
+	UpdatePersonalPassword(context.Context, *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error)
+	// UpdatePersonalProfile Update the personal user information
+	UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error)
+	// UpdatePersonalSetting User settings are saved
+	UpdatePersonalSetting(context.Context, *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error)
 	mustEmbedUnimplementedPersonalServiceServer()
 }
 
@@ -171,15 +173,6 @@ type PersonalServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPersonalServiceServer struct{}
 
-func (UnimplementedPersonalServiceServer) PersonalLogout(context.Context, *PersonalLogoutRequest) (*PersonalLogoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PersonalLogout not implemented")
-}
-func (UnimplementedPersonalServiceServer) UpdatePersonalPassword(context.Context, *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalPassword not implemented")
-}
-func (UnimplementedPersonalServiceServer) UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalProfile not implemented")
-}
 func (UnimplementedPersonalServiceServer) GetPersonalProfile(context.Context, *GetPersonalProfileRequest) (*GetPersonalProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPersonalProfile not implemented")
 }
@@ -189,11 +182,20 @@ func (UnimplementedPersonalServiceServer) ListPersonalResources(context.Context,
 func (UnimplementedPersonalServiceServer) ListPersonalRoles(context.Context, *ListPersonalRolesRequest) (*ListPersonalRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPersonalRoles not implemented")
 }
-func (UnimplementedPersonalServiceServer) UpdatePersonalSetting(context.Context, *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalSetting not implemented")
+func (UnimplementedPersonalServiceServer) PersonalLogout(context.Context, *PersonalLogoutRequest) (*PersonalLogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PersonalLogout not implemented")
 }
 func (UnimplementedPersonalServiceServer) RefreshPersonalToken(context.Context, *RefreshPersonalTokenRequest) (*RefreshPersonalTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshPersonalToken not implemented")
+}
+func (UnimplementedPersonalServiceServer) UpdatePersonalPassword(context.Context, *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalPassword not implemented")
+}
+func (UnimplementedPersonalServiceServer) UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalProfile not implemented")
+}
+func (UnimplementedPersonalServiceServer) UpdatePersonalSetting(context.Context, *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePersonalSetting not implemented")
 }
 func (UnimplementedPersonalServiceServer) mustEmbedUnimplementedPersonalServiceServer() {}
 func (UnimplementedPersonalServiceServer) testEmbeddedByValue()                         {}
@@ -214,60 +216,6 @@ func RegisterPersonalServiceServer(s grpc.ServiceRegistrar, srv PersonalServiceS
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&PersonalService_ServiceDesc, srv)
-}
-
-func _PersonalService_PersonalLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PersonalLogoutRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PersonalServiceServer).PersonalLogout(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PersonalService_PersonalLogout_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonalServiceServer).PersonalLogout(ctx, req.(*PersonalLogoutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PersonalService_UpdatePersonalPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePersonalPasswordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PersonalServiceServer).UpdatePersonalPassword(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PersonalService_UpdatePersonalPassword_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonalServiceServer).UpdatePersonalPassword(ctx, req.(*UpdatePersonalPasswordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PersonalService_UpdatePersonalProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePersonalProfileRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PersonalServiceServer).UpdatePersonalProfile(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PersonalService_UpdatePersonalProfile_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonalServiceServer).UpdatePersonalProfile(ctx, req.(*UpdatePersonalProfileRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _PersonalService_GetPersonalProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -324,20 +272,20 @@ func _PersonalService_ListPersonalRoles_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonalService_UpdatePersonalSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePersonalSettingRequest)
+func _PersonalService_PersonalLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PersonalLogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonalServiceServer).UpdatePersonalSetting(ctx, in)
+		return srv.(PersonalServiceServer).PersonalLogout(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PersonalService_UpdatePersonalSetting_FullMethodName,
+		FullMethod: PersonalService_PersonalLogout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonalServiceServer).UpdatePersonalSetting(ctx, req.(*UpdatePersonalSettingRequest))
+		return srv.(PersonalServiceServer).PersonalLogout(ctx, req.(*PersonalLogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -360,6 +308,60 @@ func _PersonalService_RefreshPersonalToken_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PersonalService_UpdatePersonalPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonalServiceServer).UpdatePersonalPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersonalService_UpdatePersonalPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonalServiceServer).UpdatePersonalPassword(ctx, req.(*UpdatePersonalPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonalService_UpdatePersonalProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonalServiceServer).UpdatePersonalProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersonalService_UpdatePersonalProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonalServiceServer).UpdatePersonalProfile(ctx, req.(*UpdatePersonalProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonalService_UpdatePersonalSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePersonalSettingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonalServiceServer).UpdatePersonalSetting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PersonalService_UpdatePersonalSetting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonalServiceServer).UpdatePersonalSetting(ctx, req.(*UpdatePersonalSettingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PersonalService_ServiceDesc is the grpc.ServiceDesc for PersonalService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -367,18 +369,6 @@ var PersonalService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "api.v1.services.system.PersonalService",
 	HandlerType: (*PersonalServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "PersonalLogout",
-			Handler:    _PersonalService_PersonalLogout_Handler,
-		},
-		{
-			MethodName: "UpdatePersonalPassword",
-			Handler:    _PersonalService_UpdatePersonalPassword_Handler,
-		},
-		{
-			MethodName: "UpdatePersonalProfile",
-			Handler:    _PersonalService_UpdatePersonalProfile_Handler,
-		},
 		{
 			MethodName: "GetPersonalProfile",
 			Handler:    _PersonalService_GetPersonalProfile_Handler,
@@ -392,12 +382,24 @@ var PersonalService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PersonalService_ListPersonalRoles_Handler,
 		},
 		{
-			MethodName: "UpdatePersonalSetting",
-			Handler:    _PersonalService_UpdatePersonalSetting_Handler,
+			MethodName: "PersonalLogout",
+			Handler:    _PersonalService_PersonalLogout_Handler,
 		},
 		{
 			MethodName: "RefreshPersonalToken",
 			Handler:    _PersonalService_RefreshPersonalToken_Handler,
+		},
+		{
+			MethodName: "UpdatePersonalPassword",
+			Handler:    _PersonalService_UpdatePersonalPassword_Handler,
+		},
+		{
+			MethodName: "UpdatePersonalProfile",
+			Handler:    _PersonalService_UpdatePersonalProfile_Handler,
+		},
+		{
+			MethodName: "UpdatePersonalSetting",
+			Handler:    _PersonalService_UpdatePersonalSetting_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

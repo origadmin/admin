@@ -15,11 +15,12 @@ import (
 
 	"origadmin/application/admin/helpers/ent/mixin"
 	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/constants"
 )
 
 // Role type constant
 const (
-	RoleTypeSystem     int8 = 1 // System roles (e.g., Super Administrator, Guest)
+	RoleTypeSystem     int8 = 1 // System roles (e.g., Super Admin)
 	RoleTypeUser       int8 = 2 // User roles (e.g., general user, operation, customer service)
 	RoleTypeDepartment int8 = 3 // Department roles (e.g., department heads, department members)
 )
@@ -51,7 +52,7 @@ func (Role) Fields() []ent.Field {
 			Default(0).
 			Comment("role.field.sequence"), // Sequence for sorting
 		field.Int8("status").
-			Default(0).
+			Default(constants.Active).
 			Comment("role.field.status"),
 	}
 }

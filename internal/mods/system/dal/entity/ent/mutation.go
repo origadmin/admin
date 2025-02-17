@@ -8562,6 +8562,7 @@ type UserMutation struct {
 	addupdate_author        *int64
 	create_time             *time.Time
 	update_time             *time.Time
+	delete_time             *time.Time
 	uuid                    *string
 	allowed_ip              *string
 	username                *string
@@ -8922,6 +8923,55 @@ func (m *UserMutation) OldUpdateTime(ctx context.Context) (v time.Time, err erro
 // ResetUpdateTime resets all changes to the "update_time" field.
 func (m *UserMutation) ResetUpdateTime() {
 	m.update_time = nil
+}
+
+// SetDeleteTime sets the "delete_time" field.
+func (m *UserMutation) SetDeleteTime(t time.Time) {
+	m.delete_time = &t
+}
+
+// DeleteTime returns the value of the "delete_time" field in the mutation.
+func (m *UserMutation) DeleteTime() (r time.Time, exists bool) {
+	v := m.delete_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeleteTime returns the old "delete_time" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldDeleteTime(ctx context.Context) (v *time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeleteTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeleteTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeleteTime: %w", err)
+	}
+	return oldValue.DeleteTime, nil
+}
+
+// ClearDeleteTime clears the value of the "delete_time" field.
+func (m *UserMutation) ClearDeleteTime() {
+	m.delete_time = nil
+	m.clearedFields[user.FieldDeleteTime] = struct{}{}
+}
+
+// DeleteTimeCleared returns if the "delete_time" field was cleared in this mutation.
+func (m *UserMutation) DeleteTimeCleared() bool {
+	_, ok := m.clearedFields[user.FieldDeleteTime]
+	return ok
+}
+
+// ResetDeleteTime resets all changes to the "delete_time" field.
+func (m *UserMutation) ResetDeleteTime() {
+	m.delete_time = nil
+	delete(m.clearedFields, user.FieldDeleteTime)
 }
 
 // SetUUID sets the "uuid" field.
@@ -10069,7 +10119,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 24)
+	fields := make([]string, 0, 25)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10081,6 +10131,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.update_time != nil {
 		fields = append(fields, user.FieldUpdateTime)
+	}
+	if m.delete_time != nil {
+		fields = append(fields, user.FieldDeleteTime)
 	}
 	if m.uuid != nil {
 		fields = append(fields, user.FieldUUID)
@@ -10158,6 +10211,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.CreateTime()
 	case user.FieldUpdateTime:
 		return m.UpdateTime()
+	case user.FieldDeleteTime:
+		return m.DeleteTime()
 	case user.FieldUUID:
 		return m.UUID()
 	case user.FieldAllowedIP:
@@ -10215,6 +10270,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldCreateTime(ctx)
 	case user.FieldUpdateTime:
 		return m.OldUpdateTime(ctx)
+	case user.FieldDeleteTime:
+		return m.OldDeleteTime(ctx)
 	case user.FieldUUID:
 		return m.OldUUID(ctx)
 	case user.FieldAllowedIP:
@@ -10291,6 +10348,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetUpdateTime(v)
+		return nil
+	case user.FieldDeleteTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeleteTime(v)
 		return nil
 	case user.FieldUUID:
 		v, ok := value.(string)
@@ -10519,6 +10583,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldUpdateAuthor) {
 		fields = append(fields, user.FieldUpdateAuthor)
 	}
+	if m.FieldCleared(user.FieldDeleteTime) {
+		fields = append(fields, user.FieldDeleteTime)
+	}
 	if m.FieldCleared(user.FieldSanctionDate) {
 		fields = append(fields, user.FieldSanctionDate)
 	}
@@ -10545,6 +10612,9 @@ func (m *UserMutation) ClearField(name string) error {
 	case user.FieldUpdateAuthor:
 		m.ClearUpdateAuthor()
 		return nil
+	case user.FieldDeleteTime:
+		m.ClearDeleteTime()
+		return nil
 	case user.FieldSanctionDate:
 		m.ClearSanctionDate()
 		return nil
@@ -10570,6 +10640,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldUpdateTime:
 		m.ResetUpdateTime()
+		return nil
+	case user.FieldDeleteTime:
+		m.ResetDeleteTime()
 		return nil
 	case user.FieldUUID:
 		m.ResetUUID()
