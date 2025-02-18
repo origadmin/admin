@@ -132,10 +132,14 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	return repo.genToken(ctx, userUUID)
 }
 func (repo loginRepo) CaptchaAudio(ctx context.Context, id string, reload bool) (*dto.CaptchaAudioResponse, error) {
+	var err error
 	log.Debugf("Generating captcha audio with id %s and reload %v", id, reload)
 	if reload && !repo.captcha.Reload(captcha.TypeAudio, id) {
-		log.Warnf("Captcha id %s not found during reload", id)
-		return nil, dto.ErrCaptchaIDNotFound
+		log.Warnf("Captcha id %s not found during reload, regenerating", id)
+		id, err = repo.getCaptchaID()
+		if err != nil {
+			return nil, err
+		}
 	}
 	content := repo.captcha.Store.Get(id, false)
 	item, err := repo.captcha.DriverAudio.Driver.DrawCaptcha(content)
@@ -160,9 +164,13 @@ func (repo loginRepo) CaptchaAudio(ctx context.Context, id string, reload bool) 
 
 func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) (*dto.CaptchaImageResponse, error) {
 	log.Debugf("Generating captcha image with id %s and reload %v", id, reload)
+	var err error
 	if reload && !repo.captcha.Reload(captcha.TypeDigit, id) {
-		log.Warnf("Captcha id %s not found during reload", id)
-		return nil, dto.ErrCaptchaIDNotFound
+		log.Warnf("Captcha id %s not found during reload, regenerating", id)
+		id, err = repo.getCaptchaID()
+		if err != nil {
+			return nil, err
+		}
 	}
 	content := repo.captcha.Store.Get(id, false)
 	item, err := repo.captcha.DriverDigit.Driver.DrawCaptcha(content)
@@ -225,8 +233,11 @@ func (repo loginRepo) Captcha(ctx context.Context, in *dto.CaptchaRequest) (*dto
 		return nil, err
 	}
 	if in.Reload && in.Id != "" && !repo.captcha.Reload(in.Type, in.Id) {
-		log.Warnf("Captcha id %s not found during reload", id)
-		return nil, dto.ErrCaptchaIDNotFound
+		log.Warnf("Captcha id %s not found during reload, regenerating id", id)
+		id, err = repo.getCaptchaID()
+		if err != nil {
+			return nil, err
+		}
 	}
 	data, err := repo.getCaptchaData(driver, id)
 	if err != nil {

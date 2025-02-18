@@ -122,6 +122,9 @@ func (c *Captcha) reload(d base64Captcha.Driver, id string) bool {
 		return false
 	}
 	_, _, old = d.GenerateIdQuestionAnswer()
-	c.Store.Set(id, old)
+	err := c.Store.Set(id, old)
+	if err != nil {
+		return false
+	}
 	return true
 }

@@ -155,11 +155,13 @@ message User {
   // user.field.last_login_time
   google.protobuf.Timestamp last_login_time = 21 [json_name = "last_login_time"];
   // user.field.sanction_date
-  google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
+  optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
   // user.field.manager_id
   int64 manager_id = 23 [json_name = "manager_id"];
   // user.field.manager
   string manager = 24 [json_name = "manager"];
+  // Roles holds the value of the roles edge.
+  repeated Role roles = 25 [json_name = "roles"];
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.

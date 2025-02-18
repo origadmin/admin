@@ -55,8 +55,8 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel.Avatar = goModel.Avatar
 	pbModel.Name = goModel.Name
 	pbModel.Gender = ConvertGender2PB(goModel.Gender)
-	pbModel.Password = goModel.Password
-	pbModel.Salt = goModel.Salt
+	//pbModel.Password = goModel.Password
+	//pbModel.Salt = goModel.Salt
 	pbModel.Phone = goModel.Phone
 	pbModel.Email = goModel.Email
 	pbModel.Remark = goModel.Remark
@@ -67,6 +67,7 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel.SanctionDate = timestamppb.New(goModel.SanctionDate)
 	pbModel.ManagerId = int64(goModel.ManagerID)
 	pbModel.Manager = goModel.Manager
+	pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
 	return pbModel
 }
 
@@ -93,8 +94,8 @@ func ConvertUserPB2Object(pbModel *UserPB) (goModel *User) {
 	goModel.Avatar = pbModel.Avatar
 	goModel.Name = pbModel.Name
 	goModel.Gender = user.Gender(pbModel.Gender)
-	goModel.Password = pbModel.Password
-	goModel.Salt = pbModel.Salt
+	//goModel.Password = pbModel.Password
+	//goModel.Salt = pbModel.Salt
 	goModel.Phone = pbModel.Phone
 	goModel.Email = pbModel.Email
 	goModel.Remark = pbModel.Remark
@@ -103,7 +104,7 @@ func ConvertUserPB2Object(pbModel *UserPB) (goModel *User) {
 	goModel.LastLoginIP = pbModel.LastLoginIp
 	goModel.LastLoginTime = pbModel.LastLoginTime.AsTime()
 	goModel.SanctionDate = pbModel.SanctionDate.AsTime()
-	goModel.ManagerID = int64(pbModel.ManagerId)
+	goModel.ManagerID = pbModel.ManagerId
 	goModel.Manager = pbModel.Manager
 	return goModel
 }
@@ -119,7 +120,7 @@ func ConvertResource2PB(goModel *Resource) (pbModel *ResourcePB) {
 		return pbModel
 	}
 
-	pbModel.Id = int64(goModel.ID)
+	pbModel.Id = goModel.ID
 	pbModel.CreateTime = timestamppb.New(goModel.CreateTime)
 	pbModel.UpdateTime = timestamppb.New(goModel.UpdateTime)
 	pbModel.Name = goModel.Name

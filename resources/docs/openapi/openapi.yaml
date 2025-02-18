@@ -3197,6 +3197,11 @@ components:
                 manager:
                     type: string
                     description: user.field.manager
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                    description: Roles holds the value of the roles edge.
             description: User is the model entity for the User schema.
         api.v1.services.system.ValidateTokenResponse:
             type: object
