@@ -849,6 +849,10 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			if input.LastLoginTime.Unix() != 0 {
 				m.SetLastLoginTime(input.LastLoginTime)
 			}
+		case user.FieldLoginTime:
+			if input.LoginTime.Unix() != 0 {
+				m.SetLoginTime(input.LoginTime)
+			}
 		case user.FieldSanctionDate:
 			if input.SanctionDate.Unix() != 0 {
 				m.SetSanctionDate(input.SanctionDate)
@@ -929,6 +933,8 @@ func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
 			m.SetLastLoginIP(input.LastLoginIP)
 		case user.FieldLastLoginTime:
 			m.SetLastLoginTime(input.LastLoginTime)
+		case user.FieldLoginTime:
+			m.SetLoginTime(input.LoginTime)
 		case user.FieldSanctionDate:
 			m.SetSanctionDate(input.SanctionDate)
 		case user.FieldManagerID:

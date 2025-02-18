@@ -360,6 +360,20 @@ func (uu *UserUpdate) SetNillableLastLoginTime(t *time.Time) *UserUpdate {
 	return uu
 }
 
+// SetLoginTime sets the "login_time" field.
+func (uu *UserUpdate) SetLoginTime(t time.Time) *UserUpdate {
+	uu.mutation.SetLoginTime(t)
+	return uu
+}
+
+// SetNillableLoginTime sets the "login_time" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableLoginTime(t *time.Time) *UserUpdate {
+	if t != nil {
+		uu.SetLoginTime(*t)
+	}
+	return uu
+}
+
 // SetSanctionDate sets the "sanction_date" field.
 func (uu *UserUpdate) SetSanctionDate(t time.Time) *UserUpdate {
 	uu.mutation.SetSanctionDate(t)
@@ -857,6 +871,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
+	}
+	if value, ok := uu.mutation.LoginTime(); ok {
+		_spec.SetField(user.FieldLoginTime, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
@@ -1556,6 +1573,20 @@ func (uuo *UserUpdateOne) SetNillableLastLoginTime(t *time.Time) *UserUpdateOne 
 	return uuo
 }
 
+// SetLoginTime sets the "login_time" field.
+func (uuo *UserUpdateOne) SetLoginTime(t time.Time) *UserUpdateOne {
+	uuo.mutation.SetLoginTime(t)
+	return uuo
+}
+
+// SetNillableLoginTime sets the "login_time" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableLoginTime(t *time.Time) *UserUpdateOne {
+	if t != nil {
+		uuo.SetLoginTime(*t)
+	}
+	return uuo
+}
+
 // SetSanctionDate sets the "sanction_date" field.
 func (uuo *UserUpdateOne) SetSanctionDate(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetSanctionDate(t)
@@ -2083,6 +2114,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
+	}
+	if value, ok := uuo.mutation.LoginTime(); ok {
+		_spec.SetField(user.FieldLoginTime, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)

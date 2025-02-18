@@ -318,6 +318,20 @@ func (uc *UserCreate) SetNillableLastLoginTime(t *time.Time) *UserCreate {
 	return uc
 }
 
+// SetLoginTime sets the "login_time" field.
+func (uc *UserCreate) SetLoginTime(t time.Time) *UserCreate {
+	uc.mutation.SetLoginTime(t)
+	return uc
+}
+
+// SetNillableLoginTime sets the "login_time" field if the given value is not nil.
+func (uc *UserCreate) SetNillableLoginTime(t *time.Time) *UserCreate {
+	if t != nil {
+		uc.SetLoginTime(*t)
+	}
+	return uc
+}
+
 // SetSanctionDate sets the "sanction_date" field.
 func (uc *UserCreate) SetSanctionDate(t time.Time) *UserCreate {
 	uc.mutation.SetSanctionDate(t)
@@ -586,6 +600,13 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultLastLoginTime()
 		uc.mutation.SetLastLoginTime(v)
 	}
+	if _, ok := uc.mutation.LoginTime(); !ok {
+		if user.DefaultLoginTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultLoginTime (forgotten import ent/runtime?)")
+		}
+		v := user.DefaultLoginTime()
+		uc.mutation.SetLoginTime(v)
+	}
 	if _, ok := uc.mutation.Manager(); !ok {
 		v := user.DefaultManager
 		uc.mutation.SetManager(v)
@@ -724,6 +745,9 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.LastLoginTime(); !ok {
 		return &ValidationError{Name: "last_login_time", err: errors.New(`ent: missing required field "User.last_login_time"`)}
 	}
+	if _, ok := uc.mutation.LoginTime(); !ok {
+		return &ValidationError{Name: "login_time", err: errors.New(`ent: missing required field "User.login_time"`)}
+	}
 	if v, ok := uc.mutation.ManagerID(); ok {
 		if err := user.ManagerIDValidator(v); err != nil {
 			return &ValidationError{Name: "manager_id", err: fmt.Errorf(`ent: validator failed for field "User.manager_id": %w`, err)}
@@ -856,6 +880,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
 		_node.LastLoginTime = value
+	}
+	if value, ok := uc.mutation.LoginTime(); ok {
+		_spec.SetField(user.FieldLoginTime, field.TypeTime, value)
+		_node.LoginTime = value
 	}
 	if value, ok := uc.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)

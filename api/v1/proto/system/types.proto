@@ -135,8 +135,10 @@ message User {
   // user.field.gender
   string gender = 12 [json_name = "gender"];
   // user.field.password
+  // @Decrypted don't show this field in response
   string password = 13 [json_name = "password"];
   // user.field.salt
+  // @Decrypted don't show this field in response
   string salt = 14 [json_name = "salt"];
   // user.field.phone
   string phone = 15 [json_name = "phone"];

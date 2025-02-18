@@ -160,6 +160,11 @@ func LastLoginTime(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLastLoginTime, v))
 }
 
+// LoginTime applies equality check predicate on the "login_time" field. It's identical to LoginTimeEQ.
+func LoginTime(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLoginTime, v))
+}
+
 // SanctionDate applies equality check predicate on the "sanction_date" field. It's identical to SanctionDateEQ.
 func SanctionDate(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldSanctionDate, v))
@@ -1358,6 +1363,46 @@ func LastLoginTimeLT(v time.Time) predicate.User {
 // LastLoginTimeLTE applies the LTE predicate on the "last_login_time" field.
 func LastLoginTimeLTE(v time.Time) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldLastLoginTime, v))
+}
+
+// LoginTimeEQ applies the EQ predicate on the "login_time" field.
+func LoginTimeEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLoginTime, v))
+}
+
+// LoginTimeNEQ applies the NEQ predicate on the "login_time" field.
+func LoginTimeNEQ(v time.Time) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldLoginTime, v))
+}
+
+// LoginTimeIn applies the In predicate on the "login_time" field.
+func LoginTimeIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldIn(FieldLoginTime, vs...))
+}
+
+// LoginTimeNotIn applies the NotIn predicate on the "login_time" field.
+func LoginTimeNotIn(vs ...time.Time) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldLoginTime, vs...))
+}
+
+// LoginTimeGT applies the GT predicate on the "login_time" field.
+func LoginTimeGT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGT(FieldLoginTime, v))
+}
+
+// LoginTimeGTE applies the GTE predicate on the "login_time" field.
+func LoginTimeGTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldLoginTime, v))
+}
+
+// LoginTimeLT applies the LT predicate on the "login_time" field.
+func LoginTimeLT(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLT(FieldLoginTime, v))
+}
+
+// LoginTimeLTE applies the LTE predicate on the "login_time" field.
+func LoginTimeLTE(v time.Time) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldLoginTime, v))
 }
 
 // SanctionDateEQ applies the EQ predicate on the "sanction_date" field.

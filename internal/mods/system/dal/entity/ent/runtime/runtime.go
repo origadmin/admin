@@ -537,12 +537,16 @@ func init() {
 	userDescLastLoginTime := userFields[16].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
+	// userDescLoginTime is the schema descriptor for login_time field.
+	userDescLoginTime := userFields[17].Descriptor()
+	// user.DefaultLoginTime holds the default value on creation for the login_time field.
+	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
 	// userDescManagerID is the schema descriptor for manager_id field.
-	userDescManagerID := userFields[18].Descriptor()
+	userDescManagerID := userFields[19].Descriptor()
 	// user.ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	user.ManagerIDValidator = userDescManagerID.Validators[0].(func(int64) error)
 	// userDescManager is the schema descriptor for manager field.
-	userDescManager := userFields[19].Descriptor()
+	userDescManager := userFields[20].Descriptor()
 	// user.DefaultManager holds the default value on creation for the manager field.
 	user.DefaultManager = userDescManager.Default.(string)
 	// userDescID is the schema descriptor for id field.

@@ -62,6 +62,8 @@ type User struct {
 	LastLoginIP string `json:"last_login_ip,omitempty"`
 	// user.field.last_login_time
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
+	// user.field.login_time
+	LoginTime time.Time `json:"login_time,omitempty"`
 	// user.field.sanction_date
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
 	// user.field.manager_id
@@ -158,7 +160,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
 			values[i] = new(sql.NullString)
-		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldSanctionDate:
+		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -314,6 +316,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.LastLoginTime = value.Time
 			}
+		case user.FieldLoginTime:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field login_time", values[i])
+			} else if value.Valid {
+				u.LoginTime = value.Time
+			}
 		case user.FieldSanctionDate:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field sanction_date", values[i])
@@ -465,6 +473,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("last_login_time=")
 	builder.WriteString(u.LastLoginTime.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("login_time=")
+	builder.WriteString(u.LoginTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("sanction_date=")
 	builder.WriteString(u.SanctionDate.Format(time.ANSIC))

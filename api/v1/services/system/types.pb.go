@@ -566,8 +566,10 @@ type User struct {
 	// user.field.gender
 	Gender string `protobuf:"bytes,12,opt,name=gender,proto3" json:"gender,omitempty"`
 	// user.field.password
+	// @Decrypted don't show this field in response
 	Password string `protobuf:"bytes,13,opt,name=password,proto3" json:"password,omitempty"`
 	// user.field.salt
+	// @Decrypted don't show this field in response
 	Salt string `protobuf:"bytes,14,opt,name=salt,proto3" json:"salt,omitempty"`
 	// user.field.phone
 	Phone string `protobuf:"bytes,15,opt,name=phone,proto3" json:"phone,omitempty"`

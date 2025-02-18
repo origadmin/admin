@@ -407,6 +407,7 @@ var (
 		{Name: "is_system", Type: field.TypeBool, Comment: "user.field.is_system", Default: false},
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "user.field.last_login_ip", Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, Comment: "user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "login_time", Type: field.TypeTime, Comment: "user.field.login_time", SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "sanction_date", Type: field.TypeTime, Nullable: true, Comment: "user.field.sanction_date", SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "manager_id", Type: field.TypeInt64, Nullable: true, Comment: "user.field.manager_id"},
 		{Name: "manager", Type: field.TypeString, Comment: "user.field.manager", Default: ""},

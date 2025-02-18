@@ -8581,6 +8581,7 @@ type UserMutation struct {
 	is_system               *bool
 	last_login_ip           *string
 	last_login_time         *time.Time
+	login_time              *time.Time
 	sanction_date           *time.Time
 	manager_id              *int64
 	addmanager_id           *int64
@@ -9606,6 +9607,42 @@ func (m *UserMutation) ResetLastLoginTime() {
 	m.last_login_time = nil
 }
 
+// SetLoginTime sets the "login_time" field.
+func (m *UserMutation) SetLoginTime(t time.Time) {
+	m.login_time = &t
+}
+
+// LoginTime returns the value of the "login_time" field in the mutation.
+func (m *UserMutation) LoginTime() (r time.Time, exists bool) {
+	v := m.login_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLoginTime returns the old "login_time" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldLoginTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLoginTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLoginTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLoginTime: %w", err)
+	}
+	return oldValue.LoginTime, nil
+}
+
+// ResetLoginTime resets all changes to the "login_time" field.
+func (m *UserMutation) ResetLoginTime() {
+	m.login_time = nil
+}
+
 // SetSanctionDate sets the "sanction_date" field.
 func (m *UserMutation) SetSanctionDate(t time.Time) {
 	m.sanction_date = &t
@@ -10119,7 +10156,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 25)
+	fields := make([]string, 0, 26)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10186,6 +10223,9 @@ func (m *UserMutation) Fields() []string {
 	if m.last_login_time != nil {
 		fields = append(fields, user.FieldLastLoginTime)
 	}
+	if m.login_time != nil {
+		fields = append(fields, user.FieldLoginTime)
+	}
 	if m.sanction_date != nil {
 		fields = append(fields, user.FieldSanctionDate)
 	}
@@ -10247,6 +10287,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.LastLoginIP()
 	case user.FieldLastLoginTime:
 		return m.LastLoginTime()
+	case user.FieldLoginTime:
+		return m.LoginTime()
 	case user.FieldSanctionDate:
 		return m.SanctionDate()
 	case user.FieldManagerID:
@@ -10306,6 +10348,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldLastLoginIP(ctx)
 	case user.FieldLastLoginTime:
 		return m.OldLastLoginTime(ctx)
+	case user.FieldLoginTime:
+		return m.OldLoginTime(ctx)
 	case user.FieldSanctionDate:
 		return m.OldSanctionDate(ctx)
 	case user.FieldManagerID:
@@ -10474,6 +10518,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLastLoginTime(v)
+		return nil
+	case user.FieldLoginTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLoginTime(v)
 		return nil
 	case user.FieldSanctionDate:
 		v, ok := value.(time.Time)
@@ -10694,6 +10745,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldLastLoginTime:
 		m.ResetLastLoginTime()
+		return nil
+	case user.FieldLoginTime:
+		m.ResetLoginTime()
 		return nil
 	case user.FieldSanctionDate:
 		m.ResetSanctionDate()

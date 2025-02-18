@@ -60,6 +60,8 @@ const (
 	FieldLastLoginIP = "last_login_ip"
 	// FieldLastLoginTime holds the string denoting the last_login_time field in the database.
 	FieldLastLoginTime = "last_login_time"
+	// FieldLoginTime holds the string denoting the login_time field in the database.
+	FieldLoginTime = "login_time"
 	// FieldSanctionDate holds the string denoting the sanction_date field in the database.
 	FieldSanctionDate = "sanction_date"
 	// FieldManagerID holds the string denoting the manager_id field in the database.
@@ -143,6 +145,7 @@ var Columns = []string{
 	FieldIsSystem,
 	FieldLastLoginIP,
 	FieldLastLoginTime,
+	FieldLoginTime,
 	FieldSanctionDate,
 	FieldManagerID,
 	FieldManager,
@@ -240,6 +243,8 @@ var (
 	LastLoginIPValidator func(string) error
 	// DefaultLastLoginTime holds the default value on creation for the "last_login_time" field.
 	DefaultLastLoginTime func() time.Time
+	// DefaultLoginTime holds the default value on creation for the "login_time" field.
+	DefaultLoginTime func() time.Time
 	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	ManagerIDValidator func(int64) error
 	// DefaultManager holds the default value on creation for the "manager" field.
@@ -393,6 +398,11 @@ func ByLastLoginIP(opts ...sql.OrderTermOption) OrderOption {
 // ByLastLoginTime orders the results by the last_login_time field.
 func ByLastLoginTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldLastLoginTime, opts...).ToFunc()
+}
+
+// ByLoginTime orders the results by the login_time field.
+func ByLoginTime(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLoginTime, opts...).ToFunc()
 }
 
 // BySanctionDate orders the results by the sanction_date field.

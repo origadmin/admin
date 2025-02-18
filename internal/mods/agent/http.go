@@ -125,6 +125,7 @@ func DefaultPaths() []string {
 		system.OperationLoginServiceCaptchaAudio,
 		system.OperationLoginServiceLogin,
 		system.OperationLoginServiceRegister,
+		system.OperationLoginServiceTokenRefresh,
 	}
 }
 

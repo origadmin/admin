@@ -1049,6 +1049,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  IsSystem bool `json:"is_system,omitempty"`
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
 //	  LastLoginTime time.Time `json:"last_login_time,omitempty"`
+//	  LoginTime time.Time `json:"login_time,omitempty"`
 //	  SanctionDate time.Time `json:"sanction_date,omitempty"`
 //	  ManagerID int64 `json:"manager_id,omitempty"`
 //	  Manager string `json:"manager,omitempty"`
@@ -1078,6 +1079,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldIsSystem,
 //	  user.FieldLastLoginIP,
 //	  user.FieldLastLoginTime,
+//	  user.FieldLoginTime,
 //	  user.FieldSanctionDate,
 //	  user.FieldManagerID,
 //	  user.FieldManager,

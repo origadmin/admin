@@ -1930,12 +1930,16 @@ paths:
                     type: string
                 - name: user.password
                   in: query
-                  description: user.field.password
+                  description: |-
+                    user.field.password
+                     @Decrypted don't show this field in response
                   schema:
                     type: string
                 - name: user.salt
                   in: query
-                  description: user.field.salt
+                  description: |-
+                    user.field.salt
+                     @Decrypted don't show this field in response
                   schema:
                     type: string
                 - name: user.phone
@@ -2082,12 +2086,16 @@ paths:
                     type: string
                 - name: user.password
                   in: query
-                  description: user.field.password
+                  description: |-
+                    user.field.password
+                     @Decrypted don't show this field in response
                   schema:
                     type: string
                 - name: user.salt
                   in: query
-                  description: user.field.salt
+                  description: |-
+                    user.field.salt
+                     @Decrypted don't show this field in response
                   schema:
                     type: string
                 - name: user.phone
@@ -3148,10 +3156,14 @@ components:
                     description: user.field.gender
                 password:
                     type: string
-                    description: user.field.password
+                    description: |-
+                        user.field.password
+                         @Decrypted don't show this field in response
                 salt:
                     type: string
-                    description: user.field.salt
+                    description: |-
+                        user.field.salt
+                         @Decrypted don't show this field in response
                 phone:
                     type: string
                     description: user.field.phone
