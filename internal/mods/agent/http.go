@@ -85,7 +85,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 				return false
 			}
 		}
-		log.Debugf("Operation '%s' no matches public path '%s'", operation)
+		log.Debugf("Operation '%s' no matches public path '%s'", operation, "*")
 		return true
 	})
 	ms = append(ms, serv.Build(), CallerMiddleware())
@@ -96,7 +96,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 			http.ErrorEncoder(resp.ResponseErrorEncoder),
 			http.Filter(handlers.CORS(
 				handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-				handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}),
+				handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
 				handlers.AllowedOrigins([]string{"*"}),
 			))),
 		servicehttp.WithMiddlewares(ms...),

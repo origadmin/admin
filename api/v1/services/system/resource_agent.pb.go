@@ -162,8 +162,8 @@ func _ResourceService_DeleteResource0_HTTPAgent_Handler(srv ResourceServiceAgent
 func RegisterResourceServiceAgent(ag agent.HTTPAgent, srv ResourceServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/resources", _ResourceService_ListResources0_HTTPAgent_Handler(srv))
-	r.GET("/sys/resources/:id", _ResourceService_GetResource0_HTTPAgent_Handler(srv))
+	r.GET("/sys/resources/{id}", _ResourceService_GetResource0_HTTPAgent_Handler(srv))
 	r.POST("/sys/resources", _ResourceService_CreateResource0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/resources/:resource.id", _ResourceService_UpdateResource0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/resources/:id", _ResourceService_DeleteResource0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/resources/{resource.id}", _ResourceService_UpdateResource0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/resources/{id}", _ResourceService_DeleteResource0_HTTPAgent_Handler(srv))
 }

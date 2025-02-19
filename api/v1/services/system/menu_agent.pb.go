@@ -162,8 +162,8 @@ func _MenuService_DeleteMenu0_HTTPAgent_Handler(srv MenuServiceAgent) http.Handl
 func RegisterMenuServiceAgent(ag agent.HTTPAgent, srv MenuServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/menus", _MenuService_ListMenus0_HTTPAgent_Handler(srv))
-	r.GET("/sys/menus/:id", _MenuService_GetMenu0_HTTPAgent_Handler(srv))
+	r.GET("/sys/menus/{id}", _MenuService_GetMenu0_HTTPAgent_Handler(srv))
 	r.POST("/sys/menus", _MenuService_CreateMenu0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/menus/:menu.id", _MenuService_UpdateMenu0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/menus/:id", _MenuService_DeleteMenu0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/menus/{menu.id}", _MenuService_UpdateMenu0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/menus/{id}", _MenuService_DeleteMenu0_HTTPAgent_Handler(srv))
 }

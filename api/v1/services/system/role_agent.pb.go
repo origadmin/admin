@@ -162,8 +162,8 @@ func _RoleService_DeleteRole0_HTTPAgent_Handler(srv RoleServiceAgent) http.Handl
 func RegisterRoleServiceAgent(ag agent.HTTPAgent, srv RoleServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/roles", _RoleService_ListRoles0_HTTPAgent_Handler(srv))
-	r.GET("/sys/roles/:id", _RoleService_GetRole0_HTTPAgent_Handler(srv))
+	r.GET("/sys/roles/{id}", _RoleService_GetRole0_HTTPAgent_Handler(srv))
 	r.POST("/sys/roles", _RoleService_CreateRole0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/roles/:role.id", _RoleService_UpdateRole0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/roles/:id", _RoleService_DeleteRole0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/roles/{role.id}", _RoleService_UpdateRole0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/roles/{id}", _RoleService_DeleteRole0_HTTPAgent_Handler(srv))
 }

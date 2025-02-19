@@ -108,14 +108,6 @@ func (biz UserServiceClientBiz) UpdateUser(ctx context.Context, in *pb.UpdateUse
 }
 
 func (biz UserServiceClientBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts ...grpc.CallOption) (*pb.DeleteUserResponse, error) {
-	//var option dto.DeleteUserOption
-	//if err := option.FromListRequest(in, biz.limiter); err != nil {
-	//	return nil, err
-	//}
-	//_, err := biz.dao.Get(ctx, in.GetId())
-	//if err != nil {
-	//	return nil, err
-	//}
 	log.Info("DeleteUser")
 	if err := biz.dao.Delete(ctx, in.GetUser().GetId()); err != nil {
 		return nil, err

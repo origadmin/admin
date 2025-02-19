@@ -162,8 +162,8 @@ func _DepartmentService_DeleteDepartment0_HTTPAgent_Handler(srv DepartmentServic
 func RegisterDepartmentServiceAgent(ag agent.HTTPAgent, srv DepartmentServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/departments", _DepartmentService_ListDepartments0_HTTPAgent_Handler(srv))
-	r.GET("/sys/departments/:id", _DepartmentService_GetDepartment0_HTTPAgent_Handler(srv))
+	r.GET("/sys/departments/{id}", _DepartmentService_GetDepartment0_HTTPAgent_Handler(srv))
 	r.POST("/sys/departments", _DepartmentService_CreateDepartment0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/departments/:department.id", _DepartmentService_UpdateDepartment0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/departments/:id", _DepartmentService_DeleteDepartment0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/departments/{department.id}", _DepartmentService_UpdateDepartment0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/departments/{id}", _DepartmentService_DeleteDepartment0_HTTPAgent_Handler(srv))
 }

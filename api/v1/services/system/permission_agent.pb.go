@@ -162,8 +162,8 @@ func _PermissionService_DeletePermission0_HTTPAgent_Handler(srv PermissionServic
 func RegisterPermissionServiceAgent(ag agent.HTTPAgent, srv PermissionServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/permissions", _PermissionService_ListPermissions0_HTTPAgent_Handler(srv))
-	r.GET("/sys/permissions/:id", _PermissionService_GetPermission0_HTTPAgent_Handler(srv))
+	r.GET("/sys/permissions/{id}", _PermissionService_GetPermission0_HTTPAgent_Handler(srv))
 	r.POST("/sys/permissions", _PermissionService_CreatePermission0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/permissions/:permission.id", _PermissionService_UpdatePermission0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/permissions/:id", _PermissionService_DeletePermission0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/permissions/{permission.id}", _PermissionService_UpdatePermission0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/permissions/{id}", _PermissionService_DeletePermission0_HTTPAgent_Handler(srv))
 }

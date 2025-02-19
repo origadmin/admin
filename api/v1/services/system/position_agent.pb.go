@@ -162,8 +162,8 @@ func _PositionService_DeletePosition0_HTTPAgent_Handler(srv PositionServiceAgent
 func RegisterPositionServiceAgent(ag agent.HTTPAgent, srv PositionServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/positions", _PositionService_ListPositions0_HTTPAgent_Handler(srv))
-	r.GET("/sys/positions/:id", _PositionService_GetPosition0_HTTPAgent_Handler(srv))
+	r.GET("/sys/positions/{id}", _PositionService_GetPosition0_HTTPAgent_Handler(srv))
 	r.POST("/sys/positions", _PositionService_CreatePosition0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/positions/:position.id", _PositionService_UpdatePosition0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/positions/:id", _PositionService_DeletePosition0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/positions/{position.id}", _PositionService_UpdatePosition0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/positions/{id}", _PositionService_DeletePosition0_HTTPAgent_Handler(srv))
 }

@@ -252,11 +252,11 @@ func _UserService_ResetUserPassword0_HTTPAgent_Handler(srv UserServiceAgent) htt
 func RegisterUserServiceAgent(ag agent.HTTPAgent, srv UserServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/users", _UserService_ListUsers0_HTTPAgent_Handler(srv))
-	r.GET("/sys/users/:id", _UserService_GetUser0_HTTPAgent_Handler(srv))
+	r.GET("/sys/users/{id}", _UserService_GetUser0_HTTPAgent_Handler(srv))
 	r.POST("/sys/users", _UserService_CreateUser0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/users/:user.id", _UserService_UpdateUser0_HTTPAgent_Handler(srv))
-	r.DELETE("/sys/users/:user.id", _UserService_DeleteUser0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/users/:user.id/status", _UserService_UpdateUserStatus0_HTTPAgent_Handler(srv))
-	r.PUT("/sys/users/:user.id/roles", _UserService_UpdateUserRoles0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/users/{user.id}", _UserService_UpdateUser0_HTTPAgent_Handler(srv))
+	r.DELETE("/sys/users/{user.id}", _UserService_DeleteUser0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/users/{user.id}/status", _UserService_UpdateUserStatus0_HTTPAgent_Handler(srv))
+	r.PUT("/sys/users/{user.id}/roles", _UserService_UpdateUserRoles0_HTTPAgent_Handler(srv))
 	r.POST("/sys/users/password/reset", _UserService_ResetUserPassword0_HTTPAgent_Handler(srv))
 }
