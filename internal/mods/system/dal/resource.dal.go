@@ -113,12 +113,12 @@ func resourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.Lis
 		return nil, int32(count), nil
 	}
 
-	query = resourceQueryPage(query, in)
 	query = resourceQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
+	query = resourceQueryPage(query, in)
 	result, err := query.All(ctx)
 	return dto.ConvertResources(result), int32(count), err
 }

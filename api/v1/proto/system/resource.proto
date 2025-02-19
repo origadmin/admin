@@ -52,6 +52,9 @@ message ListResourcesRequest {
   bool no_paging = 5;
   // The only_count is the query parameter for set only to query the total number
   bool only_count = 6;
+  // resource type
+  string type = 7;
+
 }
 
 // ListResourcesResponse is the response for the ResourceService.ListResources method.

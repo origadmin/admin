@@ -167,12 +167,12 @@ func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRe
 		return nil, int32(count), nil
 	}
 
-	query = userQueryPage(query, in)
 	query = userQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
+	query = userQueryPage(query, in)
 	result, err := query.All(ctx)
 	return dto.ConvertUsers(result), int32(count), err
 }

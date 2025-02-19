@@ -143,12 +143,12 @@ func rolePageQuery(ctx context.Context, query *ent.RoleQuery, in *pb.ListRolesRe
 		return nil, int32(count), nil
 	}
 
-	query = roleQueryPage(query, in)
 	query = roleQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
+	query = roleQueryPage(query, in)
 	result, err := query.All(ctx)
 	return dto.ConvertRoles(result), int32(count), err
 }

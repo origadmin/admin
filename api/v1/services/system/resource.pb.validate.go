@@ -69,6 +69,8 @@ func (m *ListResourcesRequest) validate(all bool) error {
 
 	// no validation rules for OnlyCount
 
+	// no validation rules for Type
+
 	if len(errors) > 0 {
 		return ListResourcesRequestMultiError(errors)
 	}

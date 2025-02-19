@@ -1379,6 +1379,11 @@ paths:
                   description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
+                - name: type
+                  in: query
+                  description: resource type
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
