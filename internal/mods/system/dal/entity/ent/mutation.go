@@ -5256,7 +5256,7 @@ type ResourceMutation struct {
 	_type                       *string
 	status                      *int8
 	addstatus                   *int8
-	uri                         *string
+	_path                       *string
 	operation                   *string
 	method                      *string
 	component                   *string
@@ -5660,40 +5660,40 @@ func (m *ResourceMutation) ResetStatus() {
 	m.addstatus = nil
 }
 
-// SetURI sets the "uri" field.
-func (m *ResourceMutation) SetURI(s string) {
-	m.uri = &s
+// SetPath sets the "path" field.
+func (m *ResourceMutation) SetPath(s string) {
+	m._path = &s
 }
 
-// URI returns the value of the "uri" field in the mutation.
-func (m *ResourceMutation) URI() (r string, exists bool) {
-	v := m.uri
+// Path returns the value of the "path" field in the mutation.
+func (m *ResourceMutation) Path() (r string, exists bool) {
+	v := m._path
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldURI returns the old "uri" field's value of the Resource entity.
+// OldPath returns the old "path" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldURI(ctx context.Context) (v string, err error) {
+func (m *ResourceMutation) OldPath(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldURI is only allowed on UpdateOne operations")
+		return v, errors.New("OldPath is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldURI requires an ID field in the mutation")
+		return v, errors.New("OldPath requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldURI: %w", err)
+		return v, fmt.Errorf("querying old value for OldPath: %w", err)
 	}
-	return oldValue.URI, nil
+	return oldValue.Path, nil
 }
 
-// ResetURI resets all changes to the "uri" field.
-func (m *ResourceMutation) ResetURI() {
-	m.uri = nil
+// ResetPath resets all changes to the "path" field.
+func (m *ResourceMutation) ResetPath() {
+	m._path = nil
 }
 
 // SetOperation sets the "operation" field.
@@ -6347,8 +6347,8 @@ func (m *ResourceMutation) Fields() []string {
 	if m.status != nil {
 		fields = append(fields, resource.FieldStatus)
 	}
-	if m.uri != nil {
-		fields = append(fields, resource.FieldURI)
+	if m._path != nil {
+		fields = append(fields, resource.FieldPath)
 	}
 	if m.operation != nil {
 		fields = append(fields, resource.FieldOperation)
@@ -6402,8 +6402,8 @@ func (m *ResourceMutation) Field(name string) (ent.Value, bool) {
 		return m.GetType()
 	case resource.FieldStatus:
 		return m.Status()
-	case resource.FieldURI:
-		return m.URI()
+	case resource.FieldPath:
+		return m.Path()
 	case resource.FieldOperation:
 		return m.Operation()
 	case resource.FieldMethod:
@@ -6447,8 +6447,8 @@ func (m *ResourceMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldType(ctx)
 	case resource.FieldStatus:
 		return m.OldStatus(ctx)
-	case resource.FieldURI:
-		return m.OldURI(ctx)
+	case resource.FieldPath:
+		return m.OldPath(ctx)
 	case resource.FieldOperation:
 		return m.OldOperation(ctx)
 	case resource.FieldMethod:
@@ -6527,12 +6527,12 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetStatus(v)
 		return nil
-	case resource.FieldURI:
+	case resource.FieldPath:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetURI(v)
+		m.SetPath(v)
 		return nil
 	case resource.FieldOperation:
 		v, ok := value.(string)
@@ -6716,8 +6716,8 @@ func (m *ResourceMutation) ResetField(name string) error {
 	case resource.FieldStatus:
 		m.ResetStatus()
 		return nil
-	case resource.FieldURI:
-		m.ResetURI()
+	case resource.FieldPath:
+		m.ResetPath()
 		return nil
 	case resource.FieldOperation:
 		m.ResetOperation()

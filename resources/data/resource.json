@@ -4,7 +4,7 @@
     "name": "首页",
     "sequence": 1,
     "type": "M",
-    "uri": "/home",
+    "path": "/home",
     "icon": "home",
     "status": 1,
     "children": [
@@ -13,7 +13,7 @@
         "name": "仪表盘",
         "sequence": 1,
         "type": "P",
-        "uri": "/home/dashboard",
+        "path": "/home/dashboard",
         "icon": "dashboard",
         "status": 1,
         "children": [
@@ -22,7 +22,7 @@
             "name": "工作台",
             "sequence": 1,
             "type": "P",
-            "uri": "/home/dashboard/workplace",
+            "path": "/home/dashboard/workplace",
             "status": 1,
             "children": [
               {
@@ -31,7 +31,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/dashboard/workplace",
+                "path": "/api/v1/dashboard/workplace",
                 "status": 1
               }
             ]
@@ -41,7 +41,7 @@
             "name": "分析页",
             "sequence": 2,
             "type": "P",
-            "uri": "/home/dashboard/analysis",
+            "path": "/home/dashboard/analysis",
             "status": 1,
             "children": [
               {
@@ -50,7 +50,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/dashboard/analysis",
+                "path": "/api/v1/dashboard/analysis",
                 "status": 1
               }
             ]
@@ -62,7 +62,7 @@
         "name": "系统监控",
         "sequence": 2,
         "type": "P",
-        "uri": "/home/monitor",
+        "path": "/home/monitor",
         "icon": "monitor",
         "status": 1,
         "children": [
@@ -71,7 +71,7 @@
             "name": "在线用户",
             "sequence": 1,
             "type": "P",
-            "uri": "/home/monitor/online",
+            "path": "/home/monitor/online",
             "status": 1,
             "children": [
               {
@@ -80,7 +80,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/monitor/online",
+                "path": "/api/v1/monitor/online",
                 "status": 1
               },
               {
@@ -89,7 +89,7 @@
                 "sequence": 2,
                 "type": "B",
                 "method": "DELETE",
-                "uri": "/api/v1/monitor/online/:token",
+                "path": "/api/v1/monitor/online/:token",
                 "status": 1
               }
             ]
@@ -99,7 +99,7 @@
             "name": "服务监控",
             "sequence": 2,
             "type": "P",
-            "uri": "/home/monitor/server",
+            "path": "/home/monitor/server",
             "status": 1,
             "children": [
               {
@@ -108,7 +108,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/monitor/server",
+                "path": "/api/v1/monitor/server",
                 "status": 1
               }
             ]
@@ -129,7 +129,7 @@
             "name": "个人资料",
             "sequence": 1,
             "type": "P",
-            "uri": "/personal/profile",
+            "path": "/personal/profile",
             "icon": "user",
             "status": 1,
             "hidden": true,
@@ -140,7 +140,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/personal/profile",
+                "path": "/api/v1/personal/profile",
                 "status": 1
               },
               {
@@ -149,7 +149,7 @@
                 "sequence": 2,
                 "type": "B",
                 "method": "PUT",
-                "uri": "/api/v1/personal/profile",
+                "path": "/api/v1/personal/profile",
                 "status": 1
               }
             ]
@@ -159,7 +159,7 @@
             "name": "修改密码",
             "sequence": 2,
             "type": "P",
-            "uri": "/personal/password",
+            "path": "/personal/password",
             "icon": "lock",
             "status": 1,
             "hidden": true,
@@ -170,7 +170,7 @@
                 "sequence": 1,
                 "type": "B",
                 "method": "PUT",
-                "uri": "/api/v1/personal/password",
+                "path": "/api/v1/personal/password",
                 "status": 1
               }
             ]
@@ -181,7 +181,7 @@
             "sequence": 3,
             "type": "B",
             "method": "POST",
-            "uri": "/api/v1/auth/logout",
+            "path": "/api/v1/auth/logout",
             "icon": "logout",
             "status": 1,
             "hidden": true
@@ -193,7 +193,7 @@
         "name": "个人中心",
         "sequence": 3,
         "type": "P",
-        "uri": "/home/personal",
+        "path": "/home/personal",
         "icon": "user",
         "status": 1,
         "children": [
@@ -202,7 +202,7 @@
             "name": "个人资料",
             "sequence": 1,
             "type": "P",
-            "uri": "/home/personal/profile",
+            "path": "/home/personal/profile",
             "status": 1,
             "children": [
               {
@@ -211,7 +211,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/personal/profile",
+                "path": "/api/v1/personal/profile",
                 "status": 1
               },
               {
@@ -220,7 +220,7 @@
                 "sequence": 2,
                 "type": "B",
                 "method": "PUT",
-                "uri": "/api/v1/personal/profile",
+                "path": "/api/v1/personal/profile",
                 "status": 1
               }
             ]
@@ -230,7 +230,7 @@
             "name": "修改密码",
             "sequence": 2,
             "type": "P",
-            "uri": "/home/personal/password",
+            "path": "/home/personal/password",
             "status": 1,
             "children": [
               {
@@ -239,7 +239,7 @@
                 "sequence": 1,
                 "type": "B",
                 "method": "PUT",
-                "uri": "/api/v1/personal/password",
+                "path": "/api/v1/personal/password",
                 "status": 1
               }
             ]
@@ -253,7 +253,7 @@
     "name": "系统管理",
     "sequence": 2,
     "type": "M",
-    "uri": "/sys",
+    "path": "/sys",
     "icon": "setting",
     "status": 1,
     "children": [
@@ -262,7 +262,7 @@
         "name": "组织管理",
         "sequence": 1,
         "type": "M",
-        "uri": "/sys/org",
+        "path": "/sys/org",
         "icon": "team",
         "status": 1,
         "children": [
@@ -271,7 +271,7 @@
             "name": "部门管理",
             "sequence": 1,
             "type": "P",
-            "uri": "/sys/org/dept",
+            "path": "/sys/org/dept",
             "status": 1,
             "children": [
               {
@@ -280,7 +280,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/sys/departments",
+                "path": "/api/v1/sys/departments",
                 "status": 1
               },
               {
@@ -289,7 +289,7 @@
                 "sequence": 2,
                 "type": "B",
                 "method": "POST",
-                "uri": "/api/v1/sys/departments",
+                "path": "/api/v1/sys/departments",
                 "status": 1
               },
               {
@@ -298,7 +298,7 @@
                 "sequence": 3,
                 "type": "B",
                 "method": "PUT",
-                "uri": "/api/v1/sys/departments/:id",
+                "path": "/api/v1/sys/departments/:id",
                 "status": 1
               },
               {
@@ -307,7 +307,7 @@
                 "sequence": 4,
                 "type": "B",
                 "method": "DELETE",
-                "uri": "/api/v1/sys/departments/:id",
+                "path": "/api/v1/sys/departments/:id",
                 "status": 1
               }
             ]
@@ -317,7 +317,7 @@
             "name": "岗位管理",
             "sequence": 2,
             "type": "P",
-            "uri": "/sys/org/position",
+            "path": "/sys/org/position",
             "status": 1,
             "children": [
               {
@@ -326,7 +326,7 @@
                 "sequence": 1,
                 "type": "A",
                 "method": "GET",
-                "uri": "/api/v1/sys/positions",
+                "path": "/api/v1/sys/positions",
                 "status": 1
               },
               {
@@ -335,7 +335,7 @@
                 "sequence": 2,
                 "type": "B",
                 "method": "POST",
-                "uri": "/api/v1/sys/positions",
+                "path": "/api/v1/sys/positions",
                 "status": 1
               },
               {
@@ -344,7 +344,7 @@
                 "sequence": 3,
                 "type": "B",
                 "method": "PUT",
-                "uri": "/api/v1/sys/positions/:id",
+                "path": "/api/v1/sys/positions/:id",
                 "status": 1
               },
               {
@@ -353,7 +353,7 @@
                 "sequence": 4,
                 "type": "B",
                 "method": "DELETE",
-                "uri": "/api/v1/sys/positions/:id",
+                "path": "/api/v1/sys/positions/:id",
                 "status": 1
               }
             ]
@@ -365,7 +365,7 @@
         "name": "用户管理",
         "sequence": 2,
         "type": "P",
-        "uri": "/sys/user",
+        "path": "/sys/user",
         "icon": "user",
         "status": 1,
         "children": [
@@ -375,7 +375,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/sys/users",
+            "path": "/api/v1/sys/users",
             "status": 1
           },
           {
@@ -384,7 +384,7 @@
             "sequence": 2,
             "type": "B",
             "method": "POST",
-            "uri": "/api/v1/sys/users",
+            "path": "/api/v1/sys/users",
             "status": 1
           },
           {
@@ -393,7 +393,7 @@
             "sequence": 3,
             "type": "B",
             "method": "PUT",
-            "uri": "/api/v1/sys/users/:id",
+            "path": "/api/v1/sys/users/:id",
             "status": 1
           },
           {
@@ -402,7 +402,7 @@
             "sequence": 4,
             "type": "B",
             "method": "DELETE",
-            "uri": "/api/v1/sys/users/:id",
+            "path": "/api/v1/sys/users/:id",
             "status": 1
           }
         ]
@@ -412,7 +412,7 @@
         "name": "角色管理",
         "sequence": 3,
         "type": "P",
-        "uri": "/sys/role",
+        "path": "/sys/role",
         "icon": "safety",
         "status": 1,
         "children": [
@@ -422,7 +422,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/sys/roles",
+            "path": "/api/v1/sys/roles",
             "status": 1
           },
           {
@@ -431,7 +431,7 @@
             "sequence": 2,
             "type": "B",
             "method": "POST",
-            "uri": "/api/v1/sys/roles",
+            "path": "/api/v1/sys/roles",
             "status": 1
           },
           {
@@ -440,7 +440,7 @@
             "sequence": 3,
             "type": "B",
             "method": "PUT",
-            "uri": "/api/v1/sys/roles/:id",
+            "path": "/api/v1/sys/roles/:id",
             "status": 1
           },
           {
@@ -449,7 +449,7 @@
             "sequence": 4,
             "type": "B",
             "method": "DELETE",
-            "uri": "/api/v1/sys/roles/:id",
+            "path": "/api/v1/sys/roles/:id",
             "status": 1
           },
           {
@@ -458,7 +458,7 @@
             "sequence": 5,
             "type": "B",
             "method": "PUT",
-            "uri": "/api/v1/sys/roles/:id/permissions",
+            "path": "/api/v1/sys/roles/:id/permissions",
             "status": 1
           }
         ]
@@ -468,7 +468,7 @@
         "name": "权限管理",
         "sequence": 4,
         "type": "P",
-        "uri": "/sys/permission",
+        "path": "/sys/permission",
         "icon": "lock",
         "status": 1,
         "children": [
@@ -478,7 +478,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/sys/permissions",
+            "path": "/api/v1/sys/permissions",
             "status": 1
           },
           {
@@ -487,7 +487,7 @@
             "sequence": 2,
             "type": "B",
             "method": "POST",
-            "uri": "/api/v1/sys/permissions",
+            "path": "/api/v1/sys/permissions",
             "status": 1
           },
           {
@@ -496,7 +496,7 @@
             "sequence": 3,
             "type": "B",
             "method": "PUT",
-            "uri": "/api/v1/sys/permissions/:id",
+            "path": "/api/v1/sys/permissions/:id",
             "status": 1
           },
           {
@@ -505,7 +505,7 @@
             "sequence": 4,
             "type": "B",
             "method": "DELETE",
-            "uri": "/api/v1/sys/permissions/:id",
+            "path": "/api/v1/sys/permissions/:id",
             "status": 1
           }
         ]
@@ -515,7 +515,7 @@
         "name": "资源管理",
         "sequence": 5,
         "type": "P",
-        "uri": "/sys/resource",
+        "path": "/sys/resource",
         "icon": "appstore",
         "status": 1,
         "children": [
@@ -525,7 +525,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/sys/resources",
+            "path": "/api/v1/sys/resources",
             "status": 1
           },
           {
@@ -534,7 +534,7 @@
             "sequence": 2,
             "type": "B",
             "method": "POST",
-            "uri": "/api/v1/sys/resources",
+            "path": "/api/v1/sys/resources",
             "status": 1
           },
           {
@@ -543,7 +543,7 @@
             "sequence": 3,
             "type": "B",
             "method": "PUT",
-            "uri": "/api/v1/sys/resources/:id",
+            "path": "/api/v1/sys/resources/:id",
             "status": 1
           },
           {
@@ -552,7 +552,7 @@
             "sequence": 4,
             "type": "B",
             "method": "DELETE",
-            "uri": "/api/v1/sys/resources/:id",
+            "path": "/api/v1/sys/resources/:id",
             "status": 1
           }
         ]
@@ -564,7 +564,7 @@
     "name": "日志管理",
     "sequence": 3,
     "type": "M",
-    "uri": "/logs",
+    "path": "/logs",
     "icon": "file-text",
     "status": 1,
     "children": [
@@ -573,7 +573,7 @@
         "name": "访问日志",
         "sequence": 1,
         "type": "P",
-        "uri": "/logs/access",
+        "path": "/logs/access",
         "status": 1,
         "children": [
           {
@@ -582,7 +582,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/logs/access",
+            "path": "/api/v1/logs/access",
             "status": 1
           }
         ]
@@ -592,7 +592,7 @@
         "name": "登录日志",
         "sequence": 2,
         "type": "P",
-        "uri": "/logs/login",
+        "path": "/logs/login",
         "status": 1,
         "children": [
           {
@@ -601,7 +601,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/logs/login",
+            "path": "/api/v1/logs/login",
             "status": 1
           }
         ]
@@ -611,7 +611,7 @@
         "name": "修改日志",
         "sequence": 3,
         "type": "P",
-        "uri": "/logs/modify",
+        "path": "/logs/modify",
         "status": 1,
         "children": [
           {
@@ -620,7 +620,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/logs/modify",
+            "path": "/api/v1/logs/modify",
             "status": 1
           }
         ]
@@ -630,7 +630,7 @@
         "name": "审计日志",
         "sequence": 4,
         "type": "P",
-        "uri": "/logs/audit",
+        "path": "/logs/audit",
         "status": 1,
         "children": [
           {
@@ -639,7 +639,7 @@
             "sequence": 1,
             "type": "A",
             "method": "GET",
-            "uri": "/api/v1/logs/audit",
+            "path": "/api/v1/logs/audit",
             "status": 1
           }
         ]
@@ -650,7 +650,7 @@
         "sequence": 5,
         "type": "B",
         "method": "DELETE",
-        "uri": "/api/v1/logs/:id",
+        "path": "/api/v1/logs/:id",
         "status": 1
       }
     ]

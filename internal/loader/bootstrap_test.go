@@ -204,7 +204,7 @@ func TestData_InitDataFromPath(t *testing.T) {
 				return
 			}
 			defer cleanup()
-			if err := d.InitDataFromPath(context.Background(), tt.args.filename); (err != nil) != tt.wantErr {
+			if err := d.InitDataFromPath(context.Background(), tt.args.filename, "resource"); (err != nil) != tt.wantErr {
 				t.Errorf("InitFromFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -242,7 +242,7 @@ func createTestRole(t *testing.T, client *ent.Client) *ent.Role {
 func createTestResource(t *testing.T, client *ent.Client) *ent.Resource {
 	m, err := client.Resource.Create().
 		SetName("test-resource").
-		SetURI("/test").
+		SetPath("/test").
 		SetDescription("Test menu for testing").
 		SetKeyword("test-resource").
 		//SetI18nKey("test-resource").
@@ -300,12 +300,6 @@ func TestAddRolePermission(t *testing.T) {
 	permission := createTestPermission(t, client)
 
 	role, err := role.Update().
-		//	AddRolePermissions(ent.RolePermission{
-		//	ID:           0,
-		//	RoleID:       0,
-		//	PermissionID: 0,
-		//	Edges:        ent.RolePermissionEdges{},
-		//})
 		AddPermissions(permission).
 		Save(context.Background())
 	if err != nil {

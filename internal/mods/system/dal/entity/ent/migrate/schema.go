@@ -243,7 +243,7 @@ var (
 		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "resource.field.i18n_key", Default: ""},
 		{Name: "type", Type: field.TypeString, Size: 2, Comment: "resource.field.type", Default: "M"},
 		{Name: "status", Type: field.TypeInt8, Comment: "resource.field.status", Default: 1},
-		{Name: "uri", Type: field.TypeString, Size: 256, Comment: "resource.field.uri", Default: ""},
+		{Name: "path", Type: field.TypeString, Size: 256, Comment: "resource.field.path", Default: ""},
 		{Name: "operation", Type: field.TypeString, Size: 128, Comment: "resource.field.operation", Default: ""},
 		{Name: "method", Type: field.TypeString, Size: 16, Comment: "resource.field.method", Default: ""},
 		{Name: "component", Type: field.TypeString, Size: 128, Comment: "resource.field.component", Default: ""},

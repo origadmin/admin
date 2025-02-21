@@ -112,16 +112,16 @@ func (rc *ResourceCreate) SetNillableStatus(i *int8) *ResourceCreate {
 	return rc
 }
 
-// SetURI sets the "uri" field.
-func (rc *ResourceCreate) SetURI(s string) *ResourceCreate {
-	rc.mutation.SetURI(s)
+// SetPath sets the "path" field.
+func (rc *ResourceCreate) SetPath(s string) *ResourceCreate {
+	rc.mutation.SetPath(s)
 	return rc
 }
 
-// SetNillableURI sets the "uri" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableURI(s *string) *ResourceCreate {
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillablePath(s *string) *ResourceCreate {
 	if s != nil {
-		rc.SetURI(*s)
+		rc.SetPath(*s)
 	}
 	return rc
 }
@@ -381,9 +381,9 @@ func (rc *ResourceCreate) defaults() {
 		v := resource.DefaultStatus
 		rc.mutation.SetStatus(v)
 	}
-	if _, ok := rc.mutation.URI(); !ok {
-		v := resource.DefaultURI
-		rc.mutation.SetURI(v)
+	if _, ok := rc.mutation.Path(); !ok {
+		v := resource.DefaultPath
+		rc.mutation.SetPath(v)
 	}
 	if _, ok := rc.mutation.Operation(); !ok {
 		v := resource.DefaultOperation
@@ -466,12 +466,12 @@ func (rc *ResourceCreate) check() error {
 	if _, ok := rc.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
 	}
-	if _, ok := rc.mutation.URI(); !ok {
-		return &ValidationError{Name: "uri", err: errors.New(`ent: missing required field "Resource.uri"`)}
+	if _, ok := rc.mutation.Path(); !ok {
+		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Resource.path"`)}
 	}
-	if v, ok := rc.mutation.URI(); ok {
-		if err := resource.URIValidator(v); err != nil {
-			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+	if v, ok := rc.mutation.Path(); ok {
+		if err := resource.PathValidator(v); err != nil {
+			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
 	if _, ok := rc.mutation.Operation(); !ok {
@@ -598,9 +598,9 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
-	if value, ok := rc.mutation.URI(); ok {
-		_spec.SetField(resource.FieldURI, field.TypeString, value)
-		_node.URI = value
+	if value, ok := rc.mutation.Path(); ok {
+		_spec.SetField(resource.FieldPath, field.TypeString, value)
+		_node.Path = value
 	}
 	if value, ok := rc.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)

@@ -245,8 +245,8 @@ message Resource {
   string type = 7 [json_name = "type"];
   // resource.field.status
   int32 status = 8 [json_name = "status"];
-  // resource.field.uri
-  string uri = 9 [json_name = "uri"];
+  // resource.field.path
+  string path = 9 [json_name = "path"];
   // resource.field.operation
   string operation = 10 [json_name = "operation"];
   // resource.field.method

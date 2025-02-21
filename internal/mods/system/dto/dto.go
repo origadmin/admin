@@ -128,7 +128,7 @@ func ConvertResource2PB(goModel *Resource) (pbModel *ResourcePB) {
 	pbModel.I18NKey = goModel.I18nKey
 	pbModel.Type = goModel.Type
 	pbModel.Status = int32(goModel.Status)
-	pbModel.Uri = goModel.URI
+	pbModel.Path = goModel.Path
 	pbModel.Operation = goModel.Operation
 	pbModel.Method = goModel.Method
 	pbModel.Component = goModel.Component
@@ -156,7 +156,7 @@ func ConvertResourcePB2Object(pbModel *ResourcePB) (goModel *Resource) {
 	goModel.I18nKey = pbModel.I18NKey
 	goModel.Type = pbModel.Type
 	goModel.Status = int8(pbModel.Status)
-	goModel.URI = pbModel.Uri
+	goModel.Path = pbModel.Path
 	goModel.Operation = pbModel.Operation
 	goModel.Method = pbModel.Method
 	goModel.Component = pbModel.Component

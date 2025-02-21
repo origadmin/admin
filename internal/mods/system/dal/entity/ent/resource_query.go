@@ -825,7 +825,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  I18nKey string `json:"i18n_key,omitempty"`
 //	  Type string `json:"type,omitempty"`
 //	  Status int8 `json:"status,omitempty"`
-//	  URI string `json:"uri,omitempty"`
+//	  Path string `json:"path,omitempty"`
 //	  Operation string `json:"operation,omitempty"`
 //	  Method string `json:"method,omitempty"`
 //	  Component string `json:"component,omitempty"`
@@ -847,7 +847,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  resource.FieldI18nKey,
 //	  resource.FieldType,
 //	  resource.FieldStatus,
-//	  resource.FieldURI,
+//	  resource.FieldPath,
 //	  resource.FieldOperation,
 //	  resource.FieldMethod,
 //	  resource.FieldComponent,

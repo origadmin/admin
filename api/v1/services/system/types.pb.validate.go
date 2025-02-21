@@ -2398,7 +2398,7 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Status
 
-	// no validation rules for Uri
+	// no validation rules for Path
 
 	// no validation rules for Operation
 

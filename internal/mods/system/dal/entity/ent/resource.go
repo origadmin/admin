@@ -33,8 +33,8 @@ type Resource struct {
 	Type string `json:"type,omitempty"`
 	// resource.field.status
 	Status int8 `json:"status,omitempty"`
-	// resource.field.uri
-	URI string `json:"uri,omitempty"`
+	// resource.field.path
+	Path string `json:"path,omitempty"`
 	// resource.field.operation
 	Operation string `json:"operation,omitempty"`
 	// resource.field.method
@@ -125,7 +125,7 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case resource.FieldID, resource.FieldStatus, resource.FieldSequence, resource.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case resource.FieldName, resource.FieldKeyword, resource.FieldI18nKey, resource.FieldType, resource.FieldURI, resource.FieldOperation, resource.FieldMethod, resource.FieldComponent, resource.FieldIcon, resource.FieldTreePath, resource.FieldDescription:
+		case resource.FieldName, resource.FieldKeyword, resource.FieldI18nKey, resource.FieldType, resource.FieldPath, resource.FieldOperation, resource.FieldMethod, resource.FieldComponent, resource.FieldIcon, resource.FieldTreePath, resource.FieldDescription:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -192,11 +192,11 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.Status = int8(value.Int64)
 			}
-		case resource.FieldURI:
+		case resource.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field uri", values[i])
+				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
-				r.URI = value.String
+				r.Path = value.String
 			}
 		case resource.FieldOperation:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -337,8 +337,8 @@ func (r *Resource) String() string {
 	builder.WriteString("status=")
 	builder.WriteString(fmt.Sprintf("%v", r.Status))
 	builder.WriteString(", ")
-	builder.WriteString("uri=")
-	builder.WriteString(r.URI)
+	builder.WriteString("path=")
+	builder.WriteString(r.Path)
 	builder.WriteString(", ")
 	builder.WriteString("operation=")
 	builder.WriteString(r.Operation)

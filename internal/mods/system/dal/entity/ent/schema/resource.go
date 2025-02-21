@@ -61,10 +61,10 @@ func (Resource) Fields() []ent.Field {
 			Default(ResourceStatusEnabled).
 			Comment(i18n.Text("resource.field.status")),
 		// fields that are unique to api resources
-		field.String("uri").
+		field.String("path").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("resource.field.uri")),
+			Comment(i18n.Text("resource.field.path")),
 		// fields that are unique to grpc resources
 		field.String("operation").
 			MaxLen(128).

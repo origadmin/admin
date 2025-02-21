@@ -2948,9 +2948,9 @@ components:
                     type: integer
                     description: resource.field.status
                     format: int32
-                uri:
+                path:
                     type: string
-                    description: resource.field.uri
+                    description: resource.field.path
                 operation:
                     type: string
                     description: resource.field.operation

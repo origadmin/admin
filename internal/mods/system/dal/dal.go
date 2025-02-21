@@ -146,7 +146,7 @@ func NewDataWithClient(client *ent.Client) *Data {
 	}
 }
 
-func (obj *Data) InitDataFromPath(ctx context.Context, path string) error {
+func (obj *Data) InitDataFromPath(ctx context.Context, path string, filters ...string) error {
 	type data struct {
 		name string
 		fn   func(ctx context.Context, filename string) error
@@ -177,13 +177,23 @@ func (obj *Data) InitDataFromPath(ctx context.Context, path string) error {
 			fn:   obj.InitPermissionFromFile,
 		},
 	}
+	actions := make([]data, 0)
 	for _, di := range initializers {
-		di.name = filepath.Join(path, di.name+".json")
-		err := di.fn(ctx, di.name)
+		for _, filter := range filters {
+			if di.name == filter {
+				actions = append(actions, di)
+			}
+		}
+
+	}
+	for _, action := range actions {
+		action.name = filepath.Join(path, action.name+".json")
+		err := action.fn(ctx, action.name)
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
 func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) error {

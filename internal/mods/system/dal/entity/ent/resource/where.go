@@ -90,9 +90,9 @@ func Status(v int8) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldStatus, v))
 }
 
-// URI applies equality check predicate on the "uri" field. It's identical to URIEQ.
-func URI(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldEQ(FieldURI, v))
+// Path applies equality check predicate on the "path" field. It's identical to PathEQ.
+func Path(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldPath, v))
 }
 
 // Operation applies equality check predicate on the "operation" field. It's identical to OperationEQ.
@@ -520,69 +520,69 @@ func StatusLTE(v int8) predicate.Resource {
 	return predicate.Resource(sql.FieldLTE(FieldStatus, v))
 }
 
-// URIEQ applies the EQ predicate on the "uri" field.
-func URIEQ(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldEQ(FieldURI, v))
+// PathEQ applies the EQ predicate on the "path" field.
+func PathEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldPath, v))
 }
 
-// URINEQ applies the NEQ predicate on the "uri" field.
-func URINEQ(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldNEQ(FieldURI, v))
+// PathNEQ applies the NEQ predicate on the "path" field.
+func PathNEQ(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldPath, v))
 }
 
-// URIIn applies the In predicate on the "uri" field.
-func URIIn(vs ...string) predicate.Resource {
-	return predicate.Resource(sql.FieldIn(FieldURI, vs...))
+// PathIn applies the In predicate on the "path" field.
+func PathIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldPath, vs...))
 }
 
-// URINotIn applies the NotIn predicate on the "uri" field.
-func URINotIn(vs ...string) predicate.Resource {
-	return predicate.Resource(sql.FieldNotIn(FieldURI, vs...))
+// PathNotIn applies the NotIn predicate on the "path" field.
+func PathNotIn(vs ...string) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldPath, vs...))
 }
 
-// URIGT applies the GT predicate on the "uri" field.
-func URIGT(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldGT(FieldURI, v))
+// PathGT applies the GT predicate on the "path" field.
+func PathGT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldPath, v))
 }
 
-// URIGTE applies the GTE predicate on the "uri" field.
-func URIGTE(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldGTE(FieldURI, v))
+// PathGTE applies the GTE predicate on the "path" field.
+func PathGTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldPath, v))
 }
 
-// URILT applies the LT predicate on the "uri" field.
-func URILT(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldLT(FieldURI, v))
+// PathLT applies the LT predicate on the "path" field.
+func PathLT(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldPath, v))
 }
 
-// URILTE applies the LTE predicate on the "uri" field.
-func URILTE(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldLTE(FieldURI, v))
+// PathLTE applies the LTE predicate on the "path" field.
+func PathLTE(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldPath, v))
 }
 
-// URIContains applies the Contains predicate on the "uri" field.
-func URIContains(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldContains(FieldURI, v))
+// PathContains applies the Contains predicate on the "path" field.
+func PathContains(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContains(FieldPath, v))
 }
 
-// URIHasPrefix applies the HasPrefix predicate on the "uri" field.
-func URIHasPrefix(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldHasPrefix(FieldURI, v))
+// PathHasPrefix applies the HasPrefix predicate on the "path" field.
+func PathHasPrefix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasPrefix(FieldPath, v))
 }
 
-// URIHasSuffix applies the HasSuffix predicate on the "uri" field.
-func URIHasSuffix(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldHasSuffix(FieldURI, v))
+// PathHasSuffix applies the HasSuffix predicate on the "path" field.
+func PathHasSuffix(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldHasSuffix(FieldPath, v))
 }
 
-// URIEqualFold applies the EqualFold predicate on the "uri" field.
-func URIEqualFold(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldEqualFold(FieldURI, v))
+// PathEqualFold applies the EqualFold predicate on the "path" field.
+func PathEqualFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldEqualFold(FieldPath, v))
 }
 
-// URIContainsFold applies the ContainsFold predicate on the "uri" field.
-func URIContainsFold(v string) predicate.Resource {
-	return predicate.Resource(sql.FieldContainsFold(FieldURI, v))
+// PathContainsFold applies the ContainsFold predicate on the "path" field.
+func PathContainsFold(v string) predicate.Resource {
+	return predicate.Resource(sql.FieldContainsFold(FieldPath, v))
 }
 
 // OperationEQ applies the EQ predicate on the "operation" field.

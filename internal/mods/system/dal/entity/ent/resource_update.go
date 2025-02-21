@@ -114,16 +114,16 @@ func (ru *ResourceUpdate) AddStatus(i int8) *ResourceUpdate {
 	return ru
 }
 
-// SetURI sets the "uri" field.
-func (ru *ResourceUpdate) SetURI(s string) *ResourceUpdate {
-	ru.mutation.SetURI(s)
+// SetPath sets the "path" field.
+func (ru *ResourceUpdate) SetPath(s string) *ResourceUpdate {
+	ru.mutation.SetPath(s)
 	return ru
 }
 
-// SetNillableURI sets the "uri" field if the given value is not nil.
-func (ru *ResourceUpdate) SetNillableURI(s *string) *ResourceUpdate {
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillablePath(s *string) *ResourceUpdate {
 	if s != nil {
-		ru.SetURI(*s)
+		ru.SetPath(*s)
 	}
 	return ru
 }
@@ -461,9 +461,9 @@ func (ru *ResourceUpdate) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
 		}
 	}
-	if v, ok := ru.mutation.URI(); ok {
-		if err := resource.URIValidator(v); err != nil {
-			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+	if v, ok := ru.mutation.Path(); ok {
+		if err := resource.PathValidator(v); err != nil {
+			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
 	if v, ok := ru.mutation.Operation(); ok {
@@ -543,8 +543,8 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.AddedStatus(); ok {
 		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
 	}
-	if value, ok := ru.mutation.URI(); ok {
-		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	if value, ok := ru.mutation.Path(); ok {
+		_spec.SetField(resource.FieldPath, field.TypeString, value)
 	}
 	if value, ok := ru.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)
@@ -869,16 +869,16 @@ func (ruo *ResourceUpdateOne) AddStatus(i int8) *ResourceUpdateOne {
 	return ruo
 }
 
-// SetURI sets the "uri" field.
-func (ruo *ResourceUpdateOne) SetURI(s string) *ResourceUpdateOne {
-	ruo.mutation.SetURI(s)
+// SetPath sets the "path" field.
+func (ruo *ResourceUpdateOne) SetPath(s string) *ResourceUpdateOne {
+	ruo.mutation.SetPath(s)
 	return ruo
 }
 
-// SetNillableURI sets the "uri" field if the given value is not nil.
-func (ruo *ResourceUpdateOne) SetNillableURI(s *string) *ResourceUpdateOne {
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillablePath(s *string) *ResourceUpdateOne {
 	if s != nil {
-		ruo.SetURI(*s)
+		ruo.SetPath(*s)
 	}
 	return ruo
 }
@@ -1229,9 +1229,9 @@ func (ruo *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
 		}
 	}
-	if v, ok := ruo.mutation.URI(); ok {
-		if err := resource.URIValidator(v); err != nil {
-			return &ValidationError{Name: "uri", err: fmt.Errorf(`ent: validator failed for field "Resource.uri": %w`, err)}
+	if v, ok := ruo.mutation.Path(); ok {
+		if err := resource.PathValidator(v); err != nil {
+			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
 	if v, ok := ruo.mutation.Operation(); ok {
@@ -1328,8 +1328,8 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	if value, ok := ruo.mutation.AddedStatus(); ok {
 		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
 	}
-	if value, ok := ruo.mutation.URI(); ok {
-		_spec.SetField(resource.FieldURI, field.TypeString, value)
+	if value, ok := ruo.mutation.Path(); ok {
+		_spec.SetField(resource.FieldPath, field.TypeString, value)
 	}
 	if value, ok := ruo.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)

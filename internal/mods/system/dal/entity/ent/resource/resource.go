@@ -28,8 +28,8 @@ const (
 	FieldType = "type"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
-	// FieldURI holds the string denoting the uri field in the database.
-	FieldURI = "uri"
+	// FieldPath holds the string denoting the path field in the database.
+	FieldPath = "path"
 	// FieldOperation holds the string denoting the operation field in the database.
 	FieldOperation = "operation"
 	// FieldMethod holds the string denoting the method field in the database.
@@ -92,7 +92,7 @@ var Columns = []string{
 	FieldI18nKey,
 	FieldType,
 	FieldStatus,
-	FieldURI,
+	FieldPath,
 	FieldOperation,
 	FieldMethod,
 	FieldComponent,
@@ -144,10 +144,10 @@ var (
 	TypeValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus int8
-	// DefaultURI holds the default value on creation for the "uri" field.
-	DefaultURI string
-	// URIValidator is a validator for the "uri" field. It is called by the builders before save.
-	URIValidator func(string) error
+	// DefaultPath holds the default value on creation for the "path" field.
+	DefaultPath string
+	// PathValidator is a validator for the "path" field. It is called by the builders before save.
+	PathValidator func(string) error
 	// DefaultOperation holds the default value on creation for the "operation" field.
 	DefaultOperation string
 	// OperationValidator is a validator for the "operation" field. It is called by the builders before save.
@@ -227,9 +227,9 @@ func ByStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
-// ByURI orders the results by the uri field.
-func ByURI(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldURI, opts...).ToFunc()
+// ByPath orders the results by the path field.
+func ByPath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPath, opts...).ToFunc()
 }
 
 // ByOperation orders the results by the operation field.

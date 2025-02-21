@@ -288,12 +288,12 @@ func init() {
 	resourceDescStatus := resourceFields[4].Descriptor()
 	// resource.DefaultStatus holds the default value on creation for the status field.
 	resource.DefaultStatus = resourceDescStatus.Default.(int8)
-	// resourceDescURI is the schema descriptor for uri field.
-	resourceDescURI := resourceFields[5].Descriptor()
-	// resource.DefaultURI holds the default value on creation for the uri field.
-	resource.DefaultURI = resourceDescURI.Default.(string)
-	// resource.URIValidator is a validator for the "uri" field. It is called by the builders before save.
-	resource.URIValidator = resourceDescURI.Validators[0].(func(string) error)
+	// resourceDescPath is the schema descriptor for path field.
+	resourceDescPath := resourceFields[5].Descriptor()
+	// resource.DefaultPath holds the default value on creation for the path field.
+	resource.DefaultPath = resourceDescPath.Default.(string)
+	// resource.PathValidator is a validator for the "path" field. It is called by the builders before save.
+	resource.PathValidator = resourceDescPath.Validators[0].(func(string) error)
 	// resourceDescOperation is the schema descriptor for operation field.
 	resourceDescOperation := resourceFields[6].Descriptor()
 	// resource.DefaultOperation holds the default value on creation for the operation field.

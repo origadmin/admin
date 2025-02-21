@@ -487,10 +487,10 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
-		case resource.FieldURI:
+		case resource.FieldPath:
 			// check string with sql.NullString if it is empty
-			if input.URI != "" {
-				m.SetURI(input.URI)
+			if input.Path != "" {
+				m.SetPath(input.Path)
 			}
 		case resource.FieldOperation:
 			// check string with sql.NullString if it is empty
@@ -572,8 +572,8 @@ func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) 
 			m.SetType(input.Type)
 		case resource.FieldStatus:
 			m.SetStatus(input.Status)
-		case resource.FieldURI:
-			m.SetURI(input.URI)
+		case resource.FieldPath:
+			m.SetPath(input.Path)
 		case resource.FieldOperation:
 			m.SetOperation(input.Operation)
 		case resource.FieldMethod:
