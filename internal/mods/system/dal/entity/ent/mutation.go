@@ -8574,6 +8574,7 @@ type UserMutation struct {
 	salt                    *string
 	phone                   *string
 	email                   *string
+	department              *string
 	remark                  *string
 	token                   *string
 	status                  *int8
@@ -9371,6 +9372,42 @@ func (m *UserMutation) ResetEmail() {
 	m.email = nil
 }
 
+// SetDepartment sets the "department" field.
+func (m *UserMutation) SetDepartment(s string) {
+	m.department = &s
+}
+
+// Department returns the value of the "department" field in the mutation.
+func (m *UserMutation) Department() (r string, exists bool) {
+	v := m.department
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDepartment returns the old "department" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldDepartment(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDepartment is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDepartment requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDepartment: %w", err)
+	}
+	return oldValue.Department, nil
+}
+
+// ResetDepartment resets all changes to the "department" field.
+func (m *UserMutation) ResetDepartment() {
+	m.department = nil
+}
+
 // SetRemark sets the "remark" field.
 func (m *UserMutation) SetRemark(s string) {
 	m.remark = &s
@@ -10156,7 +10193,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 26)
+	fields := make([]string, 0, 27)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10204,6 +10241,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.email != nil {
 		fields = append(fields, user.FieldEmail)
+	}
+	if m.department != nil {
+		fields = append(fields, user.FieldDepartment)
 	}
 	if m.remark != nil {
 		fields = append(fields, user.FieldRemark)
@@ -10275,6 +10315,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Phone()
 	case user.FieldEmail:
 		return m.Email()
+	case user.FieldDepartment:
+		return m.Department()
 	case user.FieldRemark:
 		return m.Remark()
 	case user.FieldToken:
@@ -10336,6 +10378,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPhone(ctx)
 	case user.FieldEmail:
 		return m.OldEmail(ctx)
+	case user.FieldDepartment:
+		return m.OldDepartment(ctx)
 	case user.FieldRemark:
 		return m.OldRemark(ctx)
 	case user.FieldToken:
@@ -10476,6 +10520,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEmail(v)
+		return nil
+	case user.FieldDepartment:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDepartment(v)
 		return nil
 	case user.FieldRemark:
 		v, ok := value.(string)
@@ -10727,6 +10778,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldEmail:
 		m.ResetEmail()
+		return nil
+	case user.FieldDepartment:
+		m.ResetDepartment()
 		return nil
 	case user.FieldRemark:
 		m.ResetRemark()

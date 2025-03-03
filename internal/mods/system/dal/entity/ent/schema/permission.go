@@ -24,7 +24,8 @@ type Permission struct {
 // DataScope 数据范围
 const (
 	DataScopeSelf string = "self" // 仅本人数据
-	DataScopeDept string = "dept" // 本部门数据
+	DataScopeDept string = "dept" // 部门数据
+	DataScopeRole string = "role" // 角色数据
 	DataScopeAll  string = "all"  // 所有数据
 )
 

@@ -401,6 +401,7 @@ var (
 		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "user.field.salt", Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "user.field.phone", Default: ""},
 		{Name: "email", Type: field.TypeString, Size: 64, Comment: "user.field.email", Default: ""},
+		{Name: "department", Type: field.TypeString, Size: 64, Comment: "user.field.department", Default: ""},
 		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "user.field.remark", Default: ""},
 		{Name: "token", Type: field.TypeString, Size: 512, Comment: "user.field.token", Default: ""},
 		{Name: "status", Type: field.TypeInt8, Comment: "user.field.status", Default: 1},
@@ -462,7 +463,7 @@ var (
 			{
 				Name:    "user_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[19]},
+				Columns: []*schema.Column{SysUsersColumns[20]},
 			},
 		},
 	}

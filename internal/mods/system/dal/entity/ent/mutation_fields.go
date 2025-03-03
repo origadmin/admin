@@ -821,6 +821,11 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			if input.Email != "" {
 				m.SetEmail(input.Email)
 			}
+		case user.FieldDepartment:
+			// check string with sql.NullString if it is empty
+			if input.Department != "" {
+				m.SetDepartment(input.Department)
+			}
 		case user.FieldRemark:
 			// check string with sql.NullString if it is empty
 			if input.Remark != "" {
@@ -921,6 +926,8 @@ func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
 			m.SetPhone(input.Phone)
 		case user.FieldEmail:
 			m.SetEmail(input.Email)
+		case user.FieldDepartment:
+			m.SetDepartment(input.Department)
 		case user.FieldRemark:
 			m.SetRemark(input.Remark)
 		case user.FieldToken:

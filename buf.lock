@@ -2,8 +2,8 @@
 version: v2
 deps:
   - name: buf.build/bufbuild/protovalidate
-    commit: a3320276596649bcad929ac829d451f4
-    digest: b5:285a6d3a423b195a21f45aacc97ee222ac09cfb01a42f0d546aa51d92177b0b9d00eb9ae93e72dabbbefdc77f35a4c7a11f15d913cc08da764fcb6071f85d148
+    commit: d39267d9df8f4053bbac6b956a23169f
+    digest: b5:c2542c2e9935dd9a7f12ef79f76aa5b53cf1c8312d720da54e03953f27ad952e2b439cbced06e3b4069e466bd9b64019cf9f687243ad51aa5dc2b5f364fac71e
   - name: buf.build/envoyproxy/protoc-gen-validate
     commit: daf171c6cdb54629b5f51e345a79e4dd
     digest: b5:c745e1521879f43740230b1df673d0729f55704efefdcfc489d4a0a2d40c92a26cacfeab62813403040a8b180142d53b398c7ca784a065e43823605ee49681de
@@ -11,8 +11,8 @@ deps:
     commit: 087bc8072ce44e339f213209e4d57bf0
     digest: b5:c4eebcd04bc2fdd5dd0b8d695eb419682a650b600cdb56ff2ed61208a24603e0eb1b8ae0d467925c69a24bde6d322f3c4112bd2b8efdd682d8c3128384cdac9a
   - name: buf.build/googleapis/googleapis
-    commit: e93e34f48be043dab55be31b4b47f458
-    digest: b5:cebe5dfac5f7d67c55296f37ad9d368dba8d9862777e69d5d99eb1d72dc95fa68cd6323b483ca42cf70e66060002c1bc36e1f5f754b217a5c771c108eb243dbf
+    commit: 546238c53f7340c6a2a6099fb863bc1b
+    digest: b5:e017bbf31a3f912e2b969c03c3aa711f466cfe104f510865d1a8ede1be490240aabd4cca5865459a0f15222747284395f98afc094b0fd086e8917a5a7bdd9db0
   - name: buf.build/kratos/apis
     commit: c2de25f14fa445a79a054214f31d17a8
     digest: b5:3e4dac0d26ce9db17309aeb845f0efb38ec7db1af06ee3c6b8dce2f4f7f53f126d62233c4910410384ead7f0a0edb6448cb389e62d1e3da5e927c3a980828f0b

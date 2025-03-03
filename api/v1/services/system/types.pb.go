@@ -344,6 +344,8 @@ type Role struct {
 	Menus []*Menu `protobuf:"bytes,21,rep,name=menus,proto3" json:"menus,omitempty"`
 	// Users holds the value of the users edge.
 	Users []*User `protobuf:"bytes,22,rep,name=users,proto3" json:"users,omitempty"`
+	// Resources holds the value of the resources edge.
+	Resources []*Resource `protobuf:"bytes,23,rep,name=resources,proto3" json:"resources,omitempty"`
 }
 
 func (x *Role) Reset() {
@@ -456,6 +458,13 @@ func (x *Role) GetMenus() []*Menu {
 func (x *Role) GetUsers() []*User {
 	if x != nil {
 		return x.Users
+	}
+	return nil
+}
+
+func (x *Role) GetResources() []*Resource {
+	if x != nil {
+		return x.Resources
 	}
 	return nil
 }
@@ -2779,7 +2788,7 @@ var file_system_types_proto_rawDesc = []byte{
 	0x75, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76,
 	0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65,
 	0x6d, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x4d, 0x65, 0x6e, 0x75, 0x52, 0x0a, 0x72, 0x6f, 0x6c, 0x65,
-	0x5f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x22, 0xb0, 0x03, 0x0a, 0x04, 0x52, 0x6f, 0x6c, 0x65, 0x12,
+	0x5f, 0x6d, 0x65, 0x6e, 0x75, 0x73, 0x22, 0xf0, 0x03, 0x0a, 0x04, 0x52, 0x6f, 0x6c, 0x65, 0x12,
 	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12,
 	0x3c, 0x0a, 0x0b, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72,
@@ -2806,7 +2815,11 @@ var file_system_types_proto_rawDesc = []byte{
 	0x6d, 0x65, 0x6e, 0x75, 0x73, 0x12, 0x32, 0x0a, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x16,
 	0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65,
 	0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x55, 0x73,
-	0x65, 0x72, 0x52, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x22, 0xf7, 0x01, 0x0a, 0x09, 0x52, 0x6f,
+	0x65, 0x72, 0x52, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x12, 0x3e, 0x0a, 0x09, 0x72, 0x65, 0x73,
+	0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x18, 0x17, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73,
+	0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x09,
+	0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x73, 0x22, 0xf7, 0x01, 0x0a, 0x09, 0x52, 0x6f,
 	0x6c, 0x65, 0x45, 0x64, 0x67, 0x65, 0x73, 0x12, 0x32, 0x0a, 0x05, 0x6d, 0x65, 0x6e, 0x75, 0x73,
 	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x31, 0x2e,
 	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x73, 0x2e, 0x73, 0x79, 0x73, 0x74, 0x65, 0x6d, 0x2e,
@@ -3303,76 +3316,77 @@ var file_system_types_proto_depIdxs = []int32{
 	30, // 12: api.v1.services.system.Role.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 13: api.v1.services.system.Role.menus:type_name -> api.v1.services.system.Menu
 	4,  // 14: api.v1.services.system.Role.users:type_name -> api.v1.services.system.User
-	0,  // 15: api.v1.services.system.RoleEdges.menus:type_name -> api.v1.services.system.Menu
-	4,  // 16: api.v1.services.system.RoleEdges.users:type_name -> api.v1.services.system.User
-	8,  // 17: api.v1.services.system.RoleEdges.role_menus:type_name -> api.v1.services.system.RoleMenu
-	6,  // 18: api.v1.services.system.RoleEdges.user_roles:type_name -> api.v1.services.system.UserRole
-	30, // 19: api.v1.services.system.User.create_time:type_name -> google.protobuf.Timestamp
-	30, // 20: api.v1.services.system.User.update_time:type_name -> google.protobuf.Timestamp
-	30, // 21: api.v1.services.system.User.last_login_time:type_name -> google.protobuf.Timestamp
-	30, // 22: api.v1.services.system.User.sanction_date:type_name -> google.protobuf.Timestamp
-	2,  // 23: api.v1.services.system.User.roles:type_name -> api.v1.services.system.Role
-	2,  // 24: api.v1.services.system.UserEdges.roles:type_name -> api.v1.services.system.Role
-	6,  // 25: api.v1.services.system.UserEdges.user_roles:type_name -> api.v1.services.system.UserRole
-	30, // 26: api.v1.services.system.UserRole.create_time:type_name -> google.protobuf.Timestamp
-	30, // 27: api.v1.services.system.UserRole.update_time:type_name -> google.protobuf.Timestamp
-	4,  // 28: api.v1.services.system.UserRole.user:type_name -> api.v1.services.system.User
-	2,  // 29: api.v1.services.system.UserRole.role:type_name -> api.v1.services.system.Role
-	4,  // 30: api.v1.services.system.UserRoleEdges.user:type_name -> api.v1.services.system.User
-	2,  // 31: api.v1.services.system.UserRoleEdges.role:type_name -> api.v1.services.system.Role
-	30, // 32: api.v1.services.system.RoleMenu.create_time:type_name -> google.protobuf.Timestamp
-	30, // 33: api.v1.services.system.RoleMenu.update_time:type_name -> google.protobuf.Timestamp
-	2,  // 34: api.v1.services.system.RoleMenu.role:type_name -> api.v1.services.system.Role
-	0,  // 35: api.v1.services.system.RoleMenu.menu:type_name -> api.v1.services.system.Menu
-	2,  // 36: api.v1.services.system.RoleMenuEdges.role:type_name -> api.v1.services.system.Role
-	0,  // 37: api.v1.services.system.RoleMenuEdges.menu:type_name -> api.v1.services.system.Menu
-	30, // 38: api.v1.services.system.Resource.create_time:type_name -> google.protobuf.Timestamp
-	30, // 39: api.v1.services.system.Resource.update_time:type_name -> google.protobuf.Timestamp
-	28, // 40: api.v1.services.system.Resource.properties:type_name -> api.v1.services.system.Resource.PropertiesEntry
-	10, // 41: api.v1.services.system.Resource.children:type_name -> api.v1.services.system.Resource
-	10, // 42: api.v1.services.system.Resource.parent:type_name -> api.v1.services.system.Resource
-	0,  // 43: api.v1.services.system.ResourceEdges.menu:type_name -> api.v1.services.system.Menu
-	30, // 44: api.v1.services.system.Department.create_time:type_name -> google.protobuf.Timestamp
-	30, // 45: api.v1.services.system.Department.update_time:type_name -> google.protobuf.Timestamp
-	12, // 46: api.v1.services.system.Department.children:type_name -> api.v1.services.system.Department
-	12, // 47: api.v1.services.system.Department.parent:type_name -> api.v1.services.system.Department
-	4,  // 48: api.v1.services.system.DepartmentEdges.users:type_name -> api.v1.services.system.User
-	16, // 49: api.v1.services.system.DepartmentEdges.positions:type_name -> api.v1.services.system.Position
-	12, // 50: api.v1.services.system.DepartmentEdges.children:type_name -> api.v1.services.system.Department
-	12, // 51: api.v1.services.system.DepartmentEdges.parent:type_name -> api.v1.services.system.Department
-	14, // 52: api.v1.services.system.DepartmentEdges.user_departments:type_name -> api.v1.services.system.UserDepartment
-	15, // 53: api.v1.services.system.UserDepartment.edges:type_name -> api.v1.services.system.UserDepartmentEdges
-	4,  // 54: api.v1.services.system.UserDepartmentEdges.user:type_name -> api.v1.services.system.User
-	12, // 55: api.v1.services.system.UserDepartmentEdges.department:type_name -> api.v1.services.system.Department
-	30, // 56: api.v1.services.system.Position.create_time:type_name -> google.protobuf.Timestamp
-	30, // 57: api.v1.services.system.Position.update_time:type_name -> google.protobuf.Timestamp
-	12, // 58: api.v1.services.system.PositionEdges.department:type_name -> api.v1.services.system.Department
-	4,  // 59: api.v1.services.system.PositionEdges.users:type_name -> api.v1.services.system.User
-	18, // 60: api.v1.services.system.PositionEdges.permissions:type_name -> api.v1.services.system.Permission
-	20, // 61: api.v1.services.system.PositionEdges.user_positions:type_name -> api.v1.services.system.UserPosition
-	22, // 62: api.v1.services.system.PositionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
-	30, // 63: api.v1.services.system.Permission.create_time:type_name -> google.protobuf.Timestamp
-	30, // 64: api.v1.services.system.Permission.update_time:type_name -> google.protobuf.Timestamp
-	29, // 65: api.v1.services.system.Permission.data_rules:type_name -> api.v1.services.system.Permission.DataRulesEntry
-	2,  // 66: api.v1.services.system.PermissionEdges.roles:type_name -> api.v1.services.system.Role
-	10, // 67: api.v1.services.system.PermissionEdges.resources:type_name -> api.v1.services.system.Resource
-	16, // 68: api.v1.services.system.PermissionEdges.positions:type_name -> api.v1.services.system.Position
-	24, // 69: api.v1.services.system.PermissionEdges.role_permissions:type_name -> api.v1.services.system.RolePermission
-	26, // 70: api.v1.services.system.PermissionEdges.permission_resources:type_name -> api.v1.services.system.PermissionResource
-	22, // 71: api.v1.services.system.PermissionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
-	4,  // 72: api.v1.services.system.UserPositionEdges.user:type_name -> api.v1.services.system.User
-	16, // 73: api.v1.services.system.UserPositionEdges.position:type_name -> api.v1.services.system.Position
-	16, // 74: api.v1.services.system.PositionPermissionEdges.position:type_name -> api.v1.services.system.Position
-	18, // 75: api.v1.services.system.PositionPermissionEdges.permission:type_name -> api.v1.services.system.Permission
-	2,  // 76: api.v1.services.system.RolePermissionEdges.role:type_name -> api.v1.services.system.Role
-	18, // 77: api.v1.services.system.RolePermissionEdges.permission:type_name -> api.v1.services.system.Permission
-	18, // 78: api.v1.services.system.PermissionResourceEdges.permission:type_name -> api.v1.services.system.Permission
-	10, // 79: api.v1.services.system.PermissionResourceEdges.resource:type_name -> api.v1.services.system.Resource
-	80, // [80:80] is the sub-list for method output_type
-	80, // [80:80] is the sub-list for method input_type
-	80, // [80:80] is the sub-list for extension type_name
-	80, // [80:80] is the sub-list for extension extendee
-	0,  // [0:80] is the sub-list for field type_name
+	10, // 15: api.v1.services.system.Role.resources:type_name -> api.v1.services.system.Resource
+	0,  // 16: api.v1.services.system.RoleEdges.menus:type_name -> api.v1.services.system.Menu
+	4,  // 17: api.v1.services.system.RoleEdges.users:type_name -> api.v1.services.system.User
+	8,  // 18: api.v1.services.system.RoleEdges.role_menus:type_name -> api.v1.services.system.RoleMenu
+	6,  // 19: api.v1.services.system.RoleEdges.user_roles:type_name -> api.v1.services.system.UserRole
+	30, // 20: api.v1.services.system.User.create_time:type_name -> google.protobuf.Timestamp
+	30, // 21: api.v1.services.system.User.update_time:type_name -> google.protobuf.Timestamp
+	30, // 22: api.v1.services.system.User.last_login_time:type_name -> google.protobuf.Timestamp
+	30, // 23: api.v1.services.system.User.sanction_date:type_name -> google.protobuf.Timestamp
+	2,  // 24: api.v1.services.system.User.roles:type_name -> api.v1.services.system.Role
+	2,  // 25: api.v1.services.system.UserEdges.roles:type_name -> api.v1.services.system.Role
+	6,  // 26: api.v1.services.system.UserEdges.user_roles:type_name -> api.v1.services.system.UserRole
+	30, // 27: api.v1.services.system.UserRole.create_time:type_name -> google.protobuf.Timestamp
+	30, // 28: api.v1.services.system.UserRole.update_time:type_name -> google.protobuf.Timestamp
+	4,  // 29: api.v1.services.system.UserRole.user:type_name -> api.v1.services.system.User
+	2,  // 30: api.v1.services.system.UserRole.role:type_name -> api.v1.services.system.Role
+	4,  // 31: api.v1.services.system.UserRoleEdges.user:type_name -> api.v1.services.system.User
+	2,  // 32: api.v1.services.system.UserRoleEdges.role:type_name -> api.v1.services.system.Role
+	30, // 33: api.v1.services.system.RoleMenu.create_time:type_name -> google.protobuf.Timestamp
+	30, // 34: api.v1.services.system.RoleMenu.update_time:type_name -> google.protobuf.Timestamp
+	2,  // 35: api.v1.services.system.RoleMenu.role:type_name -> api.v1.services.system.Role
+	0,  // 36: api.v1.services.system.RoleMenu.menu:type_name -> api.v1.services.system.Menu
+	2,  // 37: api.v1.services.system.RoleMenuEdges.role:type_name -> api.v1.services.system.Role
+	0,  // 38: api.v1.services.system.RoleMenuEdges.menu:type_name -> api.v1.services.system.Menu
+	30, // 39: api.v1.services.system.Resource.create_time:type_name -> google.protobuf.Timestamp
+	30, // 40: api.v1.services.system.Resource.update_time:type_name -> google.protobuf.Timestamp
+	28, // 41: api.v1.services.system.Resource.properties:type_name -> api.v1.services.system.Resource.PropertiesEntry
+	10, // 42: api.v1.services.system.Resource.children:type_name -> api.v1.services.system.Resource
+	10, // 43: api.v1.services.system.Resource.parent:type_name -> api.v1.services.system.Resource
+	0,  // 44: api.v1.services.system.ResourceEdges.menu:type_name -> api.v1.services.system.Menu
+	30, // 45: api.v1.services.system.Department.create_time:type_name -> google.protobuf.Timestamp
+	30, // 46: api.v1.services.system.Department.update_time:type_name -> google.protobuf.Timestamp
+	12, // 47: api.v1.services.system.Department.children:type_name -> api.v1.services.system.Department
+	12, // 48: api.v1.services.system.Department.parent:type_name -> api.v1.services.system.Department
+	4,  // 49: api.v1.services.system.DepartmentEdges.users:type_name -> api.v1.services.system.User
+	16, // 50: api.v1.services.system.DepartmentEdges.positions:type_name -> api.v1.services.system.Position
+	12, // 51: api.v1.services.system.DepartmentEdges.children:type_name -> api.v1.services.system.Department
+	12, // 52: api.v1.services.system.DepartmentEdges.parent:type_name -> api.v1.services.system.Department
+	14, // 53: api.v1.services.system.DepartmentEdges.user_departments:type_name -> api.v1.services.system.UserDepartment
+	15, // 54: api.v1.services.system.UserDepartment.edges:type_name -> api.v1.services.system.UserDepartmentEdges
+	4,  // 55: api.v1.services.system.UserDepartmentEdges.user:type_name -> api.v1.services.system.User
+	12, // 56: api.v1.services.system.UserDepartmentEdges.department:type_name -> api.v1.services.system.Department
+	30, // 57: api.v1.services.system.Position.create_time:type_name -> google.protobuf.Timestamp
+	30, // 58: api.v1.services.system.Position.update_time:type_name -> google.protobuf.Timestamp
+	12, // 59: api.v1.services.system.PositionEdges.department:type_name -> api.v1.services.system.Department
+	4,  // 60: api.v1.services.system.PositionEdges.users:type_name -> api.v1.services.system.User
+	18, // 61: api.v1.services.system.PositionEdges.permissions:type_name -> api.v1.services.system.Permission
+	20, // 62: api.v1.services.system.PositionEdges.user_positions:type_name -> api.v1.services.system.UserPosition
+	22, // 63: api.v1.services.system.PositionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
+	30, // 64: api.v1.services.system.Permission.create_time:type_name -> google.protobuf.Timestamp
+	30, // 65: api.v1.services.system.Permission.update_time:type_name -> google.protobuf.Timestamp
+	29, // 66: api.v1.services.system.Permission.data_rules:type_name -> api.v1.services.system.Permission.DataRulesEntry
+	2,  // 67: api.v1.services.system.PermissionEdges.roles:type_name -> api.v1.services.system.Role
+	10, // 68: api.v1.services.system.PermissionEdges.resources:type_name -> api.v1.services.system.Resource
+	16, // 69: api.v1.services.system.PermissionEdges.positions:type_name -> api.v1.services.system.Position
+	24, // 70: api.v1.services.system.PermissionEdges.role_permissions:type_name -> api.v1.services.system.RolePermission
+	26, // 71: api.v1.services.system.PermissionEdges.permission_resources:type_name -> api.v1.services.system.PermissionResource
+	22, // 72: api.v1.services.system.PermissionEdges.position_permissions:type_name -> api.v1.services.system.PositionPermission
+	4,  // 73: api.v1.services.system.UserPositionEdges.user:type_name -> api.v1.services.system.User
+	16, // 74: api.v1.services.system.UserPositionEdges.position:type_name -> api.v1.services.system.Position
+	16, // 75: api.v1.services.system.PositionPermissionEdges.position:type_name -> api.v1.services.system.Position
+	18, // 76: api.v1.services.system.PositionPermissionEdges.permission:type_name -> api.v1.services.system.Permission
+	2,  // 77: api.v1.services.system.RolePermissionEdges.role:type_name -> api.v1.services.system.Role
+	18, // 78: api.v1.services.system.RolePermissionEdges.permission:type_name -> api.v1.services.system.Permission
+	18, // 79: api.v1.services.system.PermissionResourceEdges.permission:type_name -> api.v1.services.system.Permission
+	10, // 80: api.v1.services.system.PermissionResourceEdges.resource:type_name -> api.v1.services.system.Resource
+	81, // [81:81] is the sub-list for method output_type
+	81, // [81:81] is the sub-list for method input_type
+	81, // [81:81] is the sub-list for extension type_name
+	81, // [81:81] is the sub-list for extension extendee
+	0,  // [0:81] is the sub-list for field type_name
 }
 
 func init() { file_system_types_proto_init() }

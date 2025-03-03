@@ -93,6 +93,8 @@ message Role {
   repeated Menu menus = 21 [json_name = "menus"];
   // Users holds the value of the users edge.
   repeated User users = 22 [json_name = "users"];
+  // Resources holds the value of the resources edge.
+  repeated Resource resources = 23 [json_name = "resources"];
 }
 
 // RoleEdges holds the relations/edges for other nodes in the graph.

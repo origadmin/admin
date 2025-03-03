@@ -507,46 +507,52 @@ func init() {
 	user.DefaultEmail = userDescEmail.Default.(string)
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
+	// userDescDepartment is the schema descriptor for department field.
+	userDescDepartment := userFields[11].Descriptor()
+	// user.DefaultDepartment holds the default value on creation for the department field.
+	user.DefaultDepartment = userDescDepartment.Default.(string)
+	// user.DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
+	user.DepartmentValidator = userDescDepartment.Validators[0].(func(string) error)
 	// userDescRemark is the schema descriptor for remark field.
-	userDescRemark := userFields[11].Descriptor()
+	userDescRemark := userFields[12].Descriptor()
 	// user.DefaultRemark holds the default value on creation for the remark field.
 	user.DefaultRemark = userDescRemark.Default.(string)
 	// user.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
 	user.RemarkValidator = userDescRemark.Validators[0].(func(string) error)
 	// userDescToken is the schema descriptor for token field.
-	userDescToken := userFields[12].Descriptor()
+	userDescToken := userFields[13].Descriptor()
 	// user.DefaultToken holds the default value on creation for the token field.
 	user.DefaultToken = userDescToken.Default.(string)
 	// user.TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	user.TokenValidator = userDescToken.Validators[0].(func(string) error)
 	// userDescStatus is the schema descriptor for status field.
-	userDescStatus := userFields[13].Descriptor()
+	userDescStatus := userFields[14].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = userDescStatus.Default.(int8)
 	// userDescIsSystem is the schema descriptor for is_system field.
-	userDescIsSystem := userFields[14].Descriptor()
+	userDescIsSystem := userFields[15].Descriptor()
 	// user.DefaultIsSystem holds the default value on creation for the is_system field.
 	user.DefaultIsSystem = userDescIsSystem.Default.(bool)
 	// userDescLastLoginIP is the schema descriptor for last_login_ip field.
-	userDescLastLoginIP := userFields[15].Descriptor()
+	userDescLastLoginIP := userFields[16].Descriptor()
 	// user.DefaultLastLoginIP holds the default value on creation for the last_login_ip field.
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// user.LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	user.LastLoginIPValidator = userDescLastLoginIP.Validators[0].(func(string) error)
 	// userDescLastLoginTime is the schema descriptor for last_login_time field.
-	userDescLastLoginTime := userFields[16].Descriptor()
+	userDescLastLoginTime := userFields[17].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
 	// userDescLoginTime is the schema descriptor for login_time field.
-	userDescLoginTime := userFields[17].Descriptor()
+	userDescLoginTime := userFields[18].Descriptor()
 	// user.DefaultLoginTime holds the default value on creation for the login_time field.
 	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
 	// userDescManagerID is the schema descriptor for manager_id field.
-	userDescManagerID := userFields[19].Descriptor()
+	userDescManagerID := userFields[20].Descriptor()
 	// user.ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
 	user.ManagerIDValidator = userDescManagerID.Validators[0].(func(int64) error)
 	// userDescManager is the schema descriptor for manager field.
-	userDescManager := userFields[20].Descriptor()
+	userDescManager := userFields[21].Descriptor()
 	// user.DefaultManager holds the default value on creation for the manager field.
 	user.DefaultManager = userDescManager.Default.(string)
 	// userDescID is the schema descriptor for id field.

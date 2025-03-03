@@ -48,6 +48,8 @@ const (
 	FieldPhone = "phone"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
+	// FieldDepartment holds the string denoting the department field in the database.
+	FieldDepartment = "department"
 	// FieldRemark holds the string denoting the remark field in the database.
 	FieldRemark = "remark"
 	// FieldToken holds the string denoting the token field in the database.
@@ -139,6 +141,7 @@ var Columns = []string{
 	FieldSalt,
 	FieldPhone,
 	FieldEmail,
+	FieldDepartment,
 	FieldRemark,
 	FieldToken,
 	FieldStatus,
@@ -225,6 +228,10 @@ var (
 	DefaultEmail string
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
+	// DefaultDepartment holds the default value on creation for the "department" field.
+	DefaultDepartment string
+	// DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
+	DepartmentValidator func(string) error
 	// DefaultRemark holds the default value on creation for the "remark" field.
 	DefaultRemark string
 	// RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
@@ -368,6 +375,11 @@ func ByPhone(opts ...sql.OrderTermOption) OrderOption {
 // ByEmail orders the results by the email field.
 func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
+}
+
+// ByDepartment orders the results by the department field.
+func ByDepartment(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDepartment, opts...).ToFunc()
 }
 
 // ByRemark orders the results by the remark field.

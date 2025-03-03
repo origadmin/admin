@@ -77,6 +77,10 @@ func (User) Fields() []ent.Field {
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("user.field.email")), // login email of user
+		field.String("department").
+			MaxLen(64).
+			Default("").
+			Comment(i18n.Text("user.field.department")), // Department of user
 		field.String("remark").
 			MaxLen(1024).
 			Default("").

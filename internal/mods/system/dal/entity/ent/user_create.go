@@ -234,6 +234,20 @@ func (uc *UserCreate) SetNillableEmail(s *string) *UserCreate {
 	return uc
 }
 
+// SetDepartment sets the "department" field.
+func (uc *UserCreate) SetDepartment(s string) *UserCreate {
+	uc.mutation.SetDepartment(s)
+	return uc
+}
+
+// SetNillableDepartment sets the "department" field if the given value is not nil.
+func (uc *UserCreate) SetNillableDepartment(s *string) *UserCreate {
+	if s != nil {
+		uc.SetDepartment(*s)
+	}
+	return uc
+}
+
 // SetRemark sets the "remark" field.
 func (uc *UserCreate) SetRemark(s string) *UserCreate {
 	uc.mutation.SetRemark(s)
@@ -573,6 +587,10 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultEmail
 		uc.mutation.SetEmail(v)
 	}
+	if _, ok := uc.mutation.Department(); !ok {
+		v := user.DefaultDepartment
+		uc.mutation.SetDepartment(v)
+	}
 	if _, ok := uc.mutation.Remark(); !ok {
 		v := user.DefaultRemark
 		uc.mutation.SetRemark(v)
@@ -710,6 +728,14 @@ func (uc *UserCreate) check() error {
 	if v, ok := uc.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
+		}
+	}
+	if _, ok := uc.mutation.Department(); !ok {
+		return &ValidationError{Name: "department", err: errors.New(`ent: missing required field "User.department"`)}
+	}
+	if v, ok := uc.mutation.Department(); ok {
+		if err := user.DepartmentValidator(v); err != nil {
+			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.Remark(); !ok {
@@ -856,6 +882,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 		_node.Email = value
+	}
+	if value, ok := uc.mutation.Department(); ok {
+		_spec.SetField(user.FieldDepartment, field.TypeString, value)
+		_node.Department = value
 	}
 	if value, ok := uc.mutation.Remark(); ok {
 		_spec.SetField(user.FieldRemark, field.TypeString, value)

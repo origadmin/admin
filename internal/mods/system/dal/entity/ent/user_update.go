@@ -269,6 +269,20 @@ func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
 	return uu
 }
 
+// SetDepartment sets the "department" field.
+func (uu *UserUpdate) SetDepartment(s string) *UserUpdate {
+	uu.mutation.SetDepartment(s)
+	return uu
+}
+
+// SetNillableDepartment sets the "department" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableDepartment(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetDepartment(*s)
+	}
+	return uu
+}
+
 // SetRemark sets the "remark" field.
 func (uu *UserUpdate) SetRemark(s string) *UserUpdate {
 	uu.mutation.SetRemark(s)
@@ -750,6 +764,11 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.Department(); ok {
+		if err := user.DepartmentValidator(v); err != nil {
+			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
+		}
+	}
 	if v, ok := uu.mutation.Remark(); ok {
 		if err := user.RemarkValidator(v); err != nil {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
@@ -850,6 +869,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Department(); ok {
+		_spec.SetField(user.FieldDepartment, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Remark(); ok {
 		_spec.SetField(user.FieldRemark, field.TypeString, value)
@@ -1482,6 +1504,20 @@ func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetDepartment sets the "department" field.
+func (uuo *UserUpdateOne) SetDepartment(s string) *UserUpdateOne {
+	uuo.mutation.SetDepartment(s)
+	return uuo
+}
+
+// SetNillableDepartment sets the "department" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDepartment(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetDepartment(*s)
+	}
+	return uuo
+}
+
 // SetRemark sets the "remark" field.
 func (uuo *UserUpdateOne) SetRemark(s string) *UserUpdateOne {
 	uuo.mutation.SetRemark(s)
@@ -1976,6 +2012,11 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.Department(); ok {
+		if err := user.DepartmentValidator(v); err != nil {
+			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
+		}
+	}
 	if v, ok := uuo.mutation.Remark(); ok {
 		if err := user.RemarkValidator(v); err != nil {
 			return &ValidationError{Name: "remark", err: fmt.Errorf(`ent: validator failed for field "User.remark": %w`, err)}
@@ -2093,6 +2134,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Department(); ok {
+		_spec.SetField(user.FieldDepartment, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Remark(); ok {
 		_spec.SetField(user.FieldRemark, field.TypeString, value)

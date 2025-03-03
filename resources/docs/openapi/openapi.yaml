@@ -3044,6 +3044,11 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.User'
                     description: Users holds the value of the users edge.
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    description: Resources holds the value of the resources edge.
             description: Role is the model entity for the Role schema.
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
