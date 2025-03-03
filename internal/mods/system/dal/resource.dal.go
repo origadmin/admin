@@ -6,6 +6,7 @@ package dal
 
 import (
 	"context"
+	"strconv"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/log"
@@ -39,8 +40,17 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 	if len(options) > 0 {
 		option = options[0]
 	}
+	obj := dto.ConvertResourcePB2Object(resource)
+	if obj.ParentID > 0 {
+		parent, err := repo.db.Resource(ctx).Get(ctx, obj.ParentID)
+		if err != nil {
+			return nil, err
+		}
+		obj.TreePath = parent.TreePath + strconv.Itoa(int(parent.ID)) + TreePathDelimiter
+	}
+
 	create := repo.db.Resource(ctx).Create()
-	create.SetResource(dto.ConvertResourcePB2Object(resource), option.Fields...)
+	create.SetResource(obj, option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
