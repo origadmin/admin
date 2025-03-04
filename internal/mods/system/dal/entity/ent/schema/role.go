@@ -20,9 +20,8 @@ import (
 
 // Role type constant
 const (
-	RoleTypeSystem     int8 = 1 // System roles (e.g., Super Admin)
-	RoleTypeUser       int8 = 2 // User roles (e.g., general user, operation, customer service)
-	RoleTypeDepartment int8 = 3 // Department roles (e.g., department heads, department members)
+	RoleTypeSystem int8 = 1 // System roles (e.g., Super Admin)
+	RoleTypeUser   int8 = 2 // User roles (e.g., general user, operation, customer service)
 )
 
 // Role holds the schema definition for the Role domain.

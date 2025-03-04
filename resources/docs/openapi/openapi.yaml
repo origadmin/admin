@@ -2850,6 +2850,16 @@ components:
                     additionalProperties:
                         type: string
                     description: permission.field.data_rules
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: permission.field.resource_ids
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    description: permission.field.resources
             description: permission.table.comment
         api.v1.services.system.PersonalLogoutResponse:
             type: object

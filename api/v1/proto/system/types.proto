@@ -400,7 +400,10 @@ message Permission {
   string data_scope = 7 [json_name = "data_scope"];
   // permission.field.data_rules
   map<string, string > data_rules = 8 [json_name = "data_rules"];
-
+  // permission.field.resource_ids
+  repeated int64 resource_ids = 9 [json_name = "resource_ids"];
+  // permission.field.resources
+  repeated Resource resources = 10 [json_name = "resources"];
 }
 
 // PermissionEdges holds the relations/edges for other nodes in the graph.
