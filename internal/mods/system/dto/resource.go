@@ -29,18 +29,19 @@ type ResourceRepo interface {
 }
 
 type ResourceQueryOption struct {
-	Name             string   `form:"name" json:"name,omitempty"`
-	Status           int8     `form:"status" json:"status,omitempty"`
-	InIDs            []string `form:"-" json:"-"`
-	UserID           string   `form:"-" json:"-"` // UserPB ID
-	RoleID           string   `form:"-" json:"-"` // RolePB ID
-	ParentID         string   `form:"-" json:"-"` // Parent ID
-	ParentPathPrefix string   `form:"-" json:"-"`
-	IncludeResources bool     `form:"-" json:"-"` //　Include resources
-	SelectFields     []string
-	OmitFields       []string
-	OrderFields      []string
-	Fields           []string
+	Name               string   `form:"name" json:"name,omitempty"`
+	Status             int8     `form:"status" json:"status,omitempty"`
+	InIDs              []string `form:"-" json:"-"`
+	UserID             string   `form:"-" json:"-"` // UserPB ID
+	RoleID             string   `form:"-" json:"-"` // RolePB ID
+	ParentID           string   `form:"-" json:"-"` // Parent ID
+	ParentPathPrefix   string   `form:"-" json:"-"`
+	IncludeResources   bool     `form:"-" json:"-"` //　Include resources
+	IncludePermissions bool     `form:"-" json:"-"`
+	SelectFields       []string
+	OmitFields         []string
+	OrderFields        []string
+	Fields             []string
 }
 
 func (o ResourceQueryOption) FromListRequest(in *ListResourcesRequest, limiter pagination.PageLimiter) error {

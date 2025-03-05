@@ -28,6 +28,9 @@ func (repo resourceRepo) Get(ctx context.Context, id int64, options ...dto.Resou
 	}
 	query := repo.db.Resource(ctx).Query().Where(resource.ID(id))
 	query = resourceQueryOptions(query, option)
+	if option.IncludePermissions {
+		query.WithPermissions()
+	}
 	result, err := query.First(ctx)
 	if err != nil {
 		return nil, err
