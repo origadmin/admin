@@ -28,6 +28,8 @@ var ProviderSet = wire.NewSet(
 	NewRoleServiceClient,
 	NewUserServiceClientBiz,
 	NewUserServiceClient,
+	NewPermissionServiceClientBiz,
+	NewPermissionServiceClient,
 )
 
 var (

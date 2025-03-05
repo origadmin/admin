@@ -29,15 +29,18 @@ var ProviderSet = wire.NewSet(
 	NewPersonalServiceHTTPServerPB,
 	NewAuthServiceServerPB,
 	NewAuthServiceHTTPServerPB,
+	NewPermissionServiceServerPB,
+	NewPermissionServiceHTTPServerPB,
 )
 
 type RegisterServer struct {
-	Resource pb.ResourceServiceServer
-	Role     pb.RoleServiceServer
-	User     pb.UserServiceServer
-	Auth     pb.AuthServiceServer
-	Login    pb.LoginServiceServer
-	Personal pb.PersonalServiceServer
+	Resource   pb.ResourceServiceServer
+	Role       pb.RoleServiceServer
+	User       pb.UserServiceServer
+	Auth       pb.AuthServiceServer
+	Login      pb.LoginServiceServer
+	Personal   pb.PersonalServiceServer
+	Permission pb.PermissionServiceServer
 }
 
 func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
@@ -48,6 +51,7 @@ func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServ
 	pb.RegisterAuthServiceServer(server, s.Auth)
 	pb.RegisterLoginServiceServer(server, s.Login)
 	pb.RegisterPersonalServiceServer(server, s.Personal)
+	pb.RegisterPermissionServiceServer(server, s.Permission)
 }
 
 func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
@@ -58,6 +62,7 @@ func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServ
 	pb.RegisterAuthServiceHTTPServer(server, s.Auth)
 	pb.RegisterLoginServiceHTTPServer(server, s.Login)
 	pb.RegisterPersonalServiceHTTPServer(server, s.Personal)
+	pb.RegisterPermissionServiceHTTPServer(server, s.Permission)
 }
 
 func (s RegisterServer) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {

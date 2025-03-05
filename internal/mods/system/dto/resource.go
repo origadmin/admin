@@ -12,13 +12,9 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 )
 
 type (
-	ResourceEdges   = ent.ResourceEdges
-	ResourceEdgesPB = pb.ResourceEdges
-
 	ListResourcesRequest  = pb.ListResourcesRequest
 	ListResourcesResponse = pb.ListResourcesResponse
 )

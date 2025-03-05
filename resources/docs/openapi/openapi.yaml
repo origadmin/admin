@@ -3003,6 +3003,16 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/api.v1.services.system.Resource'
                     description: Parent holds the value of the parent edge.
+                permission_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: Permission Ids holds the value of the permission_ids edge.
+                permissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Permission'
+                    description: Permissions holds the value of the permissions edge.
             description: Resource is the model entity for the Resource schema.
         api.v1.services.system.Role:
             type: object

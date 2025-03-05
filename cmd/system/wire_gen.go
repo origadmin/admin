@@ -68,13 +68,17 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	personalRepo := dal.NewPersonalRepo(data, arg)
 	personalServiceClient := biz.NewPersonalServiceClient(personalRepo, arg)
 	personalServiceServer := service.NewPersonalServiceServerPB(personalServiceClient)
+	permissionRepo := dal.NewPermissionRepo(data, arg)
+	permissionServiceClient := biz.NewPermissionServiceClient(permissionRepo, arg)
+	permissionServiceServer := service.NewPermissionServiceServerPB(permissionServiceClient)
 	registerServer := &service.RegisterServer{
-		Resource: resourceServiceServer,
-		Role:     roleServiceServer,
-		User:     userServiceServer,
-		Auth:     authServiceServer,
-		Login:    loginServiceServer,
-		Personal: personalServiceServer,
+		Resource:   resourceServiceServer,
+		Role:       roleServiceServer,
+		User:       userServiceServer,
+		Auth:       authServiceServer,
+		Login:      loginServiceServer,
+		Personal:   personalServiceServer,
+		Permission: permissionServiceServer,
 	}
 	v2 := server.NewRegisterServer(registerServer)
 	v3 := server.NewSystemServer(bootstrap, v2, arg)

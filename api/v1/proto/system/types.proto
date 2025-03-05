@@ -273,6 +273,10 @@ message Resource {
   repeated Resource children = 21 [json_name = "children"];
   // Parent holds the value of the parent edge.
   Resource parent = 22 [json_name = "parent"];
+  // Permission Ids holds the value of the permission_ids edge.
+  repeated int64 permission_ids = 23 [json_name = "permission_ids"];
+  // Permissions holds the value of the permissions edge.
+  repeated Permission permissions = 24 [json_name = "permissions"];
 }
 
 // ResourceEdges holds the relations/edges for other nodes in the graph.

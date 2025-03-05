@@ -51,6 +51,12 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 
 	create := repo.db.Resource(ctx).Create()
 	create.SetResource(obj, option.Fields...)
+	if len(resource.PermissionIds) > 0 {
+		create.AddPermissionIDs(resource.PermissionIds...)
+	}
+	if len(resource.Permissions) > 0 {
+		create.AddPermissions(dto.ConvertPermissionsPB2Object(resource.Permissions)...)
+	}
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
@@ -65,6 +71,12 @@ func (repo resourceRepo) Delete(ctx context.Context, id int64) error {
 func (repo resourceRepo) Update(ctx context.Context, resource *dto.ResourcePB, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
 	update := repo.db.Resource(ctx).UpdateOneID(resource.Id)
 	update.SetResource(dto.ConvertResourcePB2Object(resource))
+	if len(resource.PermissionIds) > 0 {
+		update.AddPermissionIDs(resource.PermissionIds...)
+	}
+	if len(resource.Permissions) > 0 {
+		update.AddPermissions(dto.ConvertPermissionsPB2Object(resource.Permissions)...)
+	}
 	saved, err := update.Save(ctx)
 	if err != nil {
 		return nil, err

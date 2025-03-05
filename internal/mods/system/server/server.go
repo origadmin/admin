@@ -75,12 +75,13 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 }
 
 type RegisterAgent struct {
-	Auth     pb.AuthServiceAgent
-	Login    pb.LoginServiceAgent
-	Personal pb.PersonalServiceAgent
-	Resource pb.ResourceServiceAgent
-	Role     pb.RoleServiceAgent
-	User     pb.UserServiceAgent
+	Auth       pb.AuthServiceAgent
+	Login      pb.LoginServiceAgent
+	Personal   pb.PersonalServiceAgent
+	Resource   pb.ResourceServiceAgent
+	Role       pb.RoleServiceAgent
+	User       pb.UserServiceAgent
+	Permission pb.PermissionServiceAgent
 }
 
 func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
@@ -96,6 +97,7 @@ func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServe
 	pb.RegisterResourceServiceAgent(ag, s.Resource)
 	pb.RegisterRoleServiceAgent(ag, s.Role)
 	pb.RegisterUserServiceAgent(ag, s.User)
+	pb.RegisterPermissionServiceAgent(ag, s.Permission)
 }
 
 func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
@@ -105,12 +107,13 @@ func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServe
 
 func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
 	register := RegisterAgent{
-		Auth:     systemservice.NewAuthServiceAgentClient(client),
-		Login:    systemservice.NewLoginServiceAgentClient(client),
-		Personal: systemservice.NewPersonalServiceAgentClient(client),
-		Resource: systemservice.NewResourceServiceAgentClient(client),
-		Role:     systemservice.NewRoleServiceAgentClient(client),
-		User:     systemservice.NewUserServiceAgentClient(client),
+		Auth:       systemservice.NewAuthServiceAgentClient(client),
+		Login:      systemservice.NewLoginServiceAgentClient(client),
+		Personal:   systemservice.NewPersonalServiceAgentClient(client),
+		Resource:   systemservice.NewResourceServiceAgentClient(client),
+		Role:       systemservice.NewRoleServiceAgentClient(client),
+		User:       systemservice.NewUserServiceAgentClient(client),
+		Permission: systemservice.NewPermissionServiceAgentClient(client),
 	}
 	return &register, nil
 }
@@ -165,17 +168,14 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 func MiddlewareServer() middleware.KMiddleware {
 	return func(handler middleware.KHandler) middleware.KHandler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			log.Debugf("MiddlewareServer: entering handler function")
-			//if md, ok := FromAgentContext(ctx); ok {
-			log.Debugf("MiddlewareServer: found agent context metadata: %+v", ctx)
 			if md, ok := metadata.FromClientContext(ctx); ok {
-				//	log.Debugf("MiddlewareServer: found client context metadata: %+v", cmd)
+				log.Debugf("MiddlewareServer: found client context metadata: %+v", md)
 				//	//for k, v := range md {
 				//	//	cmd[k] = v
 				//	//	log.Debugf("MiddlewareServer: adding key-value pair (%s, %s) to client context metadata", k, v)
 				//	//}
 				//	ctx = metadata.NewClientContext(ctx, cmd)
-				log.Debugf("MiddlewareServer: updated client context metadata: %+v", md)
+				//log.Debugf("MiddlewareServer: updated client context metadata: %+v", md)
 				//} else {
 				//	log.Debugf("MiddlewareServer: no client context metadata found")
 			} else {
@@ -186,9 +186,9 @@ func MiddlewareServer() middleware.KMiddleware {
 			} else {
 				log.Debugf("MiddlewareServer: no server context metadata found")
 			}
-			log.Debugf("MiddlewareServer: calling handler function")
+			//log.Debugf("MiddlewareServer: calling handler function")
 			reply, err = handler(ctx, req)
-			log.Debugf("MiddlewareServer: handler function returned reply: %+v, error: %v", reply, err)
+			//log.Debugf("MiddlewareServer: handler function returned reply: %+v, error: %v", reply, err)
 			return
 		}
 	}
