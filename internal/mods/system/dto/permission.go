@@ -29,18 +29,19 @@ type PermissionRepo interface {
 }
 
 type PermissionQueryOption struct {
-	Name               string   `form:"name" json:"name,omitempty"`
-	Status             int8     `form:"status" json:"status,omitempty"`
-	InIDs              []string `form:"-" json:"-"`
-	UserID             string   `form:"-" json:"-"` // UserPB ID
-	RoleID             string   `form:"-" json:"-"` // RolePB ID
-	ParentID           string   `form:"-" json:"-"` // Parent ID
-	ParentPathPrefix   string   `form:"-" json:"-"`
-	IncludePermissions bool     `form:"-" json:"-"` //　Include permissions
-	SelectFields       []string
-	OmitFields         []string
-	OrderFields        []string
-	Fields             []string
+	Name             string   `form:"name" json:"name,omitempty"`
+	Status           int8     `form:"status" json:"status,omitempty"`
+	InIDs            []string `form:"-" json:"-"`
+	UserID           string   `form:"-" json:"-"` // UserPB ID
+	RoleID           string   `form:"-" json:"-"` // RolePB ID
+	ParentID         string   `form:"-" json:"-"` // Parent ID
+	ParentPathPrefix string   `form:"-" json:"-"`
+	SelectFields     []string
+	OmitFields       []string
+	OrderFields      []string
+	Fields           []string
+	IncludeResources bool
+	IncludeRoles     bool
 }
 
 func (o PermissionQueryOption) FromListRequest(in *ListPermissionsRequest, limiter pagination.PageLimiter) error {

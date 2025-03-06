@@ -192,7 +192,7 @@ func _UserService_UpdateUserStatus0_HTTP_Handler(srv UserServiceHTTPServer) func
 func _UserService_UpdateUserRoles0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserRolesRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := ctx.Bind(&in.User); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -339,7 +339,7 @@ func (c *UserServiceHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *Upd
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceUpdateUserRoles))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

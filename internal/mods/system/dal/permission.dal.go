@@ -70,31 +70,15 @@ func (repo permissionRepo) List(ctx context.Context, in *dto.ListPermissionsRequ
 	}
 
 	query := repo.db.Permission(ctx).Query()
-	//if option.IncludePermissions {
-	//	query = query.WithPermissions()
-	//}
-	//if v := option.UserID; len(v) > 0 {
-	//	query = query.Where(permission.HasRolesWith(role.HasUsersWith(user.ID(v))))
-	//}
-	//if v := option.RoleID; len(v) > 0 {
-	//	query = query.Where(permission.HasRolesWith(role.ID(v)))
-	//}
-	//if v := option.InIDs; len(v) > 0 {
-	//	query = query.Where(permission.IDIn(v...))
-	//}
-	//if v := option.Name; len(v) > 0 {
-	//	query = query.Where(permission.ParentPathContains(v))
-	//}
-	//if v := option.Status; v > 0 {
-	//	query = query.Where(permission.StatusEQ(v))
-	//}
-	//if v := option.ParentID; len(v) > 0 {
-	//	query = query.Where(permission.ParentID(v))
-	//}
-	//if v := option.ParentPathPrefix; len(v) > 0 {
-	//	query = query.Where(permission.ParentPathHasPrefix(v))
-	//}
-
+	if option.IncludeResources {
+		query = query.WithResources()
+	}
+	if option.IncludeRoles {
+		query = query.WithRoles()
+	}
+	if len(in.DataScopes) > 0 {
+		query = query.Where(permission.DataScopeIn(in.DataScopes...))
+	}
 	return permissionPageQuery(ctx, query, in, option)
 }
 

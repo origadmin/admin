@@ -40,17 +40,17 @@ service PositionService {
 
 message ListPositionsRequest {
   // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
   // The current page number.
-  int32 current = 2;
+  int32 current = 2 [json_name = "current"];
   // The maximum number of items to return.
-  int32 page_size = 3;
+  int32 page_size = 3 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4;
+  string page_token = 4 [json_name = "page_token"];
   // The no_paging is used to disable pagination.
-  bool no_paging = 5;
+  bool no_paging = 5 [json_name = "no_paging"];
   // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6;
+  bool only_count = 6 [json_name = "only_count"];
 }
 
 message ListPositionsResponse {
@@ -73,42 +73,41 @@ message ListPositionsResponse {
 message GetPositionRequest {
   // The field will contain id of the resource requested, for example:
   // "shelves/shelf1/positions/position2"
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
 }
 
 message GetPositionResponse {
-  Position position = 1;
+  Position position = 1 [json_name = "position"];
 }
 
 message CreatePositionRequest {
   // The parent resource id where the position is to be created.
-  string parent = 1;
-
+  string parent = 1 [json_name = "parent"];
   // The position id to use for this position.
-  string position_id = 3;
-
-  // The position resource to create.
-  // The field id should match the Noun in the method id.
-  Position position = 2;
+  string position_id = 2 [json_name = "position_id"];
+  // The position object to create.
+  Position position = 3 [json_name = "position"];
 }
 
 message CreatePositionResponse {
-  Position position = 1;
+  Position position = 1 [json_name = "position"];
 }
 
 message UpdatePositionRequest {
+  // The id of the position resource to update.
+  int64 id = 1 [json_name = "id"];
   // The position resource which replaces the resource on the server.
-  Position position = 1;
+  Position position = 2 [json_name = "position"];
 }
 
 message UpdatePositionResponse {
-  Position position = 1;
+  Position position = 1 [json_name = "position"];
 }
 
 message DeletePositionRequest {
   // The resource id of the position to be deleted, for example:
   // "shelves/shelf1/positions/position2"
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
 }
 
 message DeletePositionResponse {

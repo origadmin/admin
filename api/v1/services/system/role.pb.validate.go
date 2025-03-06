@@ -843,6 +843,8 @@ func (m *UpdateRoleRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
 	if all {
 		switch v := interface{}(m.GetRole()).(type) {
 		case interface{ ValidateAll() error }:

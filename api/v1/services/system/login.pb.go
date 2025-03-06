@@ -736,9 +736,12 @@ type CaptchaRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id     string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Type   string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
-	Reload bool   `protobuf:"varint,3,opt,name=reload,proto3" json:"reload,omitempty"`
+	// The id of the captcha
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The type of the captcha
+	Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	// The reload is used to reload the captcha
+	Reload bool `protobuf:"varint,3,opt,name=reload,proto3" json:"reload,omitempty"`
 	// The timestamp of the request prevent caching of the same result
 	Ts string `protobuf:"bytes,4,opt,name=ts,proto3" json:"ts,omitempty"`
 }

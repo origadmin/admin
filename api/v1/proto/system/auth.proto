@@ -54,9 +54,9 @@ service AuthService {
 
 message AuthLogoutRequest {
   message Data {
-    string token = 1;
+    string token = 1 [json_name = "token"];
   }
-  Data data = 1;
+  Data data = 1 [json_name = "data"];
 }
 
 message AuthLogoutResponse {
@@ -65,53 +65,53 @@ message AuthLogoutResponse {
 
 message ListAuthResourcesRequest {
   // The maximum number of Auths to return.
-  int32 page_size = 1;
+  int32 page_size = 1 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 2;
+  string page_token = 2 [json_name = "page_token"];
   // The current page number.
-  int32 current = 3;
+  int32 current = 3 [json_name = "current"];
   // The no_paging is used to disable pagination.
-  bool no_paging = 4;
+  bool no_paging = 4 [json_name = "no_paging"];
 }
 
 message ListAuthResourcesResponse {
   // The list of Auths.
-  repeated Resource resources = 1;
+  repeated Resource resources = 1 [json_name = "resources"];
   // The total number of Auths in the result set.
-  int32 total_size = 2;
+  int32 total_size = 2 [json_name = "total_size"];
 }
 
 // CreateTokenRequest contains the information needed to create a token.
 message CreateTokenRequest {
   message Data {
-    string user_id = 1;
-    repeated string scopes = 2;
+    string user_id = 1 [json_name = "user_id"];
+    repeated string scopes = 2 [json_name = "scopes"];
   }
-  Data data = 1;
+  Data data = 1 [json_name = "data"];
 }
 
 // CreateTokenResponse contains the generated token.
 message CreateTokenResponse {
-  string token = 1;
+  string token = 1 [json_name = "token"];
 }
 
 // VerifyTokenRequest contains the token to be verified.
 message ValidateTokenRequest {
-  string token = 1;
+  string token = 1 [json_name = "token"];
 }
 
 // VerifyTokenResponse contains the result of the verification.
 message ValidateTokenResponse {
-  bool is_valid = 1;
-  map<string, string> claims = 2;
+  bool is_valid = 1 [json_name = "is_valid"];
+  map<string, string> claims = 2 [json_name = "claims"];
 }
 
 // DestroyTokenRequest contains the token to be invalidated.
 message DestroyTokenRequest {
   message Data {
-    string token = 1;
+    string token = 1 [json_name = "token"];
   }
-  Data data = 1;
+  Data data = 1 [json_name = "data"];
 }
 
 // DestroyTokenResponse contains the result of the invalidation.
@@ -121,14 +121,14 @@ message DestroyTokenResponse {
 
 message AuthenticateRequest {
   message Data {
-    string token = 1;
-    string path = 3;
-    string method = 4;
-    string operation = 5;
+    string token = 1 [json_name = "token"];
+    string path = 3 [json_name = "path"];
+    string method = 4 [json_name = "method"];
+    string operation = 5 [json_name = "operation"];
   }
-  Data data = 1;
+  Data data = 1 [json_name = "data"];
 }
 
 message AuthenticateResponse {
-  bool is_valid = 1;
+  bool is_valid = 1 [json_name = "is_valid"];
 }

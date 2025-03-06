@@ -41,19 +41,19 @@ service ResourceService {
 // ListResourcesRequest is the request for the ResourceService.ListResources method.
 message ListResourcesRequest {
   // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
   // The current page number.
-  int32 current = 2;
+  int32 current = 2 [json_name = "current"];
   // The maximum number of items to return.
-  int32 page_size = 3;
+  int32 page_size = 3 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4;
+  string page_token = 4 [json_name = "page_token"];
   // The no_paging is used to disable pagination.
-  bool no_paging = 5;
+  bool no_paging = 5 [json_name = "no_paging"];
   // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6;
+  bool only_count = 6 [json_name = "only_count"];
   // resource type
-  string type = 7;
+  string type = 7 [json_name = "type"];
 
 }
 
@@ -79,49 +79,48 @@ message ListResourcesResponse {
 message GetResourceRequest {
   // The field will contain id of the resource requested, for example:
   // "shelves/shelf1/resources/resource2"
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
 }
 
 // GetResourceResponse is the response for the ResourceService.GetResource method.
 message GetResourceResponse {
   // The field id should match the Noun in the method id.
-  Resource resource = 1;
+  Resource resource = 1 [json_name = "resource"];
 }
 
 // CreateResourceRequest is the request for the ResourceService.CreateResource method.
 message CreateResourceRequest {
   // The parent resource id where the resource is to be created.
-  string parent = 1;
-
+  string parent = 1 [json_name = "parent"];
   // The resource id to use for this resource.
-  string resource_id = 3;
-
-  // The resource resource to create.
-  // The field id should match the Noun in the method id.
-  Resource resource = 2;
+  string resource_id = 2 [json_name = "resource_id"];
+  // The resource object to create.
+  Resource resource = 3 [json_name = "resource"];
 }
 
 // CreateResourceResponse is the response for the ResourceService.CreateResource method.
 message CreateResourceResponse {
-  Resource resource = 1;
+  Resource resource = 1 [json_name = "resource"];
 }
 
 // UpdateResourceRequest is the request for the ResourceService.UpdateResource method.
 message UpdateResourceRequest {
-  // The resource resource which replaces the resource on the server.
-  Resource resource = 1;
+  // The id of the resource object to update.
+  int64 id = 1 [json_name = "id"];
+  // The resource object which replaces the resource on the server.
+  Resource resource = 2 [json_name = "resource"];
 }
 
 // UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
 message UpdateResourceResponse {
-  Resource resource = 1;
+  Resource resource = 1 [json_name = "resource"];
 }
 
 // DeleteResourceRequest is the request for the ResourceService.DeleteResource method.
 message DeleteResourceRequest {
   // The resource id of the resource to be deleted, for example:
   // "shelves/shelf1/resources/resource2"
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
 }
 
 // DeleteResourceResponse is the response for the ResourceService.DeleteResource method.

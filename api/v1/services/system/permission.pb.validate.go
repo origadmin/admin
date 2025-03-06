@@ -849,6 +849,8 @@ func (m *UpdatePermissionRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
 	if all {
 		switch v := interface{}(m.GetPermission()).(type) {
 		case interface{ ValidateAll() error }:

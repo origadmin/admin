@@ -40,17 +40,19 @@ service PermissionService {
 
 message ListPermissionsRequest {
   // The parent resource id, for example, "shelves/shelf1".
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
   // The current page number.
-  int32 current = 2;
+  int32 current = 2 [json_name = "current"];
   // The maximum number of items to return.
-  int32 page_size = 3;
+  int32 page_size = 3 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
-  string page_token = 4;
+  string page_token = 4 [json_name = "page_token"];
   // The no_paging is used to disable pagination.
-  bool no_paging = 5;
+  bool no_paging = 5 [json_name = "no_paging"];
   // The only_count is the query parameter for set only to query the total number
-  bool only_count = 6;
+  bool only_count = 6 [json_name = "only_count"];
+  // The data_scopes is used to query the permission by data scopes.
+  repeated string data_scopes = 7 [json_name = "data_scopes"];
 }
 
 message ListPermissionsResponse {
@@ -73,42 +75,44 @@ message ListPermissionsResponse {
 message GetPermissionRequest {
   // The field will contain id of the resource requested, for example:
   // "shelves/shelf1/permissions/permission2"
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
 }
 
 message GetPermissionResponse {
-  Permission permission = 1;
+  Permission permission = 1 [json_name = "permission"];
 }
 
 message CreatePermissionRequest {
   // The parent resource id where the permission is to be created.
-  string parent = 1;
+  string parent = 1 [json_name = "parent"];
 
   // The permission id to use for this permission.
-  string permission_id = 3;
+  string permission_id = 3 [json_name = "permission_id"];
 
   // The permission resource to create.
   // The field id should match the Noun in the method id.
-  Permission permission = 2;
+  Permission permission = 2 [json_name = "permission"];
 }
 
 message CreatePermissionResponse {
-  Permission permission = 1;
+  Permission permission = 1 [json_name = "permission"];
 }
 
 message UpdatePermissionRequest {
+  // The resource name of the permission to update.
+  int64 id = 1 [json_name = "id"];
   // The permission resource which replaces the resource on the server.
-  Permission permission = 1;
+  Permission permission = 2 [json_name = "permission"];
 }
 
 message UpdatePermissionResponse {
-  Permission permission = 1;
+  Permission permission = 1 [json_name = "permission"];
 }
 
 message DeletePermissionRequest {
   // The resource id of the permission to be deleted, for example:
   // "shelves/shelf1/permissions/permission2"
-  int64 id = 1;
+  int64 id = 1 [json_name = "id"];
 }
 
 message DeletePermissionResponse {

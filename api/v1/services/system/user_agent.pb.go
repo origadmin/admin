@@ -197,7 +197,7 @@ func _UserService_UpdateUserStatus0_HTTPAgent_Handler(srv UserServiceAgent) http
 func _UserService_UpdateUserRoles0_HTTPAgent_Handler(srv UserServiceAgent) http.HandlerFunc {
 	return func(cctx http.Context) error {
 		var in UpdateUserRolesRequest
-		if err := cctx.Bind(&in.Data); err != nil {
+		if err := cctx.Bind(&in.User); err != nil {
 			return err
 		}
 		if err := cctx.BindQuery(&in); err != nil {

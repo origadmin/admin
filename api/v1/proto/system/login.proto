@@ -153,14 +153,17 @@ message CaptchaAudioRequest {
 
 // The response message containing the greetings
 message CaptchaAudioResponse {
-  map<string, string> headers = 1;
+  map<string, string> headers = 1 [json_name = "headers"];
   bytes audio = 2 [json_name = "audio"];
 }
 
 
 message CaptchaRequest {
+  // The id of the captcha
   string id = 1 [json_name = "id"];
+  // The type of the captcha
   string type = 2 [json_name = "type"];
+  // The reload is used to reload the captcha
   bool reload = 3 [json_name = "reload"];
   // The timestamp of the request prevent caching of the same result
   string ts = 4 [json_name = "ts"];

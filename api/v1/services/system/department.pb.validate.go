@@ -849,6 +849,8 @@ func (m *UpdateDepartmentRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Id
+
 	if all {
 		switch v := interface{}(m.GetDepartment()).(type) {
 		case interface{ ValidateAll() error }:

@@ -48,7 +48,7 @@ service UserService {
   rpc UpdateUserRoles (UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}/roles"
-      body: "data"
+      body: "user"
     };
   }
 
@@ -152,12 +152,10 @@ message DeleteUserResponse {
 }
 
 message UpdateUserRolesRequest {
-  message Data {
-    repeated int64 role_ids = 1 [json_name = "role_ids"];
-  }
-  User user = 1 [json_name = "user"];
-  Data data = 2 [json_name = "data"];
-  bool is_add = 3 [json_name = "is_add"];
+  int64 id = 1;
+  User user = 2 [json_name = "user"];
+  repeated int64 role_ids = 3 [json_name = "role_ids"];
+  //  bool is_add = 5 [json_name = "is_add"];
 }
 
 message UpdateUserRolesResponse {
