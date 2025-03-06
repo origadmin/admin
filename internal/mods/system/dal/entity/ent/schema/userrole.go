@@ -32,7 +32,7 @@ func (UserRole) Fields() []ent.Field {
 // Mixin of the UserRole.
 func (UserRole) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.ID{},
+		//mixin.ID{},
 	}
 }
 

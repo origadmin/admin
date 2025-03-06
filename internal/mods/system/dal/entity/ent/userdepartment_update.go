@@ -143,7 +143,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if err := udu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
 	if ps := udu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -357,7 +357,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 	if err := uduo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
 	id, ok := uduo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserDepartment.id" for update`)}

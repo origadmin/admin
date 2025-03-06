@@ -32,7 +32,7 @@ func (UserDepartment) Fields() []ent.Field {
 // Mixin of the UserDepartment.
 func (UserDepartment) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.ID{},
+		//mixin.ID{},
 	}
 }
 

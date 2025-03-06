@@ -17,8 +17,7 @@ import (
 type UserPosition struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field.primary_key.comment
-	ID int64 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// field.foreign_key.comment
 	UserID int64 `json:"user_id,omitempty"`
 	// field.foreign_key.comment
@@ -89,7 +88,7 @@ func (up *UserPosition) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			up.ID = int64(value.Int64)
+			up.ID = int(value.Int64)
 		case userposition.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])

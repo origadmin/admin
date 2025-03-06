@@ -143,7 +143,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := upu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
 	if ps := upu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -357,7 +357,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 	if err := upuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
 	id, ok := upuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserPosition.id" for update`)}

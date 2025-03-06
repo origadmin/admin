@@ -365,7 +365,7 @@ func ConvertUserDepartmentPB2Object(pbModel *UserDepartmentPB) (goModel *UserDep
 		return goModel
 	}
 
-	goModel.ID = int64(pbModel.Id)
+	//goModel.ID = int64(pbModel.Id)
 	goModel.UserID = int64(pbModel.UserId)
 	goModel.DepartmentID = int64(pbModel.DepartmentId)
 	return goModel
@@ -565,6 +565,10 @@ func ConvertPermission2PB(goModel *Permission) (pbModel *PermissionPB) {
 	pbModel.Description = goModel.Description
 	pbModel.DataScope = goModel.DataScope
 	pbModel.DataRules = ConvertDataRules2PB(goModel.DataRules)
+	for _, resource := range goModel.Edges.Resources {
+		pbModel.ResourceIds = append(pbModel.ResourceIds, resource.ID)
+	}
+	pbModel.Resources = ConvertResources2PB(goModel.Edges.Resources)
 	return pbModel
 }
 
@@ -774,7 +778,7 @@ func ConvertUserPositionPB2Object(pbModel *UserPositionPB) (goModel *UserPositio
 		return goModel
 	}
 
-	goModel.ID = int64(pbModel.Id)
+	//goModel.ID = int64(pbModel.Id)
 	goModel.UserID = int64(pbModel.UserId)
 	goModel.PositionID = int64(pbModel.PositionId)
 	return goModel
@@ -834,7 +838,7 @@ func ConvertPositionPermissionPB2Object(pbModel *PositionPermissionPB) (goModel 
 		return goModel
 	}
 
-	goModel.ID = int64(pbModel.Id)
+	//goModel.ID = int64(pbModel.Id)
 	goModel.PositionID = int64(pbModel.PositionId)
 	goModel.PermissionID = int64(pbModel.PermissionId)
 	return goModel
@@ -894,7 +898,7 @@ func ConvertRolePermissionPB2Object(pbModel *RolePermissionPB) (goModel *RolePer
 		return goModel
 	}
 
-	goModel.ID = int64(pbModel.Id)
+	//goModel.ID = int64(pbModel.Id)
 	goModel.RoleID = int64(pbModel.RoleId)
 	goModel.PermissionID = int64(pbModel.PermissionId)
 	return goModel
@@ -955,7 +959,7 @@ func ConvertPermissionResourcePB2Object(pbModel *PermissionResourcePB) (goModel 
 		return goModel
 	}
 
-	goModel.ID = int64(pbModel.Id)
+	//goModel.ID = int64(pbModel.Id)
 	goModel.PermissionID = int64(pbModel.PermissionId)
 	goModel.ResourceID = int64(pbModel.ResourceId)
 	goModel.Actions = pbModel.Actions

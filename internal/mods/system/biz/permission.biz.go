@@ -28,6 +28,7 @@ func (biz PermissionServiceClientBiz) ListPermissions(ctx context.Context, in *p
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
+	option.IncludeResources = true
 	log.Info("ListPermissions")
 	result, total, err := biz.dao.List(ctx, in, option)
 	if err != nil {

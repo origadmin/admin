@@ -308,14 +308,14 @@ func (rc *ResourceCreate) AddPermissions(p ...*Permission) *ResourceCreate {
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (rc *ResourceCreate) AddPermissionResourceIDs(ids ...int64) *ResourceCreate {
+func (rc *ResourceCreate) AddPermissionResourceIDs(ids ...int) *ResourceCreate {
 	rc.mutation.AddPermissionResourceIDs(ids...)
 	return rc
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
 func (rc *ResourceCreate) AddPermissionResources(p ...*PermissionResource) *ResourceCreate {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -689,9 +689,6 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := rc.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
@@ -702,7 +699,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Columns: []string{resource.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

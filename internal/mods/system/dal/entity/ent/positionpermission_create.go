@@ -33,20 +33,6 @@ func (ppc *PositionPermissionCreate) SetPermissionID(i int64) *PositionPermissio
 	return ppc
 }
 
-// SetID sets the "id" field.
-func (ppc *PositionPermissionCreate) SetID(i int64) *PositionPermissionCreate {
-	ppc.mutation.SetID(i)
-	return ppc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (ppc *PositionPermissionCreate) SetNillableID(i *int64) *PositionPermissionCreate {
-	if i != nil {
-		ppc.SetID(*i)
-	}
-	return ppc
-}
-
 // SetPosition sets the "position" edge to the Position entity.
 func (ppc *PositionPermissionCreate) SetPosition(p *Position) *PositionPermissionCreate {
 	return ppc.SetPositionID(p.ID)
@@ -64,7 +50,6 @@ func (ppc *PositionPermissionCreate) Mutation() *PositionPermissionMutation {
 
 // Save creates the PositionPermission in the database.
 func (ppc *PositionPermissionCreate) Save(ctx context.Context) (*PositionPermission, error) {
-	ppc.defaults()
 	return withHooks(ctx, ppc.sqlSave, ppc.mutation, ppc.hooks)
 }
 
@@ -90,14 +75,6 @@ func (ppc *PositionPermissionCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (ppc *PositionPermissionCreate) defaults() {
-	if _, ok := ppc.mutation.ID(); !ok {
-		v := positionpermission.DefaultID()
-		ppc.mutation.SetID(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (ppc *PositionPermissionCreate) check() error {
 	if _, ok := ppc.mutation.PositionID(); !ok {
@@ -114,11 +91,6 @@ func (ppc *PositionPermissionCreate) check() error {
 	if v, ok := ppc.mutation.PermissionID(); ok {
 		if err := positionpermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.permission_id": %w`, err)}
-		}
-	}
-	if v, ok := ppc.mutation.ID(); ok {
-		if err := positionpermission.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.id": %w`, err)}
 		}
 	}
 	if len(ppc.mutation.PositionIDs()) == 0 {
@@ -141,10 +113,8 @@ func (ppc *PositionPermissionCreate) sqlSave(ctx context.Context) (*PositionPerm
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	ppc.mutation.id = &_node.ID
 	ppc.mutation.done = true
 	return _node, nil
@@ -153,12 +123,8 @@ func (ppc *PositionPermissionCreate) sqlSave(ctx context.Context) (*PositionPerm
 func (ppc *PositionPermissionCreate) createSpec() (*PositionPermission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &PositionPermission{config: ppc.config}
-		_spec = sqlgraph.NewCreateSpec(positionpermission.Table, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(positionpermission.Table, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
 	)
-	if id, ok := ppc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if nodes := ppc.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -234,7 +200,6 @@ func (ppcb *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*Position
 	for i := range ppcb.builders {
 		func(i int, root context.Context) {
 			builder := ppcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PositionPermissionMutation)
 				if !ok {
@@ -261,9 +226,9 @@ func (ppcb *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*Position
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

@@ -41,6 +41,12 @@ func (repo permissionRepo) Create(ctx context.Context, permission *dto.Permissio
 	}
 	obj := dto.ConvertPermissionPB2Object(permission)
 	create := repo.db.Permission(ctx).Create()
+	if len(permission.ResourceIds) > 0 {
+		create.AddResourceIDs(permission.ResourceIds...)
+	}
+	if len(permission.Resources) > 0 {
+		create.AddResources(dto.ConvertResourcesPB2Object(permission.Resources)...)
+	}
 	create.SetPermission(obj, option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -54,8 +60,26 @@ func (repo permissionRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (repo permissionRepo) Update(ctx context.Context, permission *dto.PermissionPB, options ...dto.PermissionQueryOption) (*dto.PermissionPB, error) {
+	var option dto.PermissionQueryOption
+	if len(options) > 0 {
+		option = options[0]
+	}
+	//forUpdate, err := repo.db.Permission(ctx).Get(ctx, permission.Id)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//resources := forUpdate.QueryResources()
 	update := repo.db.Permission(ctx).UpdateOneID(permission.Id)
-	update.SetPermission(dto.ConvertPermissionPB2Object(permission))
+	obj := dto.ConvertPermissionPB2Object(permission)
+	if len(permission.ResourceIds) > 0 {
+		update.ClearResources()
+		update.AddResourceIDs(permission.ResourceIds...)
+	}
+	if len(permission.Resources) > 0 {
+		update.ClearResources()
+		update.AddResources(dto.ConvertResourcesPB2Object(permission.Resources)...)
+	}
+	update.SetPermission(obj, option.Fields...)
 	saved, err := update.Save(ctx)
 	if err != nil {
 		return nil, err

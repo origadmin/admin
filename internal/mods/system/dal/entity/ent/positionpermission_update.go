@@ -143,7 +143,7 @@ func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err er
 	if err := ppu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
 	if ps := ppu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -357,7 +357,7 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 	if err := ppuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
 	id, ok := ppuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "PositionPermission.id" for update`)}

@@ -47,20 +47,6 @@ func (prc *PermissionResourceCreate) SetNillableActions(s *string) *PermissionRe
 	return prc
 }
 
-// SetID sets the "id" field.
-func (prc *PermissionResourceCreate) SetID(i int64) *PermissionResourceCreate {
-	prc.mutation.SetID(i)
-	return prc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (prc *PermissionResourceCreate) SetNillableID(i *int64) *PermissionResourceCreate {
-	if i != nil {
-		prc.SetID(*i)
-	}
-	return prc
-}
-
 // SetPermission sets the "permission" edge to the Permission entity.
 func (prc *PermissionResourceCreate) SetPermission(p *Permission) *PermissionResourceCreate {
 	return prc.SetPermissionID(p.ID)
@@ -110,10 +96,6 @@ func (prc *PermissionResourceCreate) defaults() {
 		v := permissionresource.DefaultActions
 		prc.mutation.SetActions(v)
 	}
-	if _, ok := prc.mutation.ID(); !ok {
-		v := permissionresource.DefaultID()
-		prc.mutation.SetID(v)
-	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -137,11 +119,6 @@ func (prc *PermissionResourceCreate) check() error {
 	if _, ok := prc.mutation.Actions(); !ok {
 		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "PermissionResource.actions"`)}
 	}
-	if v, ok := prc.mutation.ID(); ok {
-		if err := permissionresource.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "PermissionResource.id": %w`, err)}
-		}
-	}
 	if len(prc.mutation.PermissionIDs()) == 0 {
 		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required edge "PermissionResource.permission"`)}
 	}
@@ -162,10 +139,8 @@ func (prc *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionRe
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	prc.mutation.id = &_node.ID
 	prc.mutation.done = true
 	return _node, nil
@@ -174,12 +149,8 @@ func (prc *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionRe
 func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgraph.CreateSpec) {
 	var (
 		_node = &PermissionResource{config: prc.config}
-		_spec = sqlgraph.NewCreateSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
 	)
-	if id, ok := prc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if value, ok := prc.mutation.Actions(); ok {
 		_spec.SetField(permissionresource.FieldActions, field.TypeString, value)
 		_node.Actions = value
@@ -286,9 +257,9 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

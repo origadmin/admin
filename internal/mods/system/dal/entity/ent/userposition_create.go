@@ -33,20 +33,6 @@ func (upc *UserPositionCreate) SetPositionID(i int64) *UserPositionCreate {
 	return upc
 }
 
-// SetID sets the "id" field.
-func (upc *UserPositionCreate) SetID(i int64) *UserPositionCreate {
-	upc.mutation.SetID(i)
-	return upc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (upc *UserPositionCreate) SetNillableID(i *int64) *UserPositionCreate {
-	if i != nil {
-		upc.SetID(*i)
-	}
-	return upc
-}
-
 // SetUser sets the "user" edge to the User entity.
 func (upc *UserPositionCreate) SetUser(u *User) *UserPositionCreate {
 	return upc.SetUserID(u.ID)
@@ -64,7 +50,6 @@ func (upc *UserPositionCreate) Mutation() *UserPositionMutation {
 
 // Save creates the UserPosition in the database.
 func (upc *UserPositionCreate) Save(ctx context.Context) (*UserPosition, error) {
-	upc.defaults()
 	return withHooks(ctx, upc.sqlSave, upc.mutation, upc.hooks)
 }
 
@@ -90,14 +75,6 @@ func (upc *UserPositionCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (upc *UserPositionCreate) defaults() {
-	if _, ok := upc.mutation.ID(); !ok {
-		v := userposition.DefaultID()
-		upc.mutation.SetID(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (upc *UserPositionCreate) check() error {
 	if _, ok := upc.mutation.UserID(); !ok {
@@ -114,11 +91,6 @@ func (upc *UserPositionCreate) check() error {
 	if v, ok := upc.mutation.PositionID(); ok {
 		if err := userposition.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.position_id": %w`, err)}
-		}
-	}
-	if v, ok := upc.mutation.ID(); ok {
-		if err := userposition.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.id": %w`, err)}
 		}
 	}
 	if len(upc.mutation.UserIDs()) == 0 {
@@ -141,10 +113,8 @@ func (upc *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, erro
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	upc.mutation.id = &_node.ID
 	upc.mutation.done = true
 	return _node, nil
@@ -153,12 +123,8 @@ func (upc *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, erro
 func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserPosition{config: upc.config}
-		_spec = sqlgraph.NewCreateSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
 	)
-	if id, ok := upc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if nodes := upc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -234,7 +200,6 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 	for i := range upcb.builders {
 		func(i int, root context.Context) {
 			builder := upcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserPositionMutation)
 				if !ok {
@@ -261,9 +226,9 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

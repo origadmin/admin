@@ -43,7 +43,7 @@ func (PermissionResource) Fields() []ent.Field {
 
 func (PermissionResource) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.ID{},
+		//mixin.ID{},
 	}
 }
 

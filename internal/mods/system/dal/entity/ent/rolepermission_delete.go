@@ -40,7 +40,7 @@ func (rpd *RolePermissionDelete) ExecX(ctx context.Context) int {
 }
 
 func (rpd *RolePermissionDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(rolepermission.Table, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewDeleteSpec(rolepermission.Table, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
 	if ps := rpd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

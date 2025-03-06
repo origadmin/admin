@@ -33,20 +33,6 @@ func (udc *UserDepartmentCreate) SetDepartmentID(i int64) *UserDepartmentCreate 
 	return udc
 }
 
-// SetID sets the "id" field.
-func (udc *UserDepartmentCreate) SetID(i int64) *UserDepartmentCreate {
-	udc.mutation.SetID(i)
-	return udc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (udc *UserDepartmentCreate) SetNillableID(i *int64) *UserDepartmentCreate {
-	if i != nil {
-		udc.SetID(*i)
-	}
-	return udc
-}
-
 // SetUser sets the "user" edge to the User entity.
 func (udc *UserDepartmentCreate) SetUser(u *User) *UserDepartmentCreate {
 	return udc.SetUserID(u.ID)
@@ -64,7 +50,6 @@ func (udc *UserDepartmentCreate) Mutation() *UserDepartmentMutation {
 
 // Save creates the UserDepartment in the database.
 func (udc *UserDepartmentCreate) Save(ctx context.Context) (*UserDepartment, error) {
-	udc.defaults()
 	return withHooks(ctx, udc.sqlSave, udc.mutation, udc.hooks)
 }
 
@@ -90,14 +75,6 @@ func (udc *UserDepartmentCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (udc *UserDepartmentCreate) defaults() {
-	if _, ok := udc.mutation.ID(); !ok {
-		v := userdepartment.DefaultID()
-		udc.mutation.SetID(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (udc *UserDepartmentCreate) check() error {
 	if _, ok := udc.mutation.UserID(); !ok {
@@ -114,11 +91,6 @@ func (udc *UserDepartmentCreate) check() error {
 	if v, ok := udc.mutation.DepartmentID(); ok {
 		if err := userdepartment.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.department_id": %w`, err)}
-		}
-	}
-	if v, ok := udc.mutation.ID(); ok {
-		if err := userdepartment.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.id": %w`, err)}
 		}
 	}
 	if len(udc.mutation.UserIDs()) == 0 {
@@ -141,10 +113,8 @@ func (udc *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, 
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	udc.mutation.id = &_node.ID
 	udc.mutation.done = true
 	return _node, nil
@@ -153,12 +123,8 @@ func (udc *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, 
 func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserDepartment{config: udc.config}
-		_spec = sqlgraph.NewCreateSpec(userdepartment.Table, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(userdepartment.Table, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
 	)
-	if id, ok := udc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if nodes := udc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -234,7 +200,6 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 	for i := range udcb.builders {
 		func(i int, root context.Context) {
 			builder := udcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserDepartmentMutation)
 				if !ok {
@@ -261,9 +226,9 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

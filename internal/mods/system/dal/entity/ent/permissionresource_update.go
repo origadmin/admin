@@ -157,7 +157,7 @@ func (pru *PermissionResourceUpdate) sqlSave(ctx context.Context) (n int, err er
 	if err := pru.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(permissionresource.Table, permissionresource.Columns, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(permissionresource.Table, permissionresource.Columns, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
 	if ps := pru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -388,7 +388,7 @@ func (pruo *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Pe
 	if err := pruo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(permissionresource.Table, permissionresource.Columns, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(permissionresource.Table, permissionresource.Columns, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
 	id, ok := pruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "PermissionResource.id" for update`)}

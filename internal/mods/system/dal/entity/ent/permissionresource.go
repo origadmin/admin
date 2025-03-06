@@ -17,8 +17,7 @@ import (
 type PermissionResource struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field.primary_key.comment
-	ID int64 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// field.foreign_key.comment
 	PermissionID int64 `json:"permission_id,omitempty"`
 	// field.foreign_key.comment
@@ -93,7 +92,7 @@ func (pr *PermissionResource) assignValues(columns []string, values []any) error
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pr.ID = int64(value.Int64)
+			pr.ID = int(value.Int64)
 		case permissionresource.FieldPermissionID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])

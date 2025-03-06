@@ -132,14 +132,14 @@ func (pu *PositionUpdate) AddPermissions(p ...*Permission) *PositionUpdate {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (pu *PositionUpdate) AddUserPositionIDs(ids ...int64) *PositionUpdate {
+func (pu *PositionUpdate) AddUserPositionIDs(ids ...int) *PositionUpdate {
 	pu.mutation.AddUserPositionIDs(ids...)
 	return pu
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (pu *PositionUpdate) AddUserPositions(u ...*UserPosition) *PositionUpdate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -147,14 +147,14 @@ func (pu *PositionUpdate) AddUserPositions(u ...*UserPosition) *PositionUpdate {
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (pu *PositionUpdate) AddPositionPermissionIDs(ids ...int64) *PositionUpdate {
+func (pu *PositionUpdate) AddPositionPermissionIDs(ids ...int) *PositionUpdate {
 	pu.mutation.AddPositionPermissionIDs(ids...)
 	return pu
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
 func (pu *PositionUpdate) AddPositionPermissions(p ...*PositionPermission) *PositionUpdate {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -221,14 +221,14 @@ func (pu *PositionUpdate) ClearUserPositions() *PositionUpdate {
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
-func (pu *PositionUpdate) RemoveUserPositionIDs(ids ...int64) *PositionUpdate {
+func (pu *PositionUpdate) RemoveUserPositionIDs(ids ...int) *PositionUpdate {
 	pu.mutation.RemoveUserPositionIDs(ids...)
 	return pu
 }
 
 // RemoveUserPositions removes "user_positions" edges to UserPosition entities.
 func (pu *PositionUpdate) RemoveUserPositions(u ...*UserPosition) *PositionUpdate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -242,14 +242,14 @@ func (pu *PositionUpdate) ClearPositionPermissions() *PositionUpdate {
 }
 
 // RemovePositionPermissionIDs removes the "position_permissions" edge to PositionPermission entities by IDs.
-func (pu *PositionUpdate) RemovePositionPermissionIDs(ids ...int64) *PositionUpdate {
+func (pu *PositionUpdate) RemovePositionPermissionIDs(ids ...int) *PositionUpdate {
 	pu.mutation.RemovePositionPermissionIDs(ids...)
 	return pu
 }
 
 // RemovePositionPermissions removes "position_permissions" edges to PositionPermission entities.
 func (pu *PositionUpdate) RemovePositionPermissions(p ...*PositionPermission) *PositionUpdate {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -390,13 +390,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &UserPositionCreate{config: pu.config, mutation: newUserPositionMutation(pu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := pu.mutation.RemovedUsersIDs(); len(nodes) > 0 && !pu.mutation.UsersCleared() {
@@ -412,13 +405,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &UserPositionCreate{config: pu.config, mutation: newUserPositionMutation(pu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
@@ -436,13 +422,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserPositionCreate{config: pu.config, mutation: newUserPositionMutation(pu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if pu.mutation.PermissionsCleared() {
@@ -455,13 +434,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
-		}
-		createE := &PositionPermissionCreate{config: pu.config, mutation: newPositionPermissionMutation(pu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
@@ -479,13 +451,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PositionPermissionCreate{config: pu.config, mutation: newPositionPermissionMutation(pu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := pu.mutation.PermissionsIDs(); len(nodes) > 0 {
@@ -502,13 +467,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PositionPermissionCreate{config: pu.config, mutation: newPositionPermissionMutation(pu.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if pu.mutation.UserPositionsCleared() {
@@ -519,7 +477,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -532,7 +490,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -548,7 +506,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -564,7 +522,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -577,7 +535,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -593,7 +551,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -721,14 +679,14 @@ func (puo *PositionUpdateOne) AddPermissions(p ...*Permission) *PositionUpdateOn
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (puo *PositionUpdateOne) AddUserPositionIDs(ids ...int64) *PositionUpdateOne {
+func (puo *PositionUpdateOne) AddUserPositionIDs(ids ...int) *PositionUpdateOne {
 	puo.mutation.AddUserPositionIDs(ids...)
 	return puo
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (puo *PositionUpdateOne) AddUserPositions(u ...*UserPosition) *PositionUpdateOne {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -736,14 +694,14 @@ func (puo *PositionUpdateOne) AddUserPositions(u ...*UserPosition) *PositionUpda
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (puo *PositionUpdateOne) AddPositionPermissionIDs(ids ...int64) *PositionUpdateOne {
+func (puo *PositionUpdateOne) AddPositionPermissionIDs(ids ...int) *PositionUpdateOne {
 	puo.mutation.AddPositionPermissionIDs(ids...)
 	return puo
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
 func (puo *PositionUpdateOne) AddPositionPermissions(p ...*PositionPermission) *PositionUpdateOne {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -810,14 +768,14 @@ func (puo *PositionUpdateOne) ClearUserPositions() *PositionUpdateOne {
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
-func (puo *PositionUpdateOne) RemoveUserPositionIDs(ids ...int64) *PositionUpdateOne {
+func (puo *PositionUpdateOne) RemoveUserPositionIDs(ids ...int) *PositionUpdateOne {
 	puo.mutation.RemoveUserPositionIDs(ids...)
 	return puo
 }
 
 // RemoveUserPositions removes "user_positions" edges to UserPosition entities.
 func (puo *PositionUpdateOne) RemoveUserPositions(u ...*UserPosition) *PositionUpdateOne {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -831,14 +789,14 @@ func (puo *PositionUpdateOne) ClearPositionPermissions() *PositionUpdateOne {
 }
 
 // RemovePositionPermissionIDs removes the "position_permissions" edge to PositionPermission entities by IDs.
-func (puo *PositionUpdateOne) RemovePositionPermissionIDs(ids ...int64) *PositionUpdateOne {
+func (puo *PositionUpdateOne) RemovePositionPermissionIDs(ids ...int) *PositionUpdateOne {
 	puo.mutation.RemovePositionPermissionIDs(ids...)
 	return puo
 }
 
 // RemovePositionPermissions removes "position_permissions" edges to PositionPermission entities.
 func (puo *PositionUpdateOne) RemovePositionPermissions(p ...*PositionPermission) *PositionUpdateOne {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -1009,13 +967,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
 			},
 		}
-		createE := &UserPositionCreate{config: puo.config, mutation: newUserPositionMutation(puo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := puo.mutation.RemovedUsersIDs(); len(nodes) > 0 && !puo.mutation.UsersCleared() {
@@ -1031,13 +982,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &UserPositionCreate{config: puo.config, mutation: newUserPositionMutation(puo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
@@ -1055,13 +999,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserPositionCreate{config: puo.config, mutation: newUserPositionMutation(puo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if puo.mutation.PermissionsCleared() {
@@ -1074,13 +1011,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
 			},
-		}
-		createE := &PositionPermissionCreate{config: puo.config, mutation: newPositionPermissionMutation(puo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
@@ -1098,13 +1028,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PositionPermissionCreate{config: puo.config, mutation: newPositionPermissionMutation(puo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := puo.mutation.PermissionsIDs(); len(nodes) > 0 {
@@ -1121,13 +1044,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PositionPermissionCreate{config: puo.config, mutation: newPositionPermissionMutation(puo.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if puo.mutation.UserPositionsCleared() {
@@ -1138,7 +1054,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1151,7 +1067,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1167,7 +1083,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1183,7 +1099,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1196,7 +1112,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1212,7 +1128,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

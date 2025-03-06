@@ -32,7 +32,7 @@ func (UserPosition) Fields() []ent.Field {
 // Mixin of the UserPosition.
 func (UserPosition) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.ID{},
+		//mixin.ID{},
 	}
 }
 

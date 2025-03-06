@@ -173,14 +173,14 @@ func (rc *RoleCreate) AddPermissions(p ...*Permission) *RoleCreate {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
-func (rc *RoleCreate) AddUserRoleIDs(ids ...int64) *RoleCreate {
+func (rc *RoleCreate) AddUserRoleIDs(ids ...int) *RoleCreate {
 	rc.mutation.AddUserRoleIDs(ids...)
 	return rc
 }
 
 // AddUserRoles adds the "user_roles" edges to the UserRole entity.
 func (rc *RoleCreate) AddUserRoles(u ...*UserRole) *RoleCreate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -188,14 +188,14 @@ func (rc *RoleCreate) AddUserRoles(u ...*UserRole) *RoleCreate {
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
-func (rc *RoleCreate) AddRolePermissionIDs(ids ...int64) *RoleCreate {
+func (rc *RoleCreate) AddRolePermissionIDs(ids ...int) *RoleCreate {
 	rc.mutation.AddRolePermissionIDs(ids...)
 	return rc
 }
 
 // AddRolePermissions adds the "role_permissions" edges to the RolePermission entity.
 func (rc *RoleCreate) AddRolePermissions(r ...*RolePermission) *RoleCreate {
-	ids := make([]int64, len(r))
+	ids := make([]int, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -395,13 +395,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: rc.config, mutation: newUserRoleMutation(rc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := rc.mutation.PermissionsIDs(); len(nodes) > 0 {
@@ -418,13 +411,6 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RolePermissionCreate{config: rc.config, mutation: newRolePermissionMutation(rc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := rc.mutation.UserRolesIDs(); len(nodes) > 0 {
@@ -435,7 +421,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: []string{role.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -451,7 +437,7 @@ func (rc *RoleCreate) createSpec() (*Role, *sqlgraph.CreateSpec) {
 			Columns: []string{role.RolePermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

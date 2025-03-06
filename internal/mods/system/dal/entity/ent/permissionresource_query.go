@@ -132,8 +132,8 @@ func (prq *PermissionResourceQuery) FirstX(ctx context.Context) *PermissionResou
 
 // FirstID returns the first PermissionResource ID from the query.
 // Returns a *NotFoundError when no PermissionResource ID was found.
-func (prq *PermissionResourceQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (prq *PermissionResourceQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = prq.Limit(1).IDs(setContextOp(ctx, prq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (prq *PermissionResourceQuery) FirstID(ctx context.Context) (id int64, err 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (prq *PermissionResourceQuery) FirstIDX(ctx context.Context) int64 {
+func (prq *PermissionResourceQuery) FirstIDX(ctx context.Context) int {
 	id, err := prq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (prq *PermissionResourceQuery) OnlyX(ctx context.Context) *PermissionResour
 // OnlyID is like Only, but returns the only PermissionResource ID in the query.
 // Returns a *NotSingularError when more than one PermissionResource ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (prq *PermissionResourceQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (prq *PermissionResourceQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = prq.Limit(2).IDs(setContextOp(ctx, prq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (prq *PermissionResourceQuery) OnlyID(ctx context.Context) (id int64, err e
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (prq *PermissionResourceQuery) OnlyIDX(ctx context.Context) int64 {
+func (prq *PermissionResourceQuery) OnlyIDX(ctx context.Context) int {
 	id, err := prq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (prq *PermissionResourceQuery) AllX(ctx context.Context) []*PermissionResou
 }
 
 // IDs executes the query and returns a list of PermissionResource IDs.
-func (prq *PermissionResourceQuery) IDs(ctx context.Context) (ids []int64, err error) {
+func (prq *PermissionResourceQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if prq.ctx.Unique == nil && prq.path != nil {
 		prq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (prq *PermissionResourceQuery) IDs(ctx context.Context) (ids []int64, err e
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (prq *PermissionResourceQuery) IDsX(ctx context.Context) []int64 {
+func (prq *PermissionResourceQuery) IDsX(ctx context.Context) []int {
 	ids, err := prq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -522,7 +522,7 @@ func (prq *PermissionResourceQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (prq *PermissionResourceQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(permissionresource.Table, permissionresource.Columns, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewQuerySpec(permissionresource.Table, permissionresource.Columns, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
 	_spec.From = prq.sql
 	if unique := prq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

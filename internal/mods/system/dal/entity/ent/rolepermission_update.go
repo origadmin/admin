@@ -143,7 +143,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if err := rpu.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
 	if ps := rpu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -357,7 +357,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 	if err := rpuo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
 	id, ok := rpuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "RolePermission.id" for update`)}

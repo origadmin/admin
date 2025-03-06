@@ -33,20 +33,6 @@ func (urc *UserRoleCreate) SetRoleID(i int64) *UserRoleCreate {
 	return urc
 }
 
-// SetID sets the "id" field.
-func (urc *UserRoleCreate) SetID(i int64) *UserRoleCreate {
-	urc.mutation.SetID(i)
-	return urc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (urc *UserRoleCreate) SetNillableID(i *int64) *UserRoleCreate {
-	if i != nil {
-		urc.SetID(*i)
-	}
-	return urc
-}
-
 // SetUser sets the "user" edge to the User entity.
 func (urc *UserRoleCreate) SetUser(u *User) *UserRoleCreate {
 	return urc.SetUserID(u.ID)
@@ -64,7 +50,6 @@ func (urc *UserRoleCreate) Mutation() *UserRoleMutation {
 
 // Save creates the UserRole in the database.
 func (urc *UserRoleCreate) Save(ctx context.Context) (*UserRole, error) {
-	urc.defaults()
 	return withHooks(ctx, urc.sqlSave, urc.mutation, urc.hooks)
 }
 
@@ -90,14 +75,6 @@ func (urc *UserRoleCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (urc *UserRoleCreate) defaults() {
-	if _, ok := urc.mutation.ID(); !ok {
-		v := userrole.DefaultID()
-		urc.mutation.SetID(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (urc *UserRoleCreate) check() error {
 	if _, ok := urc.mutation.UserID(); !ok {
@@ -114,11 +91,6 @@ func (urc *UserRoleCreate) check() error {
 	if v, ok := urc.mutation.RoleID(); ok {
 		if err := userrole.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_id": %w`, err)}
-		}
-	}
-	if v, ok := urc.mutation.ID(); ok {
-		if err := userrole.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "UserRole.id": %w`, err)}
 		}
 	}
 	if len(urc.mutation.UserIDs()) == 0 {
@@ -141,10 +113,8 @@ func (urc *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	urc.mutation.id = &_node.ID
 	urc.mutation.done = true
 	return _node, nil
@@ -153,12 +123,8 @@ func (urc *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
 func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 	var (
 		_node = &UserRole{config: urc.config}
-		_spec = sqlgraph.NewCreateSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
 	)
-	if id, ok := urc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if nodes := urc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -234,7 +200,6 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 	for i := range urcb.builders {
 		func(i int, root context.Context) {
 			builder := urcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserRoleMutation)
 				if !ok {
@@ -261,9 +226,9 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

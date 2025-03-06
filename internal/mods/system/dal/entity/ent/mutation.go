@@ -731,8 +731,8 @@ type DepartmentMutation struct {
 	clearedchildren         bool
 	parent                  *int64
 	clearedparent           bool
-	user_departments        map[int64]struct{}
-	removeduser_departments map[int64]struct{}
+	user_departments        map[int]struct{}
+	removeduser_departments map[int]struct{}
 	cleareduser_departments bool
 	done                    bool
 	oldValue                func(context.Context) (*Department, error)
@@ -1466,9 +1466,9 @@ func (m *DepartmentMutation) ResetParent() {
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by ids.
-func (m *DepartmentMutation) AddUserDepartmentIDs(ids ...int64) {
+func (m *DepartmentMutation) AddUserDepartmentIDs(ids ...int) {
 	if m.user_departments == nil {
-		m.user_departments = make(map[int64]struct{})
+		m.user_departments = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.user_departments[ids[i]] = struct{}{}
@@ -1486,9 +1486,9 @@ func (m *DepartmentMutation) UserDepartmentsCleared() bool {
 }
 
 // RemoveUserDepartmentIDs removes the "user_departments" edge to the UserDepartment entity by IDs.
-func (m *DepartmentMutation) RemoveUserDepartmentIDs(ids ...int64) {
+func (m *DepartmentMutation) RemoveUserDepartmentIDs(ids ...int) {
 	if m.removeduser_departments == nil {
-		m.removeduser_departments = make(map[int64]struct{})
+		m.removeduser_departments = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.user_departments, ids[i])
@@ -1497,7 +1497,7 @@ func (m *DepartmentMutation) RemoveUserDepartmentIDs(ids ...int64) {
 }
 
 // RemovedUserDepartments returns the removed IDs of the "user_departments" edge to the UserDepartment entity.
-func (m *DepartmentMutation) RemovedUserDepartmentsIDs() (ids []int64) {
+func (m *DepartmentMutation) RemovedUserDepartmentsIDs() (ids []int) {
 	for id := range m.removeduser_departments {
 		ids = append(ids, id)
 	}
@@ -1505,7 +1505,7 @@ func (m *DepartmentMutation) RemovedUserDepartmentsIDs() (ids []int64) {
 }
 
 // UserDepartmentsIDs returns the "user_departments" edge IDs in the mutation.
-func (m *DepartmentMutation) UserDepartmentsIDs() (ids []int64) {
+func (m *DepartmentMutation) UserDepartmentsIDs() (ids []int) {
 	for id := range m.user_departments {
 		ids = append(ids, id)
 	}
@@ -2054,14 +2054,14 @@ type PermissionMutation struct {
 	positions                   map[int64]struct{}
 	removedpositions            map[int64]struct{}
 	clearedpositions            bool
-	role_permissions            map[int64]struct{}
-	removedrole_permissions     map[int64]struct{}
+	role_permissions            map[int]struct{}
+	removedrole_permissions     map[int]struct{}
 	clearedrole_permissions     bool
-	permission_resources        map[int64]struct{}
-	removedpermission_resources map[int64]struct{}
+	permission_resources        map[int]struct{}
+	removedpermission_resources map[int]struct{}
 	clearedpermission_resources bool
-	position_permissions        map[int64]struct{}
-	removedposition_permissions map[int64]struct{}
+	position_permissions        map[int]struct{}
+	removedposition_permissions map[int]struct{}
 	clearedposition_permissions bool
 	done                        bool
 	oldValue                    func(context.Context) (*Permission, error)
@@ -2600,9 +2600,9 @@ func (m *PermissionMutation) ResetPositions() {
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by ids.
-func (m *PermissionMutation) AddRolePermissionIDs(ids ...int64) {
+func (m *PermissionMutation) AddRolePermissionIDs(ids ...int) {
 	if m.role_permissions == nil {
-		m.role_permissions = make(map[int64]struct{})
+		m.role_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.role_permissions[ids[i]] = struct{}{}
@@ -2620,9 +2620,9 @@ func (m *PermissionMutation) RolePermissionsCleared() bool {
 }
 
 // RemoveRolePermissionIDs removes the "role_permissions" edge to the RolePermission entity by IDs.
-func (m *PermissionMutation) RemoveRolePermissionIDs(ids ...int64) {
+func (m *PermissionMutation) RemoveRolePermissionIDs(ids ...int) {
 	if m.removedrole_permissions == nil {
-		m.removedrole_permissions = make(map[int64]struct{})
+		m.removedrole_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.role_permissions, ids[i])
@@ -2631,7 +2631,7 @@ func (m *PermissionMutation) RemoveRolePermissionIDs(ids ...int64) {
 }
 
 // RemovedRolePermissions returns the removed IDs of the "role_permissions" edge to the RolePermission entity.
-func (m *PermissionMutation) RemovedRolePermissionsIDs() (ids []int64) {
+func (m *PermissionMutation) RemovedRolePermissionsIDs() (ids []int) {
 	for id := range m.removedrole_permissions {
 		ids = append(ids, id)
 	}
@@ -2639,7 +2639,7 @@ func (m *PermissionMutation) RemovedRolePermissionsIDs() (ids []int64) {
 }
 
 // RolePermissionsIDs returns the "role_permissions" edge IDs in the mutation.
-func (m *PermissionMutation) RolePermissionsIDs() (ids []int64) {
+func (m *PermissionMutation) RolePermissionsIDs() (ids []int) {
 	for id := range m.role_permissions {
 		ids = append(ids, id)
 	}
@@ -2654,9 +2654,9 @@ func (m *PermissionMutation) ResetRolePermissions() {
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
-func (m *PermissionMutation) AddPermissionResourceIDs(ids ...int64) {
+func (m *PermissionMutation) AddPermissionResourceIDs(ids ...int) {
 	if m.permission_resources == nil {
-		m.permission_resources = make(map[int64]struct{})
+		m.permission_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.permission_resources[ids[i]] = struct{}{}
@@ -2674,9 +2674,9 @@ func (m *PermissionMutation) PermissionResourcesCleared() bool {
 }
 
 // RemovePermissionResourceIDs removes the "permission_resources" edge to the PermissionResource entity by IDs.
-func (m *PermissionMutation) RemovePermissionResourceIDs(ids ...int64) {
+func (m *PermissionMutation) RemovePermissionResourceIDs(ids ...int) {
 	if m.removedpermission_resources == nil {
-		m.removedpermission_resources = make(map[int64]struct{})
+		m.removedpermission_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.permission_resources, ids[i])
@@ -2685,7 +2685,7 @@ func (m *PermissionMutation) RemovePermissionResourceIDs(ids ...int64) {
 }
 
 // RemovedPermissionResources returns the removed IDs of the "permission_resources" edge to the PermissionResource entity.
-func (m *PermissionMutation) RemovedPermissionResourcesIDs() (ids []int64) {
+func (m *PermissionMutation) RemovedPermissionResourcesIDs() (ids []int) {
 	for id := range m.removedpermission_resources {
 		ids = append(ids, id)
 	}
@@ -2693,7 +2693,7 @@ func (m *PermissionMutation) RemovedPermissionResourcesIDs() (ids []int64) {
 }
 
 // PermissionResourcesIDs returns the "permission_resources" edge IDs in the mutation.
-func (m *PermissionMutation) PermissionResourcesIDs() (ids []int64) {
+func (m *PermissionMutation) PermissionResourcesIDs() (ids []int) {
 	for id := range m.permission_resources {
 		ids = append(ids, id)
 	}
@@ -2708,9 +2708,9 @@ func (m *PermissionMutation) ResetPermissionResources() {
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by ids.
-func (m *PermissionMutation) AddPositionPermissionIDs(ids ...int64) {
+func (m *PermissionMutation) AddPositionPermissionIDs(ids ...int) {
 	if m.position_permissions == nil {
-		m.position_permissions = make(map[int64]struct{})
+		m.position_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.position_permissions[ids[i]] = struct{}{}
@@ -2728,9 +2728,9 @@ func (m *PermissionMutation) PositionPermissionsCleared() bool {
 }
 
 // RemovePositionPermissionIDs removes the "position_permissions" edge to the PositionPermission entity by IDs.
-func (m *PermissionMutation) RemovePositionPermissionIDs(ids ...int64) {
+func (m *PermissionMutation) RemovePositionPermissionIDs(ids ...int) {
 	if m.removedposition_permissions == nil {
-		m.removedposition_permissions = make(map[int64]struct{})
+		m.removedposition_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.position_permissions, ids[i])
@@ -2739,7 +2739,7 @@ func (m *PermissionMutation) RemovePositionPermissionIDs(ids ...int64) {
 }
 
 // RemovedPositionPermissions returns the removed IDs of the "position_permissions" edge to the PositionPermission entity.
-func (m *PermissionMutation) RemovedPositionPermissionsIDs() (ids []int64) {
+func (m *PermissionMutation) RemovedPositionPermissionsIDs() (ids []int) {
 	for id := range m.removedposition_permissions {
 		ids = append(ids, id)
 	}
@@ -2747,7 +2747,7 @@ func (m *PermissionMutation) RemovedPositionPermissionsIDs() (ids []int64) {
 }
 
 // PositionPermissionsIDs returns the "position_permissions" edge IDs in the mutation.
-func (m *PermissionMutation) PositionPermissionsIDs() (ids []int64) {
+func (m *PermissionMutation) PositionPermissionsIDs() (ids []int) {
 	for id := range m.position_permissions {
 		ids = append(ids, id)
 	}
@@ -3222,7 +3222,7 @@ type PermissionResourceMutation struct {
 	config
 	op                Op
 	typ               string
-	id                *int64
+	id                *int
 	actions           *string
 	clearedFields     map[string]struct{}
 	permission        *int64
@@ -3254,7 +3254,7 @@ func newPermissionResourceMutation(c config, op Op, opts ...permissionresourceOp
 }
 
 // withPermissionResourceID sets the ID field of the mutation.
-func withPermissionResourceID(id int64) permissionresourceOption {
+func withPermissionResourceID(id int) permissionresourceOption {
 	return func(m *PermissionResourceMutation) {
 		var (
 			err   error
@@ -3304,15 +3304,9 @@ func (m PermissionResourceMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of PermissionResource entities.
-func (m *PermissionResourceMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PermissionResourceMutation) ID() (id int64, exists bool) {
+func (m *PermissionResourceMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -3323,12 +3317,12 @@ func (m *PermissionResourceMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PermissionResourceMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *PermissionResourceMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -3780,11 +3774,11 @@ type PositionMutation struct {
 	permissions                 map[int64]struct{}
 	removedpermissions          map[int64]struct{}
 	clearedpermissions          bool
-	user_positions              map[int64]struct{}
-	removeduser_positions       map[int64]struct{}
+	user_positions              map[int]struct{}
+	removeduser_positions       map[int]struct{}
 	cleareduser_positions       bool
-	position_permissions        map[int64]struct{}
-	removedposition_permissions map[int64]struct{}
+	position_permissions        map[int]struct{}
+	removedposition_permissions map[int]struct{}
 	clearedposition_permissions bool
 	done                        bool
 	oldValue                    func(context.Context) (*Position, error)
@@ -4247,9 +4241,9 @@ func (m *PositionMutation) ResetPermissions() {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by ids.
-func (m *PositionMutation) AddUserPositionIDs(ids ...int64) {
+func (m *PositionMutation) AddUserPositionIDs(ids ...int) {
 	if m.user_positions == nil {
-		m.user_positions = make(map[int64]struct{})
+		m.user_positions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.user_positions[ids[i]] = struct{}{}
@@ -4267,9 +4261,9 @@ func (m *PositionMutation) UserPositionsCleared() bool {
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to the UserPosition entity by IDs.
-func (m *PositionMutation) RemoveUserPositionIDs(ids ...int64) {
+func (m *PositionMutation) RemoveUserPositionIDs(ids ...int) {
 	if m.removeduser_positions == nil {
-		m.removeduser_positions = make(map[int64]struct{})
+		m.removeduser_positions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.user_positions, ids[i])
@@ -4278,7 +4272,7 @@ func (m *PositionMutation) RemoveUserPositionIDs(ids ...int64) {
 }
 
 // RemovedUserPositions returns the removed IDs of the "user_positions" edge to the UserPosition entity.
-func (m *PositionMutation) RemovedUserPositionsIDs() (ids []int64) {
+func (m *PositionMutation) RemovedUserPositionsIDs() (ids []int) {
 	for id := range m.removeduser_positions {
 		ids = append(ids, id)
 	}
@@ -4286,7 +4280,7 @@ func (m *PositionMutation) RemovedUserPositionsIDs() (ids []int64) {
 }
 
 // UserPositionsIDs returns the "user_positions" edge IDs in the mutation.
-func (m *PositionMutation) UserPositionsIDs() (ids []int64) {
+func (m *PositionMutation) UserPositionsIDs() (ids []int) {
 	for id := range m.user_positions {
 		ids = append(ids, id)
 	}
@@ -4301,9 +4295,9 @@ func (m *PositionMutation) ResetUserPositions() {
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by ids.
-func (m *PositionMutation) AddPositionPermissionIDs(ids ...int64) {
+func (m *PositionMutation) AddPositionPermissionIDs(ids ...int) {
 	if m.position_permissions == nil {
-		m.position_permissions = make(map[int64]struct{})
+		m.position_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.position_permissions[ids[i]] = struct{}{}
@@ -4321,9 +4315,9 @@ func (m *PositionMutation) PositionPermissionsCleared() bool {
 }
 
 // RemovePositionPermissionIDs removes the "position_permissions" edge to the PositionPermission entity by IDs.
-func (m *PositionMutation) RemovePositionPermissionIDs(ids ...int64) {
+func (m *PositionMutation) RemovePositionPermissionIDs(ids ...int) {
 	if m.removedposition_permissions == nil {
-		m.removedposition_permissions = make(map[int64]struct{})
+		m.removedposition_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.position_permissions, ids[i])
@@ -4332,7 +4326,7 @@ func (m *PositionMutation) RemovePositionPermissionIDs(ids ...int64) {
 }
 
 // RemovedPositionPermissions returns the removed IDs of the "position_permissions" edge to the PositionPermission entity.
-func (m *PositionMutation) RemovedPositionPermissionsIDs() (ids []int64) {
+func (m *PositionMutation) RemovedPositionPermissionsIDs() (ids []int) {
 	for id := range m.removedposition_permissions {
 		ids = append(ids, id)
 	}
@@ -4340,7 +4334,7 @@ func (m *PositionMutation) RemovedPositionPermissionsIDs() (ids []int64) {
 }
 
 // PositionPermissionsIDs returns the "position_permissions" edge IDs in the mutation.
-func (m *PositionMutation) PositionPermissionsIDs() (ids []int64) {
+func (m *PositionMutation) PositionPermissionsIDs() (ids []int) {
 	for id := range m.position_permissions {
 		ids = append(ids, id)
 	}
@@ -4758,7 +4752,7 @@ type PositionPermissionMutation struct {
 	config
 	op                Op
 	typ               string
-	id                *int64
+	id                *int
 	clearedFields     map[string]struct{}
 	position          *int64
 	clearedposition   bool
@@ -4789,7 +4783,7 @@ func newPositionPermissionMutation(c config, op Op, opts ...positionpermissionOp
 }
 
 // withPositionPermissionID sets the ID field of the mutation.
-func withPositionPermissionID(id int64) positionpermissionOption {
+func withPositionPermissionID(id int) positionpermissionOption {
 	return func(m *PositionPermissionMutation) {
 		var (
 			err   error
@@ -4839,15 +4833,9 @@ func (m PositionPermissionMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of PositionPermission entities.
-func (m *PositionPermissionMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PositionPermissionMutation) ID() (id int64, exists bool) {
+func (m *PositionPermissionMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -4858,12 +4846,12 @@ func (m *PositionPermissionMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PositionPermissionMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *PositionPermissionMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -5276,8 +5264,8 @@ type ResourceMutation struct {
 	permissions                 map[int64]struct{}
 	removedpermissions          map[int64]struct{}
 	clearedpermissions          bool
-	permission_resources        map[int64]struct{}
-	removedpermission_resources map[int64]struct{}
+	permission_resources        map[int]struct{}
+	removedpermission_resources map[int]struct{}
 	clearedpermission_resources bool
 	done                        bool
 	oldValue                    func(context.Context) (*Resource, error)
@@ -6238,9 +6226,9 @@ func (m *ResourceMutation) ResetPermissions() {
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
-func (m *ResourceMutation) AddPermissionResourceIDs(ids ...int64) {
+func (m *ResourceMutation) AddPermissionResourceIDs(ids ...int) {
 	if m.permission_resources == nil {
-		m.permission_resources = make(map[int64]struct{})
+		m.permission_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.permission_resources[ids[i]] = struct{}{}
@@ -6258,9 +6246,9 @@ func (m *ResourceMutation) PermissionResourcesCleared() bool {
 }
 
 // RemovePermissionResourceIDs removes the "permission_resources" edge to the PermissionResource entity by IDs.
-func (m *ResourceMutation) RemovePermissionResourceIDs(ids ...int64) {
+func (m *ResourceMutation) RemovePermissionResourceIDs(ids ...int) {
 	if m.removedpermission_resources == nil {
-		m.removedpermission_resources = make(map[int64]struct{})
+		m.removedpermission_resources = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.permission_resources, ids[i])
@@ -6269,7 +6257,7 @@ func (m *ResourceMutation) RemovePermissionResourceIDs(ids ...int64) {
 }
 
 // RemovedPermissionResources returns the removed IDs of the "permission_resources" edge to the PermissionResource entity.
-func (m *ResourceMutation) RemovedPermissionResourcesIDs() (ids []int64) {
+func (m *ResourceMutation) RemovedPermissionResourcesIDs() (ids []int) {
 	for id := range m.removedpermission_resources {
 		ids = append(ids, id)
 	}
@@ -6277,7 +6265,7 @@ func (m *ResourceMutation) RemovedPermissionResourcesIDs() (ids []int64) {
 }
 
 // PermissionResourcesIDs returns the "permission_resources" edge IDs in the mutation.
-func (m *ResourceMutation) PermissionResourcesIDs() (ids []int64) {
+func (m *ResourceMutation) PermissionResourcesIDs() (ids []int) {
 	for id := range m.permission_resources {
 		ids = append(ids, id)
 	}
@@ -6931,11 +6919,11 @@ type RoleMutation struct {
 	permissions             map[int64]struct{}
 	removedpermissions      map[int64]struct{}
 	clearedpermissions      bool
-	user_roles              map[int64]struct{}
-	removeduser_roles       map[int64]struct{}
+	user_roles              map[int]struct{}
+	removeduser_roles       map[int]struct{}
 	cleareduser_roles       bool
-	role_permissions        map[int64]struct{}
-	removedrole_permissions map[int64]struct{}
+	role_permissions        map[int]struct{}
+	removedrole_permissions map[int]struct{}
 	clearedrole_permissions bool
 	done                    bool
 	oldValue                func(context.Context) (*Role, error)
@@ -7503,9 +7491,9 @@ func (m *RoleMutation) ResetPermissions() {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by ids.
-func (m *RoleMutation) AddUserRoleIDs(ids ...int64) {
+func (m *RoleMutation) AddUserRoleIDs(ids ...int) {
 	if m.user_roles == nil {
-		m.user_roles = make(map[int64]struct{})
+		m.user_roles = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.user_roles[ids[i]] = struct{}{}
@@ -7523,9 +7511,9 @@ func (m *RoleMutation) UserRolesCleared() bool {
 }
 
 // RemoveUserRoleIDs removes the "user_roles" edge to the UserRole entity by IDs.
-func (m *RoleMutation) RemoveUserRoleIDs(ids ...int64) {
+func (m *RoleMutation) RemoveUserRoleIDs(ids ...int) {
 	if m.removeduser_roles == nil {
-		m.removeduser_roles = make(map[int64]struct{})
+		m.removeduser_roles = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.user_roles, ids[i])
@@ -7534,7 +7522,7 @@ func (m *RoleMutation) RemoveUserRoleIDs(ids ...int64) {
 }
 
 // RemovedUserRoles returns the removed IDs of the "user_roles" edge to the UserRole entity.
-func (m *RoleMutation) RemovedUserRolesIDs() (ids []int64) {
+func (m *RoleMutation) RemovedUserRolesIDs() (ids []int) {
 	for id := range m.removeduser_roles {
 		ids = append(ids, id)
 	}
@@ -7542,7 +7530,7 @@ func (m *RoleMutation) RemovedUserRolesIDs() (ids []int64) {
 }
 
 // UserRolesIDs returns the "user_roles" edge IDs in the mutation.
-func (m *RoleMutation) UserRolesIDs() (ids []int64) {
+func (m *RoleMutation) UserRolesIDs() (ids []int) {
 	for id := range m.user_roles {
 		ids = append(ids, id)
 	}
@@ -7557,9 +7545,9 @@ func (m *RoleMutation) ResetUserRoles() {
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by ids.
-func (m *RoleMutation) AddRolePermissionIDs(ids ...int64) {
+func (m *RoleMutation) AddRolePermissionIDs(ids ...int) {
 	if m.role_permissions == nil {
-		m.role_permissions = make(map[int64]struct{})
+		m.role_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.role_permissions[ids[i]] = struct{}{}
@@ -7577,9 +7565,9 @@ func (m *RoleMutation) RolePermissionsCleared() bool {
 }
 
 // RemoveRolePermissionIDs removes the "role_permissions" edge to the RolePermission entity by IDs.
-func (m *RoleMutation) RemoveRolePermissionIDs(ids ...int64) {
+func (m *RoleMutation) RemoveRolePermissionIDs(ids ...int) {
 	if m.removedrole_permissions == nil {
-		m.removedrole_permissions = make(map[int64]struct{})
+		m.removedrole_permissions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.role_permissions, ids[i])
@@ -7588,7 +7576,7 @@ func (m *RoleMutation) RemoveRolePermissionIDs(ids ...int64) {
 }
 
 // RemovedRolePermissions returns the removed IDs of the "role_permissions" edge to the RolePermission entity.
-func (m *RoleMutation) RemovedRolePermissionsIDs() (ids []int64) {
+func (m *RoleMutation) RemovedRolePermissionsIDs() (ids []int) {
 	for id := range m.removedrole_permissions {
 		ids = append(ids, id)
 	}
@@ -7596,7 +7584,7 @@ func (m *RoleMutation) RemovedRolePermissionsIDs() (ids []int64) {
 }
 
 // RolePermissionsIDs returns the "role_permissions" edge IDs in the mutation.
-func (m *RoleMutation) RolePermissionsIDs() (ids []int64) {
+func (m *RoleMutation) RolePermissionsIDs() (ids []int) {
 	for id := range m.role_permissions {
 		ids = append(ids, id)
 	}
@@ -8066,7 +8054,7 @@ type RolePermissionMutation struct {
 	config
 	op                Op
 	typ               string
-	id                *int64
+	id                *int
 	clearedFields     map[string]struct{}
 	role              *int64
 	clearedrole       bool
@@ -8097,7 +8085,7 @@ func newRolePermissionMutation(c config, op Op, opts ...rolepermissionOption) *R
 }
 
 // withRolePermissionID sets the ID field of the mutation.
-func withRolePermissionID(id int64) rolepermissionOption {
+func withRolePermissionID(id int) rolepermissionOption {
 	return func(m *RolePermissionMutation) {
 		var (
 			err   error
@@ -8147,15 +8135,9 @@ func (m RolePermissionMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of RolePermission entities.
-func (m *RolePermissionMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *RolePermissionMutation) ID() (id int64, exists bool) {
+func (m *RolePermissionMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -8166,12 +8148,12 @@ func (m *RolePermissionMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *RolePermissionMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *RolePermissionMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -8597,14 +8579,14 @@ type UserMutation struct {
 	departments             map[int64]struct{}
 	removeddepartments      map[int64]struct{}
 	cleareddepartments      bool
-	user_roles              map[int64]struct{}
-	removeduser_roles       map[int64]struct{}
+	user_roles              map[int]struct{}
+	removeduser_roles       map[int]struct{}
 	cleareduser_roles       bool
-	user_positions          map[int64]struct{}
-	removeduser_positions   map[int64]struct{}
+	user_positions          map[int]struct{}
+	removeduser_positions   map[int]struct{}
 	cleareduser_positions   bool
-	user_departments        map[int64]struct{}
-	removeduser_departments map[int64]struct{}
+	user_departments        map[int]struct{}
+	removeduser_departments map[int]struct{}
 	cleareduser_departments bool
 	done                    bool
 	oldValue                func(context.Context) (*User, error)
@@ -9998,9 +9980,9 @@ func (m *UserMutation) ResetDepartments() {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by ids.
-func (m *UserMutation) AddUserRoleIDs(ids ...int64) {
+func (m *UserMutation) AddUserRoleIDs(ids ...int) {
 	if m.user_roles == nil {
-		m.user_roles = make(map[int64]struct{})
+		m.user_roles = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.user_roles[ids[i]] = struct{}{}
@@ -10018,9 +10000,9 @@ func (m *UserMutation) UserRolesCleared() bool {
 }
 
 // RemoveUserRoleIDs removes the "user_roles" edge to the UserRole entity by IDs.
-func (m *UserMutation) RemoveUserRoleIDs(ids ...int64) {
+func (m *UserMutation) RemoveUserRoleIDs(ids ...int) {
 	if m.removeduser_roles == nil {
-		m.removeduser_roles = make(map[int64]struct{})
+		m.removeduser_roles = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.user_roles, ids[i])
@@ -10029,7 +10011,7 @@ func (m *UserMutation) RemoveUserRoleIDs(ids ...int64) {
 }
 
 // RemovedUserRoles returns the removed IDs of the "user_roles" edge to the UserRole entity.
-func (m *UserMutation) RemovedUserRolesIDs() (ids []int64) {
+func (m *UserMutation) RemovedUserRolesIDs() (ids []int) {
 	for id := range m.removeduser_roles {
 		ids = append(ids, id)
 	}
@@ -10037,7 +10019,7 @@ func (m *UserMutation) RemovedUserRolesIDs() (ids []int64) {
 }
 
 // UserRolesIDs returns the "user_roles" edge IDs in the mutation.
-func (m *UserMutation) UserRolesIDs() (ids []int64) {
+func (m *UserMutation) UserRolesIDs() (ids []int) {
 	for id := range m.user_roles {
 		ids = append(ids, id)
 	}
@@ -10052,9 +10034,9 @@ func (m *UserMutation) ResetUserRoles() {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by ids.
-func (m *UserMutation) AddUserPositionIDs(ids ...int64) {
+func (m *UserMutation) AddUserPositionIDs(ids ...int) {
 	if m.user_positions == nil {
-		m.user_positions = make(map[int64]struct{})
+		m.user_positions = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.user_positions[ids[i]] = struct{}{}
@@ -10072,9 +10054,9 @@ func (m *UserMutation) UserPositionsCleared() bool {
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to the UserPosition entity by IDs.
-func (m *UserMutation) RemoveUserPositionIDs(ids ...int64) {
+func (m *UserMutation) RemoveUserPositionIDs(ids ...int) {
 	if m.removeduser_positions == nil {
-		m.removeduser_positions = make(map[int64]struct{})
+		m.removeduser_positions = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.user_positions, ids[i])
@@ -10083,7 +10065,7 @@ func (m *UserMutation) RemoveUserPositionIDs(ids ...int64) {
 }
 
 // RemovedUserPositions returns the removed IDs of the "user_positions" edge to the UserPosition entity.
-func (m *UserMutation) RemovedUserPositionsIDs() (ids []int64) {
+func (m *UserMutation) RemovedUserPositionsIDs() (ids []int) {
 	for id := range m.removeduser_positions {
 		ids = append(ids, id)
 	}
@@ -10091,7 +10073,7 @@ func (m *UserMutation) RemovedUserPositionsIDs() (ids []int64) {
 }
 
 // UserPositionsIDs returns the "user_positions" edge IDs in the mutation.
-func (m *UserMutation) UserPositionsIDs() (ids []int64) {
+func (m *UserMutation) UserPositionsIDs() (ids []int) {
 	for id := range m.user_positions {
 		ids = append(ids, id)
 	}
@@ -10106,9 +10088,9 @@ func (m *UserMutation) ResetUserPositions() {
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by ids.
-func (m *UserMutation) AddUserDepartmentIDs(ids ...int64) {
+func (m *UserMutation) AddUserDepartmentIDs(ids ...int) {
 	if m.user_departments == nil {
-		m.user_departments = make(map[int64]struct{})
+		m.user_departments = make(map[int]struct{})
 	}
 	for i := range ids {
 		m.user_departments[ids[i]] = struct{}{}
@@ -10126,9 +10108,9 @@ func (m *UserMutation) UserDepartmentsCleared() bool {
 }
 
 // RemoveUserDepartmentIDs removes the "user_departments" edge to the UserDepartment entity by IDs.
-func (m *UserMutation) RemoveUserDepartmentIDs(ids ...int64) {
+func (m *UserMutation) RemoveUserDepartmentIDs(ids ...int) {
 	if m.removeduser_departments == nil {
-		m.removeduser_departments = make(map[int64]struct{})
+		m.removeduser_departments = make(map[int]struct{})
 	}
 	for i := range ids {
 		delete(m.user_departments, ids[i])
@@ -10137,7 +10119,7 @@ func (m *UserMutation) RemoveUserDepartmentIDs(ids ...int64) {
 }
 
 // RemovedUserDepartments returns the removed IDs of the "user_departments" edge to the UserDepartment entity.
-func (m *UserMutation) RemovedUserDepartmentsIDs() (ids []int64) {
+func (m *UserMutation) RemovedUserDepartmentsIDs() (ids []int) {
 	for id := range m.removeduser_departments {
 		ids = append(ids, id)
 	}
@@ -10145,7 +10127,7 @@ func (m *UserMutation) RemovedUserDepartmentsIDs() (ids []int64) {
 }
 
 // UserDepartmentsIDs returns the "user_departments" edge IDs in the mutation.
-func (m *UserMutation) UserDepartmentsIDs() (ids []int64) {
+func (m *UserMutation) UserDepartmentsIDs() (ids []int) {
 	for id := range m.user_departments {
 		ids = append(ids, id)
 	}
@@ -11035,7 +11017,7 @@ type UserDepartmentMutation struct {
 	config
 	op                Op
 	typ               string
-	id                *int64
+	id                *int
 	clearedFields     map[string]struct{}
 	user              *int64
 	cleareduser       bool
@@ -11066,7 +11048,7 @@ func newUserDepartmentMutation(c config, op Op, opts ...userdepartmentOption) *U
 }
 
 // withUserDepartmentID sets the ID field of the mutation.
-func withUserDepartmentID(id int64) userdepartmentOption {
+func withUserDepartmentID(id int) userdepartmentOption {
 	return func(m *UserDepartmentMutation) {
 		var (
 			err   error
@@ -11116,15 +11098,9 @@ func (m UserDepartmentMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of UserDepartment entities.
-func (m *UserDepartmentMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserDepartmentMutation) ID() (id int64, exists bool) {
+func (m *UserDepartmentMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -11135,12 +11111,12 @@ func (m *UserDepartmentMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserDepartmentMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *UserDepartmentMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -11524,7 +11500,7 @@ type UserPositionMutation struct {
 	config
 	op              Op
 	typ             string
-	id              *int64
+	id              *int
 	clearedFields   map[string]struct{}
 	user            *int64
 	cleareduser     bool
@@ -11555,7 +11531,7 @@ func newUserPositionMutation(c config, op Op, opts ...userpositionOption) *UserP
 }
 
 // withUserPositionID sets the ID field of the mutation.
-func withUserPositionID(id int64) userpositionOption {
+func withUserPositionID(id int) userpositionOption {
 	return func(m *UserPositionMutation) {
 		var (
 			err   error
@@ -11605,15 +11581,9 @@ func (m UserPositionMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of UserPosition entities.
-func (m *UserPositionMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserPositionMutation) ID() (id int64, exists bool) {
+func (m *UserPositionMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -11624,12 +11594,12 @@ func (m *UserPositionMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserPositionMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *UserPositionMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -12013,7 +11983,7 @@ type UserRoleMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int64
+	id            *int
 	clearedFields map[string]struct{}
 	user          *int64
 	cleareduser   bool
@@ -12044,7 +12014,7 @@ func newUserRoleMutation(c config, op Op, opts ...userroleOption) *UserRoleMutat
 }
 
 // withUserRoleID sets the ID field of the mutation.
-func withUserRoleID(id int64) userroleOption {
+func withUserRoleID(id int) userroleOption {
 	return func(m *UserRoleMutation) {
 		var (
 			err   error
@@ -12094,15 +12064,9 @@ func (m UserRoleMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of UserRole entities.
-func (m *UserRoleMutation) SetID(id int64) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserRoleMutation) ID() (id int64, exists bool) {
+func (m *UserRoleMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -12113,12 +12077,12 @@ func (m *UserRoleMutation) ID() (id int64, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserRoleMutation) IDs(ctx context.Context) ([]int64, error) {
+func (m *UserRoleMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int64{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):

@@ -212,14 +212,14 @@ func (dc *DepartmentCreate) SetParent(d *Department) *DepartmentCreate {
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
-func (dc *DepartmentCreate) AddUserDepartmentIDs(ids ...int64) *DepartmentCreate {
+func (dc *DepartmentCreate) AddUserDepartmentIDs(ids ...int) *DepartmentCreate {
 	dc.mutation.AddUserDepartmentIDs(ids...)
 	return dc
 }
 
 // AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
 func (dc *DepartmentCreate) AddUserDepartments(u ...*UserDepartment) *DepartmentCreate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -436,13 +436,6 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserDepartmentCreate{config: dc.config, mutation: newUserDepartmentMutation(dc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := dc.mutation.PositionsIDs(); len(nodes) > 0 {
@@ -502,7 +495,7 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			Columns: []string{department.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

@@ -33,20 +33,6 @@ func (rpc *RolePermissionCreate) SetPermissionID(i int64) *RolePermissionCreate 
 	return rpc
 }
 
-// SetID sets the "id" field.
-func (rpc *RolePermissionCreate) SetID(i int64) *RolePermissionCreate {
-	rpc.mutation.SetID(i)
-	return rpc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (rpc *RolePermissionCreate) SetNillableID(i *int64) *RolePermissionCreate {
-	if i != nil {
-		rpc.SetID(*i)
-	}
-	return rpc
-}
-
 // SetRole sets the "role" edge to the Role entity.
 func (rpc *RolePermissionCreate) SetRole(r *Role) *RolePermissionCreate {
 	return rpc.SetRoleID(r.ID)
@@ -64,7 +50,6 @@ func (rpc *RolePermissionCreate) Mutation() *RolePermissionMutation {
 
 // Save creates the RolePermission in the database.
 func (rpc *RolePermissionCreate) Save(ctx context.Context) (*RolePermission, error) {
-	rpc.defaults()
 	return withHooks(ctx, rpc.sqlSave, rpc.mutation, rpc.hooks)
 }
 
@@ -90,14 +75,6 @@ func (rpc *RolePermissionCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (rpc *RolePermissionCreate) defaults() {
-	if _, ok := rpc.mutation.ID(); !ok {
-		v := rolepermission.DefaultID()
-		rpc.mutation.SetID(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (rpc *RolePermissionCreate) check() error {
 	if _, ok := rpc.mutation.RoleID(); !ok {
@@ -114,11 +91,6 @@ func (rpc *RolePermissionCreate) check() error {
 	if v, ok := rpc.mutation.PermissionID(); ok {
 		if err := rolepermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "RolePermission.permission_id": %w`, err)}
-		}
-	}
-	if v, ok := rpc.mutation.ID(); ok {
-		if err := rolepermission.IDValidator(v); err != nil {
-			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "RolePermission.id": %w`, err)}
 		}
 	}
 	if len(rpc.mutation.RoleIDs()) == 0 {
@@ -141,10 +113,8 @@ func (rpc *RolePermissionCreate) sqlSave(ctx context.Context) (*RolePermission, 
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != _node.ID {
-		id := _spec.ID.Value.(int64)
-		_node.ID = int64(id)
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	rpc.mutation.id = &_node.ID
 	rpc.mutation.done = true
 	return _node, nil
@@ -153,12 +123,8 @@ func (rpc *RolePermissionCreate) sqlSave(ctx context.Context) (*RolePermission, 
 func (rpc *RolePermissionCreate) createSpec() (*RolePermission, *sqlgraph.CreateSpec) {
 	var (
 		_node = &RolePermission{config: rpc.config}
-		_spec = sqlgraph.NewCreateSpec(rolepermission.Table, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64))
+		_spec = sqlgraph.NewCreateSpec(rolepermission.Table, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
 	)
-	if id, ok := rpc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if nodes := rpc.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -234,7 +200,6 @@ func (rpcb *RolePermissionCreateBulk) Save(ctx context.Context) ([]*RolePermissi
 	for i := range rpcb.builders {
 		func(i int, root context.Context) {
 			builder := rpcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*RolePermissionMutation)
 				if !ok {
@@ -261,9 +226,9 @@ func (rpcb *RolePermissionCreateBulk) Save(ctx context.Context) ([]*RolePermissi
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+				if specs[i].ID.Value != nil {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int64(id)
+					nodes[i].ID = int(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

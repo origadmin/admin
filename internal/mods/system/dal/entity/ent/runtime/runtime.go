@@ -158,9 +158,6 @@ func init() {
 	permission.DefaultID = permissionDescID.Default.(func() int64)
 	// permission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	permission.IDValidator = permissionDescID.Validators[0].(func(int64) error)
-	permissionresourceMixin := schema.PermissionResource{}.Mixin()
-	permissionresourceMixinFields0 := permissionresourceMixin[0].Fields()
-	_ = permissionresourceMixinFields0
 	permissionresourceFields := schema.PermissionResource{}.Fields()
 	_ = permissionresourceFields
 	// permissionresourceDescPermissionID is the schema descriptor for permission_id field.
@@ -175,12 +172,6 @@ func init() {
 	permissionresourceDescActions := permissionresourceFields[2].Descriptor()
 	// permissionresource.DefaultActions holds the default value on creation for the actions field.
 	permissionresource.DefaultActions = permissionresourceDescActions.Default.(string)
-	// permissionresourceDescID is the schema descriptor for id field.
-	permissionresourceDescID := permissionresourceMixinFields0[0].Descriptor()
-	// permissionresource.DefaultID holds the default value on creation for the id field.
-	permissionresource.DefaultID = permissionresourceDescID.Default.(func() int64)
-	// permissionresource.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	permissionresource.IDValidator = permissionresourceDescID.Validators[0].(func(int64) error)
 	positionMixin := schema.Position{}.Mixin()
 	positionMixinFields0 := positionMixin[0].Fields()
 	_ = positionMixinFields0
@@ -224,9 +215,6 @@ func init() {
 	position.DefaultID = positionDescID.Default.(func() int64)
 	// position.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	position.IDValidator = positionDescID.Validators[0].(func(int64) error)
-	positionpermissionMixin := schema.PositionPermission{}.Mixin()
-	positionpermissionMixinFields0 := positionpermissionMixin[0].Fields()
-	_ = positionpermissionMixinFields0
 	positionpermissionFields := schema.PositionPermission{}.Fields()
 	_ = positionpermissionFields
 	// positionpermissionDescPositionID is the schema descriptor for position_id field.
@@ -237,12 +225,6 @@ func init() {
 	positionpermissionDescPermissionID := positionpermissionFields[1].Descriptor()
 	// positionpermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	positionpermission.PermissionIDValidator = positionpermissionDescPermissionID.Validators[0].(func(int64) error)
-	// positionpermissionDescID is the schema descriptor for id field.
-	positionpermissionDescID := positionpermissionMixinFields0[0].Descriptor()
-	// positionpermission.DefaultID holds the default value on creation for the id field.
-	positionpermission.DefaultID = positionpermissionDescID.Default.(func() int64)
-	// positionpermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	positionpermission.IDValidator = positionpermissionDescID.Validators[0].(func(int64) error)
 	resourceMixin := schema.Resource{}.Mixin()
 	resourceMixinFields0 := resourceMixin[0].Fields()
 	_ = resourceMixinFields0
@@ -401,9 +383,6 @@ func init() {
 	role.DefaultID = roleDescID.Default.(func() int64)
 	// role.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	role.IDValidator = roleDescID.Validators[0].(func(int64) error)
-	rolepermissionMixin := schema.RolePermission{}.Mixin()
-	rolepermissionMixinFields0 := rolepermissionMixin[0].Fields()
-	_ = rolepermissionMixinFields0
 	rolepermissionFields := schema.RolePermission{}.Fields()
 	_ = rolepermissionFields
 	// rolepermissionDescRoleID is the schema descriptor for role_id field.
@@ -414,12 +393,6 @@ func init() {
 	rolepermissionDescPermissionID := rolepermissionFields[1].Descriptor()
 	// rolepermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
-	// rolepermissionDescID is the schema descriptor for id field.
-	rolepermissionDescID := rolepermissionMixinFields0[0].Descriptor()
-	// rolepermission.DefaultID holds the default value on creation for the id field.
-	rolepermission.DefaultID = rolepermissionDescID.Default.(func() int64)
-	// rolepermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	rolepermission.IDValidator = rolepermissionDescID.Validators[0].(func(int64) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks4 := userMixin[4].Hooks()
 	user.Hooks[0] = userMixinHooks4[0]
@@ -561,9 +534,6 @@ func init() {
 	user.DefaultID = userDescID.Default.(func() int64)
 	// user.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	user.IDValidator = userDescID.Validators[0].(func(int64) error)
-	userdepartmentMixin := schema.UserDepartment{}.Mixin()
-	userdepartmentMixinFields0 := userdepartmentMixin[0].Fields()
-	_ = userdepartmentMixinFields0
 	userdepartmentFields := schema.UserDepartment{}.Fields()
 	_ = userdepartmentFields
 	// userdepartmentDescUserID is the schema descriptor for user_id field.
@@ -574,15 +544,6 @@ func init() {
 	userdepartmentDescDepartmentID := userdepartmentFields[1].Descriptor()
 	// userdepartment.DepartmentIDValidator is a validator for the "department_id" field. It is called by the builders before save.
 	userdepartment.DepartmentIDValidator = userdepartmentDescDepartmentID.Validators[0].(func(int64) error)
-	// userdepartmentDescID is the schema descriptor for id field.
-	userdepartmentDescID := userdepartmentMixinFields0[0].Descriptor()
-	// userdepartment.DefaultID holds the default value on creation for the id field.
-	userdepartment.DefaultID = userdepartmentDescID.Default.(func() int64)
-	// userdepartment.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	userdepartment.IDValidator = userdepartmentDescID.Validators[0].(func(int64) error)
-	userpositionMixin := schema.UserPosition{}.Mixin()
-	userpositionMixinFields0 := userpositionMixin[0].Fields()
-	_ = userpositionMixinFields0
 	userpositionFields := schema.UserPosition{}.Fields()
 	_ = userpositionFields
 	// userpositionDescUserID is the schema descriptor for user_id field.
@@ -593,15 +554,6 @@ func init() {
 	userpositionDescPositionID := userpositionFields[1].Descriptor()
 	// userposition.PositionIDValidator is a validator for the "position_id" field. It is called by the builders before save.
 	userposition.PositionIDValidator = userpositionDescPositionID.Validators[0].(func(int64) error)
-	// userpositionDescID is the schema descriptor for id field.
-	userpositionDescID := userpositionMixinFields0[0].Descriptor()
-	// userposition.DefaultID holds the default value on creation for the id field.
-	userposition.DefaultID = userpositionDescID.Default.(func() int64)
-	// userposition.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	userposition.IDValidator = userpositionDescID.Validators[0].(func(int64) error)
-	userroleMixin := schema.UserRole{}.Mixin()
-	userroleMixinFields0 := userroleMixin[0].Fields()
-	_ = userroleMixinFields0
 	userroleFields := schema.UserRole{}.Fields()
 	_ = userroleFields
 	// userroleDescUserID is the schema descriptor for user_id field.
@@ -612,12 +564,6 @@ func init() {
 	userroleDescRoleID := userroleFields[1].Descriptor()
 	// userrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	userrole.RoleIDValidator = userroleDescRoleID.Validators[0].(func(int64) error)
-	// userroleDescID is the schema descriptor for id field.
-	userroleDescID := userroleMixinFields0[0].Descriptor()
-	// userrole.DefaultID holds the default value on creation for the id field.
-	userrole.DefaultID = userroleDescID.Default.(func() int64)
-	// userrole.IDValidator is a validator for the "id" field. It is called by the builders before save.
-	userrole.IDValidator = userroleDescID.Validators[0].(func(int64) error)
 }
 
 const (

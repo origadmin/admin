@@ -143,7 +143,7 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if err := uru.check(); err != nil {
 		return n, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
 	if ps := uru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -357,7 +357,7 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 	if err := uruo.check(); err != nil {
 		return _node, err
 	}
-	_spec := sqlgraph.NewUpdateSpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewUpdateSpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
 	id, ok := uruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserRole.id" for update`)}

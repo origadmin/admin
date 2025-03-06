@@ -132,8 +132,8 @@ func (udq *UserDepartmentQuery) FirstX(ctx context.Context) *UserDepartment {
 
 // FirstID returns the first UserDepartment ID from the query.
 // Returns a *NotFoundError when no UserDepartment ID was found.
-func (udq *UserDepartmentQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (udq *UserDepartmentQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = udq.Limit(1).IDs(setContextOp(ctx, udq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (udq *UserDepartmentQuery) FirstID(ctx context.Context) (id int64, err erro
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (udq *UserDepartmentQuery) FirstIDX(ctx context.Context) int64 {
+func (udq *UserDepartmentQuery) FirstIDX(ctx context.Context) int {
 	id, err := udq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (udq *UserDepartmentQuery) OnlyX(ctx context.Context) *UserDepartment {
 // OnlyID is like Only, but returns the only UserDepartment ID in the query.
 // Returns a *NotSingularError when more than one UserDepartment ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (udq *UserDepartmentQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (udq *UserDepartmentQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = udq.Limit(2).IDs(setContextOp(ctx, udq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (udq *UserDepartmentQuery) OnlyID(ctx context.Context) (id int64, err error
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (udq *UserDepartmentQuery) OnlyIDX(ctx context.Context) int64 {
+func (udq *UserDepartmentQuery) OnlyIDX(ctx context.Context) int {
 	id, err := udq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (udq *UserDepartmentQuery) AllX(ctx context.Context) []*UserDepartment {
 }
 
 // IDs executes the query and returns a list of UserDepartment IDs.
-func (udq *UserDepartmentQuery) IDs(ctx context.Context) (ids []int64, err error) {
+func (udq *UserDepartmentQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if udq.ctx.Unique == nil && udq.path != nil {
 		udq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (udq *UserDepartmentQuery) IDs(ctx context.Context) (ids []int64, err error
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (udq *UserDepartmentQuery) IDsX(ctx context.Context) []int64 {
+func (udq *UserDepartmentQuery) IDsX(ctx context.Context) []int {
 	ids, err := udq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -522,7 +522,7 @@ func (udq *UserDepartmentQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (udq *UserDepartmentQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewQuerySpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
 	_spec.From = udq.sql
 	if unique := udq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

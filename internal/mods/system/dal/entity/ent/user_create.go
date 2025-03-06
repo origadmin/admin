@@ -448,14 +448,14 @@ func (uc *UserCreate) AddDepartments(d ...*Department) *UserCreate {
 }
 
 // AddUserRoleIDs adds the "user_roles" edge to the UserRole entity by IDs.
-func (uc *UserCreate) AddUserRoleIDs(ids ...int64) *UserCreate {
+func (uc *UserCreate) AddUserRoleIDs(ids ...int) *UserCreate {
 	uc.mutation.AddUserRoleIDs(ids...)
 	return uc
 }
 
 // AddUserRoles adds the "user_roles" edges to the UserRole entity.
 func (uc *UserCreate) AddUserRoles(u ...*UserRole) *UserCreate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -463,14 +463,14 @@ func (uc *UserCreate) AddUserRoles(u ...*UserRole) *UserCreate {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (uc *UserCreate) AddUserPositionIDs(ids ...int64) *UserCreate {
+func (uc *UserCreate) AddUserPositionIDs(ids ...int) *UserCreate {
 	uc.mutation.AddUserPositionIDs(ids...)
 	return uc
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (uc *UserCreate) AddUserPositions(u ...*UserPosition) *UserCreate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -478,14 +478,14 @@ func (uc *UserCreate) AddUserPositions(u ...*UserPosition) *UserCreate {
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
-func (uc *UserCreate) AddUserDepartmentIDs(ids ...int64) *UserCreate {
+func (uc *UserCreate) AddUserDepartmentIDs(ids ...int) *UserCreate {
 	uc.mutation.AddUserDepartmentIDs(ids...)
 	return uc
 }
 
 // AddUserDepartments adds the "user_departments" edges to the UserDepartment entity.
 func (uc *UserCreate) AddUserDepartments(u ...*UserDepartment) *UserCreate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -941,13 +941,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserRoleCreate{config: uc.config, mutation: newUserRoleMutation(uc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.PositionsIDs(); len(nodes) > 0 {
@@ -963,13 +956,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		createE := &UserPositionCreate{config: uc.config, mutation: newUserPositionMutation(uc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
@@ -987,13 +973,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserDepartmentCreate{config: uc.config, mutation: newUserDepartmentMutation(uc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := uc.mutation.UserRolesIDs(); len(nodes) > 0 {
@@ -1004,7 +983,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Columns: []string{user.UserRolesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1020,7 +999,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Columns: []string{user.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -1036,7 +1015,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Columns: []string{user.UserDepartmentsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

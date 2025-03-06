@@ -17,8 +17,7 @@ import (
 type RolePermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field.primary_key.comment
-	ID int64 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// field.foreign_key.comment
 	RoleID int64 `json:"role_id,omitempty"`
 	// field.foreign_key.comment
@@ -89,7 +88,7 @@ func (rp *RolePermission) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			rp.ID = int64(value.Int64)
+			rp.ID = int(value.Int64)
 		case rolepermission.FieldRoleID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field role_id", values[i])

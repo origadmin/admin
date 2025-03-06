@@ -119,7 +119,7 @@ var (
 	}
 	// SysPermissionResourcesColumns holds the columns for the "sys_permission_resources" table.
 	SysPermissionResourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "actions", Type: field.TypeString, Comment: "permission_resource.field.actions", Default: "*"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "resource_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
@@ -191,7 +191,7 @@ var (
 	}
 	// SysPositionPermissionsColumns holds the columns for the "sys_position_permissions" table.
 	SysPositionPermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "position_id", Type: field.TypeInt64, Comment: "position_permission.field.position_id"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "position_permission.field.permission_id"},
 	}
@@ -340,7 +340,7 @@ var (
 	}
 	// SysRolePermissionsColumns holds the columns for the "sys_role_permissions" table.
 	SysRolePermissionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
@@ -469,7 +469,7 @@ var (
 	}
 	// SysUserDepartmentsColumns holds the columns for the "sys_user_departments" table.
 	SysUserDepartmentsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
@@ -513,7 +513,7 @@ var (
 	}
 	// SysUserPositionsColumns holds the columns for the "sys_user_positions" table.
 	SysUserPositionsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "position_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
@@ -557,7 +557,7 @@ var (
 	}
 	// SysUserRolesColumns holds the columns for the "sys_user_roles" table.
 	SysUserRolesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "user_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "role_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}

@@ -295,11 +295,6 @@ func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields
 			if input.Actions != "" {
 				m.SetActions(input.Actions)
 			}
-		case permissionresource.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
 		default:
 			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
 		}
@@ -319,8 +314,6 @@ func (m *PermissionResourceMutation) SetFieldsWithZero(input *PermissionResource
 			m.SetResourceID(input.ResourceID)
 		case permissionresource.FieldActions:
 			m.SetActions(input.Actions)
-		case permissionresource.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
 		}
@@ -417,11 +410,6 @@ func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields
 			if input.PermissionID != 0 {
 				m.SetPermissionID(input.PermissionID)
 			}
-		case positionpermission.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
 		default:
 			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
 		}
@@ -439,8 +427,6 @@ func (m *PositionPermissionMutation) SetFieldsWithZero(input *PositionPermission
 			m.SetPositionID(input.PositionID)
 		case positionpermission.FieldPermissionID:
 			m.SetPermissionID(input.PermissionID)
-		case positionpermission.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
 		}
@@ -706,11 +692,6 @@ func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...stri
 			if input.PermissionID != 0 {
 				m.SetPermissionID(input.PermissionID)
 			}
-		case rolepermission.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
 		default:
 			return fmt.Errorf("unknown RolePermission field %s", fields[i])
 		}
@@ -728,8 +709,6 @@ func (m *RolePermissionMutation) SetFieldsWithZero(input *RolePermission, fields
 			m.SetRoleID(input.RoleID)
 		case rolepermission.FieldPermissionID:
 			m.SetPermissionID(input.PermissionID)
-		case rolepermission.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown RolePermission field %s", fields[i])
 		}
@@ -973,11 +952,6 @@ func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...stri
 			if input.DepartmentID != 0 {
 				m.SetDepartmentID(input.DepartmentID)
 			}
-		case userdepartment.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
 		default:
 			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
 		}
@@ -995,8 +969,6 @@ func (m *UserDepartmentMutation) SetFieldsWithZero(input *UserDepartment, fields
 			m.SetUserID(input.UserID)
 		case userdepartment.FieldDepartmentID:
 			m.SetDepartmentID(input.DepartmentID)
-		case userdepartment.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
 		}
@@ -1020,11 +992,6 @@ func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) 
 			if input.PositionID != 0 {
 				m.SetPositionID(input.PositionID)
 			}
-		case userposition.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
 		default:
 			return fmt.Errorf("unknown UserPosition field %s", fields[i])
 		}
@@ -1042,8 +1009,6 @@ func (m *UserPositionMutation) SetFieldsWithZero(input *UserPosition, fields ...
 			m.SetUserID(input.UserID)
 		case userposition.FieldPositionID:
 			m.SetPositionID(input.PositionID)
-		case userposition.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown UserPosition field %s", fields[i])
 		}
@@ -1067,11 +1032,6 @@ func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 			if input.RoleID != 0 {
 				m.SetRoleID(input.RoleID)
 			}
-		case userrole.FieldID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ID != 0 {
-				m.SetID(input.ID)
-			}
 		default:
 			return fmt.Errorf("unknown UserRole field %s", fields[i])
 		}
@@ -1089,8 +1049,6 @@ func (m *UserRoleMutation) SetFieldsWithZero(input *UserRole, fields ...string) 
 			m.SetUserID(input.UserID)
 		case userrole.FieldRoleID:
 			m.SetRoleID(input.RoleID)
-		case userrole.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown UserRole field %s", fields[i])
 		}

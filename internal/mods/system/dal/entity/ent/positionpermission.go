@@ -17,8 +17,7 @@ import (
 type PositionPermission struct {
 	config `json:"-"`
 	// ID of the ent.
-	// field.primary_key.comment
-	ID int64 `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// position_permission.field.position_id
 	PositionID int64 `json:"position_id,omitempty"`
 	// position_permission.field.permission_id
@@ -89,7 +88,7 @@ func (pp *PositionPermission) assignValues(columns []string, values []any) error
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pp.ID = int64(value.Int64)
+			pp.ID = int(value.Int64)
 		case positionpermission.FieldPositionID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field position_id", values[i])

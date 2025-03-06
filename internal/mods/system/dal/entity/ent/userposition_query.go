@@ -132,8 +132,8 @@ func (upq *UserPositionQuery) FirstX(ctx context.Context) *UserPosition {
 
 // FirstID returns the first UserPosition ID from the query.
 // Returns a *NotFoundError when no UserPosition ID was found.
-func (upq *UserPositionQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (upq *UserPositionQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = upq.Limit(1).IDs(setContextOp(ctx, upq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (upq *UserPositionQuery) FirstID(ctx context.Context) (id int64, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (upq *UserPositionQuery) FirstIDX(ctx context.Context) int64 {
+func (upq *UserPositionQuery) FirstIDX(ctx context.Context) int {
 	id, err := upq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (upq *UserPositionQuery) OnlyX(ctx context.Context) *UserPosition {
 // OnlyID is like Only, but returns the only UserPosition ID in the query.
 // Returns a *NotSingularError when more than one UserPosition ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (upq *UserPositionQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (upq *UserPositionQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = upq.Limit(2).IDs(setContextOp(ctx, upq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (upq *UserPositionQuery) OnlyID(ctx context.Context) (id int64, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (upq *UserPositionQuery) OnlyIDX(ctx context.Context) int64 {
+func (upq *UserPositionQuery) OnlyIDX(ctx context.Context) int {
 	id, err := upq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (upq *UserPositionQuery) AllX(ctx context.Context) []*UserPosition {
 }
 
 // IDs executes the query and returns a list of UserPosition IDs.
-func (upq *UserPositionQuery) IDs(ctx context.Context) (ids []int64, err error) {
+func (upq *UserPositionQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if upq.ctx.Unique == nil && upq.path != nil {
 		upq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (upq *UserPositionQuery) IDs(ctx context.Context) (ids []int64, err error) 
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (upq *UserPositionQuery) IDsX(ctx context.Context) []int64 {
+func (upq *UserPositionQuery) IDsX(ctx context.Context) []int {
 	ids, err := upq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -522,7 +522,7 @@ func (upq *UserPositionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (upq *UserPositionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewQuerySpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
 	_spec.From = upq.sql
 	if unique := upq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

@@ -40,7 +40,7 @@ func (ppd *PositionPermissionDelete) ExecX(ctx context.Context) int {
 }
 
 func (ppd *PositionPermissionDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := sqlgraph.NewDeleteSpec(positionpermission.Table, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewDeleteSpec(positionpermission.Table, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
 	if ps := ppd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

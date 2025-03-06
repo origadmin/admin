@@ -132,8 +132,8 @@ func (ppq *PositionPermissionQuery) FirstX(ctx context.Context) *PositionPermiss
 
 // FirstID returns the first PositionPermission ID from the query.
 // Returns a *NotFoundError when no PositionPermission ID was found.
-func (ppq *PositionPermissionQuery) FirstID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (ppq *PositionPermissionQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = ppq.Limit(1).IDs(setContextOp(ctx, ppq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
@@ -145,7 +145,7 @@ func (ppq *PositionPermissionQuery) FirstID(ctx context.Context) (id int64, err 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) FirstIDX(ctx context.Context) int64 {
+func (ppq *PositionPermissionQuery) FirstIDX(ctx context.Context) int {
 	id, err := ppq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -183,8 +183,8 @@ func (ppq *PositionPermissionQuery) OnlyX(ctx context.Context) *PositionPermissi
 // OnlyID is like Only, but returns the only PositionPermission ID in the query.
 // Returns a *NotSingularError when more than one PositionPermission ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (ppq *PositionPermissionQuery) OnlyID(ctx context.Context) (id int64, err error) {
-	var ids []int64
+func (ppq *PositionPermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = ppq.Limit(2).IDs(setContextOp(ctx, ppq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
@@ -200,7 +200,7 @@ func (ppq *PositionPermissionQuery) OnlyID(ctx context.Context) (id int64, err e
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) OnlyIDX(ctx context.Context) int64 {
+func (ppq *PositionPermissionQuery) OnlyIDX(ctx context.Context) int {
 	id, err := ppq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -228,7 +228,7 @@ func (ppq *PositionPermissionQuery) AllX(ctx context.Context) []*PositionPermiss
 }
 
 // IDs executes the query and returns a list of PositionPermission IDs.
-func (ppq *PositionPermissionQuery) IDs(ctx context.Context) (ids []int64, err error) {
+func (ppq *PositionPermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if ppq.ctx.Unique == nil && ppq.path != nil {
 		ppq.Unique(true)
 	}
@@ -240,7 +240,7 @@ func (ppq *PositionPermissionQuery) IDs(ctx context.Context) (ids []int64, err e
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) IDsX(ctx context.Context) []int64 {
+func (ppq *PositionPermissionQuery) IDsX(ctx context.Context) []int {
 	ids, err := ppq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -522,7 +522,7 @@ func (ppq *PositionPermissionQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (ppq *PositionPermissionQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64))
+	_spec := sqlgraph.NewQuerySpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
 	_spec.From = ppq.sql
 	if unique := ppq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

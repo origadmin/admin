@@ -32,7 +32,7 @@ func (PositionPermission) Fields() []ent.Field {
 // Mixin of the PositionPermission.
 func (PositionPermission) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.ID{},
+		//mixin.ID{},
 	}
 }
 

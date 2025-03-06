@@ -135,14 +135,14 @@ func (pc *PositionCreate) AddPermissions(p ...*Permission) *PositionCreate {
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (pc *PositionCreate) AddUserPositionIDs(ids ...int64) *PositionCreate {
+func (pc *PositionCreate) AddUserPositionIDs(ids ...int) *PositionCreate {
 	pc.mutation.AddUserPositionIDs(ids...)
 	return pc
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
 func (pc *PositionCreate) AddUserPositions(u ...*UserPosition) *PositionCreate {
-	ids := make([]int64, len(u))
+	ids := make([]int, len(u))
 	for i := range u {
 		ids[i] = u[i].ID
 	}
@@ -150,14 +150,14 @@ func (pc *PositionCreate) AddUserPositions(u ...*UserPosition) *PositionCreate {
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (pc *PositionCreate) AddPositionPermissionIDs(ids ...int64) *PositionCreate {
+func (pc *PositionCreate) AddPositionPermissionIDs(ids ...int) *PositionCreate {
 	pc.mutation.AddPositionPermissionIDs(ids...)
 	return pc
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
 func (pc *PositionCreate) AddPositionPermissions(p ...*PositionPermission) *PositionCreate {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -348,13 +348,6 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &UserPositionCreate{config: pc.config, mutation: newUserPositionMutation(pc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.PermissionsIDs(); len(nodes) > 0 {
@@ -371,13 +364,6 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PositionPermissionCreate{config: pc.config, mutation: newPositionPermissionMutation(pc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.UserPositionsIDs(); len(nodes) > 0 {
@@ -388,7 +374,7 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			Columns: []string{position.UserPositionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -404,7 +390,7 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			Columns: []string{position.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

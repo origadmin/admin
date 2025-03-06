@@ -65,10 +65,6 @@ var (
 	ResourceIDValidator func(int64) error
 	// DefaultActions holds the default value on creation for the "actions" field.
 	DefaultActions string
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() int64
-	// IDValidator is a validator for the "id" field. It is called by the builders before save.
-	IDValidator func(int64) error
 )
 
 // OrderOption defines the ordering options for the PermissionResource queries.

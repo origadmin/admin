@@ -168,14 +168,14 @@ func (pc *PermissionCreate) AddPositions(p ...*Position) *PermissionCreate {
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
-func (pc *PermissionCreate) AddRolePermissionIDs(ids ...int64) *PermissionCreate {
+func (pc *PermissionCreate) AddRolePermissionIDs(ids ...int) *PermissionCreate {
 	pc.mutation.AddRolePermissionIDs(ids...)
 	return pc
 }
 
 // AddRolePermissions adds the "role_permissions" edges to the RolePermission entity.
 func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *PermissionCreate {
-	ids := make([]int64, len(r))
+	ids := make([]int, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -183,14 +183,14 @@ func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *Permission
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (pc *PermissionCreate) AddPermissionResourceIDs(ids ...int64) *PermissionCreate {
+func (pc *PermissionCreate) AddPermissionResourceIDs(ids ...int) *PermissionCreate {
 	pc.mutation.AddPermissionResourceIDs(ids...)
 	return pc
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
 func (pc *PermissionCreate) AddPermissionResources(p ...*PermissionResource) *PermissionCreate {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -198,14 +198,14 @@ func (pc *PermissionCreate) AddPermissionResources(p ...*PermissionResource) *Pe
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (pc *PermissionCreate) AddPositionPermissionIDs(ids ...int64) *PermissionCreate {
+func (pc *PermissionCreate) AddPositionPermissionIDs(ids ...int) *PermissionCreate {
 	pc.mutation.AddPositionPermissionIDs(ids...)
 	return pc
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
 func (pc *PermissionCreate) AddPositionPermissions(p ...*PositionPermission) *PermissionCreate {
-	ids := make([]int64, len(p))
+	ids := make([]int, len(p))
 	for i := range p {
 		ids[i] = p[i].ID
 	}
@@ -387,13 +387,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &RolePermissionCreate{config: pc.config, mutation: newRolePermissionMutation(pc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.ResourcesIDs(); len(nodes) > 0 {
@@ -414,9 +407,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.PositionsIDs(); len(nodes) > 0 {
@@ -433,13 +423,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PositionPermissionCreate{config: pc.config, mutation: newPositionPermissionMutation(pc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
-		if specE.ID.Value != nil {
-			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
-		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.RolePermissionsIDs(); len(nodes) > 0 {
@@ -450,7 +433,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.RolePermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -466,7 +449,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.PermissionResourcesColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -482,7 +465,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Columns: []string{permission.PositionPermissionsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
