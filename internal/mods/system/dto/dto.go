@@ -67,7 +67,10 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel.SanctionDate = timestamppb.New(goModel.SanctionDate)
 	pbModel.ManagerId = int64(goModel.ManagerID)
 	pbModel.Manager = goModel.Manager
-	pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
+	//pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
+	for _, role := range goModel.Edges.Roles {
+		pbModel.RoleIds = append(pbModel.RoleIds, int64(role.ID))
+	}
 	return pbModel
 }
 

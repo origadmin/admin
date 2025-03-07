@@ -2040,6 +2040,13 @@ paths:
                   description: user.field.manager
                   schema:
                     type: string
+                - name: user.role_ids
+                  in: query
+                  description: Role Ids holds the value of the role_ids
+                  schema:
+                    type: array
+                    items:
+                        type: string
             responses:
                 "200":
                     description: OK
@@ -2984,6 +2991,11 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Resource'
                     description: Resources holds the value of the resources edge.
+                resource_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: Resource Ids holds the value of the resource_ids edge.
             description: Role is the model entity for the Role schema.
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
@@ -3140,6 +3152,11 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
                     description: Roles holds the value of the roles edge.
+                role_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: Role Ids holds the value of the role_ids
             description: User is the model entity for the User schema.
         api.v1.services.system.ValidateTokenResponse:
             type: object

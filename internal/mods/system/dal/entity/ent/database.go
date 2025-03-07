@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/database"
 )
 
@@ -27,17 +28,13 @@ func NewDatabase(client *Client, opts ...Option) *Database {
 }
 
 func (db *Database) clientDriver(ctx context.Context) dialect.Driver {
-	tx := TxFromContext(ctx)
-	c := db.client
-	if tx != nil {
-		c = tx.Client()
-	}
-	return c.driver
+	return db.Client(ctx).driver
 }
 
 // Tx runs the given function f within a transaction.
 func (db *Database) Tx(ctx context.Context, fn func(context.Context) error) error {
 	tx := TxFromContext(ctx)
+	log.Info("Database Tx")
 	if tx != nil {
 		return fn(ctx)
 	}

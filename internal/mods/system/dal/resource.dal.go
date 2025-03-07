@@ -72,19 +72,26 @@ func (repo resourceRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (repo resourceRepo) Update(ctx context.Context, resource *dto.ResourcePB, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
-	update := repo.db.Resource(ctx).UpdateOneID(resource.Id)
-	update.SetResource(dto.ConvertResourcePB2Object(resource))
-	if len(resource.PermissionIds) > 0 {
-		update.AddPermissionIDs(resource.PermissionIds...)
-	}
-	if len(resource.Permissions) > 0 {
-		update.AddPermissions(dto.ConvertPermissionsPB2Object(resource.Permissions)...)
-	}
-	saved, err := update.Save(ctx)
+	err := repo.db.Tx(ctx, func(ctx context.Context) error {
+		update := repo.db.Resource(ctx).UpdateOneID(resource.Id)
+		update.SetResource(dto.ConvertResourcePB2Object(resource))
+		if len(resource.PermissionIds) > 0 {
+			update.AddPermissionIDs(resource.PermissionIds...)
+		}
+		if len(resource.Permissions) > 0 {
+			update.AddPermissions(dto.ConvertPermissionsPB2Object(resource.Permissions)...)
+		}
+		saved, err := update.Save(ctx)
+		if err != nil {
+			return err
+		}
+		resource = dto.ConvertResource2PB(saved)
+		return nil
+	})
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertResource2PB(saved), nil
+	return resource, nil
 }
 
 func (repo resourceRepo) List(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {

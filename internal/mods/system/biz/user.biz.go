@@ -45,6 +45,7 @@ func (biz UserServiceClientBiz) ListUsers(ctx context.Context, in *pb.ListUsersR
 		return nil, err
 	}
 	log.Info("ListUsers")
+	option.IncludeRoles = true
 	result, total, err := biz.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err

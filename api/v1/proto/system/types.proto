@@ -95,6 +95,8 @@ message Role {
   repeated User users = 22 [json_name = "users"];
   // Resources holds the value of the resources edge.
   repeated Resource resources = 23 [json_name = "resources"];
+  // Resource Ids holds the value of the resource_ids edge.
+  repeated int64 resource_ids = 24 [json_name = "resource_ids"];
 }
 
 // RoleEdges holds the relations/edges for other nodes in the graph.
@@ -164,6 +166,8 @@ message User {
   string manager = 24 [json_name = "manager"];
   // Roles holds the value of the roles edge.
   repeated Role roles = 25 [json_name = "roles"];
+  // Role Ids holds the value of the role_ids
+  repeated int64 role_ids = 26 [json_name = "role_ids"];
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.

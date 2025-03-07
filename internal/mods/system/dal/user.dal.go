@@ -116,7 +116,15 @@ func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...
 	obj.UpdateTime = time.Now()
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.User(ctx).UpdateOneID(userPB.Id)
-		update.SetUser(obj)
+		if len(userPB.Roles) > 0 {
+			update.ClearRoles()
+			update.AddRoles(dto.ConvertRolesPB2Object(userPB.Roles)...)
+		}
+		if len(userPB.RoleIds) > 0 {
+			update.ClearRoles()
+			update.AddRoleIDs(userPB.RoleIds...)
+		}
+		update.SetUser(obj, user.OmitColumns(user.FieldSanctionDate, user.FieldLoginTime, user.FieldLastLoginTime)...)
 		saved, err := update.Save(ctx)
 		if err != nil {
 			return err

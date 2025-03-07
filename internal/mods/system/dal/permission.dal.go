@@ -64,11 +64,7 @@ func (repo permissionRepo) Update(ctx context.Context, permission *dto.Permissio
 	if len(options) > 0 {
 		option = options[0]
 	}
-	//forUpdate, err := repo.db.Permission(ctx).Get(ctx, permission.Id)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//resources := forUpdate.QueryResources()
+
 	update := repo.db.Permission(ctx).UpdateOneID(permission.Id)
 	obj := dto.ConvertPermissionPB2Object(permission)
 	if len(permission.ResourceIds) > 0 {
