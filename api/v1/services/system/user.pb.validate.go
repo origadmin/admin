@@ -535,6 +535,8 @@ func (m *ListUsersRequest) validate(all bool) error {
 
 	// no validation rules for OnlyCount
 
+	// no validation rules for Title
+
 	if len(errors) > 0 {
 		return ListUsersRequestMultiError(errors)
 	}

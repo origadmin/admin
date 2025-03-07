@@ -52,6 +52,7 @@ type UserRepo interface {
 }
 
 type UserQueryOption struct {
+	IncludeRoles bool
 	IsAdmin      bool
 	NoPasswd     bool
 	RandomPasswd bool

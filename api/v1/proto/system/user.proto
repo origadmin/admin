@@ -86,6 +86,8 @@ message ListUsersRequest {
   bool no_paging = 5;
   // The only_count is the query parameter for set only to query the total number
   bool only_count = 6;
+  // The title query parameter for set only to query the title
+  string title = 7 [json_name = "title"];
 }
 
 message ListUsersResponse {

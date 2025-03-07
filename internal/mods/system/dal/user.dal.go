@@ -137,13 +137,13 @@ func (repo userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options 
 	}
 
 	query := repo.db.User(ctx).Query()
-	query = query.WithRoles()
-	//if v := in.Username; len(v) > 0 {
-	//	query = query.Where(user.UsernameContains(v))
-	//}
-	//if v := in.Name; len(v) > 0 {
-	//	query = query.Where(user.NameContains(v))
-	//}
+	if option.IncludeRoles {
+		query = query.WithRoles()
+	}
+	if in.Title != "" {
+		query = query.Where(user.Or(user.UsernameContainsFold(in.Title), user.PhoneContainsFold(in.Title), user.EmailContainsFold(in.Title)))
+	}
+
 	if v := option.Status; v > 0 {
 		query = query.Where(user.StatusEQ(v))
 	}
