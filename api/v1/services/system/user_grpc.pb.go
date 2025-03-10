@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	UserService_ListUsers_FullMethodName         = "/api.v1.services.system.UserService/ListUsers"
+	UserService_ListUserResources_FullMethodName = "/api.v1.services.system.UserService/ListUserResources"
 	UserService_GetUser_FullMethodName           = "/api.v1.services.system.UserService/GetUser"
 	UserService_CreateUser_FullMethodName        = "/api.v1.services.system.UserService/CreateUser"
 	UserService_UpdateUser_FullMethodName        = "/api.v1.services.system.UserService/UpdateUser"
@@ -36,6 +37,7 @@ const (
 // The login service definition.
 type UserServiceClient interface {
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	ListUserResources(ctx context.Context, in *ListUserResourcesRequest, opts ...grpc.CallOption) (*ListUserResourcesResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
@@ -60,6 +62,16 @@ func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest,
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListUsersResponse)
 	err := c.cc.Invoke(ctx, UserService_ListUsers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) ListUserResources(ctx context.Context, in *ListUserResourcesRequest, opts ...grpc.CallOption) (*ListUserResourcesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListUserResourcesResponse)
+	err := c.cc.Invoke(ctx, UserService_ListUserResources_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -143,6 +155,7 @@ func (c *userServiceClient) ResetUserPassword(ctx context.Context, in *ResetUser
 // The login service definition.
 type UserServiceServer interface {
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
@@ -165,6 +178,9 @@ type UnimplementedUserServiceServer struct{}
 
 func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedUserServiceServer) ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListUserResources not implemented")
 }
 func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
@@ -222,6 +238,24 @@ func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).ListUsers(ctx, req.(*ListUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_ListUserResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListUserResourcesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).ListUserResources(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_ListUserResources_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).ListUserResources(ctx, req.(*ListUserResourcesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -362,6 +396,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUsers",
 			Handler:    _UserService_ListUsers_Handler,
+		},
+		{
+			MethodName: "ListUserResources",
+			Handler:    _UserService_ListUserResources_Handler,
 		},
 		{
 			MethodName: "GetUser",

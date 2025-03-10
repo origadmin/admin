@@ -24,19 +24,74 @@ type UserServiceClientBiz struct {
 	log     *log.KHelper
 }
 
+func (biz UserServiceClientBiz) ListUserResources(ctx context.Context, in *pb.ListUserResourcesRequest, opts ...grpc.CallOption) (*pb.ListUserResourcesResponse, error) {
+	var option dto.UserQueryOption
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
+	//	return nil, err
+	//}
+	log.Info("ListUserResources")
+	//option.IncludeRoles = true
+	result, err := biz.dao.ListResourceByUserID(ctx, in.GetId(), option)
+	if err != nil {
+		return nil, err
+	}
+	log.Info("ListUserResources result:", result)
+	//return dto.ToListResourcesResponse(result, in, total)
+	return &pb.ListUserResourcesResponse{
+		TotalSize: int32(len(result)),
+		//Current:   in.Current,
+		//PageSize:  in.PageSize,
+		Resources: result,
+		//Extra:     resp.Any(args...),
+	}, nil
+}
+
 func (biz UserServiceClientBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest, opts ...grpc.CallOption) (*pb.UpdateUserRolesResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var option dto.UserQueryOption
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
+	//	return nil, err
+	//}
+	log.Info("UpdateUserRoles")
+	//option.IncludeRoles = true
+	err := biz.dao.AddRoleIDs(ctx, in.GetUser().GetId(), in.GetRoleIds(), option)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateUserRolesResponse{
+		//User: result,
+	}, nil
 }
 
 func (biz UserServiceClientBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, opts ...grpc.CallOption) (*pb.UpdateUserStatusResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var option dto.UserQueryOption
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
+	//	return nil, err
+	//}
+	log.Info("UpdateUserStatus")
+	option.Fields = []string{"status"}
+	//option.IncludeRoles = true
+	err := biz.dao.UpdateUserStatus(ctx, in.GetUser().GetId(), int8(in.GetUser().GetStatus()), option)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UpdateUserStatusResponse{
+		//User: result,
+	}, nil
 }
 
 func (biz UserServiceClientBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUserPasswordRequest, opts ...grpc.CallOption) (*pb.ResetUserPasswordResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	var option dto.UserQueryOption
+	//if err := option.FromListRequest(in, biz.limiter); err != nil {
+	//	return nil, err
+	//}
+	log.Info("ResetUserPassword")
+	option.IncludeRoles = true
+	//result, total, err := biz.dao.ResetUserPassword(ctx, in, option)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//return dto.ToListUsersResponse(result, in, total)
+	return &pb.ResetUserPasswordResponse{}, nil
 }
 
 func (biz UserServiceClientBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {

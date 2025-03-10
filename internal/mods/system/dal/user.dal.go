@@ -23,19 +23,25 @@ type userRepo struct {
 	db *Data
 }
 
-func (repo userRepo) AddRoleIDs(ctx context.Context, i int64, int64s []int64) error {
-	return nil
+func (repo userRepo) AddRoleIDs(ctx context.Context, i int64, int64s []int64, option ...dto.UserQueryOption) error {
+	//TODO implement me
+	panic("implement me")
 }
 
-func (repo userRepo) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option dto.UserQueryOption) (*pb.UpdateUserStatusResponse, error) {
-	return nil, nil
+func (repo userRepo) UpdateUserStatus(ctx context.Context, id int64, status int8, options ...dto.UserQueryOption) error {
+	err := repo.db.User(ctx).UpdateOneID(id).SetStatus(status).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (repo userRepo) Current(ctx context.Context, id int64) (*dto.UserPB, error) {
 	return repo.Get(ctx, id)
 }
 
-func (repo userRepo) ListResourceByUserID(ctx context.Context, id int64) ([]*dto.ResourcePB, error) {
+func (repo userRepo) ListResourceByUserID(ctx context.Context, id int64,
+	option ...dto.UserQueryOption) ([]*dto.ResourcePB, error) {
 	resources, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryPermissions().QueryResources().All(ctx)
 	if err != nil {
 		return nil, err

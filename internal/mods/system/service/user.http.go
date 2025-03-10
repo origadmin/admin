@@ -16,6 +16,25 @@ type UserServiceHTTPService struct {
 	client pb.UserServiceHTTPClient
 }
 
+func (s UserServiceHTTPService) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
+	return s.client.ListUserResources(ctx, request)
+}
+
+func (s UserServiceHTTPService) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserServiceHTTPService) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserServiceHTTPService) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s UserServiceHTTPService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return s.client.ListUsers(ctx, req)
 }

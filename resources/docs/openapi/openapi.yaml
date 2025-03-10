@@ -1817,31 +1817,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/password/reset:
-        post:
-            tags:
-                - UserService
-            description: ResetUserPassword reset the user s password
-            operationId: UserService_ResetUserPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{id}:
         get:
             tags:
@@ -1863,6 +1838,61 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.GetUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{id}/password/reset:
+        post:
+            tags:
+                - UserService
+            description: ResetUserPassword reset the user s password
+            operationId: UserService_ResetUserPassword
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{id}/resources:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_ListUserResources
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUserResourcesResponse'
                 default:
                     description: Default error response
                     content:
@@ -2630,6 +2660,16 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
+        api.v1.services.system.ListUserResourcesResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    format: int32
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
@@ -3011,6 +3051,16 @@ components:
                     items:
                         type: string
                     description: Resource Ids holds the value of the resource_ids edge.
+                permissions:
+                    type: array
+                    items:
+                        type: string
+                    description: Permissions holds the value of the permissions edge.
+                permission_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: Permission Ids holds the value of the permission_ids edge.
             description: Role is the model entity for the Role schema.
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object

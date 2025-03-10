@@ -16,6 +16,30 @@ type UserServiceServer struct {
 	client pb.UserServiceClient
 }
 
+func (s UserServiceServer) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
+	return s.client.ListUserResources(ctx, request)
+}
+
+func (s UserServiceServer) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserServiceServer) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserServiceServer) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserServiceServer) mustEmbedUnimplementedUserServiceServer() {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s UserServiceServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return s.client.ListUsers(ctx, req)
 }

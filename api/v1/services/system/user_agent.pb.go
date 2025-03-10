@@ -25,6 +25,7 @@ type UserServiceAgent interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	// ResetUserPassword ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
@@ -51,6 +52,32 @@ func _UserService_ListUsers0_HTTPAgent_Handler(srv UserServiceAgent) http.Handle
 			return err
 		}
 		reply := out.(*ListUsersResponse)
+		if reply == nil {
+			return nil
+		}
+		return cctx.Result(200, reply)
+	}
+}
+
+func _UserService_ListUserResources0_HTTPAgent_Handler(srv UserServiceAgent) http.HandlerFunc {
+	return func(cctx http.Context) error {
+		var in ListUserResourcesRequest
+		if err := cctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := cctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(cctx, OperationUserServiceListUserResources)
+		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			ctx = agent.NewHTTPContext(ctx, cctx)
+			return srv.ListUserResources(ctx, req.(*ListUserResourcesRequest))
+		})
+		out, err := h(cctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListUserResourcesResponse)
 		if reply == nil {
 			return nil
 		}
@@ -232,6 +259,9 @@ func _UserService_ResetUserPassword0_HTTPAgent_Handler(srv UserServiceAgent) htt
 		if err := cctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := cctx.BindVars(&in); err != nil {
+			return err
+		}
 		http.SetOperation(cctx, OperationUserServiceResetUserPassword)
 		h := cctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			ctx = agent.NewHTTPContext(ctx, cctx)
@@ -252,11 +282,12 @@ func _UserService_ResetUserPassword0_HTTPAgent_Handler(srv UserServiceAgent) htt
 func RegisterUserServiceAgent(ag agent.HTTPAgent, srv UserServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/users", _UserService_ListUsers0_HTTPAgent_Handler(srv))
+	r.GET("/sys/users/{id}/resources", _UserService_ListUserResources0_HTTPAgent_Handler(srv))
 	r.GET("/sys/users/{id}", _UserService_GetUser0_HTTPAgent_Handler(srv))
 	r.POST("/sys/users", _UserService_CreateUser0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/{user.id}", _UserService_UpdateUser0_HTTPAgent_Handler(srv))
 	r.DELETE("/sys/users/{user.id}", _UserService_DeleteUser0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/{user.id}/status", _UserService_UpdateUserStatus0_HTTPAgent_Handler(srv))
 	r.PUT("/sys/users/{user.id}/roles", _UserService_UpdateUserRoles0_HTTPAgent_Handler(srv))
-	r.POST("/sys/users/password/reset", _UserService_ResetUserPassword0_HTTPAgent_Handler(srv))
+	r.POST("/sys/users/{id}/password/reset", _UserService_ResetUserPassword0_HTTPAgent_Handler(srv))
 }

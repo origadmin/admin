@@ -18,6 +18,11 @@ service UserService {
   rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {get: "/sys/users"};
   }
+
+  rpc ListUserResources (ListUserResourcesRequest) returns (ListUserResourcesResponse) {
+    option (google.api.http) = {get: "/sys/users/{id}/resources"};
+  }
+
   rpc GetUser (GetUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {get: "/sys/users/{id}"};
   }
@@ -55,11 +60,21 @@ service UserService {
   // ResetUserPassword reset the user s password
   rpc ResetUserPassword (ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
     option (google.api.http) = {
-      post: "/sys/users/password/reset"
+      post: "/sys/users/{id}/password/reset"
       body: "data"
     };
   }
 }
+
+message ListUserResourcesRequest {
+  int64 id = 1;
+}
+
+message ListUserResourcesResponse {
+  int32 total_size = 1 [json_name = "total_size"];
+  repeated Resource resources = 2 [json_name = "resources"];
+}
+
 
 message UpdateUserStatusRequest {
   User user = 1 [json_name = "user"];
@@ -68,7 +83,8 @@ message UpdateUserStatusRequest {
 message UpdateUserStatusResponse {}
 
 message ResetUserPasswordRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
+  string id = 1 [json_name = "id"];
+  google.protobuf.Any data = 2 [json_name = "data"];
 }
 
 message ResetUserPasswordResponse {}

@@ -23,6 +23,20 @@ type UserServiceAgent struct {
 	client pb.UserServiceClient
 }
 
+func (s UserServiceAgent) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
+	httpCtx := agent.FromHTTPContext(ctx)
+	response, err := s.client.ListUserResources(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+		Success: true,
+		Data:    resp.Any2AnyPB(response.Resources),
+	})
+	return nil, nil
+}
+
 func (s UserServiceAgent) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")

@@ -43,17 +43,17 @@ type UserRepo interface {
 	Delete(context.Context, int64) error
 	Update(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
-	AddRoleIDs(context.Context, int64, []int64) error
+	AddRoleIDs(context.Context, int64, []int64, ...UserQueryOption) error
 	GetByUserName(context.Context, string, ...string) (*UserPB, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
-	ListResourceByUserID(context.Context, int64) ([]*ResourcePB, error)
+	ListResourceByUserID(context.Context, int64, ...UserQueryOption) ([]*ResourcePB, error)
 	Current(context.Context, int64) (*UserPB, error)
-	UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, option UserQueryOption) (*pb.UpdateUserStatusResponse, error)
+	UpdateUserStatus(ctx context.Context, id int64, status int8, options ...UserQueryOption) error
 }
 
 type UserQueryOption struct {
 	IncludeRoles bool
-	IsAdmin      bool
+	IsSystem     bool
 	NoPasswd     bool
 	RandomPasswd bool
 	Status       int8 `form:"status" json:"status,omitempty"`
@@ -84,7 +84,7 @@ func (o *UserQueryOption) FromGetRequest(in *pb.GetUserRequest, limiter paginati
 func (o *UserQueryOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pagination.PageLimiter) error {
 	o.RandomPasswd = in.RandomPassword
 	//o.NoPasswd = in.NoPassword
-	o.IsAdmin = in.IsAdmin
+	o.IsSystem = in.IsSystem
 	return nil
 }
 
