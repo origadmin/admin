@@ -124,8 +124,8 @@ message CreateUserRequest {
   User user = 2;
   // The user id to use for this user.
   string user_id = 3 [json_name = "user_id"];
-  // The user is_admin to use for this user.
-  bool is_admin = 4 [json_name = "is_admin"];
+  // The user is_system to use for this user.
+  bool is_system = 4 [json_name = "is_system"];
   // The random_password is the query parameter for set only to generate a random password
   bool random_password = 5 [json_name = "random_password"];
 }
@@ -137,6 +137,13 @@ message CreateUserResponse {
 message UpdateUserRequest {
   // The user resource which replaces the resource on the server.
   User user = 1;
+  // The user id to use for this user.
+  string user_id = 3 [json_name = "user_id"];
+  // The user is_system to use for this user.
+  bool is_system = 4 [json_name = "is_system"];
+  // The random_password is the query parameter for set only to generate a random password
+  bool random_password = 2 [json_name = "random_password"];
+
 }
 
 message UpdateUserResponse {

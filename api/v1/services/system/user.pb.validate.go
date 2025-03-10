@@ -1078,7 +1078,7 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	// no validation rules for UserId
 
-	// no validation rules for IsAdmin
+	// no validation rules for IsSystem
 
 	// no validation rules for RandomPassword
 
@@ -1343,6 +1343,12 @@ func (m *UpdateUserRequest) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for UserId
+
+	// no validation rules for IsSystem
+
+	// no validation rules for RandomPassword
 
 	if len(errors) > 0 {
 		return UpdateUserRequestMultiError(errors)

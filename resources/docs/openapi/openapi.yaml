@@ -1788,9 +1788,9 @@ paths:
                   description: The user id to use for this user.
                   schema:
                     type: string
-                - name: is_admin
+                - name: is_system
                   in: query
-                  description: The user is_admin to use for this user.
+                  description: The user is_system to use for this user.
                   schema:
                     type: boolean
                 - name: random_password
@@ -1880,6 +1880,21 @@ paths:
                   required: true
                   schema:
                     type: string
+                - name: user_id
+                  in: query
+                  description: The user id to use for this user.
+                  schema:
+                    type: string
+                - name: is_system
+                  in: query
+                  description: The user is_system to use for this user.
+                  schema:
+                    type: boolean
+                - name: random_password
+                  in: query
+                  description: The random_password is the query parameter for set only to generate a random password
+                  schema:
+                    type: boolean
             requestBody:
                 content:
                     application/json:

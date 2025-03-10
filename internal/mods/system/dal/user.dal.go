@@ -124,7 +124,12 @@ func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...
 			update.ClearRoles()
 			update.AddRoleIDs(userPB.RoleIds...)
 		}
-		update.SetUser(obj, user.OmitColumns(user.FieldSanctionDate, user.FieldLoginTime, user.FieldLastLoginTime)...)
+		update.SetUser(obj, user.SelectColumns([]string{
+			user.FieldNickname,
+			user.FieldUsername,
+			user.FieldPhone,
+			user.FieldEmail,
+			user.FieldUpdateTime})...)
 		saved, err := update.Save(ctx)
 		if err != nil {
 			return err
