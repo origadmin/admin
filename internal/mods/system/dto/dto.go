@@ -32,7 +32,18 @@ const (
 )
 
 type (
-	User   = ent.User
+	// User 用户类型
+	// @Convert(
+	//   target = "UserPB",
+	//   direction = "both",
+	//   ignoreFields = ["password", "salt"]
+	// )
+	User = ent.User
+	// UserPB
+	// @Convert(
+	//   target="User",
+	//   direction="both"
+	// )
 	UserPB = pb.User
 )
 
@@ -69,8 +80,9 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	pbModel.Manager = goModel.Manager
 	//pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
 	for _, role := range goModel.Edges.Roles {
-		pbModel.RoleIds = append(pbModel.RoleIds, int64(role.ID))
+		pbModel.RoleIds = append(pbModel.RoleIds, role.ID)
 	}
+	pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
 	return pbModel
 }
 
@@ -194,7 +206,10 @@ func ConvertRole2PB(goModel *Role) (pbModel *RolePB) {
 	pbModel.Type = int32(goModel.Type)
 	pbModel.Sequence = int32(goModel.Sequence)
 	pbModel.Status = int32(goModel.Status)
-
+	for _, permission := range goModel.Edges.Permissions {
+		pbModel.PermissionIds = append(pbModel.PermissionIds, int64(permission.ID))
+	}
+	pbModel.Permissions = ConvertPermissions(goModel.Edges.Permissions)
 	//pbModel.IsSystem = goModel.IsSystem
 	return pbModel
 }

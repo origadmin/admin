@@ -89,18 +89,24 @@ func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...
 	if len(options) > 0 {
 		option = options[0]
 	}
-	err := repo.db.Tx(ctx, func(ctx context.Context) error {
-		update := repo.db.Role(ctx).UpdateOneID(rolePB.Id)
-		saved, err := update.SetRole(dto.ConvertRolePB2Object(rolePB), option.Fields...).Save(ctx)
-		if err != nil {
-			return err
-		}
-		rolePB = dto.ConvertRole2PB(saved)
-		return nil
-	})
+	//err := repo.db.Tx(ctx, func(ctx context.Context) error {
+
+	update := repo.db.Role(ctx).UpdateOneID(rolePB.Id)
+	if len(rolePB.PermissionIds) > 0 {
+		update.ClearPermissions()
+		update.AddPermissionIDs(rolePB.PermissionIds...)
+	}
+	if len(rolePB.Permissions) > 0 {
+		update.ClearPermissions()
+		update.AddPermissions(dto.ConvertPermissionsPB2Object(rolePB.Permissions)...)
+	}
+	saved, err := update.SetRole(dto.ConvertRolePB2Object(rolePB), option.Fields...).Save(ctx)
 	if err != nil {
 		return nil, err
 	}
+	rolePB = dto.ConvertRole2PB(saved)
+	//return nil
+	//})
 	return rolePB, nil
 }
 
@@ -111,6 +117,9 @@ func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options 
 	}
 
 	query := repo.db.Role(ctx).Query()
+	if option.IncludePermissions {
+		query = query.WithPermissions()
+	}
 	if v := option.InIDs; len(v) > 0 {
 		query = query.Where(role.IDIn(v...))
 	}

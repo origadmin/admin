@@ -35,14 +35,15 @@ type RoleRepo interface {
 }
 
 type RoleQueryOption struct {
-	Name         string  `form:"name" json:"name,omitempty"`
-	Status       int8    `form:"status" json:"status,omitempty"`
-	InIDs        []int64 `form:"-" json:"-"`
-	UpdateTimeGT *time.Time
-	SelectFields []string
-	OmitFields   []string
-	OrderFields  []string
-	Fields       []string
+	Name               string  `form:"name" json:"name,omitempty"`
+	Status             int8    `form:"status" json:"status,omitempty"`
+	InIDs              []int64 `form:"-" json:"-"`
+	UpdateTimeGT       *time.Time
+	SelectFields       []string
+	OmitFields         []string
+	OrderFields        []string
+	Fields             []string
+	IncludePermissions bool
 }
 
 func (o RoleQueryOption) FromListRequest(in *ListRolesRequest, limiter pagination.PageLimiter) error {

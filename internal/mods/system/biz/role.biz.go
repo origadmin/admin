@@ -29,6 +29,7 @@ func (biz RoleServiceClientBiz) ListRoles(ctx context.Context, in *pb.ListRolesR
 		return nil, err
 	}
 	log.Info("ListRoles")
+	option.IncludePermissions = true
 	result, total, err := biz.dao.List(ctx, in, option)
 	if err != nil {
 		return nil, err

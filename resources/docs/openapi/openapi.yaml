@@ -3054,7 +3054,7 @@ components:
                 permissions:
                     type: array
                     items:
-                        type: string
+                        $ref: '#/components/schemas/api.v1.services.system.Permission'
                     description: Permissions holds the value of the permissions edge.
                 permission_ids:
                     type: array

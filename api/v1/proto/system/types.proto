@@ -98,7 +98,7 @@ message Role {
   // Resource Ids holds the value of the resource_ids edge.
   repeated int64 resource_ids = 24 [json_name = "resource_ids"];
   // Permissions holds the value of the permissions edge.
-  repeated string permissions = 25 [json_name = "permissions"];
+  repeated Permission permissions = 25 [json_name = "permissions"];
   // Permission Ids holds the value of the permission_ids edge.
   repeated int64 permission_ids = 26 [json_name = "permission_ids"];
 }
