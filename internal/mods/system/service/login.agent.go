@@ -32,7 +32,7 @@ func (s LoginServiceAgent) PersonalLogout(ctx context.Context, request *pb.Logou
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -46,7 +46,7 @@ func (s LoginServiceAgent) Register(ctx context.Context, request *pb.RegisterReq
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -60,7 +60,7 @@ func (s LoginServiceAgent) Captcha(ctx context.Context, request *pb.CaptchaReque
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -125,7 +125,7 @@ func (s LoginServiceAgent) TokenRefresh(ctx context.Context, request *pb.TokenRe
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(resp.FromToken(response.Token)),
+		Data:    resp.Proto2Any(resp.FromToken(response.Token)),
 	})
 	return nil, nil
 }
@@ -155,7 +155,7 @@ func (s LoginServiceAgent) Logout(ctx context.Context, request *pb.LogoutRequest
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }

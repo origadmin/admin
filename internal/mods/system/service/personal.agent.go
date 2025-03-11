@@ -37,7 +37,7 @@ func (s PersonalServiceAgent) GetPersonalProfile(ctx context.Context, request *p
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -51,7 +51,7 @@ func (s PersonalServiceAgent) PersonalLogout(ctx context.Context, request *pb.Pe
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -65,7 +65,7 @@ func (s PersonalServiceAgent) ListPersonalResources(ctx context.Context, request
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -93,7 +93,7 @@ func (s PersonalServiceAgent) UpdatePersonalSetting(ctx context.Context, request
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -107,7 +107,7 @@ func (s PersonalServiceAgent) UpdatePersonalProfile(ctx context.Context, request
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }
@@ -121,7 +121,7 @@ func (s PersonalServiceAgent) UpdatePersonalPassword(ctx context.Context, reques
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response),
+		Data:    resp.Proto2Any(response),
 	})
 	return nil, nil
 }

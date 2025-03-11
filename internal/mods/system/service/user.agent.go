@@ -65,7 +65,7 @@ func (s UserServiceAgent) CreateUser(ctx context.Context, request *pb.CreateUser
 
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response.User),
+		Data:    resp.Proto2Any(response.User),
 	})
 	return nil, nil
 }
@@ -92,7 +92,7 @@ func (s UserServiceAgent) GetUser(ctx context.Context, request *pb.GetUserReques
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response.User),
+		Data:    resp.Proto2Any(response.User),
 	})
 	return nil, nil
 }
@@ -119,7 +119,7 @@ func (s UserServiceAgent) UpdateUser(ctx context.Context, request *pb.UpdateUser
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response.User),
+		Data:    resp.Proto2Any(response.User),
 	})
 	return nil, nil
 }

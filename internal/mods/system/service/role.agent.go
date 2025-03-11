@@ -84,7 +84,7 @@ func (s RoleServiceAgent) UpdateRole(ctx context.Context, request *pb.UpdateRole
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Data{
 		Success: true,
-		Data:    resp.Any2AnyPB(response.Role),
+		Data:    resp.Proto2Any(response.Role),
 	})
 	return nil, nil
 }
