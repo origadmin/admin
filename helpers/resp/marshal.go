@@ -41,11 +41,11 @@ func Any(args ...any) *anypb.Any {
 	return Any2AnyPB(args)
 }
 
-func ProtoArray2AnyPB(args ...proto.Message) *anypb.Any {
+func ProtoArray2AnyPB[T proto.Message](args ...T) *anypb.Any {
 	if len(args) == 0 {
 		return Empty
 	}
-	vals := &datav1.AnyData{Value: Proto2AnyPBArray(args...)}
+	vals := &datav1.AnyData{Data: Proto2AnyPBArray(args...)}
 	val, err := anypb.New(vals)
 	if err != nil {
 		return Empty

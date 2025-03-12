@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/service"
-	"google.golang.org/protobuf/proto"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
@@ -30,13 +29,9 @@ func (s UserServiceAgent) ListUserResources(ctx context.Context, request *pb.Lis
 	if err != nil {
 		return nil, err
 	}
-	var data []proto.Message
-	for _, v := range response.Resources {
-		data = append(data, v)
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.DataArray{
 		Success: true,
-		Data:    resp.ProtoArray2AnyPB(data...),
+		Data:    resp.Proto2AnyPBArray(response.Resources...),
 	})
 	return nil, nil
 }

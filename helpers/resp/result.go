@@ -24,6 +24,7 @@ type Message interface {
 type Error datav1.Error
 
 type Data datav1.Data
+type DataArray = datav1.DataArray
 type Page = datav1.Page
 type SourcePage = datav1.SourcePage
 type Token = datav1.Token

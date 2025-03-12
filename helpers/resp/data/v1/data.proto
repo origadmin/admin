@@ -31,7 +31,7 @@ message SourcePage {
   // The total number of items in the list.
   int32 total = 2 [json_name = "total"];
   // The paging data
-  string data = 3 [json_name = "data"];
+  bytes data = 3 [json_name = "data"];
   // The current page number.
   optional int32 current = 4 [json_name = "current"];
   // The maximum number of items to return.
@@ -55,6 +55,13 @@ message Data {
   Error error = 5 [json_name = "error"];
 }
 
+message DataArray {
+  bool success = 1 [json_name = "success"];
+  repeated  google.protobuf.Any data = 3 [json_name = "data"];
+  map<string, google.protobuf.Any> extra = 4 [json_name = "extra"];
+  Error error = 5 [json_name = "error"];
+}
+
 message StringData {
   bool success = 1 [json_name = "success"];
   string data = 3 [json_name = "data"];
@@ -63,6 +70,11 @@ message StringData {
 message BytesData {
   bool success = 1 [json_name = "success"];
   bytes data = 3 [json_name = "data"];
+}
+
+message ErrorData {
+  bool success = 1 [json_name = "success"];
+  Error error = 5 [json_name = "error"];
 }
 
 message Token {
@@ -77,5 +89,6 @@ message Token {
 }
 
 message AnyData {
-  repeated google.protobuf.Any value = 1;
+  bool success = 1 [json_name = "success"];
+  repeated google.protobuf.Any data = 3 [json_name = "data"];
 }
