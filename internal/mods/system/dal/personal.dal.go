@@ -66,11 +66,27 @@ func (repo personalRepo) UpdatePersonalProfile(ctx context.Context, in *pb.Updat
 }
 
 func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
-	resources, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryPermissions().QueryResources().All(ctx)
+	uid := securityx.GetUserID(ctx)
+	log.Infof("uid: %+v", uid)
+	if uid == "admin" {
+		resources, err := repo.db.Resource(ctx).Query().All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return &pb.ListPersonalResourcesResponse{
+			TotalSize: int64(len(resources)),
+			Resources: dto.ConvertResources(resources),
+		}, nil
+	}
+	resources, err := repo.db.User(ctx).Query().Where(user.ID(in.Id)).QueryRoles().QueryPermissions().QueryResources().
+		All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertResources(resources), nil
+	return &pb.ListPersonalResourcesResponse{
+		TotalSize: int64(len(resources)),
+		Resources: dto.ConvertResources(resources),
+	}, nil
 }
 
 func (repo personalRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
