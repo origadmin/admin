@@ -50,7 +50,7 @@ type PersonalServiceHTTPServer interface {
 func RegisterPersonalServiceHTTPServer(s *http.Server, srv PersonalServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/sys/personal/profile", _PersonalService_GetPersonalProfile0_HTTP_Handler(srv))
-	r.GET("/sys/personal/menus", _PersonalService_ListPersonalResources0_HTTP_Handler(srv))
+	r.GET("/sys/personal/resources", _PersonalService_ListPersonalResources0_HTTP_Handler(srv))
 	r.GET("/sys/personal/roles", _PersonalService_ListPersonalRoles0_HTTP_Handler(srv))
 	r.POST("/sys/personal/logout", _PersonalService_PersonalLogout0_HTTP_Handler(srv))
 	r.POST("/sys/personal/token/refresh", _PersonalService_RefreshPersonalToken0_HTTP_Handler(srv))
@@ -260,7 +260,7 @@ func (c *PersonalServiceHTTPClientImpl) GetPersonalProfile(ctx context.Context, 
 
 func (c *PersonalServiceHTTPClientImpl) ListPersonalResources(ctx context.Context, in *ListPersonalResourcesRequest, opts ...http.CallOption) (*ListPersonalResourcesResponse, error) {
 	var out ListPersonalResourcesResponse
-	pattern := "/sys/personal/menus"
+	pattern := "/sys/personal/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPersonalServiceListPersonalResources))
 	opts = append(opts, http.PathTemplate(pattern))

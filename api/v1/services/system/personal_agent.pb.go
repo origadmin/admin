@@ -242,7 +242,7 @@ func _PersonalService_UpdatePersonalSetting0_HTTPAgent_Handler(srv PersonalServi
 func RegisterPersonalServiceAgent(ag agent.HTTPAgent, srv PersonalServiceAgent) {
 	r := ag.Route()
 	r.GET("/sys/personal/profile", _PersonalService_GetPersonalProfile0_HTTPAgent_Handler(srv))
-	r.GET("/sys/personal/menus", _PersonalService_ListPersonalResources0_HTTPAgent_Handler(srv))
+	r.GET("/sys/personal/resources", _PersonalService_ListPersonalResources0_HTTPAgent_Handler(srv))
 	r.GET("/sys/personal/roles", _PersonalService_ListPersonalRoles0_HTTPAgent_Handler(srv))
 	r.POST("/sys/personal/logout", _PersonalService_PersonalLogout0_HTTPAgent_Handler(srv))
 	r.POST("/sys/personal/token/refresh", _PersonalService_RefreshPersonalToken0_HTTPAgent_Handler(srv))

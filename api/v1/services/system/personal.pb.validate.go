@@ -525,34 +525,17 @@ func (m *ListPersonalResourcesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetData()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ListPersonalResourcesRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, ListPersonalResourcesRequestValidationError{
-					field:  "Data",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return ListPersonalResourcesRequestValidationError{
-				field:  "Data",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Id
+
+	// no validation rules for Current
+
+	// no validation rules for PageSize
+
+	// no validation rules for PageToken
+
+	// no validation rules for NoPaging
+
+	// no validation rules for OnlyCount
 
 	if len(errors) > 0 {
 		return ListPersonalResourcesRequestMultiError(errors)
@@ -657,7 +640,9 @@ func (m *ListPersonalResourcesResponse) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetMenus() {
+	// no validation rules for TotalSize
+
+	for idx, item := range m.GetResources() {
 		_, _ = idx, item
 
 		if all {
@@ -665,7 +650,7 @@ func (m *ListPersonalResourcesResponse) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListPersonalResourcesResponseValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
+						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -673,7 +658,7 @@ func (m *ListPersonalResourcesResponse) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListPersonalResourcesResponseValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
+						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -682,7 +667,7 @@ func (m *ListPersonalResourcesResponse) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListPersonalResourcesResponseValidationError{
-					field:  fmt.Sprintf("Menus[%v]", idx),
+					field:  fmt.Sprintf("Resources[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -690,6 +675,8 @@ func (m *ListPersonalResourcesResponse) validate(all bool) error {
 		}
 
 	}
+
+	// no validation rules for NextPageToken
 
 	if len(errors) > 0 {
 		return ListPersonalResourcesResponseMultiError(errors)

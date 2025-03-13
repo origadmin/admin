@@ -20,7 +20,7 @@ service PersonalService {
   }
   // ListPersonalResources List the personal user's menu
   rpc ListPersonalResources (ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
-    option (google.api.http) = {get: "/sys/personal/menus"};
+    option (google.api.http) = {get: "/sys/personal/resources"};
   }
   // ListPersonalResources List the personal user's menu
   rpc ListPersonalRoles (ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
@@ -76,11 +76,28 @@ message UpdatePersonalRoleRequest {
 message UpdatePersonalRoleResponse {}
 
 message ListPersonalResourcesRequest {
-  google.protobuf.Any data = 1 [json_name = "data"];
+  // The parent resource id, for example, "shelves/shelf1".
+  int64 id = 1 [json_name = "id"];
+  // The current page number.
+  int32 current = 2 [json_name = "current"];
+  // The maximum number of items to return.
+  int32 page_size = 3 [json_name = "page_size"];
+  // The next_page_token value returned from a previous List request, if any.
+  string page_token = 4 [json_name = "page_token"];
+  // The no_paging is used to disable pagination.
+  bool no_paging = 5 [json_name = "no_paging"];
+  // The only_count is the query parameter for set only to query the total number
+  bool only_count = 6 [json_name = "only_count"];
 }
 
 message ListPersonalResourcesResponse {
-  repeated system.Menu menus = 1;
+  // The total number of items in the list.
+  int64 total_size = 1 [json_name = "total"];
+  // list of resources
+  repeated Resource resources = 2 [json_name = "resources"];
+  // Token to retrieve the next page of results, or empty if there are no
+// more results in the list.
+  string next_page_token = 5 [json_name = "next_page_token"];
 }
 
 message UpdatePersonalPasswordRequest {

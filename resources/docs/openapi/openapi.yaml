@@ -997,65 +997,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/menus:
-        get:
-            tags:
-                - PersonalService
-            description: ListPersonalResources List the personal user's menu
-            operationId: PersonalService_ListPersonalResources
-            parameters:
-                - name: data.type_url
-                  in: query
-                  description: |-
-                    A URL/resource name that uniquely identifies the type of the serialized
-                     protocol buffer message. This string must contain at least
-                     one "/" character. The last segment of the URL's path must represent
-                     the fully qualified name of the type (as in
-                     `path/google.protobuf.Duration`). The name should be in a canonical form
-                     (e.g., leading "." is not accepted).
-
-                     In practice, teams usually precompile into the binary all types that they
-                     expect it to use in the context of Any. However, for URLs which use the
-                     scheme `http`, `https`, or no scheme, one can optionally set up a type
-                     server that maps type URLs to message definitions as follows:
-
-                     * If no scheme is provided, `https` is assumed.
-                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-                       value in binary format, or produce an error.
-                     * Applications are allowed to cache lookup results based on the
-                       URL, or have them precompiled into a binary to avoid any
-                       lookup. Therefore, binary compatibility needs to be preserved
-                       on changes to types. (Use versioned type names to manage
-                       breaking changes.)
-
-                     Note: this functionality is not currently available in the official
-                     protobuf release, and it is not used for type URLs beginning with
-                     type.googleapis.com. As of May 2023, there are no widely used type server
-                     implementations and no plans to implement one.
-
-                     Schemes other than `http`, `https` (or the empty scheme) might be
-                     used with implementation specific semantics.
-                  schema:
-                    type: string
-                - name: data.value
-                  in: query
-                  description: Must be a valid serialized protocol buffer of the above specified type.
-                  schema:
-                    type: string
-                    format: bytes
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListPersonalResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/personal/password:
         put:
             tags:
@@ -1118,6 +1059,58 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/personal/resources:
+        get:
+            tags:
+                - PersonalService
+            description: ListPersonalResources List the personal user's menu
+            operationId: PersonalService_ListPersonalResources
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPersonalResourcesResponse'
                 default:
                     description: Default error response
                     content:
@@ -2555,10 +2548,17 @@ components:
         api.v1.services.system.ListPersonalResourcesResponse:
             type: object
             properties:
-                menus:
+                total_size:
+                    type: string
+                    description: The total number of items in the list.
+                resources:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    description: list of resources
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
         api.v1.services.system.ListPersonalRolesResponse:
             type: object
             properties:

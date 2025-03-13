@@ -66,8 +66,11 @@ func (repo personalRepo) UpdatePersonalProfile(ctx context.Context, in *pb.Updat
 }
 
 func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	resources, err := repo.db.User(ctx).Query().Where(user.ID(id)).QueryRoles().QueryPermissions().QueryResources().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertResources(resources), nil
 }
 
 func (repo personalRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
