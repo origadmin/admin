@@ -13,6 +13,7 @@ import (
 	"github.com/origadmin/toolkits/net/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -67,12 +68,15 @@ func (biz ResourceServiceClientBiz) CreateResource(ctx context.Context, in *pb.C
 }
 
 func (biz ResourceServiceClientBiz) UpdateResource(ctx context.Context, in *pb.UpdateResourceRequest, opts ...grpc.CallOption) (*pb.UpdateResourceResponse, error) {
-	//var option dto.UpdateResourceOption
-	//if err := option.FromListRequest(in, biz.limiter); err != nil {
-	//	return nil, err
-	//}
+	var option dto.ResourceQueryOption
+
 	log.Info("UpdateResource")
-	result, err := biz.dao.Update(ctx, in.Resource)
+	option.Fields = resource.SelectColumns([]string{
+		resource.FieldIcon, resource.FieldType, resource.FieldStatus,
+		resource.FieldName, resource.FieldPath, resource.FieldKeyword,
+		resource.FieldSequence, resource.FieldProperties, resource.FieldDescription,
+	})
+	result, err := biz.dao.Update(ctx, in.Resource, option)
 	if err != nil {
 		return nil, err
 	}

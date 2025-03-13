@@ -72,9 +72,13 @@ func (repo resourceRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (repo resourceRepo) Update(ctx context.Context, resource *dto.ResourcePB, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
+	var option dto.ResourceQueryOption
+	if len(options) > 0 {
+		option = options[0]
+	}
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.Resource(ctx).UpdateOneID(resource.Id)
-		update.SetResource(dto.ConvertResourcePB2Object(resource))
+		update.SetResourceWithZero(dto.ConvertResourcePB2Object(resource), option.Fields...)
 		if len(resource.PermissionIds) > 0 {
 			update.AddPermissionIDs(resource.PermissionIds...)
 		}
