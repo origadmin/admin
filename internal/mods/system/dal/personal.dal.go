@@ -69,7 +69,7 @@ func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListP
 	uid := securityx.GetUserID(ctx)
 	log.Infof("uid: %+v", uid)
 	if uid == "admin" {
-		resources, err := repo.db.Resource(ctx).Query().All(ctx)
+		resources, err := repo.db.Resource(ctx).Query().Where(resource.StatusEQ(dto.ResourceStatusEnabled)).All(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -79,7 +79,7 @@ func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListP
 		}, nil
 	}
 	resources, err := repo.db.User(ctx).Query().Where(user.ID(in.Id)).QueryRoles().QueryPermissions().QueryResources().
-		All(ctx)
+		Where(resource.StatusEQ(dto.ResourceStatusEnabled)).All(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -63,9 +63,10 @@ func (s PersonalServiceAgent) ListPersonalResources(ctx context.Context, request
 		log.Errorf("PersonalResources error: %v", err)
 		return nil, err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	s.JSON(httpCtx, http.StatusOK, &resp.Page{
 		Success: true,
-		Data:    resp.Proto2Any(response),
+		Total:   int32(response.TotalSize),
+		Data:    resp.Proto2AnyPBArray(response.Resources...),
 	})
 	return nil, nil
 }
@@ -79,7 +80,8 @@ func (s PersonalServiceAgent) ListPersonalRoles(ctx context.Context, request *pb
 	}
 	s.JSON(httpCtx, http.StatusOK, &resp.Page{
 		Success: true,
-		Data:    resp.Proto2AnyPBArray(response.Roles...),
+		//Total:   int32(response.TotalSize),
+		Data: resp.Proto2AnyPBArray(response.Roles...),
 	})
 	return nil, nil
 }

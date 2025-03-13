@@ -28,8 +28,8 @@ func (biz PersonalServiceClientBiz) ListPersonalResources(ctx context.Context, i
 }
 
 func (biz PersonalServiceClientBiz) RefreshPersonalToken(ctx context.Context, in *pb.RefreshPersonalTokenRequest, opts ...grpc.CallOption) (*pb.RefreshPersonalTokenResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	//return biz.dao.RefreshPersonalToken(ctx, in)
+	return &pb.RefreshPersonalTokenResponse{}, nil
 }
 
 func (biz PersonalServiceClientBiz) GetPersonalProfile(ctx context.Context, in *pb.GetPersonalProfileRequest, opts ...grpc.CallOption) (*pb.GetPersonalProfileResponse, error) {

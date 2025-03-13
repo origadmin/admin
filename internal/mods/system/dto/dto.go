@@ -31,6 +31,11 @@ const (
 	UserStatusFrozen = constants.Frozen
 )
 
+const (
+	ResourceStatusEnabled  = constants.Enabled
+	ResourceStatusDisabled = constants.Disabled
+)
+
 type (
 	// User 用户类型
 	// @Convert(
