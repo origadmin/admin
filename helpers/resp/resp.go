@@ -61,7 +61,7 @@ func (r Response) resultJSON(context transhttp.Context, status int, data any) er
 	if err != nil {
 		return err
 	}
-	responseJSON(context.Response(), status, bytes)
+	writeBytesWithJSON(context.Response(), status, bytes)
 	return nil
 }
 
@@ -70,7 +70,7 @@ func (r Response) resultProtoJSON(context transhttp.Context, status int, msg pro
 	if err != nil {
 		return err
 	}
-	responseJSON(context.Response(), status, buf)
+	writeBytesWithJSON(context.Response(), status, buf)
 	return nil
 }
 
@@ -87,7 +87,7 @@ func (r Response) JSON(context transhttp.Context, status int, data any) {
 }
 
 func (r Response) Bytes(context transhttp.Context, status int, data []byte) {
-	responseJSON(context.Response(), status, data)
+	writeBytesWithJSON(context.Response(), status, data)
 }
 
 func (r Response) Any(context transhttp.Context, status int, data any, err error) {
@@ -103,7 +103,7 @@ func ResponseErrorEncoder(writer http.ResponseWriter, request *http.Request, err
 	return
 }
 
-func responseJSON(rw http.ResponseWriter, status int, data []byte) {
+func writeBytesWithJSON(rw http.ResponseWriter, status int, data []byte) {
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.WriteHeader(status)
 	_, _ = rw.Write(data)

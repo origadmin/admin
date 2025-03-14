@@ -42,10 +42,14 @@ type casbinAdapterRepo struct {
 	filtered bool
 }
 
-type Option = func(a *casbinAdapterRepo) error
+type CasbinAdapterSetting struct {
+	filtered bool
+}
+
+type Option = func(a *CasbinAdapterSetting) error
 
 func WithFiltered(filtered bool) Option {
-	return func(a *casbinAdapterRepo) error {
+	return func(a *CasbinAdapterSetting) error {
 		a.filtered = filtered
 		return nil
 	}
@@ -76,30 +80,34 @@ func open(driverName, dataSourceName string) (*ent.Client, error) {
 }
 
 // NewAdapter returns an adapter by driver name and data source string.
-func NewAdapter(data *Data, options ...Option) (*casbinAdapterRepo, error) {
+func NewAdapter(data *Data, options ...Option) (persist.Adapter, error) {
 	a := &casbinAdapterRepo{
-		data: data,
+		data:     data,
+		filtered: false,
 	}
+	var setting CasbinAdapterSetting
 	for _, option := range options {
-		if err := option(a); err != nil {
+		if err := option(&setting); err != nil {
 			return nil, err
 		}
 	}
-
+	a.filtered = setting.filtered
 	return a, nil
 }
 
 // NewAdapterWithClient create an adapter with client passed in.
 // This method does not ensure the existence of database, user should create database manually.
-func NewAdapterWithClient(client *ent.Client, options ...Option) (*casbinAdapterRepo, error) {
+func NewAdapterWithClient(client *ent.Client, options ...Option) (persist.Adapter, error) {
 	a := &casbinAdapterRepo{
 		data: NewDataWithClient(client),
 	}
+	var setting CasbinAdapterSetting
 	for _, option := range options {
-		if err := option(a); err != nil {
+		if err := option(&setting); err != nil {
 			return nil, err
 		}
 	}
+	a.filtered = setting.filtered
 	return a, nil
 }
 
@@ -123,30 +131,30 @@ func (repo *casbinAdapterRepo) LoadFilteredPolicy(model model.Model, filter inte
 		return fmt.Errorf("invalid filter type: %v", reflect.TypeOf(filter))
 	}
 
-	session := repo.data.CasbinRule(repo.ctx).Query()
+	query := repo.data.CasbinRule(repo.ctx).Query()
 	if len(filterValue.Ptype) != 0 {
-		session.Where(casbinrule.PtypeIn(filterValue.Ptype...))
+		query.Where(casbinrule.PtypeIn(filterValue.Ptype...))
 	}
 	if len(filterValue.V0) != 0 {
-		session.Where(casbinrule.V0In(filterValue.V0...))
+		query.Where(casbinrule.V0In(filterValue.V0...))
 	}
 	if len(filterValue.V1) != 0 {
-		session.Where(casbinrule.V1In(filterValue.V1...))
+		query.Where(casbinrule.V1In(filterValue.V1...))
 	}
 	if len(filterValue.V2) != 0 {
-		session.Where(casbinrule.V2In(filterValue.V2...))
+		query.Where(casbinrule.V2In(filterValue.V2...))
 	}
 	if len(filterValue.V3) != 0 {
-		session.Where(casbinrule.V3In(filterValue.V3...))
+		query.Where(casbinrule.V3In(filterValue.V3...))
 	}
 	if len(filterValue.V4) != 0 {
-		session.Where(casbinrule.V4In(filterValue.V4...))
+		query.Where(casbinrule.V4In(filterValue.V4...))
 	}
 	if len(filterValue.V5) != 0 {
-		session.Where(casbinrule.V5In(filterValue.V5...))
+		query.Where(casbinrule.V5In(filterValue.V5...))
 	}
 
-	lines, err := session.All(repo.ctx)
+	lines, err := query.All(repo.ctx)
 	if err != nil {
 		return err
 	}
@@ -435,9 +443,7 @@ func (repo *casbinAdapterRepo) UpdateFilteredPolicies(sec string, ptype string, 
 		if fieldIndex <= 5 && 5 < fieldIndex+len(fieldValues) && len(fieldValues[5-fieldIndex]) > 0 {
 			cond = append(cond, casbinrule.V5EQ(fieldValues[5-fieldIndex]))
 		}
-		rules, err := repo.data.CasbinRule(ctx).Query().
-			Where(cond...).
-			All(repo.ctx)
+		rules, err := repo.data.CasbinRule(ctx).Query().Where(cond...).All(repo.ctx)
 		if err != nil {
 			return err
 		}
