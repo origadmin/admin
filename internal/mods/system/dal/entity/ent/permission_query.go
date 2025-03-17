@@ -1037,6 +1037,8 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  Keyword string `json:"keyword,omitempty"`
 //	  Description string `json:"description,omitempty"`
 //	  DataScope string `json:"data_scope,omitempty"`
+//	  Method string `json:"method,omitempty"`
+//	  Path string `json:"path,omitempty"`
 //	  DataRules map[string]string `json:"data_rules,omitempty"`
 //	}
 //
@@ -1048,6 +1050,8 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  permission.FieldKeyword,
 //	  permission.FieldDescription,
 //	  permission.FieldDataScope,
+//	  permission.FieldMethod,
+//	  permission.FieldPath,
 //	  permission.FieldDataRules,
 //	  ).
 //	  Scan(ctx, &v)

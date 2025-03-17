@@ -6,9 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// CasbinRule is the predicate function for casbinrule builders.
-type CasbinRule func(*sql.Selector)
-
 // Department is the predicate function for department builders.
 type Department func(*sql.Selector)
 

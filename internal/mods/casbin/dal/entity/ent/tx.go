@@ -12,30 +12,8 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
-	// Department is the client for interacting with the Department builders.
-	Department *DepartmentClient
-	// Permission is the client for interacting with the Permission builders.
-	Permission *PermissionClient
-	// PermissionResource is the client for interacting with the PermissionResource builders.
-	PermissionResource *PermissionResourceClient
-	// Position is the client for interacting with the Position builders.
-	Position *PositionClient
-	// PositionPermission is the client for interacting with the PositionPermission builders.
-	PositionPermission *PositionPermissionClient
-	// Resource is the client for interacting with the Resource builders.
-	Resource *ResourceClient
-	// Role is the client for interacting with the Role builders.
-	Role *RoleClient
-	// RolePermission is the client for interacting with the RolePermission builders.
-	RolePermission *RolePermissionClient
-	// User is the client for interacting with the User builders.
-	User *UserClient
-	// UserDepartment is the client for interacting with the UserDepartment builders.
-	UserDepartment *UserDepartmentClient
-	// UserPosition is the client for interacting with the UserPosition builders.
-	UserPosition *UserPositionClient
-	// UserRole is the client for interacting with the UserRole builders.
-	UserRole *UserRoleClient
+	// CasbinRule is the client for interacting with the CasbinRule builders.
+	CasbinRule *CasbinRuleClient
 
 	// lazily loaded.
 	client     *Client
@@ -167,18 +145,7 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
-	tx.Department = NewDepartmentClient(tx.config)
-	tx.Permission = NewPermissionClient(tx.config)
-	tx.PermissionResource = NewPermissionResourceClient(tx.config)
-	tx.Position = NewPositionClient(tx.config)
-	tx.PositionPermission = NewPositionPermissionClient(tx.config)
-	tx.Resource = NewResourceClient(tx.config)
-	tx.Role = NewRoleClient(tx.config)
-	tx.RolePermission = NewRolePermissionClient(tx.config)
-	tx.User = NewUserClient(tx.config)
-	tx.UserDepartment = NewUserDepartmentClient(tx.config)
-	tx.UserPosition = NewUserPositionClient(tx.config)
-	tx.UserRole = NewUserRoleClient(tx.config)
+	tx.CasbinRule = NewCasbinRuleClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
@@ -188,7 +155,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Department.QueryXXX(), the query will be executed
+// applies a query, for example: CasbinRule.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

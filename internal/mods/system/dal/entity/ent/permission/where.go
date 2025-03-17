@@ -85,6 +85,16 @@ func DataScope(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldDataScope, v))
 }
 
+// Method applies equality check predicate on the "method" field. It's identical to MethodEQ.
+func Method(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldMethod, v))
+}
+
+// Path applies equality check predicate on the "path" field. It's identical to PathEQ.
+func Path(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldPath, v))
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldCreateTime, v))
@@ -423,6 +433,136 @@ func DataScopeEqualFold(v string) predicate.Permission {
 // DataScopeContainsFold applies the ContainsFold predicate on the "data_scope" field.
 func DataScopeContainsFold(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldContainsFold(FieldDataScope, v))
+}
+
+// MethodEQ applies the EQ predicate on the "method" field.
+func MethodEQ(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldMethod, v))
+}
+
+// MethodNEQ applies the NEQ predicate on the "method" field.
+func MethodNEQ(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldMethod, v))
+}
+
+// MethodIn applies the In predicate on the "method" field.
+func MethodIn(vs ...string) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldMethod, vs...))
+}
+
+// MethodNotIn applies the NotIn predicate on the "method" field.
+func MethodNotIn(vs ...string) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldMethod, vs...))
+}
+
+// MethodGT applies the GT predicate on the "method" field.
+func MethodGT(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldGT(FieldMethod, v))
+}
+
+// MethodGTE applies the GTE predicate on the "method" field.
+func MethodGTE(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldGTE(FieldMethod, v))
+}
+
+// MethodLT applies the LT predicate on the "method" field.
+func MethodLT(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldLT(FieldMethod, v))
+}
+
+// MethodLTE applies the LTE predicate on the "method" field.
+func MethodLTE(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldLTE(FieldMethod, v))
+}
+
+// MethodContains applies the Contains predicate on the "method" field.
+func MethodContains(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldContains(FieldMethod, v))
+}
+
+// MethodHasPrefix applies the HasPrefix predicate on the "method" field.
+func MethodHasPrefix(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldHasPrefix(FieldMethod, v))
+}
+
+// MethodHasSuffix applies the HasSuffix predicate on the "method" field.
+func MethodHasSuffix(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldHasSuffix(FieldMethod, v))
+}
+
+// MethodEqualFold applies the EqualFold predicate on the "method" field.
+func MethodEqualFold(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEqualFold(FieldMethod, v))
+}
+
+// MethodContainsFold applies the ContainsFold predicate on the "method" field.
+func MethodContainsFold(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldContainsFold(FieldMethod, v))
+}
+
+// PathEQ applies the EQ predicate on the "path" field.
+func PathEQ(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldPath, v))
+}
+
+// PathNEQ applies the NEQ predicate on the "path" field.
+func PathNEQ(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldPath, v))
+}
+
+// PathIn applies the In predicate on the "path" field.
+func PathIn(vs ...string) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldPath, vs...))
+}
+
+// PathNotIn applies the NotIn predicate on the "path" field.
+func PathNotIn(vs ...string) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldPath, vs...))
+}
+
+// PathGT applies the GT predicate on the "path" field.
+func PathGT(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldGT(FieldPath, v))
+}
+
+// PathGTE applies the GTE predicate on the "path" field.
+func PathGTE(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldGTE(FieldPath, v))
+}
+
+// PathLT applies the LT predicate on the "path" field.
+func PathLT(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldLT(FieldPath, v))
+}
+
+// PathLTE applies the LTE predicate on the "path" field.
+func PathLTE(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldLTE(FieldPath, v))
+}
+
+// PathContains applies the Contains predicate on the "path" field.
+func PathContains(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldContains(FieldPath, v))
+}
+
+// PathHasPrefix applies the HasPrefix predicate on the "path" field.
+func PathHasPrefix(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldHasPrefix(FieldPath, v))
+}
+
+// PathHasSuffix applies the HasSuffix predicate on the "path" field.
+func PathHasSuffix(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldHasSuffix(FieldPath, v))
+}
+
+// PathEqualFold applies the EqualFold predicate on the "path" field.
+func PathEqualFold(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldEqualFold(FieldPath, v))
+}
+
+// PathContainsFold applies the ContainsFold predicate on the "path" field.
+func PathContainsFold(v string) predicate.Permission {
+	return predicate.Permission(sql.FieldContainsFold(FieldPath, v))
 }
 
 // DataRulesIsNil applies the IsNil predicate on the "data_rules" field.

@@ -102,62 +102,7 @@ func (db *Database) Query(ctx context.Context, query string, args ...interface{}
 	return &rows, nil
 }
 
-// Department is the client for interacting with the Department builders.
-func (db *Database) Department(ctx context.Context) *DepartmentClient {
-	return db.Client(ctx).Department
-}
-
-// Permission is the client for interacting with the Permission builders.
-func (db *Database) Permission(ctx context.Context) *PermissionClient {
-	return db.Client(ctx).Permission
-}
-
-// PermissionResource is the client for interacting with the PermissionResource builders.
-func (db *Database) PermissionResource(ctx context.Context) *PermissionResourceClient {
-	return db.Client(ctx).PermissionResource
-}
-
-// Position is the client for interacting with the Position builders.
-func (db *Database) Position(ctx context.Context) *PositionClient {
-	return db.Client(ctx).Position
-}
-
-// PositionPermission is the client for interacting with the PositionPermission builders.
-func (db *Database) PositionPermission(ctx context.Context) *PositionPermissionClient {
-	return db.Client(ctx).PositionPermission
-}
-
-// Resource is the client for interacting with the Resource builders.
-func (db *Database) Resource(ctx context.Context) *ResourceClient {
-	return db.Client(ctx).Resource
-}
-
-// Role is the client for interacting with the Role builders.
-func (db *Database) Role(ctx context.Context) *RoleClient {
-	return db.Client(ctx).Role
-}
-
-// RolePermission is the client for interacting with the RolePermission builders.
-func (db *Database) RolePermission(ctx context.Context) *RolePermissionClient {
-	return db.Client(ctx).RolePermission
-}
-
-// User is the client for interacting with the User builders.
-func (db *Database) User(ctx context.Context) *UserClient {
-	return db.Client(ctx).User
-}
-
-// UserDepartment is the client for interacting with the UserDepartment builders.
-func (db *Database) UserDepartment(ctx context.Context) *UserDepartmentClient {
-	return db.Client(ctx).UserDepartment
-}
-
-// UserPosition is the client for interacting with the UserPosition builders.
-func (db *Database) UserPosition(ctx context.Context) *UserPositionClient {
-	return db.Client(ctx).UserPosition
-}
-
-// UserRole is the client for interacting with the UserRole builders.
-func (db *Database) UserRole(ctx context.Context) *UserRoleClient {
-	return db.Client(ctx).UserRole
+// CasbinRule is the client for interacting with the CasbinRule builders.
+func (db *Database) CasbinRule(ctx context.Context) *CasbinRuleClient {
+	return db.Client(ctx).CasbinRule
 }

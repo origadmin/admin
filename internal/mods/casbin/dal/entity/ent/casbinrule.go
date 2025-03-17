@@ -4,7 +4,7 @@ package ent
 
 import (
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/casbinrule"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent/casbinrule"
 	"strings"
 
 	"entgo.io/ent"

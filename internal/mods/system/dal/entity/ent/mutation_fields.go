@@ -4,7 +4,6 @@ package ent
 
 import (
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
@@ -18,81 +17,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userposition"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
 )
-
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *CasbinRuleMutation) SetFields(input *CasbinRule, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case casbinrule.FieldPtype:
-			// check string with sql.NullString if it is empty
-			if input.Ptype != "" {
-				m.SetPtype(input.Ptype)
-			}
-		case casbinrule.FieldV0:
-			// check string with sql.NullString if it is empty
-			if input.V0 != "" {
-				m.SetV0(input.V0)
-			}
-		case casbinrule.FieldV1:
-			// check string with sql.NullString if it is empty
-			if input.V1 != "" {
-				m.SetV1(input.V1)
-			}
-		case casbinrule.FieldV2:
-			// check string with sql.NullString if it is empty
-			if input.V2 != "" {
-				m.SetV2(input.V2)
-			}
-		case casbinrule.FieldV3:
-			// check string with sql.NullString if it is empty
-			if input.V3 != "" {
-				m.SetV3(input.V3)
-			}
-		case casbinrule.FieldV4:
-			// check string with sql.NullString if it is empty
-			if input.V4 != "" {
-				m.SetV4(input.V4)
-			}
-		case casbinrule.FieldV5:
-			// check string with sql.NullString if it is empty
-			if input.V5 != "" {
-				m.SetV5(input.V5)
-			}
-		default:
-			return fmt.Errorf("unknown CasbinRule field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *CasbinRuleMutation) SetFieldsWithZero(input *CasbinRule, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case casbinrule.FieldPtype:
-			m.SetPtype(input.Ptype)
-		case casbinrule.FieldV0:
-			m.SetV0(input.V0)
-		case casbinrule.FieldV1:
-			m.SetV1(input.V1)
-		case casbinrule.FieldV2:
-			m.SetV2(input.V2)
-		case casbinrule.FieldV3:
-			m.SetV3(input.V3)
-		case casbinrule.FieldV4:
-			m.SetV4(input.V4)
-		case casbinrule.FieldV5:
-			m.SetV5(input.V5)
-		default:
-			return fmt.Errorf("unknown CasbinRule field %s", fields[i])
-		}
-	}
-	return nil
-}
 
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
@@ -229,6 +153,16 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			if input.DataScope != "" {
 				m.SetDataScope(input.DataScope)
 			}
+		case permission.FieldMethod:
+			// check string with sql.NullString if it is empty
+			if input.Method != "" {
+				m.SetMethod(input.Method)
+			}
+		case permission.FieldPath:
+			// check string with sql.NullString if it is empty
+			if input.Path != "" {
+				m.SetPath(input.Path)
+			}
 		case permission.FieldDataRules:
 			if len(input.DataRules) > 0 {
 				m.SetDataRules(input.DataRules)
@@ -263,6 +197,10 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetDescription(input.Description)
 		case permission.FieldDataScope:
 			m.SetDataScope(input.DataScope)
+		case permission.FieldMethod:
+			m.SetMethod(input.Method)
+		case permission.FieldPath:
+			m.SetPath(input.Path)
 		case permission.FieldDataRules:
 			m.SetDataRules(input.DataRules)
 		case permission.FieldID:

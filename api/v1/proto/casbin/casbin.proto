@@ -87,86 +87,85 @@ service CasbinService {
   rpc DeletePermissionForUser (PermissionRequest) returns (BoolReply) {}
   rpc DeletePermissionsForUser (PermissionRequest) returns (BoolReply) {}
   rpc HasPermissionForUser (PermissionRequest) returns (BoolReply) {}
-
 }
 
 message NewEnforcerRequest {
-  string model_text = 1;
-  int32 adapter_handle = 2;
-  bool enable_accept_json_request = 3;
+  string model_text = 1 [json_name = "model_text"];
+  int32 adapter_handle = 2 [json_name = "adapter_handle"];
+  bool enable_accept_json_request = 3 [json_name = "enable_accept_json_request"];
 }
 
 message NewEnforcerReply {
-  int32 handler = 1;
+  int32 handler = 1 [json_name = "handler"];
 }
 
 message NewAdapterRequest {
-  string adapter_name = 1;
-  string driver_name = 2;
-  string connect_string = 3;
-  bool db_specified = 4;
+  string adapter_name = 1 [json_name = "adapter_name"];
+  string driver_name = 2 [json_name = "driver_name"];
+  string connect_string = 3 [json_name = "connect_string"];
+  bool db_specified = 4 [json_name = "db_specified"];
 }
 
 message NewAdapterReply {
-  int32 handler = 1;
+  int32 handler = 1 [json_name = "handler"];
 }
 
 message EnforceRequest {
-  int32 enforcer_handler = 1;
-  repeated string params = 2;
+  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
+  repeated string params = 2 [json_name = "params"];
 }
 
 message BoolReply {
-  bool res = 1;
+  bool res = 1 [json_name = "res"];
 }
 
 message EmptyRequest {
-  int32 handler = 1;
+  int32 handler = 1 [json_name = "handler"];
 }
 
 message EmptyReply {
 }
 
 message PolicyRequest {
-  int32 enforcer_handler = 1;
-  string p_type = 2;
-  repeated string params = 3;
+  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
+  string p_type = 2 [json_name = "p_type"];
+  repeated string params = 3 [json_name = "params"];
 }
 
 message SimpleGetRequest {
-  int32 enforcer_handler = 1;
-  string p_type = 2;
+  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
+  string p_type = 2 [json_name = "p_type"];
 }
 
 message ArrayReply {
-  repeated string array = 1;
+  repeated string array = 1 [json_name = "array"];
 }
 
 message FilteredPolicyRequest {
-  int32 enforcer_handler = 1;
-  string p_type = 2;
-  int32 field_index = 3;
-  repeated string field_values = 4;
+  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
+  string p_type = 2 [json_name = "p_type"];
+  int32 field_index = 3 [json_name = "field_index"];
+  repeated string field_values = 4 [json_name = "field_values"];
 }
 
 message UserRoleRequest {
-  int32 enforcer_handler = 1;
-  string user = 2;
-  string role = 3;
-  repeated string domain = 4;
+  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
+  string user = 2 [json_name = "user"];
+  string role = 3 [json_name = "role"];
+  repeated string domain = 4 [json_name = "domain"];
 }
 
 message PermissionRequest {
-  int32 enforcer_handler = 1;
-  string user = 2;
-  repeated string permissions = 3;
-  repeated string domain = 4;
+  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
+  string user = 2 [json_name = "user"];
+  repeated string permissions = 3 [json_name = "permissions"];
+  repeated string domain = 4 [json_name = "domain"];
 }
 
 message Array2dReply {
   message D {
-    repeated string d1 = 1;
+    repeated string d1 = 1 [json_name = "d1"];
   }
 
-  repeated D d2 = 1;
+  repeated D d2 = 1 [json_name = "d2"];
 }

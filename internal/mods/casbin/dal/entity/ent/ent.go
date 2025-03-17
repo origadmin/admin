@@ -6,18 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/position"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/positionpermission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userposition"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userrole"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent/casbinrule"
 	"reflect"
 	"sync"
 
@@ -84,18 +73,7 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			department.Table:         department.ValidColumn,
-			permission.Table:         permission.ValidColumn,
-			permissionresource.Table: permissionresource.ValidColumn,
-			position.Table:           position.ValidColumn,
-			positionpermission.Table: positionpermission.ValidColumn,
-			resource.Table:           resource.ValidColumn,
-			role.Table:               role.ValidColumn,
-			rolepermission.Table:     rolepermission.ValidColumn,
-			user.Table:               user.ValidColumn,
-			userdepartment.Table:     userdepartment.ValidColumn,
-			userposition.Table:       userposition.ValidColumn,
-			userrole.Table:           userrole.ValidColumn,
+			casbinrule.Table: casbinrule.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

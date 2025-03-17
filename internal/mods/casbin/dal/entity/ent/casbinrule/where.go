@@ -3,7 +3,7 @@
 package casbinrule
 
 import (
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent/predicate"
 
 	"entgo.io/ent/dialect/sql"
 )

@@ -7,7 +7,9 @@ import (
 	"sync"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/casbin/casbin/v2/persist"
 
+	pb "origadmin/application/admin/api/v1/services/casbin"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
@@ -15,15 +17,14 @@ import (
 
 // CasbinRuleService 处理casbin规则的服务
 type CasbinRuleService struct {
-	client        *ent.Client
-	enforcer      *casbin.Enforcer
-	userRoleCache sync.Map // map[int64][]int64
+	client   pb.CasbinServiceClient
+	enforcer *casbin.Enforcer
+	adapter  persist.Adapter
 }
 
 // NewCasbinRuleService 创建casbin规则服务实例
-func NewCasbinRuleService(client *ent.Client, enforcer *casbin.Enforcer) *CasbinRuleService {
+func NewCasbinRuleService() *CasbinRuleService {
 	return &CasbinRuleService{
-		client:   client,
 		enforcer: enforcer,
 	}
 }
@@ -77,6 +78,23 @@ func (s *CasbinRuleService) LoadPolicyFromDB(ctx context.Context) error {
 
 	// 3. 加载用户角色关系到缓存
 	return s.LoadUserRoleCache(ctx)
+}
+
+// CheckPermission 检查用户是否有权限访问特定资源
+func (s *CasbinRuleService) CheckPermission(ctx context.Context, userID int64, path, method string) (bool, error) {
+	// 检查用户是否有权限
+	res, err := s.client.Enforce(ctx, &pb.EnforceRequest{
+		Params: []string{
+			strconv.FormatInt(userID, 10),
+			path,
+			method,
+		},
+	})
+	if err != nil {
+		return false, fmt.Errorf("检查权限失败: %w", err)
+	}
+
+	return res.Res, nil
 }
 
 // LoadUserRoleCache 加载用户角色关系到缓存
@@ -156,41 +174,6 @@ func (s *CasbinRuleService) GetUserPermissions(ctx context.Context, userID int64
 	}
 
 	return permissions, nil
-}
-
-// CheckPermission 检查用户是否有权限访问特定资源
-func (s *CasbinRuleService) CheckPermission(ctx context.Context, userID int64, path, method string) (bool, error) {
-	// 从缓存获取用户角色
-	roleIDs := s.GetUserRoles(userID)
-	if len(roleIDs) == 0 {
-		return false, nil
-	}
-
-	// 检查用户的每个角色是否有权限
-	for _, roleID := range roleIDs {
-		// 获取角色的所有权限
-		permIDs, err := s.enforcer.GetFilteredGroupingPolicy(0, strconv.FormatInt(roleID, 10))
-		if err != nil {
-			return false, fmt.Errorf("获取角色权限失败: %w", err)
-		}
-		// 检查每个权限是否可以访问请求的资源
-		for _, policy := range permIDs {
-			if len(policy) < 2 {
-				continue
-			}
-			permID := policy[1]
-			// 使用权限ID检查是否有访问权限
-			hasPermission, err := s.enforcer.Enforce(permID, path, method)
-			if err != nil {
-				return false, fmt.Errorf("检查权限失败: %w", err)
-			}
-			if hasPermission {
-				return true, nil
-			}
-		}
-	}
-
-	return false, nil
 }
 
 // ReloadPolicy 重新加载权限策略

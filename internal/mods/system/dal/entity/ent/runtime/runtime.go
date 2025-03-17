@@ -3,7 +3,6 @@
 package runtime
 
 import (
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permissionresource"
@@ -24,36 +23,6 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
-	casbinruleFields := schema.CasbinRule{}.Fields()
-	_ = casbinruleFields
-	// casbinruleDescPtype is the schema descriptor for Ptype field.
-	casbinruleDescPtype := casbinruleFields[0].Descriptor()
-	// casbinrule.DefaultPtype holds the default value on creation for the Ptype field.
-	casbinrule.DefaultPtype = casbinruleDescPtype.Default.(string)
-	// casbinruleDescV0 is the schema descriptor for V0 field.
-	casbinruleDescV0 := casbinruleFields[1].Descriptor()
-	// casbinrule.DefaultV0 holds the default value on creation for the V0 field.
-	casbinrule.DefaultV0 = casbinruleDescV0.Default.(string)
-	// casbinruleDescV1 is the schema descriptor for V1 field.
-	casbinruleDescV1 := casbinruleFields[2].Descriptor()
-	// casbinrule.DefaultV1 holds the default value on creation for the V1 field.
-	casbinrule.DefaultV1 = casbinruleDescV1.Default.(string)
-	// casbinruleDescV2 is the schema descriptor for V2 field.
-	casbinruleDescV2 := casbinruleFields[3].Descriptor()
-	// casbinrule.DefaultV2 holds the default value on creation for the V2 field.
-	casbinrule.DefaultV2 = casbinruleDescV2.Default.(string)
-	// casbinruleDescV3 is the schema descriptor for V3 field.
-	casbinruleDescV3 := casbinruleFields[4].Descriptor()
-	// casbinrule.DefaultV3 holds the default value on creation for the V3 field.
-	casbinrule.DefaultV3 = casbinruleDescV3.Default.(string)
-	// casbinruleDescV4 is the schema descriptor for V4 field.
-	casbinruleDescV4 := casbinruleFields[5].Descriptor()
-	// casbinrule.DefaultV4 holds the default value on creation for the V4 field.
-	casbinrule.DefaultV4 = casbinruleDescV4.Default.(string)
-	// casbinruleDescV5 is the schema descriptor for V5 field.
-	casbinruleDescV5 := casbinruleFields[6].Descriptor()
-	// casbinrule.DefaultV5 holds the default value on creation for the V5 field.
-	casbinrule.DefaultV5 = casbinruleDescV5.Default.(string)
 	departmentMixin := schema.Department{}.Mixin()
 	departmentMixinFields0 := departmentMixin[0].Fields()
 	_ = departmentMixinFields0
@@ -152,6 +121,14 @@ func init() {
 	permissionDescDataScope := permissionFields[3].Descriptor()
 	// permission.DefaultDataScope holds the default value on creation for the data_scope field.
 	permission.DefaultDataScope = permissionDescDataScope.Default.(string)
+	// permissionDescMethod is the schema descriptor for method field.
+	permissionDescMethod := permissionFields[4].Descriptor()
+	// permission.DefaultMethod holds the default value on creation for the method field.
+	permission.DefaultMethod = permissionDescMethod.Default.(string)
+	// permissionDescPath is the schema descriptor for path field.
+	permissionDescPath := permissionFields[5].Descriptor()
+	// permission.DefaultPath holds the default value on creation for the path field.
+	permission.DefaultPath = permissionDescPath.Default.(string)
 	// permissionDescID is the schema descriptor for id field.
 	permissionDescID := permissionMixinFields0[0].Descriptor()
 	// permission.DefaultID holds the default value on creation for the id field.

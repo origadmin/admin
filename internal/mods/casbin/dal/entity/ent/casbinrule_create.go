@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/casbinrule"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent/casbinrule"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"

@@ -9,23 +9,6 @@ import (
 )
 
 var (
-	// CasbinRulesColumns holds the columns for the "casbin_rules" table.
-	CasbinRulesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "ptype", Type: field.TypeString, Default: ""},
-		{Name: "v0", Type: field.TypeString, Default: ""},
-		{Name: "v1", Type: field.TypeString, Default: ""},
-		{Name: "v2", Type: field.TypeString, Default: ""},
-		{Name: "v3", Type: field.TypeString, Default: ""},
-		{Name: "v4", Type: field.TypeString, Default: ""},
-		{Name: "v5", Type: field.TypeString, Default: ""},
-	}
-	// CasbinRulesTable holds the schema information for the "casbin_rules" table.
-	CasbinRulesTable = &schema.Table{
-		Name:       "casbin_rules",
-		Columns:    CasbinRulesColumns,
-		PrimaryKey: []*schema.Column{CasbinRulesColumns[0]},
-	}
 	// SysDepartmentsColumns holds the columns for the "sys_departments" table.
 	SysDepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
@@ -96,6 +79,8 @@ var (
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "permission.field.keyword"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "permission.field.description", Default: ""},
 		{Name: "data_scope", Type: field.TypeString, Comment: "permission.field.data_scope", Default: "self"},
+		{Name: "method", Type: field.TypeString, Comment: "permission.field.method", Default: "GET"},
+		{Name: "path", Type: field.TypeString, Comment: "permission.field.path", Default: ""},
 		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "permission.field.data_rules"},
 	}
 	// SysPermissionsTable holds the schema information for the "sys_permissions" table.
@@ -601,7 +586,6 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		CasbinRulesTable,
 		SysDepartmentsTable,
 		SysPermissionsTable,
 		SysPermissionResourcesTable,
