@@ -38,15 +38,10 @@ func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQuery
 	return dto.ConvertRole2PB(result), nil
 }
 
-func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
-	var option dto.RoleQueryOption
+func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleUpdateOption) (*dto.RolePB, error) {
+	var option dto.RoleUpdateOption
 	if len(options) > 0 {
 		option = options[0]
-	}
-	var err error
-	err = rolePB.Validate()
-	if err != nil {
-		return nil, err
 	}
 	obj := dto.ConvertRolePB2Object(rolePB)
 	if obj.Keyword == "" {
@@ -56,8 +51,6 @@ func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...
 	if err != nil || exist {
 		return nil, errors.New("role keyword already exists")
 	}
-	//create := repo.db.Role(ctx).Create()
-	//create.SetRole(obj, option.Fields...)
 	err = repo.db.Tx(ctx, func(ctx context.Context) error {
 		create := repo.db.Role(ctx).Create()
 		create.SetRole(obj, option.Fields...)
@@ -84,13 +77,11 @@ func (repo roleRepo) Delete(ctx context.Context, id int64) error {
 	})
 }
 
-func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
-	var option dto.RoleQueryOption
+func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleUpdateOption) (*dto.RolePB, error) {
+	var option dto.RoleUpdateOption
 	if len(options) > 0 {
 		option = options[0]
 	}
-	//err := repo.db.Tx(ctx, func(ctx context.Context) error {
-
 	update := repo.db.Role(ctx).UpdateOneID(rolePB.Id)
 	if len(rolePB.PermissionIds) > 0 {
 		update.ClearPermissions()
@@ -100,13 +91,11 @@ func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...
 		update.ClearPermissions()
 		update.AddPermissions(dto.ConvertPermissionsPB2Object(rolePB.Permissions)...)
 	}
-	saved, err := update.SetRole(dto.ConvertRolePB2Object(rolePB), option.Fields...).Save(ctx)
+	saved, err := update.SetRoleWithZero(dto.ConvertRolePB2Object(rolePB), option.Fields...).Save(ctx)
 	if err != nil {
 		return nil, err
 	}
 	rolePB = dto.ConvertRole2PB(saved)
-	//return nil
-	//})
 	return rolePB, nil
 }
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-package ent
+package dal
 
 import (
 	"context"
@@ -16,9 +16,9 @@ import (
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/casbinrule"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent/casbinrule"
+	"origadmin/application/admin/internal/mods/casbin/dal/entity/ent/predicate"
 )
 
 const (

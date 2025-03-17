@@ -28,10 +28,10 @@ type (
 // RoleRepo is a RolePB repository interface.
 type RoleRepo interface {
 	Get(context.Context, int64, ...RoleQueryOption) (*RolePB, error)
-	Create(context.Context, *RolePB, ...RoleQueryOption) (*RolePB, error)
-	Delete(context.Context, int64) error
-	Update(context.Context, *RolePB, ...RoleQueryOption) (*RolePB, error)
 	List(context.Context, *ListRolesRequest, ...RoleQueryOption) ([]*RolePB, int32, error)
+	Create(context.Context, *RolePB, ...RoleUpdateOption) (*RolePB, error)
+	Update(context.Context, *RolePB, ...RoleUpdateOption) (*RolePB, error)
+	Delete(context.Context, int64) error
 }
 
 type RoleQueryOption struct {
@@ -57,6 +57,26 @@ func (o RoleQueryOption) FromGetRequest(in *pb.GetRoleRequest, limiter paginatio
 }
 
 func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pagination.PageLimiter) error {
+	return nil
+}
+
+// RoleUpdateOption is used for creating and updating roles.
+type RoleUpdateOption struct {
+	Name               string `form:"name" json:"name,omitempty"`
+	Status             int8   `form:"status" json:"status,omitempty"`
+	UpdateTimeGT       *time.Time
+	SelectFields       []string
+	OmitFields         []string
+	OrderFields        []string
+	Fields             []string
+	IncludePermissions bool
+}
+
+func (o RoleUpdateOption) FromCreateRequest(in *pb.CreateRoleRequest) error {
+	return nil
+}
+
+func (o RoleUpdateOption) FromUpdateRequest(in *pb.UpdateRoleRequest) error {
 	return nil
 }
 
