@@ -6,13 +6,14 @@
 package biz
 
 import (
-	"github.com/origadmin/runtime/context"
+	"context"
+
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/net/pagination"
 	"google.golang.org/grpc"
 
-	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/dto"
+	pb "origadmin/application/admin/api/v1/services/casbin"
+	"origadmin/application/admin/internal/mods/casbin/dto"
 )
 
 // CasbinSourceServiceClientBiz is a CasbinSource use case.
@@ -22,37 +23,16 @@ type CasbinSourceServiceClientBiz struct {
 	log     *log.KHelper
 }
 
-func (biz CasbinSourceServiceClientBiz) CasbinSourceLogout(ctx context.Context, in *pb.CasbinSourceLogoutRequest, opts ...grpc.CallOption) (*pb.CasbinSourceLogoutResponse, error) {
-	return biz.dao.CasbinSourceLogout(ctx, in)
+func (c CasbinSourceServiceClientBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest, opts ...grpc.CallOption) (*pb.ListPoliciesResponse, error) {
+	return c.dao.ListPolicies(ctx, in)
 }
 
-func (biz CasbinSourceServiceClientBiz) CreateToken(ctx context.Context, in *pb.CreateTokenRequest, opts ...grpc.CallOption) (*pb.CreateTokenResponse, error) {
-	return biz.dao.CreateToken(ctx, in)
+func (c CasbinSourceServiceClientBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest, opts ...grpc.CallOption) (*pb.ListGroupingsResponse, error) {
+	return c.dao.ListGroupings(ctx, in)
 }
 
-func (biz CasbinSourceServiceClientBiz) ValidateToken(ctx context.Context, in *pb.ValidateTokenRequest, opts ...grpc.CallOption) (*pb.ValidateTokenResponse, error) {
-	return biz.dao.ValidateToken(ctx, in)
-}
-
-func (biz CasbinSourceServiceClientBiz) DestroyToken(ctx context.Context, in *pb.DestroyTokenRequest, opts ...grpc.CallOption) (*pb.DestroyTokenResponse, error) {
-	return biz.dao.DestroyToken(ctx, in)
-}
-
-func (biz CasbinSourceServiceClientBiz) CasbinSourceenticate(ctx context.Context, in *pb.CasbinSourceenticateRequest, opts ...grpc.CallOption) (*pb.CasbinSourceenticateResponse, error) {
-	return biz.dao.CasbinSourceenticate(ctx, in)
-}
-
-func (biz CasbinSourceServiceClientBiz) ListCasbinSourceResources(ctx context.Context, in *pb.ListCasbinSourceResourcesRequest, opts ...grpc.CallOption) (*pb.ListCasbinSourceResourcesResponse, error) {
-	var option dto.CasbinSourceResourceQueryOption
-	if err := option.FromListRequest(in, biz.limiter); err != nil {
-		return nil, err
-	}
-	log.Info("ListCasbinSources")
-	result, total, err := biz.dao.ListCasbinSourceResources(ctx, in, option)
-	if err != nil {
-		return nil, err
-	}
-	return dto.ToListCasbinSourceResourcesResponse(result, in, total)
+func (c CasbinSourceServiceClientBiz) StreamRules(ctx context.Context, in *pb.StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[pb.StreamRulesResponse], error) {
+	return c.dao.StreamRules(ctx, in)
 }
 
 // NewCasbinSourceServiceClientBiz new a CasbinSource use case.
