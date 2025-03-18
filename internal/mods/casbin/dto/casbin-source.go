@@ -4,3 +4,6 @@
 
 // Package dto implements the functions, types, and interfaces for the module.
 package dto
+
+type CasbinSourceRepo interface {
+}
