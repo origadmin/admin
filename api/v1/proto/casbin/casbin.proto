@@ -22,150 +22,48 @@ option csharp_namespace = "CasbinOrg.Grpc";
 
 package api.v1.services.casbin;
 
-// The Casbin service definition.
-service CasbinService {
-  rpc NewEnforcer (NewEnforcerRequest) returns (NewEnforcerReply) {}
-  rpc NewAdapter (NewAdapterRequest) returns (NewAdapterReply) {}
+// The Casbin source service definition.
+service CasbinSourceService {
+  rpc ListPolicies (ListPoliciesRequest) returns (ListPoliciesResponse) {}
+  rpc ListGroupings (ListGroupingsRequest) returns (ListGroupingsResponse) {}
 
-  rpc Enforce (EnforceRequest) returns (BoolReply) {}
-
-  rpc LoadPolicy (EmptyRequest) returns (EmptyReply) {}
-  rpc SavePolicy (EmptyRequest) returns (EmptyReply) {}
-
-  rpc AddPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc AddNamedPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc RemovePolicy (PolicyRequest) returns (BoolReply) {}
-  rpc RemoveNamedPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc RemoveFilteredPolicy (FilteredPolicyRequest) returns (BoolReply) {}
-  rpc RemoveFilteredNamedPolicy (FilteredPolicyRequest) returns (BoolReply) {}
-  rpc GetPolicy (EmptyRequest) returns (Array2dReply) {}
-  rpc GetNamedPolicy (PolicyRequest) returns (Array2dReply) {}
-  rpc GetFilteredPolicy (FilteredPolicyRequest) returns (Array2dReply) {}
-  rpc GetFilteredNamedPolicy (FilteredPolicyRequest) returns (Array2dReply) {}
-
-  rpc AddGroupingPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc AddNamedGroupingPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc RemoveGroupingPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc RemoveNamedGroupingPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc RemoveFilteredGroupingPolicy (FilteredPolicyRequest) returns (BoolReply) {}
-  rpc RemoveFilteredNamedGroupingPolicy (FilteredPolicyRequest) returns (BoolReply) {}
-  rpc GetGroupingPolicy (EmptyRequest) returns (Array2dReply) {}
-  rpc GetNamedGroupingPolicy (PolicyRequest) returns (Array2dReply) {}
-  rpc GetFilteredGroupingPolicy (FilteredPolicyRequest) returns (Array2dReply) {}
-  rpc GetFilteredNamedGroupingPolicy (FilteredPolicyRequest) returns (Array2dReply) {}
-
-  rpc GetAllSubjects (EmptyRequest) returns (ArrayReply) {}
-  rpc GetAllNamedSubjects (SimpleGetRequest) returns (ArrayReply) {}
-  rpc GetAllObjects (EmptyRequest) returns (ArrayReply) {}
-  rpc GetAllNamedObjects (SimpleGetRequest) returns (ArrayReply) {}
-  rpc GetAllActions (EmptyRequest) returns (ArrayReply) {}
-  rpc GetAllNamedActions (SimpleGetRequest) returns (ArrayReply) {}
-  rpc GetAllRoles (EmptyRequest) returns (ArrayReply) {}
-  rpc GetAllNamedRoles (SimpleGetRequest) returns (ArrayReply) {}
-
-  rpc HasPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc HasNamedPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc HasGroupingPolicy (PolicyRequest) returns (BoolReply) {}
-  rpc HasNamedGroupingPolicy (PolicyRequest) returns (BoolReply) {}
-
-  rpc GetDomains (UserRoleRequest) returns (ArrayReply) {}
-
-  rpc GetRolesForUser (UserRoleRequest) returns (ArrayReply) {}
-  rpc GetImplicitRolesForUser (UserRoleRequest) returns (ArrayReply) {}
-  rpc GetUsersForRole (UserRoleRequest) returns (ArrayReply) {}
-  rpc HasRoleForUser (UserRoleRequest) returns (BoolReply) {}
-  rpc AddRoleForUser (UserRoleRequest) returns (BoolReply) {}
-  rpc DeleteRoleForUser (UserRoleRequest) returns (BoolReply) {}
-  rpc DeleteRolesForUser (UserRoleRequest) returns (BoolReply) {}
-  rpc DeleteUser (UserRoleRequest) returns (BoolReply) {}
-  rpc DeleteRole (UserRoleRequest) returns (EmptyReply) {}
-
-  rpc GetPermissionsForUser (PermissionRequest) returns (Array2dReply) {}
-  rpc GetImplicitPermissionsForUser (PermissionRequest) returns (Array2dReply) {}
-  rpc DeletePermission (PermissionRequest) returns (BoolReply) {}
-  rpc AddPermissionForUser (PermissionRequest) returns (BoolReply) {}
-  rpc DeletePermissionForUser (PermissionRequest) returns (BoolReply) {}
-  rpc DeletePermissionsForUser (PermissionRequest) returns (BoolReply) {}
-  rpc HasPermissionForUser (PermissionRequest) returns (BoolReply) {}
+  rpc StreamRules(StreamRulesRequest) returns (stream StreamRulesResponse) {}
 }
 
-message NewEnforcerRequest {
-  string model_text = 1 [json_name = "model_text"];
-  int32 adapter_handle = 2 [json_name = "adapter_handle"];
-  bool enable_accept_json_request = 3 [json_name = "enable_accept_json_request"];
+message ListPoliciesRequest {
+
 }
 
-message NewEnforcerReply {
-  int32 handler = 1 [json_name = "handler"];
+message ListPoliciesResponse {
+  repeated PolicyRule rules = 1;
 }
 
-message NewAdapterRequest {
-  string adapter_name = 1 [json_name = "adapter_name"];
-  string driver_name = 2 [json_name = "driver_name"];
-  string connect_string = 3 [json_name = "connect_string"];
-  bool db_specified = 4 [json_name = "db_specified"];
+message PolicyRule {
+  string ptype = 1;
+  repeated string params = 2;
 }
 
-message NewAdapterReply {
-  int32 handler = 1 [json_name = "handler"];
+message ListGroupingsRequest {
+
 }
 
-message EnforceRequest {
-  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
-  repeated string params = 2 [json_name = "params"];
+message ListGroupingsResponse {
+  repeated GroupingRule rules = 1;
 }
 
-message BoolReply {
-  bool res = 1 [json_name = "res"];
+message GroupingRule {
+  string ptype = 1;
+  repeated string params = 2;
 }
 
-message EmptyRequest {
-  int32 handler = 1 [json_name = "handler"];
+message StreamRulesRequest {
+  bool with_policies = 1 [json_name = "with_policies"];
+  bool with_groupings = 2 [json_name = "with_groupings"];
 }
 
-message EmptyReply {
-}
-
-message PolicyRequest {
-  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
-  string p_type = 2 [json_name = "p_type"];
-  repeated string params = 3 [json_name = "params"];
-}
-
-message SimpleGetRequest {
-  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
-  string p_type = 2 [json_name = "p_type"];
-}
-
-message ArrayReply {
-  repeated string array = 1 [json_name = "array"];
-}
-
-message FilteredPolicyRequest {
-  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
-  string p_type = 2 [json_name = "p_type"];
-  int32 field_index = 3 [json_name = "field_index"];
-  repeated string field_values = 4 [json_name = "field_values"];
-}
-
-message UserRoleRequest {
-  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
-  string user = 2 [json_name = "user"];
-  string role = 3 [json_name = "role"];
-  repeated string domain = 4 [json_name = "domain"];
-}
-
-message PermissionRequest {
-  int32 enforcer_handler = 1 [json_name = "enforcer_handler"];
-  string user = 2 [json_name = "user"];
-  repeated string permissions = 3 [json_name = "permissions"];
-  repeated string domain = 4 [json_name = "domain"];
-}
-
-message Array2dReply {
-  message D {
-    repeated string d1 = 1 [json_name = "d1"];
+message StreamRulesResponse {
+  oneof rule_type {
+    PolicyRule policy = 1;
+    GroupingRule grouping = 2;
   }
-
-  repeated D d2 = 1 [json_name = "d2"];
 }
