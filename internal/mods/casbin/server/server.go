@@ -9,7 +9,6 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/google/wire"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/agent"
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
@@ -19,14 +18,13 @@ import (
 	servicehttp "github.com/origadmin/runtime/service/http"
 	"github.com/origadmin/toolkits/errors"
 
-	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
-	systemservice "origadmin/application/admin/internal/mods/system/service"
+	casbinservice "origadmin/application/admin/internal/mods/casbin/service"
 )
 
 const (
 	// ServiceName is service name.
-	ServiceName = "system"
+	ServiceName = "casbin"
 )
 
 var (
@@ -75,29 +73,14 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 }
 
 type RegisterAgent struct {
-	Auth       pb.AuthServiceAgent
-	Login      pb.LoginServiceAgent
-	Personal   pb.PersonalServiceAgent
-	Resource   pb.ResourceServiceAgent
-	Role       pb.RoleServiceAgent
-	User       pb.UserServiceAgent
-	Permission pb.PermissionServiceAgent
 }
 
 func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
-	log.Info("grpc server system init")
+	log.Info("grpc server casbin init")
 }
 
 func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http server system init")
-	ag := agent.NewHTTP(server)
-	pb.RegisterAuthServiceAgent(ag, s.Auth)
-	pb.RegisterLoginServiceAgent(ag, s.Login)
-	pb.RegisterPersonalServiceAgent(ag, s.Personal)
-	pb.RegisterResourceServiceAgent(ag, s.Resource)
-	pb.RegisterRoleServiceAgent(ag, s.Role)
-	pb.RegisterUserServiceAgent(ag, s.User)
-	pb.RegisterPermissionServiceAgent(ag, s.Permission)
+	log.Info("http server casbin init")
 }
 
 func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
@@ -106,15 +89,7 @@ func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServe
 }
 
 func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
-	register := RegisterAgent{
-		Auth:       systemservice.NewAuthServiceAgentClient(client),
-		Login:      systemservice.NewLoginServiceAgentClient(client),
-		Personal:   systemservice.NewPersonalServiceAgentClient(client),
-		Resource:   systemservice.NewResourceServiceAgentClient(client),
-		Role:       systemservice.NewRoleServiceAgentClient(client),
-		User:       systemservice.NewUserServiceAgentClient(client),
-		Permission: systemservice.NewPermissionServiceAgentClient(client),
-	}
+	register := RegisterAgent{}
 	return &register, nil
 }
 
@@ -194,7 +169,7 @@ func MiddlewareServer() middleware.KMiddleware {
 	}
 }
 
-func NewRegisterServer(s1 *systemservice.RegisterServer) []service.ServerRegister {
+func NewRegisterServer(s1 *casbinservice.RegisterServer) []service.ServerRegister {
 	return []service.ServerRegister{
 		s1,
 	}
