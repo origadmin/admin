@@ -97,34 +97,6 @@ func (pu *PermissionUpdate) SetNillableDataScope(s *string) *PermissionUpdate {
 	return pu
 }
 
-// SetMethod sets the "method" field.
-func (pu *PermissionUpdate) SetMethod(s string) *PermissionUpdate {
-	pu.mutation.SetMethod(s)
-	return pu
-}
-
-// SetNillableMethod sets the "method" field if the given value is not nil.
-func (pu *PermissionUpdate) SetNillableMethod(s *string) *PermissionUpdate {
-	if s != nil {
-		pu.SetMethod(*s)
-	}
-	return pu
-}
-
-// SetPath sets the "path" field.
-func (pu *PermissionUpdate) SetPath(s string) *PermissionUpdate {
-	pu.mutation.SetPath(s)
-	return pu
-}
-
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (pu *PermissionUpdate) SetNillablePath(s *string) *PermissionUpdate {
-	if s != nil {
-		pu.SetPath(*s)
-	}
-	return pu
-}
-
 // SetDataRules sets the "data_rules" field.
 func (pu *PermissionUpdate) SetDataRules(m map[string]string) *PermissionUpdate {
 	pu.mutation.SetDataRules(m)
@@ -446,12 +418,6 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := pu.mutation.DataScope(); ok {
 		_spec.SetField(permission.FieldDataScope, field.TypeString, value)
-	}
-	if value, ok := pu.mutation.Method(); ok {
-		_spec.SetField(permission.FieldMethod, field.TypeString, value)
-	}
-	if value, ok := pu.mutation.Path(); ok {
-		_spec.SetField(permission.FieldPath, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
@@ -825,34 +791,6 @@ func (puo *PermissionUpdateOne) SetNillableDataScope(s *string) *PermissionUpdat
 	return puo
 }
 
-// SetMethod sets the "method" field.
-func (puo *PermissionUpdateOne) SetMethod(s string) *PermissionUpdateOne {
-	puo.mutation.SetMethod(s)
-	return puo
-}
-
-// SetNillableMethod sets the "method" field if the given value is not nil.
-func (puo *PermissionUpdateOne) SetNillableMethod(s *string) *PermissionUpdateOne {
-	if s != nil {
-		puo.SetMethod(*s)
-	}
-	return puo
-}
-
-// SetPath sets the "path" field.
-func (puo *PermissionUpdateOne) SetPath(s string) *PermissionUpdateOne {
-	puo.mutation.SetPath(s)
-	return puo
-}
-
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (puo *PermissionUpdateOne) SetNillablePath(s *string) *PermissionUpdateOne {
-	if s != nil {
-		puo.SetPath(*s)
-	}
-	return puo
-}
-
 // SetDataRules sets the "data_rules" field.
 func (puo *PermissionUpdateOne) SetDataRules(m map[string]string) *PermissionUpdateOne {
 	puo.mutation.SetDataRules(m)
@@ -1204,12 +1142,6 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 	}
 	if value, ok := puo.mutation.DataScope(); ok {
 		_spec.SetField(permission.FieldDataScope, field.TypeString, value)
-	}
-	if value, ok := puo.mutation.Method(); ok {
-		_spec.SetField(permission.FieldMethod, field.TypeString, value)
-	}
-	if value, ok := puo.mutation.Path(); ok {
-		_spec.SetField(permission.FieldPath, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)

@@ -79,8 +79,6 @@ var (
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "permission.field.keyword"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "permission.field.description", Default: ""},
 		{Name: "data_scope", Type: field.TypeString, Comment: "permission.field.data_scope", Default: "self"},
-		{Name: "method", Type: field.TypeString, Comment: "permission.field.method", Default: "GET"},
-		{Name: "path", Type: field.TypeString, Comment: "permission.field.path", Default: ""},
 		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "permission.field.data_rules"},
 	}
 	// SysPermissionsTable holds the schema information for the "sys_permissions" table.

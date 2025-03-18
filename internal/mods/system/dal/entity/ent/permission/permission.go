@@ -26,10 +26,6 @@ const (
 	FieldDescription = "description"
 	// FieldDataScope holds the string denoting the data_scope field in the database.
 	FieldDataScope = "data_scope"
-	// FieldMethod holds the string denoting the method field in the database.
-	FieldMethod = "method"
-	// FieldPath holds the string denoting the path field in the database.
-	FieldPath = "path"
 	// FieldDataRules holds the string denoting the data_rules field in the database.
 	FieldDataRules = "data_rules"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
@@ -93,8 +89,6 @@ var Columns = []string{
 	FieldKeyword,
 	FieldDescription,
 	FieldDataScope,
-	FieldMethod,
-	FieldPath,
 	FieldDataRules,
 }
 
@@ -139,10 +133,6 @@ var (
 	DescriptionValidator func(string) error
 	// DefaultDataScope holds the default value on creation for the "data_scope" field.
 	DefaultDataScope string
-	// DefaultMethod holds the default value on creation for the "method" field.
-	DefaultMethod string
-	// DefaultPath holds the default value on creation for the "path" field.
-	DefaultPath string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -185,16 +175,6 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByDataScope orders the results by the data_scope field.
 func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
-}
-
-// ByMethod orders the results by the method field.
-func ByMethod(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMethod, opts...).ToFunc()
-}
-
-// ByPath orders the results by the path field.
-func ByPath(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPath, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

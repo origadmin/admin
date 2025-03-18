@@ -31,10 +31,6 @@ type Permission struct {
 	Description string `json:"description,omitempty"`
 	// permission.field.data_scope
 	DataScope string `json:"data_scope,omitempty"`
-	// permission.field.method
-	Method string `json:"method,omitempty"`
-	// permission.field.path
-	Path string `json:"path,omitempty"`
 	// permission.field.data_rules
 	DataRules map[string]string `json:"data_rules,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -125,7 +121,7 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case permission.FieldID:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldMethod, permission.FieldPath:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -185,18 +181,6 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
 			} else if value.Valid {
 				pe.DataScope = value.String
-			}
-		case permission.FieldMethod:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field method", values[i])
-			} else if value.Valid {
-				pe.Method = value.String
-			}
-		case permission.FieldPath:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field path", values[i])
-			} else if value.Valid {
-				pe.Path = value.String
 			}
 		case permission.FieldDataRules:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -289,12 +273,6 @@ func (pe *Permission) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("data_scope=")
 	builder.WriteString(pe.DataScope)
-	builder.WriteString(", ")
-	builder.WriteString("method=")
-	builder.WriteString(pe.Method)
-	builder.WriteString(", ")
-	builder.WriteString("path=")
-	builder.WriteString(pe.Path)
 	builder.WriteString(", ")
 	builder.WriteString("data_rules=")
 	builder.WriteString(fmt.Sprintf("%v", pe.DataRules))

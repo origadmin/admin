@@ -1391,8 +1391,6 @@ type PermissionMutation struct {
 	keyword                     *string
 	description                 *string
 	data_scope                  *string
-	method                      *string
-	_path                       *string
 	data_rules                  *map[string]string
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
@@ -1736,78 +1734,6 @@ func (m *PermissionMutation) OldDataScope(ctx context.Context) (v string, err er
 // ResetDataScope resets all changes to the "data_scope" field.
 func (m *PermissionMutation) ResetDataScope() {
 	m.data_scope = nil
-}
-
-// SetMethod sets the "method" field.
-func (m *PermissionMutation) SetMethod(s string) {
-	m.method = &s
-}
-
-// Method returns the value of the "method" field in the mutation.
-func (m *PermissionMutation) Method() (r string, exists bool) {
-	v := m.method
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldMethod returns the old "method" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldMethod(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMethod is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMethod requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMethod: %w", err)
-	}
-	return oldValue.Method, nil
-}
-
-// ResetMethod resets all changes to the "method" field.
-func (m *PermissionMutation) ResetMethod() {
-	m.method = nil
-}
-
-// SetPath sets the "path" field.
-func (m *PermissionMutation) SetPath(s string) {
-	m._path = &s
-}
-
-// Path returns the value of the "path" field in the mutation.
-func (m *PermissionMutation) Path() (r string, exists bool) {
-	v := m._path
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPath returns the old "path" field's value of the Permission entity.
-// If the Permission object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldPath(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPath is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPath requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPath: %w", err)
-	}
-	return oldValue.Path, nil
-}
-
-// ResetPath resets all changes to the "path" field.
-func (m *PermissionMutation) ResetPath() {
-	m._path = nil
 }
 
 // SetDataRules sets the "data_rules" field.
@@ -2217,7 +2143,7 @@ func (m *PermissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 7)
 	if m.create_time != nil {
 		fields = append(fields, permission.FieldCreateTime)
 	}
@@ -2235,12 +2161,6 @@ func (m *PermissionMutation) Fields() []string {
 	}
 	if m.data_scope != nil {
 		fields = append(fields, permission.FieldDataScope)
-	}
-	if m.method != nil {
-		fields = append(fields, permission.FieldMethod)
-	}
-	if m._path != nil {
-		fields = append(fields, permission.FieldPath)
 	}
 	if m.data_rules != nil {
 		fields = append(fields, permission.FieldDataRules)
@@ -2265,10 +2185,6 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 		return m.Description()
 	case permission.FieldDataScope:
 		return m.DataScope()
-	case permission.FieldMethod:
-		return m.Method()
-	case permission.FieldPath:
-		return m.Path()
 	case permission.FieldDataRules:
 		return m.DataRules()
 	}
@@ -2292,10 +2208,6 @@ func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldDescription(ctx)
 	case permission.FieldDataScope:
 		return m.OldDataScope(ctx)
-	case permission.FieldMethod:
-		return m.OldMethod(ctx)
-	case permission.FieldPath:
-		return m.OldPath(ctx)
 	case permission.FieldDataRules:
 		return m.OldDataRules(ctx)
 	}
@@ -2348,20 +2260,6 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDataScope(v)
-		return nil
-	case permission.FieldMethod:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetMethod(v)
-		return nil
-	case permission.FieldPath:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPath(v)
 		return nil
 	case permission.FieldDataRules:
 		v, ok := value.(map[string]string)
@@ -2445,12 +2343,6 @@ func (m *PermissionMutation) ResetField(name string) error {
 		return nil
 	case permission.FieldDataScope:
 		m.ResetDataScope()
-		return nil
-	case permission.FieldMethod:
-		m.ResetMethod()
-		return nil
-	case permission.FieldPath:
-		m.ResetPath()
 		return nil
 	case permission.FieldDataRules:
 		m.ResetDataRules()

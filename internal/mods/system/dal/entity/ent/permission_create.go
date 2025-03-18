@@ -102,34 +102,6 @@ func (pc *PermissionCreate) SetNillableDataScope(s *string) *PermissionCreate {
 	return pc
 }
 
-// SetMethod sets the "method" field.
-func (pc *PermissionCreate) SetMethod(s string) *PermissionCreate {
-	pc.mutation.SetMethod(s)
-	return pc
-}
-
-// SetNillableMethod sets the "method" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableMethod(s *string) *PermissionCreate {
-	if s != nil {
-		pc.SetMethod(*s)
-	}
-	return pc
-}
-
-// SetPath sets the "path" field.
-func (pc *PermissionCreate) SetPath(s string) *PermissionCreate {
-	pc.mutation.SetPath(s)
-	return pc
-}
-
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillablePath(s *string) *PermissionCreate {
-	if s != nil {
-		pc.SetPath(*s)
-	}
-	return pc
-}
-
 // SetDataRules sets the "data_rules" field.
 func (pc *PermissionCreate) SetDataRules(m map[string]string) *PermissionCreate {
 	pc.mutation.SetDataRules(m)
@@ -295,14 +267,6 @@ func (pc *PermissionCreate) defaults() {
 		v := permission.DefaultDataScope
 		pc.mutation.SetDataScope(v)
 	}
-	if _, ok := pc.mutation.Method(); !ok {
-		v := permission.DefaultMethod
-		pc.mutation.SetMethod(v)
-	}
-	if _, ok := pc.mutation.Path(); !ok {
-		v := permission.DefaultPath
-		pc.mutation.SetPath(v)
-	}
 	if _, ok := pc.mutation.ID(); !ok {
 		v := permission.DefaultID()
 		pc.mutation.SetID(v)
@@ -343,12 +307,6 @@ func (pc *PermissionCreate) check() error {
 	}
 	if _, ok := pc.mutation.DataScope(); !ok {
 		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Permission.data_scope"`)}
-	}
-	if _, ok := pc.mutation.Method(); !ok {
-		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "Permission.method"`)}
-	}
-	if _, ok := pc.mutation.Path(); !ok {
-		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Permission.path"`)}
 	}
 	if v, ok := pc.mutation.ID(); ok {
 		if err := permission.IDValidator(v); err != nil {
@@ -410,14 +368,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.DataScope(); ok {
 		_spec.SetField(permission.FieldDataScope, field.TypeString, value)
 		_node.DataScope = value
-	}
-	if value, ok := pc.mutation.Method(); ok {
-		_spec.SetField(permission.FieldMethod, field.TypeString, value)
-		_node.Method = value
-	}
-	if value, ok := pc.mutation.Path(); ok {
-		_spec.SetField(permission.FieldPath, field.TypeString, value)
-		_node.Path = value
 	}
 	if value, ok := pc.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)

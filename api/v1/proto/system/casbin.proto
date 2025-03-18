@@ -14,20 +14,22 @@
 
 syntax = "proto3";
 
+option go_package = "v1/services/system;system";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.services.casbin";
-option java_outer_classname = "CasbinProto";
-option go_package = "v1/services/casbin;casbin";
 option csharp_namespace = "CasbinOrg.Grpc";
+option java_outer_classname = "APIServiceSystemCasbinProto";
+option java_package = "com.origadmin.api.v1.services.system";
+option objc_class_prefix = "APIServiceSystemCasbin";
 
-package api.v1.services.casbin;
+
+package api.v1.services.system;
 
 // The Casbin source service definition.
 service CasbinSourceService {
   rpc ListPolicies (ListPoliciesRequest) returns (ListPoliciesResponse) {}
   rpc ListGroupings (ListGroupingsRequest) returns (ListGroupingsResponse) {}
 
-  rpc StreamRules(StreamRulesRequest) returns (stream StreamRulesResponse) {}
+  rpc StreamRules (StreamRulesRequest) returns (stream StreamRulesResponse) {}
 }
 
 message ListPoliciesRequest {

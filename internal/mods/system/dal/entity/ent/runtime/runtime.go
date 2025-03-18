@@ -121,14 +121,6 @@ func init() {
 	permissionDescDataScope := permissionFields[3].Descriptor()
 	// permission.DefaultDataScope holds the default value on creation for the data_scope field.
 	permission.DefaultDataScope = permissionDescDataScope.Default.(string)
-	// permissionDescMethod is the schema descriptor for method field.
-	permissionDescMethod := permissionFields[4].Descriptor()
-	// permission.DefaultMethod holds the default value on creation for the method field.
-	permission.DefaultMethod = permissionDescMethod.Default.(string)
-	// permissionDescPath is the schema descriptor for path field.
-	permissionDescPath := permissionFields[5].Descriptor()
-	// permission.DefaultPath holds the default value on creation for the path field.
-	permission.DefaultPath = permissionDescPath.Default.(string)
 	// permissionDescID is the schema descriptor for id field.
 	permissionDescID := permissionMixinFields0[0].Descriptor()
 	// permission.DefaultID holds the default value on creation for the id field.
@@ -544,6 +536,6 @@ func init() {
 }
 
 const (
-	Version = "v0.14.1"                                         // Version of ent codegen.
-	Sum     = "h1:fUERL506Pqr92EPHJqr8EYxbPioflJo6PudkrEA8a/s=" // Sum of ent codegen.
+	Version = "v0.14.4"                                         // Version of ent codegen.
+	Sum     = "h1:/DhDraSLXIkBhyiVoJeSshr4ZYi7femzhj6/TckzZuI=" // Sum of ent codegen.
 )

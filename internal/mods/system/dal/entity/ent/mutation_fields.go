@@ -153,16 +153,6 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			if input.DataScope != "" {
 				m.SetDataScope(input.DataScope)
 			}
-		case permission.FieldMethod:
-			// check string with sql.NullString if it is empty
-			if input.Method != "" {
-				m.SetMethod(input.Method)
-			}
-		case permission.FieldPath:
-			// check string with sql.NullString if it is empty
-			if input.Path != "" {
-				m.SetPath(input.Path)
-			}
 		case permission.FieldDataRules:
 			if len(input.DataRules) > 0 {
 				m.SetDataRules(input.DataRules)
@@ -197,10 +187,6 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetDescription(input.Description)
 		case permission.FieldDataScope:
 			m.SetDataScope(input.DataScope)
-		case permission.FieldMethod:
-			m.SetMethod(input.Method)
-		case permission.FieldPath:
-			m.SetPath(input.Path)
 		case permission.FieldDataRules:
 			m.SetDataRules(input.DataRules)
 		case permission.FieldID:

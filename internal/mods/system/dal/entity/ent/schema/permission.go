@@ -48,12 +48,6 @@ func (Permission) Fields() []ent.Field {
 		field.String("data_scope").
 			Default(DataScopeSelf).
 			Comment(i18n.Text("permission.field.data_scope")),
-		field.String("method").
-			Default("GET").
-			Comment(i18n.Text("permission.field.method")),
-		field.String("path").
-			Default("").
-			Comment(i18n.Text("permission.field.path")),
 		field.JSON("data_rules", map[string]string{}).
 			Optional().
 			Comment(i18n.Text("permission.field.data_rules")),
