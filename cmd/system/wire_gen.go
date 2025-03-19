@@ -37,17 +37,17 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		return nil, nil, err
 	}
 	resourceRepo := dal.NewResourceRepo(data, arg)
-	resourceServiceClient := biz.NewResourceServiceClient(resourceRepo, arg)
-	resourceServiceServer := service.NewResourceServiceServerPB(resourceServiceClient)
+	resourceServiceBiz := biz.NewResourceServiceBiz(resourceRepo, arg)
+	resourceServiceServer := service.NewResourceServiceServerPB(resourceServiceBiz)
 	roleRepo := dal.NewRoleRepo(data, arg)
-	roleServiceClient := biz.NewRoleServiceClient(roleRepo, arg)
-	roleServiceServer := service.NewRoleServiceServerPB(roleServiceClient)
+	roleServiceBiz := biz.NewRoleServiceBiz(roleRepo, arg)
+	roleServiceServer := service.NewRoleServiceServerPB(roleServiceBiz)
 	userRepo := dal.NewUserRepo(data, arg)
-	userServiceClient := biz.NewUserServiceClient(userRepo, arg)
-	userServiceServer := service.NewUserServiceServerPB(userServiceClient)
+	userServiceBiz := biz.NewUserServiceBiz(userRepo, arg)
+	userServiceServer := service.NewUserServiceServerPB(userServiceBiz)
 	authRepo := dal.NewAuthRepo(data, arg)
-	authServiceClient := biz.NewAuthServiceClient(authRepo, arg)
-	authServiceServer := service.NewAuthServiceServerPB(authServiceClient)
+	authServiceBiz := biz.NewAuthServiceBiz(authRepo, arg)
+	authServiceServer := service.NewAuthServiceServerPB(authServiceBiz)
 	basisConfig := loader.NewBasisConfig(bootstrap)
 	tokenizer, err := loader.NewTokenizer(bootstrap)
 	if err != nil {
@@ -63,14 +63,14 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		User:        userRepo,
 	}
 	loginRepo := dal.NewLoginRepo(loginData, arg)
-	loginServiceClient := biz.NewLoginServiceClient(loginRepo, arg)
-	loginServiceServer := service.NewLoginServiceServerPB(loginServiceClient)
+	loginServiceBiz := biz.NewLoginServiceBiz(loginRepo, arg)
+	loginServiceServer := service.NewLoginServiceServerPB(loginServiceBiz)
 	personalRepo := dal.NewPersonalRepo(data, arg)
-	personalServiceClient := biz.NewPersonalServiceClient(personalRepo, arg)
-	personalServiceServer := service.NewPersonalServiceServerPB(personalServiceClient)
+	personalServiceBiz := biz.NewPersonalServiceBiz(personalRepo, arg)
+	personalServiceServer := service.NewPersonalServiceServerPB(personalServiceBiz)
 	permissionRepo := dal.NewPermissionRepo(data, arg)
-	permissionServiceClient := biz.NewPermissionServiceClient(permissionRepo, arg)
-	permissionServiceServer := service.NewPermissionServiceServerPB(permissionServiceClient)
+	permissionServiceBiz := biz.NewPermissionServiceBiz(permissionRepo, arg)
+	permissionServiceServer := service.NewPermissionServiceServerPB(permissionServiceBiz)
 	registerServer := &service.RegisterServer{
 		Resource:   resourceServiceServer,
 		Role:       roleServiceServer,
