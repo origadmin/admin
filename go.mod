@@ -27,7 +27,7 @@ require (
 	github.com/origadmin/contrib/replacer v0.0.32
 	github.com/origadmin/contrib/transport/gins v0.0.32
 	github.com/origadmin/entslog/v3 v3.0.6
-	github.com/origadmin/runtime v0.1.51
+	github.com/origadmin/runtime v0.1.52
 	github.com/origadmin/slog-kratos v1.0.4
 	github.com/origadmin/toolkits v0.2.10
 	github.com/origadmin/toolkits/codec v0.2.10
@@ -74,7 +74,7 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-openapi/inflect v0.21.2 // indirect
-	github.com/go-playground/form/v4 v4.2.1 // indirect
+	github.com/go-playground/form/v4 v4.2.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.25.0 // indirect

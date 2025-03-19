@@ -30,11 +30,11 @@ service CasbinSourceService {
   rpc ListGroupings (ListGroupingsRequest) returns (ListGroupingsResponse) {}
 
   rpc StreamRules (StreamRulesRequest) returns (stream StreamRulesResponse) {}
+
+  rpc WatchUpdate (WatchUpdateRequest) returns (stream WatchUpdateResponse) {}
 }
 
-message ListPoliciesRequest {
-
-}
+message ListPoliciesRequest {}
 
 message ListPoliciesResponse {
   repeated PolicyRule rules = 1;
@@ -45,9 +45,7 @@ message PolicyRule {
   repeated string params = 2;
 }
 
-message ListGroupingsRequest {
-
-}
+message ListGroupingsRequest {}
 
 message ListGroupingsResponse {
   repeated GroupingRule rules = 1;
@@ -68,4 +66,12 @@ message StreamRulesResponse {
     PolicyRule policy = 1;
     GroupingRule grouping = 2;
   }
+}
+
+message WatchUpdateRequest {
+  string last_modified = 1 [json_name = "last_modified"];
+}
+
+message WatchUpdateResponse {
+  string modified_date = 1 [json_name = "modified_date"];
 }

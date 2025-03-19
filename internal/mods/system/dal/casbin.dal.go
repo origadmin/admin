@@ -9,8 +9,6 @@ import (
 	"context"
 	"strconv"
 
-	"google.golang.org/grpc"
-
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -83,23 +81,6 @@ func (c casbinSourceRepo) ListGroupings(ctx context.Context, in *pb.ListGrouping
 	return &pb.ListGroupingsResponse{
 		Rules: rules,
 	}, nil
-}
-
-func (c casbinSourceRepo) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
-	ctx := stream.Context()
-
-	if request.WithPolicies {
-		if err := c.streamPolicies(ctx, stream); err != nil {
-			return err
-		}
-	}
-
-	if request.WithGroupings {
-		if err := c.streamGroupings(ctx, stream); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 // NewCasbinSourceRepo returns a new CasbinSourceRepo

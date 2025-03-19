@@ -1007,3 +1007,211 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = StreamRulesResponseValidationError{}
+
+// Validate checks the field values on WatchUpdateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *WatchUpdateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on WatchUpdateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// WatchUpdateRequestMultiError, or nil if none found.
+func (m *WatchUpdateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *WatchUpdateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for LastModified
+
+	if len(errors) > 0 {
+		return WatchUpdateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// WatchUpdateRequestMultiError is an error wrapping multiple validation errors
+// returned by WatchUpdateRequest.ValidateAll() if the designated constraints
+// aren't met.
+type WatchUpdateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m WatchUpdateRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m WatchUpdateRequestMultiError) AllErrors() []error { return m }
+
+// WatchUpdateRequestValidationError is the validation error returned by
+// WatchUpdateRequest.Validate if the designated constraints aren't met.
+type WatchUpdateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e WatchUpdateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e WatchUpdateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e WatchUpdateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e WatchUpdateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e WatchUpdateRequestValidationError) ErrorName() string {
+	return "WatchUpdateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e WatchUpdateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sWatchUpdateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = WatchUpdateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = WatchUpdateRequestValidationError{}
+
+// Validate checks the field values on WatchUpdateResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *WatchUpdateResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on WatchUpdateResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// WatchUpdateResponseMultiError, or nil if none found.
+func (m *WatchUpdateResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *WatchUpdateResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ModifiedDate
+
+	if len(errors) > 0 {
+		return WatchUpdateResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// WatchUpdateResponseMultiError is an error wrapping multiple validation
+// errors returned by WatchUpdateResponse.ValidateAll() if the designated
+// constraints aren't met.
+type WatchUpdateResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m WatchUpdateResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m WatchUpdateResponseMultiError) AllErrors() []error { return m }
+
+// WatchUpdateResponseValidationError is the validation error returned by
+// WatchUpdateResponse.Validate if the designated constraints aren't met.
+type WatchUpdateResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e WatchUpdateResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e WatchUpdateResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e WatchUpdateResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e WatchUpdateResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e WatchUpdateResponseValidationError) ErrorName() string {
+	return "WatchUpdateResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e WatchUpdateResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sWatchUpdateResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = WatchUpdateResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = WatchUpdateResponseValidationError{}
