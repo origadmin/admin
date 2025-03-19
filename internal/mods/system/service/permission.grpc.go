@@ -8,13 +8,14 @@ import (
 	"github.com/origadmin/runtime/context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 // PermissionServiceServer is a menu service.
 type PermissionServiceServer struct {
 	pb.UnimplementedPermissionServiceServer
 
-	client pb.PermissionServiceClient
+	client *biz.PermissionServiceBiz
 }
 
 func (s PermissionServiceServer) ListPermissions(ctx context.Context, request *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
@@ -43,12 +44,12 @@ func (s PermissionServiceServer) DeletePermission(ctx context.Context, request *
 //}
 
 // NewPermissionServiceServer new a menu service.
-func NewPermissionServiceServer(client pb.PermissionServiceClient) *PermissionServiceServer {
+func NewPermissionServiceServer(client *biz.PermissionServiceBiz) *PermissionServiceServer {
 	return &PermissionServiceServer{client: client}
 }
 
 // NewPermissionServiceServerPB new a menu service.
-func NewPermissionServiceServerPB(client pb.PermissionServiceClient) pb.PermissionServiceServer {
+func NewPermissionServiceServerPB(client *biz.PermissionServiceBiz) pb.PermissionServiceServer {
 	return &PermissionServiceServer{client: client}
 }
 

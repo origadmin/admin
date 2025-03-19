@@ -12,37 +12,81 @@ import (
 	"github.com/origadmin/toolkits/net/pagination"
 	"google.golang.org/grpc"
 
-	pb "origadmin/application/admin/api/v1/services/casbin"
-	"origadmin/application/admin/internal/mods/casbin/dto"
+	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-// CasbinSourceServiceClientBiz is a CasbinSource use case.
-type CasbinSourceServiceClientBiz struct {
+// CasbinSourceServiceBiz is a CasbinSource use case.
+type CasbinSourceServiceBiz struct {
 	dao     dto.CasbinSourceRepo
 	limiter pagination.PageLimiter
 	log     *log.KHelper
 }
 
-func (c CasbinSourceServiceClientBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest, opts ...grpc.CallOption) (*pb.ListPoliciesResponse, error) {
+func (c CasbinSourceServiceBiz) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+	ctx := stream.Context()
+
+	if request.WithPolicies {
+		if err := c.streamPolicies(ctx, stream); err != nil {
+			return err
+		}
+	}
+
+	if request.WithGroupings {
+		if err := c.streamGroupings(ctx, stream); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (c CasbinSourceServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
 	return c.dao.ListPolicies(ctx, in)
 }
 
-func (c CasbinSourceServiceClientBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest, opts ...grpc.CallOption) (*pb.ListGroupingsResponse, error) {
+func (c CasbinSourceServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
 	return c.dao.ListGroupings(ctx, in)
 }
 
-func (c CasbinSourceServiceClientBiz) StreamRules(ctx context.Context, in *pb.StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[pb.StreamRulesResponse], error) {
-	return c.dao.StreamRules(ctx, in)
+func (c CasbinSourceServiceBiz) streamPolicies(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+	policies, err := c.ListPolicies(ctx, &pb.ListPoliciesRequest{})
+	if err != nil {
+		return err
+	}
+	for _, rule := range policies.Rules {
+		if err := stream.Send(newPolicyResponse(rule)); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-// NewCasbinSourceServiceClientBiz new a CasbinSource use case.
-func NewCasbinSourceServiceClientBiz(repo dto.CasbinSourceRepo, logger log.KLogger) *CasbinSourceServiceClientBiz {
-	return &CasbinSourceServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+func (c CasbinSourceServiceBiz) streamGroupings(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+	groupings, err := c.ListGroupings(ctx, &pb.ListGroupingsRequest{})
+	if err != nil {
+		return err
+	}
+	for _, rule := range groupings.Rules {
+		if err := stream.Send(newGroupingResponse(rule)); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-// NewCasbinSourceServiceClient new a CasbinSource use case.
-func NewCasbinSourceServiceClient(repo dto.CasbinSourceRepo, logger log.KLogger) pb.CasbinSourceServiceClient {
-	return &CasbinSourceServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+func newPolicyResponse(rule *pb.PolicyRule) *pb.StreamRulesResponse {
+	return &pb.StreamRulesResponse{
+		RuleType: &pb.StreamRulesResponse_Policy{Policy: rule},
+	}
 }
 
-var _ pb.CasbinSourceServiceClient = (*CasbinSourceServiceClientBiz)(nil)
+func newGroupingResponse(rule *pb.GroupingRule) *pb.StreamRulesResponse {
+	return &pb.StreamRulesResponse{
+		RuleType: &pb.StreamRulesResponse_Grouping{Grouping: rule},
+	}
+}
+
+// NewCasbinSourceServiceBiz new a CasbinSource use case.
+func NewCasbinSourceServiceBiz(repo dto.CasbinSourceRepo, logger log.KLogger) *CasbinSourceServiceBiz {
+	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+}

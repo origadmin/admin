@@ -16,14 +16,14 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-// RoleServiceClientBiz is a RolePB use case.
-type RoleServiceClientBiz struct {
+// RoleServiceBiz is a RolePB use case.
+type RoleServiceBiz struct {
 	dao     dto.RoleRepo
 	limiter pagination.PageLimiter
 	log     *log.KHelper
 }
 
-func (biz RoleServiceClientBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts ...grpc.CallOption) (*pb.ListRolesResponse, error) {
+func (biz RoleServiceBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts ...grpc.CallOption) (*pb.ListRolesResponse, error) {
 	var option dto.RoleQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (biz RoleServiceClientBiz) ListRoles(ctx context.Context, in *pb.ListRolesR
 	return dto.ToListRolesResponse(result, in, total)
 }
 
-func (biz RoleServiceClientBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...grpc.CallOption) (*pb.GetRoleResponse, error) {
+func (biz RoleServiceBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...grpc.CallOption) (*pb.GetRoleResponse, error) {
 	var option dto.RoleQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,9 +52,9 @@ func (biz RoleServiceClientBiz) GetRole(ctx context.Context, in *pb.GetRoleReque
 	}, nil
 }
 
-func (biz RoleServiceClientBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts ...grpc.CallOption) (*pb.CreateRoleResponse, error) {
-	var option dto.RoleQueryOption
-	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
+func (biz RoleServiceBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts ...grpc.CallOption) (*pb.CreateRoleResponse, error) {
+	var option dto.RoleUpdateOption
+	if err := option.FromCreateRequest(in); err != nil {
 		return nil, err
 	}
 	log.Info("CreateRole")
@@ -67,7 +67,7 @@ func (biz RoleServiceClientBiz) CreateRole(ctx context.Context, in *pb.CreateRol
 	}, nil
 }
 
-func (biz RoleServiceClientBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts ...grpc.CallOption) (*pb.UpdateRoleResponse, error) {
+func (biz RoleServiceBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts ...grpc.CallOption) (*pb.UpdateRoleResponse, error) {
 	//var option dto.UpdateRoleOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -82,7 +82,7 @@ func (biz RoleServiceClientBiz) UpdateRole(ctx context.Context, in *pb.UpdateRol
 	}, nil
 }
 
-func (biz RoleServiceClientBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts ...grpc.CallOption) (*pb.DeleteRoleResponse, error) {
+func (biz RoleServiceBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts ...grpc.CallOption) (*pb.DeleteRoleResponse, error) {
 	//var option dto.DeleteRoleOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -98,14 +98,7 @@ func (biz RoleServiceClientBiz) DeleteRole(ctx context.Context, in *pb.DeleteRol
 	return &pb.DeleteRoleResponse{}, nil
 }
 
-// NewRoleServiceClientBiz new a RolePB use case.
-func NewRoleServiceClientBiz(repo dto.RoleRepo, logger log.KLogger) *RoleServiceClientBiz {
-	return &RoleServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewRoleServiceBiz new a RolePB use case.
+func NewRoleServiceBiz(repo dto.RoleRepo, logger log.KLogger) *RoleServiceBiz {
+	return &RoleServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
-
-// NewRoleServiceClient new a RolePB use case.
-func NewRoleServiceClient(repo dto.RoleRepo, logger log.KLogger) pb.RoleServiceClient {
-	return &RoleServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
-}
-
-var _ pb.RoleServiceClient = (*RoleServiceClientBiz)(nil)

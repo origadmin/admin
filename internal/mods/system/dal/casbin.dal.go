@@ -16,67 +16,101 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-type casbinSourceRepo struct {
-	ctx  context.Context
-	data *Data
+type CasbinSourceConfig struct {
+	PrefixNumberID func(prefix string, id int64) string
 }
 
+type casbinSourceRepo struct {
+	ctx    context.Context
+	data   *Data
+	config *CasbinSourceConfig
+}
+
+func (c casbinSourceRepo) mustEmbedUnimplementedCasbinSourceServiceServer() {
+	//TODO implement me
+	panic("implement me")
+}
+
+func permissionResourceQuery(query *ent.PermissionQuery) {
+	query.WithResources()
+}
 func (c casbinSourceRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
-	roles, err := c.data.Role(ctx).Query().WithPermissions(func(query *ent.PermissionQuery) {
-		query.WithResources()
-	}).All(ctx)
+	rolePermissions, err := c.data.RolePermission(ctx).Query().WithPermission(permissionResourceQuery).WithRole().All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	// 转换策略
 	var rules []*pb.PolicyRule
-	for _, role := range roles {
-		for _, permission := range role.Edges.Permissions {
-			for _, resource := range permission.Edges.Resources {
-				rules = append(rules, &pb.PolicyRule{
-					Ptype: "p",
-					Params: []string{
-						"role_" + strconv.FormatInt(role.ID, 10),
-						resource.Path,
-						resource.Method,
-					},
-				})
-			}
+	for _, rolePermission := range rolePermissions {
+		permission, err := rolePermission.Edges.PermissionOrErr()
+		if err != nil {
+			continue
+		}
+		resources, err := permission.Edges.ResourcesOrErr()
+		if err != nil {
+			continue
+		}
+		for _, resource := range resources {
+			rules = append(rules, &pb.PolicyRule{
+				Ptype: "p",
+				Params: []string{
+					c.config.PrefixNumberID("role", rolePermission.RoleID),
+					resource.Path,
+					resource.Method,
+					//todo: add domain support
+				},
+			})
 		}
 	}
 	return &pb.ListPoliciesResponse{Rules: rules}, nil
 }
 
 func (c casbinSourceRepo) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
-	users, err := c.data.User(ctx).Query().WithRoles().All(ctx)
+	userRoles, err := c.data.UserRole(ctx).Query().All(ctx)
 	if err != nil {
 		return nil, err
 	}
 	var rules []*pb.GroupingRule
-	for _, user := range users {
-		for _, role := range user.Edges.Roles {
-			rules = append(rules, &pb.GroupingRule{
-				Ptype: "g",
-				Params: []string{
-					"user_" + strconv.FormatInt(user.ID, 10),
-					"role_" + strconv.FormatInt(role.ID, 10),
-				},
-			})
-		}
+	for _, userRole := range userRoles {
+		rules = append(rules, &pb.GroupingRule{
+			Ptype: "g",
+			Params: []string{
+				c.config.PrefixNumberID("user", userRole.UserID),
+				c.config.PrefixNumberID("role", userRole.RoleID),
+				//todo: add domain support
+			},
+		})
 	}
 	return &pb.ListGroupingsResponse{
 		Rules: rules,
 	}, nil
 }
 
-func (c casbinSourceRepo) StreamRules(ctx context.Context, in *pb.StreamRulesRequest) (grpc.ServerStreamingClient[pb.StreamRulesResponse], error) {
-	return nil, nil
+func (c casbinSourceRepo) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+	ctx := stream.Context()
+
+	if request.WithPolicies {
+		if err := c.streamPolicies(ctx, stream); err != nil {
+			return err
+		}
+	}
+
+	if request.WithGroupings {
+		if err := c.streamGroupings(ctx, stream); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // NewCasbinSourceRepo returns a new CasbinSourceRepo
 func NewCasbinSourceRepo(data *Data) (dto.CasbinSourceRepo, error) {
 	c := &casbinSourceRepo{
 		data: data,
+		config: &CasbinSourceConfig{
+			PrefixNumberID: func(prefix string, id int64) string {
+				return prefix + "_" + strconv.FormatInt(id, 10)
+			},
+		},
 	}
 	return c, nil
 }
@@ -84,8 +118,13 @@ func NewCasbinSourceRepo(data *Data) (dto.CasbinSourceRepo, error) {
 // NewCasbinSourceWithClient create a new CasbinSourceRepo with given client.
 // This method does not ensure the existence of database, user should create database manually.
 func NewCasbinSourceWithClient(client *ent.Client) (dto.CasbinSourceRepo, error) {
-	a := &casbinSourceRepo{
+	c := &casbinSourceRepo{
 		data: NewDataWithClient(client),
+		config: &CasbinSourceConfig{
+			PrefixNumberID: func(prefix string, id int64) string {
+				return prefix + "_" + strconv.FormatInt(id, 10)
+			},
+		},
 	}
-	return a, nil
+	return c, nil
 }

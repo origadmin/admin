@@ -16,14 +16,14 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-// PermissionServiceClientBiz is a PermissionPB use case.
-type PermissionServiceClientBiz struct {
+// PermissionServiceBiz is a PermissionPB use case.
+type PermissionServiceBiz struct {
 	dao     dto.PermissionRepo
 	limiter pagination.PageLimiter
 	log     *log.KHelper
 }
 
-func (biz PermissionServiceClientBiz) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest, opts ...grpc.CallOption) (*pb.ListPermissionsResponse, error) {
+func (biz PermissionServiceBiz) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest, opts ...grpc.CallOption) (*pb.ListPermissionsResponse, error) {
 	var option dto.PermissionQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (biz PermissionServiceClientBiz) ListPermissions(ctx context.Context, in *p
 	return dto.ToListPermissionsResponse(result, in, total)
 }
 
-func (biz PermissionServiceClientBiz) GetPermission(ctx context.Context, in *pb.GetPermissionRequest, opts ...grpc.CallOption) (*pb.GetPermissionResponse, error) {
+func (biz PermissionServiceBiz) GetPermission(ctx context.Context, in *pb.GetPermissionRequest, opts ...grpc.CallOption) (*pb.GetPermissionResponse, error) {
 	var option dto.PermissionQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (biz PermissionServiceClientBiz) GetPermission(ctx context.Context, in *pb.
 	}, nil
 }
 
-func (biz PermissionServiceClientBiz) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest, opts ...grpc.CallOption) (*pb.CreatePermissionResponse, error) {
+func (biz PermissionServiceBiz) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest, opts ...grpc.CallOption) (*pb.CreatePermissionResponse, error) {
 	var option dto.PermissionQueryOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (biz PermissionServiceClientBiz) CreatePermission(ctx context.Context, in *
 	}, nil
 }
 
-func (biz PermissionServiceClientBiz) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest, opts ...grpc.CallOption) (*pb.UpdatePermissionResponse, error) {
+func (biz PermissionServiceBiz) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest, opts ...grpc.CallOption) (*pb.UpdatePermissionResponse, error) {
 	log.Info("UpdatePermission")
 	result, err := biz.dao.Update(ctx, in.Permission)
 	if err != nil {
@@ -78,7 +78,7 @@ func (biz PermissionServiceClientBiz) UpdatePermission(ctx context.Context, in *
 	}, nil
 }
 
-func (biz PermissionServiceClientBiz) DeletePermission(ctx context.Context, in *pb.DeletePermissionRequest, opts ...grpc.CallOption) (*pb.DeletePermissionResponse, error) {
+func (biz PermissionServiceBiz) DeletePermission(ctx context.Context, in *pb.DeletePermissionRequest, opts ...grpc.CallOption) (*pb.DeletePermissionResponse, error) {
 	log.Info("DeletePermission")
 	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err
@@ -86,14 +86,7 @@ func (biz PermissionServiceClientBiz) DeletePermission(ctx context.Context, in *
 	return &pb.DeletePermissionResponse{}, nil
 }
 
-// NewPermissionServiceClientBiz new a PermissionPB use case.
-func NewPermissionServiceClientBiz(repo dto.PermissionRepo, logger log.KLogger) *PermissionServiceClientBiz {
-	return &PermissionServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewPermissionServiceBiz new a PermissionPB use case.
+func NewPermissionServiceBiz(repo dto.PermissionRepo, logger log.KLogger) *PermissionServiceBiz {
+	return &PermissionServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
-
-// NewPermissionServiceClient new a PermissionPB use case.
-func NewPermissionServiceClient(repo dto.PermissionRepo, logger log.KLogger) pb.PermissionServiceClient {
-	return &PermissionServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
-}
-
-var _ pb.PermissionServiceClient = (*PermissionServiceClientBiz)(nil)

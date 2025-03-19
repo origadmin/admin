@@ -8,13 +8,14 @@ import (
 	"golang.org/x/net/context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 // LoginServiceServer is a login service.
 type LoginServiceServer struct {
 	pb.UnimplementedLoginServiceServer
 
-	client pb.LoginServiceClient
+	client *biz.LoginServiceBiz
 }
 
 func (obj LoginServiceServer) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
@@ -51,12 +52,12 @@ func (obj LoginServiceServer) Login(ctx context.Context, request *pb.LoginReques
 //}
 
 // NewLoginServiceServer new a login service.
-func NewLoginServiceServer(client pb.LoginServiceClient) *LoginServiceServer {
+func NewLoginServiceServer(client *biz.LoginServiceBiz) *LoginServiceServer {
 	return &LoginServiceServer{client: client}
 }
 
 // NewLoginServiceServerPB new a login service.
-func NewLoginServiceServerPB(client pb.LoginServiceClient) pb.LoginServiceServer {
+func NewLoginServiceServerPB(client *biz.LoginServiceBiz) pb.LoginServiceServer {
 	return &LoginServiceServer{client: client}
 }
 

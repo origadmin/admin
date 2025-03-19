@@ -8,13 +8,14 @@ import (
 	"github.com/origadmin/runtime/context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 // AuthServiceServer is a menu service.
 type AuthServiceServer struct {
 	pb.UnimplementedAuthServiceServer
 
-	client pb.AuthServiceClient
+	client *biz.AuthServiceBiz
 }
 
 func (s AuthServiceServer) ListAuthResources(ctx context.Context, request *pb.ListAuthResourcesRequest) (*pb.ListAuthResourcesResponse, error) {
@@ -26,13 +27,8 @@ func (s AuthServiceServer) ListAuthResources(ctx context.Context, request *pb.Li
 //	panic("implement me")
 //}
 
-// NewAuthServiceServer new a menu service.
-func NewAuthServiceServer(client pb.AuthServiceClient) *AuthServiceServer {
-	return &AuthServiceServer{client: client}
-}
-
 // NewAuthServiceServerPB new a menu service.
-func NewAuthServiceServerPB(client pb.AuthServiceClient) pb.AuthServiceServer {
+func NewAuthServiceServerPB(client *biz.AuthServiceBiz) pb.AuthServiceServer {
 	return &AuthServiceServer{client: client}
 }
 

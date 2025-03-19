@@ -8,12 +8,13 @@ import (
 	"context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 type RoleServiceServer struct {
 	pb.UnimplementedRoleServiceServer
 
-	client pb.RoleServiceClient
+	client *biz.RoleServiceBiz
 }
 
 func (s RoleServiceServer) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
@@ -33,14 +34,14 @@ func (s RoleServiceServer) DeleteRole(ctx context.Context, req *pb.DeleteRoleReq
 }
 
 // NewRoleServiceServer new a user service.
-func NewRoleServiceServer(client pb.RoleServiceClient) *RoleServiceServer {
+func NewRoleServiceServer(client *biz.RoleServiceBiz) *RoleServiceServer {
 	return &RoleServiceServer{
 		client: client,
 	}
 }
 
 // NewRoleServiceServerPB new a user service.
-func NewRoleServiceServerPB(client pb.RoleServiceClient) pb.RoleServiceServer {
+func NewRoleServiceServerPB(client *biz.RoleServiceBiz) pb.RoleServiceServer {
 	return &RoleServiceServer{
 		client: client,
 	}

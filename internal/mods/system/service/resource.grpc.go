@@ -8,13 +8,14 @@ import (
 	"github.com/origadmin/runtime/context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 // ResourceServiceServer is a menu service.
 type ResourceServiceServer struct {
 	pb.UnimplementedResourceServiceServer
 
-	client pb.ResourceServiceClient
+	client *biz.ResourceServiceBiz
 }
 
 func (s ResourceServiceServer) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
@@ -43,12 +44,12 @@ func (s ResourceServiceServer) DeleteResource(ctx context.Context, request *pb.D
 //}
 
 // NewResourceServiceServer new a menu service.
-func NewResourceServiceServer(client pb.ResourceServiceClient) *ResourceServiceServer {
+func NewResourceServiceServer(client *biz.ResourceServiceBiz) *ResourceServiceServer {
 	return &ResourceServiceServer{client: client}
 }
 
 // NewResourceServiceServerPB new a menu service.
-func NewResourceServiceServerPB(client pb.ResourceServiceClient) pb.ResourceServiceServer {
+func NewResourceServiceServerPB(client *biz.ResourceServiceBiz) pb.ResourceServiceServer {
 	return &ResourceServiceServer{client: client}
 }
 

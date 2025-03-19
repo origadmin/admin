@@ -5,8 +5,20 @@
 // Package dto implements the functions, types, and interfaces for the module.
 package dto
 
+import (
+	"context"
+
+	pb "origadmin/application/admin/api/v1/services/system"
+)
+
+type (
+	ListPoliciesRequest   = pb.ListPoliciesRequest
+	ListPoliciesResponse  = pb.ListPoliciesResponse
+	ListGroupingsRequest  = pb.ListGroupingsRequest
+	ListGroupingsResponse = pb.ListGroupingsResponse
+)
+
 type CasbinSourceRepo interface {
-	ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error)
-	ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error)
-	StreamRules(ctx context.Context, in *pb.StreamRulesRequest) (grpc.ServerStreamingClient[pb.StreamRulesResponse], error)
+	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
+	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
 }

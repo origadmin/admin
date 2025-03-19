@@ -8,12 +8,13 @@ import (
 	"context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 type UserServiceServer struct {
 	pb.UnimplementedUserServiceServer
 
-	client pb.UserServiceClient
+	client *biz.UserServiceBiz
 }
 
 func (s UserServiceServer) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
@@ -61,12 +62,12 @@ func (s UserServiceServer) DeleteUser(ctx context.Context, req *pb.DeleteUserReq
 }
 
 // NewUserServiceServer new a user service.
-func NewUserServiceServer(client pb.UserServiceClient) *UserServiceServer {
+func NewUserServiceServer(client *biz.UserServiceBiz) *UserServiceServer {
 	return &UserServiceServer{}
 }
 
 // NewUserServiceServerPB new a user service.
-func NewUserServiceServerPB(client pb.UserServiceClient) pb.UserServiceServer {
+func NewUserServiceServerPB(client *biz.UserServiceBiz) pb.UserServiceServer {
 	return &UserServiceServer{
 		client: client,
 	}

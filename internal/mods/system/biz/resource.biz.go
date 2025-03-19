@@ -17,14 +17,14 @@ import (
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
-// ResourceServiceClientBiz is a ResourcePB use case.
-type ResourceServiceClientBiz struct {
+// ResourceServiceBiz is a ResourcePB use case.
+type ResourceServiceBiz struct {
 	dao     dto.ResourceRepo
 	limiter pagination.PageLimiter
 	log     *log.KHelper
 }
 
-func (biz ResourceServiceClientBiz) ListResources(ctx context.Context, in *pb.ListResourcesRequest, opts ...grpc.CallOption) (*pb.ListResourcesResponse, error) {
+func (biz ResourceServiceBiz) ListResources(ctx context.Context, in *pb.ListResourcesRequest, opts ...grpc.CallOption) (*pb.ListResourcesResponse, error) {
 	var option dto.ResourceQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (biz ResourceServiceClientBiz) ListResources(ctx context.Context, in *pb.Li
 	return dto.ToListResourcesResponse(result, in, total)
 }
 
-func (biz ResourceServiceClientBiz) GetResource(ctx context.Context, in *pb.GetResourceRequest, opts ...grpc.CallOption) (*pb.GetResourceResponse, error) {
+func (biz ResourceServiceBiz) GetResource(ctx context.Context, in *pb.GetResourceRequest, opts ...grpc.CallOption) (*pb.GetResourceResponse, error) {
 	var option dto.ResourceQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (biz ResourceServiceClientBiz) GetResource(ctx context.Context, in *pb.GetR
 	}, nil
 }
 
-func (biz ResourceServiceClientBiz) CreateResource(ctx context.Context, in *pb.CreateResourceRequest, opts ...grpc.CallOption) (*pb.CreateResourceResponse, error) {
+func (biz ResourceServiceBiz) CreateResource(ctx context.Context, in *pb.CreateResourceRequest, opts ...grpc.CallOption) (*pb.CreateResourceResponse, error) {
 	var option dto.ResourceQueryOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (biz ResourceServiceClientBiz) CreateResource(ctx context.Context, in *pb.C
 	}, nil
 }
 
-func (biz ResourceServiceClientBiz) UpdateResource(ctx context.Context, in *pb.UpdateResourceRequest, opts ...grpc.CallOption) (*pb.UpdateResourceResponse, error) {
+func (biz ResourceServiceBiz) UpdateResource(ctx context.Context, in *pb.UpdateResourceRequest, opts ...grpc.CallOption) (*pb.UpdateResourceResponse, error) {
 	var option dto.ResourceQueryOption
 
 	log.Info("UpdateResource")
@@ -85,7 +85,7 @@ func (biz ResourceServiceClientBiz) UpdateResource(ctx context.Context, in *pb.U
 	}, nil
 }
 
-func (biz ResourceServiceClientBiz) DeleteResource(ctx context.Context, in *pb.DeleteResourceRequest, opts ...grpc.CallOption) (*pb.DeleteResourceResponse, error) {
+func (biz ResourceServiceBiz) DeleteResource(ctx context.Context, in *pb.DeleteResourceRequest, opts ...grpc.CallOption) (*pb.DeleteResourceResponse, error) {
 	//var option dto.DeleteResourceOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -101,14 +101,7 @@ func (biz ResourceServiceClientBiz) DeleteResource(ctx context.Context, in *pb.D
 	return &pb.DeleteResourceResponse{}, nil
 }
 
-// NewResourceServiceClientBiz new a ResourcePB use case.
-func NewResourceServiceClientBiz(repo dto.ResourceRepo, logger log.KLogger) *ResourceServiceClientBiz {
-	return &ResourceServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+// NewResourceServiceBiz new a ResourcePB use case.
+func NewResourceServiceBiz(repo dto.ResourceRepo, logger log.KLogger) *ResourceServiceBiz {
+	return &ResourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
 }
-
-// NewResourceServiceClient new a ResourcePB use case.
-func NewResourceServiceClient(repo dto.ResourceRepo, logger log.KLogger) pb.ResourceServiceClient {
-	return &ResourceServiceClientBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
-}
-
-var _ pb.ResourceServiceClient = (*ResourceServiceClientBiz)(nil)

@@ -8,13 +8,14 @@ import (
 	"github.com/origadmin/runtime/context"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 // PersonalServiceServer is a login service.
 type PersonalServiceServer struct {
 	pb.UnimplementedPersonalServiceServer
 
-	client pb.PersonalServiceClient
+	client *biz.PersonalServiceBiz
 }
 
 func (s PersonalServiceServer) GetPersonalProfile(ctx context.Context, request *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
@@ -50,12 +51,12 @@ func (s PersonalServiceServer) UpdatePersonalSetting(ctx context.Context, reques
 //}
 
 // NewPersonalServiceServer new a login service.
-func NewPersonalServiceServer(client pb.PersonalServiceClient) *PersonalServiceServer {
+func NewPersonalServiceServer(client *biz.PersonalServiceBiz) *PersonalServiceServer {
 	return &PersonalServiceServer{client: client}
 }
 
 // NewPersonalServiceServerPB new a login service.
-func NewPersonalServiceServerPB(client pb.PersonalServiceClient) pb.PersonalServiceServer {
+func NewPersonalServiceServerPB(client *biz.PersonalServiceBiz) pb.PersonalServiceServer {
 	return &PersonalServiceServer{client: client}
 }
 

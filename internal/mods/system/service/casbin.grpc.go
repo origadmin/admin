@@ -7,20 +7,18 @@ package service
 
 import (
 	"context"
-	"io"
 
 	"github.com/casbin/casbin/v2"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 type CasbinSourceServiceServer struct {
 	pb.UnimplementedCasbinSourceServiceServer
 
-	client   pb.CasbinSourceServiceClient
+	client   *biz.CasbinSourceServiceBiz
 	enforcer *casbin.Enforcer
 }
 
@@ -35,47 +33,12 @@ func (c *CasbinSourceServiceServer) ListGroupings(ctx context.Context,
 }
 
 func (c *CasbinSourceServiceServer) StreamRules(request *pb.StreamRulesRequest,
-	g grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
-	stream, err := c.client.StreamRules(g.Context(), request)
-	if err != nil {
-		return status.Errorf(codes.Unavailable, "connect server failed: %v", err)
-	}
-
-	for {
-		rule, err := stream.Recv()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			st, _ := status.FromError(err)
-			return status.Errorf(st.Code(), "recvied error: %v", st.Message())
-		}
-		if err := g.Send(rule); err != nil {
-			if status.Code(err) == codes.Canceled {
-				_ = stream.CloseSend()
-				return nil
-			}
-			return status.Errorf(codes.Internal, "send data error: %v", err)
-		}
-		if c.enforcer != nil {
-			switch v := rule.RuleType.(type) {
-			case *pb.StreamRulesResponse_Policy:
-				_, _ = c.enforcer.AddPolicy(v.Policy.Params)
-			case *pb.StreamRulesResponse_Grouping:
-				_, _ = c.enforcer.AddGroupingPolicy(v.Grouping.Params)
-			}
-		}
-	}
-	return nil
-}
-
-// NewCasbinSourceServiceServer new a menu service.
-func NewCasbinSourceServiceServer(client pb.CasbinSourceServiceClient) *CasbinSourceServiceServer {
-	return &CasbinSourceServiceServer{client: client}
+	stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+	return c.client.StreamRules(request, stream)
 }
 
 // NewCasbinSourceServiceServerPB new a menu service.
-func NewCasbinSourceServiceServerPB(client pb.CasbinSourceServiceClient) pb.CasbinSourceServiceServer {
+func NewCasbinSourceServiceServerPB(client *biz.CasbinSourceServiceBiz) pb.CasbinSourceServiceServer {
 	return &CasbinSourceServiceServer{client: client}
 }
 
