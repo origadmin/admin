@@ -7,6 +7,8 @@ package biz
 
 import (
 	"context"
+	"sync/atomic"
+	"time"
 
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/net/pagination"
@@ -18,9 +20,10 @@ import (
 
 // CasbinSourceServiceBiz is a CasbinSource use case.
 type CasbinSourceServiceBiz struct {
-	dao     dto.CasbinSourceRepo
-	limiter pagination.PageLimiter
-	log     *log.KHelper
+	dao          dto.CasbinSourceRepo
+	limiter      pagination.PageLimiter
+	log          *log.KHelper
+	lastModified *atomic.Int64
 }
 
 func (c CasbinSourceServiceBiz) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
@@ -46,6 +49,19 @@ func (c CasbinSourceServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPol
 
 func (c CasbinSourceServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
 	return c.dao.ListGroupings(ctx, in)
+}
+
+func (c CasbinSourceServiceBiz) WatchUpdate(_ context.Context,
+	request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
+	ModifiedDate := request.LastModified
+	if c.lastModified.Load() > ModifiedDate {
+		ModifiedDate = c.lastModified.Load()
+	}
+	return &pb.WatchUpdateResponse{ModifiedDate: ModifiedDate}, nil
+}
+
+func (c CasbinSourceServiceBiz) UpdateRules() {
+	c.lastModified.Store(time.Now().Unix())
 }
 
 func (c CasbinSourceServiceBiz) streamPolicies(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
@@ -88,5 +104,6 @@ func newGroupingResponse(rule *pb.GroupingRule) *pb.StreamRulesResponse {
 
 // NewCasbinSourceServiceBiz new a CasbinSource use case.
 func NewCasbinSourceServiceBiz(repo dto.CasbinSourceRepo, logger log.KLogger) *CasbinSourceServiceBiz {
-	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger),
+		lastModified: &atomic.Int64{}}
 }

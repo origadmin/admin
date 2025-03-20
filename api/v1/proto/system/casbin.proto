@@ -28,10 +28,11 @@ package api.v1.services.system;
 service CasbinSourceService {
   rpc ListPolicies (ListPoliciesRequest) returns (ListPoliciesResponse) {}
   rpc ListGroupings (ListGroupingsRequest) returns (ListGroupingsResponse) {}
+  rpc WatchUpdate (WatchUpdateRequest) returns (WatchUpdateResponse) {}
 
   rpc StreamRules (StreamRulesRequest) returns (stream StreamRulesResponse) {}
 
-  rpc WatchUpdate (WatchUpdateRequest) returns (stream WatchUpdateResponse) {}
+
 }
 
 message ListPoliciesRequest {}
@@ -41,19 +42,19 @@ message ListPoliciesResponse {
 }
 
 message PolicyRule {
-  string ptype = 1;
-  repeated string params = 2;
+  string p_type = 1 [json_name = "p_type"];
+  repeated string params = 2 [json_name = "params"];
 }
 
 message ListGroupingsRequest {}
 
 message ListGroupingsResponse {
-  repeated GroupingRule rules = 1;
+  repeated GroupingRule rules = 1 [json_name = "rules"];
 }
 
 message GroupingRule {
-  string ptype = 1;
-  repeated string params = 2;
+  string p_type = 1 [json_name = "p_type"];
+  repeated string params = 2 [json_name = "params"];
 }
 
 message StreamRulesRequest {
@@ -69,9 +70,9 @@ message StreamRulesResponse {
 }
 
 message WatchUpdateRequest {
-  string last_modified = 1 [json_name = "last_modified"];
+  int64 last_modified = 1 [json_name = "last_modified"];
 }
 
 message WatchUpdateResponse {
-  string modified_date = 1 [json_name = "modified_date"];
+  int64 modified_date = 1 [json_name = "modified_date"];
 }

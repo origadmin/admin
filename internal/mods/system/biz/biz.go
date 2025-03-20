@@ -33,3 +33,7 @@ var (
 var (
 	defaultLimiter = pagination.DefaultLimiter()
 )
+
+type UpdateHooker interface {
+	UpdateRules()
+}

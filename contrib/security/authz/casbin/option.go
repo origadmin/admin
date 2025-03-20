@@ -47,9 +47,9 @@ func WithNameModel(name string) Setting {
 	}
 }
 
-func WithPolicyAdapter(policy persist.Adapter) Setting {
+func WithPolicyAdapter(adapter persist.Adapter) Setting {
 	return func(s *Authorizer) {
-		s.policy = policy
+		s.adapter = adapter
 	}
 }
 

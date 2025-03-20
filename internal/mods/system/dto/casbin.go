@@ -16,9 +16,12 @@ type (
 	ListPoliciesResponse  = pb.ListPoliciesResponse
 	ListGroupingsRequest  = pb.ListGroupingsRequest
 	ListGroupingsResponse = pb.ListGroupingsResponse
+	//WatchUpdateRequest    = pb.WatchUpdateRequest
+	//WatchUpdateResponse   = pb.WatchUpdateResponse
 )
 
 type CasbinSourceRepo interface {
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
+	//WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error)
 }

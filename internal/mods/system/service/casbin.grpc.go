@@ -22,6 +22,14 @@ type CasbinSourceServiceServer struct {
 	enforcer *casbin.Enforcer
 }
 
+func (c *CasbinSourceServiceServer) WatchUpdate(ctx context.Context, request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
+	return c.client.WatchUpdate(ctx, request)
+}
+
+func (c *CasbinSourceServiceServer) mustEmbedUnimplementedCasbinSourceServiceServer() {
+
+}
+
 func (c *CasbinSourceServiceServer) ListPolicies(ctx context.Context,
 	request *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
 	return c.client.ListPolicies(ctx, request)

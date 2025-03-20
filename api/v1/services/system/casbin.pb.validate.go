@@ -295,7 +295,7 @@ func (m *PolicyRule) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Ptype
+	// no validation rules for PType
 
 	if len(errors) > 0 {
 		return PolicyRuleMultiError(errors)
@@ -634,7 +634,7 @@ func (m *GroupingRule) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Ptype
+	// no validation rules for PType
 
 	if len(errors) > 0 {
 		return GroupingRuleMultiError(errors)

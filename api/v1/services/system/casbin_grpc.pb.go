@@ -35,8 +35,8 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	CasbinSourceService_ListPolicies_FullMethodName  = "/api.v1.services.system.CasbinSourceService/ListPolicies"
 	CasbinSourceService_ListGroupings_FullMethodName = "/api.v1.services.system.CasbinSourceService/ListGroupings"
-	CasbinSourceService_StreamRules_FullMethodName   = "/api.v1.services.system.CasbinSourceService/StreamRules"
 	CasbinSourceService_WatchUpdate_FullMethodName   = "/api.v1.services.system.CasbinSourceService/WatchUpdate"
+	CasbinSourceService_StreamRules_FullMethodName   = "/api.v1.services.system.CasbinSourceService/StreamRules"
 )
 
 // CasbinSourceServiceClient is the client API for CasbinSourceService service.
@@ -47,8 +47,8 @@ const (
 type CasbinSourceServiceClient interface {
 	ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...grpc.CallOption) (*ListPoliciesResponse, error)
 	ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...grpc.CallOption) (*ListGroupingsResponse, error)
+	WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (*WatchUpdateResponse, error)
 	StreamRules(ctx context.Context, in *StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamRulesResponse], error)
-	WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchUpdateResponse], error)
 }
 
 type casbinSourceServiceClient struct {
@@ -79,6 +79,16 @@ func (c *casbinSourceServiceClient) ListGroupings(ctx context.Context, in *ListG
 	return out, nil
 }
 
+func (c *casbinSourceServiceClient) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (*WatchUpdateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WatchUpdateResponse)
+	err := c.cc.Invoke(ctx, CasbinSourceService_WatchUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *casbinSourceServiceClient) StreamRules(ctx context.Context, in *StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamRulesResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &CasbinSourceService_ServiceDesc.Streams[0], CasbinSourceService_StreamRules_FullMethodName, cOpts...)
@@ -98,25 +108,6 @@ func (c *casbinSourceServiceClient) StreamRules(ctx context.Context, in *StreamR
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type CasbinSourceService_StreamRulesClient = grpc.ServerStreamingClient[StreamRulesResponse]
 
-func (c *casbinSourceServiceClient) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[WatchUpdateResponse], error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &CasbinSourceService_ServiceDesc.Streams[1], CasbinSourceService_WatchUpdate_FullMethodName, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &grpc.GenericClientStream[WatchUpdateRequest, WatchUpdateResponse]{ClientStream: stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type CasbinSourceService_WatchUpdateClient = grpc.ServerStreamingClient[WatchUpdateResponse]
-
 // CasbinSourceServiceServer is the server API for CasbinSourceService service.
 // All implementations must embed UnimplementedCasbinSourceServiceServer
 // for forward compatibility.
@@ -125,8 +116,8 @@ type CasbinSourceService_WatchUpdateClient = grpc.ServerStreamingClient[WatchUpd
 type CasbinSourceServiceServer interface {
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
+	WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error)
 	StreamRules(*StreamRulesRequest, grpc.ServerStreamingServer[StreamRulesResponse]) error
-	WatchUpdate(*WatchUpdateRequest, grpc.ServerStreamingServer[WatchUpdateResponse]) error
 	mustEmbedUnimplementedCasbinSourceServiceServer()
 }
 
@@ -143,11 +134,11 @@ func (UnimplementedCasbinSourceServiceServer) ListPolicies(context.Context, *Lis
 func (UnimplementedCasbinSourceServiceServer) ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListGroupings not implemented")
 }
+func (UnimplementedCasbinSourceServiceServer) WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WatchUpdate not implemented")
+}
 func (UnimplementedCasbinSourceServiceServer) StreamRules(*StreamRulesRequest, grpc.ServerStreamingServer[StreamRulesResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method StreamRules not implemented")
-}
-func (UnimplementedCasbinSourceServiceServer) WatchUpdate(*WatchUpdateRequest, grpc.ServerStreamingServer[WatchUpdateResponse]) error {
-	return status.Errorf(codes.Unimplemented, "method WatchUpdate not implemented")
 }
 func (UnimplementedCasbinSourceServiceServer) mustEmbedUnimplementedCasbinSourceServiceServer() {}
 func (UnimplementedCasbinSourceServiceServer) testEmbeddedByValue()                             {}
@@ -206,6 +197,24 @@ func _CasbinSourceService_ListGroupings_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CasbinSourceService_WatchUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WatchUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CasbinSourceServiceServer).WatchUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CasbinSourceService_WatchUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CasbinSourceServiceServer).WatchUpdate(ctx, req.(*WatchUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _CasbinSourceService_StreamRules_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(StreamRulesRequest)
 	if err := stream.RecvMsg(m); err != nil {
@@ -216,17 +225,6 @@ func _CasbinSourceService_StreamRules_Handler(srv interface{}, stream grpc.Serve
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type CasbinSourceService_StreamRulesServer = grpc.ServerStreamingServer[StreamRulesResponse]
-
-func _CasbinSourceService_WatchUpdate_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(WatchUpdateRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(CasbinSourceServiceServer).WatchUpdate(m, &grpc.GenericServerStream[WatchUpdateRequest, WatchUpdateResponse]{ServerStream: stream})
-}
-
-// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type CasbinSourceService_WatchUpdateServer = grpc.ServerStreamingServer[WatchUpdateResponse]
 
 // CasbinSourceService_ServiceDesc is the grpc.ServiceDesc for CasbinSourceService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -243,16 +241,15 @@ var CasbinSourceService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "ListGroupings",
 			Handler:    _CasbinSourceService_ListGroupings_Handler,
 		},
+		{
+			MethodName: "WatchUpdate",
+			Handler:    _CasbinSourceService_WatchUpdate_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "StreamRules",
 			Handler:       _CasbinSourceService_StreamRules_Handler,
-			ServerStreams: true,
-		},
-		{
-			StreamName:    "WatchUpdate",
-			Handler:       _CasbinSourceService_WatchUpdate_Handler,
 			ServerStreams: true,
 		},
 	},

@@ -22,14 +22,14 @@ import (
 // Authorizer is a struct that implements the Authorizer interface.
 type Authorizer struct {
 	model        model.Model
-	policy       persist.Adapter
+	adapter      persist.Adapter
 	watcher      persist.Watcher
 	enforcer     *casbin.SyncedEnforcer
 	wildcardItem string
 }
 
 func (auth *Authorizer) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {
-	log.Debugf("Authorizing user with policy: %+v", policy)
+	log.Debugf("Authorizing user with adapter: %+v", policy)
 	var err error
 	var allowed bool
 	if object == "" {
@@ -42,15 +42,15 @@ func (auth *Authorizer) Authorized(ctx context.Context, policy security.Policy, 
 		log.Errorf("Authorization failed with error: %v", err)
 		return false, err
 	} else if allowed {
-		log.Debugf("Authorization successful for user with policy: %+v", policy)
+		log.Debugf("Authorization successful for user with adapter: %+v", policy)
 		return true, nil
 	}
-	log.Debugf("Authorization failed for user with policy: %+v", policy)
+	log.Debugf("Authorization failed for user with adapter: %+v", policy)
 	return false, nil
 }
 
 func (auth *Authorizer) AuthorizedWithDomain(ctx context.Context, policy security.Policy, domain string, object string, action string) (bool, error) {
-	log.Debugf("Authorizing user with policy: %+v", policy)
+	log.Debugf("Authorizing user with adapter: %+v", policy)
 	domain = cmp.Or(domain, policy.GetDomain(), auth.wildcardItem)
 	object = cmp.Or(object, policy.GetObject())
 	action = cmp.Or(action, policy.GetAction())
@@ -59,10 +59,10 @@ func (auth *Authorizer) AuthorizedWithDomain(ctx context.Context, policy securit
 		log.Errorf("Authorization failed with error: %v", err)
 		return false, err
 	} else if allowed {
-		log.Debugf("Authorization successful for user with policy: %+v", policy)
+		log.Debugf("Authorization successful for user with adapter: %+v", policy)
 		return true, nil
 	}
-	log.Debugf("Authorization failed for user with policy: %+v", policy)
+	log.Debugf("Authorization failed for user with adapter: %+v", policy)
 	return false, nil
 }
 
@@ -70,16 +70,16 @@ func (auth *Authorizer) AuthorizedWithExtra(ctx context.Context, data security.E
 	log.Debugf("Authorizing user with extra data: %+v", data)
 	policy, ok := data.GetPolicy()
 	if !ok {
-		return false, errors.New("policy is empty")
+		return false, errors.New("adapter is empty")
 	}
 	if allowed, err := auth.enforcer.Enforce(policy.GetSubject(), policy.GetObject(), policy.GetAction(), policy.GetDomain()); err != nil {
 		log.Errorf("Authorization failed with error: %v", err)
 		return false, err
 	} else if allowed {
-		log.Debugf("Authorization successful for user with policy: %+v", policy)
+		log.Debugf("Authorization successful for user with adapter: %+v", policy)
 		return true, nil
 	}
-	log.Debugf("Authorization failed for user with policy: %+v", policy)
+	log.Debugf("Authorization failed for user with adapter: %+v", policy)
 	return false, nil
 }
 
@@ -90,17 +90,18 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 		}
 		return k, [][]string{}, false
 	})
-	auth.policy = NewAdapterWithPolicies(p)
+
+	auth.adapter = NewAdapterWithPolicies(p)
 	err := auth.watcher.Update()
 	if err != nil {
-		return errors.Wrap(err, "failed to load policy")
+		return errors.Wrap(err, "failed to load adapter")
 	}
 	return nil
 }
 
 func (auth *Authorizer) ApplyDefaults() error {
-	if auth.policy == nil {
-		return errors.New("policy adapter is nil")
+	if auth.adapter == nil {
+		return errors.New("adapter adapter is nil")
 	}
 	if auth.wildcardItem == "" {
 		auth.wildcardItem = "*"
@@ -112,7 +113,7 @@ func (auth *Authorizer) ApplyDefaults() error {
 		auth.watcher = NewWatcher()
 	}
 	if auth.enforcer == nil {
-		auth.enforcer, _ = casbin.NewSyncedEnforcer(auth.model, auth.policy)
+		auth.enforcer, _ = casbin.NewSyncedEnforcer(auth.model, auth.adapter)
 	}
 	err := auth.enforcer.SetWatcher(auth.watcher)
 	if err != nil {
