@@ -320,10 +320,6 @@ func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto
 			itemObj := dto.ConvertResourcePB2Object(item)
 			itemObj.UpdateTime = time.Now()
 			itemObj.CreateTime = time.Now()
-			//columns := resource.OmitColumns()
-			//if item.ParentId == "" {
-			//	columns = resource.OmitColumns(resource.FieldParentID)
-			//}
 			if _, err := obj.Resource(ctx).Create().SetResource(itemObj).Save(ctx); err != nil {
 				log.Errorw("msg", "Error creating resource item", "itemId", item.Id, "sequence", item.Sequence, "error", err)
 				return err
@@ -340,7 +336,6 @@ func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto
 			log.Infow("msg", "Children processed successfully", "itemId", item.Id)
 		}
 	}
-
 	log.Infow("msg", "Finished createResourceBatchWithParent")
 	return nil
 }
@@ -369,20 +364,13 @@ func (obj *Data) createUserBatch(ctx context.Context, users []*dto.UserNode) err
 	log.Infow("msg", "Starting createUserBatch", "totalItems", total)
 	for i, item := range users {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemUsername", item.Username, "itemNickname", item.Nickname)
-		//if item.Id == 0 {
-		//	item.Id = id.Gen()
-		//	log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
-		//	item.Uuid = uuid.Must(uuid.NewRandom()).String()
-		//	log.Infow("msg", "Generated new UUID for item", "itemId", item.Id, "itemUuid", item.Uuid)
-		//	item.Password = ""
-		//	log.Infow("msg", "Generated new Password for item", "itemId", item.Id, "itemPassword", item.Password)
-		//}
-		user, ps, err := dto.CreateUser(&item.UserPB, item.Username, item.Password, dto.UserQueryOption{})
+		user, ps, err := dto.MakeCreateUser(&item.UserPB, item.Username, item.Password, dto.UserQueryOption{})
 		if err != nil {
 			return err
 		}
 		fmt.Println("generate user: ", user.Username, "with password: ", ps)
-		if _, err := obj.User(ctx).Create().SetIsSystem(item.IsSystem).SetUser(dto.ConvertUserPB2Object(user)).Save(ctx); err != nil {
+		if _, err := obj.User(ctx).Create().SetIsSystem(item.IsSystem).SetUser(dto.ConvertUserPB2Object(user)).
+			Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating user item", "itemId", item.Id, "error", err)
 			return err
 		}

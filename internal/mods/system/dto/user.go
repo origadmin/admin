@@ -33,7 +33,7 @@ type (
 
 type UserNode struct {
 	UserPB
-	IsSystem bool `json:"is_system,omitempty"`
+	IsSystem bool `json:"is_system"`
 }
 
 // UserRepo is a UserPB repository interface.
@@ -108,8 +108,8 @@ func ConvertUsers(users []*User) []*UserPB {
 	return result
 }
 
-// CreateUser functions are used to create new users
-func CreateUser(user *UserPB, username, password string, option UserQueryOption) (*UserPB, string, error) {
+// MakeCreateUser functions are used to create new users
+func MakeCreateUser(user *UserPB, username, password string, option UserQueryOption) (*UserPB, string, error) {
 	log.Debugf("Creating user with options: %+v", option)
 	if !option.NoPasswd {
 		log.Debugf("NoPasswd is false, checking for RandomPasswd")

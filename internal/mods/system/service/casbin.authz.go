@@ -164,7 +164,6 @@ func (s *CasbinAuthorizerService) WatchUpdate() {
 	retryDelay := time.Duration(s.interval) * time.Second
 	timer := time.NewTimer(retryDelay)
 	defer timer.Stop()
-
 	for {
 		select {
 		case <-timer.C:
@@ -178,26 +177,17 @@ func (s *CasbinAuthorizerService) WatchUpdate() {
 					newDelay = MaxRetryDelay
 				}
 				retryDelay = newDelay
-
 				log.Warnf("WatchUpdate failed, retrying in %v: %v", retryDelay, err)
 				timer.Reset(retryDelay)
 				continue
 			}
 
 			timer.Reset(time.Duration(s.interval) * time.Second)
-
 			lastDate := response.ModifiedDate
 			if lastDate > s.lastModified || s.lastModified == 0 {
 				s.lastModified = lastDate
-				if err := s.Update(); err != nil {
-					newDelay := time.Duration(float64(retryDelay) * 1.5)
-					if newDelay > MaxRetryDelay {
-						newDelay = MaxRetryDelay
-					}
-					retryDelay = newDelay
-					timer.Reset(retryDelay)
-					log.Warnf("Policy update failed: %v", err)
-				}
+				_ = s.Update()
+				continue
 			}
 		case <-ctx.Done():
 			return

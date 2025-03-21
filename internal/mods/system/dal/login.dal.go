@@ -44,7 +44,7 @@ func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*d
 	data := in.GetData()
 	var err error
 	createUser := new(dto.UserPB)
-	createUser, _, err = dto.CreateUser(createUser, data.GetUsername(), data.GetPassword(), dto.UserQueryOption{})
+	createUser, _, err = dto.MakeCreateUser(createUser, data.GetUsername(), data.GetPassword(), dto.UserQueryOption{})
 	if err != nil {
 		return nil, err
 	}

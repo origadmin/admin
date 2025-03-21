@@ -54,7 +54,6 @@ message ListResourcesRequest {
   bool only_count = 6 [json_name = "only_count"];
   // resource type
   string type = 7 [json_name = "type"];
-
 }
 
 // ListResourcesResponse is the response for the ResourceService.ListResources method.

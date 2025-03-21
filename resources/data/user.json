@@ -7,8 +7,8 @@
     "phone": "13800138000",
     "status": 1,
     "roles": ["super_admin"],
-    "departments": ["root"],
-    "positions": ["技术总监"],
+    "department": "总公司",
+    "department_keywords": ["root"],
     "is_system": true
   },
   {
@@ -19,7 +19,7 @@
     "phone": "13800138001",
     "status": 1,
     "roles": ["user"],
-    "departments": ["dev"],
-    "positions": ["高级开发工程师"]
+    "department": "技术部",
+    "department_keywords": ["dev"]
   }
 ] 

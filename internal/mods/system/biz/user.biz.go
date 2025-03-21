@@ -128,10 +128,10 @@ func (biz UserServiceBiz) CreateUser(ctx context.Context, in *pb.CreateUserReque
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}
-	log.Info("CreateUser")
+	log.Info("MakeCreateUser")
 	username := in.GetUser().GetUsername()
 	password := in.GetUser().GetPassword()
-	createUser, ps, err := dto.CreateUser(in.User, username, password, option)
+	createUser, ps, err := dto.MakeCreateUser(in.User, username, password, option)
 	if err != nil {
 		return nil, err
 	}
