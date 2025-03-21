@@ -156,61 +156,51 @@ func (s *CasbinAuthorizerService) SyncPolicy(ctx context.Context) error {
 	return nil
 }
 
+const MaxRetryDelay = time.Minute
+
 func (s *CasbinAuthorizerService) WatchUpdate() {
-	tickerInterval := time.Duration(s.interval) * time.Second
-	t := time.NewTicker(tickerInterval)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	defer t.Stop()
-	for range t.C {
-		response, err := s.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
-			LastModified: s.lastModified,
-		})
-		if err != nil {
-			log.Warnf("WatchUpdate error: %v", err)
-			continue
-		}
-		lastDate := response.ModifiedDate
-		if lastDate > s.lastModified || s.lastModified == 0 {
-			s.lastModified = lastDate
-			err := s.Update()
-			if err != nil {
-				log.Warnf("Update error: %v", err)
-				continue
-			}
-			if s.lastModified == 0 {
-				log.Infof("WatchUpdate finished with zero date change")
-				continue
-			}
-		}
-	}
-}
-
-func (s *CasbinAuthorizerService) WatchUpdateR(e *casbinv2.Enforcer) {
-	retryBackoff := 1 * time.Second
+	retryDelay := time.Duration(s.interval) * time.Second
+	timer := time.NewTimer(retryDelay)
+	defer timer.Stop()
 
 	for {
 		select {
-		case <-time.After(retryBackoff):
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-			defer cancel()
-
-			_, err := s.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
+		case <-timer.C:
+			response, err := s.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
 				LastModified: s.lastModified,
 			})
 
 			if err != nil {
-				log.Warnf("监控更新失败，将在%.0f秒后重试: %v", retryBackoff.Seconds(), err)
-				retryBackoff *= 2
-				if retryBackoff > 60*time.Second {
-					retryBackoff = 60 * time.Second
+				newDelay := time.Duration(float64(retryDelay) * 1.5)
+				if newDelay > MaxRetryDelay {
+					newDelay = MaxRetryDelay
 				}
+				retryDelay = newDelay
+
+				log.Warnf("WatchUpdate failed, retrying in %v: %v", retryDelay, err)
+				timer.Reset(retryDelay)
 				continue
 			}
 
-			retryBackoff = 1 * time.Second // 重置重试间隔
+			timer.Reset(time.Duration(s.interval) * time.Second)
 
-			// 后续处理逻辑...
+			lastDate := response.ModifiedDate
+			if lastDate > s.lastModified || s.lastModified == 0 {
+				s.lastModified = lastDate
+				if err := s.Update(); err != nil {
+					newDelay := time.Duration(float64(retryDelay) * 1.5)
+					if newDelay > MaxRetryDelay {
+						newDelay = MaxRetryDelay
+					}
+					retryDelay = newDelay
+					timer.Reset(retryDelay)
+					log.Warnf("Policy update failed: %v", err)
+				}
+			}
+		case <-ctx.Done():
+			return
 		}
 	}
 }
