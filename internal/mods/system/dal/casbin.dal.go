@@ -25,8 +25,8 @@ type casbinSourceRepo struct {
 }
 
 func (c casbinSourceRepo) mustEmbedUnimplementedCasbinSourceServiceServer() {
-	//TODO implement me
-	panic("implement me")
+	// This method is useless,
+	// it is just automatically generated when using the inheritance implementation interface
 }
 
 func permissionResourceQuery(query *ent.PermissionQuery) {
