@@ -49,7 +49,7 @@ func (c casbinSourceRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesR
 		}
 		for _, resource := range resources {
 			rules = append(rules, &pb.PolicyRule{
-				Ptype: "p",
+				PType: "p",
 				Params: []string{
 					c.config.PrefixNumberID("role", rolePermission.RoleID),
 					resource.Path,
@@ -70,7 +70,7 @@ func (c casbinSourceRepo) ListGroupings(ctx context.Context, in *pb.ListGrouping
 	var rules []*pb.GroupingRule
 	for _, userRole := range userRoles {
 		rules = append(rules, &pb.GroupingRule{
-			Ptype: "g",
+			PType: "g",
 			Params: []string{
 				c.config.PrefixNumberID("user", userRole.UserID),
 				c.config.PrefixNumberID("role", userRole.RoleID),
