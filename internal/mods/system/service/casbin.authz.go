@@ -16,6 +16,7 @@ import (
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/goexts/generic/cmp"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/service"
 	"github.com/origadmin/toolkits/security"
 	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc/status"
@@ -33,6 +34,41 @@ type CasbinAuthorizerService struct {
 	lastModified int64
 	interval     int64
 	wildcardItem string
+}
+
+const MaxRetryDelay = time.Minute
+
+var (
+	policySyncCounter = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "casbin_policy_sync_total",
+			Help: "Total number of policy sync operations",
+		},
+		[]string{"status"},
+	)
+
+	policyCountGauge = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: "casbin_policy_count",
+			Help: "Current number of loaded policies",
+		},
+	)
+
+	policySyncDuration = prometheus.NewHistogram(
+		prometheus.HistogramOpts{
+			Name:    "casbin_sync_duration_seconds",
+			Help:    "Histogram of policy sync durations",
+			Buckets: prometheus.DefBuckets,
+		},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(
+		policySyncCounter,
+		policyCountGauge,
+		policySyncDuration,
+	)
 }
 
 func (s *CasbinAuthorizerService) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {
@@ -150,13 +186,12 @@ func (s *CasbinAuthorizerService) SyncPolicy(ctx context.Context) error {
 	pLen := len(policies)
 	if pLen > 0 {
 		s.adapter = casbin.NewAdapterWithPolicies(policies)
+		policyCountGauge.Set(float64(pLen))
+		policySyncCounter.WithLabelValues("success").Inc()
 	}
-	policyCountGauge.Set(float64(pLen))
-	policySyncCounter.WithLabelValues("success").Inc()
+
 	return nil
 }
-
-const MaxRetryDelay = time.Minute
 
 func (s *CasbinAuthorizerService) WatchUpdate() {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -195,46 +230,17 @@ func (s *CasbinAuthorizerService) WatchUpdate() {
 	}
 }
 
-var (
-	policySyncCounter = prometheus.NewCounterVec(
-		prometheus.CounterOpts{
-			Name: "casbin_policy_sync_total",
-			Help: "Total number of policy sync operations",
-		},
-		[]string{"status"},
-	)
-
-	policyCountGauge = prometheus.NewGauge(
-		prometheus.GaugeOpts{
-			Name: "casbin_policy_count",
-			Help: "Current number of loaded policies",
-		},
-	)
-
-	policySyncDuration = prometheus.NewHistogram(
-		prometheus.HistogramOpts{
-			Name:    "casbin_sync_duration_seconds",
-			Help:    "Histogram of policy sync durations",
-			Buckets: prometheus.DefBuckets,
-		},
-	)
-)
-
-func init() {
-	prometheus.MustRegister(
-		policySyncCounter,
-		policyCountGauge,
-		policySyncDuration,
-	)
-}
-
 // NewCasbinAuthorizerService new a casbin service.
 func NewCasbinAuthorizerService(client pb.CasbinSourceServiceClient) security.Authorizer {
 	return &CasbinAuthorizerService{
 		client:       client,
 		lastModified: 0,
-		interval:     3,
+		interval:     int64(5 * time.Minute),
 	}
+}
+
+func NewCasbinSourceServiceClient(client *service.GRPCClient) pb.CasbinSourceServiceClient {
+	return pb.NewCasbinSourceServiceClient(client)
 }
 
 //var _ pb.CasbinSourceServiceServer = (*CasbinAuthorizerService)(nil)

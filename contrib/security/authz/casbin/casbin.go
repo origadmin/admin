@@ -5,6 +5,9 @@
 package casbin
 
 import (
+	"io"
+	"time"
+
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
@@ -12,20 +15,62 @@ import (
 	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/runtime/log"
+	"github.com/prometheus/client_golang/prometheus"
+	"google.golang.org/grpc/status"
 
 	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/security"
+
+	pb "origadmin/application/admin/api/v1/services/system"
 )
 
 // Authorizer is a struct that implements the Authorizer interface.
 type Authorizer struct {
+	client       pb.CasbinSourceServiceClient
 	model        model.Model
 	adapter      persist.Adapter
 	watcher      persist.Watcher
 	enforcer     *casbin.SyncedEnforcer
+	lastModified int64
+	interval     int64
 	wildcardItem string
+}
+
+const MaxRetryDelay = time.Minute
+
+var (
+	policySyncCounter = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "casbin_policy_sync_total",
+			Help: "Total number of policy sync operations",
+		},
+		[]string{"status"},
+	)
+
+	policyCountGauge = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: "casbin_policy_count",
+			Help: "Current number of loaded policies",
+		},
+	)
+
+	policySyncDuration = prometheus.NewHistogram(
+		prometheus.HistogramOpts{
+			Name:    "casbin_sync_duration_seconds",
+			Help:    "Histogram of policy sync durations",
+			Buckets: prometheus.DefBuckets,
+		},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(
+		policySyncCounter,
+		policyCountGauge,
+		policySyncDuration,
+	)
 }
 
 func (auth *Authorizer) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {
@@ -99,6 +144,85 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 	return nil
 }
 
+func (auth *Authorizer) SyncPolicy(ctx context.Context) error {
+	start := time.Now()
+	defer func() {
+		duration := time.Since(start).Seconds()
+		policySyncDuration.Observe(duration)
+	}()
+	stream, err := auth.client.StreamRules(ctx, &pb.StreamRulesRequest{
+		WithGroupings: true,
+		WithPolicies:  true,
+	})
+	if err != nil {
+		return err
+	}
+
+	var policies = make(map[string][][]string)
+	for {
+		rule, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			st, _ := status.FromError(err)
+			return status.Errorf(st.Code(), "recvied error: %v", st.Message())
+		}
+
+		switch v := rule.RuleType.(type) {
+		case *pb.StreamRulesResponse_Policy:
+			policies[v.Policy.PType] = append(policies[v.Policy.PType], v.Policy.Params)
+		case *pb.StreamRulesResponse_Grouping:
+			policies[v.Grouping.PType] = append(policies[v.Grouping.PType], v.Grouping.Params)
+		}
+	}
+	pLen := len(policies)
+	if pLen > 0 {
+		auth.adapter = NewAdapterWithPolicies(policies)
+		policyCountGauge.Set(float64(pLen))
+		policySyncCounter.WithLabelValues("success").Inc()
+	}
+
+	return nil
+}
+
+func (auth *Authorizer) WatchUpdate() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	retryDelay := time.Duration(auth.interval) * time.Second
+	timer := time.NewTimer(retryDelay)
+	defer timer.Stop()
+	for {
+		select {
+		case <-timer.C:
+			response, err := auth.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
+				LastModified: auth.lastModified,
+			})
+
+			if err != nil {
+				newDelay := time.Duration(float64(retryDelay) * 1.5)
+				if newDelay > MaxRetryDelay {
+					newDelay = MaxRetryDelay
+				}
+				retryDelay = newDelay
+				log.Warnf("WatchUpdate failed, retrying in %v: %v", retryDelay, err)
+				timer.Reset(retryDelay)
+				continue
+			}
+
+			timer.Reset(time.Duration(auth.interval) * time.Second)
+			lastDate := response.ModifiedDate
+			if lastDate > auth.lastModified || auth.lastModified == 0 {
+				auth.lastModified = lastDate
+				_ = auth.watcher.Update()
+				continue
+			}
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
 func (auth *Authorizer) ApplyDefaults() error {
 	if auth.adapter == nil {
 		return errors.New("adapter adapter is nil")
@@ -144,5 +268,10 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 	if err != nil {
 		return nil, err
 	}
-	return settings.ApplyErrorDefaults(auth, ss)
+	s, err := settings.ApplyErrorDefaults(auth, ss)
+	if err != nil {
+		return nil, err
+	}
+	go s.WatchUpdate()
+	return s, nil
 }

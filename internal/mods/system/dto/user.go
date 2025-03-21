@@ -13,7 +13,6 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/net/pagination"
-	"google.golang.org/protobuf/proto"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/id"
@@ -39,16 +38,21 @@ type UserNode struct {
 // UserRepo is a UserPB repository interface.
 type UserRepo interface {
 	Get(context.Context, int64, ...UserQueryOption) (*UserPB, error)
-	Create(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
+	Create(context.Context, *UserPB, ...UserMutationOption) (*UserPB, error)
 	Delete(context.Context, int64) error
-	Update(context.Context, *UserPB, ...UserQueryOption) (*UserPB, error)
+	Update(context.Context, *UserPB, ...UserMutationOption) (*UserPB, error)
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
-	AddRoleIDs(context.Context, int64, []int64, ...UserQueryOption) error
+	AddRoleIDs(context.Context, int64, []int64, ...UserMutationOption) error
 	GetByUserName(context.Context, string, ...string) (*UserPB, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
 	ListResourceByUserID(context.Context, int64, ...UserQueryOption) ([]*ResourcePB, error)
 	Current(context.Context, int64) (*UserPB, error)
 	UpdateUserStatus(ctx context.Context, id int64, status int8, options ...UserQueryOption) error
+}
+
+type UserMutationOption struct {
+	RandomPasswd bool
+	NoPasswd     bool
 }
 
 type UserQueryOption struct {
@@ -63,14 +67,6 @@ type UserQueryOption struct {
 	Fields       []string
 }
 
-type UserQueryResult struct {
-	Current  int                      `json:"current"`
-	PageSize int                      `json:"page_size"`
-	Data     []*UserPB                `json:"data"`
-	Total    int64                    `json:"total"`
-	Args     map[string]proto.Message `json:"args"`
-}
-
 func (o *UserQueryOption) FromListRequest(in *ListUsersRequest, limiter pagination.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
@@ -81,10 +77,8 @@ func (o *UserQueryOption) FromGetRequest(in *pb.GetUserRequest, limiter paginati
 	return nil
 }
 
-func (o *UserQueryOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pagination.PageLimiter) error {
+func (o *UserMutationOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pagination.PageLimiter) error {
 	o.RandomPasswd = in.RandomPassword
-	//o.NoPasswd = in.NoPassword
-	o.IsSystem = in.IsSystem
 	return nil
 }
 
@@ -109,7 +103,7 @@ func ConvertUsers(users []*User) []*UserPB {
 }
 
 // MakeCreateUser functions are used to create new users
-func MakeCreateUser(user *UserPB, username, password string, option UserQueryOption) (*UserPB, string, error) {
+func MakeCreateUser(user *UserPB, username, password string, option UserMutationOption) (*UserPB, string, error) {
 	log.Debugf("Creating user with options: %+v", option)
 	if !option.NoPasswd {
 		log.Debugf("NoPasswd is false, checking for RandomPasswd")

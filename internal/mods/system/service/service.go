@@ -31,6 +31,7 @@ var ProviderSet = wire.NewSet(
 	NewAuthServiceHTTPServerPB,
 	NewPermissionServiceServerPB,
 	NewPermissionServiceHTTPServerPB,
+	NewCasbinSourceServiceServerPB,
 )
 
 type RegisterServer struct {

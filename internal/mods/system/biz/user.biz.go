@@ -124,7 +124,7 @@ func (biz UserServiceBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, op
 }
 
 func (biz UserServiceBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
-	var option dto.UserQueryOption
+	var option dto.UserMutationOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
 	}

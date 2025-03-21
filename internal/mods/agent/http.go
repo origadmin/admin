@@ -42,7 +42,8 @@ func (d data) QueryPermissions(ctx context.Context, subject string) ([]string, e
 }
 
 // NewHTTPServerAgent new an HTTP server.
-func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegisterAgent, l log.KLogger) *service.HTTPServer {
+func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegisterAgent,
+	client system.CasbinSourceServiceClient, l log.KLogger) *service.HTTPServer {
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		panic("no service config")
@@ -57,7 +58,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		panic(err)
 	}
 	adapter := casbin.NewAdapter()
-	authorizer, err := securityx.NewAuthorizer(bootstrap, casbin.WithPolicyAdapter(adapter))
+	authorizer, err := securityx.NewAuthorizer(bootstrap, casbin.WithPolicyAdapter(adapter), casbin.WithServiceClient(client))
 	if err != nil {
 		panic(err)
 	}

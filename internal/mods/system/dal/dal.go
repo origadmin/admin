@@ -364,7 +364,7 @@ func (obj *Data) createUserBatch(ctx context.Context, users []*dto.UserNode) err
 	log.Infow("msg", "Starting createUserBatch", "totalItems", total)
 	for i, item := range users {
 		log.Infow("msg", "Processing item", "index", i, "itemId", item.Id, "itemUsername", item.Username, "itemNickname", item.Nickname)
-		user, ps, err := dto.MakeCreateUser(&item.UserPB, item.Username, item.Password, dto.UserQueryOption{})
+		user, ps, err := dto.MakeCreateUser(&item.UserPB, item.Username, item.Password, dto.UserMutationOption{})
 		if err != nil {
 			return err
 		}

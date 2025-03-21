@@ -8,6 +8,7 @@ import (
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
+	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/contrib/security/authz/casbin/internal/model"
 	"origadmin/application/admin/contrib/security/authz/casbin/internal/policy"
 )
@@ -56,5 +57,11 @@ func WithPolicyAdapter(adapter persist.Adapter) Setting {
 func WithWatcher(watcher persist.Watcher) Setting {
 	return func(s *Authorizer) {
 		s.watcher = watcher
+	}
+}
+
+func WithServiceClient(client pb.CasbinSourceServiceClient) Setting {
+	return func(s *Authorizer) {
+		s.client = client
 	}
 }

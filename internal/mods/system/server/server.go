@@ -35,7 +35,9 @@ var (
 		NewRegisterServer,
 		NewSystemClient,
 		NewSystemServer,
-		NewSystemServiceAgentClient)
+		NewSystemServiceAgentClient,
+		NewCasbinServiceClient,
+	)
 )
 
 func init() {
@@ -116,6 +118,10 @@ func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*Re
 		Permission: systemservice.NewPermissionServiceAgentClient(client),
 	}
 	return &register, nil
+}
+
+func NewCasbinServiceClient(client *service.GRPCClient, l log.KLogger) pb.CasbinSourceServiceClient {
+	return systemservice.NewCasbinSourceServiceClient(client)
 }
 
 func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPCClient, error) {

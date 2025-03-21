@@ -35,7 +35,8 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		return nil, nil, err
 	}
 	v2 := agent.NewRegisterAgent(registerAgent)
-	httpServer := agent.NewHTTPServerAgent(bootstrap, v2, arg)
+	casbinSourceServiceClient := server.NewCasbinServiceClient(v, arg)
+	httpServer := agent.NewHTTPServerAgent(bootstrap, v2, casbinSourceServiceClient, arg)
 	injectorClient := &loader.InjectorClient{
 		Logger:    arg,
 		Bootstrap: bootstrap,
