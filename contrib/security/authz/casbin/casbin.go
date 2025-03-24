@@ -278,11 +278,11 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 	auth := &Authorizer{
 		interval: 5,
 		options:  options,
+		client:   options.ServiceCli,
 	}
 	if err := auth.Apply(); err != nil {
 		return nil, err
 	}
-
 	auth.enforcer, err = casbin.NewSyncedEnforcer(auth.options.Model, auth.options.Adapter)
 	if err != nil {
 		return nil, err
