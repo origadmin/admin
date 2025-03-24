@@ -263,7 +263,9 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 		return nil, errors.New("authorizer casbin config is empty")
 	}
 	var err error
-	auth := &Authorizer{}
+	auth := &Authorizer{
+		interval: 5,
+	}
 	err = auth.WithConfig(config)
 	if err != nil {
 		return nil, err

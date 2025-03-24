@@ -53,6 +53,7 @@ type UserRepo interface {
 type UserMutationOption struct {
 	RandomPasswd bool
 	NoPasswd     bool
+	Fields       []string
 }
 
 type UserQueryOption struct {

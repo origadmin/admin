@@ -64,11 +64,11 @@ var (
 )
 
 func init() {
-	prometheus.MustRegister(
-		policySyncCounter,
-		policyCountGauge,
-		policySyncDuration,
-	)
+	//prometheus.MustRegister(
+	//	policySyncCounter,
+	//	policyCountGauge,
+	//	policySyncDuration,
+	//)
 }
 
 func (s *CasbinAuthorizerService) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {

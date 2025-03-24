@@ -48,6 +48,7 @@ func (c CasbinSourceServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPol
 }
 
 func (c CasbinSourceServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
+
 	return c.dao.ListGroupings(ctx, in)
 }
 

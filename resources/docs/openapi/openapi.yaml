@@ -216,6 +216,92 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /casbin/groupings:
+        get:
+            tags:
+                - CasbinSourceService
+            operationId: CasbinSourceService_ListGroupings
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListGroupingsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /casbin/policies:
+        get:
+            tags:
+                - CasbinSourceService
+            operationId: CasbinSourceService_ListPolicies
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListPoliciesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /casbin/stream:
+        get:
+            tags:
+                - CasbinSourceService
+            operationId: CasbinSourceService_StreamRules
+            parameters:
+                - name: with_policies
+                  in: query
+                  schema:
+                    type: boolean
+                - name: with_groupings
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.StreamRulesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /casbin/watch:
+        get:
+            tags:
+                - CasbinSourceService
+            operationId: CasbinSourceService_WatchUpdate
+            parameters:
+                - name: last_modified
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.WatchUpdateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /login:
         post:
             tags:
@@ -2439,6 +2525,15 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.system.User'
+        api.v1.services.system.GroupingRule:
+            type: object
+            properties:
+                p_type:
+                    type: string
+                params:
+                    type: array
+                    items:
+                        type: string
         api.v1.services.system.ListAuthResourcesResponse:
             type: object
             properties:
@@ -2482,6 +2577,13 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
+        api.v1.services.system.ListGroupingsResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
@@ -2566,6 +2668,13 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.system.Role'
+        api.v1.services.system.ListPoliciesResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
         api.v1.services.system.ListPositionsResponse:
             type: object
             properties:
@@ -2843,6 +2952,15 @@ components:
             properties:
                 success:
                     type: boolean
+        api.v1.services.system.PolicyRule:
+            type: object
+            properties:
+                p_type:
+                    type: string
+                params:
+                    type: array
+                    items:
+                        type: string
         api.v1.services.system.Position:
             type: object
             properties:
@@ -3062,6 +3180,13 @@ components:
                         type: string
                     description: Permission Ids holds the value of the permission_ids edge.
             description: Role is the model entity for the Role schema.
+        api.v1.services.system.StreamRulesResponse:
+            type: object
+            properties:
+                policy:
+                    $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
+                grouping:
+                    $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
             properties:
@@ -3233,6 +3358,11 @@ components:
                     additionalProperties:
                         type: string
             description: VerifyTokenResponse contains the result of the verification.
+        api.v1.services.system.WatchUpdateResponse:
+            type: object
+            properties:
+                modified_date:
+                    type: string
         google.protobuf.Any:
             type: object
             properties:
@@ -3286,6 +3416,8 @@ components:
             in: header
 tags:
     - name: AuthService
+    - name: CasbinSourceService
+      description: The Casbin source service definition.
     - name: DepartmentService
       description: The login service definition.
     - name: LoginService

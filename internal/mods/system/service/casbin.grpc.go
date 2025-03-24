@@ -17,7 +17,6 @@ import (
 
 type CasbinSourceServiceServer struct {
 	pb.UnimplementedCasbinSourceServiceServer
-
 	client   *biz.CasbinSourceServiceBiz
 	enforcer *casbin.Enforcer
 }

@@ -42,6 +42,7 @@ type RegisterServer struct {
 	Login      pb.LoginServiceServer
 	Personal   pb.PersonalServiceServer
 	Permission pb.PermissionServiceServer
+	Casbin     pb.CasbinSourceServiceServer
 }
 
 func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
@@ -53,6 +54,7 @@ func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServ
 	pb.RegisterLoginServiceServer(server, s.Login)
 	pb.RegisterPersonalServiceServer(server, s.Personal)
 	pb.RegisterPermissionServiceServer(server, s.Permission)
+	pb.RegisterCasbinSourceServiceServer(server, s.Casbin)
 }
 
 func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
@@ -64,6 +66,7 @@ func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServ
 	pb.RegisterLoginServiceHTTPServer(server, s.Login)
 	pb.RegisterPersonalServiceHTTPServer(server, s.Personal)
 	pb.RegisterPermissionServiceHTTPServer(server, s.Permission)
+	pb.RegisterCasbinSourceServiceHTTPServer(server, s.Casbin)
 }
 
 func (s RegisterServer) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {

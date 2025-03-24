@@ -47,7 +47,7 @@ func (biz UserServiceBiz) ListUserResources(ctx context.Context, in *pb.ListUser
 }
 
 func (biz UserServiceBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest, opts ...grpc.CallOption) (*pb.UpdateUserRolesResponse, error) {
-	var option dto.UserQueryOption
+	var option dto.UserMutationOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
 	//}

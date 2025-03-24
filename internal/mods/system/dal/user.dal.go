@@ -23,7 +23,7 @@ type userRepo struct {
 	db *Data
 }
 
-func (repo userRepo) AddRoleIDs(ctx context.Context, i int64, int64s []int64, option ...dto.UserQueryOption) error {
+func (repo userRepo) AddRoleIDs(ctx context.Context, i int64, int64s []int64, option ...dto.UserMutationOption) error {
 	//TODO implement me
 	panic("implement me")
 }
@@ -81,8 +81,8 @@ func (repo userRepo) Get(ctx context.Context, id int64, options ...dto.UserQuery
 	return dto.ConvertUser2PB(result), nil
 }
 
-func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
-	var option dto.UserQueryOption
+func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...dto.UserMutationOption) (*dto.UserPB, error) {
+	var option dto.UserMutationOption
 	if len(options) > 0 {
 		option = options[0]
 	}
@@ -117,7 +117,7 @@ func (repo userRepo) Delete(ctx context.Context, id int64) error {
 	})
 }
 
-func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...dto.UserQueryOption) (*dto.UserPB, error) {
+func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...dto.UserMutationOption) (*dto.UserPB, error) {
 	obj := dto.ConvertUserPB2Object(userPB)
 	obj.UpdateTime = time.Now()
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
