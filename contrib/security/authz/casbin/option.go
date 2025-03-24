@@ -5,8 +5,6 @@
 package casbin
 
 import (
-	"errors"
-
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
@@ -75,20 +73,4 @@ func WithServiceClient(client pb.CasbinSourceServiceClient) Setting {
 	return func(s *AuthorizerOptions) {
 		s.ServiceCli = client
 	}
-}
-
-func (auth *AuthorizerOptions) Apply() error {
-	if auth.Adapter == nil {
-		return errors.New("adapter adapter is nil")
-	}
-	if auth.Model == nil {
-		auth.Model, _ = casbinmodel.NewModelFromString(DefaultModel())
-	}
-	if auth.Watcher == nil {
-		auth.Watcher = NewWatcher()
-	}
-	if auth.Adapter == nil {
-		auth.Adapter = NewAdapter()
-	}
-	return nil
 }

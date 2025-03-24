@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/casbin/casbin/v2"
+	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/goexts/generic/cmp"
 	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
@@ -26,10 +27,8 @@ import (
 
 // Authorizer is a struct that implements the Authorizer interface.
 type Authorizer struct {
-	client pb.CasbinSourceServiceClient
-	//model        model.Model
-	//adapter      persist.Adapter
-	//watcher      persist.Watcher
+	client       pb.CasbinSourceServiceClient
+	options      *AuthorizerOptions
 	enforcer     *casbin.SyncedEnforcer
 	lastModified int64
 	interval     int64
@@ -238,13 +237,29 @@ func (auth *Authorizer) WatchUpdate() {
 	}
 }
 
-func (auth *Authorizer) OptionFromConfig(config *configv1.AuthZConfig_CasbinConfig) ([]Setting, error) {
-	var err error
-	var options []Setting
-	if config.ModelFile != "" {
-		options = append(options, WithFileModel(config.ModelFile))
+//func (auth *Authorizer) OptionFromConfig(config *configv1.AuthZConfig_CasbinConfig) error {
+//	var err error
+//	var options []Setting
+//	if config.ModelFile != "" {
+//		options = append(options, WithFileModel(config.ModelFile))
+//	}
+//	return options, err
+//}
+
+func (auth *Authorizer) Apply() error {
+	if auth.options.Adapter == nil {
+		return errors.New("adapter adapter is nil")
 	}
-	return options, err
+	if auth.options.Model == nil {
+		auth.options.Model, _ = casbinmodel.NewModelFromString(DefaultModel())
+	}
+	if auth.options.Watcher == nil {
+		auth.options.Watcher = NewWatcher()
+	}
+	if auth.options.Adapter == nil {
+		auth.options.Adapter = NewAdapter()
+	}
+	return nil
 }
 
 func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, error) {
@@ -253,23 +268,22 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 		return nil, errors.New("authorizer casbin config is empty")
 	}
 	var err error
-	auth := &Authorizer{
-		interval: 5,
+	if config.ModelFile != "" {
+		ss = append(ss, WithFileModel(config.ModelFile))
 	}
-	options, err := auth.OptionFromConfig(config)
-	if err != nil {
-		return nil, err
-	}
-	ss = append(options, ss...)
-	option := settings.Apply(&AuthorizerOptions{
+	options := settings.Apply(&AuthorizerOptions{
 		Interval:   5,
 		RetryDelay: 3,
 	}, ss)
-	if err := option.Apply(); err != nil {
+	auth := &Authorizer{
+		interval: 5,
+		options:  options,
+	}
+	if err := auth.Apply(); err != nil {
 		return nil, err
 	}
 
-	auth.enforcer, err = casbin.NewSyncedEnforcer(option.Model, option.Adapter)
+	auth.enforcer, err = casbin.NewSyncedEnforcer(auth.options.Model, auth.options.Adapter)
 	if err != nil {
 		return nil, err
 	}
