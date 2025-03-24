@@ -54,6 +54,7 @@ var ProviderSet = wire.NewSet(
 	NewRoleRepo,
 	NewUserRepo,
 	NewPermissionRepo,
+	NewCasbinSourceRepo,
 	RefreshTokenizer,
 )
 

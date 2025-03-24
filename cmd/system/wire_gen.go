@@ -71,6 +71,13 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 	permissionRepo := dal.NewPermissionRepo(data, arg)
 	permissionServiceBiz := biz.NewPermissionServiceBiz(permissionRepo, arg)
 	permissionServiceServer := service.NewPermissionServiceServerPB(permissionServiceBiz)
+	casbinSourceRepo, err := dal.NewCasbinSourceRepo(data)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	casbinSourceServiceBiz := biz.NewCasbinSourceServiceBiz(casbinSourceRepo, arg)
+	casbinSourceServiceServer := service.NewCasbinSourceServiceServerPB(casbinSourceServiceBiz)
 	registerServer := &service.RegisterServer{
 		Resource:   resourceServiceServer,
 		Role:       roleServiceServer,
@@ -79,6 +86,7 @@ func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap
 		Login:      loginServiceServer,
 		Personal:   personalServiceServer,
 		Permission: permissionServiceServer,
+		Casbin:     casbinSourceServiceServer,
 	}
 	v2 := server.NewRegisterServer(registerServer)
 	v3 := server.NewSystemServer(bootstrap, v2, arg)

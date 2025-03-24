@@ -9,8 +9,6 @@ import (
 	"time"
 
 	"github.com/casbin/casbin/v2"
-	"github.com/casbin/casbin/v2/model"
-	"github.com/casbin/casbin/v2/persist"
 	"github.com/goexts/generic/cmp"
 	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
@@ -28,10 +26,10 @@ import (
 
 // Authorizer is a struct that implements the Authorizer interface.
 type Authorizer struct {
-	client       pb.CasbinSourceServiceClient
-	model        model.Model
-	adapter      persist.Adapter
-	watcher      persist.Watcher
+	client pb.CasbinSourceServiceClient
+	//model        model.Model
+	//adapter      persist.Adapter
+	//watcher      persist.Watcher
 	enforcer     *casbin.SyncedEnforcer
 	lastModified int64
 	interval     int64
@@ -136,8 +134,10 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 		return k, [][]string{}, false
 	})
 
-	auth.adapter = NewAdapterWithPolicies(p)
-	err := auth.watcher.Update()
+	adapter := NewAdapterWithPolicies(p)
+	auth.enforcer.SetAdapter(adapter)
+	err := auth.enforcer.LoadPolicy()
+	//err := auth.watcher.Update()
 	if err != nil {
 		return errors.Wrap(err, "failed to load adapter")
 	}
@@ -157,7 +157,7 @@ func (auth *Authorizer) SyncPolicy(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-
+	log.Infof("Syncing policies...")
 	var policies = make(map[string][][]string)
 	for {
 		rule, err := stream.Recv()
@@ -177,10 +177,19 @@ func (auth *Authorizer) SyncPolicy(ctx context.Context) error {
 		}
 	}
 	pLen := len(policies)
+	log.Infof("Loaded %d policies", pLen)
 	if pLen > 0 {
-		auth.adapter = NewAdapterWithPolicies(policies)
+		auth.lastModified = time.Now().Unix()
+		adapter := NewAdapterWithPolicies(policies)
+		auth.enforcer.SetAdapter(adapter)
+		err := auth.enforcer.LoadPolicy()
+		if err != nil {
+			policySyncCounter.WithLabelValues("failed").Inc()
+			return err
+		}
 		policyCountGauge.Set(float64(pLen))
 		policySyncCounter.WithLabelValues("success").Inc()
+		//auth.enforcer.updatge
 	}
 
 	return nil
@@ -189,9 +198,11 @@ func (auth *Authorizer) SyncPolicy(ctx context.Context) error {
 func (auth *Authorizer) WatchUpdate() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	retryDelay := time.Duration(auth.interval) * time.Second
-	timer := time.NewTimer(retryDelay)
+	interval := time.Duration(auth.interval) * time.Second
+	retryDelay := 3 * time.Second
+	timer := time.NewTimer(interval)
 	defer timer.Stop()
+	log.Infof("Watching for updates every %v", interval)
 	for {
 		select {
 		case <-timer.C:
@@ -210,51 +221,30 @@ func (auth *Authorizer) WatchUpdate() {
 				continue
 			}
 
-			timer.Reset(time.Duration(auth.interval) * time.Second)
+			retryDelay = 3 * time.Second
+			timer.Reset(interval)
 			lastDate := response.ModifiedDate
 			if lastDate > auth.lastModified || auth.lastModified == 0 {
-				auth.lastModified = lastDate
-				_ = auth.watcher.Update()
+				log.Infof("Update detected, last modified: %v", lastDate)
+				//auth.lastModified = lastDate
+				//_ = auth.watcher.Update()
+				//auth.enforcer
 				continue
 			}
+			log.Debugf("No update detected, last modified: %v", lastDate)
 		case <-ctx.Done():
 			return
 		}
 	}
 }
 
-func (auth *Authorizer) ApplyDefaults() error {
-	if auth.adapter == nil {
-		return errors.New("adapter adapter is nil")
-	}
-	if auth.wildcardItem == "" {
-		auth.wildcardItem = "*"
-	}
-	if auth.model == nil {
-		auth.model, _ = model.NewModelFromString(DefaultModel())
-	}
-	if auth.watcher == nil {
-		auth.watcher = NewWatcher()
-	}
-	if auth.enforcer == nil {
-		auth.enforcer, _ = casbin.NewSyncedEnforcer(auth.model, auth.adapter)
-	}
-	err := auth.enforcer.SetWatcher(auth.watcher)
-	if err != nil {
-		return err
-	}
-	if err := auth.enforcer.LoadPolicy(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (auth *Authorizer) WithConfig(config *configv1.AuthZConfig_CasbinConfig) error {
+func (auth *Authorizer) OptionFromConfig(config *configv1.AuthZConfig_CasbinConfig) ([]Setting, error) {
 	var err error
+	var options []Setting
 	if config.ModelFile != "" {
-		auth.model, err = model.NewModelFromFile(config.ModelFile)
+		options = append(options, WithFileModel(config.ModelFile))
 	}
-	return err
+	return options, err
 }
 
 func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, error) {
@@ -266,14 +256,23 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 	auth := &Authorizer{
 		interval: 5,
 	}
-	err = auth.WithConfig(config)
+	options, err := auth.OptionFromConfig(config)
 	if err != nil {
 		return nil, err
 	}
-	s, err := settings.ApplyErrorDefaults(auth, ss)
+	ss = append(options, ss...)
+	option := settings.Apply(&AuthorizerOptions{
+		Interval:   5,
+		RetryDelay: 3,
+	}, ss)
+	if err := option.Apply(); err != nil {
+		return nil, err
+	}
+
+	auth.enforcer, err = casbin.NewSyncedEnforcer(option.Model, option.Adapter)
 	if err != nil {
 		return nil, err
 	}
-	go s.WatchUpdate()
-	return s, nil
+	go auth.WatchUpdate()
+	return auth, nil
 }

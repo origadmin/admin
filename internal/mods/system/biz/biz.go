@@ -23,6 +23,7 @@ var ProviderSet = wire.NewSet(
 	NewRoleServiceBiz,
 	NewUserServiceBiz,
 	NewPermissionServiceBiz,
+	NewCasbinSourceServiceBiz,
 )
 
 var (
