@@ -55,9 +55,23 @@ message Data {
   Error error = 5 [json_name = "error"];
 }
 
+message SourceData {
+  bool success = 1 [json_name = "success"];
+  bytes data = 3 [json_name = "data"];
+  map<string, google.protobuf.Any> extra = 4 [json_name = "extra"];
+  Error error = 5 [json_name = "error"];
+}
+
 message DataArray {
   bool success = 1 [json_name = "success"];
-  repeated  google.protobuf.Any data = 3 [json_name = "data"];
+  repeated google.protobuf.Any data = 3 [json_name = "data"];
+  map<string, google.protobuf.Any> extra = 4 [json_name = "extra"];
+  Error error = 5 [json_name = "error"];
+}
+
+message SourceDataArray {
+  bool success = 1 [json_name = "success"];
+  repeated bytes data = 3 [json_name = "data"];
   map<string, google.protobuf.Any> extra = 4 [json_name = "extra"];
   Error error = 5 [json_name = "error"];
 }

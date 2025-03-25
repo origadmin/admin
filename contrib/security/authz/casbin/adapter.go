@@ -6,6 +6,8 @@
 package casbin
 
 import (
+	"fmt"
+
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 )
@@ -14,14 +16,35 @@ type adapter struct {
 	typedPolicies map[string][][]string
 }
 
+func (a *adapter) AddPolicies(sec string, ptype string, rules [][]string) error {
+	for _, rule := range rules {
+		err := a.AddPolicy(sec, ptype, rule)
+		if err != nil {
+			return fmt.Errorf("error adding policy: %v", err)
+		}
+	}
+	return nil
+}
+
+func (a *adapter) RemovePolicies(sec string, ptype string, rules [][]string) error {
+	for _, rule := range rules {
+		err := a.RemovePolicy(sec, ptype, rule)
+		if err != nil {
+			return fmt.Errorf("error removing policy: %v", err)
+		}
+	}
+	return nil
+}
+
 func (a *adapter) LoadPolicy(model model.Model) error {
 	var (
 		idx      int
 		policies [][]string
+		ptype    string
 	)
-	for _, policies = range a.typedPolicies {
+	for ptype, policies = range a.typedPolicies {
 		for idx = range policies {
-			err := persist.LoadPolicyArray(policies[idx], model)
+			err := persist.LoadPolicyArray(append([]string{ptype}, policies[idx]...), model)
 			if err != nil {
 				return err
 			}
@@ -110,6 +133,10 @@ func (a *adapter) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int,
 	return nil
 }
 
+func (a *adapter) SetPolicies(policies map[string][][]string) {
+	a.typedPolicies = policies
+}
+
 func NewAdapter() persist.Adapter {
 	return &adapter{
 		typedPolicies: make(map[string][][]string),
@@ -120,3 +147,6 @@ func NewAdapterWithPolicies(policies map[string][][]string) persist.Adapter {
 		typedPolicies: policies,
 	}
 }
+
+var _ persist.Adapter = (*adapter)(nil)
+var _ persist.BatchAdapter = (*adapter)(nil)

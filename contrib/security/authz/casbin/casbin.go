@@ -135,8 +135,8 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 
 	adapter := NewAdapterWithPolicies(p)
 	auth.enforcer.SetAdapter(adapter)
-	err := auth.enforcer.LoadPolicy()
-	//err := auth.watcher.Update()
+	//err := auth.enforcer.LoadPolicy()
+	err := auth.options.Watcher.Update()
 	if err != nil {
 		return errors.Wrap(err, "failed to load adapter")
 	}
@@ -176,19 +176,61 @@ func (auth *Authorizer) SyncPolicy(ctx context.Context) error {
 		}
 	}
 	pLen := len(policies)
-	log.Infof("Loaded %d policies", pLen)
+	log.Infof("Updated %d policies", pLen)
+	for s, p := range policies {
+		log.Debugf("Updated %d %s policies", len(p), s)
+	}
 	if pLen > 0 {
 		auth.lastModified = time.Now().Unix()
-		adapter := NewAdapterWithPolicies(policies)
-		auth.enforcer.SetAdapter(adapter)
+		if setter, ok := auth.options.Adapter.(interface {
+			SetPolicies(policies map[string][][]string)
+		}); ok {
+			log.Infof("Setting policies...")
+			setter.SetPolicies(policies)
+		}
+		//err := auth.options.Watcher.Update()
+		//if err != nil {
+		//	policySyncCounter.WithLabelValues("failed").Inc()
+		//	return err
+		//}
+		//for ptype, policy := range policies {
+		//	switch ptype {
+		//	case "p":
+		//		log.Debugf("Updating %d policies", len(policy))
+		//		added, err := auth.enforcer.AddPolicies(policy)
+		//		if err != nil {
+		//			log.Warnf("Failed to add policies: %v", err)
+		//			return err
+		//		}
+		//		log.Debugf("Added %b policies", added)
+		//	case "g":
+		//		log.Debugf("Updating %d groupings", len(policy))
+		//		added, err := auth.enforcer.AddGroupingPolicies(policy)
+		//		if err != nil {
+		//			log.Warnf("Failed to add groupings: %v", err)
+		//			return err
+		//		}
+		//		log.Debugf("Added %b groupings", added)
+		//	}
+		//
+		//}
 		err := auth.enforcer.LoadPolicy()
 		if err != nil {
-			policySyncCounter.WithLabelValues("failed").Inc()
+			log.Warnf("Failed to load policy: %v", err)
 			return err
 		}
+		policies, err := auth.enforcer.GetPolicy()
+		if err != nil {
+			log.Warnf("Failed to get policy: %v", err)
+			return err
+		}
+		//for _, policy := range policies {
+		//	log.Debugf("Updated policy: %+v", policy)
+		//}
+		log.Infof("Updated %d policies", len(policies))
 		policyCountGauge.Set(float64(pLen))
 		policySyncCounter.WithLabelValues("success").Inc()
-		//auth.enforcer.updatge
+		//auth.enforcer.update
 	}
 
 	return nil
@@ -228,6 +270,7 @@ func (auth *Authorizer) WatchUpdate() {
 				//auth.lastModified = lastDate
 				//_ = auth.watcher.Update()
 				//auth.enforcer
+				go auth.SyncPolicy(ctx)
 				continue
 			}
 			log.Debugf("No update detected, last modified: %v", lastDate)
@@ -236,15 +279,6 @@ func (auth *Authorizer) WatchUpdate() {
 		}
 	}
 }
-
-//func (auth *Authorizer) OptionFromConfig(config *configv1.AuthZConfig_CasbinConfig) error {
-//	var err error
-//	var options []Setting
-//	if config.ModelFile != "" {
-//		options = append(options, WithFileModel(config.ModelFile))
-//	}
-//	return options, err
-//}
 
 func (auth *Authorizer) Apply() error {
 	if auth.options.Adapter == nil {
@@ -284,6 +318,10 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 		return nil, err
 	}
 	auth.enforcer, err = casbin.NewSyncedEnforcer(auth.options.Model, auth.options.Adapter)
+	if err != nil {
+		return nil, err
+	}
+	err = auth.enforcer.SetWatcher(auth.options.Watcher)
 	if err != nil {
 		return nil, err
 	}

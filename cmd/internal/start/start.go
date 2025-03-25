@@ -94,7 +94,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	staticDir, _ := cmd.Flags().GetString(startStatic)
 	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)
 	//random, _ := cmd.Flags().GetBool(startRandom)
-
+	
 	l := log.With(kslog.NewLogger(),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,

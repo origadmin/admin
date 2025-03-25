@@ -54,7 +54,7 @@ func (c casbinSourceRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesR
 					c.config.PrefixNumberID("role", rolePermission.RoleID),
 					resource.Path,
 					resource.Method,
-					//todo: add domain support
+					"*",
 				},
 			})
 		}
@@ -75,6 +75,7 @@ func (c casbinSourceRepo) ListGroupings(ctx context.Context, in *pb.ListGrouping
 				c.config.PrefixNumberID("user", userRole.UserID),
 				c.config.PrefixNumberID("role", userRole.RoleID),
 				//todo: add domain support
+				"*",
 			},
 		})
 	}

@@ -8,6 +8,7 @@ package resp
 import (
 	"encoding/json"
 
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/structpb"
@@ -108,4 +109,16 @@ func Any2AnyPB(message any) *anypb.Any {
 		return Empty
 	}
 	return val
+}
+
+func Proto2JSONArray[T proto.Message](msgs ...T) ([]json.RawMessage, error) {
+	var arr []json.RawMessage
+	for _, msg := range msgs {
+		b, err := protojson.Marshal(msg)
+		if err != nil {
+			return nil, err
+		}
+		arr = append(arr, b)
+	}
+	return arr, nil
 }
