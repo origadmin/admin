@@ -19,6 +19,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/golang-cz/devslog"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
@@ -27,6 +28,7 @@ import (
 	kslog "github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/errors"
+	"github.com/origadmin/toolkits/sloge"
 	"github.com/spf13/cobra"
 
 	"origadmin/application/admin/helpers/command"
@@ -94,8 +96,17 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	staticDir, _ := cmd.Flags().GetString(startStatic)
 	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)
 	//random, _ := cmd.Flags().GetBool(startRandom)
-	
-	l := log.With(kslog.NewLogger(),
+	slogInstance := sloge.New(sloge.WithFile("logs/admin.log"), sloge.WithDevConfig(&sloge.DevConfig{
+		HandlerOptions:    &slog.HandlerOptions{Level: slog.LevelDebug},
+		MaxSlicePrintSize: 50,
+		SortKeys:          false,
+		TimeFormat:        "[15:04:05]",
+		DebugColor:        devslog.Blue,
+		InfoColor:         devslog.Green,
+		WarnColor:         devslog.Yellow,
+		ErrorColor:        devslog.Red,
+	}))
+	l := log.With(kslog.NewLogger(kslog.WithLogger(slogInstance)),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
 		"service.id", flags.ID(),
