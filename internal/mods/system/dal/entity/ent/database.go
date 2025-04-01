@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/schema"
 	"github.com/origadmin/toolkits/database"
 )
 
@@ -19,7 +20,13 @@ type Database struct {
 }
 
 // NewDatabase creates a new database configured with the given options.
-func NewDatabase(client *Client, opts ...Option) *Database {
+func NewDatabase(opts ...Option) *Database {
+	client := NewClient(opts...)
+	return &Database{client: client}
+}
+
+// NewDatabase creates a new database configured with the given options.
+func NewDatabaseWithClient(client *Client, opts ...Option) *Database {
 	if client == nil {
 		client = NewClient(opts...)
 	}
@@ -160,4 +167,8 @@ func (db *Database) UserPosition(ctx context.Context) *UserPositionClient {
 // UserRole is the client for interacting with the UserRole builders.
 func (db *Database) UserRole(ctx context.Context) *UserRoleClient {
 	return db.Client(ctx).UserRole
+}
+
+func (db *Database) Migration(ctx context.Context, opts ...schema.MigrateOption) error {
+	return db.Client(ctx).Schema.Create(ctx, opts...)
 }

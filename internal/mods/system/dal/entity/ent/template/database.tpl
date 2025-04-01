@@ -21,13 +21,19 @@
 		client *Client
 		}
 
-		// NewDatabase creates a new database configured with the given options.
-		func NewDatabase(client *Client,opts ...Option) *Database {
-		if client == nil {
-		client = NewClient(opts...)
-		}
-		return &Database{client: client}
-		}
+    // NewDatabase creates a new database configured with the given options.
+    func NewDatabase(opts ...Option) *Database {
+    client := NewClient(opts...)
+    return &Database{client: client}
+    }
+
+    // NewDatabase creates a new database configured with the given options.
+    func NewDatabaseWithClient(client *Client,opts ...Option) *Database {
+    if client == nil {
+    client = NewClient(opts...)
+    }
+    return &Database{client: client}
+    }
 
 		func (db *Database) clientDriver(ctx context.Context) dialect.Driver {
 		tx := TxFromContext(ctx)
@@ -112,5 +118,9 @@
 				return db.Client(ctx).{{ $n.Name }}
 				}
     {{ end }}
+
+		func (db *Database) Migration(ctx context.Context,opts ...schema.MigrateOption) error {
+		return db.Client(ctx).Schema.Create(ctx, opts...)
+		}
 
 {{ end }}

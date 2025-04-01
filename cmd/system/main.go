@@ -77,6 +77,12 @@ func main() {
 	if err := bs.Validate(); err != nil {
 		log.Fatalf("failed to validate config: %s", err.Error())
 	}
+
+	if err := loader.InitSetup(bs); err != nil {
+		log.Fatalf("failed to init setup: %s", err.Error())
+		return
+	}
+
 	//log.Infof("bootstrap config: %+v\n", loader.PrintString(bs))
 	ctx := context.Background()
 	//info to ctx

@@ -22,8 +22,6 @@ import (
 	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
-	"github.com/origadmin/toolkits/crypto/hash"
-	"github.com/origadmin/toolkits/crypto/hash/types"
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
@@ -91,15 +89,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	if bootstrap == nil {
 		return nil, nil, errors.New("bootstrap is nil")
 	}
-	crypto := bootstrap.GetCryptoType()
-	cryptotype := types.TypeArgon2
-	if crypto != "" {
-		cryptotype = types.ParseType(crypto)
-	}
-	err := hash.UseCrypto(cryptotype)
-	if err != nil {
-		return nil, nil, err
-	}
+
 	cfg := bootstrap.GetData().GetDatabase()
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
@@ -119,15 +109,11 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 		return nil, nil, err
 	}
 
-	//err = drv.Exec(context.Background(), "PRAGMA foreign_keys = ON;", []any{}, nil)
-	//if err != nil {
-	//	return nil, nil, err
-	//}
 	// Run the auto migration tool.
 	debugDrv := entslog.New(sql.OpenDB(cfg.Dialect, drv))
-	client := ent.NewClient(ent.Driver(debugDrv))
+	db := ent.NewDatabase(ent.Driver(debugDrv))
 	if true || cfg.GetMigration().GetEnabled() {
-		if err := client.Schema.Create(
+		if err := db.Migration(
 			context.Background(),
 			schema.WithDropIndex(true),
 			schema.WithDropColumn(true),
@@ -138,8 +124,9 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}
 
 	d := &Data{
-		Database: ent.NewDatabase(client),
+		Database: db,
 	}
+
 	// 初始化数据
 	if err := d.InitDataFromPath(context.Background(), ""); err != nil {
 		log.Errorw("failed to init data", "error", err)
@@ -156,7 +143,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 
 func NewDataWithClient(client *ent.Client) *Data {
 	return &Data{
-		Database: ent.NewDatabase(client),
+		Database: ent.NewDatabaseWithClient(client),
 	}
 }
 
