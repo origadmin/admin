@@ -77,7 +77,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		username := root.Username
 		if data.Username == username {
 			log.Debugf("Username matches, checking password")
-			if err := hash.Compare(root.Password, data.Password, root.Salt); err != nil {
+			if err := hash.Verify(root.Password, data.Password); err != nil {
 				log.Warnf("Invalid password for root userData")
 				return nil, dto.ErrInvalidPassword
 			}
@@ -109,7 +109,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 
 	// check password
 	log.Debugf("Comparing password for userData %s", data.Username)
-	if err := hash.Compare(userData.Password, data.Password, userData.Salt); err != nil {
+	if err := hash.Verify(userData.Password, data.Password); err != nil {
 		log.Warnf("Invalid password for userData %s", data.Username)
 		return nil, dto.ErrInvalidPassword
 	}
@@ -407,8 +407,7 @@ func NewLoginRepo(data *LoginData, logger log.KLogger) dto.LoginRepo {
 	// todo: generate random password for root user if not exists
 	if cfg.RootUser.RandomPassword {
 		passwd := rand.GenerateRandom(12)
-		cfg.RootUser.Salt = rand.GenerateSalt()
-		cfg.RootUser.Password, err = hash.Generate(passwd, cfg.RootUser.Salt)
+		cfg.RootUser.Password, err = hash.Generate(passwd)
 		if err == nil {
 			fmt.Println("Root user password:", passwd)
 		} else {

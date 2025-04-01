@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 
 	"github.com/origadmin/toolkits/crypto/hash"
-	"github.com/origadmin/toolkits/crypto/rand"
 
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
@@ -240,8 +239,7 @@ func initUsers(ctx context.Context, client *ent.Client) error {
 	}
 
 	for _, u := range users {
-		salt := rand.GenerateSalt()
-		passwd, err := hash.Generate(u.Password, salt)
+		passwd, err := hash.Generate(u.Password)
 		if err != nil {
 			return err
 		}
@@ -250,7 +248,6 @@ func initUsers(ctx context.Context, client *ent.Client) error {
 			SetUsername(u.Username).
 			SetNickname(u.Nickname).
 			SetPassword(passwd). // 加密密码
-			SetSalt(salt).
 			SetEmail(u.Email).
 			SetPhone(u.Phone).
 			SetStatus(u.Status).

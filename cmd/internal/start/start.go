@@ -27,6 +27,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	kslog "github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/crypto/hash"
+	"github.com/origadmin/toolkits/crypto/hash/types"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/toolkits/sloge"
 	"github.com/spf13/cobra"
@@ -157,7 +158,10 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("bootstrap config not found")
 	}
 	if bs.CryptoType == "argon2" {
-		hash.UseArgon2()
+		err := hash.UseCrypto(types.TypeArgon2)
+		if err != nil {
+			return err
+		}
 	}
 
 	//log.Infof("bootstrap: %+v", loader.PrintString(bs))

@@ -15,22 +15,7 @@ import (
 )
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(
-	NewAuthServiceClientBiz,
-	NewAuthServiceClient,
-	NewLoginServiceClientBiz,
-	NewLoginServiceClient,
-	NewPersonalServiceClientBiz,
-	NewPersonalServiceClient,
-	NewResourceServiceClientBiz,
-	NewResourceServiceClient,
-	NewRoleServiceClientBiz,
-	NewRoleServiceClient,
-	NewUserServiceClientBiz,
-	NewUserServiceClient,
-	NewPermissionServiceClientBiz,
-	NewPermissionServiceClient,
-)
+var ProviderSet = wire.NewSet()
 
 var (
 	// ErrUserNotFound is user not found.

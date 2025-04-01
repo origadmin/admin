@@ -50,26 +50,18 @@ func NewGINSServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.Op
 		opts = append(opts, gins.WithLogger(log.With(l, "module", "gins")))
 	}
 	log.Infof("GetHostName: %s", env.Var(runtime.DefaultEnvPrefix, "host"))
-	host := env.Var(runtime.DefaultEnvPrefix, "host")
+	hostVar := env.Var(runtime.DefaultEnvPrefix, "host")
 	hostIP := env.GetEnv(env.Var(runtime.DefaultEnvPrefix, "host_ip"))
 	if hostIP == "" {
-		log.Debugf("HostIP is empty, replacing with HostAddr: %s", host)
-		hostIP = net.HostAddr(host)
+		log.Debugf("HostIP is empty, replacing with HostAddr: %s", hostVar)
+		hostIP = net.HostAddr(net.WithEnvVar(hostVar))
 		log.Debugf("HostIP after replacement: %s", hostIP)
 	}
 
 	var endpoint string
-	//if cfg.Endpoint == "" {
-	//	endpoint, _ = helpers.ServiceEndpoint("http", hostIP, cfg.Addr)
-	//} else {
-	//	endpoint = cfg.Endpoint
-	//}
 	log.Debugf("GINS.Endpoint: %v", endpoint)
 	ep, _ := url.Parse(endpoint)
 	opts = append(opts, gins.Endpoint(ep))
 	srv := gins.NewServer(opts...)
-	//if register != nil {
-	//	register(srv)
-	//}
 	return srv
 }

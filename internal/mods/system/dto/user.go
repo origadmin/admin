@@ -122,9 +122,9 @@ func MakeCreateUser(user *UserPB, username, password string, option UserMutation
 	var err error
 	if password != "" {
 		log.Debugf("Password is not empty, generating salt")
-		user.Salt = rand.GenerateSalt()
-		log.Debugf("Generated salt: %s", user.Salt)
-		user.Password, err = hash.Generate(password, user.Salt)
+		//user.Salt = rand.GenerateSalt()
+		//log.Debugf("Generated salt: %s", user.Salt)
+		user.Password, err = hash.Generate(password)
 		if err != nil {
 			log.Errorf("Error generating password hash: %v", err)
 			return nil, "", err

@@ -6,10 +6,8 @@
 package loader
 
 import (
-	"fmt"
-
 	"github.com/origadmin/toolkits/crypto/hash"
-	"github.com/origadmin/toolkits/errors"
+	"github.com/origadmin/toolkits/crypto/hash/types"
 
 	"origadmin/application/admin/internal/configs"
 )
@@ -17,22 +15,13 @@ import (
 func Setup(bootstrap *configs.Bootstrap) error {
 	// add init action here
 	crypto := bootstrap.GetCryptoType()
-	switch hash.Type(crypto) {
-	case hash.TypeArgon2:
-		hash.UseArgon2()
-	case hash.TypeMD5:
-		hash.UseMD5()
-	case hash.TypeSHA1:
-		hash.UseSHA1()
-	case hash.TypeSHA256:
-		hash.UseSHA256()
-	case hash.TypeScrypt:
-		hash.UseScrypt()
-	case hash.TypeHMAC256:
-
-	default:
-		return errors.New(fmt.Sprintf("unsupported crypto type: %s", crypto))
+	cryptoType := types.TypeArgon2
+	if crypto != "" {
+		cryptoType = types.ParseType(crypto)
 	}
-
+	err := hash.UseCrypto(cryptoType)
+	if err != nil {
+		return err
+	}
 	return nil
 }

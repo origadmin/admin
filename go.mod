@@ -14,7 +14,8 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/v2 v2.8.4
 	github.com/go-sql-driver/mysql v1.9.1
-	github.com/goexts/generic v0.2.1
+	github.com/goexts/generic v0.2.4
+	github.com/golang-cz/devslog v0.0.11
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/gnostic v0.7.0
 	github.com/google/uuid v1.6.0
@@ -28,13 +29,13 @@ require (
 	github.com/origadmin/contrib/replacer v0.0.32
 	github.com/origadmin/contrib/transport/gins v0.0.32
 	github.com/origadmin/entslog/v3 v3.0.6
-	github.com/origadmin/runtime v0.1.53
+	github.com/origadmin/runtime v0.1.55
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.2.10
-	github.com/origadmin/toolkits/codec v0.2.10
-	github.com/origadmin/toolkits/errors v0.2.10
-	github.com/origadmin/toolkits/idgen v0.2.10
-	github.com/origadmin/toolkits/sloge v0.0.58
+	github.com/origadmin/toolkits v0.2.14
+	github.com/origadmin/toolkits/codec v0.2.14
+	github.com/origadmin/toolkits/errors v0.2.14
+	github.com/origadmin/toolkits/idgen v0.2.14
+	github.com/origadmin/toolkits/sloge v0.2.14
 	github.com/prometheus/client_golang v1.21.1
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.9.1
@@ -84,7 +85,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.25.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
-	github.com/golang-cz/devslog v0.0.11 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
@@ -112,7 +112,7 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
-	github.com/lmittmann/tint v1.0.6 // indirect
+	github.com/lmittmann/tint v1.0.7 // indirect
 	github.com/lufia/plan9stats v0.0.0-20250317134145-8bc96cf8fc35 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

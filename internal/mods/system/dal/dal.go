@@ -23,6 +23,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/crypto/hash"
+	"github.com/origadmin/toolkits/crypto/hash/types"
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
@@ -87,7 +88,18 @@ func FixSource(source string) string {
 
 // NewData .
 func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), error) {
-	hash.UseCrypto(hash.Type(bootstrap.GetCryptoType()))
+	if bootstrap == nil {
+		return nil, nil, errors.New("bootstrap is nil")
+	}
+	crypto := bootstrap.GetCryptoType()
+	cryptotype := types.TypeArgon2
+	if crypto != "" {
+		cryptotype = types.ParseType(crypto)
+	}
+	err := hash.UseCrypto(cryptotype)
+	if err != nil {
+		return nil, nil, err
+	}
 	cfg := bootstrap.GetData().GetDatabase()
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")

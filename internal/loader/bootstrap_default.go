@@ -167,23 +167,10 @@ func DefaultData() *configv1.Data {
 			File: &configv1.Data_File{
 				Root: "",
 			},
-			Redis: &configv1.Data_Redis{
-				Network:      "",
-				Addr:         "",
-				Password:     "",
-				Db:           0,
-				DialTimeout:  0,
-				ReadTimeout:  0,
-				WriteTimeout: 0,
-			},
-			Badger: &configv1.Data_BadgerDS{
-				Path:             "",
-				SyncWrites:       false,
-				ValueLogFileSize: 0,
-				LogLevel:         0,
-			},
-			Mongo: &configv1.Data_Mongo{},
-			Oss:   &configv1.Data_Oss{},
+			Redis: &configv1.Data_Redis{},
+			Badger: &configv1.Data_BadgerDS{},
+			Mongo:  &configv1.Data_Mongo{},
+			Oss:    &configv1.Data_Oss{},
 		},
 	}
 }

@@ -65,7 +65,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	bridge := securityx.SecurityBridge{
 		TokenSource:          security.TokenSourceHeader,
 		Scheme:               security.SchemeBearer,
-		AuthenticationHeader: "Authorization",
+		AuthenticationHeader: security.HeaderAuthorize,
 		Authenticator:        authenticator,
 		Authorizer:           authorizer,
 		SkipKey:              msecurity.MetadataSecuritySkipKey,

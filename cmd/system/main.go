@@ -9,9 +9,7 @@ import (
 	"flag"
 	"fmt"
 	"log/slog"
-	"os"
 	"syscall"
-	"time"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
@@ -37,16 +35,7 @@ var (
 	debug = false
 )
 
-func RandomID() string {
-	id, err := os.Hostname()
-	if err != nil {
-		id = "unknown"
-	}
-	return id + "." + fmt.Sprintf("%08d", time.Now().UnixNano()%(1<<32))
-}
-
 func init() {
-	flags.Flags.ID = RandomID()
 	flags.Env = "release"
 	flags.SetFlags(Name, Version)
 	flag.BoolVar(&debug, "debug", false, "set environment, eg: -debug")
@@ -57,18 +46,11 @@ func main() {
 	flag.Parse()
 
 	// the release mode, work dir sets to empty, use config path as work dir
-	//logger := slog.Default()
 	if debug {
 		fmt.Println("debug mode")
 		flags.Env = "debug"
 		flags.WorkDir = "resources/configs"
 		slog.SetLogLoggerLevel(slog.LevelDebug)
-		//logger = sloge.New(func(option *sloge.Option) {
-		//	option.Level = sloge.LevelDebug
-		//	option.Console = true
-		//	option.OutputPath = ""
-		//	option.FileName = ""
-		//})
 	}
 
 	l := log.With(kslog.NewLogger(),
