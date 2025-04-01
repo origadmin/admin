@@ -667,6 +667,8 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 		case user.FieldDeleteTime:
 			if input.DeleteTime != nil {
 				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
 			}
 		case user.FieldUUID:
 			// check string with sql.NullString if it is empty

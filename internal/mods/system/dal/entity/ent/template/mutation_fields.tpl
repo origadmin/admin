@@ -41,10 +41,13 @@
         {{- range $f := $fields }}
             {{- $const := print $n.Package "." $f.Constant }}
             {{- $setter := print "Set" $f.StructField }}
+            {{- $clear := print "Reset" $f.StructField }}
 						case {{ $const }}:
             {{- if $f.Nillable}}
 							if input.{{ $f.StructField }} != nil {
 							m.{{ $setter }}(*input.{{ $f.StructField }})
+							}else{
+								m.{{ $clear }}()
 							}
             {{- else if $f.IsBool}}
 							if input.{{ $f.StructField }} {
