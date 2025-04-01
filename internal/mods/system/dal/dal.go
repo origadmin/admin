@@ -16,7 +16,6 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/database"
 	"github.com/origadmin/entslog/v3"
@@ -94,14 +93,17 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
 	}
-	if cfg.Dialect == "sqlite3" {
-		cfg.Source = FixSource(cfg.GetSource())
-	}
-	sourceConfig, err := mysql.ParseDSN(cfg.Source)
-	if err != nil {
-		return nil, nil, err
-	}
-	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", sourceConfig.Addr)
+	//if cfg.Dialect == "sqlite3" {
+	//	//cfg.Source = FixSource(cfg.GetSource())
+	//}
+	//if cfg.Dialect == "mysql" {
+	//	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
+	//	sourceConfig, err := mysql.ParseDSN(cfg.Source)
+	//	if err != nil {
+	//		return nil, nil, err
+	//	}
+	//	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", sourceConfig.Addr)
+	//}
 	drv, err := database.Open(cfg)
 	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
 	if err != nil {
@@ -123,17 +125,17 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 		}
 	}
 
-	d := &Data{
+	data := &Data{
 		Database: db,
 	}
 
 	// 初始化数据
-	if err := d.InitDataFromPath(context.Background(), ""); err != nil {
+	if err := data.InitDataFromPath(context.Background(), ""); err != nil {
 		log.Errorw("failed to init data", "error", err)
 		return nil, nil, err
 	}
 
-	return d, func() {
+	return data, func() {
 		log.Info("closing the data resources")
 		if err := drv.Close(); err != nil {
 			log.Error(err)

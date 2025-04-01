@@ -12,7 +12,7 @@ import (
 	"origadmin/application/admin/internal/configs"
 )
 
-func Setup(bootstrap *configs.Bootstrap) error {
+func InitSetup(bootstrap *configs.Bootstrap) error {
 	// add init action here
 	crypto := bootstrap.GetCryptoType()
 	cryptoType := types.TypeArgon2
