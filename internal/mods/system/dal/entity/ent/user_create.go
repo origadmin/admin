@@ -499,7 +499,9 @@ func (uc *UserCreate) Mutation() *UserMutation {
 
 // Save creates the User in the database.
 func (uc *UserCreate) Save(ctx context.Context) (*User, error) {
-	uc.defaults()
+	if err := uc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, uc.sqlSave, uc.mutation, uc.hooks)
 }
 
@@ -526,7 +528,7 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (uc *UserCreate) defaults() {
+func (uc *UserCreate) defaults() error {
 	if _, ok := uc.mutation.CreateAuthor(); !ok {
 		v := user.DefaultCreateAuthor
 		uc.mutation.SetCreateAuthor(v)
@@ -536,10 +538,16 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetUpdateAuthor(v)
 	}
 	if _, ok := uc.mutation.CreateTime(); !ok {
+		if user.DefaultCreateTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultCreateTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultCreateTime()
 		uc.mutation.SetCreateTime(v)
 	}
 	if _, ok := uc.mutation.UpdateTime(); !ok {
+		if user.DefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultUpdateTime()
 		uc.mutation.SetUpdateTime(v)
 	}
@@ -604,10 +612,16 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetLastLoginIP(v)
 	}
 	if _, ok := uc.mutation.LastLoginTime(); !ok {
+		if user.DefaultLastLoginTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultLastLoginTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultLastLoginTime()
 		uc.mutation.SetLastLoginTime(v)
 	}
 	if _, ok := uc.mutation.LoginTime(); !ok {
+		if user.DefaultLoginTime == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultLoginTime (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultLoginTime()
 		uc.mutation.SetLoginTime(v)
 	}
@@ -616,9 +630,13 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetManager(v)
 	}
 	if _, ok := uc.mutation.ID(); !ok {
+		if user.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized user.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := user.DefaultID()
 		uc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
