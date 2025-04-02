@@ -47,6 +47,8 @@ type Resource struct {
 	Sequence int `json:"sequence,omitempty"`
 	// entity.resource.field.visible
 	Visible bool `json:"visible,omitempty"`
+	// entity.resource.field.level
+	Level int8 `json:"level,omitempty"`
 	// entity.resource.field.tree_path
 	TreePath string `json:"tree_path,omitempty"`
 	// entity.resource.field.properties
@@ -123,7 +125,7 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case resource.FieldVisible:
 			values[i] = new(sql.NullBool)
-		case resource.FieldID, resource.FieldStatus, resource.FieldSequence, resource.FieldParentID:
+		case resource.FieldID, resource.FieldStatus, resource.FieldSequence, resource.FieldLevel, resource.FieldParentID:
 			values[i] = new(sql.NullInt64)
 		case resource.FieldName, resource.FieldKeyword, resource.FieldI18nKey, resource.FieldType, resource.FieldPath, resource.FieldOperation, resource.FieldMethod, resource.FieldComponent, resource.FieldIcon, resource.FieldTreePath, resource.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -233,6 +235,12 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field visible", values[i])
 			} else if value.Valid {
 				r.Visible = value.Bool
+			}
+		case resource.FieldLevel:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field level", values[i])
+			} else if value.Valid {
+				r.Level = int8(value.Int64)
 			}
 		case resource.FieldTreePath:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -357,6 +365,9 @@ func (r *Resource) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("visible=")
 	builder.WriteString(fmt.Sprintf("%v", r.Visible))
+	builder.WriteString(", ")
+	builder.WriteString("level=")
+	builder.WriteString(fmt.Sprintf("%v", r.Level))
 	builder.WriteString(", ")
 	builder.WriteString("tree_path=")
 	builder.WriteString(r.TreePath)

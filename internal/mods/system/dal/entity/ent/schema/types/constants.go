@@ -2,8 +2,8 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package constants implements the functions, types, and interfaces for the module.
-package constants
+// Package types implements the functions, types, and interfaces for the module.
+package types
 
 const (
 	Invalid  = 0

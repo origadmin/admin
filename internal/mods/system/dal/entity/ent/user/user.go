@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 )
@@ -176,14 +175,7 @@ func ValidColumn(column string) bool {
 	return false
 }
 
-// Note that the variables below are initialized by the runtime
-// package on the initialization of the application. Therefore,
-// it should be imported in the main as follows:
-//
-//	import _ "origadmin/application/admin/internal/mods/system/dal/entity/ent/runtime"
 var (
-	Hooks        [1]ent.Hook
-	Interceptors [1]ent.Interceptor
 	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
 	DefaultCreateAuthor int64
 	// DefaultUpdateAuthor holds the default value on creation for the "update_author" field.

@@ -125,6 +125,11 @@ func Visible(v bool) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldVisible, v))
 }
 
+// Level applies equality check predicate on the "level" field. It's identical to LevelEQ.
+func Level(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldLevel, v))
+}
+
 // TreePath applies equality check predicate on the "tree_path" field. It's identical to TreePathEQ.
 func TreePath(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldTreePath, v))
@@ -893,6 +898,46 @@ func VisibleEQ(v bool) predicate.Resource {
 // VisibleNEQ applies the NEQ predicate on the "visible" field.
 func VisibleNEQ(v bool) predicate.Resource {
 	return predicate.Resource(sql.FieldNEQ(FieldVisible, v))
+}
+
+// LevelEQ applies the EQ predicate on the "level" field.
+func LevelEQ(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldEQ(FieldLevel, v))
+}
+
+// LevelNEQ applies the NEQ predicate on the "level" field.
+func LevelNEQ(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldNEQ(FieldLevel, v))
+}
+
+// LevelIn applies the In predicate on the "level" field.
+func LevelIn(vs ...int8) predicate.Resource {
+	return predicate.Resource(sql.FieldIn(FieldLevel, vs...))
+}
+
+// LevelNotIn applies the NotIn predicate on the "level" field.
+func LevelNotIn(vs ...int8) predicate.Resource {
+	return predicate.Resource(sql.FieldNotIn(FieldLevel, vs...))
+}
+
+// LevelGT applies the GT predicate on the "level" field.
+func LevelGT(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldGT(FieldLevel, v))
+}
+
+// LevelGTE applies the GTE predicate on the "level" field.
+func LevelGTE(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldGTE(FieldLevel, v))
+}
+
+// LevelLT applies the LT predicate on the "level" field.
+func LevelLT(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldLT(FieldLevel, v))
+}
+
+// LevelLTE applies the LTE predicate on the "level" field.
+func LevelLTE(v int8) predicate.Resource {
+	return predicate.Resource(sql.FieldLTE(FieldLevel, v))
 }
 
 // TreePathEQ applies the EQ predicate on the "tree_path" field.

@@ -14,12 +14,10 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 )
 
@@ -108,44 +106,6 @@ func (pu *PermissionUpdate) SetDataRules(m map[string]string) *PermissionUpdate 
 // ClearDataRules clears the value of the "data_rules" field.
 func (pu *PermissionUpdate) ClearDataRules() *PermissionUpdate {
 	pu.mutation.ClearDataRules()
-	return pu
-}
-
-// SetConditions sets the "conditions" field.
-func (pu *PermissionUpdate) SetConditions(sc []schema.PermissionCondition) *PermissionUpdate {
-	pu.mutation.SetConditions(sc)
-	return pu
-}
-
-// AppendConditions appends sc to the "conditions" field.
-func (pu *PermissionUpdate) AppendConditions(sc []schema.PermissionCondition) *PermissionUpdate {
-	pu.mutation.AppendConditions(sc)
-	return pu
-}
-
-// ClearConditions clears the value of the "conditions" field.
-func (pu *PermissionUpdate) ClearConditions() *PermissionUpdate {
-	pu.mutation.ClearConditions()
-	return pu
-}
-
-// SetAccessControl sets the "access_control" field.
-func (pu *PermissionUpdate) SetAccessControl(sac schema.PermissionAccessControl) *PermissionUpdate {
-	pu.mutation.SetAccessControl(sac)
-	return pu
-}
-
-// SetNillableAccessControl sets the "access_control" field if the given value is not nil.
-func (pu *PermissionUpdate) SetNillableAccessControl(sac *schema.PermissionAccessControl) *PermissionUpdate {
-	if sac != nil {
-		pu.SetAccessControl(*sac)
-	}
-	return pu
-}
-
-// ClearAccessControl clears the value of the "access_control" field.
-func (pu *PermissionUpdate) ClearAccessControl() *PermissionUpdate {
-	pu.mutation.ClearAccessControl()
 	return pu
 }
 
@@ -483,23 +443,6 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if pu.mutation.DataRulesCleared() {
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
-	}
-	if value, ok := pu.mutation.Conditions(); ok {
-		_spec.SetField(permission.FieldConditions, field.TypeJSON, value)
-	}
-	if value, ok := pu.mutation.AppendedConditions(); ok {
-		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, permission.FieldConditions, value)
-		})
-	}
-	if pu.mutation.ConditionsCleared() {
-		_spec.ClearField(permission.FieldConditions, field.TypeJSON)
-	}
-	if value, ok := pu.mutation.AccessControl(); ok {
-		_spec.SetField(permission.FieldAccessControl, field.TypeJSON, value)
-	}
-	if pu.mutation.AccessControlCleared() {
-		_spec.ClearField(permission.FieldAccessControl, field.TypeJSON)
 	}
 	if value, ok := pu.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
@@ -870,44 +813,6 @@ func (puo *PermissionUpdateOne) ClearDataRules() *PermissionUpdateOne {
 	return puo
 }
 
-// SetConditions sets the "conditions" field.
-func (puo *PermissionUpdateOne) SetConditions(sc []schema.PermissionCondition) *PermissionUpdateOne {
-	puo.mutation.SetConditions(sc)
-	return puo
-}
-
-// AppendConditions appends sc to the "conditions" field.
-func (puo *PermissionUpdateOne) AppendConditions(sc []schema.PermissionCondition) *PermissionUpdateOne {
-	puo.mutation.AppendConditions(sc)
-	return puo
-}
-
-// ClearConditions clears the value of the "conditions" field.
-func (puo *PermissionUpdateOne) ClearConditions() *PermissionUpdateOne {
-	puo.mutation.ClearConditions()
-	return puo
-}
-
-// SetAccessControl sets the "access_control" field.
-func (puo *PermissionUpdateOne) SetAccessControl(sac schema.PermissionAccessControl) *PermissionUpdateOne {
-	puo.mutation.SetAccessControl(sac)
-	return puo
-}
-
-// SetNillableAccessControl sets the "access_control" field if the given value is not nil.
-func (puo *PermissionUpdateOne) SetNillableAccessControl(sac *schema.PermissionAccessControl) *PermissionUpdateOne {
-	if sac != nil {
-		puo.SetAccessControl(*sac)
-	}
-	return puo
-}
-
-// ClearAccessControl clears the value of the "access_control" field.
-func (puo *PermissionUpdateOne) ClearAccessControl() *PermissionUpdateOne {
-	puo.mutation.ClearAccessControl()
-	return puo
-}
-
 // SetActions sets the "actions" field.
 func (puo *PermissionUpdateOne) SetActions(pe permission.Actions) *PermissionUpdateOne {
 	puo.mutation.SetActions(pe)
@@ -1272,23 +1177,6 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 	}
 	if puo.mutation.DataRulesCleared() {
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
-	}
-	if value, ok := puo.mutation.Conditions(); ok {
-		_spec.SetField(permission.FieldConditions, field.TypeJSON, value)
-	}
-	if value, ok := puo.mutation.AppendedConditions(); ok {
-		_spec.AddModifier(func(u *sql.UpdateBuilder) {
-			sqljson.Append(u, permission.FieldConditions, value)
-		})
-	}
-	if puo.mutation.ConditionsCleared() {
-		_spec.ClearField(permission.FieldConditions, field.TypeJSON)
-	}
-	if value, ok := puo.mutation.AccessControl(); ok {
-		_spec.SetField(permission.FieldAccessControl, field.TypeJSON, value)
-	}
-	if puo.mutation.AccessControlCleared() {
-		_spec.ClearField(permission.FieldAccessControl, field.TypeJSON)
 	}
 	if value, ok := puo.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)

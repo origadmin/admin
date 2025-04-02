@@ -92,6 +92,9 @@ func (Resource) Fields() []ent.Field {
 		field.Bool("visible").
 			Default(true).
 			Comment(i18n.Text("entity.resource.field.visible")),
+		field.Int8("level").
+			Default(0).
+			Comment(i18n.Text("entity.resource.field.level")),
 		field.String("tree_path").
 			MaxLen(256).
 			Default("").
@@ -117,6 +120,7 @@ func (Resource) Mixin() []ent.Mixin {
 func (Resource) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("parent_id"),
+		index.Fields("level"),
 	}
 }
 

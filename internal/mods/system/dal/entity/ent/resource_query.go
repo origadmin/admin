@@ -832,6 +832,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  Icon string `json:"icon,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  Visible bool `json:"visible,omitempty"`
+//	  Level int8 `json:"level,omitempty"`
 //	  TreePath string `json:"tree_path,omitempty"`
 //	  Properties map[string]string `json:"properties,omitempty"`
 //	  Description string `json:"description,omitempty"`
@@ -854,6 +855,7 @@ func (rq *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  resource.FieldIcon,
 //	  resource.FieldSequence,
 //	  resource.FieldVisible,
+//	  resource.FieldLevel,
 //	  resource.FieldTreePath,
 //	  resource.FieldProperties,
 //	  resource.FieldDescription,

@@ -6,8 +6,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
@@ -31,20 +29,6 @@ const (
 	DataScopeAll  string = "all"  // 所有数据
 )
 
-type PermissionCondition struct {
-	Field    string `json:"field"`
-	Operator string `json:"operator"`
-	Value    string `json:"value"`
-}
-
-type PermissionAccessControl struct {
-	Actions    []string          `json:"actions"`
-	Conditions map[string]string `json:"conditions"`
-	ValidFrom  *time.Time        `json:"valid_from"`
-	ValidUntil *time.Time        `json:"valid_until"`
-	Attributes map[string]any    `json:"attributes"`
-}
-
 // Fields of the Permission.
 func (Permission) Fields() []ent.Field {
 	return []ent.Field{
@@ -66,12 +50,12 @@ func (Permission) Fields() []ent.Field {
 		field.JSON("data_rules", map[string]string{}).
 			Optional().
 			Comment(i18n.Text("entity.permission.field.data_rules")),
-		field.JSON("conditions", []PermissionCondition{}).
-			Optional().
-			Comment(i18n.Text("entity.permission.field.conditions")),
-		field.JSON("access_control", PermissionAccessControl{}).
-			Optional().
-			Comment(i18n.Text("entity.permission.field.access_control")),
+		//field.JSON("conditions", []types.PermissionCondition{}).
+		//	Optional().
+		//	Comment(i18n.Text("entity.permission.field.conditions")),
+		//field.JSON("access_control", types.PermissionAccessControl{}).
+		//	Optional().
+		//	Comment(i18n.Text("entity.permission.field.access_control")),
 		field.Enum("actions").
 			Values("read", "write", "delete", "manage").
 			Default("read").

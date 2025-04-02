@@ -2048,14 +2048,12 @@ func (c *UserClient) QueryUserDepartments(u *User) *UserDepartmentQuery {
 
 // Hooks returns the client hooks.
 func (c *UserClient) Hooks() []Hook {
-	hooks := c.hooks.User
-	return append(hooks[:len(hooks):len(hooks)], user.Hooks[:]...)
+	return c.hooks.User
 }
 
 // Interceptors returns the client interceptors.
 func (c *UserClient) Interceptors() []Interceptor {
-	inters := c.inters.User
-	return append(inters[:len(inters):len(inters)], user.Interceptors[:]...)
+	return c.inters.User
 }
 
 func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {

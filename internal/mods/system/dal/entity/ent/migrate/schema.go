@@ -80,8 +80,6 @@ var (
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.permission.field.description", Default: ""},
 		{Name: "data_scope", Type: field.TypeString, Comment: "entity.permission.field.data_scope", Default: "self"},
 		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.data_rules"},
-		{Name: "conditions", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.conditions"},
-		{Name: "access_control", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.access_control"},
 		{Name: "actions", Type: field.TypeEnum, Comment: "entity.permission.field.actions", Enums: []string{"read", "write", "delete", "manage"}, Default: "read"},
 	}
 	// SysPermissionsTable holds the schema information for the "sys_permissions" table.
@@ -235,6 +233,7 @@ var (
 		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "entity.resource.field.icon", Default: ""},
 		{Name: "sequence", Type: field.TypeInt, Comment: "entity.resource.field.sequence", Default: 0},
 		{Name: "visible", Type: field.TypeBool, Comment: "entity.resource.field.visible", Default: true},
+		{Name: "level", Type: field.TypeInt8, Comment: "entity.resource.field.level", Default: 0},
 		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "entity.resource.field.tree_path", Default: ""},
 		{Name: "properties", Type: field.TypeJSON, Nullable: true, Comment: "entity.resource.field.properties"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.resource.field.description", Default: ""},
@@ -249,7 +248,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_resources_sys_resources_children",
-				Columns:    []*schema.Column{SysResourcesColumns[18]},
+				Columns:    []*schema.Column{SysResourcesColumns[19]},
 				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -268,7 +267,12 @@ var (
 			{
 				Name:    "resource_parent_id",
 				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[18]},
+				Columns: []*schema.Column{SysResourcesColumns[19]},
+			},
+			{
+				Name:    "resource_level",
+				Unique:  false,
+				Columns: []*schema.Column{SysResourcesColumns[15]},
 			},
 		},
 	}

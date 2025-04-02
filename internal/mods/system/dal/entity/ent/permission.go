@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 	"strings"
 	"time"
 
@@ -34,10 +33,6 @@ type Permission struct {
 	DataScope string `json:"data_scope,omitempty"`
 	// entity.permission.field.data_rules
 	DataRules map[string]string `json:"data_rules,omitempty"`
-	// entity.permission.field.conditions
-	Conditions []schema.PermissionCondition `json:"conditions,omitempty"`
-	// entity.permission.field.access_control
-	AccessControl schema.PermissionAccessControl `json:"access_control,omitempty"`
 	// entity.permission.field.actions
 	Actions permission.Actions `json:"actions,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -124,7 +119,7 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case permission.FieldDataRules, permission.FieldConditions, permission.FieldAccessControl:
+		case permission.FieldDataRules:
 			values[i] = new([]byte)
 		case permission.FieldID:
 			values[i] = new(sql.NullInt64)
@@ -195,22 +190,6 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 			} else if value != nil && len(*value) > 0 {
 				if err := json.Unmarshal(*value, &pe.DataRules); err != nil {
 					return fmt.Errorf("unmarshal field data_rules: %w", err)
-				}
-			}
-		case permission.FieldConditions:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field conditions", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &pe.Conditions); err != nil {
-					return fmt.Errorf("unmarshal field conditions: %w", err)
-				}
-			}
-		case permission.FieldAccessControl:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field access_control", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &pe.AccessControl); err != nil {
-					return fmt.Errorf("unmarshal field access_control: %w", err)
 				}
 			}
 		case permission.FieldActions:
@@ -305,12 +284,6 @@ func (pe *Permission) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("data_rules=")
 	builder.WriteString(fmt.Sprintf("%v", pe.DataRules))
-	builder.WriteString(", ")
-	builder.WriteString("conditions=")
-	builder.WriteString(fmt.Sprintf("%v", pe.Conditions))
-	builder.WriteString(", ")
-	builder.WriteString("access_control=")
-	builder.WriteString(fmt.Sprintf("%v", pe.AccessControl))
 	builder.WriteString(", ")
 	builder.WriteString("actions=")
 	builder.WriteString(fmt.Sprintf("%v", pe.Actions))

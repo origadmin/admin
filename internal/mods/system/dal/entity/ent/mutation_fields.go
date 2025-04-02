@@ -157,14 +157,6 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			if len(input.DataRules) > 0 {
 				m.SetDataRules(input.DataRules)
 			}
-		case permission.FieldConditions:
-			if len(input.Conditions) > 0 {
-				m.SetConditions(input.Conditions)
-			}
-		case permission.FieldAccessControl:
-			if len(input.AccessControl) > 0 {
-				m.SetAccessControl(input.AccessControl)
-			}
 		case permission.FieldActions:
 			var zero permission.Actions
 			// check permission.Actions with sql.NullString if it is empty
@@ -203,10 +195,6 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetDataScope(input.DataScope)
 		case permission.FieldDataRules:
 			m.SetDataRules(input.DataRules)
-		case permission.FieldConditions:
-			m.SetConditions(input.Conditions)
-		case permission.FieldAccessControl:
-			m.SetAccessControl(input.AccessControl)
 		case permission.FieldActions:
 			m.SetActions(input.Actions)
 		case permission.FieldID:
@@ -444,6 +432,11 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			if input.Visible {
 				m.SetVisible(input.Visible)
 			}
+		case resource.FieldLevel:
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Level != 0 {
+				m.SetLevel(input.Level)
+			}
 		case resource.FieldTreePath:
 			// check string with sql.NullString if it is empty
 			if input.TreePath != "" {
@@ -509,6 +502,8 @@ func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) 
 			m.SetSequence(input.Sequence)
 		case resource.FieldVisible:
 			m.SetVisible(input.Visible)
+		case resource.FieldLevel:
+			m.SetLevel(input.Level)
 		case resource.FieldTreePath:
 			m.SetTreePath(input.TreePath)
 		case resource.FieldProperties:

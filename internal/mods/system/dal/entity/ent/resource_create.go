@@ -210,6 +210,20 @@ func (rc *ResourceCreate) SetNillableVisible(b *bool) *ResourceCreate {
 	return rc
 }
 
+// SetLevel sets the "level" field.
+func (rc *ResourceCreate) SetLevel(i int8) *ResourceCreate {
+	rc.mutation.SetLevel(i)
+	return rc
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (rc *ResourceCreate) SetNillableLevel(i *int8) *ResourceCreate {
+	if i != nil {
+		rc.SetLevel(*i)
+	}
+	return rc
+}
+
 // SetTreePath sets the "tree_path" field.
 func (rc *ResourceCreate) SetTreePath(s string) *ResourceCreate {
 	rc.mutation.SetTreePath(s)
@@ -409,6 +423,10 @@ func (rc *ResourceCreate) defaults() {
 		v := resource.DefaultVisible
 		rc.mutation.SetVisible(v)
 	}
+	if _, ok := rc.mutation.Level(); !ok {
+		v := resource.DefaultLevel
+		rc.mutation.SetLevel(v)
+	}
 	if _, ok := rc.mutation.TreePath(); !ok {
 		v := resource.DefaultTreePath
 		rc.mutation.SetTreePath(v)
@@ -511,6 +529,9 @@ func (rc *ResourceCreate) check() error {
 	}
 	if _, ok := rc.mutation.Visible(); !ok {
 		return &ValidationError{Name: "visible", err: errors.New(`ent: missing required field "Resource.visible"`)}
+	}
+	if _, ok := rc.mutation.Level(); !ok {
+		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Resource.level"`)}
 	}
 	if _, ok := rc.mutation.TreePath(); !ok {
 		return &ValidationError{Name: "tree_path", err: errors.New(`ent: missing required field "Resource.tree_path"`)}
@@ -625,6 +646,10 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.Visible(); ok {
 		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
 		_node.Visible = value
+	}
+	if value, ok := rc.mutation.Level(); ok {
+		_spec.SetField(resource.FieldLevel, field.TypeInt8, value)
+		_node.Level = value
 	}
 	if value, ok := rc.mutation.TreePath(); ok {
 		_spec.SetField(resource.FieldTreePath, field.TypeString, value)

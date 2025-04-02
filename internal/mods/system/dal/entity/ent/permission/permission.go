@@ -29,10 +29,6 @@ const (
 	FieldDataScope = "data_scope"
 	// FieldDataRules holds the string denoting the data_rules field in the database.
 	FieldDataRules = "data_rules"
-	// FieldConditions holds the string denoting the conditions field in the database.
-	FieldConditions = "conditions"
-	// FieldAccessControl holds the string denoting the access_control field in the database.
-	FieldAccessControl = "access_control"
 	// FieldActions holds the string denoting the actions field in the database.
 	FieldActions = "actions"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
@@ -97,8 +93,6 @@ var Columns = []string{
 	FieldDescription,
 	FieldDataScope,
 	FieldDataRules,
-	FieldConditions,
-	FieldAccessControl,
 	FieldActions,
 }
 

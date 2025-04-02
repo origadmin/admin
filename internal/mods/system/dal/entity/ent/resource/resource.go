@@ -42,6 +42,8 @@ const (
 	FieldSequence = "sequence"
 	// FieldVisible holds the string denoting the visible field in the database.
 	FieldVisible = "visible"
+	// FieldLevel holds the string denoting the level field in the database.
+	FieldLevel = "level"
 	// FieldTreePath holds the string denoting the tree_path field in the database.
 	FieldTreePath = "tree_path"
 	// FieldProperties holds the string denoting the properties field in the database.
@@ -99,6 +101,7 @@ var Columns = []string{
 	FieldIcon,
 	FieldSequence,
 	FieldVisible,
+	FieldLevel,
 	FieldTreePath,
 	FieldProperties,
 	FieldDescription,
@@ -168,6 +171,8 @@ var (
 	DefaultSequence int
 	// DefaultVisible holds the default value on creation for the "visible" field.
 	DefaultVisible bool
+	// DefaultLevel holds the default value on creation for the "level" field.
+	DefaultLevel int8
 	// DefaultTreePath holds the default value on creation for the "tree_path" field.
 	DefaultTreePath string
 	// TreePathValidator is a validator for the "tree_path" field. It is called by the builders before save.
@@ -260,6 +265,11 @@ func BySequence(opts ...sql.OrderTermOption) OrderOption {
 // ByVisible orders the results by the visible field.
 func ByVisible(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVisible, opts...).ToFunc()
+}
+
+// ByLevel orders the results by the level field.
+func ByLevel(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLevel, opts...).ToFunc()
 }
 
 // ByTreePath orders the results by the tree_path field.

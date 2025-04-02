@@ -13,7 +13,6 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -106,26 +105,6 @@ func (pc *PermissionCreate) SetNillableDataScope(s *string) *PermissionCreate {
 // SetDataRules sets the "data_rules" field.
 func (pc *PermissionCreate) SetDataRules(m map[string]string) *PermissionCreate {
 	pc.mutation.SetDataRules(m)
-	return pc
-}
-
-// SetConditions sets the "conditions" field.
-func (pc *PermissionCreate) SetConditions(sc []schema.PermissionCondition) *PermissionCreate {
-	pc.mutation.SetConditions(sc)
-	return pc
-}
-
-// SetAccessControl sets the "access_control" field.
-func (pc *PermissionCreate) SetAccessControl(sac schema.PermissionAccessControl) *PermissionCreate {
-	pc.mutation.SetAccessControl(sac)
-	return pc
-}
-
-// SetNillableAccessControl sets the "access_control" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableAccessControl(sac *schema.PermissionAccessControl) *PermissionCreate {
-	if sac != nil {
-		pc.SetAccessControl(*sac)
-	}
 	return pc
 }
 
@@ -419,14 +398,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if value, ok := pc.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
 		_node.DataRules = value
-	}
-	if value, ok := pc.mutation.Conditions(); ok {
-		_spec.SetField(permission.FieldConditions, field.TypeJSON, value)
-		_node.Conditions = value
-	}
-	if value, ok := pc.mutation.AccessControl(); ok {
-		_spec.SetField(permission.FieldAccessControl, field.TypeJSON, value)
-		_node.AccessControl = value
 	}
 	if value, ok := pc.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)

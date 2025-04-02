@@ -15,7 +15,7 @@ import (
 
 	"origadmin/application/admin/helpers/ent/mixin"
 	"origadmin/application/admin/helpers/i18n"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/constants"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/types"
 )
 
 // Role type constant
@@ -51,7 +51,7 @@ func (Role) Fields() []ent.Field {
 			Default(0).
 			Comment("role.field.sequence"), // Sequence for sorting
 		field.Int8("status").
-			Default(constants.Active).
+			Default(types.Active).
 			Comment("role.field.status"),
 	}
 }

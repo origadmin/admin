@@ -24,16 +24,6 @@ func (PermissionResource) Fields() []ent.Field {
 	return []ent.Field{
 		mixin.FK("permission_id"),
 		mixin.FK("resource_id"),
-		//// 使用JSON字段存储更复杂的权限控制
-		//field.JSON("access_control", struct {
-		//	Actions    []string          `json:"actions"`     // 允许的操作
-		//	Conditions map[string]string `json:"conditions"`  // 条件约束
-		//	ValidFrom  *time.Time        `json:"valid_from"`  // 生效时间
-		//	ValidUntil *time.Time        `json:"valid_until"` // 失效时间
-		//	Attributes map[string]any    `json:"attributes"`  // 其他属性
-		//}{}).
-		//	Optional().
-		//	Comment(i18n.Text("entity.permission_resource.field.access_control")),
 	}
 }
 

@@ -219,6 +219,27 @@ func (ru *ResourceUpdate) SetNillableVisible(b *bool) *ResourceUpdate {
 	return ru
 }
 
+// SetLevel sets the "level" field.
+func (ru *ResourceUpdate) SetLevel(i int8) *ResourceUpdate {
+	ru.mutation.ResetLevel()
+	ru.mutation.SetLevel(i)
+	return ru
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (ru *ResourceUpdate) SetNillableLevel(i *int8) *ResourceUpdate {
+	if i != nil {
+		ru.SetLevel(*i)
+	}
+	return ru
+}
+
+// AddLevel adds i to the "level" field.
+func (ru *ResourceUpdate) AddLevel(i int8) *ResourceUpdate {
+	ru.mutation.AddLevel(i)
+	return ru
+}
+
 // SetTreePath sets the "tree_path" field.
 func (ru *ResourceUpdate) SetTreePath(s string) *ResourceUpdate {
 	ru.mutation.SetTreePath(s)
@@ -566,6 +587,12 @@ func (ru *ResourceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Visible(); ok {
 		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
+	}
+	if value, ok := ru.mutation.Level(); ok {
+		_spec.SetField(resource.FieldLevel, field.TypeInt8, value)
+	}
+	if value, ok := ru.mutation.AddedLevel(); ok {
+		_spec.AddField(resource.FieldLevel, field.TypeInt8, value)
 	}
 	if value, ok := ru.mutation.TreePath(); ok {
 		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
@@ -953,6 +980,27 @@ func (ruo *ResourceUpdateOne) SetNillableVisible(b *bool) *ResourceUpdateOne {
 	return ruo
 }
 
+// SetLevel sets the "level" field.
+func (ruo *ResourceUpdateOne) SetLevel(i int8) *ResourceUpdateOne {
+	ruo.mutation.ResetLevel()
+	ruo.mutation.SetLevel(i)
+	return ruo
+}
+
+// SetNillableLevel sets the "level" field if the given value is not nil.
+func (ruo *ResourceUpdateOne) SetNillableLevel(i *int8) *ResourceUpdateOne {
+	if i != nil {
+		ruo.SetLevel(*i)
+	}
+	return ruo
+}
+
+// AddLevel adds i to the "level" field.
+func (ruo *ResourceUpdateOne) AddLevel(i int8) *ResourceUpdateOne {
+	ruo.mutation.AddLevel(i)
+	return ruo
+}
+
 // SetTreePath sets the "tree_path" field.
 func (ruo *ResourceUpdateOne) SetTreePath(s string) *ResourceUpdateOne {
 	ruo.mutation.SetTreePath(s)
@@ -1330,6 +1378,12 @@ func (ruo *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err
 	}
 	if value, ok := ruo.mutation.Visible(); ok {
 		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
+	}
+	if value, ok := ruo.mutation.Level(); ok {
+		_spec.SetField(resource.FieldLevel, field.TypeInt8, value)
+	}
+	if value, ok := ruo.mutation.AddedLevel(); ok {
+		_spec.AddField(resource.FieldLevel, field.TypeInt8, value)
 	}
 	if value, ok := ruo.mutation.TreePath(); ok {
 		_spec.SetField(resource.FieldTreePath, field.TypeString, value)

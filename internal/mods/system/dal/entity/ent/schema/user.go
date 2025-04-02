@@ -15,12 +15,12 @@ import (
 
 	"origadmin/application/admin/helpers/ent/mixin"
 	"origadmin/application/admin/helpers/i18n"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/constants"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/types"
 )
 
 const (
-	UserStatusActive = constants.Active
-	UserStatusFrozen = constants.Frozen
+	UserStatusActive = types.Active
+	UserStatusFrozen = types.Frozen
 )
 
 const (
@@ -151,3 +151,14 @@ func (User) Edges() []ent.Edge {
 		//edge.To("user_departments", UserDepartment.Type),
 	}
 }
+
+//func (User) Hooks() []ent.Hook {
+//	auditService := audit.NewService()
+//	// todo audit service: inject audit service
+//	if auditService == nil {
+//		return nil
+//	}
+//	return []ent.Hook{
+//		hook.On(UserAuditHook(auditService), ent.OpCreate|ent.OpUpdate|ent.OpDelete),
+//	}
+//}
