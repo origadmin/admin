@@ -13,6 +13,7 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -105,6 +106,40 @@ func (pc *PermissionCreate) SetNillableDataScope(s *string) *PermissionCreate {
 // SetDataRules sets the "data_rules" field.
 func (pc *PermissionCreate) SetDataRules(m map[string]string) *PermissionCreate {
 	pc.mutation.SetDataRules(m)
+	return pc
+}
+
+// SetConditions sets the "conditions" field.
+func (pc *PermissionCreate) SetConditions(sc []schema.PermissionCondition) *PermissionCreate {
+	pc.mutation.SetConditions(sc)
+	return pc
+}
+
+// SetAccessControl sets the "access_control" field.
+func (pc *PermissionCreate) SetAccessControl(sac schema.PermissionAccessControl) *PermissionCreate {
+	pc.mutation.SetAccessControl(sac)
+	return pc
+}
+
+// SetNillableAccessControl sets the "access_control" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableAccessControl(sac *schema.PermissionAccessControl) *PermissionCreate {
+	if sac != nil {
+		pc.SetAccessControl(*sac)
+	}
+	return pc
+}
+
+// SetActions sets the "actions" field.
+func (pc *PermissionCreate) SetActions(pe permission.Actions) *PermissionCreate {
+	pc.mutation.SetActions(pe)
+	return pc
+}
+
+// SetNillableActions sets the "actions" field if the given value is not nil.
+func (pc *PermissionCreate) SetNillableActions(pe *permission.Actions) *PermissionCreate {
+	if pe != nil {
+		pc.SetActions(*pe)
+	}
 	return pc
 }
 
@@ -267,6 +302,10 @@ func (pc *PermissionCreate) defaults() {
 		v := permission.DefaultDataScope
 		pc.mutation.SetDataScope(v)
 	}
+	if _, ok := pc.mutation.Actions(); !ok {
+		v := permission.DefaultActions
+		pc.mutation.SetActions(v)
+	}
 	if _, ok := pc.mutation.ID(); !ok {
 		v := permission.DefaultID()
 		pc.mutation.SetID(v)
@@ -307,6 +346,14 @@ func (pc *PermissionCreate) check() error {
 	}
 	if _, ok := pc.mutation.DataScope(); !ok {
 		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Permission.data_scope"`)}
+	}
+	if _, ok := pc.mutation.Actions(); !ok {
+		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "Permission.actions"`)}
+	}
+	if v, ok := pc.mutation.Actions(); ok {
+		if err := permission.ActionsValidator(v); err != nil {
+			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
+		}
 	}
 	if v, ok := pc.mutation.ID(); ok {
 		if err := permission.IDValidator(v); err != nil {
@@ -373,6 +420,18 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
 		_node.DataRules = value
 	}
+	if value, ok := pc.mutation.Conditions(); ok {
+		_spec.SetField(permission.FieldConditions, field.TypeJSON, value)
+		_node.Conditions = value
+	}
+	if value, ok := pc.mutation.AccessControl(); ok {
+		_spec.SetField(permission.FieldAccessControl, field.TypeJSON, value)
+		_node.AccessControl = value
+	}
+	if value, ok := pc.mutation.Actions(); ok {
+		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
+		_node.Actions = value
+	}
 	if nodes := pc.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -419,10 +478,6 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		createE := &PermissionResourceCreate{config: pc.config, mutation: newPermissionResourceMutation(pc.config, OpCreate)}
-		createE.defaults()
-		_, specE := createE.createSpec()
-		edge.Target.Fields = specE.Fields
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := pc.mutation.RolePermissionsIDs(); len(nodes) > 0 {

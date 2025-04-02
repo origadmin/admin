@@ -38,10 +38,10 @@ const (
 	EdgeUsers = "users"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
 	EdgePositions = "positions"
-	// EdgeChildren holds the string denoting the children edge name in mutations.
-	EdgeChildren = "children"
 	// EdgeParent holds the string denoting the parent edge name in mutations.
 	EdgeParent = "parent"
+	// EdgeChildren holds the string denoting the children edge name in mutations.
+	EdgeChildren = "children"
 	// EdgeUserDepartments holds the string denoting the user_departments edge name in mutations.
 	EdgeUserDepartments = "user_departments"
 	// Table holds the table name of the department in the database.
@@ -58,14 +58,14 @@ const (
 	PositionsInverseTable = "sys_positions"
 	// PositionsColumn is the table column denoting the positions relation/edge.
 	PositionsColumn = "department_id"
-	// ChildrenTable is the table that holds the children relation/edge.
-	ChildrenTable = "sys_departments"
-	// ChildrenColumn is the table column denoting the children relation/edge.
-	ChildrenColumn = "parent_id"
 	// ParentTable is the table that holds the parent relation/edge.
 	ParentTable = "sys_departments"
 	// ParentColumn is the table column denoting the parent relation/edge.
 	ParentColumn = "parent_id"
+	// ChildrenTable is the table that holds the children relation/edge.
+	ChildrenTable = "sys_departments"
+	// ChildrenColumn is the table column denoting the children relation/edge.
+	ChildrenColumn = "parent_id"
 	// UserDepartmentsTable is the table that holds the user_departments relation/edge.
 	UserDepartmentsTable = "sys_user_departments"
 	// UserDepartmentsInverseTable is the table name for the UserDepartment entity.
@@ -225,6 +225,13 @@ func ByPositions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByParentField orders the results by parent field.
+func ByParentField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newParentStep(), sql.OrderByField(field, opts...))
+	}
+}
+
 // ByChildrenCount orders the results by children count.
 func ByChildrenCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -236,13 +243,6 @@ func ByChildrenCount(opts ...sql.OrderTermOption) OrderOption {
 func ByChildren(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newChildrenStep(), append([]sql.OrderTerm{term}, terms...)...)
-	}
-}
-
-// ByParentField orders the results by parent field.
-func ByParentField(field string, opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newParentStep(), sql.OrderByField(field, opts...))
 	}
 }
 
@@ -273,18 +273,18 @@ func newPositionsStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.O2M, false, PositionsTable, PositionsColumn),
 	)
 }
-func newChildrenStep() *sqlgraph.Step {
-	return sqlgraph.NewStep(
-		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(Table, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
-	)
-}
 func newParentStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(Table, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, ParentTable, ParentColumn),
+	)
+}
+func newChildrenStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
 	)
 }
 func newUserDepartmentsStep() *sqlgraph.Step {

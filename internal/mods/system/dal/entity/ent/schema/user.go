@@ -37,18 +37,18 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		mixin.FieldUUIDFK("uuid", i18n.Text("user.field.uuid")),
+		mixin.FieldUUIDFK("uuid", i18n.Text("entity.user.field.uuid")),
 		field.String("allowed_ip").
 			Default("0.0.0.0").
-			Comment(i18n.Text("user.field.allowed_ip")),
+			Comment(i18n.Text("entity.user.field.allowed_ip")),
 		field.String("username").
 			MaxLen(32).
 			Unique().
-			Comment(i18n.Text("user.field.username")), // login username of user
+			Comment(i18n.Text("entity.user.field.username")), // login username of user
 		field.String("nickname").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("user.field.nickname")), // Nickname display name of user
+			Comment(i18n.Text("entity.user.field.nickname")), // Nickname display name of user
 		field.String("avatar").
 			MaxLen(256).
 			Default("").
@@ -56,56 +56,56 @@ func (User) Fields() []ent.Field {
 		field.String("name").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("user.field.nickname")), // Name of user
+			Comment(i18n.Text("entity.user.field.nickname")), // Name of user
 		field.Enum("gender").
 			Values(UserGenderMale, UserGenderFemale, UserGenderUnknown).
 			Default(UserGenderUnknown).
-			Comment(i18n.Text("user.field.gender")), // Gender of user
+			Comment(i18n.Text("entity.user.field.gender")), // Gender of user
 		field.String("password").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("user.field.password")),
+			Comment(i18n.Text("entity.user.field.password")),
 		field.String("salt").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("user.field.salt")),
+			Comment(i18n.Text("entity.user.field.salt")),
 		field.String("phone").
 			MaxLen(32).
 			Default("").
-			Comment(i18n.Text("user.field.phone")), // login phone number of user
+			Comment(i18n.Text("entity.user.field.phone")), // login phone number of user
 		field.String("email").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("user.field.email")), // login email of user
+			Comment(i18n.Text("entity.user.field.email")), // login email of user
 		field.String("department").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("user.field.department")), // Department of user
+			Comment(i18n.Text("entity.user.field.department")), // Department of user
 		field.String("remark").
 			MaxLen(1024).
 			Default("").
-			Comment(i18n.Text("user.field.remark")), // Remark of user
+			Comment(i18n.Text("entity.user.field.remark")), // Remark of user
 		field.String("token").
 			MaxLen(512).
 			Default("").
-			Comment(i18n.Text("user.field.token")), // Token for login
+			Comment(i18n.Text("entity.user.field.token")), // Token for login
 		field.Int8("status").
 			Default(UserStatusActive).
-			Comment(i18n.Text("user.field.status")),
+			Comment(i18n.Text("entity.user.field.status")),
 		field.Bool("is_system").
 			Default(false).
 			Comment("user.field.is_system"), // Whether the system is built-in (the built-in user cannot be deleted, but can be disabled)
 		field.String("last_login_ip").
 			MaxLen(32).
 			Default("").
-			Comment(i18n.Text("user.field.last_login_ip")),
-		mixin.Time("last_login_time", i18n.Text("user.field.last_login_time")),
-		mixin.Time("login_time", i18n.Text("user.field.login_time")),
-		mixin.TimeOP("sanction_date", i18n.Text("user.field.sanction_date")),
-		mixin.OP("manager_id", i18n.Text("user.field.manager_id")), // 管理员ID
+			Comment(i18n.Text("entity.user.field.last_login_ip")),
+		mixin.Time("last_login_time", i18n.Text("entity.user.field.last_login_time")),
+		mixin.Time("login_time", i18n.Text("entity.user.field.login_time")),
+		mixin.TimeOP("sanction_date", i18n.Text("entity.user.field.sanction_date")),
+		mixin.OP("manager_id", i18n.Text("entity.user.field.manager_id")), // 管理员ID
 		field.String("manager").
 			Default("").
-			Comment(i18n.Text("user.field.manager")), // 管理员
+			Comment(i18n.Text("entity.user.field.manager")), // 管理员
 	}
 }
 
@@ -129,7 +129,7 @@ func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_users"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("user.table.comment")),
+		schema.Comment(i18n.Text("entity.user.table.comment")),
 	}
 }
 

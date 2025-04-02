@@ -27,16 +27,16 @@ func (Position) Fields() []ent.Field {
 		field.String("name").
 			MaxLen(64).
 			Unique().
-			Comment(i18n.Text("position.field.name")),
+			Comment(i18n.Text("entity.position.field.name")),
 		field.String("keyword").
 			MaxLen(64).
 			Unique().
-			Comment(i18n.Text("position.field.keyword")),
+			Comment(i18n.Text("entity.position.field.keyword")),
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment(i18n.Text("position.field.description")),
-		mixin.FK("department_id", i18n.Text("department.field.department_id")),
+			Comment(i18n.Text("entity.position.field.description")),
+		mixin.FK("department_id", i18n.Text("entity.department.field.department_id")),
 	}
 }
 
@@ -50,7 +50,7 @@ func (Position) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_positions"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("position.table.comment")),
+		schema.Comment(i18n.Text("entity.position.table.comment")),
 	}
 }
 

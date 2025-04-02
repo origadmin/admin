@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// position_permission.table.comment
+// entity.position_permission.table.comment
 type PositionPermission struct {
 	config `json:"-"`
 	// ID of the ent.

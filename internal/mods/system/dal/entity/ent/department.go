@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// department.table.comment
+// entity.department.table.comment
 type Department struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -22,19 +22,19 @@ type Department struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// department.field.keyword
+	// entity.department.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// department.field.name
+	// entity.department.field.name
 	Name string `json:"name,omitempty"`
-	// menu.field.tree_path
+	// entity.menu.field.tree_path
 	TreePath string `json:"tree_path,omitempty"`
-	// department.field.sequence
+	// entity.department.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// department.field.status
+	// entity.department.field.status
 	Status int8 `json:"status,omitempty"`
-	// department.field.level
+	// entity.department.field.level
 	Level int `json:"level,omitempty"`
-	// department.field.description
+	// entity.department.field.description
 	Description string `json:"description,omitempty"`
 	// department.field.parent_id
 	ParentID int64 `json:"parent_id,omitempty"`
@@ -50,10 +50,10 @@ type DepartmentEdges struct {
 	Users []*User `json:"users,omitempty"`
 	// Positions holds the value of the positions edge.
 	Positions []*Position `json:"positions,omitempty"`
-	// Children holds the value of the children edge.
-	Children []*Department `json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
 	Parent *Department `json:"parent,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Department `json:"children,omitempty"`
 	// UserDepartments holds the value of the user_departments edge.
 	UserDepartments []*UserDepartment `json:"user_departments,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -79,24 +79,24 @@ func (e DepartmentEdges) PositionsOrErr() ([]*Position, error) {
 	return nil, &NotLoadedError{edge: "positions"}
 }
 
-// ChildrenOrErr returns the Children value or an error if the edge
-// was not loaded in eager-loading.
-func (e DepartmentEdges) ChildrenOrErr() ([]*Department, error) {
-	if e.loadedTypes[2] {
-		return e.Children, nil
-	}
-	return nil, &NotLoadedError{edge: "children"}
-}
-
 // ParentOrErr returns the Parent value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e DepartmentEdges) ParentOrErr() (*Department, error) {
 	if e.Parent != nil {
 		return e.Parent, nil
-	} else if e.loadedTypes[3] {
+	} else if e.loadedTypes[2] {
 		return nil, &NotFoundError{label: department.Label}
 	}
 	return nil, &NotLoadedError{edge: "parent"}
+}
+
+// ChildrenOrErr returns the Children value or an error if the edge
+// was not loaded in eager-loading.
+func (e DepartmentEdges) ChildrenOrErr() ([]*Department, error) {
+	if e.loadedTypes[3] {
+		return e.Children, nil
+	}
+	return nil, &NotLoadedError{edge: "children"}
 }
 
 // UserDepartmentsOrErr returns the UserDepartments value or an error if the edge
@@ -223,14 +223,14 @@ func (d *Department) QueryPositions() *PositionQuery {
 	return NewDepartmentClient(d.config).QueryPositions(d)
 }
 
-// QueryChildren queries the "children" edge of the Department entity.
-func (d *Department) QueryChildren() *DepartmentQuery {
-	return NewDepartmentClient(d.config).QueryChildren(d)
-}
-
 // QueryParent queries the "parent" edge of the Department entity.
 func (d *Department) QueryParent() *DepartmentQuery {
 	return NewDepartmentClient(d.config).QueryParent(d)
+}
+
+// QueryChildren queries the "children" edge of the Department entity.
+func (d *Department) QueryChildren() *DepartmentQuery {
+	return NewDepartmentClient(d.config).QueryChildren(d)
 }
 
 // QueryUserDepartments queries the "user_departments" edge of the Department entity.

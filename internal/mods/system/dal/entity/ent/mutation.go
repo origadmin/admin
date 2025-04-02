@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/rolepermission"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/userposition"
@@ -74,11 +75,11 @@ type DepartmentMutation struct {
 	positions               map[int64]struct{}
 	removedpositions        map[int64]struct{}
 	clearedpositions        bool
+	parent                  *int64
+	clearedparent           bool
 	children                map[int64]struct{}
 	removedchildren         map[int64]struct{}
 	clearedchildren         bool
-	parent                  *int64
-	clearedparent           bool
 	user_departments        map[int]struct{}
 	removeduser_departments map[int]struct{}
 	cleareduser_departments bool
@@ -732,6 +733,33 @@ func (m *DepartmentMutation) ResetPositions() {
 	m.removedpositions = nil
 }
 
+// ClearParent clears the "parent" edge to the Department entity.
+func (m *DepartmentMutation) ClearParent() {
+	m.clearedparent = true
+	m.clearedFields[department.FieldParentID] = struct{}{}
+}
+
+// ParentCleared reports if the "parent" edge to the Department entity was cleared.
+func (m *DepartmentMutation) ParentCleared() bool {
+	return m.ParentIDCleared() || m.clearedparent
+}
+
+// ParentIDs returns the "parent" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ParentID instead. It exists only for internal usage by the builders.
+func (m *DepartmentMutation) ParentIDs() (ids []int64) {
+	if id := m.parent; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetParent resets all changes to the "parent" edge.
+func (m *DepartmentMutation) ResetParent() {
+	m.parent = nil
+	m.clearedparent = false
+}
+
 // AddChildIDs adds the "children" edge to the Department entity by ids.
 func (m *DepartmentMutation) AddChildIDs(ids ...int64) {
 	if m.children == nil {
@@ -784,33 +812,6 @@ func (m *DepartmentMutation) ResetChildren() {
 	m.children = nil
 	m.clearedchildren = false
 	m.removedchildren = nil
-}
-
-// ClearParent clears the "parent" edge to the Department entity.
-func (m *DepartmentMutation) ClearParent() {
-	m.clearedparent = true
-	m.clearedFields[department.FieldParentID] = struct{}{}
-}
-
-// ParentCleared reports if the "parent" edge to the Department entity was cleared.
-func (m *DepartmentMutation) ParentCleared() bool {
-	return m.ParentIDCleared() || m.clearedparent
-}
-
-// ParentIDs returns the "parent" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// ParentID instead. It exists only for internal usage by the builders.
-func (m *DepartmentMutation) ParentIDs() (ids []int64) {
-	if id := m.parent; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetParent resets all changes to the "parent" edge.
-func (m *DepartmentMutation) ResetParent() {
-	m.parent = nil
-	m.clearedparent = false
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by ids.
@@ -1208,11 +1209,11 @@ func (m *DepartmentMutation) AddedEdges() []string {
 	if m.positions != nil {
 		edges = append(edges, department.EdgePositions)
 	}
-	if m.children != nil {
-		edges = append(edges, department.EdgeChildren)
-	}
 	if m.parent != nil {
 		edges = append(edges, department.EdgeParent)
+	}
+	if m.children != nil {
+		edges = append(edges, department.EdgeChildren)
 	}
 	if m.user_departments != nil {
 		edges = append(edges, department.EdgeUserDepartments)
@@ -1236,16 +1237,16 @@ func (m *DepartmentMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case department.EdgeParent:
+		if id := m.parent; id != nil {
+			return []ent.Value{*id}
+		}
 	case department.EdgeChildren:
 		ids := make([]ent.Value, 0, len(m.children))
 		for id := range m.children {
 			ids = append(ids, id)
 		}
 		return ids
-	case department.EdgeParent:
-		if id := m.parent; id != nil {
-			return []ent.Value{*id}
-		}
 	case department.EdgeUserDepartments:
 		ids := make([]ent.Value, 0, len(m.user_departments))
 		for id := range m.user_departments {
@@ -1315,11 +1316,11 @@ func (m *DepartmentMutation) ClearedEdges() []string {
 	if m.clearedpositions {
 		edges = append(edges, department.EdgePositions)
 	}
-	if m.clearedchildren {
-		edges = append(edges, department.EdgeChildren)
-	}
 	if m.clearedparent {
 		edges = append(edges, department.EdgeParent)
+	}
+	if m.clearedchildren {
+		edges = append(edges, department.EdgeChildren)
 	}
 	if m.cleareduser_departments {
 		edges = append(edges, department.EdgeUserDepartments)
@@ -1335,10 +1336,10 @@ func (m *DepartmentMutation) EdgeCleared(name string) bool {
 		return m.clearedusers
 	case department.EdgePositions:
 		return m.clearedpositions
-	case department.EdgeChildren:
-		return m.clearedchildren
 	case department.EdgeParent:
 		return m.clearedparent
+	case department.EdgeChildren:
+		return m.clearedchildren
 	case department.EdgeUserDepartments:
 		return m.cleareduser_departments
 	}
@@ -1366,11 +1367,11 @@ func (m *DepartmentMutation) ResetEdge(name string) error {
 	case department.EdgePositions:
 		m.ResetPositions()
 		return nil
-	case department.EdgeChildren:
-		m.ResetChildren()
-		return nil
 	case department.EdgeParent:
 		m.ResetParent()
+		return nil
+	case department.EdgeChildren:
+		m.ResetChildren()
 		return nil
 	case department.EdgeUserDepartments:
 		m.ResetUserDepartments()
@@ -1392,6 +1393,10 @@ type PermissionMutation struct {
 	description                 *string
 	data_scope                  *string
 	data_rules                  *map[string]string
+	conditions                  *[]schema.PermissionCondition
+	appendconditions            []schema.PermissionCondition
+	access_control              *schema.PermissionAccessControl
+	actions                     *permission.Actions
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
 	removedroles                map[int64]struct{}
@@ -1785,6 +1790,156 @@ func (m *PermissionMutation) ResetDataRules() {
 	delete(m.clearedFields, permission.FieldDataRules)
 }
 
+// SetConditions sets the "conditions" field.
+func (m *PermissionMutation) SetConditions(sc []schema.PermissionCondition) {
+	m.conditions = &sc
+	m.appendconditions = nil
+}
+
+// Conditions returns the value of the "conditions" field in the mutation.
+func (m *PermissionMutation) Conditions() (r []schema.PermissionCondition, exists bool) {
+	v := m.conditions
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConditions returns the old "conditions" field's value of the Permission entity.
+// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PermissionMutation) OldConditions(ctx context.Context) (v []schema.PermissionCondition, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConditions is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConditions requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConditions: %w", err)
+	}
+	return oldValue.Conditions, nil
+}
+
+// AppendConditions adds sc to the "conditions" field.
+func (m *PermissionMutation) AppendConditions(sc []schema.PermissionCondition) {
+	m.appendconditions = append(m.appendconditions, sc...)
+}
+
+// AppendedConditions returns the list of values that were appended to the "conditions" field in this mutation.
+func (m *PermissionMutation) AppendedConditions() ([]schema.PermissionCondition, bool) {
+	if len(m.appendconditions) == 0 {
+		return nil, false
+	}
+	return m.appendconditions, true
+}
+
+// ClearConditions clears the value of the "conditions" field.
+func (m *PermissionMutation) ClearConditions() {
+	m.conditions = nil
+	m.appendconditions = nil
+	m.clearedFields[permission.FieldConditions] = struct{}{}
+}
+
+// ConditionsCleared returns if the "conditions" field was cleared in this mutation.
+func (m *PermissionMutation) ConditionsCleared() bool {
+	_, ok := m.clearedFields[permission.FieldConditions]
+	return ok
+}
+
+// ResetConditions resets all changes to the "conditions" field.
+func (m *PermissionMutation) ResetConditions() {
+	m.conditions = nil
+	m.appendconditions = nil
+	delete(m.clearedFields, permission.FieldConditions)
+}
+
+// SetAccessControl sets the "access_control" field.
+func (m *PermissionMutation) SetAccessControl(sac schema.PermissionAccessControl) {
+	m.access_control = &sac
+}
+
+// AccessControl returns the value of the "access_control" field in the mutation.
+func (m *PermissionMutation) AccessControl() (r schema.PermissionAccessControl, exists bool) {
+	v := m.access_control
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAccessControl returns the old "access_control" field's value of the Permission entity.
+// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PermissionMutation) OldAccessControl(ctx context.Context) (v schema.PermissionAccessControl, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAccessControl is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAccessControl requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAccessControl: %w", err)
+	}
+	return oldValue.AccessControl, nil
+}
+
+// ClearAccessControl clears the value of the "access_control" field.
+func (m *PermissionMutation) ClearAccessControl() {
+	m.access_control = nil
+	m.clearedFields[permission.FieldAccessControl] = struct{}{}
+}
+
+// AccessControlCleared returns if the "access_control" field was cleared in this mutation.
+func (m *PermissionMutation) AccessControlCleared() bool {
+	_, ok := m.clearedFields[permission.FieldAccessControl]
+	return ok
+}
+
+// ResetAccessControl resets all changes to the "access_control" field.
+func (m *PermissionMutation) ResetAccessControl() {
+	m.access_control = nil
+	delete(m.clearedFields, permission.FieldAccessControl)
+}
+
+// SetActions sets the "actions" field.
+func (m *PermissionMutation) SetActions(pe permission.Actions) {
+	m.actions = &pe
+}
+
+// Actions returns the value of the "actions" field in the mutation.
+func (m *PermissionMutation) Actions() (r permission.Actions, exists bool) {
+	v := m.actions
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldActions returns the old "actions" field's value of the Permission entity.
+// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PermissionMutation) OldActions(ctx context.Context) (v permission.Actions, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldActions is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldActions requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldActions: %w", err)
+	}
+	return oldValue.Actions, nil
+}
+
+// ResetActions resets all changes to the "actions" field.
+func (m *PermissionMutation) ResetActions() {
+	m.actions = nil
+}
+
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
 func (m *PermissionMutation) AddRoleIDs(ids ...int64) {
 	if m.roles == nil {
@@ -2143,7 +2298,7 @@ func (m *PermissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 10)
 	if m.create_time != nil {
 		fields = append(fields, permission.FieldCreateTime)
 	}
@@ -2164,6 +2319,15 @@ func (m *PermissionMutation) Fields() []string {
 	}
 	if m.data_rules != nil {
 		fields = append(fields, permission.FieldDataRules)
+	}
+	if m.conditions != nil {
+		fields = append(fields, permission.FieldConditions)
+	}
+	if m.access_control != nil {
+		fields = append(fields, permission.FieldAccessControl)
+	}
+	if m.actions != nil {
+		fields = append(fields, permission.FieldActions)
 	}
 	return fields
 }
@@ -2187,6 +2351,12 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 		return m.DataScope()
 	case permission.FieldDataRules:
 		return m.DataRules()
+	case permission.FieldConditions:
+		return m.Conditions()
+	case permission.FieldAccessControl:
+		return m.AccessControl()
+	case permission.FieldActions:
+		return m.Actions()
 	}
 	return nil, false
 }
@@ -2210,6 +2380,12 @@ func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldDataScope(ctx)
 	case permission.FieldDataRules:
 		return m.OldDataRules(ctx)
+	case permission.FieldConditions:
+		return m.OldConditions(ctx)
+	case permission.FieldAccessControl:
+		return m.OldAccessControl(ctx)
+	case permission.FieldActions:
+		return m.OldActions(ctx)
 	}
 	return nil, fmt.Errorf("unknown Permission field %s", name)
 }
@@ -2268,6 +2444,27 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDataRules(v)
 		return nil
+	case permission.FieldConditions:
+		v, ok := value.([]schema.PermissionCondition)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConditions(v)
+		return nil
+	case permission.FieldAccessControl:
+		v, ok := value.(schema.PermissionAccessControl)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAccessControl(v)
+		return nil
+	case permission.FieldActions:
+		v, ok := value.(permission.Actions)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetActions(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
 }
@@ -2301,6 +2498,12 @@ func (m *PermissionMutation) ClearedFields() []string {
 	if m.FieldCleared(permission.FieldDataRules) {
 		fields = append(fields, permission.FieldDataRules)
 	}
+	if m.FieldCleared(permission.FieldConditions) {
+		fields = append(fields, permission.FieldConditions)
+	}
+	if m.FieldCleared(permission.FieldAccessControl) {
+		fields = append(fields, permission.FieldAccessControl)
+	}
 	return fields
 }
 
@@ -2317,6 +2520,12 @@ func (m *PermissionMutation) ClearField(name string) error {
 	switch name {
 	case permission.FieldDataRules:
 		m.ClearDataRules()
+		return nil
+	case permission.FieldConditions:
+		m.ClearConditions()
+		return nil
+	case permission.FieldAccessControl:
+		m.ClearAccessControl()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission nullable field %s", name)
@@ -2346,6 +2555,15 @@ func (m *PermissionMutation) ResetField(name string) error {
 		return nil
 	case permission.FieldDataRules:
 		m.ResetDataRules()
+		return nil
+	case permission.FieldConditions:
+		m.ResetConditions()
+		return nil
+	case permission.FieldAccessControl:
+		m.ResetAccessControl()
+		return nil
+	case permission.FieldActions:
+		m.ResetActions()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission field %s", name)
@@ -2571,7 +2789,6 @@ type PermissionResourceMutation struct {
 	op                Op
 	typ               string
 	id                *int
-	actions           *string
 	clearedFields     map[string]struct{}
 	permission        *int64
 	clearedpermission bool
@@ -2752,42 +2969,6 @@ func (m *PermissionResourceMutation) ResetResourceID() {
 	m.resource = nil
 }
 
-// SetActions sets the "actions" field.
-func (m *PermissionResourceMutation) SetActions(s string) {
-	m.actions = &s
-}
-
-// Actions returns the value of the "actions" field in the mutation.
-func (m *PermissionResourceMutation) Actions() (r string, exists bool) {
-	v := m.actions
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldActions returns the old "actions" field's value of the PermissionResource entity.
-// If the PermissionResource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionResourceMutation) OldActions(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldActions is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldActions requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldActions: %w", err)
-	}
-	return oldValue.Actions, nil
-}
-
-// ResetActions resets all changes to the "actions" field.
-func (m *PermissionResourceMutation) ResetActions() {
-	m.actions = nil
-}
-
 // ClearPermission clears the "permission" edge to the Permission entity.
 func (m *PermissionResourceMutation) ClearPermission() {
 	m.clearedpermission = true
@@ -2876,15 +3057,12 @@ func (m *PermissionResourceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionResourceMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 2)
 	if m.permission != nil {
 		fields = append(fields, permissionresource.FieldPermissionID)
 	}
 	if m.resource != nil {
 		fields = append(fields, permissionresource.FieldResourceID)
-	}
-	if m.actions != nil {
-		fields = append(fields, permissionresource.FieldActions)
 	}
 	return fields
 }
@@ -2898,8 +3076,6 @@ func (m *PermissionResourceMutation) Field(name string) (ent.Value, bool) {
 		return m.PermissionID()
 	case permissionresource.FieldResourceID:
 		return m.ResourceID()
-	case permissionresource.FieldActions:
-		return m.Actions()
 	}
 	return nil, false
 }
@@ -2913,8 +3089,6 @@ func (m *PermissionResourceMutation) OldField(ctx context.Context, name string) 
 		return m.OldPermissionID(ctx)
 	case permissionresource.FieldResourceID:
 		return m.OldResourceID(ctx)
-	case permissionresource.FieldActions:
-		return m.OldActions(ctx)
 	}
 	return nil, fmt.Errorf("unknown PermissionResource field %s", name)
 }
@@ -2937,13 +3111,6 @@ func (m *PermissionResourceMutation) SetField(name string, value ent.Value) erro
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetResourceID(v)
-		return nil
-	case permissionresource.FieldActions:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetActions(v)
 		return nil
 	}
 	return fmt.Errorf("unknown PermissionResource field %s", name)
@@ -3002,9 +3169,6 @@ func (m *PermissionResourceMutation) ResetField(name string) error {
 		return nil
 	case permissionresource.FieldResourceID:
 		m.ResetResourceID()
-		return nil
-	case permissionresource.FieldActions:
-		m.ResetActions()
 		return nil
 	}
 	return fmt.Errorf("unknown PermissionResource field %s", name)

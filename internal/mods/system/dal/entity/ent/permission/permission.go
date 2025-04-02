@@ -3,6 +3,7 @@
 package permission
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -28,6 +29,12 @@ const (
 	FieldDataScope = "data_scope"
 	// FieldDataRules holds the string denoting the data_rules field in the database.
 	FieldDataRules = "data_rules"
+	// FieldConditions holds the string denoting the conditions field in the database.
+	FieldConditions = "conditions"
+	// FieldAccessControl holds the string denoting the access_control field in the database.
+	FieldAccessControl = "access_control"
+	// FieldActions holds the string denoting the actions field in the database.
+	FieldActions = "actions"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
@@ -90,6 +97,9 @@ var Columns = []string{
 	FieldDescription,
 	FieldDataScope,
 	FieldDataRules,
+	FieldConditions,
+	FieldAccessControl,
+	FieldActions,
 }
 
 var (
@@ -139,6 +149,34 @@ var (
 	IDValidator func(int64) error
 )
 
+// Actions defines the type for the "actions" enum field.
+type Actions string
+
+// ActionsRead is the default value of the Actions enum.
+const DefaultActions = ActionsRead
+
+// Actions values.
+const (
+	ActionsRead   Actions = "read"
+	ActionsWrite  Actions = "write"
+	ActionsDelete Actions = "delete"
+	ActionsManage Actions = "manage"
+)
+
+func (a Actions) String() string {
+	return string(a)
+}
+
+// ActionsValidator is a validator for the "actions" field enum values. It is called by the builders before save.
+func ActionsValidator(a Actions) error {
+	switch a {
+	case ActionsRead, ActionsWrite, ActionsDelete, ActionsManage:
+		return nil
+	default:
+		return fmt.Errorf("permission: invalid enum value for actions field: %q", a)
+	}
+}
+
 // OrderOption defines the ordering options for the Permission queries.
 type OrderOption func(*sql.Selector)
 
@@ -175,6 +213,11 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByDataScope orders the results by the data_scope field.
 func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
+}
+
+// ByActions orders the results by the actions field.
+func ByActions(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActions, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

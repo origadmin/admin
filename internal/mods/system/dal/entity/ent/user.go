@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// user.table.comment
+// entity.user.table.comment
 type User struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -28,49 +28,49 @@ type User struct {
 	UpdateTime time.Time `json:"update_time,omitempty"`
 	// delete_time.field.comment
 	DeleteTime *time.Time `json:"delete_time,omitempty"`
-	// user.field.uuid
+	// entity.user.field.uuid
 	UUID string `json:"uuid,omitempty"`
-	// user.field.allowed_ip
+	// entity.user.field.allowed_ip
 	AllowedIP string `json:"allowed_ip,omitempty"`
-	// user.field.username
+	// entity.user.field.username
 	Username string `json:"username,omitempty"`
-	// user.field.nickname
+	// entity.user.field.nickname
 	Nickname string `json:"nickname,omitempty"`
 	// user.field.avatar
 	Avatar string `json:"avatar,omitempty"`
-	// user.field.nickname
+	// entity.user.field.nickname
 	Name string `json:"name,omitempty"`
-	// user.field.gender
+	// entity.user.field.gender
 	Gender user.Gender `json:"gender,omitempty"`
-	// user.field.password
+	// entity.user.field.password
 	Password string `json:"password,omitempty"`
-	// user.field.salt
+	// entity.user.field.salt
 	Salt string `json:"salt,omitempty"`
-	// user.field.phone
+	// entity.user.field.phone
 	Phone string `json:"phone,omitempty"`
-	// user.field.email
+	// entity.user.field.email
 	Email string `json:"email,omitempty"`
-	// user.field.department
+	// entity.user.field.department
 	Department string `json:"department,omitempty"`
-	// user.field.remark
+	// entity.user.field.remark
 	Remark string `json:"remark,omitempty"`
-	// user.field.token
+	// entity.user.field.token
 	Token string `json:"token,omitempty"`
-	// user.field.status
+	// entity.user.field.status
 	Status int8 `json:"status,omitempty"`
 	// user.field.is_system
 	IsSystem bool `json:"is_system,omitempty"`
-	// user.field.last_login_ip
+	// entity.user.field.last_login_ip
 	LastLoginIP string `json:"last_login_ip,omitempty"`
-	// user.field.last_login_time
+	// entity.user.field.last_login_time
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
-	// user.field.login_time
+	// entity.user.field.login_time
 	LoginTime time.Time `json:"login_time,omitempty"`
-	// user.field.sanction_date
+	// entity.user.field.sanction_date
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
-	// user.field.manager_id
+	// entity.user.field.manager_id
 	ManagerID int64 `json:"manager_id,omitempty"`
-	// user.field.manager
+	// entity.user.field.manager
 	Manager string `json:"manager,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.

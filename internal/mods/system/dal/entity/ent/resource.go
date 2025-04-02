@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// resource.table.comment
+// entity.resource.table.comment
 type Resource struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -23,35 +23,35 @@ type Resource struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// resource.field.name
+	// entity.resource.field.name
 	Name string `json:"name,omitempty"`
-	// resource.field.keyword
+	// entity.resource.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// resource.field.i18n_key
+	// entity.resource.field.i18n_key
 	I18nKey string `json:"i18n_key,omitempty"`
-	// resource.field.type
+	// entity.resource.field.type
 	Type string `json:"type,omitempty"`
-	// resource.field.status
+	// entity.resource.field.status
 	Status int8 `json:"status,omitempty"`
-	// resource.field.path
+	// entity.resource.field.path
 	Path string `json:"path,omitempty"`
-	// resource.field.operation
+	// entity.resource.field.operation
 	Operation string `json:"operation,omitempty"`
-	// resource.field.method
+	// entity.resource.field.method
 	Method string `json:"method,omitempty"`
-	// resource.field.component
+	// entity.resource.field.component
 	Component string `json:"component,omitempty"`
-	// resource.field.icon
+	// entity.resource.field.icon
 	Icon string `json:"icon,omitempty"`
-	// resource.field.sequence
+	// entity.resource.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// resource.field.visible
+	// entity.resource.field.visible
 	Visible bool `json:"visible,omitempty"`
-	// resource.field.tree_path
+	// entity.resource.field.tree_path
 	TreePath string `json:"tree_path,omitempty"`
-	// resource.field.properties
+	// entity.resource.field.properties
 	Properties map[string]string `json:"properties,omitempty"`
-	// resource.field.description
+	// entity.resource.field.description
 	Description string `json:"description,omitempty"`
 	// resource.field.parent_id
 	ParentID int64 `json:"parent_id,omitempty"`

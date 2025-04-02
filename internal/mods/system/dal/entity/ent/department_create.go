@@ -191,6 +191,11 @@ func (dc *DepartmentCreate) AddPositions(p ...*Position) *DepartmentCreate {
 	return dc.AddPositionIDs(ids...)
 }
 
+// SetParent sets the "parent" edge to the Department entity.
+func (dc *DepartmentCreate) SetParent(d *Department) *DepartmentCreate {
+	return dc.SetParentID(d.ID)
+}
+
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
 func (dc *DepartmentCreate) AddChildIDs(ids ...int64) *DepartmentCreate {
 	dc.mutation.AddChildIDs(ids...)
@@ -204,11 +209,6 @@ func (dc *DepartmentCreate) AddChildren(d ...*Department) *DepartmentCreate {
 		ids[i] = d[i].ID
 	}
 	return dc.AddChildIDs(ids...)
-}
-
-// SetParent sets the "parent" edge to the Department entity.
-func (dc *DepartmentCreate) SetParent(d *Department) *DepartmentCreate {
-	return dc.SetParentID(d.ID)
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
@@ -454,22 +454,6 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := dc.mutation.ChildrenIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := dc.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -485,6 +469,22 @@ func (dc *DepartmentCreate) createSpec() (*Department, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.ParentID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := dc.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := dc.mutation.UserDepartmentsIDs(); len(nodes) > 0 {

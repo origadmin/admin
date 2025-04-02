@@ -6,6 +6,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
@@ -29,28 +31,51 @@ const (
 	DataScopeAll  string = "all"  // 所有数据
 )
 
+type PermissionCondition struct {
+	Field    string `json:"field"`
+	Operator string `json:"operator"`
+	Value    string `json:"value"`
+}
+
+type PermissionAccessControl struct {
+	Actions    []string          `json:"actions"`
+	Conditions map[string]string `json:"conditions"`
+	ValidFrom  *time.Time        `json:"valid_from"`
+	ValidUntil *time.Time        `json:"valid_until"`
+	Attributes map[string]any    `json:"attributes"`
+}
+
 // Fields of the Permission.
 func (Permission) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("permission.field.name")),
+			Comment(i18n.Text("entity.permission.field.name")),
 		field.String("keyword").
 			MaxLen(64).
 			Unique().
-			Comment(i18n.Text("permission.field.keyword")),
+			Comment(i18n.Text("entity.permission.field.keyword")),
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment(i18n.Text("permission.field.description")),
-		// 数据权限相关字段
+			Comment(i18n.Text("entity.permission.field.description")),
 		field.String("data_scope").
 			Default(DataScopeSelf).
-			Comment(i18n.Text("permission.field.data_scope")),
+			Comment(i18n.Text("entity.permission.field.data_scope")),
 		field.JSON("data_rules", map[string]string{}).
 			Optional().
-			Comment(i18n.Text("permission.field.data_rules")),
+			Comment(i18n.Text("entity.permission.field.data_rules")),
+		field.JSON("conditions", []PermissionCondition{}).
+			Optional().
+			Comment(i18n.Text("entity.permission.field.conditions")),
+		field.JSON("access_control", PermissionAccessControl{}).
+			Optional().
+			Comment(i18n.Text("entity.permission.field.access_control")),
+		field.Enum("actions").
+			Values("read", "write", "delete", "manage").
+			Default("read").
+			Comment(i18n.Text("entity.permission.field.actions")),
 	}
 }
 
@@ -59,7 +84,7 @@ func (Permission) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_permissions"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("permission.table.comment")),
+		schema.Comment(i18n.Text("entity.permission.table.comment")),
 	}
 }
 

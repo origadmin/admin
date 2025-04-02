@@ -33,20 +33,6 @@ func (prc *PermissionResourceCreate) SetResourceID(i int64) *PermissionResourceC
 	return prc
 }
 
-// SetActions sets the "actions" field.
-func (prc *PermissionResourceCreate) SetActions(s string) *PermissionResourceCreate {
-	prc.mutation.SetActions(s)
-	return prc
-}
-
-// SetNillableActions sets the "actions" field if the given value is not nil.
-func (prc *PermissionResourceCreate) SetNillableActions(s *string) *PermissionResourceCreate {
-	if s != nil {
-		prc.SetActions(*s)
-	}
-	return prc
-}
-
 // SetPermission sets the "permission" edge to the Permission entity.
 func (prc *PermissionResourceCreate) SetPermission(p *Permission) *PermissionResourceCreate {
 	return prc.SetPermissionID(p.ID)
@@ -64,7 +50,6 @@ func (prc *PermissionResourceCreate) Mutation() *PermissionResourceMutation {
 
 // Save creates the PermissionResource in the database.
 func (prc *PermissionResourceCreate) Save(ctx context.Context) (*PermissionResource, error) {
-	prc.defaults()
 	return withHooks(ctx, prc.sqlSave, prc.mutation, prc.hooks)
 }
 
@@ -90,14 +75,6 @@ func (prc *PermissionResourceCreate) ExecX(ctx context.Context) {
 	}
 }
 
-// defaults sets the default values of the builder before save.
-func (prc *PermissionResourceCreate) defaults() {
-	if _, ok := prc.mutation.Actions(); !ok {
-		v := permissionresource.DefaultActions
-		prc.mutation.SetActions(v)
-	}
-}
-
 // check runs all checks and user-defined validators on the builder.
 func (prc *PermissionResourceCreate) check() error {
 	if _, ok := prc.mutation.PermissionID(); !ok {
@@ -115,9 +92,6 @@ func (prc *PermissionResourceCreate) check() error {
 		if err := permissionresource.ResourceIDValidator(v); err != nil {
 			return &ValidationError{Name: "resource_id", err: fmt.Errorf(`ent: validator failed for field "PermissionResource.resource_id": %w`, err)}
 		}
-	}
-	if _, ok := prc.mutation.Actions(); !ok {
-		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "PermissionResource.actions"`)}
 	}
 	if len(prc.mutation.PermissionIDs()) == 0 {
 		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required edge "PermissionResource.permission"`)}
@@ -151,10 +125,6 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 		_node = &PermissionResource{config: prc.config}
 		_spec = sqlgraph.NewCreateSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
 	)
-	if value, ok := prc.mutation.Actions(); ok {
-		_spec.SetField(permissionresource.FieldActions, field.TypeString, value)
-		_node.Actions = value
-	}
 	if nodes := prc.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -230,7 +200,6 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 	for i := range prcb.builders {
 		func(i int, root context.Context) {
 			builder := prcb.builders[i]
-			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PermissionResourceMutation)
 				if !ok {

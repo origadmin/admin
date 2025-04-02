@@ -44,66 +44,66 @@ func (Resource) Fields() []ent.Field {
 		field.String("name").
 			MaxLen(128).
 			Default("").
-			Comment(i18n.Text("resource.field.name")),
+			Comment(i18n.Text("entity.resource.field.name")),
 		field.String("keyword").
 			MaxLen(64).
 			Unique().
-			Comment(i18n.Text("resource.field.keyword")),
+			Comment(i18n.Text("entity.resource.field.keyword")),
 		field.String("i18n_key").
 			MaxLen(128).
 			Default("").
-			Comment(i18n.Text("resource.field.i18n_key")),
+			Comment(i18n.Text("entity.resource.field.i18n_key")),
 		field.String("type").
 			MaxLen(2).
 			Default(ResourceTypeMenu).
-			Comment(i18n.Text("resource.field.type")),
+			Comment(i18n.Text("entity.resource.field.type")),
 		field.Int8("status").
 			Default(ResourceStatusEnabled).
-			Comment(i18n.Text("resource.field.status")),
+			Comment(i18n.Text("entity.resource.field.status")),
 		// fields that are unique to api resources
 		field.String("path").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("resource.field.path")),
+			Comment(i18n.Text("entity.resource.field.path")),
 		// fields that are unique to grpc resources
 		field.String("operation").
 			MaxLen(128).
 			Default("").
-			Comment(i18n.Text("resource.field.operation")),
+			Comment(i18n.Text("entity.resource.field.operation")),
 		field.String("method").
 			MaxLen(16).
 			Default("").
-			Comment(i18n.Text("resource.field.method")),
+			Comment(i18n.Text("entity.resource.field.method")),
 		// fields specific to ui resources
 		field.String("component").
 			MaxLen(128).
 			Default("").
-			Comment(i18n.Text("resource.field.component")),
+			Comment(i18n.Text("entity.resource.field.component")),
 		// fields specific to ui resources
 		field.String("icon").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("resource.field.icon")),
+			Comment(i18n.Text("entity.resource.field.icon")),
 		// menu sort field
 		field.Int("sequence").
 			Default(0).
-			Comment(i18n.Text("resource.field.sequence")),
+			Comment(i18n.Text("entity.resource.field.sequence")),
 		// menu specific fields
 		field.Bool("visible").
 			Default(true).
-			Comment(i18n.Text("resource.field.visible")),
+			Comment(i18n.Text("entity.resource.field.visible")),
 		field.String("tree_path").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("resource.field.tree_path")),
+			Comment(i18n.Text("entity.resource.field.tree_path")),
 		// extended properties
 		field.JSON("properties", map[string]string{}).
 			Optional().
-			Comment(i18n.Text("resource.field.properties")),
+			Comment(i18n.Text("entity.resource.field.properties")),
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment(i18n.Text("resource.field.description")),
+			Comment(i18n.Text("entity.resource.field.description")),
 		mixin.OP("parent_id", "resource.field.parent_id"),
 	}
 }
@@ -125,7 +125,7 @@ func (Resource) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_resources"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("resource.table.comment")),
+		schema.Comment(i18n.Text("entity.resource.table.comment")),
 	}
 }
 

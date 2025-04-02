@@ -157,6 +157,20 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			if len(input.DataRules) > 0 {
 				m.SetDataRules(input.DataRules)
 			}
+		case permission.FieldConditions:
+			if len(input.Conditions) > 0 {
+				m.SetConditions(input.Conditions)
+			}
+		case permission.FieldAccessControl:
+			if len(input.AccessControl) > 0 {
+				m.SetAccessControl(input.AccessControl)
+			}
+		case permission.FieldActions:
+			var zero permission.Actions
+			// check permission.Actions with sql.NullString if it is empty
+			if input.Actions != zero {
+				m.SetActions(input.Actions)
+			}
 		case permission.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
 			if input.ID != 0 {
@@ -189,6 +203,12 @@ func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...stri
 			m.SetDataScope(input.DataScope)
 		case permission.FieldDataRules:
 			m.SetDataRules(input.DataRules)
+		case permission.FieldConditions:
+			m.SetConditions(input.Conditions)
+		case permission.FieldAccessControl:
+			m.SetAccessControl(input.AccessControl)
+		case permission.FieldActions:
+			m.SetActions(input.Actions)
 		case permission.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -214,11 +234,6 @@ func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields
 			if input.ResourceID != 0 {
 				m.SetResourceID(input.ResourceID)
 			}
-		case permissionresource.FieldActions:
-			// check string with sql.NullString if it is empty
-			if input.Actions != "" {
-				m.SetActions(input.Actions)
-			}
 		default:
 			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
 		}
@@ -236,8 +251,6 @@ func (m *PermissionResourceMutation) SetFieldsWithZero(input *PermissionResource
 			m.SetPermissionID(input.PermissionID)
 		case permissionresource.FieldResourceID:
 			m.SetResourceID(input.ResourceID)
-		case permissionresource.FieldActions:
-			m.SetActions(input.Actions)
 		default:
 			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
 		}

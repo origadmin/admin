@@ -1038,6 +1038,9 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  Description string `json:"description,omitempty"`
 //	  DataScope string `json:"data_scope,omitempty"`
 //	  DataRules map[string]string `json:"data_rules,omitempty"`
+//	  Conditions []schema.PermissionCondition `json:"conditions,omitempty"`
+//	  AccessControl schema.PermissionAccessControl `json:"access_control,omitempty"`
+//	  Actions permission.Actions `json:"actions,omitempty"`
 //	}
 //
 //	client.Permission.Query().
@@ -1049,6 +1052,9 @@ func (pq *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  permission.FieldDescription,
 //	  permission.FieldDataScope,
 //	  permission.FieldDataRules,
+//	  permission.FieldConditions,
+//	  permission.FieldAccessControl,
+//	  permission.FieldActions,
 //	  ).
 //	  Scan(ctx, &v)
 func (pq *PermissionQuery) Omit(fields ...string) *PermissionSelect {

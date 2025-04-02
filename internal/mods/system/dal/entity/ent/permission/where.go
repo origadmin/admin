@@ -435,6 +435,46 @@ func DataRulesNotNil() predicate.Permission {
 	return predicate.Permission(sql.FieldNotNull(FieldDataRules))
 }
 
+// ConditionsIsNil applies the IsNil predicate on the "conditions" field.
+func ConditionsIsNil() predicate.Permission {
+	return predicate.Permission(sql.FieldIsNull(FieldConditions))
+}
+
+// ConditionsNotNil applies the NotNil predicate on the "conditions" field.
+func ConditionsNotNil() predicate.Permission {
+	return predicate.Permission(sql.FieldNotNull(FieldConditions))
+}
+
+// AccessControlIsNil applies the IsNil predicate on the "access_control" field.
+func AccessControlIsNil() predicate.Permission {
+	return predicate.Permission(sql.FieldIsNull(FieldAccessControl))
+}
+
+// AccessControlNotNil applies the NotNil predicate on the "access_control" field.
+func AccessControlNotNil() predicate.Permission {
+	return predicate.Permission(sql.FieldNotNull(FieldAccessControl))
+}
+
+// ActionsEQ applies the EQ predicate on the "actions" field.
+func ActionsEQ(v Actions) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldActions, v))
+}
+
+// ActionsNEQ applies the NEQ predicate on the "actions" field.
+func ActionsNEQ(v Actions) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldActions, v))
+}
+
+// ActionsIn applies the In predicate on the "actions" field.
+func ActionsIn(vs ...Actions) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldActions, vs...))
+}
+
+// ActionsNotIn applies the NotIn predicate on the "actions" field.
+func ActionsNotIn(vs ...Actions) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldActions, vs...))
+}
+
 // HasRoles applies the HasEdge predicate on the "roles" edge.
 func HasRoles() predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {

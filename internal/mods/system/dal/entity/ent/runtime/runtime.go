@@ -137,10 +137,6 @@ func init() {
 	permissionresourceDescResourceID := permissionresourceFields[1].Descriptor()
 	// permissionresource.ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
 	permissionresource.ResourceIDValidator = permissionresourceDescResourceID.Validators[0].(func(int64) error)
-	// permissionresourceDescActions is the schema descriptor for actions field.
-	permissionresourceDescActions := permissionresourceFields[2].Descriptor()
-	// permissionresource.DefaultActions holds the default value on creation for the actions field.
-	permissionresource.DefaultActions = permissionresourceDescActions.Default.(string)
 	positionMixin := schema.Position{}.Mixin()
 	positionMixinFields0 := positionMixin[0].Fields()
 	_ = positionMixinFields0

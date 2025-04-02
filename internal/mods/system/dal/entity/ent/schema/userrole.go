@@ -51,7 +51,7 @@ func (UserRole) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_user_roles"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("(1).(2).(3)")),
+		schema.Comment(i18n.Text("entity.(1).(2).(3)")),
 	}
 }
 

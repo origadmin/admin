@@ -6,7 +6,7 @@
 package constants
 
 const (
-	Default  = 0
+	Invalid  = 0
 	Enabled  = 1
 	Disabled = 2
 

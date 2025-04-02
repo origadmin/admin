@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// position.table.comment
+// entity.position.table.comment
 type Position struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -23,13 +23,13 @@ type Position struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// position.field.name
+	// entity.position.field.name
 	Name string `json:"name,omitempty"`
-	// position.field.keyword
+	// entity.position.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// position.field.description
+	// entity.position.field.description
 	Description string `json:"description,omitempty"`
-	// department.field.department_id
+	// entity.department.field.department_id
 	DepartmentID int64 `json:"department_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PositionQuery when eager-loading is set.

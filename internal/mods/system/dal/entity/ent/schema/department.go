@@ -28,29 +28,29 @@ func (Department) Fields() []ent.Field {
 		field.String("keyword").
 			MaxLen(64).
 			Unique().
-			Comment(i18n.Text("department.field.keyword")),
+			Comment(i18n.Text("entity.department.field.keyword")),
 		field.String("name").
 			MaxLen(64).
 			Default("").
-			Comment(i18n.Text("department.field.name")),
+			Comment(i18n.Text("entity.department.field.name")),
 		// use materialized path model to store the tree structure
 		// Parent path of the menu item
 		field.String("tree_path").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("menu.field.tree_path")),
+			Comment(i18n.Text("entity.menu.field.tree_path")),
 		field.Int("sequence").
-			Comment(i18n.Text("department.field.sequence")),
+			Comment(i18n.Text("entity.department.field.sequence")),
 		field.Int8("status").
 			Default(0).
-			Comment(i18n.Text("department.field.status")),
+			Comment(i18n.Text("entity.department.field.status")),
 		field.Int("level").
 			Default(1).
-			Comment(i18n.Text("department.field.level")),
+			Comment(i18n.Text("entity.department.field.level")),
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment(i18n.Text("department.field.description")),
+			Comment(i18n.Text("entity.department.field.description")),
 		mixin.OP("parent_id", "department.field.parent_id"),
 	}
 }
@@ -77,7 +77,7 @@ func (Department) Annotations() []schema.Annotation {
 		// Adding this annotation to the schema enables
 		// comments for the table and all its fields.
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("department.table.comment")),
+		schema.Comment(i18n.Text("entity.department.table.comment")),
 	}
 }
 
@@ -88,11 +88,12 @@ func (Department) Edges() []ent.Edge {
 			Ref("departments").
 			Through("user_departments", UserDepartment.Type),
 		edge.To("positions", Position.Type),
-		// 添加部门层级关系
-		edge.To("children", Department.Type),
-		edge.From("parent", Department.Type).
-			Ref("children").
-			Field("parent_id").
-			Unique(),
+		edge.To("children", Department.Type).
+			From("parent").Unique().Field("parent_id"),
+		//edge.To("children", Department.Type),
+		//edge.From("parent", Department.Type).
+		//	Ref("children").
+		//	Field("parent_id").
+		//	Unique(),
 	}
 }

@@ -14,19 +14,19 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "department.field.keyword"},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "department.field.name", Default: ""},
-		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "menu.field.tree_path", Default: ""},
-		{Name: "sequence", Type: field.TypeInt, Comment: "department.field.sequence"},
-		{Name: "status", Type: field.TypeInt8, Comment: "department.field.status", Default: 0},
-		{Name: "level", Type: field.TypeInt, Comment: "department.field.level", Default: 1},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "department.field.description", Default: ""},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.department.field.keyword"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.department.field.name", Default: ""},
+		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "entity.menu.field.tree_path", Default: ""},
+		{Name: "sequence", Type: field.TypeInt, Comment: "entity.department.field.sequence"},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.department.field.status", Default: 0},
+		{Name: "level", Type: field.TypeInt, Comment: "entity.department.field.level", Default: 1},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.department.field.description", Default: ""},
 		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "department.field.parent_id"},
 	}
 	// SysDepartmentsTable holds the schema information for the "sys_departments" table.
 	SysDepartmentsTable = &schema.Table{
 		Name:       "sys_departments",
-		Comment:    "department.table.comment",
+		Comment:    "entity.department.table.comment",
 		Columns:    SysDepartmentsColumns,
 		PrimaryKey: []*schema.Column{SysDepartmentsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -75,16 +75,19 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "permission.field.name", Default: ""},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "permission.field.keyword"},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "permission.field.description", Default: ""},
-		{Name: "data_scope", Type: field.TypeString, Comment: "permission.field.data_scope", Default: "self"},
-		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "permission.field.data_rules"},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.permission.field.name", Default: ""},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.permission.field.keyword"},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.permission.field.description", Default: ""},
+		{Name: "data_scope", Type: field.TypeString, Comment: "entity.permission.field.data_scope", Default: "self"},
+		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.data_rules"},
+		{Name: "conditions", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.conditions"},
+		{Name: "access_control", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.access_control"},
+		{Name: "actions", Type: field.TypeEnum, Comment: "entity.permission.field.actions", Enums: []string{"read", "write", "delete", "manage"}, Default: "read"},
 	}
 	// SysPermissionsTable holds the schema information for the "sys_permissions" table.
 	SysPermissionsTable = &schema.Table{
 		Name:       "sys_permissions",
-		Comment:    "permission.table.comment",
+		Comment:    "entity.permission.table.comment",
 		Columns:    SysPermissionsColumns,
 		PrimaryKey: []*schema.Column{SysPermissionsColumns[0]},
 		Indexes: []*schema.Index{
@@ -103,26 +106,25 @@ var (
 	// SysPermissionResourcesColumns holds the columns for the "sys_permission_resources" table.
 	SysPermissionResourcesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "actions", Type: field.TypeString, Comment: "permission_resource.field.actions", Default: "*"},
 		{Name: "permission_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 		{Name: "resource_id", Type: field.TypeInt64, Comment: "field.foreign_key.comment"},
 	}
 	// SysPermissionResourcesTable holds the schema information for the "sys_permission_resources" table.
 	SysPermissionResourcesTable = &schema.Table{
 		Name:       "sys_permission_resources",
-		Comment:    "permission_resource.table.comment",
+		Comment:    "entity.permission_resource.table.comment",
 		Columns:    SysPermissionResourcesColumns,
 		PrimaryKey: []*schema.Column{SysPermissionResourcesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_permission_resources_sys_permissions_permission",
-				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
+				Columns:    []*schema.Column{SysPermissionResourcesColumns[1]},
 				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "sys_permission_resources_sys_resources_resource",
-				Columns:    []*schema.Column{SysPermissionResourcesColumns[3]},
+				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
 				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -131,7 +133,7 @@ var (
 			{
 				Name:    "permissionresource_permission_id_resource_id",
 				Unique:  true,
-				Columns: []*schema.Column{SysPermissionResourcesColumns[2], SysPermissionResourcesColumns[3]},
+				Columns: []*schema.Column{SysPermissionResourcesColumns[1], SysPermissionResourcesColumns[2]},
 			},
 		},
 	}
@@ -140,15 +142,15 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "position.field.name"},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "position.field.keyword"},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "position.field.description", Default: ""},
-		{Name: "department_id", Type: field.TypeInt64, Comment: "department.field.department_id"},
+		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.position.field.name"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.position.field.keyword"},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.position.field.description", Default: ""},
+		{Name: "department_id", Type: field.TypeInt64, Comment: "entity.department.field.department_id"},
 	}
 	// SysPositionsTable holds the schema information for the "sys_positions" table.
 	SysPositionsTable = &schema.Table{
 		Name:       "sys_positions",
-		Comment:    "position.table.comment",
+		Comment:    "entity.position.table.comment",
 		Columns:    SysPositionsColumns,
 		PrimaryKey: []*schema.Column{SysPositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -181,7 +183,7 @@ var (
 	// SysPositionPermissionsTable holds the schema information for the "sys_position_permissions" table.
 	SysPositionPermissionsTable = &schema.Table{
 		Name:       "sys_position_permissions",
-		Comment:    "position_permission.table.comment",
+		Comment:    "entity.position_permission.table.comment",
 		Columns:    SysPositionPermissionsColumns,
 		PrimaryKey: []*schema.Column{SysPositionPermissionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -221,27 +223,27 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "name", Type: field.TypeString, Size: 128, Comment: "resource.field.name", Default: ""},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "resource.field.keyword"},
-		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "resource.field.i18n_key", Default: ""},
-		{Name: "type", Type: field.TypeString, Size: 2, Comment: "resource.field.type", Default: "M"},
-		{Name: "status", Type: field.TypeInt8, Comment: "resource.field.status", Default: 1},
-		{Name: "path", Type: field.TypeString, Size: 256, Comment: "resource.field.path", Default: ""},
-		{Name: "operation", Type: field.TypeString, Size: 128, Comment: "resource.field.operation", Default: ""},
-		{Name: "method", Type: field.TypeString, Size: 16, Comment: "resource.field.method", Default: ""},
-		{Name: "component", Type: field.TypeString, Size: 128, Comment: "resource.field.component", Default: ""},
-		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "resource.field.icon", Default: ""},
-		{Name: "sequence", Type: field.TypeInt, Comment: "resource.field.sequence", Default: 0},
-		{Name: "visible", Type: field.TypeBool, Comment: "resource.field.visible", Default: true},
-		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "resource.field.tree_path", Default: ""},
-		{Name: "properties", Type: field.TypeJSON, Nullable: true, Comment: "resource.field.properties"},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "resource.field.description", Default: ""},
+		{Name: "name", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.name", Default: ""},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.resource.field.keyword"},
+		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.i18n_key", Default: ""},
+		{Name: "type", Type: field.TypeString, Size: 2, Comment: "entity.resource.field.type", Default: "M"},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.resource.field.status", Default: 1},
+		{Name: "path", Type: field.TypeString, Size: 256, Comment: "entity.resource.field.path", Default: ""},
+		{Name: "operation", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.operation", Default: ""},
+		{Name: "method", Type: field.TypeString, Size: 16, Comment: "entity.resource.field.method", Default: ""},
+		{Name: "component", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.component", Default: ""},
+		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "entity.resource.field.icon", Default: ""},
+		{Name: "sequence", Type: field.TypeInt, Comment: "entity.resource.field.sequence", Default: 0},
+		{Name: "visible", Type: field.TypeBool, Comment: "entity.resource.field.visible", Default: true},
+		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "entity.resource.field.tree_path", Default: ""},
+		{Name: "properties", Type: field.TypeJSON, Nullable: true, Comment: "entity.resource.field.properties"},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.resource.field.description", Default: ""},
 		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "resource.field.parent_id"},
 	}
 	// SysResourcesTable holds the schema information for the "sys_resources" table.
 	SysResourcesTable = &schema.Table{
 		Name:       "sys_resources",
-		Comment:    "resource.table.comment",
+		Comment:    "entity.resource.table.comment",
 		Columns:    SysResourcesColumns,
 		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -285,7 +287,7 @@ var (
 	// SysRolesTable holds the schema information for the "sys_roles" table.
 	SysRolesTable = &schema.Table{
 		Name:       "sys_roles",
-		Comment:    "role.table.comment",
+		Comment:    "entity.role.table.comment",
 		Columns:    SysRolesColumns,
 		PrimaryKey: []*schema.Column{SysRolesColumns[0]},
 		Indexes: []*schema.Index{
@@ -330,7 +332,7 @@ var (
 	// SysRolePermissionsTable holds the schema information for the "sys_role_permissions" table.
 	SysRolePermissionsTable = &schema.Table{
 		Name:       "sys_role_permissions",
-		Comment:    "role_permission.table.comment",
+		Comment:    "entity.role_permission.table.comment",
 		Columns:    SysRolePermissionsColumns,
 		PrimaryKey: []*schema.Column{SysRolePermissionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -373,33 +375,33 @@ var (
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
-		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "user.field.uuid"},
-		{Name: "allowed_ip", Type: field.TypeString, Comment: "user.field.allowed_ip", Default: "0.0.0.0"},
-		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "user.field.username"},
-		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "user.field.nickname", Default: ""},
+		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "entity.user.field.uuid"},
+		{Name: "allowed_ip", Type: field.TypeString, Comment: "entity.user.field.allowed_ip", Default: "0.0.0.0"},
+		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "entity.user.field.username"},
+		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
 		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "user.field.avatar", Default: ""},
-		{Name: "name", Type: field.TypeString, Size: 64, Comment: "user.field.nickname", Default: ""},
-		{Name: "gender", Type: field.TypeEnum, Comment: "user.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
-		{Name: "password", Type: field.TypeString, Size: 256, Comment: "user.field.password", Default: ""},
-		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "user.field.salt", Default: ""},
-		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "user.field.phone", Default: ""},
-		{Name: "email", Type: field.TypeString, Size: 64, Comment: "user.field.email", Default: ""},
-		{Name: "department", Type: field.TypeString, Size: 64, Comment: "user.field.department", Default: ""},
-		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "user.field.remark", Default: ""},
-		{Name: "token", Type: field.TypeString, Size: 512, Comment: "user.field.token", Default: ""},
-		{Name: "status", Type: field.TypeInt8, Comment: "user.field.status", Default: 1},
+		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
+		{Name: "gender", Type: field.TypeEnum, Comment: "entity.user.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
+		{Name: "password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.password", Default: ""},
+		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "entity.user.field.salt", Default: ""},
+		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone", Default: ""},
+		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email", Default: ""},
+		{Name: "department", Type: field.TypeString, Size: 64, Comment: "entity.user.field.department", Default: ""},
+		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "entity.user.field.remark", Default: ""},
+		{Name: "token", Type: field.TypeString, Size: 512, Comment: "entity.user.field.token", Default: ""},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.user.field.status", Default: 1},
 		{Name: "is_system", Type: field.TypeBool, Comment: "user.field.is_system", Default: false},
-		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "user.field.last_login_ip", Default: ""},
-		{Name: "last_login_time", Type: field.TypeTime, Comment: "user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "login_time", Type: field.TypeTime, Comment: "user.field.login_time", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "sanction_date", Type: field.TypeTime, Nullable: true, Comment: "user.field.sanction_date", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "manager_id", Type: field.TypeInt64, Nullable: true, Comment: "user.field.manager_id"},
-		{Name: "manager", Type: field.TypeString, Comment: "user.field.manager", Default: ""},
+		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "entity.user.field.last_login_ip", Default: ""},
+		{Name: "last_login_time", Type: field.TypeTime, Comment: "entity.user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "login_time", Type: field.TypeTime, Comment: "entity.user.field.login_time", SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "sanction_date", Type: field.TypeTime, Nullable: true, Comment: "entity.user.field.sanction_date", SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "manager_id", Type: field.TypeInt64, Nullable: true, Comment: "entity.user.field.manager_id"},
+		{Name: "manager", Type: field.TypeString, Comment: "entity.user.field.manager", Default: ""},
 	}
 	// SysUsersTable holds the schema information for the "sys_users" table.
 	SysUsersTable = &schema.Table{
 		Name:       "sys_users",
-		Comment:    "user.table.comment",
+		Comment:    "entity.user.table.comment",
 		Columns:    SysUsersColumns,
 		PrimaryKey: []*schema.Column{SysUsersColumns[0]},
 		Indexes: []*schema.Index{
@@ -459,7 +461,7 @@ var (
 	// SysUserDepartmentsTable holds the schema information for the "sys_user_departments" table.
 	SysUserDepartmentsTable = &schema.Table{
 		Name:       "sys_user_departments",
-		Comment:    "user_department.table.comment",
+		Comment:    "entity.user_department.table.comment",
 		Columns:    SysUserDepartmentsColumns,
 		PrimaryKey: []*schema.Column{SysUserDepartmentsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -503,7 +505,7 @@ var (
 	// SysUserPositionsTable holds the schema information for the "sys_user_positions" table.
 	SysUserPositionsTable = &schema.Table{
 		Name:       "sys_user_positions",
-		Comment:    "user_position.table.comment",
+		Comment:    "entity.user_position.table.comment",
 		Columns:    SysUserPositionsColumns,
 		PrimaryKey: []*schema.Column{SysUserPositionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -547,7 +549,7 @@ var (
 	// SysUserRolesTable holds the schema information for the "sys_user_roles" table.
 	SysUserRolesTable = &schema.Table{
 		Name:       "sys_user_roles",
-		Comment:    "(1).(2).(3)",
+		Comment:    "entity.(1).(2).(3)",
 		Columns:    SysUserRolesColumns,
 		PrimaryKey: []*schema.Column{SysUserRolesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{

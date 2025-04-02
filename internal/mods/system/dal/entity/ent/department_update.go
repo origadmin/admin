@@ -207,6 +207,11 @@ func (du *DepartmentUpdate) AddPositions(p ...*Position) *DepartmentUpdate {
 	return du.AddPositionIDs(ids...)
 }
 
+// SetParent sets the "parent" edge to the Department entity.
+func (du *DepartmentUpdate) SetParent(d *Department) *DepartmentUpdate {
+	return du.SetParentID(d.ID)
+}
+
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
 func (du *DepartmentUpdate) AddChildIDs(ids ...int64) *DepartmentUpdate {
 	du.mutation.AddChildIDs(ids...)
@@ -220,11 +225,6 @@ func (du *DepartmentUpdate) AddChildren(d ...*Department) *DepartmentUpdate {
 		ids[i] = d[i].ID
 	}
 	return du.AddChildIDs(ids...)
-}
-
-// SetParent sets the "parent" edge to the Department entity.
-func (du *DepartmentUpdate) SetParent(d *Department) *DepartmentUpdate {
-	return du.SetParentID(d.ID)
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
@@ -289,6 +289,12 @@ func (du *DepartmentUpdate) RemovePositions(p ...*Position) *DepartmentUpdate {
 	return du.RemovePositionIDs(ids...)
 }
 
+// ClearParent clears the "parent" edge to the Department entity.
+func (du *DepartmentUpdate) ClearParent() *DepartmentUpdate {
+	du.mutation.ClearParent()
+	return du
+}
+
 // ClearChildren clears all "children" edges to the Department entity.
 func (du *DepartmentUpdate) ClearChildren() *DepartmentUpdate {
 	du.mutation.ClearChildren()
@@ -308,12 +314,6 @@ func (du *DepartmentUpdate) RemoveChildren(d ...*Department) *DepartmentUpdate {
 		ids[i] = d[i].ID
 	}
 	return du.RemoveChildIDs(ids...)
-}
-
-// ClearParent clears the "parent" edge to the Department entity.
-func (du *DepartmentUpdate) ClearParent() *DepartmentUpdate {
-	du.mutation.ClearParent()
-	return du
 }
 
 // ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
@@ -544,51 +544,6 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if du.mutation.ChildrenCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !du.mutation.ChildrenCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := du.mutation.ChildrenIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if du.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -608,6 +563,51 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Inverse: true,
 			Table:   department.ParentTable,
 			Columns: []string{department.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if du.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !du.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := du.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
@@ -860,6 +860,11 @@ func (duo *DepartmentUpdateOne) AddPositions(p ...*Position) *DepartmentUpdateOn
 	return duo.AddPositionIDs(ids...)
 }
 
+// SetParent sets the "parent" edge to the Department entity.
+func (duo *DepartmentUpdateOne) SetParent(d *Department) *DepartmentUpdateOne {
+	return duo.SetParentID(d.ID)
+}
+
 // AddChildIDs adds the "children" edge to the Department entity by IDs.
 func (duo *DepartmentUpdateOne) AddChildIDs(ids ...int64) *DepartmentUpdateOne {
 	duo.mutation.AddChildIDs(ids...)
@@ -873,11 +878,6 @@ func (duo *DepartmentUpdateOne) AddChildren(d ...*Department) *DepartmentUpdateO
 		ids[i] = d[i].ID
 	}
 	return duo.AddChildIDs(ids...)
-}
-
-// SetParent sets the "parent" edge to the Department entity.
-func (duo *DepartmentUpdateOne) SetParent(d *Department) *DepartmentUpdateOne {
-	return duo.SetParentID(d.ID)
 }
 
 // AddUserDepartmentIDs adds the "user_departments" edge to the UserDepartment entity by IDs.
@@ -942,6 +942,12 @@ func (duo *DepartmentUpdateOne) RemovePositions(p ...*Position) *DepartmentUpdat
 	return duo.RemovePositionIDs(ids...)
 }
 
+// ClearParent clears the "parent" edge to the Department entity.
+func (duo *DepartmentUpdateOne) ClearParent() *DepartmentUpdateOne {
+	duo.mutation.ClearParent()
+	return duo
+}
+
 // ClearChildren clears all "children" edges to the Department entity.
 func (duo *DepartmentUpdateOne) ClearChildren() *DepartmentUpdateOne {
 	duo.mutation.ClearChildren()
@@ -961,12 +967,6 @@ func (duo *DepartmentUpdateOne) RemoveChildren(d ...*Department) *DepartmentUpda
 		ids[i] = d[i].ID
 	}
 	return duo.RemoveChildIDs(ids...)
-}
-
-// ClearParent clears the "parent" edge to the Department entity.
-func (duo *DepartmentUpdateOne) ClearParent() *DepartmentUpdateOne {
-	duo.mutation.ClearParent()
-	return duo
 }
 
 // ClearUserDepartments clears all "user_departments" edges to the UserDepartment entity.
@@ -1227,51 +1227,6 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if duo.mutation.ChildrenCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !duo.mutation.ChildrenCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := duo.mutation.ChildrenIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   department.ChildrenTable,
-			Columns: []string{department.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if duo.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -1291,6 +1246,51 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department,
 			Inverse: true,
 			Table:   department.ParentTable,
 			Columns: []string{department.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if duo.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !duo.mutation.ChildrenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := duo.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   department.ChildrenTable,
+			Columns: []string{department.ChildrenColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(department.FieldID, field.TypeInt64),

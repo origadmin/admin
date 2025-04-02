@@ -10,7 +10,6 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
-	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/helpers/ent/mixin"
@@ -25,9 +24,6 @@ func (PermissionResource) Fields() []ent.Field {
 	return []ent.Field{
 		mixin.FK("permission_id"),
 		mixin.FK("resource_id"),
-		field.String("actions").
-			Default("*").
-			Comment(i18n.Text("permission_resource.field.actions")),
 		//// 使用JSON字段存储更复杂的权限控制
 		//field.JSON("access_control", struct {
 		//	Actions    []string          `json:"actions"`     // 允许的操作
@@ -37,7 +33,7 @@ func (PermissionResource) Fields() []ent.Field {
 		//	Attributes map[string]any    `json:"attributes"`  // 其他属性
 		//}{}).
 		//	Optional().
-		//	Comment(i18n.Text("permission_resource.field.access_control")),
+		//	Comment(i18n.Text("entity.permission_resource.field.access_control")),
 	}
 }
 
@@ -58,7 +54,7 @@ func (PermissionResource) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_permission_resources"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("permission_resource.table.comment")),
+		schema.Comment(i18n.Text("entity.permission_resource.table.comment")),
 	}
 }
 
