@@ -15,6 +15,8 @@ import (
 
 	"origadmin/application/admin/helpers/ent/mixin"
 	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/hook"
+	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/audit"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema/types"
 )
 
@@ -152,13 +154,13 @@ func (User) Edges() []ent.Edge {
 	}
 }
 
-//func (User) Hooks() []ent.Hook {
-//	auditService := audit.NewService()
-//	// todo audit service: inject audit service
-//	if auditService == nil {
-//		return nil
-//	}
-//	return []ent.Hook{
-//		hook.On(UserAuditHook(auditService), ent.OpCreate|ent.OpUpdate|ent.OpDelete),
-//	}
-//}
+func (User) Hooks() []ent.Hook {
+	auditService := audit.NewService()
+	// todo audit service: inject audit service
+	if auditService == nil {
+		return nil
+	}
+	return []ent.Hook{
+		hook.On(UserAuditHook(auditService), ent.OpCreate|ent.OpUpdate|ent.OpDelete),
+	}
+}

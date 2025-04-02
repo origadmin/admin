@@ -364,7 +364,9 @@ func init() {
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks4 := userMixin[4].Hooks()
+	userHooks := schema.User{}.Hooks()
 	user.Hooks[0] = userMixinHooks4[0]
+	user.Hooks[1] = userHooks[0]
 	userMixinInters4 := userMixin[4].Interceptors()
 	user.Interceptors[0] = userMixinInters4[0]
 	userMixinFields0 := userMixin[0].Fields()
