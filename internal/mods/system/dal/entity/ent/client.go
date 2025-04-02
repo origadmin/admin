@@ -635,22 +635,6 @@ func (c *PermissionClient) QueryRoles(pe *Permission) *RoleQuery {
 	return query
 }
 
-// QueryResources queries the resources edge of a Permission.
-func (c *PermissionClient) QueryResources(pe *Permission) *ResourceQuery {
-	query := (&ResourceClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pe.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(permission.Table, permission.FieldID, id),
-			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryPositions queries the positions edge of a Permission.
 func (c *PermissionClient) QueryPositions(pe *Permission) *PositionQuery {
 	query := (&PositionClient{config: c.config}).Query()
@@ -660,6 +644,22 @@ func (c *PermissionClient) QueryPositions(pe *Permission) *PositionQuery {
 			sqlgraph.From(permission.Table, permission.FieldID, id),
 			sqlgraph.To(position.Table, position.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, permission.PositionsTable, permission.PositionsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryResources queries the resources edge of a Permission.
+func (c *PermissionClient) QueryResources(pe *Permission) *ResourceQuery {
+	query := (&ResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil
@@ -683,22 +683,6 @@ func (c *PermissionClient) QueryRolePermissions(pe *Permission) *RolePermissionQ
 	return query
 }
 
-// QueryPermissionResources queries the permission_resources edge of a Permission.
-func (c *PermissionClient) QueryPermissionResources(pe *Permission) *PermissionResourceQuery {
-	query := (&PermissionResourceClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := pe.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(permission.Table, permission.FieldID, id),
-			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
-		)
-		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryPositionPermissions queries the position_permissions edge of a Permission.
 func (c *PermissionClient) QueryPositionPermissions(pe *Permission) *PositionPermissionQuery {
 	query := (&PositionPermissionClient{config: c.config}).Query()
@@ -708,6 +692,22 @@ func (c *PermissionClient) QueryPositionPermissions(pe *Permission) *PositionPer
 			sqlgraph.From(permission.Table, permission.FieldID, id),
 			sqlgraph.To(positionpermission.Table, positionpermission.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, permission.PositionPermissionsTable, permission.PositionPermissionsColumn),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermissionResources queries the permission_resources edge of a Permission.
+func (c *PermissionClient) QueryPermissionResources(pe *Permission) *PermissionResourceQuery {
+	query := (&PermissionResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
 		)
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil

@@ -1396,21 +1396,21 @@ type PermissionMutation struct {
 	roles                       map[int64]struct{}
 	removedroles                map[int64]struct{}
 	clearedroles                bool
-	resources                   map[int64]struct{}
-	removedresources            map[int64]struct{}
-	clearedresources            bool
 	positions                   map[int64]struct{}
 	removedpositions            map[int64]struct{}
 	clearedpositions            bool
+	resources                   map[int64]struct{}
+	removedresources            map[int64]struct{}
+	clearedresources            bool
 	role_permissions            map[int]struct{}
 	removedrole_permissions     map[int]struct{}
 	clearedrole_permissions     bool
-	permission_resources        map[int]struct{}
-	removedpermission_resources map[int]struct{}
-	clearedpermission_resources bool
 	position_permissions        map[int]struct{}
 	removedposition_permissions map[int]struct{}
 	clearedposition_permissions bool
+	permission_resources        map[int]struct{}
+	removedpermission_resources map[int]struct{}
+	clearedpermission_resources bool
 	done                        bool
 	oldValue                    func(context.Context) (*Permission, error)
 	predicates                  []predicate.Permission
@@ -1839,60 +1839,6 @@ func (m *PermissionMutation) ResetRoles() {
 	m.removedroles = nil
 }
 
-// AddResourceIDs adds the "resources" edge to the Resource entity by ids.
-func (m *PermissionMutation) AddResourceIDs(ids ...int64) {
-	if m.resources == nil {
-		m.resources = make(map[int64]struct{})
-	}
-	for i := range ids {
-		m.resources[ids[i]] = struct{}{}
-	}
-}
-
-// ClearResources clears the "resources" edge to the Resource entity.
-func (m *PermissionMutation) ClearResources() {
-	m.clearedresources = true
-}
-
-// ResourcesCleared reports if the "resources" edge to the Resource entity was cleared.
-func (m *PermissionMutation) ResourcesCleared() bool {
-	return m.clearedresources
-}
-
-// RemoveResourceIDs removes the "resources" edge to the Resource entity by IDs.
-func (m *PermissionMutation) RemoveResourceIDs(ids ...int64) {
-	if m.removedresources == nil {
-		m.removedresources = make(map[int64]struct{})
-	}
-	for i := range ids {
-		delete(m.resources, ids[i])
-		m.removedresources[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedResources returns the removed IDs of the "resources" edge to the Resource entity.
-func (m *PermissionMutation) RemovedResourcesIDs() (ids []int64) {
-	for id := range m.removedresources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResourcesIDs returns the "resources" edge IDs in the mutation.
-func (m *PermissionMutation) ResourcesIDs() (ids []int64) {
-	for id := range m.resources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetResources resets all changes to the "resources" edge.
-func (m *PermissionMutation) ResetResources() {
-	m.resources = nil
-	m.clearedresources = false
-	m.removedresources = nil
-}
-
 // AddPositionIDs adds the "positions" edge to the Position entity by ids.
 func (m *PermissionMutation) AddPositionIDs(ids ...int64) {
 	if m.positions == nil {
@@ -1945,6 +1891,60 @@ func (m *PermissionMutation) ResetPositions() {
 	m.positions = nil
 	m.clearedpositions = false
 	m.removedpositions = nil
+}
+
+// AddResourceIDs adds the "resources" edge to the Resource entity by ids.
+func (m *PermissionMutation) AddResourceIDs(ids ...int64) {
+	if m.resources == nil {
+		m.resources = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.resources[ids[i]] = struct{}{}
+	}
+}
+
+// ClearResources clears the "resources" edge to the Resource entity.
+func (m *PermissionMutation) ClearResources() {
+	m.clearedresources = true
+}
+
+// ResourcesCleared reports if the "resources" edge to the Resource entity was cleared.
+func (m *PermissionMutation) ResourcesCleared() bool {
+	return m.clearedresources
+}
+
+// RemoveResourceIDs removes the "resources" edge to the Resource entity by IDs.
+func (m *PermissionMutation) RemoveResourceIDs(ids ...int64) {
+	if m.removedresources == nil {
+		m.removedresources = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.resources, ids[i])
+		m.removedresources[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedResources returns the removed IDs of the "resources" edge to the Resource entity.
+func (m *PermissionMutation) RemovedResourcesIDs() (ids []int64) {
+	for id := range m.removedresources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResourcesIDs returns the "resources" edge IDs in the mutation.
+func (m *PermissionMutation) ResourcesIDs() (ids []int64) {
+	for id := range m.resources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetResources resets all changes to the "resources" edge.
+func (m *PermissionMutation) ResetResources() {
+	m.resources = nil
+	m.clearedresources = false
+	m.removedresources = nil
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by ids.
@@ -2001,60 +2001,6 @@ func (m *PermissionMutation) ResetRolePermissions() {
 	m.removedrole_permissions = nil
 }
 
-// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
-func (m *PermissionMutation) AddPermissionResourceIDs(ids ...int) {
-	if m.permission_resources == nil {
-		m.permission_resources = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.permission_resources[ids[i]] = struct{}{}
-	}
-}
-
-// ClearPermissionResources clears the "permission_resources" edge to the PermissionResource entity.
-func (m *PermissionMutation) ClearPermissionResources() {
-	m.clearedpermission_resources = true
-}
-
-// PermissionResourcesCleared reports if the "permission_resources" edge to the PermissionResource entity was cleared.
-func (m *PermissionMutation) PermissionResourcesCleared() bool {
-	return m.clearedpermission_resources
-}
-
-// RemovePermissionResourceIDs removes the "permission_resources" edge to the PermissionResource entity by IDs.
-func (m *PermissionMutation) RemovePermissionResourceIDs(ids ...int) {
-	if m.removedpermission_resources == nil {
-		m.removedpermission_resources = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.permission_resources, ids[i])
-		m.removedpermission_resources[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPermissionResources returns the removed IDs of the "permission_resources" edge to the PermissionResource entity.
-func (m *PermissionMutation) RemovedPermissionResourcesIDs() (ids []int) {
-	for id := range m.removedpermission_resources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PermissionResourcesIDs returns the "permission_resources" edge IDs in the mutation.
-func (m *PermissionMutation) PermissionResourcesIDs() (ids []int) {
-	for id := range m.permission_resources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPermissionResources resets all changes to the "permission_resources" edge.
-func (m *PermissionMutation) ResetPermissionResources() {
-	m.permission_resources = nil
-	m.clearedpermission_resources = false
-	m.removedpermission_resources = nil
-}
-
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by ids.
 func (m *PermissionMutation) AddPositionPermissionIDs(ids ...int) {
 	if m.position_permissions == nil {
@@ -2107,6 +2053,60 @@ func (m *PermissionMutation) ResetPositionPermissions() {
 	m.position_permissions = nil
 	m.clearedposition_permissions = false
 	m.removedposition_permissions = nil
+}
+
+// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
+func (m *PermissionMutation) AddPermissionResourceIDs(ids ...int) {
+	if m.permission_resources == nil {
+		m.permission_resources = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.permission_resources[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPermissionResources clears the "permission_resources" edge to the PermissionResource entity.
+func (m *PermissionMutation) ClearPermissionResources() {
+	m.clearedpermission_resources = true
+}
+
+// PermissionResourcesCleared reports if the "permission_resources" edge to the PermissionResource entity was cleared.
+func (m *PermissionMutation) PermissionResourcesCleared() bool {
+	return m.clearedpermission_resources
+}
+
+// RemovePermissionResourceIDs removes the "permission_resources" edge to the PermissionResource entity by IDs.
+func (m *PermissionMutation) RemovePermissionResourceIDs(ids ...int) {
+	if m.removedpermission_resources == nil {
+		m.removedpermission_resources = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.permission_resources, ids[i])
+		m.removedpermission_resources[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPermissionResources returns the removed IDs of the "permission_resources" edge to the PermissionResource entity.
+func (m *PermissionMutation) RemovedPermissionResourcesIDs() (ids []int) {
+	for id := range m.removedpermission_resources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PermissionResourcesIDs returns the "permission_resources" edge IDs in the mutation.
+func (m *PermissionMutation) PermissionResourcesIDs() (ids []int) {
+	for id := range m.permission_resources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPermissionResources resets all changes to the "permission_resources" edge.
+func (m *PermissionMutation) ResetPermissionResources() {
+	m.permission_resources = nil
+	m.clearedpermission_resources = false
+	m.removedpermission_resources = nil
 }
 
 // Where appends a list predicates to the PermissionMutation builder.
@@ -2357,20 +2357,20 @@ func (m *PermissionMutation) AddedEdges() []string {
 	if m.roles != nil {
 		edges = append(edges, permission.EdgeRoles)
 	}
-	if m.resources != nil {
-		edges = append(edges, permission.EdgeResources)
-	}
 	if m.positions != nil {
 		edges = append(edges, permission.EdgePositions)
+	}
+	if m.resources != nil {
+		edges = append(edges, permission.EdgeResources)
 	}
 	if m.role_permissions != nil {
 		edges = append(edges, permission.EdgeRolePermissions)
 	}
-	if m.permission_resources != nil {
-		edges = append(edges, permission.EdgePermissionResources)
-	}
 	if m.position_permissions != nil {
 		edges = append(edges, permission.EdgePositionPermissions)
+	}
+	if m.permission_resources != nil {
+		edges = append(edges, permission.EdgePermissionResources)
 	}
 	return edges
 }
@@ -2385,15 +2385,15 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case permission.EdgeResources:
-		ids := make([]ent.Value, 0, len(m.resources))
-		for id := range m.resources {
-			ids = append(ids, id)
-		}
-		return ids
 	case permission.EdgePositions:
 		ids := make([]ent.Value, 0, len(m.positions))
 		for id := range m.positions {
+			ids = append(ids, id)
+		}
+		return ids
+	case permission.EdgeResources:
+		ids := make([]ent.Value, 0, len(m.resources))
+		for id := range m.resources {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2403,15 +2403,15 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case permission.EdgePermissionResources:
-		ids := make([]ent.Value, 0, len(m.permission_resources))
-		for id := range m.permission_resources {
-			ids = append(ids, id)
-		}
-		return ids
 	case permission.EdgePositionPermissions:
 		ids := make([]ent.Value, 0, len(m.position_permissions))
 		for id := range m.position_permissions {
+			ids = append(ids, id)
+		}
+		return ids
+	case permission.EdgePermissionResources:
+		ids := make([]ent.Value, 0, len(m.permission_resources))
+		for id := range m.permission_resources {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2425,20 +2425,20 @@ func (m *PermissionMutation) RemovedEdges() []string {
 	if m.removedroles != nil {
 		edges = append(edges, permission.EdgeRoles)
 	}
-	if m.removedresources != nil {
-		edges = append(edges, permission.EdgeResources)
-	}
 	if m.removedpositions != nil {
 		edges = append(edges, permission.EdgePositions)
+	}
+	if m.removedresources != nil {
+		edges = append(edges, permission.EdgeResources)
 	}
 	if m.removedrole_permissions != nil {
 		edges = append(edges, permission.EdgeRolePermissions)
 	}
-	if m.removedpermission_resources != nil {
-		edges = append(edges, permission.EdgePermissionResources)
-	}
 	if m.removedposition_permissions != nil {
 		edges = append(edges, permission.EdgePositionPermissions)
+	}
+	if m.removedpermission_resources != nil {
+		edges = append(edges, permission.EdgePermissionResources)
 	}
 	return edges
 }
@@ -2453,15 +2453,15 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case permission.EdgeResources:
-		ids := make([]ent.Value, 0, len(m.removedresources))
-		for id := range m.removedresources {
-			ids = append(ids, id)
-		}
-		return ids
 	case permission.EdgePositions:
 		ids := make([]ent.Value, 0, len(m.removedpositions))
 		for id := range m.removedpositions {
+			ids = append(ids, id)
+		}
+		return ids
+	case permission.EdgeResources:
+		ids := make([]ent.Value, 0, len(m.removedresources))
+		for id := range m.removedresources {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2471,15 +2471,15 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case permission.EdgePermissionResources:
-		ids := make([]ent.Value, 0, len(m.removedpermission_resources))
-		for id := range m.removedpermission_resources {
-			ids = append(ids, id)
-		}
-		return ids
 	case permission.EdgePositionPermissions:
 		ids := make([]ent.Value, 0, len(m.removedposition_permissions))
 		for id := range m.removedposition_permissions {
+			ids = append(ids, id)
+		}
+		return ids
+	case permission.EdgePermissionResources:
+		ids := make([]ent.Value, 0, len(m.removedpermission_resources))
+		for id := range m.removedpermission_resources {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2493,20 +2493,20 @@ func (m *PermissionMutation) ClearedEdges() []string {
 	if m.clearedroles {
 		edges = append(edges, permission.EdgeRoles)
 	}
-	if m.clearedresources {
-		edges = append(edges, permission.EdgeResources)
-	}
 	if m.clearedpositions {
 		edges = append(edges, permission.EdgePositions)
+	}
+	if m.clearedresources {
+		edges = append(edges, permission.EdgeResources)
 	}
 	if m.clearedrole_permissions {
 		edges = append(edges, permission.EdgeRolePermissions)
 	}
-	if m.clearedpermission_resources {
-		edges = append(edges, permission.EdgePermissionResources)
-	}
 	if m.clearedposition_permissions {
 		edges = append(edges, permission.EdgePositionPermissions)
+	}
+	if m.clearedpermission_resources {
+		edges = append(edges, permission.EdgePermissionResources)
 	}
 	return edges
 }
@@ -2517,16 +2517,16 @@ func (m *PermissionMutation) EdgeCleared(name string) bool {
 	switch name {
 	case permission.EdgeRoles:
 		return m.clearedroles
-	case permission.EdgeResources:
-		return m.clearedresources
 	case permission.EdgePositions:
 		return m.clearedpositions
+	case permission.EdgeResources:
+		return m.clearedresources
 	case permission.EdgeRolePermissions:
 		return m.clearedrole_permissions
-	case permission.EdgePermissionResources:
-		return m.clearedpermission_resources
 	case permission.EdgePositionPermissions:
 		return m.clearedposition_permissions
+	case permission.EdgePermissionResources:
+		return m.clearedpermission_resources
 	}
 	return false
 }
@@ -2546,20 +2546,20 @@ func (m *PermissionMutation) ResetEdge(name string) error {
 	case permission.EdgeRoles:
 		m.ResetRoles()
 		return nil
-	case permission.EdgeResources:
-		m.ResetResources()
-		return nil
 	case permission.EdgePositions:
 		m.ResetPositions()
+		return nil
+	case permission.EdgeResources:
+		m.ResetResources()
 		return nil
 	case permission.EdgeRolePermissions:
 		m.ResetRolePermissions()
 		return nil
-	case permission.EdgePermissionResources:
-		m.ResetPermissionResources()
-		return nil
 	case permission.EdgePositionPermissions:
 		m.ResetPositionPermissions()
+		return nil
+	case permission.EdgePermissionResources:
+		m.ResetPermissionResources()
 		return nil
 	}
 	return fmt.Errorf("unknown Permission edge %s", name)

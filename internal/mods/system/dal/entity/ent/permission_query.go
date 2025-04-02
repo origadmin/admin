@@ -31,11 +31,11 @@ type PermissionQuery struct {
 	inters                  []Interceptor
 	predicates              []predicate.Permission
 	withRoles               *RoleQuery
-	withResources           *ResourceQuery
 	withPositions           *PositionQuery
+	withResources           *ResourceQuery
 	withRolePermissions     *RolePermissionQuery
-	withPermissionResources *PermissionResourceQuery
 	withPositionPermissions *PositionPermissionQuery
+	withPermissionResources *PermissionResourceQuery
 	modifiers               []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -95,28 +95,6 @@ func (pq *PermissionQuery) QueryRoles() *RoleQuery {
 	return query
 }
 
-// QueryResources chains the current query on the "resources" edge.
-func (pq *PermissionQuery) QueryResources() *ResourceQuery {
-	query := (&ResourceClient{config: pq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := pq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := pq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(permission.Table, permission.FieldID, selector),
-			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
-		)
-		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
 // QueryPositions chains the current query on the "positions" edge.
 func (pq *PermissionQuery) QueryPositions() *PositionQuery {
 	query := (&PositionClient{config: pq.config}).Query()
@@ -132,6 +110,28 @@ func (pq *PermissionQuery) QueryPositions() *PositionQuery {
 			sqlgraph.From(permission.Table, permission.FieldID, selector),
 			sqlgraph.To(position.Table, position.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, permission.PositionsTable, permission.PositionsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryResources chains the current query on the "resources" edge.
+func (pq *PermissionQuery) QueryResources() *ResourceQuery {
+	query := (&ResourceClient{config: pq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := pq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, selector),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -161,28 +161,6 @@ func (pq *PermissionQuery) QueryRolePermissions() *RolePermissionQuery {
 	return query
 }
 
-// QueryPermissionResources chains the current query on the "permission_resources" edge.
-func (pq *PermissionQuery) QueryPermissionResources() *PermissionResourceQuery {
-	query := (&PermissionResourceClient{config: pq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := pq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := pq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(permission.Table, permission.FieldID, selector),
-			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
 // QueryPositionPermissions chains the current query on the "position_permissions" edge.
 func (pq *PermissionQuery) QueryPositionPermissions() *PositionPermissionQuery {
 	query := (&PositionPermissionClient{config: pq.config}).Query()
@@ -198,6 +176,28 @@ func (pq *PermissionQuery) QueryPositionPermissions() *PositionPermissionQuery {
 			sqlgraph.From(permission.Table, permission.FieldID, selector),
 			sqlgraph.To(positionpermission.Table, positionpermission.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, permission.PositionPermissionsTable, permission.PositionPermissionsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPermissionResources chains the current query on the "permission_resources" edge.
+func (pq *PermissionQuery) QueryPermissionResources() *PermissionResourceQuery {
+	query := (&PermissionResourceClient{config: pq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := pq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := pq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, selector),
+			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
@@ -398,11 +398,11 @@ func (pq *PermissionQuery) Clone() *PermissionQuery {
 		inters:                  append([]Interceptor{}, pq.inters...),
 		predicates:              append([]predicate.Permission{}, pq.predicates...),
 		withRoles:               pq.withRoles.Clone(),
-		withResources:           pq.withResources.Clone(),
 		withPositions:           pq.withPositions.Clone(),
+		withResources:           pq.withResources.Clone(),
 		withRolePermissions:     pq.withRolePermissions.Clone(),
-		withPermissionResources: pq.withPermissionResources.Clone(),
 		withPositionPermissions: pq.withPositionPermissions.Clone(),
+		withPermissionResources: pq.withPermissionResources.Clone(),
 		// clone intermediate query.
 		sql:       pq.sql.Clone(),
 		path:      pq.path,
@@ -421,17 +421,6 @@ func (pq *PermissionQuery) WithRoles(opts ...func(*RoleQuery)) *PermissionQuery 
 	return pq
 }
 
-// WithResources tells the query-builder to eager-load the nodes that are connected to
-// the "resources" edge. The optional arguments are used to configure the query builder of the edge.
-func (pq *PermissionQuery) WithResources(opts ...func(*ResourceQuery)) *PermissionQuery {
-	query := (&ResourceClient{config: pq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	pq.withResources = query
-	return pq
-}
-
 // WithPositions tells the query-builder to eager-load the nodes that are connected to
 // the "positions" edge. The optional arguments are used to configure the query builder of the edge.
 func (pq *PermissionQuery) WithPositions(opts ...func(*PositionQuery)) *PermissionQuery {
@@ -440,6 +429,17 @@ func (pq *PermissionQuery) WithPositions(opts ...func(*PositionQuery)) *Permissi
 		opt(query)
 	}
 	pq.withPositions = query
+	return pq
+}
+
+// WithResources tells the query-builder to eager-load the nodes that are connected to
+// the "resources" edge. The optional arguments are used to configure the query builder of the edge.
+func (pq *PermissionQuery) WithResources(opts ...func(*ResourceQuery)) *PermissionQuery {
+	query := (&ResourceClient{config: pq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withResources = query
 	return pq
 }
 
@@ -454,17 +454,6 @@ func (pq *PermissionQuery) WithRolePermissions(opts ...func(*RolePermissionQuery
 	return pq
 }
 
-// WithPermissionResources tells the query-builder to eager-load the nodes that are connected to
-// the "permission_resources" edge. The optional arguments are used to configure the query builder of the edge.
-func (pq *PermissionQuery) WithPermissionResources(opts ...func(*PermissionResourceQuery)) *PermissionQuery {
-	query := (&PermissionResourceClient{config: pq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	pq.withPermissionResources = query
-	return pq
-}
-
 // WithPositionPermissions tells the query-builder to eager-load the nodes that are connected to
 // the "position_permissions" edge. The optional arguments are used to configure the query builder of the edge.
 func (pq *PermissionQuery) WithPositionPermissions(opts ...func(*PositionPermissionQuery)) *PermissionQuery {
@@ -473,6 +462,17 @@ func (pq *PermissionQuery) WithPositionPermissions(opts ...func(*PositionPermiss
 		opt(query)
 	}
 	pq.withPositionPermissions = query
+	return pq
+}
+
+// WithPermissionResources tells the query-builder to eager-load the nodes that are connected to
+// the "permission_resources" edge. The optional arguments are used to configure the query builder of the edge.
+func (pq *PermissionQuery) WithPermissionResources(opts ...func(*PermissionResourceQuery)) *PermissionQuery {
+	query := (&PermissionResourceClient{config: pq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	pq.withPermissionResources = query
 	return pq
 }
 
@@ -556,11 +556,11 @@ func (pq *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 		_spec       = pq.querySpec()
 		loadedTypes = [6]bool{
 			pq.withRoles != nil,
-			pq.withResources != nil,
 			pq.withPositions != nil,
+			pq.withResources != nil,
 			pq.withRolePermissions != nil,
-			pq.withPermissionResources != nil,
 			pq.withPositionPermissions != nil,
+			pq.withPermissionResources != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -591,17 +591,17 @@ func (pq *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 			return nil, err
 		}
 	}
-	if query := pq.withResources; query != nil {
-		if err := pq.loadResources(ctx, query, nodes,
-			func(n *Permission) { n.Edges.Resources = []*Resource{} },
-			func(n *Permission, e *Resource) { n.Edges.Resources = append(n.Edges.Resources, e) }); err != nil {
-			return nil, err
-		}
-	}
 	if query := pq.withPositions; query != nil {
 		if err := pq.loadPositions(ctx, query, nodes,
 			func(n *Permission) { n.Edges.Positions = []*Position{} },
 			func(n *Permission, e *Position) { n.Edges.Positions = append(n.Edges.Positions, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := pq.withResources; query != nil {
+		if err := pq.loadResources(ctx, query, nodes,
+			func(n *Permission) { n.Edges.Resources = []*Resource{} },
+			func(n *Permission, e *Resource) { n.Edges.Resources = append(n.Edges.Resources, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -612,20 +612,20 @@ func (pq *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 			return nil, err
 		}
 	}
-	if query := pq.withPermissionResources; query != nil {
-		if err := pq.loadPermissionResources(ctx, query, nodes,
-			func(n *Permission) { n.Edges.PermissionResources = []*PermissionResource{} },
-			func(n *Permission, e *PermissionResource) {
-				n.Edges.PermissionResources = append(n.Edges.PermissionResources, e)
-			}); err != nil {
-			return nil, err
-		}
-	}
 	if query := pq.withPositionPermissions; query != nil {
 		if err := pq.loadPositionPermissions(ctx, query, nodes,
 			func(n *Permission) { n.Edges.PositionPermissions = []*PositionPermission{} },
 			func(n *Permission, e *PositionPermission) {
 				n.Edges.PositionPermissions = append(n.Edges.PositionPermissions, e)
+			}); err != nil {
+			return nil, err
+		}
+	}
+	if query := pq.withPermissionResources; query != nil {
+		if err := pq.loadPermissionResources(ctx, query, nodes,
+			func(n *Permission) { n.Edges.PermissionResources = []*PermissionResource{} },
+			func(n *Permission, e *PermissionResource) {
+				n.Edges.PermissionResources = append(n.Edges.PermissionResources, e)
 			}); err != nil {
 			return nil, err
 		}
@@ -694,67 +694,6 @@ func (pq *PermissionQuery) loadRoles(ctx context.Context, query *RoleQuery, node
 	}
 	return nil
 }
-func (pq *PermissionQuery) loadResources(ctx context.Context, query *ResourceQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *Resource)) error {
-	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[int64]*Permission)
-	nids := make(map[int64]map[*Permission]struct{})
-	for i, node := range nodes {
-		edgeIDs[i] = node.ID
-		byID[node.ID] = node
-		if init != nil {
-			init(node)
-		}
-	}
-	query.Where(func(s *sql.Selector) {
-		joinT := sql.Table(permission.ResourcesTable)
-		s.Join(joinT).On(s.C(resource.FieldID), joinT.C(permission.ResourcesPrimaryKey[1]))
-		s.Where(sql.InValues(joinT.C(permission.ResourcesPrimaryKey[0]), edgeIDs...))
-		columns := s.SelectedColumns()
-		s.Select(joinT.C(permission.ResourcesPrimaryKey[0]))
-		s.AppendSelect(columns...)
-		s.SetDistinct(false)
-	})
-	if err := query.prepareQuery(ctx); err != nil {
-		return err
-	}
-	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
-		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
-			assign := spec.Assign
-			values := spec.ScanValues
-			spec.ScanValues = func(columns []string) ([]any, error) {
-				values, err := values(columns[1:])
-				if err != nil {
-					return nil, err
-				}
-				return append([]any{new(sql.NullInt64)}, values...), nil
-			}
-			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullInt64).Int64
-				inValue := values[1].(*sql.NullInt64).Int64
-				if nids[inValue] == nil {
-					nids[inValue] = map[*Permission]struct{}{byID[outValue]: {}}
-					return assign(columns[1:], values[1:])
-				}
-				nids[inValue][byID[outValue]] = struct{}{}
-				return nil
-			}
-		})
-	})
-	neighbors, err := withInterceptors[[]*Resource](ctx, query, qr, query.inters)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		nodes, ok := nids[n.ID]
-		if !ok {
-			return fmt.Errorf(`unexpected "resources" node returned %v`, n.ID)
-		}
-		for kn := range nodes {
-			assign(kn, n)
-		}
-	}
-	return nil
-}
 func (pq *PermissionQuery) loadPositions(ctx context.Context, query *PositionQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *Position)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
 	byID := make(map[int64]*Permission)
@@ -816,6 +755,67 @@ func (pq *PermissionQuery) loadPositions(ctx context.Context, query *PositionQue
 	}
 	return nil
 }
+func (pq *PermissionQuery) loadResources(ctx context.Context, query *ResourceQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *Resource)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int64]*Permission)
+	nids := make(map[int64]map[*Permission]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(permission.ResourcesTable)
+		s.Join(joinT).On(s.C(resource.FieldID), joinT.C(permission.ResourcesPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(permission.ResourcesPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(permission.ResourcesPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullInt64).Int64
+				inValue := values[1].(*sql.NullInt64).Int64
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Permission]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Resource](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "resources" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
 func (pq *PermissionQuery) loadRolePermissions(ctx context.Context, query *RolePermissionQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *RolePermission)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int64]*Permission)
@@ -846,36 +846,6 @@ func (pq *PermissionQuery) loadRolePermissions(ctx context.Context, query *RoleP
 	}
 	return nil
 }
-func (pq *PermissionQuery) loadPermissionResources(ctx context.Context, query *PermissionResourceQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *PermissionResource)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int64]*Permission)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
-		if init != nil {
-			init(nodes[i])
-		}
-	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(permissionresource.FieldPermissionID)
-	}
-	query.Where(predicate.PermissionResource(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(permission.PermissionResourcesColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		fk := n.PermissionID
-		node, ok := nodeids[fk]
-		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "permission_id" returned %v for node %v`, fk, n.ID)
-		}
-		assign(node, n)
-	}
-	return nil
-}
 func (pq *PermissionQuery) loadPositionPermissions(ctx context.Context, query *PositionPermissionQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *PositionPermission)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[int64]*Permission)
@@ -891,6 +861,36 @@ func (pq *PermissionQuery) loadPositionPermissions(ctx context.Context, query *P
 	}
 	query.Where(predicate.PositionPermission(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(permission.PositionPermissionsColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.PermissionID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "permission_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (pq *PermissionQuery) loadPermissionResources(ctx context.Context, query *PermissionResourceQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *PermissionResource)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*Permission)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(permissionresource.FieldPermissionID)
+	}
+	query.Where(predicate.PermissionResource(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(permission.PermissionResourcesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
