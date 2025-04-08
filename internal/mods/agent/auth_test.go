@@ -46,6 +46,16 @@ var bridge = securityx.SecurityBridge{
 	//	}
 	//	return ""
 	//},
+	PolicyParser: func(ctx context.Context, claims security.Claims) (security.Policy, error) {
+		return &security.RegisteredPolicy{
+			Subject:     claims.GetSubject(),
+			Object:      "/api/v1/users",
+			Action:      "GET",
+			Domain:      claims.GetIssuer(),
+			Roles:       []string{"admin"},
+			Permissions: []string{"users:read"},
+		}, nil
+	},
 	// Initialize other fields...
 }
 

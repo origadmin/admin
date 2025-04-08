@@ -45,8 +45,7 @@ type mockAuthorizer struct {
 }
 
 func (m mockAuthorizer) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {
-	//TODO implement me
-	panic("implement me")
+	return policy.GetSubject() == "valid_token", nil
 }
 
 func (m mockAuthorizer) AuthorizedWithDomain(ctx context.Context, policy security.Policy, object string, action string, domain string) (bool, error) {

@@ -75,6 +75,8 @@ type SecurityBridge struct {
 	Data Data
 	// TokenParser is the parser used to parse the token from the context.
 	TokenParser func(ctx context.Context) string
+	// PolicyParser is the parser used to parse the policy from the context.
+	PolicyParser func(ctx context.Context, claims security.Claims) (security.Policy, error)
 }
 
 func (obj SecurityBridge) SkipFromContext(ctx context.Context) (context.Context, bool) {
@@ -190,7 +192,10 @@ func (obj SecurityBridge) Build() middleware.KMiddleware {
 func (obj SecurityBridge) TokenTo(ctx context.Context, token string) context.Context {
 	return msecurity.TokenToContext(ctx, obj.TokenSource, obj.schemeString(), token)
 }
-func (obj SecurityBridge) PolicyParser(ctx context.Context, claims security.Claims) (security.Policy, error) {
+func (obj SecurityBridge) policyParser(ctx context.Context, claims security.Claims) (security.Policy, error) {
+	if obj.PolicyParser != nil {
+		return obj.PolicyParser(ctx, claims)
+	}
 	log.Debugf("PolicyParser: parsing policy for subject: %s", claims.GetSubject())
 	roles, err := obj.Data.QueryRoles(ctx, claims.GetSubject())
 	if err != nil {
