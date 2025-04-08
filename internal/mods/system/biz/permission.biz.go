@@ -8,8 +8,6 @@ package biz
 import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
-	"google.golang.org/grpc"
-
 	"github.com/origadmin/toolkits/net/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -23,7 +21,7 @@ type PermissionServiceBiz struct {
 	log     *log.KHelper
 }
 
-func (biz PermissionServiceBiz) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest, opts ...grpc.CallOption) (*pb.ListPermissionsResponse, error) {
+func (biz PermissionServiceBiz) ListPermissions(ctx context.Context, in *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
 	var option dto.PermissionQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -37,7 +35,7 @@ func (biz PermissionServiceBiz) ListPermissions(ctx context.Context, in *pb.List
 	return dto.ToListPermissionsResponse(result, in, total)
 }
 
-func (biz PermissionServiceBiz) GetPermission(ctx context.Context, in *pb.GetPermissionRequest, opts ...grpc.CallOption) (*pb.GetPermissionResponse, error) {
+func (biz PermissionServiceBiz) GetPermission(ctx context.Context, in *pb.GetPermissionRequest) (*pb.GetPermissionResponse, error) {
 	var option dto.PermissionQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,7 +50,7 @@ func (biz PermissionServiceBiz) GetPermission(ctx context.Context, in *pb.GetPer
 	}, nil
 }
 
-func (biz PermissionServiceBiz) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest, opts ...grpc.CallOption) (*pb.CreatePermissionResponse, error) {
+func (biz PermissionServiceBiz) CreatePermission(ctx context.Context, in *pb.CreatePermissionRequest) (*pb.CreatePermissionResponse, error) {
 	var option dto.PermissionQueryOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -67,7 +65,7 @@ func (biz PermissionServiceBiz) CreatePermission(ctx context.Context, in *pb.Cre
 	}, nil
 }
 
-func (biz PermissionServiceBiz) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest, opts ...grpc.CallOption) (*pb.UpdatePermissionResponse, error) {
+func (biz PermissionServiceBiz) UpdatePermission(ctx context.Context, in *pb.UpdatePermissionRequest) (*pb.UpdatePermissionResponse, error) {
 	log.Info("UpdatePermission")
 	result, err := biz.dao.Update(ctx, in.Permission)
 	if err != nil {
@@ -78,7 +76,7 @@ func (biz PermissionServiceBiz) UpdatePermission(ctx context.Context, in *pb.Upd
 	}, nil
 }
 
-func (biz PermissionServiceBiz) DeletePermission(ctx context.Context, in *pb.DeletePermissionRequest, opts ...grpc.CallOption) (*pb.DeletePermissionResponse, error) {
+func (biz PermissionServiceBiz) DeletePermission(ctx context.Context, in *pb.DeletePermissionRequest) (*pb.DeletePermissionResponse, error) {
 	log.Info("DeletePermission")
 	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err

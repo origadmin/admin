@@ -8,10 +8,10 @@ import (
 	"context"
 	"strconv"
 
-	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -123,7 +123,6 @@ func resourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.Lis
 		}
 		return nil, int32(count), nil
 	}
-
 	query = resourceQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
@@ -136,22 +135,13 @@ func resourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.Lis
 
 func resourceQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
 	if in.NoPaging {
-		pageSize := in.PageSize
-		if pageSize > 0 {
-			query = query.Limit(int(pageSize))
-		}
-		return query
+		return db.NoPageQuery(query, in)
 	}
+	return db.PageQuery(query, in)
+}
 
-	pageSize := in.PageSize
-	if pageSize > 0 {
-		query = query.Limit(int(pageSize))
-	}
-	current := in.Current
-	if current > 0 {
-		query = query.Offset(int((current - 1) * pageSize))
-	}
-	return query
+func orderBy(orders []string) []resource.OrderOption {
+	return db.OrderBy[resource.OrderOption](orders)
 }
 
 func resourceQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
@@ -162,15 +152,7 @@ func resourceQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOpti
 		query = query.Omit(option.OmitFields...).ResourceQuery
 	}
 	if len(option.OrderFields) > 0 {
-		query = query.Order(resourceOrderBy(option.OrderFields)...)
+		query = query.Order(orderBy(option.OrderFields)...)
 	}
 	return query
-}
-
-func resourceOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
-	var orders []resource.OrderOption
-	for _, field := range fields {
-		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
-	}
-	return orders
 }

@@ -8,8 +8,6 @@ package biz
 import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
-	"google.golang.org/grpc"
-
 	"github.com/origadmin/toolkits/net/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -24,7 +22,7 @@ type ResourceServiceBiz struct {
 	log     *log.KHelper
 }
 
-func (biz ResourceServiceBiz) ListResources(ctx context.Context, in *pb.ListResourcesRequest, opts ...grpc.CallOption) (*pb.ListResourcesResponse, error) {
+func (biz ResourceServiceBiz) ListResources(ctx context.Context, in *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
 	var option dto.ResourceQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -37,7 +35,7 @@ func (biz ResourceServiceBiz) ListResources(ctx context.Context, in *pb.ListReso
 	return dto.ToListResourcesResponse(result, in, total)
 }
 
-func (biz ResourceServiceBiz) GetResource(ctx context.Context, in *pb.GetResourceRequest, opts ...grpc.CallOption) (*pb.GetResourceResponse, error) {
+func (biz ResourceServiceBiz) GetResource(ctx context.Context, in *pb.GetResourceRequest) (*pb.GetResourceResponse, error) {
 	var option dto.ResourceQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,7 +50,7 @@ func (biz ResourceServiceBiz) GetResource(ctx context.Context, in *pb.GetResourc
 	}, nil
 }
 
-func (biz ResourceServiceBiz) CreateResource(ctx context.Context, in *pb.CreateResourceRequest, opts ...grpc.CallOption) (*pb.CreateResourceResponse, error) {
+func (biz ResourceServiceBiz) CreateResource(ctx context.Context, in *pb.CreateResourceRequest) (*pb.CreateResourceResponse, error) {
 	var option dto.ResourceQueryOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -67,15 +65,17 @@ func (biz ResourceServiceBiz) CreateResource(ctx context.Context, in *pb.CreateR
 	}, nil
 }
 
-func (biz ResourceServiceBiz) UpdateResource(ctx context.Context, in *pb.UpdateResourceRequest, opts ...grpc.CallOption) (*pb.UpdateResourceResponse, error) {
+var updateFields = []string{
+	resource.FieldIcon, resource.FieldType, resource.FieldStatus,
+	resource.FieldName, resource.FieldPath, resource.FieldKeyword,
+	resource.FieldSequence, resource.FieldProperties, resource.FieldDescription,
+}
+
+func (biz ResourceServiceBiz) UpdateResource(ctx context.Context, in *pb.UpdateResourceRequest) (*pb.UpdateResourceResponse, error) {
 	var option dto.ResourceQueryOption
 
 	log.Info("UpdateResource")
-	option.Fields = resource.SelectColumns([]string{
-		resource.FieldIcon, resource.FieldType, resource.FieldStatus,
-		resource.FieldName, resource.FieldPath, resource.FieldKeyword,
-		resource.FieldSequence, resource.FieldProperties, resource.FieldDescription,
-	})
+	option.Fields = resource.SelectColumns(updateFields)
 	result, err := biz.dao.Update(ctx, in.Resource, option)
 	if err != nil {
 		return nil, err
@@ -85,15 +85,7 @@ func (biz ResourceServiceBiz) UpdateResource(ctx context.Context, in *pb.UpdateR
 	}, nil
 }
 
-func (biz ResourceServiceBiz) DeleteResource(ctx context.Context, in *pb.DeleteResourceRequest, opts ...grpc.CallOption) (*pb.DeleteResourceResponse, error) {
-	//var option dto.DeleteResourceOption
-	//if err := option.FromListRequest(in, biz.limiter); err != nil {
-	//	return nil, err
-	//}
-	//_, err := biz.dao.Get(ctx, in.GetId())
-	//if err != nil {
-	//	return nil, err
-	//}
+func (biz ResourceServiceBiz) DeleteResource(ctx context.Context, in *pb.DeleteResourceRequest) (*pb.DeleteResourceResponse, error) {
 	log.Info("DeleteResource")
 	if err := biz.dao.Delete(ctx, in.GetId()); err != nil {
 		return nil, err

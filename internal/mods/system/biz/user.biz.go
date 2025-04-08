@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/net/pagination"
-	"google.golang.org/grpc"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -24,7 +23,7 @@ type UserServiceBiz struct {
 	log     *log.KHelper
 }
 
-func (biz UserServiceBiz) ListUserResources(ctx context.Context, in *pb.ListUserResourcesRequest, opts ...grpc.CallOption) (*pb.ListUserResourcesResponse, error) {
+func (biz UserServiceBiz) ListUserResources(ctx context.Context, in *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
 	var option dto.UserQueryOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -46,7 +45,7 @@ func (biz UserServiceBiz) ListUserResources(ctx context.Context, in *pb.ListUser
 	}, nil
 }
 
-func (biz UserServiceBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest, opts ...grpc.CallOption) (*pb.UpdateUserRolesResponse, error) {
+func (biz UserServiceBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
 	var option dto.UserMutationOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -62,7 +61,7 @@ func (biz UserServiceBiz) UpdateUserRoles(ctx context.Context, in *pb.UpdateUser
 	}, nil
 }
 
-func (biz UserServiceBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest, opts ...grpc.CallOption) (*pb.UpdateUserStatusResponse, error) {
+func (biz UserServiceBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
 	var option dto.UserQueryOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -79,7 +78,7 @@ func (biz UserServiceBiz) UpdateUserStatus(ctx context.Context, in *pb.UpdateUse
 	}, nil
 }
 
-func (biz UserServiceBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUserPasswordRequest, opts ...grpc.CallOption) (*pb.ResetUserPasswordResponse, error) {
+func (biz UserServiceBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
 	var option dto.UserQueryOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -94,7 +93,7 @@ func (biz UserServiceBiz) ResetUserPassword(ctx context.Context, in *pb.ResetUse
 	return &pb.ResetUserPasswordResponse{}, nil
 }
 
-func (biz UserServiceBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest, opts ...grpc.CallOption) (*pb.ListUsersResponse, error) {
+func (biz UserServiceBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	var option dto.UserQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -108,7 +107,7 @@ func (biz UserServiceBiz) ListUsers(ctx context.Context, in *pb.ListUsersRequest
 	return dto.ToListUsersResponse(result, in, total)
 }
 
-func (biz UserServiceBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, opts ...grpc.CallOption) (*pb.GetUserResponse, error) {
+func (biz UserServiceBiz) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	var option dto.UserQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -123,7 +122,7 @@ func (biz UserServiceBiz) GetUser(ctx context.Context, in *pb.GetUserRequest, op
 	}, nil
 }
 
-func (biz UserServiceBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest, opts ...grpc.CallOption) (*pb.CreateUserResponse, error) {
+func (biz UserServiceBiz) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	var option dto.UserMutationOption
 	if err := option.FromCreateRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -148,7 +147,7 @@ func (biz UserServiceBiz) CreateUser(ctx context.Context, in *pb.CreateUserReque
 	}, nil
 }
 
-func (biz UserServiceBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest, opts ...grpc.CallOption) (*pb.UpdateUserResponse, error) {
+func (biz UserServiceBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	//var option dto.UpdateUserOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -163,7 +162,7 @@ func (biz UserServiceBiz) UpdateUser(ctx context.Context, in *pb.UpdateUserReque
 	}, nil
 }
 
-func (biz UserServiceBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest, opts ...grpc.CallOption) (*pb.DeleteUserResponse, error) {
+func (biz UserServiceBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	log.Info("DeleteUser")
 	if err := biz.dao.Delete(ctx, in.GetUser().GetId()); err != nil {
 		return nil, err

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 
+	paginationv1 "github.com/origadmin/runtime/gen/go/pagination/v1"
 	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/proto"
@@ -45,6 +46,36 @@ type ResultBytes struct {
 	Data    []byte `json:"data,omitempty"`
 	Error   []byte `json:"error,omitempty"`
 	Extra   []byte `json:"extra,omitempty"`
+}
+
+type PageResponse struct {
+	*paginationv1.PageResponse
+	Data  []json.RawMessage          `json:"data"`
+	Extra map[string]json.RawMessage `json:"extra,omitempty"`
+}
+
+func (x *PageResponse) MarshalJSON() ([]byte, error) {
+	type Alias PageResponse
+
+	aux := &struct {
+		Data  []json.RawMessage          `json:"data"`
+		Extra map[string]json.RawMessage `json:"extra,omitempty"`
+		*Alias
+	}{
+		Alias: (*Alias)(x),
+	}
+
+	for _, d := range x.Data {
+		aux.Data = append(aux.Data, json.RawMessage(d))
+	}
+
+	// 转换 extra 字段
+	aux.Extra = make(map[string]json.RawMessage)
+	for k, v := range x.Extra {
+		aux.Extra[k] = json.RawMessage(v)
+	}
+
+	return json.Marshal(aux)
 }
 
 func (e *Error) Error() string {

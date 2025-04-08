@@ -204,13 +204,7 @@ func (obj SecurityBridge) PolicyParser(ctx context.Context, claims security.Clai
 		log.Errorf("PolicyParser: failed to query permissions for subject: %s, error: %s", claims.GetSubject(), err.Error())
 		return nil, err
 	}
-	//log.Debugf("PolicyParser: queried permissions for subject: %s, permissions: %v", claims.GetSubject(), permissions)
-	//tr, ok := transport.FromClientContext(ctx)
-	//if !ok {
-	//	log.Errorf("PolicyParser: failed to get transport from client context, error: %s", msecurity.ErrInvalidToken.Error())
-	//	return nil, msecurity.ErrInvalidToken
-	//}
-	//log.Debugf("PolicyParser: got transport from client context, operation: %s", tr.Operation())
+
 	req, ok := transhttp.RequestFromServerContext(ctx)
 	if !ok {
 		log.Errorf("PolicyParser: failed to get request from server context, error: %s", msecurity.ErrInvalidToken.Error())

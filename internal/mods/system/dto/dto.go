@@ -971,7 +971,7 @@ func ConvertPermissionResource2PB(goModel *PermissionResource) (pbModel *Permiss
 	pbModel.Id = int64(goModel.ID)
 	pbModel.PermissionId = int64(goModel.PermissionID)
 	pbModel.ResourceId = int64(goModel.ResourceID)
-	pbModel.Actions = goModel.Actions
+	//pbModel.Actions = goModel.Actions
 	return pbModel
 }
 
@@ -985,7 +985,7 @@ func ConvertPermissionResourcePB2Object(pbModel *PermissionResourcePB) (goModel 
 	//goModel.ID = int64(pbModel.Id)
 	goModel.PermissionID = int64(pbModel.PermissionId)
 	goModel.ResourceID = int64(pbModel.ResourceId)
-	goModel.Actions = pbModel.Actions
+	//goModel.Actions = pbModel.Actions
 	return goModel
 }
 

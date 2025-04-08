@@ -8,8 +8,6 @@ package biz
 import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
-	"google.golang.org/grpc"
-
 	"github.com/origadmin/toolkits/net/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -23,7 +21,7 @@ type RoleServiceBiz struct {
 	log     *log.KHelper
 }
 
-func (biz RoleServiceBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest, opts ...grpc.CallOption) (*pb.ListRolesResponse, error) {
+func (biz RoleServiceBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	var option dto.RoleQueryOption
 	if err := option.FromListRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -37,7 +35,7 @@ func (biz RoleServiceBiz) ListRoles(ctx context.Context, in *pb.ListRolesRequest
 	return dto.ToListRolesResponse(result, in, total)
 }
 
-func (biz RoleServiceBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, opts ...grpc.CallOption) (*pb.GetRoleResponse, error) {
+func (biz RoleServiceBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
 	var option dto.RoleQueryOption
 	if err := option.FromGetRequest(in, biz.limiter); err != nil {
 		return nil, err
@@ -52,7 +50,7 @@ func (biz RoleServiceBiz) GetRole(ctx context.Context, in *pb.GetRoleRequest, op
 	}, nil
 }
 
-func (biz RoleServiceBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest, opts ...grpc.CallOption) (*pb.CreateRoleResponse, error) {
+func (biz RoleServiceBiz) CreateRole(ctx context.Context, in *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
 	var option dto.RoleUpdateOption
 	if err := option.FromCreateRequest(in); err != nil {
 		return nil, err
@@ -67,7 +65,7 @@ func (biz RoleServiceBiz) CreateRole(ctx context.Context, in *pb.CreateRoleReque
 	}, nil
 }
 
-func (biz RoleServiceBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest, opts ...grpc.CallOption) (*pb.UpdateRoleResponse, error) {
+func (biz RoleServiceBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
 	//var option dto.UpdateRoleOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
@@ -82,7 +80,7 @@ func (biz RoleServiceBiz) UpdateRole(ctx context.Context, in *pb.UpdateRoleReque
 	}, nil
 }
 
-func (biz RoleServiceBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest, opts ...grpc.CallOption) (*pb.DeleteRoleResponse, error) {
+func (biz RoleServiceBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	//var option dto.DeleteRoleOption
 	//if err := option.FromListRequest(in, biz.limiter); err != nil {
 	//	return nil, err
