@@ -70,6 +70,7 @@ func (User) Fields() []ent.Field {
 		field.String("salt").
 			MaxLen(64).
 			Default("").
+			Deprecated("toolkits/crypto includes salt management").
 			Comment(i18n.Text("entity.user.field.salt")),
 		field.String("phone").
 			MaxLen(32).

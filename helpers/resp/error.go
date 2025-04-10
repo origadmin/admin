@@ -15,7 +15,7 @@ import (
 )
 
 func decodeError(alwaysSucceed bool, code int, err error) (int, *Error) {
-	var ierr (*Error)
+	var ierr *Error
 	var status int
 	if ok := errors.As(err, &ierr); ok {
 		status = int(ierr.Code)

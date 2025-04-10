@@ -45,6 +45,8 @@ type User struct {
 	// entity.user.field.password
 	Password string `json:"password,omitempty"`
 	// entity.user.field.salt
+	//
+	// Deprecated: toolkits/crypto includes salt management
 	Salt string `json:"salt,omitempty"`
 	// entity.user.field.phone
 	Phone string `json:"phone,omitempty"`
