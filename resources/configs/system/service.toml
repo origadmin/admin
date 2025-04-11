@@ -1,0 +1,125 @@
+[Servers]
+system = "origadmin.service.system.v1"
+
+[Service]
+Name = ""
+DynamicEndpoint = true
+[Service.Grpc]
+Network = "tcp"
+Addr = "${grpc_address:0.0.0.0:18000}"
+UseTls = false
+CertFile = ""
+KeyFile = ""
+Timeout = 0
+ShutdownTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+IdleTimeout = 0
+Endpoint = ""
+[Service.Http]
+Network = "tcp"
+Addr = "${http_address:0.0.0.0:18100}"
+UseTls = false
+CertFile = ""
+KeyFile = ""
+Timeout = 0
+ShutdownTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+IdleTimeout = 0
+Endpoint = ""
+[Service.Websocket]
+Network = ""
+Addr = ""
+Path = ""
+Codec = ""
+Timeout = 0
+[Service.Message]
+Type = "none"
+Name = ""
+[Service.Message.Mqtt]
+Endpoint = ""
+Codec = ""
+[Service.Message.Kafka]
+Endpoint = ""
+Codec = ""
+[Service.Message.Rabbitmq]
+Endpoint = ""
+Codec = ""
+[Service.Message.Activemq]
+Endpoint = ""
+Codec = ""
+[Service.Message.Nats]
+Endpoint = ""
+Codec = ""
+[Service.Message.Nsq]
+Endpoint = ""
+Codec = ""
+[Service.Message.Pulsar]
+Endpoint = ""
+Codec = ""
+[Service.Message.Redis]
+Endpoint = ""
+Codec = ""
+[Service.Message.Rocketmq]
+Endpoint = ""
+Codec = ""
+EnableTrace = false
+NameServerDomain = ""
+AccessKey = ""
+SecretKey = ""
+SecurityToken = ""
+Namespace = ""
+InstanceName = ""
+GroupName = ""
+[Service.Task]
+Type = "none"
+Name = ""
+[Service.Task.Asynq]
+Endpoint = ""
+Password = ""
+Db = 0
+Location = ""
+[Service.Task.Machinery]
+[Service.Task.Cron]
+Addr = ""
+[Service.Middleware]
+Logging = true
+Recovery = true
+Tracing = true
+CircuitBreaker = true
+[Service.Middleware.Metadata]
+Enabled = true
+Prefix = ""
+[Service.Middleware.RateLimiter]
+Enabled = true
+Name = "bbr"
+Period = 0
+XRatelimitLimit = 0
+XRatelimitRemaining = 0
+XRatelimitReset = 0
+RetryAfter = 0
+[Service.Middleware.Metrics]
+Enabled = true
+[Service.Middleware.Validator]
+Enabled = true
+Version = 1
+FailFast = true
+[Service.Middleware.Jwt]
+Enabled = false
+Subject = ""
+ClaimType = ""
+[Service.Middleware.Jwt.Config]
+SigningMethod = "HS512"
+Key = "${middleware_jwt_key:12345678901234567890123456789012}"
+Key2 = "can empty next version fixed"
+AccessTokenLifetime = 900000000000
+RefreshTokenLifetime = 259200000000000
+Issuer = "localhost"
+TokenType = "Bearer"
+[Service.Middleware.Selector]
+Enabled = false
+Regex = ""
+[Service.Selector]
+Version = "v1.0.0"
+Builder = "bbr"

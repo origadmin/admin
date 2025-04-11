@@ -9,13 +9,11 @@ import (
 	"errors"
 	"sync"
 
-	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/security"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -145,14 +143,6 @@ func authResourceQueryOptions(query *ent.ResourceQuery, option dto.AuthResourceQ
 		query = query.Order(resourceOrderBy(option.OrderFields)...)
 	}
 	return query
-}
-
-func authResourceOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
-	var orders []resource.OrderOption
-	for _, field := range fields {
-		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
-	}
-	return orders
 }
 
 type refreshTokenizer struct {

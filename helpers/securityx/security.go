@@ -47,9 +47,30 @@ func NewAuthorizer(bootstrap *configs.Bootstrap, ss ...casbin.Setting) (security
 	return authorizer, nil
 }
 
-type Data interface {
+type DataProvider interface {
 	QueryRoles(ctx context.Context, subject string) ([]string, error)
 	QueryPermissions(ctx context.Context, subject string) ([]string, error)
+}
+
+type SecurityConfig struct {
+	// Authenticator is the authenticator used for the authorization header.
+	Authenticator security.Authenticator
+	// Authorizer is the authorizer used for the authorization header.
+	Authorizer security.Authorizer
+}
+
+type Option = func(config *SecurityConfig)
+
+func WithAuthenticator(authenticator security.Authenticator) Option {
+	return func(config *SecurityConfig) {
+		config.Authenticator = authenticator
+	}
+}
+
+func WithAuthorizer(authorizer security.Authorizer) Option {
+	return func(config *SecurityConfig) {
+		config.Authorizer = authorizer
+	}
 }
 
 type SecurityBridge struct {
@@ -67,12 +88,12 @@ type SecurityBridge struct {
 	SkipKey string
 	// PublicPaths are the public paths that do not require authentication.
 	PublicPaths []string
+	// Provider is the role/permission data from the database.
+	Provider DataProvider
 	// Skipper is the function used to skip authentication.
 	Skipper func(string) bool
 	// IsRoot is the function used to check if the request is root.
 	IsRoot func(ctx context.Context, claims security.Claims) bool
-	// Data is the permission data from the database.
-	Data Data
 	// TokenParser is the parser used to parse the token from the context.
 	TokenParser func(ctx context.Context) string
 	// PolicyParser is the parser used to parse the policy from the context.
@@ -136,7 +157,7 @@ func (obj SecurityBridge) aggregateTokenParsers(outer ...func(ctx context.Contex
 func (obj SecurityBridge) Build() middleware.KMiddleware {
 	if obj.TokenParser == nil {
 		obj.TokenParser = obj.aggregateTokenParsers(
-			FromTransportClient(obj.AuthenticationHeader, obj.Scheme.String()),
+			//FromTransportClient(obj.AuthenticationHeader, obj.Scheme.String()),
 			FromTransportServer(obj.AuthenticationHeader, obj.Scheme.String()),
 		)
 	}
@@ -197,14 +218,14 @@ func (obj SecurityBridge) policyParser(ctx context.Context, claims security.Clai
 		return obj.PolicyParser(ctx, claims)
 	}
 	log.Debugf("PolicyParser: parsing policy for subject: %s", claims.GetSubject())
-	roles, err := obj.Data.QueryRoles(ctx, claims.GetSubject())
+	roles, err := obj.Provider.QueryRoles(ctx, claims.GetSubject())
 	if err != nil {
 		log.Errorf("PolicyParser: failed to query roles for subject: %s, error: %s", claims.GetSubject(), err.Error())
 		return nil, err
 	}
 	log.Debugf("PolicyParser: queried roles for subject: %s, roles: %v", claims.GetSubject(), roles)
 
-	permissions, err := obj.Data.QueryPermissions(ctx, claims.GetSubject())
+	permissions, err := obj.Provider.QueryPermissions(ctx, claims.GetSubject())
 	if err != nil {
 		log.Errorf("PolicyParser: failed to query permissions for subject: %s, error: %s", claims.GetSubject(), err.Error())
 		return nil, err
@@ -251,4 +272,22 @@ func FromTransportServer(authorize string, scheme string) func(ctx context.Conte
 		}
 		return ""
 	}
+}
+
+func DefaultBridge() *SecurityBridge {
+	bridge := SecurityBridge{
+		TokenSource:          security.TokenSourceHeader,
+		Scheme:               security.SchemeBearer,
+		AuthenticationHeader: security.HeaderAuthorize,
+		SkipKey:              msecurity.MetadataSecuritySkipKey,
+		PublicPaths:          nil,
+		Skipper: func(path string) bool {
+			return false
+		},
+		IsRoot: func(ctx context.Context, claims security.Claims) bool {
+			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
+		},
+		TokenParser: nil,
+	}
+	return &bridge
 }

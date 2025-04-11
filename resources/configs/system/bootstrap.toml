@@ -1,0 +1,11 @@
+Name = "origadmin.agent.service.admin.v1"
+Mode = "singleton"
+Version = "v1.0.0"
+CryptoType = "argon2"
+Id = ""
+
+[Servers]
+system = "origadmin.service.system.v1"
+
+[Entry]
+Scheme = "http"

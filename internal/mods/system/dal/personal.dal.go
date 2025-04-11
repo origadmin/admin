@@ -99,12 +99,12 @@ func NewPersonalRepo(db *Data, logger log.KLogger) dto.PersonalRepo {
 }
 
 func personalPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
-	query = personalQueryPage(query, in)
 	query = personalQueryOptions(query, option)
 	count, err := query.Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
+	query = personalQueryPage(query, in)
 	result, err := query.All(ctx)
 	return dto.ConvertResources(result), int32(count), err
 }

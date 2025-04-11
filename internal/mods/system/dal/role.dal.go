@@ -14,6 +14,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/rand"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -147,29 +148,9 @@ func rolePageQuery(ctx context.Context, query *ent.RoleQuery, in *pb.ListRolesRe
 	if err != nil {
 		return nil, 0, err
 	}
-	query = roleQueryPage(query, in)
+	query = db.PaginationQuery(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
 	return dto.ConvertRoles(result), int32(count), err
-}
-
-func roleQueryPage(query *ent.RoleQuery, in *pb.ListRolesRequest) *ent.RoleQuery {
-	if in.NoPaging {
-		pageSize := in.PageSize
-		if pageSize > 0 {
-			query = query.Limit(int(pageSize))
-		}
-		return query
-	}
-
-	pageSize := in.PageSize
-	if pageSize > 0 {
-		query = query.Limit(int(pageSize))
-	}
-	current := in.Current
-	if current > 0 {
-		query = query.Offset(int((current - 1) * pageSize))
-	}
-	return query
 }
 
 func roleQueryOptions(query *ent.RoleQuery, option dto.RoleQueryOption) *ent.RoleQuery {

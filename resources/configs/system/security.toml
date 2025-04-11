@@ -1,0 +1,35 @@
+[Security]
+PublicPaths = [
+    "/swagger/*",
+    "/api/v1/health",
+    "/api/v1/health/*",
+    "/api/v1/captcha",
+    "/api/v1/captcha/*",
+    "/api/v1/login",
+    "/api/v1/register",
+    "/api/v1/current/logout",
+    "/api.v1.services.system.LoginAPI/CaptchaId",
+    "/api.v1.services.system.LoginAPI/CaptchaImage",
+    "/api.v1.services.system.LoginAPI/CaptchaResource",
+    "/api.v1.services.system.LoginAPI/CaptchaResources",
+    "/api.v1.services.system.LoginAPI/Login",
+    "/api.v1.services.system.LoginAPI/Register",
+    "/api.v1.services.system.LoginAPI/Refresh",
+    "/api.v1.services.system.LoginAPI/TokenRefresh",
+]
+[Security.Authz]
+Disabled = false
+Type = "casbin"
+[Security.Authz.Casbin]
+PolicyFile = ""
+ModelFile = ""
+[Security.Authn]
+Disabled = false
+Type = "jwt"
+[Security.Authn.Jwt]
+Algorithm = "HS512"
+SigningKey = "${middleware_jwt_key:12345678901234567890123456789012}"
+OldSigningKey = ""
+ExpireTime = 0
+RefreshTime = 0
+CacheName = ""

@@ -27,6 +27,13 @@ type FieldSelector[T any] interface {
 	Omit(...string) T
 }
 
+func PaginationQuery[Q QueryPager[Q]](query Q, in pagination.PageRequest, paging bool) Q {
+	if !paging {
+		return NoPageQuery(query, in)
+	}
+	return PageQuery(query, in)
+}
+
 func NoPageQuery[Q QueryPager[Q]](query Q, in pagination.PageSizeGetter) Q {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
@@ -35,15 +42,28 @@ func NoPageQuery[Q QueryPager[Q]](query Q, in pagination.PageSizeGetter) Q {
 	return query
 }
 
+func handleTokenPagination[Q QueryPager[Q]](query Q, token string) Q {
+	// TODO: 实现游标分页逻辑
+	// 示例伪代码：
+	// decodedToken := decodeToken(token)
+	// query = query.Where(...).Order(...).Limit(...)
+	return query
+}
+
 func PageQuery[Q QueryPager[Q]](query Q, in pagination.PageRequest) Q {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))
 	}
+	token := in.GetPageToken()
+	if token != "" {
+		return handleTokenPagination(query, token)
+	}
 	current := in.GetCurrent()
 	if current > 0 {
-		query = query.Offset(int((current - 1) * pageSize))
+		return query.Offset(int((current - 1) * pageSize))
 	}
+
 	return query
 }
 

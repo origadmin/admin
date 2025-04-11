@@ -128,19 +128,12 @@ func resourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.Lis
 	if err != nil {
 		return nil, 0, err
 	}
-	query = resourceQueryPage(query, in)
+	query = db.PaginationQuery(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
 	return dto.ConvertResources(result), int32(count), err
 }
 
-func resourceQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
-	if in.NoPaging {
-		return db.NoPageQuery(query, in)
-	}
-	return db.PageQuery(query, in)
-}
-
-func orderBy(orders []string) []resource.OrderOption {
+func resourceOrderBy(orders []string) []resource.OrderOption {
 	return db.OrderBy[resource.OrderOption](orders)
 }
 
@@ -152,7 +145,7 @@ func resourceQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOpti
 		query = query.Omit(option.OmitFields...).ResourceQuery
 	}
 	if len(option.OrderFields) > 0 {
-		query = query.Order(orderBy(option.OrderFields)...)
+		query = query.Order(resourceOrderBy(option.OrderFields)...)
 	}
 	return query
 }

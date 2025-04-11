@@ -319,7 +319,7 @@ func TestAddRoleResource(t *testing.T) {
 	pr, err := client.PermissionResource.Create().
 		SetPermission(perm).
 		SetResource(res).
-		SetActions("abc123").Save(context.Background())
+		Save(context.Background())
 	//perm, err := perm.Update().AddPermissionResources().Save(context.Background())
 	if err != nil {
 		t.Fatalf("failed adding resource to permission: %v", err)

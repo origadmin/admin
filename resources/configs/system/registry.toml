@@ -1,0 +1,14 @@
+[Registry]
+Type = "consul"
+ServiceName = ""
+Debug = false
+[Registry.Consul]
+Address = "${consul_address:127.0.0.1:8500}"
+Scheme = "http"
+Token = ""
+HeartBeat = true
+HealthCheck = true
+Datacenter = ""
+HealthCheckInterval = 30
+Timeout = 0
+DeregisterCriticalServiceAfter = 0

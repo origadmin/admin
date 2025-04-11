@@ -1,0 +1,37 @@
+[Middleware]
+Logging = true
+Recovery = true
+Tracing = true
+CircuitBreaker = true
+[Middleware.Metadata]
+Enabled = true
+Prefix = ""
+[Middleware.RateLimiter]
+Enabled = true
+Name = "bbr"
+Period = 0
+XRatelimitLimit = 0
+XRatelimitRemaining = 0
+XRatelimitReset = 0
+RetryAfter = 0
+[Middleware.Metrics]
+Enabled = true
+[Middleware.Validator]
+Enabled = true
+Version = 1
+FailFast = true
+[Middleware.Jwt]
+Enabled = false
+Subject = ""
+ClaimType = ""
+[Middleware.Jwt.Config]
+SigningMethod = "HS512"
+Key = "${middleware_jwt_key:12345678901234567890123456789012}"
+Key2 = "can empty next version fixed"
+AccessTokenLifetime = 900000000000
+RefreshTokenLifetime = 259200000000000
+Issuer = "localhost"
+TokenType = "Bearer"
+[Middleware.Selector]
+Enabled = false
+Regex = ""

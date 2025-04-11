@@ -8,6 +8,8 @@ package loader
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/runtime"
@@ -20,6 +22,48 @@ import (
 	"origadmin/application/admin/internal/configs"
 )
 
+// decodeFile loads the config file from the given path
+func decodeFile(path string, cfg any) error {
+	// skip stupid temp file
+	if strings.HasSuffix(path, "~") || strings.HasSuffix(path, ".bak") || strings.HasSuffix(path, ".tmp") || strings.HasSuffix(path, ".lock") {
+		return nil
+	}
+	// Decode the file into the config struct
+	if err := codec.DecodeFromFile(path, cfg); err != nil {
+		return errors.Wrapf(err, "failed to parse config file %s", path)
+	}
+	return nil
+}
+
+// decodeDir loads the config file from the given directory
+func decodeDir(path string, cfg any) error {
+	found := false
+	// Walk through the directory and load each file
+	err := filepath.WalkDir(path, func(walkpath string, d os.DirEntry, err error) error {
+		if err != nil {
+			return errors.Wrapf(err, "failed to get config file %s", walkpath)
+		}
+		// Check if the path is a directory
+		if d.IsDir() {
+			return nil
+		}
+
+		// Decode the file into the config struct
+		if err := decodeFile(walkpath, cfg); err != nil {
+			return err
+		}
+		found = true
+		return nil
+	})
+	if err != nil {
+		return errors.Wrap(err, "load config error")
+	}
+	if !found {
+		return errors.New("no config file found in " + path)
+	}
+	return nil
+}
+
 // LoadFileBootstrap load config from file
 func LoadFileBootstrap(path string) (*configs.Bootstrap, error) {
 	typo := codec.TypeFromPath(path)
@@ -28,11 +72,10 @@ func LoadFileBootstrap(path string) (*configs.Bootstrap, error) {
 	}
 
 	cfg := DefaultBootstrap()
-	err := codec.DecodeFromFile(path, cfg)
+	err := decodeFile(path, cfg)
 	if err != nil {
 		return nil, err
 	}
-
 	return cfg, nil
 }
 
@@ -46,8 +89,13 @@ func LoadLocalBootstrap(source *configv1.SourceConfig) (*configs.Bootstrap, erro
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to state file %s", path)
 	}
+	var bs configs.Bootstrap
 	if stat.IsDir() {
-		return nil, errors.String("file config is a directory")
+		err := decodeDir(path, &bs)
+		if err != nil {
+			return nil, err
+		}
+		return &bs, nil
 	}
 	return LoadFileBootstrap(path)
 }
@@ -79,7 +127,7 @@ func LoadBootstrap(flags *Bootstrap) (*configs.Bootstrap, error) {
 		SetupEnv(sourceConfig.EnvArgs, sourceConfig.EnvPrefixes[0])
 	}
 
-	log.Infof("load soure config: %+v", sourceConfig)
+	log.Infof("load source config: %+v", sourceConfig)
 	var bs *configs.Bootstrap
 	switch sourceConfig.GetType() {
 	case "file":
@@ -90,10 +138,11 @@ func LoadBootstrap(flags *Bootstrap) (*configs.Bootstrap, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	if err := ReplaceObject(bs, sourceConfig.EnvArgs); err != nil {
 		return nil, err
 	}
-
+	log.Infof("load config: %+v\n", bs)
 	return bs, nil
 }
 

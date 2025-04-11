@@ -11,6 +11,7 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -123,7 +124,7 @@ func permissionPageQuery(ctx context.Context, query *ent.PermissionQuery, in *pb
 	if err != nil {
 		return nil, 0, err
 	}
-	query = permissionQueryPage(query, in)
+	query = db.PaginationQuery(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
 	return dto.ConvertPermissions(result), int32(count), err
 }

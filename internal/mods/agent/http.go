@@ -76,7 +76,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		IsRoot: func(ctx context.Context, claims security.Claims) bool {
 			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
 		},
-		Data:        &data{},
+		Provider:    &data{},
 		TokenParser: nil,
 	}
 	serv := selector.Server(bridge.Build()).Match(func(ctx context.Context, operation string) bool {

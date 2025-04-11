@@ -14,6 +14,7 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent/user"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -191,29 +192,9 @@ func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRe
 	if err != nil {
 		return nil, 0, err
 	}
-	query = userQueryPage(query, in)
+	query = db.PaginationQuery(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
 	return dto.ConvertUsers(result), int32(count), err
-}
-
-func userQueryPage(query *ent.UserQuery, in *pb.ListUsersRequest) *ent.UserQuery {
-	if in.NoPaging {
-		pageSize := in.PageSize
-		if pageSize > 0 {
-			query = query.Limit(int(pageSize))
-		}
-		return query
-	}
-
-	pageSize := in.PageSize
-	if pageSize > 0 {
-		query = query.Limit(int(pageSize))
-	}
-	current := in.Current
-	if current > 0 {
-		query = query.Offset(int((current - 1) * pageSize))
-	}
-	return query
 }
 
 func userQueryOptions(query *ent.UserQuery, option dto.UserQueryOption) *ent.UserQuery {

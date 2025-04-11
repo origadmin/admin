@@ -1,0 +1,57 @@
+[Data.Database]
+Debug = false
+Dialect = "${database_dialect:sqlite}"
+Source = "${database_source:file://origadmin}"
+Migrate = false
+EnableTrace = false
+EnableMetrics = false
+MaxIdleConnections = 0
+MaxOpenConnections = 0
+ConnectionMaxLifetime = 0
+ConnectionMaxIdleTime = 0
+[Data.Cache]
+Driver = "memory"
+Name = ""
+[Data.Cache.Memcached]
+Addr = ""
+Username = ""
+Password = ""
+MaxIdle = 0
+Timeout = 0
+[Data.Cache.Memory]
+Size = 0
+Capacity = 0
+Expiration = 0
+CleanupInterval = 0
+[Data.Cache.Redis]
+Network = ""
+Addr = ""
+Password = ""
+Db = 0
+DialTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+[Data.Cache.Badger]
+Path = ""
+SyncWrites = false
+ValueLogFileSize = 0
+LogLevel = 0
+[Data.Storage]
+Type = "none"
+[Data.Storage.File]
+Root = ""
+[Data.Storage.Redis]
+Network = ""
+Addr = ""
+Password = ""
+Db = 0
+DialTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+[Data.Storage.Badger]
+Path = ""
+SyncWrites = false
+ValueLogFileSize = 0
+LogLevel = 0
+[Data.Storage.Mongo]
+[Data.Storage.Oss]
