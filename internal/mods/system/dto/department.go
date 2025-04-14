@@ -4,3 +4,9 @@
 
 // Package dto implements the functions, types, and interfaces for the module.
 package dto
+
+type DepartmentNode struct {
+	DepartmentPB
+	Children         []*DepartmentNode `json:"children"`
+	PositionKeywords []string          `json:"position_keywords"`
+}

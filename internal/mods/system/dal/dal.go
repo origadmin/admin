@@ -415,7 +415,7 @@ func (obj *Data) InitDepartmentFromFile(ctx context.Context, filename string) er
 	if err != nil {
 		return err
 	}
-	var departments []*dto.DepartmentPB
+	var departments []*dto.DepartmentNode
 	err = codec.DecodeFromFile(abs, &departments)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -429,7 +429,7 @@ func (obj *Data) InitDepartmentFromFile(ctx context.Context, filename string) er
 	})
 }
 
-func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.DepartmentPB, parent *dto.DepartmentPB) error {
+func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.DepartmentNode, parent *dto.DepartmentPB) error {
 	total := len(departments)
 	log.Infow("msg", "Starting createDepartmentBatch", "totalItems", total)
 	for i, item := range departments {
@@ -443,7 +443,8 @@ func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.D
 			item.TreePath = parent.TreePath + strconv.Itoa(int(parent.Id)) + TreePathDelimiter
 		}
 
-		if _, err := obj.Department(ctx).Create().SetDepartment(dto.ConvertDepartmentPB2Object(item)).Save(ctx); err != nil {
+		if _, err := obj.Department(ctx).Create().SetDepartment(dto.ConvertDepartmentPB2Object(&item.DepartmentPB)).
+			Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating department item", "itemId", item.Id, "error", err)
 			return err
 		}
@@ -451,7 +452,7 @@ func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.D
 		log.Infow("msg", "Department item created successfully", "itemId", item.Id)
 		if len(item.Children) != 0 {
 			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))
-			if err := obj.createDepartmentBatch(ctx, item.Children, item); err != nil {
+			if err := obj.createDepartmentBatch(ctx, item.Children, &item.DepartmentPB); err != nil {
 				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
 				return err
 			}
