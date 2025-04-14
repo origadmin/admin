@@ -194,7 +194,7 @@ func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) erro
 	if err != nil {
 		return err
 	}
-	var resources []*dto.ResourcePB
+	var resources []*dto.ResourceNode
 	err = codec.DecodeFromFile(abs, &resources)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -216,7 +216,7 @@ func (obj *Data) InitResourceFromFile(ctx context.Context, filename string) erro
 	})
 }
 
-func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto.ResourcePB, parent *dto.ResourcePB) error {
+func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto.ResourceNode, parent *dto.ResourcePB) error {
 	total := len(items)
 	log.Infow("msg", "Starting createResourceBatchWithParent", "totalItems", total)
 
@@ -309,7 +309,7 @@ func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto
 				item.TreePath = parent.TreePath + strconv.Itoa(int(pid)) + TreePathDelimiter
 				log.Infow("msg", "Setting parent path for item", "itemId", item.Id, "treePath", item.TreePath)
 			}
-			itemObj := dto.ConvertResourcePB2Object(item)
+			itemObj := dto.ConvertResourcePB2Object(&item.ResourcePB)
 			itemObj.UpdateTime = time.Now()
 			itemObj.CreateTime = time.Now()
 			if _, err := obj.Resource(ctx).Create().SetResource(itemObj).Save(ctx); err != nil {
@@ -321,7 +321,7 @@ func (obj *Data) createResourceBatchWithParent(ctx context.Context, items []*dto
 
 		if len(item.Children) != 0 {
 			log.Infow("Processing children for item", "itemId", item.Id, "childCount", len(item.Children))
-			if err := obj.createResourceBatchWithParent(ctx, item.Children, item); err != nil {
+			if err := obj.createResourceBatchWithParent(ctx, item.Children, &item.ResourcePB); err != nil {
 				log.Errorw("Error processing children", "itemId", item.Id, "error", err)
 				return err
 			}
@@ -443,7 +443,8 @@ func (obj *Data) createDepartmentBatch(ctx context.Context, departments []*dto.D
 			item.TreePath = parent.TreePath + strconv.Itoa(int(parent.Id)) + TreePathDelimiter
 		}
 
-		if _, err := obj.Department(ctx).Create().SetDepartment(dto.ConvertDepartmentPB2Object(&item.DepartmentPB)).
+		if _, err := obj.Department(ctx).Create().
+			SetDepartment(dto.ConvertDepartmentPB2Object(&item.DepartmentPB)).
 			Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating department item", "itemId", item.Id, "error", err)
 			return err
@@ -519,7 +520,7 @@ func (obj *Data) InitPermissionFromFile(ctx context.Context, filename string) er
 	if err != nil {
 		return err
 	}
-	var permissions []*dto.PermissionPB
+	var permissions []*dto.PermissionNode
 	err = codec.DecodeFromFile(abs, &permissions)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -533,7 +534,7 @@ func (obj *Data) InitPermissionFromFile(ctx context.Context, filename string) er
 	})
 }
 
-func (obj *Data) createPermissionBatch(ctx context.Context, permissions []*dto.PermissionPB) error {
+func (obj *Data) createPermissionBatch(ctx context.Context, permissions []*dto.PermissionNode) error {
 	total := len(permissions)
 	log.Infow("msg", "Starting createPermissionBatch", "totalItems", total)
 	for i, item := range permissions {
@@ -542,7 +543,9 @@ func (obj *Data) createPermissionBatch(ctx context.Context, permissions []*dto.P
 			item.Id = id.Gen()
 			log.Infow("msg", "Generated new ID for item", "itemId", item.Id)
 		}
-		if _, err := obj.Permission(ctx).Create().SetPermission(dto.ConvertPermissionPB2Object(item)).Save(ctx); err != nil {
+		if _, err := obj.Permission(ctx).Create().
+			SetPermission(dto.ConvertPermissionPB2Object(&item.PermissionPB)).
+			Save(ctx); err != nil {
 			log.Errorw("msg", "Error creating permission item", "itemId", item.Id, "error", err)
 			return err
 		}

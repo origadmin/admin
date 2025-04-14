@@ -19,6 +19,11 @@ type (
 	ListResourcesResponse = pb.ListResourcesResponse
 )
 
+type ResourceNode struct {
+	ResourcePB
+	Children []*ResourceNode `json:"children"`
+}
+
 // ResourceRepo is a Resource repository interface.
 type ResourceRepo interface {
 	Get(context.Context, int64, ...ResourceQueryOption) (*ResourcePB, error)
