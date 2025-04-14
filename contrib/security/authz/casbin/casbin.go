@@ -5,6 +5,7 @@
 package casbin
 
 import (
+	"fmt"
 	"io"
 	"time"
 
@@ -80,13 +81,46 @@ func (auth *Authorizer) Authorized(ctx context.Context, policy security.Policy, 
 	if action == "" {
 		action = policy.GetAction()
 	}
-	if allowed, err = auth.enforcer.Enforce(policy.GetSubject(), object, action); err != nil {
+	domain := cmp.Or(policy.GetDomain(), auth.wildcardItem)
+	if domain == "" {
+		domain = "*"
+	}
+	if allowed, err = auth.enforcer.Enforce(policy.GetSubject(), object, action, domain); err != nil {
 		log.Errorf("Authorization failed with error: %v", err)
 		return false, err
 	} else if allowed {
 		log.Debugf("Authorization successful for user with adapter: %+v", policy)
 		return true, nil
 	}
+	ps, err := auth.enforcer.GetPolicy()
+	if err != nil {
+		return false, err
+	}
+	for _, p := range ps {
+		fmt.Printf("Existing policy: %v\n", p)
+	}
+	//hasPolicy, err := auth.enforcer.HasPolicy(policy.GetSubject(), object, action, domain)
+	//if err != nil {
+	//	return false, err
+	//}
+	//if hasPolicy {
+	//	log.Debugf("hasPolicy for user with adapter: %+v", policy)
+	//	return false, nil
+	//}
+
+	hasGroupingPolicy, err := auth.enforcer.HasGroupingPolicy(
+		policy.GetSubject(),
+		"role_4",
+		"*",
+	)
+	if err != nil {
+		return false, err
+	}
+	if hasGroupingPolicy {
+		log.Debugf("hasGroupingPolicy for user with adapter: %+v", policy)
+		return false, nil
+	}
+
 	log.Debugf("Authorization failed for user with adapter: %+v", policy)
 	return false, nil
 }
@@ -325,6 +359,7 @@ func NewAuthorizer(cfg *configv1.Security, ss ...Setting) (security.Authorizer, 
 	if err != nil {
 		return nil, err
 	}
+	auth.SyncPolicy(context.TODO())
 	go auth.WatchUpdate()
 	return auth, nil
 }

@@ -14,6 +14,7 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	_ "origadmin/application/admin/internal/mods/system/dal/entity/ent/runtime"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -63,7 +64,11 @@ func (repo authRepo) Authenticate(ctx context.Context, request *pb.AuthenticateR
 	if err != nil {
 		return nil, err
 	}
-	authorized, err := repo.Authorizer.Authorized(ctx, fromClaims(claims, "", ""), request.GetData().GetMethod(), request.GetData().GetPath())
+	authorized, err := repo.Authorizer.Authorized(
+		ctx,
+		fromClaims(claims, "", ""),
+		request.GetData().GetMethod(),
+		request.GetData().GetPath())
 	if err != nil {
 		return nil, err
 	}

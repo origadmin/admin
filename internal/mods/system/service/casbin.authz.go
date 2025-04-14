@@ -81,7 +81,11 @@ func (s *CasbinAuthorizerService) Authorized(ctx context.Context, policy securit
 	if action == "" {
 		action = policy.GetAction()
 	}
-	if allowed, err = s.enforcer.Enforce(policy.GetSubject(), object, action); err != nil {
+	domain := policy.GetDomain()
+	if domain == "" {
+		domain = "*"
+	}
+	if allowed, err = s.enforcer.Enforce(policy.GetSubject(), object, action, domain); err != nil {
 		log.Errorf("Authorization failed with error: %v", err)
 		return false, err
 	} else if allowed {

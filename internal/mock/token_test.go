@@ -6,28 +6,152 @@
 package mock
 
 import (
+	"context"
 	"testing"
 
+	_ "github.com/origadmin/contrib/consul/config"
+	_ "github.com/origadmin/contrib/consul/registry"
+	_ "github.com/origadmin/contrib/database"
+	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/toolkits/security"
 
+	"origadmin/application/admin/contrib/security/authz/casbin"
+	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/loader"
+	"origadmin/application/admin/internal/mods/system/dal"
 	"origadmin/application/admin/internal/mods/system/server"
 )
 
-func GenerateTokenTest(t *testing.T) {
+type data struct {
+}
+
+func (d data) QueryRoles(ctx context.Context, subject string) ([]string, error) {
+	return []string{
+		"role_1",
+	}, nil
+}
+
+func (d data) QueryPermissions(ctx context.Context, subject string) ([]string, error) {
+	return []string{
+		"user_1",
+	}, nil
+}
+
+func TestGenerateToken(t *testing.T) {
 	bs, err := loader.LoadBootstrap(&loader.Bootstrap{
 		Flags:      bootstrap.Flags{},
 		WorkDir:    "",
-		ConfigPath: "resources/configs/system",
+		ConfigPath: "D:\\workspace\\project\\golang\\origadmin\\backend\\resources\\configs\\config_test.toml",
 		Env:        "",
 		Daemon:     false,
 	})
 	if err != nil {
 		t.Fatalf("failed to load bootstrap: %v", err)
 	}
+	dd, cleanup, err := dal.NewData(bs, nil)
+	if err != nil {
+		t.Fatalf("failed to new dd: %v", err)
+	}
+	defer cleanup()
+	//casbinRepo, err := dal.NewCasbinSourceRepo(dd)
+	//if err != nil {
+	//	t.Fatalf("failed to new casbin source repo: %v", err)
+	//}
+	resourceRepo := dal.NewResourceRepo(dd, nil)
+	roleRepo := dal.NewRoleRepo(dd, nil)
+	userRepo := dal.NewUserRepo(dd, nil)
+	basisConfig := loader.NewBasisConfig(bs)
+	//v, err := server.NewSystemClient(bs, nil)
+	//if err != nil {
+	//	t.Fatalf("failed to new system client: %v", err)
+	//}
+	//auth := system.NewAuthServiceClient(v)
+	tokenizer, err := loader.NewTokenizer(bs)
+	if err != nil {
+		t.Fatalf("failed to new tokenizer: %v", err)
+	}
+	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
+	loginData := &dal.LoginData{
+		BasisConfig: basisConfig,
+		Tokenizer:   refreshTokenizer,
+		Resource:    resourceRepo,
+		Role:        roleRepo,
+		User:        userRepo,
+	}
+	claims, err := loginData.Tokenizer.CreateClaims(t.Context(), "user_1")
+	if err != nil {
+		return
+	}
+	token, err := loginData.Tokenizer.CreateToken(t.Context(), claims)
+	if err != nil {
+		t.Fatalf("failed to create token: %v", err)
+	}
+	t.Logf("token: %s", token)
+
 	v, err := server.NewSystemClient(bs, nil)
 	if err != nil {
 		t.Fatalf("failed to new system client: %v", err)
 	}
-
+	//registerAgent, err := server.NewSystemServiceAgentClient(v, nil)
+	//if err != nil {
+	//	t.Fatalf("failed to new system service agent client: %v", err)
+	//}
+	//_ := agent.NewRegisterAgent(registerAgent)
+	casbinSourceServiceClient := server.NewCasbinServiceClient(v, nil)
+	//casbinBiz := biz.NewCasbinSourceServiceBiz(casbinRepo, nil)
+	//client := service.NewCasbinSourceServiceServerPB(casbinBiz)
+	authenticator, err := securityx.NewAuthenticator(bs)
+	if err != nil {
+		panic(err)
+	}
+	adapter := casbin.NewAdapter()
+	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithPolicyAdapter(adapter), casbin.WithServiceClient(casbinSourceServiceClient))
+	if err != nil {
+		panic(err)
+	}
+	bridge := securityx.SecurityBridge{
+		TokenSource:          security.TokenSourceHeader,
+		Scheme:               security.SchemeBearer,
+		AuthenticationHeader: security.HeaderAuthorize,
+		Authenticator:        authenticator,
+		Authorizer:           authorizer,
+		SkipKey:              msecurity.MetadataSecuritySkipKey,
+		PublicPaths:          nil,
+		Provider:             &data{},
+		Skipper: func(path string) bool {
+			return false
+		},
+		IsRoot: func(ctx context.Context, claims security.Claims) bool {
+			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
+		},
+		TokenParser: nil,
+		PolicyParser: func(ctx context.Context, claims security.Claims) (security.Policy, error) {
+			return security.RegisteredPolicy{
+				Subject: "user_1",
+				Object:  "/api/v1/sys/users",
+				Action:  "GET",
+				Domain:  "*",
+				//Roles:       roles,
+				//Permissions: permissions,
+			}, nil
+		},
+	}
+	ctx := context.Background()
+	claims2, err := bridge.Authenticator.Authenticate(ctx, token)
+	if err != nil {
+		t.Fatalf("failed to authenticate: %v", err)
+	}
+	policy, err := bridge.PolicyParser(ctx, claims2)
+	if err != nil {
+		t.Fatalf("failed to parse policy: %v", err)
+	}
+	authorized, err := bridge.Authorizer.Authorized(context.Background(), policy, "", "")
+	if err != nil {
+		t.Errorf("failed to authorize: %v", err)
+	}
+	if !authorized {
+		t.Errorf("failed to authorize: %v", err)
+	}
+	t.Logf("authorized: %v", authorized)
 }
