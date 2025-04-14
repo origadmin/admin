@@ -5,7 +5,7 @@
     "type": "role",
     "description": "系统管理权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "system"
     ]
   },
@@ -15,7 +15,7 @@
     "type": "role",
     "description": "组织管理权限",
     "data_scope": "dept",
-    "resources": [
+    "resource_keywords": [
       "system:org",
       "system:org:dept",
       "system:org:dept:list",
@@ -29,7 +29,7 @@
     "type": "role",
     "description": "用户管理权限",
     "data_scope": "dept",
-    "resources": [
+    "resource_keywords": [
       "system:user",
       "system:user:list"
     ]
@@ -40,7 +40,7 @@
     "type": "position",
     "description": "部门管理权限",
     "data_scope": "dept",
-    "resources": [
+    "resource_keywords": [
       "system:org:dept:list",
       "system:org:dept:add",
       "system:org:dept:edit"
@@ -52,7 +52,7 @@
     "type": "role",
     "description": "资源管理权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "system:resource",
       "system:resource:list",
       "system:resource:add",
@@ -66,7 +66,7 @@
     "type": "role",
     "description": "访问日志管理权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "logs:access",
       "logs:access:list"
     ]
@@ -77,7 +77,7 @@
     "type": "role",
     "description": "登录日志管理权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "logs:login",
       "logs:login:list"
     ]
@@ -88,7 +88,7 @@
     "type": "role",
     "description": "修改日志管理权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "logs:modify",
       "logs:modify:list"
     ]
@@ -99,7 +99,7 @@
     "type": "role",
     "description": "审计日志管理权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "logs:audit",
       "logs:audit:list"
     ]
@@ -110,7 +110,7 @@
     "type": "role",
     "description": "删除日志权限",
     "data_scope": "all",
-    "resources": [
+    "resource_keywords": [
       "logs:delete"
     ]
   }

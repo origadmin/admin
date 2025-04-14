@@ -19,6 +19,11 @@ type (
 	ListPermissionsResponse = pb.ListPermissionsResponse
 )
 
+type PermissionNode struct {
+	PermissionPB
+	ResourceKeywords []string `json:"resource_keywords"`
+}
+
 // PermissionRepo is a Permission repository interface.
 type PermissionRepo interface {
 	Get(context.Context, int64, ...PermissionQueryOption) (*PermissionPB, error)

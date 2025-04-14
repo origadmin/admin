@@ -32,7 +32,8 @@ type (
 
 type UserNode struct {
 	UserPB
-	IsSystem bool `json:"is_system"`
+	IsSystem     bool     `json:"is_system"`
+	RoleKeywords []string `json:"role_keywords"`
 }
 
 // UserRepo is a UserPB repository interface.

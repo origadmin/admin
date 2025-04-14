@@ -6,7 +6,7 @@
     "email": "admin@example.com",
     "phone": "13800138000",
     "status": 1,
-    "roles": ["super_admin"],
+    "role_keywords": ["super_admin"],
     "department": "总公司",
     "department_keywords": ["root"],
     "is_system": true
@@ -18,7 +18,7 @@
     "email": "test@example.com",
     "phone": "13800138001",
     "status": 1,
-    "roles": ["user"],
+    "role_keywords": ["user"],
     "department": "技术部",
     "department_keywords": ["dev"]
   }

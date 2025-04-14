@@ -4,9 +4,3 @@
 
 // Package dto implements the functions, types, and interfaces for the module.
 package dto
-
-// PositionNode position.table.comment
-type PositionNode struct {
-	PositionPB
-	DepartmentKeyword string `json:"department_keyword,omitempty"`
-}

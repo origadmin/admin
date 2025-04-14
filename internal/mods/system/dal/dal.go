@@ -93,17 +93,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
 	}
-	//if cfg.Dialect == "sqlite3" {
-	//	//cfg.Source = FixSource(cfg.GetSource())
-	//}
-	//if cfg.Dialect == "mysql" {
-	//	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
-	//	sourceConfig, err := mysql.ParseDSN(cfg.Source)
-	//	if err != nil {
-	//		return nil, nil, err
-	//	}
-	//	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", sourceConfig.Addr)
-	//}
+
 	drv, err := database.Open(cfg)
 	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
 	if err != nil {

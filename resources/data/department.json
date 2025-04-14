@@ -6,6 +6,9 @@
     "status": 1,
     "level": 1,
     "description": "顶级部门",
+    "position_keywords": [
+      "tech"
+    ],
     "children": [
       {
         "keyword": "tech",
