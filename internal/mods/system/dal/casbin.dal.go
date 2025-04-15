@@ -48,6 +48,9 @@ func (c casbinSourceRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesR
 			continue
 		}
 		for _, resource := range resources {
+			if resource.Type != "A" && resource.Type != "B" {
+				continue
+			}
 			rules = append(rules, &pb.PolicyRule{
 				PType: "p",
 				Params: []string{

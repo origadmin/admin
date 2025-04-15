@@ -12,7 +12,6 @@ import (
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
-	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/toolkits/security"
 
@@ -105,38 +104,24 @@ func TestGenerateToken(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	adapter := casbin.NewAdapter()
-	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithPolicyAdapter(adapter), casbin.WithServiceClient(casbinSourceServiceClient))
+	//adapter := casbin.NewAdapter()
+	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithServiceClient(casbinSourceServiceClient))
 	if err != nil {
 		panic(err)
 	}
-	bridge := securityx.SecurityBridge{
-		TokenSource:          security.TokenSourceHeader,
-		Scheme:               security.SchemeBearer,
-		AuthenticationHeader: security.HeaderAuthorize,
-		Authenticator:        authenticator,
-		Authorizer:           authorizer,
-		SkipKey:              msecurity.MetadataSecuritySkipKey,
-		PublicPaths:          nil,
-		Provider:             &data{},
-		Skipper: func(path string) bool {
-			return false
-		},
-		IsRoot: func(ctx context.Context, claims security.Claims) bool {
-			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
-		},
-		TokenParser: nil,
-		PolicyParser: func(ctx context.Context, claims security.Claims) (security.Policy, error) {
-			return security.RegisteredPolicy{
-				Subject: "user_1",
-				Object:  "/api/v1/sys/users",
-				Action:  "GET",
-				Domain:  "*",
-				//Roles:       roles,
-				//Permissions: permissions,
-			}, nil
-		},
+	bridge := securityx.DefaultBridge()
+	bridge.PolicyParser = func(ctx context.Context, claims security.Claims) (security.Policy, error) {
+		return security.RegisteredPolicy{
+			Subject: "user_1",
+			Object:  "/api/v1/sys/users",
+			Action:  "GET",
+			Domain:  "*",
+			//Roles:       roles,
+			//Permissions: permissions,
+		}, nil
 	}
+	bridge.Authenticator = authenticator
+	bridge.Authorizer = authorizer
 	ctx := context.Background()
 	claims2, err := bridge.Authenticator.Authenticate(ctx, token)
 	if err != nil {
@@ -146,7 +131,9 @@ func TestGenerateToken(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to parse policy: %v", err)
 	}
-	authorized, err := bridge.Authorizer.Authorized(context.Background(), policy, "", "")
+
+	authorized, err := bridge.Authorizer.AuthorizedWithExtra(context.Background(), security.DataWithExtra(claims,
+		policy, nil))
 	if err != nil {
 		t.Errorf("failed to authorize: %v", err)
 	}

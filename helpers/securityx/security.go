@@ -39,7 +39,7 @@ func NewTokenizer(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Tok
 	return tokenizer, nil
 }
 
-func NewAuthorizer(bootstrap *configs.Bootstrap, ss ...casbin.Setting) (security.Authorizer, error) {
+func NewAuthorizer(bootstrap *configs.Bootstrap, ss ...casbin.AuthorizerOption) (security.Authorizer, error) {
 	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity(), ss...)
 	if err != nil {
 		return nil, err

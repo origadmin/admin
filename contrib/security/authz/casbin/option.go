@@ -5,72 +5,74 @@
 package casbin
 
 import (
+	"time"
+
+	"github.com/casbin/casbin/v2"
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
-	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/contrib/security/authz/casbin/internal/model"
-	"origadmin/application/admin/contrib/security/authz/casbin/internal/policy"
 )
 
 type AuthorizerOptions struct {
-	Model      casbinmodel.Model
-	Adapter    persist.Adapter
-	Watcher    persist.Watcher
-	ServiceCli pb.CasbinSourceServiceClient
-	Interval   int
-	RetryDelay int
+	Model        casbinmodel.Model      // Need
+	Adapter      persist.Adapter        // Need
+	Watcher      persist.Watcher        // Optional
+	Enforcer     *casbin.SyncedEnforcer // Optional
+	SyncInterval time.Duration          // Optional（Replace Interval/RetryDelay）
 }
 
-// Setting is a function type for setting the Authenticator.
-type Setting = func(*AuthorizerOptions)
+// AuthorizerOption is a function type for setting the Authenticator.
+type AuthorizerOption = func(*AuthorizerOptions)
 
 func DefaultModel() string {
 	return model.DefaultRestfullWithRoleModel
 }
 
-func DefaultPolicy() []byte {
-	return policy.MustPolicy("keymatch_with_rbac_in_domain.csv")
-}
-
-func WithModel(model casbinmodel.Model) Setting {
+func WithModel(model casbinmodel.Model) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Model = model
 	}
 }
 
-func WithStringModel(str string) Setting {
+func WithStringModel(str string) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Model, _ = casbinmodel.NewModelFromString(str)
 	}
 }
 
-func WithFileModel(path string) Setting {
+func WithFileModel(path string) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Model, _ = casbinmodel.NewModelFromFile(path)
 	}
 }
 
-func WithNameModel(name string) Setting {
+func WithNameModel(name string) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Model, _ = casbinmodel.NewModelFromString(model.MustModel(name))
 	}
 }
 
-func WithPolicyAdapter(adapter persist.Adapter) Setting {
+func WithPolicyAdapter(adapter persist.Adapter) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Adapter = adapter
 	}
 }
 
-func WithWatcher(watcher persist.Watcher) Setting {
+func WithWatcher(watcher persist.Watcher) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Watcher = watcher
 	}
 }
 
-func WithServiceClient(client pb.CasbinSourceServiceClient) Setting {
+func WithSyncInterval(interval time.Duration) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
-		s.ServiceCli = client
+		s.SyncInterval = interval
+	}
+}
+
+func WithEnforcer(enforcer *casbin.SyncedEnforcer) AuthorizerOption {
+	return func(s *AuthorizerOptions) {
+		s.Enforcer = enforcer
 	}
 }

@@ -8,6 +8,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"sync"
 	"time"
@@ -75,19 +76,11 @@ func (s *CasbinAuthorizerService) Authorized(ctx context.Context, policy securit
 	log.Debugf("Authorizing user with adapter: %+v", policy)
 	var err error
 	var allowed bool
-	if object == "" {
-		object = policy.GetObject()
-	}
-	if action == "" {
-		action = policy.GetAction()
-	}
-	domain := policy.GetDomain()
-	if domain == "" {
-		domain = "*"
-	}
+	domain := cmp.Or(policy.GetDomain(), s.wildcardItem)
+	object = cmp.Or(object, policy.GetObject())
+	action = cmp.Or(action, policy.GetAction())
 	if allowed, err = s.enforcer.Enforce(policy.GetSubject(), object, action, domain); err != nil {
-		log.Errorf("Authorization failed with error: %v", err)
-		return false, err
+		return false, fmt.Errorf("authorization failed with error: %v", err)
 	} else if allowed {
 		log.Debugf("Authorization successful for user with adapter: %+v", policy)
 		return true, nil

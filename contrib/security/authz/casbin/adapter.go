@@ -12,6 +12,10 @@ import (
 	"github.com/casbin/casbin/v2/persist"
 )
 
+type PolicySetter interface {
+	SetPolicies(policies map[string][][]string)
+}
+
 type adapter struct {
 	typedPolicies map[string][][]string
 }
@@ -137,12 +141,10 @@ func (a *adapter) SetPolicies(policies map[string][][]string) {
 	a.typedPolicies = policies
 }
 
-func NewAdapter() persist.Adapter {
-	return &adapter{
-		typedPolicies: make(map[string][][]string),
+func NewAdapter(policies map[string][][]string) persist.Adapter {
+	if policies == nil {
+		policies = make(map[string][][]string)
 	}
-}
-func NewAdapterWithPolicies(policies map[string][][]string) persist.Adapter {
 	return &adapter{
 		typedPolicies: policies,
 	}
