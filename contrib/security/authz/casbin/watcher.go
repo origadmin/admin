@@ -22,35 +22,6 @@ type watcher struct {
 	callback func(string)
 }
 
-//func (w *watcher) UpdateForAddPolicy(sec, ptype string, params ...string) error {
-//	return w.Update()
-//}
-//
-//func (w *watcher) UpdateForRemovePolicy(sec, ptype string, params ...string) error {
-//	return w.Update()
-//}
-//
-//func (w *watcher) UpdateForRemoveFilteredPolicy(sec, ptype string, fieldIndex int, fieldValues ...string) error {
-//	return w.Update()
-//}
-//
-//func (w *watcher) UpdateForSavePolicy(model model.Model) error {
-//	w.mu.Lock()
-//	defer w.mu.Unlock()
-//	if w.callback != nil {
-//		w.callback(model.ToText())
-//	}
-//	return nil
-//}
-//
-//func (w *watcher) UpdateForAddPolicies(sec string, ptype string, rules ...[]string) error {
-//	return w.Update()
-//}
-//
-//func (w *watcher) UpdateForRemovePolicies(sec string, ptype string, rules ...[]string) error {
-//	return w.Update()
-//}
-
 func (w *watcher) SetUpdateCallback(f func(string)) error {
 	w.mu.Lock()
 	defer w.mu.Unlock()
@@ -78,5 +49,3 @@ func NewWatcher() persist.Watcher {
 }
 
 var _ persist.Watcher = &watcher{}
-
-//var _ persist.WatcherEx = &watcher{}

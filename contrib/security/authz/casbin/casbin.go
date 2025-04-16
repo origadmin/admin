@@ -28,14 +28,15 @@ import (
 
 // Authorizer is a struct that implements the Authorizer interface.
 type Authorizer struct {
-	client       pb.CasbinSourceServiceClient
-	options      *AuthorizerOptions
-	enforcer     *casbin.SyncedEnforcer
-	lastModified int64
-	interval     int64
-	wildcardItem string
-	model        casbinmodel.Model
-	adapter      persist.Adapter
+	client           pb.CasbinSourceServiceClient
+	options          *AuthorizerOptions
+	enforcer         *casbin.SyncedEnforcer
+	lastModified     int64
+	interval         int64
+	wildcardItem     string
+	model            casbinmodel.Model
+	adapter          persist.Adapter
+	enablePrometheus bool
 }
 
 const MaxRetryDelay = time.Minute
@@ -66,11 +67,7 @@ var (
 )
 
 func init() {
-	prometheus.MustRegister(
-		policySyncCounter,
-		policyCountGauge,
-		policySyncDuration,
-	)
+
 }
 
 func (auth *Authorizer) Authorized(ctx context.Context, policy security.Policy, object string, action string) (bool, error) {
@@ -260,12 +257,13 @@ func (auth *Authorizer) Apply() error {
 func NewDefaultAuthorizer() *Authorizer {
 	model, _ := casbinmodel.NewModelFromString(DefaultModel())
 	return &Authorizer{
-		model:   model,
-		adapter: NewAdapter(nil),
+		model:            model,
+		adapter:          NewAdapter(nil),
+		enablePrometheus: false, // 默认关闭 Prometheus
 	}
 }
 
-func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Authorizer, error) {
+func NewAuthorizer(cfg *configv1.Security, enablePrometheus bool, ss ...AuthorizerOption) (security.Authorizer, error) {
 	config := cfg.GetAuthz().GetCasbin()
 	if config == nil {
 		return nil, errors.New("authorizer casbin config is empty")
@@ -283,8 +281,9 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 		return nil, errors.New("model and adapter are required")
 	}
 	auth := &Authorizer{
-		interval: 5,
-		options:  options,
+		interval:         5,
+		options:          options,
+		enablePrometheus: enablePrometheus, // 用户注入是否启用 Prometheus
 	}
 	if err := auth.Apply(); err != nil {
 		return nil, err
@@ -299,5 +298,15 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 	}
 	auth.SyncPolicy(context.TODO())
 	go auth.WatchUpdate()
+
+	// 条件性注册 Prometheus 指标
+	if auth.enablePrometheus {
+		prometheus.MustRegister(
+			policySyncCounter,
+			policyCountGauge,
+			policySyncDuration,
+		)
+	}
+
 	return auth, nil
 }
