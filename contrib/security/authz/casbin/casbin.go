@@ -129,29 +129,26 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 
 func (auth *Authorizer) Apply() error {
 	var err error
-	if auth.options.Adapter == nil {
-		auth.adapter = NewAdapter(nil)
+	auth.adapter = NewAdapter(nil)
+	if auth.options.Adapter != nil {
+		auth.adapter = auth.options.Adapter
 	}
-	if auth.options.Model == nil {
-		auth.model, err = casbinmodel.NewModelFromString(DefaultModel())
-		if err != nil {
-			return err
-		}
+	auth.model, err = casbinmodel.NewModelFromString(DefaultModel())
+	if err != nil {
+		return err
 	}
-	if auth.options.Watcher == nil {
-		auth.watcher = NewWatcher()
+	if auth.options.Model != nil {
+		auth.model = auth.options.Model
+	}
+	auth.watcher = NewWatcher()
+	if auth.options.Watcher != nil {
+		auth.watcher = auth.options.Watcher
 	}
 	if auth.model == nil || auth.adapter == nil {
 		return errors.New("model and adapter cannot be nil")
 	}
-
 	if auth.options.WildcardItem == "" {
 		auth.wildcardItem = "*"
-	}
-
-	auth.enforcer, err = casbin.NewSyncedEnforcer(auth.model, auth.adapter)
-	if err != nil {
-		return err
 	}
 	return nil
 }
@@ -165,7 +162,7 @@ func NewDefaultAuthorizer() *Authorizer {
 	}
 }
 
-func NewAuthorizer(cfg *configv1.Security, enablePrometheus bool, ss ...AuthorizerOption) (security.Authorizer, error) {
+func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Authorizer, error) {
 	config := cfg.GetAuthz().GetCasbin()
 	if config == nil {
 		return nil, errors.New("authorizer casbin config is empty")
@@ -180,6 +177,7 @@ func NewAuthorizer(cfg *configv1.Security, enablePrometheus bool, ss ...Authoriz
 		client:   options.ServiceClient,
 		adapter:  options.Adapter,
 		interval: options.SyncInterval,
+		metric:   options.EnablePrometheus,
 	}
 
 	auth := &Authorizer{
@@ -189,6 +187,10 @@ func NewAuthorizer(cfg *configv1.Security, enablePrometheus bool, ss ...Authoriz
 	}
 
 	if err := auth.Apply(); err != nil {
+		return nil, err
+	}
+	_, err := updater.Sync(context.Background())
+	if err != nil {
 		return nil, err
 	}
 
@@ -204,7 +206,7 @@ func NewAuthorizer(cfg *configv1.Security, enablePrometheus bool, ss ...Authoriz
 
 	go updater.Watch(context.Background(), auth.watcher)
 
-	if enablePrometheus {
+	if options.EnablePrometheus {
 		prometheus.MustRegister(
 			policySyncCounter,
 			policyCountGauge,

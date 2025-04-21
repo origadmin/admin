@@ -27,12 +27,15 @@ type PolicyUpdater struct {
 	enforcer     *casbin.SyncedEnforcer
 	lastModified int64
 	interval     time.Duration
+	metric       bool
 }
 
 func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 	start := time.Now()
 	defer func() {
-		policySyncDuration.Observe(time.Since(start).Seconds())
+		if u.metric {
+			policySyncDuration.Observe(time.Since(start).Seconds())
+		}
 	}()
 
 	update, err := u.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
@@ -87,8 +90,10 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 		default:
 			return false, errors.New("unsupported adapter")
 		}
-		policyCountGauge.Set(float64(len(policies)))
-		policySyncCounter.WithLabelValues("success").Inc()
+		if u.metric {
+			policyCountGauge.Set(float64(len(policies)))
+			policySyncCounter.WithLabelValues("success").Inc()
+		}
 		return true, nil
 	}
 	return false, nil

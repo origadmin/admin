@@ -57,11 +57,10 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	if err != nil {
 		panic(err)
 	}
-	casbinOpts := &casbin.AuthorizerOptions{
-		PolicyAdapter: casbin.NewAdapter(),
-		ServiceClient: client,
-	}
-	authorizer, err := securityx.NewAuthorizer(bootstrap, casbinOpts)
+
+	opts := []casbin.AuthorizerOption{casbin.WithServiceClient(client)}
+
+	authorizer, err := securityx.NewAuthorizer(bootstrap, opts...)
 	if err != nil {
 		panic(err)
 	}

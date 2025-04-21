@@ -24,19 +24,20 @@ import (
 // ServiceClient: gRPC client for policy data service
 // WildcardItem: Permission matching wildcard (default "*")
 type AuthorizerOptions struct {
-	Model         casbinmodel.Model
-	Adapter       persist.Adapter
-	Watcher       persist.Watcher
-	Enforcer      *casbin.SyncedEnforcer
-	SyncInterval  time.Duration
-	ServiceClient pb.CasbinSourceServiceClient
-	WildcardItem  string
+	Model            casbinmodel.Model
+	Adapter          persist.Adapter
+	Watcher          persist.Watcher
+	Enforcer         *casbin.SyncedEnforcer
+	SyncInterval     time.Duration
+	ServiceClient    pb.CasbinSourceServiceClient
+	WildcardItem     string
+	EnablePrometheus bool
 }
 
 // AuthorizerOption function type for configuring AuthorizerOptions
 type AuthorizerOption = func(*AuthorizerOptions)
 
-// Default configuration parameters for authorizer
+// DefaultAuthorizerOptions parameters for authorizer
 // Model:        Creates new empty model
 // Watcher:     Initializes new watcher instance
 // SyncInterval: 5s sync interval
@@ -133,5 +134,13 @@ func WithWildcardItem(item string) AuthorizerOption {
 func WithServiceClient(client pb.CasbinSourceServiceClient) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.ServiceClient = client
+	}
+}
+
+// WithPrometheusMetrics enables Prometheus metrics collection
+// enable: Enable Prometheus metrics collection (default false)
+func WithPrometheusMetrics(enable bool) AuthorizerOption {
+	return func(s *AuthorizerOptions) {
+		s.EnablePrometheus = enable
 	}
 }
