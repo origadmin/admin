@@ -7,6 +7,7 @@ package casbin
 
 import (
 	"context"
+	"errors"
 	"io"
 	"time"
 
@@ -28,18 +29,29 @@ type PolicyUpdater struct {
 	interval     time.Duration
 }
 
-func (u *PolicyUpdater) Sync(ctx context.Context) error {
+func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 	start := time.Now()
 	defer func() {
 		policySyncDuration.Observe(time.Since(start).Seconds())
 	}()
+
+	update, err := u.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
+		LastModified: u.lastModified,
+	})
+	if err != nil {
+		return false, err
+	}
+	if u.lastModified >= update.ModifiedDate {
+		return false, nil
+	}
+	u.lastModified = update.ModifiedDate
 
 	stream, err := u.client.StreamRules(ctx, &pb.StreamRulesRequest{
 		WithGroupings: true,
 		WithPolicies:  true,
 	})
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	policies := make(map[string][][]string)
@@ -49,7 +61,7 @@ func (u *PolicyUpdater) Sync(ctx context.Context) error {
 			break
 		}
 		if err != nil {
-			return status.Errorf(status.Code(err), "received stream error: %v", err)
+			return false, status.Errorf(status.Code(err), "received stream error: %v", err)
 		}
 
 		switch v := rule.RuleType.(type) {
@@ -65,19 +77,22 @@ func (u *PolicyUpdater) Sync(ctx context.Context) error {
 		switch setter := u.adapter.(type) {
 		case *adapter:
 			setter.typedPolicies = policies
+			return true, nil
 		case security.PolicyRegistry:
 			pm := maps.Transform(policies, func(k string, v [][]string) (string, any, bool) {
 				return k, any(v), true
 			})
 			if err := setter.SetPolicies(ctx, pm); err != nil {
-				return err
+				return false, err
 			}
+			return true, nil
+		default:
+			return false, errors.New("unsupported adapter")
 		}
-
 		policyCountGauge.Set(float64(len(policies)))
 		policySyncCounter.WithLabelValues("success").Inc()
 	}
-	return nil
+	return false, nil
 }
 
 func (u *PolicyUpdater) Watch(ctx context.Context, notifier persist.Watcher) {
@@ -87,8 +102,7 @@ func (u *PolicyUpdater) Watch(ctx context.Context, notifier persist.Watcher) {
 	for {
 		select {
 		case <-ticker.C:
-
-			if err := u.Sync(ctx); err != nil {
+			if update, err := u.Sync(ctx); err != nil || !update {
 				log.Errorf("Policy sync failed: %v", err)
 				continue
 			}
