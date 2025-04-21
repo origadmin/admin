@@ -57,9 +57,9 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 	if err != nil {
 		panic(err)
 	}
-	casbinOpts := &casbin.Options{
-		PolicyAdapter:   casbin.NewAdapter(),
-		ServiceClient:   client,
+	casbinOpts := &casbin.AuthorizerOptions{
+		PolicyAdapter: casbin.NewAdapter(),
+		ServiceClient: client,
 	}
 	authorizer, err := securityx.NewAuthorizer(bootstrap, casbinOpts)
 	if err != nil {
@@ -140,7 +140,7 @@ func CallerMiddleware() middleware.KMiddleware {
 			tr, ok := transport.FromServerContext(ctx)
 			log.Infof("Caller Server: %+v, ok: %+v", tr, ok)
 			tr, ok = transport.FromClientContext(ctx)
-			log.Infof("Caller Client: %+v, ok: %+v", tr, ok)
+			log.Infof("Caller ServiceClient: %+v, ok: %+v", tr, ok)
 			return handler(ctx, req)
 		}
 	}

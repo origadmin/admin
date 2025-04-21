@@ -106,7 +106,7 @@
 		}
 
     {{ range $n := $.Nodes }}
-        {{ $client := print $n.Name "Client" }}
+        {{ $client := print $n.Name "ServiceClient" }}
 				// {{ $n.Name }} is the client for interacting with the {{ $n.Name }} builders.
 				func (db *Database) {{ $n.Name }}(ctx context.Context) *{{ $client }} {
 				return db.Client(ctx).{{ $n.Name }}

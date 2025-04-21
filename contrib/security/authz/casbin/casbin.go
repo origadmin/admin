@@ -172,12 +172,12 @@ func NewAuthorizer(cfg *configv1.Security, enablePrometheus bool, ss ...Authoriz
 	}
 
 	options := settings.ApplyDefault(DefaultAuthorizerOptions, ss)
-	if options.Client == nil {
+	if options.ServiceClient == nil {
 		return nil, errors.New("authorizer casbin client is empty")
 	}
 
 	updater := &PolicyUpdater{
-		client:   options.Client,
+		client:   options.ServiceClient,
 		adapter:  options.Adapter,
 		interval: options.SyncInterval,
 	}
