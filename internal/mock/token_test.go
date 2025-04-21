@@ -15,7 +15,6 @@ import (
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/toolkits/security"
 
-	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/system/dal"
@@ -78,11 +77,12 @@ func TestGenerateToken(t *testing.T) {
 		Role:        roleRepo,
 		User:        userRepo,
 	}
-	claims, err := loginData.Tokenizer.CreateClaims(t.Context(), "user_1")
+	ctx := context.Background()
+	claims, err := loginData.Tokenizer.CreateClaims(ctx, "user_1")
 	if err != nil {
 		return
 	}
-	token, err := loginData.Tokenizer.CreateToken(t.Context(), claims)
+	token, err := loginData.Tokenizer.CreateToken(ctx, claims)
 	if err != nil {
 		t.Fatalf("failed to create token: %v", err)
 	}
@@ -98,6 +98,7 @@ func TestGenerateToken(t *testing.T) {
 	//}
 	//_ := agent.NewRegisterAgent(registerAgent)
 	casbinSourceServiceClient := server.NewCasbinServiceClient(v, nil)
+	_ = casbinSourceServiceClient
 	//casbinBiz := biz.NewCasbinSourceServiceBiz(casbinRepo, nil)
 	//client := service.NewCasbinSourceServiceServerPB(casbinBiz)
 	authenticator, err := securityx.NewAuthenticator(bs)
@@ -105,7 +106,7 @@ func TestGenerateToken(t *testing.T) {
 		panic(err)
 	}
 	//adapter := casbin.NewAdapter()
-	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithServiceClient(casbinSourceServiceClient))
+	authorizer, err := securityx.NewAuthorizer(bs)
 	if err != nil {
 		panic(err)
 	}
@@ -122,7 +123,6 @@ func TestGenerateToken(t *testing.T) {
 	}
 	bridge.Authenticator = authenticator
 	bridge.Authorizer = authorizer
-	ctx := context.Background()
 	claims2, err := bridge.Authenticator.Authenticate(ctx, token)
 	if err != nil {
 		t.Fatalf("failed to authenticate: %v", err)
@@ -132,7 +132,7 @@ func TestGenerateToken(t *testing.T) {
 		t.Fatalf("failed to parse policy: %v", err)
 	}
 
-	authorized, err := bridge.Authorizer.AuthorizedWithExtra(context.Background(), security.DataWithExtra(claims,
+	authorized, err := bridge.Authorizer.AuthorizedWithExtra(ctx, security.DataWithExtra(claims,
 		policy, nil))
 	if err != nil {
 		t.Errorf("failed to authorize: %v", err)

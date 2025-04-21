@@ -6,18 +6,51 @@
 package casbin
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
+	"github.com/goexts/generic/maps"
+	"github.com/origadmin/toolkits/security"
 )
-
-type PolicySetter interface {
-	SetPolicies(policies map[string][][]string)
-}
 
 type adapter struct {
 	typedPolicies map[string][][]string
+}
+
+func (a *adapter) SetRoles(ctx context.Context, roles security.RoleMap) error {
+	return nil
+}
+
+func (a *adapter) SetPolicies(ctx context.Context, policies security.PolicyMap) error {
+	a.typedPolicies = maps.Transform(policies, func(k string, v any) (string, [][]string, bool) {
+		if vv, ok := v.([][]string); ok {
+			return k, vv, true
+		}
+		return "", nil, false
+	})
+	return nil
+}
+
+func (a *adapter) SetPolicyRoles(ctx context.Context, policies security.PolicyMap, roles security.RoleMap) error {
+	merged := make(map[string][][]string)
+	maps.Transform(policies, func(k string, v any) (string, [][]string, bool) {
+		if vv, ok := v.([][]string); ok {
+			merged[k] = append(merged[k], vv...)
+			return k, vv, true
+		}
+		return "", nil, false
+	})
+	maps.Transform(roles, func(k string, v any) (string, [][]string, bool) {
+		if vv, ok := v.([][]string); ok {
+			merged[k] = append(merged[k], vv...)
+			return k, vv, true
+		}
+		return "", nil, false
+	})
+	a.typedPolicies = merged
+	return nil
 }
 
 func (a *adapter) AddPolicies(sec string, ptype string, rules [][]string) error {
@@ -137,10 +170,6 @@ func (a *adapter) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int,
 	return nil
 }
 
-func (a *adapter) SetPolicies(policies map[string][][]string) {
-	a.typedPolicies = policies
-}
-
 func NewAdapter(policies map[string][][]string) persist.Adapter {
 	if policies == nil {
 		policies = make(map[string][][]string)
@@ -152,3 +181,4 @@ func NewAdapter(policies map[string][][]string) persist.Adapter {
 
 var _ persist.Adapter = (*adapter)(nil)
 var _ persist.BatchAdapter = (*adapter)(nil)
+var _ security.PolicyRegistry = (*adapter)(nil)

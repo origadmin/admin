@@ -11,19 +11,31 @@ import (
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
+	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/contrib/security/authz/casbin/internal/model"
 )
 
 type AuthorizerOptions struct {
-	Model        casbinmodel.Model      // Need
-	Adapter      persist.Adapter        // Need
-	Watcher      persist.Watcher        // Optional
-	Enforcer     *casbin.SyncedEnforcer // Optional
-	SyncInterval time.Duration          // Optional（Replace Interval/RetryDelay）
+	Model        casbinmodel.Model            // Need
+	Adapter      persist.Adapter              // Need
+	Watcher      persist.Watcher              // Optional
+	Enforcer     *casbin.SyncedEnforcer       // Optional
+	SyncInterval time.Duration                // Optional
+	Client       pb.CasbinSourceServiceClient // gRPC client
+	WildcardItem string
 }
 
 // AuthorizerOption is a function type for setting the Authenticator.
 type AuthorizerOption = func(*AuthorizerOptions)
+
+var (
+	DefaultAuthorizerOptions = AuthorizerOptions{
+		Model:        casbinmodel.NewModel(),
+		Watcher:      NewWatcher(),
+		SyncInterval: 5 * time.Second,
+		WildcardItem: "*",
+	}
+)
 
 func DefaultModel() string {
 	return model.DefaultRestfullWithRoleModel
@@ -74,5 +86,17 @@ func WithSyncInterval(interval time.Duration) AuthorizerOption {
 func WithEnforcer(enforcer *casbin.SyncedEnforcer) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.Enforcer = enforcer
+	}
+}
+
+func WithWildcardItem(item string) AuthorizerOption {
+	return func(s *AuthorizerOptions) {
+		s.WildcardItem = item
+	}
+}
+
+func WithClient(client pb.CasbinSourceServiceClient) AuthorizerOption {
+	return func(s *AuthorizerOptions) {
+		s.Client = client
 	}
 }

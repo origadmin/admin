@@ -74,7 +74,7 @@ func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
 }
 
 func NewBasisConfig(bootstrap *configs.Bootstrap) *configs.BasisConfig {
-	//c := DefaultCaptcha()
+	// c := DefaultCaptcha()
 	// todo Read from the configuration file
 	return DefaultBasisConfig()
 }
