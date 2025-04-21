@@ -77,7 +77,6 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 		switch setter := u.adapter.(type) {
 		case *adapter:
 			setter.typedPolicies = policies
-			return true, nil
 		case security.PolicyRegistry:
 			pm := maps.Transform(policies, func(k string, v [][]string) (string, any, bool) {
 				return k, any(v), true
@@ -85,12 +84,12 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 			if err := setter.SetPolicies(ctx, pm); err != nil {
 				return false, err
 			}
-			return true, nil
 		default:
 			return false, errors.New("unsupported adapter")
 		}
 		policyCountGauge.Set(float64(len(policies)))
 		policySyncCounter.WithLabelValues("success").Inc()
+		return true, nil
 	}
 	return false, nil
 }
