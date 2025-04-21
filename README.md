@@ -4,52 +4,79 @@ This is the backend for the project `OrigAdmin`
 
 ## Introduction
 
+The architecture diagram demonstrates a multi-layered directory structure where each directory serves specific
+functionalities:
 
-这个项目的架构图展示了一个多层次的目录结构，每个目录都有特定的功能和用途。以下是对每个目录的详细解释：
+1. **api**: Houses API-related implementations with subdirectories:
+    - `http`: HTTP interface definitions
+    - `multiplatform`: Cross-platform interfaces
+    - `proto`: Protocol Buffer definitions
+    - `services`: Service implementations
 
-1. **.github**：这个目录包含了GitHub相关的配置文件，如CODE_OF_CONDUCT.md、CONTRIBUTING.md、ISSUE_TEMPLATE等，用于管理和指导项目的开发和使用。
+2. **cmd**: Contains CLI tool implementations with subdirectories:
+    - `internal`: Core CLI logic
+    - `multiplatform`: Platform-agnostic commands
+    - `root.go`: Root command definitions
+    - `system`: System management commands
 
-2. **api**：这个目录包含了API相关的代码，包括HTTP、multiplatform、proto和services等子目录。这些子目录分别用于定义HTTP接口、多平台接口、协议文件和服务代码。
+3. **data**: Stores data files (e.g., admin.db) for persistent storage.
 
-3. **cmd**：这个目录包含了命令行工具的代码，包括internal、multiplatform、root.go和system等子目录。这些子目录分别用于定义命令行工具的内部逻辑、多平台逻辑、根命令和系统命令。
+4. **generate.go**: Code generation utilities.
 
-4. **data**：这个目录包含了数据相关的文件，如admin.db，用于存储项目所需的数据。
+5. **helpers**: Utility modules including:
+    - `command`: CLI toolkit
+    - `ent`: Entity management
+    - `errors`: Error handling framework
+    - `protobuf`: Protocol Buffer utilities
+    - `resp`: Response handlers
 
-5. **generate.go**：这个文件包含了代码生成相关的代码，用于生成项目所需的代码文件。
+6. **internal**: Core internal components:
+    - `configs`: Configuration management
+    - `generate.go`: Internal code generators
+    - `loader`: Resource loading system
+    - `mods`: Modular components
 
-6. **go.sum**：这个文件包含了项目依赖的校验和，用于确保依赖的一致性和安全性。
+7. **main.go**: Application entry point with initialization logic.
 
-7. **helpers**：这个目录包含了辅助工具的代码，如command、ent、errors、protobuf和resp等子目录。这些子目录分别用于定义命令行工具、实体、错误处理、协议缓冲区和响应处理等辅助功能。
+8. **Makefile**: Build automation scripts.
 
-8. **internal**：这个目录包含了项目内部使用的代码，如configs、generate.go、loader和mods等子目录。这些子目录分别用于定义配置、代码生成、加载器和模块等内部功能。
+9. **resources**: Resource files including:
+    - `configs`: Configuration templates
+    - `docs`: Documentation assets
 
-9. **LICENSE**：这个文件包含了项目的许可证信息。
+10. **third_party**: External dependencies' integration:
+    - Authentication systems
+    - Code generation tools
+    - Configuration management
+    - Error handling libraries
+    - Protocol Buffer extensions
+    - Google API integrations
+    - Pagination utilities
+    - Token management
+    - Validation frameworks
 
-10. **main.go**：这个文件是项目的入口点，包含了项目的初始化和启动逻辑。
+This project provides a comprehensive API service solution featuring HTTP interfaces, cross-platform support, protocol
+definitions, and service implementations, complemented by configuration management, code generation, and modular
+architecture.
 
-11. **Makefile**：这个文件包含了项目的构建和打包命令。
-
-12. **README.md**：这个文件包含了项目的介绍和文档。
-
-13. **resources**：这个目录包含了项目的资源文件，如configs和docs等子目录。这些子目录分别用于定义配置文件和文档文件。
-
-14. **third_party**：这个目录包含了第三方库的代码，如auth、buf、config、errors、gnostic、google、options、pagination、pwt、README.md和validate等子目录。这些子目录分别用于定义认证、代码生成、配置、错误处理、协议缓冲区、谷歌API、选项、分页、令牌、README.md和验证等第三方功能。
-
-总的来说，这个项目是一个多层次的目录结构，每个目录都有特定的功能和用途。这个项目的目的是提供一套完整的API服务，包括HTTP接口、多平台接口、协议文件和服务代码，以及相关的配置、代码生成、加载器和模块等内部功能。
+## Getting Started
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/origadmin/admin.git
-```
+    ```bash
+    # git clone URL_ADDRESS 
+    git clone https://github.com/OrigAdmin/backend.git
+    ```
 
 2. Install dependencies
-```bash
-cd admin
-go mod tidy
-```
 
-3. Run the server
-```bash
-go run main.go start
-```
+    ```bash
+    cd backend
+    go mod tidy
+    ```
+
+3. Run the application
+
+    ```bash
+    go run main.go start
+    ```
