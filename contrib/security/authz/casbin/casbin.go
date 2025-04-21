@@ -23,14 +23,12 @@ import (
 
 // Authorizer is a struct that implements the Authorizer interface.
 type Authorizer struct {
-	options          *AuthorizerOptions
-	enforcer         *casbin.SyncedEnforcer
-	updater          *PolicyUpdater
-	wildcardItem     string
-	model            casbinmodel.Model
-	adapter          persist.Adapter
-	watcher          persist.Watcher
-	enablePrometheus bool
+	enforcer     *casbin.SyncedEnforcer
+	updater      *PolicyUpdater
+	wildcardItem string
+	model        casbinmodel.Model
+	adapter      persist.Adapter
+	watcher      persist.Watcher
 }
 
 const MaxRetryDelay = time.Minute
@@ -88,7 +86,14 @@ func (auth *Authorizer) enforce(ctx context.Context, subject, object, action, do
 		log.Errorf("Authorization error: %auth", err)
 		return false, err
 	}
-	log.Debugf("Authorization result: %t for %s %s %s %s", allowed, subject, object, action, domain)
+	if !allowed {
+		log.Debugf("Authorization result: %t for %s %s %s %s", allowed, subject, object, action, domain)
+	}
+	policy, err := auth.enforcer.GetPolicy()
+	if err != nil {
+		return false, err
+	}
+	log.Infof("Authorization policy %v", policy)
 	return allowed, nil
 }
 
@@ -127,41 +132,6 @@ func (auth *Authorizer) SetPolicies(ctx context.Context, policies map[string]any
 	return nil
 }
 
-func (auth *Authorizer) Apply() error {
-	var err error
-	auth.adapter = NewAdapter(nil)
-	if auth.options.Adapter != nil {
-		auth.adapter = auth.options.Adapter
-	}
-	auth.model, err = casbinmodel.NewModelFromString(DefaultModel())
-	if err != nil {
-		return err
-	}
-	if auth.options.Model != nil {
-		auth.model = auth.options.Model
-	}
-	auth.watcher = NewWatcher()
-	if auth.options.Watcher != nil {
-		auth.watcher = auth.options.Watcher
-	}
-	if auth.model == nil || auth.adapter == nil {
-		return errors.New("model and adapter cannot be nil")
-	}
-	if auth.options.WildcardItem == "" {
-		auth.wildcardItem = "*"
-	}
-	return nil
-}
-
-func NewDefaultAuthorizer() *Authorizer {
-	model, _ := casbinmodel.NewModelFromString(DefaultModel())
-	return &Authorizer{
-		model:            model,
-		adapter:          NewAdapter(nil),
-		enablePrometheus: false,
-	}
-}
-
 func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Authorizer, error) {
 	config := cfg.GetAuthz().GetCasbin()
 	if config == nil {
@@ -172,6 +142,10 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 	if options.ServiceClient == nil {
 		return nil, errors.New("authorizer casbin client is empty")
 	}
+	err := options.Setup()
+	if err != nil {
+		return nil, err
+	}
 
 	updater := &PolicyUpdater{
 		client:   options.ServiceClient,
@@ -180,32 +154,16 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 		metric:   options.EnablePrometheus,
 	}
 
-	auth := &Authorizer{
-		options:      options,
-		updater:      updater,
-		wildcardItem: options.WildcardItem,
-	}
-
-	if err := auth.Apply(); err != nil {
+	_, err = updater.Sync(context.Background())
+	if err != nil {
 		return nil, err
 	}
-	_, err := updater.Sync(context.Background())
+	auth, err := authorizerFromOptions(updater, options)
 	if err != nil {
 		return nil, err
 	}
 
-	enforcer, err := casbin.NewSyncedEnforcer(auth.model, auth.adapter)
-	if err != nil {
-		return nil, err
-	}
-	auth.enforcer = enforcer
-
-	if err := auth.enforcer.SetWatcher(auth.watcher); err != nil {
-		return nil, err
-	}
-
-	go updater.Watch(context.Background(), auth.watcher)
-
+	go updater.Watch(context.Background(), options.Watcher)
 	if options.EnablePrometheus {
 		prometheus.MustRegister(
 			policySyncCounter,
@@ -214,5 +172,27 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 		)
 	}
 
+	return auth, nil
+}
+
+func authorizerFromOptions(updater *PolicyUpdater, options *AuthorizerOptions) (security.Authorizer, error) {
+	auth := &Authorizer{
+		model:        options.Model,
+		adapter:      options.Adapter,
+		watcher:      options.Watcher,
+		wildcardItem: options.WildcardItem,
+		updater:      updater,
+	}
+	enforcer, err := casbin.NewSyncedEnforcer(auth.model, auth.adapter)
+	if err != nil {
+		return nil, err
+	}
+	if err := enforcer.SetWatcher(auth.watcher); err != nil {
+		return nil, err
+	}
+	auth.enforcer = enforcer
+	if auth.model == nil || auth.adapter == nil {
+		return nil, errors.New("authorizer casbin model or adapter is empty")
+	}
 	return auth, nil
 }

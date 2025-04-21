@@ -15,6 +15,7 @@ import (
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/toolkits/security"
 
+	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/system/dal"
@@ -106,7 +107,7 @@ func TestGenerateToken(t *testing.T) {
 		panic(err)
 	}
 	//adapter := casbin.NewAdapter()
-	authorizer, err := securityx.NewAuthorizer(bs)
+	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithServiceClient(casbinSourceServiceClient))
 	if err != nil {
 		panic(err)
 	}

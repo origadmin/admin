@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/origadmin/runtime/service"
 	"google.golang.org/grpc"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -47,6 +48,10 @@ func (c *CasbinSourceServiceServer) StreamRules(request *pb.StreamRulesRequest,
 // NewCasbinSourceServiceServerPB new a menu service.
 func NewCasbinSourceServiceServerPB(client *biz.CasbinSourceServiceBiz) pb.CasbinSourceServiceServer {
 	return &CasbinSourceServiceServer{client: client}
+}
+
+func NewCasbinSourceServiceClient(client *service.GRPCClient) pb.CasbinSourceServiceClient {
+	return pb.NewCasbinSourceServiceClient(client)
 }
 
 var _ pb.CasbinSourceServiceServer = (*CasbinSourceServiceServer)(nil)

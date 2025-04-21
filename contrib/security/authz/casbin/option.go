@@ -44,7 +44,6 @@ type AuthorizerOption = func(*AuthorizerOptions)
 // WildcardItem: Wildcard "*"
 var (
 	DefaultAuthorizerOptions = AuthorizerOptions{
-		Model:        casbinmodel.NewModel(),
 		Watcher:      NewWatcher(),
 		SyncInterval: 5 * time.Second,
 		WildcardItem: "*",
@@ -143,4 +142,23 @@ func WithPrometheusMetrics(enable bool) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
 		s.EnablePrometheus = enable
 	}
+}
+
+func (s *AuthorizerOptions) Setup() error {
+	if s.Adapter == nil {
+		s.Adapter = NewAdapter(nil)
+	}
+
+	if s.Model == nil {
+		var err error
+		s.Model, err = casbinmodel.NewModelFromString(DefaultModel())
+		if err != nil {
+			return err
+		}
+	}
+
+	if s.Watcher == nil {
+		s.Watcher = NewWatcher()
+	}
+	return nil
 }

@@ -56,14 +56,11 @@ func (c CasbinSourceServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGr
 func (c CasbinSourceServiceBiz) WatchUpdate(_ context.Context,
 	request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
 	log.Info("WatchUpdate")
-	ModifiedDate := request.LastModified
-	if c.lastModified.Load() > ModifiedDate {
-		ModifiedDate = c.lastModified.Load()
-	}
-	return &pb.WatchUpdateResponse{ModifiedDate: ModifiedDate}, nil
+	return &pb.WatchUpdateResponse{ModifiedDate: c.lastModified.Load()}, nil
 }
 
 func (c CasbinSourceServiceBiz) UpdateRules() {
+	// todo: load from db
 	c.lastModified.Store(time.Now().Unix())
 }
 

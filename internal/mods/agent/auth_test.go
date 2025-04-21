@@ -39,7 +39,7 @@ var bridge = securityx.SecurityBridge{
 	IsRoot: func(ctx context.Context, claims security.Claims) bool {
 		return claims.GetSubject() == "admin"
 	},
-	Data: mockData{},
+	Provider: mockData{},
 	//TokenParser: func(ctx context.Context) string {
 	//	if tr, ok := transport.FromServerContext(ctx); ok {
 	//		return tr.RequestHeader().Get("Authorization")

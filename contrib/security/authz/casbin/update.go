@@ -8,6 +8,7 @@ package casbin
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"time"
 
@@ -44,11 +45,10 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if u.lastModified >= update.ModifiedDate {
+	if u.lastModified > update.ModifiedDate {
 		return false, nil
 	}
-	u.lastModified = update.ModifiedDate
-
+	fmt.Printf("Received update: %v to %v\n", u.lastModified, update.ModifiedDate)
 	stream, err := u.client.StreamRules(ctx, &pb.StreamRulesRequest{
 		WithGroupings: true,
 		WithPolicies:  true,
@@ -76,11 +76,13 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 	}
 
 	if len(policies) > 0 {
-		u.lastModified = time.Now().Unix()
+		fmt.Printf("Adapter: %T\n", u.adapter)
 		switch setter := u.adapter.(type) {
 		case *adapter:
+			log.Infof("set policies(inner): %v", policies)
 			setter.typedPolicies = policies
 		case security.PolicyRegistry:
+			log.Infof("set policies: %v", policies)
 			pm := maps.Transform(policies, func(k string, v [][]string) (string, any, bool) {
 				return k, any(v), true
 			})
@@ -94,6 +96,10 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 			policyCountGauge.Set(float64(len(policies)))
 			policySyncCounter.WithLabelValues("success").Inc()
 		}
+
+		u.lastModified = time.Now().Unix()
+		//todo: update lastModified
+		//u.lastModified = update.ModifiedDate
 		return true, nil
 	}
 	return false, nil
