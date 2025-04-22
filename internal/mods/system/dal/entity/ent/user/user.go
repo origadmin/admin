@@ -40,8 +40,8 @@ const (
 	FieldName = "name"
 	// FieldGender holds the string denoting the gender field in the database.
 	FieldGender = "gender"
-	// FieldPassword holds the string denoting the password field in the database.
-	FieldPassword = "password"
+	// FieldEncryptedPassword holds the string denoting the encrypted_password field in the database.
+	FieldEncryptedPassword = "encrypted_password"
 	// FieldSalt holds the string denoting the salt field in the database.
 	FieldSalt = "salt"
 	// FieldPhone holds the string denoting the phone field in the database.
@@ -137,7 +137,7 @@ var Columns = []string{
 	FieldAvatar,
 	FieldName,
 	FieldGender,
-	FieldPassword,
+	FieldEncryptedPassword,
 	FieldPhone,
 	FieldEmail,
 	FieldDepartment,
@@ -216,10 +216,10 @@ var (
 	DefaultName string
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
-	// DefaultPassword holds the default value on creation for the "password" field.
-	DefaultPassword string
-	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
-	PasswordValidator func(string) error
+	// DefaultEncryptedPassword holds the default value on creation for the "encrypted_password" field.
+	DefaultEncryptedPassword string
+	// EncryptedPasswordValidator is a validator for the "encrypted_password" field. It is called by the builders before save.
+	EncryptedPasswordValidator func(string) error
 	// DefaultSalt holds the default value on creation for the "salt" field.
 	DefaultSalt string
 	// SaltValidator is a validator for the "salt" field. It is called by the builders before save.
@@ -361,9 +361,9 @@ func ByGender(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldGender, opts...).ToFunc()
 }
 
-// ByPassword orders the results by the password field.
-func ByPassword(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPassword, opts...).ToFunc()
+// ByEncryptedPassword orders the results by the encrypted_password field.
+func ByEncryptedPassword(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEncryptedPassword, opts...).ToFunc()
 }
 
 // BySalt orders the results by the salt field.

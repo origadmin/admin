@@ -386,7 +386,7 @@ var (
 		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "user.field.avatar", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
 		{Name: "gender", Type: field.TypeEnum, Comment: "entity.user.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
-		{Name: "password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.password", Default: ""},
+		{Name: "encrypted_password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.encrypted_password", Default: ""},
 		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "entity.user.field.salt", Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone", Default: ""},
 		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email", Default: ""},

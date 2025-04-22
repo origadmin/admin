@@ -178,16 +178,16 @@ func (uc *UserCreate) SetNillableGender(u *user.Gender) *UserCreate {
 	return uc
 }
 
-// SetPassword sets the "password" field.
-func (uc *UserCreate) SetPassword(s string) *UserCreate {
-	uc.mutation.SetPassword(s)
+// SetEncryptedPassword sets the "encrypted_password" field.
+func (uc *UserCreate) SetEncryptedPassword(s string) *UserCreate {
+	uc.mutation.SetEncryptedPassword(s)
 	return uc
 }
 
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uc *UserCreate) SetNillablePassword(s *string) *UserCreate {
+// SetNillableEncryptedPassword sets the "encrypted_password" field if the given value is not nil.
+func (uc *UserCreate) SetNillableEncryptedPassword(s *string) *UserCreate {
 	if s != nil {
-		uc.SetPassword(*s)
+		uc.SetEncryptedPassword(*s)
 	}
 	return uc
 }
@@ -571,9 +571,9 @@ func (uc *UserCreate) defaults() error {
 		v := user.DefaultGender
 		uc.mutation.SetGender(v)
 	}
-	if _, ok := uc.mutation.Password(); !ok {
-		v := user.DefaultPassword
-		uc.mutation.SetPassword(v)
+	if _, ok := uc.mutation.EncryptedPassword(); !ok {
+		v := user.DefaultEncryptedPassword
+		uc.mutation.SetEncryptedPassword(v)
 	}
 	if _, ok := uc.mutation.Salt(); !ok {
 		v := user.DefaultSalt
@@ -698,12 +698,12 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
 		}
 	}
-	if _, ok := uc.mutation.Password(); !ok {
-		return &ValidationError{Name: "password", err: errors.New(`ent: missing required field "User.password"`)}
+	if _, ok := uc.mutation.EncryptedPassword(); !ok {
+		return &ValidationError{Name: "encrypted_password", err: errors.New(`ent: missing required field "User.encrypted_password"`)}
 	}
-	if v, ok := uc.mutation.Password(); ok {
-		if err := user.PasswordValidator(v); err != nil {
-			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
+	if v, ok := uc.mutation.EncryptedPassword(); ok {
+		if err := user.EncryptedPasswordValidator(v); err != nil {
+			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.Salt(); !ok {
@@ -867,9 +867,9 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldGender, field.TypeEnum, value)
 		_node.Gender = value
 	}
-	if value, ok := uc.mutation.Password(); ok {
-		_spec.SetField(user.FieldPassword, field.TypeString, value)
-		_node.Password = value
+	if value, ok := uc.mutation.EncryptedPassword(); ok {
+		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
+		_node.EncryptedPassword = value
 	}
 	if value, ok := uc.mutation.Salt(); ok {
 		_spec.SetField(user.FieldSalt, field.TypeString, value)

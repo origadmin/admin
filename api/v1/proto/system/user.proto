@@ -15,34 +15,34 @@ option objc_class_prefix = "APIServiceSystemUser";
 
 // The login service definition.
 service UserService {
-  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {get: "/sys/users"};
   }
 
-  rpc ListUserResources (ListUserResourcesRequest) returns (ListUserResourcesResponse) {
+  rpc ListUserResources(ListUserResourcesRequest) returns (ListUserResourcesResponse) {
     option (google.api.http) = {get: "/sys/users/{id}/resources"};
   }
 
-  rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {get: "/sys/users/{id}"};
   }
-  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/sys/users"
       body: "user"
     };
   }
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}"
       body: "user"
     };
   }
-  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {delete: "/sys/users/{user.id}"};
   }
   // UpdateUserStatus Update the status of the user information
-  rpc UpdateUserStatus (UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
+  rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}/status"
       body: "user"
@@ -50,7 +50,7 @@ service UserService {
   }
 
   // UpdateUserRoles update the user roles
-  rpc UpdateUserRoles (UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
+  rpc UpdateUserRoles(UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
     option (google.api.http) = {
       put: "/sys/users/{user.id}/roles"
       body: "user"
@@ -58,7 +58,7 @@ service UserService {
   }
 
   // ResetUserPassword reset the user s password
-  rpc ResetUserPassword (ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
+  rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
     option (google.api.http) = {
       post: "/sys/users/{id}/password/reset"
       body: "data"
@@ -74,7 +74,6 @@ message ListUserResourcesResponse {
   int32 total_size = 1 [json_name = "total_size"];
   repeated Resource resources = 2 [json_name = "resources"];
 }
-
 
 message UpdateUserStatusRequest {
   User user = 1 [json_name = "user"];
@@ -159,7 +158,6 @@ message UpdateUserRequest {
   bool is_system = 4 [json_name = "is_system"];
   // The random_password is the query parameter for set only to generate a random password
   bool random_password = 2 [json_name = "random_password"];
-
 }
 
 message UpdateUserResponse {

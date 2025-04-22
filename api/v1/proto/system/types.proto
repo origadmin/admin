@@ -69,7 +69,7 @@ message MenuEdges {
 // Role is the model entity for the Role schema.
 message Role {
   // ID of the ent.
-   // field.primary_key.comment
+  // field.primary_key.comment
   int64 id = 1 [json_name = "id"];
   // create_time.field.comment
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
@@ -118,7 +118,7 @@ message RoleEdges {
 // User is the model entity for the User schema.
 message User {
   // ID of the ent.
-   // field.primary_key.comment
+  // field.primary_key.comment
   int64 id = 1 [json_name = "id"];
   // create_author.field.comment
   int64 create_author = 2 [json_name = "create_author"];
@@ -145,33 +145,35 @@ message User {
   // user.field.password
   // @Decrypted don't show this field in response
   string password = 13 [json_name = "password"];
+  // user.field.confirm_password
+  string confirm_password = 14 [json_name = "confirm_password"];
   // user.field.salt
   // @Decrypted don't show this field in response
-  string salt = 14 [json_name = "salt"];
+  string salt = 15 [json_name = "salt"];
   // user.field.phone
-  string phone = 15 [json_name = "phone"];
+  string phone = 16 [json_name = "phone"];
   // user.field.email
-  string email = 16 [json_name = "email"];
+  string email = 17 [json_name = "email"];
   // user.field.remark
-  string remark = 17 [json_name = "remark"];
+  string remark = 18 [json_name = "remark"];
   // user.field.token
-  string token = 18 [json_name = "token"];
+  string token = 19 [json_name = "token"];
   // user.field.status
-  int32 status = 19 [json_name = "status"];
+  int32 status = 20 [json_name = "status"];
   // user.field.last_login_ip
-  string last_login_ip = 20 [json_name = "last_login_ip"];
+  string last_login_ip = 21 [json_name = "last_login_ip"];
   // user.field.last_login_time
-  google.protobuf.Timestamp last_login_time = 21 [json_name = "last_login_time"];
+  google.protobuf.Timestamp last_login_time = 22 [json_name = "last_login_time"];
   // user.field.sanction_date
-  optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
+  optional google.protobuf.Timestamp sanction_date = 23 [json_name = "sanction_date"];
   // user.field.manager_id
-  int64 manager_id = 23 [json_name = "manager_id"];
+  int64 manager_id = 24 [json_name = "manager_id"];
   // user.field.manager
-  string manager = 24 [json_name = "manager"];
+  string manager = 25 [json_name = "manager"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 25 [json_name = "roles"];
+  repeated Role roles = 26 [json_name = "roles"];
   // Role Ids holds the value of the role_ids
-  repeated int64 role_ids = 26 [json_name = "role_ids"];
+  repeated int64 role_ids = 27 [json_name = "role_ids"];
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.
@@ -239,7 +241,7 @@ message RoleMenuEdges {
 // Resource is the model entity for the Resource schema.
 message Resource {
   // ID of the ent.
- // field.primary_key.comment
+  // field.primary_key.comment
   int64 id = 1 [json_name = "id"];
   // create_time.field.comment
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
@@ -272,7 +274,7 @@ message Resource {
   // resource.field.tree_path
   string tree_path = 16 [json_name = "tree_path"];
   // resource.field.properties
-  map<string, string > properties = 17 [json_name = "properties"];
+  map<string, string> properties = 17 [json_name = "properties"];
   // resource.field.description
   string description = 18 [json_name = "description"];
   // resource.field.parent_id
@@ -292,7 +294,6 @@ message ResourceEdges {
   // Menu holds the value of the menu edge.
   Menu menu = 1 [json_name = "menu"];
 }
-
 
 // department.table.comment
 message Department {
@@ -411,7 +412,7 @@ message Permission {
   // permission.field.data_scope
   string data_scope = 7 [json_name = "data_scope"];
   // permission.field.data_rules
-  map<string, string > data_rules = 8 [json_name = "data_rules"];
+  map<string, string> data_rules = 8 [json_name = "data_rules"];
   // permission.field.resource_ids
   repeated int64 resource_ids = 9 [json_name = "resource_ids"];
   // permission.field.resources
@@ -443,7 +444,6 @@ message UserPosition {
   int64 user_id = 2 [json_name = "user_id"];
   // field.foreign_key.comment
   int64 position_id = 3 [json_name = "position_id"];
-
 }
 
 // UserPositionEdges holds the relations/edges for other nodes in the graph.
@@ -463,7 +463,6 @@ message PositionPermission {
   int64 position_id = 2 [json_name = "position_id"];
   // position_permission.field.permission_id
   int64 permission_id = 3 [json_name = "permission_id"];
-
 }
 
 // PositionPermissionEdges holds the relations/edges for other nodes in the graph.
@@ -483,7 +482,6 @@ message RolePermission {
   int64 role_id = 2 [json_name = "role_id"];
   // field.foreign_key.comment
   int64 permission_id = 3 [json_name = "permission_id"];
-
 }
 
 // RolePermissionEdges holds the relations/edges for other nodes in the graph.

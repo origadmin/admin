@@ -427,12 +427,12 @@ func init() {
 	user.DefaultName = userDescName.Default.(string)
 	// user.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	user.NameValidator = userDescName.Validators[0].(func(string) error)
-	// userDescPassword is the schema descriptor for password field.
-	userDescPassword := userFields[7].Descriptor()
-	// user.DefaultPassword holds the default value on creation for the password field.
-	user.DefaultPassword = userDescPassword.Default.(string)
-	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
-	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
+	// userDescEncryptedPassword is the schema descriptor for encrypted_password field.
+	userDescEncryptedPassword := userFields[7].Descriptor()
+	// user.DefaultEncryptedPassword holds the default value on creation for the encrypted_password field.
+	user.DefaultEncryptedPassword = userDescEncryptedPassword.Default.(string)
+	// user.EncryptedPasswordValidator is a validator for the "encrypted_password" field. It is called by the builders before save.
+	user.EncryptedPasswordValidator = userDescEncryptedPassword.Validators[0].(func(string) error)
 	// userDescSalt is the schema descriptor for salt field.
 	userDescSalt := userFields[8].Descriptor()
 	// user.DefaultSalt holds the default value on creation for the salt field.

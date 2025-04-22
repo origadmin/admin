@@ -1,18 +1,18 @@
 syntax = "proto3";
 
-option go_package = "v1/services/system;system";
-option java_multiple_files = true;
-option csharp_namespace = "CasbinOrg.Grpc";
-option java_outer_classname = "APIServiceSystemCasbinProto";
-option java_package = "com.origadmin.api.v1.services.system";
-option objc_class_prefix = "APIServiceSystemCasbin";
+package api.v1.services.system;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "system/types.proto";
 
-package api.v1.services.system;
+option go_package = "v1/services/system;system";
+option java_multiple_files = true;
+option csharp_namespace = "CasbinOrg.Grpc";
+option java_outer_classname = "APIServiceSystemCasbinProto";
+option java_package = "com.origadmin.api.v1.services.system";
+option objc_class_prefix = "APIServiceSystemCasbin";
 
 // The Casbin source service definition.
 service CasbinSourceService {

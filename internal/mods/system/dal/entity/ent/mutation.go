@@ -7987,7 +7987,7 @@ type UserMutation struct {
 	avatar                  *string
 	name                    *string
 	gender                  *user.Gender
-	password                *string
+	encrypted_password      *string
 	salt                    *string
 	phone                   *string
 	email                   *string
@@ -8645,40 +8645,40 @@ func (m *UserMutation) ResetGender() {
 	m.gender = nil
 }
 
-// SetPassword sets the "password" field.
-func (m *UserMutation) SetPassword(s string) {
-	m.password = &s
+// SetEncryptedPassword sets the "encrypted_password" field.
+func (m *UserMutation) SetEncryptedPassword(s string) {
+	m.encrypted_password = &s
 }
 
-// Password returns the value of the "password" field in the mutation.
-func (m *UserMutation) Password() (r string, exists bool) {
-	v := m.password
+// EncryptedPassword returns the value of the "encrypted_password" field in the mutation.
+func (m *UserMutation) EncryptedPassword() (r string, exists bool) {
+	v := m.encrypted_password
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPassword returns the old "password" field's value of the User entity.
+// OldEncryptedPassword returns the old "encrypted_password" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldPassword(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldEncryptedPassword(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPassword is only allowed on UpdateOne operations")
+		return v, errors.New("OldEncryptedPassword is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPassword requires an ID field in the mutation")
+		return v, errors.New("OldEncryptedPassword requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPassword: %w", err)
+		return v, fmt.Errorf("querying old value for OldEncryptedPassword: %w", err)
 	}
-	return oldValue.Password, nil
+	return oldValue.EncryptedPassword, nil
 }
 
-// ResetPassword resets all changes to the "password" field.
-func (m *UserMutation) ResetPassword() {
-	m.password = nil
+// ResetEncryptedPassword resets all changes to the "encrypted_password" field.
+func (m *UserMutation) ResetEncryptedPassword() {
+	m.encrypted_password = nil
 }
 
 // SetSalt sets the "salt" field.
@@ -9647,8 +9647,8 @@ func (m *UserMutation) Fields() []string {
 	if m.gender != nil {
 		fields = append(fields, user.FieldGender)
 	}
-	if m.password != nil {
-		fields = append(fields, user.FieldPassword)
+	if m.encrypted_password != nil {
+		fields = append(fields, user.FieldEncryptedPassword)
 	}
 	if m.salt != nil {
 		fields = append(fields, user.FieldSalt)
@@ -9724,8 +9724,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case user.FieldGender:
 		return m.Gender()
-	case user.FieldPassword:
-		return m.Password()
+	case user.FieldEncryptedPassword:
+		return m.EncryptedPassword()
 	case user.FieldSalt:
 		return m.Salt()
 	case user.FieldPhone:
@@ -9787,8 +9787,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldName(ctx)
 	case user.FieldGender:
 		return m.OldGender(ctx)
-	case user.FieldPassword:
-		return m.OldPassword(ctx)
+	case user.FieldEncryptedPassword:
+		return m.OldEncryptedPassword(ctx)
 	case user.FieldSalt:
 		return m.OldSalt(ctx)
 	case user.FieldPhone:
@@ -9910,12 +9910,12 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetGender(v)
 		return nil
-	case user.FieldPassword:
+	case user.FieldEncryptedPassword:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPassword(v)
+		m.SetEncryptedPassword(v)
 		return nil
 	case user.FieldSalt:
 		v, ok := value.(string)
@@ -10184,8 +10184,8 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldGender:
 		m.ResetGender()
 		return nil
-	case user.FieldPassword:
-		m.ResetPassword()
+	case user.FieldEncryptedPassword:
+		m.ResetEncryptedPassword()
 		return nil
 	case user.FieldSalt:
 		m.ResetSalt()

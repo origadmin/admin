@@ -17,7 +17,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/slog-kratos"
 	"github.com/origadmin/toolkits/crypto/rand"
-	"github.com/origadmin/toolkits/idgen/uuid"
+	"github.com/origadmin/toolkits/identifier/uuid"
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"origadmin/application/admin/internal/configs"

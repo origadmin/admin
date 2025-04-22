@@ -714,10 +714,10 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			if input.Gender != zero {
 				m.SetGender(input.Gender)
 			}
-		case user.FieldPassword:
+		case user.FieldEncryptedPassword:
 			// check string with sql.NullString if it is empty
-			if input.Password != "" {
-				m.SetPassword(input.Password)
+			if input.EncryptedPassword != "" {
+				m.SetEncryptedPassword(input.EncryptedPassword)
 			}
 		case user.FieldSalt:
 			// check string with sql.NullString if it is empty
@@ -831,8 +831,8 @@ func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
 			m.SetName(input.Name)
 		case user.FieldGender:
 			m.SetGender(input.Gender)
-		case user.FieldPassword:
-			m.SetPassword(input.Password)
+		case user.FieldEncryptedPassword:
+			m.SetEncryptedPassword(input.EncryptedPassword)
 		case user.FieldSalt:
 			m.SetSalt(input.Salt)
 		case user.FieldPhone:

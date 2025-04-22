@@ -3,7 +3,7 @@
 
 
 {{ define "database" }}
-    {{- $pkg := base $.Config.Package -}}
+    {{ $pkg := base $.Config.Package -}}
     {{ template "header" $ }}
 
 		/* Additional dependencies injected to config. */
@@ -112,7 +112,7 @@
 		}
 
     {{ range $n := $.Nodes }}
-        {{ $client := print $n.Name "ServiceClient" }}
+        {{ $client := print $n.Name "Client" }}
 				// {{ $n.Name }} is the client for interacting with the {{ $n.Name }} builders.
 				func (db *Database) {{ $n.Name }}(ctx context.Context) *{{ $client }} {
 				return db.Client(ctx).{{ $n.Name }}

@@ -42,8 +42,8 @@ type User struct {
 	Name string `json:"name,omitempty"`
 	// entity.user.field.gender
 	Gender user.Gender `json:"gender,omitempty"`
-	// entity.user.field.password
-	Password string `json:"password,omitempty"`
+	// entity.user.field.encrypted_password
+	EncryptedPassword string `json:"encrypted_password,omitempty"`
 	// entity.user.field.salt
 	//
 	// Deprecated: toolkits/crypto includes salt management
@@ -162,7 +162,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus, user.FieldManagerID:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -260,11 +260,11 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Gender = user.Gender(value.String)
 			}
-		case user.FieldPassword:
+		case user.FieldEncryptedPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field password", values[i])
+				return fmt.Errorf("unexpected type %T for field encrypted_password", values[i])
 			} else if value.Valid {
-				u.Password = value.String
+				u.EncryptedPassword = value.String
 			}
 		case user.FieldSalt:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -454,8 +454,8 @@ func (u *User) String() string {
 	builder.WriteString("gender=")
 	builder.WriteString(fmt.Sprintf("%v", u.Gender))
 	builder.WriteString(", ")
-	builder.WriteString("password=")
-	builder.WriteString(u.Password)
+	builder.WriteString("encrypted_password=")
+	builder.WriteString(u.EncryptedPassword)
 	builder.WriteString(", ")
 	builder.WriteString("salt=")
 	builder.WriteString(u.Salt)

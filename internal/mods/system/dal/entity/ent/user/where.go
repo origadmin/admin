@@ -110,9 +110,9 @@ func Name(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldName, v))
 }
 
-// Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
-func Password(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldPassword, v))
+// EncryptedPassword applies equality check predicate on the "encrypted_password" field. It's identical to EncryptedPasswordEQ.
+func EncryptedPassword(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldEncryptedPassword, v))
 }
 
 // Salt applies equality check predicate on the "salt" field. It's identical to SaltEQ.
@@ -825,69 +825,69 @@ func GenderNotIn(vs ...Gender) predicate.User {
 	return predicate.User(sql.FieldNotIn(FieldGender, vs...))
 }
 
-// PasswordEQ applies the EQ predicate on the "password" field.
-func PasswordEQ(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldPassword, v))
+// EncryptedPasswordEQ applies the EQ predicate on the "encrypted_password" field.
+func EncryptedPasswordEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldEncryptedPassword, v))
 }
 
-// PasswordNEQ applies the NEQ predicate on the "password" field.
-func PasswordNEQ(v string) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldPassword, v))
+// EncryptedPasswordNEQ applies the NEQ predicate on the "encrypted_password" field.
+func EncryptedPasswordNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldEncryptedPassword, v))
 }
 
-// PasswordIn applies the In predicate on the "password" field.
-func PasswordIn(vs ...string) predicate.User {
-	return predicate.User(sql.FieldIn(FieldPassword, vs...))
+// EncryptedPasswordIn applies the In predicate on the "encrypted_password" field.
+func EncryptedPasswordIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldEncryptedPassword, vs...))
 }
 
-// PasswordNotIn applies the NotIn predicate on the "password" field.
-func PasswordNotIn(vs ...string) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldPassword, vs...))
+// EncryptedPasswordNotIn applies the NotIn predicate on the "encrypted_password" field.
+func EncryptedPasswordNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldEncryptedPassword, vs...))
 }
 
-// PasswordGT applies the GT predicate on the "password" field.
-func PasswordGT(v string) predicate.User {
-	return predicate.User(sql.FieldGT(FieldPassword, v))
+// EncryptedPasswordGT applies the GT predicate on the "encrypted_password" field.
+func EncryptedPasswordGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldEncryptedPassword, v))
 }
 
-// PasswordGTE applies the GTE predicate on the "password" field.
-func PasswordGTE(v string) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldPassword, v))
+// EncryptedPasswordGTE applies the GTE predicate on the "encrypted_password" field.
+func EncryptedPasswordGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldEncryptedPassword, v))
 }
 
-// PasswordLT applies the LT predicate on the "password" field.
-func PasswordLT(v string) predicate.User {
-	return predicate.User(sql.FieldLT(FieldPassword, v))
+// EncryptedPasswordLT applies the LT predicate on the "encrypted_password" field.
+func EncryptedPasswordLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldEncryptedPassword, v))
 }
 
-// PasswordLTE applies the LTE predicate on the "password" field.
-func PasswordLTE(v string) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldPassword, v))
+// EncryptedPasswordLTE applies the LTE predicate on the "encrypted_password" field.
+func EncryptedPasswordLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldEncryptedPassword, v))
 }
 
-// PasswordContains applies the Contains predicate on the "password" field.
-func PasswordContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldPassword, v))
+// EncryptedPasswordContains applies the Contains predicate on the "encrypted_password" field.
+func EncryptedPasswordContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldEncryptedPassword, v))
 }
 
-// PasswordHasPrefix applies the HasPrefix predicate on the "password" field.
-func PasswordHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldPassword, v))
+// EncryptedPasswordHasPrefix applies the HasPrefix predicate on the "encrypted_password" field.
+func EncryptedPasswordHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldEncryptedPassword, v))
 }
 
-// PasswordHasSuffix applies the HasSuffix predicate on the "password" field.
-func PasswordHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldPassword, v))
+// EncryptedPasswordHasSuffix applies the HasSuffix predicate on the "encrypted_password" field.
+func EncryptedPasswordHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldEncryptedPassword, v))
 }
 
-// PasswordEqualFold applies the EqualFold predicate on the "password" field.
-func PasswordEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldPassword, v))
+// EncryptedPasswordEqualFold applies the EqualFold predicate on the "encrypted_password" field.
+func EncryptedPasswordEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldEncryptedPassword, v))
 }
 
-// PasswordContainsFold applies the ContainsFold predicate on the "password" field.
-func PasswordContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldPassword, v))
+// EncryptedPasswordContainsFold applies the ContainsFold predicate on the "encrypted_password" field.
+func EncryptedPasswordContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldEncryptedPassword, v))
 }
 
 // SaltEQ applies the EQ predicate on the "salt" field.

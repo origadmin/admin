@@ -1039,7 +1039,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  Avatar string `json:"avatar,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Gender user.Gender `json:"gender,omitempty"`
-//	  Password string `json:"password,omitempty"`
+//	  EncryptedPassword string `json:"encrypted_password,omitempty"`
 //	  Salt string `json:"salt,omitempty"`
 //	  Phone string `json:"phone,omitempty"`
 //	  Email string `json:"email,omitempty"`
@@ -1070,7 +1070,7 @@ func (uq *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldAvatar,
 //	  user.FieldName,
 //	  user.FieldGender,
-//	  user.FieldPassword,
+//	  user.FieldEncryptedPassword,
 //	  user.FieldSalt,
 //	  user.FieldPhone,
 //	  user.FieldEmail,

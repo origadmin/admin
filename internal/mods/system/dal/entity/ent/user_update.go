@@ -213,16 +213,16 @@ func (uu *UserUpdate) SetNillableGender(u *user.Gender) *UserUpdate {
 	return uu
 }
 
-// SetPassword sets the "password" field.
-func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
-	uu.mutation.SetPassword(s)
+// SetEncryptedPassword sets the "encrypted_password" field.
+func (uu *UserUpdate) SetEncryptedPassword(s string) *UserUpdate {
+	uu.mutation.SetEncryptedPassword(s)
 	return uu
 }
 
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
+// SetNillableEncryptedPassword sets the "encrypted_password" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableEncryptedPassword(s *string) *UserUpdate {
 	if s != nil {
-		uu.SetPassword(*s)
+		uu.SetEncryptedPassword(*s)
 	}
 	return uu
 }
@@ -744,9 +744,9 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
 		}
 	}
-	if v, ok := uu.mutation.Password(); ok {
-		if err := user.PasswordValidator(v); err != nil {
-			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
+	if v, ok := uu.mutation.EncryptedPassword(); ok {
+		if err := user.EncryptedPasswordValidator(v); err != nil {
+			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
 		}
 	}
 	if v, ok := uu.mutation.Salt(); ok {
@@ -858,8 +858,8 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.Gender(); ok {
 		_spec.SetField(user.FieldGender, field.TypeEnum, value)
 	}
-	if value, ok := uu.mutation.Password(); ok {
-		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	if value, ok := uu.mutation.EncryptedPassword(); ok {
+		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Salt(); ok {
 		_spec.SetField(user.FieldSalt, field.TypeString, value)
@@ -1385,16 +1385,16 @@ func (uuo *UserUpdateOne) SetNillableGender(u *user.Gender) *UserUpdateOne {
 	return uuo
 }
 
-// SetPassword sets the "password" field.
-func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
-	uuo.mutation.SetPassword(s)
+// SetEncryptedPassword sets the "encrypted_password" field.
+func (uuo *UserUpdateOne) SetEncryptedPassword(s string) *UserUpdateOne {
+	uuo.mutation.SetEncryptedPassword(s)
 	return uuo
 }
 
-// SetNillablePassword sets the "password" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
+// SetNillableEncryptedPassword sets the "encrypted_password" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableEncryptedPassword(s *string) *UserUpdateOne {
 	if s != nil {
-		uuo.SetPassword(*s)
+		uuo.SetEncryptedPassword(*s)
 	}
 	return uuo
 }
@@ -1929,9 +1929,9 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "gender", err: fmt.Errorf(`ent: validator failed for field "User.gender": %w`, err)}
 		}
 	}
-	if v, ok := uuo.mutation.Password(); ok {
-		if err := user.PasswordValidator(v); err != nil {
-			return &ValidationError{Name: "password", err: fmt.Errorf(`ent: validator failed for field "User.password": %w`, err)}
+	if v, ok := uuo.mutation.EncryptedPassword(); ok {
+		if err := user.EncryptedPasswordValidator(v); err != nil {
+			return &ValidationError{Name: "encrypted_password", err: fmt.Errorf(`ent: validator failed for field "User.encrypted_password": %w`, err)}
 		}
 	}
 	if v, ok := uuo.mutation.Salt(); ok {
@@ -2060,8 +2060,8 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.Gender(); ok {
 		_spec.SetField(user.FieldGender, field.TypeEnum, value)
 	}
-	if value, ok := uuo.mutation.Password(); ok {
-		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	if value, ok := uuo.mutation.EncryptedPassword(); ok {
+		_spec.SetField(user.FieldEncryptedPassword, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Salt(); ok {
 		_spec.SetField(user.FieldSalt, field.TypeString, value)

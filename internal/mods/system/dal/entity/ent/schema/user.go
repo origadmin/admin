@@ -63,10 +63,10 @@ func (User) Fields() []ent.Field {
 			Values(UserGenderMale, UserGenderFemale, UserGenderUnknown).
 			Default(UserGenderUnknown).
 			Comment(i18n.Text("entity.user.field.gender")), // Gender of user
-		field.String("password").
+		field.String("encrypted_password").
 			MaxLen(256).
 			Default("").
-			Comment(i18n.Text("entity.user.field.password")),
+			Comment(i18n.Text("entity.user.field.encrypted_password")),
 		field.String("salt").
 			MaxLen(64).
 			Default("").
