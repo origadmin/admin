@@ -2104,6 +2104,11 @@ paths:
                      @Decrypted don't show this field in response
                   schema:
                     type: string
+                - name: user.confirm_password
+                  in: query
+                  description: user.field.confirm_password
+                  schema:
+                    type: string
                 - name: user.salt
                   in: query
                   description: |-
@@ -3299,6 +3304,9 @@ components:
                     description: |-
                         user.field.password
                          @Decrypted don't show this field in response
+                confirm_password:
+                    type: string
+                    description: user.field.confirm_password
                 salt:
                     type: string
                     description: |-

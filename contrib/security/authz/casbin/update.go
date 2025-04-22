@@ -76,13 +76,15 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 	}
 
 	if len(policies) > 0 {
-		fmt.Printf("Adapter: %T\n", u.adapter)
+		for s, v := range policies {
+			log.Infof("record policy: type(%s), len(%d)", s, len(v))
+		}
 		switch setter := u.adapter.(type) {
 		case *adapter:
-			log.Infof("set policies(inner): %v", policies)
+			log.Info("set policies(inner)")
 			setter.typedPolicies = policies
 		case security.PolicyRegistry:
-			log.Infof("set policies: %v", policies)
+			log.Info("set policies")
 			pm := maps.Transform(policies, func(k string, v [][]string) (string, any, bool) {
 				return k, any(v), true
 			})
@@ -113,7 +115,7 @@ func (u *PolicyUpdater) Watch(ctx context.Context, notifier persist.Watcher) {
 		select {
 		case <-ticker.C:
 			if update, err := u.Sync(ctx); err != nil || !update {
-				log.Errorf("Policy sync failed: %v", err)
+				log.Errorf("Policy sync failed: err(%v) update(%t)", err, update)
 				continue
 			}
 			_ = notifier.Update()

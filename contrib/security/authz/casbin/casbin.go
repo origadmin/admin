@@ -156,7 +156,7 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 
 	_, err = updater.Sync(context.Background())
 	if err != nil {
-		return nil, err
+		log.Errorf("Policy sync failed: %v", err)
 	}
 	auth, err := authorizerFromOptions(updater, options)
 	if err != nil {

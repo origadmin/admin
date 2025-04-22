@@ -91,7 +91,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 
 	// get user info
 	log.Debugf("Getting userData info for username %s", data.Username)
-	userData, err := repo.User.GetByUserName(ctx, data.Username, user.FieldID, user.FieldPassword, user.FieldSalt, user.FieldStatus)
+	userData, err := repo.User.GetByUsername(ctx, data.Username, user.FieldID, user.FieldEncryptedPassword, user.FieldStatus)
 	if err != nil {
 		log.Errorf("Error getting userData info: %v", err)
 		return nil, err
@@ -109,7 +109,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 
 	// check password
 	log.Debugf("Comparing password for userData %s", data.Username)
-	if err := hash.Verify(userData.Password, data.Password); err != nil {
+	if err := hash.Verify(userData.EncryptedPassword, data.Password); err != nil {
 		log.Warnf("Invalid password for userData %s", data.Username)
 		return nil, dto.ErrInvalidPassword
 	}

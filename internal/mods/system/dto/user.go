@@ -32,8 +32,9 @@ type (
 
 type UserNode struct {
 	UserPB
-	IsSystem     bool     `json:"is_system"`
-	RoleKeywords []string `json:"role_keywords"`
+	IsSystem          bool     `json:"is_system"`
+	RoleKeywords      []string `json:"role_keywords"`
+	EncryptedPassword string   `json:"encrypted_password"`
 }
 
 // UserRepo is a UserPB repository interface.
@@ -44,7 +45,7 @@ type UserRepo interface {
 	Update(context.Context, *UserPB, ...UserMutationOption) (*UserPB, error)
 	List(context.Context, *ListUsersRequest, ...UserQueryOption) ([]*UserPB, int32, error)
 	AddRoleIDs(context.Context, int64, []int64, ...UserMutationOption) error
-	GetByUserName(context.Context, string, ...string) (*UserPB, error)
+	GetByUsername(context.Context, string, ...string) (*UserNode, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
 	ListResourceByUserID(context.Context, int64, ...UserQueryOption) ([]*ResourcePB, error)
 	Current(context.Context, int64) (*UserPB, error)

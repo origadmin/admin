@@ -50,7 +50,7 @@ func (repo userRepo) ListResourceByUserID(ctx context.Context, id int64,
 	return dto.ConvertResources(resources), nil
 }
 
-func (repo userRepo) GetByUserName(ctx context.Context, username string, fields ...string) (*dto.UserPB, error) {
+func (repo userRepo) GetByUsername(ctx context.Context, username string, fields ...string) (*dto.UserNode, error) {
 	query := repo.db.User(ctx).Query().Where(user.UsernameEQ(username))
 	var option dto.UserQueryOption
 	if len(fields) > 0 {
@@ -61,7 +61,10 @@ func (repo userRepo) GetByUserName(ctx context.Context, username string, fields 
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertUser2PB(result), nil
+	return &dto.UserNode{
+		UserPB:            *dto.ConvertUser2PB(result),
+		EncryptedPassword: result.EncryptedPassword,
+	}, nil
 }
 
 func (repo userRepo) GetRoleIDs(ctx context.Context, id int64) ([]int64, error) {
@@ -126,10 +129,14 @@ func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...
 		if len(userPB.Roles) > 0 {
 			update.ClearRoles()
 			update.AddRoles(dto.ConvertRolesPB2Object(userPB.Roles)...)
+		} else {
+			update.ClearRoles()
 		}
 		if len(userPB.RoleIds) > 0 {
 			update.ClearRoles()
 			update.AddRoleIDs(userPB.RoleIds...)
+		} else {
+			update.ClearRoles()
 		}
 		update.SetUser(obj, user.SelectColumns([]string{
 			user.FieldNickname,
