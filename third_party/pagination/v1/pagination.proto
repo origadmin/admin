@@ -24,18 +24,18 @@ message PageRequest {
       default: {number: 1}
     }
   ];
-  // The page_token is the query parameter for set the page token.
-  string page_token = 2 [
-    json_name = "page_token",
-    (gnostic.openapi.v3.property) = {description: "paging token"}
-  ];
   // The number of lines per page
-  optional int32 page_size = 3 [
+  optional int32 page_size = 2 [
     json_name = "page_size",
     (gnostic.openapi.v3.property) = {
       description: "The number of lines per page"
       default: {number: 15}
     }
+  ];
+  // The page_token is the query parameter for set the page token.
+  string page_token = 3 [
+    json_name = "page_token",
+    (gnostic.openapi.v3.property) = {description: "paging token"}
   ];
   // The only_count is the query parameter for set only to query the total number
   bool only_count = 4 [
@@ -73,7 +73,7 @@ message PageResponse {
     (gnostic.openapi.v3.property) = {description: "total number"}
   ];
   // The paging data
-  google.protobuf.Any data = 2 [
+  repeated google.protobuf.Any data = 2 [
     json_name = "data",
     (gnostic.openapi.v3.property) = {description: "data"}
   ];
@@ -95,7 +95,7 @@ message PageResponse {
   ];
   // Additional information about this response.
   // content to be added without destroying the current data format
-  google.protobuf.Any extra = 6 [
+  map<string, google.protobuf.Any> extra = 6 [
     json_name = "extra",
     (gnostic.openapi.v3.property) = {description: "additional information about this response"}
   ];

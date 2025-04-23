@@ -18,9 +18,21 @@ message EntrySelectorConfig {
   string version = 4 [json_name = "version"];
 }
 
+message ServiceConfig {
+  string name = 1 [
+    json_name = "name",
+    (validate.rules).string.min_len = 1
+  ];
+  Entry entry = 2 [json_name = "entry"]; // 各服务独立入口配置
+  config.v1.Service service = 3 [json_name = "service"]; // 服务专用配置
+//  string registry_path = 4 [json_name = "registry_path"]; // 服务发现注册路径
+}
+
 message Bootstrap {
   // name is the application name or service name for used
   string name = 1 [json_name = "name"];
+  string version = 2 [json_name = "version"];
+  string crypto_type = 3 [json_name = "crypto_type"];
   string mode = 5 [
     json_name = "mode",
     (validate.rules).string = { // Ensure this matches the new import
@@ -30,10 +42,23 @@ message Bootstrap {
       ]
     }
   ];
-  string version = 2 [json_name = "version"];
-  string crypto_type = 3 [json_name = "crypto_type"];
-  map<string, string> servers = 4 [json_name = "servers"];
 
+  string environment = 6 [
+    json_name = "environment",
+    (validate.rules).string = {
+      in: [
+        "development",
+        "production"
+      ]
+    }
+  ];
+  bool enable_dynamic_config = 7 [json_name = "enable_dynamic_config"];
+
+  message HealthCheck {
+    int32 timeout = 1 [json_name = "timeout"];
+    string path = 2 [json_name = "path"];
+  }
+  HealthCheck health_check = 1002;
   // Entry
   message Entry {
     string scheme = 1 [json_name = "scheme"];

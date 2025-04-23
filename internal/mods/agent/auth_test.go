@@ -124,7 +124,7 @@ func TestAuthenticator(t *testing.T) {
 // Test security middleware chain
 func TestSecurityMiddlewareChain(t *testing.T) {
 	// Create test middleware chain
-	chain := selector.Server(bridge.Build()).Match(func(ctx context.Context, operation string) bool {
+	chain := selector.Server(bridge.Middleware()).Match(func(ctx context.Context, operation string) bool {
 		fmt.Println("operation:", operation)
 		return operation == "/protected"
 	}).Build()

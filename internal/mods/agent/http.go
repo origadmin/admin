@@ -81,7 +81,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		Provider:    &data{},
 		TokenParser: nil,
 	}
-	serv := selector.Server(bridge.Build()).Match(func(ctx context.Context, operation string) bool {
+	serv := selector.Server(bridge.Middleware()).Match(func(ctx context.Context, operation string) bool {
 		for _, p := range paths {
 			if strings.HasPrefix(operation, p) {
 				log.Debugf("Operation '%s' matches public path '%s', returning true", operation, p)
@@ -91,7 +91,7 @@ func NewHTTPServerAgent(bootstrap *configs.Bootstrap, registrars []ServerRegiste
 		log.Debugf("Operation '%s' no matches public path '%s'", operation, "*")
 		return true
 	})
-	ms = append(ms, serv.Build(), CallerMiddleware())
+	ms = append(ms, serv.Build(), CallLoggerMiddleware())
 
 	serviceConfig.Name = types.ZeroOr(serviceConfig.Name, "ORIGADMIN_SERVICE")
 	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), service.WithHTTP(
@@ -132,10 +132,10 @@ func DefaultPaths() []string {
 	}
 }
 
-func CallerMiddleware() middleware.KMiddleware {
+func CallLoggerMiddleware() middleware.KMiddleware {
 	return func(handler middleware.KHandler) middleware.KHandler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			log.Infof("CallerMiddleware: %+v", ctx)
+			log.Infof("CallLoggerMiddleware: %+v", ctx)
 			tr, ok := transport.FromServerContext(ctx)
 			log.Infof("Caller Server: %+v, ok: %+v", tr, ok)
 			tr, ok = transport.FromClientContext(ctx)

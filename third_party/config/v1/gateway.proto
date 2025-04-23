@@ -70,9 +70,17 @@ enum Protocol {
   UNSPECIFIED = 0;
   HTTP = 1;
   GRPC = 2;
+  CUSTOM = 3;
 }
 
-message HealthCheck {}
+message HealthCheck {
+  enum CheckType {
+    HTTP = 0;
+    TCP = 1;
+  }
+  CheckType type = 1;
+  string endpoint = 2;
+}
 
 message Retry {
   // default attempts is 1

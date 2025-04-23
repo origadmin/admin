@@ -130,10 +130,10 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 		return nil, errors.New("no entry")
 	}
 
-	servers := bootstrap.GetServers()
-	if servers == nil {
-		return nil, errors.New("no servers")
-	}
+	//servers := bootstrap.GetServers()
+	//if servers == nil {
+	//	return nil, errors.New("no servers")
+	//}
 	registry := bootstrap.GetRegistry()
 	if registry == nil {
 		return nil, errors.New("no registry")
@@ -176,14 +176,6 @@ func MiddlewareServer() middleware.KMiddleware {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			if md, ok := metadata.FromClientContext(ctx); ok {
 				log.Debugf("MiddlewareServer: found client context metadata: %+v", md)
-				//	//for k, v := range md {
-				//	//	cmd[k] = v
-				//	//	log.Debugf("MiddlewareServer: adding key-value pair (%s, %s) to client context metadata", k, v)
-				//	//}
-				//	ctx = metadata.NewClientContext(ctx, cmd)
-				//log.Debugf("MiddlewareServer: updated client context metadata: %+v", md)
-				//} else {
-				//	log.Debugf("MiddlewareServer: no client context metadata found")
 			} else {
 				log.Debugf("MiddlewareServer: no client context metadata found")
 			}
@@ -192,9 +184,7 @@ func MiddlewareServer() middleware.KMiddleware {
 			} else {
 				log.Debugf("MiddlewareServer: no server context metadata found")
 			}
-			//log.Debugf("MiddlewareServer: calling handler function")
 			reply, err = handler(ctx, req)
-			//log.Debugf("MiddlewareServer: handler function returned reply: %+v, error: %v", reply, err)
 			return
 		}
 	}

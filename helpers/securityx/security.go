@@ -154,7 +154,7 @@ func (obj SecurityBridge) aggregateTokenParsers(outer ...func(ctx context.Contex
 	}
 }
 
-func (obj SecurityBridge) Build() middleware.KMiddleware {
+func (obj SecurityBridge) Middleware() middleware.KMiddleware {
 	if obj.TokenParser == nil {
 		obj.TokenParser = obj.aggregateTokenParsers(
 			FromTransportServer(obj.AuthenticationHeader, obj.Scheme.String()),

@@ -167,7 +167,7 @@ func DefaultData() *configv1.Data {
 			File: &configv1.Data_File{
 				Root: "",
 			},
-			Redis: &configv1.Data_Redis{},
+			Redis:  &configv1.Data_Redis{},
 			Badger: &configv1.Data_BadgerDS{},
 			Mongo:  &configv1.Data_Mongo{},
 			Oss:    &configv1.Data_Oss{},
@@ -301,7 +301,7 @@ func DefaultServiceMiddleware() *middlewarev1.Middleware {
 				TokenType:            "Bearer",
 			},
 		},
-		// Build filters
+		// Middleware filters
 		Selector: &selectorv1.Selector{
 			Enabled: false,
 		},

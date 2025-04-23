@@ -138,7 +138,7 @@ message AuthZConfig {
   }
   // Disable security middleware
   bool disabled = 1 [json_name = "disabled"];
-  // Direct release paths
+  // Direct release paths, paths exempt from authorization
   repeated string public_paths = 2 [json_name = "public_paths"];
   // Type of authorization noop, casbin, opa, etc
   string type = 3 [

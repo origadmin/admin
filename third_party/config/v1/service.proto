@@ -51,7 +51,6 @@ message Service {
     string version = 1;
     string builder = 2;
   }
-
   // Service name for service discovery
   string name = 1 [json_name = "name"];
   bool dynamic_endpoint = 2 [json_name = "dynamic_endpoint"];

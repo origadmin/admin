@@ -120,13 +120,6 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	//path := filepath.Join(flags.WorkDir, flags.ConfigPath)
 	//envpath := filepath.Join(flags.WorkDir, flags.EnvPath)
 	log.Infow("msg", "start info", "workpath", flags.WorkPath(), startStatic, staticDir)
-	//env, _ := bootstrap.LoadEnv(envpath)
-	//bs, err := bootstrap.FromLocalPath(flags.ServiceName, path, l)
-	//if err != nil {
-	//	return errors.Wrap(err, "load config error")
-	//}
-	//src := loader.LoadSourceFiles(flags.WorkDir, flags.ConfigPath)
-	//source := loader.FileSourceConfig(flags.WorkPath())
 	if daemon, _ := cmd.Flags().GetBool("daemon"); daemon {
 		bin, err := filepath.Abs(os.Args[0])
 		if err != nil {
@@ -155,22 +148,20 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 		return errors.Wrap(err, "load config error")
 	}
 	if bs == nil {
-		return fmt.Errorf("bootstrap config not found")
-	}
-	if bs.CryptoType == "argon2" {
-		err := hash.UseCrypto(types.TypeArgon2)
-		if err != nil {
-			return err
-		}
+		return errors.New("bootstrap config not found")
 	}
 
-	//log.Infof("bootstrap: %+v", loader.PrintString(bs))
+	if err := hash.UseCrypto(types.Type(bs.CryptoType)); err != nil {
+		return errors.Wrap(err, "use crypto error")
+	}
+
 	lockfile := fmt.Sprintf("%s.lock", command.ToLower(cmd))
 	if err = os.WriteFile(lockfile, []byte(fmt.Sprintf("%d", os.Getpid())), 0o600); err == nil {
 		defer os.Remove(lockfile)
+	} else {
+		return errors.Wrap(err, "write lock file error")
 	}
-	//engine := gin.New()
-	//info to ctx
+
 	app, cleanup, err := buildInjectors(cmd.Context(), bs, l)
 	if err != nil {
 		return err
@@ -193,16 +184,12 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
 		kratos.Logger(injector.Logger),
 		kratos.Server(injector.Server),
-		//kratos.Server(injector.ServerGINS),
 	}
-	//err := loader.InjectorGinServer(injector)
-	//if err != nil {
-	//	log.Errorf("injector gin server error: %v", err)
-	//	os.Exit(1)
-	//}
+
 	if flags.Env == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+
 	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
 		log.Infow("msg", "GIN route", "method", httpMethod, "path", absolutePath, "operation", handlerName, "handlers", nuHandlers)
 	}
