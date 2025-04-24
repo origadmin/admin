@@ -1,13 +1,15 @@
 syntax = "proto3";
 package configs.api;
 
+import "config/v1/storage.proto";
+
 option go_package = "origadmin/application/admin/internal/configs";
 
 message Captcha {
   int32 length = 1 [json_name = "length"];
   int32 width = 2 [json_name = "width"];
   int32 height = 3 [json_name = "height"];
-  
+
   string storage_name = 4 [json_name = "storage_name"];
 
   config.v1.Storage storage = 5 [json_name = "storage"];

@@ -1,6 +1,7 @@
 syntax = "proto3";
 package configs.api;
 
+import "config/v1/security.proto";
 // 移除对root_user的引用（迁移至安全配置模块）
 // import "configs/root_user.proto";
 import "configs/captcha.proto";
@@ -10,6 +11,6 @@ option go_package = "origadmin/application/admin/internal/configs";
 message BasisConfig {
   // configs.api.RootUser root_user = 1 [json_name = "root_user"];
   configs.api.Captcha captcha = 2 [json_name = "captcha"];
-  
+
   config.v1.Security security = 3 [json_name = "security"];
 }

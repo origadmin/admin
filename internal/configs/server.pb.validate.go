@@ -60,8 +60,6 @@ func (m *Server) validate(all bool) error {
 
 	// no validation rules for Version
 
-	// no validation rules for CryptoType
-
 	if all {
 		switch v := interface{}(m.GetService()).(type) {
 		case interface{ ValidateAll() error }:
@@ -92,11 +90,11 @@ func (m *Server) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetData()).(type) {
+		switch v := interface{}(m.GetStorage()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ServerValidationError{
-					field:  "Data",
+					field:  "Storage",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -104,16 +102,16 @@ func (m *Server) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ServerValidationError{
-					field:  "Data",
+					field:  "Storage",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetStorage()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ServerValidationError{
-				field:  "Data",
+				field:  "Storage",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

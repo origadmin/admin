@@ -23,9 +23,8 @@ message ServiceConfig {
     json_name = "name",
     (validate.rules).string.min_len = 1
   ];
-  Entry entry = 2 [json_name = "entry"]; // 各服务独立入口配置
-  config.v1.Service service = 3 [json_name = "service"]; // 服务专用配置
-  //  string registry_path = 4 [json_name = "registry_path"]; // 服务发现注册路径
+//  Entry entry = 2 [json_name = "entry"]; // 各服务独立入口配置
+//  repeated config.v1.Service services = 3 [json_name = "services"]; // 服务专用配置
 }
 
 message Bootstrap {
@@ -59,19 +58,24 @@ message Bootstrap {
   }
 
   string id = 100 [json_name = "id"];
-  string environment = 2 [
+  string environment = 102 [
     json_name = "environment",
-    (validate.rules).string = { in: ["dev", "prod"] }
+    (validate.rules).string = {
+      in: [
+        "dev",
+        "prod"
+      ]
+    }
   ];
 
   // 入口服务专属配置
-  Entry entry = 100 [json_name = "entry"];
-  config.v1.Service http_gateway = 101 [json_name = "http_gateway"];
+  Entry entry = 103 [json_name = "entry"];
+  config.v1.Service http_gateway = 104 [json_name = "http_gateway"];
 
   // 动态加载服务配置
   repeated ServiceConfig services = 200 [json_name = "services"];
 
-  config.v1.Data data = 300 [json_name = "data"];
+  config.v1.Storage storage = 300 [json_name = "storage"];
   config.v1.Registry registry = 400 [json_name = "registry"];
   middleware.v1.Middleware middleware = 9 [json_name = "middleware"];
   security.v1.AuthN authn = 1000 [json_name = "authn"];

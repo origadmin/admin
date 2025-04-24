@@ -58,35 +58,6 @@ func (m *BasisConfig) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetRootUser()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, BasisConfigValidationError{
-					field:  "RootUser",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, BasisConfigValidationError{
-					field:  "RootUser",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetRootUser()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return BasisConfigValidationError{
-				field:  "RootUser",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if all {
 		switch v := interface{}(m.GetCaptcha()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
@@ -109,6 +80,35 @@ func (m *BasisConfig) validate(all bool) error {
 		if err := v.Validate(); err != nil {
 			return BasisConfigValidationError{
 				field:  "Captcha",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetSecurity()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, BasisConfigValidationError{
+					field:  "Security",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, BasisConfigValidationError{
+					field:  "Security",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSecurity()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return BasisConfigValidationError{
+				field:  "Security",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

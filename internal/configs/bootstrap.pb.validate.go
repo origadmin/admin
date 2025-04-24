@@ -143,6 +143,117 @@ var _ interface {
 	ErrorName() string
 } = EntrySelectorConfigValidationError{}
 
+// Validate checks the field values on ServiceConfig with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ServiceConfig) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ServiceConfig with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ServiceConfigMultiError, or
+// nil if none found.
+func (m *ServiceConfig) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ServiceConfig) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := ServiceConfigValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ServiceConfigMultiError(errors)
+	}
+
+	return nil
+}
+
+// ServiceConfigMultiError is an error wrapping multiple validation errors
+// returned by ServiceConfig.ValidateAll() if the designated constraints
+// aren't met.
+type ServiceConfigMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ServiceConfigMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ServiceConfigMultiError) AllErrors() []error { return m }
+
+// ServiceConfigValidationError is the validation error returned by
+// ServiceConfig.Validate if the designated constraints aren't met.
+type ServiceConfigValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ServiceConfigValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ServiceConfigValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ServiceConfigValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ServiceConfigValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ServiceConfigValidationError) ErrorName() string { return "ServiceConfigValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ServiceConfigValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sServiceConfig.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ServiceConfigValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ServiceConfigValidationError{}
+
 // Validate checks the field values on Bootstrap with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -167,6 +278,10 @@ func (m *Bootstrap) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Version
+
+	// no validation rules for CryptoType
+
 	if _, ok := _Bootstrap_Mode_InLookup[m.GetMode()]; !ok {
 		err := BootstrapValidationError{
 			field:  "Mode",
@@ -178,13 +293,20 @@ func (m *Bootstrap) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Version
-
-	// no validation rules for CryptoType
-
-	// no validation rules for Servers
+	// no validation rules for EnableDynamicConfig
 
 	// no validation rules for Id
+
+	if _, ok := _Bootstrap_Environment_InLookup[m.GetEnvironment()]; !ok {
+		err := BootstrapValidationError{
+			field:  "Environment",
+			reason: "value must be in list [dev prod]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if all {
 		switch v := interface{}(m.GetEntry()).(type) {
@@ -216,11 +338,11 @@ func (m *Bootstrap) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetService()).(type) {
+		switch v := interface{}(m.GetHttpGateway()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, BootstrapValidationError{
-					field:  "Service",
+					field:  "HttpGateway",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -228,28 +350,62 @@ func (m *Bootstrap) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, BootstrapValidationError{
-					field:  "Service",
+					field:  "HttpGateway",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetService()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetHttpGateway()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return BootstrapValidationError{
-				field:  "Service",
+				field:  "HttpGateway",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
 		}
 	}
 
+	for idx, item := range m.GetServices() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, BootstrapValidationError{
+						field:  fmt.Sprintf("Services[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, BootstrapValidationError{
+						field:  fmt.Sprintf("Services[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return BootstrapValidationError{
+					field:  fmt.Sprintf("Services[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if all {
-		switch v := interface{}(m.GetData()).(type) {
+		switch v := interface{}(m.GetStorage()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, BootstrapValidationError{
-					field:  "Data",
+					field:  "Storage",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -257,16 +413,16 @@ func (m *Bootstrap) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, BootstrapValidationError{
-					field:  "Data",
+					field:  "Storage",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetStorage()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return BootstrapValidationError{
-				field:  "Data",
+				field:  "Storage",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -418,6 +574,35 @@ func (m *Bootstrap) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetHealthCheck()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, BootstrapValidationError{
+					field:  "HealthCheck",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, BootstrapValidationError{
+					field:  "HealthCheck",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetHealthCheck()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return BootstrapValidationError{
+				field:  "HealthCheck",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return BootstrapMultiError(errors)
 	}
@@ -498,6 +683,11 @@ var _ interface {
 var _Bootstrap_Mode_InLookup = map[string]struct{}{
 	"singleton": {},
 	"cluster":   {},
+}
+
+var _Bootstrap_Environment_InLookup = map[string]struct{}{
+	"dev":  {},
+	"prod": {},
 }
 
 // Validate checks the field values on Settings with the rules defined in the
@@ -600,6 +790,112 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SettingsValidationError{}
+
+// Validate checks the field values on Bootstrap_HealthCheck with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *Bootstrap_HealthCheck) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Bootstrap_HealthCheck with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// Bootstrap_HealthCheckMultiError, or nil if none found.
+func (m *Bootstrap_HealthCheck) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Bootstrap_HealthCheck) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Timeout
+
+	// no validation rules for Path
+
+	if len(errors) > 0 {
+		return Bootstrap_HealthCheckMultiError(errors)
+	}
+
+	return nil
+}
+
+// Bootstrap_HealthCheckMultiError is an error wrapping multiple validation
+// errors returned by Bootstrap_HealthCheck.ValidateAll() if the designated
+// constraints aren't met.
+type Bootstrap_HealthCheckMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m Bootstrap_HealthCheckMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m Bootstrap_HealthCheckMultiError) AllErrors() []error { return m }
+
+// Bootstrap_HealthCheckValidationError is the validation error returned by
+// Bootstrap_HealthCheck.Validate if the designated constraints aren't met.
+type Bootstrap_HealthCheckValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e Bootstrap_HealthCheckValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e Bootstrap_HealthCheckValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e Bootstrap_HealthCheckValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e Bootstrap_HealthCheckValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e Bootstrap_HealthCheckValidationError) ErrorName() string {
+	return "Bootstrap_HealthCheckValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e Bootstrap_HealthCheckValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sBootstrap_HealthCheck.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = Bootstrap_HealthCheckValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = Bootstrap_HealthCheckValidationError{}
 
 // Validate checks the field values on Bootstrap_Entry with the rules defined
 // in the proto definition for this message. If any rules are violated, the
