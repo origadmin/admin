@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/google/wire"
@@ -83,6 +84,13 @@ func FixSource(source string) string {
 	return source
 }
 
+func debugDatabase(driver dialect.Driver, debug bool) dialect.Driver {
+	if debug {
+		return entslog.New(driver)
+	}
+	return driver
+}
+
 // NewData .
 func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), error) {
 	if bootstrap == nil {
@@ -102,8 +110,8 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 	}
 
 	// Run the auto migration tool.
-	debugDrv := entslog.New(sql.OpenDB(cfg.Dialect, drv))
-	db := ent.NewDatabase(ent.Driver(debugDrv))
+	sqldb := debugDatabase(sql.OpenDB(cfg.Dialect, drv), cfg.Debug)
+	db := ent.NewDatabase(ent.Driver(sqldb))
 	if true || cfg.GetMigration().GetEnabled() {
 		if err := db.Migration(
 			context.Background(),

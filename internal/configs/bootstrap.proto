@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package configs.api;
 
-import "config/v1/data.proto";
 import "config/v1/registry.proto";
 import "config/v1/security.proto";
 import "config/v1/service.proto";
+import "config/v1/storage.proto";
 import "middleware/v1/middleware.proto";
 import "security/v1/auth.proto";
 import "validate/validate.proto"; // Updated import statement
@@ -25,7 +25,7 @@ message ServiceConfig {
   ];
   Entry entry = 2 [json_name = "entry"]; // 各服务独立入口配置
   config.v1.Service service = 3 [json_name = "service"]; // 服务专用配置
-//  string registry_path = 4 [json_name = "registry_path"]; // 服务发现注册路径
+  //  string registry_path = 4 [json_name = "registry_path"]; // 服务发现注册路径
 }
 
 message Bootstrap {
@@ -43,22 +43,13 @@ message Bootstrap {
     }
   ];
 
-  string environment = 6 [
-    json_name = "environment",
-    (validate.rules).string = {
-      in: [
-        "development",
-        "production"
-      ]
-    }
-  ];
   bool enable_dynamic_config = 7 [json_name = "enable_dynamic_config"];
 
   message HealthCheck {
     int32 timeout = 1 [json_name = "timeout"];
     string path = 2 [json_name = "path"];
   }
-  HealthCheck health_check = 1002;
+
   // Entry
   message Entry {
     string scheme = 1 [json_name = "scheme"];
@@ -67,16 +58,26 @@ message Bootstrap {
     //    config.v1.Service.GINS gins = 30 [json_name = "gins"];
   }
 
-  string id = 101;
+  string id = 100 [json_name = "id"];
+  string environment = 2 [
+    json_name = "environment",
+    (validate.rules).string = { in: ["dev", "prod"] }
+  ];
 
+  // 入口服务专属配置
   Entry entry = 100 [json_name = "entry"];
-  config.v1.Service service = 200 [json_name = "service"];
+  config.v1.Service http_gateway = 101 [json_name = "http_gateway"];
+
+  // 动态加载服务配置
+  repeated ServiceConfig services = 200 [json_name = "services"];
+
   config.v1.Data data = 300 [json_name = "data"];
   config.v1.Registry registry = 400 [json_name = "registry"];
   middleware.v1.Middleware middleware = 9 [json_name = "middleware"];
   security.v1.AuthN authn = 1000 [json_name = "authn"];
   security.v1.AuthZ authz = 1001 [json_name = "authz"];
   config.v1.Security security = 1002 [json_name = "security"];
+  HealthCheck health_check = 1003 [json_name = "health_check"];
 }
 
 //message Server {

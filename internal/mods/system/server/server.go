@@ -46,7 +46,6 @@ func init() {
 
 func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerRegister, l log.KLogger) []transport.Server {
 	var servers []transport.Server
-	middlewares := middleware.NewServer(bootstrap.GetService().GetMiddleware())
 	serviceConfig := bootstrap.GetService()
 	if serviceConfig == nil {
 		return servers
@@ -55,6 +54,7 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 		serviceConfig.Name = ServiceName
 	}
 	ctx := context.Background()
+	middlewares := middleware.NewServer(bootstrap.GetService().GetMiddleware())
 	if serv := NewGRPCServer(bootstrap, l, service.WithGRPC(
 		servicegrpc.WithMiddlewares(middlewares...),
 		servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),

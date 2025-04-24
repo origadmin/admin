@@ -1,0 +1,23 @@
+syntax = "proto3";
+package origadmin.configs.api;
+
+import "config/v1/registry.proto";
+import "config/v1/service.proto";
+import "config/v1/storage.proto";
+import "middleware/v1/middleware.proto";
+
+option go_package = "origadmin/application/admin/internal/configs";
+
+message ServiceCore {
+  string name = 1 [json_name = "name"];
+  string version = 2 [json_name = "version"];
+
+  config.v1.Registry registry = 3 [json_name = "registry"];
+  repeated config.v1.Storage storages = 4 [json_name = "storages"];
+}
+
+message Service {
+  ServiceCore core = 1 [json_name = "core"];
+  config.v1.Service service = 200 [json_name = "service"];
+  middleware.v1.RateLimit rate_limit = 4 [json_name = "rate_limit"];
+}
