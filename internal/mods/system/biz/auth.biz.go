@@ -8,7 +8,7 @@ package biz
 import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/net/pagination"
+	"github.com/origadmin/runtime/interfaces/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dto"

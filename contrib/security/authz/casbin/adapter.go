@@ -12,7 +12,7 @@ import (
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/goexts/generic/maps"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 )
 
 type adapter struct {

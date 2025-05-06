@@ -17,7 +17,7 @@ import (
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 )
 
 const (

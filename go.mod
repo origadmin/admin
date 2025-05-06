@@ -1,13 +1,12 @@
 module origadmin/application/admin
 
-go 1.23.4
+go 1.23.7
 
 toolchain go1.23.8
 
 replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0.5.4
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250307204501-0409229c3780.1
 	entgo.io/ent v0.14.4
 	github.com/caarlos0/go-version v0.2.0
 	github.com/casbin/casbin/v2 v2.105.0
@@ -15,8 +14,8 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/v2 v2.8.4
-	github.com/goexts/generic v0.2.5
-	github.com/golang-cz/devslog v0.0.12
+	github.com/goexts/generic v0.2.6
+	github.com/golang-cz/devslog v0.0.13
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/gnostic v0.7.0
 	github.com/google/uuid v1.6.0
@@ -24,32 +23,33 @@ require (
 	github.com/gorilla/handlers v1.5.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/mojocn/base64Captcha v1.3.8
-	github.com/origadmin/contrib/consul v0.0.32
-	github.com/origadmin/contrib/database v0.0.32
-	github.com/origadmin/contrib/i18n v0.0.32
-	github.com/origadmin/contrib/replacer v0.0.32
-	github.com/origadmin/contrib/transport/gins v0.0.32
-	github.com/origadmin/entslog/v3 v3.0.6
-	github.com/origadmin/runtime v0.1.55
+	github.com/origadmin/contrib/consul v0.0.33
+	github.com/origadmin/contrib/database v0.0.33
+	github.com/origadmin/contrib/i18n v0.0.33
+	github.com/origadmin/contrib/replacer v0.0.33
+	github.com/origadmin/contrib/transport/gins v0.0.33
+	github.com/origadmin/entslog/v3 v3.1.0
+	github.com/origadmin/runtime v0.1.58
 	github.com/origadmin/slog-kratos v1.0.4
-	github.com/origadmin/toolkits v0.3.1
-	github.com/origadmin/toolkits/codec v0.3.1
-	github.com/origadmin/toolkits/crypto v0.3.1
-	github.com/origadmin/toolkits/errors v0.3.1
-	github.com/origadmin/toolkits/identifier v0.3.1
-	github.com/origadmin/toolkits/sloge v0.3.1
+	github.com/origadmin/toolkits v0.3.15
+	github.com/origadmin/toolkits/codec v0.3.15
+	github.com/origadmin/toolkits/crypto v0.3.15
+	github.com/origadmin/toolkits/errors v0.3.15
+	github.com/origadmin/toolkits/identifier v0.3.15
+	github.com/origadmin/toolkits/slogx v0.3.15
 	github.com/prometheus/client_golang v1.22.0
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/net v0.39.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20250414145226-207652e42e2e
+	google.golang.org/genproto/googleapis/api v0.0.0-20250428153025-10db94c68c34
 	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.6
 )
 
 require (
 	ariga.io/atlas v0.32.0 // indirect
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250425153114-8976f5be98c1.1 // indirect
 	cel.dev/expr v0.23.1 // indirect
 	dario.cat/mergo v1.0.1 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
@@ -61,7 +61,7 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.8.1 // indirect
-	github.com/bufbuild/protovalidate-go v0.9.3 // indirect
+	github.com/bufbuild/protovalidate-go v0.10.0 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/casbin/govaluate v1.3.0 // indirect
@@ -76,8 +76,8 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.9 // indirect
 	github.com/gin-contrib/sse v1.1.0 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
-	github.com/go-kratos/kratos/contrib/config/consul/v2 v2.0.0-20250314165958-d9aa7ff19541 // indirect
-	github.com/go-kratos/kratos/contrib/registry/consul/v2 v2.0.0-20250314165958-d9aa7ff19541 // indirect
+	github.com/go-kratos/kratos/contrib/config/consul/v2 v2.0.0-20250427030626-b463dc514714 // indirect
+	github.com/go-kratos/kratos/contrib/registry/consul/v2 v2.0.0-20250427030626-b463dc514714 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
@@ -91,11 +91,11 @@ require (
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-	github.com/google/cel-go v0.24.1 // indirect
+	github.com/google/cel-go v0.25.0 // indirect
 	github.com/google/gnostic-models v0.6.9 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
-	github.com/hashicorp/consul/api v1.31.2 // indirect
+	github.com/hashicorp/consul/api v1.32.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
@@ -160,11 +160,11 @@ require (
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
 	golang.org/x/tools v0.32.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250414145226-207652e42e2e // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250428153025-10db94c68c34 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.63.0 // indirect
+	modernc.org/libc v1.64.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.10.0 // indirect
 	modernc.org/sqlite v1.37.0 // indirect

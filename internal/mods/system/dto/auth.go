@@ -8,7 +8,7 @@ package dto
 import (
 	"context"
 
-	"github.com/origadmin/toolkits/net/pagination"
+	"github.com/origadmin/runtime/interfaces/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 )

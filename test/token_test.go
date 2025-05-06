@@ -3,7 +3,7 @@
  */
 
 // Package mock implements the functions, types, and interfaces for the module.
-package mock
+package test
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/securityx"

@@ -17,7 +17,7 @@ import (
 	middlewaresecurity "github.com/origadmin/runtime/agent/middleware/security"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/stretchr/testify/assert"
 )
 

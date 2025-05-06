@@ -8,31 +8,21 @@ package start
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
 	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
-	"github.com/golang-cz/devslog"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-	kslog "github.com/origadmin/slog-kratos"
-	"github.com/origadmin/toolkits/crypto/hash"
-	"github.com/origadmin/toolkits/crypto/hash/types"
-	"github.com/origadmin/toolkits/errors"
-	"github.com/origadmin/toolkits/sloge"
+	"github.com/origadmin/runtime/registry"
+	"github.com/origadmin/runtime/service"
 	"github.com/spf13/cobra"
 
-	"origadmin/application/admin/helpers/command"
 	"origadmin/application/admin/internal/loader"
 )
 
@@ -51,7 +41,7 @@ var (
 	// Version is the Version of the compiled software.
 	Version = "v1.0.0"
 	// flags are the bootstrap flags.
-	flags = bootstrap.Bootstrap{Env: "release"}
+	flags = bootstrap.New()
 )
 
 var cmd = &cobra.Command{
@@ -69,16 +59,14 @@ func RandomID() string {
 }
 func init() {
 	//fmt.Println("total env: ", os.Environ(), len(os.Environ()))
-	flags.Flags.ID = RandomID()
-	flags.SetFlags(Name, Version)
+	flags.SetServiceID(RandomID())
+	flags.SetServiceInfo(Name, Version)
 }
 
 // Cmd The function defines a CLI command to start a server with various flags and options, including the
 // ability to run as a daemon.
 func Cmd() *cobra.Command {
 	cmd.Flags().BoolP(startRandom, "r", false, "start with random password")
-	//cmd.Flags().StringP(startWorkDir, "d", ".", "working directory")
-	//cmd.Flags().StringP(startWorkDir, "d", ".", "working directory")
 	cmd.Flags().StringP(startConfig, "c", "bootstrap.toml",
 		"runtime configuration files or directory (relative to workdir, multiple separated by commas)")
 	cmd.Flags().StringP(startStatic, "s", "", "static files directory")
@@ -87,91 +75,26 @@ func Cmd() *cobra.Command {
 	return cmd
 }
 
+// 启动时使用分离的配置
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	debug, _ := cmd.Flags().GetBool(startDebug)
-	if debug {
-		flags.Env = "debug"
-		flags.WorkDir = "resources/configs"
-		slog.SetLogLoggerLevel(slog.LevelDebug)
-	}
-	staticDir, _ := cmd.Flags().GetString(startStatic)
-	flags.ConfigPath, _ = cmd.Flags().GetString(startConfig)
-	//random, _ := cmd.Flags().GetBool(startRandom)
-	slogInstance := sloge.New(sloge.WithFile("logs/admin.log"), sloge.WithDevConfig(&sloge.DevConfig{
-		HandlerOptions:    &slog.HandlerOptions{Level: slog.LevelDebug},
-		MaxSlicePrintSize: 50,
-		SortKeys:          false,
-		TimeFormat:        "[15:04:05]",
-		DebugColor:        devslog.Blue,
-		InfoColor:         devslog.Green,
-		WarnColor:         devslog.Yellow,
-		ErrorColor:        devslog.Red,
-	}))
-	l := log.With(kslog.NewLogger(kslog.WithLogger(slogInstance)),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", flags.ID(),
-		"service.name", flags.ServiceName(),
-		"service.version", flags.Version(),
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-	)
-	log.SetLogger(l)
-	//path := filepath.Join(flags.WorkDir, flags.ConfigPath)
-	//envpath := filepath.Join(flags.WorkDir, flags.EnvPath)
-	log.Infow("msg", "start info", "workpath", flags.WorkPath(), startStatic, staticDir)
-	if daemon, _ := cmd.Flags().GetBool("daemon"); daemon {
-		bin, err := filepath.Abs(os.Args[0])
-		if err != nil {
-			log.Errorf("failed to get absolute path for cmd: %s \n", err.Error())
-			return err
-		}
-
-		cmdArgs := []string{"start"}
-		cmdArgs = append(cmdArgs, "-d", strings.TrimSpace(flags.WorkDir))
-		cmdArgs = append(cmdArgs, "-c", strings.TrimSpace(flags.ConfigPath))
-		cmdArgs = append(cmdArgs, "-s", strings.TrimSpace(staticDir))
-		_, _ = fmt.Printf("execute cmd: %s %s \n", bin, strings.Join(cmdArgs, " "))
-		cmd := exec.Command(bin, cmdArgs...)
-		err = cmd.Start()
-		if err != nil {
-			_, _ = fmt.Printf("failed to start daemon thread: %s \n", err.Error())
-			return err
-		}
-
-		pid := cmd.Process.Pid
-		log.Errorf("service %s daemon thread started with pid %d \n", flags.ServiceName(), pid)
-		return nil
-	}
-	bs, err := loader.LoadBootstrap(&flags)
-	if err != nil {
-		return errors.Wrap(err, "load config error")
-	}
-	if bs == nil {
-		return errors.New("bootstrap config not found")
-	}
-
-	if err := hash.UseCrypto(types.Type(bs.CryptoType)); err != nil {
-		return errors.Wrap(err, "use crypto error")
-	}
-
-	lockfile := fmt.Sprintf("%s.lock", command.ToLower(cmd))
-	if err = os.WriteFile(lockfile, []byte(fmt.Sprintf("%d", os.Getpid())), 0o600); err == nil {
-		defer os.Remove(lockfile)
-	} else {
-		return errors.Wrap(err, "write lock file error")
-	}
-
-	app, cleanup, err := buildInjectors(cmd.Context(), bs, l)
+	// 获取纯净配置
+	bs, err := loader.LoadBootstrap(config)
 	if err != nil {
 		return err
 	}
-	defer cleanup()
-	// start and wait for stop signal
-	if err := app.Run(); err != nil {
-		return err
+
+	// 显式创建注册器（按需）
+	var registrar registry.KRegistrar
+	if flags.IsMainService() {
+		registrar, _ = registry.NewConsulRegistrar(...)
 	}
-	return nil
+
+	// 组合使用配置和服务
+	appInstance := loader.NewApp(cmd.Context(), loader.AppOptions{
+		Name:    bs.ServiceName,
+		Version: flags.Version(),
+		Server:  grpcServer,
+	})
 }
 
 func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
@@ -186,7 +109,7 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 		kratos.Server(injector.Server),
 	}
 
-	if flags.Env == "release" {
+	if flags.Env() == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 

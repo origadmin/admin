@@ -55,7 +55,7 @@ func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerReg
 	}
 	ctx := context.Background()
 	middlewares := middleware.NewServer(bootstrap.GetService().GetMiddleware())
-	if serv := NewGRPCServer(bootstrap, l, service.WithGRPC(
+	if serv := runtime.NewGRPCServiceServer(bootstrap, l, service.WithGRPC(
 		servicegrpc.WithMiddlewares(middlewares...),
 		servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
 	)); serv != nil {
@@ -148,8 +148,9 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 		},
 	}
 	if v, ok := bootstrap.GetServers()[ServiceName]; ok {
-		registry.ServiceName = v
+		registry.ServiceName = ServiceName
 	}
+	//registry.ServiceName = ServiceName
 	log.Infof("service name: %s", registry.ServiceName)
 	discovery, err := runtime.NewDiscovery(registry)
 	if err != nil {
@@ -190,9 +191,27 @@ func MiddlewareServer() middleware.KMiddleware {
 	}
 }
 
-func NewRegisterServer(s1 *systemservice.RegisterServer) []service.ServerRegister {
+func NewRegisterServer(
+	Resource pb.ResourceServiceServer,
+	Role pb.RoleServiceServer,
+	User pb.UserServiceServer,
+	Auth pb.AuthServiceServer,
+	Login pb.LoginServiceServer,
+	Personal pb.PersonalServiceServer,
+	Permission pb.PermissionServiceServer,
+	Casbin pb.CasbinSourceServiceServer,
+) []service.ServerRegister {
 	return []service.ServerRegister{
-		s1,
+		&systemservice.RegisterServer{
+			Resource:   Resource,
+			Role:       Role,
+			User:       User,
+			Auth:       Auth,
+			Login:      Login,
+			Personal:   Personal,
+			Permission: Permission,
+			Casbin:     Casbin,
+		},
 	}
 }
 

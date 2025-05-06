@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/origadmin/toolkits/net/pagination"
+	"github.com/origadmin/runtime/interfaces/pagination"
 )
 
 type QueryPager[T any] interface {

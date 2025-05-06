@@ -196,10 +196,10 @@ gen:
 .PHONY: all
 # generate all
 all:
-	make api;
-	make config;
-	make generate;
-	make openapi;
+	$(MAKE) api;
+	$(MAKE) config;
+	$(MAKE) generate;
+	$(MAKE) openapi;
 
 .PHONY: http
 # run http request

@@ -7,7 +7,7 @@ package securityx
 
 import (
 	"github.com/goexts/generic/settings"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 )
 
 type AuthenticatorSetting = func(tz *authSecurity)

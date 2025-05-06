@@ -14,7 +14,7 @@ import (
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 
 	"origadmin/application/admin/contrib/security/authn/jwt"
 	"origadmin/application/admin/contrib/security/authz/casbin"

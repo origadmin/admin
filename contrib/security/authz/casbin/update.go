@@ -16,7 +16,7 @@ import (
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/goexts/generic/maps"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 	"google.golang.org/grpc/status"
 
 	pb "origadmin/application/admin/api/v1/services/system"

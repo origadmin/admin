@@ -13,7 +13,7 @@
 		"context"
 		"fmt"
 		"entgo.io/ent/dialect/sql"
-		"github.com/origadmin/toolkits/database"
+		"github.com/origadmin/runtime/interfaces/database"
 		)
 
 		// Database is the client that holds all ent builders.

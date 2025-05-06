@@ -17,7 +17,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/errors/httperr"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/captcha"

@@ -48,7 +48,7 @@ func NewResourceServiceHTTPServer(client pb.ResourceServiceHTTPClient) *Resource
 }
 
 // NewResourceServiceHTTPServerPB new a menu service.
-func NewResourceServiceHTTPServerPB(client pb.ResourceServiceHTTPClient) pb.ResourceServiceServer {
+func NewResourceServiceHTTPServerPB(client pb.ResourceServiceHTTPClient) pb.ResourceServiceHTTPServer {
 	return &ResourceServiceHTTPServer{client: client}
 }
 

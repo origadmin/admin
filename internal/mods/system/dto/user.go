@@ -12,7 +12,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
-	"github.com/origadmin/toolkits/net/pagination"
+	"github.com/origadmin/runtime/interfaces/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/id"

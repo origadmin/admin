@@ -9,7 +9,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/origadmin/toolkits/net/pagination"
+	"github.com/origadmin/runtime/interfaces/pagination"
 	"google.golang.org/protobuf/proto"
 
 	pb "origadmin/application/admin/api/v1/services/system"

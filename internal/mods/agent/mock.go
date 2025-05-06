@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 )
 
 type mockAuthenticator struct {

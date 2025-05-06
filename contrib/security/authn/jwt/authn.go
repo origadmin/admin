@@ -10,7 +10,7 @@ import (
 
 	"github.com/goexts/generic/settings"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 )
 
 type Authenticator struct {

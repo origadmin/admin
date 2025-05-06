@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package configs.api;
+package origadmin.configs.api;
 
 import "config/v1/registry.proto";
 import "config/v1/security.proto";
@@ -52,9 +52,7 @@ message Bootstrap {
   // Entry
   message Entry {
     string scheme = 1 [json_name = "scheme"];
-    config.v1.Service.GRPC grpc = 10 [json_name = "grpc"];
-    config.v1.Service.HTTP http = 20 [json_name = "http"];
-    //    config.v1.Service.GINS gins = 30 [json_name = "gins"];
+    config.v1.Service server = 2 [json_name = "server"];
   }
 
   string id = 100 [json_name = "id"];

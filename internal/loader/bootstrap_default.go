@@ -18,7 +18,6 @@ import (
 	sjwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 
 	"origadmin/application/admin/internal/configs"
-	systemserver "origadmin/application/admin/internal/mods/system/server"
 )
 
 const (
@@ -31,28 +30,30 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Mode:       "singleton",
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
-		Servers: map[string]string{
-			systemserver.ServiceName: "origadmin.service.system.v1",
-		},
+		//Servers: map[string]string{
+		//	systemserver.ServiceName: "origadmin.service.system.v1",
+		//},
 		Id: "",
 		Entry: &configs.Bootstrap_Entry{
 			Scheme: "http",
 		},
-		Service: &configv1.Service{
-			Name:            "",
-			DynamicEndpoint: true,
-			Grpc:            DefaultServiceGrpc(),
-			Http:            DefaultServiceHttp(),
-			Websocket:       DefaultServiceWebsocket(),
-			Message:         DefaultServiceMessage(),
-			Task:            DefaultServiceTask(),
-			Middleware:      DefaultServiceMiddleware(),
-			Selector: &configv1.Service_Selector{
-				Version: "v1.0.0",
-				Builder: "bbr",
-			},
+		Services: []*configs.ServiceConfig{
+			//&configv1.Service{
+			//	Name:            "",
+			//	DynamicEndpoint: true,
+			//	Grpc:            DefaultServiceGrpc(),
+			//	Http:            DefaultServiceHttp(),
+			//	Websocket:       DefaultServiceWebsocket(),
+			//	Message:         DefaultServiceMessage(),
+			//	Task:            DefaultServiceTask(),
+			//	Middleware:      DefaultServiceMiddleware(),
+			//	Selector: &configv1.Service_Selector{
+			//		Version: "v1.0.0",
+			//		Builder: "bbr",
+			//	},
+			//}
 		},
-		Data:       DefaultData(),
+		Storage:    DefaultStorage(),
 		Registry:   DefaultRegistry(),
 		Middleware: DefaultServiceMiddleware(),
 		Security: &configv1.Security{
@@ -111,7 +112,7 @@ func DefaultServiceWebsocket() *configv1.WebSocket {
 	}
 }
 
-func DefaultData() *configv1.Data {
+func DefaultStorage() *configv1.Data {
 	return &configv1.Data{
 		Database: &configv1.Data_Database{
 			Debug:   false,
@@ -348,15 +349,11 @@ func DefaultEntry() *configs.Bootstrap_Entry {
 
 func DefaultCaptcha() *configs.Captcha {
 	return &configs.Captcha{
-		CacheType: "memory",
-		Width:     400,
-		Height:    160,
-		Length:    4,
-		Redis: &configs.Captcha_Redis{
-			Addr:      "${captcha_redis_address:127.0.0.1:6379}",
-			Db:        0,
-			KeyPrefix: "captcha",
-		},
+		Length:      4,
+		Width:       400,
+		Height:      160,
+		StorageName: "captcha",
+		Storage:     &configv1.Data_Redis{},
 	}
 }
 
@@ -373,9 +370,9 @@ func DefaultRootUser() *configs.RootUser {
 	}
 }
 
-func DefaultBasisConfig() *configs.BasisConfig {
-	return &configs.BasisConfig{
-		RootUser: DefaultRootUser(),
-		Captcha:  DefaultCaptcha(),
+func AuthConfig() *configs.AuthConfig {
+	return &configs.AuthConfig{
+		//RootUser: DefaultRootUser(),
+		Captcha: DefaultCaptcha(),
 	}
 }

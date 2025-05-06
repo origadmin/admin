@@ -1,5 +1,5 @@
 syntax = "proto3";
-package origadmin.configs.api;
+package origadmin.origadmin.configs.api;
 
 import "config/v1/storage.proto";
 import "config/v1/registry.proto";

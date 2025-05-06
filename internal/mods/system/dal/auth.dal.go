@@ -9,8 +9,8 @@ import (
 	"errors"
 	"sync"
 
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/security"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dal/entity/ent"

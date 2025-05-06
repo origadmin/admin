@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/net/pagination"
+	"github.com/origadmin/runtime/interfaces/pagination"
 	"google.golang.org/grpc"
 
 	pb "origadmin/application/admin/api/v1/services/system"

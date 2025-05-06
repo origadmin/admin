@@ -20,7 +20,7 @@ import (
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	kslog "github.com/origadmin/slog-kratos"
-	"github.com/origadmin/toolkits/security"
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/stretchr/testify/assert"
 
 	"origadmin/application/admin/helpers/securityx"
