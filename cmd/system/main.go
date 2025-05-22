@@ -9,16 +9,14 @@ import (
 	"flag"
 	"fmt"
 	"log/slog"
-	"syscall"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-	kslog "github.com/origadmin/slog-kratos"
 
 	"origadmin/application/admin/internal/loader"
 )
@@ -30,16 +28,17 @@ var (
 	// Version is the Version of the compiled software.
 	Version = "v1.0.0"
 	// boot are the bootstrap boot.
-	flags = bootstrap.DefaultBootstrap()
+	flags = bootstrap.New()
 	// debug mode
 	debug = false
+	// configPath is the config path, default is config.toml
+	configPath = ""
 )
 
 func init() {
-	flags.Env = "release"
-	flags.SetFlags(Name, Version)
+	flags.SetServiceInfo(Name, Version)
 	flag.BoolVar(&debug, "debug", false, "set environment, eg: -debug")
-	flag.StringVar(&flags.ConfigPath, "c", "config.toml", "config path, eg: -c config.toml")
+	flag.StringVar(&configPath, "c", "config.toml", "config path, eg: -c config.toml")
 }
 
 func main() {
@@ -48,69 +47,33 @@ func main() {
 	// the release mode, work dir sets to empty, use config path as work dir
 	if debug {
 		fmt.Println("debug mode")
-		flags.Env = "debug"
-		flags.WorkDir = "resources/configs"
+		flags.SetEnv("debug")
+		flags.SetConfigPath("resources/configs")
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 
-	l := log.With(kslog.NewLogger(),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", flags.ID(),
-		"service.name", flags.ServiceName(),
-		"service.version", flags.Version(),
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-	)
-	log.SetLogger(l)
-	log.Infof("bootstrap flags: %+v\n", flags)
-	bs, err := loader.LoadBootstrap(flags)
-	if err != nil {
-		log.Fatalf("failed to load config: %s", err.Error())
-		return
-	}
-	//v, err := validate.NewValidateV2()
+	//r, err := runtime.Load(flags)
 	//if err != nil {
-	//	log.Fatalf("failed to new validate: %s", err.Error())
+	//	return
 	//}
-	// v1 used method Validate to check the config
-	if err := bs.Validate(); err != nil {
-		log.Fatalf("failed to validate config: %s", err.Error())
-	}
-
-	if err := loader.InitSetup(bs); err != nil {
-		log.Fatalf("failed to init setup: %s", err.Error())
+	//l := r.Logger(
+	//	"ts", log.DefaultTimestamp,
+	//	"caller", log.DefaultCaller,
+	//	"service.id", flags.ServiceID(),
+	//	"service.name", flags.ServiceName(),
+	//	"service.version", flags.Version(),
+	//	"trace.id", tracing.TraceID(),
+	//	"span.id", tracing.SpanID(),
+	//)
+	//log.SetLogger(l)
+	log.Infof("bootstrap flags: %+v\n", flags)
+	if err := loader.Bootstrap(context.Background(), flags, buildInjectors); err != nil {
+		log.Fatalf("failed to bootstrap: %s", err.Error())
 		return
-	}
-
-	//log.Infof("bootstrap config: %+v\n", loader.PrintString(bs))
-	ctx := context.Background()
-	//info to ctx
-	app, cleanup, err := buildInjectors(ctx, bs, l)
-	if err != nil {
-		log.Fatalf("failed to build injector: %s", err.Error())
-	}
-	defer cleanup()
-	// start and wait for stop signal
-	if err := app.Run(); err != nil {
-		log.Fatalf("app stopped with error: %s", err.Error())
 	}
 }
 
-func NewApp(ctx context.Context, injector *loader.InjectorServer) *kratos.App {
-	opts := []kratos.Option{
-		kratos.ID(flags.ServiceID()),
-		kratos.Name(flags.ServiceName()),
-		kratos.Version(flags.Version()),
-		kratos.Metadata(flags.Metadata()),
-		kratos.Context(ctx),
-		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
-		kratos.Logger(injector.Logger),
-		kratos.Server(injector.Servers...),
-	}
-	if injector.Registrar != nil {
-		opts = append(opts, kratos.Registrar(injector.Registrar))
-	}
-
-	return kratos.New(opts...)
+// NewAppProvider 是一个provider函数，它使用runtime.Runtime的CreateApp方法
+func NewAppProvider(r runtime.Runtime, injector *loader.Injector) *kratos.App {
+	return r.CreateApp(injector.Servers...)
 }

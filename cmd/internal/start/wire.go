@@ -13,7 +13,6 @@ import (
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
-	"github.com/origadmin/runtime/log"
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
@@ -22,7 +21,7 @@ import (
 )
 
 // buildInjectors init kratos application.
-func buildInjectors(context.Context, *configs.Bootstrap, log.KLogger) (*kratos.App, func(), error) {
+func buildInjectors(context.Context, *configs.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		loader.ProviderSet,
 		agent.ProviderSet,

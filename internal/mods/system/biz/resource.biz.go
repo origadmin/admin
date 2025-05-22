@@ -11,7 +11,7 @@ import (
 	"github.com/origadmin/runtime/interfaces/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
+	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 

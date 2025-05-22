@@ -7,20 +7,19 @@ package start
 
 import (
 	"context"
-	"fmt"
-	"os"
 	"syscall"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/registry"
-	"github.com/origadmin/runtime/service"
 	"github.com/spf13/cobra"
 
 	"origadmin/application/admin/internal/loader"
@@ -50,16 +49,7 @@ var cmd = &cobra.Command{
 	RunE:  startCommandRun,
 }
 
-func RandomID() string {
-	id, err := os.Hostname()
-	if err != nil {
-		id = "unknown"
-	}
-	return id + "." + fmt.Sprintf("%08d", time.Now().UnixNano()%(1<<32))
-}
 func init() {
-	//fmt.Println("total env: ", os.Environ(), len(os.Environ()))
-	flags.SetServiceID(RandomID())
 	flags.SetServiceInfo(Name, Version)
 }
 
@@ -75,19 +65,22 @@ func Cmd() *cobra.Command {
 	return cmd
 }
 
-// 启动时使用分离的配置
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	// 获取纯净配置
-	bs, err := loader.LoadBootstrap(config)
+	r, err := runtime.Load(flags, func(options *runtime.Options) {
+		// Set your runtime options.
+	})
 	if err != nil {
 		return err
 	}
 
-	// 显式创建注册器（按需）
 	var registrar registry.KRegistrar
 	if flags.IsMainService() {
-		registrar, _ = registry.NewConsulRegistrar(...)
+		registrar, _ = registry.NewConsulRegistrar()
 	}
+
+	buildInjectors()
+
+	r.CreateApp(cmd.Context())
 
 	// 组合使用配置和服务
 	appInstance := loader.NewApp(cmd.Context(), loader.AppOptions{
@@ -108,6 +101,10 @@ func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
 		kratos.Logger(injector.Logger),
 		kratos.Server(injector.Server),
 	}
+	mux := gwruntime.NewServeMux()
+	srv := transhttp.NewServer()
+	srv.Handler = mux
+	kratos.Server(srv)
 
 	if flags.Env() == "release" {
 		gin.SetMode(gin.ReleaseMode)

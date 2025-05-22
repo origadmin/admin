@@ -12,6 +12,9 @@ import (
 
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/contrib/replacer"
+	"github.com/origadmin/runtime/config"
+	"github.com/origadmin/runtime/config/file"
+	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/toolkits/codec"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -56,4 +59,16 @@ func ReplaceObject(s any, envs map[string]string) error {
 	}
 	marshal = Replace(marshal, envs)
 	return json.Unmarshal(marshal, s)
+}
+
+func NewFileConfig(sourceConfig *configv1.SourceConfig, _ *config.Options) (config.KSource, error) {
+	cfg := sourceConfig.GetFile()
+	if cfg == nil {
+		return nil, config.ErrInvalidConfigType
+	}
+	var options []file.Option
+	if len(cfg.Ignores) > 0 {
+		options = append(options, file.WithIgnores(cfg.Ignores...))
+	}
+	return file.NewSource(cfg.Path, options...), nil
 }

@@ -41,12 +41,12 @@ var (
 )
 
 func init() {
-	runtime.RegisterService(ServiceName, service.DefaultServiceBuilder)
+	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
 func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerRegister, l log.KLogger) []transport.Server {
 	var servers []transport.Server
-	serviceConfig := bootstrap.GetService()
+	serviceConfig := bootstrap.GetServices()
 	if serviceConfig == nil {
 		return servers
 	}
@@ -124,7 +124,7 @@ func NewCasbinServiceClient(client *service.GRPCClient, l log.KLogger) pb.Casbin
 	return systemservice.NewCasbinSourceServiceClient(client)
 }
 
-func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPCClient, error) {
+func NewSystemClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.GRPCClient, error) {
 	entry := bootstrap.GetEntry()
 	if entry == nil {
 		return nil, errors.New("no entry")
@@ -150,14 +150,15 @@ func NewSystemClient(bootstrap *configs.Bootstrap, l log.KLogger) (*service.GRPC
 	if v, ok := bootstrap.GetServers()[ServiceName]; ok {
 		registry.ServiceName = ServiceName
 	}
+	helper := log.NewHelper(r.Logger())
 	//registry.ServiceName = ServiceName
-	log.Infof("service name: %s", registry.ServiceName)
+	helper.Infof("service name: %s", registry.ServiceName)
 	discovery, err := runtime.NewDiscovery(registry)
 	if err != nil {
 		return nil, errors.Wrap(err, "create discovery")
 	}
 	var ms []middleware.KMiddleware
-	options := []servicegrpc.OptionSetting{
+	options := []servicegrpc.Option{
 		servicegrpc.WithDiscovery(registry.ServiceName, discovery),
 	}
 	ms = append(ms, middleware.NewClient(bootstrap.GetMiddleware())...)

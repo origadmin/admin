@@ -11,11 +11,12 @@ import (
 	"github.com/goexts/generic/settings"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/interfaces/security"
+	"github.com/origadmin/runtime/interfaces/security/token"
 )
 
 type Authenticator struct {
 	Tokenizer security.Tokenizer
-	Cache     security.CacheStorage
+	Cache     token.CacheStorage
 	Scheme    security.Scheme
 }
 
@@ -36,11 +37,11 @@ func (obj Authenticator) AuthenticateContext(ctx context.Context, tokenType secu
 }
 
 func (obj Authenticator) DestroyToken(ctx context.Context, tokenStr string) error {
-	return obj.Cache.Remove(ctx, obj.key(security.TokenCacheAccess, tokenStr))
+	return obj.Cache.Remove(ctx, obj.key(token.CacheAccess, tokenStr))
 }
 
 func (obj Authenticator) DestroyRefreshToken(ctx context.Context, tokenStr string) error {
-	return obj.Cache.Remove(ctx, obj.key(security.TokenCacheRefresh, tokenStr))
+	return obj.Cache.Remove(ctx, obj.key(token.CacheRefresh, tokenStr))
 }
 
 func (obj Authenticator) key(ns, token string) string {
@@ -52,7 +53,7 @@ type AuthenticatorSetting = func(*Authenticator)
 func NewAuthenticator(tokenizer security.Tokenizer, ss ...AuthenticatorSetting) security.Authenticator {
 	return settings.Apply(&Authenticator{
 		Tokenizer: tokenizer,
-		Cache:     security.NewCacheStorage(),
+		Cache:     token.New(),
 		Scheme:    security.SchemeBearer,
 	}, ss)
 }

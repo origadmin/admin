@@ -25,10 +25,10 @@ import (
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/department"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/predicate"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/resource"
+	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
@@ -97,7 +97,7 @@ func NewData(bootstrap *configs.Bootstrap, logger log.KLogger) (*Data, func(), e
 		return nil, nil, errors.New("bootstrap is nil")
 	}
 
-	cfg := bootstrap.GetData().GetDatabase()
+	cfg := bootstrap.GetStorage().GetDatabase()
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
 	}
@@ -147,6 +147,9 @@ func NewDataWithClient(client *ent.Client) *Data {
 	}
 }
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+// InitDataFromPath  .
+/* <<<<<<<<<<  5ac4ba63-529d-41b7-890c-f5204968f606  >>>>>>>>>>> */
 func (obj *Data) InitDataFromPath(ctx context.Context, path string, filters ...string) error {
 	type data struct {
 		name string

@@ -6,7 +6,7 @@
 package dto
 
 import (
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent/schema"
+	"origadmin/application/admin/internal/data/entity/ent/schema"
 )
 
 const (

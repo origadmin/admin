@@ -80,3 +80,50 @@ architecture.
     ```bash
     go run main.go start
     ```
+
+# SourceTree
+
+```plainText
+.
+├── api/                # API interface definitions
+│   ├── http/           # HTTP interface
+│   ├── multiplatform/  # Cross-platform interfaces
+│   ├── proto/          # Protocol Buffer definitions
+│   └── services/       # Service implementations
+├── cmd/                # CLI tool implementations
+│   ├── internal/       # Core CLI logic
+│   ├── multiplatform/  # Platform-agnostic commands
+│   ├── root.go         # Root command definitions
+│   └── system/         # System management commands
+├── data/               # Data storage
+├── generate.go         # Code generation utilities
+├── helpers/            # Utility modules
+│   ├── command/        # CLI toolkit
+│   ├── ent/            # Entity management
+│   ├── errors/         # Error handling framework
+│   ├── protobuf/       # Protocol Buffer utilities
+│   └── resp/           # Response handlers
+├── internal/           # Core internal components
+│   ├── configs/        # Configuration management
+│   ├── generate.go     # Internal code generators
+│   ├── loader/         # Resource loading system
+│   └── mods/           # Modular components
+├── main.go             # Application entry point
+├── Makefile            # Build automation scripts
+├── resources/          # Resource files
+│   ├── configs/        # Configuration templates
+│   └── docs/           # Documentation assets
+├── third_party/        # External dependencies
+│   ├── auth/           # Authentication systems
+│   ├── codegen/        # Code generation tools
+│   ├── config/         # Configuration management
+│   ├── errors/         # Error handling libraries
+│   ├── proto/          # Protocol Buffer extensions
+│   ├── google/         # Google API integrations
+│   ├── pagination/     # Pagination utilities
+│   ├── token/          # Token management
+│   └── validation/     # Validation frameworks
+└── go.mod              # Go module dependencies
+```
+
+

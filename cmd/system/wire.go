@@ -9,13 +9,12 @@
 package main
 
 import (
-	"context"
-
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/loader"
 	systembiz "origadmin/application/admin/internal/mods/system/biz"
 	systemdal "origadmin/application/admin/internal/mods/system/dal"
@@ -24,9 +23,10 @@ import (
 )
 
 // buildInjectors init kratos application.
-func buildInjectors(context.Context, *configs.Bootstrap, log.KLogger) (*kratos.App, func(), error) {
+func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		loader.ProviderSet,
+		data.ProviderSet,
 		//basisdal.ProviderSet,
 		//basisbiz.ProviderSet,
 		//basisservice.ProviderSet,
@@ -36,5 +36,6 @@ func buildInjectors(context.Context, *configs.Bootstrap, log.KLogger) (*kratos.A
 		systemservice.ProviderSet,
 		systemserver.ProviderSet,
 		/* add your providers here */
-		NewApp))
+		NewAppProvider,
+	))
 }

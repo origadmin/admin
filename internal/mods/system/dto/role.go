@@ -14,7 +14,7 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
-	"origadmin/application/admin/internal/mods/system/dal/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent"
 )
 
 type (

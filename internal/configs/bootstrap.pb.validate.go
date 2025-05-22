@@ -77,7 +77,7 @@ type EntrySelectorConfigMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m EntrySelectorConfigMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -190,7 +190,7 @@ type ServiceConfigMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ServiceConfigMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -603,6 +603,35 @@ func (m *Bootstrap) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetLogger()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, BootstrapValidationError{
+					field:  "Logger",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, BootstrapValidationError{
+					field:  "Logger",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetLogger()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return BootstrapValidationError{
+				field:  "Logger",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return BootstrapMultiError(errors)
 	}
@@ -616,7 +645,7 @@ type BootstrapMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m BootstrapMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -727,7 +756,7 @@ type SettingsMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m SettingsMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -831,7 +860,7 @@ type Bootstrap_HealthCheckMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Bootstrap_HealthCheckMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -964,7 +993,7 @@ type Bootstrap_EntryMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m Bootstrap_EntryMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

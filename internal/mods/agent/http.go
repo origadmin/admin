@@ -17,11 +17,11 @@ import (
 	"github.com/origadmin/runtime"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
 	servicehttp "github.com/origadmin/runtime/service/http"
-	"github.com/origadmin/runtime/interfaces/security"
 
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/contrib/security/authz/casbin"

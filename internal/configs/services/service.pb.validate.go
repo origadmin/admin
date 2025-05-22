@@ -137,7 +137,7 @@ type ServiceCoreMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ServiceCoreMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -322,7 +322,7 @@ type ServiceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ServiceMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
