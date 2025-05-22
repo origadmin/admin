@@ -8,17 +8,19 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/db"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
 type resourceRepo struct {
-	db *Data
+	db *data.Data
 }
 
 func (repo resourceRepo) Get(ctx context.Context, id int64, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
@@ -109,7 +111,7 @@ func (repo resourceRepo) List(ctx context.Context, in *dto.ListResourcesRequest,
 }
 
 // NewResourceRepo .
-func NewResourceRepo(db *Data, logger log.KLogger) dto.ResourceRepo {
+func NewResourceRepo(r runtime.Runtime, db *data.Data) dto.ResourceRepo {
 	return &resourceRepo{
 		db: db,
 	}

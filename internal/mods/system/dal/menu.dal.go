@@ -5,13 +5,14 @@
 package dal
 
 import (
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
 type menuRepo struct {
-	db *Data
+	db *data.Data
 }
 
 //
@@ -109,7 +110,7 @@ type menuRepo struct {
 //}
 
 // NewMenuRepo .
-func NewMenuRepo(db *Data, logger log.KLogger) dto.MenuRepo {
+func NewMenuRepo(r runtime.Runtime, db *data.Data) dto.MenuRepo {
 	return &menuRepo{
 		db: db,
 	}

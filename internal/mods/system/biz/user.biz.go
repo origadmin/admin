@@ -8,9 +8,10 @@ package biz
 import (
 	"fmt"
 
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -171,6 +172,7 @@ func (biz UserServiceBiz) DeleteUser(ctx context.Context, in *pb.DeleteUserReque
 }
 
 // NewUserServiceBiz new a UserPB use case.
-func NewUserServiceBiz(repo dto.UserRepo, logger log.KLogger) *UserServiceBiz {
-	return &UserServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+
+func NewUserServiceBiz(r runtime.Runtime, repo dto.UserRepo) *UserServiceBiz {
+	return &UserServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.Logger())}
 }

@@ -173,9 +173,3 @@ func (r refreshTokenizer) Validate(ctx context.Context, s string) (bool, error) 
 func (r refreshTokenizer) CreateRefreshClaims(ctx context.Context, s string) (security.Claims, error) {
 	return nil, errors.New("not implemented")
 }
-
-func wrapRefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
-	return &refreshTokenizer{
-		tokenizer: tokenizer,
-	}
-}

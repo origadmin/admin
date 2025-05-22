@@ -18,12 +18,13 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/google/wire"
-	"github.com/origadmin/contrib/database"
 	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
 
+	"origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/configs"
@@ -45,7 +46,6 @@ type Data struct {
 
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(
-	wire.Struct(new(LoginData), "*"),
 	NewData,
 	NewAuthRepo,
 	NewLoginRepo,
@@ -564,4 +564,17 @@ func (obj *Data) createPermissionBatch(ctx context.Context, permissions []*dto.P
 
 func resourceOrderBy(orders []string) []resource.OrderOption {
 	return db.OrderBy[resource.OrderOption](orders)
+}
+
+func wrapRefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
+	return &refreshTokenizer{
+		tokenizer: tokenizer,
+	}
+}
+
+func RefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
+	if rt, ok := tokenizer.(security.RefreshTokenizer); ok {
+		return rt
+	}
+	return wrapRefreshTokenizer(tokenizer)
 }

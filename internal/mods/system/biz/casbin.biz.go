@@ -10,8 +10,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/runtime/log"
 	"google.golang.org/grpc"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -103,7 +104,8 @@ func newGroupingResponse(rule *pb.GroupingRule) *pb.StreamRulesResponse {
 }
 
 // NewCasbinSourceServiceBiz new a CasbinSource use case.
-func NewCasbinSourceServiceBiz(repo dto.CasbinSourceRepo, logger log.KLogger) *CasbinSourceServiceBiz {
-	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger),
+
+func NewCasbinSourceServiceBiz(r runtime.Runtime, repo dto.CasbinSourceRepo) *CasbinSourceServiceBiz {
+	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.Logger()),
 		lastModified: &atomic.Int64{}}
 }

@@ -12,9 +12,9 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	msecurity "github.com/origadmin/runtime/agent/middleware/security"
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
-	"github.com/origadmin/runtime/interfaces/security"
 
 	"origadmin/application/admin/contrib/security/authn/jwt"
 	"origadmin/application/admin/contrib/security/authz/casbin"
@@ -22,7 +22,7 @@ import (
 )
 
 func NewAuthenticator(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Authenticator, error) {
-	tokenizer, err := jwt.NewTokenizer(bootstrap.GetSecurity(), ss...)
+	tokenizer, err := jwt.NewTokenizer(bootstrap.GetSecurity().GetSecurity(), ss...)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func NewAuthenticator(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security
 }
 
 func NewTokenizer(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Tokenizer, error) {
-	tokenizer, err := jwt.NewTokenizer(bootstrap.GetSecurity(), ss...)
+	tokenizer, err := jwt.NewTokenizer(bootstrap.GetSecurity().GetSecurity(), ss...)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func NewTokenizer(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Tok
 }
 
 func NewAuthorizer(bootstrap *configs.Bootstrap, ss ...casbin.AuthorizerOption) (security.Authorizer, error) {
-	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity(), ss...)
+	authorizer, err := casbin.NewAuthorizer(bootstrap.GetSecurity().GetSecurity(), ss...)
 	if err != nil {
 		return nil, err
 	}

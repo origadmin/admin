@@ -6,22 +6,14 @@
 package start
 
 import (
-	"context"
-	"syscall"
-
-	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
-	transhttp "github.com/go-kratos/kratos/v2/transport/http"
-	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
-	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
-	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/runtime/registry"
 	"github.com/spf13/cobra"
 
+	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/internal/loader"
 )
 
@@ -66,53 +58,27 @@ func Cmd() *cobra.Command {
 }
 
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	r, err := runtime.Load(flags, func(options *runtime.Options) {
-		// Set your runtime options.
-	})
-	if err != nil {
+	if err := loader.Bootstrap(cmd.Context(), flags, buildInjectors); err != nil {
 		return err
 	}
-
-	var registrar registry.KRegistrar
-	if flags.IsMainService() {
-		registrar, _ = registry.NewConsulRegistrar()
-	}
-
-	buildInjectors()
-
-	r.CreateApp(cmd.Context())
-
-	// 组合使用配置和服务
-	appInstance := loader.NewApp(cmd.Context(), loader.AppOptions{
-		Name:    bs.ServiceName,
-		Version: flags.Version(),
-		Server:  grpcServer,
-	})
+	//var registrar registry.KRegistrar
+	//if flags.IsMainService() {
+	//	registrar, _ = registry.NewConsulRegistrar()
+	//}
+	//
+	//buildInjectors()
+	//
+	//r.CreateApp(cmd.Context())
+	//
+	//// 组合使用配置和服务
+	//appInstance := loader.NewApp(cmd.Context(), loader.AppOptions{
+	//	Name:    bs.ServiceName,
+	//	Version: flags.Version(),
+	//	Server:  grpcServer,
+	//})
+	return nil
 }
 
-func NewApp(ctx context.Context, injector *loader.InjectorClient) *kratos.App {
-	opts := []kratos.Option{
-		kratos.ID(flags.ServiceID()),
-		kratos.Name(flags.ServiceName()),
-		kratos.Version(flags.Version()),
-		kratos.Metadata(map[string]string{}),
-		kratos.Context(ctx),
-		kratos.Signal(syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT),
-		kratos.Logger(injector.Logger),
-		kratos.Server(injector.Server),
-	}
-	mux := gwruntime.NewServeMux()
-	srv := transhttp.NewServer()
-	srv.Handler = mux
-	kratos.Server(srv)
-
-	if flags.Env() == "release" {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
-	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
-		log.Infow("msg", "GIN route", "method", httpMethod, "path", absolutePath, "operation", handlerName, "handlers", nuHandlers)
-	}
-
-	return kratos.New(opts...)
+func NewAppProvider(r runtime.Runtime, injector *loader.InjectorClient) *kratos.App {
+	return r.CreateApp(injector.Server)
 }

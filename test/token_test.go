@@ -72,11 +72,10 @@ func TestGenerateToken(t *testing.T) {
 	}
 	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
 	loginData := &dal.LoginData{
-		BasisConfig: basisConfig,
-		Tokenizer:   refreshTokenizer,
-		Resource:    resourceRepo,
-		Role:        roleRepo,
-		User:        userRepo,
+		Tokenizer: refreshTokenizer,
+		Resource:  resourceRepo,
+		Role:      roleRepo,
+		User:      userRepo,
 	}
 	ctx := context.Background()
 	claims, err := loginData.Tokenizer.CreateClaims(ctx, "user_1")

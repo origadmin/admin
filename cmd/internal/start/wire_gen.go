@@ -7,42 +7,27 @@
 package start
 
 import (
-	"context"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
-	"origadmin/application/admin/internal/mods/agent"
-	"origadmin/application/admin/internal/mods/system/server"
 )
 
 import (
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
-	_ "github.com/origadmin/contrib/database"
+	_ "origadmin/application/admin/contrib/database"
 )
 
 // Injectors from wire.go:
 
 // buildInjectors init kratos application.
-func buildInjectors(contextContext context.Context, bootstrap *configs.Bootstrap, arg log.KLogger) (*kratos.App, func(), error) {
-	v, err := server.NewSystemClient(bootstrap, arg)
-	if err != nil {
-		return nil, nil, err
-	}
-	registerAgent, err := server.NewSystemServiceAgentClient(v, arg)
-	if err != nil {
-		return nil, nil, err
-	}
-	v2 := agent.NewRegisterAgent(registerAgent)
-	casbinSourceServiceClient := server.NewCasbinServiceClient(v, arg)
-	httpServer := agent.NewHTTPServerAgent(bootstrap, v2, casbinSourceServiceClient, arg)
+func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
+	server := loader.MockHttpServer()
 	injectorClient := &loader.InjectorClient{
-		Logger:    arg,
-		Bootstrap: bootstrap,
-		Server:    httpServer,
+		Server: server,
 	}
-	app := NewApp(contextContext, injectorClient)
+	app := NewAppProvider(r, injectorClient)
 	return app, func() {
 	}, nil
 }

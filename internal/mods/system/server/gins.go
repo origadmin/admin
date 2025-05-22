@@ -19,7 +19,7 @@ import (
 )
 
 // NewGINSServer new a gin server.
-func NewGINSServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.OptionSetting) *gins.Server {
+func NewGINSServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.ServerOption) *gins.Server {
 	ms := middleware.NewServer(bootstrap.GetMiddleware())
 	//option := settings.ApplyOrZero(ss...)
 	var opts = []gins.ServerOption{

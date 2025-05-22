@@ -9,8 +9,8 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/system/biz"
 	"origadmin/application/admin/internal/mods/system/dal"
@@ -21,7 +21,7 @@ import (
 import (
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
-	_ "github.com/origadmin/contrib/database"
+	_ "origadmin/application/admin/contrib/database"
 )
 
 // Injectors from wire.go:
@@ -32,52 +32,24 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	if err != nil {
 		return nil, nil, err
 	}
-	data, cleanup, err := dal.NewData(bootstrap, logger)
+	dataData, cleanup, err := data.NewData(r, bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	resourceRepo := dal.NewResourceRepo(data, logger)
-	resourceServiceBiz := biz.NewResourceServiceBiz(resourceRepo, logger)
+	resourceRepo := dal.NewResourceRepo(r, dataData)
+	resourceServiceBiz := biz.NewResourceServiceBiz(r, resourceRepo)
 	resourceServiceServer := service.NewResourceServiceServerPB(resourceServiceBiz)
-	roleRepo := dal.NewRoleRepo(data, logger)
-	roleServiceBiz := biz.NewRoleServiceBiz(roleRepo, logger)
+	roleRepo := dal.NewRoleRepo(r, dataData)
+	roleServiceBiz := biz.NewRoleServiceBiz(r, roleRepo)
 	roleServiceServer := service.NewRoleServiceServerPB(roleServiceBiz)
-	userRepo := dal.NewUserRepo(data, logger)
-	userServiceBiz := biz.NewUserServiceBiz(userRepo, logger)
+	userRepo := dal.NewUserRepo(r, dataData)
+	userServiceBiz := biz.NewUserServiceBiz(r, userRepo)
 	userServiceServer := service.NewUserServiceServerPB(userServiceBiz)
-	authRepo := dal.NewAuthRepo(data, logger)
-	authServiceBiz := biz.NewAuthServiceBiz(authRepo, logger)
-	authServiceServer := service.NewAuthServiceServerPB(authServiceBiz)
-	tokenizer, err := loader.NewTokenizer(bootstrap)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
-	loginData := &dal.LoginData{
-		Tokenizer: refreshTokenizer,
-		Resource:  resourceRepo,
-		Role:      roleRepo,
-		User:      userRepo,
-	}
-	loginRepo := dal.NewLoginRepo(loginData, logger)
-	loginServiceBiz := biz.NewLoginServiceBiz(loginRepo, logger)
-	loginServiceServer := service.NewLoginServiceServerPB(loginServiceBiz)
-	personalRepo := dal.NewPersonalRepo(data, logger)
-	personalServiceBiz := biz.NewPersonalServiceBiz(personalRepo, logger)
-	personalServiceServer := service.NewPersonalServiceServerPB(personalServiceBiz)
-	permissionRepo := dal.NewPermissionRepo(data, logger)
-	permissionServiceBiz := biz.NewPermissionServiceBiz(permissionRepo, logger)
+	permissionRepo := dal.NewPermissionRepo(r, dataData)
+	permissionServiceBiz := biz.NewPermissionServiceBiz(r, permissionRepo)
 	permissionServiceServer := service.NewPermissionServiceServerPB(permissionServiceBiz)
-	casbinSourceRepo, err := dal.NewCasbinSourceRepo(data)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	casbinSourceServiceBiz := biz.NewCasbinSourceServiceBiz(casbinSourceRepo, logger)
-	casbinSourceServiceServer := service.NewCasbinSourceServiceServerPB(casbinSourceServiceBiz)
-	v2 := server.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, authServiceServer, loginServiceServer, personalServiceServer, permissionServiceServer, casbinSourceServiceServer)
-	v3 := server.NewSystemServer(bootstrap, v2, logger)
+	v2 := server.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
+	v3 := server.NewSystemServer(r, bootstrap, v2)
 	injector := &loader.Injector{
 		Registrar: v,
 		Servers:   v3,

@@ -6,9 +6,10 @@
 package biz
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
@@ -94,6 +95,6 @@ func (biz ResourceServiceBiz) DeleteResource(ctx context.Context, in *pb.DeleteR
 }
 
 // NewResourceServiceBiz new a ResourcePB use case.
-func NewResourceServiceBiz(repo dto.ResourceRepo, logger log.KLogger) *ResourceServiceBiz {
-	return &ResourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+func NewResourceServiceBiz(r runtime.Runtime, repo dto.ResourceRepo) *ResourceServiceBiz {
+	return &ResourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.Logger())}
 }

@@ -6,9 +6,10 @@
 package biz
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -97,6 +98,6 @@ func (biz RoleServiceBiz) DeleteRole(ctx context.Context, in *pb.DeleteRoleReque
 }
 
 // NewRoleServiceBiz new a RolePB use case.
-func NewRoleServiceBiz(repo dto.RoleRepo, logger log.KLogger) *RoleServiceBiz {
-	return &RoleServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+func NewRoleServiceBiz(r runtime.Runtime, repo dto.RoleRepo) *RoleServiceBiz {
+	return &RoleServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.Logger())}
 }

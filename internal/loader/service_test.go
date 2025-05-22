@@ -176,10 +176,10 @@ func TestServiceDefaultOutput(t *testing.T) {
 				},
 			},
 			Middleware: &v11.Middleware{
-				Logging:        false,
-				Recovery:       false,
-				Tracing:        false,
-				CircuitBreaker: false,
+				//Logging:        false,
+				//Recovery:       false,
+				//Tracing:        false,
+				//CircuitBreaker: false,
 				Metadata: &v11.Middleware_Metadata{
 					Enabled: false,
 					Prefix:  "",
@@ -219,16 +219,16 @@ func TestServiceDefaultOutput(t *testing.T) {
 					Subject:     "",
 					ClaimType:   "",
 					TokenHeader: nil,
-					Config: &jwtv1.Config{
-						SigningMethod:        "",
-						Key:                  "",
-						Key2:                 "",
-						AccessTokenLifetime:  0,
-						RefreshTokenLifetime: 0,
-						Issuer:               "",
-						Audience:             nil,
-						TokenType:            "",
-					},
+					//Config: &jwtv1.Config{
+					//	SigningMethod:        "",
+					//	Key:                  "",
+					//	Key2:                 "",
+					//	AccessTokenLifetime:  0,
+					//	RefreshTokenLifetime: 0,
+					//	Issuer:               "",
+					//	Audience:             nil,
+					//	TokenType:            "",
+					//},
 				},
 				Selector: &selectorv1.Selector{
 					Enabled:  false,
@@ -244,10 +244,10 @@ func TestServiceDefaultOutput(t *testing.T) {
 			},
 		},
 		Middleware: &v11.Middleware{
-			Logging:        false,
-			Recovery:       false,
-			Tracing:        false,
-			CircuitBreaker: false,
+			//Logging:        false,
+			//Recovery:       false,
+			//Tracing:        false,
+			//CircuitBreaker: false,
 			Metadata: &v11.Middleware_Metadata{
 				Enabled: false,
 				Prefix:  "",
@@ -287,16 +287,16 @@ func TestServiceDefaultOutput(t *testing.T) {
 				Subject:     "",
 				ClaimType:   "",
 				TokenHeader: nil,
-				Config: &jwtv1.Config{
-					SigningMethod:        "",
-					Key:                  "",
-					Key2:                 "",
-					AccessTokenLifetime:  0,
-					RefreshTokenLifetime: 0,
-					Issuer:               "",
-					Audience:             nil,
-					TokenType:            "",
-				},
+				//Config: &jwtv1.Config{
+				//	SigningMethod:        "",
+				//	Key:                  "",
+				//	Key2:                 "",
+				//	AccessTokenLifetime:  0,
+				//	RefreshTokenLifetime: 0,
+				//	Issuer:               "",
+				//	Audience:             nil,
+				//	TokenType:            "",
+				//},
 			},
 			Selector: &selectorv1.Selector{
 				Enabled:  false,
@@ -307,10 +307,9 @@ func TestServiceDefaultOutput(t *testing.T) {
 			},
 		},
 	}
-	services = append(services, testService)
+	ss = append(ss, testService)
 
 	// 验证服务添加后的数量和内容
-	assert.Len(t, services, 1, "添加服务后应包含一个元素")
-	assert.Equal(t, "test-service", services[0].Name, "服务名称不匹配")
-	assert.Equal(t, "v1.0.0", services[0].Version, "服务版本不匹配")
+	assert.Len(t, ss, 1, "添加服务后应包含一个元素")
+	assert.Equal(t, "test-service", ss[0].Service.Name, "服务名称不匹配")
 }

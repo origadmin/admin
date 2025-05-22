@@ -284,7 +284,7 @@ type MenuMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m MenuMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -548,7 +548,7 @@ type MenuEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m MenuEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -856,7 +856,7 @@ type RoleMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RoleMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1091,7 +1091,7 @@ type RoleEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RoleEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1385,7 +1385,7 @@ type UserMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1552,7 +1552,7 @@ type UserEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1775,7 +1775,7 @@ type UserRoleMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserRoleMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1933,7 +1933,7 @@ type UserRoleEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserRoleEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2154,7 +2154,7 @@ type RoleMenuMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RoleMenuMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2312,7 +2312,7 @@ type RoleMenuEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RoleMenuEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2600,7 +2600,7 @@ type ResourceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ResourceMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2729,7 +2729,7 @@ type ResourceEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ResourceEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -2967,7 +2967,7 @@ type DepartmentMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DepartmentMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -3232,7 +3232,7 @@ type DepartmentEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DepartmentEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -3367,7 +3367,7 @@ type UserDepartmentMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserDepartmentMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -3525,7 +3525,7 @@ type UserDepartmentEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserDepartmentEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -3694,7 +3694,7 @@ type PositionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PositionMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -3959,7 +3959,7 @@ type PositionEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PositionEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -4162,7 +4162,7 @@ type PermissionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PermissionMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -4466,7 +4466,7 @@ type PermissionEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PermissionEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -4571,7 +4571,7 @@ type UserPositionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserPositionMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -4729,7 +4729,7 @@ type UserPositionEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UserPositionEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -4837,7 +4837,7 @@ type PositionPermissionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PositionPermissionMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -4997,7 +4997,7 @@ type PositionPermissionEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PositionPermissionEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -5105,7 +5105,7 @@ type RolePermissionMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RolePermissionMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -5263,7 +5263,7 @@ type RolePermissionEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m RolePermissionEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -5373,7 +5373,7 @@ type PermissionResourceMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PermissionResourceMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -5533,7 +5533,7 @@ type PermissionResourceEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PermissionResourceEdgesMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

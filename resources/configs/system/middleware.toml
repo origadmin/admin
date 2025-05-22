@@ -1,8 +1,5 @@
 [Middleware]
-Logging = true
-Recovery = true
-Tracing = true
-CircuitBreaker = true
+EnabledMiddlewares = ["logging", "recovery", "tracing", "circuit_breaker", "metadata", "rate_limiter", "metrics", "validator", "jwt", "selector"]
 [Middleware.Metadata]
 Enabled = true
 Prefix = ""
@@ -26,7 +23,7 @@ Subject = ""
 ClaimType = ""
 [Middleware.Jwt.Config]
 SigningMethod = "HS512"
-Key = "${middleware_jwt_key:12345678901234567890123456789012}"
+Key = "wSX^6C1d2HM%K9D_H6I*YPZVMa3^Gvhj"
 Key2 = "can empty next version fixed"
 AccessTokenLifetime = 900000000000
 RefreshTokenLifetime = 259200000000000

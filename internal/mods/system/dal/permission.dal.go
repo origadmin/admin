@@ -8,17 +8,18 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/db"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
 type permissionRepo struct {
-	db *Data
+	db *data.Data
 }
 
 func (repo permissionRepo) Get(ctx context.Context, id int64, options ...dto.PermissionQueryOption) (*dto.PermissionPB, error) {
@@ -104,7 +105,7 @@ func (repo permissionRepo) List(ctx context.Context, in *dto.ListPermissionsRequ
 }
 
 // NewPermissionRepo .
-func NewPermissionRepo(db *Data, logger log.KLogger) dto.PermissionRepo {
+func NewPermissionRepo(r runtime.Runtime, db *data.Data) dto.PermissionRepo {
 	return &permissionRepo{
 		db: db,
 	}

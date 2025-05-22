@@ -8,22 +8,22 @@ import (
 	"net/http"
 
 	"github.com/google/wire"
-	"github.com/origadmin/toolkits/errors/httperr"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/toolkits/errors/httperr"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
 // ProviderSet is biz providers.
 var ProviderSet = wire.NewSet(
-	NewAuthServiceBiz,
-	NewLoginServiceBiz,
-	NewPersonalServiceBiz,
+	//NewAuthServiceBiz,
+	//NewLoginServiceBiz,
+	//NewPersonalServiceBiz,
 	NewResourceServiceBiz,
 	NewRoleServiceBiz,
 	NewUserServiceBiz,
 	NewPermissionServiceBiz,
-	NewCasbinSourceServiceBiz,
+	//NewCasbinSourceServiceBiz,
 )
 
 var (

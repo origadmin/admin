@@ -9,12 +9,13 @@ import (
 	"errors"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/rand"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/db"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -22,7 +23,7 @@ import (
 
 type roleRepo struct {
 	gen *rand.Rand
-	db  *Data
+	db  *data.Data
 }
 
 func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
@@ -127,7 +128,7 @@ func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options 
 }
 
 // NewRoleRepo .
-func NewRoleRepo(db *Data, logger log.KLogger) dto.RoleRepo {
+func NewRoleRepo(r runtime.Runtime, db *data.Data) dto.RoleRepo {
 	return &roleRepo{
 		gen: rand.DigitAndLowerCase,
 		db:  db,

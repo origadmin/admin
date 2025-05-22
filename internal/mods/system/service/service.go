@@ -17,8 +17,8 @@ import (
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
-	NewLoginServiceServerPB,
-	NewLoginServiceHTTPServerPB,
+	//NewLoginServiceServerPB,
+	//NewLoginServiceHTTPServerPB,
 	NewResourceServiceServerPB,
 	NewResourceServiceHTTPServerPB,
 	NewRoleServiceServerPB,
@@ -27,22 +27,22 @@ var ProviderSet = wire.NewSet(
 	NewUserServiceHTTPServerPB,
 	NewPersonalServiceServerPB,
 	NewPersonalServiceHTTPServerPB,
-	NewAuthServiceServerPB,
-	NewAuthServiceHTTPServerPB,
+	//NewAuthServiceServerPB,
+	//NewAuthServiceHTTPServerPB,
 	NewPermissionServiceServerPB,
 	NewPermissionServiceHTTPServerPB,
-	NewCasbinSourceServiceServerPB,
+	//NewCasbinSourceServiceServerPB,
 )
 
 type RegisterServer struct {
-	Resource   pb.ResourceServiceServer
-	Role       pb.RoleServiceServer
-	User       pb.UserServiceServer
-	Auth       pb.AuthServiceServer
-	Login      pb.LoginServiceServer
-	Personal   pb.PersonalServiceServer
+	Resource pb.ResourceServiceServer
+	Role     pb.RoleServiceServer
+	User     pb.UserServiceServer
+	//Auth       pb.AuthServiceServer
+	//Login      pb.LoginServiceServer
+	//Personal   pb.PersonalServiceServer
 	Permission pb.PermissionServiceServer
-	Casbin     pb.CasbinSourceServiceServer
+	//Casbin     pb.CasbinSourceServiceServer
 }
 
 func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServer) {
@@ -50,11 +50,11 @@ func (s RegisterServer) GRPCServer(ctx context.Context, server *service.GRPCServ
 	pb.RegisterResourceServiceServer(server, s.Resource)
 	pb.RegisterRoleServiceServer(server, s.Role)
 	pb.RegisterUserServiceServer(server, s.User)
-	pb.RegisterAuthServiceServer(server, s.Auth)
-	pb.RegisterLoginServiceServer(server, s.Login)
-	pb.RegisterPersonalServiceServer(server, s.Personal)
+	//pb.RegisterAuthServiceServer(server, s.Auth)
+	//pb.RegisterLoginServiceServer(server, s.Login)
+	//pb.RegisterPersonalServiceServer(server, s.Personal)
 	pb.RegisterPermissionServiceServer(server, s.Permission)
-	pb.RegisterCasbinSourceServiceServer(server, s.Casbin)
+	//pb.RegisterCasbinSourceServiceServer(server, s.Casbin)
 }
 
 func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServer) {
@@ -62,11 +62,11 @@ func (s RegisterServer) HTTPServer(ctx context.Context, server *service.HTTPServ
 	pb.RegisterResourceServiceHTTPServer(server, s.Resource)
 	pb.RegisterRoleServiceHTTPServer(server, s.Role)
 	pb.RegisterUserServiceHTTPServer(server, s.User)
-	pb.RegisterAuthServiceHTTPServer(server, s.Auth)
-	pb.RegisterLoginServiceHTTPServer(server, s.Login)
-	pb.RegisterPersonalServiceHTTPServer(server, s.Personal)
+	//pb.RegisterAuthServiceHTTPServer(server, s.Auth)
+	//pb.RegisterLoginServiceHTTPServer(server, s.Login)
+	//pb.RegisterPersonalServiceHTTPServer(server, s.Personal)
 	pb.RegisterPermissionServiceHTTPServer(server, s.Permission)
-	pb.RegisterCasbinSourceServiceHTTPServer(server, s.Casbin)
+	//pb.RegisterCasbinSourceServiceHTTPServer(server, s.Casbin)
 }
 
 func (s RegisterServer) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {

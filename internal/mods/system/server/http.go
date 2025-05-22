@@ -5,7 +5,6 @@
 package server
 
 import (
-	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -13,10 +12,14 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.OptionSetting) *service.HTTPServer {
-	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetService(), ss...)
-	if err != nil {
-		panic(err)
-	}
-	return srv
+func NewHTTPServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.ServerOption) *service.HTTPServer {
+	//options := settings.ApplyZero(ss)
+	//for i, config := range bootstrap.GetServices() {
+	//	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetServices(), options.ToHTTP())
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//	return srv
+	//}
+	return nil
 }

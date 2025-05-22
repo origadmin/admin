@@ -16,7 +16,6 @@ import (
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
 	servicegrpc "github.com/origadmin/runtime/service/grpc"
-	servicehttp "github.com/origadmin/runtime/service/http"
 	"github.com/origadmin/toolkits/errors"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -44,35 +43,37 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
-func NewSystemServer(bootstrap *configs.Bootstrap, registers []service.ServerRegister, l log.KLogger) []transport.Server {
+func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, registers []service.ServerRegister) []transport.
+Server {
 	var servers []transport.Server
 	serviceConfig := bootstrap.GetServices()
 	if serviceConfig == nil {
 		return servers
 	}
-	if serviceConfig.Name == "" {
-		serviceConfig.Name = ServiceName
-	}
-	ctx := context.Background()
-	middlewares := middleware.NewServer(bootstrap.GetService().GetMiddleware())
-	if serv := runtime.NewGRPCServiceServer(bootstrap, l, service.WithGRPC(
-		servicegrpc.WithMiddlewares(middlewares...),
-		servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
-	)); serv != nil {
-		for i := range registers {
-			registers[i].GRPCServer(ctx, serv)
-		}
-		servers = append(servers, serv)
-	}
-	if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
-		servicehttp.WithMiddlewares(middlewares...),
-		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
-	)); serv != nil {
-		for i := range registers {
-			registers[i].HTTPServer(ctx, serv)
-		}
-		servers = append(servers, serv)
-	}
+	//if serviceConfig.Name == "" {
+	//	serviceConfig.Name = ServiceName
+	//}
+	//ctx := context.Background()
+	//middlewares := middleware.NewServer(bootstrap.GetMiddleware())
+
+	//if serv, _ := runtime.NewGRPCServiceServer(bootstrap, l, service.WithGRPC(
+	//	servicegrpc.WithMiddlewares(middlewares...),
+	//	servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
+	//)); serv != nil {
+	//	for i := range registers {
+	//		registers[i].GRPCServer(ctx, serv)
+	//	}
+	//	servers = append(servers, serv)
+	//}
+	//if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
+	//	servicehttp.WithMiddlewares(middlewares...),
+	//	servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+	//)); serv != nil {
+	//	for i := range registers {
+	//		registers[i].HTTPServer(ctx, serv)
+	//	}
+	//	servers = append(servers, serv)
+	//}
 	return servers
 }
 
@@ -140,16 +141,16 @@ func NewSystemClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.
 	}
 	serviceConfig := &configv1.Service{
 		Name: ServiceName,
-		Grpc: entry.GetGrpc(),
-		Http: entry.GetHttp(),
+		//Grpc: entry.GetGrpc(),
+		//Http: entry.GetHttp(),
 		Selector: &configv1.Service_Selector{
 			Version: "v1.0.0",
 			Builder: "bbr",
 		},
 	}
-	if v, ok := bootstrap.GetServers()[ServiceName]; ok {
-		registry.ServiceName = ServiceName
-	}
+	//if v, ok := bootstrap.GetServices()[ServiceName]; ok {
+	//	registry.ServiceName = ServiceName
+	//}
 	helper := log.NewHelper(r.Logger())
 	//registry.ServiceName = ServiceName
 	helper.Infof("service name: %s", registry.ServiceName)
@@ -166,7 +167,7 @@ func NewSystemClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.
 	if len(ms) > 0 {
 		options = append(options, servicegrpc.WithMiddlewares(ms...))
 	}
-	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, service.WithGRPC(options...))
+	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, options...)
 	if err != nil {
 		return nil, errors.Wrap(err, "create menu grpc client")
 	}
@@ -196,22 +197,22 @@ func NewRegisterServer(
 	Resource pb.ResourceServiceServer,
 	Role pb.RoleServiceServer,
 	User pb.UserServiceServer,
-	Auth pb.AuthServiceServer,
-	Login pb.LoginServiceServer,
-	Personal pb.PersonalServiceServer,
+//Auth pb.AuthServiceServer,
+//Login pb.LoginServiceServer,
+//Personal pb.PersonalServiceServer,
 	Permission pb.PermissionServiceServer,
-	Casbin pb.CasbinSourceServiceServer,
+//Casbin pb.CasbinSourceServiceServer,
 ) []service.ServerRegister {
 	return []service.ServerRegister{
 		&systemservice.RegisterServer{
-			Resource:   Resource,
-			Role:       Role,
-			User:       User,
-			Auth:       Auth,
-			Login:      Login,
-			Personal:   Personal,
+			Resource: Resource,
+			Role:     Role,
+			User:     User,
+			//Auth:       Auth,
+			//Login:      Login,
+			//Personal:   Personal,
 			Permission: Permission,
-			Casbin:     Casbin,
+			//Casbin:     Casbin,
 		},
 	}
 }

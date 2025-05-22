@@ -21,7 +21,6 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/origadmin/contrib/consul v0.0.33
-	github.com/origadmin/contrib/database v0.0.33
 	github.com/origadmin/contrib/i18n v0.0.33
 	github.com/origadmin/contrib/replacer v0.0.33
 	github.com/origadmin/contrib/transport/gins v0.0.33

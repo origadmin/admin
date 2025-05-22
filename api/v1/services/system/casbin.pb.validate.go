@@ -71,7 +71,7 @@ type ListPoliciesRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListPoliciesRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -207,7 +207,7 @@ type ListPoliciesResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListPoliciesResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -310,7 +310,7 @@ type PolicyRuleMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m PolicyRuleMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -410,7 +410,7 @@ type ListGroupingsRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListGroupingsRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -546,7 +546,7 @@ type ListGroupingsResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListGroupingsResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -649,7 +649,7 @@ type GroupingRuleMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GroupingRuleMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -753,7 +753,7 @@ type StreamRulesRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m StreamRulesRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -942,7 +942,7 @@ type StreamRulesResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m StreamRulesResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1046,7 +1046,7 @@ type WatchUpdateRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m WatchUpdateRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1150,7 +1150,7 @@ type WatchUpdateResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m WatchUpdateResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

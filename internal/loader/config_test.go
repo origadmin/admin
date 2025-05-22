@@ -31,7 +31,7 @@ func TestNewFileSourceConfig(t *testing.T) {
 				path: "resources/configs",
 			},
 			want: &configv1.SourceConfig{
-				Type: "consul",
+				Types: []string{"consul"},
 				File: &configv1.SourceConfig_File{
 					Path: "resources/configs",
 				},
@@ -52,7 +52,7 @@ func TestNewFileSourceConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := &configv1.SourceConfig{
-				Type: "consul",
+				Types: []string{"consul"},
 				File: &configv1.SourceConfig_File{
 					Path: "resources/configs",
 				},

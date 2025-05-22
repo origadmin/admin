@@ -19,6 +19,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/errors/httperr"
 
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 
 	"origadmin/application/admin/api/v1/services/system"
@@ -30,7 +31,8 @@ import (
 )
 
 type loginRepo struct {
-	*LoginData
+	*data.LoginData
+	User    *userRepo
 	captcha *captcha.Captcha
 	bufpool *sync.Pool
 }
@@ -327,13 +329,6 @@ func fromSecurityClaims(claims security.Claims) *securityv1.Claims {
 	}
 }
 
-func RefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
-	if rt, ok := tokenizer.(security.RefreshTokenizer); ok {
-		return rt
-	}
-	return wrapRefreshTokenizer(tokenizer)
-}
-
 func (repo loginRepo) rootUser() *configs.RootUser {
 	return repo.LoginData.RootUser
 }
@@ -381,15 +376,6 @@ func (repo loginRepo) getCaptchaImage(id string) (string, error) {
 	return item.EncodeB64string(), nil
 }
 
-type LoginData struct {
-	Captcha   *configs.Captcha
-	RootUser  *configs.RootUser
-	Tokenizer security.RefreshTokenizer
-	Resource  systemdto.ResourceRepo
-	Role      systemdto.RoleRepo
-	User      systemdto.UserRepo
-}
-
 func NewCaptcha(cfg *configs.Captcha) *captcha.Captcha {
 	return captcha.NewCaptcha(&captcha.Config{
 		DriverDigit: &captcha.DriverDigit{
@@ -403,9 +389,9 @@ func NewCaptcha(cfg *configs.Captcha) *captcha.Captcha {
 }
 
 // NewLoginRepo .
-func NewLoginRepo(data *LoginData, logger log.KLogger) dto.LoginRepo {
+func NewLoginRepo(dd *data.Data, ld *data.LoginData) dto.LoginRepo {
 	var err error
-	cfg := data.RootUser
+	cfg := ld.RootUser
 	// todo: generate random password for root user if not exists
 	if cfg.RandomPassword {
 		passwd := rand.GenerateRandom(12)
@@ -426,8 +412,9 @@ func NewLoginRepo(data *LoginData, logger log.KLogger) dto.LoginRepo {
 	//}
 	return &loginRepo{
 		bufpool:   BufPool(),
-		LoginData: data,
-		captcha:   NewCaptcha(data.Captcha),
+		LoginData: ld,
+		User:      &userRepo{db: dd},
+		captcha:   NewCaptcha(ld.Captcha),
 	}
 }
 

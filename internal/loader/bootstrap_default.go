@@ -56,49 +56,51 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Storage:    DefaultStorage(),
 		Registry:   DefaultRegistry(),
 		Middleware: DefaultServiceMiddleware(),
-		Security: &configv1.Security{
-			PublicPaths: []string{
-				"/swagger/*",
-				"/api/v1/health",
-				"/api/v1/health/*",
-				"/api/v1/captcha",
-				"/api/v1/captcha/*",
-				"/api/v1/login",
-				"/api/v1/register",
-				"/api/v1/current/logout",
-				"/api/v1/refresh_token",
-				"/api.v1.services.system.LoginAPI/CaptchaId",
-				"/api.v1.services.system.LoginAPI/CaptchaImage",
-				"/api.v1.services.system.LoginAPI/CaptchaResource",
-				"/api.v1.services.system.LoginAPI/CaptchaResources",
-				"/api.v1.services.system.LoginAPI/Login",
-				"/api.v1.services.system.LoginAPI/Register",
-				"/api.v1.services.system.LoginAPI/Refresh",
-				//"/api.v1.services.basis.LoginAPI/Logout",
-				//"/api.v1.services.basis.LoginAPI/CurrentUser",
-				//"/api.v1.services.basis.LoginAPI/CurrentMenus",
-			},
-			Authz: &configv1.AuthZConfig{
-				Disabled:    false,
-				PublicPaths: nil,
-				Type:        "casbin",
-				Casbin: &configv1.AuthZConfig_CasbinConfig{
-					PolicyFile: "",
-					ModelFile:  "",
+		Security: &configs.SecurityConfig{
+			Security: &configv1.Security{
+				PublicPaths: []string{
+					"/swagger/*",
+					"/api/v1/health",
+					"/api/v1/health/*",
+					"/api/v1/captcha",
+					"/api/v1/captcha/*",
+					"/api/v1/login",
+					"/api/v1/register",
+					"/api/v1/current/logout",
+					"/api/v1/refresh_token",
+					"/api.v1.services.system.LoginAPI/CaptchaId",
+					"/api.v1.services.system.LoginAPI/CaptchaImage",
+					"/api.v1.services.system.LoginAPI/CaptchaResource",
+					"/api.v1.services.system.LoginAPI/CaptchaResources",
+					"/api.v1.services.system.LoginAPI/Login",
+					"/api.v1.services.system.LoginAPI/Register",
+					"/api.v1.services.system.LoginAPI/Refresh",
+					//"/api.v1.services.basis.LoginAPI/Logout",
+					//"/api.v1.services.basis.LoginAPI/CurrentUser",
+					//"/api.v1.services.basis.LoginAPI/CurrentMenus",
 				},
-				Opa:      nil,
-				Zanzibar: nil,
-			},
-			Authn: &configv1.AuthNConfig{
-				Disabled: false,
-				Type:     "jwt",
-				Jwt: &configv1.AuthNConfig_JWTConfig{
-					Algorithm:     "HS512",
-					SigningKey:    SigningKey,
-					OldSigningKey: "",
-					ExpireTime:    0, // use default
-					RefreshTime:   0, // use default
-					CacheName:     "",
+				Authz: &configv1.AuthZConfig{
+					Disabled:    false,
+					PublicPaths: nil,
+					Type:        "casbin",
+					Casbin: &configv1.AuthZConfig_CasbinConfig{
+						PolicyFile: "",
+						ModelFile:  "",
+					},
+					Opa:      nil,
+					Zanzibar: nil,
+				},
+				Authn: &configv1.AuthNConfig{
+					Disabled: false,
+					Type:     "jwt",
+					Jwt: &configv1.AuthNConfig_JWTConfig{
+						Algorithm:     "HS512",
+						SigningKey:    SigningKey,
+						OldSigningKey: "",
+						ExpireTime:    0, // use default
+						RefreshTime:   0, // use default
+						CacheName:     "",
+					},
 				},
 			},
 		},
@@ -112,9 +114,11 @@ func DefaultServiceWebsocket() *configv1.WebSocket {
 	}
 }
 
-func DefaultStorage() *configv1.Data {
-	return &configv1.Data{
-		Database: &configv1.Data_Database{
+func DefaultStorage() *configv1.Storage {
+	return &configv1.Storage{
+		Name: "",
+		Type: "",
+		Database: &configv1.Database{
 			Debug:   false,
 			Dialect: "sqlite3",
 			Source:  "data/admin.db",
@@ -132,22 +136,22 @@ func DefaultStorage() *configv1.Data {
 			ConnectionMaxLifetime: 0,
 			ConnectionMaxIdleTime: 0,
 		},
-		Cache: &configv1.Data_Cache{
+		Cache: &configv1.Cache{
 			Driver: "memory", //["none", "redis", "memcached", "memory"] [string.in]
-			Memcached: &configv1.Data_Memcached{
+			Memcached: &configv1.Memcached{
 				Addr:     "",
 				Username: "",
 				Password: "",
 				MaxIdle:  0,
 				Timeout:  0,
 			},
-			Memory: &configv1.Data_Memory{
+			Memory: &configv1.Memory{
 				Size:            0,
 				Capacity:        0,
 				Expiration:      0,
 				CleanupInterval: 0,
 			},
-			Redis: &configv1.Data_Redis{
+			Redis: &configv1.Redis{
 				Network:      "",
 				Addr:         "",
 				Password:     "",
@@ -156,23 +160,18 @@ func DefaultStorage() *configv1.Data {
 				ReadTimeout:  0,
 				WriteTimeout: 0,
 			},
-			Badger: &configv1.Data_BadgerDS{
+			Badger: &configv1.BadgerDS{
 				Path:             "",
 				SyncWrites:       false,
 				ValueLogFileSize: 0,
 				LogLevel:         0,
 			},
 		},
-		Storage: &configv1.Data_Storage{
-			Type: "none", //["none", "file", "redis", "mongo", "oss"] [string.in]
-			File: &configv1.Data_File{
-				Root: "",
-			},
-			Redis:  &configv1.Data_Redis{},
-			Badger: &configv1.Data_BadgerDS{},
-			Mongo:  &configv1.Data_Mongo{},
-			Oss:    &configv1.Data_Oss{},
-		},
+		File:   nil,
+		Redis:  nil,
+		Badger: nil,
+		Mongo:  nil,
+		Oss:    nil,
 	}
 }
 
@@ -269,10 +268,22 @@ func DefaultRegistry() *configv1.Registry {
 
 func DefaultServiceMiddleware() *middlewarev1.Middleware {
 	return &middlewarev1.Middleware{
-		Logging:        true,
-		Recovery:       true,
-		Tracing:        true,
-		CircuitBreaker: true,
+		EnabledMiddlewares: []string{
+			"logging",
+			"recovery",
+			"tracing",
+			"circuit_breaker",
+			"metadata",
+			"rate_limiter",
+			"metrics",
+			"validator",
+			"jwt",
+			"selector",
+		},
+		//Logging:        true,
+		//Recovery:       true,
+		//Tracing:        true,
+		//CircuitBreaker: true,
 		Metadata: &middlewarev1.Middleware_Metadata{
 			Enabled: true,
 		},
@@ -311,11 +322,11 @@ func DefaultServiceMiddleware() *middlewarev1.Middleware {
 
 func DefaultServiceGrpc() *configv1.Service_GRPC {
 	return &configv1.Service_GRPC{
-		Network:         "tcp",
-		Addr:            "${grpc_address:0.0.0.0:18000}",
-		UseTls:          false,
-		CertFile:        "",
-		KeyFile:         "",
+		Network: "tcp",
+		Addr:    "${grpc_address:0.0.0.0:18000}",
+		UseTls:  false,
+		//CertFile:        "",
+		//KeyFile:         "",
 		Timeout:         0,
 		ShutdownTimeout: 0,
 		ReadTimeout:     0,
@@ -327,11 +338,11 @@ func DefaultServiceGrpc() *configv1.Service_GRPC {
 
 func DefaultServiceHttp() *configv1.Service_HTTP {
 	return &configv1.Service_HTTP{
-		Network:         "tcp",
-		Addr:            "${http_address:0.0.0.0:18100}",
-		UseTls:          false,
-		CertFile:        "",
-		KeyFile:         "",
+		Network: "tcp",
+		Addr:    "${http_address:0.0.0.0:18100}",
+		UseTls:  false,
+		//CertFile:        "",
+		//KeyFile:         "",
 		Timeout:         0,
 		ShutdownTimeout: 0,
 		ReadTimeout:     0,
@@ -353,7 +364,7 @@ func DefaultCaptcha() *configs.Captcha {
 		Width:       400,
 		Height:      160,
 		StorageName: "captcha",
-		Storage:     &configv1.Data_Redis{},
+		Storage:     &configv1.Storage{},
 	}
 }
 
@@ -367,12 +378,5 @@ func DefaultRootUser() *configs.RootUser {
 		Nickname:       "admin",
 		Email:          "admin@admin.com",
 		Mobile:         "1380000000",
-	}
-}
-
-func AuthConfig() *configs.AuthConfig {
-	return &configs.AuthConfig{
-		//RootUser: DefaultRootUser(),
-		Captcha: DefaultCaptcha(),
 	}
 }

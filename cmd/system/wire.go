@@ -27,7 +27,7 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	panic(wire.Build(
 		loader.ProviderSet,
 		data.ProviderSet,
-		//basisdal.ProviderSet,
+		//authdal.ProviderSet,
 		//basisbiz.ProviderSet,
 		//basisservice.ProviderSet,
 		//basisserver.ProviderSet,

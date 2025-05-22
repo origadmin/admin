@@ -13,14 +13,16 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/origadmin/contrib/database"
+	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/slog-kratos"
+	"github.com/origadmin/toolkits/codec/toml"
 	"github.com/origadmin/toolkits/crypto/rand"
 	"github.com/origadmin/toolkits/identifier/uuid"
 	"google.golang.org/protobuf/encoding/protojson"
 
+	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -36,6 +38,7 @@ var (
 )
 
 func init() {
+	encoding.RegisterCodec(toml.Codec)
 	_, err := os.Stat(testPath)
 	if err != nil {
 		os.MkdirAll(testPath, 0755)
@@ -47,7 +50,7 @@ func TestSaveConfig(t *testing.T) {
 	fmt.Println("unixmillis:", time.Now().UnixMilli())
 	bootstrap := DefaultBootstrap()
 	//bootstrap.Security.Authn.Jwt.SigningMethod = "HS256"
-	bootstrap.Security.Authn.Jwt.SigningKey = key
+	//bootstrap.Security.Authn.Jwt.SigningKey = key
 	bootstrap.Middleware.Jwt.Config.Key = key
 	bootstrap.Middleware.Jwt.Config.SigningMethod = "HS512"
 	//bootstrap.Service.Middleware.Jwt.Config.Key = key
@@ -141,7 +144,6 @@ func TestLoadConfig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			got, err := LoadLocalBootstrap(filepath.Join(testPath, tt.args.path))
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LoadConf() error = %v, wantErr %v", err, tt.wantErr)
@@ -187,12 +189,12 @@ func TestData_InitDataFromPath(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.fields.Bootstrap == nil {
-				abs, err := filepath.Abs("../../resources/configs/system/bootstrap.toml")
+				abs, err := filepath.Abs("../../resources/configs/system")
 				if err != nil {
 					return
 				}
 				log.Infof("abs: %s", abs)
-				bs, err := LoadLocalBootstrap("../../resources/configs/system/bootstrap.toml")
+				bs, err := LoadLocalBootstrap(`D:\workspace\project\golang\origadmin\backend\internal\loader\test\test.toml`)
 				if err != nil {
 					t.Fatal(err)
 					return

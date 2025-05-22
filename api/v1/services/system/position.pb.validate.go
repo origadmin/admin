@@ -83,7 +83,7 @@ type ListPositionsRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListPositionsRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -260,7 +260,7 @@ type ListPositionsResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m ListPositionsResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -364,7 +364,7 @@ type GetPositionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetPositionRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -495,7 +495,7 @@ type GetPositionResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m GetPositionResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -630,7 +630,7 @@ type CreatePositionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CreatePositionRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -761,7 +761,7 @@ type CreatePositionResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m CreatePositionResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -894,7 +894,7 @@ type UpdatePositionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdatePositionRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1025,7 +1025,7 @@ type UpdatePositionResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m UpdatePositionResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1129,7 +1129,7 @@ type DeletePositionRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DeletePositionRequestMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}
@@ -1260,7 +1260,7 @@ type DeletePositionResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
 func (m DeletePositionResponseMultiError) Error() string {
-	var msgs []string
+	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
 	}

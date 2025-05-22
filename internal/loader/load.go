@@ -14,11 +14,9 @@ import (
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
-	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/registry"
 
-	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
 )
 
@@ -34,11 +32,8 @@ type AppOptions struct {
 
 var (
 	ProviderSet = wire.NewSet(
-		NewAuthConfig,
 		NewRegistrar,
-		NewTokenizer,
-		NewAuthorizer,
-		NewAuthenticator,
+		MockHttpServer,
 		wire.Struct(new(Injector), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)
@@ -55,9 +50,7 @@ type Loader interface {
 }
 
 type InjectorClient struct {
-	Logger    log.KLogger
-	Bootstrap *configs.Bootstrap
-	Server    *http.Server
+	Server *http.Server
 }
 
 type Injector struct {
@@ -68,28 +61,6 @@ type Injector struct {
 func init() {
 	runtime.RegisterConfigFunc("file", NewFileConfig)
 	//runtime.RegisterService(service.Service, service.DefaultServiceBuilder)
-}
-
-func NewAuthenticator(bootstrap *configs.Bootstrap) (security.Authenticator, error) {
-	return securityx.NewAuthenticator(bootstrap)
-}
-
-func NewTokenizer(bootstrap *configs.Bootstrap) (security.Tokenizer, error) {
-	authenticator, err := securityx.NewTokenizer(bootstrap)
-	if err != nil {
-		return nil, err
-	}
-	return authenticator, nil
-}
-
-func NewAuthorizer(bootstrap *configs.Bootstrap) (security.Authorizer, error) {
-	return securityx.NewAuthorizer(bootstrap)
-}
-
-func NewAuthConfig(bootstrap *configs.Bootstrap) *configs.AuthConfig {
-	// c := DefaultCaptcha()
-	// todo Read from the configuration file
-	return AuthConfig()
 }
 
 type loader struct {
@@ -113,4 +84,8 @@ func NewLoader(bs *bootstrap.Bootstrap) (Loader, error) {
 		flags: bs,
 	}
 	return load, nil
+}
+
+func MockHttpServer() *http.Server {
+	return http.NewServer()
 }

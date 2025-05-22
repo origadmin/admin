@@ -8,10 +8,12 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/securityx"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/user"
@@ -19,7 +21,7 @@ import (
 )
 
 type personalRepo struct {
-	db *Data
+	db *data.Data
 }
 
 func (repo personalRepo) GetPersonalProfile(ctx context.Context, in *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
@@ -92,7 +94,7 @@ func (repo personalRepo) ListResources(ctx context.Context, in *dto.ListResource
 }
 
 // NewPersonalRepo .
-func NewPersonalRepo(db *Data, logger log.KLogger) dto.PersonalRepo {
+func NewPersonalRepo(r runtime.Runtime, db *data.Data) dto.PersonalRepo {
 	return &personalRepo{
 		db: db,
 	}

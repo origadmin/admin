@@ -13,11 +13,11 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	_ "github.com/origadmin/contrib/consul/config"
 	_ "github.com/origadmin/contrib/consul/registry"
-	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 
+	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/internal/loader"
 )
 

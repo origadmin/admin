@@ -8,8 +8,9 @@ package biz
 import (
 	"context"
 
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/dto"
@@ -56,6 +57,6 @@ func (biz PersonalServiceBiz) UpdatePersonalSetting(ctx context.Context, in *pb.
 }
 
 // NewPersonalServiceBiz new a Personal use case.
-func NewPersonalServiceBiz(repo dto.PersonalRepo, logger log.KLogger) *PersonalServiceBiz {
-	return &PersonalServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+func NewPersonalServiceBiz(r runtime.Runtime, repo dto.PersonalRepo) *PersonalServiceBiz {
+	return &PersonalServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.Logger())}
 }

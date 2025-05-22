@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	kerr "github.com/go-kratos/kratos/v2/errors"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
 	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
@@ -390,20 +391,8 @@ type LoginData struct {
 	User      systemdto.UserRepo
 }
 
-func NewCaptcha(cfg *configs.Captcha) *captcha.Captcha {
-	return captcha.NewCaptcha(&captcha.Config{
-		DriverDigit: &captcha.DriverDigit{
-			Height:   int(cfg.Height),
-			Width:    int(cfg.Width),
-			Length:   int(cfg.Length),
-			MaxSkew:  0.7,
-			DotCount: 120,
-		},
-	})
-}
-
 // NewLoginRepo .
-func NewLoginRepo(data *LoginData, logger log.KLogger) dto.LoginRepo {
+func NewLoginRepo(r runtime.Runtime, data *LoginData) dto.LoginRepo {
 	var err error
 	cfg := data.RootUser
 	// todo: generate random password for root user if not exists
