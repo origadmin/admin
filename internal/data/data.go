@@ -50,6 +50,7 @@ var ProviderSet = wire.NewSet(
 
 type Data struct {
 	*ent.Database
+	Delimiter string
 }
 
 type LoginData struct {
@@ -134,7 +135,8 @@ func NewData(r runtime.Runtime, bootstrap *configs.Bootstrap) (*Data, func(), er
 	}
 
 	data := &Data{
-		Database: db,
+		Database:  db,
+		Delimiter: TreePathDelimiter,
 	}
 
 	return data, func() {

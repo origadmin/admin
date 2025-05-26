@@ -7,6 +7,8 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 	"time"
 
 	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
@@ -30,10 +32,14 @@ func Open(database *configv1.Database) (*sql.DB, error) {
 		database.Dialect = "postgres"
 	case "sqlite3", "sqlite":
 		database.Dialect = "sqlite3"
+		if !strings.Contains(database.Source, ":memory:") {
+			sqlite.MakeSourceDirectory(database.Source)
+		}
 		database.Source = sqlite.SourceForeignKeys(database.Source)
 	default:
 
 	}
+	fmt.Printf("database: dialect: %s, source: %s\n", database.Dialect, database.Source)
 	db, err := sql.Open(database.Dialect, database.Source)
 	if err != nil {
 		return nil, errors.Wrap(err, "database: open database error")

@@ -155,14 +155,14 @@ var File_configs_services_service_proto protoreflect.FileDescriptor
 
 const file_configs_services_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1econfigs/services/service.proto\x12\x1eorigadmin.configs.services.api\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1emiddleware/v1/middleware.proto\"\x9c\x01\n" +
+	"\x1econfigs/services/service.proto\x12\x14api.configs.services\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1emiddleware/v1/middleware.proto\"\x9c\x01\n" +
 	"\vServiceCore\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12/\n" +
 	"\bregistry\x18\x03 \x01(\v2\x13.config.v1.RegistryR\bregistry\x12.\n" +
-	"\bstorages\x18\x04 \x03(\v2\x12.config.v1.StorageR\bstorages\"\xb5\x01\n" +
-	"\aService\x12?\n" +
-	"\x04core\x18\x01 \x01(\v2+.origadmin.configs.services.api.ServiceCoreR\x04core\x12-\n" +
+	"\bstorages\x18\x04 \x03(\v2\x12.config.v1.StorageR\bstorages\"\xab\x01\n" +
+	"\aService\x125\n" +
+	"\x04core\x18\x01 \x01(\v2!.api.configs.services.ServiceCoreR\x04core\x12-\n" +
 	"\aservice\x18\xc8\x01 \x01(\v2\x12.config.v1.ServiceR\aservice\x12:\n" +
 	"\n" +
 	"middleware\x18\xac\x02 \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
@@ -182,19 +182,19 @@ func file_configs_services_service_proto_rawDescGZIP() []byte {
 
 var file_configs_services_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_configs_services_service_proto_goTypes = []any{
-	(*ServiceCore)(nil),    // 0: origadmin.configs.services.api.ServiceCore
-	(*Service)(nil),        // 1: origadmin.configs.services.api.Service
+	(*ServiceCore)(nil),    // 0: api.configs.services.ServiceCore
+	(*Service)(nil),        // 1: api.configs.services.Service
 	(*v1.Registry)(nil),    // 2: config.v1.Registry
 	(*v1.Storage)(nil),     // 3: config.v1.Storage
 	(*v1.Service)(nil),     // 4: config.v1.Service
 	(*v11.Middleware)(nil), // 5: middleware.v1.Middleware
 }
 var file_configs_services_service_proto_depIdxs = []int32{
-	2, // 0: origadmin.configs.services.api.ServiceCore.registry:type_name -> config.v1.Registry
-	3, // 1: origadmin.configs.services.api.ServiceCore.storages:type_name -> config.v1.Storage
-	0, // 2: origadmin.configs.services.api.Service.core:type_name -> origadmin.configs.services.api.ServiceCore
-	4, // 3: origadmin.configs.services.api.Service.service:type_name -> config.v1.Service
-	5, // 4: origadmin.configs.services.api.Service.middleware:type_name -> middleware.v1.Middleware
+	2, // 0: api.configs.services.ServiceCore.registry:type_name -> config.v1.Registry
+	3, // 1: api.configs.services.ServiceCore.storages:type_name -> config.v1.Storage
+	0, // 2: api.configs.services.Service.core:type_name -> api.configs.services.ServiceCore
+	4, // 3: api.configs.services.Service.service:type_name -> config.v1.Service
+	5, // 4: api.configs.services.Service.middleware:type_name -> middleware.v1.Middleware
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name

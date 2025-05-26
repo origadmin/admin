@@ -111,7 +111,7 @@ var File_configs_server_proto protoreflect.FileDescriptor
 
 const file_configs_server_proto_rawDesc = "" +
 	"\n" +
-	"\x14configs/server.proto\x12\x1forigadmin.origadmin.configs.api\x1a\x17config/v1/storage.proto\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x1emiddleware/v1/middleware.proto\"\x81\x02\n" +
+	"\x14configs/server.proto\x12\x15origadmin.api.configs\x1a\x17config/v1/storage.proto\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x1emiddleware/v1/middleware.proto\"\x81\x02\n" +
 	"\x06Server\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12-\n" +
@@ -136,17 +136,17 @@ func file_configs_server_proto_rawDescGZIP() []byte {
 
 var file_configs_server_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_configs_server_proto_goTypes = []any{
-	(*Server)(nil),         // 0: origadmin.origadmin.configs.api.Server
+	(*Server)(nil),         // 0: origadmin.api.configs.Server
 	(*v1.Service)(nil),     // 1: config.v1.Service
 	(*v1.Storage)(nil),     // 2: config.v1.Storage
 	(*v1.Registry)(nil),    // 3: config.v1.Registry
 	(*v11.Middleware)(nil), // 4: middleware.v1.Middleware
 }
 var file_configs_server_proto_depIdxs = []int32{
-	1, // 0: origadmin.origadmin.configs.api.Server.service:type_name -> config.v1.Service
-	2, // 1: origadmin.origadmin.configs.api.Server.storage:type_name -> config.v1.Storage
-	3, // 2: origadmin.origadmin.configs.api.Server.registry:type_name -> config.v1.Registry
-	4, // 3: origadmin.origadmin.configs.api.Server.middleware:type_name -> middleware.v1.Middleware
+	1, // 0: origadmin.api.configs.Server.service:type_name -> config.v1.Service
+	2, // 1: origadmin.api.configs.Server.storage:type_name -> config.v1.Storage
+	3, // 2: origadmin.api.configs.Server.registry:type_name -> config.v1.Registry
+	4, // 3: origadmin.api.configs.Server.middleware:type_name -> middleware.v1.Middleware
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

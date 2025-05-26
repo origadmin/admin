@@ -60,7 +60,6 @@ type Injector struct {
 
 func init() {
 	runtime.RegisterConfigFunc("file", NewFileConfig)
-	//runtime.RegisterService(service.Service, service.DefaultServiceBuilder)
 }
 
 type loader struct {

@@ -1,5 +1,5 @@
 syntax = "proto3";
-package origadmin.configs.services.api;
+package api.configs.services;
 
 import "config/v1/registry.proto";
 import "config/v1/service.proto";

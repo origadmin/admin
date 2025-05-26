@@ -18,7 +18,6 @@ var (
 	treeState = ""
 	date      = ""
 	builtBy   = ""
-	debug     = false
 )
 
 func buildVersion(version, commit, date, builtBy, treeState string) goversion.Info {

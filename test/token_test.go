@@ -9,8 +9,8 @@ import (
 	"context"
 	"testing"
 
-	_ "github.com/origadmin/contrib/consul/config"
-	_ "github.com/origadmin/contrib/consul/registry"
+	_ "origadmin/application/admin/contrib/consul/config"
+	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "github.com/origadmin/contrib/database"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/interfaces/security"

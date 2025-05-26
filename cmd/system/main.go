@@ -11,12 +11,15 @@ import (
 	"log/slog"
 
 	"github.com/go-kratos/kratos/v2"
-	_ "github.com/origadmin/contrib/consul/config"
-	_ "github.com/origadmin/contrib/consul/registry"
+	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 
+	"github.com/origadmin/toolkits/codec/toml"
+
+	_ "origadmin/application/admin/contrib/consul/config"
+	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/internal/loader"
 )
@@ -36,6 +39,7 @@ var (
 )
 
 func init() {
+	encoding.RegisterCodec(toml.Codec)
 	flags.SetServiceInfo(Name, Version)
 	flag.BoolVar(&debug, "debug", false, "set environment, eg: -debug")
 	flag.StringVar(&configPath, "c", "config.toml", "config path, eg: -c config.toml")
@@ -48,7 +52,8 @@ func main() {
 	if debug {
 		fmt.Println("debug mode")
 		flags.SetEnv("debug")
-		flags.SetConfigPath("resources/configs")
+		flags.SetConfigPath("resources/configs/config.toml")
+		flags.SetWorkDir(".")
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 
@@ -73,7 +78,7 @@ func main() {
 	}
 }
 
-// NewAppProvider 是一个provider函数，它使用runtime.Runtime的CreateApp方法
-func NewAppProvider(r runtime.Runtime, injector *loader.Injector) *kratos.App {
+// NewApp new app with runtime and injector
+func NewApp(r runtime.Runtime, injector *loader.Injector) *kratos.App {
 	return r.CreateApp(injector.Servers...)
 }

@@ -6,6 +6,7 @@
 package sqlite
 
 import (
+	"os"
 	"strings"
 )
 
@@ -29,4 +30,24 @@ func SourceForeignKeys(source string) string {
 		source += "?" + FKSuffix
 	}
 	return source
+}
+
+func MakeSourceDirectory(source string) {
+	if strings.HasPrefix(source, "file://") {
+		source = strings.TrimPrefix(source, "file://")
+	}
+	idx := strings.Index(source, "?")
+	if idx > 0 {
+		source = source[:idx]
+	}
+	dirs := strings.Split(source, "/")
+	if len(dirs) > 1 {
+		dirs = dirs[:len(dirs)-1]
+		dir := strings.Join(dirs, "/")
+		_, err := os.Stat(dir)
+		if err != nil {
+			os.MkdirAll(dir, 0755)
+			return
+		}
+	}
 }

@@ -5,17 +5,24 @@
 package server
 
 import (
-	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/service"
 
 	"origadmin/application/admin/internal/configs"
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(bootstrap *configs.Bootstrap, l log.KLogger, ss ...service.ServerOption) *service.GRPCServer {
-	//srv, err := runtime.NewGRPCServiceServer(bootstrap.GetService(), ss...)
-	//if err != nil {
-	//	panic(err)
-	//}
-	return srv
+func NewGRPCServer(r runtime.Runtime, bootstrap *configs.Bootstrap) *service.GRPCServer {
+	services := bootstrap.GetServices()
+	for _, config := range services {
+		serviceConfig := config.GetService()
+		if serviceConfig.GetType() == "grpc" {
+			grpcServer, err := r.Builder().NewGRPCServer(serviceConfig)
+			if err != nil {
+				return nil
+			}
+			return grpcServer
+		}
+	}
+	return nil
 }

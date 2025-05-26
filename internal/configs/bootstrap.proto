@@ -1,12 +1,13 @@
 syntax = "proto3";
 
-package origadmin.configs.api;
+package api.configs;
 
 import "config/v1/logger.proto";
 import "config/v1/registry.proto";
 import "config/v1/service.proto";
 import "config/v1/storage.proto";
 import "configs/security_config.proto";
+import "configs/services/service.proto";
 import "middleware/v1/middleware.proto";
 import "validate/validate.proto"; // Updated import statement
 
@@ -68,10 +69,7 @@ message Bootstrap {
 
   // 入口服务专属配置
   Entry entry = 103 [json_name = "entry"];
-  config.v1.Service http_gateway = 104 [json_name = "http_gateway"];
-
-  // 动态加载服务配置
-  repeated ServiceConfig services = 200 [json_name = "services"];
+  repeated api.configs.services.Service services = 104 [json_name = "services"];
 
   config.v1.Storage storage = 300 [json_name = "storage"];
   config.v1.Registry registry = 400 [json_name = "registry"];

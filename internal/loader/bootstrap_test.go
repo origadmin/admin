@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/encoding"
+	_ "github.com/go-kratos/kratos/v2/encoding/proto"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/slog-kratos"
@@ -189,12 +190,13 @@ func TestData_InitDataFromPath(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if tt.fields.Bootstrap == nil {
-				abs, err := filepath.Abs("../../resources/configs/system")
+				abs, err := filepath.Abs("D:\\workspace\\project\\golang\\origadmin\\backend\\internal\\loader\\test" +
+					"\\test.toml")
 				if err != nil {
 					return
 				}
 				log.Infof("abs: %s", abs)
-				bs, err := LoadLocalBootstrap(`D:\workspace\project\golang\origadmin\backend\internal\loader\test\test.toml`)
+				bs, err := LoadLocalBootstrap(abs)
 				if err != nil {
 					t.Fatal(err)
 					return

@@ -102,7 +102,7 @@ var File_configs_captcha_proto protoreflect.FileDescriptor
 
 const file_configs_captcha_proto_rawDesc = "" +
 	"\n" +
-	"\x15configs/captcha.proto\x12\x15origadmin.configs.api\x1a\x17config/v1/storage.proto\"\xa1\x01\n" +
+	"\x15configs/captcha.proto\x12\vapi.configs\x1a\x17config/v1/storage.proto\"\xa1\x01\n" +
 	"\aCaptcha\x12\x16\n" +
 	"\x06length\x18\x01 \x01(\x05R\x06length\x12\x14\n" +
 	"\x05width\x18\x02 \x01(\x05R\x05width\x12\x16\n" +
@@ -124,11 +124,11 @@ func file_configs_captcha_proto_rawDescGZIP() []byte {
 
 var file_configs_captcha_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_configs_captcha_proto_goTypes = []any{
-	(*Captcha)(nil),    // 0: origadmin.configs.api.Captcha
+	(*Captcha)(nil),    // 0: api.configs.Captcha
 	(*v1.Storage)(nil), // 1: config.v1.Storage
 }
 var file_configs_captcha_proto_depIdxs = []int32{
-	1, // 0: origadmin.configs.api.Captcha.storage:type_name -> config.v1.Storage
+	1, // 0: api.configs.Captcha.storage:type_name -> config.v1.Storage
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

@@ -9,7 +9,6 @@ import (
 	"strconv"
 
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/db"
@@ -51,7 +50,7 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 		if err != nil {
 			return nil, err
 		}
-		obj.TreePath = parent.TreePath + strconv.Itoa(int(parent.ID)) + TreePathDelimiter
+		obj.TreePath = parent.TreePath + strconv.Itoa(int(parent.ID)) + repo.db.Delimiter
 	}
 
 	create := repo.db.Resource(ctx).Create()

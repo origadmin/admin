@@ -7,8 +7,8 @@ package start
 
 import (
 	"github.com/go-kratos/kratos/v2"
-	_ "github.com/origadmin/contrib/consul/config"
-	_ "github.com/origadmin/contrib/consul/registry"
+	_ "origadmin/application/admin/contrib/consul/config"
+	_ "origadmin/contrib/consul/registry"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/spf13/cobra"

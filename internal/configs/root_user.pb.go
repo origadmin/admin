@@ -166,7 +166,7 @@ var File_configs_root_user_proto protoreflect.FileDescriptor
 
 const file_configs_root_user_proto_rawDesc = "" +
 	"\n" +
-	"\x17configs/root_user.proto\x12\x15origadmin.configs.api\x1a\x17validate/validate.proto\"\x8c\x03\n" +
+	"\x17configs/root_user.proto\x12\vapi.configs\x1a\x17validate/validate.proto\"\x8c\x03\n" +
 	"\bRootUser\x12\x18\n" +
 	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x17\n" +
 	"\x02id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12#\n" +
@@ -197,7 +197,7 @@ func file_configs_root_user_proto_rawDescGZIP() []byte {
 
 var file_configs_root_user_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_configs_root_user_proto_goTypes = []any{
-	(*RootUser)(nil), // 0: origadmin.configs.api.RootUser
+	(*RootUser)(nil), // 0: api.configs.RootUser
 }
 var file_configs_root_user_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

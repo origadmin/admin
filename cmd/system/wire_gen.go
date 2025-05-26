@@ -19,8 +19,8 @@ import (
 )
 
 import (
-	_ "github.com/origadmin/contrib/consul/config"
-	_ "github.com/origadmin/contrib/consul/registry"
+	_ "origadmin/application/admin/contrib/consul/config"
+	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
 )
 
@@ -54,7 +54,7 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 		Registrar: v,
 		Servers:   v3,
 	}
-	app := NewAppProvider(r, injector)
+	app := NewApp(r, injector)
 	return app, func() {
 		cleanup()
 	}, nil

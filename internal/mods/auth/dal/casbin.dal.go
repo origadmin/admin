@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
@@ -20,7 +21,7 @@ type CasbinSourceConfig struct {
 
 type casbinSourceRepo struct {
 	ctx    context.Context
-	data   *Data
+	data   *data.Data
 	config *CasbinSourceConfig
 }
 
@@ -88,7 +89,7 @@ func (c casbinSourceRepo) ListGroupings(ctx context.Context, in *pb.ListGrouping
 }
 
 // NewCasbinSourceRepo returns a new CasbinSourceRepo
-func NewCasbinSourceRepo(data *Data) (dto.CasbinSourceRepo, error) {
+func NewCasbinSourceRepo(data *data.Data) (dto.CasbinSourceRepo, error) {
 	c := &casbinSourceRepo{
 		data: data,
 		config: &CasbinSourceConfig{
@@ -104,7 +105,7 @@ func NewCasbinSourceRepo(data *Data) (dto.CasbinSourceRepo, error) {
 // This method does not ensure the existence of database, user should create database manually.
 func NewCasbinSourceWithClient(client *ent.Client) (dto.CasbinSourceRepo, error) {
 	c := &casbinSourceRepo{
-		data: NewDataWithClient(client),
+		data: data.NewDataWithClient(client),
 		config: &CasbinSourceConfig{
 			PrefixNumberID: func(prefix string, id int64) string {
 				return prefix + "_" + strconv.FormatInt(id, 10)

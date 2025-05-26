@@ -1,5 +1,5 @@
 syntax = "proto3";
-package origadmin.configs.api;
+package api.configs;
 
 import "validate/validate.proto";
 

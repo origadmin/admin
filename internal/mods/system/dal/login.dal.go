@@ -416,7 +416,7 @@ func NewLoginRepo(r runtime.Runtime, data *LoginData) dto.LoginRepo {
 	return &loginRepo{
 		bufpool:   BufPool(),
 		LoginData: data,
-		captcha:   NewCaptcha(data.Captcha),
+		//captcha:   NewCaptcha(data.Captcha),
 	}
 }
 

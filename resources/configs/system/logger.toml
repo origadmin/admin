@@ -1,0 +1,19 @@
+[Logger]
+Disabled = false
+Develop = true
+Default = true
+Name = "output.log"
+Format = "json"
+Level = 2
+Stdout = true
+DisableCaller = false
+CallerSkip = 0
+TimeFormat = ""
+[Logger.File]
+Path = "logs"
+Lumberjack = true
+Compress = false
+LocalTime = false
+MaxSize = 0
+MaxAge = 0
+MaxBackups = 0

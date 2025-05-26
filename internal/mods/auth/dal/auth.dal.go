@@ -13,13 +13,14 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	"origadmin/application/admin/internal/mods/system/dto"
 )
 
 type authRepo struct {
-	DB         *Data
+	DB         *data.Data
 	BufPool    *sync.Pool
 	Tokenizer  security.Tokenizer
 	Authorizer security.Authorizer
@@ -99,7 +100,7 @@ func fromClaims(claims security.Claims, method, path string) security.Policy {
 }
 
 // NewAuthRepo .
-func NewAuthRepo(db *Data, logger log.KLogger) dto.AuthRepo {
+func NewAuthRepo(db *data.Data, logger log.KLogger) dto.AuthRepo {
 	return &authRepo{
 		DB:      db,
 		BufPool: BufPool(),

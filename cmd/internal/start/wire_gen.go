@@ -14,8 +14,8 @@ import (
 )
 
 import (
-	_ "github.com/origadmin/contrib/consul/config"
-	_ "github.com/origadmin/contrib/consul/registry"
+	_ "origadmin/application/admin/contrib/consul/config"
+	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
 )
 

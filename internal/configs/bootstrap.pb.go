@@ -12,6 +12,7 @@ import (
 	v11 "github.com/origadmin/runtime/gen/go/middleware/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	services "origadmin/application/admin/internal/configs/services"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -139,10 +140,8 @@ type Bootstrap struct {
 	Id                  string `protobuf:"bytes,100,opt,name=id,proto3" json:"id,omitempty"`
 	Environment         string `protobuf:"bytes,102,opt,name=environment,proto3" json:"environment,omitempty"`
 	// 入口服务专属配置
-	Entry       *Bootstrap_Entry `protobuf:"bytes,103,opt,name=entry,proto3" json:"entry,omitempty"`
-	HttpGateway *v1.Service      `protobuf:"bytes,104,opt,name=http_gateway,proto3" json:"http_gateway,omitempty"`
-	// 动态加载服务配置
-	Services      []*ServiceConfig       `protobuf:"bytes,200,rep,name=services,proto3" json:"services,omitempty"`
+	Entry         *Bootstrap_Entry       `protobuf:"bytes,103,opt,name=entry,proto3" json:"entry,omitempty"`
+	Services      []*services.Service    `protobuf:"bytes,104,rep,name=services,proto3" json:"services,omitempty"` // 服务专用配置
 	Storage       *v1.Storage            `protobuf:"bytes,300,opt,name=storage,proto3" json:"storage,omitempty"`
 	Registry      *v1.Registry           `protobuf:"bytes,400,opt,name=registry,proto3" json:"registry,omitempty"`
 	Middleware    *v11.Middleware        `protobuf:"bytes,9,opt,name=middleware,proto3" json:"middleware,omitempty"`
@@ -239,14 +238,7 @@ func (x *Bootstrap) GetEntry() *Bootstrap_Entry {
 	return nil
 }
 
-func (x *Bootstrap) GetHttpGateway() *v1.Service {
-	if x != nil {
-		return x.HttpGateway
-	}
-	return nil
-}
-
-func (x *Bootstrap) GetServices() []*ServiceConfig {
+func (x *Bootstrap) GetServices() []*services.Service {
 	if x != nil {
 		return x.Services
 	}
@@ -448,13 +440,13 @@ var File_configs_bootstrap_proto protoreflect.FileDescriptor
 
 const file_configs_bootstrap_proto_rawDesc = "" +
 	"\n" +
-	"\x17configs/bootstrap.proto\x12\x15origadmin.configs.api\x1a\x16config/v1/logger.proto\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1dconfigs/security_config.proto\x1a\x1emiddleware/v1/middleware.proto\x1a\x17validate/validate.proto\"[\n" +
+	"\x17configs/bootstrap.proto\x12\vapi.configs\x1a\x16config/v1/logger.proto\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1dconfigs/security_config.proto\x1a\x1econfigs/services/service.proto\x1a\x1emiddleware/v1/middleware.proto\x1a\x17validate/validate.proto\"[\n" +
 	"\x13EntrySelectorConfig\x12\x16\n" +
 	"\x06global\x18\x02 \x01(\bR\x06global\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x04 \x01(\tR\aversion\",\n" +
 	"\rServiceConfig\x12\x1b\n" +
-	"\x04name\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\"\xa5\a\n" +
+	"\x04name\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\"\xc7\x06\n" +
 	"\tBootstrap\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12 \n" +
@@ -462,18 +454,17 @@ const file_configs_bootstrap_proto_rawDesc = "" +
 	"\x04mode\x18\x05 \x01(\tB\x19\xfaB\x16r\x14R\tsingletonR\aclusterR\x04mode\x124\n" +
 	"\x15enable_dynamic_config\x18\a \x01(\bR\x15enable_dynamic_config\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\x122\n" +
-	"\venvironment\x18f \x01(\tB\x10\xfaB\rr\vR\x03devR\x04prodR\venvironment\x12<\n" +
-	"\x05entry\x18g \x01(\v2&.origadmin.configs.api.Bootstrap.EntryR\x05entry\x126\n" +
-	"\fhttp_gateway\x18h \x01(\v2\x12.config.v1.ServiceR\fhttp_gateway\x12A\n" +
-	"\bservices\x18\xc8\x01 \x03(\v2$.origadmin.configs.api.ServiceConfigR\bservices\x12-\n" +
+	"\venvironment\x18f \x01(\tB\x10\xfaB\rr\vR\x03devR\x04prodR\venvironment\x122\n" +
+	"\x05entry\x18g \x01(\v2\x1c.api.configs.Bootstrap.EntryR\x05entry\x129\n" +
+	"\bservices\x18h \x03(\v2\x1d.api.configs.services.ServiceR\bservices\x12-\n" +
 	"\astorage\x18\xac\x02 \x01(\v2\x12.config.v1.StorageR\astorage\x120\n" +
 	"\bregistry\x18\x90\x03 \x01(\v2\x13.config.v1.RegistryR\bregistry\x129\n" +
 	"\n" +
 	"middleware\x18\t \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
-	"middleware\x12A\n" +
+	"middleware\x127\n" +
 	"\bsecurity\x18\n" +
-	" \x01(\v2%.origadmin.configs.api.SecurityConfigR\bsecurity\x12Q\n" +
-	"\fhealth_check\x18\xeb\a \x01(\v2,.origadmin.configs.api.Bootstrap.HealthCheckR\fhealth_check\x12*\n" +
+	" \x01(\v2\x1b.api.configs.SecurityConfigR\bsecurity\x12G\n" +
+	"\fhealth_check\x18\xeb\a \x01(\v2\".api.configs.Bootstrap.HealthCheckR\fhealth_check\x12*\n" +
 	"\x06logger\x18\xec\a \x01(\v2\x11.config.v1.LoggerR\x06logger\x1a;\n" +
 	"\vHealthCheck\x12\x18\n" +
 	"\atimeout\x18\x01 \x01(\x05R\atimeout\x12\x12\n" +
@@ -498,35 +489,35 @@ func file_configs_bootstrap_proto_rawDescGZIP() []byte {
 
 var file_configs_bootstrap_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_configs_bootstrap_proto_goTypes = []any{
-	(*EntrySelectorConfig)(nil),   // 0: origadmin.configs.api.EntrySelectorConfig
-	(*ServiceConfig)(nil),         // 1: origadmin.configs.api.ServiceConfig
-	(*Bootstrap)(nil),             // 2: origadmin.configs.api.Bootstrap
-	(*Settings)(nil),              // 3: origadmin.configs.api.Settings
-	(*Bootstrap_HealthCheck)(nil), // 4: origadmin.configs.api.Bootstrap.HealthCheck
-	(*Bootstrap_Entry)(nil),       // 5: origadmin.configs.api.Bootstrap.Entry
-	(*v1.Service)(nil),            // 6: config.v1.Service
+	(*EntrySelectorConfig)(nil),   // 0: api.configs.EntrySelectorConfig
+	(*ServiceConfig)(nil),         // 1: api.configs.ServiceConfig
+	(*Bootstrap)(nil),             // 2: api.configs.Bootstrap
+	(*Settings)(nil),              // 3: api.configs.Settings
+	(*Bootstrap_HealthCheck)(nil), // 4: api.configs.Bootstrap.HealthCheck
+	(*Bootstrap_Entry)(nil),       // 5: api.configs.Bootstrap.Entry
+	(*services.Service)(nil),      // 6: api.configs.services.Service
 	(*v1.Storage)(nil),            // 7: config.v1.Storage
 	(*v1.Registry)(nil),           // 8: config.v1.Registry
 	(*v11.Middleware)(nil),        // 9: middleware.v1.Middleware
-	(*SecurityConfig)(nil),        // 10: origadmin.configs.api.SecurityConfig
+	(*SecurityConfig)(nil),        // 10: api.configs.SecurityConfig
 	(*v1.Logger)(nil),             // 11: config.v1.Logger
+	(*v1.Service)(nil),            // 12: config.v1.Service
 }
 var file_configs_bootstrap_proto_depIdxs = []int32{
-	5,  // 0: origadmin.configs.api.Bootstrap.entry:type_name -> origadmin.configs.api.Bootstrap.Entry
-	6,  // 1: origadmin.configs.api.Bootstrap.http_gateway:type_name -> config.v1.Service
-	1,  // 2: origadmin.configs.api.Bootstrap.services:type_name -> origadmin.configs.api.ServiceConfig
-	7,  // 3: origadmin.configs.api.Bootstrap.storage:type_name -> config.v1.Storage
-	8,  // 4: origadmin.configs.api.Bootstrap.registry:type_name -> config.v1.Registry
-	9,  // 5: origadmin.configs.api.Bootstrap.middleware:type_name -> middleware.v1.Middleware
-	10, // 6: origadmin.configs.api.Bootstrap.security:type_name -> origadmin.configs.api.SecurityConfig
-	4,  // 7: origadmin.configs.api.Bootstrap.health_check:type_name -> origadmin.configs.api.Bootstrap.HealthCheck
-	11, // 8: origadmin.configs.api.Bootstrap.logger:type_name -> config.v1.Logger
-	6,  // 9: origadmin.configs.api.Bootstrap.Entry.server:type_name -> config.v1.Service
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	5,  // 0: api.configs.Bootstrap.entry:type_name -> api.configs.Bootstrap.Entry
+	6,  // 1: api.configs.Bootstrap.services:type_name -> api.configs.services.Service
+	7,  // 2: api.configs.Bootstrap.storage:type_name -> config.v1.Storage
+	8,  // 3: api.configs.Bootstrap.registry:type_name -> config.v1.Registry
+	9,  // 4: api.configs.Bootstrap.middleware:type_name -> middleware.v1.Middleware
+	10, // 5: api.configs.Bootstrap.security:type_name -> api.configs.SecurityConfig
+	4,  // 6: api.configs.Bootstrap.health_check:type_name -> api.configs.Bootstrap.HealthCheck
+	11, // 7: api.configs.Bootstrap.logger:type_name -> config.v1.Logger
+	12, // 8: api.configs.Bootstrap.Entry.server:type_name -> config.v1.Service
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_configs_bootstrap_proto_init() }

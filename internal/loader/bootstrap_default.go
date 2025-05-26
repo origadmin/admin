@@ -18,6 +18,7 @@ import (
 	sjwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
 
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/configs/services"
 )
 
 const (
@@ -37,22 +38,42 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Entry: &configs.Bootstrap_Entry{
 			Scheme: "http",
 		},
-		Services: []*configs.ServiceConfig{
-			//&configv1.Service{
-			//	Name:            "",
-			//	DynamicEndpoint: true,
-			//	Grpc:            DefaultServiceGrpc(),
-			//	Http:            DefaultServiceHttp(),
-			//	Websocket:       DefaultServiceWebsocket(),
-			//	Message:         DefaultServiceMessage(),
-			//	Task:            DefaultServiceTask(),
-			//	Middleware:      DefaultServiceMiddleware(),
-			//	Selector: &configv1.Service_Selector{
-			//		Version: "v1.0.0",
-			//		Builder: "bbr",
-			//	},
-			//}
+		Services: []*services.Service{
+			{
+				Service: &configv1.Service{
+					Name:            "",
+					DynamicEndpoint: true,
+					Type:            "grpc",
+					Grpc:            DefaultServiceGrpc(),
+					//Http:            DefaultServiceHttp(),
+					Websocket:  DefaultServiceWebsocket(),
+					Message:    DefaultServiceMessage(),
+					Task:       DefaultServiceTask(),
+					Middleware: DefaultServiceMiddleware(),
+					Selector: &configv1.Service_Selector{
+						Version: "v1.0.0",
+						Builder: "bbr",
+					},
+				},
+			},
+			{
+				Service: &configv1.Service{
+					Name:            "",
+					DynamicEndpoint: true,
+					Type:            "http",
+					Http:            DefaultServiceHttp(),
+					Websocket:       DefaultServiceWebsocket(),
+					Message:         DefaultServiceMessage(),
+					Task:            DefaultServiceTask(),
+					Middleware:      DefaultServiceMiddleware(),
+					Selector: &configv1.Service_Selector{
+						Version: "v1.0.0",
+						Builder: "bbr",
+					},
+				},
+			},
 		},
+		Logger:     DefaultLogger(),
 		Storage:    DefaultStorage(),
 		Registry:   DefaultRegistry(),
 		Middleware: DefaultServiceMiddleware(),
@@ -104,6 +125,31 @@ func DefaultBootstrap() *configs.Bootstrap {
 				},
 			},
 		},
+	}
+}
+
+func DefaultLogger() *configv1.Logger {
+	return &configv1.Logger{
+		Disabled:      false,
+		Develop:       true,
+		Default:       true,
+		Name:          "output.log",
+		Format:        "json",
+		Level:         configv1.LoggerLevel_LOGGER_LEVEL_INFO,
+		Stdout:        true,
+		DisableCaller: false,
+		CallerSkip:    0,
+		TimeFormat:    "",
+		File: &configv1.Logger_File{
+			Path:       "logs",
+			Lumberjack: true,
+			Compress:   false,
+			LocalTime:  false,
+			MaxSize:    0,
+			MaxAge:     0,
+			MaxBackups: 0,
+		},
+		DevLogger: nil,
 	}
 }
 

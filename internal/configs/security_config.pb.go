@@ -86,10 +86,10 @@ var File_configs_security_config_proto protoreflect.FileDescriptor
 
 const file_configs_security_config_proto_rawDesc = "" +
 	"\n" +
-	"\x1dconfigs/security_config.proto\x12\x15origadmin.configs.api\x1a\x18config/v1/security.proto\x1a\x15configs/captcha.proto\x1a\x17configs/root_user.proto\"\xba\x01\n" +
-	"\x0eSecurityConfig\x12=\n" +
-	"\troot_user\x18\x01 \x01(\v2\x1f.origadmin.configs.api.RootUserR\troot_user\x128\n" +
-	"\acaptcha\x18\x02 \x01(\v2\x1e.origadmin.configs.api.CaptchaR\acaptcha\x12/\n" +
+	"\x1dconfigs/security_config.proto\x12\vapi.configs\x1a\x18config/v1/security.proto\x1a\x15configs/captcha.proto\x1a\x17configs/root_user.proto\"\xa6\x01\n" +
+	"\x0eSecurityConfig\x123\n" +
+	"\troot_user\x18\x01 \x01(\v2\x15.api.configs.RootUserR\troot_user\x12.\n" +
+	"\acaptcha\x18\x02 \x01(\v2\x14.api.configs.CaptchaR\acaptcha\x12/\n" +
 	"\bsecurity\x18\x03 \x01(\v2\x13.config.v1.SecurityR\bsecurityB.Z,origadmin/application/admin/internal/configsb\x06proto3"
 
 var (
@@ -106,15 +106,15 @@ func file_configs_security_config_proto_rawDescGZIP() []byte {
 
 var file_configs_security_config_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_configs_security_config_proto_goTypes = []any{
-	(*SecurityConfig)(nil), // 0: origadmin.configs.api.SecurityConfig
-	(*RootUser)(nil),       // 1: origadmin.configs.api.RootUser
-	(*Captcha)(nil),        // 2: origadmin.configs.api.Captcha
+	(*SecurityConfig)(nil), // 0: api.configs.SecurityConfig
+	(*RootUser)(nil),       // 1: api.configs.RootUser
+	(*Captcha)(nil),        // 2: api.configs.Captcha
 	(*v1.Security)(nil),    // 3: config.v1.Security
 }
 var file_configs_security_config_proto_depIdxs = []int32{
-	1, // 0: origadmin.configs.api.SecurityConfig.root_user:type_name -> origadmin.configs.api.RootUser
-	2, // 1: origadmin.configs.api.SecurityConfig.captcha:type_name -> origadmin.configs.api.Captcha
-	3, // 2: origadmin.configs.api.SecurityConfig.security:type_name -> config.v1.Security
+	1, // 0: api.configs.SecurityConfig.root_user:type_name -> api.configs.RootUser
+	2, // 1: api.configs.SecurityConfig.captcha:type_name -> api.configs.Captcha
+	3, // 2: api.configs.SecurityConfig.security:type_name -> config.v1.Security
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

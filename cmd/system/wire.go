@@ -36,6 +36,6 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 		systemservice.ProviderSet,
 		systemserver.ProviderSet,
 		/* add your providers here */
-		NewAppProvider,
+		NewApp,
 	))
 }
