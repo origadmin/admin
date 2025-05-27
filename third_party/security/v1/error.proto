@@ -6,10 +6,10 @@ import "errors/errors.proto";
 
 option cc_enable_arenas = true;
 option csharp_namespace = "OrigAdmin.Runtime.Security.V1";
-option go_package = "github.com/origadmin/runtime/gen/go/security/v1;securityv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/security/v1;securityv1";
 option java_multiple_files = true;
 option java_outer_classname = "SecurityProto";
-option java_package = "com.github.origadmin.runtime.security.v1";
+option java_package = "com.github.origadmin.api.runtime.security.v1";
 option objc_class_prefix = "ORS";
 option php_namespace = "OrigAdmin\\Runtime\\Security\\V1";
 

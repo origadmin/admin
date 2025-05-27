@@ -3,16 +3,14 @@ syntax = "proto3";
 package security.jwt.v1;
 
 import "gnostic/openapi/v3/annotations.proto";
-import "google/protobuf/duration.proto";
-import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
 option cc_enable_arenas = true;
 option csharp_namespace = "OrigAdmin.Runtime.Security.JWT.V1";
-option go_package = "github.com/origadmin/runtime/gen/go/security/jwt/v1;jwtv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/security/jwt/v1;jwtv1";
 option java_multiple_files = true;
 option java_outer_classname = "JWTProto";
-option java_package = "com.github.origadmin.runtime.security.jwt.v1";
+option java_package = "com.github.origadmin.api.runtime.security.jwt.v1";
 option objc_class_prefix = "ORST";
 option php_namespace = "OrigAdmin\\Runtime\\Security\\JWT\\V1";
 

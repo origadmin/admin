@@ -2,14 +2,11 @@ syntax = "proto3";
 
 package config.v1;
 
-import "google/protobuf/any.proto";
-import "google/protobuf/duration.proto";
-
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/v1;configv1";
 option java_multiple_files = true;
 option java_outer_classname = "GatewayProto";
-option java_package = "com.github.origadmin.runtime.config.v1";
+option java_package = "com.github.origadmin.api.runtime.config.v1";
 option objc_class_prefix = "ORC";
 
 message Gateway {
@@ -50,7 +47,7 @@ message Endpoint {
 
 message Middleware {
   string name = 1;
-  google.protobuf.Any options = 2;
+  bytes options = 2;
   bool required = 3;
 }
 
@@ -67,16 +64,17 @@ message Backend {
 }
 
 enum Protocol {
-  UNSPECIFIED = 0;
-  HTTP = 1;
-  GRPC = 2;
-  CUSTOM = 3;
+  PROTOCOL_UNSPECIFIED = 0;
+  PROTOCOL_HTTP = 1;
+  PROTOCOL_GRPC = 2;
+  PROTOCOL_CUSTOM = 3;
 }
 
 message HealthCheck {
   enum CheckType {
-    HTTP = 0;
-    TCP = 1;
+    CHECK_TYPE_UNSPECIFIED = 0;
+    CHECK_TYPE_HTTP = 1;
+    CHECK_TYPE_TCP = 2;
   }
   CheckType type = 1;
   string endpoint = 2;
@@ -92,7 +90,7 @@ message Retry {
 }
 
 message Condition {
-  message header {
+  message Header {
     string name = 1;
     string value = 2;
   }
@@ -100,6 +98,6 @@ message Condition {
     // "500-599", "429"
     string by_status_code = 1;
     // {"name": "grpc-status", "value": "14"}
-    header by_header = 2;
+    Header by_header = 2;
   }
 }

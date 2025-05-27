@@ -7,10 +7,10 @@ import "google/protobuf/any.proto";
 import "google/protobuf/field_mask.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/pagination/v1;paginationv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/pagination/v1;paginationv1";
 option java_multiple_files = true;
 option java_outer_classname = "PaginationProto";
-option java_package = "com.github.origadmin.runtime.pagination.v1";
+option java_package = "com.github.origadmin.api.runtime.pagination.v1";
 option objc_class_prefix = "ORP";
 option php_namespace = "OrigAdmin\\Runtime\\Pagination\\V1";
 
@@ -56,8 +56,8 @@ message PageRequest {
     }
   ];
   // Field mask
-  google.protobuf.FieldMask update_mask = 7 [
-    json_name = "update_mask",
+  google.protobuf.FieldMask field_mask = 7 [
+    json_name = "field_mask",
     (gnostic.openapi.v3.property) = {
       description: "It is used to Update the request message, which is used to perform a partial update to the resource. This mask is related to the resource, not the request message."
       example: {yaml: "id,name,age"}

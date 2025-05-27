@@ -45,11 +45,9 @@ type ResolvedBootstrap struct {
 }
 
 func (r *ResolvedBootstrap) Resolve(config config.KConfig) (config.Resolved, error) {
-	var unknown map[string]any
-	if err := config.Scan(&unknown); err != nil {
+	if err := config.Scan(&r.bootstrap); err != nil {
 		return nil, err
 	}
-	log.NewHelper(log.DefaultLogger).Infof("bootstrap: %+v", unknown)
 	return r, nil
 }
 
@@ -78,8 +76,7 @@ func (r *ResolvedBootstrap) Middleware() *middlewarev1.Middleware {
 }
 
 func (r *ResolvedBootstrap) Service() *configv1.Service {
-	panic("unimplemented")
-	//return r.bootstrap.GetService()
+	return r.bootstrap.GetServices()
 }
 
 func (r *ResolvedBootstrap) Logger() *configv1.Logger {
@@ -101,8 +98,6 @@ func Bootstrap(ctx context.Context, flags *bootstrap.Bootstrap, newApp NewApp) e
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
-	help := log.NewHelper(r.Logger())
-	help.Infof("bootstrap: %+v", &rb.bootstrap)
 	app, clean, err := newApp(r, &rb.bootstrap)
 	if err != nil {
 		return err

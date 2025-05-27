@@ -3,10 +3,10 @@ syntax = "proto3";
 package config.v1;
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/v1;configv1";
 option java_multiple_files = true;
 option java_outer_classname = "LoggerProto";
-option java_package = "com.github.origadmin.runtime.config.v1";
+option java_package = "com.github.origadmin.api.runtime.config.v1";
 option objc_class_prefix = "ORC";
 
 // Logger level
@@ -18,9 +18,10 @@ enum LoggerLevel {
   LOGGER_LEVEL_ERROR = 4;
   LOGGER_LEVEL_FATAL = 5;
 }
+
 // Logger hook message
 message LoggerHookMessage {
-  LoggerLevel level = 1 [json_name = "level"];
+  string level = 1 [json_name = "level"];
   string message = 2 [json_name = "message"];
   string stacktrace = 3 [json_name = "stacktrace"];
   string error = 4 [json_name = "error"];
@@ -35,9 +36,9 @@ message Logger {
     bool lumberjack = 2 [json_name = "lumberjack"];
     bool compress = 3 [json_name = "compress"];
     bool local_time = 4 [json_name = "local_time"];
-    string max_size = 5 [json_name = "max_size"];
-    string max_age = 6 [json_name = "max_age"];
-    string max_backups = 7 [json_name = "max_backups"];
+    int32 max_size = 5 [json_name = "max_size"];
+    int32 max_age = 6 [json_name = "max_age"];
+    int32 max_backups = 7 [json_name = "max_backups"];
   }
 
   // Dev logger
@@ -65,7 +66,7 @@ message Logger {
   // Logger format json text or tint
   string format = 5 [json_name = "format"];
   // Logger level
-  LoggerLevel level = 6 [json_name = "level"];
+  string level = 6 [json_name = "level"];
   // Logger output stdout
   bool stdout = 7 [json_name = "stdout"];
   // Disable logger caller

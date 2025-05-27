@@ -7,8 +7,8 @@
 package configs
 
 import (
-	v1 "github.com/origadmin/runtime/gen/go/config/v1"
-	v11 "github.com/origadmin/runtime/gen/go/middleware/v1"
+	v1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	v11 "github.com/origadmin/runtime/api/gen/go/middleware/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -29,7 +29,7 @@ type Server struct {
 	Version       string                 `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
 	Service       *v1.Service            `protobuf:"bytes,200,opt,name=service,proto3" json:"service,omitempty"`
 	Storage       *v1.Storage            `protobuf:"bytes,300,opt,name=storage,proto3" json:"storage,omitempty"`
-	Registry      *v1.Registry           `protobuf:"bytes,400,opt,name=registry,proto3" json:"registry,omitempty"`
+	Discovery     *v1.Discovery          `protobuf:"bytes,400,opt,name=discovery,proto3" json:"discovery,omitempty"`
 	Middleware    *v11.Middleware        `protobuf:"bytes,9,opt,name=middleware,proto3" json:"middleware,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -93,9 +93,9 @@ func (x *Server) GetStorage() *v1.Storage {
 	return nil
 }
 
-func (x *Server) GetRegistry() *v1.Registry {
+func (x *Server) GetDiscovery() *v1.Discovery {
 	if x != nil {
-		return x.Registry
+		return x.Discovery
 	}
 	return nil
 }
@@ -111,13 +111,13 @@ var File_configs_server_proto protoreflect.FileDescriptor
 
 const file_configs_server_proto_rawDesc = "" +
 	"\n" +
-	"\x14configs/server.proto\x12\x15origadmin.api.configs\x1a\x17config/v1/storage.proto\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x1emiddleware/v1/middleware.proto\"\x81\x02\n" +
+	"\x14configs/server.proto\x12\x15origadmin.api.configs\x1a\x17config/v1/storage.proto\x1a\x19config/v1/discovery.proto\x1a\x17config/v1/service.proto\x1a\x1emiddleware/v1/middleware.proto\"\x84\x02\n" +
 	"\x06Server\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12-\n" +
 	"\aservice\x18\xc8\x01 \x01(\v2\x12.config.v1.ServiceR\aservice\x12-\n" +
-	"\astorage\x18\xac\x02 \x01(\v2\x12.config.v1.StorageR\astorage\x120\n" +
-	"\bregistry\x18\x90\x03 \x01(\v2\x13.config.v1.RegistryR\bregistry\x129\n" +
+	"\astorage\x18\xac\x02 \x01(\v2\x12.config.v1.StorageR\astorage\x123\n" +
+	"\tdiscovery\x18\x90\x03 \x01(\v2\x14.config.v1.DiscoveryR\tdiscovery\x129\n" +
 	"\n" +
 	"middleware\x18\t \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
 	"middlewareB.Z,origadmin/application/admin/internal/configsb\x06proto3"
@@ -139,13 +139,13 @@ var file_configs_server_proto_goTypes = []any{
 	(*Server)(nil),         // 0: origadmin.api.configs.Server
 	(*v1.Service)(nil),     // 1: config.v1.Service
 	(*v1.Storage)(nil),     // 2: config.v1.Storage
-	(*v1.Registry)(nil),    // 3: config.v1.Registry
+	(*v1.Discovery)(nil),   // 3: config.v1.Discovery
 	(*v11.Middleware)(nil), // 4: middleware.v1.Middleware
 }
 var file_configs_server_proto_depIdxs = []int32{
 	1, // 0: origadmin.api.configs.Server.service:type_name -> config.v1.Service
 	2, // 1: origadmin.api.configs.Server.storage:type_name -> config.v1.Storage
-	3, // 2: origadmin.api.configs.Server.registry:type_name -> config.v1.Registry
+	3, // 2: origadmin.api.configs.Server.discovery:type_name -> config.v1.Discovery
 	4, // 3: origadmin.api.configs.Server.middleware:type_name -> middleware.v1.Middleware
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type

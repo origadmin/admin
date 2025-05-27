@@ -4,15 +4,16 @@ package config.v1;
 
 import "config/v1/message.proto";
 import "config/v1/task.proto";
+import "config/v1/tlsconfig.proto";
 import "config/v1/websocket.proto";
-import "google/protobuf/duration.proto";
 import "middleware/v1/middleware.proto";
+import "validate/validate.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/v1;configv1";
 option java_multiple_files = true;
 option java_outer_classname = "ServiceProto";
-option java_package = "com.github.origadmin.runtime.config.v1";
+option java_package = "com.github.origadmin.api.runtime.config.v1";
 option objc_class_prefix = "ORC";
 
 message Service {
@@ -21,8 +22,7 @@ message Service {
     string network = 1;
     string addr = 2;
     bool use_tls = 3 [json_name = "use_tls"];
-    string cert_file = 4 [json_name = "cert_file"];
-    string key_file = 5 [json_name = "key_file"];
+    TLSConfig tls_config = 4 [json_name = "tls_config"];
     int64 timeout = 6 [json_name = "timeout"];
     int64 shutdown_timeout = 7 [json_name = "shutdown_timeout"];
     int64 read_timeout = 8 [json_name = "read_timeout"];
@@ -36,8 +36,7 @@ message Service {
     string network = 1;
     string addr = 2;
     bool use_tls = 3 [json_name = "use_tls"];
-    string cert_file = 4 [json_name = "cert_file"];
-    string key_file = 5 [json_name = "key_file"];
+    TLSConfig tls_config = 4 [json_name = "tls_config"];
     int64 timeout = 6 [json_name = "timeout"];
     int64 shutdown_timeout = 7 [json_name = "shutdown_timeout"];
     int64 read_timeout = 8 [json_name = "read_timeout"];
@@ -53,7 +52,19 @@ message Service {
   }
   // Service name for service discovery
   string name = 1 [json_name = "name"];
-  bool dynamic_endpoint = 2 [json_name = "dynamic_endpoint"];
+  string type = 2 [
+    json_name = "type",
+    (validate.rules).string = {
+      in: [
+        "http",
+        "grpc",
+        "websocket",
+        "message",
+        "task"
+      ]
+    }
+  ];
+  bool dynamic_endpoint = 3 [json_name = "dynamic_endpoint"];
 
   GRPC grpc = 10 [json_name = "grpc"];
   HTTP http = 20 [json_name = "http"];

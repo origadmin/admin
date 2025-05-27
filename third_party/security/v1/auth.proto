@@ -3,18 +3,16 @@ syntax = "proto3";
 package security.v1;
 
 import "gnostic/openapi/v3/annotations.proto";
-import "google/protobuf/any.proto";
-import "google/protobuf/timestamp.proto";
 import "security/casbin/v1/policy.proto";
 import "security/jwt/v1/token.proto";
 import "validate/validate.proto";
 
 option cc_enable_arenas = true;
 option csharp_namespace = "OrigAdmin.Runtime.Security.V1";
-option go_package = "github.com/origadmin/runtime/gen/go/security/v1;securityv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/security/v1;securityv1";
 option java_multiple_files = true;
 option java_outer_classname = "SecurityProto";
-option java_package = "com.github.origadmin.runtime.security.v1";
+option java_package = "com.github.origadmin.api.runtime.security.v1";
 option objc_class_prefix = "ORS";
 option php_namespace = "OrigAdmin\\Runtime\\Security\\V1";
 
@@ -181,7 +179,7 @@ message AuthN {
     json_name = "jwt",
     (gnostic.openapi.v3.property) = {description: "The JWT authentication details."}
   ];
-  optional google.protobuf.Any additional = 16 [
+  optional bytes additional = 16 [
     json_name = "additional",
     (gnostic.openapi.v3.property) = {description: "Additional properties for the authentication."}
   ];

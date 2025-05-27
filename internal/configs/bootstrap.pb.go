@@ -8,11 +8,10 @@ package configs
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
-	v1 "github.com/origadmin/runtime/gen/go/config/v1"
-	v11 "github.com/origadmin/runtime/gen/go/middleware/v1"
+	v1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	v11 "github.com/origadmin/runtime/api/gen/go/middleware/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	services "origadmin/application/admin/internal/configs/services"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -85,50 +84,6 @@ func (x *EntrySelectorConfig) GetVersion() string {
 	return ""
 }
 
-type ServiceConfig struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ServiceConfig) Reset() {
-	*x = ServiceConfig{}
-	mi := &file_configs_bootstrap_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ServiceConfig) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ServiceConfig) ProtoMessage() {}
-
-func (x *ServiceConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ServiceConfig.ProtoReflect.Descriptor instead.
-func (*ServiceConfig) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ServiceConfig) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
 type Bootstrap struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// name is the application name or service name for used
@@ -141,20 +96,21 @@ type Bootstrap struct {
 	Environment         string `protobuf:"bytes,102,opt,name=environment,proto3" json:"environment,omitempty"`
 	// 入口服务专属配置
 	Entry         *Bootstrap_Entry       `protobuf:"bytes,103,opt,name=entry,proto3" json:"entry,omitempty"`
-	Services      []*services.Service    `protobuf:"bytes,104,rep,name=services,proto3" json:"services,omitempty"` // 服务专用配置
 	Storage       *v1.Storage            `protobuf:"bytes,300,opt,name=storage,proto3" json:"storage,omitempty"`
-	Registry      *v1.Registry           `protobuf:"bytes,400,opt,name=registry,proto3" json:"registry,omitempty"`
+	Discovery     *v1.Discovery          `protobuf:"bytes,400,opt,name=discovery,proto3" json:"discovery,omitempty"`
 	Middleware    *v11.Middleware        `protobuf:"bytes,9,opt,name=middleware,proto3" json:"middleware,omitempty"`
 	Security      *SecurityConfig        `protobuf:"bytes,10,opt,name=security,proto3" json:"security,omitempty"`
 	HealthCheck   *Bootstrap_HealthCheck `protobuf:"bytes,1003,opt,name=health_check,proto3" json:"health_check,omitempty"`
 	Logger        *v1.Logger             `protobuf:"bytes,1004,opt,name=logger,proto3" json:"logger,omitempty"`
+	Server        *ServiceServer         `protobuf:"bytes,1005,opt,name=server,proto3" json:"server,omitempty"`
+	Clients       []*ServiceClient       `protobuf:"bytes,1006,rep,name=clients,proto3" json:"clients,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Bootstrap) Reset() {
 	*x = Bootstrap{}
-	mi := &file_configs_bootstrap_proto_msgTypes[2]
+	mi := &file_configs_bootstrap_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -166,7 +122,7 @@ func (x *Bootstrap) String() string {
 func (*Bootstrap) ProtoMessage() {}
 
 func (x *Bootstrap) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[2]
+	mi := &file_configs_bootstrap_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -179,7 +135,7 @@ func (x *Bootstrap) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bootstrap.ProtoReflect.Descriptor instead.
 func (*Bootstrap) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{2}
+	return file_configs_bootstrap_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Bootstrap) GetName() string {
@@ -238,13 +194,6 @@ func (x *Bootstrap) GetEntry() *Bootstrap_Entry {
 	return nil
 }
 
-func (x *Bootstrap) GetServices() []*services.Service {
-	if x != nil {
-		return x.Services
-	}
-	return nil
-}
-
 func (x *Bootstrap) GetStorage() *v1.Storage {
 	if x != nil {
 		return x.Storage
@@ -252,9 +201,9 @@ func (x *Bootstrap) GetStorage() *v1.Storage {
 	return nil
 }
 
-func (x *Bootstrap) GetRegistry() *v1.Registry {
+func (x *Bootstrap) GetDiscovery() *v1.Discovery {
 	if x != nil {
-		return x.Registry
+		return x.Discovery
 	}
 	return nil
 }
@@ -287,6 +236,20 @@ func (x *Bootstrap) GetLogger() *v1.Logger {
 	return nil
 }
 
+func (x *Bootstrap) GetServer() *ServiceServer {
+	if x != nil {
+		return x.Server
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetClients() []*ServiceClient {
+	if x != nil {
+		return x.Clients
+	}
+	return nil
+}
+
 type Settings struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CryptoType    string                 `protobuf:"bytes,1,opt,name=crypto_type,proto3" json:"crypto_type,omitempty"`
@@ -296,7 +259,7 @@ type Settings struct {
 
 func (x *Settings) Reset() {
 	*x = Settings{}
-	mi := &file_configs_bootstrap_proto_msgTypes[3]
+	mi := &file_configs_bootstrap_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -308,7 +271,7 @@ func (x *Settings) String() string {
 func (*Settings) ProtoMessage() {}
 
 func (x *Settings) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[3]
+	mi := &file_configs_bootstrap_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -321,7 +284,7 @@ func (x *Settings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Settings.ProtoReflect.Descriptor instead.
 func (*Settings) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{3}
+	return file_configs_bootstrap_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Settings) GetCryptoType() string {
@@ -341,7 +304,7 @@ type Bootstrap_HealthCheck struct {
 
 func (x *Bootstrap_HealthCheck) Reset() {
 	*x = Bootstrap_HealthCheck{}
-	mi := &file_configs_bootstrap_proto_msgTypes[4]
+	mi := &file_configs_bootstrap_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +316,7 @@ func (x *Bootstrap_HealthCheck) String() string {
 func (*Bootstrap_HealthCheck) ProtoMessage() {}
 
 func (x *Bootstrap_HealthCheck) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[4]
+	mi := &file_configs_bootstrap_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +329,7 @@ func (x *Bootstrap_HealthCheck) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bootstrap_HealthCheck.ProtoReflect.Descriptor instead.
 func (*Bootstrap_HealthCheck) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{2, 0}
+	return file_configs_bootstrap_proto_rawDescGZIP(), []int{1, 0}
 }
 
 func (x *Bootstrap_HealthCheck) GetTimeout() int32 {
@@ -394,7 +357,7 @@ type Bootstrap_Entry struct {
 
 func (x *Bootstrap_Entry) Reset() {
 	*x = Bootstrap_Entry{}
-	mi := &file_configs_bootstrap_proto_msgTypes[5]
+	mi := &file_configs_bootstrap_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -406,7 +369,7 @@ func (x *Bootstrap_Entry) String() string {
 func (*Bootstrap_Entry) ProtoMessage() {}
 
 func (x *Bootstrap_Entry) ProtoReflect() protoreflect.Message {
-	mi := &file_configs_bootstrap_proto_msgTypes[5]
+	mi := &file_configs_bootstrap_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -419,7 +382,7 @@ func (x *Bootstrap_Entry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bootstrap_Entry.ProtoReflect.Descriptor instead.
 func (*Bootstrap_Entry) Descriptor() ([]byte, []int) {
-	return file_configs_bootstrap_proto_rawDescGZIP(), []int{2, 1}
+	return file_configs_bootstrap_proto_rawDescGZIP(), []int{1, 1}
 }
 
 func (x *Bootstrap_Entry) GetScheme() string {
@@ -440,13 +403,11 @@ var File_configs_bootstrap_proto protoreflect.FileDescriptor
 
 const file_configs_bootstrap_proto_rawDesc = "" +
 	"\n" +
-	"\x17configs/bootstrap.proto\x12\vapi.configs\x1a\x16config/v1/logger.proto\x1a\x18config/v1/registry.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1dconfigs/security_config.proto\x1a\x1econfigs/services/service.proto\x1a\x1emiddleware/v1/middleware.proto\x1a\x17validate/validate.proto\"[\n" +
+	"\x17configs/bootstrap.proto\x12\vapi.configs\x1a\x19config/v1/discovery.proto\x1a\x16config/v1/logger.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1dconfigs/security_config.proto\x1a\x15configs/service.proto\x1a\x1emiddleware/v1/middleware.proto\x1a\x17validate/validate.proto\"[\n" +
 	"\x13EntrySelectorConfig\x12\x16\n" +
 	"\x06global\x18\x02 \x01(\bR\x06global\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x04 \x01(\tR\aversion\",\n" +
-	"\rServiceConfig\x12\x1b\n" +
-	"\x04name\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04name\"\xc7\x06\n" +
+	"\aversion\x18\x04 \x01(\tR\aversion\"\xfb\x06\n" +
 	"\tBootstrap\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12 \n" +
@@ -455,17 +416,18 @@ const file_configs_bootstrap_proto_rawDesc = "" +
 	"\x15enable_dynamic_config\x18\a \x01(\bR\x15enable_dynamic_config\x12\x0e\n" +
 	"\x02id\x18d \x01(\tR\x02id\x122\n" +
 	"\venvironment\x18f \x01(\tB\x10\xfaB\rr\vR\x03devR\x04prodR\venvironment\x122\n" +
-	"\x05entry\x18g \x01(\v2\x1c.api.configs.Bootstrap.EntryR\x05entry\x129\n" +
-	"\bservices\x18h \x03(\v2\x1d.api.configs.services.ServiceR\bservices\x12-\n" +
-	"\astorage\x18\xac\x02 \x01(\v2\x12.config.v1.StorageR\astorage\x120\n" +
-	"\bregistry\x18\x90\x03 \x01(\v2\x13.config.v1.RegistryR\bregistry\x129\n" +
+	"\x05entry\x18g \x01(\v2\x1c.api.configs.Bootstrap.EntryR\x05entry\x12-\n" +
+	"\astorage\x18\xac\x02 \x01(\v2\x12.config.v1.StorageR\astorage\x123\n" +
+	"\tdiscovery\x18\x90\x03 \x01(\v2\x14.config.v1.DiscoveryR\tdiscovery\x129\n" +
 	"\n" +
 	"middleware\x18\t \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
 	"middleware\x127\n" +
 	"\bsecurity\x18\n" +
 	" \x01(\v2\x1b.api.configs.SecurityConfigR\bsecurity\x12G\n" +
 	"\fhealth_check\x18\xeb\a \x01(\v2\".api.configs.Bootstrap.HealthCheckR\fhealth_check\x12*\n" +
-	"\x06logger\x18\xec\a \x01(\v2\x11.config.v1.LoggerR\x06logger\x1a;\n" +
+	"\x06logger\x18\xec\a \x01(\v2\x11.config.v1.LoggerR\x06logger\x123\n" +
+	"\x06server\x18\xed\a \x01(\v2\x1a.api.configs.ServiceServerR\x06server\x125\n" +
+	"\aclients\x18\xee\a \x03(\v2\x1a.api.configs.ServiceClientR\aclients\x1a;\n" +
 	"\vHealthCheck\x12\x18\n" +
 	"\atimeout\x18\x01 \x01(\x05R\atimeout\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x1aK\n" +
@@ -487,37 +449,38 @@ func file_configs_bootstrap_proto_rawDescGZIP() []byte {
 	return file_configs_bootstrap_proto_rawDescData
 }
 
-var file_configs_bootstrap_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_configs_bootstrap_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_configs_bootstrap_proto_goTypes = []any{
 	(*EntrySelectorConfig)(nil),   // 0: api.configs.EntrySelectorConfig
-	(*ServiceConfig)(nil),         // 1: api.configs.ServiceConfig
-	(*Bootstrap)(nil),             // 2: api.configs.Bootstrap
-	(*Settings)(nil),              // 3: api.configs.Settings
-	(*Bootstrap_HealthCheck)(nil), // 4: api.configs.Bootstrap.HealthCheck
-	(*Bootstrap_Entry)(nil),       // 5: api.configs.Bootstrap.Entry
-	(*services.Service)(nil),      // 6: api.configs.services.Service
-	(*v1.Storage)(nil),            // 7: config.v1.Storage
-	(*v1.Registry)(nil),           // 8: config.v1.Registry
-	(*v11.Middleware)(nil),        // 9: middleware.v1.Middleware
-	(*SecurityConfig)(nil),        // 10: api.configs.SecurityConfig
-	(*v1.Logger)(nil),             // 11: config.v1.Logger
+	(*Bootstrap)(nil),             // 1: api.configs.Bootstrap
+	(*Settings)(nil),              // 2: api.configs.Settings
+	(*Bootstrap_HealthCheck)(nil), // 3: api.configs.Bootstrap.HealthCheck
+	(*Bootstrap_Entry)(nil),       // 4: api.configs.Bootstrap.Entry
+	(*v1.Storage)(nil),            // 5: config.v1.Storage
+	(*v1.Discovery)(nil),          // 6: config.v1.Discovery
+	(*v11.Middleware)(nil),        // 7: middleware.v1.Middleware
+	(*SecurityConfig)(nil),        // 8: api.configs.SecurityConfig
+	(*v1.Logger)(nil),             // 9: config.v1.Logger
+	(*ServiceServer)(nil),         // 10: api.configs.ServiceServer
+	(*ServiceClient)(nil),         // 11: api.configs.ServiceClient
 	(*v1.Service)(nil),            // 12: config.v1.Service
 }
 var file_configs_bootstrap_proto_depIdxs = []int32{
-	5,  // 0: api.configs.Bootstrap.entry:type_name -> api.configs.Bootstrap.Entry
-	6,  // 1: api.configs.Bootstrap.services:type_name -> api.configs.services.Service
-	7,  // 2: api.configs.Bootstrap.storage:type_name -> config.v1.Storage
-	8,  // 3: api.configs.Bootstrap.registry:type_name -> config.v1.Registry
-	9,  // 4: api.configs.Bootstrap.middleware:type_name -> middleware.v1.Middleware
-	10, // 5: api.configs.Bootstrap.security:type_name -> api.configs.SecurityConfig
-	4,  // 6: api.configs.Bootstrap.health_check:type_name -> api.configs.Bootstrap.HealthCheck
-	11, // 7: api.configs.Bootstrap.logger:type_name -> config.v1.Logger
-	12, // 8: api.configs.Bootstrap.Entry.server:type_name -> config.v1.Service
-	9,  // [9:9] is the sub-list for method output_type
-	9,  // [9:9] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	4,  // 0: api.configs.Bootstrap.entry:type_name -> api.configs.Bootstrap.Entry
+	5,  // 1: api.configs.Bootstrap.storage:type_name -> config.v1.Storage
+	6,  // 2: api.configs.Bootstrap.discovery:type_name -> config.v1.Discovery
+	7,  // 3: api.configs.Bootstrap.middleware:type_name -> middleware.v1.Middleware
+	8,  // 4: api.configs.Bootstrap.security:type_name -> api.configs.SecurityConfig
+	3,  // 5: api.configs.Bootstrap.health_check:type_name -> api.configs.Bootstrap.HealthCheck
+	9,  // 6: api.configs.Bootstrap.logger:type_name -> config.v1.Logger
+	10, // 7: api.configs.Bootstrap.server:type_name -> api.configs.ServiceServer
+	11, // 8: api.configs.Bootstrap.clients:type_name -> api.configs.ServiceClient
+	12, // 9: api.configs.Bootstrap.Entry.server:type_name -> config.v1.Service
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_configs_bootstrap_proto_init() }
@@ -526,13 +489,14 @@ func file_configs_bootstrap_proto_init() {
 		return
 	}
 	file_configs_security_config_proto_init()
+	file_configs_service_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_configs_bootstrap_proto_rawDesc), len(file_configs_bootstrap_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

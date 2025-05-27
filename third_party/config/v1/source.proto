@@ -2,13 +2,14 @@ syntax = "proto3";
 
 package config.v1;
 
+import "config/v1/customize.proto";
 import "validate/validate.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/config/v1;configv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/v1;configv1";
 option java_multiple_files = true;
 option java_outer_classname = "SourceConfigProto";
-option java_package = "com.github.origadmin.runtime.config.v1";
+option java_package = "com.github.origadmin.api.runtime.config.v1";
 option objc_class_prefix = "ORC";
 
 // SourceConfig is the source file for load configuration
@@ -17,6 +18,7 @@ message SourceConfig {
   message File {
     string path = 1 [json_name = "path"];
     string format = 2 [json_name = "format"];
+    repeated string ignores = 3 [json_name = "ignores"];
   }
   // Consul
   message Consul {
@@ -36,25 +38,33 @@ message SourceConfig {
     repeated string endpoints = 1 [json_name = "endpoints"];
   }
 
-  string type = 1 [
-    json_name = "type",
-    (validate.rules).string = {
+  message Nacos {}
+  message Apollo {}
+
+  message Kubernetes {}
+
+  message Polaris {}
+
+  repeated string types = 1 [
+    json_name = "types",
+    (validate.rules).repeated.items.string = {
       in: [
-        "none",
         "file",
+        "apollo",
         "consul",
         "etcd",
-        "nacos",
-        "apollo",
         "kubernetes",
-        "polaris"
+        "nacos",
+        "polaris",
+        "customize"
       ]
     }
   ]; // Type
   // name
   string name = 2 [json_name = "name"];
+  string version = 3 [json_name = "version"];
   // set the supported file format, if not set, all formats are supported
-  repeated string formats = 3 [json_name = "formats"];
+  repeated string formats = 4 [json_name = "formats"];
   bool env = 5 [json_name = "env"];
   // set the environment variable name
   map<string, string> env_args = 6 [json_name = "env_args"];
@@ -64,4 +74,9 @@ message SourceConfig {
   optional File file = 100 [json_name = "file"];
   optional Consul consul = 200 [json_name = "consul"];
   optional ETCD etcd = 300 [json_name = "etcd"];
+  optional Nacos nacos = 400 [json_name = "nacos"]; // Nacos
+  optional Apollo apollo = 500 [json_name = "apollo"]; // Apollo
+  optional Kubernetes kubernetes = 600 [json_name = "kubernetes"]; // Kubernetes
+  optional Polaris polaris = 700 [json_name = "polaris"]; // Polaris
+  optional config.v1.Customize customize = 800 [json_name = "customize"]; // Customize
 }

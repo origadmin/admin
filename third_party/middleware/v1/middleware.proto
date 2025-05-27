@@ -2,20 +2,17 @@ syntax = "proto3";
 
 package middleware.v1;
 
-import "google/protobuf/duration.proto";
-import "google/protobuf/timestamp.proto";
-import "middleware/jwt/v1/jwt.proto";
-import "middleware/metrics/v1/metrics.proto";
-import "middleware/ratelimit/v1/ratelimiter.proto";
-import "middleware/selector/v1/selector.proto";
-import "middleware/validator/v1/validator.proto";
-import "validate/validate.proto";
+import "middleware/v1/jwt/jwt.proto";
+import "middleware/v1/metrics/metrics.proto";
+import "middleware/v1/ratelimit/ratelimiter.proto";
+import "middleware/v1/selector/selector.proto";
+import "middleware/v1/validator/validator.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/middleware/v1;middlewarev1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/middleware/v1;middlewarev1";
 option java_multiple_files = true;
 option java_outer_classname = "MiddlewareProto";
-option java_package = "com.github.origadmin.runtime.middleware.v1";
+option java_package = "com.github.origadmin.api.runtime.middleware.v1";
 option objc_class_prefix = "OMX";
 option php_namespace = "OrigAdmin\\Runtime\\Middleware\\V1";
 
@@ -57,6 +54,21 @@ option php_namespace = "OrigAdmin\\Runtime\\Middleware\\V1";
 //      }
 //    };
 
+enum MiddlewareName {
+  MIDDLEWARE_NAME_UNSPECIFIED = 0;
+  MIDDLEWARE_NAME_LOGGING = 1;
+  MIDDLEWARE_NAME_RECOVERY = 2;
+  MIDDLEWARE_NAME_TRACING = 3;
+  MIDDLEWARE_NAME_CIRCUIT_BREAKER = 4;
+  MIDDLEWARE_NAME_METADATA = 5;
+  MIDDLEWARE_NAME_JWT = 6;
+  MIDDLEWARE_NAME_RATE_LIMITER = 7;
+  MIDDLEWARE_NAME_METRICS = 8;
+  MIDDLEWARE_NAME_VALIDATOR = 9;
+  MIDDLEWARE_NAME_SELECTOR = 10;
+  MIDDLEWARE_NAME_CUSTOMIZE = 11;
+}
+
 // Middleware middleware is used to middlewareure middleware for entry
 message Middleware {
   // Metadata
@@ -68,23 +80,12 @@ message Middleware {
     map<string, string> data = 3 [json_name = "data"];
   }
 
-  // Logging switch
-  bool logging = 1 [json_name = "logging"];
-  // Recovery switch
-  bool recovery = 2 [json_name = "recovery"];
-  //  // tracing switch
-  bool tracing = 3 [json_name = "tracing"];
-  // Circuit breaker switch
-  bool circuit_breaker = 4 [json_name = "circuit_breaker"];
-  //  // Metadata switch
-  //  bool enable_metadata = 6 [json_name = "enable_metadata"];
-  //  // JWT switch
-  //  bool enable_jwt = 7 [json_name = "jwt"];
+  repeated string enabled_middlewares = 1 [json_name = "enabled_middlewares"];
 
   Metadata metadata = 100 [json_name = "metadata"];
-  middleware.ratelimit.v1.RateLimiter rate_limiter = 101 [json_name = "rate_limiter"];
-  middleware.metrics.v1.Metrics metrics = 102 [json_name = "metrics"];
-  middleware.validator.v1.Validator validator = 103 [json_name = "validator"];
-  middleware.jwt.v1.JWT jwt = 104 [json_name = "jwt"];
-  middleware.selector.v1.Selector selector = 105 [json_name = "selector"];
+  middleware.v1.ratelimit.RateLimiter rate_limiter = 101 [json_name = "rate_limiter"];
+  middleware.v1.metrics.Metrics metrics = 102 [json_name = "metrics"];
+  middleware.v1.validator.Validator validator = 103 [json_name = "validator"];
+  middleware.v1.jwt.JWT jwt = 104 [json_name = "jwt"];
+  middleware.v1.selector.Selector selector = 105 [json_name = "selector"];
 }
