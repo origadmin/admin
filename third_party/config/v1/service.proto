@@ -22,7 +22,7 @@ message Service {
     string network = 1;
     string addr = 2;
     bool use_tls = 3 [json_name = "use_tls"];
-    TLSConfig tls_config = 4 [json_name = "tls_config"];
+    config.v1.TLSConfig tls_config = 4 [json_name = "tls_config"];
     int64 timeout = 6 [json_name = "timeout"];
     int64 shutdown_timeout = 7 [json_name = "shutdown_timeout"];
     int64 read_timeout = 8 [json_name = "read_timeout"];
@@ -36,7 +36,7 @@ message Service {
     string network = 1;
     string addr = 2;
     bool use_tls = 3 [json_name = "use_tls"];
-    TLSConfig tls_config = 4 [json_name = "tls_config"];
+    config.v1.TLSConfig tls_config = 4 [json_name = "tls_config"];
     int64 timeout = 6 [json_name = "timeout"];
     int64 shutdown_timeout = 7 [json_name = "shutdown_timeout"];
     int64 read_timeout = 8 [json_name = "read_timeout"];
@@ -65,6 +65,7 @@ message Service {
     }
   ];
   bool dynamic_endpoint = 3 [json_name = "dynamic_endpoint"];
+  string version = 4 [json_name = "version"];
 
   GRPC grpc = 10 [json_name = "grpc"];
   HTTP http = 20 [json_name = "http"];

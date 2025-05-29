@@ -7,9 +7,9 @@ package registry
 import (
 	"time"
 
-	"github.com/hashicorp/consul/api"
+	consulapi "github.com/hashicorp/consul/api"
 	"github.com/origadmin/runtime"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/registry"
 	"github.com/origadmin/toolkits/errors"
 )
@@ -21,8 +21,8 @@ func init() {
 	runtime.RegisterRegistry(Type, &consulBuilder{})
 }
 
-func configFromConfig(registry *configv1.Registry) *api.Config {
-	apiconfig := api.DefaultConfig()
+func configFromConfig(registry *configv1.Discovery) *consulapi.Config {
+	apiconfig := consulapi.DefaultConfig()
 	cfg := registry.GetConsul()
 	if cfg == nil {
 		return apiconfig
@@ -42,10 +42,10 @@ func configFromConfig(registry *configv1.Registry) *api.Config {
 	return apiconfig
 }
 
-func optionsFromConfig(registry *configv1.Registry) []Option {
+func optionsFromConfig(discovery *configv1.Discovery) []Option {
 	var opts []Option
 
-	cfg := registry.GetConsul()
+	cfg := discovery.GetConsul()
 	if cfg == nil {
 		return opts
 	}
@@ -71,20 +71,20 @@ func optionsFromConfig(registry *configv1.Registry) []Option {
 	return opts
 }
 
-func (c *consulBuilder) NewDiscovery(cfg *configv1.Registry, opts ...registry.Option) (registry.KDiscovery, error) {
+func (c *consulBuilder) NewDiscovery(cfg *configv1.Discovery, opts ...registry.Option) (registry.KDiscovery, error) {
 	return c.Create(cfg, opts...)
 }
 
-func (c *consulBuilder) NewRegistrar(cfg *configv1.Registry, opts ...registry.Option) (registry.KRegistrar, error) {
+func (c *consulBuilder) NewRegistrar(cfg *configv1.Discovery, opts ...registry.Option) (registry.KRegistrar, error) {
 	return c.Create(cfg, opts...)
 }
 
-func (c *consulBuilder) Create(cfg *configv1.Registry, _ ...registry.Option) (registry.Registry, error) {
+func (c *consulBuilder) Create(cfg *configv1.Discovery, _ ...registry.Option) (registry.Registry, error) {
 	if cfg == nil || cfg.Consul == nil {
 		return nil, errors.New("configuration: consul config is required")
 	}
 	apiConfig := configFromConfig(cfg)
-	apiClient, err := api.NewClient(apiConfig)
+	apiClient, err := consulapi.NewClient(apiConfig)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create consul client")
 	}

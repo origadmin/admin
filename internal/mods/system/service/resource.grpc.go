@@ -5,7 +5,9 @@
 package service
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/biz"
@@ -14,8 +16,8 @@ import (
 // ResourceServiceServer is a menu service.
 type ResourceServiceServer struct {
 	pb.UnimplementedResourceServiceServer
-
 	client *biz.ResourceServiceBiz
+	log    *log.KHelper
 }
 
 func (s ResourceServiceServer) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
@@ -44,13 +46,16 @@ func (s ResourceServiceServer) DeleteResource(ctx context.Context, request *pb.D
 //}
 
 // NewResourceServiceServer new a menu service.
-func NewResourceServiceServer(client *biz.ResourceServiceBiz) *ResourceServiceServer {
-	return &ResourceServiceServer{client: client}
+func NewResourceServiceServer(r runtime.Runtime, client *biz.ResourceServiceBiz) *ResourceServiceServer {
+	return &ResourceServiceServer{
+		log:    log.NewHelper(r.WithLogger("module", "service/resource")),
+		client: client,
+	}
 }
 
 // NewResourceServiceServerPB new a menu service.
-func NewResourceServiceServerPB(client *biz.ResourceServiceBiz) pb.ResourceServiceServer {
-	return &ResourceServiceServer{client: client}
+func NewResourceServiceServerPB(r runtime.Runtime, client *biz.ResourceServiceBiz) pb.ResourceServiceServer {
+	return NewResourceServiceServer(r, client)
 }
 
 var _ pb.ResourceServiceServer = (*ResourceServiceServer)(nil)

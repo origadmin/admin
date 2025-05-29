@@ -5,7 +5,9 @@
 package service
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/biz"
@@ -16,6 +18,7 @@ type PersonalServiceServer struct {
 	pb.UnimplementedPersonalServiceServer
 
 	client *biz.PersonalServiceBiz
+	log    *log.KHelper
 }
 
 func (s PersonalServiceServer) GetPersonalProfile(ctx context.Context, request *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
@@ -51,13 +54,18 @@ func (s PersonalServiceServer) UpdatePersonalSetting(ctx context.Context, reques
 //}
 
 // NewPersonalServiceServer new a login service.
-func NewPersonalServiceServer(client *biz.PersonalServiceBiz) *PersonalServiceServer {
-	return &PersonalServiceServer{client: client}
+func NewPersonalServiceServer(r runtime.Runtime, client *biz.PersonalServiceBiz) *PersonalServiceServer {
+	return &PersonalServiceServer{
+		log: log.NewHelper(r.WithLogger(
+			"module", "service/personal",
+		)),
+		client: client,
+	}
 }
 
 // NewPersonalServiceServerPB new a login service.
-func NewPersonalServiceServerPB(client *biz.PersonalServiceBiz) pb.PersonalServiceServer {
-	return &PersonalServiceServer{client: client}
+func NewPersonalServiceServerPB(r runtime.Runtime, client *biz.PersonalServiceBiz) pb.PersonalServiceServer {
+	return NewPersonalServiceServer(r, client)
 }
 
 var _ pb.PersonalServiceServer = (*PersonalServiceServer)(nil)

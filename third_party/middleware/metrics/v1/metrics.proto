@@ -5,7 +5,7 @@ package middleware.metrics.v1;
 import "google/protobuf/timestamp.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/middleware/metrics/v1;metricsv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/middleware/metrics/v1;metricsv1";
 option java_multiple_files = true;
 option java_outer_classname = "CircuitBreakerProto";
 option java_package = "com.github.origadmin.runtime.middleware.metrics.v1";

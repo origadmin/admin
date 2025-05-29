@@ -7,8 +7,3 @@ Id = ""
 Environment = ""
 Services = []
 
-[Servers]
-system = "origadmin.service.system.v1"
-
-[Entry]
-Scheme = "http"

@@ -10,12 +10,13 @@ import (
 	"github.com/google/wire"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/agent"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/context"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
 	servicegrpc "github.com/origadmin/runtime/service/grpc"
+	servicehttp "github.com/origadmin/runtime/service/http"
 	"github.com/origadmin/toolkits/errors"
 
 	pb "origadmin/application/admin/api/v1/services/system"
@@ -31,11 +32,10 @@ const (
 var (
 	// ProviderSet is server providers.
 	ProviderSet = wire.NewSet(
-		NewRegisterServer,
 		NewSystemClient,
 		NewSystemServer,
 		NewSystemServiceAgentClient,
-		NewCasbinServiceClient,
+		//NewCasbinServiceClient,
 	)
 )
 
@@ -43,43 +43,53 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
-func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, registers []service.ServerRegister) []transport.
+func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc service.ServerRegistrar) []transport.
 Server {
 	var servers []transport.Server
-	serviceConfig := bootstrap.GetServices()
-	if serviceConfig == nil {
+	serverConfig := bootstrap.GetServer()
+	if serverConfig == nil {
 		return servers
 	}
-	//if serviceConfig.Name == "" {
-	//	serviceConfig.Name = ServiceName
-	//}
-	//ctx := context.Background()
-	//middlewares := middleware.NewServer(bootstrap.GetMiddleware())
 
-	//if serv, _ := runtime.NewGRPCServiceServer(bootstrap, l, service.WithGRPC(
-	//	servicegrpc.WithMiddlewares(middlewares...),
-	//	servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
-	//)); serv != nil {
-	//	for i := range registers {
-	//		registers[i].GRPCServer(ctx, serv)
-	//	}
-	//	servers = append(servers, serv)
-	//}
-	//if serv := NewHTTPServer(bootstrap, l, service.WithHTTP(
-	//	servicehttp.WithMiddlewares(middlewares...),
-	//	servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
-	//)); serv != nil {
-	//	for i := range registers {
-	//		registers[i].HTTPServer(ctx, serv)
-	//	}
-	//	servers = append(servers, serv)
-	//}
+	ll := log.NewHelper(r.WithLogger("module", "system/server"))
+	middlewares := middleware.NewServer(bootstrap.GetServer().GetMiddleware())
+	services := bootstrap.GetServer().GetServices()
+	coreinfo := bootstrap.GetServer().GetCore()
+	for _, serviceConfig := range services {
+		ll.Infow("msg", "service init", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
+		switch serviceConfig.GetType() {
+		case "grpc":
+			options := []servicegrpc.Option{
+				servicegrpc.WithMiddlewares(middlewares...),
+				servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
+			}
+			grpcServer, err := r.Builder().NewGRPCServer(serviceConfig, options...)
+			if err != nil {
+				continue
+			}
+			ll.Infow("msg", "grpc server init", "name", coreinfo.GetName(), "version",
+				coreinfo.GetVersion())
+			svc.Register(r.Context(), grpcServer)
+			servers = append(servers, grpcServer)
+		case "http":
+			options := []servicehttp.Option{
+				servicehttp.WithMiddlewares(middlewares...),
+				servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+			}
+			httpServer, err := r.Builder().NewHTTPServer(serviceConfig, options...)
+			if err != nil {
+				continue
+			}
+			ll.Infow("msg", "http server init", "name", coreinfo.GetName(), "version",
+				coreinfo.GetVersion())
+			svc.Register(r.Context(), httpServer)
+			servers = append(servers, httpServer)
+		}
+	}
 	return servers
 }
 
-type RegisterAgent struct {
-	Auth       pb.AuthServiceAgent
-	Login      pb.LoginServiceAgent
+type RegisterBridge struct {
 	Personal   pb.PersonalServiceAgent
 	Resource   pb.ResourceServiceAgent
 	Role       pb.RoleServiceAgent
@@ -87,15 +97,19 @@ type RegisterAgent struct {
 	Permission pb.PermissionServiceAgent
 }
 
-func (s RegisterAgent) GRPCServer(ctx context.Context, server *service.GRPCServer) {
-	log.Info("grpc server system init")
+func (s RegisterBridge) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
+	//TODO implement me
+	panic("implement me")
 }
 
-func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http server system init")
+func (s RegisterBridge) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s RegisterBridge) RegisterHTTPServer(ctx context.Context, server *service.HTTPServer) {
+	log.Info("http client system init")
 	ag := agent.NewHTTP(server)
-	pb.RegisterAuthServiceAgent(ag, s.Auth)
-	pb.RegisterLoginServiceAgent(ag, s.Login)
 	pb.RegisterPersonalServiceAgent(ag, s.Personal)
 	pb.RegisterResourceServiceAgent(ag, s.Resource)
 	pb.RegisterRoleServiceAgent(ag, s.Role)
@@ -103,15 +117,51 @@ func (s RegisterAgent) HTTPServer(ctx context.Context, server *service.HTTPServe
 	pb.RegisterPermissionServiceAgent(ag, s.Permission)
 }
 
-func (s RegisterAgent) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
+func (s RegisterBridge) RegisterGRPCClient(ctx context.Context, client *service.GRPCClient) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s RegisterBridge) RegisterHTTPClient(ctx context.Context, client *service.HTTPClient) {
+	log.Info("http client system init")
+	//ag := agent.NewHTTP(client)
+	//pb.RegisterPersonalServiceAgent(ag, s.Personal)
+	//pb.RegisterResourceServiceAgent(ag, s.Resource)
+	//pb.RegisterRoleServiceAgent(ag, s.Role)
+	//pb.RegisterUserServiceAgent(ag, s.User)
+	//pb.RegisterPermissionServiceAgent(ag, s.Permission)
+}
+
+func (s RegisterBridge) Register(ctx context.Context, svc any) {
+	switch v := svc.(type) {
+	case *service.GRPCServer:
+		s.RegisterGRPC(ctx, v)
+	case *service.HTTPServer:
+		s.RegisterHTTP(ctx, v)
+	}
+}
+
+func (s RegisterBridge) GRPCServer(ctx context.Context, server *service.GRPCServer) {
+	log.Info("grpc server system init")
+}
+
+func (s RegisterBridge) HTTPServer(ctx context.Context, server *service.HTTPServer) {
+	log.Info("http server system init")
+	ag := agent.NewHTTP(server)
+	pb.RegisterPersonalServiceAgent(ag, s.Personal)
+	pb.RegisterResourceServiceAgent(ag, s.Resource)
+	pb.RegisterRoleServiceAgent(ag, s.Role)
+	pb.RegisterUserServiceAgent(ag, s.User)
+	pb.RegisterPermissionServiceAgent(ag, s.Permission)
+}
+
+func (s RegisterBridge) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
 	s.HTTPServer(ctx, httpServer)
 	s.GRPCServer(ctx, grpcServer)
 }
 
-func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*RegisterAgent, error) {
-	register := RegisterAgent{
-		Auth:       systemservice.NewAuthServiceAgentClient(client),
-		Login:      systemservice.NewLoginServiceAgentClient(client),
+func NewSystemServiceAgentClient(r runtime.Runtime, client *service.GRPCClient) (*RegisterBridge, error) {
+	register := RegisterBridge{
 		Personal:   systemservice.NewPersonalServiceAgentClient(client),
 		Resource:   systemservice.NewResourceServiceAgentClient(client),
 		Role:       systemservice.NewRoleServiceAgentClient(client),
@@ -121,23 +171,10 @@ func NewSystemServiceAgentClient(client *service.GRPCClient, l log.KLogger) (*Re
 	return &register, nil
 }
 
-func NewCasbinServiceClient(client *service.GRPCClient, l log.KLogger) pb.CasbinSourceServiceClient {
-	return systemservice.NewCasbinSourceServiceClient(client)
-}
-
 func NewSystemClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.GRPCClient, error) {
-	entry := bootstrap.GetEntry()
-	if entry == nil {
-		return nil, errors.New("no entry")
-	}
-
-	//servers := bootstrap.GetServers()
-	//if servers == nil {
-	//	return nil, errors.New("no servers")
-	//}
-	registry := bootstrap.GetRegistry()
-	if registry == nil {
-		return nil, errors.New("no registry")
+	discovery := bootstrap.GetDiscovery()
+	if discovery == nil {
+		return nil, errors.New("no discovery")
 	}
 	serviceConfig := &configv1.Service{
 		Name: ServiceName,
@@ -149,18 +186,18 @@ func NewSystemClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.
 		},
 	}
 	//if v, ok := bootstrap.GetServices()[ServiceName]; ok {
-	//	registry.ServiceName = ServiceName
+	//	discovery.ServiceName = ServiceName
 	//}
 	helper := log.NewHelper(r.Logger())
-	//registry.ServiceName = ServiceName
-	helper.Infof("service name: %s", registry.ServiceName)
-	discovery, err := runtime.NewDiscovery(registry)
+	//discovery.ServiceName = ServiceName
+	helper.Infof("service name: %s", discovery.ServiceName)
+	discover, err := runtime.NewDiscovery(discovery)
 	if err != nil {
 		return nil, errors.Wrap(err, "create discovery")
 	}
 	var ms []middleware.KMiddleware
 	options := []servicegrpc.Option{
-		servicegrpc.WithDiscovery(registry.ServiceName, discovery),
+		servicegrpc.WithDiscovery(discovery.ServiceName, discover),
 	}
 	ms = append(ms, middleware.NewClient(bootstrap.GetMiddleware())...)
 	ms = append(ms, MiddlewareServer())
@@ -193,28 +230,4 @@ func MiddlewareServer() middleware.KMiddleware {
 	}
 }
 
-func NewRegisterServer(
-	Resource pb.ResourceServiceServer,
-	Role pb.RoleServiceServer,
-	User pb.UserServiceServer,
-//Auth pb.AuthServiceServer,
-//Login pb.LoginServiceServer,
-//Personal pb.PersonalServiceServer,
-	Permission pb.PermissionServiceServer,
-//Casbin pb.CasbinSourceServiceServer,
-) []service.ServerRegister {
-	return []service.ServerRegister{
-		&systemservice.RegisterServer{
-			Resource: Resource,
-			Role:     Role,
-			User:     User,
-			//Auth:       Auth,
-			//Login:      Login,
-			//Personal:   Personal,
-			Permission: Permission,
-			//Casbin:     Casbin,
-		},
-	}
-}
-
-var _ service.ServerRegister = (*RegisterAgent)(nil)
+var _ service.ServerRegistrar = (*RegisterBridge)(nil)

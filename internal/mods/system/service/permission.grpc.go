@@ -5,7 +5,9 @@
 package service
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/biz"
@@ -16,6 +18,7 @@ type PermissionServiceServer struct {
 	pb.UnimplementedPermissionServiceServer
 
 	client *biz.PermissionServiceBiz
+	log    *log.KHelper
 }
 
 func (s PermissionServiceServer) ListPermissions(ctx context.Context, request *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
@@ -44,13 +47,16 @@ func (s PermissionServiceServer) DeletePermission(ctx context.Context, request *
 //}
 
 // NewPermissionServiceServer new a menu service.
-func NewPermissionServiceServer(client *biz.PermissionServiceBiz) *PermissionServiceServer {
-	return &PermissionServiceServer{client: client}
+func NewPermissionServiceServer(r runtime.Runtime, client *biz.PermissionServiceBiz) *PermissionServiceServer {
+	return &PermissionServiceServer{
+		log:    log.NewHelper(r.WithLogger("module", "service/permission")),
+		client: client,
+	}
 }
 
 // NewPermissionServiceServerPB new a menu service.
-func NewPermissionServiceServerPB(client *biz.PermissionServiceBiz) pb.PermissionServiceServer {
-	return &PermissionServiceServer{client: client}
+func NewPermissionServiceServerPB(r runtime.Runtime, client *biz.PermissionServiceBiz) pb.PermissionServiceServer {
+	return NewPermissionServiceServer(r, client)
 }
 
 var _ pb.PermissionServiceServer = (*PermissionServiceServer)(nil)

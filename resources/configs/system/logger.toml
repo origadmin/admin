@@ -2,15 +2,15 @@
 Disabled = false
 Develop = true
 Default = true
-Name = "output.log"
+Name = ""
 Format = "json"
-Level = 2
+Level = "info"
 Stdout = true
 DisableCaller = false
 CallerSkip = 0
 TimeFormat = ""
 [Logger.File]
-Path = "logs"
+Path = "logs/output.log"
 Lumberjack = true
 Compress = false
 LocalTime = false

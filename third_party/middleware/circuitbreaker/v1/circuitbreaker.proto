@@ -6,7 +6,7 @@ import "config/v1/gateway.proto";
 import "google/protobuf/duration.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/middleware/circuitbreaker/v1;circuitbreakerv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/middleware/circuitbreaker/v1;circuitbreakerv1";
 option java_multiple_files = true;
 option java_outer_classname = "CircuitBreakerProto";
 option java_package = "com.github.origadmin.runtime.middleware.circuitbreaker.v1";

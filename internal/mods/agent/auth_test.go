@@ -17,7 +17,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime/context"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	kslog "github.com/origadmin/slog-kratos"
 	"github.com/origadmin/runtime/interfaces/security"

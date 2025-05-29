@@ -94,7 +94,7 @@ func (x *ServiceCore) GetStorages() []*v1.Storage {
 type ServiceServer struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Core          *ServiceCore           `protobuf:"bytes,1,opt,name=core,proto3" json:"core,omitempty"`
-	Service       *v1.Service            `protobuf:"bytes,200,opt,name=service,proto3" json:"service,omitempty"`
+	Services      []*v1.Service          `protobuf:"bytes,200,rep,name=services,proto3" json:"services,omitempty"`
 	Middleware    *v11.Middleware        `protobuf:"bytes,300,opt,name=middleware,proto3" json:"middleware,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -137,9 +137,9 @@ func (x *ServiceServer) GetCore() *ServiceCore {
 	return nil
 }
 
-func (x *ServiceServer) GetService() *v1.Service {
+func (x *ServiceServer) GetServices() []*v1.Service {
 	if x != nil {
-		return x.Service
+		return x.Services
 	}
 	return nil
 }
@@ -204,10 +204,10 @@ const file_configs_service_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x122\n" +
 	"\tdiscovery\x18\x03 \x01(\v2\x14.config.v1.DiscoveryR\tdiscovery\x12.\n" +
-	"\bstorages\x18\x04 \x03(\v2\x12.config.v1.StorageR\bstorages\"\xa8\x01\n" +
+	"\bstorages\x18\x04 \x03(\v2\x12.config.v1.StorageR\bstorages\"\xaa\x01\n" +
 	"\rServiceServer\x12,\n" +
-	"\x04core\x18\x01 \x01(\v2\x18.api.configs.ServiceCoreR\x04core\x12-\n" +
-	"\aservice\x18\xc8\x01 \x01(\v2\x12.config.v1.ServiceR\aservice\x12:\n" +
+	"\x04core\x18\x01 \x01(\v2\x18.api.configs.ServiceCoreR\x04core\x12/\n" +
+	"\bservices\x18\xc8\x01 \x03(\v2\x12.config.v1.ServiceR\bservices\x12:\n" +
 	"\n" +
 	"middleware\x18\xac\x02 \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
 	"middleware\"=\n" +
@@ -240,7 +240,7 @@ var file_configs_service_proto_depIdxs = []int32{
 	3, // 0: api.configs.ServiceCore.discovery:type_name -> config.v1.Discovery
 	4, // 1: api.configs.ServiceCore.storages:type_name -> config.v1.Storage
 	0, // 2: api.configs.ServiceServer.core:type_name -> api.configs.ServiceCore
-	5, // 3: api.configs.ServiceServer.service:type_name -> config.v1.Service
+	5, // 3: api.configs.ServiceServer.services:type_name -> config.v1.Service
 	6, // 4: api.configs.ServiceServer.middleware:type_name -> middleware.v1.Middleware
 	0, // 5: api.configs.ServiceClient.core:type_name -> api.configs.ServiceCore
 	6, // [6:6] is the sub-list for method output_type

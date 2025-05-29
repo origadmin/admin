@@ -15,14 +15,14 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// MenuServiceAgent is a menu service.
-type MenuServiceAgent struct {
-	resp.Response
+// MenuServiceBridge is a menu service.
+type MenuServiceBridge struct {
+	pb.UnimplementedMenuServiceServer
 
 	client pb.MenuServiceClient
 }
 
-func (s MenuServiceAgent) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
+func (s MenuServiceBridge) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreateMenu(ctx, request)
 	if err != nil {
@@ -35,7 +35,7 @@ func (s MenuServiceAgent) CreateMenu(ctx context.Context, request *pb.CreateMenu
 	return nil, nil
 }
 
-func (s MenuServiceAgent) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
+func (s MenuServiceBridge) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	_, err := s.client.DeleteMenu(ctx, request)
 	if err != nil {
@@ -48,7 +48,7 @@ func (s MenuServiceAgent) DeleteMenu(ctx context.Context, request *pb.DeleteMenu
 	return nil, nil
 }
 
-func (s MenuServiceAgent) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
+func (s MenuServiceBridge) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetMenu(ctx, request)
 	if err != nil {
@@ -61,7 +61,7 @@ func (s MenuServiceAgent) GetMenu(ctx context.Context, request *pb.GetMenuReques
 	return nil, nil
 }
 
-func (s MenuServiceAgent) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
+func (s MenuServiceBridge) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListMenus(ctx, request)
 	if err != nil {
@@ -76,7 +76,7 @@ func (s MenuServiceAgent) ListMenus(ctx context.Context, request *pb.ListMenusRe
 	return nil, nil
 }
 
-func (s MenuServiceAgent) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
+func (s MenuServiceBridge) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdateMenu(ctx, request)
 	if err != nil {
@@ -89,18 +89,18 @@ func (s MenuServiceAgent) UpdateMenu(ctx context.Context, request *pb.UpdateMenu
 	return nil, nil
 }
 
-// NewMenuServiceAgent new a menu service.
-func NewMenuServiceAgent(client pb.MenuServiceClient) *MenuServiceAgent {
-	return &MenuServiceAgent{client: client}
+// NewMenuServiceBridge new a menu service.
+func NewMenuServiceBridge(client pb.MenuServiceClient) *MenuServiceBridge {
+	return &MenuServiceBridge{client: client}
 }
 
-// NewMenuServiceAgentPB new a menu service.
-func NewMenuServiceAgentPB(client pb.MenuServiceClient) pb.MenuServiceAgent {
-	return &MenuServiceAgent{client: client}
+// NewMenuServiceBridgePB new a menu service.
+func NewMenuServiceBridgePB(client pb.MenuServiceClient) pb.MenuServiceServer {
+	return &MenuServiceBridge{client: client}
 }
-func NewMenuServiceAgentClient(client *service.GRPCClient) pb.MenuServiceAgent {
+func NewMenuServiceBridgeClient(client *service.GRPCClient) pb.MenuServiceServer {
 	cli := pb.NewMenuServiceClient(client)
-	return NewMenuServiceAgent(cli)
+	return NewMenuServiceBridge(cli)
 }
 
-var _ pb.MenuServiceAgent = (*MenuServiceAgent)(nil)
+var _ pb.MenuServiceServer = (*MenuServiceBridge)(nil)

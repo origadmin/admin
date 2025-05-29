@@ -16,14 +16,14 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// UserServiceAgent is a menu service.
-type UserServiceAgent struct {
+// UserServiceBridge is a menu service.
+type UserServiceBridge struct {
 	resp.Response
 
 	client pb.UserServiceClient
 }
 
-func (s UserServiceAgent) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
+func (s UserServiceBridge) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListUserResources(ctx, request)
 	if err != nil {
@@ -36,22 +36,22 @@ func (s UserServiceAgent) ListUserResources(ctx context.Context, request *pb.Lis
 	return nil, nil
 }
 
-func (s UserServiceAgent) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+func (s UserServiceBridge) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServiceAgent) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+func (s UserServiceBridge) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServiceAgent) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+func (s UserServiceBridge) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServiceAgent) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (s UserServiceBridge) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreateUser(ctx, request)
 	if err != nil {
@@ -65,7 +65,7 @@ func (s UserServiceAgent) CreateUser(ctx context.Context, request *pb.CreateUser
 	return nil, nil
 }
 
-func (s UserServiceAgent) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (s UserServiceBridge) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	_, err := s.client.DeleteUser(ctx, request)
 	if err != nil {
@@ -79,7 +79,7 @@ func (s UserServiceAgent) DeleteUser(ctx context.Context, request *pb.DeleteUser
 	return nil, nil
 }
 
-func (s UserServiceAgent) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (s UserServiceBridge) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetUser(ctx, request)
 	if err != nil {
@@ -92,7 +92,7 @@ func (s UserServiceAgent) GetUser(ctx context.Context, request *pb.GetUserReques
 	return nil, nil
 }
 
-func (s UserServiceAgent) ListUsers(ctx context.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+func (s UserServiceBridge) ListUsers(ctx context.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListUsers(ctx, request)
 	if err != nil {
@@ -106,7 +106,7 @@ func (s UserServiceAgent) ListUsers(ctx context.Context, request *pb.ListUsersRe
 	return nil, nil
 }
 
-func (s UserServiceAgent) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+func (s UserServiceBridge) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdateUser(ctx, request)
 	if err != nil {
@@ -119,18 +119,18 @@ func (s UserServiceAgent) UpdateUser(ctx context.Context, request *pb.UpdateUser
 	return nil, nil
 }
 
-// NewUserServiceAgent new a menu service.
-func NewUserServiceAgent(client pb.UserServiceClient) *UserServiceAgent {
-	return &UserServiceAgent{client: client}
+// NewUserServiceBridge new a menu service.
+func NewUserServiceBridge(client pb.UserServiceClient) *UserServiceBridge {
+	return &UserServiceBridge{client: client}
 }
 
-// NewUserServiceAgentPB new a menu service.
-func NewUserServiceAgentPB(client pb.UserServiceClient) pb.UserServiceAgent {
-	return &UserServiceAgent{client: client}
+// NewUserServiceBridgePB new a menu service.
+func NewUserServiceBridgePB(client pb.UserServiceClient) pb.UserServiceBridge {
+	return &UserServiceBridge{client: client}
 }
-func NewUserServiceAgentClient(client *service.GRPCClient) pb.UserServiceAgent {
+func NewUserServiceBridgeClient(client *service.GRPCClient) pb.UserServiceBridge {
 	c := pb.NewUserServiceClient(client)
-	return NewUserServiceAgent(c)
+	return NewUserServiceBridge(c)
 }
 
-var _ pb.UserServiceAgent = (*UserServiceAgent)(nil)
+var _ pb.UserServiceBridge = (*UserServiceBridge)(nil)

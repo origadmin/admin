@@ -5,7 +5,9 @@
 package service
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 )
@@ -15,6 +17,7 @@ type MenuServiceServer struct {
 	pb.UnimplementedMenuServiceServer
 
 	client pb.MenuServiceClient
+	log    *log.KHelper
 }
 
 func (s MenuServiceServer) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
@@ -43,13 +46,16 @@ func (s MenuServiceServer) DeleteMenu(ctx context.Context, request *pb.DeleteMen
 //}
 
 // NewMenuServiceServer new a menu service.
-func NewMenuServiceServer(client pb.MenuServiceClient) *MenuServiceServer {
-	return &MenuServiceServer{client: client}
+func NewMenuServiceServer(client pb.MenuServiceClient, logger log.KLogger) *MenuServiceServer {
+	return &MenuServiceServer{
+		log:    log.NewHelper(logger),
+		client: client,
+	}
 }
 
 // NewMenuServiceServerPB new a menu service.
-func NewMenuServiceServerPB(client pb.MenuServiceClient) pb.MenuServiceServer {
-	return &MenuServiceServer{client: client}
+func NewMenuServiceServerPB(r runtime.Runtime, client pb.MenuServiceClient) pb.MenuServiceServer {
+	return NewMenuServiceServer(client, r.WithLogger("module", "service/menu"))
 }
 
 var _ pb.MenuServiceServer = (*MenuServiceServer)(nil)

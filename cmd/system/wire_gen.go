@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/loader"
 	"origadmin/application/admin/internal/mods/system/biz"
 	"origadmin/application/admin/internal/mods/system/dal"
 	"origadmin/application/admin/internal/mods/system/server"
@@ -28,33 +27,25 @@ import (
 
 // buildInjectors init kratos application.
 func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
-	v, err := loader.NewRegistrar(bootstrap)
-	if err != nil {
-		return nil, nil, err
-	}
 	dataData, cleanup, err := data.NewData(r, bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
 	resourceRepo := dal.NewResourceRepo(r, dataData)
 	resourceServiceBiz := biz.NewResourceServiceBiz(r, resourceRepo)
-	resourceServiceServer := service.NewResourceServiceServerPB(resourceServiceBiz)
+	resourceServiceServer := service.NewResourceServiceServerPB(r, resourceServiceBiz)
 	roleRepo := dal.NewRoleRepo(r, dataData)
 	roleServiceBiz := biz.NewRoleServiceBiz(r, roleRepo)
-	roleServiceServer := service.NewRoleServiceServerPB(roleServiceBiz)
+	roleServiceServer := service.NewRoleServiceServerPB(r, roleServiceBiz)
 	userRepo := dal.NewUserRepo(r, dataData)
 	userServiceBiz := biz.NewUserServiceBiz(r, userRepo)
-	userServiceServer := service.NewUserServiceServerPB(userServiceBiz)
+	userServiceServer := service.NewUserServiceServerPB(r, userServiceBiz)
 	permissionRepo := dal.NewPermissionRepo(r, dataData)
 	permissionServiceBiz := biz.NewPermissionServiceBiz(r, permissionRepo)
-	permissionServiceServer := service.NewPermissionServiceServerPB(permissionServiceBiz)
-	v2 := server.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
-	v3 := server.NewSystemServer(r, bootstrap, v2)
-	injector := &loader.Injector{
-		Registrar: v,
-		Servers:   v3,
-	}
-	app := NewApp(r, injector)
+	permissionServiceServer := service.NewPermissionServiceServerPB(r, permissionServiceBiz)
+	serverRegister := server.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
+	v := server.NewSystemServer(r, bootstrap, serverRegister)
+	app := NewApp(r, v)
 	return app, func() {
 		cleanup()
 	}, nil

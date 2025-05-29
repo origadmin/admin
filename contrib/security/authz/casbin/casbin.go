@@ -14,7 +14,7 @@ import (
 	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/runtime/context"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/errors"
 	"github.com/origadmin/runtime/interfaces/security"

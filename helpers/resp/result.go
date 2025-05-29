@@ -10,8 +10,8 @@ import (
 	"fmt"
 	"net/http"
 
-	paginationv1 "github.com/origadmin/runtime/gen/go/pagination/v1"
-	jwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
+	paginationv1 "github.com/origadmin/runtime/api/gen/go/pagination/v1"
+	jwtv1 "github.com/origadmin/runtime/api/gen/go/security/jwt/v1"
 	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/proto"
 

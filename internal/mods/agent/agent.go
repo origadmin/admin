@@ -19,7 +19,7 @@ var ProviderSet = wire.NewSet(
 
 type ServerRegisterAgent service.ServerRegister
 
-func NewRegisterAgent(s1 *systemserver.RegisterAgent) []ServerRegisterAgent {
+func NewRegisterAgent(s1 *systemserver.RegisterBridge) []ServerRegisterAgent {
 	return []ServerRegisterAgent{
 		s1,
 	}

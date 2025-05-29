@@ -1,67 +1,51 @@
-[Servers]
-system = "origadmin.service.system.v1"
-
-[Service]
+[[Server.Services]]
 Name = ""
+Type = "grpc"
 DynamicEndpoint = true
-[Service.Grpc]
+[Server.Services.Grpc]
 Network = "tcp"
 Addr = "${grpc_address:0.0.0.0:18000}"
 UseTls = false
-CertFile = ""
-KeyFile = ""
 Timeout = 0
 ShutdownTimeout = 0
 ReadTimeout = 0
 WriteTimeout = 0
 IdleTimeout = 0
 Endpoint = ""
-[Service.Http]
-Network = "tcp"
-Addr = "${http_address:0.0.0.0:18100}"
-UseTls = false
-CertFile = ""
-KeyFile = ""
-Timeout = 0
-ShutdownTimeout = 0
-ReadTimeout = 0
-WriteTimeout = 0
-IdleTimeout = 0
-Endpoint = ""
-[Service.Websocket]
+[Server.Services.Websocket]
 Network = ""
 Addr = ""
 Path = ""
 Codec = ""
 Timeout = 0
-[Service.Message]
+[Server.Services.Message]
 Type = "none"
 Name = ""
-[Service.Message.Mqtt]
+[Server.Services.Message.Mqtt]
 Endpoint = ""
 Codec = ""
-[Service.Message.Kafka]
+[Server.Services.Message.Kafka]
 Endpoint = ""
 Codec = ""
-[Service.Message.Rabbitmq]
+[Server.Services.Message.Rabbitmq]
 Endpoint = ""
 Codec = ""
-[Service.Message.Activemq]
+[Server.Services.Message.Activemq]
 Endpoint = ""
 Codec = ""
-[Service.Message.Nats]
+[Server.Services.Message.Nats]
 Endpoint = ""
 Codec = ""
-[Service.Message.Nsq]
+[Server.Services.Message.Nsq]
 Endpoint = ""
 Codec = ""
-[Service.Message.Pulsar]
+[Server.Services.Message.Pulsar]
 Endpoint = ""
 Codec = ""
-[Service.Message.Redis]
+[Server.Services.Message.Redis]
 Endpoint = ""
 Codec = ""
-[Service.Message.Rocketmq]
+[Server.Services.Message.Rocketmq]
 Endpoint = ""
 Codec = ""
 EnableTrace = false
@@ -72,26 +56,23 @@ SecurityToken = ""
 Namespace = ""
 InstanceName = ""
 GroupName = ""
-[Service.Task]
+[Server.Services.Task]
 Type = "none"
 Name = ""
-[Service.Task.Asynq]
+[Server.Services.Task.Asynq]
 Endpoint = ""
 Password = ""
 Db = 0
 Location = ""
-[Service.Task.Machinery]
-[Service.Task.Cron]
+[Server.Services.Task.Machinery]
+[Server.Services.Task.Cron]
 Addr = ""
-[Service.Middleware]
-Logging = true
-Recovery = true
-Tracing = true
-CircuitBreaker = true
-[Service.Middleware.Metadata]
+[Server.Services.Middleware]
+EnabledMiddlewares = ["logging", "recovery", "tracing", "circuit_breaker", "metadata", "rate_limiter", "metrics", "validator", "jwt", "selector"]
+[Server.Services.Middleware.Metadata]
 Enabled = true
 Prefix = ""
-[Service.Middleware.RateLimiter]
+[Server.Services.Middleware.RateLimiter]
 Enabled = true
 Name = "bbr"
 Period = 0
@@ -99,27 +80,134 @@ XRatelimitLimit = 0
 XRatelimitRemaining = 0
 XRatelimitReset = 0
 RetryAfter = 0
-[Service.Middleware.Metrics]
+[Server.Services.Middleware.Metrics]
 Enabled = true
-[Service.Middleware.Validator]
+[Server.Services.Middleware.Validator]
 Enabled = true
 Version = 1
 FailFast = true
-[Service.Middleware.Jwt]
+[Server.Services.Middleware.Jwt]
 Enabled = false
 Subject = ""
 ClaimType = ""
-[Service.Middleware.Jwt.Config]
+[Server.Services.Middleware.Jwt.Config]
 SigningMethod = "HS512"
-Key = "${middleware_jwt_key:12345678901234567890123456789012}"
+Key = "%VH_C!Vpa$_aK2kOynB&q+x=4$27&Ios"
 Key2 = "can empty next version fixed"
 AccessTokenLifetime = 900000000000
 RefreshTokenLifetime = 259200000000000
 Issuer = "localhost"
 TokenType = "Bearer"
-[Service.Middleware.Selector]
+[Server.Services.Middleware.Selector]
 Enabled = false
 Regex = ""
-[Service.Selector]
+[Server.Services.Selector]
+Version = "v1.0.0"
+Builder = "bbr"
+
+[[Server.Services]]
+Name = ""
+Type = "http"
+DynamicEndpoint = true
+[Server.Services.Http]
+Network = "tcp"
+Addr = "${http_address:0.0.0.0:18100}"
+UseTls = false
+Timeout = 0
+ShutdownTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+IdleTimeout = 0
+Endpoint = ""
+[Server.Services.Websocket]
+Network = ""
+Addr = ""
+Path = ""
+Codec = ""
+Timeout = 0
+[Server.Services.Message]
+Type = "none"
+Name = ""
+[Server.Services.Message.Mqtt]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Kafka]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Rabbitmq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Activemq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Nats]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Nsq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Pulsar]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Redis]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Rocketmq]
+Endpoint = ""
+Codec = ""
+EnableTrace = false
+NameServerDomain = ""
+AccessKey = ""
+SecretKey = ""
+SecurityToken = ""
+Namespace = ""
+InstanceName = ""
+GroupName = ""
+[Server.Services.Task]
+Type = "none"
+Name = ""
+[Server.Services.Task.Asynq]
+Endpoint = ""
+Password = ""
+Db = 0
+Location = ""
+[Server.Services.Task.Machinery]
+[Server.Services.Task.Cron]
+Addr = ""
+[Server.Services.Middleware]
+EnabledMiddlewares = ["logging", "recovery", "tracing", "circuit_breaker", "metadata", "rate_limiter", "metrics", "validator", "jwt", "selector"]
+[Server.Services.Middleware.Metadata]
+Enabled = true
+Prefix = ""
+[Server.Services.Middleware.RateLimiter]
+Enabled = true
+Name = "bbr"
+Period = 0
+XRatelimitLimit = 0
+XRatelimitRemaining = 0
+XRatelimitReset = 0
+RetryAfter = 0
+[Server.Services.Middleware.Metrics]
+Enabled = true
+[Server.Services.Middleware.Validator]
+Enabled = true
+Version = 1
+FailFast = true
+[Server.Services.Middleware.Jwt]
+Enabled = false
+Subject = ""
+ClaimType = ""
+[Server.Services.Middleware.Jwt.Config]
+SigningMethod = "HS512"
+Key = "%VH_C!Vpa$_aK2kOynB&q+x=4$27&Ios"
+Key2 = "can empty next version fixed"
+AccessTokenLifetime = 900000000000
+RefreshTokenLifetime = 259200000000000
+Issuer = "localhost"
+TokenType = "Bearer"
+[Server.Services.Middleware.Selector]
+Enabled = false
+Regex = ""
+[Server.Services.Selector]
 Version = "v1.0.0"
 Builder = "bbr"

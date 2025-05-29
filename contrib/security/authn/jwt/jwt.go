@@ -14,8 +14,8 @@ import (
 	"github.com/dchest/uniuri"
 	"github.com/goexts/generic/settings"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
-	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	securityv1 "github.com/origadmin/runtime/api/gen/go/security/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/security"
 )

@@ -1,8 +1,8 @@
-[Registry]
+[Discovery]
 Type = "consul"
 ServiceName = ""
 Debug = false
-[Registry.Consul]
+[Discovery.Consul]
 Address = "${consul_address:127.0.0.1:8500}"
 Scheme = "http"
 Token = ""

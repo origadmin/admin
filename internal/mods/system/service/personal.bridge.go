@@ -16,19 +16,19 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// PersonalServiceAgent is a Personal service.
-type PersonalServiceAgent struct {
+// PersonalServiceBridge is a Personal service.
+type PersonalServiceBridge struct {
 	resp.Response
 
 	client pb.PersonalServiceClient
 }
 
-func (s PersonalServiceAgent) RefreshPersonalToken(ctx context.Context, request *pb.RefreshPersonalTokenRequest) (*pb.RefreshPersonalTokenResponse, error) {
+func (s PersonalServiceBridge) RefreshPersonalToken(ctx context.Context, request *pb.RefreshPersonalTokenRequest) (*pb.RefreshPersonalTokenResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s PersonalServiceAgent) GetPersonalProfile(ctx context.Context, request *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
+func (s PersonalServiceBridge) GetPersonalProfile(ctx context.Context, request *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetPersonalProfile(ctx, request)
 	if err != nil {
@@ -42,7 +42,7 @@ func (s PersonalServiceAgent) GetPersonalProfile(ctx context.Context, request *p
 	return nil, nil
 }
 
-func (s PersonalServiceAgent) PersonalLogout(ctx context.Context, request *pb.PersonalLogoutRequest) (*pb.PersonalLogoutResponse, error) {
+func (s PersonalServiceBridge) PersonalLogout(ctx context.Context, request *pb.PersonalLogoutRequest) (*pb.PersonalLogoutResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.PersonalLogout(ctx, request)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s PersonalServiceAgent) PersonalLogout(ctx context.Context, request *pb.Pe
 	return nil, nil
 }
 
-func (s PersonalServiceAgent) ListPersonalResources(ctx context.Context, request *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
+func (s PersonalServiceBridge) ListPersonalResources(ctx context.Context, request *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListPersonalResources(ctx, request)
 	if err != nil {
@@ -71,7 +71,7 @@ func (s PersonalServiceAgent) ListPersonalResources(ctx context.Context, request
 	return nil, nil
 }
 
-func (s PersonalServiceAgent) ListPersonalRoles(ctx context.Context, request *pb.ListPersonalRolesRequest) (*pb.ListPersonalRolesResponse, error) {
+func (s PersonalServiceBridge) ListPersonalRoles(ctx context.Context, request *pb.ListPersonalRolesRequest) (*pb.ListPersonalRolesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListPersonalRoles(ctx, request)
 	if err != nil {
@@ -86,7 +86,7 @@ func (s PersonalServiceAgent) ListPersonalRoles(ctx context.Context, request *pb
 	return nil, nil
 }
 
-func (s PersonalServiceAgent) UpdatePersonalSetting(ctx context.Context, request *pb.UpdatePersonalSettingRequest) (*pb.UpdatePersonalSettingResponse, error) {
+func (s PersonalServiceBridge) UpdatePersonalSetting(ctx context.Context, request *pb.UpdatePersonalSettingRequest) (*pb.UpdatePersonalSettingResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdatePersonalSetting(ctx, request)
 	if err != nil {
@@ -100,7 +100,7 @@ func (s PersonalServiceAgent) UpdatePersonalSetting(ctx context.Context, request
 	return nil, nil
 }
 
-func (s PersonalServiceAgent) UpdatePersonalProfile(ctx context.Context, request *pb.UpdatePersonalProfileRequest) (*pb.UpdatePersonalProfileResponse, error) {
+func (s PersonalServiceBridge) UpdatePersonalProfile(ctx context.Context, request *pb.UpdatePersonalProfileRequest) (*pb.UpdatePersonalProfileResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdatePersonalProfile(ctx, request)
 	if err != nil {
@@ -114,7 +114,7 @@ func (s PersonalServiceAgent) UpdatePersonalProfile(ctx context.Context, request
 	return nil, nil
 }
 
-func (s PersonalServiceAgent) UpdatePersonalPassword(ctx context.Context, request *pb.UpdatePersonalPasswordRequest) (*pb.UpdatePersonalPasswordResponse, error) {
+func (s PersonalServiceBridge) UpdatePersonalPassword(ctx context.Context, request *pb.UpdatePersonalPasswordRequest) (*pb.UpdatePersonalPasswordResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdatePersonalPassword(ctx, request)
 	if err != nil {
@@ -128,7 +128,7 @@ func (s PersonalServiceAgent) UpdatePersonalPassword(ctx context.Context, reques
 	return nil, nil
 }
 
-//func (s PersonalServiceAgent) PersonalResources(ctx context.Context, request *pb.PersonalResourcesRequest) (*pb.PersonalResourcesResponse, error) {
+//func (s PersonalServiceBridge) PersonalResources(ctx context.Context, request *pb.PersonalResourcesRequest) (*pb.PersonalResourcesResponse, error) {
 //	response, err := s.client.PersonalResources(context, request)
 //	if err != nil {
 //		log.Errorf("PersonalResources error: %v", err)
@@ -141,7 +141,7 @@ func (s PersonalServiceAgent) UpdatePersonalPassword(ctx context.Context, reques
 //	return nil, nil
 //}
 
-//func (s PersonalServiceAgent) PersonalProfile(ctx context.Context, request *pb.PersonalProfileRequest) (*pb.PersonalProfileResponse, error) {
+//func (s PersonalServiceBridge) PersonalProfile(ctx context.Context, request *pb.PersonalProfileRequest) (*pb.PersonalProfileResponse, error) {
 //	response, err := s.client.PersonalProfile(context, request)
 //	if err != nil {
 //		log.Errorf("PersonalProfile error: %v", err)
@@ -154,7 +154,7 @@ func (s PersonalServiceAgent) UpdatePersonalPassword(ctx context.Context, reques
 //	return nil, nil
 //}
 
-//func (s PersonalServiceAgent) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+//func (s PersonalServiceBridge) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
 //	response, err := s.client.Logout(context, request)
 //	if err != nil {
 //		log.Errorf("Logout error: %v", err)
@@ -167,18 +167,18 @@ func (s PersonalServiceAgent) UpdatePersonalPassword(ctx context.Context, reques
 //	return nil, nil
 //}
 
-// NewPersonalServiceAgent new a Personal service.
-func NewPersonalServiceAgent(client pb.PersonalServiceClient) *PersonalServiceAgent {
-	return &PersonalServiceAgent{client: client}
+// NewPersonalServiceBridge new a Personal service.
+func NewPersonalServiceBridge(client pb.PersonalServiceClient) *PersonalServiceBridge {
+	return &PersonalServiceBridge{client: client}
 }
 
-// NewPersonalServiceAgentPB new a Personal service.
-func NewPersonalServiceAgentPB(client pb.PersonalServiceClient) pb.PersonalServiceAgent {
-	return &PersonalServiceAgent{client: client}
+// NewPersonalServiceBridgePB new a Personal service.
+func NewPersonalServiceBridgePB(client pb.PersonalServiceClient) pb.PersonalServiceBridge {
+	return &PersonalServiceBridge{client: client}
 }
-func NewPersonalServiceAgentClient(client *service.GRPCClient) pb.PersonalServiceAgent {
+func NewPersonalServiceBridgeClient(client *service.GRPCClient) pb.PersonalServiceServer {
 	cli := pb.NewPersonalServiceClient(client)
-	return NewPersonalServiceAgent(cli)
+	return NewPersonalServiceBridge(cli)
 }
 
-var _ pb.PersonalServiceAgent = (*PersonalServiceAgent)(nil)
+var _ pb.PersonalServiceBridge = (*PersonalServiceBridge)(nil)

@@ -7,11 +7,10 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"strings"
 	"time"
 
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/toolkits/errors"
 
 	"origadmin/application/admin/contrib/database/internal/mysql"
@@ -39,7 +38,6 @@ func Open(database *configv1.Database) (*sql.DB, error) {
 	default:
 
 	}
-	fmt.Printf("database: dialect: %s, source: %s\n", database.Dialect, database.Source)
 	db, err := sql.Open(database.Dialect, database.Source)
 	if err != nil {
 		return nil, errors.Wrap(err, "database: open database error")

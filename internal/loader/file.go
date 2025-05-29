@@ -15,9 +15,9 @@ import (
 	"github.com/goexts/generic/settings"
 	"github.com/origadmin/contrib/replacer"
 	"github.com/origadmin/runtime"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/config"
 	"github.com/origadmin/runtime/config/file"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/codec"
 	"github.com/origadmin/toolkits/errors"
@@ -90,7 +90,7 @@ func NewFileConfig(sourceConfig *configv1.SourceConfig, _ *config.Options) (conf
 	v := new(configs.Bootstrap)
 	options = append(options, file.WithFormatter(fileFormatter(v)))
 	path, _ := filepath.Abs(cfg.Path)
-	log.NewHelper(log.DefaultLogger).Infof("loading config from %s", path)
+	log.NewHelper(log.GetLogger()).Infof("loading config from %s", path)
 	return file.NewSource(cfg.Path, options...), nil
 }
 

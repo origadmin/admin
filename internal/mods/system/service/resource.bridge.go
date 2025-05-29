@@ -15,14 +15,14 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// ResourceServiceAgent is a menu service.
-type ResourceServiceAgent struct {
+// ResourceServiceBridge is a menu service.
+type ResourceServiceBridge struct {
 	resp.Response
 
 	client pb.ResourceServiceClient
 }
 
-func (s ResourceServiceAgent) CreateResource(ctx context.Context, request *pb.CreateResourceRequest) (*pb.CreateResourceResponse, error) {
+func (s ResourceServiceBridge) CreateResource(ctx context.Context, request *pb.CreateResourceRequest) (*pb.CreateResourceResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreateResource(ctx, request)
 	if err != nil {
@@ -35,7 +35,7 @@ func (s ResourceServiceAgent) CreateResource(ctx context.Context, request *pb.Cr
 	return nil, nil
 }
 
-func (s ResourceServiceAgent) DeleteResource(ctx context.Context, request *pb.DeleteResourceRequest) (*pb.DeleteResourceResponse, error) {
+func (s ResourceServiceBridge) DeleteResource(ctx context.Context, request *pb.DeleteResourceRequest) (*pb.DeleteResourceResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	_, err := s.client.DeleteResource(ctx, request)
 	if err != nil {
@@ -48,7 +48,7 @@ func (s ResourceServiceAgent) DeleteResource(ctx context.Context, request *pb.De
 	return nil, nil
 }
 
-func (s ResourceServiceAgent) GetResource(ctx context.Context, request *pb.GetResourceRequest) (*pb.GetResourceResponse, error) {
+func (s ResourceServiceBridge) GetResource(ctx context.Context, request *pb.GetResourceRequest) (*pb.GetResourceResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetResource(ctx, request)
 	if err != nil {
@@ -61,7 +61,7 @@ func (s ResourceServiceAgent) GetResource(ctx context.Context, request *pb.GetRe
 	return nil, nil
 }
 
-func (s ResourceServiceAgent) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
+func (s ResourceServiceBridge) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListResources(ctx, request)
 	if err != nil {
@@ -76,7 +76,7 @@ func (s ResourceServiceAgent) ListResources(ctx context.Context, request *pb.Lis
 	return nil, nil
 }
 
-func (s ResourceServiceAgent) UpdateResource(ctx context.Context, request *pb.UpdateResourceRequest) (*pb.UpdateResourceResponse, error) {
+func (s ResourceServiceBridge) UpdateResource(ctx context.Context, request *pb.UpdateResourceRequest) (*pb.UpdateResourceResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdateResource(ctx, request)
 	if err != nil {
@@ -89,18 +89,18 @@ func (s ResourceServiceAgent) UpdateResource(ctx context.Context, request *pb.Up
 	return nil, nil
 }
 
-// NewResourceServiceAgent new a menu service.
-func NewResourceServiceAgent(client pb.ResourceServiceClient) *ResourceServiceAgent {
-	return &ResourceServiceAgent{client: client}
+// NewResourceServiceBridge new a menu service.
+func NewResourceServiceBridge(client pb.ResourceServiceClient) *ResourceServiceBridge {
+	return &ResourceServiceBridge{client: client}
 }
 
-// NewResourceServiceAgentPB new a menu service.
-func NewResourceServiceAgentPB(client pb.ResourceServiceClient) pb.ResourceServiceAgent {
-	return &ResourceServiceAgent{client: client}
+// NewResourceServiceBridgePB new a menu service.
+func NewResourceServiceBridgePB(client pb.ResourceServiceClient) pb.ResourceServiceBridge {
+	return &ResourceServiceBridge{client: client}
 }
-func NewResourceServiceAgentClient(client *service.GRPCClient) pb.ResourceServiceAgent {
+func NewResourceServiceBridgeClient(client *service.GRPCClient) pb.ResourceServiceBridge {
 	cli := pb.NewResourceServiceClient(client)
-	return NewResourceServiceAgent(cli)
+	return NewResourceServiceBridge(cli)
 }
 
-var _ pb.ResourceServiceAgent = (*ResourceServiceAgent)(nil)
+var _ pb.ResourceServiceBridge = (*ResourceServiceBridge)(nil)

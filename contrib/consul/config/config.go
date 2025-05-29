@@ -13,8 +13,8 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	"github.com/origadmin/runtime"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/config"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
 )
 
 func init() {

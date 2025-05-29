@@ -13,9 +13,8 @@ import (
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(r runtime.Runtime, bootstrap *configs.Bootstrap) *service.GRPCServer {
-	services := bootstrap.GetServices()
-	for _, config := range services {
-		serviceConfig := config.GetService()
+	services := bootstrap.GetServer().GetServices()
+	for _, serviceConfig := range services {
 		if serviceConfig.GetType() == "grpc" {
 			grpcServer, err := r.Builder().NewGRPCServer(serviceConfig)
 			if err != nil {

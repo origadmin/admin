@@ -13,9 +13,8 @@ import (
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(r runtime.Runtime, bootstrap *configs.Bootstrap) *service.HTTPServer {
-	services := bootstrap.GetServices()
-	for _, config := range services {
-		serviceConfig := config.GetService()
+	services := bootstrap.GetServer().GetServices()
+	for _, serviceConfig := range services {
 		if serviceConfig.GetType() == "http" {
 			httpServer, err := r.Builder().NewHTTPServer(serviceConfig)
 			if err != nil {

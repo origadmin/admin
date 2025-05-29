@@ -7,6 +7,9 @@ package service
 import (
 	"context"
 
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
+
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/biz"
 )
@@ -15,6 +18,7 @@ type UserServiceServer struct {
 	pb.UnimplementedUserServiceServer
 
 	client *biz.UserServiceBiz
+	log    *log.KHelper
 }
 
 func (s UserServiceServer) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
@@ -62,15 +66,18 @@ func (s UserServiceServer) DeleteUser(ctx context.Context, req *pb.DeleteUserReq
 }
 
 // NewUserServiceServer new a user service.
-func NewUserServiceServer(client *biz.UserServiceBiz) *UserServiceServer {
-	return &UserServiceServer{}
+func NewUserServiceServer(r runtime.Runtime, client *biz.UserServiceBiz) *UserServiceServer {
+	return &UserServiceServer{
+		log: log.NewHelper(r.WithLogger(
+			"module", "service/user",
+		)),
+		client: client,
+	}
 }
 
 // NewUserServiceServerPB new a user service.
-func NewUserServiceServerPB(client *biz.UserServiceBiz) pb.UserServiceServer {
-	return &UserServiceServer{
-		client: client,
-	}
+func NewUserServiceServerPB(r runtime.Runtime, client *biz.UserServiceBiz) pb.UserServiceServer {
+	return NewUserServiceServer(r, client)
 }
 
 var _ pb.UserServiceServer = (*UserServiceServer)(nil)

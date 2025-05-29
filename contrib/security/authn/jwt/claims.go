@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	jwtv5 "github.com/golang-jwt/jwt/v5"
-	securityv1 "github.com/origadmin/runtime/gen/go/security/v1"
+	securityv1 "github.com/origadmin/runtime/api/gen/go/security/v1"
 	"github.com/origadmin/runtime/interfaces/security"
 )
 

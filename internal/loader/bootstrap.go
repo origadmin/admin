@@ -11,11 +11,12 @@ import (
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	"github.com/goexts/generic/cmp"
 	"github.com/origadmin/runtime"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	middlewarev1 "github.com/origadmin/runtime/api/gen/go/middleware/v1"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/config"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
-	middlewarev1 "github.com/origadmin/runtime/gen/go/middleware/v1"
 	"github.com/origadmin/runtime/log"
 
 	"origadmin/application/admin/internal/configs"
@@ -44,6 +45,18 @@ type ResolvedBootstrap struct {
 	bootstrap configs.Bootstrap
 }
 
+func (r *ResolvedBootstrap) FillServiceInfo(flags *bootstrap.Bootstrap) {
+	core := r.bootstrap.GetServer().GetCore()
+	name := cmp.Or(flags.ServiceName(), core.GetName())
+	version := cmp.Or(flags.Version(), core.GetVersion())
+	flags.SetServiceInfo(name, version)
+}
+
+func (r *ResolvedBootstrap) Discovery() *configv1.Discovery {
+	log.NewHelper(log.GetLogger()).Infow("msg", "discovery config", "value", r.bootstrap.GetDiscovery())
+	return r.bootstrap.GetDiscovery()
+}
+
 func (r *ResolvedBootstrap) Resolve(config config.KConfig) (config.Resolved, error) {
 	if err := config.Scan(&r.bootstrap); err != nil {
 		return nil, err
@@ -67,16 +80,12 @@ func (r *ResolvedBootstrap) Value(name string) (any, error) {
 
 }
 
-func (r *ResolvedBootstrap) Registry() *configv1.Registry {
-	return r.bootstrap.GetRegistry()
-}
-
 func (r *ResolvedBootstrap) Middleware() *middlewarev1.Middleware {
 	return r.bootstrap.GetMiddleware()
 }
 
-func (r *ResolvedBootstrap) Service() *configv1.Service {
-	return r.bootstrap.GetServices()
+func (r *ResolvedBootstrap) Services() []*configv1.Service {
+	return r.bootstrap.GetServer().GetServices()
 }
 
 func (r *ResolvedBootstrap) Logger() *configv1.Logger {
@@ -89,6 +98,7 @@ func Bootstrap(ctx context.Context, flags *bootstrap.Bootstrap, newApp NewApp) e
 	if err != nil {
 		return err
 	}
+	rb.FillServiceInfo(flags)
 	r = r.WithLoggerAttrs(
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,

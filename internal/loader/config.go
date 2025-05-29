@@ -7,7 +7,7 @@ package loader
 
 import (
 	"github.com/origadmin/runtime"
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 
 	"origadmin/application/admin/internal/configs"
 )

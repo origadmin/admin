@@ -7,6 +7,9 @@ package service
 import (
 	"context"
 
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
+
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/mods/system/biz"
 )
@@ -15,6 +18,7 @@ type RoleServiceServer struct {
 	pb.UnimplementedRoleServiceServer
 
 	client *biz.RoleServiceBiz
+	log    *log.KHelper
 }
 
 func (s RoleServiceServer) ListRoles(ctx context.Context, req *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
@@ -34,17 +38,18 @@ func (s RoleServiceServer) DeleteRole(ctx context.Context, req *pb.DeleteRoleReq
 }
 
 // NewRoleServiceServer new a user service.
-func NewRoleServiceServer(client *biz.RoleServiceBiz) *RoleServiceServer {
+func NewRoleServiceServer(r runtime.Runtime, client *biz.RoleServiceBiz) *RoleServiceServer {
 	return &RoleServiceServer{
+		log: log.NewHelper(r.WithLogger(
+			"module", "service/role",
+		)),
 		client: client,
 	}
 }
 
 // NewRoleServiceServerPB new a user service.
-func NewRoleServiceServerPB(client *biz.RoleServiceBiz) pb.RoleServiceServer {
-	return &RoleServiceServer{
-		client: client,
-	}
+func NewRoleServiceServerPB(r runtime.Runtime, client *biz.RoleServiceBiz) pb.RoleServiceServer {
+	return NewRoleServiceServer(r, client)
 }
 
 var _ pb.RoleServiceServer = (*RoleServiceServer)(nil)

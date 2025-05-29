@@ -51,6 +51,7 @@ var ProviderSet = wire.NewSet(
 type Data struct {
 	*ent.Database
 	Delimiter string
+	Log       *log.KHelper
 }
 
 type LoginData struct {
@@ -104,16 +105,17 @@ func NewData(r runtime.Runtime, bootstrap *configs.Bootstrap) (*Data, func(), er
 	if bootstrap == nil {
 		return nil, nil, errors.New("bootstrap is nil")
 	}
-	fmt.Printf("bootstrap: %+v\n", bootstrap)
+	ll := log.NewHelper(r.WithLogger("module", "data"))
+	ll.Infow("msg", "bootstrap config", "value", bootstrap)
 	cfg := bootstrap.GetStorage().GetDatabase()
 	if cfg == nil {
 		return nil, nil, errors.New("data source not found")
 	}
 
 	drv, err := database.Open(cfg)
-	log.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
+	ll.Infow("msg", "connecting to database", "dialect", cfg.Dialect, "source", cfg.Source)
 	if err != nil {
-		log.Errorw("msg", "failed opening connection to database", "error", err)
+		ll.Errorw("msg", "failed opening connection to database", "error", err)
 		return nil, nil, err
 	}
 
@@ -135,12 +137,13 @@ func NewData(r runtime.Runtime, bootstrap *configs.Bootstrap) (*Data, func(), er
 	}
 
 	data := &Data{
+		Log:       ll,
 		Database:  db,
 		Delimiter: TreePathDelimiter,
 	}
 
 	return data, func() {
-		log.Info("closing the data resources")
+		ll.Info("closing the data resources")
 		if err := drv.Close(); err != nil {
 			log.Error(err)
 		}

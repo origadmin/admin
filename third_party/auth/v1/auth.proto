@@ -7,7 +7,7 @@ import "buf/validate/validate.proto";
 
 option cc_enable_arenas = true;
 option csharp_namespace = "OrigAdmin.Runtime.Auth.V1";
-option go_package = "github.com/origadmin/runtime/gen/go/auth/v1;authv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/auth/v1;authv1";
 option java_multiple_files = true;
 option java_outer_classname = "AuthProto";
 option java_package = "com.github.origadmin.runtime.auth.v1";

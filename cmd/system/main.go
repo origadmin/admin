@@ -7,15 +7,14 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log/slog"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/encoding"
+	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-
 	"github.com/origadmin/toolkits/codec/toml"
 
 	_ "origadmin/application/admin/contrib/consul/config"
@@ -50,7 +49,6 @@ func main() {
 
 	// the release mode, work dir sets to empty, use config path as work dir
 	if debug {
-		fmt.Println("debug mode")
 		flags.SetEnv("debug")
 		flags.SetConfigPath("resources/configs/config.toml")
 		flags.SetWorkDir(".")
@@ -71,14 +69,15 @@ func main() {
 	//	"span.id", tracing.SpanID(),
 	//)
 	//log.SetLogger(l)
-	log.Infof("bootstrap flags: %+v\n", flags)
+	ll := log.NewHelper(log.GetLogger())
+	ll.Infof("bootstrap flags: %+v", flags)
 	if err := loader.Bootstrap(context.Background(), flags, buildInjectors); err != nil {
-		log.Fatalf("failed to bootstrap: %s", err.Error())
+		ll.Infof("failed to bootstrap: %s", err.Error())
 		return
 	}
 }
 
 // NewApp new app with runtime and injector
-func NewApp(r runtime.Runtime, injector *loader.Injector) *kratos.App {
-	return r.CreateApp(injector.Servers...)
+func NewApp(r runtime.Runtime, servers []transport.Server) *kratos.App {
+	return r.CreateApp(servers...)
 }

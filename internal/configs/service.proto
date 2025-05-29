@@ -18,7 +18,7 @@ message ServiceCore {
 
 message ServiceServer {
   ServiceCore core = 1 [json_name = "core"];
-  config.v1.Service service = 200 [json_name = "service"];
+  repeated config.v1.Service services = 200 [json_name = "services"];
   middleware.v1.Middleware middleware = 300 [json_name = "middleware"];
 }
 

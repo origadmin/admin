@@ -15,14 +15,14 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// PermissionServiceAgent is a menu service.
-type PermissionServiceAgent struct {
+// PermissionServiceBridge is a menu service.
+type PermissionServiceBridge struct {
 	resp.Response
 
 	client pb.PermissionServiceClient
 }
 
-func (s PermissionServiceAgent) CreatePermission(ctx context.Context, request *pb.CreatePermissionRequest) (*pb.CreatePermissionResponse, error) {
+func (s PermissionServiceBridge) CreatePermission(ctx context.Context, request *pb.CreatePermissionRequest) (*pb.CreatePermissionResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreatePermission(ctx, request)
 	if err != nil {
@@ -35,7 +35,7 @@ func (s PermissionServiceAgent) CreatePermission(ctx context.Context, request *p
 	return nil, nil
 }
 
-func (s PermissionServiceAgent) DeletePermission(ctx context.Context, request *pb.DeletePermissionRequest) (*pb.DeletePermissionResponse, error) {
+func (s PermissionServiceBridge) DeletePermission(ctx context.Context, request *pb.DeletePermissionRequest) (*pb.DeletePermissionResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	_, err := s.client.DeletePermission(ctx, request)
 	if err != nil {
@@ -48,7 +48,7 @@ func (s PermissionServiceAgent) DeletePermission(ctx context.Context, request *p
 	return nil, nil
 }
 
-func (s PermissionServiceAgent) GetPermission(ctx context.Context, request *pb.GetPermissionRequest) (*pb.GetPermissionResponse, error) {
+func (s PermissionServiceBridge) GetPermission(ctx context.Context, request *pb.GetPermissionRequest) (*pb.GetPermissionResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetPermission(ctx, request)
 	if err != nil {
@@ -61,7 +61,7 @@ func (s PermissionServiceAgent) GetPermission(ctx context.Context, request *pb.G
 	return nil, nil
 }
 
-func (s PermissionServiceAgent) ListPermissions(ctx context.Context, request *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
+func (s PermissionServiceBridge) ListPermissions(ctx context.Context, request *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListPermissions(ctx, request)
 	if err != nil {
@@ -76,7 +76,7 @@ func (s PermissionServiceAgent) ListPermissions(ctx context.Context, request *pb
 	return nil, nil
 }
 
-func (s PermissionServiceAgent) UpdatePermission(ctx context.Context, request *pb.UpdatePermissionRequest) (*pb.UpdatePermissionResponse, error) {
+func (s PermissionServiceBridge) UpdatePermission(ctx context.Context, request *pb.UpdatePermissionRequest) (*pb.UpdatePermissionResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdatePermission(ctx, request)
 	if err != nil {
@@ -89,18 +89,18 @@ func (s PermissionServiceAgent) UpdatePermission(ctx context.Context, request *p
 	return nil, nil
 }
 
-// NewPermissionServiceAgent new a menu service.
-func NewPermissionServiceAgent(client pb.PermissionServiceClient) *PermissionServiceAgent {
-	return &PermissionServiceAgent{client: client}
+// NewPermissionServiceBridge new a menu service.
+func NewPermissionServiceBridge(client pb.PermissionServiceClient) *PermissionServiceBridge {
+	return &PermissionServiceBridge{client: client}
 }
 
-// NewPermissionServiceAgentPB new a menu service.
-func NewPermissionServiceAgentPB(client pb.PermissionServiceClient) pb.PermissionServiceAgent {
-	return &PermissionServiceAgent{client: client}
+// NewPermissionServiceBridgePB new a menu service.
+func NewPermissionServiceBridgePB(client pb.PermissionServiceClient) pb.PermissionServiceBridge {
+	return &PermissionServiceBridge{client: client}
 }
-func NewPermissionServiceAgentClient(client *service.GRPCClient) pb.PermissionServiceAgent {
+func NewPermissionServiceBridgeClient(client *service.GRPCClient) pb.PermissionServiceBridge {
 	cli := pb.NewPermissionServiceClient(client)
-	return NewPermissionServiceAgent(cli)
+	return NewPermissionServiceBridge(cli)
 }
 
-var _ pb.PermissionServiceAgent = (*PermissionServiceAgent)(nil)
+var _ pb.PermissionServiceBridge = (*PermissionServiceBridge)(nil)

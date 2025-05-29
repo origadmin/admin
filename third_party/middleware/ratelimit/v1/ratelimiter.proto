@@ -7,7 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
 option cc_enable_arenas = true;
-option go_package = "github.com/origadmin/runtime/gen/go/middleware/ratelimit/v1;ratelimitv1";
+option go_package = "github.com/origadmin/runtime/api/gen/go/middleware/ratelimit/v1;ratelimitv1";
 option java_multiple_files = true;
 option java_outer_classname = "RateLimitProto";
 option java_package = "com.github.origadmin.runtime.middleware.ratelimit.v1";

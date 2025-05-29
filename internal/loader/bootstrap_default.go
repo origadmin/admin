@@ -8,17 +8,16 @@ package loader
 import (
 	"time"
 
-	configv1 "github.com/origadmin/runtime/gen/go/config/v1"
-	jwtv1 "github.com/origadmin/runtime/gen/go/middleware/jwt/v1"
-	"github.com/origadmin/runtime/gen/go/middleware/metrics/v1"
-	"github.com/origadmin/runtime/gen/go/middleware/ratelimit/v1"
-	"github.com/origadmin/runtime/gen/go/middleware/selector/v1"
-	middlewarev1 "github.com/origadmin/runtime/gen/go/middleware/v1"
-	"github.com/origadmin/runtime/gen/go/middleware/validator/v1"
-	sjwtv1 "github.com/origadmin/runtime/gen/go/security/jwt/v1"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	middlewarev1 "github.com/origadmin/runtime/api/gen/go/middleware/v1"
+	jwtv1 "github.com/origadmin/runtime/api/gen/go/middleware/v1/jwt"
+	"github.com/origadmin/runtime/api/gen/go/middleware/v1/metrics"
+	"github.com/origadmin/runtime/api/gen/go/middleware/v1/ratelimit"
+	"github.com/origadmin/runtime/api/gen/go/middleware/v1/selector"
+	"github.com/origadmin/runtime/api/gen/go/middleware/v1/validator"
+	sjwtv1 "github.com/origadmin/runtime/api/gen/go/security/jwt/v1"
 
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/configs/services"
 )
 
 const (
@@ -38,9 +37,9 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Entry: &configs.Bootstrap_Entry{
 			Scheme: "http",
 		},
-		Services: []*services.Service{
-			{
-				Service: &configv1.Service{
+		Server: &configs.ServiceServer{
+			Services: []*configv1.Service{
+				{
 					Name:            "",
 					DynamicEndpoint: true,
 					Type:            "grpc",
@@ -55,9 +54,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 						Builder: "bbr",
 					},
 				},
-			},
-			{
-				Service: &configv1.Service{
+				{
 					Name:            "",
 					DynamicEndpoint: true,
 					Type:            "http",
@@ -75,7 +72,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 		},
 		Logger:     DefaultLogger(),
 		Storage:    DefaultStorage(),
-		Registry:   DefaultRegistry(),
+		Discovery:  DefaultDiscovery(),
 		Middleware: DefaultServiceMiddleware(),
 		Security: &configs.SecurityConfig{
 			Security: &configv1.Security{
@@ -135,7 +132,7 @@ func DefaultLogger() *configv1.Logger {
 		Default:       true,
 		Name:          "output.log",
 		Format:        "json",
-		Level:         configv1.LoggerLevel_LOGGER_LEVEL_INFO,
+		Level:         "info",
 		Stdout:        true,
 		DisableCaller: false,
 		CallerSkip:    0,
@@ -293,11 +290,11 @@ func DefaultServiceMessage() *configv1.Message {
 	}
 }
 
-func DefaultRegistry() *configv1.Registry {
-	return &configv1.Registry{
+func DefaultDiscovery() *configv1.Discovery {
+	return &configv1.Discovery{
 		Debug: false,
 		Type:  "consul",
-		Consul: &configv1.Registry_Consul{
+		Consul: &configv1.Discovery_Consul{
 			Address:                        "${consul_address:127.0.0.1:8500}",
 			Scheme:                         "http",
 			Token:                          "",

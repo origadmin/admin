@@ -15,7 +15,7 @@ import (
 )
 
 func NewRegistrar(bootstrap *configs.Bootstrap) (registry.KRegistrar, error) {
-	cfg := bootstrap.GetRegistry()
+	cfg := bootstrap.GetDiscovery()
 	if cfg == nil {
 		return nil, errors.New("registry config is nil")
 	}
@@ -27,7 +27,7 @@ func NewRegistrar(bootstrap *configs.Bootstrap) (registry.KRegistrar, error) {
 }
 
 func NewDiscovery(bootstrap *configs.Bootstrap) (registry.KDiscovery, error) {
-	cfg := bootstrap.GetRegistry()
+	cfg := bootstrap.GetDiscovery()
 	if cfg == nil {
 		return nil, errors.New("registry config is nil")
 	}
