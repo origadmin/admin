@@ -6,25 +6,12 @@
 package dto
 
 import (
-	"net/http"
-
-	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	pb "origadmin/application/admin/api/v1/services/auth"
 	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/schema/types"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-)
-
-var (
-	// ErrUserNotFound is user not found.
-	ErrUserNotFound      = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
-	ErrInvalidCaptchaID  = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), http.StatusBadRequest, "invalid captcha id")
-	ErrInvalidPassword   = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), http.StatusBadRequest, "invalid password")
-	ErrInvalidUsername   = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), http.StatusBadRequest, "invalid username")
-	ErrCaptchaIDNotFound = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), http.StatusBadRequest, "captcha id not found")
 )
 
 const (
@@ -88,7 +75,7 @@ func ConvertUser2PB(goModel *User) (pbModel *UserPB) {
 	for _, role := range goModel.Edges.Roles {
 		pbModel.RoleIds = append(pbModel.RoleIds, role.ID)
 	}
-	pbModel.Roles = ConvertRoles(goModel.Edges.Roles)
+	pbModel.Roles = ConvertRoles2PB(goModel.Edges.Roles)
 	return pbModel
 }
 
@@ -215,7 +202,7 @@ func ConvertRole2PB(goModel *Role) (pbModel *RolePB) {
 	for _, permission := range goModel.Edges.Permissions {
 		pbModel.PermissionIds = append(pbModel.PermissionIds, int64(permission.ID))
 	}
-	pbModel.Permissions = ConvertPermissions(goModel.Edges.Permissions)
+	pbModel.Permissions = ConvertPermissions2PB(goModel.Edges.Permissions)
 	//pbModel.IsSystem = goModel.IsSystem
 	return pbModel
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -31,7 +32,7 @@ func (repo personalRepo) GetPersonalProfile(ctx context.Context, in *pb.GetPerso
 	}
 	if userid == "admin" {
 		return &pb.GetPersonalProfileResponse{
-			User: &pb.User{
+			User: &typespb.User{
 				Id:       0,
 				Uuid:     "admin",
 				Username: "admin",
