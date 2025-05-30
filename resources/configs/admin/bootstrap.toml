@@ -1,4 +1,4 @@
-Name = "origadmin.agent.service.admin.v1"
+Name = "origadmin.proxy.service.admin.v1"
 Version = "v1.0.0"
 CryptoType = "argon2"
 Mode = "singleton"

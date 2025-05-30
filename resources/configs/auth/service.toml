@@ -1,0 +1,213 @@
+[[Server.Services]]
+Name = ""
+Type = "grpc"
+DynamicEndpoint = true
+[Server.Services.Grpc]
+Network = "tcp"
+Addr = "${grpc_address:0.0.0.0:18000}"
+UseTls = false
+Timeout = 0
+ShutdownTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+IdleTimeout = 0
+Endpoint = ""
+[Server.Services.Websocket]
+Network = ""
+Addr = ""
+Path = ""
+Codec = ""
+Timeout = 0
+[Server.Services.Message]
+Type = "none"
+Name = ""
+[Server.Services.Message.Mqtt]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Kafka]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Rabbitmq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Activemq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Nats]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Nsq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Pulsar]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Redis]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Rocketmq]
+Endpoint = ""
+Codec = ""
+EnableTrace = false
+NameServerDomain = ""
+AccessKey = ""
+SecretKey = ""
+SecurityToken = ""
+Namespace = ""
+InstanceName = ""
+GroupName = ""
+[Server.Services.Task]
+Type = "none"
+Name = ""
+[Server.Services.Task.Asynq]
+Endpoint = ""
+Password = ""
+Db = 0
+Location = ""
+[Server.Services.Task.Machinery]
+[Server.Services.Task.Cron]
+Addr = ""
+[Server.Services.Middleware]
+EnabledMiddlewares = ["logging", "recovery", "tracing", "circuit_breaker", "metadata", "rate_limiter", "metrics", "validator", "jwt", "selector"]
+[Server.Services.Middleware.Metadata]
+Enabled = true
+Prefix = ""
+[Server.Services.Middleware.RateLimiter]
+Enabled = true
+Name = "bbr"
+Period = 0
+XRatelimitLimit = 0
+XRatelimitRemaining = 0
+XRatelimitReset = 0
+RetryAfter = 0
+[Server.Services.Middleware.Metrics]
+Enabled = true
+[Server.Services.Middleware.Validator]
+Enabled = true
+Version = 1
+FailFast = true
+[Server.Services.Middleware.Jwt]
+Enabled = false
+Subject = ""
+ClaimType = ""
+[Server.Services.Middleware.Jwt.Config]
+SigningMethod = "HS512"
+Key = "%VH_C!Vpa$_aK2kOynB&q+x=4$27&Ios"
+Key2 = "can empty next version fixed"
+AccessTokenLifetime = 900000000000
+RefreshTokenLifetime = 259200000000000
+Issuer = "localhost"
+TokenType = "Bearer"
+[Server.Services.Middleware.Selector]
+Enabled = false
+Regex = ""
+[Server.Services.Selector]
+Version = "v1.0.0"
+Builder = "bbr"
+
+[[Server.Services]]
+Name = ""
+Type = "http"
+DynamicEndpoint = true
+[Server.Services.Http]
+Network = "tcp"
+Addr = "${http_address:0.0.0.0:18100}"
+UseTls = false
+Timeout = 0
+ShutdownTimeout = 0
+ReadTimeout = 0
+WriteTimeout = 0
+IdleTimeout = 0
+Endpoint = ""
+[Server.Services.Websocket]
+Network = ""
+Addr = ""
+Path = ""
+Codec = ""
+Timeout = 0
+[Server.Services.Message]
+Type = "none"
+Name = ""
+[Server.Services.Message.Mqtt]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Kafka]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Rabbitmq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Activemq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Nats]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Nsq]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Pulsar]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Redis]
+Endpoint = ""
+Codec = ""
+[Server.Services.Message.Rocketmq]
+Endpoint = ""
+Codec = ""
+EnableTrace = false
+NameServerDomain = ""
+AccessKey = ""
+SecretKey = ""
+SecurityToken = ""
+Namespace = ""
+InstanceName = ""
+GroupName = ""
+[Server.Services.Task]
+Type = "none"
+Name = ""
+[Server.Services.Task.Asynq]
+Endpoint = ""
+Password = ""
+Db = 0
+Location = ""
+[Server.Services.Task.Machinery]
+[Server.Services.Task.Cron]
+Addr = ""
+[Server.Services.Middleware]
+EnabledMiddlewares = ["logging", "recovery", "tracing", "circuit_breaker", "metadata", "rate_limiter", "metrics", "validator", "jwt", "selector"]
+[Server.Services.Middleware.Metadata]
+Enabled = true
+Prefix = ""
+[Server.Services.Middleware.RateLimiter]
+Enabled = true
+Name = "bbr"
+Period = 0
+XRatelimitLimit = 0
+XRatelimitRemaining = 0
+XRatelimitReset = 0
+RetryAfter = 0
+[Server.Services.Middleware.Metrics]
+Enabled = true
+[Server.Services.Middleware.Validator]
+Enabled = true
+Version = 1
+FailFast = true
+[Server.Services.Middleware.Jwt]
+Enabled = false
+Subject = ""
+ClaimType = ""
+[Server.Services.Middleware.Jwt.Config]
+SigningMethod = "HS512"
+Key = "%VH_C!Vpa$_aK2kOynB&q+x=4$27&Ios"
+Key2 = "can empty next version fixed"
+AccessTokenLifetime = 900000000000
+RefreshTokenLifetime = 259200000000000
+Issuer = "localhost"
+TokenType = "Bearer"
+[Server.Services.Middleware.Selector]
+Enabled = false
+Regex = ""
+[Server.Services.Selector]
+Version = "v1.0.0"
+Builder = "bbr"
