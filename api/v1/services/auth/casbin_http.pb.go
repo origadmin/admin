@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.8.4
 // - protoc             (unknown)
-// source: system/casbin.proto
+// source: auth/casbin.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,9 +19,9 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationCasbinSourceServiceListGroupings = "/api.v1.services.system.CasbinSourceService/ListGroupings"
-const OperationCasbinSourceServiceListPolicies = "/api.v1.services.system.CasbinSourceService/ListPolicies"
-const OperationCasbinSourceServiceWatchUpdate = "/api.v1.services.system.CasbinSourceService/WatchUpdate"
+const OperationCasbinSourceServiceListGroupings = "/api.v1.services.auth.CasbinSourceService/ListGroupings"
+const OperationCasbinSourceServiceListPolicies = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
+const OperationCasbinSourceServiceWatchUpdate = "/api.v1.services.auth.CasbinSourceService/WatchUpdate"
 
 type CasbinSourceServiceHTTPServer interface {
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)

@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: system/casbin.proto
+// source: auth/casbin.proto
 
-package system
+package auth
 
 import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -30,7 +30,7 @@ type ListPoliciesRequest struct {
 
 func (x *ListPoliciesRequest) Reset() {
 	*x = ListPoliciesRequest{}
-	mi := &file_system_casbin_proto_msgTypes[0]
+	mi := &file_auth_casbin_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -42,7 +42,7 @@ func (x *ListPoliciesRequest) String() string {
 func (*ListPoliciesRequest) ProtoMessage() {}
 
 func (x *ListPoliciesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[0]
+	mi := &file_auth_casbin_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -55,7 +55,7 @@ func (x *ListPoliciesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPoliciesRequest.ProtoReflect.Descriptor instead.
 func (*ListPoliciesRequest) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{0}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{0}
 }
 
 type ListPoliciesResponse struct {
@@ -67,7 +67,7 @@ type ListPoliciesResponse struct {
 
 func (x *ListPoliciesResponse) Reset() {
 	*x = ListPoliciesResponse{}
-	mi := &file_system_casbin_proto_msgTypes[1]
+	mi := &file_auth_casbin_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -79,7 +79,7 @@ func (x *ListPoliciesResponse) String() string {
 func (*ListPoliciesResponse) ProtoMessage() {}
 
 func (x *ListPoliciesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[1]
+	mi := &file_auth_casbin_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -92,7 +92,7 @@ func (x *ListPoliciesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPoliciesResponse.ProtoReflect.Descriptor instead.
 func (*ListPoliciesResponse) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{1}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListPoliciesResponse) GetRules() []*PolicyRule {
@@ -112,7 +112,7 @@ type PolicyRule struct {
 
 func (x *PolicyRule) Reset() {
 	*x = PolicyRule{}
-	mi := &file_system_casbin_proto_msgTypes[2]
+	mi := &file_auth_casbin_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -124,7 +124,7 @@ func (x *PolicyRule) String() string {
 func (*PolicyRule) ProtoMessage() {}
 
 func (x *PolicyRule) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[2]
+	mi := &file_auth_casbin_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -137,7 +137,7 @@ func (x *PolicyRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PolicyRule.ProtoReflect.Descriptor instead.
 func (*PolicyRule) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{2}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *PolicyRule) GetPType() string {
@@ -162,7 +162,7 @@ type ListGroupingsRequest struct {
 
 func (x *ListGroupingsRequest) Reset() {
 	*x = ListGroupingsRequest{}
-	mi := &file_system_casbin_proto_msgTypes[3]
+	mi := &file_auth_casbin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -174,7 +174,7 @@ func (x *ListGroupingsRequest) String() string {
 func (*ListGroupingsRequest) ProtoMessage() {}
 
 func (x *ListGroupingsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[3]
+	mi := &file_auth_casbin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -187,7 +187,7 @@ func (x *ListGroupingsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupingsRequest.ProtoReflect.Descriptor instead.
 func (*ListGroupingsRequest) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{3}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{3}
 }
 
 type ListGroupingsResponse struct {
@@ -199,7 +199,7 @@ type ListGroupingsResponse struct {
 
 func (x *ListGroupingsResponse) Reset() {
 	*x = ListGroupingsResponse{}
-	mi := &file_system_casbin_proto_msgTypes[4]
+	mi := &file_auth_casbin_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -211,7 +211,7 @@ func (x *ListGroupingsResponse) String() string {
 func (*ListGroupingsResponse) ProtoMessage() {}
 
 func (x *ListGroupingsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[4]
+	mi := &file_auth_casbin_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -224,7 +224,7 @@ func (x *ListGroupingsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListGroupingsResponse.ProtoReflect.Descriptor instead.
 func (*ListGroupingsResponse) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{4}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListGroupingsResponse) GetRules() []*GroupingRule {
@@ -244,7 +244,7 @@ type GroupingRule struct {
 
 func (x *GroupingRule) Reset() {
 	*x = GroupingRule{}
-	mi := &file_system_casbin_proto_msgTypes[5]
+	mi := &file_auth_casbin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -256,7 +256,7 @@ func (x *GroupingRule) String() string {
 func (*GroupingRule) ProtoMessage() {}
 
 func (x *GroupingRule) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[5]
+	mi := &file_auth_casbin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -269,7 +269,7 @@ func (x *GroupingRule) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GroupingRule.ProtoReflect.Descriptor instead.
 func (*GroupingRule) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{5}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GroupingRule) GetPType() string {
@@ -296,7 +296,7 @@ type StreamRulesRequest struct {
 
 func (x *StreamRulesRequest) Reset() {
 	*x = StreamRulesRequest{}
-	mi := &file_system_casbin_proto_msgTypes[6]
+	mi := &file_auth_casbin_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -308,7 +308,7 @@ func (x *StreamRulesRequest) String() string {
 func (*StreamRulesRequest) ProtoMessage() {}
 
 func (x *StreamRulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[6]
+	mi := &file_auth_casbin_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -321,7 +321,7 @@ func (x *StreamRulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamRulesRequest.ProtoReflect.Descriptor instead.
 func (*StreamRulesRequest) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{6}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *StreamRulesRequest) GetWithPolicies() bool {
@@ -351,7 +351,7 @@ type StreamRulesResponse struct {
 
 func (x *StreamRulesResponse) Reset() {
 	*x = StreamRulesResponse{}
-	mi := &file_system_casbin_proto_msgTypes[7]
+	mi := &file_auth_casbin_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -363,7 +363,7 @@ func (x *StreamRulesResponse) String() string {
 func (*StreamRulesResponse) ProtoMessage() {}
 
 func (x *StreamRulesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[7]
+	mi := &file_auth_casbin_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -376,7 +376,7 @@ func (x *StreamRulesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamRulesResponse.ProtoReflect.Descriptor instead.
 func (*StreamRulesResponse) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{7}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *StreamRulesResponse) GetRuleType() isStreamRulesResponse_RuleType {
@@ -429,7 +429,7 @@ type WatchUpdateRequest struct {
 
 func (x *WatchUpdateRequest) Reset() {
 	*x = WatchUpdateRequest{}
-	mi := &file_system_casbin_proto_msgTypes[8]
+	mi := &file_auth_casbin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -441,7 +441,7 @@ func (x *WatchUpdateRequest) String() string {
 func (*WatchUpdateRequest) ProtoMessage() {}
 
 func (x *WatchUpdateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[8]
+	mi := &file_auth_casbin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -454,7 +454,7 @@ func (x *WatchUpdateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WatchUpdateRequest.ProtoReflect.Descriptor instead.
 func (*WatchUpdateRequest) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{8}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *WatchUpdateRequest) GetLastModified() int64 {
@@ -473,7 +473,7 @@ type WatchUpdateResponse struct {
 
 func (x *WatchUpdateResponse) Reset() {
 	*x = WatchUpdateResponse{}
-	mi := &file_system_casbin_proto_msgTypes[9]
+	mi := &file_auth_casbin_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -485,7 +485,7 @@ func (x *WatchUpdateResponse) String() string {
 func (*WatchUpdateResponse) ProtoMessage() {}
 
 func (x *WatchUpdateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_casbin_proto_msgTypes[9]
+	mi := &file_auth_casbin_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -498,7 +498,7 @@ func (x *WatchUpdateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WatchUpdateResponse.ProtoReflect.Descriptor instead.
 func (*WatchUpdateResponse) Descriptor() ([]byte, []int) {
-	return file_system_casbin_proto_rawDescGZIP(), []int{9}
+	return file_auth_casbin_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *WatchUpdateResponse) GetModifiedDate() int64 {
@@ -508,80 +508,80 @@ func (x *WatchUpdateResponse) GetModifiedDate() int64 {
 	return 0
 }
 
-var File_system_casbin_proto protoreflect.FileDescriptor
+var File_auth_casbin_proto protoreflect.FileDescriptor
 
-const file_system_casbin_proto_rawDesc = "" +
+const file_auth_casbin_proto_rawDesc = "" +
 	"\n" +
-	"\x13system/casbin.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\"\x15\n" +
-	"\x13ListPoliciesRequest\"P\n" +
-	"\x14ListPoliciesResponse\x128\n" +
-	"\x05rules\x18\x01 \x03(\v2\".api.v1.services.system.PolicyRuleR\x05rules\"<\n" +
+	"\x11auth/casbin.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\"\x15\n" +
+	"\x13ListPoliciesRequest\"N\n" +
+	"\x14ListPoliciesResponse\x126\n" +
+	"\x05rules\x18\x01 \x03(\v2 .api.v1.services.auth.PolicyRuleR\x05rules\"<\n" +
 	"\n" +
 	"PolicyRule\x12\x16\n" +
 	"\x06p_type\x18\x01 \x01(\tR\x06p_type\x12\x16\n" +
 	"\x06params\x18\x02 \x03(\tR\x06params\"\x16\n" +
-	"\x14ListGroupingsRequest\"S\n" +
-	"\x15ListGroupingsResponse\x12:\n" +
-	"\x05rules\x18\x01 \x03(\v2$.api.v1.services.system.GroupingRuleR\x05rules\">\n" +
+	"\x14ListGroupingsRequest\"Q\n" +
+	"\x15ListGroupingsResponse\x128\n" +
+	"\x05rules\x18\x01 \x03(\v2\".api.v1.services.auth.GroupingRuleR\x05rules\">\n" +
 	"\fGroupingRule\x12\x16\n" +
 	"\x06p_type\x18\x01 \x01(\tR\x06p_type\x12\x16\n" +
 	"\x06params\x18\x02 \x03(\tR\x06params\"b\n" +
 	"\x12StreamRulesRequest\x12$\n" +
 	"\rwith_policies\x18\x01 \x01(\bR\rwith_policies\x12&\n" +
-	"\x0ewith_groupings\x18\x02 \x01(\bR\x0ewith_groupings\"\xa4\x01\n" +
-	"\x13StreamRulesResponse\x12<\n" +
-	"\x06policy\x18\x01 \x01(\v2\".api.v1.services.system.PolicyRuleH\x00R\x06policy\x12B\n" +
-	"\bgrouping\x18\x02 \x01(\v2$.api.v1.services.system.GroupingRuleH\x00R\bgroupingB\v\n" +
+	"\x0ewith_groupings\x18\x02 \x01(\bR\x0ewith_groupings\"\xa0\x01\n" +
+	"\x13StreamRulesResponse\x12:\n" +
+	"\x06policy\x18\x01 \x01(\v2 .api.v1.services.auth.PolicyRuleH\x00R\x06policy\x12@\n" +
+	"\bgrouping\x18\x02 \x01(\v2\".api.v1.services.auth.GroupingRuleH\x00R\bgroupingB\v\n" +
 	"\trule_type\":\n" +
 	"\x12WatchUpdateRequest\x12$\n" +
 	"\rlast_modified\x18\x01 \x01(\x03R\rlast_modified\";\n" +
 	"\x13WatchUpdateResponse\x12$\n" +
-	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\xb4\x04\n" +
-	"\x13CasbinSourceService\x12\x86\x01\n" +
-	"\fListPolicies\x12+.api.v1.services.system.ListPoliciesRequest\x1a,.api.v1.services.system.ListPoliciesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15b\x01*\x12\x10/casbin/policies\x12\x8a\x01\n" +
-	"\rListGroupings\x12,.api.v1.services.system.ListGroupingsRequest\x1a-.api.v1.services.system.ListGroupingsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16b\x01*\x12\x11/casbin/groupings\x12\x80\x01\n" +
-	"\vWatchUpdate\x12*.api.v1.services.system.WatchUpdateRequest\x1a+.api.v1.services.system.WatchUpdateResponse\"\x18\x82\xd3\xe4\x93\x02\x12b\x01*\x12\r/casbin/watch\x12\x83\x01\n" +
-	"\vStreamRules\x12*.api.v1.services.system.StreamRulesRequest\x1a+.api.v1.services.system.StreamRulesResponse\"\x19\x82\xd3\xe4\x93\x02\x13b\x01*\x12\x0e/casbin/stream0\x01B\xc0\x01\n" +
-	"\x1acom.api.v1.services.systemB\vCasbinProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\xa2\x04\n" +
+	"\x13CasbinSourceService\x12\x82\x01\n" +
+	"\fListPolicies\x12).api.v1.services.auth.ListPoliciesRequest\x1a*.api.v1.services.auth.ListPoliciesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15b\x01*\x12\x10/casbin/policies\x12\x86\x01\n" +
+	"\rListGroupings\x12*.api.v1.services.auth.ListGroupingsRequest\x1a+.api.v1.services.auth.ListGroupingsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16b\x01*\x12\x11/casbin/groupings\x12|\n" +
+	"\vWatchUpdate\x12(.api.v1.services.auth.WatchUpdateRequest\x1a).api.v1.services.auth.WatchUpdateResponse\"\x18\x82\xd3\xe4\x93\x02\x12b\x01*\x12\r/casbin/watch\x12\x7f\n" +
+	"\vStreamRules\x12(.api.v1.services.auth.StreamRulesRequest\x1a).api.v1.services.auth.StreamRulesResponse\"\x19\x82\xd3\xe4\x93\x02\x13b\x01*\x12\x0e/casbin/stream0\x01B\xb2\x01\n" +
+	"\x18com.api.v1.services.authB\vCasbinProtoP\x01Z\x15v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
-	file_system_casbin_proto_rawDescOnce sync.Once
-	file_system_casbin_proto_rawDescData []byte
+	file_auth_casbin_proto_rawDescOnce sync.Once
+	file_auth_casbin_proto_rawDescData []byte
 )
 
-func file_system_casbin_proto_rawDescGZIP() []byte {
-	file_system_casbin_proto_rawDescOnce.Do(func() {
-		file_system_casbin_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_system_casbin_proto_rawDesc), len(file_system_casbin_proto_rawDesc)))
+func file_auth_casbin_proto_rawDescGZIP() []byte {
+	file_auth_casbin_proto_rawDescOnce.Do(func() {
+		file_auth_casbin_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_auth_casbin_proto_rawDesc), len(file_auth_casbin_proto_rawDesc)))
 	})
-	return file_system_casbin_proto_rawDescData
+	return file_auth_casbin_proto_rawDescData
 }
 
-var file_system_casbin_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
-var file_system_casbin_proto_goTypes = []any{
-	(*ListPoliciesRequest)(nil),   // 0: api.v1.services.system.ListPoliciesRequest
-	(*ListPoliciesResponse)(nil),  // 1: api.v1.services.system.ListPoliciesResponse
-	(*PolicyRule)(nil),            // 2: api.v1.services.system.PolicyRule
-	(*ListGroupingsRequest)(nil),  // 3: api.v1.services.system.ListGroupingsRequest
-	(*ListGroupingsResponse)(nil), // 4: api.v1.services.system.ListGroupingsResponse
-	(*GroupingRule)(nil),          // 5: api.v1.services.system.GroupingRule
-	(*StreamRulesRequest)(nil),    // 6: api.v1.services.system.StreamRulesRequest
-	(*StreamRulesResponse)(nil),   // 7: api.v1.services.system.StreamRulesResponse
-	(*WatchUpdateRequest)(nil),    // 8: api.v1.services.system.WatchUpdateRequest
-	(*WatchUpdateResponse)(nil),   // 9: api.v1.services.system.WatchUpdateResponse
+var file_auth_casbin_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_auth_casbin_proto_goTypes = []any{
+	(*ListPoliciesRequest)(nil),   // 0: api.v1.services.auth.ListPoliciesRequest
+	(*ListPoliciesResponse)(nil),  // 1: api.v1.services.auth.ListPoliciesResponse
+	(*PolicyRule)(nil),            // 2: api.v1.services.auth.PolicyRule
+	(*ListGroupingsRequest)(nil),  // 3: api.v1.services.auth.ListGroupingsRequest
+	(*ListGroupingsResponse)(nil), // 4: api.v1.services.auth.ListGroupingsResponse
+	(*GroupingRule)(nil),          // 5: api.v1.services.auth.GroupingRule
+	(*StreamRulesRequest)(nil),    // 6: api.v1.services.auth.StreamRulesRequest
+	(*StreamRulesResponse)(nil),   // 7: api.v1.services.auth.StreamRulesResponse
+	(*WatchUpdateRequest)(nil),    // 8: api.v1.services.auth.WatchUpdateRequest
+	(*WatchUpdateResponse)(nil),   // 9: api.v1.services.auth.WatchUpdateResponse
 }
-var file_system_casbin_proto_depIdxs = []int32{
-	2, // 0: api.v1.services.system.ListPoliciesResponse.rules:type_name -> api.v1.services.system.PolicyRule
-	5, // 1: api.v1.services.system.ListGroupingsResponse.rules:type_name -> api.v1.services.system.GroupingRule
-	2, // 2: api.v1.services.system.StreamRulesResponse.policy:type_name -> api.v1.services.system.PolicyRule
-	5, // 3: api.v1.services.system.StreamRulesResponse.grouping:type_name -> api.v1.services.system.GroupingRule
-	0, // 4: api.v1.services.system.CasbinSourceService.ListPolicies:input_type -> api.v1.services.system.ListPoliciesRequest
-	3, // 5: api.v1.services.system.CasbinSourceService.ListGroupings:input_type -> api.v1.services.system.ListGroupingsRequest
-	8, // 6: api.v1.services.system.CasbinSourceService.WatchUpdate:input_type -> api.v1.services.system.WatchUpdateRequest
-	6, // 7: api.v1.services.system.CasbinSourceService.StreamRules:input_type -> api.v1.services.system.StreamRulesRequest
-	1, // 8: api.v1.services.system.CasbinSourceService.ListPolicies:output_type -> api.v1.services.system.ListPoliciesResponse
-	4, // 9: api.v1.services.system.CasbinSourceService.ListGroupings:output_type -> api.v1.services.system.ListGroupingsResponse
-	9, // 10: api.v1.services.system.CasbinSourceService.WatchUpdate:output_type -> api.v1.services.system.WatchUpdateResponse
-	7, // 11: api.v1.services.system.CasbinSourceService.StreamRules:output_type -> api.v1.services.system.StreamRulesResponse
+var file_auth_casbin_proto_depIdxs = []int32{
+	2, // 0: api.v1.services.auth.ListPoliciesResponse.rules:type_name -> api.v1.services.auth.PolicyRule
+	5, // 1: api.v1.services.auth.ListGroupingsResponse.rules:type_name -> api.v1.services.auth.GroupingRule
+	2, // 2: api.v1.services.auth.StreamRulesResponse.policy:type_name -> api.v1.services.auth.PolicyRule
+	5, // 3: api.v1.services.auth.StreamRulesResponse.grouping:type_name -> api.v1.services.auth.GroupingRule
+	0, // 4: api.v1.services.auth.CasbinSourceService.ListPolicies:input_type -> api.v1.services.auth.ListPoliciesRequest
+	3, // 5: api.v1.services.auth.CasbinSourceService.ListGroupings:input_type -> api.v1.services.auth.ListGroupingsRequest
+	8, // 6: api.v1.services.auth.CasbinSourceService.WatchUpdate:input_type -> api.v1.services.auth.WatchUpdateRequest
+	6, // 7: api.v1.services.auth.CasbinSourceService.StreamRules:input_type -> api.v1.services.auth.StreamRulesRequest
+	1, // 8: api.v1.services.auth.CasbinSourceService.ListPolicies:output_type -> api.v1.services.auth.ListPoliciesResponse
+	4, // 9: api.v1.services.auth.CasbinSourceService.ListGroupings:output_type -> api.v1.services.auth.ListGroupingsResponse
+	9, // 10: api.v1.services.auth.CasbinSourceService.WatchUpdate:output_type -> api.v1.services.auth.WatchUpdateResponse
+	7, // 11: api.v1.services.auth.CasbinSourceService.StreamRules:output_type -> api.v1.services.auth.StreamRulesResponse
 	8, // [8:12] is the sub-list for method output_type
 	4, // [4:8] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -589,12 +589,12 @@ var file_system_casbin_proto_depIdxs = []int32{
 	0, // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_system_casbin_proto_init() }
-func file_system_casbin_proto_init() {
-	if File_system_casbin_proto != nil {
+func init() { file_auth_casbin_proto_init() }
+func file_auth_casbin_proto_init() {
+	if File_auth_casbin_proto != nil {
 		return
 	}
-	file_system_casbin_proto_msgTypes[7].OneofWrappers = []any{
+	file_auth_casbin_proto_msgTypes[7].OneofWrappers = []any{
 		(*StreamRulesResponse_Policy)(nil),
 		(*StreamRulesResponse_Grouping)(nil),
 	}
@@ -602,17 +602,17 @@ func file_system_casbin_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_system_casbin_proto_rawDesc), len(file_system_casbin_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_casbin_proto_rawDesc), len(file_auth_casbin_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_system_casbin_proto_goTypes,
-		DependencyIndexes: file_system_casbin_proto_depIdxs,
-		MessageInfos:      file_system_casbin_proto_msgTypes,
+		GoTypes:           file_auth_casbin_proto_goTypes,
+		DependencyIndexes: file_auth_casbin_proto_depIdxs,
+		MessageInfos:      file_auth_casbin_proto_msgTypes,
 	}.Build()
-	File_system_casbin_proto = out.File
-	file_system_casbin_proto_goTypes = nil
-	file_system_casbin_proto_depIdxs = nil
+	File_auth_casbin_proto = out.File
+	file_auth_casbin_proto_goTypes = nil
+	file_auth_casbin_proto_depIdxs = nil
 }

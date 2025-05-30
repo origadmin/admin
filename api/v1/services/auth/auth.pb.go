@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        (unknown)
-// source: system/auth.proto
+// source: auth/auth.proto
 
-package system
+package auth
 
 import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -33,7 +33,7 @@ type AuthLogoutRequest struct {
 
 func (x *AuthLogoutRequest) Reset() {
 	*x = AuthLogoutRequest{}
-	mi := &file_system_auth_proto_msgTypes[0]
+	mi := &file_auth_auth_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +45,7 @@ func (x *AuthLogoutRequest) String() string {
 func (*AuthLogoutRequest) ProtoMessage() {}
 
 func (x *AuthLogoutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[0]
+	mi := &file_auth_auth_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *AuthLogoutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthLogoutRequest.ProtoReflect.Descriptor instead.
 func (*AuthLogoutRequest) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{0}
+	return file_auth_auth_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *AuthLogoutRequest) GetData() *AuthLogoutRequest_Data {
@@ -77,7 +77,7 @@ type AuthLogoutResponse struct {
 
 func (x *AuthLogoutResponse) Reset() {
 	*x = AuthLogoutResponse{}
-	mi := &file_system_auth_proto_msgTypes[1]
+	mi := &file_auth_auth_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -89,7 +89,7 @@ func (x *AuthLogoutResponse) String() string {
 func (*AuthLogoutResponse) ProtoMessage() {}
 
 func (x *AuthLogoutResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[1]
+	mi := &file_auth_auth_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -102,7 +102,7 @@ func (x *AuthLogoutResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthLogoutResponse.ProtoReflect.Descriptor instead.
 func (*AuthLogoutResponse) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{1}
+	return file_auth_auth_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *AuthLogoutResponse) GetEmpty() *emptypb.Empty {
@@ -128,7 +128,7 @@ type ListAuthResourcesRequest struct {
 
 func (x *ListAuthResourcesRequest) Reset() {
 	*x = ListAuthResourcesRequest{}
-	mi := &file_system_auth_proto_msgTypes[2]
+	mi := &file_auth_auth_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -140,7 +140,7 @@ func (x *ListAuthResourcesRequest) String() string {
 func (*ListAuthResourcesRequest) ProtoMessage() {}
 
 func (x *ListAuthResourcesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[2]
+	mi := &file_auth_auth_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -153,7 +153,7 @@ func (x *ListAuthResourcesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAuthResourcesRequest.ProtoReflect.Descriptor instead.
 func (*ListAuthResourcesRequest) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{2}
+	return file_auth_auth_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListAuthResourcesRequest) GetPageSize() int32 {
@@ -196,7 +196,7 @@ type ListAuthResourcesResponse struct {
 
 func (x *ListAuthResourcesResponse) Reset() {
 	*x = ListAuthResourcesResponse{}
-	mi := &file_system_auth_proto_msgTypes[3]
+	mi := &file_auth_auth_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -208,7 +208,7 @@ func (x *ListAuthResourcesResponse) String() string {
 func (*ListAuthResourcesResponse) ProtoMessage() {}
 
 func (x *ListAuthResourcesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[3]
+	mi := &file_auth_auth_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -221,7 +221,7 @@ func (x *ListAuthResourcesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAuthResourcesResponse.ProtoReflect.Descriptor instead.
 func (*ListAuthResourcesResponse) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{3}
+	return file_auth_auth_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ListAuthResourcesResponse) GetResources() []*types.Resource {
@@ -248,7 +248,7 @@ type CreateTokenRequest struct {
 
 func (x *CreateTokenRequest) Reset() {
 	*x = CreateTokenRequest{}
-	mi := &file_system_auth_proto_msgTypes[4]
+	mi := &file_auth_auth_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -260,7 +260,7 @@ func (x *CreateTokenRequest) String() string {
 func (*CreateTokenRequest) ProtoMessage() {}
 
 func (x *CreateTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[4]
+	mi := &file_auth_auth_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -273,7 +273,7 @@ func (x *CreateTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTokenRequest.ProtoReflect.Descriptor instead.
 func (*CreateTokenRequest) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{4}
+	return file_auth_auth_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreateTokenRequest) GetData() *CreateTokenRequest_Data {
@@ -293,7 +293,7 @@ type CreateTokenResponse struct {
 
 func (x *CreateTokenResponse) Reset() {
 	*x = CreateTokenResponse{}
-	mi := &file_system_auth_proto_msgTypes[5]
+	mi := &file_auth_auth_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -305,7 +305,7 @@ func (x *CreateTokenResponse) String() string {
 func (*CreateTokenResponse) ProtoMessage() {}
 
 func (x *CreateTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[5]
+	mi := &file_auth_auth_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -318,7 +318,7 @@ func (x *CreateTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTokenResponse.ProtoReflect.Descriptor instead.
 func (*CreateTokenResponse) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{5}
+	return file_auth_auth_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *CreateTokenResponse) GetToken() string {
@@ -338,7 +338,7 @@ type ValidateTokenRequest struct {
 
 func (x *ValidateTokenRequest) Reset() {
 	*x = ValidateTokenRequest{}
-	mi := &file_system_auth_proto_msgTypes[6]
+	mi := &file_auth_auth_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -350,7 +350,7 @@ func (x *ValidateTokenRequest) String() string {
 func (*ValidateTokenRequest) ProtoMessage() {}
 
 func (x *ValidateTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[6]
+	mi := &file_auth_auth_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -363,7 +363,7 @@ func (x *ValidateTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateTokenRequest.ProtoReflect.Descriptor instead.
 func (*ValidateTokenRequest) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{6}
+	return file_auth_auth_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ValidateTokenRequest) GetToken() string {
@@ -384,7 +384,7 @@ type ValidateTokenResponse struct {
 
 func (x *ValidateTokenResponse) Reset() {
 	*x = ValidateTokenResponse{}
-	mi := &file_system_auth_proto_msgTypes[7]
+	mi := &file_auth_auth_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -396,7 +396,7 @@ func (x *ValidateTokenResponse) String() string {
 func (*ValidateTokenResponse) ProtoMessage() {}
 
 func (x *ValidateTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[7]
+	mi := &file_auth_auth_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -409,7 +409,7 @@ func (x *ValidateTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateTokenResponse.ProtoReflect.Descriptor instead.
 func (*ValidateTokenResponse) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{7}
+	return file_auth_auth_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ValidateTokenResponse) GetIsValid() bool {
@@ -436,7 +436,7 @@ type DestroyTokenRequest struct {
 
 func (x *DestroyTokenRequest) Reset() {
 	*x = DestroyTokenRequest{}
-	mi := &file_system_auth_proto_msgTypes[8]
+	mi := &file_auth_auth_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -448,7 +448,7 @@ func (x *DestroyTokenRequest) String() string {
 func (*DestroyTokenRequest) ProtoMessage() {}
 
 func (x *DestroyTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[8]
+	mi := &file_auth_auth_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -461,7 +461,7 @@ func (x *DestroyTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DestroyTokenRequest.ProtoReflect.Descriptor instead.
 func (*DestroyTokenRequest) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{8}
+	return file_auth_auth_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DestroyTokenRequest) GetData() *DestroyTokenRequest_Data {
@@ -481,7 +481,7 @@ type DestroyTokenResponse struct {
 
 func (x *DestroyTokenResponse) Reset() {
 	*x = DestroyTokenResponse{}
-	mi := &file_system_auth_proto_msgTypes[9]
+	mi := &file_auth_auth_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -493,7 +493,7 @@ func (x *DestroyTokenResponse) String() string {
 func (*DestroyTokenResponse) ProtoMessage() {}
 
 func (x *DestroyTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[9]
+	mi := &file_auth_auth_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -506,7 +506,7 @@ func (x *DestroyTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DestroyTokenResponse.ProtoReflect.Descriptor instead.
 func (*DestroyTokenResponse) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{9}
+	return file_auth_auth_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *DestroyTokenResponse) GetEmpty() *emptypb.Empty {
@@ -525,7 +525,7 @@ type AuthenticateRequest struct {
 
 func (x *AuthenticateRequest) Reset() {
 	*x = AuthenticateRequest{}
-	mi := &file_system_auth_proto_msgTypes[10]
+	mi := &file_auth_auth_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -537,7 +537,7 @@ func (x *AuthenticateRequest) String() string {
 func (*AuthenticateRequest) ProtoMessage() {}
 
 func (x *AuthenticateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[10]
+	mi := &file_auth_auth_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -550,7 +550,7 @@ func (x *AuthenticateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthenticateRequest.ProtoReflect.Descriptor instead.
 func (*AuthenticateRequest) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{10}
+	return file_auth_auth_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *AuthenticateRequest) GetData() *AuthenticateRequest_Data {
@@ -569,7 +569,7 @@ type AuthenticateResponse struct {
 
 func (x *AuthenticateResponse) Reset() {
 	*x = AuthenticateResponse{}
-	mi := &file_system_auth_proto_msgTypes[11]
+	mi := &file_auth_auth_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -581,7 +581,7 @@ func (x *AuthenticateResponse) String() string {
 func (*AuthenticateResponse) ProtoMessage() {}
 
 func (x *AuthenticateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[11]
+	mi := &file_auth_auth_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -594,7 +594,7 @@ func (x *AuthenticateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthenticateResponse.ProtoReflect.Descriptor instead.
 func (*AuthenticateResponse) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{11}
+	return file_auth_auth_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *AuthenticateResponse) GetIsValid() bool {
@@ -613,7 +613,7 @@ type AuthLogoutRequest_Data struct {
 
 func (x *AuthLogoutRequest_Data) Reset() {
 	*x = AuthLogoutRequest_Data{}
-	mi := &file_system_auth_proto_msgTypes[12]
+	mi := &file_auth_auth_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -625,7 +625,7 @@ func (x *AuthLogoutRequest_Data) String() string {
 func (*AuthLogoutRequest_Data) ProtoMessage() {}
 
 func (x *AuthLogoutRequest_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[12]
+	mi := &file_auth_auth_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -638,7 +638,7 @@ func (x *AuthLogoutRequest_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthLogoutRequest_Data.ProtoReflect.Descriptor instead.
 func (*AuthLogoutRequest_Data) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{0, 0}
+	return file_auth_auth_proto_rawDescGZIP(), []int{0, 0}
 }
 
 func (x *AuthLogoutRequest_Data) GetToken() string {
@@ -658,7 +658,7 @@ type CreateTokenRequest_Data struct {
 
 func (x *CreateTokenRequest_Data) Reset() {
 	*x = CreateTokenRequest_Data{}
-	mi := &file_system_auth_proto_msgTypes[13]
+	mi := &file_auth_auth_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -670,7 +670,7 @@ func (x *CreateTokenRequest_Data) String() string {
 func (*CreateTokenRequest_Data) ProtoMessage() {}
 
 func (x *CreateTokenRequest_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[13]
+	mi := &file_auth_auth_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -683,7 +683,7 @@ func (x *CreateTokenRequest_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTokenRequest_Data.ProtoReflect.Descriptor instead.
 func (*CreateTokenRequest_Data) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{4, 0}
+	return file_auth_auth_proto_rawDescGZIP(), []int{4, 0}
 }
 
 func (x *CreateTokenRequest_Data) GetUserId() string {
@@ -709,7 +709,7 @@ type DestroyTokenRequest_Data struct {
 
 func (x *DestroyTokenRequest_Data) Reset() {
 	*x = DestroyTokenRequest_Data{}
-	mi := &file_system_auth_proto_msgTypes[15]
+	mi := &file_auth_auth_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -721,7 +721,7 @@ func (x *DestroyTokenRequest_Data) String() string {
 func (*DestroyTokenRequest_Data) ProtoMessage() {}
 
 func (x *DestroyTokenRequest_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[15]
+	mi := &file_auth_auth_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -734,7 +734,7 @@ func (x *DestroyTokenRequest_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DestroyTokenRequest_Data.ProtoReflect.Descriptor instead.
 func (*DestroyTokenRequest_Data) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{8, 0}
+	return file_auth_auth_proto_rawDescGZIP(), []int{8, 0}
 }
 
 func (x *DestroyTokenRequest_Data) GetToken() string {
@@ -756,7 +756,7 @@ type AuthenticateRequest_Data struct {
 
 func (x *AuthenticateRequest_Data) Reset() {
 	*x = AuthenticateRequest_Data{}
-	mi := &file_system_auth_proto_msgTypes[16]
+	mi := &file_auth_auth_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -768,7 +768,7 @@ func (x *AuthenticateRequest_Data) String() string {
 func (*AuthenticateRequest_Data) ProtoMessage() {}
 
 func (x *AuthenticateRequest_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_system_auth_proto_msgTypes[16]
+	mi := &file_auth_auth_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -781,7 +781,7 @@ func (x *AuthenticateRequest_Data) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AuthenticateRequest_Data.ProtoReflect.Descriptor instead.
 func (*AuthenticateRequest_Data) Descriptor() ([]byte, []int) {
-	return file_system_auth_proto_rawDescGZIP(), []int{10, 0}
+	return file_auth_auth_proto_rawDescGZIP(), []int{10, 0}
 }
 
 func (x *AuthenticateRequest_Data) GetToken() string {
@@ -812,13 +812,13 @@ func (x *AuthenticateRequest_Data) GetOperation() string {
 	return ""
 }
 
-var File_system_auth_proto protoreflect.FileDescriptor
+var File_auth_auth_proto protoreflect.FileDescriptor
 
-const file_system_auth_proto_rawDesc = "" +
+const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/auth.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"u\n" +
-	"\x11AuthLogoutRequest\x12B\n" +
-	"\x04data\x18\x01 \x01(\v2..api.v1.services.system.AuthLogoutRequest.DataR\x04data\x1a\x1c\n" +
+	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"s\n" +
+	"\x11AuthLogoutRequest\x12@\n" +
+	"\x04data\x18\x01 \x01(\v2,.api.v1.services.auth.AuthLogoutRequest.DataR\x04data\x1a\x1c\n" +
 	"\x04Data\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"B\n" +
 	"\x12AuthLogoutResponse\x12,\n" +
@@ -834,102 +834,102 @@ const file_system_auth_proto_rawDesc = "" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x02 \x01(\x05R\n" +
-	"total_size\"\x93\x01\n" +
-	"\x12CreateTokenRequest\x12C\n" +
-	"\x04data\x18\x01 \x01(\v2/.api.v1.services.system.CreateTokenRequest.DataR\x04data\x1a8\n" +
+	"total_size\"\x91\x01\n" +
+	"\x12CreateTokenRequest\x12A\n" +
+	"\x04data\x18\x01 \x01(\v2-.api.v1.services.auth.CreateTokenRequest.DataR\x04data\x1a8\n" +
 	"\x04Data\x12\x18\n" +
 	"\auser_id\x18\x01 \x01(\tR\auser_id\x12\x16\n" +
 	"\x06scopes\x18\x02 \x03(\tR\x06scopes\"+\n" +
 	"\x13CreateTokenResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\",\n" +
 	"\x14ValidateTokenRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\"\xc1\x01\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"\xbf\x01\n" +
 	"\x15ValidateTokenResponse\x12\x1a\n" +
-	"\bis_valid\x18\x01 \x01(\bR\bis_valid\x12Q\n" +
-	"\x06claims\x18\x02 \x03(\v29.api.v1.services.system.ValidateTokenResponse.ClaimsEntryR\x06claims\x1a9\n" +
+	"\bis_valid\x18\x01 \x01(\bR\bis_valid\x12O\n" +
+	"\x06claims\x18\x02 \x03(\v27.api.v1.services.auth.ValidateTokenResponse.ClaimsEntryR\x06claims\x1a9\n" +
 	"\vClaimsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"y\n" +
-	"\x13DestroyTokenRequest\x12D\n" +
-	"\x04data\x18\x01 \x01(\v20.api.v1.services.system.DestroyTokenRequest.DataR\x04data\x1a\x1c\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"w\n" +
+	"\x13DestroyTokenRequest\x12B\n" +
+	"\x04data\x18\x01 \x01(\v2..api.v1.services.auth.DestroyTokenRequest.DataR\x04data\x1a\x1c\n" +
 	"\x04Data\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"D\n" +
 	"\x14DestroyTokenResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"\xc3\x01\n" +
-	"\x13AuthenticateRequest\x12D\n" +
-	"\x04data\x18\x01 \x01(\v20.api.v1.services.system.AuthenticateRequest.DataR\x04data\x1af\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"\xc1\x01\n" +
+	"\x13AuthenticateRequest\x12B\n" +
+	"\x04data\x18\x01 \x01(\v2..api.v1.services.auth.AuthenticateRequest.DataR\x04data\x1af\n" +
 	"\x04Data\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x12\n" +
 	"\x04path\x18\x03 \x01(\tR\x04path\x12\x16\n" +
 	"\x06method\x18\x04 \x01(\tR\x06method\x12\x1c\n" +
 	"\toperation\x18\x05 \x01(\tR\toperation\"2\n" +
 	"\x14AuthenticateResponse\x12\x1a\n" +
-	"\bis_valid\x18\x01 \x01(\bR\bis_valid2\xdd\x06\n" +
-	"\vAuthService\x12\x95\x01\n" +
-	"\x11ListAuthResources\x120.api.v1.services.system.ListAuthResourcesRequest\x1a1.api.v1.services.system.ListAuthResourcesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/auth/resources\x12\x85\x01\n" +
-	"\vCreateToken\x12*.api.v1.services.system.CreateTokenRequest\x1a+.api.v1.services.system.CreateTokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x04data\"\x0f/sys/auth/token\x12\x88\x01\n" +
-	"\rValidateToken\x12,.api.v1.services.system.ValidateTokenRequest\x1a-.api.v1.services.system.ValidateTokenResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/sys/auth/validate\x12\x8a\x01\n" +
-	"\fDestroyToken\x12+.api.v1.services.system.DestroyTokenRequest\x1a,.api.v1.services.system.DestroyTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x04data\"\x11/sys/auth/destroy\x12\x8f\x01\n" +
-	"\fAuthenticate\x12+.api.v1.services.system.AuthenticateRequest\x1a,.api.v1.services.system.AuthenticateResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\"\x16/sys/auth/authenticate\x12\x83\x01\n" +
+	"\bis_valid\x18\x01 \x01(\bR\bis_valid2\xc4\x06\n" +
+	"\vAuthService\x12\x91\x01\n" +
+	"\x11ListAuthResources\x12..api.v1.services.auth.ListAuthResourcesRequest\x1a/.api.v1.services.auth.ListAuthResourcesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/auth/resources\x12\x81\x01\n" +
+	"\vCreateToken\x12(.api.v1.services.auth.CreateTokenRequest\x1a).api.v1.services.auth.CreateTokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x04data\"\x0f/sys/auth/token\x12\x84\x01\n" +
+	"\rValidateToken\x12*.api.v1.services.auth.ValidateTokenRequest\x1a+.api.v1.services.auth.ValidateTokenResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/sys/auth/validate\x12\x86\x01\n" +
+	"\fDestroyToken\x12).api.v1.services.auth.DestroyTokenRequest\x1a*.api.v1.services.auth.DestroyTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x04data\"\x11/sys/auth/destroy\x12\x8b\x01\n" +
+	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\"\x16/sys/auth/authenticate\x12\x7f\n" +
 	"\n" +
-	"AuthLogout\x12).api.v1.services.system.AuthLogoutRequest\x1a*.api.v1.services.system.AuthLogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x04data\"\x10/sys/auth/logoutB\xbe\x01\n" +
-	"\x1acom.api.v1.services.systemB\tAuthProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"AuthLogout\x12'.api.v1.services.auth.AuthLogoutRequest\x1a(.api.v1.services.auth.AuthLogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x04data\"\x10/sys/auth/logoutB\xb0\x01\n" +
+	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z\x15v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
-	file_system_auth_proto_rawDescOnce sync.Once
-	file_system_auth_proto_rawDescData []byte
+	file_auth_auth_proto_rawDescOnce sync.Once
+	file_auth_auth_proto_rawDescData []byte
 )
 
-func file_system_auth_proto_rawDescGZIP() []byte {
-	file_system_auth_proto_rawDescOnce.Do(func() {
-		file_system_auth_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_system_auth_proto_rawDesc), len(file_system_auth_proto_rawDesc)))
+func file_auth_auth_proto_rawDescGZIP() []byte {
+	file_auth_auth_proto_rawDescOnce.Do(func() {
+		file_auth_auth_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_auth_auth_proto_rawDesc), len(file_auth_auth_proto_rawDesc)))
 	})
-	return file_system_auth_proto_rawDescData
+	return file_auth_auth_proto_rawDescData
 }
 
-var file_system_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
-var file_system_auth_proto_goTypes = []any{
-	(*AuthLogoutRequest)(nil),         // 0: api.v1.services.system.AuthLogoutRequest
-	(*AuthLogoutResponse)(nil),        // 1: api.v1.services.system.AuthLogoutResponse
-	(*ListAuthResourcesRequest)(nil),  // 2: api.v1.services.system.ListAuthResourcesRequest
-	(*ListAuthResourcesResponse)(nil), // 3: api.v1.services.system.ListAuthResourcesResponse
-	(*CreateTokenRequest)(nil),        // 4: api.v1.services.system.CreateTokenRequest
-	(*CreateTokenResponse)(nil),       // 5: api.v1.services.system.CreateTokenResponse
-	(*ValidateTokenRequest)(nil),      // 6: api.v1.services.system.ValidateTokenRequest
-	(*ValidateTokenResponse)(nil),     // 7: api.v1.services.system.ValidateTokenResponse
-	(*DestroyTokenRequest)(nil),       // 8: api.v1.services.system.DestroyTokenRequest
-	(*DestroyTokenResponse)(nil),      // 9: api.v1.services.system.DestroyTokenResponse
-	(*AuthenticateRequest)(nil),       // 10: api.v1.services.system.AuthenticateRequest
-	(*AuthenticateResponse)(nil),      // 11: api.v1.services.system.AuthenticateResponse
-	(*AuthLogoutRequest_Data)(nil),    // 12: api.v1.services.system.AuthLogoutRequest.Data
-	(*CreateTokenRequest_Data)(nil),   // 13: api.v1.services.system.CreateTokenRequest.Data
-	nil,                               // 14: api.v1.services.system.ValidateTokenResponse.ClaimsEntry
-	(*DestroyTokenRequest_Data)(nil),  // 15: api.v1.services.system.DestroyTokenRequest.Data
-	(*AuthenticateRequest_Data)(nil),  // 16: api.v1.services.system.AuthenticateRequest.Data
+var file_auth_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_auth_auth_proto_goTypes = []any{
+	(*AuthLogoutRequest)(nil),         // 0: api.v1.services.auth.AuthLogoutRequest
+	(*AuthLogoutResponse)(nil),        // 1: api.v1.services.auth.AuthLogoutResponse
+	(*ListAuthResourcesRequest)(nil),  // 2: api.v1.services.auth.ListAuthResourcesRequest
+	(*ListAuthResourcesResponse)(nil), // 3: api.v1.services.auth.ListAuthResourcesResponse
+	(*CreateTokenRequest)(nil),        // 4: api.v1.services.auth.CreateTokenRequest
+	(*CreateTokenResponse)(nil),       // 5: api.v1.services.auth.CreateTokenResponse
+	(*ValidateTokenRequest)(nil),      // 6: api.v1.services.auth.ValidateTokenRequest
+	(*ValidateTokenResponse)(nil),     // 7: api.v1.services.auth.ValidateTokenResponse
+	(*DestroyTokenRequest)(nil),       // 8: api.v1.services.auth.DestroyTokenRequest
+	(*DestroyTokenResponse)(nil),      // 9: api.v1.services.auth.DestroyTokenResponse
+	(*AuthenticateRequest)(nil),       // 10: api.v1.services.auth.AuthenticateRequest
+	(*AuthenticateResponse)(nil),      // 11: api.v1.services.auth.AuthenticateResponse
+	(*AuthLogoutRequest_Data)(nil),    // 12: api.v1.services.auth.AuthLogoutRequest.Data
+	(*CreateTokenRequest_Data)(nil),   // 13: api.v1.services.auth.CreateTokenRequest.Data
+	nil,                               // 14: api.v1.services.auth.ValidateTokenResponse.ClaimsEntry
+	(*DestroyTokenRequest_Data)(nil),  // 15: api.v1.services.auth.DestroyTokenRequest.Data
+	(*AuthenticateRequest_Data)(nil),  // 16: api.v1.services.auth.AuthenticateRequest.Data
 	(*emptypb.Empty)(nil),             // 17: google.protobuf.Empty
 	(*types.Resource)(nil),            // 18: api.v1.services.types.Resource
 }
-var file_system_auth_proto_depIdxs = []int32{
-	12, // 0: api.v1.services.system.AuthLogoutRequest.data:type_name -> api.v1.services.system.AuthLogoutRequest.Data
-	17, // 1: api.v1.services.system.AuthLogoutResponse.empty:type_name -> google.protobuf.Empty
-	18, // 2: api.v1.services.system.ListAuthResourcesResponse.resources:type_name -> api.v1.services.types.Resource
-	13, // 3: api.v1.services.system.CreateTokenRequest.data:type_name -> api.v1.services.system.CreateTokenRequest.Data
-	14, // 4: api.v1.services.system.ValidateTokenResponse.claims:type_name -> api.v1.services.system.ValidateTokenResponse.ClaimsEntry
-	15, // 5: api.v1.services.system.DestroyTokenRequest.data:type_name -> api.v1.services.system.DestroyTokenRequest.Data
-	17, // 6: api.v1.services.system.DestroyTokenResponse.empty:type_name -> google.protobuf.Empty
-	16, // 7: api.v1.services.system.AuthenticateRequest.data:type_name -> api.v1.services.system.AuthenticateRequest.Data
-	2,  // 8: api.v1.services.system.AuthService.ListAuthResources:input_type -> api.v1.services.system.ListAuthResourcesRequest
-	4,  // 9: api.v1.services.system.AuthService.CreateToken:input_type -> api.v1.services.system.CreateTokenRequest
-	6,  // 10: api.v1.services.system.AuthService.ValidateToken:input_type -> api.v1.services.system.ValidateTokenRequest
-	8,  // 11: api.v1.services.system.AuthService.DestroyToken:input_type -> api.v1.services.system.DestroyTokenRequest
-	10, // 12: api.v1.services.system.AuthService.Authenticate:input_type -> api.v1.services.system.AuthenticateRequest
-	0,  // 13: api.v1.services.system.AuthService.AuthLogout:input_type -> api.v1.services.system.AuthLogoutRequest
-	3,  // 14: api.v1.services.system.AuthService.ListAuthResources:output_type -> api.v1.services.system.ListAuthResourcesResponse
-	5,  // 15: api.v1.services.system.AuthService.CreateToken:output_type -> api.v1.services.system.CreateTokenResponse
-	7,  // 16: api.v1.services.system.AuthService.ValidateToken:output_type -> api.v1.services.system.ValidateTokenResponse
-	9,  // 17: api.v1.services.system.AuthService.DestroyToken:output_type -> api.v1.services.system.DestroyTokenResponse
-	11, // 18: api.v1.services.system.AuthService.Authenticate:output_type -> api.v1.services.system.AuthenticateResponse
-	1,  // 19: api.v1.services.system.AuthService.AuthLogout:output_type -> api.v1.services.system.AuthLogoutResponse
+var file_auth_auth_proto_depIdxs = []int32{
+	12, // 0: api.v1.services.auth.AuthLogoutRequest.data:type_name -> api.v1.services.auth.AuthLogoutRequest.Data
+	17, // 1: api.v1.services.auth.AuthLogoutResponse.empty:type_name -> google.protobuf.Empty
+	18, // 2: api.v1.services.auth.ListAuthResourcesResponse.resources:type_name -> api.v1.services.types.Resource
+	13, // 3: api.v1.services.auth.CreateTokenRequest.data:type_name -> api.v1.services.auth.CreateTokenRequest.Data
+	14, // 4: api.v1.services.auth.ValidateTokenResponse.claims:type_name -> api.v1.services.auth.ValidateTokenResponse.ClaimsEntry
+	15, // 5: api.v1.services.auth.DestroyTokenRequest.data:type_name -> api.v1.services.auth.DestroyTokenRequest.Data
+	17, // 6: api.v1.services.auth.DestroyTokenResponse.empty:type_name -> google.protobuf.Empty
+	16, // 7: api.v1.services.auth.AuthenticateRequest.data:type_name -> api.v1.services.auth.AuthenticateRequest.Data
+	2,  // 8: api.v1.services.auth.AuthService.ListAuthResources:input_type -> api.v1.services.auth.ListAuthResourcesRequest
+	4,  // 9: api.v1.services.auth.AuthService.CreateToken:input_type -> api.v1.services.auth.CreateTokenRequest
+	6,  // 10: api.v1.services.auth.AuthService.ValidateToken:input_type -> api.v1.services.auth.ValidateTokenRequest
+	8,  // 11: api.v1.services.auth.AuthService.DestroyToken:input_type -> api.v1.services.auth.DestroyTokenRequest
+	10, // 12: api.v1.services.auth.AuthService.Authenticate:input_type -> api.v1.services.auth.AuthenticateRequest
+	0,  // 13: api.v1.services.auth.AuthService.AuthLogout:input_type -> api.v1.services.auth.AuthLogoutRequest
+	3,  // 14: api.v1.services.auth.AuthService.ListAuthResources:output_type -> api.v1.services.auth.ListAuthResourcesResponse
+	5,  // 15: api.v1.services.auth.AuthService.CreateToken:output_type -> api.v1.services.auth.CreateTokenResponse
+	7,  // 16: api.v1.services.auth.AuthService.ValidateToken:output_type -> api.v1.services.auth.ValidateTokenResponse
+	9,  // 17: api.v1.services.auth.AuthService.DestroyToken:output_type -> api.v1.services.auth.DestroyTokenResponse
+	11, // 18: api.v1.services.auth.AuthService.Authenticate:output_type -> api.v1.services.auth.AuthenticateResponse
+	1,  // 19: api.v1.services.auth.AuthService.AuthLogout:output_type -> api.v1.services.auth.AuthLogoutResponse
 	14, // [14:20] is the sub-list for method output_type
 	8,  // [8:14] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name
@@ -937,26 +937,26 @@ var file_system_auth_proto_depIdxs = []int32{
 	0,  // [0:8] is the sub-list for field type_name
 }
 
-func init() { file_system_auth_proto_init() }
-func file_system_auth_proto_init() {
-	if File_system_auth_proto != nil {
+func init() { file_auth_auth_proto_init() }
+func file_auth_auth_proto_init() {
+	if File_auth_auth_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_system_auth_proto_rawDesc), len(file_system_auth_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_auth_proto_rawDesc), len(file_auth_auth_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_system_auth_proto_goTypes,
-		DependencyIndexes: file_system_auth_proto_depIdxs,
-		MessageInfos:      file_system_auth_proto_msgTypes,
+		GoTypes:           file_auth_auth_proto_goTypes,
+		DependencyIndexes: file_auth_auth_proto_depIdxs,
+		MessageInfos:      file_auth_auth_proto_msgTypes,
 	}.Build()
-	File_system_auth_proto = out.File
-	file_system_auth_proto_goTypes = nil
-	file_system_auth_proto_depIdxs = nil
+	File_auth_auth_proto = out.File
+	file_auth_auth_proto_goTypes = nil
+	file_auth_auth_proto_depIdxs = nil
 }

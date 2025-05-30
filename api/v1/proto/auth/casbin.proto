@@ -1,17 +1,17 @@
 syntax = "proto3";
 
-package api.v1.services.system;
+package api.v1.services.auth;
 
 import "google/api/annotations.proto";
 //import "google/protobuf/any.proto";
 //import "google/protobuf/empty.proto";
 //import "types/system.proto";
 
-option go_package = "v1/services/system;system";
+option go_package = "v1/services/auth;auth";
 option java_multiple_files = true;
-option java_outer_classname = "APIServiceSystemCasbinProto";
-option java_package = "com.origadmin.api.v1.services.system";
-option objc_class_prefix = "APIServiceSystemCasbin";
+option java_outer_classname = "APIServiceAuthCasbinProto";
+option java_package = "com.origadmin.api.v1.services.auth";
+option objc_class_prefix = "APIServiceAuthCasbin";
 
 // The Casbin source service definition.
 service CasbinSourceService {

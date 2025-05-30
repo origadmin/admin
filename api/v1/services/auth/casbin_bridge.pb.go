@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-bridge unknown
 // - protoc             (unknown)
-// source: system/casbin.proto
+// source: auth/casbin.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,9 +19,9 @@ var _ = new(context.Context)
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
 
-const CasbinSourceServiceListGroupingsBridgeOperation = "/api.v1.services.system.CasbinSourceService/ListGroupings"
-const CasbinSourceServiceListPoliciesBridgeOperation = "/api.v1.services.system.CasbinSourceService/ListPolicies"
-const CasbinSourceServiceWatchUpdateBridgeOperation = "/api.v1.services.system.CasbinSourceService/WatchUpdate"
+const CasbinSourceServiceListGroupingsBridgeOperation = "/api.v1.services.auth.CasbinSourceService/ListGroupings"
+const CasbinSourceServiceListPoliciesBridgeOperation = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
+const CasbinSourceServiceWatchUpdateBridgeOperation = "/api.v1.services.auth.CasbinSourceService/WatchUpdate"
 
 type CasbinSourceServiceBridger interface {
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)

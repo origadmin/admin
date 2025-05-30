@@ -227,7 +227,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListGroupingsResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.ListGroupingsResponse'
                 default:
                     description: Default error response
                     content:
@@ -245,7 +245,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListPoliciesResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.ListPoliciesResponse'
                 default:
                     description: Default error response
                     content:
@@ -272,7 +272,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.StreamRulesResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.StreamRulesResponse'
                 default:
                     description: Default error response
                     content:
@@ -295,7 +295,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.WatchUpdateResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.WatchUpdateResponse'
                 default:
                     description: Default error response
                     content:
@@ -383,7 +383,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.AuthenticateRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.AuthenticateRequest_Data'
                 required: true
             responses:
                 "200":
@@ -391,7 +391,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.AuthenticateResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.AuthenticateResponse'
                 default:
                     description: Default error response
                     content:
@@ -408,7 +408,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.DestroyTokenRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenRequest_Data'
                 required: true
             responses:
                 "200":
@@ -416,7 +416,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.DestroyTokenResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -432,7 +432,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.AuthLogoutRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutRequest_Data'
                 required: true
             responses:
                 "200":
@@ -440,7 +440,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.AuthLogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -481,7 +481,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListAuthResourcesResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.ListAuthResourcesResponse'
                 default:
                     description: Default error response
                     content:
@@ -498,7 +498,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.CreateTokenRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.CreateTokenRequest_Data'
                 required: true
             responses:
                 "200":
@@ -506,7 +506,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CreateTokenResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.CreateTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -530,7 +530,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ValidateTokenResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.ValidateTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -2287,15 +2287,15 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
-        api.v1.services.system.AuthLogoutRequest_Data:
+        api.v1.services.auth.AuthLogoutRequest_Data:
             type: object
             properties:
                 token:
                     type: string
-        api.v1.services.system.AuthLogoutResponse:
+        api.v1.services.auth.AuthLogoutResponse:
             type: object
             properties: {}
-        api.v1.services.system.AuthenticateRequest_Data:
+        api.v1.services.auth.AuthenticateRequest_Data:
             type: object
             properties:
                 token:
@@ -2306,11 +2306,101 @@ components:
                     type: string
                 operation:
                     type: string
-        api.v1.services.system.AuthenticateResponse:
+        api.v1.services.auth.AuthenticateResponse:
             type: object
             properties:
                 is_valid:
                     type: boolean
+        api.v1.services.auth.CreateTokenRequest_Data:
+            type: object
+            properties:
+                user_id:
+                    type: string
+                scopes:
+                    type: array
+                    items:
+                        type: string
+        api.v1.services.auth.CreateTokenResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+            description: CreateTokenResponse contains the generated token.
+        api.v1.services.auth.DestroyTokenRequest_Data:
+            type: object
+            properties:
+                token:
+                    type: string
+        api.v1.services.auth.DestroyTokenResponse:
+            type: object
+            properties: {}
+            description: DestroyTokenResponse contains the result of the invalidation.
+        api.v1.services.auth.GroupingRule:
+            type: object
+            properties:
+                p_type:
+                    type: string
+                params:
+                    type: array
+                    items:
+                        type: string
+        api.v1.services.auth.ListAuthResourcesResponse:
+            type: object
+            properties:
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The list of Auths.
+                total_size:
+                    type: integer
+                    description: The total number of Auths in the result set.
+                    format: int32
+        api.v1.services.auth.ListGroupingsResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
+        api.v1.services.auth.ListPoliciesResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
+        api.v1.services.auth.PolicyRule:
+            type: object
+            properties:
+                p_type:
+                    type: string
+                params:
+                    type: array
+                    items:
+                        type: string
+        api.v1.services.auth.StreamRulesResponse:
+            type: object
+            properties:
+                policy:
+                    $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
+                grouping:
+                    $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
+        api.v1.services.auth.ValidateTokenResponse:
+            type: object
+            properties:
+                is_valid:
+                    type: boolean
+                claims:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: VerifyTokenResponse contains the result of the verification.
+        api.v1.services.auth.WatchUpdateResponse:
+            type: object
+            properties:
+                modified_date:
+                    type: string
         api.v1.services.system.CaptchaAudioResponse:
             type: object
             properties:
@@ -2379,21 +2469,6 @@ components:
             properties:
                 role:
                     $ref: '#/components/schemas/api.v1.services.types.Role'
-        api.v1.services.system.CreateTokenRequest_Data:
-            type: object
-            properties:
-                user_id:
-                    type: string
-                scopes:
-                    type: array
-                    items:
-                        type: string
-        api.v1.services.system.CreateTokenResponse:
-            type: object
-            properties:
-                token:
-                    type: string
-            description: CreateTokenResponse contains the generated token.
         api.v1.services.system.CreateUserResponse:
             type: object
             properties:
@@ -2422,15 +2497,6 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
-        api.v1.services.system.DestroyTokenRequest_Data:
-            type: object
-            properties:
-                token:
-                    type: string
-        api.v1.services.system.DestroyTokenResponse:
-            type: object
-            properties: {}
-            description: DestroyTokenResponse contains the result of the invalidation.
         api.v1.services.system.GetDepartmentResponse:
             type: object
             properties:
@@ -2477,27 +2543,6 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.types.User'
-        api.v1.services.system.GroupingRule:
-            type: object
-            properties:
-                p_type:
-                    type: string
-                params:
-                    type: array
-                    items:
-                        type: string
-        api.v1.services.system.ListAuthResourcesResponse:
-            type: object
-            properties:
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: The list of Auths.
-                total_size:
-                    type: integer
-                    description: The total number of Auths in the result set.
-                    format: int32
         api.v1.services.system.ListDepartmentsResponse:
             type: object
             properties:
@@ -2529,13 +2574,6 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
-        api.v1.services.system.ListGroupingsResponse:
-            type: object
-            properties:
-                rules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
@@ -2620,13 +2658,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
-        api.v1.services.system.ListPoliciesResponse:
-            type: object
-            properties:
-                rules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
         api.v1.services.system.ListPositionsResponse:
             type: object
             properties:
@@ -2788,15 +2819,6 @@ components:
             properties:
                 success:
                     type: boolean
-        api.v1.services.system.PolicyRule:
-            type: object
-            properties:
-                p_type:
-                    type: string
-                params:
-                    type: array
-                    items:
-                        type: string
         api.v1.services.system.RefreshPersonalTokenResponse:
             type: object
             properties:
@@ -2828,13 +2850,6 @@ components:
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
-        api.v1.services.system.StreamRulesResponse:
-            type: object
-            properties:
-                policy:
-                    $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
-                grouping:
-                    $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
         api.v1.services.system.TokenRefreshRequest_Data:
             type: object
             properties:
@@ -2899,21 +2914,6 @@ components:
         api.v1.services.system.UpdateUserStatusResponse:
             type: object
             properties: {}
-        api.v1.services.system.ValidateTokenResponse:
-            type: object
-            properties:
-                is_valid:
-                    type: boolean
-                claims:
-                    type: object
-                    additionalProperties:
-                        type: string
-            description: VerifyTokenResponse contains the result of the verification.
-        api.v1.services.system.WatchUpdateResponse:
-            type: object
-            properties:
-                modified_date:
-                    type: string
         api.v1.services.types.Department:
             type: object
             properties:

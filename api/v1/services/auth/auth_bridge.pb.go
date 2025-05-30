@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-bridge unknown
 // - protoc             (unknown)
-// source: system/auth.proto
+// source: auth/auth.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,12 +19,12 @@ var _ = new(context.Context)
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
 
-const AuthServiceAuthLogoutBridgeOperation = "/api.v1.services.system.AuthService/AuthLogout"
-const AuthServiceAuthenticateBridgeOperation = "/api.v1.services.system.AuthService/Authenticate"
-const AuthServiceCreateTokenBridgeOperation = "/api.v1.services.system.AuthService/CreateToken"
-const AuthServiceDestroyTokenBridgeOperation = "/api.v1.services.system.AuthService/DestroyToken"
-const AuthServiceListAuthResourcesBridgeOperation = "/api.v1.services.system.AuthService/ListAuthResources"
-const AuthServiceValidateTokenBridgeOperation = "/api.v1.services.system.AuthService/ValidateToken"
+const AuthServiceAuthLogoutBridgeOperation = "/api.v1.services.auth.AuthService/AuthLogout"
+const AuthServiceAuthenticateBridgeOperation = "/api.v1.services.auth.AuthService/Authenticate"
+const AuthServiceCreateTokenBridgeOperation = "/api.v1.services.auth.AuthService/CreateToken"
+const AuthServiceDestroyTokenBridgeOperation = "/api.v1.services.auth.AuthService/DestroyToken"
+const AuthServiceListAuthResourcesBridgeOperation = "/api.v1.services.auth.AuthService/ListAuthResources"
+const AuthServiceValidateTokenBridgeOperation = "/api.v1.services.auth.AuthService/ValidateToken"
 
 type AuthServiceBridger interface {
 	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)

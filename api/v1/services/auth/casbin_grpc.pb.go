@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: system/casbin.proto
+// source: auth/casbin.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CasbinSourceService_ListPolicies_FullMethodName  = "/api.v1.services.system.CasbinSourceService/ListPolicies"
-	CasbinSourceService_ListGroupings_FullMethodName = "/api.v1.services.system.CasbinSourceService/ListGroupings"
-	CasbinSourceService_WatchUpdate_FullMethodName   = "/api.v1.services.system.CasbinSourceService/WatchUpdate"
-	CasbinSourceService_StreamRules_FullMethodName   = "/api.v1.services.system.CasbinSourceService/StreamRules"
+	CasbinSourceService_ListPolicies_FullMethodName  = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
+	CasbinSourceService_ListGroupings_FullMethodName = "/api.v1.services.auth.CasbinSourceService/ListGroupings"
+	CasbinSourceService_WatchUpdate_FullMethodName   = "/api.v1.services.auth.CasbinSourceService/WatchUpdate"
+	CasbinSourceService_StreamRules_FullMethodName   = "/api.v1.services.auth.CasbinSourceService/StreamRules"
 )
 
 // CasbinSourceServiceClient is the client API for CasbinSourceService service.
@@ -216,7 +216,7 @@ type CasbinSourceService_StreamRulesServer = grpc.ServerStreamingServer[StreamRu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CasbinSourceService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.system.CasbinSourceService",
+	ServiceName: "api.v1.services.auth.CasbinSourceService",
 	HandlerType: (*CasbinSourceServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -239,5 +239,5 @@ var CasbinSourceService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "system/casbin.proto",
+	Metadata: "auth/casbin.proto",
 }

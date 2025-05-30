@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: system/auth.proto
+// source: auth/auth.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_ListAuthResources_FullMethodName = "/api.v1.services.system.AuthService/ListAuthResources"
-	AuthService_CreateToken_FullMethodName       = "/api.v1.services.system.AuthService/CreateToken"
-	AuthService_ValidateToken_FullMethodName     = "/api.v1.services.system.AuthService/ValidateToken"
-	AuthService_DestroyToken_FullMethodName      = "/api.v1.services.system.AuthService/DestroyToken"
-	AuthService_Authenticate_FullMethodName      = "/api.v1.services.system.AuthService/Authenticate"
-	AuthService_AuthLogout_FullMethodName        = "/api.v1.services.system.AuthService/AuthLogout"
+	AuthService_ListAuthResources_FullMethodName = "/api.v1.services.auth.AuthService/ListAuthResources"
+	AuthService_CreateToken_FullMethodName       = "/api.v1.services.auth.AuthService/CreateToken"
+	AuthService_ValidateToken_FullMethodName     = "/api.v1.services.auth.AuthService/ValidateToken"
+	AuthService_DestroyToken_FullMethodName      = "/api.v1.services.auth.AuthService/DestroyToken"
+	AuthService_Authenticate_FullMethodName      = "/api.v1.services.auth.AuthService/Authenticate"
+	AuthService_AuthLogout_FullMethodName        = "/api.v1.services.auth.AuthService/AuthLogout"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -284,7 +284,7 @@ func _AuthService_AuthLogout_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.system.AuthService",
+	ServiceName: "api.v1.services.auth.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -313,5 +313,5 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "system/auth.proto",
+	Metadata: "auth/auth.proto",
 }

@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.8.4
 // - protoc             (unknown)
-// source: system/auth.proto
+// source: auth/auth.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,12 +19,12 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAuthServiceAuthLogout = "/api.v1.services.system.AuthService/AuthLogout"
-const OperationAuthServiceAuthenticate = "/api.v1.services.system.AuthService/Authenticate"
-const OperationAuthServiceCreateToken = "/api.v1.services.system.AuthService/CreateToken"
-const OperationAuthServiceDestroyToken = "/api.v1.services.system.AuthService/DestroyToken"
-const OperationAuthServiceListAuthResources = "/api.v1.services.system.AuthService/ListAuthResources"
-const OperationAuthServiceValidateToken = "/api.v1.services.system.AuthService/ValidateToken"
+const OperationAuthServiceAuthLogout = "/api.v1.services.auth.AuthService/AuthLogout"
+const OperationAuthServiceAuthenticate = "/api.v1.services.auth.AuthService/Authenticate"
+const OperationAuthServiceCreateToken = "/api.v1.services.auth.AuthService/CreateToken"
+const OperationAuthServiceDestroyToken = "/api.v1.services.auth.AuthService/DestroyToken"
+const OperationAuthServiceListAuthResources = "/api.v1.services.auth.AuthService/ListAuthResources"
+const OperationAuthServiceValidateToken = "/api.v1.services.auth.AuthService/ValidateToken"
 
 type AuthServiceHTTPServer interface {
 	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
