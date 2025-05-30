@@ -5,7 +5,7 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "system/types.proto";
+import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemPermission";
 
 // The login service definition.
 service PermissionService {
-  rpc ListPermissions (ListPermissionsRequest) returns (ListPermissionsResponse) {
+  rpc ListPermissions(ListPermissionsRequest) returns (ListPermissionsResponse) {
     option (google.api.http) = {get: "/sys/permissions"};
   }
-  rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse) {
+  rpc GetPermission(GetPermissionRequest) returns (GetPermissionResponse) {
     option (google.api.http) = {get: "/sys/permissions/{id}"};
   }
-  rpc CreatePermission (CreatePermissionRequest) returns (CreatePermissionResponse) {
+  rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse) {
     option (google.api.http) = {
       post: "/sys/permissions"
       body: "permission"
     };
   }
-  rpc UpdatePermission (UpdatePermissionRequest) returns (UpdatePermissionResponse) {
+  rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {
     option (google.api.http) = {
       put: "/sys/permissions/{permission.id}"
       body: "permission"
     };
   }
-  rpc DeletePermission (DeletePermissionRequest) returns (DeletePermissionResponse) {
+  rpc DeletePermission(DeletePermissionRequest) returns (DeletePermissionResponse) {
     option (google.api.http) = {delete: "/sys/permissions/{id}"};
   }
 }
@@ -59,7 +59,7 @@ message ListPermissionsResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated Permission permissions = 2 [json_name = "permissions"];
+  repeated api.v1.services.types.Permission permissions = 2 [json_name = "permissions"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -79,7 +79,7 @@ message GetPermissionRequest {
 }
 
 message GetPermissionResponse {
-  Permission permission = 1 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 1 [json_name = "permission"];
 }
 
 message CreatePermissionRequest {
@@ -91,22 +91,22 @@ message CreatePermissionRequest {
 
   // The permission resource to create.
   // The field id should match the Noun in the method id.
-  Permission permission = 2 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 2 [json_name = "permission"];
 }
 
 message CreatePermissionResponse {
-  Permission permission = 1 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 1 [json_name = "permission"];
 }
 
 message UpdatePermissionRequest {
   // The resource name of the permission to update.
   int64 id = 1 [json_name = "id"];
   // The permission resource which replaces the resource on the server.
-  Permission permission = 2 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 2 [json_name = "permission"];
 }
 
 message UpdatePermissionResponse {
-  Permission permission = 1 [json_name = "permission"];
+  api.v1.services.types.Permission permission = 1 [json_name = "permission"];
 }
 
 message DeletePermissionRequest {

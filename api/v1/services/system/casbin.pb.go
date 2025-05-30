@@ -10,8 +10,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/anypb"
-	_ "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -514,7 +512,7 @@ var File_system_casbin_proto protoreflect.FileDescriptor
 
 const file_system_casbin_proto_rawDesc = "" +
 	"\n" +
-	"\x13system/casbin.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\x15\n" +
+	"\x13system/casbin.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\"\x15\n" +
 	"\x13ListPoliciesRequest\"P\n" +
 	"\x14ListPoliciesResponse\x128\n" +
 	"\x05rules\x18\x01 \x03(\v2\".api.v1.services.system.PolicyRuleR\x05rules\"<\n" +
@@ -596,7 +594,6 @@ func file_system_casbin_proto_init() {
 	if File_system_casbin_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_casbin_proto_msgTypes[7].OneofWrappers = []any{
 		(*StreamRulesResponse_Policy)(nil),
 		(*StreamRulesResponse_Grouping)(nil),

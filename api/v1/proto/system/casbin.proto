@@ -3,47 +3,44 @@ syntax = "proto3";
 package api.v1.services.system;
 
 import "google/api/annotations.proto";
-import "google/protobuf/any.proto";
-import "google/protobuf/empty.proto";
-import "system/types.proto";
+//import "google/protobuf/any.proto";
+//import "google/protobuf/empty.proto";
+//import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
-option csharp_namespace = "CasbinOrg.Grpc";
 option java_outer_classname = "APIServiceSystemCasbinProto";
 option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemCasbin";
 
 // The Casbin source service definition.
 service CasbinSourceService {
-  rpc ListPolicies (ListPoliciesRequest) returns (ListPoliciesResponse) {
+  rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
     option (google.api.http) = {
       get: "/casbin/policies"
       response_body: "*"
     };
   }
-  rpc ListGroupings (ListGroupingsRequest) returns (ListGroupingsResponse) {
+  rpc ListGroupings(ListGroupingsRequest) returns (ListGroupingsResponse) {
     option (google.api.http) = {
       get: "/casbin/groupings"
       response_body: "*"
     };
   }
-  rpc WatchUpdate (WatchUpdateRequest) returns (WatchUpdateResponse) {
+  rpc WatchUpdate(WatchUpdateRequest) returns (WatchUpdateResponse) {
     option (google.api.http) = {
       get: "/casbin/watch"
       response_body: "*"
     };
   }
 
-  rpc StreamRules (StreamRulesRequest) returns (stream StreamRulesResponse) {
+  rpc StreamRules(StreamRulesRequest) returns (stream StreamRulesResponse) {
     option (google.api.http) = {
       get: "/casbin/stream"
       response_body: "*"
     };
-//    (google.api.method_signature) = "with_policies,with_groupings";
+    //    (google.api.method_signature) = "with_policies,with_groupings";
   }
-
-
 }
 
 message ListPoliciesRequest {}

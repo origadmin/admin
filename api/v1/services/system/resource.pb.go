@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -130,7 +131,7 @@ type ListResourcesResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging resources
-	Resources []*Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*types.Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -182,7 +183,7 @@ func (x *ListResourcesResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListResourcesResponse) GetResources() []*Resource {
+func (x *ListResourcesResponse) GetResources() []*types.Resource {
 	if x != nil {
 		return x.Resources
 	}
@@ -268,7 +269,7 @@ func (x *GetResourceRequest) GetId() int64 {
 type GetResourceResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The field id should match the Noun in the method id.
-	Resource      *Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource      *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -303,7 +304,7 @@ func (*GetResourceResponse) Descriptor() ([]byte, []int) {
 	return file_system_resource_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetResourceResponse) GetResource() *Resource {
+func (x *GetResourceResponse) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
 	}
@@ -318,7 +319,7 @@ type CreateResourceRequest struct {
 	// The resource id to use for this resource.
 	ResourceId string `protobuf:"bytes,2,opt,name=resource_id,proto3" json:"resource_id,omitempty"`
 	// The resource object to create.
-	Resource      *Resource `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource      *types.Resource `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -367,7 +368,7 @@ func (x *CreateResourceRequest) GetResourceId() string {
 	return ""
 }
 
-func (x *CreateResourceRequest) GetResource() *Resource {
+func (x *CreateResourceRequest) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
 	}
@@ -377,7 +378,7 @@ func (x *CreateResourceRequest) GetResource() *Resource {
 // CreateResourceResponse is the response for the ResourceService.CreateResource method.
 type CreateResourceResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      *Resource              `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource      *types.Resource        `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -412,7 +413,7 @@ func (*CreateResourceResponse) Descriptor() ([]byte, []int) {
 	return file_system_resource_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreateResourceResponse) GetResource() *Resource {
+func (x *CreateResourceResponse) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
 	}
@@ -425,7 +426,7 @@ type UpdateResourceRequest struct {
 	// The id of the resource object to update.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The resource object which replaces the resource on the server.
-	Resource      *Resource `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource      *types.Resource `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -467,7 +468,7 @@ func (x *UpdateResourceRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdateResourceRequest) GetResource() *Resource {
+func (x *UpdateResourceRequest) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
 	}
@@ -477,7 +478,7 @@ func (x *UpdateResourceRequest) GetResource() *Resource {
 // UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
 type UpdateResourceResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      *Resource              `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	Resource      *types.Resource        `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -512,7 +513,7 @@ func (*UpdateResourceResponse) Descriptor() ([]byte, []int) {
 	return file_system_resource_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateResourceResponse) GetResource() *Resource {
+func (x *UpdateResourceResponse) GetResource() *types.Resource {
 	if x != nil {
 		return x.Resource
 	}
@@ -616,7 +617,7 @@ var File_system_resource_proto protoreflect.FileDescriptor
 
 const file_system_resource_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\xd0\x01\n" +
+	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xd0\x01\n" +
 	"\x14ListResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
@@ -628,32 +629,32 @@ const file_system_resource_proto_rawDesc = "" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12\x12\n" +
-	"\x04type\x18\a \x01(\tR\x04type\"\x94\x02\n" +
+	"\x04type\x18\a \x01(\tR\x04type\"\x93\x02\n" +
 	"\x15ListResourcesResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x12>\n" +
-	"\tresources\x18\x02 \x03(\v2 .api.v1.services.system.ResourceR\tresources\x12\x18\n" +
+	"total_size\x12=\n" +
+	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\"$\n" +
 	"\x12GetResourceRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"S\n" +
-	"\x13GetResourceResponse\x12<\n" +
-	"\bresource\x18\x01 \x01(\v2 .api.v1.services.system.ResourceR\bresource\"\x8f\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"R\n" +
+	"\x13GetResourceResponse\x12;\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"\x8e\x01\n" +
 	"\x15CreateResourceRequest\x12\x16\n" +
 	"\x06parent\x18\x01 \x01(\tR\x06parent\x12 \n" +
-	"\vresource_id\x18\x02 \x01(\tR\vresource_id\x12<\n" +
-	"\bresource\x18\x03 \x01(\v2 .api.v1.services.system.ResourceR\bresource\"V\n" +
-	"\x16CreateResourceResponse\x12<\n" +
-	"\bresource\x18\x01 \x01(\v2 .api.v1.services.system.ResourceR\bresource\"e\n" +
+	"\vresource_id\x18\x02 \x01(\tR\vresource_id\x12;\n" +
+	"\bresource\x18\x03 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"U\n" +
+	"\x16CreateResourceResponse\x12;\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"d\n" +
 	"\x15UpdateResourceRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
-	"\bresource\x18\x02 \x01(\v2 .api.v1.services.system.ResourceR\bresource\"V\n" +
-	"\x16UpdateResourceResponse\x12<\n" +
-	"\bresource\x18\x01 \x01(\v2 .api.v1.services.system.ResourceR\bresource\"'\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12;\n" +
+	"\bresource\x18\x02 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"U\n" +
+	"\x16UpdateResourceResponse\x12;\n" +
+	"\bresource\x18\x01 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresource\"'\n" +
 	"\x15DeleteResourceRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"F\n" +
 	"\x16DeleteResourceResponse\x12,\n" +
@@ -690,18 +691,18 @@ var file_system_resource_proto_goTypes = []any{
 	(*UpdateResourceResponse)(nil), // 7: api.v1.services.system.UpdateResourceResponse
 	(*DeleteResourceRequest)(nil),  // 8: api.v1.services.system.DeleteResourceRequest
 	(*DeleteResourceResponse)(nil), // 9: api.v1.services.system.DeleteResourceResponse
-	(*Resource)(nil),               // 10: api.v1.services.system.Resource
+	(*types.Resource)(nil),         // 10: api.v1.services.types.Resource
 	(*anypb.Any)(nil),              // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),          // 12: google.protobuf.Empty
 }
 var file_system_resource_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.system.ListResourcesResponse.resources:type_name -> api.v1.services.system.Resource
+	10, // 0: api.v1.services.system.ListResourcesResponse.resources:type_name -> api.v1.services.types.Resource
 	11, // 1: api.v1.services.system.ListResourcesResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.system.GetResourceResponse.resource:type_name -> api.v1.services.system.Resource
-	10, // 3: api.v1.services.system.CreateResourceRequest.resource:type_name -> api.v1.services.system.Resource
-	10, // 4: api.v1.services.system.CreateResourceResponse.resource:type_name -> api.v1.services.system.Resource
-	10, // 5: api.v1.services.system.UpdateResourceRequest.resource:type_name -> api.v1.services.system.Resource
-	10, // 6: api.v1.services.system.UpdateResourceResponse.resource:type_name -> api.v1.services.system.Resource
+	10, // 2: api.v1.services.system.GetResourceResponse.resource:type_name -> api.v1.services.types.Resource
+	10, // 3: api.v1.services.system.CreateResourceRequest.resource:type_name -> api.v1.services.types.Resource
+	10, // 4: api.v1.services.system.CreateResourceResponse.resource:type_name -> api.v1.services.types.Resource
+	10, // 5: api.v1.services.system.UpdateResourceRequest.resource:type_name -> api.v1.services.types.Resource
+	10, // 6: api.v1.services.system.UpdateResourceResponse.resource:type_name -> api.v1.services.types.Resource
 	12, // 7: api.v1.services.system.DeleteResourceResponse.empty:type_name -> google.protobuf.Empty
 	0,  // 8: api.v1.services.system.ResourceService.ListResources:input_type -> api.v1.services.system.ListResourcesRequest
 	2,  // 9: api.v1.services.system.ResourceService.GetResource:input_type -> api.v1.services.system.GetResourceRequest
@@ -725,7 +726,6 @@ func file_system_resource_proto_init() {
 	if File_system_resource_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_resource_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

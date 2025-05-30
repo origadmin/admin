@@ -607,7 +607,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Department'
+                            $ref: '#/components/schemas/api.v1.services.types.Department'
                 required: true
             responses:
                 "200":
@@ -642,7 +642,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Department'
+                            $ref: '#/components/schemas/api.v1.services.types.Department'
                 required: true
             responses:
                 "200":
@@ -780,7 +780,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Menu'
+                            $ref: '#/components/schemas/api.v1.services.types.Menu'
                 required: true
             responses:
                 "200":
@@ -863,7 +863,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Menu'
+                            $ref: '#/components/schemas/api.v1.services.types.Menu'
                 required: true
             responses:
                 "200":
@@ -955,7 +955,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Permission'
+                            $ref: '#/components/schemas/api.v1.services.types.Permission'
                 required: true
             responses:
                 "200":
@@ -1043,7 +1043,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Permission'
+                            $ref: '#/components/schemas/api.v1.services.types.Permission'
                 required: true
             responses:
                 "200":
@@ -1342,7 +1342,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Position'
+                            $ref: '#/components/schemas/api.v1.services.types.Position'
                 required: true
             responses:
                 "200":
@@ -1430,7 +1430,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Position'
+                            $ref: '#/components/schemas/api.v1.services.types.Position'
                 required: true
             responses:
                 "200":
@@ -1520,7 +1520,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Resource'
+                            $ref: '#/components/schemas/api.v1.services.types.Resource'
                 required: true
             responses:
                 "200":
@@ -1608,7 +1608,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Resource'
+                            $ref: '#/components/schemas/api.v1.services.types.Resource'
                 required: true
             responses:
                 "200":
@@ -1693,7 +1693,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Role'
+                            $ref: '#/components/schemas/api.v1.services.types.Role'
                 required: true
             responses:
                 "200":
@@ -1781,7 +1781,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.Role'
+                            $ref: '#/components/schemas/api.v1.services.types.Role'
                 required: true
             responses:
                 "200":
@@ -1881,7 +1881,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.User'
+                            $ref: '#/components/schemas/api.v1.services.types.User'
                 required: true
             responses:
                 "200":
@@ -2008,7 +2008,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.User'
+                            $ref: '#/components/schemas/api.v1.services.types.User'
                 required: true
             responses:
                 "200":
@@ -2215,7 +2215,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.User'
+                            $ref: '#/components/schemas/api.v1.services.types.User'
                 required: true
             responses:
                 "200":
@@ -2246,7 +2246,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.User'
+                            $ref: '#/components/schemas/api.v1.services.types.User'
                 required: true
             responses:
                 "200":
@@ -2351,34 +2351,34 @@ components:
             type: object
             properties:
                 department:
-                    $ref: '#/components/schemas/api.v1.services.system.Department'
+                    $ref: '#/components/schemas/api.v1.services.types.Department'
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:
                 menu:
-                    $ref: '#/components/schemas/api.v1.services.system.Menu'
+                    $ref: '#/components/schemas/api.v1.services.types.Menu'
             description: CreateMenuResponse is the response for the MenuService.CreateMenu method.
         api.v1.services.system.CreatePermissionResponse:
             type: object
             properties:
                 permission:
-                    $ref: '#/components/schemas/api.v1.services.system.Permission'
+                    $ref: '#/components/schemas/api.v1.services.types.Permission'
         api.v1.services.system.CreatePositionResponse:
             type: object
             properties:
                 position:
-                    $ref: '#/components/schemas/api.v1.services.system.Position'
+                    $ref: '#/components/schemas/api.v1.services.types.Position'
         api.v1.services.system.CreateResourceResponse:
             type: object
             properties:
                 resource:
-                    $ref: '#/components/schemas/api.v1.services.system.Resource'
+                    $ref: '#/components/schemas/api.v1.services.types.Resource'
             description: CreateResourceResponse is the response for the ResourceService.CreateResource method.
         api.v1.services.system.CreateRoleResponse:
             type: object
             properties:
                 role:
-                    $ref: '#/components/schemas/api.v1.services.system.Role'
+                    $ref: '#/components/schemas/api.v1.services.types.Role'
         api.v1.services.system.CreateTokenRequest_Data:
             type: object
             properties:
@@ -2398,7 +2398,7 @@ components:
             type: object
             properties:
                 user:
-                    $ref: '#/components/schemas/api.v1.services.system.User'
+                    $ref: '#/components/schemas/api.v1.services.types.User'
         api.v1.services.system.DeleteDepartmentResponse:
             type: object
             properties: {}
@@ -2422,7 +2422,499 @@ components:
         api.v1.services.system.DeleteUserResponse:
             type: object
             properties: {}
-        api.v1.services.system.Department:
+        api.v1.services.system.DestroyTokenRequest_Data:
+            type: object
+            properties:
+                token:
+                    type: string
+        api.v1.services.system.DestroyTokenResponse:
+            type: object
+            properties: {}
+            description: DestroyTokenResponse contains the result of the invalidation.
+        api.v1.services.system.GetDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.types.Department'
+        api.v1.services.system.GetMenuResponse:
+            type: object
+            properties:
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Menu'
+                    description: The field id should match the Noun in the method id.
+            description: GetMenuResponse is the response for the MenuService.GetMenu method.
+        api.v1.services.system.GetPermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/api.v1.services.types.Permission'
+        api.v1.services.system.GetPersonalProfileResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+        api.v1.services.system.GetPositionResponse:
+            type: object
+            properties:
+                position:
+                    $ref: '#/components/schemas/api.v1.services.types.Position'
+        api.v1.services.system.GetResourceResponse:
+            type: object
+            properties:
+                resource:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The field id should match the Noun in the method id.
+            description: GetResourceResponse is the response for the ResourceService.GetResource method.
+        api.v1.services.system.GetRoleResponse:
+            type: object
+            properties:
+                role:
+                    $ref: '#/components/schemas/api.v1.services.types.Role'
+        api.v1.services.system.GetUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+        api.v1.services.system.GroupingRule:
+            type: object
+            properties:
+                p_type:
+                    type: string
+                params:
+                    type: array
+                    items:
+                        type: string
+        api.v1.services.system.ListAuthResourcesResponse:
+            type: object
+            properties:
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The list of Auths.
+                total_size:
+                    type: integer
+                    description: The total number of Auths in the result set.
+                    format: int32
+        api.v1.services.system.ListDepartmentsResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                departments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Department'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+        api.v1.services.system.ListGroupingsResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
+        api.v1.services.system.ListMenusResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                menus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Menu'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+            description: ListMenusResponse is the response for the MenuService.ListMenus method.
+        api.v1.services.system.ListPermissionsResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                permissions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+        api.v1.services.system.ListPersonalResourcesResponse:
+            type: object
+            properties:
+                total_size:
+                    type: string
+                    description: The total number of items in the list.
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: list of resources
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+        api.v1.services.system.ListPersonalRolesResponse:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
+        api.v1.services.system.ListPoliciesResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
+        api.v1.services.system.ListPositionsResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                positions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+        api.v1.services.system.ListResourcesResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The paging resources
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+            description: ListResourcesResponse is the response for the ResourceService.ListResources method.
+        api.v1.services.system.ListRolesResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+        api.v1.services.system.ListUserResourcesResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    format: int32
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+        api.v1.services.system.ListUsersResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The paging menus
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: |-
+                        Token to retrieve the next page of results, or empty if there are no
+                         more results in the list.
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: |-
+                        Additional information about this response.
+                         content to be added without destroying the current data format
+        api.v1.services.system.LoginRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.system.LoginResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
+        api.v1.services.system.LogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.v1.services.system.PersonalLogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.v1.services.system.PolicyRule:
+            type: object
+            properties:
+                p_type:
+                    type: string
+                params:
+                    type: array
+                    items:
+                        type: string
+        api.v1.services.system.RefreshPersonalTokenResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+        api.v1.services.system.RegisterRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.system.RegisterResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                data:
+                    $ref: '#/components/schemas/api.v1.services.system.RegisterResponse_Data'
+        api.v1.services.system.RegisterResponse_Data:
+            type: object
+            properties:
+                redirect:
+                    type: string
+        api.v1.services.system.ResetUserPasswordResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.StreamRulesResponse:
+            type: object
+            properties:
+                policy:
+                    $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
+                grouping:
+                    $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
+        api.v1.services.system.TokenRefreshRequest_Data:
+            type: object
+            properties:
+                refresh_token:
+                    type: string
+        api.v1.services.system.TokenRefreshResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
+        api.v1.services.system.UpdateDepartmentResponse:
+            type: object
+            properties:
+                department:
+                    $ref: '#/components/schemas/api.v1.services.types.Department'
+        api.v1.services.system.UpdateMenuResponse:
+            type: object
+            properties:
+                menu:
+                    $ref: '#/components/schemas/api.v1.services.types.Menu'
+            description: UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
+        api.v1.services.system.UpdatePermissionResponse:
+            type: object
+            properties:
+                permission:
+                    $ref: '#/components/schemas/api.v1.services.types.Permission'
+        api.v1.services.system.UpdatePersonalPasswordResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdatePersonalProfileResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdatePersonalSettingResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.UpdatePositionResponse:
+            type: object
+            properties:
+                position:
+                    $ref: '#/components/schemas/api.v1.services.types.Position'
+        api.v1.services.system.UpdateResourceResponse:
+            type: object
+            properties:
+                resource:
+                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+            description: UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
+        api.v1.services.system.UpdateRoleResponse:
+            type: object
+            properties:
+                role:
+                    $ref: '#/components/schemas/api.v1.services.types.Role'
+        api.v1.services.system.UpdateUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+        api.v1.services.system.UpdateUserRolesResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+        api.v1.services.system.UpdateUserStatusResponse:
+            type: object
+            properties: {}
+        api.v1.services.system.ValidateTokenResponse:
+            type: object
+            properties:
+                is_valid:
+                    type: boolean
+                claims:
+                    type: object
+                    additionalProperties:
+                        type: string
+            description: VerifyTokenResponse contains the result of the verification.
+        api.v1.services.system.WatchUpdateResponse:
+            type: object
+            properties:
+                modified_date:
+                    type: string
+        api.v1.services.types.Department:
             type: object
             properties:
                 id:
@@ -2468,375 +2960,14 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Department'
+                        $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: Children holds the value of the children edge.
                 parent:
                     allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Department'
+                        - $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: Parent holds the value of the parent edge.
             description: department.table.comment
-        api.v1.services.system.DestroyTokenRequest_Data:
-            type: object
-            properties:
-                token:
-                    type: string
-        api.v1.services.system.DestroyTokenResponse:
-            type: object
-            properties: {}
-            description: DestroyTokenResponse contains the result of the invalidation.
-        api.v1.services.system.GetDepartmentResponse:
-            type: object
-            properties:
-                department:
-                    $ref: '#/components/schemas/api.v1.services.system.Department'
-        api.v1.services.system.GetMenuResponse:
-            type: object
-            properties:
-                menu:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: The field id should match the Noun in the method id.
-            description: GetMenuResponse is the response for the MenuService.GetMenu method.
-        api.v1.services.system.GetPermissionResponse:
-            type: object
-            properties:
-                permission:
-                    $ref: '#/components/schemas/api.v1.services.system.Permission'
-        api.v1.services.system.GetPersonalProfileResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.system.User'
-        api.v1.services.system.GetPositionResponse:
-            type: object
-            properties:
-                position:
-                    $ref: '#/components/schemas/api.v1.services.system.Position'
-        api.v1.services.system.GetResourceResponse:
-            type: object
-            properties:
-                resource:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Resource'
-                    description: The field id should match the Noun in the method id.
-            description: GetResourceResponse is the response for the ResourceService.GetResource method.
-        api.v1.services.system.GetRoleResponse:
-            type: object
-            properties:
-                role:
-                    $ref: '#/components/schemas/api.v1.services.system.Role'
-        api.v1.services.system.GetUserResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.system.User'
-        api.v1.services.system.GroupingRule:
-            type: object
-            properties:
-                p_type:
-                    type: string
-                params:
-                    type: array
-                    items:
-                        type: string
-        api.v1.services.system.ListAuthResourcesResponse:
-            type: object
-            properties:
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
-                    description: The list of Auths.
-                total_size:
-                    type: integer
-                    description: The total number of Auths in the result set.
-                    format: int32
-        api.v1.services.system.ListDepartmentsResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                departments:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Department'
-                    description: The paging menus
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-        api.v1.services.system.ListGroupingsResponse:
-            type: object
-            properties:
-                rules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
-        api.v1.services.system.ListMenusResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                menus:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
-                    description: The paging menus
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-            description: ListMenusResponse is the response for the MenuService.ListMenus method.
-        api.v1.services.system.ListPermissionsResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                permissions:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Permission'
-                    description: The paging menus
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-        api.v1.services.system.ListPersonalResourcesResponse:
-            type: object
-            properties:
-                total_size:
-                    type: string
-                    description: The total number of items in the list.
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
-                    description: list of resources
-                next_page_token:
-                    type: string
-                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
-        api.v1.services.system.ListPersonalRolesResponse:
-            type: object
-            properties:
-                roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Role'
-        api.v1.services.system.ListPoliciesResponse:
-            type: object
-            properties:
-                rules:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
-        api.v1.services.system.ListPositionsResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                positions:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Position'
-                    description: The paging menus
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-        api.v1.services.system.ListResourcesResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
-                    description: The paging resources
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-            description: ListResourcesResponse is the response for the ResourceService.ListResources method.
-        api.v1.services.system.ListRolesResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Role'
-                    description: The paging menus
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-        api.v1.services.system.ListUserResourcesResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    format: int32
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
-        api.v1.services.system.ListUsersResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                users:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.system.User'
-                    description: The paging menus
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: |-
-                        Token to retrieve the next page of results, or empty if there are no
-                         more results in the list.
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: |-
-                        Additional information about this response.
-                         content to be added without destroying the current data format
-        api.v1.services.system.LoginRequest_Data:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captcha_id:
-                    type: string
-                captcha_code:
-                    type: string
-        api.v1.services.system.LoginResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.system.LogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-        api.v1.services.system.Menu:
+        api.v1.services.types.Menu:
             type: object
             properties:
                 id:
@@ -2891,24 +3022,24 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                        $ref: '#/components/schemas/api.v1.services.types.Menu'
                     description: Children holds the value of the children edge.
                 parent:
                     allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Menu'
+                        - $ref: '#/components/schemas/api.v1.services.types.Menu'
                     description: Parent holds the value of the parent edge.
                 resources:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: Resources holds the value of the resources edge.
                 roles:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: Roles holds the value of the roles edge.
             description: Menu is the model entity for the Menu schema.
-        api.v1.services.system.Permission:
+        api.v1.services.types.Permission:
             type: object
             properties:
                 id:
@@ -2949,24 +3080,10 @@ components:
                 resources:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: permission.field.resources
             description: permission.table.comment
-        api.v1.services.system.PersonalLogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-        api.v1.services.system.PolicyRule:
-            type: object
-            properties:
-                p_type:
-                    type: string
-                params:
-                    type: array
-                    items:
-                        type: string
-        api.v1.services.system.Position:
+        api.v1.services.types.Position:
             type: object
             properties:
                 id:
@@ -2995,38 +3112,7 @@ components:
                     type: string
                     description: department.field.department_id
             description: position.table.comment
-        api.v1.services.system.RefreshPersonalTokenResponse:
-            type: object
-            properties:
-                token:
-                    type: string
-        api.v1.services.system.RegisterRequest_Data:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captcha_id:
-                    type: string
-                captcha_code:
-                    type: string
-        api.v1.services.system.RegisterResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                data:
-                    $ref: '#/components/schemas/api.v1.services.system.RegisterResponse_Data'
-        api.v1.services.system.RegisterResponse_Data:
-            type: object
-            properties:
-                redirect:
-                    type: string
-        api.v1.services.system.ResetUserPasswordResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.Resource:
+        api.v1.services.types.Resource:
             type: object
             properties:
                 id:
@@ -3097,11 +3183,11 @@ components:
                 children:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: Children holds the value of the children edge.
                 parent:
                     allOf:
-                        - $ref: '#/components/schemas/api.v1.services.system.Resource'
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: Parent holds the value of the parent edge.
                 permission_ids:
                     type: array
@@ -3111,10 +3197,10 @@ components:
                 permissions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Permission'
+                        $ref: '#/components/schemas/api.v1.services.types.Permission'
                     description: Permissions holds the value of the permissions edge.
             description: Resource is the model entity for the Resource schema.
-        api.v1.services.system.Role:
+        api.v1.services.types.Role:
             type: object
             properties:
                 id:
@@ -3151,23 +3237,23 @@ components:
                     type: integer
                     description: role.field.status
                     format: int32
-                is_system:
+                is_types:
                     type: boolean
-                    description: role.field.is_system
+                    description: role.field.is_types
                 menus:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Menu'
+                        $ref: '#/components/schemas/api.v1.services.types.Menu'
                     description: Menus holds the value of the menus edge.
                 users:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.User'
+                        $ref: '#/components/schemas/api.v1.services.types.User'
                     description: Users holds the value of the users edge.
                 resources:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Resource'
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: Resources holds the value of the resources edge.
                 resource_ids:
                     type: array
@@ -3177,7 +3263,7 @@ components:
                 permissions:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Permission'
+                        $ref: '#/components/schemas/api.v1.services.types.Permission'
                     description: Permissions holds the value of the permissions edge.
                 permission_ids:
                     type: array
@@ -3185,78 +3271,7 @@ components:
                         type: string
                     description: Permission Ids holds the value of the permission_ids edge.
             description: Role is the model entity for the Role schema.
-        api.v1.services.system.StreamRulesResponse:
-            type: object
-            properties:
-                policy:
-                    $ref: '#/components/schemas/api.v1.services.system.PolicyRule'
-                grouping:
-                    $ref: '#/components/schemas/api.v1.services.system.GroupingRule'
-        api.v1.services.system.TokenRefreshRequest_Data:
-            type: object
-            properties:
-                refresh_token:
-                    type: string
-        api.v1.services.system.TokenRefreshResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.system.UpdateDepartmentResponse:
-            type: object
-            properties:
-                department:
-                    $ref: '#/components/schemas/api.v1.services.system.Department'
-        api.v1.services.system.UpdateMenuResponse:
-            type: object
-            properties:
-                menu:
-                    $ref: '#/components/schemas/api.v1.services.system.Menu'
-            description: UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
-        api.v1.services.system.UpdatePermissionResponse:
-            type: object
-            properties:
-                permission:
-                    $ref: '#/components/schemas/api.v1.services.system.Permission'
-        api.v1.services.system.UpdatePersonalPasswordResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdatePersonalProfileResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdatePersonalSettingResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdatePositionResponse:
-            type: object
-            properties:
-                position:
-                    $ref: '#/components/schemas/api.v1.services.system.Position'
-        api.v1.services.system.UpdateResourceResponse:
-            type: object
-            properties:
-                resource:
-                    $ref: '#/components/schemas/api.v1.services.system.Resource'
-            description: UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
-        api.v1.services.system.UpdateRoleResponse:
-            type: object
-            properties:
-                role:
-                    $ref: '#/components/schemas/api.v1.services.system.Role'
-        api.v1.services.system.UpdateUserResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.system.User'
-        api.v1.services.system.UpdateUserRolesResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.system.User'
-        api.v1.services.system.UpdateUserStatusResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.User:
+        api.v1.services.types.User:
             type: object
             properties:
                 id:
@@ -3348,7 +3363,7 @@ components:
                 roles:
                     type: array
                     items:
-                        $ref: '#/components/schemas/api.v1.services.system.Role'
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: Roles holds the value of the roles edge.
                 role_ids:
                     type: array
@@ -3356,21 +3371,6 @@ components:
                         type: string
                     description: Role Ids holds the value of the role_ids
             description: User is the model entity for the User schema.
-        api.v1.services.system.ValidateTokenResponse:
-            type: object
-            properties:
-                is_valid:
-                    type: boolean
-                claims:
-                    type: object
-                    additionalProperties:
-                        type: string
-            description: VerifyTokenResponse contains the result of the verification.
-        api.v1.services.system.WatchUpdateResponse:
-            type: object
-            properties:
-                modified_date:
-                    type: string
         google.protobuf.Any:
             type: object
             properties:

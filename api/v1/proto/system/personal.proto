@@ -4,7 +4,7 @@ package api.v1.services.system;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
-import "system/types.proto";
+import "types/system.proto";
 import "validate/validate.proto";
 
 option go_package = "v1/services/system;system";
@@ -15,47 +15,47 @@ option java_package = "com.origadmin.api.v1.services.system";
 // PersonalService Personal user service
 service PersonalService {
   // GetPersonalProfile Update the personal user information
-  rpc GetPersonalProfile (GetPersonalProfileRequest) returns (GetPersonalProfileResponse) {
+  rpc GetPersonalProfile(GetPersonalProfileRequest) returns (GetPersonalProfileResponse) {
     option (google.api.http) = {get: "/sys/personal/profile"};
   }
   // ListPersonalResources List the personal user's menu
-  rpc ListPersonalResources (ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
+  rpc ListPersonalResources(ListPersonalResourcesRequest) returns (ListPersonalResourcesResponse) {
     option (google.api.http) = {get: "/sys/personal/resources"};
   }
   // ListPersonalResources List the personal user's menu
-  rpc ListPersonalRoles (ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
+  rpc ListPersonalRoles(ListPersonalRolesRequest) returns (ListPersonalRolesResponse) {
     option (google.api.http) = {get: "/sys/personal/roles"};
   }
   // PersonalLogout Personal user logs out
-  rpc PersonalLogout (PersonalLogoutRequest) returns (PersonalLogoutResponse) {
+  rpc PersonalLogout(PersonalLogoutRequest) returns (PersonalLogoutResponse) {
     option (google.api.http) = {
       post: "/sys/personal/logout"
       body: "data"
     };
   }
   // RefreshPersonalToken Refresh the personal user's token
-  rpc RefreshPersonalToken (RefreshPersonalTokenRequest) returns (RefreshPersonalTokenResponse) {
+  rpc RefreshPersonalToken(RefreshPersonalTokenRequest) returns (RefreshPersonalTokenResponse) {
     option (google.api.http) = {
       post: "/sys/personal/token/refresh"
       body: "data"
     };
   }
   // UpdatePersonalProfilePassword The user changes the password
-  rpc UpdatePersonalPassword (UpdatePersonalPasswordRequest) returns (UpdatePersonalPasswordResponse) {
+  rpc UpdatePersonalPassword(UpdatePersonalPasswordRequest) returns (UpdatePersonalPasswordResponse) {
     option (google.api.http) = {
       put: "/sys/personal/password"
       body: "data"
     };
   }
   // UpdatePersonalProfile Update the personal user information
-  rpc UpdatePersonalProfile (UpdatePersonalProfileRequest) returns (UpdatePersonalProfileResponse) {
+  rpc UpdatePersonalProfile(UpdatePersonalProfileRequest) returns (UpdatePersonalProfileResponse) {
     option (google.api.http) = {
       put: "/sys/personal/profile"
       body: "data"
     };
   }
   // UpdatePersonalSetting User settings are saved
-  rpc UpdatePersonalSetting (UpdatePersonalSettingRequest) returns (UpdatePersonalSettingResponse) {
+  rpc UpdatePersonalSetting(UpdatePersonalSettingRequest) returns (UpdatePersonalSettingResponse) {
     option (google.api.http) = {
       put: "/sys/personal/setting"
       body: "data"
@@ -70,7 +70,7 @@ message UpdatePersonalSettingRequest {
 message UpdatePersonalSettingResponse {}
 
 message UpdatePersonalRoleRequest {
-  Role role = 1 [json_name = "role"];
+  api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message UpdatePersonalRoleResponse {}
@@ -94,9 +94,9 @@ message ListPersonalResourcesResponse {
   // The total number of items in the list.
   int64 total_size = 1 [json_name = "total"];
   // list of resources
-  repeated Resource resources = 2 [json_name = "resources"];
+  repeated api.v1.services.types.Resource resources = 2 [json_name = "resources"];
   // Token to retrieve the next page of results, or empty if there are no
-// more results in the list.
+  // more results in the list.
   string next_page_token = 5 [json_name = "next_page_token"];
 }
 
@@ -132,13 +132,13 @@ message PersonalLogoutResponse {
 message ListPersonalRolesRequest {}
 
 message ListPersonalRolesResponse {
-  repeated Role roles = 1;
+  repeated api.v1.services.types.Role roles = 1;
 }
 
 message GetPersonalProfileRequest {}
 
 message GetPersonalProfileResponse {
-  User user = 1 [json_name = "user"];
+  api.v1.services.types.User user = 1 [json_name = "user"];
 }
 
 message RefreshPersonalTokenRequest {

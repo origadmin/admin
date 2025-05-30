@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -119,7 +120,7 @@ type ListDepartmentsResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging menus
-	Departments []*Department `protobuf:"bytes,2,rep,name=departments,proto3" json:"departments,omitempty"`
+	Departments []*types.Department `protobuf:"bytes,2,rep,name=departments,proto3" json:"departments,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -171,7 +172,7 @@ func (x *ListDepartmentsResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListDepartmentsResponse) GetDepartments() []*Department {
+func (x *ListDepartmentsResponse) GetDepartments() []*types.Department {
 	if x != nil {
 		return x.Departments
 	}
@@ -254,7 +255,7 @@ func (x *GetDepartmentRequest) GetId() int64 {
 
 type GetDepartmentResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Department    *Department            `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department      `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -289,7 +290,7 @@ func (*GetDepartmentResponse) Descriptor() ([]byte, []int) {
 	return file_system_department_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetDepartmentResponse) GetDepartment() *Department {
+func (x *GetDepartmentResponse) GetDepartment() *types.Department {
 	if x != nil {
 		return x.Department
 	}
@@ -304,7 +305,7 @@ type CreateDepartmentRequest struct {
 	DepartmentId string `protobuf:"bytes,3,opt,name=department_id,proto3" json:"department_id,omitempty"`
 	// The department resource to create.
 	// The field id should match the Noun in the method id.
-	Department    *Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -353,7 +354,7 @@ func (x *CreateDepartmentRequest) GetDepartmentId() string {
 	return ""
 }
 
-func (x *CreateDepartmentRequest) GetDepartment() *Department {
+func (x *CreateDepartmentRequest) GetDepartment() *types.Department {
 	if x != nil {
 		return x.Department
 	}
@@ -362,7 +363,7 @@ func (x *CreateDepartmentRequest) GetDepartment() *Department {
 
 type CreateDepartmentResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Department    *Department            `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department      `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -397,7 +398,7 @@ func (*CreateDepartmentResponse) Descriptor() ([]byte, []int) {
 	return file_system_department_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreateDepartmentResponse) GetDepartment() *Department {
+func (x *CreateDepartmentResponse) GetDepartment() *types.Department {
 	if x != nil {
 		return x.Department
 	}
@@ -409,7 +410,7 @@ type UpdateDepartmentRequest struct {
 	// The department id to use for this department.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The department resource which replaces the resource on the server.
-	Department    *Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -451,7 +452,7 @@ func (x *UpdateDepartmentRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdateDepartmentRequest) GetDepartment() *Department {
+func (x *UpdateDepartmentRequest) GetDepartment() *types.Department {
 	if x != nil {
 		return x.Department
 	}
@@ -460,7 +461,7 @@ func (x *UpdateDepartmentRequest) GetDepartment() *Department {
 
 type UpdateDepartmentResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Department    *Department            `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
+	Department    *types.Department      `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -495,7 +496,7 @@ func (*UpdateDepartmentResponse) Descriptor() ([]byte, []int) {
 	return file_system_department_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateDepartmentResponse) GetDepartment() *Department {
+func (x *UpdateDepartmentResponse) GetDepartment() *types.Department {
 	if x != nil {
 		return x.Department
 	}
@@ -596,7 +597,7 @@ var File_system_department_proto protoreflect.FileDescriptor
 
 const file_system_department_proto_rawDesc = "" +
 	"\n" +
-	"\x17system/department.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\xbe\x01\n" +
+	"\x17system/department.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xbe\x01\n" +
 	"\x16ListDepartmentsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
@@ -607,41 +608,41 @@ const file_system_department_proto_rawDesc = "" +
 	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
-	"only_count\"\x9c\x02\n" +
+	"only_count\"\x9b\x02\n" +
 	"\x17ListDepartmentsResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x12D\n" +
-	"\vdepartments\x18\x02 \x03(\v2\".api.v1.services.system.DepartmentR\vdepartments\x12\x18\n" +
+	"total_size\x12C\n" +
+	"\vdepartments\x18\x02 \x03(\v2!.api.v1.services.types.DepartmentR\vdepartments\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\"&\n" +
 	"\x14GetDepartmentRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"[\n" +
-	"\x15GetDepartmentResponse\x12B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"Z\n" +
+	"\x15GetDepartmentResponse\x12A\n" +
 	"\n" +
-	"department\x18\x01 \x01(\v2\".api.v1.services.system.DepartmentR\n" +
-	"department\"\x9b\x01\n" +
+	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\"\x9a\x01\n" +
 	"\x17CreateDepartmentRequest\x12\x16\n" +
 	"\x06parent\x18\x01 \x01(\tR\x06parent\x12$\n" +
-	"\rdepartment_id\x18\x03 \x01(\tR\rdepartment_id\x12B\n" +
+	"\rdepartment_id\x18\x03 \x01(\tR\rdepartment_id\x12A\n" +
 	"\n" +
-	"department\x18\x02 \x01(\v2\".api.v1.services.system.DepartmentR\n" +
-	"department\"^\n" +
-	"\x18CreateDepartmentResponse\x12B\n" +
+	"department\x18\x02 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\"]\n" +
+	"\x18CreateDepartmentResponse\x12A\n" +
 	"\n" +
-	"department\x18\x01 \x01(\v2\".api.v1.services.system.DepartmentR\n" +
-	"department\"m\n" +
+	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\"l\n" +
 	"\x17UpdateDepartmentRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12A\n" +
 	"\n" +
-	"department\x18\x02 \x01(\v2\".api.v1.services.system.DepartmentR\n" +
-	"department\"^\n" +
-	"\x18UpdateDepartmentResponse\x12B\n" +
+	"department\x18\x02 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\"]\n" +
+	"\x18UpdateDepartmentResponse\x12A\n" +
 	"\n" +
-	"department\x18\x01 \x01(\v2\".api.v1.services.system.DepartmentR\n" +
+	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
 	"department\")\n" +
 	"\x17DeleteDepartmentRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
@@ -681,18 +682,18 @@ var file_system_department_proto_goTypes = []any{
 	(*UpdateDepartmentResponse)(nil), // 7: api.v1.services.system.UpdateDepartmentResponse
 	(*DeleteDepartmentRequest)(nil),  // 8: api.v1.services.system.DeleteDepartmentRequest
 	(*DeleteDepartmentResponse)(nil), // 9: api.v1.services.system.DeleteDepartmentResponse
-	(*Department)(nil),               // 10: api.v1.services.system.Department
+	(*types.Department)(nil),         // 10: api.v1.services.types.Department
 	(*anypb.Any)(nil),                // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),            // 12: google.protobuf.Empty
 }
 var file_system_department_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.system.ListDepartmentsResponse.departments:type_name -> api.v1.services.system.Department
+	10, // 0: api.v1.services.system.ListDepartmentsResponse.departments:type_name -> api.v1.services.types.Department
 	11, // 1: api.v1.services.system.ListDepartmentsResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.system.GetDepartmentResponse.department:type_name -> api.v1.services.system.Department
-	10, // 3: api.v1.services.system.CreateDepartmentRequest.department:type_name -> api.v1.services.system.Department
-	10, // 4: api.v1.services.system.CreateDepartmentResponse.department:type_name -> api.v1.services.system.Department
-	10, // 5: api.v1.services.system.UpdateDepartmentRequest.department:type_name -> api.v1.services.system.Department
-	10, // 6: api.v1.services.system.UpdateDepartmentResponse.department:type_name -> api.v1.services.system.Department
+	10, // 2: api.v1.services.system.GetDepartmentResponse.department:type_name -> api.v1.services.types.Department
+	10, // 3: api.v1.services.system.CreateDepartmentRequest.department:type_name -> api.v1.services.types.Department
+	10, // 4: api.v1.services.system.CreateDepartmentResponse.department:type_name -> api.v1.services.types.Department
+	10, // 5: api.v1.services.system.UpdateDepartmentRequest.department:type_name -> api.v1.services.types.Department
+	10, // 6: api.v1.services.system.UpdateDepartmentResponse.department:type_name -> api.v1.services.types.Department
 	12, // 7: api.v1.services.system.DeleteDepartmentResponse.empty:type_name -> google.protobuf.Empty
 	0,  // 8: api.v1.services.system.DepartmentService.ListDepartments:input_type -> api.v1.services.system.ListDepartmentsRequest
 	2,  // 9: api.v1.services.system.DepartmentService.GetDepartment:input_type -> api.v1.services.system.GetDepartmentRequest
@@ -716,7 +717,6 @@ func file_system_department_proto_init() {
 	if File_system_department_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_department_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

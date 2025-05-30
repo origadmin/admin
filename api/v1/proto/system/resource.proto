@@ -5,7 +5,7 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "system/types.proto";
+import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemResource";
 
 // The resource service definition.
 service ResourceService {
-  rpc ListResources (ListResourcesRequest) returns (ListResourcesResponse) {
+  rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
     option (google.api.http) = {get: "/sys/resources"};
   }
-  rpc GetResource (GetResourceRequest) returns (GetResourceResponse) {
+  rpc GetResource(GetResourceRequest) returns (GetResourceResponse) {
     option (google.api.http) = {get: "/sys/resources/{id}"};
   }
-  rpc CreateResource (CreateResourceRequest) returns (CreateResourceResponse) {
+  rpc CreateResource(CreateResourceRequest) returns (CreateResourceResponse) {
     option (google.api.http) = {
       post: "/sys/resources"
       body: "resource"
     };
   }
-  rpc UpdateResource (UpdateResourceRequest) returns (UpdateResourceResponse) {
+  rpc UpdateResource(UpdateResourceRequest) returns (UpdateResourceResponse) {
     option (google.api.http) = {
       put: "/sys/resources/{resource.id}"
       body: "resource"
     };
   }
-  rpc DeleteResource (DeleteResourceRequest) returns (DeleteResourceResponse) {
+  rpc DeleteResource(DeleteResourceRequest) returns (DeleteResourceResponse) {
     option (google.api.http) = {delete: "/sys/resources/{id}"};
   }
 }
@@ -61,7 +61,7 @@ message ListResourcesResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging resources
-  repeated Resource resources = 2 [json_name = "resources"];
+  repeated api.v1.services.types.Resource resources = 2 [json_name = "resources"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -84,7 +84,7 @@ message GetResourceRequest {
 // GetResourceResponse is the response for the ResourceService.GetResource method.
 message GetResourceResponse {
   // The field id should match the Noun in the method id.
-  Resource resource = 1 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1 [json_name = "resource"];
 }
 
 // CreateResourceRequest is the request for the ResourceService.CreateResource method.
@@ -94,12 +94,12 @@ message CreateResourceRequest {
   // The resource id to use for this resource.
   string resource_id = 2 [json_name = "resource_id"];
   // The resource object to create.
-  Resource resource = 3 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 3 [json_name = "resource"];
 }
 
 // CreateResourceResponse is the response for the ResourceService.CreateResource method.
 message CreateResourceResponse {
-  Resource resource = 1 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1 [json_name = "resource"];
 }
 
 // UpdateResourceRequest is the request for the ResourceService.UpdateResource method.
@@ -107,12 +107,12 @@ message UpdateResourceRequest {
   // The id of the resource object to update.
   int64 id = 1 [json_name = "id"];
   // The resource object which replaces the resource on the server.
-  Resource resource = 2 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 2 [json_name = "resource"];
 }
 
 // UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
 message UpdateResourceResponse {
-  Resource resource = 1 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1 [json_name = "resource"];
 }
 
 // DeleteResourceRequest is the request for the ResourceService.DeleteResource method.

@@ -16,14 +16,14 @@ import (
 	"origadmin/application/admin/helpers/resp"
 )
 
-// RoleServiceBridge is a menu service.
-type RoleServiceBridge struct {
+// RoleServiceAgent is a menu service.
+type RoleServiceAgent struct {
 	resp.Response
 
 	client pb.RoleServiceClient
 }
 
-func (s RoleServiceBridge) CreateRole(ctx context.Context, request *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
+func (s RoleServiceAgent) CreateRole(ctx context.Context, request *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.CreateRole(ctx, request)
 	if err != nil {
@@ -36,7 +36,7 @@ func (s RoleServiceBridge) CreateRole(ctx context.Context, request *pb.CreateRol
 	return nil, nil
 }
 
-func (s RoleServiceBridge) DeleteRole(ctx context.Context, request *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
+func (s RoleServiceAgent) DeleteRole(ctx context.Context, request *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.DeleteRole(ctx, request)
 	if err != nil {
@@ -49,7 +49,7 @@ func (s RoleServiceBridge) DeleteRole(ctx context.Context, request *pb.DeleteRol
 	return nil, nil
 }
 
-func (s RoleServiceBridge) GetRole(ctx context.Context, request *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
+func (s RoleServiceAgent) GetRole(ctx context.Context, request *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.GetRole(ctx, request)
 	if err != nil {
@@ -62,7 +62,7 @@ func (s RoleServiceBridge) GetRole(ctx context.Context, request *pb.GetRoleReque
 	return nil, nil
 }
 
-func (s RoleServiceBridge) ListRoles(ctx context.Context, request *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
+func (s RoleServiceAgent) ListRoles(ctx context.Context, request *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.ListRoles(ctx, request)
 	if err != nil {
@@ -76,7 +76,7 @@ func (s RoleServiceBridge) ListRoles(ctx context.Context, request *pb.ListRolesR
 	return nil, nil
 }
 
-func (s RoleServiceBridge) UpdateRole(ctx context.Context, request *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
+func (s RoleServiceAgent) UpdateRole(ctx context.Context, request *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
 	httpCtx := agent.FromHTTPContext(ctx)
 	response, err := s.client.UpdateRole(ctx, request)
 	if err != nil {
@@ -89,18 +89,18 @@ func (s RoleServiceBridge) UpdateRole(ctx context.Context, request *pb.UpdateRol
 	return nil, nil
 }
 
-// NewRoleServiceBridge new a menu service.
-func NewRoleServiceBridge(client pb.RoleServiceClient) *RoleServiceBridge {
-	return &RoleServiceBridge{client: client}
+// NewRoleServiceAgent new a menu service.
+func NewRoleServiceAgent(client pb.RoleServiceClient) *RoleServiceAgent {
+	return &RoleServiceAgent{client: client}
 }
 
-// NewRoleServiceBridgePB new a menu service.
-func NewRoleServiceBridgePB(client pb.RoleServiceClient) pb.RoleServiceBridge {
-	return &RoleServiceBridge{client: client}
+// NewRoleServiceAgentPB new a menu service.
+func NewRoleServiceAgentPB(client pb.RoleServiceClient) pb.RoleServiceBridger {
+	return &RoleServiceAgent{client: client}
 }
-func NewRoleServiceBridgeClient(client *service.GRPCClient) pb.RoleServiceBridge {
+func NewRoleServiceAgentClient(client *service.GRPCClient) pb.RoleServiceAgent {
 	c := pb.NewRoleServiceClient(client)
-	return NewRoleServiceBridge(c)
+	return NewRoleServiceAgent(c)
 }
 
-var _ pb.RoleServiceBridge = (*RoleServiceBridge)(nil)
+var _ pb.RoleServiceAgent = (*RoleServiceAgent)(nil)

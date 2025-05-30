@@ -5,7 +5,7 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "system/types.proto";
+import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemRole";
 
 // The login service definition.
 service RoleService {
-  rpc ListRoles (ListRolesRequest) returns (ListRolesResponse) {
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
     option (google.api.http) = {get: "/sys/roles"};
   }
-  rpc GetRole (GetRoleRequest) returns (GetRoleResponse) {
+  rpc GetRole(GetRoleRequest) returns (GetRoleResponse) {
     option (google.api.http) = {get: "/sys/roles/{id}"};
   }
-  rpc CreateRole (CreateRoleRequest) returns (CreateRoleResponse) {
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
       post: "/sys/roles"
       body: "role"
     };
   }
-  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse) {
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
       put: "/sys/roles/{role.id}"
       body: "role"
     };
   }
-  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse) {
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
     option (google.api.http) = {delete: "/sys/roles/{id}"};
   }
 }
@@ -57,7 +57,7 @@ message ListRolesResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated Role roles = 2 [json_name = "roles"];
+  repeated api.v1.services.types.Role roles = 2 [json_name = "roles"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -77,7 +77,7 @@ message GetRoleRequest {
 }
 
 message GetRoleResponse {
-  Role role = 1 [json_name = "role"];
+  api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message CreateRoleRequest {
@@ -89,22 +89,22 @@ message CreateRoleRequest {
 
   // The role resource to create.
   // The field id should match the Noun in the method id.
-  Role role = 2 [json_name = "role"];
+  api.v1.services.types.Role role = 2 [json_name = "role"];
 }
 
 message CreateRoleResponse {
-  Role role = 1 [json_name = "role"];
+  api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message UpdateRoleRequest {
   // The id of the role resource to update.
   int64 id = 1 [json_name = "id"];
   // The role resource which replaces the resource on the server.
-  Role role = 2 [json_name = "role"];
+  api.v1.services.types.Role role = 2 [json_name = "role"];
 }
 
 message UpdateRoleResponse {
-  Role role = 1 [json_name = "role"];
+  api.v1.services.types.Role role = 1 [json_name = "role"];
 }
 
 message DeleteRoleRequest {

@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -106,7 +107,7 @@ func (*UpdatePersonalSettingResponse) Descriptor() ([]byte, []int) {
 
 type UpdatePersonalRoleRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *Role                  `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -141,7 +142,7 @@ func (*UpdatePersonalRoleRequest) Descriptor() ([]byte, []int) {
 	return file_system_personal_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpdatePersonalRoleRequest) GetRole() *Role {
+func (x *UpdatePersonalRoleRequest) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
 	}
@@ -279,7 +280,7 @@ type ListPersonalResourcesResponse struct {
 	// The total number of items in the list.
 	TotalSize int64 `protobuf:"varint,1,opt,name=total_size,json=total,proto3" json:"total_size,omitempty"`
 	// list of resources
-	Resources []*Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*types.Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Token to retrieve the next page of results, or empty if there are no
 	// more results in the list.
 	NextPageToken string `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
@@ -324,7 +325,7 @@ func (x *ListPersonalResourcesResponse) GetTotalSize() int64 {
 	return 0
 }
 
-func (x *ListPersonalResourcesResponse) GetResources() []*Resource {
+func (x *ListPersonalResourcesResponse) GetResources() []*types.Resource {
 	if x != nil {
 		return x.Resources
 	}
@@ -704,7 +705,7 @@ func (*ListPersonalRolesRequest) Descriptor() ([]byte, []int) {
 
 type ListPersonalRolesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Roles         []*Role                `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles         []*types.Role          `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -739,7 +740,7 @@ func (*ListPersonalRolesResponse) Descriptor() ([]byte, []int) {
 	return file_system_personal_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *ListPersonalRolesResponse) GetRoles() []*Role {
+func (x *ListPersonalRolesResponse) GetRoles() []*types.Role {
 	if x != nil {
 		return x.Roles
 	}
@@ -784,7 +785,7 @@ func (*GetPersonalProfileRequest) Descriptor() ([]byte, []int) {
 
 type GetPersonalProfileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -819,7 +820,7 @@ func (*GetPersonalProfileResponse) Descriptor() ([]byte, []int) {
 	return file_system_personal_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *GetPersonalProfileResponse) GetUser() *User {
+func (x *GetPersonalProfileResponse) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -918,12 +919,12 @@ var File_system_personal_proto protoreflect.FileDescriptor
 
 const file_system_personal_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/personal.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x12system/types.proto\x1a\x17validate/validate.proto\"H\n" +
+	"\x15system/personal.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x12types/system.proto\x1a\x17validate/validate.proto\"H\n" +
 	"\x1cUpdatePersonalSettingRequest\x12(\n" +
 	"\x04data\x18\x01 \x01(\v2\x14.google.protobuf.AnyR\x04data\"\x1f\n" +
-	"\x1dUpdatePersonalSettingResponse\"M\n" +
-	"\x19UpdatePersonalRoleRequest\x120\n" +
-	"\x04role\x18\x01 \x01(\v2\x1c.api.v1.services.system.RoleR\x04role\"\x1c\n" +
+	"\x1dUpdatePersonalSettingResponse\"L\n" +
+	"\x19UpdatePersonalRoleRequest\x12/\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\x1c\n" +
 	"\x1aUpdatePersonalRoleResponse\"\xc4\x01\n" +
 	"\x1cListPersonalResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
@@ -935,11 +936,11 @@ const file_system_personal_proto_rawDesc = "" +
 	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
-	"only_count\"\xa4\x01\n" +
+	"only_count\"\xa3\x01\n" +
 	"\x1dListPersonalResourcesResponse\x12\x19\n" +
 	"\n" +
-	"total_size\x18\x01 \x01(\x03R\x05total\x12>\n" +
-	"\tresources\x18\x02 \x03(\v2 .api.v1.services.system.ResourceR\tresources\x12(\n" +
+	"total_size\x18\x01 \x01(\x03R\x05total\x12=\n" +
+	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\"I\n" +
 	"\x1dUpdatePersonalPasswordRequest\x12(\n" +
 	"\x04data\x18\x01 \x01(\v2\x14.google.protobuf.AnyR\x04data\" \n" +
@@ -954,12 +955,12 @@ const file_system_personal_proto_rawDesc = "" +
 	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\"2\n" +
 	"\x16PersonalLogoutResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\"\x1a\n" +
-	"\x18ListPersonalRolesRequest\"O\n" +
-	"\x19ListPersonalRolesResponse\x122\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1c.api.v1.services.system.RoleR\x05roles\"\x1b\n" +
-	"\x19GetPersonalProfileRequest\"N\n" +
-	"\x1aGetPersonalProfileResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\"G\n" +
+	"\x18ListPersonalRolesRequest\"N\n" +
+	"\x19ListPersonalRolesResponse\x121\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\x1b\n" +
+	"\x19GetPersonalProfileRequest\"M\n" +
+	"\x1aGetPersonalProfileResponse\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"G\n" +
 	"\x1bRefreshPersonalTokenRequest\x12(\n" +
 	"\x04data\x18\x01 \x01(\v2\x14.google.protobuf.AnyR\x04data\"4\n" +
 	"\x1cRefreshPersonalTokenResponse\x12\x14\n" +
@@ -1011,19 +1012,19 @@ var file_system_personal_proto_goTypes = []any{
 	(*RefreshPersonalTokenRequest)(nil),    // 18: api.v1.services.system.RefreshPersonalTokenRequest
 	(*RefreshPersonalTokenResponse)(nil),   // 19: api.v1.services.system.RefreshPersonalTokenResponse
 	(*anypb.Any)(nil),                      // 20: google.protobuf.Any
-	(*Role)(nil),                           // 21: api.v1.services.system.Role
-	(*Resource)(nil),                       // 22: api.v1.services.system.Resource
-	(*User)(nil),                           // 23: api.v1.services.system.User
+	(*types.Role)(nil),                     // 21: api.v1.services.types.Role
+	(*types.Resource)(nil),                 // 22: api.v1.services.types.Resource
+	(*types.User)(nil),                     // 23: api.v1.services.types.User
 }
 var file_system_personal_proto_depIdxs = []int32{
 	20, // 0: api.v1.services.system.UpdatePersonalSettingRequest.data:type_name -> google.protobuf.Any
-	21, // 1: api.v1.services.system.UpdatePersonalRoleRequest.role:type_name -> api.v1.services.system.Role
-	22, // 2: api.v1.services.system.ListPersonalResourcesResponse.resources:type_name -> api.v1.services.system.Resource
+	21, // 1: api.v1.services.system.UpdatePersonalRoleRequest.role:type_name -> api.v1.services.types.Role
+	22, // 2: api.v1.services.system.ListPersonalResourcesResponse.resources:type_name -> api.v1.services.types.Resource
 	20, // 3: api.v1.services.system.UpdatePersonalPasswordRequest.data:type_name -> google.protobuf.Any
 	20, // 4: api.v1.services.system.UpdatePersonalProfileRequest.data:type_name -> google.protobuf.Any
 	20, // 5: api.v1.services.system.PersonalLogoutRequest.data:type_name -> google.protobuf.Any
-	21, // 6: api.v1.services.system.ListPersonalRolesResponse.roles:type_name -> api.v1.services.system.Role
-	23, // 7: api.v1.services.system.GetPersonalProfileResponse.user:type_name -> api.v1.services.system.User
+	21, // 6: api.v1.services.system.ListPersonalRolesResponse.roles:type_name -> api.v1.services.types.Role
+	23, // 7: api.v1.services.system.GetPersonalProfileResponse.user:type_name -> api.v1.services.types.User
 	20, // 8: api.v1.services.system.RefreshPersonalTokenRequest.data:type_name -> google.protobuf.Any
 	16, // 9: api.v1.services.system.PersonalService.GetPersonalProfile:input_type -> api.v1.services.system.GetPersonalProfileRequest
 	4,  // 10: api.v1.services.system.PersonalService.ListPersonalResources:input_type -> api.v1.services.system.ListPersonalResourcesRequest
@@ -1053,7 +1054,6 @@ func file_system_personal_proto_init() {
 	if File_system_personal_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

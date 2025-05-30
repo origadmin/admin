@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -121,7 +122,7 @@ type ListMenusResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging menus
-	Menus []*Menu `protobuf:"bytes,2,rep,name=menus,proto3" json:"menus,omitempty"`
+	Menus []*types.Menu `protobuf:"bytes,2,rep,name=menus,proto3" json:"menus,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -173,7 +174,7 @@ func (x *ListMenusResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListMenusResponse) GetMenus() []*Menu {
+func (x *ListMenusResponse) GetMenus() []*types.Menu {
 	if x != nil {
 		return x.Menus
 	}
@@ -259,7 +260,7 @@ func (x *GetMenuRequest) GetId() int64 {
 type GetMenuResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The field id should match the Noun in the method id.
-	Menu          *Menu `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
+	Menu          *types.Menu `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -294,7 +295,7 @@ func (*GetMenuResponse) Descriptor() ([]byte, []int) {
 	return file_system_menu_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetMenuResponse) GetMenu() *Menu {
+func (x *GetMenuResponse) GetMenu() *types.Menu {
 	if x != nil {
 		return x.Menu
 	}
@@ -310,7 +311,7 @@ type CreateMenuRequest struct {
 	MenuId string `protobuf:"bytes,3,opt,name=menu_id,json=menuId,proto3" json:"menu_id,omitempty"`
 	// The menu resource to create.
 	// The field id should match the Noun in the method id.
-	Menu          *Menu `protobuf:"bytes,2,opt,name=menu,proto3" json:"menu,omitempty"`
+	Menu          *types.Menu `protobuf:"bytes,2,opt,name=menu,proto3" json:"menu,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -359,7 +360,7 @@ func (x *CreateMenuRequest) GetMenuId() string {
 	return ""
 }
 
-func (x *CreateMenuRequest) GetMenu() *Menu {
+func (x *CreateMenuRequest) GetMenu() *types.Menu {
 	if x != nil {
 		return x.Menu
 	}
@@ -369,7 +370,7 @@ func (x *CreateMenuRequest) GetMenu() *Menu {
 // CreateMenuResponse is the response for the MenuService.CreateMenu method.
 type CreateMenuResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Menu          *Menu                  `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
+	Menu          *types.Menu            `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -404,7 +405,7 @@ func (*CreateMenuResponse) Descriptor() ([]byte, []int) {
 	return file_system_menu_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreateMenuResponse) GetMenu() *Menu {
+func (x *CreateMenuResponse) GetMenu() *types.Menu {
 	if x != nil {
 		return x.Menu
 	}
@@ -415,7 +416,7 @@ func (x *CreateMenuResponse) GetMenu() *Menu {
 type UpdateMenuRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The menu resource which replaces the resource on the server.
-	Menu          *Menu `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
+	Menu          *types.Menu `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -450,7 +451,7 @@ func (*UpdateMenuRequest) Descriptor() ([]byte, []int) {
 	return file_system_menu_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *UpdateMenuRequest) GetMenu() *Menu {
+func (x *UpdateMenuRequest) GetMenu() *types.Menu {
 	if x != nil {
 		return x.Menu
 	}
@@ -460,7 +461,7 @@ func (x *UpdateMenuRequest) GetMenu() *Menu {
 // UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
 type UpdateMenuResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Menu          *Menu                  `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
+	Menu          *types.Menu            `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -495,7 +496,7 @@ func (*UpdateMenuResponse) Descriptor() ([]byte, []int) {
 	return file_system_menu_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateMenuResponse) GetMenu() *Menu {
+func (x *UpdateMenuResponse) GetMenu() *types.Menu {
 	if x != nil {
 		return x.Menu
 	}
@@ -599,7 +600,7 @@ var File_system_menu_proto protoreflect.FileDescriptor
 
 const file_system_menu_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/menu.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\xb4\x01\n" +
+	"\x11system/menu.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xb4\x01\n" +
 	"\x10ListMenusRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1b\n" +
@@ -608,31 +609,31 @@ const file_system_menu_proto_rawDesc = "" +
 	"page_token\x18\x04 \x01(\tR\tpageToken\x12\x1b\n" +
 	"\tno_paging\x18\x05 \x01(\bR\bnoPaging\x12\x1d\n" +
 	"\n" +
-	"only_count\x18\x06 \x01(\bR\tonlyCount\"\x84\x02\n" +
+	"only_count\x18\x06 \x01(\bR\tonlyCount\"\x83\x02\n" +
 	"\x11ListMenusResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x122\n" +
-	"\x05menus\x18\x02 \x03(\v2\x1c.api.v1.services.system.MenuR\x05menus\x12\x18\n" +
+	"total_size\x121\n" +
+	"\x05menus\x18\x02 \x03(\v2\x1b.api.v1.services.types.MenuR\x05menus\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\" \n" +
 	"\x0eGetMenuRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"C\n" +
-	"\x0fGetMenuResponse\x120\n" +
-	"\x04menu\x18\x01 \x01(\v2\x1c.api.v1.services.system.MenuR\x04menu\"v\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
+	"\x0fGetMenuResponse\x12/\n" +
+	"\x04menu\x18\x01 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"u\n" +
 	"\x11CreateMenuRequest\x12\x16\n" +
 	"\x06parent\x18\x01 \x01(\tR\x06parent\x12\x17\n" +
-	"\amenu_id\x18\x03 \x01(\tR\x06menuId\x120\n" +
-	"\x04menu\x18\x02 \x01(\v2\x1c.api.v1.services.system.MenuR\x04menu\"F\n" +
-	"\x12CreateMenuResponse\x120\n" +
-	"\x04menu\x18\x01 \x01(\v2\x1c.api.v1.services.system.MenuR\x04menu\"E\n" +
-	"\x11UpdateMenuRequest\x120\n" +
-	"\x04menu\x18\x01 \x01(\v2\x1c.api.v1.services.system.MenuR\x04menu\"F\n" +
-	"\x12UpdateMenuResponse\x120\n" +
-	"\x04menu\x18\x01 \x01(\v2\x1c.api.v1.services.system.MenuR\x04menu\"#\n" +
+	"\amenu_id\x18\x03 \x01(\tR\x06menuId\x12/\n" +
+	"\x04menu\x18\x02 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"E\n" +
+	"\x12CreateMenuResponse\x12/\n" +
+	"\x04menu\x18\x01 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"D\n" +
+	"\x11UpdateMenuRequest\x12/\n" +
+	"\x04menu\x18\x01 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"E\n" +
+	"\x12UpdateMenuResponse\x12/\n" +
+	"\x04menu\x18\x01 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"#\n" +
 	"\x11DeleteMenuRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteMenuResponse\x12,\n" +
@@ -674,18 +675,18 @@ var file_system_menu_proto_goTypes = []any{
 	(*UpdateMenuResponse)(nil), // 7: api.v1.services.system.UpdateMenuResponse
 	(*DeleteMenuRequest)(nil),  // 8: api.v1.services.system.DeleteMenuRequest
 	(*DeleteMenuResponse)(nil), // 9: api.v1.services.system.DeleteMenuResponse
-	(*Menu)(nil),               // 10: api.v1.services.system.Menu
+	(*types.Menu)(nil),         // 10: api.v1.services.types.Menu
 	(*anypb.Any)(nil),          // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),      // 12: google.protobuf.Empty
 }
 var file_system_menu_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.system.ListMenusResponse.menus:type_name -> api.v1.services.system.Menu
+	10, // 0: api.v1.services.system.ListMenusResponse.menus:type_name -> api.v1.services.types.Menu
 	11, // 1: api.v1.services.system.ListMenusResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.system.GetMenuResponse.menu:type_name -> api.v1.services.system.Menu
-	10, // 3: api.v1.services.system.CreateMenuRequest.menu:type_name -> api.v1.services.system.Menu
-	10, // 4: api.v1.services.system.CreateMenuResponse.menu:type_name -> api.v1.services.system.Menu
-	10, // 5: api.v1.services.system.UpdateMenuRequest.menu:type_name -> api.v1.services.system.Menu
-	10, // 6: api.v1.services.system.UpdateMenuResponse.menu:type_name -> api.v1.services.system.Menu
+	10, // 2: api.v1.services.system.GetMenuResponse.menu:type_name -> api.v1.services.types.Menu
+	10, // 3: api.v1.services.system.CreateMenuRequest.menu:type_name -> api.v1.services.types.Menu
+	10, // 4: api.v1.services.system.CreateMenuResponse.menu:type_name -> api.v1.services.types.Menu
+	10, // 5: api.v1.services.system.UpdateMenuRequest.menu:type_name -> api.v1.services.types.Menu
+	10, // 6: api.v1.services.system.UpdateMenuResponse.menu:type_name -> api.v1.services.types.Menu
 	12, // 7: api.v1.services.system.DeleteMenuResponse.empty:type_name -> google.protobuf.Empty
 	0,  // 8: api.v1.services.system.MenuService.ListMenus:input_type -> api.v1.services.system.ListMenusRequest
 	2,  // 9: api.v1.services.system.MenuService.GetMenu:input_type -> api.v1.services.system.GetMenuRequest
@@ -709,7 +710,6 @@ func file_system_menu_proto_init() {
 	if File_system_menu_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_menu_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

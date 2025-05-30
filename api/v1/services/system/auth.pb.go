@@ -14,6 +14,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -186,7 +187,7 @@ func (x *ListAuthResourcesRequest) GetNoPaging() bool {
 type ListAuthResourcesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The list of Auths.
-	Resources []*Resource `protobuf:"bytes,1,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*types.Resource `protobuf:"bytes,1,rep,name=resources,proto3" json:"resources,omitempty"`
 	// The total number of Auths in the result set.
 	TotalSize     int32 `protobuf:"varint,2,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -223,7 +224,7 @@ func (*ListAuthResourcesResponse) Descriptor() ([]byte, []int) {
 	return file_system_auth_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ListAuthResourcesResponse) GetResources() []*Resource {
+func (x *ListAuthResourcesResponse) GetResources() []*types.Resource {
 	if x != nil {
 		return x.Resources
 	}
@@ -815,7 +816,7 @@ var File_system_auth_proto protoreflect.FileDescriptor
 
 const file_system_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/auth.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"u\n" +
+	"\x11system/auth.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"u\n" +
 	"\x11AuthLogoutRequest\x12B\n" +
 	"\x04data\x18\x01 \x01(\v2..api.v1.services.system.AuthLogoutRequest.DataR\x04data\x1a\x1c\n" +
 	"\x04Data\x12\x14\n" +
@@ -828,9 +829,9 @@ const file_system_auth_proto_rawDesc = "" +
 	"page_token\x18\x02 \x01(\tR\n" +
 	"page_token\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
-	"\tno_paging\x18\x04 \x01(\bR\tno_paging\"{\n" +
-	"\x19ListAuthResourcesResponse\x12>\n" +
-	"\tresources\x18\x01 \x03(\v2 .api.v1.services.system.ResourceR\tresources\x12\x1e\n" +
+	"\tno_paging\x18\x04 \x01(\bR\tno_paging\"z\n" +
+	"\x19ListAuthResourcesResponse\x12=\n" +
+	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x02 \x01(\x05R\n" +
 	"total_size\"\x93\x01\n" +
@@ -906,12 +907,12 @@ var file_system_auth_proto_goTypes = []any{
 	(*DestroyTokenRequest_Data)(nil),  // 15: api.v1.services.system.DestroyTokenRequest.Data
 	(*AuthenticateRequest_Data)(nil),  // 16: api.v1.services.system.AuthenticateRequest.Data
 	(*emptypb.Empty)(nil),             // 17: google.protobuf.Empty
-	(*Resource)(nil),                  // 18: api.v1.services.system.Resource
+	(*types.Resource)(nil),            // 18: api.v1.services.types.Resource
 }
 var file_system_auth_proto_depIdxs = []int32{
 	12, // 0: api.v1.services.system.AuthLogoutRequest.data:type_name -> api.v1.services.system.AuthLogoutRequest.Data
 	17, // 1: api.v1.services.system.AuthLogoutResponse.empty:type_name -> google.protobuf.Empty
-	18, // 2: api.v1.services.system.ListAuthResourcesResponse.resources:type_name -> api.v1.services.system.Resource
+	18, // 2: api.v1.services.system.ListAuthResourcesResponse.resources:type_name -> api.v1.services.types.Resource
 	13, // 3: api.v1.services.system.CreateTokenRequest.data:type_name -> api.v1.services.system.CreateTokenRequest.Data
 	14, // 4: api.v1.services.system.ValidateTokenResponse.claims:type_name -> api.v1.services.system.ValidateTokenResponse.ClaimsEntry
 	15, // 5: api.v1.services.system.DestroyTokenRequest.data:type_name -> api.v1.services.system.DestroyTokenRequest.Data
@@ -941,7 +942,6 @@ func file_system_auth_proto_init() {
 	if File_system_auth_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

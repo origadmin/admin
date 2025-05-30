@@ -16,6 +16,9 @@ breaking:
   use:
     - FILE
 deps:
+  - buf.build/protocolbuffers/wellknowntypes
+#  - buf.build/grpc/grpc-go
+#  - buf.build/grpc/grpc-gateway
   - buf.build/envoyproxy/protoc-gen-validate
   - buf.build/kratos/apis
   - buf.build/googleapis/googleapis

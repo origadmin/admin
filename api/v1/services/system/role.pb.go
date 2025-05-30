@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -119,7 +120,7 @@ type ListRolesResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging menus
-	Roles []*Role `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles []*types.Role `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -171,7 +172,7 @@ func (x *ListRolesResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListRolesResponse) GetRoles() []*Role {
+func (x *ListRolesResponse) GetRoles() []*types.Role {
 	if x != nil {
 		return x.Roles
 	}
@@ -254,7 +255,7 @@ func (x *GetRoleRequest) GetId() int64 {
 
 type GetRoleResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *Role                  `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -289,7 +290,7 @@ func (*GetRoleResponse) Descriptor() ([]byte, []int) {
 	return file_system_role_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetRoleResponse) GetRole() *Role {
+func (x *GetRoleResponse) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
 	}
@@ -304,7 +305,7 @@ type CreateRoleRequest struct {
 	RoleId string `protobuf:"bytes,3,opt,name=role_id,proto3" json:"role_id,omitempty"`
 	// The role resource to create.
 	// The field id should match the Noun in the method id.
-	Role          *Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *types.Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -353,7 +354,7 @@ func (x *CreateRoleRequest) GetRoleId() string {
 	return ""
 }
 
-func (x *CreateRoleRequest) GetRole() *Role {
+func (x *CreateRoleRequest) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
 	}
@@ -362,7 +363,7 @@ func (x *CreateRoleRequest) GetRole() *Role {
 
 type CreateRoleResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *Role                  `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -397,7 +398,7 @@ func (*CreateRoleResponse) Descriptor() ([]byte, []int) {
 	return file_system_role_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreateRoleResponse) GetRole() *Role {
+func (x *CreateRoleResponse) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
 	}
@@ -409,7 +410,7 @@ type UpdateRoleRequest struct {
 	// The id of the role resource to update.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The role resource which replaces the resource on the server.
-	Role          *Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *types.Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -451,7 +452,7 @@ func (x *UpdateRoleRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdateRoleRequest) GetRole() *Role {
+func (x *UpdateRoleRequest) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
 	}
@@ -460,7 +461,7 @@ func (x *UpdateRoleRequest) GetRole() *Role {
 
 type UpdateRoleResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Role          *Role                  `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *types.Role            `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -495,7 +496,7 @@ func (*UpdateRoleResponse) Descriptor() ([]byte, []int) {
 	return file_system_role_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdateRoleResponse) GetRole() *Role {
+func (x *UpdateRoleResponse) GetRole() *types.Role {
 	if x != nil {
 		return x.Role
 	}
@@ -596,7 +597,7 @@ var File_system_role_proto protoreflect.FileDescriptor
 
 const file_system_role_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\xb8\x01\n" +
+	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xb8\x01\n" +
 	"\x10ListRolesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
@@ -607,32 +608,32 @@ const file_system_role_proto_rawDesc = "" +
 	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
-	"only_count\"\x84\x02\n" +
+	"only_count\"\x83\x02\n" +
 	"\x11ListRolesResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x122\n" +
-	"\x05roles\x18\x02 \x03(\v2\x1c.api.v1.services.system.RoleR\x05roles\x12\x18\n" +
+	"total_size\x121\n" +
+	"\x05roles\x18\x02 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\" \n" +
 	"\x0eGetRoleRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"C\n" +
-	"\x0fGetRoleResponse\x120\n" +
-	"\x04role\x18\x01 \x01(\v2\x1c.api.v1.services.system.RoleR\x04role\"w\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
+	"\x0fGetRoleResponse\x12/\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"v\n" +
 	"\x11CreateRoleRequest\x12\x16\n" +
 	"\x06parent\x18\x01 \x01(\tR\x06parent\x12\x18\n" +
-	"\arole_id\x18\x03 \x01(\tR\arole_id\x120\n" +
-	"\x04role\x18\x02 \x01(\v2\x1c.api.v1.services.system.RoleR\x04role\"F\n" +
-	"\x12CreateRoleResponse\x120\n" +
-	"\x04role\x18\x01 \x01(\v2\x1c.api.v1.services.system.RoleR\x04role\"U\n" +
+	"\arole_id\x18\x03 \x01(\tR\arole_id\x12/\n" +
+	"\x04role\x18\x02 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"E\n" +
+	"\x12CreateRoleResponse\x12/\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"T\n" +
 	"\x11UpdateRoleRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x120\n" +
-	"\x04role\x18\x02 \x01(\v2\x1c.api.v1.services.system.RoleR\x04role\"F\n" +
-	"\x12UpdateRoleResponse\x120\n" +
-	"\x04role\x18\x01 \x01(\v2\x1c.api.v1.services.system.RoleR\x04role\"#\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
+	"\x04role\x18\x02 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"E\n" +
+	"\x12UpdateRoleResponse\x12/\n" +
+	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"#\n" +
 	"\x11DeleteRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteRoleResponse\x12,\n" +
@@ -674,18 +675,18 @@ var file_system_role_proto_goTypes = []any{
 	(*UpdateRoleResponse)(nil), // 7: api.v1.services.system.UpdateRoleResponse
 	(*DeleteRoleRequest)(nil),  // 8: api.v1.services.system.DeleteRoleRequest
 	(*DeleteRoleResponse)(nil), // 9: api.v1.services.system.DeleteRoleResponse
-	(*Role)(nil),               // 10: api.v1.services.system.Role
+	(*types.Role)(nil),         // 10: api.v1.services.types.Role
 	(*anypb.Any)(nil),          // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),      // 12: google.protobuf.Empty
 }
 var file_system_role_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.system.ListRolesResponse.roles:type_name -> api.v1.services.system.Role
+	10, // 0: api.v1.services.system.ListRolesResponse.roles:type_name -> api.v1.services.types.Role
 	11, // 1: api.v1.services.system.ListRolesResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.system.GetRoleResponse.role:type_name -> api.v1.services.system.Role
-	10, // 3: api.v1.services.system.CreateRoleRequest.role:type_name -> api.v1.services.system.Role
-	10, // 4: api.v1.services.system.CreateRoleResponse.role:type_name -> api.v1.services.system.Role
-	10, // 5: api.v1.services.system.UpdateRoleRequest.role:type_name -> api.v1.services.system.Role
-	10, // 6: api.v1.services.system.UpdateRoleResponse.role:type_name -> api.v1.services.system.Role
+	10, // 2: api.v1.services.system.GetRoleResponse.role:type_name -> api.v1.services.types.Role
+	10, // 3: api.v1.services.system.CreateRoleRequest.role:type_name -> api.v1.services.types.Role
+	10, // 4: api.v1.services.system.CreateRoleResponse.role:type_name -> api.v1.services.types.Role
+	10, // 5: api.v1.services.system.UpdateRoleRequest.role:type_name -> api.v1.services.types.Role
+	10, // 6: api.v1.services.system.UpdateRoleResponse.role:type_name -> api.v1.services.types.Role
 	12, // 7: api.v1.services.system.DeleteRoleResponse.empty:type_name -> google.protobuf.Empty
 	0,  // 8: api.v1.services.system.RoleService.ListRoles:input_type -> api.v1.services.system.ListRolesRequest
 	2,  // 9: api.v1.services.system.RoleService.GetRole:input_type -> api.v1.services.system.GetRoleRequest
@@ -709,7 +710,6 @@ func file_system_role_proto_init() {
 	if File_system_role_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_role_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

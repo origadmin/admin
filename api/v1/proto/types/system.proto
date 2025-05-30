@@ -1,14 +1,14 @@
 syntax = "proto3";
 
-package api.v1.services.system;
+package api.v1.services.types;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "v1/services/system;system";
+option go_package = "v1/services/types;types";
 option java_multiple_files = true;
-option java_outer_classname = "APIServiceSystemTypeProto";
-option java_package = "com.origadmin.api.v1.services.system";
-option objc_class_prefix = "APIServiceSystemType";
+option java_outer_classname = "APIServiceTypeSystemProto";
+option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceTypeSystem";
 
 // Menu is the model entity for the Menu schema.
 message Menu {
@@ -87,8 +87,8 @@ message Role {
   int32 sequence = 8 [json_name = "sequence"];
   // role.field.status
   int32 status = 9 [json_name = "status"];
-  // role.field.is_system
-  bool is_system = 10 [json_name = "is_system"];
+  // role.field.is_types
+  bool is_types = 10 [json_name = "is_types"];
   // Menus holds the value of the menus edge.
   repeated Menu menus = 21 [json_name = "menus"];
   // Users holds the value of the users edge.

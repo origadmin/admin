@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -119,7 +120,7 @@ type ListPositionsResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging menus
-	Positions []*Position `protobuf:"bytes,2,rep,name=positions,proto3" json:"positions,omitempty"`
+	Positions []*types.Position `protobuf:"bytes,2,rep,name=positions,proto3" json:"positions,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -171,7 +172,7 @@ func (x *ListPositionsResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListPositionsResponse) GetPositions() []*Position {
+func (x *ListPositionsResponse) GetPositions() []*types.Position {
 	if x != nil {
 		return x.Positions
 	}
@@ -254,7 +255,7 @@ func (x *GetPositionRequest) GetId() int64 {
 
 type GetPositionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Position      *types.Position        `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -289,7 +290,7 @@ func (*GetPositionResponse) Descriptor() ([]byte, []int) {
 	return file_system_position_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetPositionResponse) GetPosition() *Position {
+func (x *GetPositionResponse) GetPosition() *types.Position {
 	if x != nil {
 		return x.Position
 	}
@@ -303,7 +304,7 @@ type CreatePositionRequest struct {
 	// The position id to use for this position.
 	PositionId string `protobuf:"bytes,2,opt,name=position_id,proto3" json:"position_id,omitempty"`
 	// The position object to create.
-	Position      *Position `protobuf:"bytes,3,opt,name=position,proto3" json:"position,omitempty"`
+	Position      *types.Position `protobuf:"bytes,3,opt,name=position,proto3" json:"position,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -352,7 +353,7 @@ func (x *CreatePositionRequest) GetPositionId() string {
 	return ""
 }
 
-func (x *CreatePositionRequest) GetPosition() *Position {
+func (x *CreatePositionRequest) GetPosition() *types.Position {
 	if x != nil {
 		return x.Position
 	}
@@ -361,7 +362,7 @@ func (x *CreatePositionRequest) GetPosition() *Position {
 
 type CreatePositionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Position      *types.Position        `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -396,7 +397,7 @@ func (*CreatePositionResponse) Descriptor() ([]byte, []int) {
 	return file_system_position_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreatePositionResponse) GetPosition() *Position {
+func (x *CreatePositionResponse) GetPosition() *types.Position {
 	if x != nil {
 		return x.Position
 	}
@@ -408,7 +409,7 @@ type UpdatePositionRequest struct {
 	// The id of the position resource to update.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The position resource which replaces the resource on the server.
-	Position      *Position `protobuf:"bytes,2,opt,name=position,proto3" json:"position,omitempty"`
+	Position      *types.Position `protobuf:"bytes,2,opt,name=position,proto3" json:"position,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -450,7 +451,7 @@ func (x *UpdatePositionRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdatePositionRequest) GetPosition() *Position {
+func (x *UpdatePositionRequest) GetPosition() *types.Position {
 	if x != nil {
 		return x.Position
 	}
@@ -459,7 +460,7 @@ func (x *UpdatePositionRequest) GetPosition() *Position {
 
 type UpdatePositionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Position      *types.Position        `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -494,7 +495,7 @@ func (*UpdatePositionResponse) Descriptor() ([]byte, []int) {
 	return file_system_position_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdatePositionResponse) GetPosition() *Position {
+func (x *UpdatePositionResponse) GetPosition() *types.Position {
 	if x != nil {
 		return x.Position
 	}
@@ -595,7 +596,7 @@ var File_system_position_proto protoreflect.FileDescriptor
 
 const file_system_position_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/position.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\xbc\x01\n" +
+	"\x15system/position.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xbc\x01\n" +
 	"\x14ListPositionsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
@@ -606,32 +607,32 @@ const file_system_position_proto_rawDesc = "" +
 	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
-	"only_count\"\x94\x02\n" +
+	"only_count\"\x93\x02\n" +
 	"\x15ListPositionsResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x12>\n" +
-	"\tpositions\x18\x02 \x03(\v2 .api.v1.services.system.PositionR\tpositions\x12\x18\n" +
+	"total_size\x12=\n" +
+	"\tpositions\x18\x02 \x03(\v2\x1f.api.v1.services.types.PositionR\tpositions\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\"$\n" +
 	"\x12GetPositionRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"S\n" +
-	"\x13GetPositionResponse\x12<\n" +
-	"\bposition\x18\x01 \x01(\v2 .api.v1.services.system.PositionR\bposition\"\x8f\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"R\n" +
+	"\x13GetPositionResponse\x12;\n" +
+	"\bposition\x18\x01 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\"\x8e\x01\n" +
 	"\x15CreatePositionRequest\x12\x16\n" +
 	"\x06parent\x18\x01 \x01(\tR\x06parent\x12 \n" +
-	"\vposition_id\x18\x02 \x01(\tR\vposition_id\x12<\n" +
-	"\bposition\x18\x03 \x01(\v2 .api.v1.services.system.PositionR\bposition\"V\n" +
-	"\x16CreatePositionResponse\x12<\n" +
-	"\bposition\x18\x01 \x01(\v2 .api.v1.services.system.PositionR\bposition\"e\n" +
+	"\vposition_id\x18\x02 \x01(\tR\vposition_id\x12;\n" +
+	"\bposition\x18\x03 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\"U\n" +
+	"\x16CreatePositionResponse\x12;\n" +
+	"\bposition\x18\x01 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\"d\n" +
 	"\x15UpdatePositionRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
-	"\bposition\x18\x02 \x01(\v2 .api.v1.services.system.PositionR\bposition\"V\n" +
-	"\x16UpdatePositionResponse\x12<\n" +
-	"\bposition\x18\x01 \x01(\v2 .api.v1.services.system.PositionR\bposition\"'\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12;\n" +
+	"\bposition\x18\x02 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\"U\n" +
+	"\x16UpdatePositionResponse\x12;\n" +
+	"\bposition\x18\x01 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\"'\n" +
 	"\x15DeletePositionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"F\n" +
 	"\x16DeletePositionResponse\x12,\n" +
@@ -668,18 +669,18 @@ var file_system_position_proto_goTypes = []any{
 	(*UpdatePositionResponse)(nil), // 7: api.v1.services.system.UpdatePositionResponse
 	(*DeletePositionRequest)(nil),  // 8: api.v1.services.system.DeletePositionRequest
 	(*DeletePositionResponse)(nil), // 9: api.v1.services.system.DeletePositionResponse
-	(*Position)(nil),               // 10: api.v1.services.system.Position
+	(*types.Position)(nil),         // 10: api.v1.services.types.Position
 	(*anypb.Any)(nil),              // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),          // 12: google.protobuf.Empty
 }
 var file_system_position_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.system.ListPositionsResponse.positions:type_name -> api.v1.services.system.Position
+	10, // 0: api.v1.services.system.ListPositionsResponse.positions:type_name -> api.v1.services.types.Position
 	11, // 1: api.v1.services.system.ListPositionsResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.system.GetPositionResponse.position:type_name -> api.v1.services.system.Position
-	10, // 3: api.v1.services.system.CreatePositionRequest.position:type_name -> api.v1.services.system.Position
-	10, // 4: api.v1.services.system.CreatePositionResponse.position:type_name -> api.v1.services.system.Position
-	10, // 5: api.v1.services.system.UpdatePositionRequest.position:type_name -> api.v1.services.system.Position
-	10, // 6: api.v1.services.system.UpdatePositionResponse.position:type_name -> api.v1.services.system.Position
+	10, // 2: api.v1.services.system.GetPositionResponse.position:type_name -> api.v1.services.types.Position
+	10, // 3: api.v1.services.system.CreatePositionRequest.position:type_name -> api.v1.services.types.Position
+	10, // 4: api.v1.services.system.CreatePositionResponse.position:type_name -> api.v1.services.types.Position
+	10, // 5: api.v1.services.system.UpdatePositionRequest.position:type_name -> api.v1.services.types.Position
+	10, // 6: api.v1.services.system.UpdatePositionResponse.position:type_name -> api.v1.services.types.Position
 	12, // 7: api.v1.services.system.DeletePositionResponse.empty:type_name -> google.protobuf.Empty
 	0,  // 8: api.v1.services.system.PositionService.ListPositions:input_type -> api.v1.services.system.ListPositionsRequest
 	2,  // 9: api.v1.services.system.PositionService.GetPosition:input_type -> api.v1.services.system.GetPositionRequest
@@ -703,7 +704,6 @@ func file_system_position_proto_init() {
 	if File_system_position_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_position_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

@@ -16,3 +16,6 @@ deps:
   - name: buf.build/origadmin/runtime
     commit: 67cc18c9322e48e78a0282fb854970bb
     digest: b5:8d14f8cf309734eddd71f02c03b7c2612542fe1935ecc3329c5d2c949dec14f098360cf610a9d03e35ccb764740f37090b5c228b04ff3be539861a4cd39ed617
+  - name: buf.build/protocolbuffers/wellknowntypes
+    commit: 3ddd61d1f53d485abd3d3a2b47a62b8e
+    digest: b5:09e4405493fa16fef2af6b667fcaea9d2280ec44ed4943eddb96fb5a32daa1e8a353331dd4ef33b7df3783d17e912a703d57b73b236cd749d6a87ce83f60e2c9

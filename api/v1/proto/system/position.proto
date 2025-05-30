@@ -5,7 +5,7 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "system/types.proto";
+import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemPosition";
 
 // The login service definition.
 service PositionService {
-  rpc ListPositions (ListPositionsRequest) returns (ListPositionsResponse) {
+  rpc ListPositions(ListPositionsRequest) returns (ListPositionsResponse) {
     option (google.api.http) = {get: "/sys/positions"};
   }
-  rpc GetPosition (GetPositionRequest) returns (GetPositionResponse) {
+  rpc GetPosition(GetPositionRequest) returns (GetPositionResponse) {
     option (google.api.http) = {get: "/sys/positions/{id}"};
   }
-  rpc CreatePosition (CreatePositionRequest) returns (CreatePositionResponse) {
+  rpc CreatePosition(CreatePositionRequest) returns (CreatePositionResponse) {
     option (google.api.http) = {
       post: "/sys/positions"
       body: "position"
     };
   }
-  rpc UpdatePosition (UpdatePositionRequest) returns (UpdatePositionResponse) {
+  rpc UpdatePosition(UpdatePositionRequest) returns (UpdatePositionResponse) {
     option (google.api.http) = {
       put: "/sys/positions/{position.id}"
       body: "position"
     };
   }
-  rpc DeletePosition (DeletePositionRequest) returns (DeletePositionResponse) {
+  rpc DeletePosition(DeletePositionRequest) returns (DeletePositionResponse) {
     option (google.api.http) = {delete: "/sys/positions/{id}"};
   }
 }
@@ -57,7 +57,7 @@ message ListPositionsResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated Position positions = 2 [json_name = "positions"];
+  repeated api.v1.services.types.Position positions = 2 [json_name = "positions"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -77,7 +77,7 @@ message GetPositionRequest {
 }
 
 message GetPositionResponse {
-  Position position = 1 [json_name = "position"];
+  api.v1.services.types.Position position = 1 [json_name = "position"];
 }
 
 message CreatePositionRequest {
@@ -86,22 +86,22 @@ message CreatePositionRequest {
   // The position id to use for this position.
   string position_id = 2 [json_name = "position_id"];
   // The position object to create.
-  Position position = 3 [json_name = "position"];
+  api.v1.services.types.Position position = 3 [json_name = "position"];
 }
 
 message CreatePositionResponse {
-  Position position = 1 [json_name = "position"];
+  api.v1.services.types.Position position = 1 [json_name = "position"];
 }
 
 message UpdatePositionRequest {
   // The id of the position resource to update.
   int64 id = 1 [json_name = "id"];
   // The position resource which replaces the resource on the server.
-  Position position = 2 [json_name = "position"];
+  api.v1.services.types.Position position = 2 [json_name = "position"];
 }
 
 message UpdatePositionResponse {
-  Position position = 1 [json_name = "position"];
+  api.v1.services.types.Position position = 1 [json_name = "position"];
 }
 
 message DeletePositionRequest {

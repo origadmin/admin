@@ -5,7 +5,7 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "system/types.proto";
+import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemDepartment";
 
 // The login service definition.
 service DepartmentService {
-  rpc ListDepartments (ListDepartmentsRequest) returns (ListDepartmentsResponse) {
+  rpc ListDepartments(ListDepartmentsRequest) returns (ListDepartmentsResponse) {
     option (google.api.http) = {get: "/sys/departments"};
   }
-  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentResponse) {
+  rpc GetDepartment(GetDepartmentRequest) returns (GetDepartmentResponse) {
     option (google.api.http) = {get: "/sys/departments/{id}"};
   }
-  rpc CreateDepartment (CreateDepartmentRequest) returns (CreateDepartmentResponse) {
+  rpc CreateDepartment(CreateDepartmentRequest) returns (CreateDepartmentResponse) {
     option (google.api.http) = {
       post: "/sys/departments"
       body: "department"
     };
   }
-  rpc UpdateDepartment (UpdateDepartmentRequest) returns (UpdateDepartmentResponse) {
+  rpc UpdateDepartment(UpdateDepartmentRequest) returns (UpdateDepartmentResponse) {
     option (google.api.http) = {
       put: "/sys/departments/{department.id}"
       body: "department"
     };
   }
-  rpc DeleteDepartment (DeleteDepartmentRequest) returns (DeleteDepartmentResponse) {
+  rpc DeleteDepartment(DeleteDepartmentRequest) returns (DeleteDepartmentResponse) {
     option (google.api.http) = {delete: "/sys/departments/{id}"};
   }
 }
@@ -57,7 +57,7 @@ message ListDepartmentsResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated Department departments = 2 [json_name = "departments"];
+  repeated api.v1.services.types.Department departments = 2 [json_name = "departments"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -77,7 +77,7 @@ message GetDepartmentRequest {
 }
 
 message GetDepartmentResponse {
-  Department department = 1 [json_name = "department"];
+  api.v1.services.types.Department department = 1 [json_name = "department"];
 }
 
 message CreateDepartmentRequest {
@@ -89,22 +89,22 @@ message CreateDepartmentRequest {
 
   // The department resource to create.
   // The field id should match the Noun in the method id.
-  Department department = 2 [json_name = "department"];
+  api.v1.services.types.Department department = 2 [json_name = "department"];
 }
 
 message CreateDepartmentResponse {
-  Department department = 1 [json_name = "department"];
+  api.v1.services.types.Department department = 1 [json_name = "department"];
 }
 
 message UpdateDepartmentRequest {
   // The department id to use for this department.
   int64 id = 1 [json_name = "id"];
   // The department resource which replaces the resource on the server.
-  Department department = 2 [json_name = "department"];
+  api.v1.services.types.Department department = 2 [json_name = "department"];
 }
 
 message UpdateDepartmentResponse {
-  Department department = 1 [json_name = "department"];
+  api.v1.services.types.Department department = 1 [json_name = "department"];
 }
 
 message DeleteDepartmentRequest {

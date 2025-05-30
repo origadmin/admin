@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -128,7 +129,7 @@ type ListPermissionsResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging menus
-	Permissions []*Permission `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions []*types.Permission `protobuf:"bytes,2,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -180,7 +181,7 @@ func (x *ListPermissionsResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListPermissionsResponse) GetPermissions() []*Permission {
+func (x *ListPermissionsResponse) GetPermissions() []*types.Permission {
 	if x != nil {
 		return x.Permissions
 	}
@@ -263,7 +264,7 @@ func (x *GetPermissionRequest) GetId() int64 {
 
 type GetPermissionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Permission    *Permission            `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
+	Permission    *types.Permission      `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -298,7 +299,7 @@ func (*GetPermissionResponse) Descriptor() ([]byte, []int) {
 	return file_system_permission_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetPermissionResponse) GetPermission() *Permission {
+func (x *GetPermissionResponse) GetPermission() *types.Permission {
 	if x != nil {
 		return x.Permission
 	}
@@ -313,7 +314,7 @@ type CreatePermissionRequest struct {
 	PermissionId string `protobuf:"bytes,3,opt,name=permission_id,proto3" json:"permission_id,omitempty"`
 	// The permission resource to create.
 	// The field id should match the Noun in the method id.
-	Permission    *Permission `protobuf:"bytes,2,opt,name=permission,proto3" json:"permission,omitempty"`
+	Permission    *types.Permission `protobuf:"bytes,2,opt,name=permission,proto3" json:"permission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -362,7 +363,7 @@ func (x *CreatePermissionRequest) GetPermissionId() string {
 	return ""
 }
 
-func (x *CreatePermissionRequest) GetPermission() *Permission {
+func (x *CreatePermissionRequest) GetPermission() *types.Permission {
 	if x != nil {
 		return x.Permission
 	}
@@ -371,7 +372,7 @@ func (x *CreatePermissionRequest) GetPermission() *Permission {
 
 type CreatePermissionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Permission    *Permission            `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
+	Permission    *types.Permission      `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -406,7 +407,7 @@ func (*CreatePermissionResponse) Descriptor() ([]byte, []int) {
 	return file_system_permission_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *CreatePermissionResponse) GetPermission() *Permission {
+func (x *CreatePermissionResponse) GetPermission() *types.Permission {
 	if x != nil {
 		return x.Permission
 	}
@@ -418,7 +419,7 @@ type UpdatePermissionRequest struct {
 	// The resource name of the permission to update.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// The permission resource which replaces the resource on the server.
-	Permission    *Permission `protobuf:"bytes,2,opt,name=permission,proto3" json:"permission,omitempty"`
+	Permission    *types.Permission `protobuf:"bytes,2,opt,name=permission,proto3" json:"permission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -460,7 +461,7 @@ func (x *UpdatePermissionRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdatePermissionRequest) GetPermission() *Permission {
+func (x *UpdatePermissionRequest) GetPermission() *types.Permission {
 	if x != nil {
 		return x.Permission
 	}
@@ -469,7 +470,7 @@ func (x *UpdatePermissionRequest) GetPermission() *Permission {
 
 type UpdatePermissionResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Permission    *Permission            `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
+	Permission    *types.Permission      `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -504,7 +505,7 @@ func (*UpdatePermissionResponse) Descriptor() ([]byte, []int) {
 	return file_system_permission_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UpdatePermissionResponse) GetPermission() *Permission {
+func (x *UpdatePermissionResponse) GetPermission() *types.Permission {
 	if x != nil {
 		return x.Permission
 	}
@@ -605,7 +606,7 @@ var File_system_permission_proto protoreflect.FileDescriptor
 
 const file_system_permission_proto_rawDesc = "" +
 	"\n" +
-	"\x17system/permission.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"\xe0\x01\n" +
+	"\x17system/permission.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xe0\x01\n" +
 	"\x16ListPermissionsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
@@ -617,41 +618,41 @@ const file_system_permission_proto_rawDesc = "" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12 \n" +
-	"\vdata_scopes\x18\a \x03(\tR\vdata_scopes\"\x9c\x02\n" +
+	"\vdata_scopes\x18\a \x03(\tR\vdata_scopes\"\x9b\x02\n" +
 	"\x17ListPermissionsResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x12D\n" +
-	"\vpermissions\x18\x02 \x03(\v2\".api.v1.services.system.PermissionR\vpermissions\x12\x18\n" +
+	"total_size\x12C\n" +
+	"\vpermissions\x18\x02 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\"&\n" +
 	"\x14GetPermissionRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"[\n" +
-	"\x15GetPermissionResponse\x12B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"Z\n" +
+	"\x15GetPermissionResponse\x12A\n" +
 	"\n" +
-	"permission\x18\x01 \x01(\v2\".api.v1.services.system.PermissionR\n" +
-	"permission\"\x9b\x01\n" +
+	"permission\x18\x01 \x01(\v2!.api.v1.services.types.PermissionR\n" +
+	"permission\"\x9a\x01\n" +
 	"\x17CreatePermissionRequest\x12\x16\n" +
 	"\x06parent\x18\x01 \x01(\tR\x06parent\x12$\n" +
-	"\rpermission_id\x18\x03 \x01(\tR\rpermission_id\x12B\n" +
+	"\rpermission_id\x18\x03 \x01(\tR\rpermission_id\x12A\n" +
 	"\n" +
-	"permission\x18\x02 \x01(\v2\".api.v1.services.system.PermissionR\n" +
-	"permission\"^\n" +
-	"\x18CreatePermissionResponse\x12B\n" +
+	"permission\x18\x02 \x01(\v2!.api.v1.services.types.PermissionR\n" +
+	"permission\"]\n" +
+	"\x18CreatePermissionResponse\x12A\n" +
 	"\n" +
-	"permission\x18\x01 \x01(\v2\".api.v1.services.system.PermissionR\n" +
-	"permission\"m\n" +
+	"permission\x18\x01 \x01(\v2!.api.v1.services.types.PermissionR\n" +
+	"permission\"l\n" +
 	"\x17UpdatePermissionRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12B\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12A\n" +
 	"\n" +
-	"permission\x18\x02 \x01(\v2\".api.v1.services.system.PermissionR\n" +
-	"permission\"^\n" +
-	"\x18UpdatePermissionResponse\x12B\n" +
+	"permission\x18\x02 \x01(\v2!.api.v1.services.types.PermissionR\n" +
+	"permission\"]\n" +
+	"\x18UpdatePermissionResponse\x12A\n" +
 	"\n" +
-	"permission\x18\x01 \x01(\v2\".api.v1.services.system.PermissionR\n" +
+	"permission\x18\x01 \x01(\v2!.api.v1.services.types.PermissionR\n" +
 	"permission\")\n" +
 	"\x17DeletePermissionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
@@ -691,18 +692,18 @@ var file_system_permission_proto_goTypes = []any{
 	(*UpdatePermissionResponse)(nil), // 7: api.v1.services.system.UpdatePermissionResponse
 	(*DeletePermissionRequest)(nil),  // 8: api.v1.services.system.DeletePermissionRequest
 	(*DeletePermissionResponse)(nil), // 9: api.v1.services.system.DeletePermissionResponse
-	(*Permission)(nil),               // 10: api.v1.services.system.Permission
+	(*types.Permission)(nil),         // 10: api.v1.services.types.Permission
 	(*anypb.Any)(nil),                // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),            // 12: google.protobuf.Empty
 }
 var file_system_permission_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.system.ListPermissionsResponse.permissions:type_name -> api.v1.services.system.Permission
+	10, // 0: api.v1.services.system.ListPermissionsResponse.permissions:type_name -> api.v1.services.types.Permission
 	11, // 1: api.v1.services.system.ListPermissionsResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.system.GetPermissionResponse.permission:type_name -> api.v1.services.system.Permission
-	10, // 3: api.v1.services.system.CreatePermissionRequest.permission:type_name -> api.v1.services.system.Permission
-	10, // 4: api.v1.services.system.CreatePermissionResponse.permission:type_name -> api.v1.services.system.Permission
-	10, // 5: api.v1.services.system.UpdatePermissionRequest.permission:type_name -> api.v1.services.system.Permission
-	10, // 6: api.v1.services.system.UpdatePermissionResponse.permission:type_name -> api.v1.services.system.Permission
+	10, // 2: api.v1.services.system.GetPermissionResponse.permission:type_name -> api.v1.services.types.Permission
+	10, // 3: api.v1.services.system.CreatePermissionRequest.permission:type_name -> api.v1.services.types.Permission
+	10, // 4: api.v1.services.system.CreatePermissionResponse.permission:type_name -> api.v1.services.types.Permission
+	10, // 5: api.v1.services.system.UpdatePermissionRequest.permission:type_name -> api.v1.services.types.Permission
+	10, // 6: api.v1.services.system.UpdatePermissionResponse.permission:type_name -> api.v1.services.types.Permission
 	12, // 7: api.v1.services.system.DeletePermissionResponse.empty:type_name -> google.protobuf.Empty
 	0,  // 8: api.v1.services.system.PermissionService.ListPermissions:input_type -> api.v1.services.system.ListPermissionsRequest
 	2,  // 9: api.v1.services.system.PermissionService.GetPermission:input_type -> api.v1.services.system.GetPermissionRequest
@@ -726,7 +727,6 @@ func file_system_permission_proto_init() {
 	if File_system_permission_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_permission_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

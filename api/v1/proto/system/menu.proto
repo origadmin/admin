@@ -5,7 +5,7 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "system/types.proto";
+import "types/system.proto";
 
 option go_package = "v1/services/system;system";
 option java_multiple_files = true;
@@ -15,25 +15,25 @@ option objc_class_prefix = "APIServiceSystemMenu";
 
 // The menu service definition.
 service MenuService {
-  rpc ListMenus (ListMenusRequest) returns (ListMenusResponse) {
+  rpc ListMenus(ListMenusRequest) returns (ListMenusResponse) {
     option (google.api.http) = {get: "/sys/menus"};
   }
-  rpc GetMenu (GetMenuRequest) returns (GetMenuResponse) {
+  rpc GetMenu(GetMenuRequest) returns (GetMenuResponse) {
     option (google.api.http) = {get: "/sys/menus/{id}"};
   }
-  rpc CreateMenu (CreateMenuRequest) returns (CreateMenuResponse) {
+  rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse) {
     option (google.api.http) = {
       post: "/sys/menus"
       body: "menu"
     };
   }
-  rpc UpdateMenu (UpdateMenuRequest) returns (UpdateMenuResponse) {
+  rpc UpdateMenu(UpdateMenuRequest) returns (UpdateMenuResponse) {
     option (google.api.http) = {
       put: "/sys/menus/{menu.id}"
       body: "menu"
     };
   }
-  rpc DeleteMenu (DeleteMenuRequest) returns (DeleteMenuResponse) {
+  rpc DeleteMenu(DeleteMenuRequest) returns (DeleteMenuResponse) {
     option (google.api.http) = {delete: "/sys/menus/{id}"};
   }
 }
@@ -59,7 +59,7 @@ message ListMenusResponse {
   // The total number of items in the list.
   int32 total_size = 1 [json_name = "total_size"];
   // The paging menus
-  repeated Menu menus = 2 [json_name = "menus"];
+  repeated api.v1.services.types.Menu menus = 2 [json_name = "menus"];
   // The current page number.
   int32 current = 3 [json_name = "current"];
   // The maximum number of items to return.
@@ -82,7 +82,7 @@ message GetMenuRequest {
 // GetMenuResponse is the response for the MenuService.GetMenu method.
 message GetMenuResponse {
   // The field id should match the Noun in the method id.
-  Menu menu = 1;
+  api.v1.services.types.Menu menu = 1;
 }
 
 // CreateMenuRequest is the request for the MenuService.CreateMenu method.
@@ -95,23 +95,23 @@ message CreateMenuRequest {
 
   // The menu resource to create.
   // The field id should match the Noun in the method id.
-  Menu menu = 2;
+  api.v1.services.types.Menu menu = 2;
 }
 
 // CreateMenuResponse is the response for the MenuService.CreateMenu method.
 message CreateMenuResponse {
-  Menu menu = 1;
+  api.v1.services.types.Menu menu = 1;
 }
 
 // UpdateMenuRequest is the request for the MenuService.UpdateMenu method.
 message UpdateMenuRequest {
   // The menu resource which replaces the resource on the server.
-  Menu menu = 1;
+  api.v1.services.types.Menu menu = 1;
 }
 
 // UpdateMenuResponse is the response for the MenuService.UpdateMenu method.
 message UpdateMenuResponse {
-  Menu menu = 1;
+  api.v1.services.types.Menu menu = 1;
 }
 
 // DeleteMenuRequest is the request for the MenuService.DeleteMenu method.

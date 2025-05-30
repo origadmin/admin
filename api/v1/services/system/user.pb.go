@@ -15,6 +15,7 @@ import (
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+	types "v1/services/types"
 )
 
 const (
@@ -71,7 +72,7 @@ func (x *ListUserResourcesRequest) GetId() int64 {
 type ListUserResourcesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TotalSize     int32                  `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
-	Resources     []*Resource            `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources     []*types.Resource      `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -113,7 +114,7 @@ func (x *ListUserResourcesResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListUserResourcesResponse) GetResources() []*Resource {
+func (x *ListUserResourcesResponse) GetResources() []*types.Resource {
 	if x != nil {
 		return x.Resources
 	}
@@ -122,7 +123,7 @@ func (x *ListUserResourcesResponse) GetResources() []*Resource {
 
 type UpdateUserStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -157,7 +158,7 @@ func (*UpdateUserStatusRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpdateUserStatusRequest) GetUser() *User {
+func (x *UpdateUserStatusRequest) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -392,7 +393,7 @@ type ListUsersResponse struct {
 	// The total number of items in the list.
 	TotalSize int32 `protobuf:"varint,1,opt,name=total_size,proto3" json:"total_size,omitempty"`
 	// The paging menus
-	Users []*User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	Users []*types.User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
 	// The current page number.
 	Current int32 `protobuf:"varint,3,opt,name=current,proto3" json:"current,omitempty"`
 	// The maximum number of items to return.
@@ -444,7 +445,7 @@ func (x *ListUsersResponse) GetTotalSize() int32 {
 	return 0
 }
 
-func (x *ListUsersResponse) GetUsers() []*User {
+func (x *ListUsersResponse) GetUsers() []*types.User {
 	if x != nil {
 		return x.Users
 	}
@@ -527,7 +528,7 @@ func (x *GetUserRequest) GetId() int64 {
 
 type GetUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -562,7 +563,7 @@ func (*GetUserResponse) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetUserResponse) GetUser() *User {
+func (x *GetUserResponse) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -574,7 +575,7 @@ type CreateUserRequest struct {
 	// The parent resource id where the user is to be created.
 	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
 	// The user resource to be created.
-	User *User `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	User *types.User `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	// The user id to use for this user.
 	UserId string `protobuf:"bytes,3,opt,name=user_id,proto3" json:"user_id,omitempty"`
 	// The user is_system to use for this user.
@@ -622,7 +623,7 @@ func (x *CreateUserRequest) GetParent() string {
 	return ""
 }
 
-func (x *CreateUserRequest) GetUser() *User {
+func (x *CreateUserRequest) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -652,7 +653,7 @@ func (x *CreateUserRequest) GetRandomPassword() bool {
 
 type CreateUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -687,7 +688,7 @@ func (*CreateUserResponse) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *CreateUserResponse) GetUser() *User {
+func (x *CreateUserResponse) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -697,7 +698,7 @@ func (x *CreateUserResponse) GetUser() *User {
 type UpdateUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The user resource which replaces the resource on the server.
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	// The user id to use for this user.
 	UserId string `protobuf:"bytes,3,opt,name=user_id,proto3" json:"user_id,omitempty"`
 	// The user is_system to use for this user.
@@ -738,7 +739,7 @@ func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *UpdateUserRequest) GetUser() *User {
+func (x *UpdateUserRequest) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -768,7 +769,7 @@ func (x *UpdateUserRequest) GetRandomPassword() bool {
 
 type UpdateUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -803,7 +804,7 @@ func (*UpdateUserResponse) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *UpdateUserResponse) GetUser() *User {
+func (x *UpdateUserResponse) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -814,7 +815,7 @@ type DeleteUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The resource id of the user to be deleted, for example:
 	// "shelves/shelf1/users/user2"
-	User          *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -849,7 +850,7 @@ func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *DeleteUserRequest) GetUser() *User {
+func (x *DeleteUserRequest) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -903,7 +904,7 @@ func (x *DeleteUserResponse) GetEmpty() *emptypb.Empty {
 type UpdateUserRolesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	User          *User                  `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	RoleIds       []int64                `protobuf:"varint,3,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"` //  bool is_add = 5 [json_name = "is_add"];
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -946,7 +947,7 @@ func (x *UpdateUserRolesRequest) GetId() int64 {
 	return 0
 }
 
-func (x *UpdateUserRolesRequest) GetUser() *User {
+func (x *UpdateUserRolesRequest) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -962,7 +963,7 @@ func (x *UpdateUserRolesRequest) GetRoleIds() []int64 {
 
 type UpdateUserRolesResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -997,7 +998,7 @@ func (*UpdateUserRolesResponse) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *UpdateUserRolesResponse) GetUser() *User {
+func (x *UpdateUserRolesResponse) GetUser() *types.User {
 	if x != nil {
 		return x.User
 	}
@@ -1008,16 +1009,16 @@ var File_system_user_proto protoreflect.FileDescriptor
 
 const file_system_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/user.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12system/types.proto\"*\n" +
+	"\x11system/user.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"*\n" +
 	"\x18ListUserResourcesRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"{\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"z\n" +
 	"\x19ListUserResourcesResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x12>\n" +
-	"\tresources\x18\x02 \x03(\v2 .api.v1.services.system.ResourceR\tresources\"K\n" +
-	"\x17UpdateUserStatusRequest\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\"\x1a\n" +
+	"total_size\x12=\n" +
+	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"J\n" +
+	"\x17UpdateUserStatusRequest\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\x1a\n" +
 	"\x18UpdateUserStatusResponse\"T\n" +
 	"\x18ResetUserPasswordRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12(\n" +
@@ -1034,46 +1035,46 @@ const file_system_user_proto_rawDesc = "" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12\x14\n" +
-	"\x05title\x18\a \x01(\tR\x05title\"\x84\x02\n" +
+	"\x05title\x18\a \x01(\tR\x05title\"\x83\x02\n" +
 	"\x11ListUsersResponse\x12\x1e\n" +
 	"\n" +
 	"total_size\x18\x01 \x01(\x05R\n" +
-	"total_size\x122\n" +
-	"\x05users\x18\x02 \x03(\v2\x1c.api.v1.services.system.UserR\x05users\x12\x18\n" +
+	"total_size\x121\n" +
+	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12\x18\n" +
 	"\acurrent\x18\x03 \x01(\x05R\acurrent\x12\x1c\n" +
 	"\tpage_size\x18\x04 \x01(\x05R\tpage_size\x12(\n" +
 	"\x0fnext_page_token\x18\x05 \x01(\tR\x0fnext_page_token\x12/\n" +
 	"\x05extra\x18\x06 \x01(\v2\x14.google.protobuf.AnyH\x00R\x05extra\x88\x01\x01B\b\n" +
 	"\x06_extra\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"C\n" +
-	"\x0fGetUserResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\"\xbf\x01\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
+	"\x0fGetUserResponse\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\xbe\x01\n" +
 	"\x11CreateUserRequest\x12\x16\n" +
-	"\x06parent\x18\x01 \x01(\tR\x06parent\x120\n" +
-	"\x04user\x18\x02 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\x12\x18\n" +
+	"\x06parent\x18\x01 \x01(\tR\x06parent\x12/\n" +
+	"\x04user\x18\x02 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x18\n" +
 	"\auser_id\x18\x03 \x01(\tR\auser_id\x12\x1c\n" +
 	"\tis_system\x18\x04 \x01(\bR\tis_system\x12(\n" +
-	"\x0frandom_password\x18\x05 \x01(\bR\x0frandom_password\"F\n" +
-	"\x12CreateUserResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\"\xa7\x01\n" +
-	"\x11UpdateUserRequest\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\x12\x18\n" +
+	"\x0frandom_password\x18\x05 \x01(\bR\x0frandom_password\"E\n" +
+	"\x12CreateUserResponse\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\xa6\x01\n" +
+	"\x11UpdateUserRequest\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x18\n" +
 	"\auser_id\x18\x03 \x01(\tR\auser_id\x12\x1c\n" +
 	"\tis_system\x18\x04 \x01(\bR\tis_system\x12(\n" +
-	"\x0frandom_password\x18\x02 \x01(\bR\x0frandom_password\"F\n" +
-	"\x12UpdateUserResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\"E\n" +
-	"\x11DeleteUserRequest\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\"B\n" +
+	"\x0frandom_password\x18\x02 \x01(\bR\x0frandom_password\"E\n" +
+	"\x12UpdateUserResponse\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"D\n" +
+	"\x11DeleteUserRequest\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"B\n" +
 	"\x12DeleteUserResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"v\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"u\n" +
 	"\x16UpdateUserRolesRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x120\n" +
-	"\x04user\x18\x02 \x01(\v2\x1c.api.v1.services.system.UserR\x04user\x12\x1a\n" +
-	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"K\n" +
-	"\x17UpdateUserRolesResponse\x120\n" +
-	"\x04user\x18\x01 \x01(\v2\x1c.api.v1.services.system.UserR\x04user2\x8e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12/\n" +
+	"\x04user\x18\x02 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x1a\n" +
+	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"J\n" +
+	"\x17UpdateUserRolesResponse\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\x8e\n" +
 	"\n" +
 	"\vUserService\x12t\n" +
 	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
@@ -1124,26 +1125,26 @@ var file_system_user_proto_goTypes = []any{
 	(*DeleteUserResponse)(nil),        // 15: api.v1.services.system.DeleteUserResponse
 	(*UpdateUserRolesRequest)(nil),    // 16: api.v1.services.system.UpdateUserRolesRequest
 	(*UpdateUserRolesResponse)(nil),   // 17: api.v1.services.system.UpdateUserRolesResponse
-	(*Resource)(nil),                  // 18: api.v1.services.system.Resource
-	(*User)(nil),                      // 19: api.v1.services.system.User
+	(*types.Resource)(nil),            // 18: api.v1.services.types.Resource
+	(*types.User)(nil),                // 19: api.v1.services.types.User
 	(*anypb.Any)(nil),                 // 20: google.protobuf.Any
 	(*emptypb.Empty)(nil),             // 21: google.protobuf.Empty
 }
 var file_system_user_proto_depIdxs = []int32{
-	18, // 0: api.v1.services.system.ListUserResourcesResponse.resources:type_name -> api.v1.services.system.Resource
-	19, // 1: api.v1.services.system.UpdateUserStatusRequest.user:type_name -> api.v1.services.system.User
+	18, // 0: api.v1.services.system.ListUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
+	19, // 1: api.v1.services.system.UpdateUserStatusRequest.user:type_name -> api.v1.services.types.User
 	20, // 2: api.v1.services.system.ResetUserPasswordRequest.data:type_name -> google.protobuf.Any
-	19, // 3: api.v1.services.system.ListUsersResponse.users:type_name -> api.v1.services.system.User
+	19, // 3: api.v1.services.system.ListUsersResponse.users:type_name -> api.v1.services.types.User
 	20, // 4: api.v1.services.system.ListUsersResponse.extra:type_name -> google.protobuf.Any
-	19, // 5: api.v1.services.system.GetUserResponse.user:type_name -> api.v1.services.system.User
-	19, // 6: api.v1.services.system.CreateUserRequest.user:type_name -> api.v1.services.system.User
-	19, // 7: api.v1.services.system.CreateUserResponse.user:type_name -> api.v1.services.system.User
-	19, // 8: api.v1.services.system.UpdateUserRequest.user:type_name -> api.v1.services.system.User
-	19, // 9: api.v1.services.system.UpdateUserResponse.user:type_name -> api.v1.services.system.User
-	19, // 10: api.v1.services.system.DeleteUserRequest.user:type_name -> api.v1.services.system.User
+	19, // 5: api.v1.services.system.GetUserResponse.user:type_name -> api.v1.services.types.User
+	19, // 6: api.v1.services.system.CreateUserRequest.user:type_name -> api.v1.services.types.User
+	19, // 7: api.v1.services.system.CreateUserResponse.user:type_name -> api.v1.services.types.User
+	19, // 8: api.v1.services.system.UpdateUserRequest.user:type_name -> api.v1.services.types.User
+	19, // 9: api.v1.services.system.UpdateUserResponse.user:type_name -> api.v1.services.types.User
+	19, // 10: api.v1.services.system.DeleteUserRequest.user:type_name -> api.v1.services.types.User
 	21, // 11: api.v1.services.system.DeleteUserResponse.empty:type_name -> google.protobuf.Empty
-	19, // 12: api.v1.services.system.UpdateUserRolesRequest.user:type_name -> api.v1.services.system.User
-	19, // 13: api.v1.services.system.UpdateUserRolesResponse.user:type_name -> api.v1.services.system.User
+	19, // 12: api.v1.services.system.UpdateUserRolesRequest.user:type_name -> api.v1.services.types.User
+	19, // 13: api.v1.services.system.UpdateUserRolesResponse.user:type_name -> api.v1.services.types.User
 	6,  // 14: api.v1.services.system.UserService.ListUsers:input_type -> api.v1.services.system.ListUsersRequest
 	0,  // 15: api.v1.services.system.UserService.ListUserResources:input_type -> api.v1.services.system.ListUserResourcesRequest
 	8,  // 16: api.v1.services.system.UserService.GetUser:input_type -> api.v1.services.system.GetUserRequest
@@ -1174,7 +1175,6 @@ func file_system_user_proto_init() {
 	if File_system_user_proto != nil {
 		return
 	}
-	file_system_types_proto_init()
 	file_system_user_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
