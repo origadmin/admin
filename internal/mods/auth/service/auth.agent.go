@@ -11,7 +11,7 @@ import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/service"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/helpers/resp"
 )
 

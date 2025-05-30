@@ -11,8 +11,8 @@ import (
 	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/runtime/log"
 
-	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/dto"
+	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 // AuthServiceBiz is a Auth use case.

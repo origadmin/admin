@@ -7,7 +7,7 @@ package service
 import (
 	"github.com/origadmin/runtime/context"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 )
 
 // CasbinServiceHTTPServer is a login service.

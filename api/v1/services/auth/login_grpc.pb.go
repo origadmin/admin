@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: system/login.proto
+// source: auth/login.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LoginService_Captcha_FullMethodName      = "/api.v1.services.system.LoginService/Captcha"
-	LoginService_CaptchaId_FullMethodName    = "/api.v1.services.system.LoginService/CaptchaId"
-	LoginService_CaptchaImage_FullMethodName = "/api.v1.services.system.LoginService/CaptchaImage"
-	LoginService_CaptchaAudio_FullMethodName = "/api.v1.services.system.LoginService/CaptchaAudio"
-	LoginService_Login_FullMethodName        = "/api.v1.services.system.LoginService/Login"
-	LoginService_Logout_FullMethodName       = "/api.v1.services.system.LoginService/Logout"
-	LoginService_Register_FullMethodName     = "/api.v1.services.system.LoginService/Register"
-	LoginService_TokenRefresh_FullMethodName = "/api.v1.services.system.LoginService/TokenRefresh"
+	LoginService_Captcha_FullMethodName      = "/api.v1.services.auth.LoginService/Captcha"
+	LoginService_CaptchaId_FullMethodName    = "/api.v1.services.auth.LoginService/CaptchaId"
+	LoginService_CaptchaImage_FullMethodName = "/api.v1.services.auth.LoginService/CaptchaImage"
+	LoginService_CaptchaAudio_FullMethodName = "/api.v1.services.auth.LoginService/CaptchaAudio"
+	LoginService_Login_FullMethodName        = "/api.v1.services.auth.LoginService/Login"
+	LoginService_Logout_FullMethodName       = "/api.v1.services.auth.LoginService/Logout"
+	LoginService_Register_FullMethodName     = "/api.v1.services.auth.LoginService/Register"
+	LoginService_TokenRefresh_FullMethodName = "/api.v1.services.auth.LoginService/TokenRefresh"
 )
 
 // LoginServiceClient is the client API for LoginService service.
@@ -350,7 +350,7 @@ func _LoginService_TokenRefresh_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var LoginService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.system.LoginService",
+	ServiceName: "api.v1.services.auth.LoginService",
 	HandlerType: (*LoginServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -387,5 +387,5 @@ var LoginService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "system/login.proto",
+	Metadata: "auth/login.proto",
 }

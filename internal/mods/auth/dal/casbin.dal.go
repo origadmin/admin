@@ -9,10 +9,10 @@ import (
 	"context"
 	"strconv"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 type CasbinSourceConfig struct {

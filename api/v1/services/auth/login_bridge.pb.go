@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-bridge unknown
 // - protoc             (unknown)
-// source: system/login.proto
+// source: auth/login.proto
 
-package system
+package auth
 
 import (
 	context "context"
@@ -19,14 +19,14 @@ var _ = new(context.Context)
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
 
-const LoginServiceCaptchaBridgeOperation = "/api.v1.services.system.LoginService/Captcha"
-const LoginServiceCaptchaAudioBridgeOperation = "/api.v1.services.system.LoginService/CaptchaAudio"
-const LoginServiceCaptchaIdBridgeOperation = "/api.v1.services.system.LoginService/CaptchaId"
-const LoginServiceCaptchaImageBridgeOperation = "/api.v1.services.system.LoginService/CaptchaImage"
-const LoginServiceLoginBridgeOperation = "/api.v1.services.system.LoginService/Login"
-const LoginServiceLogoutBridgeOperation = "/api.v1.services.system.LoginService/Logout"
-const LoginServiceRegisterBridgeOperation = "/api.v1.services.system.LoginService/Register"
-const LoginServiceTokenRefreshBridgeOperation = "/api.v1.services.system.LoginService/TokenRefresh"
+const LoginServiceCaptchaBridgeOperation = "/api.v1.services.auth.LoginService/Captcha"
+const LoginServiceCaptchaAudioBridgeOperation = "/api.v1.services.auth.LoginService/CaptchaAudio"
+const LoginServiceCaptchaIdBridgeOperation = "/api.v1.services.auth.LoginService/CaptchaId"
+const LoginServiceCaptchaImageBridgeOperation = "/api.v1.services.auth.LoginService/CaptchaImage"
+const LoginServiceLoginBridgeOperation = "/api.v1.services.auth.LoginService/Login"
+const LoginServiceLogoutBridgeOperation = "/api.v1.services.auth.LoginService/Logout"
+const LoginServiceRegisterBridgeOperation = "/api.v1.services.auth.LoginService/Register"
+const LoginServiceTokenRefreshBridgeOperation = "/api.v1.services.auth.LoginService/TokenRefresh"
 
 type LoginServiceBridger interface {
 	Captcha(context.Context, *CaptchaRequest) (*CaptchaResponse, error)

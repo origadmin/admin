@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package biz is a biz layer for the system module of OrigAdmin.
+// Package biz is a biz layer for the auth module of OrigAdmin.
 package biz
 
 import (
@@ -10,12 +10,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/pagination"
+	"github.com/origadmin/runtime/log"
 	"google.golang.org/grpc"
 
-	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/dto"
+	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 // CasbinSourceServiceBiz is a CasbinSource use case.

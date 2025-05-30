@@ -15,11 +15,11 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/goexts/generic/maps"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/security"
+	"github.com/origadmin/runtime/log"
 	"google.golang.org/grpc/status"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 )
 
 type PolicyUpdater struct {

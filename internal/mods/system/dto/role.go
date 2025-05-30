@@ -13,13 +13,14 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/data/entity/ent"
 )
 
 type (
 	RoleEdges   = ent.RoleEdges
-	RoleEdgesPB = pb.RoleEdges
+	RoleEdgesPB = typespb.RoleEdges
 
 	ListRolesRequest  = pb.ListRolesRequest
 	ListRolesResponse = pb.ListRolesResponse

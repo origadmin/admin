@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package dto is the data transfer object package for the system module.
+// Package dto is the data transfer object package for the auth module.
 package dto
 
 import (
@@ -11,7 +11,7 @@ import (
 	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/schema/types"

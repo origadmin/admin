@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package dto is the data transfer object package for the system module.
+// Package dto is the data transfer object package for the auth module.
 package dto
 
 import (
@@ -10,7 +10,7 @@ import (
 
 	"github.com/origadmin/runtime/interfaces/pagination"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 )
 
 type (

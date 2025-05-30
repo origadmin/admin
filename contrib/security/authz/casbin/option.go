@@ -11,7 +11,7 @@ import (
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/contrib/security/authz/casbin/internal/model"
 )
 

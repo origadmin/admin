@@ -12,11 +12,11 @@ import (
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 type authRepo struct {

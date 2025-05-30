@@ -22,12 +22,12 @@ import (
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 
-	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/helpers/captcha"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/system/dto"
-	systemdto "origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/mods/auth/dto"
+	authdto "origadmin/application/admin/internal/mods/auth/dto"
 )
 
 type loginRepo struct {
@@ -57,7 +57,7 @@ func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*d
 
 	return &dto.RegisterResponse{
 		Success: true,
-		Data: &system.RegisterResponse_Data{
+		Data: &auth.RegisterResponse_Data{
 			Redirect: "",
 		},
 	}, nil
@@ -103,7 +103,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 	case userData == nil:
 		log.Warnf("User not found with username %s", data.Username)
 		return nil, dto.ErrInvalidUsername
-	case userData.Status != systemdto.UserStatusActive:
+	case userData.Status != authdto.UserStatusActive:
 		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:

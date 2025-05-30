@@ -12,8 +12,8 @@ import (
 	"github.com/origadmin/runtime/service"
 	"google.golang.org/grpc"
 
-	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/biz"
+	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/mods/auth/biz"
 )
 
 type CasbinSourceServiceServer struct {

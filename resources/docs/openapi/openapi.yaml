@@ -49,7 +49,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CaptchaResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaResponse'
                 default:
                     description: Default error response
                     content:
@@ -115,7 +115,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CaptchaAudioResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaAudioResponse'
                 default:
                     description: Default error response
                     content:
@@ -143,7 +143,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CaptchaIdResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaIdResponse'
                 default:
                     description: Default error response
                     content:
@@ -209,7 +209,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.CaptchaImageResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaImageResponse'
                 default:
                     description: Default error response
                     content:
@@ -311,7 +311,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.LoginRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest_Data'
                 required: true
             responses:
                 "200":
@@ -319,7 +319,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.LoginResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
                 default:
                     description: Default error response
                     content:
@@ -343,7 +343,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.LogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.LogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -359,7 +359,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.RegisterRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.RegisterRequest_Data'
                 required: true
             responses:
                 "200":
@@ -367,7 +367,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.RegisterResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.RegisterResponse'
                 default:
                     description: Default error response
                     content:
@@ -2270,7 +2270,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.system.TokenRefreshRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.TokenRefreshRequest_Data'
                 required: true
             responses:
                 "200":
@@ -2278,7 +2278,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.TokenRefreshResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.TokenRefreshResponse'
                 default:
                     description: Default error response
                     content:
@@ -2311,6 +2311,42 @@ components:
             properties:
                 is_valid:
                     type: boolean
+        api.v1.services.auth.CaptchaAudioResponse:
+            type: object
+            properties:
+                headers:
+                    type: object
+                    additionalProperties:
+                        type: string
+                audio:
+                    type: string
+                    format: bytes
+            description: The response message containing the greetings
+        api.v1.services.auth.CaptchaIdResponse:
+            type: object
+            properties:
+                data:
+                    type: string
+        api.v1.services.auth.CaptchaImageResponse:
+            type: object
+            properties:
+                headers:
+                    type: object
+                    additionalProperties:
+                        type: string
+                image:
+                    type: string
+                    format: bytes
+            description: The response message containing the greetings
+        api.v1.services.auth.CaptchaResponse:
+            type: object
+            properties:
+                id:
+                    type: string
+                type:
+                    type: string
+                data:
+                    type: string
         api.v1.services.auth.CreateTokenRequest_Data:
             type: object
             properties:
@@ -2370,6 +2406,27 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
+        api.v1.services.auth.LoginRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.auth.LoginResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
+        api.v1.services.auth.LogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.v1.services.auth.PolicyRule:
             type: object
             properties:
@@ -2379,6 +2436,29 @@ components:
                     type: array
                     items:
                         type: string
+        api.v1.services.auth.RegisterRequest_Data:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captcha_id:
+                    type: string
+                captcha_code:
+                    type: string
+        api.v1.services.auth.RegisterResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                data:
+                    $ref: '#/components/schemas/api.v1.services.auth.RegisterResponse_Data'
+        api.v1.services.auth.RegisterResponse_Data:
+            type: object
+            properties:
+                redirect:
+                    type: string
         api.v1.services.auth.StreamRulesResponse:
             type: object
             properties:
@@ -2386,6 +2466,16 @@ components:
                     $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
                 grouping:
                     $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
+        api.v1.services.auth.TokenRefreshRequest_Data:
+            type: object
+            properties:
+                refresh_token:
+                    type: string
+        api.v1.services.auth.TokenRefreshResponse:
+            type: object
+            properties:
+                token:
+                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.auth.ValidateTokenResponse:
             type: object
             properties:
@@ -2400,42 +2490,6 @@ components:
             type: object
             properties:
                 modified_date:
-                    type: string
-        api.v1.services.system.CaptchaAudioResponse:
-            type: object
-            properties:
-                headers:
-                    type: object
-                    additionalProperties:
-                        type: string
-                audio:
-                    type: string
-                    format: bytes
-            description: The response message containing the greetings
-        api.v1.services.system.CaptchaIdResponse:
-            type: object
-            properties:
-                data:
-                    type: string
-        api.v1.services.system.CaptchaImageResponse:
-            type: object
-            properties:
-                headers:
-                    type: object
-                    additionalProperties:
-                        type: string
-                image:
-                    type: string
-                    format: bytes
-            description: The response message containing the greetings
-        api.v1.services.system.CaptchaResponse:
-            type: object
-            properties:
-                id:
-                    type: string
-                type:
-                    type: string
-                data:
                     type: string
         api.v1.services.system.CreateDepartmentResponse:
             type: object
@@ -2793,27 +2847,6 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
-        api.v1.services.system.LoginRequest_Data:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captcha_id:
-                    type: string
-                captcha_code:
-                    type: string
-        api.v1.services.system.LoginResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
-        api.v1.services.system.LogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
         api.v1.services.system.PersonalLogoutResponse:
             type: object
             properties:
@@ -2824,42 +2857,9 @@ components:
             properties:
                 token:
                     type: string
-        api.v1.services.system.RegisterRequest_Data:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captcha_id:
-                    type: string
-                captcha_code:
-                    type: string
-        api.v1.services.system.RegisterResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-                data:
-                    $ref: '#/components/schemas/api.v1.services.system.RegisterResponse_Data'
-        api.v1.services.system.RegisterResponse_Data:
-            type: object
-            properties:
-                redirect:
-                    type: string
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
-        api.v1.services.system.TokenRefreshRequest_Data:
-            type: object
-            properties:
-                refresh_token:
-                    type: string
-        api.v1.services.system.TokenRefreshResponse:
-            type: object
-            properties:
-                token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
         api.v1.services.system.UpdateDepartmentResponse:
             type: object
             properties:

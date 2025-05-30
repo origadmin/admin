@@ -7,9 +7,11 @@
 package auth
 
 import (
-	context "context"
-	http "github.com/go-kratos/kratos/v2/transport/http"
-	grpc "google.golang.org/grpc"
+	"context"
+	"io"
+
+	"github.com/go-kratos/kratos/v2/transport/http"
+	"google.golang.org/grpc"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -199,6 +201,25 @@ type CasbinSourceServiceBridgeImpl struct {
 
 func NewCasbinSourceServiceBridge(client grpc.ClientConnInterface) CasbinSourceServiceServer {
 	return &CasbinSourceServiceBridgeImpl{client: NewCasbinSourceServiceClient(client)}
+}
+
+func (c *CasbinSourceServiceBridgeImpl) StreamRules(req *StreamRulesRequest, srv grpc.ServerStreamingServer[StreamRulesResponse]) error {
+	client, err := c.client.StreamRules(srv.Context(), req)
+	if err != nil {
+		return err
+	}
+	for {
+		resp, err := client.Recv()
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
+		}
+		if err := srv.Send(resp); err != nil {
+			return err
+		}
+	}
 }
 
 func (c *CasbinSourceServiceBridgeImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest) (*ListGroupingsResponse, error) {

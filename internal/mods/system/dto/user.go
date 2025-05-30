@@ -9,12 +9,13 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
-	"github.com/origadmin/runtime/interfaces/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -22,9 +23,9 @@ import (
 
 type (
 	UserRole        = ent.UserRole
-	UserRolePB      = pb.UserRole
+	UserRolePB      = typespb.UserRole
 	UserRoleEdges   = ent.UserRoleEdges
-	UserRoleEdgesPB = pb.UserRoleEdges
+	UserRoleEdgesPB = typespb.UserRoleEdges
 
 	ListUsersRequest  = pb.ListUsersRequest
 	ListUsersResponse = pb.ListUsersResponse

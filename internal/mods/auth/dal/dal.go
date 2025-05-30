@@ -26,7 +26,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/department"
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 const (
