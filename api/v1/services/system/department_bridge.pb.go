@@ -33,34 +33,49 @@ type DepartmentServiceBridger interface {
 	UpdateDepartment(context.Context, *UpdateDepartmentRequest) (*UpdateDepartmentResponse, error)
 }
 
-type DepartmentServiceBridgeHooker interface {
+type DepartmentServiceHooker interface {
+	DepartmentServiceCreateDepartmentHooker
+	DepartmentServiceDeleteDepartmentHooker
+	DepartmentServiceGetDepartmentHooker
+	DepartmentServiceListDepartmentsHooker
+	DepartmentServiceUpdateDepartmentHooker
+}
+
+type DepartmentServiceHookedBridger interface {
+	DepartmentServiceHooker
 	DepartmentServiceBridger
+}
+type DepartmentServiceCreateDepartmentHooker interface {
 	BeforeCreateDepartment(http.Context, *CreateDepartmentRequest) (context.Context, error)
 	CreateDepartmentResult(http.Context, *CreateDepartmentRequest, *CreateDepartmentResponse) error
+}
+type DepartmentServiceDeleteDepartmentHooker interface {
 	BeforeDeleteDepartment(http.Context, *DeleteDepartmentRequest) (context.Context, error)
 	DeleteDepartmentResult(http.Context, *DeleteDepartmentRequest, *DeleteDepartmentResponse) error
+}
+type DepartmentServiceGetDepartmentHooker interface {
 	BeforeGetDepartment(http.Context, *GetDepartmentRequest) (context.Context, error)
 	GetDepartmentResult(http.Context, *GetDepartmentRequest, *GetDepartmentResponse) error
+}
+type DepartmentServiceListDepartmentsHooker interface {
 	BeforeListDepartments(http.Context, *ListDepartmentsRequest) (context.Context, error)
 	ListDepartmentsResult(http.Context, *ListDepartmentsRequest, *ListDepartmentsResponse) error
+}
+type DepartmentServiceUpdateDepartmentHooker interface {
 	BeforeUpdateDepartment(http.Context, *UpdateDepartmentRequest) (context.Context, error)
 	UpdateDepartmentResult(http.Context, *UpdateDepartmentRequest, *UpdateDepartmentResponse) error
 }
 
-func RegisterDepartmentServiceBridger(s *http.Server, srv DepartmentServiceBridger) {
+func RegisterDepartmentServiceBridger(s *http.Server, srv DepartmentServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(DepartmentServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedDepartmentServiceBridger{DepartmentServiceBridger: srv}
-	}
-	r.GET("/sys/departments", _DepartmentService_ListDepartments0_Bridge_Handler(hook))
-	r.GET("/sys/departments/:id", _DepartmentService_GetDepartment0_Bridge_Handler(hook))
-	r.POST("/sys/departments", _DepartmentService_CreateDepartment0_Bridge_Handler(hook))
-	r.PUT("/sys/departments/:department.id", _DepartmentService_UpdateDepartment0_Bridge_Handler(hook))
-	r.DELETE("/sys/departments/:id", _DepartmentService_DeleteDepartment0_Bridge_Handler(hook))
+	r.GET("/sys/departments", _DepartmentService_ListDepartments0_Bridge_Handler(srv))
+	r.GET("/sys/departments/:id", _DepartmentService_GetDepartment0_Bridge_Handler(srv))
+	r.POST("/sys/departments", _DepartmentService_CreateDepartment0_Bridge_Handler(srv))
+	r.PUT("/sys/departments/:department.id", _DepartmentService_UpdateDepartment0_Bridge_Handler(srv))
+	r.DELETE("/sys/departments/:id", _DepartmentService_DeleteDepartment0_Bridge_Handler(srv))
 }
 
-func _DepartmentService_ListDepartments0_Bridge_Handler(srv DepartmentServiceBridgeHooker) func(ctx http.Context) error {
+func _DepartmentService_ListDepartments0_Bridge_Handler(srv DepartmentServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListDepartmentsRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -83,7 +98,7 @@ func _DepartmentService_ListDepartments0_Bridge_Handler(srv DepartmentServiceBri
 	}
 }
 
-func _DepartmentService_GetDepartment0_Bridge_Handler(srv DepartmentServiceBridgeHooker) func(ctx http.Context) error {
+func _DepartmentService_GetDepartment0_Bridge_Handler(srv DepartmentServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetDepartmentRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -109,7 +124,7 @@ func _DepartmentService_GetDepartment0_Bridge_Handler(srv DepartmentServiceBridg
 	}
 }
 
-func _DepartmentService_CreateDepartment0_Bridge_Handler(srv DepartmentServiceBridgeHooker) func(ctx http.Context) error {
+func _DepartmentService_CreateDepartment0_Bridge_Handler(srv DepartmentServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateDepartmentRequest
 		if err := ctx.Bind(&in.Department); err != nil {
@@ -135,7 +150,7 @@ func _DepartmentService_CreateDepartment0_Bridge_Handler(srv DepartmentServiceBr
 	}
 }
 
-func _DepartmentService_UpdateDepartment0_Bridge_Handler(srv DepartmentServiceBridgeHooker) func(ctx http.Context) error {
+func _DepartmentService_UpdateDepartment0_Bridge_Handler(srv DepartmentServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateDepartmentRequest
 		if err := ctx.Bind(&in.Department); err != nil {
@@ -164,7 +179,7 @@ func _DepartmentService_UpdateDepartment0_Bridge_Handler(srv DepartmentServiceBr
 	}
 }
 
-func _DepartmentService_DeleteDepartment0_Bridge_Handler(srv DepartmentServiceBridgeHooker) func(ctx http.Context) error {
+func _DepartmentService_DeleteDepartment0_Bridge_Handler(srv DepartmentServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteDepartmentRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -190,53 +205,65 @@ func _DepartmentService_DeleteDepartment0_Bridge_Handler(srv DepartmentServiceBr
 	}
 }
 
-// UnimplementedDepartmentServiceBridger must be embedded to have
+// UnimplementedDepartmentServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedDepartmentServiceBridger struct {
+type UnimplementedDepartmentServiceHooked struct{}
+
+func (UnimplementedDepartmentServiceHooked) BeforeCreateDepartment(ctx http.Context, in *CreateDepartmentRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDepartmentServiceHooked) CreateDepartmentResult(ctx http.Context, in *CreateDepartmentRequest, out *CreateDepartmentResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDepartmentServiceHooked) BeforeDeleteDepartment(ctx http.Context, in *DeleteDepartmentRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDepartmentServiceHooked) DeleteDepartmentResult(ctx http.Context, in *DeleteDepartmentRequest, out *DeleteDepartmentResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDepartmentServiceHooked) BeforeGetDepartment(ctx http.Context, in *GetDepartmentRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDepartmentServiceHooked) GetDepartmentResult(ctx http.Context, in *GetDepartmentRequest, out *GetDepartmentResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDepartmentServiceHooked) BeforeListDepartments(ctx http.Context, in *ListDepartmentsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDepartmentServiceHooked) ListDepartmentsResult(ctx http.Context, in *ListDepartmentsRequest, out *ListDepartmentsResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDepartmentServiceHooked) BeforeUpdateDepartment(ctx http.Context, in *UpdateDepartmentRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDepartmentServiceHooked) UpdateDepartmentResult(ctx http.Context, in *UpdateDepartmentRequest, out *UpdateDepartmentResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithDepartmentServiceHook(h DepartmentServiceHooker) func(DepartmentServiceBridger) DepartmentServiceHookedBridger {
+	return func(b DepartmentServiceBridger) DepartmentServiceHookedBridger {
+		return DepartmentServiceHookedBridge{DepartmentServiceBridger: b, DepartmentServiceHooker: h}
+	}
+}
+
+// DepartmentServiceHookedBridge is a bridge between the HTTP and gRPC implementations of DepartmentService.
+// It implements the HTTP and gRPC implementations of DepartmentService.
+// It forwards requests and responses between the two implementations.
+type DepartmentServiceHookedBridge struct {
 	DepartmentServiceBridger
-}
-
-func (UnimplementedDepartmentServiceBridger) BeforeCreateDepartment(ctx http.Context, in *CreateDepartmentRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedDepartmentServiceBridger) CreateDepartmentResult(ctx http.Context, in *CreateDepartmentRequest, out *CreateDepartmentResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedDepartmentServiceBridger) BeforeDeleteDepartment(ctx http.Context, in *DeleteDepartmentRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedDepartmentServiceBridger) DeleteDepartmentResult(ctx http.Context, in *DeleteDepartmentRequest, out *DeleteDepartmentResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedDepartmentServiceBridger) BeforeGetDepartment(ctx http.Context, in *GetDepartmentRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedDepartmentServiceBridger) GetDepartmentResult(ctx http.Context, in *GetDepartmentRequest, out *GetDepartmentResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedDepartmentServiceBridger) BeforeListDepartments(ctx http.Context, in *ListDepartmentsRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedDepartmentServiceBridger) ListDepartmentsResult(ctx http.Context, in *ListDepartmentsRequest, out *ListDepartmentsResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedDepartmentServiceBridger) BeforeUpdateDepartment(ctx http.Context, in *UpdateDepartmentRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedDepartmentServiceBridger) UpdateDepartmentResult(ctx http.Context, in *UpdateDepartmentRequest, out *UpdateDepartmentResponse) error {
-	return ctx.Result(200, out)
+	DepartmentServiceHooker
 }
 
 type DepartmentServiceHTTPBridgeImpl struct {

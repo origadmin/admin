@@ -11,10 +11,10 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-	types "v1/services/types"
 )
 
 const (
@@ -872,8 +872,8 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\fDestroyToken\x12).api.v1.services.auth.DestroyTokenRequest\x1a*.api.v1.services.auth.DestroyTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x04data\"\x11/sys/auth/destroy\x12\x8b\x01\n" +
 	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\"\x16/sys/auth/authenticate\x12\x7f\n" +
 	"\n" +
-	"AuthLogout\x12'.api.v1.services.auth.AuthLogoutRequest\x1a(.api.v1.services.auth.AuthLogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x04data\"\x10/sys/auth/logoutB\xb0\x01\n" +
-	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z\x15v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
+	"AuthLogout\x12'.api.v1.services.auth.AuthLogoutRequest\x1a(.api.v1.services.auth.AuthLogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x04data\"\x10/sys/auth/logoutB\xb4\x01\n" +
+	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z\x19api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
 	file_auth_auth_proto_rawDescOnce sync.Once

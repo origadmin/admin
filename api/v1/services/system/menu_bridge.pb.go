@@ -33,34 +33,49 @@ type MenuServiceBridger interface {
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuResponse, error)
 }
 
-type MenuServiceBridgeHooker interface {
+type MenuServiceHooker interface {
+	MenuServiceCreateMenuHooker
+	MenuServiceDeleteMenuHooker
+	MenuServiceGetMenuHooker
+	MenuServiceListMenusHooker
+	MenuServiceUpdateMenuHooker
+}
+
+type MenuServiceHookedBridger interface {
+	MenuServiceHooker
 	MenuServiceBridger
+}
+type MenuServiceCreateMenuHooker interface {
 	BeforeCreateMenu(http.Context, *CreateMenuRequest) (context.Context, error)
 	CreateMenuResult(http.Context, *CreateMenuRequest, *CreateMenuResponse) error
+}
+type MenuServiceDeleteMenuHooker interface {
 	BeforeDeleteMenu(http.Context, *DeleteMenuRequest) (context.Context, error)
 	DeleteMenuResult(http.Context, *DeleteMenuRequest, *DeleteMenuResponse) error
+}
+type MenuServiceGetMenuHooker interface {
 	BeforeGetMenu(http.Context, *GetMenuRequest) (context.Context, error)
 	GetMenuResult(http.Context, *GetMenuRequest, *GetMenuResponse) error
+}
+type MenuServiceListMenusHooker interface {
 	BeforeListMenus(http.Context, *ListMenusRequest) (context.Context, error)
 	ListMenusResult(http.Context, *ListMenusRequest, *ListMenusResponse) error
+}
+type MenuServiceUpdateMenuHooker interface {
 	BeforeUpdateMenu(http.Context, *UpdateMenuRequest) (context.Context, error)
 	UpdateMenuResult(http.Context, *UpdateMenuRequest, *UpdateMenuResponse) error
 }
 
-func RegisterMenuServiceBridger(s *http.Server, srv MenuServiceBridger) {
+func RegisterMenuServiceBridger(s *http.Server, srv MenuServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(MenuServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedMenuServiceBridger{MenuServiceBridger: srv}
-	}
-	r.GET("/sys/menus", _MenuService_ListMenus0_Bridge_Handler(hook))
-	r.GET("/sys/menus/:id", _MenuService_GetMenu0_Bridge_Handler(hook))
-	r.POST("/sys/menus", _MenuService_CreateMenu0_Bridge_Handler(hook))
-	r.PUT("/sys/menus/:menu.id", _MenuService_UpdateMenu0_Bridge_Handler(hook))
-	r.DELETE("/sys/menus/:id", _MenuService_DeleteMenu0_Bridge_Handler(hook))
+	r.GET("/sys/menus", _MenuService_ListMenus0_Bridge_Handler(srv))
+	r.GET("/sys/menus/:id", _MenuService_GetMenu0_Bridge_Handler(srv))
+	r.POST("/sys/menus", _MenuService_CreateMenu0_Bridge_Handler(srv))
+	r.PUT("/sys/menus/:menu.id", _MenuService_UpdateMenu0_Bridge_Handler(srv))
+	r.DELETE("/sys/menus/:id", _MenuService_DeleteMenu0_Bridge_Handler(srv))
 }
 
-func _MenuService_ListMenus0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ctx http.Context) error {
+func _MenuService_ListMenus0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListMenusRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -83,7 +98,7 @@ func _MenuService_ListMenus0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ct
 	}
 }
 
-func _MenuService_GetMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ctx http.Context) error {
+func _MenuService_GetMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetMenuRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -109,7 +124,7 @@ func _MenuService_GetMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ctx 
 	}
 }
 
-func _MenuService_CreateMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ctx http.Context) error {
+func _MenuService_CreateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateMenuRequest
 		if err := ctx.Bind(&in.Menu); err != nil {
@@ -135,7 +150,7 @@ func _MenuService_CreateMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(c
 	}
 }
 
-func _MenuService_UpdateMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ctx http.Context) error {
+func _MenuService_UpdateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateMenuRequest
 		if err := ctx.Bind(&in.Menu); err != nil {
@@ -164,7 +179,7 @@ func _MenuService_UpdateMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(c
 	}
 }
 
-func _MenuService_DeleteMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(ctx http.Context) error {
+func _MenuService_DeleteMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteMenuRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -190,53 +205,65 @@ func _MenuService_DeleteMenu0_Bridge_Handler(srv MenuServiceBridgeHooker) func(c
 	}
 }
 
-// UnimplementedMenuServiceBridger must be embedded to have
+// UnimplementedMenuServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMenuServiceBridger struct {
+type UnimplementedMenuServiceHooked struct{}
+
+func (UnimplementedMenuServiceHooked) BeforeCreateMenu(ctx http.Context, in *CreateMenuRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMenuServiceHooked) CreateMenuResult(ctx http.Context, in *CreateMenuRequest, out *CreateMenuResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMenuServiceHooked) BeforeDeleteMenu(ctx http.Context, in *DeleteMenuRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMenuServiceHooked) DeleteMenuResult(ctx http.Context, in *DeleteMenuRequest, out *DeleteMenuResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMenuServiceHooked) BeforeGetMenu(ctx http.Context, in *GetMenuRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMenuServiceHooked) GetMenuResult(ctx http.Context, in *GetMenuRequest, out *GetMenuResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMenuServiceHooked) BeforeListMenus(ctx http.Context, in *ListMenusRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMenuServiceHooked) ListMenusResult(ctx http.Context, in *ListMenusRequest, out *ListMenusResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedMenuServiceHooked) BeforeUpdateMenu(ctx http.Context, in *UpdateMenuRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedMenuServiceHooked) UpdateMenuResult(ctx http.Context, in *UpdateMenuRequest, out *UpdateMenuResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithMenuServiceHook(h MenuServiceHooker) func(MenuServiceBridger) MenuServiceHookedBridger {
+	return func(b MenuServiceBridger) MenuServiceHookedBridger {
+		return MenuServiceHookedBridge{MenuServiceBridger: b, MenuServiceHooker: h}
+	}
+}
+
+// MenuServiceHookedBridge is a bridge between the HTTP and gRPC implementations of MenuService.
+// It implements the HTTP and gRPC implementations of MenuService.
+// It forwards requests and responses between the two implementations.
+type MenuServiceHookedBridge struct {
 	MenuServiceBridger
-}
-
-func (UnimplementedMenuServiceBridger) BeforeCreateMenu(ctx http.Context, in *CreateMenuRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedMenuServiceBridger) CreateMenuResult(ctx http.Context, in *CreateMenuRequest, out *CreateMenuResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedMenuServiceBridger) BeforeDeleteMenu(ctx http.Context, in *DeleteMenuRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedMenuServiceBridger) DeleteMenuResult(ctx http.Context, in *DeleteMenuRequest, out *DeleteMenuResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedMenuServiceBridger) BeforeGetMenu(ctx http.Context, in *GetMenuRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedMenuServiceBridger) GetMenuResult(ctx http.Context, in *GetMenuRequest, out *GetMenuResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedMenuServiceBridger) BeforeListMenus(ctx http.Context, in *ListMenusRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedMenuServiceBridger) ListMenusResult(ctx http.Context, in *ListMenusRequest, out *ListMenusResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedMenuServiceBridger) BeforeUpdateMenu(ctx http.Context, in *UpdateMenuRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedMenuServiceBridger) UpdateMenuResult(ctx http.Context, in *UpdateMenuRequest, out *UpdateMenuResponse) error {
-	return ctx.Result(200, out)
+	MenuServiceHooker
 }
 
 type MenuServiceHTTPBridgeImpl struct {

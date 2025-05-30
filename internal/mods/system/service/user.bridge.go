@@ -2,135 +2,96 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package service implements the functions, types, and interfaces for the module.
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/origadmin/runtime/agent"
-	"github.com/origadmin/runtime/context"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 )
 
-// UserServiceBridge is a menu service.
-type UserServiceBridge struct {
-	resp.Response
-
-	client pb.UserServiceClient
+// UserServiceHookedBridge is a menu service.
+type UserServiceHookedBridge struct {
+	pb.UnimplementedUserServiceHooked
+	log *log.KHelper
 }
 
-func (s UserServiceBridge) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListUserResources(ctx, request)
+func (h UserServiceHookedBridge) CreateUserResult(ctx transhttp.Context, request *pb.CreateUserRequest, response *pb.CreateUserResponse) error {
+	marshal, err := json.Marshal(response.User)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.DataArray{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2AnyPBArray(response.Resources...),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s UserServiceBridge) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s UserServiceBridge) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s UserServiceBridge) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s UserServiceBridge) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CreateUser(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response.User),
-	})
-	return nil, nil
-}
-
-func (s UserServiceBridge) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	_, err := s.client.DeleteUser(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+func (h UserServiceHookedBridge) DeleteUserResult(ctx transhttp.Context, request *pb.DeleteUserRequest, response *pb.DeleteUserResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
-	return nil, nil
 }
 
-func (s UserServiceBridge) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.GetUserResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.GetUser(ctx, request)
+func (h UserServiceHookedBridge) GetUserResult(ctx transhttp.Context, request *pb.GetUserRequest, response *pb.GetUserResponse) error {
+	marshal, err := json.Marshal(response.User)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.User),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s UserServiceBridge) ListUsers(ctx context.Context, request *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListUsers(ctx, request)
+func (h UserServiceHookedBridge) ListUsersResult(ctx transhttp.Context, request *pb.ListUsersRequest, response *pb.ListUsersResponse) error {
+	marshal, err := json.Marshal(response.Users)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
+	return ctx.JSON(http.StatusOK, &resp.SourcePage{
 		Success: true,
-		Total:   response.TotalSize,
-		Data:    resp.Proto2AnyPBArray(response.Users...),
+		Total:   response.GetTotalSize(),
+		Data:    marshal,
+		//Current:  request.GetCurrent(),
+		//PageSize: nil,
+		//Extra: "",
 	})
-	return nil, nil
 }
 
-func (s UserServiceBridge) UpdateUser(ctx context.Context, request *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdateUser(ctx, request)
+func (h UserServiceHookedBridge) UpdateUserResult(ctx transhttp.Context, request *pb.UpdateUserRequest, response *pb.UpdateUserResponse) error {
+	marshal, err := json.Marshal(response.User)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.User),
+		Data:    marshal,
 	})
-	return nil, nil
+}
+
+func NewUserServiceHookedBridge(r runtime.Runtime, client pb.UserServiceBridger) pb.UserServiceHookedBridger {
+	return pb.WithUserServiceHook(&UserServiceHookedBridge{
+		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+	})(client)
 }
 
 // NewUserServiceBridge new a menu service.
-func NewUserServiceBridge(client pb.UserServiceClient) *UserServiceBridge {
-	return &UserServiceBridge{client: client}
+func NewUserServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.UserServiceServer {
+	return pb.NewUserServiceBridge(client)
 }
 
-// NewUserServiceBridgePB new a menu service.
-func NewUserServiceBridgePB(client pb.UserServiceClient) pb.UserServiceBridge {
-	return &UserServiceBridge{client: client}
-}
-func NewUserServiceBridgeClient(client *service.GRPCClient) pb.UserServiceBridge {
-	c := pb.NewUserServiceClient(client)
-	return NewUserServiceBridge(c)
+// NewUserServiceHTTPBridge new a menu service.
+func NewUserServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.UserServiceHTTPServer {
+	return pb.NewUserServiceHTTPBridge(client)
 }
 
-var _ pb.UserServiceBridge = (*UserServiceBridge)(nil)
+var _ pb.UserServiceHooker = (*UserServiceHookedBridge)(nil)

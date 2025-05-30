@@ -29,28 +29,37 @@ type CasbinSourceServiceBridger interface {
 	WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error)
 }
 
-type CasbinSourceServiceBridgeHooker interface {
+type CasbinSourceServiceHooker interface {
+	CasbinSourceServiceListGroupingsHooker
+	CasbinSourceServiceListPoliciesHooker
+	CasbinSourceServiceWatchUpdateHooker
+}
+
+type CasbinSourceServiceHookedBridger interface {
+	CasbinSourceServiceHooker
 	CasbinSourceServiceBridger
+}
+type CasbinSourceServiceListGroupingsHooker interface {
 	BeforeListGroupings(http.Context, *ListGroupingsRequest) (context.Context, error)
 	ListGroupingsResult(http.Context, *ListGroupingsRequest, *ListGroupingsResponse) error
+}
+type CasbinSourceServiceListPoliciesHooker interface {
 	BeforeListPolicies(http.Context, *ListPoliciesRequest) (context.Context, error)
 	ListPoliciesResult(http.Context, *ListPoliciesRequest, *ListPoliciesResponse) error
+}
+type CasbinSourceServiceWatchUpdateHooker interface {
 	BeforeWatchUpdate(http.Context, *WatchUpdateRequest) (context.Context, error)
 	WatchUpdateResult(http.Context, *WatchUpdateRequest, *WatchUpdateResponse) error
 }
 
-func RegisterCasbinSourceServiceBridger(s *http.Server, srv CasbinSourceServiceBridger) {
+func RegisterCasbinSourceServiceBridger(s *http.Server, srv CasbinSourceServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(CasbinSourceServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedCasbinSourceServiceBridger{CasbinSourceServiceBridger: srv}
-	}
-	r.GET("/casbin/policies", _CasbinSourceService_ListPolicies0_Bridge_Handler(hook))
-	r.GET("/casbin/groupings", _CasbinSourceService_ListGroupings0_Bridge_Handler(hook))
-	r.GET("/casbin/watch", _CasbinSourceService_WatchUpdate0_Bridge_Handler(hook))
+	r.GET("/casbin/policies", _CasbinSourceService_ListPolicies0_Bridge_Handler(srv))
+	r.GET("/casbin/groupings", _CasbinSourceService_ListGroupings0_Bridge_Handler(srv))
+	r.GET("/casbin/watch", _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv))
 }
 
-func _CasbinSourceService_ListPolicies0_Bridge_Handler(srv CasbinSourceServiceBridgeHooker) func(ctx http.Context) error {
+func _CasbinSourceService_ListPolicies0_Bridge_Handler(srv CasbinSourceServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListPoliciesRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -73,7 +82,7 @@ func _CasbinSourceService_ListPolicies0_Bridge_Handler(srv CasbinSourceServiceBr
 	}
 }
 
-func _CasbinSourceService_ListGroupings0_Bridge_Handler(srv CasbinSourceServiceBridgeHooker) func(ctx http.Context) error {
+func _CasbinSourceService_ListGroupings0_Bridge_Handler(srv CasbinSourceServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListGroupingsRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -96,7 +105,7 @@ func _CasbinSourceService_ListGroupings0_Bridge_Handler(srv CasbinSourceServiceB
 	}
 }
 
-func _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv CasbinSourceServiceBridgeHooker) func(ctx http.Context) error {
+func _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv CasbinSourceServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in WatchUpdateRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -119,37 +128,49 @@ func _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv CasbinSourceServiceBri
 	}
 }
 
-// UnimplementedCasbinSourceServiceBridger must be embedded to have
+// UnimplementedCasbinSourceServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedCasbinSourceServiceBridger struct {
+type UnimplementedCasbinSourceServiceHooked struct{}
+
+func (UnimplementedCasbinSourceServiceHooked) BeforeListGroupings(ctx http.Context, in *ListGroupingsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedCasbinSourceServiceHooked) ListGroupingsResult(ctx http.Context, in *ListGroupingsRequest, out *ListGroupingsResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedCasbinSourceServiceHooked) BeforeListPolicies(ctx http.Context, in *ListPoliciesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedCasbinSourceServiceHooked) ListPoliciesResult(ctx http.Context, in *ListPoliciesRequest, out *ListPoliciesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedCasbinSourceServiceHooked) BeforeWatchUpdate(ctx http.Context, in *WatchUpdateRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedCasbinSourceServiceHooked) WatchUpdateResult(ctx http.Context, in *WatchUpdateRequest, out *WatchUpdateResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithCasbinSourceServiceHook(h CasbinSourceServiceHooker) func(CasbinSourceServiceBridger) CasbinSourceServiceHookedBridger {
+	return func(b CasbinSourceServiceBridger) CasbinSourceServiceHookedBridger {
+		return CasbinSourceServiceHookedBridge{CasbinSourceServiceBridger: b, CasbinSourceServiceHooker: h}
+	}
+}
+
+// CasbinSourceServiceHookedBridge is a bridge between the HTTP and gRPC implementations of CasbinSourceService.
+// It implements the HTTP and gRPC implementations of CasbinSourceService.
+// It forwards requests and responses between the two implementations.
+type CasbinSourceServiceHookedBridge struct {
 	CasbinSourceServiceBridger
-}
-
-func (UnimplementedCasbinSourceServiceBridger) BeforeListGroupings(ctx http.Context, in *ListGroupingsRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedCasbinSourceServiceBridger) ListGroupingsResult(ctx http.Context, in *ListGroupingsRequest, out *ListGroupingsResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedCasbinSourceServiceBridger) BeforeListPolicies(ctx http.Context, in *ListPoliciesRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedCasbinSourceServiceBridger) ListPoliciesResult(ctx http.Context, in *ListPoliciesRequest, out *ListPoliciesResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedCasbinSourceServiceBridger) BeforeWatchUpdate(ctx http.Context, in *WatchUpdateRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedCasbinSourceServiceBridger) WatchUpdateResult(ctx http.Context, in *WatchUpdateRequest, out *WatchUpdateResponse) error {
-	return ctx.Result(200, out)
+	CasbinSourceServiceHooker
 }
 
 type CasbinSourceServiceHTTPBridgeImpl struct {

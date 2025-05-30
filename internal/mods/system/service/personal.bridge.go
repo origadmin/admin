@@ -5,180 +5,118 @@
 package service
 
 import (
-	"net/http"
+	"context"
 
-	"github.com/origadmin/runtime/agent"
-	"github.com/origadmin/runtime/context"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/resp"
 )
 
-// PersonalServiceBridge is a Personal service.
-type PersonalServiceBridge struct {
-	resp.Response
-
-	client pb.PersonalServiceClient
+// PersonalServiceHookedBridge is a menu service.
+type PersonalServiceHookedBridge struct {
+	pb.UnimplementedPersonalServiceHooked
+	client pb.PersonalServiceHTTPServer
+	log    *log.KHelper
 }
 
-func (s PersonalServiceBridge) RefreshPersonalToken(ctx context.Context, request *pb.RefreshPersonalTokenRequest) (*pb.RefreshPersonalTokenResponse, error) {
+func (p PersonalServiceHookedBridge) BeforeGetPersonalProfile(context transhttp.Context, request *pb.GetPersonalProfileRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s PersonalServiceBridge) GetPersonalProfile(ctx context.Context, request *pb.GetPersonalProfileRequest) (*pb.GetPersonalProfileResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.GetPersonalProfile(ctx, request)
-	if err != nil {
-		log.Errorf("GetPersonalProfile error: %v", err)
-		return nil, err
+func (p PersonalServiceHookedBridge) GetPersonalProfileResult(context transhttp.Context, request *pb.GetPersonalProfileRequest, response *pb.GetPersonalProfileResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforeListPersonalResources(context transhttp.Context, request *pb.ListPersonalResourcesRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) ListPersonalResourcesResult(context transhttp.Context, request *pb.ListPersonalResourcesRequest, response *pb.ListPersonalResourcesResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforeListPersonalRoles(context transhttp.Context, request *pb.ListPersonalRolesRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) ListPersonalRolesResult(context transhttp.Context, request *pb.ListPersonalRolesRequest, response *pb.ListPersonalRolesResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforePersonalLogout(context transhttp.Context, request *pb.PersonalLogoutRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) PersonalLogoutResult(context transhttp.Context, request *pb.PersonalLogoutRequest, response *pb.PersonalLogoutResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforeRefreshPersonalToken(context transhttp.Context, request *pb.RefreshPersonalTokenRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) RefreshPersonalTokenResult(context transhttp.Context, request *pb.RefreshPersonalTokenRequest, response *pb.RefreshPersonalTokenResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforeUpdatePersonalPassword(context transhttp.Context, request *pb.UpdatePersonalPasswordRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) UpdatePersonalPasswordResult(context transhttp.Context, request *pb.UpdatePersonalPasswordRequest, response *pb.UpdatePersonalPasswordResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforeUpdatePersonalProfile(context transhttp.Context, request *pb.UpdatePersonalProfileRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) UpdatePersonalProfileResult(context transhttp.Context, request *pb.UpdatePersonalProfileRequest, response *pb.UpdatePersonalProfileResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) BeforeUpdatePersonalSetting(context transhttp.Context, request *pb.UpdatePersonalSettingRequest) (context.Context, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p PersonalServiceHookedBridge) UpdatePersonalSettingResult(context transhttp.Context, request *pb.UpdatePersonalSettingRequest, response *pb.UpdatePersonalSettingResponse) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func NewPersonalServiceHookedBridge(r runtime.Runtime, client pb.PersonalServiceHTTPServer) pb.PersonalServiceHooker {
+	return &PersonalServiceHookedBridge{
+		log:    log.NewHelper(r.WithLogger("module", "service/permission")),
+		client: client,
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response),
-	})
-	return nil, nil
 }
 
-func (s PersonalServiceBridge) PersonalLogout(ctx context.Context, request *pb.PersonalLogoutRequest) (*pb.PersonalLogoutResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.PersonalLogout(ctx, request)
-	if err != nil {
-		log.Errorf("PersonalResources error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response),
-	})
-	return nil, nil
+// NewPersonalServiceBridge new a menu service.
+func NewPersonalServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.PersonalServiceServer {
+	return pb.NewPersonalServiceBridge(client)
 }
 
-func (s PersonalServiceBridge) ListPersonalResources(ctx context.Context, request *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListPersonalResources(ctx, request)
-	if err != nil {
-		log.Errorf("PersonalResources error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
-		Success: true,
-		Total:   int32(response.TotalSize),
-		Data:    resp.Proto2AnyPBArray(response.Resources...),
-	})
-	return nil, nil
+// NewPersonalServiceHTTPBridge new a menu service.
+func NewPersonalServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.PersonalServiceHTTPServer {
+	return pb.NewPersonalServiceHTTPBridge(client)
 }
 
-func (s PersonalServiceBridge) ListPersonalRoles(ctx context.Context, request *pb.ListPersonalRolesRequest) (*pb.ListPersonalRolesResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListPersonalRoles(ctx, request)
-	if err != nil {
-		log.Errorf("PersonalResources error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
-		Success: true,
-		//Total:   int32(response.TotalSize),
-		Data: resp.Proto2AnyPBArray(response.Roles...),
-	})
-	return nil, nil
-}
-
-func (s PersonalServiceBridge) UpdatePersonalSetting(ctx context.Context, request *pb.UpdatePersonalSettingRequest) (*pb.UpdatePersonalSettingResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdatePersonalSetting(ctx, request)
-	if err != nil {
-		log.Errorf("PersonalResources error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response),
-	})
-	return nil, nil
-}
-
-func (s PersonalServiceBridge) UpdatePersonalProfile(ctx context.Context, request *pb.UpdatePersonalProfileRequest) (*pb.UpdatePersonalProfileResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdatePersonalProfile(ctx, request)
-	if err != nil {
-		log.Errorf("PersonalResources error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response),
-	})
-	return nil, nil
-}
-
-func (s PersonalServiceBridge) UpdatePersonalPassword(ctx context.Context, request *pb.UpdatePersonalPasswordRequest) (*pb.UpdatePersonalPasswordResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdatePersonalPassword(ctx, request)
-	if err != nil {
-		log.Errorf("PersonalResources error: %v", err)
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response),
-	})
-	return nil, nil
-}
-
-//func (s PersonalServiceBridge) PersonalResources(ctx context.Context, request *pb.PersonalResourcesRequest) (*pb.PersonalResourcesResponse, error) {
-//	response, err := s.client.PersonalResources(context, request)
-//	if err != nil {
-//		log.Errorf("PersonalResources error: %v", err)
-//		return nil, err
-//	}
-//	s.JSON(context, http.StatusOK, &resp.Data{
-//		Success: true,
-//		Data:    response,
-//	})
-//	return nil, nil
-//}
-
-//func (s PersonalServiceBridge) PersonalProfile(ctx context.Context, request *pb.PersonalProfileRequest) (*pb.PersonalProfileResponse, error) {
-//	response, err := s.client.PersonalProfile(context, request)
-//	if err != nil {
-//		log.Errorf("PersonalProfile error: %v", err)
-//		return nil, err
-//	}
-//	s.JSON(context, http.StatusOK, &resp.Data{
-//		Success: true,
-//		Data:    response,
-//	})
-//	return nil, nil
-//}
-
-//func (s PersonalServiceBridge) Logout(ctx context.Context, request *pb.LogoutRequest) (*pb.LogoutResponse, error) {
-//	response, err := s.client.Logout(context, request)
-//	if err != nil {
-//		log.Errorf("Logout error: %v", err)
-//		return nil, err
-//	}
-//	s.JSON(context, http.StatusOK, &resp.Data{
-//		Success: true,
-//		Data:    response,
-//	})
-//	return nil, nil
-//}
-
-// NewPersonalServiceBridge new a Personal service.
-func NewPersonalServiceBridge(client pb.PersonalServiceClient) *PersonalServiceBridge {
-	return &PersonalServiceBridge{client: client}
-}
-
-// NewPersonalServiceBridgePB new a Personal service.
-func NewPersonalServiceBridgePB(client pb.PersonalServiceClient) pb.PersonalServiceBridge {
-	return &PersonalServiceBridge{client: client}
-}
-func NewPersonalServiceBridgeClient(client *service.GRPCClient) pb.PersonalServiceServer {
-	cli := pb.NewPersonalServiceClient(client)
-	return NewPersonalServiceBridge(cli)
-}
-
-var _ pb.PersonalServiceBridge = (*PersonalServiceBridge)(nil)
+var _ pb.PersonalServiceHooker = (*PersonalServiceHookedBridge)(nil)

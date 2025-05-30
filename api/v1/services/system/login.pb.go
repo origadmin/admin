@@ -1352,9 +1352,9 @@ const file_system_login_proto_rawDesc = "" +
 	"\x05Login\x12$.api.v1.services.system.LoginRequest\x1a%.api.v1.services.system.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x04data\"\x06/login\x12n\n" +
 	"\x06Logout\x12%.api.v1.services.system.LogoutRequest\x1a&.api.v1.services.system.LogoutResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x04data\"\a/logout\x12v\n" +
 	"\bRegister\x12'.api.v1.services.system.RegisterRequest\x1a(.api.v1.services.system.RegisterResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x04data\"\t/register\x12\x87\x01\n" +
-	"\fTokenRefresh\x12+.api.v1.services.system.TokenRefreshRequest\x1a,.api.v1.services.system.TokenRefreshResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x04data\"\x0e/token/refreshB\xbf\x01\n" +
+	"\fTokenRefresh\x12+.api.v1.services.system.TokenRefreshRequest\x1a,.api.v1.services.system.TokenRefreshResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x04data\"\x0e/token/refreshB\xc3\x01\n" +
 	"\x1acom.api.v1.services.systemB\n" +
-	"LoginProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"LoginProtoP\x01Z\x1dapi/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
 	file_system_login_proto_rawDescOnce sync.Once

@@ -33,34 +33,49 @@ type PermissionServiceBridger interface {
 	UpdatePermission(context.Context, *UpdatePermissionRequest) (*UpdatePermissionResponse, error)
 }
 
-type PermissionServiceBridgeHooker interface {
+type PermissionServiceHooker interface {
+	PermissionServiceCreatePermissionHooker
+	PermissionServiceDeletePermissionHooker
+	PermissionServiceGetPermissionHooker
+	PermissionServiceListPermissionsHooker
+	PermissionServiceUpdatePermissionHooker
+}
+
+type PermissionServiceHookedBridger interface {
+	PermissionServiceHooker
 	PermissionServiceBridger
+}
+type PermissionServiceCreatePermissionHooker interface {
 	BeforeCreatePermission(http.Context, *CreatePermissionRequest) (context.Context, error)
 	CreatePermissionResult(http.Context, *CreatePermissionRequest, *CreatePermissionResponse) error
+}
+type PermissionServiceDeletePermissionHooker interface {
 	BeforeDeletePermission(http.Context, *DeletePermissionRequest) (context.Context, error)
 	DeletePermissionResult(http.Context, *DeletePermissionRequest, *DeletePermissionResponse) error
+}
+type PermissionServiceGetPermissionHooker interface {
 	BeforeGetPermission(http.Context, *GetPermissionRequest) (context.Context, error)
 	GetPermissionResult(http.Context, *GetPermissionRequest, *GetPermissionResponse) error
+}
+type PermissionServiceListPermissionsHooker interface {
 	BeforeListPermissions(http.Context, *ListPermissionsRequest) (context.Context, error)
 	ListPermissionsResult(http.Context, *ListPermissionsRequest, *ListPermissionsResponse) error
+}
+type PermissionServiceUpdatePermissionHooker interface {
 	BeforeUpdatePermission(http.Context, *UpdatePermissionRequest) (context.Context, error)
 	UpdatePermissionResult(http.Context, *UpdatePermissionRequest, *UpdatePermissionResponse) error
 }
 
-func RegisterPermissionServiceBridger(s *http.Server, srv PermissionServiceBridger) {
+func RegisterPermissionServiceBridger(s *http.Server, srv PermissionServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(PermissionServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedPermissionServiceBridger{PermissionServiceBridger: srv}
-	}
-	r.GET("/sys/permissions", _PermissionService_ListPermissions0_Bridge_Handler(hook))
-	r.GET("/sys/permissions/:id", _PermissionService_GetPermission0_Bridge_Handler(hook))
-	r.POST("/sys/permissions", _PermissionService_CreatePermission0_Bridge_Handler(hook))
-	r.PUT("/sys/permissions/:permission.id", _PermissionService_UpdatePermission0_Bridge_Handler(hook))
-	r.DELETE("/sys/permissions/:id", _PermissionService_DeletePermission0_Bridge_Handler(hook))
+	r.GET("/sys/permissions", _PermissionService_ListPermissions0_Bridge_Handler(srv))
+	r.GET("/sys/permissions/:id", _PermissionService_GetPermission0_Bridge_Handler(srv))
+	r.POST("/sys/permissions", _PermissionService_CreatePermission0_Bridge_Handler(srv))
+	r.PUT("/sys/permissions/:permission.id", _PermissionService_UpdatePermission0_Bridge_Handler(srv))
+	r.DELETE("/sys/permissions/:id", _PermissionService_DeletePermission0_Bridge_Handler(srv))
 }
 
-func _PermissionService_ListPermissions0_Bridge_Handler(srv PermissionServiceBridgeHooker) func(ctx http.Context) error {
+func _PermissionService_ListPermissions0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListPermissionsRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -83,7 +98,7 @@ func _PermissionService_ListPermissions0_Bridge_Handler(srv PermissionServiceBri
 	}
 }
 
-func _PermissionService_GetPermission0_Bridge_Handler(srv PermissionServiceBridgeHooker) func(ctx http.Context) error {
+func _PermissionService_GetPermission0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetPermissionRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -109,7 +124,7 @@ func _PermissionService_GetPermission0_Bridge_Handler(srv PermissionServiceBridg
 	}
 }
 
-func _PermissionService_CreatePermission0_Bridge_Handler(srv PermissionServiceBridgeHooker) func(ctx http.Context) error {
+func _PermissionService_CreatePermission0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreatePermissionRequest
 		if err := ctx.Bind(&in.Permission); err != nil {
@@ -135,7 +150,7 @@ func _PermissionService_CreatePermission0_Bridge_Handler(srv PermissionServiceBr
 	}
 }
 
-func _PermissionService_UpdatePermission0_Bridge_Handler(srv PermissionServiceBridgeHooker) func(ctx http.Context) error {
+func _PermissionService_UpdatePermission0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePermissionRequest
 		if err := ctx.Bind(&in.Permission); err != nil {
@@ -164,7 +179,7 @@ func _PermissionService_UpdatePermission0_Bridge_Handler(srv PermissionServiceBr
 	}
 }
 
-func _PermissionService_DeletePermission0_Bridge_Handler(srv PermissionServiceBridgeHooker) func(ctx http.Context) error {
+func _PermissionService_DeletePermission0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeletePermissionRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -190,53 +205,65 @@ func _PermissionService_DeletePermission0_Bridge_Handler(srv PermissionServiceBr
 	}
 }
 
-// UnimplementedPermissionServiceBridger must be embedded to have
+// UnimplementedPermissionServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPermissionServiceBridger struct {
+type UnimplementedPermissionServiceHooked struct{}
+
+func (UnimplementedPermissionServiceHooked) BeforeCreatePermission(ctx http.Context, in *CreatePermissionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPermissionServiceHooked) CreatePermissionResult(ctx http.Context, in *CreatePermissionRequest, out *CreatePermissionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPermissionServiceHooked) BeforeDeletePermission(ctx http.Context, in *DeletePermissionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPermissionServiceHooked) DeletePermissionResult(ctx http.Context, in *DeletePermissionRequest, out *DeletePermissionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPermissionServiceHooked) BeforeGetPermission(ctx http.Context, in *GetPermissionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPermissionServiceHooked) GetPermissionResult(ctx http.Context, in *GetPermissionRequest, out *GetPermissionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPermissionServiceHooked) BeforeListPermissions(ctx http.Context, in *ListPermissionsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPermissionServiceHooked) ListPermissionsResult(ctx http.Context, in *ListPermissionsRequest, out *ListPermissionsResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPermissionServiceHooked) BeforeUpdatePermission(ctx http.Context, in *UpdatePermissionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPermissionServiceHooked) UpdatePermissionResult(ctx http.Context, in *UpdatePermissionRequest, out *UpdatePermissionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithPermissionServiceHook(h PermissionServiceHooker) func(PermissionServiceBridger) PermissionServiceHookedBridger {
+	return func(b PermissionServiceBridger) PermissionServiceHookedBridger {
+		return PermissionServiceHookedBridge{PermissionServiceBridger: b, PermissionServiceHooker: h}
+	}
+}
+
+// PermissionServiceHookedBridge is a bridge between the HTTP and gRPC implementations of PermissionService.
+// It implements the HTTP and gRPC implementations of PermissionService.
+// It forwards requests and responses between the two implementations.
+type PermissionServiceHookedBridge struct {
 	PermissionServiceBridger
-}
-
-func (UnimplementedPermissionServiceBridger) BeforeCreatePermission(ctx http.Context, in *CreatePermissionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPermissionServiceBridger) CreatePermissionResult(ctx http.Context, in *CreatePermissionRequest, out *CreatePermissionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPermissionServiceBridger) BeforeDeletePermission(ctx http.Context, in *DeletePermissionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPermissionServiceBridger) DeletePermissionResult(ctx http.Context, in *DeletePermissionRequest, out *DeletePermissionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPermissionServiceBridger) BeforeGetPermission(ctx http.Context, in *GetPermissionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPermissionServiceBridger) GetPermissionResult(ctx http.Context, in *GetPermissionRequest, out *GetPermissionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPermissionServiceBridger) BeforeListPermissions(ctx http.Context, in *ListPermissionsRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPermissionServiceBridger) ListPermissionsResult(ctx http.Context, in *ListPermissionsRequest, out *ListPermissionsResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPermissionServiceBridger) BeforeUpdatePermission(ctx http.Context, in *UpdatePermissionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPermissionServiceBridger) UpdatePermissionResult(ctx http.Context, in *UpdatePermissionRequest, out *UpdatePermissionResponse) error {
-	return ctx.Result(200, out)
+	PermissionServiceHooker
 }
 
 type PermissionServiceHTTPBridgeImpl struct {

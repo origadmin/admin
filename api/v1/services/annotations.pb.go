@@ -25,7 +25,7 @@ var File_annotations_proto protoreflect.FileDescriptor
 
 const file_annotations_proto_rawDesc = "" +
 	"\n" +
-	"\x11annotations.proto\x12\x0fapi.v1.services\x1a$gnostic/openapi/v3/annotations.protoB\xae\x04\xbaG\x8f\x03\x12\x8c\x02\n" +
+	"\x11annotations.proto\x12\x0fapi.v1.services\x1a$gnostic/openapi/v3/annotations.protoB\xb2\x04\xbaG\x8f\x03\x12\x8c\x02\n" +
 	"\rOrigAdmin API\x12_A lightweight, flexible, elegant and full-featured RBAC scaffolding backend management project.\"@\n" +
 	"\aGodCong\x12\x1chttps://github.com/origadmin\x1a\x17waitforadding@gmail.com*?\n" +
 	"\x03MIT\x128https://github.com/origadmin/backend/blob/master/LICENSE2\x17Version from annotation\x1a\x18\n" +
@@ -39,7 +39,7 @@ const file_annotations_proto_rawDesc = "" +
 	"\x06Bearer\x12!\n" +
 	"\x1f\n" +
 	"\x06apiKey\x1a\rAuthorization\"\x06header\n" +
-	"\x13com.api.v1.servicesB\x10AnnotationsProtoP\x01Z\x14v1/services;services\xa2\x02\x03AVS\xaa\x02\x0fApi.V1.Services\xca\x02\x0fApi\\V1\\Services\xe2\x02\x1bApi\\V1\\Services\\GPBMetadata\xea\x02\x11Api::V1::Servicesb\x06proto3"
+	"\x13com.api.v1.servicesB\x10AnnotationsProtoP\x01Z\x18api/v1/services;services\xa2\x02\x03AVS\xaa\x02\x0fApi.V1.Services\xca\x02\x0fApi\\V1\\Services\xe2\x02\x1bApi\\V1\\Services\\GPBMetadata\xea\x02\x11Api::V1::Servicesb\x06proto3"
 
 var file_annotations_proto_goTypes = []any{}
 var file_annotations_proto_depIdxs = []int32{

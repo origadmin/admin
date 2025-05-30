@@ -39,43 +39,67 @@ type LoginServiceBridger interface {
 	TokenRefresh(context.Context, *TokenRefreshRequest) (*TokenRefreshResponse, error)
 }
 
-type LoginServiceBridgeHooker interface {
+type LoginServiceHooker interface {
+	LoginServiceCaptchaHooker
+	LoginServiceCaptchaAudioHooker
+	LoginServiceCaptchaIdHooker
+	LoginServiceCaptchaImageHooker
+	LoginServiceLoginHooker
+	LoginServiceLogoutHooker
+	LoginServiceRegisterHooker
+	LoginServiceTokenRefreshHooker
+}
+
+type LoginServiceHookedBridger interface {
+	LoginServiceHooker
 	LoginServiceBridger
+}
+type LoginServiceCaptchaHooker interface {
 	BeforeCaptcha(http.Context, *CaptchaRequest) (context.Context, error)
 	CaptchaResult(http.Context, *CaptchaRequest, *CaptchaResponse) error
+}
+type LoginServiceCaptchaAudioHooker interface {
 	BeforeCaptchaAudio(http.Context, *CaptchaAudioRequest) (context.Context, error)
 	CaptchaAudioResult(http.Context, *CaptchaAudioRequest, *CaptchaAudioResponse) error
+}
+type LoginServiceCaptchaIdHooker interface {
 	BeforeCaptchaId(http.Context, *CaptchaIdRequest) (context.Context, error)
 	CaptchaIdResult(http.Context, *CaptchaIdRequest, *CaptchaIdResponse) error
+}
+type LoginServiceCaptchaImageHooker interface {
 	BeforeCaptchaImage(http.Context, *CaptchaImageRequest) (context.Context, error)
 	CaptchaImageResult(http.Context, *CaptchaImageRequest, *CaptchaImageResponse) error
+}
+type LoginServiceLoginHooker interface {
 	BeforeLogin(http.Context, *LoginRequest) (context.Context, error)
 	LoginResult(http.Context, *LoginRequest, *LoginResponse) error
+}
+type LoginServiceLogoutHooker interface {
 	BeforeLogout(http.Context, *LogoutRequest) (context.Context, error)
 	LogoutResult(http.Context, *LogoutRequest, *LogoutResponse) error
+}
+type LoginServiceRegisterHooker interface {
 	BeforeRegister(http.Context, *RegisterRequest) (context.Context, error)
 	RegisterResult(http.Context, *RegisterRequest, *RegisterResponse) error
+}
+type LoginServiceTokenRefreshHooker interface {
 	BeforeTokenRefresh(http.Context, *TokenRefreshRequest) (context.Context, error)
 	TokenRefreshResult(http.Context, *TokenRefreshRequest, *TokenRefreshResponse) error
 }
 
-func RegisterLoginServiceBridger(s *http.Server, srv LoginServiceBridger) {
+func RegisterLoginServiceBridger(s *http.Server, srv LoginServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(LoginServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedLoginServiceBridger{LoginServiceBridger: srv}
-	}
-	r.GET("/captcha", _LoginService_Captcha0_Bridge_Handler(hook))
-	r.GET("/captcha/id", _LoginService_CaptchaId0_Bridge_Handler(hook))
-	r.GET("/captcha/image", _LoginService_CaptchaImage0_Bridge_Handler(hook))
-	r.GET("/captcha/audio", _LoginService_CaptchaAudio0_Bridge_Handler(hook))
-	r.POST("/login", _LoginService_Login0_Bridge_Handler(hook))
-	r.POST("/logout", _LoginService_Logout0_Bridge_Handler(hook))
-	r.POST("/register", _LoginService_Register0_Bridge_Handler(hook))
-	r.POST("/token/refresh", _LoginService_TokenRefresh0_Bridge_Handler(hook))
+	r.GET("/captcha", _LoginService_Captcha0_Bridge_Handler(srv))
+	r.GET("/captcha/id", _LoginService_CaptchaId0_Bridge_Handler(srv))
+	r.GET("/captcha/image", _LoginService_CaptchaImage0_Bridge_Handler(srv))
+	r.GET("/captcha/audio", _LoginService_CaptchaAudio0_Bridge_Handler(srv))
+	r.POST("/login", _LoginService_Login0_Bridge_Handler(srv))
+	r.POST("/logout", _LoginService_Logout0_Bridge_Handler(srv))
+	r.POST("/register", _LoginService_Register0_Bridge_Handler(srv))
+	r.POST("/token/refresh", _LoginService_TokenRefresh0_Bridge_Handler(srv))
 }
 
-func _LoginService_Captcha0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_Captcha0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CaptchaRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -98,7 +122,7 @@ func _LoginService_Captcha0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ct
 	}
 }
 
-func _LoginService_CaptchaId0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_CaptchaId0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CaptchaIdRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -121,7 +145,7 @@ func _LoginService_CaptchaId0_Bridge_Handler(srv LoginServiceBridgeHooker) func(
 	}
 }
 
-func _LoginService_CaptchaImage0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_CaptchaImage0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CaptchaImageRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -144,7 +168,7 @@ func _LoginService_CaptchaImage0_Bridge_Handler(srv LoginServiceBridgeHooker) fu
 	}
 }
 
-func _LoginService_CaptchaAudio0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_CaptchaAudio0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CaptchaAudioRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -167,7 +191,7 @@ func _LoginService_CaptchaAudio0_Bridge_Handler(srv LoginServiceBridgeHooker) fu
 	}
 }
 
-func _LoginService_Login0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_Login0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LoginRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -193,7 +217,7 @@ func _LoginService_Login0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx 
 	}
 }
 
-func _LoginService_Logout0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_Logout0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in LogoutRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -219,7 +243,7 @@ func _LoginService_Logout0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx
 	}
 }
 
-func _LoginService_Register0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_Register0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RegisterRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -245,7 +269,7 @@ func _LoginService_Register0_Bridge_Handler(srv LoginServiceBridgeHooker) func(c
 	}
 }
 
-func _LoginService_TokenRefresh0_Bridge_Handler(srv LoginServiceBridgeHooker) func(ctx http.Context) error {
+func _LoginService_TokenRefresh0_Bridge_Handler(srv LoginServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in TokenRefreshRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -271,77 +295,89 @@ func _LoginService_TokenRefresh0_Bridge_Handler(srv LoginServiceBridgeHooker) fu
 	}
 }
 
-// UnimplementedLoginServiceBridger must be embedded to have
+// UnimplementedLoginServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedLoginServiceBridger struct {
+type UnimplementedLoginServiceHooked struct{}
+
+func (UnimplementedLoginServiceHooked) BeforeCaptcha(ctx http.Context, in *CaptchaRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) CaptchaResult(ctx http.Context, in *CaptchaRequest, out *CaptchaResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeCaptchaAudio(ctx http.Context, in *CaptchaAudioRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) CaptchaAudioResult(ctx http.Context, in *CaptchaAudioRequest, out *CaptchaAudioResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeCaptchaId(ctx http.Context, in *CaptchaIdRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) CaptchaIdResult(ctx http.Context, in *CaptchaIdRequest, out *CaptchaIdResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeCaptchaImage(ctx http.Context, in *CaptchaImageRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) CaptchaImageResult(ctx http.Context, in *CaptchaImageRequest, out *CaptchaImageResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeLogin(ctx http.Context, in *LoginRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) LoginResult(ctx http.Context, in *LoginRequest, out *LoginResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeLogout(ctx http.Context, in *LogoutRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) LogoutResult(ctx http.Context, in *LogoutRequest, out *LogoutResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeRegister(ctx http.Context, in *RegisterRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) RegisterResult(ctx http.Context, in *RegisterRequest, out *RegisterResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedLoginServiceHooked) BeforeTokenRefresh(ctx http.Context, in *TokenRefreshRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedLoginServiceHooked) TokenRefreshResult(ctx http.Context, in *TokenRefreshRequest, out *TokenRefreshResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithLoginServiceHook(h LoginServiceHooker) func(LoginServiceBridger) LoginServiceHookedBridger {
+	return func(b LoginServiceBridger) LoginServiceHookedBridger {
+		return LoginServiceHookedBridge{LoginServiceBridger: b, LoginServiceHooker: h}
+	}
+}
+
+// LoginServiceHookedBridge is a bridge between the HTTP and gRPC implementations of LoginService.
+// It implements the HTTP and gRPC implementations of LoginService.
+// It forwards requests and responses between the two implementations.
+type LoginServiceHookedBridge struct {
 	LoginServiceBridger
-}
-
-func (UnimplementedLoginServiceBridger) BeforeCaptcha(ctx http.Context, in *CaptchaRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) CaptchaResult(ctx http.Context, in *CaptchaRequest, out *CaptchaResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeCaptchaAudio(ctx http.Context, in *CaptchaAudioRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) CaptchaAudioResult(ctx http.Context, in *CaptchaAudioRequest, out *CaptchaAudioResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeCaptchaId(ctx http.Context, in *CaptchaIdRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) CaptchaIdResult(ctx http.Context, in *CaptchaIdRequest, out *CaptchaIdResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeCaptchaImage(ctx http.Context, in *CaptchaImageRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) CaptchaImageResult(ctx http.Context, in *CaptchaImageRequest, out *CaptchaImageResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeLogin(ctx http.Context, in *LoginRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) LoginResult(ctx http.Context, in *LoginRequest, out *LoginResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeLogout(ctx http.Context, in *LogoutRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) LogoutResult(ctx http.Context, in *LogoutRequest, out *LogoutResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeRegister(ctx http.Context, in *RegisterRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) RegisterResult(ctx http.Context, in *RegisterRequest, out *RegisterResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedLoginServiceBridger) BeforeTokenRefresh(ctx http.Context, in *TokenRefreshRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedLoginServiceBridger) TokenRefreshResult(ctx http.Context, in *TokenRefreshRequest, out *TokenRefreshResponse) error {
-	return ctx.Result(200, out)
+	LoginServiceHooker
 }
 
 type LoginServiceHTTPBridgeImpl struct {

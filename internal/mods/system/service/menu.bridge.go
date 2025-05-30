@@ -5,102 +5,90 @@
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/origadmin/runtime/agent"
-	"github.com/origadmin/runtime/context"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 )
 
-// MenuServiceBridge is a menu service.
-type MenuServiceBridge struct {
-	pb.UnimplementedMenuServiceServer
-
-	client pb.MenuServiceClient
+// MenuServiceHookedBridge is a menu service.
+type MenuServiceHookedBridge struct {
+	pb.UnimplementedMenuServiceHooked
+	log *log.KHelper
 }
 
-func (s MenuServiceBridge) CreateMenu(ctx context.Context, request *pb.CreateMenuRequest) (*pb.CreateMenuResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CreateMenu(ctx, request)
+func (h MenuServiceHookedBridge) CreateMenuResult(ctx transhttp.Context, request *pb.CreateMenuRequest, response *pb.CreateMenuResponse) error {
+	marshal, err := json.Marshal(response.Menu)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Menu),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s MenuServiceBridge) DeleteMenu(ctx context.Context, request *pb.DeleteMenuRequest) (*pb.DeleteMenuResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	_, err := s.client.DeleteMenu(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+func (h MenuServiceHookedBridge) DeleteMenuResult(ctx transhttp.Context, request *pb.DeleteMenuRequest, response *pb.DeleteMenuResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
-	return nil, nil
 }
 
-func (s MenuServiceBridge) GetMenu(ctx context.Context, request *pb.GetMenuRequest) (*pb.GetMenuResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.GetMenu(ctx, request)
+func (h MenuServiceHookedBridge) GetMenuResult(ctx transhttp.Context, request *pb.GetMenuRequest, response *pb.GetMenuResponse) error {
+	marshal, err := json.Marshal(response.Menu)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Menu),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s MenuServiceBridge) ListMenus(ctx context.Context, request *pb.ListMenusRequest) (*pb.ListMenusResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListMenus(ctx, request)
+func (h MenuServiceHookedBridge) ListMenusResult(ctx transhttp.Context, request *pb.ListMenusRequest, response *pb.ListMenusResponse) error {
+	marshal, err := json.Marshal(response.Menus)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
+	return ctx.JSON(http.StatusOK, &resp.SourcePage{
 		Success: true,
-		Total:   response.TotalSize,
-		Data:    resp.Proto2AnyPBArray(response.Menus...),
+		Total:   response.GetTotalSize(),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s MenuServiceBridge) UpdateMenu(ctx context.Context, request *pb.UpdateMenuRequest) (*pb.UpdateMenuResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdateMenu(ctx, request)
+func (h MenuServiceHookedBridge) UpdateMenuResult(ctx transhttp.Context, request *pb.UpdateMenuRequest, response *pb.UpdateMenuResponse) error {
+	marshal, err := json.Marshal(response.Menu)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Menu),
+		Data:    marshal,
 	})
-	return nil, nil
+}
+
+func NewMenuServiceHookedBridge(r runtime.Runtime, client pb.MenuServiceHTTPServer) pb.MenuServiceHookedBridger {
+	return pb.WithMenuServiceHook(&MenuServiceHookedBridge{
+		log: log.NewHelper(r.WithLogger("module", "service/menu")),
+	})(client)
 }
 
 // NewMenuServiceBridge new a menu service.
-func NewMenuServiceBridge(client pb.MenuServiceClient) *MenuServiceBridge {
-	return &MenuServiceBridge{client: client}
+func NewMenuServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.MenuServiceServer {
+	return pb.NewMenuServiceBridge(client)
 }
 
-// NewMenuServiceBridgePB new a menu service.
-func NewMenuServiceBridgePB(client pb.MenuServiceClient) pb.MenuServiceServer {
-	return &MenuServiceBridge{client: client}
-}
-func NewMenuServiceBridgeClient(client *service.GRPCClient) pb.MenuServiceServer {
-	cli := pb.NewMenuServiceClient(client)
-	return NewMenuServiceBridge(cli)
+// NewMenuServiceHTTPBridge new a menu service.
+func NewMenuServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.MenuServiceHTTPServer {
+	return pb.NewMenuServiceHTTPBridge(client)
 }
 
-var _ pb.MenuServiceServer = (*MenuServiceBridge)(nil)
+var _ pb.MenuServiceHooker = (*MenuServiceHookedBridge)(nil)

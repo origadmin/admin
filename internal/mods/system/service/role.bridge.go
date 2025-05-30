@@ -2,105 +2,96 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package service implements the functions, types, and interfaces for the module.
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/origadmin/runtime/agent"
-	"github.com/origadmin/runtime/context"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 )
 
-// RoleServiceAgent is a menu service.
-type RoleServiceAgent struct {
-	resp.Response
-
-	client pb.RoleServiceClient
+// RoleServiceHookedBridge is a menu service.
+type RoleServiceHookedBridge struct {
+	pb.UnimplementedRoleServiceHooked
+	log *log.KHelper
 }
 
-func (s RoleServiceAgent) CreateRole(ctx context.Context, request *pb.CreateRoleRequest) (*pb.CreateRoleResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CreateRole(ctx, request)
+func (h RoleServiceHookedBridge) CreateRoleResult(ctx transhttp.Context, request *pb.CreateRoleRequest, response *pb.CreateRoleResponse) error {
+	marshal, err := json.Marshal(response.Role)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Role),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s RoleServiceAgent) DeleteRole(ctx context.Context, request *pb.DeleteRoleRequest) (*pb.DeleteRoleResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.DeleteRole(ctx, request)
+func (h RoleServiceHookedBridge) DeleteRoleResult(ctx transhttp.Context, request *pb.DeleteRoleRequest, response *pb.DeleteRoleResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
+		Success: true,
+		Data:    nil,
+	})
+}
+
+func (h RoleServiceHookedBridge) GetRoleResult(ctx transhttp.Context, request *pb.GetRoleRequest, response *pb.GetRoleResponse) error {
+	marshal, err := json.Marshal(response.Role)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Empty),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s RoleServiceAgent) GetRole(ctx context.Context, request *pb.GetRoleRequest) (*pb.GetRoleResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.GetRole(ctx, request)
+func (h RoleServiceHookedBridge) ListRolesResult(ctx transhttp.Context, request *pb.ListRolesRequest, response *pb.ListRolesResponse) error {
+	marshal, err := json.Marshal(response.Roles)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourcePage{
 		Success: true,
-		Data:    resp.Proto2Any(response.Role),
+		Total:   response.GetTotalSize(),
+		Data:    marshal,
+		//Current:  request.GetCurrent(),
+		//PageSize: nil,
+		//Extra: "",
 	})
-	return nil, nil
 }
 
-func (s RoleServiceAgent) ListRoles(ctx context.Context, request *pb.ListRolesRequest) (*pb.ListRolesResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListRoles(ctx, request)
+func (h RoleServiceHookedBridge) UpdateRoleResult(ctx transhttp.Context, request *pb.UpdateRoleRequest, response *pb.UpdateRoleResponse) error {
+	marshal, err := json.Marshal(response.Role)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Total:   response.TotalSize,
-		Data:    resp.Proto2AnyPBArray(response.Roles...),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s RoleServiceAgent) UpdateRole(ctx context.Context, request *pb.UpdateRoleRequest) (*pb.UpdateRoleResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdateRole(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response.Role),
-	})
-	return nil, nil
+func NewRoleServiceHookedBridge(r runtime.Runtime, client pb.RoleServiceHTTPServer) pb.RoleServiceHookedBridger {
+	return pb.WithRoleServiceHook(&RoleServiceHookedBridge{
+		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+	})(client)
 }
 
-// NewRoleServiceAgent new a menu service.
-func NewRoleServiceAgent(client pb.RoleServiceClient) *RoleServiceAgent {
-	return &RoleServiceAgent{client: client}
+// NewRoleServiceBridge new a menu service.
+func NewRoleServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.RoleServiceServer {
+	return pb.NewRoleServiceBridge(client)
 }
 
-// NewRoleServiceAgentPB new a menu service.
-func NewRoleServiceAgentPB(client pb.RoleServiceClient) pb.RoleServiceBridger {
-	return &RoleServiceAgent{client: client}
-}
-func NewRoleServiceAgentClient(client *service.GRPCClient) pb.RoleServiceAgent {
-	c := pb.NewRoleServiceClient(client)
-	return NewRoleServiceAgent(c)
+// NewRoleServiceHTTPBridge new a menu service.
+func NewRoleServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.RoleServiceHTTPServer {
+	return pb.NewRoleServiceHTTPBridge(client)
 }
 
-var _ pb.RoleServiceAgent = (*RoleServiceAgent)(nil)
+var _ pb.RoleServiceHooker = (*RoleServiceHookedBridge)(nil)

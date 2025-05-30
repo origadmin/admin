@@ -9,7 +9,6 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/google/wire"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/agent"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
@@ -19,9 +18,7 @@ import (
 	servicehttp "github.com/origadmin/runtime/service/http"
 	"github.com/origadmin/toolkits/errors"
 
-	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/configs"
-	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
 const (
@@ -34,8 +31,6 @@ var (
 	ProviderSet = wire.NewSet(
 		NewSystemClient,
 		NewSystemServer,
-		NewSystemServiceAgentClient,
-		//NewCasbinServiceClient,
 	)
 )
 
@@ -87,88 +82,6 @@ Server {
 		}
 	}
 	return servers
-}
-
-type RegisterBridge struct {
-	Personal   pb.PersonalServiceAgent
-	Resource   pb.ResourceServiceAgent
-	Role       pb.RoleServiceAgent
-	User       pb.UserServiceAgent
-	Permission pb.PermissionServiceAgent
-}
-
-func (s RegisterBridge) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s RegisterBridge) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s RegisterBridge) RegisterHTTPServer(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http client system init")
-	ag := agent.NewHTTP(server)
-	pb.RegisterPersonalServiceAgent(ag, s.Personal)
-	pb.RegisterResourceServiceAgent(ag, s.Resource)
-	pb.RegisterRoleServiceAgent(ag, s.Role)
-	pb.RegisterUserServiceAgent(ag, s.User)
-	pb.RegisterPermissionServiceAgent(ag, s.Permission)
-}
-
-func (s RegisterBridge) RegisterGRPCClient(ctx context.Context, client *service.GRPCClient) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s RegisterBridge) RegisterHTTPClient(ctx context.Context, client *service.HTTPClient) {
-	log.Info("http client system init")
-	//ag := agent.NewHTTP(client)
-	//pb.RegisterPersonalServiceAgent(ag, s.Personal)
-	//pb.RegisterResourceServiceAgent(ag, s.Resource)
-	//pb.RegisterRoleServiceAgent(ag, s.Role)
-	//pb.RegisterUserServiceAgent(ag, s.User)
-	//pb.RegisterPermissionServiceAgent(ag, s.Permission)
-}
-
-func (s RegisterBridge) Register(ctx context.Context, svc any) {
-	switch v := svc.(type) {
-	case *service.GRPCServer:
-		s.RegisterGRPC(ctx, v)
-	case *service.HTTPServer:
-		s.RegisterHTTP(ctx, v)
-	}
-}
-
-func (s RegisterBridge) GRPCServer(ctx context.Context, server *service.GRPCServer) {
-	log.Info("grpc server system init")
-}
-
-func (s RegisterBridge) HTTPServer(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http server system init")
-	ag := agent.NewHTTP(server)
-	pb.RegisterPersonalServiceAgent(ag, s.Personal)
-	pb.RegisterResourceServiceAgent(ag, s.Resource)
-	pb.RegisterRoleServiceAgent(ag, s.Role)
-	pb.RegisterUserServiceAgent(ag, s.User)
-	pb.RegisterPermissionServiceAgent(ag, s.Permission)
-}
-
-func (s RegisterBridge) Server(ctx context.Context, grpcServer *service.GRPCServer, httpServer *service.HTTPServer) {
-	s.HTTPServer(ctx, httpServer)
-	s.GRPCServer(ctx, grpcServer)
-}
-
-func NewSystemServiceAgentClient(r runtime.Runtime, client *service.GRPCClient) (*RegisterBridge, error) {
-	register := RegisterBridge{
-		Personal:   systemservice.NewPersonalServiceAgentClient(client),
-		Resource:   systemservice.NewResourceServiceAgentClient(client),
-		Role:       systemservice.NewRoleServiceAgentClient(client),
-		User:       systemservice.NewUserServiceAgentClient(client),
-		Permission: systemservice.NewPermissionServiceAgentClient(client),
-	}
-	return &register, nil
 }
 
 func NewSystemClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.GRPCClient, error) {
@@ -229,5 +142,3 @@ func MiddlewareServer() middleware.KMiddleware {
 		}
 	}
 }
-
-var _ service.ServerRegistrar = (*RegisterBridge)(nil)

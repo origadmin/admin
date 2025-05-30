@@ -12,10 +12,10 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
+	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-	types "v1/services/types"
 )
 
 const (
@@ -974,8 +974,8 @@ const file_system_personal_proto_rawDesc = "" +
 	"\x14RefreshPersonalToken\x123.api.v1.services.system.RefreshPersonalTokenRequest\x1a4.api.v1.services.system.RefreshPersonalTokenResponse\")\x82\xd3\xe4\x93\x02#:\x04data\"\x1b/sys/personal/token/refresh\x12\xad\x01\n" +
 	"\x16UpdatePersonalPassword\x125.api.v1.services.system.UpdatePersonalPasswordRequest\x1a6.api.v1.services.system.UpdatePersonalPasswordResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\x1a\x16/sys/personal/password\x12\xa9\x01\n" +
 	"\x15UpdatePersonalProfile\x124.api.v1.services.system.UpdatePersonalProfileRequest\x1a5.api.v1.services.system.UpdatePersonalProfileResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x04data\x1a\x15/sys/personal/profile\x12\xa9\x01\n" +
-	"\x15UpdatePersonalSetting\x124.api.v1.services.system.UpdatePersonalSettingRequest\x1a5.api.v1.services.system.UpdatePersonalSettingResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x04data\x1a\x15/sys/personal/settingB\xc2\x01\n" +
-	"\x1acom.api.v1.services.systemB\rPersonalProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"\x15UpdatePersonalSetting\x124.api.v1.services.system.UpdatePersonalSettingRequest\x1a5.api.v1.services.system.UpdatePersonalSettingResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x04data\x1a\x15/sys/personal/settingB\xc6\x01\n" +
+	"\x1acom.api.v1.services.systemB\rPersonalProtoP\x01Z\x1dapi/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
 	file_system_personal_proto_rawDescOnce sync.Once

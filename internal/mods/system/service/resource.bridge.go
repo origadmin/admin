@@ -5,102 +5,93 @@
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/origadmin/runtime/agent"
-	"github.com/origadmin/runtime/context"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 )
 
-// ResourceServiceBridge is a menu service.
-type ResourceServiceBridge struct {
-	resp.Response
-
-	client pb.ResourceServiceClient
+// ResourceServiceHookedBridge is a menu service.
+type ResourceServiceHookedBridge struct {
+	pb.UnimplementedResourceServiceHooked
+	log *log.KHelper
 }
 
-func (s ResourceServiceBridge) CreateResource(ctx context.Context, request *pb.CreateResourceRequest) (*pb.CreateResourceResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CreateResource(ctx, request)
+func (h ResourceServiceHookedBridge) CreateResourceResult(ctx transhttp.Context, request *pb.CreateResourceRequest, response *pb.CreateResourceResponse) error {
+	marshal, err := json.Marshal(response.Resource)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Resource),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s ResourceServiceBridge) DeleteResource(ctx context.Context, request *pb.DeleteResourceRequest) (*pb.DeleteResourceResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	_, err := s.client.DeleteResource(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+func (h ResourceServiceHookedBridge) DeleteResourceResult(ctx transhttp.Context, request *pb.DeleteResourceRequest, response *pb.DeleteResourceResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
-	return nil, nil
 }
 
-func (s ResourceServiceBridge) GetResource(ctx context.Context, request *pb.GetResourceRequest) (*pb.GetResourceResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.GetResource(ctx, request)
+func (h ResourceServiceHookedBridge) GetResourceResult(ctx transhttp.Context, request *pb.GetResourceRequest, response *pb.GetResourceResponse) error {
+	marshal, err := json.Marshal(response.Resource)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Resource),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s ResourceServiceBridge) ListResources(ctx context.Context, request *pb.ListResourcesRequest) (*pb.ListResourcesResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListResources(ctx, request)
+func (h ResourceServiceHookedBridge) ListResourcesResult(ctx transhttp.Context, request *pb.ListResourcesRequest, response *pb.ListResourcesResponse) error {
+	marshal, err := json.Marshal(response.Resources)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
+	return ctx.JSON(http.StatusOK, &resp.SourcePage{
 		Success: true,
-		Total:   response.TotalSize,
-		Data:    resp.Proto2AnyPBArray(response.Resources...),
+		Total:   response.GetTotalSize(),
+		Data:    marshal,
+		//Current:  request.GetCurrent(),
+		//PageSize: nil,
+		//Extra: "",
 	})
-	return nil, nil
 }
 
-func (s ResourceServiceBridge) UpdateResource(ctx context.Context, request *pb.UpdateResourceRequest) (*pb.UpdateResourceResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdateResource(ctx, request)
+func (h ResourceServiceHookedBridge) UpdateResourceResult(ctx transhttp.Context, request *pb.UpdateResourceRequest, response *pb.UpdateResourceResponse) error {
+	marshal, err := json.Marshal(response.Resource)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Resource),
+		Data:    marshal,
 	})
-	return nil, nil
+}
+
+func NewResourceServiceHookedBridge(r runtime.Runtime, client pb.ResourceServiceHTTPServer) pb.ResourceServiceHookedBridger {
+	return pb.WithResourceServiceHook(&ResourceServiceHookedBridge{
+		log: log.NewHelper(r.WithLogger("module", "service/resource")),
+	})(client)
 }
 
 // NewResourceServiceBridge new a menu service.
-func NewResourceServiceBridge(client pb.ResourceServiceClient) *ResourceServiceBridge {
-	return &ResourceServiceBridge{client: client}
+func NewResourceServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.ResourceServiceServer {
+	return pb.NewResourceServiceBridge(client)
 }
 
-// NewResourceServiceBridgePB new a menu service.
-func NewResourceServiceBridgePB(client pb.ResourceServiceClient) pb.ResourceServiceBridge {
-	return &ResourceServiceBridge{client: client}
-}
-func NewResourceServiceBridgeClient(client *service.GRPCClient) pb.ResourceServiceBridge {
-	cli := pb.NewResourceServiceClient(client)
-	return NewResourceServiceBridge(cli)
+// NewResourceServiceHTTPBridge new a menu service.
+func NewResourceServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.ResourceServiceHTTPServer {
+	return pb.NewResourceServiceHTTPBridge(client)
 }
 
-var _ pb.ResourceServiceBridge = (*ResourceServiceBridge)(nil)
+var _ pb.ResourceServiceHooker = (*ResourceServiceHookedBridge)(nil)

@@ -5,102 +5,93 @@
 package service
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"github.com/origadmin/runtime/agent"
-	"github.com/origadmin/runtime/context"
+	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/helpers/resp"
 )
 
-// PermissionServiceBridge is a menu service.
-type PermissionServiceBridge struct {
-	resp.Response
-
-	client pb.PermissionServiceClient
+// PermissionServiceHookedBridge is a menu service.
+type PermissionServiceHookedBridge struct {
+	pb.UnimplementedPermissionServiceHooked
+	log *log.KHelper
 }
 
-func (s PermissionServiceBridge) CreatePermission(ctx context.Context, request *pb.CreatePermissionRequest) (*pb.CreatePermissionResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.CreatePermission(ctx, request)
+func (h PermissionServiceHookedBridge) CreatePermissionResult(ctx transhttp.Context, request *pb.CreatePermissionRequest, response *pb.CreatePermissionResponse) error {
+	marshal, err := json.Marshal(response.Permission)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Permission),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s PermissionServiceBridge) DeletePermission(ctx context.Context, request *pb.DeletePermissionRequest) (*pb.DeletePermissionResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	_, err := s.client.DeletePermission(ctx, request)
-	if err != nil {
-		return nil, err
-	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+func (h PermissionServiceHookedBridge) DeletePermissionResult(ctx transhttp.Context, request *pb.DeletePermissionRequest, response *pb.DeletePermissionResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
-	return nil, nil
 }
 
-func (s PermissionServiceBridge) GetPermission(ctx context.Context, request *pb.GetPermissionRequest) (*pb.GetPermissionResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.GetPermission(ctx, request)
+func (h PermissionServiceHookedBridge) GetPermissionResult(ctx transhttp.Context, request *pb.GetPermissionRequest, response *pb.GetPermissionResponse) error {
+	marshal, err := json.Marshal(response.Permission)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Permission),
+		Data:    marshal,
 	})
-	return nil, nil
 }
 
-func (s PermissionServiceBridge) ListPermissions(ctx context.Context, request *pb.ListPermissionsRequest) (*pb.ListPermissionsResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.ListPermissions(ctx, request)
+func (h PermissionServiceHookedBridge) ListPermissionsResult(ctx transhttp.Context, request *pb.ListPermissionsRequest, response *pb.ListPermissionsResponse) error {
+	marshal, err := json.Marshal(response.Permissions)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	s.JSON(httpCtx, http.StatusOK, &resp.Page{
+	return ctx.JSON(http.StatusOK, &resp.SourcePage{
 		Success: true,
-		Total:   response.TotalSize,
-		Data:    resp.Proto2AnyPBArray(response.Permissions...),
+		Total:   response.GetTotalSize(),
+		Data:    marshal,
+		//Current:  request.GetCurrent(),
+		//PageSize: nil,
+		//Extra: "",
 	})
-	return nil, nil
 }
 
-func (s PermissionServiceBridge) UpdatePermission(ctx context.Context, request *pb.UpdatePermissionRequest) (*pb.UpdatePermissionResponse, error) {
-	httpCtx := agent.FromHTTPContext(ctx)
-	response, err := s.client.UpdatePermission(ctx, request)
+func (h PermissionServiceHookedBridge) UpdatePermissionResult(ctx transhttp.Context, request *pb.UpdatePermissionRequest, response *pb.UpdatePermissionResponse) error {
+	marshal, err := json.Marshal(response.Permission)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	s.JSON(httpCtx, http.StatusOK, &resp.Data{
+	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
-		Data:    resp.Proto2Any(response.Permission),
+		Data:    marshal,
 	})
-	return nil, nil
+}
+
+func NewPermissionServiceHookedBridge(r runtime.Runtime, client pb.PermissionServiceHTTPServer) pb.PermissionServiceHookedBridger {
+	return pb.WithPermissionServiceHook(&PermissionServiceHookedBridge{
+		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+	})(client)
 }
 
 // NewPermissionServiceBridge new a menu service.
-func NewPermissionServiceBridge(client pb.PermissionServiceClient) *PermissionServiceBridge {
-	return &PermissionServiceBridge{client: client}
+func NewPermissionServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.PermissionServiceServer {
+	return pb.NewPermissionServiceBridge(client)
 }
 
-// NewPermissionServiceBridgePB new a menu service.
-func NewPermissionServiceBridgePB(client pb.PermissionServiceClient) pb.PermissionServiceBridge {
-	return &PermissionServiceBridge{client: client}
-}
-func NewPermissionServiceBridgeClient(client *service.GRPCClient) pb.PermissionServiceBridge {
-	cli := pb.NewPermissionServiceClient(client)
-	return NewPermissionServiceBridge(cli)
+// NewPermissionServiceHTTPBridge new a menu service.
+func NewPermissionServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.PermissionServiceHTTPServer {
+	return pb.NewPermissionServiceHTTPBridge(client)
 }
 
-var _ pb.PermissionServiceBridge = (*PermissionServiceBridge)(nil)
+var _ pb.PermissionServiceHooker = (*PermissionServiceHookedBridge)(nil)

@@ -38,40 +38,55 @@ type AuthServiceBridger interface {
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 }
 
-type AuthServiceBridgeHooker interface {
+type AuthServiceHooker interface {
+	AuthServiceAuthLogoutHooker
+	AuthServiceAuthenticateHooker
+	AuthServiceCreateTokenHooker
+	AuthServiceDestroyTokenHooker
+	AuthServiceListAuthResourcesHooker
+	AuthServiceValidateTokenHooker
+}
+
+type AuthServiceHookedBridger interface {
+	AuthServiceHooker
 	AuthServiceBridger
+}
+type AuthServiceAuthLogoutHooker interface {
 	BeforeAuthLogout(http.Context, *AuthLogoutRequest) (context.Context, error)
 	AuthLogoutResult(http.Context, *AuthLogoutRequest, *AuthLogoutResponse) error
+}
+type AuthServiceAuthenticateHooker interface {
 	BeforeAuthenticate(http.Context, *AuthenticateRequest) (context.Context, error)
 	AuthenticateResult(http.Context, *AuthenticateRequest, *AuthenticateResponse) error
-	// CreateToken CreateToken generates a new JWT token for the given user.
+}
+type AuthServiceCreateTokenHooker interface {
 	BeforeCreateToken(http.Context, *CreateTokenRequest) (context.Context, error)
 	CreateTokenResult(http.Context, *CreateTokenRequest, *CreateTokenResponse) error
-	// DestroyToken DestroyToken invalidates a JWT token.
+}
+type AuthServiceDestroyTokenHooker interface {
 	BeforeDestroyToken(http.Context, *DestroyTokenRequest) (context.Context, error)
 	DestroyTokenResult(http.Context, *DestroyTokenRequest, *DestroyTokenResponse) error
+}
+type AuthServiceListAuthResourcesHooker interface {
 	BeforeListAuthResources(http.Context, *ListAuthResourcesRequest) (context.Context, error)
 	ListAuthResourcesResult(http.Context, *ListAuthResourcesRequest, *ListAuthResourcesResponse) error
-	// ValidateToken ValidateToken verifies the validity of a JWT token.
+}
+type AuthServiceValidateTokenHooker interface {
 	BeforeValidateToken(http.Context, *ValidateTokenRequest) (context.Context, error)
 	ValidateTokenResult(http.Context, *ValidateTokenRequest, *ValidateTokenResponse) error
 }
 
-func RegisterAuthServiceBridger(s *http.Server, srv AuthServiceBridger) {
+func RegisterAuthServiceBridger(s *http.Server, srv AuthServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(AuthServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedAuthServiceBridger{AuthServiceBridger: srv}
-	}
-	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_Bridge_Handler(hook))
-	r.POST("/sys/auth/token", _AuthService_CreateToken0_Bridge_Handler(hook))
-	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_Bridge_Handler(hook))
-	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_Bridge_Handler(hook))
-	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_Bridge_Handler(hook))
-	r.POST("/sys/auth/logout", _AuthService_AuthLogout0_Bridge_Handler(hook))
+	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_Bridge_Handler(srv))
+	r.POST("/sys/auth/token", _AuthService_CreateToken0_Bridge_Handler(srv))
+	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_Bridge_Handler(srv))
+	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_Bridge_Handler(srv))
+	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_Bridge_Handler(srv))
+	r.POST("/sys/auth/logout", _AuthService_AuthLogout0_Bridge_Handler(srv))
 }
 
-func _AuthService_ListAuthResources0_Bridge_Handler(srv AuthServiceBridgeHooker) func(ctx http.Context) error {
+func _AuthService_ListAuthResources0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListAuthResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -94,7 +109,7 @@ func _AuthService_ListAuthResources0_Bridge_Handler(srv AuthServiceBridgeHooker)
 	}
 }
 
-func _AuthService_CreateToken0_Bridge_Handler(srv AuthServiceBridgeHooker) func(ctx http.Context) error {
+func _AuthService_CreateToken0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateTokenRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -120,7 +135,7 @@ func _AuthService_CreateToken0_Bridge_Handler(srv AuthServiceBridgeHooker) func(
 	}
 }
 
-func _AuthService_ValidateToken0_Bridge_Handler(srv AuthServiceBridgeHooker) func(ctx http.Context) error {
+func _AuthService_ValidateToken0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ValidateTokenRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -143,7 +158,7 @@ func _AuthService_ValidateToken0_Bridge_Handler(srv AuthServiceBridgeHooker) fun
 	}
 }
 
-func _AuthService_DestroyToken0_Bridge_Handler(srv AuthServiceBridgeHooker) func(ctx http.Context) error {
+func _AuthService_DestroyToken0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DestroyTokenRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -169,7 +184,7 @@ func _AuthService_DestroyToken0_Bridge_Handler(srv AuthServiceBridgeHooker) func
 	}
 }
 
-func _AuthService_Authenticate0_Bridge_Handler(srv AuthServiceBridgeHooker) func(ctx http.Context) error {
+func _AuthService_Authenticate0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AuthenticateRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -195,7 +210,7 @@ func _AuthService_Authenticate0_Bridge_Handler(srv AuthServiceBridgeHooker) func
 	}
 }
 
-func _AuthService_AuthLogout0_Bridge_Handler(srv AuthServiceBridgeHooker) func(ctx http.Context) error {
+func _AuthService_AuthLogout0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AuthLogoutRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -221,61 +236,73 @@ func _AuthService_AuthLogout0_Bridge_Handler(srv AuthServiceBridgeHooker) func(c
 	}
 }
 
-// UnimplementedAuthServiceBridger must be embedded to have
+// UnimplementedAuthServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAuthServiceBridger struct {
+type UnimplementedAuthServiceHooked struct{}
+
+func (UnimplementedAuthServiceHooked) BeforeAuthLogout(ctx http.Context, in *AuthLogoutRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) AuthLogoutResult(ctx http.Context, in *AuthLogoutRequest, out *AuthLogoutResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedAuthServiceHooked) BeforeAuthenticate(ctx http.Context, in *AuthenticateRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) AuthenticateResult(ctx http.Context, in *AuthenticateRequest, out *AuthenticateResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedAuthServiceHooked) BeforeCreateToken(ctx http.Context, in *CreateTokenRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) CreateTokenResult(ctx http.Context, in *CreateTokenRequest, out *CreateTokenResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedAuthServiceHooked) BeforeDestroyToken(ctx http.Context, in *DestroyTokenRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) DestroyTokenResult(ctx http.Context, in *DestroyTokenRequest, out *DestroyTokenResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedAuthServiceHooked) BeforeListAuthResources(ctx http.Context, in *ListAuthResourcesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) ListAuthResourcesResult(ctx http.Context, in *ListAuthResourcesRequest, out *ListAuthResourcesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedAuthServiceHooked) BeforeValidateToken(ctx http.Context, in *ValidateTokenRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedAuthServiceHooked) ValidateTokenResult(ctx http.Context, in *ValidateTokenRequest, out *ValidateTokenResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithAuthServiceHook(h AuthServiceHooker) func(AuthServiceBridger) AuthServiceHookedBridger {
+	return func(b AuthServiceBridger) AuthServiceHookedBridger {
+		return AuthServiceHookedBridge{AuthServiceBridger: b, AuthServiceHooker: h}
+	}
+}
+
+// AuthServiceHookedBridge is a bridge between the HTTP and gRPC implementations of AuthService.
+// It implements the HTTP and gRPC implementations of AuthService.
+// It forwards requests and responses between the two implementations.
+type AuthServiceHookedBridge struct {
 	AuthServiceBridger
-}
-
-func (UnimplementedAuthServiceBridger) BeforeAuthLogout(ctx http.Context, in *AuthLogoutRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceBridger) AuthLogoutResult(ctx http.Context, in *AuthLogoutRequest, out *AuthLogoutResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedAuthServiceBridger) BeforeAuthenticate(ctx http.Context, in *AuthenticateRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceBridger) AuthenticateResult(ctx http.Context, in *AuthenticateRequest, out *AuthenticateResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedAuthServiceBridger) BeforeCreateToken(ctx http.Context, in *CreateTokenRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceBridger) CreateTokenResult(ctx http.Context, in *CreateTokenRequest, out *CreateTokenResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedAuthServiceBridger) BeforeDestroyToken(ctx http.Context, in *DestroyTokenRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceBridger) DestroyTokenResult(ctx http.Context, in *DestroyTokenRequest, out *DestroyTokenResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedAuthServiceBridger) BeforeListAuthResources(ctx http.Context, in *ListAuthResourcesRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceBridger) ListAuthResourcesResult(ctx http.Context, in *ListAuthResourcesRequest, out *ListAuthResourcesResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedAuthServiceBridger) BeforeValidateToken(ctx http.Context, in *ValidateTokenRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceBridger) ValidateTokenResult(ctx http.Context, in *ValidateTokenRequest, out *ValidateTokenResponse) error {
-	return ctx.Result(200, out)
+	AuthServiceHooker
 }
 
 type AuthServiceHTTPBridgeImpl struct {

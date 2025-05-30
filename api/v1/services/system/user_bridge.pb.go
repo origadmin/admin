@@ -44,49 +44,73 @@ type UserServiceBridger interface {
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 
-type UserServiceBridgeHooker interface {
+type UserServiceHooker interface {
+	UserServiceCreateUserHooker
+	UserServiceDeleteUserHooker
+	UserServiceGetUserHooker
+	UserServiceListUserResourcesHooker
+	UserServiceListUsersHooker
+	UserServiceResetUserPasswordHooker
+	UserServiceUpdateUserHooker
+	UserServiceUpdateUserRolesHooker
+	UserServiceUpdateUserStatusHooker
+}
+
+type UserServiceHookedBridger interface {
+	UserServiceHooker
 	UserServiceBridger
+}
+type UserServiceCreateUserHooker interface {
 	BeforeCreateUser(http.Context, *CreateUserRequest) (context.Context, error)
 	CreateUserResult(http.Context, *CreateUserRequest, *CreateUserResponse) error
+}
+type UserServiceDeleteUserHooker interface {
 	BeforeDeleteUser(http.Context, *DeleteUserRequest) (context.Context, error)
 	DeleteUserResult(http.Context, *DeleteUserRequest, *DeleteUserResponse) error
+}
+type UserServiceGetUserHooker interface {
 	BeforeGetUser(http.Context, *GetUserRequest) (context.Context, error)
 	GetUserResult(http.Context, *GetUserRequest, *GetUserResponse) error
+}
+type UserServiceListUserResourcesHooker interface {
 	BeforeListUserResources(http.Context, *ListUserResourcesRequest) (context.Context, error)
 	ListUserResourcesResult(http.Context, *ListUserResourcesRequest, *ListUserResourcesResponse) error
+}
+type UserServiceListUsersHooker interface {
 	BeforeListUsers(http.Context, *ListUsersRequest) (context.Context, error)
 	ListUsersResult(http.Context, *ListUsersRequest, *ListUsersResponse) error
-	// ResetUserPassword ResetUserPassword reset the user s password
+}
+type UserServiceResetUserPasswordHooker interface {
 	BeforeResetUserPassword(http.Context, *ResetUserPasswordRequest) (context.Context, error)
 	ResetUserPasswordResult(http.Context, *ResetUserPasswordRequest, *ResetUserPasswordResponse) error
+}
+type UserServiceUpdateUserHooker interface {
 	BeforeUpdateUser(http.Context, *UpdateUserRequest) (context.Context, error)
 	UpdateUserResult(http.Context, *UpdateUserRequest, *UpdateUserResponse) error
-	// UpdateUserRoles UpdateUserRoles update the user roles
+}
+type UserServiceUpdateUserRolesHooker interface {
 	BeforeUpdateUserRoles(http.Context, *UpdateUserRolesRequest) (context.Context, error)
 	UpdateUserRolesResult(http.Context, *UpdateUserRolesRequest, *UpdateUserRolesResponse) error
-	// UpdateUserStatus UpdateUserStatus Update the status of the user information
+}
+type UserServiceUpdateUserStatusHooker interface {
 	BeforeUpdateUserStatus(http.Context, *UpdateUserStatusRequest) (context.Context, error)
 	UpdateUserStatusResult(http.Context, *UpdateUserStatusRequest, *UpdateUserStatusResponse) error
 }
 
-func RegisterUserServiceBridger(s *http.Server, srv UserServiceBridger) {
+func RegisterUserServiceBridger(s *http.Server, srv UserServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(UserServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedUserServiceBridger{UserServiceBridger: srv}
-	}
-	r.GET("/sys/users", _UserService_ListUsers0_Bridge_Handler(hook))
-	r.GET("/sys/users/:id/resources", _UserService_ListUserResources0_Bridge_Handler(hook))
-	r.GET("/sys/users/:id", _UserService_GetUser0_Bridge_Handler(hook))
-	r.POST("/sys/users", _UserService_CreateUser0_Bridge_Handler(hook))
-	r.PUT("/sys/users/:user.id", _UserService_UpdateUser0_Bridge_Handler(hook))
-	r.DELETE("/sys/users/:user.id", _UserService_DeleteUser0_Bridge_Handler(hook))
-	r.PUT("/sys/users/:user.id/status", _UserService_UpdateUserStatus0_Bridge_Handler(hook))
-	r.PUT("/sys/users/:user.id/roles", _UserService_UpdateUserRoles0_Bridge_Handler(hook))
-	r.POST("/sys/users/:id/password/reset", _UserService_ResetUserPassword0_Bridge_Handler(hook))
+	r.GET("/sys/users", _UserService_ListUsers0_Bridge_Handler(srv))
+	r.GET("/sys/users/:id/resources", _UserService_ListUserResources0_Bridge_Handler(srv))
+	r.GET("/sys/users/:id", _UserService_GetUser0_Bridge_Handler(srv))
+	r.POST("/sys/users", _UserService_CreateUser0_Bridge_Handler(srv))
+	r.PUT("/sys/users/:user.id", _UserService_UpdateUser0_Bridge_Handler(srv))
+	r.DELETE("/sys/users/:user.id", _UserService_DeleteUser0_Bridge_Handler(srv))
+	r.PUT("/sys/users/:user.id/status", _UserService_UpdateUserStatus0_Bridge_Handler(srv))
+	r.PUT("/sys/users/:user.id/roles", _UserService_UpdateUserRoles0_Bridge_Handler(srv))
+	r.POST("/sys/users/:id/password/reset", _UserService_ResetUserPassword0_Bridge_Handler(srv))
 }
 
-func _UserService_ListUsers0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_ListUsers0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListUsersRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -109,7 +133,7 @@ func _UserService_ListUsers0_Bridge_Handler(srv UserServiceBridgeHooker) func(ct
 	}
 }
 
-func _UserService_ListUserResources0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_ListUserResources0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListUserResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -135,7 +159,7 @@ func _UserService_ListUserResources0_Bridge_Handler(srv UserServiceBridgeHooker)
 	}
 }
 
-func _UserService_GetUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_GetUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -161,7 +185,7 @@ func _UserService_GetUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx 
 	}
 }
 
-func _UserService_CreateUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_CreateUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateUserRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -187,7 +211,7 @@ func _UserService_CreateUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(c
 	}
 }
 
-func _UserService_UpdateUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_UpdateUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -216,7 +240,7 @@ func _UserService_UpdateUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(c
 	}
 }
 
-func _UserService_DeleteUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_DeleteUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteUserRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -242,7 +266,7 @@ func _UserService_DeleteUser0_Bridge_Handler(srv UserServiceBridgeHooker) func(c
 	}
 }
 
-func _UserService_UpdateUserStatus0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_UpdateUserStatus0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserStatusRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -271,7 +295,7 @@ func _UserService_UpdateUserStatus0_Bridge_Handler(srv UserServiceBridgeHooker) 
 	}
 }
 
-func _UserService_UpdateUserRoles0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_UpdateUserRoles0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserRolesRequest
 		if err := ctx.Bind(&in.User); err != nil {
@@ -300,7 +324,7 @@ func _UserService_UpdateUserRoles0_Bridge_Handler(srv UserServiceBridgeHooker) f
 	}
 }
 
-func _UserService_ResetUserPassword0_Bridge_Handler(srv UserServiceBridgeHooker) func(ctx http.Context) error {
+func _UserService_ResetUserPassword0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetUserPasswordRequest
 		if err := ctx.Bind(&in.Data); err != nil {
@@ -329,85 +353,97 @@ func _UserService_ResetUserPassword0_Bridge_Handler(srv UserServiceBridgeHooker)
 	}
 }
 
-// UnimplementedUserServiceBridger must be embedded to have
+// UnimplementedUserServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedUserServiceBridger struct {
+type UnimplementedUserServiceHooked struct{}
+
+func (UnimplementedUserServiceHooked) BeforeCreateUser(ctx http.Context, in *CreateUserRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) CreateUserResult(ctx http.Context, in *CreateUserRequest, out *CreateUserResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeDeleteUser(ctx http.Context, in *DeleteUserRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) DeleteUserResult(ctx http.Context, in *DeleteUserRequest, out *DeleteUserResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeGetUser(ctx http.Context, in *GetUserRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) GetUserResult(ctx http.Context, in *GetUserRequest, out *GetUserResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeListUserResources(ctx http.Context, in *ListUserResourcesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) ListUserResourcesResult(ctx http.Context, in *ListUserResourcesRequest, out *ListUserResourcesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeListUsers(ctx http.Context, in *ListUsersRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) ListUsersResult(ctx http.Context, in *ListUsersRequest, out *ListUsersResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeResetUserPassword(ctx http.Context, in *ResetUserPasswordRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) ResetUserPasswordResult(ctx http.Context, in *ResetUserPasswordRequest, out *ResetUserPasswordResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeUpdateUser(ctx http.Context, in *UpdateUserRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) UpdateUserResult(ctx http.Context, in *UpdateUserRequest, out *UpdateUserResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeUpdateUserRoles(ctx http.Context, in *UpdateUserRolesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) UpdateUserRolesResult(ctx http.Context, in *UpdateUserRolesRequest, out *UpdateUserRolesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) BeforeUpdateUserStatus(ctx http.Context, in *UpdateUserStatusRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) UpdateUserStatusResult(ctx http.Context, in *UpdateUserStatusRequest, out *UpdateUserStatusResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithUserServiceHook(h UserServiceHooker) func(UserServiceBridger) UserServiceHookedBridger {
+	return func(b UserServiceBridger) UserServiceHookedBridger {
+		return UserServiceHookedBridge{UserServiceBridger: b, UserServiceHooker: h}
+	}
+}
+
+// UserServiceHookedBridge is a bridge between the HTTP and gRPC implementations of UserService.
+// It implements the HTTP and gRPC implementations of UserService.
+// It forwards requests and responses between the two implementations.
+type UserServiceHookedBridge struct {
 	UserServiceBridger
-}
-
-func (UnimplementedUserServiceBridger) BeforeCreateUser(ctx http.Context, in *CreateUserRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) CreateUserResult(ctx http.Context, in *CreateUserRequest, out *CreateUserResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeDeleteUser(ctx http.Context, in *DeleteUserRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) DeleteUserResult(ctx http.Context, in *DeleteUserRequest, out *DeleteUserResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeGetUser(ctx http.Context, in *GetUserRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) GetUserResult(ctx http.Context, in *GetUserRequest, out *GetUserResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeListUserResources(ctx http.Context, in *ListUserResourcesRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) ListUserResourcesResult(ctx http.Context, in *ListUserResourcesRequest, out *ListUserResourcesResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeListUsers(ctx http.Context, in *ListUsersRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) ListUsersResult(ctx http.Context, in *ListUsersRequest, out *ListUsersResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeResetUserPassword(ctx http.Context, in *ResetUserPasswordRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) ResetUserPasswordResult(ctx http.Context, in *ResetUserPasswordRequest, out *ResetUserPasswordResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeUpdateUser(ctx http.Context, in *UpdateUserRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) UpdateUserResult(ctx http.Context, in *UpdateUserRequest, out *UpdateUserResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeUpdateUserRoles(ctx http.Context, in *UpdateUserRolesRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) UpdateUserRolesResult(ctx http.Context, in *UpdateUserRolesRequest, out *UpdateUserRolesResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceBridger) BeforeUpdateUserStatus(ctx http.Context, in *UpdateUserStatusRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceBridger) UpdateUserStatusResult(ctx http.Context, in *UpdateUserStatusRequest, out *UpdateUserStatusResponse) error {
-	return ctx.Result(200, out)
+	UserServiceHooker
 }
 
 type UserServiceHTTPBridgeImpl struct {

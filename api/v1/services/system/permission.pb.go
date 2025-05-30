@@ -12,10 +12,10 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-	types "v1/services/types"
 )
 
 const (
@@ -665,8 +665,8 @@ const file_system_permission_proto_rawDesc = "" +
 	"permission\"\x10/sys/permissions\x12\xab\x01\n" +
 	"\x10UpdatePermission\x12/.api.v1.services.system.UpdatePermissionRequest\x1a0.api.v1.services.system.UpdatePermissionResponse\"4\x82\xd3\xe4\x93\x02.:\n" +
 	"permission\x1a /sys/permissions/{permission.id}\x12\x94\x01\n" +
-	"\x10DeletePermission\x12/.api.v1.services.system.DeletePermissionRequest\x1a0.api.v1.services.system.DeletePermissionResponse\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/sys/permissions/{id}B\xc4\x01\n" +
-	"\x1acom.api.v1.services.systemB\x0fPermissionProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"\x10DeletePermission\x12/.api.v1.services.system.DeletePermissionRequest\x1a0.api.v1.services.system.DeletePermissionResponse\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/sys/permissions/{id}B\xc8\x01\n" +
+	"\x1acom.api.v1.services.systemB\x0fPermissionProtoP\x01Z\x1dapi/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
 	file_system_permission_proto_rawDescOnce sync.Once

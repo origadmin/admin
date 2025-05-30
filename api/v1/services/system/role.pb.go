@@ -12,10 +12,10 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-	types "v1/services/types"
 )
 
 const (
@@ -648,8 +648,8 @@ const file_system_role_proto_rawDesc = "" +
 	"\n" +
 	"UpdateRole\x12).api.v1.services.system.UpdateRoleRequest\x1a*.api.v1.services.system.UpdateRoleResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04role\x1a\x14/sys/roles/{role.id}\x12|\n" +
 	"\n" +
-	"DeleteRole\x12).api.v1.services.system.DeleteRoleRequest\x1a*.api.v1.services.system.DeleteRoleResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/sys/roles/{id}B\xbe\x01\n" +
-	"\x1acom.api.v1.services.systemB\tRoleProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"DeleteRole\x12).api.v1.services.system.DeleteRoleRequest\x1a*.api.v1.services.system.DeleteRoleResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/sys/roles/{id}B\xc2\x01\n" +
+	"\x1acom.api.v1.services.systemB\tRoleProtoP\x01Z\x1dapi/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
 	file_system_role_proto_rawDescOnce sync.Once

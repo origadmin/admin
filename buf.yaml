@@ -3,8 +3,7 @@ version: v2
 
 modules:
   - path: api/v1/proto
-#    includes:
-#      - api/v1/proto
+
 lint:
   use:
     - STANDARD

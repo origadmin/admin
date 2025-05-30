@@ -33,34 +33,49 @@ type PositionServiceBridger interface {
 	UpdatePosition(context.Context, *UpdatePositionRequest) (*UpdatePositionResponse, error)
 }
 
-type PositionServiceBridgeHooker interface {
+type PositionServiceHooker interface {
+	PositionServiceCreatePositionHooker
+	PositionServiceDeletePositionHooker
+	PositionServiceGetPositionHooker
+	PositionServiceListPositionsHooker
+	PositionServiceUpdatePositionHooker
+}
+
+type PositionServiceHookedBridger interface {
+	PositionServiceHooker
 	PositionServiceBridger
+}
+type PositionServiceCreatePositionHooker interface {
 	BeforeCreatePosition(http.Context, *CreatePositionRequest) (context.Context, error)
 	CreatePositionResult(http.Context, *CreatePositionRequest, *CreatePositionResponse) error
+}
+type PositionServiceDeletePositionHooker interface {
 	BeforeDeletePosition(http.Context, *DeletePositionRequest) (context.Context, error)
 	DeletePositionResult(http.Context, *DeletePositionRequest, *DeletePositionResponse) error
+}
+type PositionServiceGetPositionHooker interface {
 	BeforeGetPosition(http.Context, *GetPositionRequest) (context.Context, error)
 	GetPositionResult(http.Context, *GetPositionRequest, *GetPositionResponse) error
+}
+type PositionServiceListPositionsHooker interface {
 	BeforeListPositions(http.Context, *ListPositionsRequest) (context.Context, error)
 	ListPositionsResult(http.Context, *ListPositionsRequest, *ListPositionsResponse) error
+}
+type PositionServiceUpdatePositionHooker interface {
 	BeforeUpdatePosition(http.Context, *UpdatePositionRequest) (context.Context, error)
 	UpdatePositionResult(http.Context, *UpdatePositionRequest, *UpdatePositionResponse) error
 }
 
-func RegisterPositionServiceBridger(s *http.Server, srv PositionServiceBridger) {
+func RegisterPositionServiceBridger(s *http.Server, srv PositionServiceHookedBridger) {
 	r := s.Route("/")
-	hook, ok := srv.(PositionServiceBridgeHooker)
-	if !ok {
-		hook = UnimplementedPositionServiceBridger{PositionServiceBridger: srv}
-	}
-	r.GET("/sys/positions", _PositionService_ListPositions0_Bridge_Handler(hook))
-	r.GET("/sys/positions/:id", _PositionService_GetPosition0_Bridge_Handler(hook))
-	r.POST("/sys/positions", _PositionService_CreatePosition0_Bridge_Handler(hook))
-	r.PUT("/sys/positions/:position.id", _PositionService_UpdatePosition0_Bridge_Handler(hook))
-	r.DELETE("/sys/positions/:id", _PositionService_DeletePosition0_Bridge_Handler(hook))
+	r.GET("/sys/positions", _PositionService_ListPositions0_Bridge_Handler(srv))
+	r.GET("/sys/positions/:id", _PositionService_GetPosition0_Bridge_Handler(srv))
+	r.POST("/sys/positions", _PositionService_CreatePosition0_Bridge_Handler(srv))
+	r.PUT("/sys/positions/:position.id", _PositionService_UpdatePosition0_Bridge_Handler(srv))
+	r.DELETE("/sys/positions/:id", _PositionService_DeletePosition0_Bridge_Handler(srv))
 }
 
-func _PositionService_ListPositions0_Bridge_Handler(srv PositionServiceBridgeHooker) func(ctx http.Context) error {
+func _PositionService_ListPositions0_Bridge_Handler(srv PositionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListPositionsRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -83,7 +98,7 @@ func _PositionService_ListPositions0_Bridge_Handler(srv PositionServiceBridgeHoo
 	}
 }
 
-func _PositionService_GetPosition0_Bridge_Handler(srv PositionServiceBridgeHooker) func(ctx http.Context) error {
+func _PositionService_GetPosition0_Bridge_Handler(srv PositionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetPositionRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -109,7 +124,7 @@ func _PositionService_GetPosition0_Bridge_Handler(srv PositionServiceBridgeHooke
 	}
 }
 
-func _PositionService_CreatePosition0_Bridge_Handler(srv PositionServiceBridgeHooker) func(ctx http.Context) error {
+func _PositionService_CreatePosition0_Bridge_Handler(srv PositionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreatePositionRequest
 		if err := ctx.Bind(&in.Position); err != nil {
@@ -135,7 +150,7 @@ func _PositionService_CreatePosition0_Bridge_Handler(srv PositionServiceBridgeHo
 	}
 }
 
-func _PositionService_UpdatePosition0_Bridge_Handler(srv PositionServiceBridgeHooker) func(ctx http.Context) error {
+func _PositionService_UpdatePosition0_Bridge_Handler(srv PositionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePositionRequest
 		if err := ctx.Bind(&in.Position); err != nil {
@@ -164,7 +179,7 @@ func _PositionService_UpdatePosition0_Bridge_Handler(srv PositionServiceBridgeHo
 	}
 }
 
-func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceBridgeHooker) func(ctx http.Context) error {
+func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeletePositionRequest
 		if err := ctx.BindQuery(&in); err != nil {
@@ -190,53 +205,65 @@ func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceBridgeHo
 	}
 }
 
-// UnimplementedPositionServiceBridger must be embedded to have
+// UnimplementedPositionServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedPositionServiceBridger struct {
+type UnimplementedPositionServiceHooked struct{}
+
+func (UnimplementedPositionServiceHooked) BeforeCreatePosition(ctx http.Context, in *CreatePositionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPositionServiceHooked) CreatePositionResult(ctx http.Context, in *CreatePositionRequest, out *CreatePositionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPositionServiceHooked) BeforeDeletePosition(ctx http.Context, in *DeletePositionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPositionServiceHooked) DeletePositionResult(ctx http.Context, in *DeletePositionRequest, out *DeletePositionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPositionServiceHooked) BeforeGetPosition(ctx http.Context, in *GetPositionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPositionServiceHooked) GetPositionResult(ctx http.Context, in *GetPositionRequest, out *GetPositionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPositionServiceHooked) BeforeListPositions(ctx http.Context, in *ListPositionsRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPositionServiceHooked) ListPositionsResult(ctx http.Context, in *ListPositionsRequest, out *ListPositionsResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPositionServiceHooked) BeforeUpdatePosition(ctx http.Context, in *UpdatePositionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPositionServiceHooked) UpdatePositionResult(ctx http.Context, in *UpdatePositionRequest, out *UpdatePositionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func WithPositionServiceHook(h PositionServiceHooker) func(PositionServiceBridger) PositionServiceHookedBridger {
+	return func(b PositionServiceBridger) PositionServiceHookedBridger {
+		return PositionServiceHookedBridge{PositionServiceBridger: b, PositionServiceHooker: h}
+	}
+}
+
+// PositionServiceHookedBridge is a bridge between the HTTP and gRPC implementations of PositionService.
+// It implements the HTTP and gRPC implementations of PositionService.
+// It forwards requests and responses between the two implementations.
+type PositionServiceHookedBridge struct {
 	PositionServiceBridger
-}
-
-func (UnimplementedPositionServiceBridger) BeforeCreatePosition(ctx http.Context, in *CreatePositionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPositionServiceBridger) CreatePositionResult(ctx http.Context, in *CreatePositionRequest, out *CreatePositionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPositionServiceBridger) BeforeDeletePosition(ctx http.Context, in *DeletePositionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPositionServiceBridger) DeletePositionResult(ctx http.Context, in *DeletePositionRequest, out *DeletePositionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPositionServiceBridger) BeforeGetPosition(ctx http.Context, in *GetPositionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPositionServiceBridger) GetPositionResult(ctx http.Context, in *GetPositionRequest, out *GetPositionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPositionServiceBridger) BeforeListPositions(ctx http.Context, in *ListPositionsRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPositionServiceBridger) ListPositionsResult(ctx http.Context, in *ListPositionsRequest, out *ListPositionsResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPositionServiceBridger) BeforeUpdatePosition(ctx http.Context, in *UpdatePositionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPositionServiceBridger) UpdatePositionResult(ctx http.Context, in *UpdatePositionRequest, out *UpdatePositionResponse) error {
-	return ctx.Result(200, out)
+	PositionServiceHooker
 }
 
 type PositionServiceHTTPBridgeImpl struct {

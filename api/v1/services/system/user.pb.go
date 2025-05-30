@@ -12,10 +12,10 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-	types "v1/services/types"
 )
 
 const (
@@ -1090,8 +1090,8 @@ const file_system_user_proto_rawDesc = "" +
 	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"\x1c\x82\xd3\xe4\x93\x02\x16*\x14/sys/users/{user.id}\x12\xa0\x01\n" +
 	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\")\x82\xd3\xe4\x93\x02#:\x04user\x1a\x1b/sys/users/{user.id}/status\x12\x9c\x01\n" +
 	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\"(\x82\xd3\xe4\x93\x02\":\x04user\x1a\x1a/sys/users/{user.id}/roles\x12\xa6\x01\n" +
-	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\",\x82\xd3\xe4\x93\x02&:\x04data\"\x1e/sys/users/{id}/password/resetB\xbe\x01\n" +
-	"\x1acom.api.v1.services.systemB\tUserProtoP\x01Z\x19v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
+	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\",\x82\xd3\xe4\x93\x02&:\x04data\"\x1e/sys/users/{id}/password/resetB\xc2\x01\n" +
+	"\x1acom.api.v1.services.systemB\tUserProtoP\x01Z\x1dapi/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
 	file_system_user_proto_rawDescOnce sync.Once

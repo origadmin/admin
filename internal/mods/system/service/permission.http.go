@@ -5,16 +5,18 @@
 package service
 
 import (
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/mods/system/biz"
 )
 
 // PermissionServiceHTTPServer is a menu service.
 type PermissionServiceHTTPServer struct {
-	pb.UnimplementedPermissionServiceServer
-
-	client pb.PermissionServiceHTTPClient
+	client *biz.PermissionServiceBiz
+	log    *log.KHelper
 }
 
 func (s PermissionServiceHTTPServer) CreatePermission(ctx context.Context, request *pb.CreatePermissionRequest) (*pb.CreatePermissionResponse, error) {
@@ -37,19 +39,17 @@ func (s PermissionServiceHTTPServer) UpdatePermission(ctx context.Context, reque
 	return s.client.UpdatePermission(ctx, request)
 }
 
-//func (m PermissionServiceHTTPServer) mustEmbedUnimplementedPermissionServiceHTTPServer() {
-//	//TODO implement me
-//	panic("implement me")
-//}
-
 // NewPermissionServiceHTTPServer new a menu service.
-func NewPermissionServiceHTTPServer(client pb.PermissionServiceHTTPClient) *PermissionServiceHTTPServer {
-	return &PermissionServiceHTTPServer{client: client}
+func NewPermissionServiceHTTPServer(r runtime.Runtime, client *biz.PermissionServiceBiz) *PermissionServiceHTTPServer {
+	return &PermissionServiceHTTPServer{
+		log:    log.NewHelper(r.WithLogger("module", "service/permission")),
+		client: client,
+	}
 }
 
 // NewPermissionServiceHTTPServerPB new a menu service.
-func NewPermissionServiceHTTPServerPB(client pb.PermissionServiceHTTPClient) pb.PermissionServiceHTTPServer {
-	return &PermissionServiceHTTPServer{client: client}
+func NewPermissionServiceHTTPServerPB(r runtime.Runtime, client *biz.PermissionServiceBiz) pb.PermissionServiceHTTPServer {
+	return NewPermissionServiceHTTPServer(r, client)
 }
 
-var _ pb.PermissionServiceServer = (*PermissionServiceHTTPServer)(nil)
+var _ pb.PermissionServiceHTTPServer = (*PermissionServiceHTTPServer)(nil)
