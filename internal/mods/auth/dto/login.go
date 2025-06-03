@@ -8,7 +8,13 @@ package dto
 import (
 	"context"
 
+	"github.com/google/uuid"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/toolkits/crypto/hash"
+	"github.com/origadmin/toolkits/crypto/rand"
+
 	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/helpers/id"
 )
 
 type (
@@ -44,3 +50,60 @@ type LoginRepo interface {
 	Register(ctx context.Context, in *RegisterRequest) (*RegisterResponse, error)
 	TokenRefresh(ctx context.Context, in *TokenRefreshRequest) (*TokenRefreshResponse, error)
 }
+
+type UserMutationOption struct {
+	RandomPasswd bool
+	NoPasswd     bool
+	Fields       []string
+}
+
+type UserQueryOption struct {
+	IncludeRoles bool
+	IsSystem     bool
+	NoPasswd     bool
+	RandomPasswd bool
+	Status       int8 `form:"status" json:"status,omitempty"`
+	SelectFields []string
+	OmitFields   []string
+	OrderFields  []string
+	Fields       []string
+}
+
+// MakeCreateUser functions are used to create new users
+func MakeCreateUser(user *UserPB, username, password string, option UserMutationOption) (*UserPB, string, error) {
+	log.Debugf("Creating user with options: %+v", option)
+	if !option.NoPasswd {
+		log.Debugf("NoPasswd is false, checking for RandomPasswd")
+		if option.RandomPasswd && (user.Email != "" || user.Phone != "") {
+			log.Debugf("RandomPasswd is true and user has email or phone, generating random password")
+			password = rand.GenerateRandom(8)
+			log.Debugf("Generated random password: %s", password)
+		} else {
+			log.Debugf("RandomPasswd is false or user has no email or phone")
+		}
+	} else {
+		log.Debugf("NoPasswd is true, setting password to empty string")
+		password = ""
+	}
+	var err error
+	if password != "" {
+		log.Debugf("Password is not empty, generating salt")
+		//user.Salt = rand.GenerateSalt()
+		//log.Debugf("Generated salt: %s", user.Salt)
+		user.Password, err = hash.Generate(password)
+		if err != nil {
+			log.Errorf("Error generating password hash: %v", err)
+			return nil, "", err
+		}
+		log.Debugf("Generated password hash: %s", user.Password)
+	}
+	registerID := id.Gen()
+	user.Id = registerID
+	user.Uuid = uuid.Must(uuid.NewRandom()).String()
+	user.Username = username
+	user.Name = "user_" + random.RandString(8)
+	user.Status = 1
+	return user, password, nil
+}
+
+var random = rand.NewRand(rand.KindDigit | rand.KindLowerCase | rand.KindUpperCase)

@@ -7,12 +7,12 @@ package start
 
 import (
 	"github.com/go-kratos/kratos/v2"
-	_ "origadmin/application/admin/contrib/consul/config"
-	_ "origadmin/contrib/consul/registry"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/spf13/cobra"
 
+	_ "origadmin/application/admin/contrib/consul/config"
+	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/internal/loader"
 )

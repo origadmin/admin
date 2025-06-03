@@ -1,13 +1,14 @@
 syntax = "proto3";
 
-package api.v1.services.system;
+package api.v1.services.types;
 
 import "errors/errors.proto";
 
-option go_package = "api/v1/services/system;system";
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.services.system";
-option objc_class_prefix = "APIV1ServicesSystem";
+option java_outer_classname = "APIServiceTypeSystemProto";
+option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceType";
 
 enum SystemErrorReason {
   option (errors.default_code) = 500;
