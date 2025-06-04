@@ -14,11 +14,13 @@ import (
 	"github.com/google/wire"
 	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime/interfaces/security"
+	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 const (
@@ -39,6 +41,8 @@ var ProviderSet = wire.NewSet(
 )
 
 const FKSuffix = "_fk=1"
+
+var random = rand.NewRand(rand.KindDigit | rand.KindLowerCase | rand.KindUpperCase)
 
 func FixSource(source string) string {
 	// Check if the source already contains the FK parameter
@@ -502,7 +506,7 @@ func RefreshTokenizer(tokenizer security.Tokenizer) security.RefreshTokenizer {
 }
 
 // MakeCreateUser functions are used to create new users
-func MakeCreateUser(user *UserPB, username, password string, option UserMutationOption) (*UserPB, string, error) {
+func MakeCreateUser(user *dto.UserPB, username, password string, option dto.UserMutationOption) (*dto.UserPB, string, error) {
 	log.Debugf("Creating user with options: %+v", option)
 	if !option.NoPasswd {
 		log.Debugf("NoPasswd is false, checking for RandomPasswd")

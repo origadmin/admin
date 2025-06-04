@@ -75,6 +75,8 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Discovery:  DefaultDiscovery(),
 		Middleware: DefaultServiceMiddleware(),
 		Security: &configs.SecurityConfig{
+			RootUser: DefaultRootUser(),
+			Captcha:  DefaultCaptcha(),
 			Security: &configv1.Security{
 				PublicPaths: []string{
 					"/swagger/*",

@@ -50,7 +50,7 @@ func main() {
 	// the release mode, work dir sets to empty, use config path as work dir
 	if debug {
 		flags.SetEnv("debug")
-		flags.SetConfigPath("resources/configs/config.toml")
+		flags.SetConfigPath("resources/configs/auth_config.toml")
 		flags.SetWorkDir(".")
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}

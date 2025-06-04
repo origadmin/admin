@@ -31,20 +31,28 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	if err != nil {
 		return nil, nil, err
 	}
-	resourceRepo := dal.NewResourceRepo(r, dataData)
-	resourceServiceBiz := biz.NewResourceServiceBiz(r, resourceRepo)
-	resourceServiceServer := service.NewResourceServiceServerPB(r, resourceServiceBiz)
-	roleRepo := dal.NewRoleRepo(r, dataData)
-	roleServiceBiz := biz.NewRoleServiceBiz(r, roleRepo)
-	roleServiceServer := service.NewRoleServiceServerPB(r, roleServiceBiz)
-	userRepo := dal.NewUserRepo(r, dataData)
-	userServiceBiz := biz.NewUserServiceBiz(r, userRepo)
-	userServiceServer := service.NewUserServiceServerPB(r, userServiceBiz)
-	permissionRepo := dal.NewPermissionRepo(r, dataData)
-	permissionServiceBiz := biz.NewPermissionServiceBiz(r, permissionRepo)
-	permissionServiceServer := service.NewPermissionServiceServerPB(r, permissionServiceBiz)
-	serverRegistrar := service.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
-	v := server.NewSystemServer(r, bootstrap, serverRegistrar)
+	authRepo := dal.NewAuthRepo(r, dataData)
+	authServiceBiz := biz.NewAuthServiceBiz(r, authRepo)
+	authServiceServer := service.NewAuthServiceServerPB(authServiceBiz)
+	casbinSourceRepo, err := dal.NewCasbinSourceRepo(dataData)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	casbinSourceServiceBiz := biz.NewCasbinSourceServiceBiz(r, casbinSourceRepo)
+	casbinSourceServiceServer := service.NewCasbinSourceServiceServerPB(casbinSourceServiceBiz)
+	tokenizer, err := data.NewTokenizer(bootstrap)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
+	loginData := data.NewLoginData(bootstrap, refreshTokenizer)
+	loginRepo := dal.NewLoginRepo(dataData, loginData)
+	loginServiceBiz := biz.NewLoginServiceBiz(r, loginRepo)
+	loginServiceServer := service.NewLoginServiceServerPB(loginServiceBiz)
+	serverRegistrar := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer)
+	v := server.NewAuthServer(r, bootstrap, serverRegistrar)
 	app := NewApp(r, v)
 	return app, func() {
 		cleanup()

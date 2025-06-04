@@ -32,7 +32,7 @@ import (
 
 type loginRepo struct {
 	*data.LoginData
-	User    *userRepo
+	*data.Data
 	captcha *captcha.Captcha
 	bufpool *sync.Pool
 }
@@ -40,6 +40,10 @@ type loginRepo struct {
 func (repo loginRepo) TokenRefresh(ctx context.Context, in *dto.TokenRefreshRequest) (*dto.TokenRefreshResponse, error) {
 	log.Debugf("Token refresh request received with data: %+v", in.GetData())
 	return repo.refreshToken(ctx, in.GetData().GetRefreshToken())
+}
+
+func (repo loginRepo) CreateUser(ctx context.Context, userPB *dto.UserPB) (int, error) {
+	panic("implement me")
 }
 
 func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*dto.RegisterResponse, error) {
@@ -51,7 +55,7 @@ func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*d
 	if err != nil {
 		return nil, err
 	}
-	if _, err := repo.User.Create(ctx, createUser); err != nil {
+	if _, err := repo.CreateUser(ctx, createUser); err != nil {
 		return nil, err
 	}
 
@@ -61,6 +65,10 @@ func (repo loginRepo) Register(ctx context.Context, in *dto.RegisterRequest) (*d
 			Redirect: "",
 		},
 	}, nil
+}
+
+func (repo loginRepo) GetUserByUsername(ctx context.Context, username string, fields ...string) (*dto.User, error) {
+	panic("implement me")
 }
 
 func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.LoginResponse, error) {
@@ -94,7 +102,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 
 	// get user info
 	log.Debugf("Getting userData info for username %s", data.Username)
-	userData, err := repo.User.GetByUsername(ctx, data.Username, user.FieldID, user.FieldEncryptedPassword, user.FieldStatus)
+	userData, err := repo.GetUserByUsername(ctx, data.Username, user.FieldID, user.FieldEncryptedPassword, user.FieldStatus)
 	if err != nil {
 		log.Errorf("Error getting userData info: %v", err)
 		return nil, err
@@ -107,7 +115,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		log.Warnf("User %s is not activated", data.Username)
 		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
 	default:
-		log.Debugf("User found with ID %d and status %d", userData.Id, userData.Status)
+		log.Debugf("User found with ID %d and status %d", userData.ID, userData.Status)
 	}
 
 	// check password
@@ -117,13 +125,13 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		return nil, dto.ErrInvalidPassword
 	}
 
-	userUUID := userData.Uuid
+	userUUID := userData.UUID
 	username := userData.Username
 	ctx = context.NewID(ctx, userUUID)
 
 	// set userData cache with role ids
 	log.Debugf("Getting role IDs for userData %s", username)
-	roleIDs, err := repo.User.GetRoleIDs(ctx, userData.Id)
+	roleIDs, err := repo.GetUserRoleIDs(ctx, userData.ID)
 	if err != nil {
 		log.Errorf("Error getting role IDs: %v", err)
 		return nil, kerr.Newf(404, "UNKNOWN", "failed to get userData role ids: %v", err)
@@ -199,7 +207,7 @@ func (repo loginRepo) CaptchaImage(ctx context.Context, id string, reload bool) 
 }
 
 func (repo loginRepo) CurrentUser(ctx context.Context, in *dto.CurrentUserRequest) (*dto.CurrentUserResponse, error) {
-	current, err := repo.User.Current(ctx, in.GetData().GetUserId())
+	current, err := repo.User(ctx).Get(ctx, in.GetData().GetUserId())
 	if err != nil {
 		return nil, err
 	}
@@ -376,6 +384,10 @@ func (repo loginRepo) getCaptchaImage(id string) (string, error) {
 	return item.EncodeB64string(), nil
 }
 
+func (repo loginRepo) GetUserRoleIDs(ctx context.Context, id int64) ([]string, error) {
+	panic("implement me")
+}
+
 func NewCaptcha(cfg *configs.Captcha) *captcha.Captcha {
 	return captcha.NewCaptcha(&captcha.Config{
 		DriverDigit: &captcha.DriverDigit{
@@ -411,9 +423,9 @@ func NewLoginRepo(dd *data.Data, ld *data.LoginData) dto.LoginRepo {
 	//	panic(err)
 	//}
 	return &loginRepo{
+		Data:      dd,
 		bufpool:   BufPool(),
 		LoginData: ld,
-		User:      &userRepo{db: dd},
 		captcha:   NewCaptcha(ld.Captcha),
 	}
 }

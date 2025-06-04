@@ -8,6 +8,7 @@ package biz
 import (
 	"context"
 
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/runtime/log"
 
@@ -68,6 +69,6 @@ func (biz LoginServiceBiz) TokenRefresh(ctx context.Context, in *pb.TokenRefresh
 }
 
 // NewLoginServiceBiz new a Login use case.
-func NewLoginServiceBiz(repo dto.LoginRepo, logger log.KLogger) *LoginServiceBiz {
-	return &LoginServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(logger)}
+func NewLoginServiceBiz(r runtime.Runtime, repo dto.LoginRepo) *LoginServiceBiz {
+	return &LoginServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.WithLogger("module", "biz/login"))}
 }

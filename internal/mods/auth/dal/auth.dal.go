@@ -9,12 +9,14 @@ import (
 	"errors"
 	"sync"
 
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/interfaces/security"
-	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/resource"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	"origadmin/application/admin/internal/mods/auth/dto"
 )
@@ -100,7 +102,7 @@ func fromClaims(claims security.Claims, method, path string) security.Policy {
 }
 
 // NewAuthRepo .
-func NewAuthRepo(db *data.Data, logger log.KLogger) dto.AuthRepo {
+func NewAuthRepo(r runtime.Runtime, db *data.Data) dto.AuthRepo {
 	return &authRepo{
 		DB:      db,
 		BufPool: BufPool(),
@@ -115,7 +117,7 @@ func authResourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb
 		return nil, 0, err
 	}
 	result, err := query.All(ctx)
-	return dto.ConvertResources(result), int32(count), err
+	return dto.ConvertResources2PB(result), int32(count), err
 }
 
 func authResourceQueryPage(query *ent.ResourceQuery, in *pb.ListAuthResourcesRequest) *ent.ResourceQuery {
@@ -174,3 +176,20 @@ func (r refreshTokenizer) Validate(ctx context.Context, s string) (bool, error) 
 func (r refreshTokenizer) CreateRefreshClaims(ctx context.Context, s string) (security.Claims, error) {
 	return nil, errors.New("not implemented")
 }
+
+func resourceOrderBy(orders []string) []resource.OrderOption {
+	return db.OrderBy[resource.OrderOption](orders)
+}
+
+//func resourceQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
+//	if len(option.SelectFields) > 0 {
+//		query = query.Select(option.SelectFields...).ResourceQuery
+//	}
+//	if len(option.OmitFields) > 0 {
+//		query = query.Omit(option.OmitFields...).ResourceQuery
+//	}
+//	if len(option.OrderFields) > 0 {
+//		query = query.Order(resourceOrderBy(option.OrderFields)...)
+//	}
+//	return query
+//}
