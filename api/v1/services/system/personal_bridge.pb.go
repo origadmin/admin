@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const PersonalServiceGetPersonalProfileBridgeOperation = "/api.v1.services.system.PersonalService/GetPersonalProfile"
 const PersonalServiceListPersonalResourcesBridgeOperation = "/api.v1.services.system.PersonalService/ListPersonalResources"
@@ -472,3 +481,85 @@ func (c *PersonalServiceBridgeImpl) UpdatePersonalSetting(ctx context.Context, i
 }
 
 func (c *PersonalServiceBridgeImpl) mustEmbedUnimplementedPersonalServiceServer() {}
+
+type PersonalServiceGRPC2HTTPBridgeImpl struct {
+	client PersonalServiceClient
+}
+
+func NewPersonalServiceGRPC2HTTP(client grpc.ClientConnInterface) PersonalServiceHTTPServer {
+	return &PersonalServiceGRPC2HTTPBridgeImpl{client: NewPersonalServiceClient(client)}
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) GetPersonalProfile(ctx context.Context, in *GetPersonalProfileRequest) (*GetPersonalProfileResponse, error) {
+	return c.client.GetPersonalProfile(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) ListPersonalResources(ctx context.Context, in *ListPersonalResourcesRequest) (*ListPersonalResourcesResponse, error) {
+	return c.client.ListPersonalResources(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) ListPersonalRoles(ctx context.Context, in *ListPersonalRolesRequest) (*ListPersonalRolesResponse, error) {
+	return c.client.ListPersonalRoles(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) PersonalLogout(ctx context.Context, in *PersonalLogoutRequest) (*PersonalLogoutResponse, error) {
+	return c.client.PersonalLogout(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) RefreshPersonalToken(ctx context.Context, in *RefreshPersonalTokenRequest) (*RefreshPersonalTokenResponse, error) {
+	return c.client.RefreshPersonalToken(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error) {
+	return c.client.UpdatePersonalPassword(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error) {
+	return c.client.UpdatePersonalProfile(ctx, in)
+}
+
+func (c *PersonalServiceGRPC2HTTPBridgeImpl) UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error) {
+	return c.client.UpdatePersonalSetting(ctx, in)
+}
+
+type PersonalServiceHTTP2GRPCBridgeImpl struct {
+	client PersonalServiceHTTPClient
+}
+
+func NewPersonalServiceHTTP2GRPC(client *http.Client) PersonalServiceServer {
+	return &PersonalServiceHTTP2GRPCBridgeImpl{client: NewPersonalServiceHTTPClient(client)}
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) GetPersonalProfile(ctx context.Context, in *GetPersonalProfileRequest) (*GetPersonalProfileResponse, error) {
+	return c.client.GetPersonalProfile(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) ListPersonalResources(ctx context.Context, in *ListPersonalResourcesRequest) (*ListPersonalResourcesResponse, error) {
+	return c.client.ListPersonalResources(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) ListPersonalRoles(ctx context.Context, in *ListPersonalRolesRequest) (*ListPersonalRolesResponse, error) {
+	return c.client.ListPersonalRoles(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) PersonalLogout(ctx context.Context, in *PersonalLogoutRequest) (*PersonalLogoutResponse, error) {
+	return c.client.PersonalLogout(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) RefreshPersonalToken(ctx context.Context, in *RefreshPersonalTokenRequest) (*RefreshPersonalTokenResponse, error) {
+	return c.client.RefreshPersonalToken(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error) {
+	return c.client.UpdatePersonalPassword(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error) {
+	return c.client.UpdatePersonalProfile(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error) {
+	return c.client.UpdatePersonalSetting(ctx, in)
+}
+
+func (c *PersonalServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedPersonalServiceServer() {}

@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const PositionServiceCreatePositionBridgeOperation = "/api.v1.services.system.PositionService/CreatePosition"
 const PositionServiceDeletePositionBridgeOperation = "/api.v1.services.system.PositionService/DeletePosition"
@@ -323,3 +332,61 @@ func (c *PositionServiceBridgeImpl) UpdatePosition(ctx context.Context, in *Upda
 }
 
 func (c *PositionServiceBridgeImpl) mustEmbedUnimplementedPositionServiceServer() {}
+
+type PositionServiceGRPC2HTTPBridgeImpl struct {
+	client PositionServiceClient
+}
+
+func NewPositionServiceGRPC2HTTP(client grpc.ClientConnInterface) PositionServiceHTTPServer {
+	return &PositionServiceGRPC2HTTPBridgeImpl{client: NewPositionServiceClient(client)}
+}
+
+func (c *PositionServiceGRPC2HTTPBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
+	return c.client.CreatePosition(ctx, in)
+}
+
+func (c *PositionServiceGRPC2HTTPBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
+	return c.client.DeletePosition(ctx, in)
+}
+
+func (c *PositionServiceGRPC2HTTPBridgeImpl) GetPosition(ctx context.Context, in *GetPositionRequest) (*GetPositionResponse, error) {
+	return c.client.GetPosition(ctx, in)
+}
+
+func (c *PositionServiceGRPC2HTTPBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
+	return c.client.ListPositions(ctx, in)
+}
+
+func (c *PositionServiceGRPC2HTTPBridgeImpl) UpdatePosition(ctx context.Context, in *UpdatePositionRequest) (*UpdatePositionResponse, error) {
+	return c.client.UpdatePosition(ctx, in)
+}
+
+type PositionServiceHTTP2GRPCBridgeImpl struct {
+	client PositionServiceHTTPClient
+}
+
+func NewPositionServiceHTTP2GRPC(client *http.Client) PositionServiceServer {
+	return &PositionServiceHTTP2GRPCBridgeImpl{client: NewPositionServiceHTTPClient(client)}
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
+	return c.client.CreatePosition(ctx, in)
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
+	return c.client.DeletePosition(ctx, in)
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) GetPosition(ctx context.Context, in *GetPositionRequest) (*GetPositionResponse, error) {
+	return c.client.GetPosition(ctx, in)
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
+	return c.client.ListPositions(ctx, in)
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) UpdatePosition(ctx context.Context, in *UpdatePositionRequest) (*UpdatePositionResponse, error) {
+	return c.client.UpdatePosition(ctx, in)
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedPositionServiceServer() {}

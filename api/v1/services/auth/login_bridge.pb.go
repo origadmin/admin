@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const LoginServiceCaptchaBridgeOperation = "/api.v1.services.auth.LoginService/Captcha"
 const LoginServiceCaptchaAudioBridgeOperation = "/api.v1.services.auth.LoginService/CaptchaAudio"
@@ -461,3 +470,85 @@ func (c *LoginServiceBridgeImpl) TokenRefresh(ctx context.Context, in *TokenRefr
 }
 
 func (c *LoginServiceBridgeImpl) mustEmbedUnimplementedLoginServiceServer() {}
+
+type LoginServiceGRPC2HTTPBridgeImpl struct {
+	client LoginServiceClient
+}
+
+func NewLoginServiceGRPC2HTTP(client grpc.ClientConnInterface) LoginServiceHTTPServer {
+	return &LoginServiceGRPC2HTTPBridgeImpl{client: NewLoginServiceClient(client)}
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) Captcha(ctx context.Context, in *CaptchaRequest) (*CaptchaResponse, error) {
+	return c.client.Captcha(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) CaptchaAudio(ctx context.Context, in *CaptchaAudioRequest) (*CaptchaAudioResponse, error) {
+	return c.client.CaptchaAudio(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) CaptchaId(ctx context.Context, in *CaptchaIdRequest) (*CaptchaIdResponse, error) {
+	return c.client.CaptchaId(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) CaptchaImage(ctx context.Context, in *CaptchaImageRequest) (*CaptchaImageResponse, error) {
+	return c.client.CaptchaImage(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	return c.client.Login(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error) {
+	return c.client.Logout(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) Register(ctx context.Context, in *RegisterRequest) (*RegisterResponse, error) {
+	return c.client.Register(ctx, in)
+}
+
+func (c *LoginServiceGRPC2HTTPBridgeImpl) TokenRefresh(ctx context.Context, in *TokenRefreshRequest) (*TokenRefreshResponse, error) {
+	return c.client.TokenRefresh(ctx, in)
+}
+
+type LoginServiceHTTP2GRPCBridgeImpl struct {
+	client LoginServiceHTTPClient
+}
+
+func NewLoginServiceHTTP2GRPC(client *http.Client) LoginServiceServer {
+	return &LoginServiceHTTP2GRPCBridgeImpl{client: NewLoginServiceHTTPClient(client)}
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) Captcha(ctx context.Context, in *CaptchaRequest) (*CaptchaResponse, error) {
+	return c.client.Captcha(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) CaptchaAudio(ctx context.Context, in *CaptchaAudioRequest) (*CaptchaAudioResponse, error) {
+	return c.client.CaptchaAudio(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) CaptchaId(ctx context.Context, in *CaptchaIdRequest) (*CaptchaIdResponse, error) {
+	return c.client.CaptchaId(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) CaptchaImage(ctx context.Context, in *CaptchaImageRequest) (*CaptchaImageResponse, error) {
+	return c.client.CaptchaImage(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	return c.client.Login(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (*LogoutResponse, error) {
+	return c.client.Logout(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) Register(ctx context.Context, in *RegisterRequest) (*RegisterResponse, error) {
+	return c.client.Register(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) TokenRefresh(ctx context.Context, in *TokenRefreshRequest) (*TokenRefreshResponse, error) {
+	return c.client.TokenRefresh(ctx, in)
+}
+
+func (c *LoginServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedLoginServiceServer() {}

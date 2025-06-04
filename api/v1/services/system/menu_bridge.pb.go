@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const MenuServiceCreateMenuBridgeOperation = "/api.v1.services.system.MenuService/CreateMenu"
 const MenuServiceDeleteMenuBridgeOperation = "/api.v1.services.system.MenuService/DeleteMenu"
@@ -323,3 +332,61 @@ func (c *MenuServiceBridgeImpl) UpdateMenu(ctx context.Context, in *UpdateMenuRe
 }
 
 func (c *MenuServiceBridgeImpl) mustEmbedUnimplementedMenuServiceServer() {}
+
+type MenuServiceGRPC2HTTPBridgeImpl struct {
+	client MenuServiceClient
+}
+
+func NewMenuServiceGRPC2HTTP(client grpc.ClientConnInterface) MenuServiceHTTPServer {
+	return &MenuServiceGRPC2HTTPBridgeImpl{client: NewMenuServiceClient(client)}
+}
+
+func (c *MenuServiceGRPC2HTTPBridgeImpl) CreateMenu(ctx context.Context, in *CreateMenuRequest) (*CreateMenuResponse, error) {
+	return c.client.CreateMenu(ctx, in)
+}
+
+func (c *MenuServiceGRPC2HTTPBridgeImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest) (*DeleteMenuResponse, error) {
+	return c.client.DeleteMenu(ctx, in)
+}
+
+func (c *MenuServiceGRPC2HTTPBridgeImpl) GetMenu(ctx context.Context, in *GetMenuRequest) (*GetMenuResponse, error) {
+	return c.client.GetMenu(ctx, in)
+}
+
+func (c *MenuServiceGRPC2HTTPBridgeImpl) ListMenus(ctx context.Context, in *ListMenusRequest) (*ListMenusResponse, error) {
+	return c.client.ListMenus(ctx, in)
+}
+
+func (c *MenuServiceGRPC2HTTPBridgeImpl) UpdateMenu(ctx context.Context, in *UpdateMenuRequest) (*UpdateMenuResponse, error) {
+	return c.client.UpdateMenu(ctx, in)
+}
+
+type MenuServiceHTTP2GRPCBridgeImpl struct {
+	client MenuServiceHTTPClient
+}
+
+func NewMenuServiceHTTP2GRPC(client *http.Client) MenuServiceServer {
+	return &MenuServiceHTTP2GRPCBridgeImpl{client: NewMenuServiceHTTPClient(client)}
+}
+
+func (c *MenuServiceHTTP2GRPCBridgeImpl) CreateMenu(ctx context.Context, in *CreateMenuRequest) (*CreateMenuResponse, error) {
+	return c.client.CreateMenu(ctx, in)
+}
+
+func (c *MenuServiceHTTP2GRPCBridgeImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest) (*DeleteMenuResponse, error) {
+	return c.client.DeleteMenu(ctx, in)
+}
+
+func (c *MenuServiceHTTP2GRPCBridgeImpl) GetMenu(ctx context.Context, in *GetMenuRequest) (*GetMenuResponse, error) {
+	return c.client.GetMenu(ctx, in)
+}
+
+func (c *MenuServiceHTTP2GRPCBridgeImpl) ListMenus(ctx context.Context, in *ListMenusRequest) (*ListMenusResponse, error) {
+	return c.client.ListMenus(ctx, in)
+}
+
+func (c *MenuServiceHTTP2GRPCBridgeImpl) UpdateMenu(ctx context.Context, in *UpdateMenuRequest) (*UpdateMenuResponse, error) {
+	return c.client.UpdateMenu(ctx, in)
+}
+
+func (c *MenuServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedMenuServiceServer() {}

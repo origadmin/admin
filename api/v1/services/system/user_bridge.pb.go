@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const UserServiceCreateUserBridgeOperation = "/api.v1.services.system.UserService/CreateUser"
 const UserServiceDeleteUserBridgeOperation = "/api.v1.services.system.UserService/DeleteUser"
@@ -535,3 +544,93 @@ func (c *UserServiceBridgeImpl) UpdateUserStatus(ctx context.Context, in *Update
 }
 
 func (c *UserServiceBridgeImpl) mustEmbedUnimplementedUserServiceServer() {}
+
+type UserServiceGRPC2HTTPBridgeImpl struct {
+	client UserServiceClient
+}
+
+func NewUserServiceGRPC2HTTP(client grpc.ClientConnInterface) UserServiceHTTPServer {
+	return &UserServiceGRPC2HTTPBridgeImpl{client: NewUserServiceClient(client)}
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
+	return c.client.CreateUser(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return c.client.DeleteUser(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
+	return c.client.GetUser(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
+	return c.client.ListUserResources(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
+	return c.client.ListUsers(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return c.client.ResetUserPassword(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return c.client.UpdateUser(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
+	return c.client.UpdateUserRoles(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
+	return c.client.UpdateUserStatus(ctx, in)
+}
+
+type UserServiceHTTP2GRPCBridgeImpl struct {
+	client UserServiceHTTPClient
+}
+
+func NewUserServiceHTTP2GRPC(client *http.Client) UserServiceServer {
+	return &UserServiceHTTP2GRPCBridgeImpl{client: NewUserServiceHTTPClient(client)}
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
+	return c.client.CreateUser(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return c.client.DeleteUser(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
+	return c.client.GetUser(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
+	return c.client.ListUserResources(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
+	return c.client.ListUsers(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return c.client.ResetUserPassword(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return c.client.UpdateUser(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
+	return c.client.UpdateUserRoles(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
+	return c.client.UpdateUserStatus(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedUserServiceServer() {}

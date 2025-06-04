@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const RoleServiceCreateRoleBridgeOperation = "/api.v1.services.system.RoleService/CreateRole"
 const RoleServiceDeleteRoleBridgeOperation = "/api.v1.services.system.RoleService/DeleteRole"
@@ -323,3 +332,61 @@ func (c *RoleServiceBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRe
 }
 
 func (c *RoleServiceBridgeImpl) mustEmbedUnimplementedRoleServiceServer() {}
+
+type RoleServiceGRPC2HTTPBridgeImpl struct {
+	client RoleServiceClient
+}
+
+func NewRoleServiceGRPC2HTTP(client grpc.ClientConnInterface) RoleServiceHTTPServer {
+	return &RoleServiceGRPC2HTTPBridgeImpl{client: NewRoleServiceClient(client)}
+}
+
+func (c *RoleServiceGRPC2HTTPBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
+	return c.client.CreateRole(ctx, in)
+}
+
+func (c *RoleServiceGRPC2HTTPBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	return c.client.DeleteRole(ctx, in)
+}
+
+func (c *RoleServiceGRPC2HTTPBridgeImpl) GetRole(ctx context.Context, in *GetRoleRequest) (*GetRoleResponse, error) {
+	return c.client.GetRole(ctx, in)
+}
+
+func (c *RoleServiceGRPC2HTTPBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
+	return c.client.ListRoles(ctx, in)
+}
+
+func (c *RoleServiceGRPC2HTTPBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest) (*UpdateRoleResponse, error) {
+	return c.client.UpdateRole(ctx, in)
+}
+
+type RoleServiceHTTP2GRPCBridgeImpl struct {
+	client RoleServiceHTTPClient
+}
+
+func NewRoleServiceHTTP2GRPC(client *http.Client) RoleServiceServer {
+	return &RoleServiceHTTP2GRPCBridgeImpl{client: NewRoleServiceHTTPClient(client)}
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
+	return c.client.CreateRole(ctx, in)
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	return c.client.DeleteRole(ctx, in)
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) GetRole(ctx context.Context, in *GetRoleRequest) (*GetRoleResponse, error) {
+	return c.client.GetRole(ctx, in)
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
+	return c.client.ListRoles(ctx, in)
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest) (*UpdateRoleResponse, error) {
+	return c.client.UpdateRole(ctx, in)
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedRoleServiceServer() {}

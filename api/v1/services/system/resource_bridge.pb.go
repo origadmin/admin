@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const ResourceServiceCreateResourceBridgeOperation = "/api.v1.services.system.ResourceService/CreateResource"
 const ResourceServiceDeleteResourceBridgeOperation = "/api.v1.services.system.ResourceService/DeleteResource"
@@ -323,3 +332,61 @@ func (c *ResourceServiceBridgeImpl) UpdateResource(ctx context.Context, in *Upda
 }
 
 func (c *ResourceServiceBridgeImpl) mustEmbedUnimplementedResourceServiceServer() {}
+
+type ResourceServiceGRPC2HTTPBridgeImpl struct {
+	client ResourceServiceClient
+}
+
+func NewResourceServiceGRPC2HTTP(client grpc.ClientConnInterface) ResourceServiceHTTPServer {
+	return &ResourceServiceGRPC2HTTPBridgeImpl{client: NewResourceServiceClient(client)}
+}
+
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
+	return c.client.CreateResource(ctx, in)
+}
+
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+	return c.client.DeleteResource(ctx, in)
+}
+
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) GetResource(ctx context.Context, in *GetResourceRequest) (*GetResourceResponse, error) {
+	return c.client.GetResource(ctx, in)
+}
+
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return c.client.ListResources(ctx, in)
+}
+
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest) (*UpdateResourceResponse, error) {
+	return c.client.UpdateResource(ctx, in)
+}
+
+type ResourceServiceHTTP2GRPCBridgeImpl struct {
+	client ResourceServiceHTTPClient
+}
+
+func NewResourceServiceHTTP2GRPC(client *http.Client) ResourceServiceServer {
+	return &ResourceServiceHTTP2GRPCBridgeImpl{client: NewResourceServiceHTTPClient(client)}
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
+	return c.client.CreateResource(ctx, in)
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+	return c.client.DeleteResource(ctx, in)
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) GetResource(ctx context.Context, in *GetResourceRequest) (*GetResourceResponse, error) {
+	return c.client.GetResource(ctx, in)
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return c.client.ListResources(ctx, in)
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest) (*UpdateResourceResponse, error) {
+	return c.client.UpdateResource(ctx, in)
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedResourceServiceServer() {}

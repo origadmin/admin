@@ -11,7 +11,6 @@ import (
 	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	pb "origadmin/application/admin/api/v1/services/system"
 	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/schema/types"
@@ -46,11 +45,11 @@ type (
 
 var (
 	// ErrUserNotFound is user not found.
-	ErrUserNotFound      = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
-	ErrInvalidCaptchaID  = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), http.StatusBadRequest, "invalid captcha id")
-	ErrInvalidPassword   = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), http.StatusBadRequest, "invalid password")
-	ErrInvalidUsername   = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), http.StatusBadRequest, "invalid username")
-	ErrCaptchaIDNotFound = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), http.StatusBadRequest, "captcha id not found")
+	ErrUserNotFound      = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+	ErrInvalidCaptchaID  = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), http.StatusBadRequest, "invalid captcha id")
+	ErrInvalidPassword   = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), http.StatusBadRequest, "invalid password")
+	ErrInvalidUsername   = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), http.StatusBadRequest, "invalid username")
+	ErrCaptchaIDNotFound = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), http.StatusBadRequest, "captcha id not found")
 )
 
 // ConvertUser2PB user.table.comment

@@ -11,7 +11,7 @@ import (
 	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/toolkits/errors/httperr"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	typespb "origadmin/application/admin/api/v1/services/types"
 )
 
 // ProviderSet is biz providers.
@@ -28,7 +28,7 @@ var ProviderSet = wire.NewSet(
 
 var (
 	// ErrUserNotFound is user not found.
-	ErrUserNotFound = httperr.New("http.response.status."+pb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+	ErrUserNotFound = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
 )
 
 var (

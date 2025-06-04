@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const CasbinSourceServiceListGroupingsBridgeOperation = "/api.v1.services.auth.CasbinSourceService/ListGroupings"
 const CasbinSourceServiceListPoliciesBridgeOperation = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
@@ -213,4 +222,70 @@ func (c *CasbinSourceServiceBridgeImpl) WatchUpdate(ctx context.Context, in *Wat
 	return c.client.WatchUpdate(ctx, in)
 }
 
+func (c *CasbinSourceServiceBridgeImpl) StreamRules(request *StreamRulesRequest, g grpc.ServerStreamingServer[StreamRulesResponse]) error {
+	stream, err := c.client.StreamRules(g.Context(), request)
+	if err != nil {
+		return err
+	}
+	for {
+		rule, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return status.Errorf(status.Code(err), "received stream error: %v", err)
+		}
+		if err := g.Send(rule); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (c *CasbinSourceServiceBridgeImpl) mustEmbedUnimplementedCasbinSourceServiceServer() {}
+
+type CasbinSourceServiceGRPC2HTTPBridgeImpl struct {
+	client CasbinSourceServiceClient
+}
+
+func NewCasbinSourceServiceGRPC2HTTP(client grpc.ClientConnInterface) CasbinSourceServiceHTTPServer {
+	return &CasbinSourceServiceGRPC2HTTPBridgeImpl{client: NewCasbinSourceServiceClient(client)}
+}
+
+func (c *CasbinSourceServiceGRPC2HTTPBridgeImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest) (*ListGroupingsResponse, error) {
+	return c.client.ListGroupings(ctx, in)
+}
+
+func (c *CasbinSourceServiceGRPC2HTTPBridgeImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+	return c.client.ListPolicies(ctx, in)
+}
+
+func (c *CasbinSourceServiceGRPC2HTTPBridgeImpl) WatchUpdate(ctx context.Context, in *WatchUpdateRequest) (*WatchUpdateResponse, error) {
+	return c.client.WatchUpdate(ctx, in)
+}
+
+type CasbinSourceServiceHTTP2GRPCBridgeImpl struct {
+	client CasbinSourceServiceHTTPClient
+}
+
+func NewCasbinSourceServiceHTTP2GRPC(client *http.Client) CasbinSourceServiceServer {
+	return &CasbinSourceServiceHTTP2GRPCBridgeImpl{client: NewCasbinSourceServiceHTTPClient(client)}
+}
+
+func (c *CasbinSourceServiceHTTP2GRPCBridgeImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest) (*ListGroupingsResponse, error) {
+	return c.client.ListGroupings(ctx, in)
+}
+
+func (c *CasbinSourceServiceHTTP2GRPCBridgeImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+	return c.client.ListPolicies(ctx, in)
+}
+
+func (c *CasbinSourceServiceHTTP2GRPCBridgeImpl) WatchUpdate(ctx context.Context, in *WatchUpdateRequest) (*WatchUpdateResponse, error) {
+	return c.client.WatchUpdate(ctx, in)
+}
+
+func (c *CasbinSourceServiceHTTP2GRPCBridgeImpl) StreamRules(request *StreamRulesRequest, g grpc.ServerStreamingServer[StreamRulesResponse]) error {
+	return status.Errorf(codes.Unimplemented, "StreamRules not implemented")
+}
+
+func (c *CasbinSourceServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedCasbinSourceServiceServer() {}

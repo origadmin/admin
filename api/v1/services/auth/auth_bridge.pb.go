@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const AuthServiceAuthLogoutBridgeOperation = "/api.v1.services.auth.AuthService/AuthLogout"
 const AuthServiceAuthenticateBridgeOperation = "/api.v1.services.auth.AuthService/Authenticate"
@@ -370,3 +379,69 @@ func (c *AuthServiceBridgeImpl) ValidateToken(ctx context.Context, in *ValidateT
 }
 
 func (c *AuthServiceBridgeImpl) mustEmbedUnimplementedAuthServiceServer() {}
+
+type AuthServiceGRPC2HTTPBridgeImpl struct {
+	client AuthServiceClient
+}
+
+func NewAuthServiceGRPC2HTTP(client grpc.ClientConnInterface) AuthServiceHTTPServer {
+	return &AuthServiceGRPC2HTTPBridgeImpl{client: NewAuthServiceClient(client)}
+}
+
+func (c *AuthServiceGRPC2HTTPBridgeImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest) (*AuthLogoutResponse, error) {
+	return c.client.AuthLogout(ctx, in)
+}
+
+func (c *AuthServiceGRPC2HTTPBridgeImpl) Authenticate(ctx context.Context, in *AuthenticateRequest) (*AuthenticateResponse, error) {
+	return c.client.Authenticate(ctx, in)
+}
+
+func (c *AuthServiceGRPC2HTTPBridgeImpl) CreateToken(ctx context.Context, in *CreateTokenRequest) (*CreateTokenResponse, error) {
+	return c.client.CreateToken(ctx, in)
+}
+
+func (c *AuthServiceGRPC2HTTPBridgeImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest) (*DestroyTokenResponse, error) {
+	return c.client.DestroyToken(ctx, in)
+}
+
+func (c *AuthServiceGRPC2HTTPBridgeImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
+	return c.client.ListAuthResources(ctx, in)
+}
+
+func (c *AuthServiceGRPC2HTTPBridgeImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return c.client.ValidateToken(ctx, in)
+}
+
+type AuthServiceHTTP2GRPCBridgeImpl struct {
+	client AuthServiceHTTPClient
+}
+
+func NewAuthServiceHTTP2GRPC(client *http.Client) AuthServiceServer {
+	return &AuthServiceHTTP2GRPCBridgeImpl{client: NewAuthServiceHTTPClient(client)}
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest) (*AuthLogoutResponse, error) {
+	return c.client.AuthLogout(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) Authenticate(ctx context.Context, in *AuthenticateRequest) (*AuthenticateResponse, error) {
+	return c.client.Authenticate(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) CreateToken(ctx context.Context, in *CreateTokenRequest) (*CreateTokenResponse, error) {
+	return c.client.CreateToken(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest) (*DestroyTokenResponse, error) {
+	return c.client.DestroyToken(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
+	return c.client.ListAuthResources(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return c.client.ValidateToken(ctx, in)
+}
+
+func (c *AuthServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedAuthServiceServer() {}

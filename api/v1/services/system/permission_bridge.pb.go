@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const PermissionServiceCreatePermissionBridgeOperation = "/api.v1.services.system.PermissionService/CreatePermission"
 const PermissionServiceDeletePermissionBridgeOperation = "/api.v1.services.system.PermissionService/DeletePermission"
@@ -323,3 +332,61 @@ func (c *PermissionServiceBridgeImpl) UpdatePermission(ctx context.Context, in *
 }
 
 func (c *PermissionServiceBridgeImpl) mustEmbedUnimplementedPermissionServiceServer() {}
+
+type PermissionServiceGRPC2HTTPBridgeImpl struct {
+	client PermissionServiceClient
+}
+
+func NewPermissionServiceGRPC2HTTP(client grpc.ClientConnInterface) PermissionServiceHTTPServer {
+	return &PermissionServiceGRPC2HTTPBridgeImpl{client: NewPermissionServiceClient(client)}
+}
+
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return c.client.CreatePermission(ctx, in)
+}
+
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return c.client.DeletePermission(ctx, in)
+}
+
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) GetPermission(ctx context.Context, in *GetPermissionRequest) (*GetPermissionResponse, error) {
+	return c.client.GetPermission(ctx, in)
+}
+
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
+	return c.client.ListPermissions(ctx, in)
+}
+
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
+	return c.client.UpdatePermission(ctx, in)
+}
+
+type PermissionServiceHTTP2GRPCBridgeImpl struct {
+	client PermissionServiceHTTPClient
+}
+
+func NewPermissionServiceHTTP2GRPC(client *http.Client) PermissionServiceServer {
+	return &PermissionServiceHTTP2GRPCBridgeImpl{client: NewPermissionServiceHTTPClient(client)}
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return c.client.CreatePermission(ctx, in)
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return c.client.DeletePermission(ctx, in)
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) GetPermission(ctx context.Context, in *GetPermissionRequest) (*GetPermissionResponse, error) {
+	return c.client.GetPermission(ctx, in)
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
+	return c.client.ListPermissions(ctx, in)
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
+	return c.client.UpdatePermission(ctx, in)
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedPermissionServiceServer() {}

@@ -10,6 +10,9 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,6 +21,12 @@ var _ = new(context.Context)
 
 const _ = http.SupportPackageIsVersion1
 const _ = grpc.SupportPackageIsVersion9
+
+var (
+	_ = io.EOF
+	_ = status.Errorf
+	_ = codes.Unimplemented
+)
 
 const DepartmentServiceCreateDepartmentBridgeOperation = "/api.v1.services.system.DepartmentService/CreateDepartment"
 const DepartmentServiceDeleteDepartmentBridgeOperation = "/api.v1.services.system.DepartmentService/DeleteDepartment"
@@ -323,3 +332,61 @@ func (c *DepartmentServiceBridgeImpl) UpdateDepartment(ctx context.Context, in *
 }
 
 func (c *DepartmentServiceBridgeImpl) mustEmbedUnimplementedDepartmentServiceServer() {}
+
+type DepartmentServiceGRPC2HTTPBridgeImpl struct {
+	client DepartmentServiceClient
+}
+
+func NewDepartmentServiceGRPC2HTTP(client grpc.ClientConnInterface) DepartmentServiceHTTPServer {
+	return &DepartmentServiceGRPC2HTTPBridgeImpl{client: NewDepartmentServiceClient(client)}
+}
+
+func (c *DepartmentServiceGRPC2HTTPBridgeImpl) CreateDepartment(ctx context.Context, in *CreateDepartmentRequest) (*CreateDepartmentResponse, error) {
+	return c.client.CreateDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceGRPC2HTTPBridgeImpl) DeleteDepartment(ctx context.Context, in *DeleteDepartmentRequest) (*DeleteDepartmentResponse, error) {
+	return c.client.DeleteDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceGRPC2HTTPBridgeImpl) GetDepartment(ctx context.Context, in *GetDepartmentRequest) (*GetDepartmentResponse, error) {
+	return c.client.GetDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceGRPC2HTTPBridgeImpl) ListDepartments(ctx context.Context, in *ListDepartmentsRequest) (*ListDepartmentsResponse, error) {
+	return c.client.ListDepartments(ctx, in)
+}
+
+func (c *DepartmentServiceGRPC2HTTPBridgeImpl) UpdateDepartment(ctx context.Context, in *UpdateDepartmentRequest) (*UpdateDepartmentResponse, error) {
+	return c.client.UpdateDepartment(ctx, in)
+}
+
+type DepartmentServiceHTTP2GRPCBridgeImpl struct {
+	client DepartmentServiceHTTPClient
+}
+
+func NewDepartmentServiceHTTP2GRPC(client *http.Client) DepartmentServiceServer {
+	return &DepartmentServiceHTTP2GRPCBridgeImpl{client: NewDepartmentServiceHTTPClient(client)}
+}
+
+func (c *DepartmentServiceHTTP2GRPCBridgeImpl) CreateDepartment(ctx context.Context, in *CreateDepartmentRequest) (*CreateDepartmentResponse, error) {
+	return c.client.CreateDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceHTTP2GRPCBridgeImpl) DeleteDepartment(ctx context.Context, in *DeleteDepartmentRequest) (*DeleteDepartmentResponse, error) {
+	return c.client.DeleteDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceHTTP2GRPCBridgeImpl) GetDepartment(ctx context.Context, in *GetDepartmentRequest) (*GetDepartmentResponse, error) {
+	return c.client.GetDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceHTTP2GRPCBridgeImpl) ListDepartments(ctx context.Context, in *ListDepartmentsRequest) (*ListDepartmentsResponse, error) {
+	return c.client.ListDepartments(ctx, in)
+}
+
+func (c *DepartmentServiceHTTP2GRPCBridgeImpl) UpdateDepartment(ctx context.Context, in *UpdateDepartmentRequest) (*UpdateDepartmentResponse, error) {
+	return c.client.UpdateDepartment(ctx, in)
+}
+
+func (c *DepartmentServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedDepartmentServiceServer() {}
