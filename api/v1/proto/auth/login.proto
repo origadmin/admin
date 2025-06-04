@@ -36,7 +36,6 @@ service LoginService {
       response_body: "*"
     };
   }
-
   rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/login"
@@ -55,7 +54,6 @@ service LoginService {
       body: "data"
     };
   }
-
   rpc TokenRefresh (TokenRefreshRequest) returns (TokenRefreshResponse) {
     option (google.api.http) = {
       post: "/token/refresh"

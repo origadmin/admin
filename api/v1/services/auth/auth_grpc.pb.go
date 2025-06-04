@@ -31,6 +31,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
+	// ListAuthResources returns a list of Auths.
 	ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error)
 	// CreateToken generates a new JWT token for the given user.
 	CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*CreateTokenResponse, error)
@@ -38,7 +39,9 @@ type AuthServiceClient interface {
 	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 	// DestroyToken invalidates a JWT token.
 	DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error)
+	// Authenticate authenticates a user.
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
+	// AuthLogout logs out a user.
 	AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...grpc.CallOption) (*AuthLogoutResponse, error)
 }
 
@@ -114,6 +117,7 @@ func (c *authServiceClient) AuthLogout(ctx context.Context, in *AuthLogoutReques
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
+	// ListAuthResources returns a list of Auths.
 	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 	// CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
@@ -121,7 +125,9 @@ type AuthServiceServer interface {
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 	// DestroyToken invalidates a JWT token.
 	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
+	// Authenticate authenticates a user.
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
+	// AuthLogout logs out a user.
 	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }

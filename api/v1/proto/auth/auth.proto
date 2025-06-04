@@ -13,6 +13,7 @@ option java_package = "com.origadmin.api.v1.services.auth";
 option objc_class_prefix = "APIServiceAuthAuth";
 
 service AuthService {
+  // ListAuthResources returns a list of Auths.
   rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
     option (google.api.http) = {get: "/sys/auth/resources"};
   }
@@ -37,6 +38,7 @@ service AuthService {
     };
   }
 
+  // Authenticate authenticates a user.
   rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {
     option (google.api.http) = {
       post: "/sys/auth/authenticate"
@@ -44,6 +46,7 @@ service AuthService {
     };
   }
 
+  // AuthLogout logs out a user.
   rpc AuthLogout(AuthLogoutRequest) returns (AuthLogoutResponse) {
     option (google.api.http) = {
       post: "/sys/auth/logout"

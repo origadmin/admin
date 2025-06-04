@@ -38,21 +38,21 @@ const PersonalServiceUpdatePersonalProfileBridgeOperation = "/api.v1.services.sy
 const PersonalServiceUpdatePersonalSettingBridgeOperation = "/api.v1.services.system.PersonalService/UpdatePersonalSetting"
 
 type PersonalServiceBridger interface {
-	// GetPersonalProfile GetPersonalProfile Update the personal user information
+	// GetPersonalProfile Update the personal user information
 	GetPersonalProfile(context.Context, *GetPersonalProfileRequest) (*GetPersonalProfileResponse, error)
-	// ListPersonalResources ListPersonalResources List the personal user's menu
+	// ListPersonalResources List the personal user's menu
 	ListPersonalResources(context.Context, *ListPersonalResourcesRequest) (*ListPersonalResourcesResponse, error)
-	// ListPersonalRoles ListPersonalResources List the personal user's menu
+	// ListPersonalResources List the personal user's menu
 	ListPersonalRoles(context.Context, *ListPersonalRolesRequest) (*ListPersonalRolesResponse, error)
-	// PersonalLogout PersonalLogout Personal user logs out
+	// PersonalLogout Personal user logs out
 	PersonalLogout(context.Context, *PersonalLogoutRequest) (*PersonalLogoutResponse, error)
-	// RefreshPersonalToken RefreshPersonalToken Refresh the personal user's token
+	// RefreshPersonalToken Refresh the personal user's token
 	RefreshPersonalToken(context.Context, *RefreshPersonalTokenRequest) (*RefreshPersonalTokenResponse, error)
-	// UpdatePersonalPassword UpdatePersonalProfilePassword The user changes the password
+	// UpdatePersonalProfilePassword The user changes the password
 	UpdatePersonalPassword(context.Context, *UpdatePersonalPasswordRequest) (*UpdatePersonalPasswordResponse, error)
-	// UpdatePersonalProfile UpdatePersonalProfile Update the personal user information
+	// UpdatePersonalProfile Update the personal user information
 	UpdatePersonalProfile(context.Context, *UpdatePersonalProfileRequest) (*UpdatePersonalProfileResponse, error)
-	// UpdatePersonalSetting UpdatePersonalSetting User settings are saved
+	// UpdatePersonalSetting User settings are saved
 	UpdatePersonalSetting(context.Context, *UpdatePersonalSettingRequest) (*UpdatePersonalSettingResponse, error)
 }
 

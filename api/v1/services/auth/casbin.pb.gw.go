@@ -106,32 +106,6 @@ func local_request_CasbinSourceService_WatchUpdate_0(ctx context.Context, marsha
 	return msg, metadata, err
 }
 
-var filter_CasbinSourceService_StreamRules_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-
-func request_CasbinSourceService_StreamRules_0(ctx context.Context, marshaler runtime.Marshaler, client CasbinSourceServiceClient, req *http.Request, pathParams map[string]string) (CasbinSourceService_StreamRulesClient, runtime.ServerMetadata, error) {
-	var (
-		protoReq StreamRulesRequest
-		metadata runtime.ServerMetadata
-	)
-	io.Copy(io.Discard, req.Body)
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_CasbinSourceService_StreamRules_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	stream, err := client.StreamRules(ctx, &protoReq)
-	if err != nil {
-		return nil, metadata, err
-	}
-	header, err := stream.Header()
-	if err != nil {
-		return nil, metadata, err
-	}
-	metadata.HeaderMD = header
-	return stream, metadata, nil
-}
-
 // RegisterCasbinSourceServiceHandlerServer registers the http handlers for service CasbinSourceService to "mux".
 // UnaryRPC     :call CasbinSourceServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -197,13 +171,6 @@ func RegisterCasbinSourceServiceHandlerServer(ctx context.Context, mux *runtime.
 			return
 		}
 		forward_CasbinSourceService_WatchUpdate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-	})
-
-	mux.Handle(http.MethodGet, pattern_CasbinSourceService_StreamRules_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		err := status.Error(codes.Unimplemented, "streaming calls are not yet supported in the in-process transport")
-		_, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-		return
 	})
 
 	return nil
@@ -296,23 +263,6 @@ func RegisterCasbinSourceServiceHandlerClient(ctx context.Context, mux *runtime.
 		}
 		forward_CasbinSourceService_WatchUpdate_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_CasbinSourceService_StreamRules_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/StreamRules", runtime.WithHTTPPathPattern("/casbin/stream"))
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_CasbinSourceService_StreamRules_0(annotatedContext, inboundMarshaler, client, req, pathParams)
-		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
-		if err != nil {
-			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		forward_CasbinSourceService_StreamRules_0(annotatedContext, mux, outboundMarshaler, w, req, func() (proto.Message, error) { return resp.Recv() }, mux.GetForwardResponseOptions()...)
-	})
 	return nil
 }
 
@@ -320,12 +270,10 @@ var (
 	pattern_CasbinSourceService_ListPolicies_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "policies"}, ""))
 	pattern_CasbinSourceService_ListGroupings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "groupings"}, ""))
 	pattern_CasbinSourceService_WatchUpdate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "watch"}, ""))
-	pattern_CasbinSourceService_StreamRules_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "stream"}, ""))
 )
 
 var (
 	forward_CasbinSourceService_ListPolicies_0  = runtime.ForwardResponseMessage
 	forward_CasbinSourceService_ListGroupings_0 = runtime.ForwardResponseMessage
 	forward_CasbinSourceService_WatchUpdate_0   = runtime.ForwardResponseMessage
-	forward_CasbinSourceService_StreamRules_0   = runtime.ForwardResponseStream
 )

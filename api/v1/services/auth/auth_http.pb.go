@@ -27,12 +27,15 @@ const OperationAuthServiceListAuthResources = "/api.v1.services.auth.AuthService
 const OperationAuthServiceValidateToken = "/api.v1.services.auth.AuthService/ValidateToken"
 
 type AuthServiceHTTPServer interface {
+	// AuthLogout AuthLogout logs out a user.
 	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
+	// Authenticate Authenticate authenticates a user.
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
 	// CreateToken CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
 	// DestroyToken DestroyToken invalidates a JWT token.
 	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
+	// ListAuthResources ListAuthResources returns a list of Auths.
 	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
 	// ValidateToken ValidateToken verifies the validity of a JWT token.
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)

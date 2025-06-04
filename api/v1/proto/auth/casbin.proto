@@ -35,11 +35,11 @@ service CasbinSourceService {
   }
 
   rpc StreamRules(StreamRulesRequest) returns (stream StreamRulesResponse) {
-    option (google.api.http) = {
-      get: "/casbin/stream"
-      response_body: "*"
-    };
-    //    (google.api.method_signature) = "with_policies,with_groupings";
+//    option (google.api.http) = {
+//      get: "/casbin/stream"
+//      response_body: "*"
+//    };
+//    (google.api.method_signature) = "with_policies,with_groupings";
   }
 }
 

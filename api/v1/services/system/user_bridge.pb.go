@@ -44,12 +44,12 @@ type UserServiceBridger interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
-	// ResetUserPassword ResetUserPassword reset the user s password
+	// ResetUserPassword reset the user s password
 	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
-	// UpdateUserRoles UpdateUserRoles update the user roles
+	// UpdateUserRoles update the user roles
 	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
-	// UpdateUserStatus UpdateUserStatus Update the status of the user information
+	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
 }
 

@@ -36,14 +36,17 @@ const AuthServiceListAuthResourcesBridgeOperation = "/api.v1.services.auth.AuthS
 const AuthServiceValidateTokenBridgeOperation = "/api.v1.services.auth.AuthService/ValidateToken"
 
 type AuthServiceBridger interface {
+	// AuthLogout logs out a user.
 	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
+	// Authenticate authenticates a user.
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
-	// CreateToken CreateToken generates a new JWT token for the given user.
+	// CreateToken generates a new JWT token for the given user.
 	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
-	// DestroyToken DestroyToken invalidates a JWT token.
+	// DestroyToken invalidates a JWT token.
 	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
+	// ListAuthResources returns a list of Auths.
 	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
-	// ValidateToken ValidateToken verifies the validity of a JWT token.
+	// ValidateToken verifies the validity of a JWT token.
 	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
 }
 

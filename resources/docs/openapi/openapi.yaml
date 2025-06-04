@@ -252,33 +252,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/stream:
-        get:
-            tags:
-                - CasbinSourceService
-            operationId: CasbinSourceService_StreamRules
-            parameters:
-                - name: with_policies
-                  in: query
-                  schema:
-                    type: boolean
-                - name: with_groupings
-                  in: query
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.StreamRulesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /casbin/watch:
         get:
             tags:
@@ -378,6 +351,7 @@ paths:
         post:
             tags:
                 - AuthService
+            description: Authenticate authenticates a user.
             operationId: AuthService_Authenticate
             requestBody:
                 content:
@@ -427,6 +401,7 @@ paths:
         post:
             tags:
                 - AuthService
+            description: AuthLogout logs out a user.
             operationId: AuthService_AuthLogout
             requestBody:
                 content:
@@ -451,6 +426,7 @@ paths:
         get:
             tags:
                 - AuthService
+            description: ListAuthResources returns a list of Auths.
             operationId: AuthService_ListAuthResources
             parameters:
                 - name: page_size
@@ -2459,13 +2435,6 @@ components:
             properties:
                 redirect:
                     type: string
-        api.v1.services.auth.StreamRulesResponse:
-            type: object
-            properties:
-                policy:
-                    $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
-                grouping:
-                    $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
         api.v1.services.auth.TokenRefreshRequest_Data:
             type: object
             properties:
