@@ -27,7 +27,7 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	injectorClient := &loader.InjectorClient{
 		Server: server,
 	}
-	app := NewAppProvider(r, injectorClient)
+	app := NewApp(r, injectorClient)
 	return app, func() {
 	}, nil
 }

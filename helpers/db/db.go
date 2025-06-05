@@ -13,7 +13,7 @@ import (
 	"github.com/origadmin/runtime/interfaces/pagination"
 )
 
-type QueryPager[T any] interface {
+type Paginator[T any] interface {
 	Limit(int) T
 	Offset(int) T
 }
@@ -27,14 +27,14 @@ type FieldSelector[T any] interface {
 	Omit(...string) T
 }
 
-func PaginationQuery[Q QueryPager[Q]](query Q, in pagination.PageRequest, paging bool) Q {
+func Query[P Paginator[P]](query P, in pagination.PageRequest, paging bool) P {
 	if !paging {
-		return NoPageQuery(query, in)
+		return QueryNoPage(query, in)
 	}
-	return PageQuery(query, in)
+	return QueryPage(query, in)
 }
 
-func NoPageQuery[Q QueryPager[Q]](query Q, in pagination.PageSizeGetter) Q {
+func QueryNoPage[P Paginator[P]](query P, in pagination.PageSizeGetter) P {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))
@@ -42,7 +42,7 @@ func NoPageQuery[Q QueryPager[Q]](query Q, in pagination.PageSizeGetter) Q {
 	return query
 }
 
-func handleTokenPagination[Q QueryPager[Q]](query Q, token string) Q {
+func handleTokenPagination[P Paginator[P]](query P, token string) P {
 	// TODO: 实现游标分页逻辑
 	// 示例伪代码：
 	// decodedToken := decodeToken(token)
@@ -50,7 +50,7 @@ func handleTokenPagination[Q QueryPager[Q]](query Q, token string) Q {
 	return query
 }
 
-func PageQuery[Q QueryPager[Q]](query Q, in pagination.PageRequest) Q {
+func QueryPage[P Paginator[P]](query P, in pagination.PageRequest) P {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))
@@ -75,7 +75,11 @@ func PageCount[Q QueryCounter[Q]](ctx context.Context, query Q) (int32, error) {
 	return int32(count), nil
 }
 
-func OrderBy[T ~func(*sql.Selector)](fields []string, orders ...T) []T {
+type Order interface {
+	~func(*sql.Selector)
+}
+
+func OrderBy[T Order](fields []string, orders ...T) []T {
 	for _, field := range fields {
 		parts := strings.Split(field, ",")
 		fieldName := parts[0]

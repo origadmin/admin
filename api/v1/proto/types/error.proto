@@ -33,3 +33,10 @@ enum SystemErrorReason {
   SYSTEM_ERROR_REASON_INVALID_USERNAME = 1005 [(errors.code) = 400];
   SYSTEM_ERROR_REASON_INVALID_PASSWORD = 1006 [(errors.code) = 400];
 }
+
+enum AuthErrorReason {
+  option (errors.default_code) = 500;
+  AUTH_ERROR_REASON_UNSPECIFIED = 0;
+  AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND = 2001 [(errors.code) = 404];
+}
+

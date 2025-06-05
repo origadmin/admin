@@ -55,24 +55,24 @@ type PositionServiceHookedBridger interface {
 	PositionServiceBridger
 }
 type PositionServiceCreatePositionHooker interface {
-	BeforeCreatePosition(http.Context, *CreatePositionRequest) (context.Context, error)
-	CreatePositionResult(http.Context, *CreatePositionRequest, *CreatePositionResponse) error
+	PrepareCreatePosition(http.Context, *CreatePositionRequest) (context.Context, error)
+	CompleteCreatePosition(http.Context, *CreatePositionRequest, *CreatePositionResponse) error
 }
 type PositionServiceDeletePositionHooker interface {
-	BeforeDeletePosition(http.Context, *DeletePositionRequest) (context.Context, error)
-	DeletePositionResult(http.Context, *DeletePositionRequest, *DeletePositionResponse) error
+	PrepareDeletePosition(http.Context, *DeletePositionRequest) (context.Context, error)
+	CompleteDeletePosition(http.Context, *DeletePositionRequest, *DeletePositionResponse) error
 }
 type PositionServiceGetPositionHooker interface {
-	BeforeGetPosition(http.Context, *GetPositionRequest) (context.Context, error)
-	GetPositionResult(http.Context, *GetPositionRequest, *GetPositionResponse) error
+	PrepareGetPosition(http.Context, *GetPositionRequest) (context.Context, error)
+	CompleteGetPosition(http.Context, *GetPositionRequest, *GetPositionResponse) error
 }
 type PositionServiceListPositionsHooker interface {
-	BeforeListPositions(http.Context, *ListPositionsRequest) (context.Context, error)
-	ListPositionsResult(http.Context, *ListPositionsRequest, *ListPositionsResponse) error
+	PrepareListPositions(http.Context, *ListPositionsRequest) (context.Context, error)
+	CompleteListPositions(http.Context, *ListPositionsRequest, *ListPositionsResponse) error
 }
 type PositionServiceUpdatePositionHooker interface {
-	BeforeUpdatePosition(http.Context, *UpdatePositionRequest) (context.Context, error)
-	UpdatePositionResult(http.Context, *UpdatePositionRequest, *UpdatePositionResponse) error
+	PrepareUpdatePosition(http.Context, *UpdatePositionRequest) (context.Context, error)
+	CompleteUpdatePosition(http.Context, *UpdatePositionRequest, *UpdatePositionResponse) error
 }
 
 func RegisterPositionServiceBridger(s *http.Server, srv PositionServiceHookedBridger) {
@@ -95,7 +95,7 @@ func _PositionService_ListPositions0_Bridge_Handler(srv PositionServiceHookedBri
 			return srv.ListPositions(ctx, req.(*ListPositionsRequest))
 		})
 
-		newctx, err := srv.BeforeListPositions(ctx, &in)
+		newctx, err := srv.PrepareListPositions(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func _PositionService_ListPositions0_Bridge_Handler(srv PositionServiceHookedBri
 		if err != nil {
 			return err
 		}
-		return srv.ListPositionsResult(ctx, &in, out.(*ListPositionsResponse))
+		return srv.CompleteListPositions(ctx, &in, out.(*ListPositionsResponse))
 	}
 }
 
@@ -121,7 +121,7 @@ func _PositionService_GetPosition0_Bridge_Handler(srv PositionServiceHookedBridg
 			return srv.GetPosition(ctx, req.(*GetPositionRequest))
 		})
 
-		newctx, err := srv.BeforeGetPosition(ctx, &in)
+		newctx, err := srv.PrepareGetPosition(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func _PositionService_GetPosition0_Bridge_Handler(srv PositionServiceHookedBridg
 		if err != nil {
 			return err
 		}
-		return srv.GetPositionResult(ctx, &in, out.(*GetPositionResponse))
+		return srv.CompleteGetPosition(ctx, &in, out.(*GetPositionResponse))
 	}
 }
 
@@ -147,7 +147,7 @@ func _PositionService_CreatePosition0_Bridge_Handler(srv PositionServiceHookedBr
 			return srv.CreatePosition(ctx, req.(*CreatePositionRequest))
 		})
 
-		newctx, err := srv.BeforeCreatePosition(ctx, &in)
+		newctx, err := srv.PrepareCreatePosition(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func _PositionService_CreatePosition0_Bridge_Handler(srv PositionServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.CreatePositionResult(ctx, &in, out.(*CreatePositionResponse))
+		return srv.CompleteCreatePosition(ctx, &in, out.(*CreatePositionResponse))
 	}
 }
 
@@ -176,7 +176,7 @@ func _PositionService_UpdatePosition0_Bridge_Handler(srv PositionServiceHookedBr
 			return srv.UpdatePosition(ctx, req.(*UpdatePositionRequest))
 		})
 
-		newctx, err := srv.BeforeUpdatePosition(ctx, &in)
+		newctx, err := srv.PrepareUpdatePosition(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -184,7 +184,7 @@ func _PositionService_UpdatePosition0_Bridge_Handler(srv PositionServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.UpdatePositionResult(ctx, &in, out.(*UpdatePositionResponse))
+		return srv.CompleteUpdatePosition(ctx, &in, out.(*UpdatePositionResponse))
 	}
 }
 
@@ -202,7 +202,7 @@ func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceHookedBr
 			return srv.DeletePosition(ctx, req.(*DeletePositionRequest))
 		})
 
-		newctx, err := srv.BeforeDeletePosition(ctx, &in)
+		newctx, err := srv.PrepareDeletePosition(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -210,7 +210,7 @@ func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.DeletePositionResult(ctx, &in, out.(*DeletePositionResponse))
+		return srv.CompleteDeletePosition(ctx, &in, out.(*DeletePositionResponse))
 	}
 }
 
@@ -221,43 +221,43 @@ func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceHookedBr
 // pointer dereference when methods are called.
 type UnimplementedPositionServiceHooked struct{}
 
-func (UnimplementedPositionServiceHooked) BeforeCreatePosition(ctx http.Context, in *CreatePositionRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareCreatePosition(ctx http.Context, in *CreatePositionRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) CreatePositionResult(ctx http.Context, in *CreatePositionRequest, out *CreatePositionResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteCreatePosition(ctx http.Context, in *CreatePositionRequest, out *CreatePositionResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPositionServiceHooked) BeforeDeletePosition(ctx http.Context, in *DeletePositionRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareDeletePosition(ctx http.Context, in *DeletePositionRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) DeletePositionResult(ctx http.Context, in *DeletePositionRequest, out *DeletePositionResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteDeletePosition(ctx http.Context, in *DeletePositionRequest, out *DeletePositionResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPositionServiceHooked) BeforeGetPosition(ctx http.Context, in *GetPositionRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareGetPosition(ctx http.Context, in *GetPositionRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) GetPositionResult(ctx http.Context, in *GetPositionRequest, out *GetPositionResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteGetPosition(ctx http.Context, in *GetPositionRequest, out *GetPositionResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPositionServiceHooked) BeforeListPositions(ctx http.Context, in *ListPositionsRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareListPositions(ctx http.Context, in *ListPositionsRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) ListPositionsResult(ctx http.Context, in *ListPositionsRequest, out *ListPositionsResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteListPositions(ctx http.Context, in *ListPositionsRequest, out *ListPositionsResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPositionServiceHooked) BeforeUpdatePosition(ctx http.Context, in *UpdatePositionRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareUpdatePosition(ctx http.Context, in *UpdatePositionRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) UpdatePositionResult(ctx http.Context, in *UpdatePositionRequest, out *UpdatePositionResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteUpdatePosition(ctx http.Context, in *UpdatePositionRequest, out *UpdatePositionResponse) error {
 	return ctx.Result(200, out)
 }
 

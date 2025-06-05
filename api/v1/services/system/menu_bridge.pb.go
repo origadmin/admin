@@ -55,24 +55,24 @@ type MenuServiceHookedBridger interface {
 	MenuServiceBridger
 }
 type MenuServiceCreateMenuHooker interface {
-	BeforeCreateMenu(http.Context, *CreateMenuRequest) (context.Context, error)
-	CreateMenuResult(http.Context, *CreateMenuRequest, *CreateMenuResponse) error
+	PrepareCreateMenu(http.Context, *CreateMenuRequest) (context.Context, error)
+	CompleteCreateMenu(http.Context, *CreateMenuRequest, *CreateMenuResponse) error
 }
 type MenuServiceDeleteMenuHooker interface {
-	BeforeDeleteMenu(http.Context, *DeleteMenuRequest) (context.Context, error)
-	DeleteMenuResult(http.Context, *DeleteMenuRequest, *DeleteMenuResponse) error
+	PrepareDeleteMenu(http.Context, *DeleteMenuRequest) (context.Context, error)
+	CompleteDeleteMenu(http.Context, *DeleteMenuRequest, *DeleteMenuResponse) error
 }
 type MenuServiceGetMenuHooker interface {
-	BeforeGetMenu(http.Context, *GetMenuRequest) (context.Context, error)
-	GetMenuResult(http.Context, *GetMenuRequest, *GetMenuResponse) error
+	PrepareGetMenu(http.Context, *GetMenuRequest) (context.Context, error)
+	CompleteGetMenu(http.Context, *GetMenuRequest, *GetMenuResponse) error
 }
 type MenuServiceListMenusHooker interface {
-	BeforeListMenus(http.Context, *ListMenusRequest) (context.Context, error)
-	ListMenusResult(http.Context, *ListMenusRequest, *ListMenusResponse) error
+	PrepareListMenus(http.Context, *ListMenusRequest) (context.Context, error)
+	CompleteListMenus(http.Context, *ListMenusRequest, *ListMenusResponse) error
 }
 type MenuServiceUpdateMenuHooker interface {
-	BeforeUpdateMenu(http.Context, *UpdateMenuRequest) (context.Context, error)
-	UpdateMenuResult(http.Context, *UpdateMenuRequest, *UpdateMenuResponse) error
+	PrepareUpdateMenu(http.Context, *UpdateMenuRequest) (context.Context, error)
+	CompleteUpdateMenu(http.Context, *UpdateMenuRequest, *UpdateMenuResponse) error
 }
 
 func RegisterMenuServiceBridger(s *http.Server, srv MenuServiceHookedBridger) {
@@ -95,7 +95,7 @@ func _MenuService_ListMenus0_Bridge_Handler(srv MenuServiceHookedBridger) func(c
 			return srv.ListMenus(ctx, req.(*ListMenusRequest))
 		})
 
-		newctx, err := srv.BeforeListMenus(ctx, &in)
+		newctx, err := srv.PrepareListMenus(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func _MenuService_ListMenus0_Bridge_Handler(srv MenuServiceHookedBridger) func(c
 		if err != nil {
 			return err
 		}
-		return srv.ListMenusResult(ctx, &in, out.(*ListMenusResponse))
+		return srv.CompleteListMenus(ctx, &in, out.(*ListMenusResponse))
 	}
 }
 
@@ -121,7 +121,7 @@ func _MenuService_GetMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx
 			return srv.GetMenu(ctx, req.(*GetMenuRequest))
 		})
 
-		newctx, err := srv.BeforeGetMenu(ctx, &in)
+		newctx, err := srv.PrepareGetMenu(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func _MenuService_GetMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx
 		if err != nil {
 			return err
 		}
-		return srv.GetMenuResult(ctx, &in, out.(*GetMenuResponse))
+		return srv.CompleteGetMenu(ctx, &in, out.(*GetMenuResponse))
 	}
 }
 
@@ -147,7 +147,7 @@ func _MenuService_CreateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 			return srv.CreateMenu(ctx, req.(*CreateMenuRequest))
 		})
 
-		newctx, err := srv.BeforeCreateMenu(ctx, &in)
+		newctx, err := srv.PrepareCreateMenu(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func _MenuService_CreateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.CreateMenuResult(ctx, &in, out.(*CreateMenuResponse))
+		return srv.CompleteCreateMenu(ctx, &in, out.(*CreateMenuResponse))
 	}
 }
 
@@ -176,7 +176,7 @@ func _MenuService_UpdateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 			return srv.UpdateMenu(ctx, req.(*UpdateMenuRequest))
 		})
 
-		newctx, err := srv.BeforeUpdateMenu(ctx, &in)
+		newctx, err := srv.PrepareUpdateMenu(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -184,7 +184,7 @@ func _MenuService_UpdateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.UpdateMenuResult(ctx, &in, out.(*UpdateMenuResponse))
+		return srv.CompleteUpdateMenu(ctx, &in, out.(*UpdateMenuResponse))
 	}
 }
 
@@ -202,7 +202,7 @@ func _MenuService_DeleteMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
 		})
 
-		newctx, err := srv.BeforeDeleteMenu(ctx, &in)
+		newctx, err := srv.PrepareDeleteMenu(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -210,7 +210,7 @@ func _MenuService_DeleteMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.DeleteMenuResult(ctx, &in, out.(*DeleteMenuResponse))
+		return srv.CompleteDeleteMenu(ctx, &in, out.(*DeleteMenuResponse))
 	}
 }
 
@@ -221,43 +221,43 @@ func _MenuService_DeleteMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(
 // pointer dereference when methods are called.
 type UnimplementedMenuServiceHooked struct{}
 
-func (UnimplementedMenuServiceHooked) BeforeCreateMenu(ctx http.Context, in *CreateMenuRequest) (context.Context, error) {
+func (UnimplementedMenuServiceHooked) PrepareCreateMenu(ctx http.Context, in *CreateMenuRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMenuServiceHooked) CreateMenuResult(ctx http.Context, in *CreateMenuRequest, out *CreateMenuResponse) error {
+func (UnimplementedMenuServiceHooked) CompleteCreateMenu(ctx http.Context, in *CreateMenuRequest, out *CreateMenuResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMenuServiceHooked) BeforeDeleteMenu(ctx http.Context, in *DeleteMenuRequest) (context.Context, error) {
+func (UnimplementedMenuServiceHooked) PrepareDeleteMenu(ctx http.Context, in *DeleteMenuRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMenuServiceHooked) DeleteMenuResult(ctx http.Context, in *DeleteMenuRequest, out *DeleteMenuResponse) error {
+func (UnimplementedMenuServiceHooked) CompleteDeleteMenu(ctx http.Context, in *DeleteMenuRequest, out *DeleteMenuResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMenuServiceHooked) BeforeGetMenu(ctx http.Context, in *GetMenuRequest) (context.Context, error) {
+func (UnimplementedMenuServiceHooked) PrepareGetMenu(ctx http.Context, in *GetMenuRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMenuServiceHooked) GetMenuResult(ctx http.Context, in *GetMenuRequest, out *GetMenuResponse) error {
+func (UnimplementedMenuServiceHooked) CompleteGetMenu(ctx http.Context, in *GetMenuRequest, out *GetMenuResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMenuServiceHooked) BeforeListMenus(ctx http.Context, in *ListMenusRequest) (context.Context, error) {
+func (UnimplementedMenuServiceHooked) PrepareListMenus(ctx http.Context, in *ListMenusRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMenuServiceHooked) ListMenusResult(ctx http.Context, in *ListMenusRequest, out *ListMenusResponse) error {
+func (UnimplementedMenuServiceHooked) CompleteListMenus(ctx http.Context, in *ListMenusRequest, out *ListMenusResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMenuServiceHooked) BeforeUpdateMenu(ctx http.Context, in *UpdateMenuRequest) (context.Context, error) {
+func (UnimplementedMenuServiceHooked) PrepareUpdateMenu(ctx http.Context, in *UpdateMenuRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMenuServiceHooked) UpdateMenuResult(ctx http.Context, in *UpdateMenuRequest, out *UpdateMenuResponse) error {
+func (UnimplementedMenuServiceHooked) CompleteUpdateMenu(ctx http.Context, in *UpdateMenuRequest, out *UpdateMenuResponse) error {
 	return ctx.Result(200, out)
 }
 

@@ -20,11 +20,11 @@ func LoadBootstrap(cfg *configv1.SourceConfig) (*configs.Bootstrap, error) {
 	if err := source.Load(); err != nil {
 		return nil, err
 	}
-	var bs configs.Bootstrap
-	if err := source.Scan(&bs); err != nil {
+	bs := DefaultBootstrap()
+	if err := source.Scan(bs); err != nil {
 		return nil, err
 	}
-	return &bs, nil
+	return bs, nil
 }
 
 func LoadLocalBootstrap(path string) (*configs.Bootstrap, error) {

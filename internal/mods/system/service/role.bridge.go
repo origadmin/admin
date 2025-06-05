@@ -23,7 +23,7 @@ type RoleServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (h RoleServiceHookedBridge) CreateRoleResult(ctx transhttp.Context, request *pb.CreateRoleRequest, response *pb.CreateRoleResponse) error {
+func (h RoleServiceHookedBridge) CompleteCreateRole(ctx transhttp.Context, request *pb.CreateRoleRequest, response *pb.CreateRoleResponse) error {
 	marshal, err := json.Marshal(response.Role)
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func (h RoleServiceHookedBridge) CreateRoleResult(ctx transhttp.Context, request
 	})
 }
 
-func (h RoleServiceHookedBridge) DeleteRoleResult(ctx transhttp.Context, request *pb.DeleteRoleRequest, response *pb.DeleteRoleResponse) error {
+func (h RoleServiceHookedBridge) CompleteDeleteRole(ctx transhttp.Context, request *pb.DeleteRoleRequest, response *pb.DeleteRoleResponse) error {
 	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
 }
 
-func (h RoleServiceHookedBridge) GetRoleResult(ctx transhttp.Context, request *pb.GetRoleRequest, response *pb.GetRoleResponse) error {
+func (h RoleServiceHookedBridge) CompleteGetRole(ctx transhttp.Context, request *pb.GetRoleRequest, response *pb.GetRoleResponse) error {
 	marshal, err := json.Marshal(response.Role)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (h RoleServiceHookedBridge) GetRoleResult(ctx transhttp.Context, request *p
 	})
 }
 
-func (h RoleServiceHookedBridge) ListRolesResult(ctx transhttp.Context, request *pb.ListRolesRequest, response *pb.ListRolesResponse) error {
+func (h RoleServiceHookedBridge) CompleteListRoles(ctx transhttp.Context, request *pb.ListRolesRequest, response *pb.ListRolesResponse) error {
 	marshal, err := json.Marshal(response.Roles)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (h RoleServiceHookedBridge) ListRolesResult(ctx transhttp.Context, request 
 	})
 }
 
-func (h RoleServiceHookedBridge) UpdateRoleResult(ctx transhttp.Context, request *pb.UpdateRoleRequest, response *pb.UpdateRoleResponse) error {
+func (h RoleServiceHookedBridge) CompleteUpdateRole(ctx transhttp.Context, request *pb.UpdateRoleRequest, response *pb.UpdateRoleResponse) error {
 	marshal, err := json.Marshal(response.Role)
 	if err != nil {
 		return err

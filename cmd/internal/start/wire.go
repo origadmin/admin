@@ -15,6 +15,8 @@ import (
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
+	authservice "origadmin/application/admin/internal/mods/auth/service"
+	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
 // buildInjectors init kratos application.
@@ -22,7 +24,8 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	panic(wire.Build(
 		loader.ProviderSet,
 		//agent.ProviderSet,
-		//server.ProviderSet,
+		systemservice.ProviderSet,
+		authservice.ProviderSet,
 		//basisserver.ProviderSet,
-		NewAppProvider))
+		NewApp))
 }

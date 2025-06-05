@@ -25,14 +25,16 @@ import (
 type NewApp func(runtime.Runtime, *configs.Bootstrap) (*kratos.App, func(), error)
 
 func Resolve(config config.KConfig) (config.Resolved, error) {
-	var rb ResolvedBootstrap
+	rb := &ResolvedBootstrap{
+		bootstrap: DefaultBootstrap(),
+	}
 	if err := config.Load(); err != nil {
 		return nil, err
 	}
-	if err := config.Scan(&rb.bootstrap); err != nil {
+	if err := config.Scan(rb.bootstrap); err != nil {
 		return nil, err
 	}
-	return &rb, nil
+	return rb, nil
 }
 
 type BootstrapConfig func(config config.KConfig) (config.Resolved, error)
@@ -42,7 +44,7 @@ func (b BootstrapConfig) Resolve(config config.KConfig) (config.Resolved, error)
 }
 
 type ResolvedBootstrap struct {
-	bootstrap configs.Bootstrap
+	bootstrap *configs.Bootstrap
 }
 
 func (r *ResolvedBootstrap) FillServiceInfo(flags *bootstrap.Bootstrap) {
@@ -58,7 +60,7 @@ func (r *ResolvedBootstrap) Discovery() *configv1.Discovery {
 }
 
 func (r *ResolvedBootstrap) Resolve(config config.KConfig) (config.Resolved, error) {
-	if err := config.Scan(&r.bootstrap); err != nil {
+	if err := config.Scan(r.bootstrap); err != nil {
 		return nil, err
 	}
 	return r, nil
@@ -93,8 +95,10 @@ func (r *ResolvedBootstrap) Logger() *configv1.Logger {
 }
 
 func Bootstrap(ctx context.Context, flags *bootstrap.Bootstrap, newApp NewApp) error {
-	var rb ResolvedBootstrap
-	r, err := runtime.Load(flags, runtime.WithResolver(&rb), runtime.WithContext(ctx))
+	rb := &ResolvedBootstrap{
+		bootstrap: DefaultBootstrap(),
+	}
+	r, err := runtime.Load(flags, runtime.WithResolver(rb), runtime.WithContext(ctx))
 	if err != nil {
 		return err
 	}
@@ -108,7 +112,7 @@ func Bootstrap(ctx context.Context, flags *bootstrap.Bootstrap, newApp NewApp) e
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
-	app, clean, err := newApp(r, &rb.bootstrap)
+	app, clean, err := newApp(r, rb.bootstrap)
 	if err != nil {
 		return err
 	}

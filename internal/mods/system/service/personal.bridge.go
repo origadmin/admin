@@ -22,82 +22,82 @@ type PersonalServiceHookedBridge struct {
 	log    *log.KHelper
 }
 
-func (p PersonalServiceHookedBridge) BeforeGetPersonalProfile(context transhttp.Context, request *pb.GetPersonalProfileRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareGetPersonalProfile(context transhttp.Context, request *pb.GetPersonalProfileRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) GetPersonalProfileResult(context transhttp.Context, request *pb.GetPersonalProfileRequest, response *pb.GetPersonalProfileResponse) error {
+func (p PersonalServiceHookedBridge) CompleteGetPersonalProfile(context transhttp.Context, request *pb.GetPersonalProfileRequest, response *pb.GetPersonalProfileResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforeListPersonalResources(context transhttp.Context, request *pb.ListPersonalResourcesRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareListPersonalResources(context transhttp.Context, request *pb.ListPersonalResourcesRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) ListPersonalResourcesResult(context transhttp.Context, request *pb.ListPersonalResourcesRequest, response *pb.ListPersonalResourcesResponse) error {
+func (p PersonalServiceHookedBridge) CompleteListPersonalResources(context transhttp.Context, request *pb.ListPersonalResourcesRequest, response *pb.ListPersonalResourcesResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforeListPersonalRoles(context transhttp.Context, request *pb.ListPersonalRolesRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareListPersonalRoles(context transhttp.Context, request *pb.ListPersonalRolesRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) ListPersonalRolesResult(context transhttp.Context, request *pb.ListPersonalRolesRequest, response *pb.ListPersonalRolesResponse) error {
+func (p PersonalServiceHookedBridge) CompleteListPersonalRoles(context transhttp.Context, request *pb.ListPersonalRolesRequest, response *pb.ListPersonalRolesResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforePersonalLogout(context transhttp.Context, request *pb.PersonalLogoutRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PreparePersonalLogout(context transhttp.Context, request *pb.PersonalLogoutRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) PersonalLogoutResult(context transhttp.Context, request *pb.PersonalLogoutRequest, response *pb.PersonalLogoutResponse) error {
+func (p PersonalServiceHookedBridge) CompletePersonalLogout(context transhttp.Context, request *pb.PersonalLogoutRequest, response *pb.PersonalLogoutResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforeRefreshPersonalToken(context transhttp.Context, request *pb.RefreshPersonalTokenRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareRefreshPersonalToken(context transhttp.Context, request *pb.RefreshPersonalTokenRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) RefreshPersonalTokenResult(context transhttp.Context, request *pb.RefreshPersonalTokenRequest, response *pb.RefreshPersonalTokenResponse) error {
+func (p PersonalServiceHookedBridge) CompleteRefreshPersonalToken(context transhttp.Context, request *pb.RefreshPersonalTokenRequest, response *pb.RefreshPersonalTokenResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforeUpdatePersonalPassword(context transhttp.Context, request *pb.UpdatePersonalPasswordRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareUpdatePersonalPassword(context transhttp.Context, request *pb.UpdatePersonalPasswordRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) UpdatePersonalPasswordResult(context transhttp.Context, request *pb.UpdatePersonalPasswordRequest, response *pb.UpdatePersonalPasswordResponse) error {
+func (p PersonalServiceHookedBridge) CompleteUpdatePersonalPassword(context transhttp.Context, request *pb.UpdatePersonalPasswordRequest, response *pb.UpdatePersonalPasswordResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforeUpdatePersonalProfile(context transhttp.Context, request *pb.UpdatePersonalProfileRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareUpdatePersonalProfile(context transhttp.Context, request *pb.UpdatePersonalProfileRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) UpdatePersonalProfileResult(context transhttp.Context, request *pb.UpdatePersonalProfileRequest, response *pb.UpdatePersonalProfileResponse) error {
+func (p PersonalServiceHookedBridge) CompleteUpdatePersonalProfile(context transhttp.Context, request *pb.UpdatePersonalProfileRequest, response *pb.UpdatePersonalProfileResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) BeforeUpdatePersonalSetting(context transhttp.Context, request *pb.UpdatePersonalSettingRequest) (context.Context, error) {
+func (p PersonalServiceHookedBridge) PrepareUpdatePersonalSetting(context transhttp.Context, request *pb.UpdatePersonalSettingRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PersonalServiceHookedBridge) UpdatePersonalSettingResult(context transhttp.Context, request *pb.UpdatePersonalSettingRequest, response *pb.UpdatePersonalSettingResponse) error {
+func (p PersonalServiceHookedBridge) CompleteUpdatePersonalSetting(context transhttp.Context, request *pb.UpdatePersonalSettingRequest, response *pb.UpdatePersonalSettingResponse) error {
 	//TODO implement me
 	panic("implement me")
 }

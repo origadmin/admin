@@ -129,7 +129,7 @@ func resourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.Lis
 	if err != nil {
 		return nil, 0, err
 	}
-	query = db.PaginationQuery(query, in, !in.NoPaging)
+	query = db.Query(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
 	return dto.ConvertResources(result), int32(count), err
 }

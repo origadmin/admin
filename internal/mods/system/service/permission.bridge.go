@@ -23,7 +23,7 @@ type PermissionServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (h PermissionServiceHookedBridge) CreatePermissionResult(ctx transhttp.Context, request *pb.CreatePermissionRequest, response *pb.CreatePermissionResponse) error {
+func (h PermissionServiceHookedBridge) CompleteCreatePermission(ctx transhttp.Context, request *pb.CreatePermissionRequest, response *pb.CreatePermissionResponse) error {
 	marshal, err := json.Marshal(response.Permission)
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func (h PermissionServiceHookedBridge) CreatePermissionResult(ctx transhttp.Cont
 	})
 }
 
-func (h PermissionServiceHookedBridge) DeletePermissionResult(ctx transhttp.Context, request *pb.DeletePermissionRequest, response *pb.DeletePermissionResponse) error {
+func (h PermissionServiceHookedBridge) CompleteDeletePermission(ctx transhttp.Context, request *pb.DeletePermissionRequest, response *pb.DeletePermissionResponse) error {
 	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
 }
 
-func (h PermissionServiceHookedBridge) GetPermissionResult(ctx transhttp.Context, request *pb.GetPermissionRequest, response *pb.GetPermissionResponse) error {
+func (h PermissionServiceHookedBridge) CompleteGetPermission(ctx transhttp.Context, request *pb.GetPermissionRequest, response *pb.GetPermissionResponse) error {
 	marshal, err := json.Marshal(response.Permission)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (h PermissionServiceHookedBridge) GetPermissionResult(ctx transhttp.Context
 	})
 }
 
-func (h PermissionServiceHookedBridge) ListPermissionsResult(ctx transhttp.Context, request *pb.ListPermissionsRequest, response *pb.ListPermissionsResponse) error {
+func (h PermissionServiceHookedBridge) CompleteListPermissions(ctx transhttp.Context, request *pb.ListPermissionsRequest, response *pb.ListPermissionsResponse) error {
 	marshal, err := json.Marshal(response.Permissions)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (h PermissionServiceHookedBridge) ListPermissionsResult(ctx transhttp.Conte
 	})
 }
 
-func (h PermissionServiceHookedBridge) UpdatePermissionResult(ctx transhttp.Context, request *pb.UpdatePermissionRequest, response *pb.UpdatePermissionResponse) error {
+func (h PermissionServiceHookedBridge) CompleteUpdatePermission(ctx transhttp.Context, request *pb.UpdatePermissionRequest, response *pb.UpdatePermissionResponse) error {
 	marshal, err := json.Marshal(response.Permission)
 	if err != nil {
 		return err

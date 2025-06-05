@@ -49,16 +49,16 @@ type CasbinSourceServiceHookedBridger interface {
 	CasbinSourceServiceBridger
 }
 type CasbinSourceServiceListGroupingsHooker interface {
-	BeforeListGroupings(http.Context, *ListGroupingsRequest) (context.Context, error)
-	ListGroupingsResult(http.Context, *ListGroupingsRequest, *ListGroupingsResponse) error
+	PrepareListGroupings(http.Context, *ListGroupingsRequest) (context.Context, error)
+	CompleteListGroupings(http.Context, *ListGroupingsRequest, *ListGroupingsResponse) error
 }
 type CasbinSourceServiceListPoliciesHooker interface {
-	BeforeListPolicies(http.Context, *ListPoliciesRequest) (context.Context, error)
-	ListPoliciesResult(http.Context, *ListPoliciesRequest, *ListPoliciesResponse) error
+	PrepareListPolicies(http.Context, *ListPoliciesRequest) (context.Context, error)
+	CompleteListPolicies(http.Context, *ListPoliciesRequest, *ListPoliciesResponse) error
 }
 type CasbinSourceServiceWatchUpdateHooker interface {
-	BeforeWatchUpdate(http.Context, *WatchUpdateRequest) (context.Context, error)
-	WatchUpdateResult(http.Context, *WatchUpdateRequest, *WatchUpdateResponse) error
+	PrepareWatchUpdate(http.Context, *WatchUpdateRequest) (context.Context, error)
+	CompleteWatchUpdate(http.Context, *WatchUpdateRequest, *WatchUpdateResponse) error
 }
 
 func RegisterCasbinSourceServiceBridger(s *http.Server, srv CasbinSourceServiceHookedBridger) {
@@ -79,7 +79,7 @@ func _CasbinSourceService_ListPolicies0_Bridge_Handler(srv CasbinSourceServiceHo
 			return srv.ListPolicies(ctx, req.(*ListPoliciesRequest))
 		})
 
-		newctx, err := srv.BeforeListPolicies(ctx, &in)
+		newctx, err := srv.PrepareListPolicies(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -87,7 +87,7 @@ func _CasbinSourceService_ListPolicies0_Bridge_Handler(srv CasbinSourceServiceHo
 		if err != nil {
 			return err
 		}
-		return srv.ListPoliciesResult(ctx, &in, out.(*ListPoliciesResponse))
+		return srv.CompleteListPolicies(ctx, &in, out.(*ListPoliciesResponse))
 	}
 }
 
@@ -102,7 +102,7 @@ func _CasbinSourceService_ListGroupings0_Bridge_Handler(srv CasbinSourceServiceH
 			return srv.ListGroupings(ctx, req.(*ListGroupingsRequest))
 		})
 
-		newctx, err := srv.BeforeListGroupings(ctx, &in)
+		newctx, err := srv.PrepareListGroupings(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -110,7 +110,7 @@ func _CasbinSourceService_ListGroupings0_Bridge_Handler(srv CasbinSourceServiceH
 		if err != nil {
 			return err
 		}
-		return srv.ListGroupingsResult(ctx, &in, out.(*ListGroupingsResponse))
+		return srv.CompleteListGroupings(ctx, &in, out.(*ListGroupingsResponse))
 	}
 }
 
@@ -125,7 +125,7 @@ func _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv CasbinSourceServiceHoo
 			return srv.WatchUpdate(ctx, req.(*WatchUpdateRequest))
 		})
 
-		newctx, err := srv.BeforeWatchUpdate(ctx, &in)
+		newctx, err := srv.PrepareWatchUpdate(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -133,7 +133,7 @@ func _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv CasbinSourceServiceHoo
 		if err != nil {
 			return err
 		}
-		return srv.WatchUpdateResult(ctx, &in, out.(*WatchUpdateResponse))
+		return srv.CompleteWatchUpdate(ctx, &in, out.(*WatchUpdateResponse))
 	}
 }
 
@@ -144,27 +144,27 @@ func _CasbinSourceService_WatchUpdate0_Bridge_Handler(srv CasbinSourceServiceHoo
 // pointer dereference when methods are called.
 type UnimplementedCasbinSourceServiceHooked struct{}
 
-func (UnimplementedCasbinSourceServiceHooked) BeforeListGroupings(ctx http.Context, in *ListGroupingsRequest) (context.Context, error) {
+func (UnimplementedCasbinSourceServiceHooked) PrepareListGroupings(ctx http.Context, in *ListGroupingsRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedCasbinSourceServiceHooked) ListGroupingsResult(ctx http.Context, in *ListGroupingsRequest, out *ListGroupingsResponse) error {
+func (UnimplementedCasbinSourceServiceHooked) CompleteListGroupings(ctx http.Context, in *ListGroupingsRequest, out *ListGroupingsResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedCasbinSourceServiceHooked) BeforeListPolicies(ctx http.Context, in *ListPoliciesRequest) (context.Context, error) {
+func (UnimplementedCasbinSourceServiceHooked) PrepareListPolicies(ctx http.Context, in *ListPoliciesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedCasbinSourceServiceHooked) ListPoliciesResult(ctx http.Context, in *ListPoliciesRequest, out *ListPoliciesResponse) error {
+func (UnimplementedCasbinSourceServiceHooked) CompleteListPolicies(ctx http.Context, in *ListPoliciesRequest, out *ListPoliciesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedCasbinSourceServiceHooked) BeforeWatchUpdate(ctx http.Context, in *WatchUpdateRequest) (context.Context, error) {
+func (UnimplementedCasbinSourceServiceHooked) PrepareWatchUpdate(ctx http.Context, in *WatchUpdateRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedCasbinSourceServiceHooked) WatchUpdateResult(ctx http.Context, in *WatchUpdateRequest, out *WatchUpdateResponse) error {
+func (UnimplementedCasbinSourceServiceHooked) CompleteWatchUpdate(ctx http.Context, in *WatchUpdateRequest, out *WatchUpdateResponse) error {
 	return ctx.Result(200, out)
 }
 

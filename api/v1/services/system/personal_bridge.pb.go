@@ -72,36 +72,36 @@ type PersonalServiceHookedBridger interface {
 	PersonalServiceBridger
 }
 type PersonalServiceGetPersonalProfileHooker interface {
-	BeforeGetPersonalProfile(http.Context, *GetPersonalProfileRequest) (context.Context, error)
-	GetPersonalProfileResult(http.Context, *GetPersonalProfileRequest, *GetPersonalProfileResponse) error
+	PrepareGetPersonalProfile(http.Context, *GetPersonalProfileRequest) (context.Context, error)
+	CompleteGetPersonalProfile(http.Context, *GetPersonalProfileRequest, *GetPersonalProfileResponse) error
 }
 type PersonalServiceListPersonalResourcesHooker interface {
-	BeforeListPersonalResources(http.Context, *ListPersonalResourcesRequest) (context.Context, error)
-	ListPersonalResourcesResult(http.Context, *ListPersonalResourcesRequest, *ListPersonalResourcesResponse) error
+	PrepareListPersonalResources(http.Context, *ListPersonalResourcesRequest) (context.Context, error)
+	CompleteListPersonalResources(http.Context, *ListPersonalResourcesRequest, *ListPersonalResourcesResponse) error
 }
 type PersonalServiceListPersonalRolesHooker interface {
-	BeforeListPersonalRoles(http.Context, *ListPersonalRolesRequest) (context.Context, error)
-	ListPersonalRolesResult(http.Context, *ListPersonalRolesRequest, *ListPersonalRolesResponse) error
+	PrepareListPersonalRoles(http.Context, *ListPersonalRolesRequest) (context.Context, error)
+	CompleteListPersonalRoles(http.Context, *ListPersonalRolesRequest, *ListPersonalRolesResponse) error
 }
 type PersonalServicePersonalLogoutHooker interface {
-	BeforePersonalLogout(http.Context, *PersonalLogoutRequest) (context.Context, error)
-	PersonalLogoutResult(http.Context, *PersonalLogoutRequest, *PersonalLogoutResponse) error
+	PreparePersonalLogout(http.Context, *PersonalLogoutRequest) (context.Context, error)
+	CompletePersonalLogout(http.Context, *PersonalLogoutRequest, *PersonalLogoutResponse) error
 }
 type PersonalServiceRefreshPersonalTokenHooker interface {
-	BeforeRefreshPersonalToken(http.Context, *RefreshPersonalTokenRequest) (context.Context, error)
-	RefreshPersonalTokenResult(http.Context, *RefreshPersonalTokenRequest, *RefreshPersonalTokenResponse) error
+	PrepareRefreshPersonalToken(http.Context, *RefreshPersonalTokenRequest) (context.Context, error)
+	CompleteRefreshPersonalToken(http.Context, *RefreshPersonalTokenRequest, *RefreshPersonalTokenResponse) error
 }
 type PersonalServiceUpdatePersonalPasswordHooker interface {
-	BeforeUpdatePersonalPassword(http.Context, *UpdatePersonalPasswordRequest) (context.Context, error)
-	UpdatePersonalPasswordResult(http.Context, *UpdatePersonalPasswordRequest, *UpdatePersonalPasswordResponse) error
+	PrepareUpdatePersonalPassword(http.Context, *UpdatePersonalPasswordRequest) (context.Context, error)
+	CompleteUpdatePersonalPassword(http.Context, *UpdatePersonalPasswordRequest, *UpdatePersonalPasswordResponse) error
 }
 type PersonalServiceUpdatePersonalProfileHooker interface {
-	BeforeUpdatePersonalProfile(http.Context, *UpdatePersonalProfileRequest) (context.Context, error)
-	UpdatePersonalProfileResult(http.Context, *UpdatePersonalProfileRequest, *UpdatePersonalProfileResponse) error
+	PrepareUpdatePersonalProfile(http.Context, *UpdatePersonalProfileRequest) (context.Context, error)
+	CompleteUpdatePersonalProfile(http.Context, *UpdatePersonalProfileRequest, *UpdatePersonalProfileResponse) error
 }
 type PersonalServiceUpdatePersonalSettingHooker interface {
-	BeforeUpdatePersonalSetting(http.Context, *UpdatePersonalSettingRequest) (context.Context, error)
-	UpdatePersonalSettingResult(http.Context, *UpdatePersonalSettingRequest, *UpdatePersonalSettingResponse) error
+	PrepareUpdatePersonalSetting(http.Context, *UpdatePersonalSettingRequest) (context.Context, error)
+	CompleteUpdatePersonalSetting(http.Context, *UpdatePersonalSettingRequest, *UpdatePersonalSettingResponse) error
 }
 
 func RegisterPersonalServiceBridger(s *http.Server, srv PersonalServiceHookedBridger) {
@@ -127,7 +127,7 @@ func _PersonalService_GetPersonalProfile0_Bridge_Handler(srv PersonalServiceHook
 			return srv.GetPersonalProfile(ctx, req.(*GetPersonalProfileRequest))
 		})
 
-		newctx, err := srv.BeforeGetPersonalProfile(ctx, &in)
+		newctx, err := srv.PrepareGetPersonalProfile(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -135,7 +135,7 @@ func _PersonalService_GetPersonalProfile0_Bridge_Handler(srv PersonalServiceHook
 		if err != nil {
 			return err
 		}
-		return srv.GetPersonalProfileResult(ctx, &in, out.(*GetPersonalProfileResponse))
+		return srv.CompleteGetPersonalProfile(ctx, &in, out.(*GetPersonalProfileResponse))
 	}
 }
 
@@ -150,7 +150,7 @@ func _PersonalService_ListPersonalResources0_Bridge_Handler(srv PersonalServiceH
 			return srv.ListPersonalResources(ctx, req.(*ListPersonalResourcesRequest))
 		})
 
-		newctx, err := srv.BeforeListPersonalResources(ctx, &in)
+		newctx, err := srv.PrepareListPersonalResources(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -158,7 +158,7 @@ func _PersonalService_ListPersonalResources0_Bridge_Handler(srv PersonalServiceH
 		if err != nil {
 			return err
 		}
-		return srv.ListPersonalResourcesResult(ctx, &in, out.(*ListPersonalResourcesResponse))
+		return srv.CompleteListPersonalResources(ctx, &in, out.(*ListPersonalResourcesResponse))
 	}
 }
 
@@ -173,7 +173,7 @@ func _PersonalService_ListPersonalRoles0_Bridge_Handler(srv PersonalServiceHooke
 			return srv.ListPersonalRoles(ctx, req.(*ListPersonalRolesRequest))
 		})
 
-		newctx, err := srv.BeforeListPersonalRoles(ctx, &in)
+		newctx, err := srv.PrepareListPersonalRoles(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -181,7 +181,7 @@ func _PersonalService_ListPersonalRoles0_Bridge_Handler(srv PersonalServiceHooke
 		if err != nil {
 			return err
 		}
-		return srv.ListPersonalRolesResult(ctx, &in, out.(*ListPersonalRolesResponse))
+		return srv.CompleteListPersonalRoles(ctx, &in, out.(*ListPersonalRolesResponse))
 	}
 }
 
@@ -199,7 +199,7 @@ func _PersonalService_PersonalLogout0_Bridge_Handler(srv PersonalServiceHookedBr
 			return srv.PersonalLogout(ctx, req.(*PersonalLogoutRequest))
 		})
 
-		newctx, err := srv.BeforePersonalLogout(ctx, &in)
+		newctx, err := srv.PreparePersonalLogout(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -207,7 +207,7 @@ func _PersonalService_PersonalLogout0_Bridge_Handler(srv PersonalServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.PersonalLogoutResult(ctx, &in, out.(*PersonalLogoutResponse))
+		return srv.CompletePersonalLogout(ctx, &in, out.(*PersonalLogoutResponse))
 	}
 }
 
@@ -225,7 +225,7 @@ func _PersonalService_RefreshPersonalToken0_Bridge_Handler(srv PersonalServiceHo
 			return srv.RefreshPersonalToken(ctx, req.(*RefreshPersonalTokenRequest))
 		})
 
-		newctx, err := srv.BeforeRefreshPersonalToken(ctx, &in)
+		newctx, err := srv.PrepareRefreshPersonalToken(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -233,7 +233,7 @@ func _PersonalService_RefreshPersonalToken0_Bridge_Handler(srv PersonalServiceHo
 		if err != nil {
 			return err
 		}
-		return srv.RefreshPersonalTokenResult(ctx, &in, out.(*RefreshPersonalTokenResponse))
+		return srv.CompleteRefreshPersonalToken(ctx, &in, out.(*RefreshPersonalTokenResponse))
 	}
 }
 
@@ -251,7 +251,7 @@ func _PersonalService_UpdatePersonalPassword0_Bridge_Handler(srv PersonalService
 			return srv.UpdatePersonalPassword(ctx, req.(*UpdatePersonalPasswordRequest))
 		})
 
-		newctx, err := srv.BeforeUpdatePersonalPassword(ctx, &in)
+		newctx, err := srv.PrepareUpdatePersonalPassword(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -259,7 +259,7 @@ func _PersonalService_UpdatePersonalPassword0_Bridge_Handler(srv PersonalService
 		if err != nil {
 			return err
 		}
-		return srv.UpdatePersonalPasswordResult(ctx, &in, out.(*UpdatePersonalPasswordResponse))
+		return srv.CompleteUpdatePersonalPassword(ctx, &in, out.(*UpdatePersonalPasswordResponse))
 	}
 }
 
@@ -277,7 +277,7 @@ func _PersonalService_UpdatePersonalProfile0_Bridge_Handler(srv PersonalServiceH
 			return srv.UpdatePersonalProfile(ctx, req.(*UpdatePersonalProfileRequest))
 		})
 
-		newctx, err := srv.BeforeUpdatePersonalProfile(ctx, &in)
+		newctx, err := srv.PrepareUpdatePersonalProfile(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -285,7 +285,7 @@ func _PersonalService_UpdatePersonalProfile0_Bridge_Handler(srv PersonalServiceH
 		if err != nil {
 			return err
 		}
-		return srv.UpdatePersonalProfileResult(ctx, &in, out.(*UpdatePersonalProfileResponse))
+		return srv.CompleteUpdatePersonalProfile(ctx, &in, out.(*UpdatePersonalProfileResponse))
 	}
 }
 
@@ -303,7 +303,7 @@ func _PersonalService_UpdatePersonalSetting0_Bridge_Handler(srv PersonalServiceH
 			return srv.UpdatePersonalSetting(ctx, req.(*UpdatePersonalSettingRequest))
 		})
 
-		newctx, err := srv.BeforeUpdatePersonalSetting(ctx, &in)
+		newctx, err := srv.PrepareUpdatePersonalSetting(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -311,7 +311,7 @@ func _PersonalService_UpdatePersonalSetting0_Bridge_Handler(srv PersonalServiceH
 		if err != nil {
 			return err
 		}
-		return srv.UpdatePersonalSettingResult(ctx, &in, out.(*UpdatePersonalSettingResponse))
+		return srv.CompleteUpdatePersonalSetting(ctx, &in, out.(*UpdatePersonalSettingResponse))
 	}
 }
 
@@ -322,67 +322,67 @@ func _PersonalService_UpdatePersonalSetting0_Bridge_Handler(srv PersonalServiceH
 // pointer dereference when methods are called.
 type UnimplementedPersonalServiceHooked struct{}
 
-func (UnimplementedPersonalServiceHooked) BeforeGetPersonalProfile(ctx http.Context, in *GetPersonalProfileRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareGetPersonalProfile(ctx http.Context, in *GetPersonalProfileRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) GetPersonalProfileResult(ctx http.Context, in *GetPersonalProfileRequest, out *GetPersonalProfileResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteGetPersonalProfile(ctx http.Context, in *GetPersonalProfileRequest, out *GetPersonalProfileResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforeListPersonalResources(ctx http.Context, in *ListPersonalResourcesRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareListPersonalResources(ctx http.Context, in *ListPersonalResourcesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) ListPersonalResourcesResult(ctx http.Context, in *ListPersonalResourcesRequest, out *ListPersonalResourcesResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteListPersonalResources(ctx http.Context, in *ListPersonalResourcesRequest, out *ListPersonalResourcesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforeListPersonalRoles(ctx http.Context, in *ListPersonalRolesRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareListPersonalRoles(ctx http.Context, in *ListPersonalRolesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) ListPersonalRolesResult(ctx http.Context, in *ListPersonalRolesRequest, out *ListPersonalRolesResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteListPersonalRoles(ctx http.Context, in *ListPersonalRolesRequest, out *ListPersonalRolesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforePersonalLogout(ctx http.Context, in *PersonalLogoutRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PreparePersonalLogout(ctx http.Context, in *PersonalLogoutRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) PersonalLogoutResult(ctx http.Context, in *PersonalLogoutRequest, out *PersonalLogoutResponse) error {
+func (UnimplementedPersonalServiceHooked) CompletePersonalLogout(ctx http.Context, in *PersonalLogoutRequest, out *PersonalLogoutResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforeRefreshPersonalToken(ctx http.Context, in *RefreshPersonalTokenRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareRefreshPersonalToken(ctx http.Context, in *RefreshPersonalTokenRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) RefreshPersonalTokenResult(ctx http.Context, in *RefreshPersonalTokenRequest, out *RefreshPersonalTokenResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteRefreshPersonalToken(ctx http.Context, in *RefreshPersonalTokenRequest, out *RefreshPersonalTokenResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforeUpdatePersonalPassword(ctx http.Context, in *UpdatePersonalPasswordRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareUpdatePersonalPassword(ctx http.Context, in *UpdatePersonalPasswordRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) UpdatePersonalPasswordResult(ctx http.Context, in *UpdatePersonalPasswordRequest, out *UpdatePersonalPasswordResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteUpdatePersonalPassword(ctx http.Context, in *UpdatePersonalPasswordRequest, out *UpdatePersonalPasswordResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforeUpdatePersonalProfile(ctx http.Context, in *UpdatePersonalProfileRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareUpdatePersonalProfile(ctx http.Context, in *UpdatePersonalProfileRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) UpdatePersonalProfileResult(ctx http.Context, in *UpdatePersonalProfileRequest, out *UpdatePersonalProfileResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteUpdatePersonalProfile(ctx http.Context, in *UpdatePersonalProfileRequest, out *UpdatePersonalProfileResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPersonalServiceHooked) BeforeUpdatePersonalSetting(ctx http.Context, in *UpdatePersonalSettingRequest) (context.Context, error) {
+func (UnimplementedPersonalServiceHooked) PrepareUpdatePersonalSetting(ctx http.Context, in *UpdatePersonalSettingRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPersonalServiceHooked) UpdatePersonalSettingResult(ctx http.Context, in *UpdatePersonalSettingRequest, out *UpdatePersonalSettingResponse) error {
+func (UnimplementedPersonalServiceHooked) CompleteUpdatePersonalSetting(ctx http.Context, in *UpdatePersonalSettingRequest, out *UpdatePersonalSettingResponse) error {
 	return ctx.Result(200, out)
 }
 

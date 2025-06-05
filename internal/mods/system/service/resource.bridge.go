@@ -23,7 +23,7 @@ type ResourceServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (h ResourceServiceHookedBridge) CreateResourceResult(ctx transhttp.Context, request *pb.CreateResourceRequest, response *pb.CreateResourceResponse) error {
+func (h ResourceServiceHookedBridge) CompleteCreateResource(ctx transhttp.Context, request *pb.CreateResourceRequest, response *pb.CreateResourceResponse) error {
 	marshal, err := json.Marshal(response.Resource)
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func (h ResourceServiceHookedBridge) CreateResourceResult(ctx transhttp.Context,
 	})
 }
 
-func (h ResourceServiceHookedBridge) DeleteResourceResult(ctx transhttp.Context, request *pb.DeleteResourceRequest, response *pb.DeleteResourceResponse) error {
+func (h ResourceServiceHookedBridge) CompleteDeleteResource(ctx transhttp.Context, request *pb.DeleteResourceRequest, response *pb.DeleteResourceResponse) error {
 	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
 }
 
-func (h ResourceServiceHookedBridge) GetResourceResult(ctx transhttp.Context, request *pb.GetResourceRequest, response *pb.GetResourceResponse) error {
+func (h ResourceServiceHookedBridge) CompleteGetResource(ctx transhttp.Context, request *pb.GetResourceRequest, response *pb.GetResourceResponse) error {
 	marshal, err := json.Marshal(response.Resource)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (h ResourceServiceHookedBridge) GetResourceResult(ctx transhttp.Context, re
 	})
 }
 
-func (h ResourceServiceHookedBridge) ListResourcesResult(ctx transhttp.Context, request *pb.ListResourcesRequest, response *pb.ListResourcesResponse) error {
+func (h ResourceServiceHookedBridge) CompleteListResources(ctx transhttp.Context, request *pb.ListResourcesRequest, response *pb.ListResourcesResponse) error {
 	marshal, err := json.Marshal(response.Resources)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (h ResourceServiceHookedBridge) ListResourcesResult(ctx transhttp.Context, 
 	})
 }
 
-func (h ResourceServiceHookedBridge) UpdateResourceResult(ctx transhttp.Context, request *pb.UpdateResourceRequest, response *pb.UpdateResourceResponse) error {
+func (h ResourceServiceHookedBridge) CompleteUpdateResource(ctx transhttp.Context, request *pb.UpdateResourceRequest, response *pb.UpdateResourceResponse) error {
 	marshal, err := json.Marshal(response.Resource)
 	if err != nil {
 		return err

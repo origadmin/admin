@@ -23,7 +23,7 @@ type MenuServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (h MenuServiceHookedBridge) CreateMenuResult(ctx transhttp.Context, request *pb.CreateMenuRequest, response *pb.CreateMenuResponse) error {
+func (h MenuServiceHookedBridge) CompleteCreateMenu(ctx transhttp.Context, request *pb.CreateMenuRequest, response *pb.CreateMenuResponse) error {
 	marshal, err := json.Marshal(response.Menu)
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func (h MenuServiceHookedBridge) CreateMenuResult(ctx transhttp.Context, request
 	})
 }
 
-func (h MenuServiceHookedBridge) DeleteMenuResult(ctx transhttp.Context, request *pb.DeleteMenuRequest, response *pb.DeleteMenuResponse) error {
+func (h MenuServiceHookedBridge) CompleteDeleteMenu(ctx transhttp.Context, request *pb.DeleteMenuRequest, response *pb.DeleteMenuResponse) error {
 	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
 }
 
-func (h MenuServiceHookedBridge) GetMenuResult(ctx transhttp.Context, request *pb.GetMenuRequest, response *pb.GetMenuResponse) error {
+func (h MenuServiceHookedBridge) CompleteGetMenu(ctx transhttp.Context, request *pb.GetMenuRequest, response *pb.GetMenuResponse) error {
 	marshal, err := json.Marshal(response.Menu)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (h MenuServiceHookedBridge) GetMenuResult(ctx transhttp.Context, request *p
 	})
 }
 
-func (h MenuServiceHookedBridge) ListMenusResult(ctx transhttp.Context, request *pb.ListMenusRequest, response *pb.ListMenusResponse) error {
+func (h MenuServiceHookedBridge) CompleteListMenus(ctx transhttp.Context, request *pb.ListMenusRequest, response *pb.ListMenusResponse) error {
 	marshal, err := json.Marshal(response.Menus)
 	if err != nil {
 		return err
@@ -64,7 +64,7 @@ func (h MenuServiceHookedBridge) ListMenusResult(ctx transhttp.Context, request 
 	})
 }
 
-func (h MenuServiceHookedBridge) UpdateMenuResult(ctx transhttp.Context, request *pb.UpdateMenuRequest, response *pb.UpdateMenuResponse) error {
+func (h MenuServiceHookedBridge) CompleteUpdateMenu(ctx transhttp.Context, request *pb.UpdateMenuRequest, response *pb.UpdateMenuResponse) error {
 	marshal, err := json.Marshal(response.Menu)
 	if err != nil {
 		return err

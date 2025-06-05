@@ -6,13 +6,17 @@
 package captcha
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/mojocn/base64Captcha"
+	"github.com/origadmin/toolkits/errors/httperr"
+
+	typespb "origadmin/application/admin/api/v1/services/types"
 )
 
-var ErrNotFound = errors.New("captcha not found")
+var (
+	ErrNotFound = httperr.New("http.response.status."+typespb.AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND.String(), http.StatusBadRequest, "captcha not found")
+)
 
 const (
 	TypeAudio   = "audio"

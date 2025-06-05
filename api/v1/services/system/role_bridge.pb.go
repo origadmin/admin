@@ -55,24 +55,24 @@ type RoleServiceHookedBridger interface {
 	RoleServiceBridger
 }
 type RoleServiceCreateRoleHooker interface {
-	BeforeCreateRole(http.Context, *CreateRoleRequest) (context.Context, error)
-	CreateRoleResult(http.Context, *CreateRoleRequest, *CreateRoleResponse) error
+	PrepareCreateRole(http.Context, *CreateRoleRequest) (context.Context, error)
+	CompleteCreateRole(http.Context, *CreateRoleRequest, *CreateRoleResponse) error
 }
 type RoleServiceDeleteRoleHooker interface {
-	BeforeDeleteRole(http.Context, *DeleteRoleRequest) (context.Context, error)
-	DeleteRoleResult(http.Context, *DeleteRoleRequest, *DeleteRoleResponse) error
+	PrepareDeleteRole(http.Context, *DeleteRoleRequest) (context.Context, error)
+	CompleteDeleteRole(http.Context, *DeleteRoleRequest, *DeleteRoleResponse) error
 }
 type RoleServiceGetRoleHooker interface {
-	BeforeGetRole(http.Context, *GetRoleRequest) (context.Context, error)
-	GetRoleResult(http.Context, *GetRoleRequest, *GetRoleResponse) error
+	PrepareGetRole(http.Context, *GetRoleRequest) (context.Context, error)
+	CompleteGetRole(http.Context, *GetRoleRequest, *GetRoleResponse) error
 }
 type RoleServiceListRolesHooker interface {
-	BeforeListRoles(http.Context, *ListRolesRequest) (context.Context, error)
-	ListRolesResult(http.Context, *ListRolesRequest, *ListRolesResponse) error
+	PrepareListRoles(http.Context, *ListRolesRequest) (context.Context, error)
+	CompleteListRoles(http.Context, *ListRolesRequest, *ListRolesResponse) error
 }
 type RoleServiceUpdateRoleHooker interface {
-	BeforeUpdateRole(http.Context, *UpdateRoleRequest) (context.Context, error)
-	UpdateRoleResult(http.Context, *UpdateRoleRequest, *UpdateRoleResponse) error
+	PrepareUpdateRole(http.Context, *UpdateRoleRequest) (context.Context, error)
+	CompleteUpdateRole(http.Context, *UpdateRoleRequest, *UpdateRoleResponse) error
 }
 
 func RegisterRoleServiceBridger(s *http.Server, srv RoleServiceHookedBridger) {
@@ -95,7 +95,7 @@ func _RoleService_ListRoles0_Bridge_Handler(srv RoleServiceHookedBridger) func(c
 			return srv.ListRoles(ctx, req.(*ListRolesRequest))
 		})
 
-		newctx, err := srv.BeforeListRoles(ctx, &in)
+		newctx, err := srv.PrepareListRoles(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func _RoleService_ListRoles0_Bridge_Handler(srv RoleServiceHookedBridger) func(c
 		if err != nil {
 			return err
 		}
-		return srv.ListRolesResult(ctx, &in, out.(*ListRolesResponse))
+		return srv.CompleteListRoles(ctx, &in, out.(*ListRolesResponse))
 	}
 }
 
@@ -121,7 +121,7 @@ func _RoleService_GetRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(ctx
 			return srv.GetRole(ctx, req.(*GetRoleRequest))
 		})
 
-		newctx, err := srv.BeforeGetRole(ctx, &in)
+		newctx, err := srv.PrepareGetRole(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func _RoleService_GetRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(ctx
 		if err != nil {
 			return err
 		}
-		return srv.GetRoleResult(ctx, &in, out.(*GetRoleResponse))
+		return srv.CompleteGetRole(ctx, &in, out.(*GetRoleResponse))
 	}
 }
 
@@ -147,7 +147,7 @@ func _RoleService_CreateRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 			return srv.CreateRole(ctx, req.(*CreateRoleRequest))
 		})
 
-		newctx, err := srv.BeforeCreateRole(ctx, &in)
+		newctx, err := srv.PrepareCreateRole(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func _RoleService_CreateRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.CreateRoleResult(ctx, &in, out.(*CreateRoleResponse))
+		return srv.CompleteCreateRole(ctx, &in, out.(*CreateRoleResponse))
 	}
 }
 
@@ -176,7 +176,7 @@ func _RoleService_UpdateRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 			return srv.UpdateRole(ctx, req.(*UpdateRoleRequest))
 		})
 
-		newctx, err := srv.BeforeUpdateRole(ctx, &in)
+		newctx, err := srv.PrepareUpdateRole(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -184,7 +184,7 @@ func _RoleService_UpdateRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.UpdateRoleResult(ctx, &in, out.(*UpdateRoleResponse))
+		return srv.CompleteUpdateRole(ctx, &in, out.(*UpdateRoleResponse))
 	}
 }
 
@@ -202,7 +202,7 @@ func _RoleService_DeleteRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 			return srv.DeleteRole(ctx, req.(*DeleteRoleRequest))
 		})
 
-		newctx, err := srv.BeforeDeleteRole(ctx, &in)
+		newctx, err := srv.PrepareDeleteRole(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -210,7 +210,7 @@ func _RoleService_DeleteRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 		if err != nil {
 			return err
 		}
-		return srv.DeleteRoleResult(ctx, &in, out.(*DeleteRoleResponse))
+		return srv.CompleteDeleteRole(ctx, &in, out.(*DeleteRoleResponse))
 	}
 }
 
@@ -221,43 +221,43 @@ func _RoleService_DeleteRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 // pointer dereference when methods are called.
 type UnimplementedRoleServiceHooked struct{}
 
-func (UnimplementedRoleServiceHooked) BeforeCreateRole(ctx http.Context, in *CreateRoleRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareCreateRole(ctx http.Context, in *CreateRoleRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) CreateRoleResult(ctx http.Context, in *CreateRoleRequest, out *CreateRoleResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteCreateRole(ctx http.Context, in *CreateRoleRequest, out *CreateRoleResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedRoleServiceHooked) BeforeDeleteRole(ctx http.Context, in *DeleteRoleRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareDeleteRole(ctx http.Context, in *DeleteRoleRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) DeleteRoleResult(ctx http.Context, in *DeleteRoleRequest, out *DeleteRoleResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteDeleteRole(ctx http.Context, in *DeleteRoleRequest, out *DeleteRoleResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedRoleServiceHooked) BeforeGetRole(ctx http.Context, in *GetRoleRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareGetRole(ctx http.Context, in *GetRoleRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) GetRoleResult(ctx http.Context, in *GetRoleRequest, out *GetRoleResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteGetRole(ctx http.Context, in *GetRoleRequest, out *GetRoleResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedRoleServiceHooked) BeforeListRoles(ctx http.Context, in *ListRolesRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareListRoles(ctx http.Context, in *ListRolesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) ListRolesResult(ctx http.Context, in *ListRolesRequest, out *ListRolesResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteListRoles(ctx http.Context, in *ListRolesRequest, out *ListRolesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedRoleServiceHooked) BeforeUpdateRole(ctx http.Context, in *UpdateRoleRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareUpdateRole(ctx http.Context, in *UpdateRoleRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) UpdateRoleResult(ctx http.Context, in *UpdateRoleRequest, out *UpdateRoleResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteUpdateRole(ctx http.Context, in *UpdateRoleRequest, out *UpdateRoleResponse) error {
 	return ctx.Result(200, out)
 }
 

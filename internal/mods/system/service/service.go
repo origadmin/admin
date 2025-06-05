@@ -17,17 +17,23 @@ import (
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
 	wire.Struct(new(RegisterServer), "*"),
+	NewResourceServiceBridge,
 	NewResourceServiceServerPB,
 	NewResourceServiceHTTPServerPB,
+	NewRoleServiceBridge,
 	NewRoleServiceServerPB,
 	NewRoleServiceHTTPServerPB,
+	NewUserServiceBridge,
 	NewUserServiceServerPB,
 	NewUserServiceHTTPServerPB,
+	NewPersonalServiceBridge,
 	NewPersonalServiceServerPB,
 	NewPersonalServiceHTTPServerPB,
+	NewPermissionServiceBridge,
 	NewPermissionServiceServerPB,
 	NewPermissionServiceHTTPServerPB,
 	NewRegisterServer,
+
 )
 
 type RegisterServer struct {

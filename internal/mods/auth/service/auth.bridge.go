@@ -29,17 +29,17 @@ type AuthServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (s AuthServiceHookedBridge) BeforeAuthLogout(h transhttp.Context, request *pb.AuthLogoutRequest) (context2.Context, error) {
+func (s AuthServiceHookedBridge) PrepareAuthLogout(h transhttp.Context, request *pb.AuthLogoutRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) AuthLogoutResult(h transhttp.Context, request *pb.AuthLogoutRequest, response *pb.AuthLogoutResponse) error {
+func (s AuthServiceHookedBridge) CompleteAuthLogout(h transhttp.Context, request *pb.AuthLogoutRequest, response *pb.AuthLogoutResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) AuthenticateResult(h transhttp.Context, request *pb.AuthenticateRequest, response *pb.AuthenticateResponse) error {
+func (s AuthServiceHookedBridge) CompleteAuthenticate(h transhttp.Context, request *pb.AuthenticateRequest, response *pb.AuthenticateResponse) error {
 	if !response.IsValid {
 		return ErrorInvalidToken
 	}
@@ -48,42 +48,42 @@ func (s AuthServiceHookedBridge) AuthenticateResult(h transhttp.Context, request
 	})
 }
 
-func (s AuthServiceHookedBridge) BeforeCreateToken(h transhttp.Context, request *pb.CreateTokenRequest) (context2.Context, error) {
+func (s AuthServiceHookedBridge) PrepareCreateToken(h transhttp.Context, request *pb.CreateTokenRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) CreateTokenResult(h transhttp.Context, request *pb.CreateTokenRequest, response *pb.CreateTokenResponse) error {
+func (s AuthServiceHookedBridge) CompleteCreateToken(h transhttp.Context, request *pb.CreateTokenRequest, response *pb.CreateTokenResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) BeforeDestroyToken(h transhttp.Context, request *pb.DestroyTokenRequest) (context2.Context, error) {
+func (s AuthServiceHookedBridge) PrepareDestroyToken(h transhttp.Context, request *pb.DestroyTokenRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) DestroyTokenResult(h transhttp.Context, request *pb.DestroyTokenRequest, response *pb.DestroyTokenResponse) error {
+func (s AuthServiceHookedBridge) CompleteDestroyToken(h transhttp.Context, request *pb.DestroyTokenRequest, response *pb.DestroyTokenResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) BeforeListAuthResources(h transhttp.Context, request *pb.ListAuthResourcesRequest) (context2.Context, error) {
+func (s AuthServiceHookedBridge) PrepareListAuthResources(h transhttp.Context, request *pb.ListAuthResourcesRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) ListAuthResourcesResult(h transhttp.Context, request *pb.ListAuthResourcesRequest, response *pb.ListAuthResourcesResponse) error {
+func (s AuthServiceHookedBridge) CompleteListAuthResources(h transhttp.Context, request *pb.ListAuthResourcesRequest, response *pb.ListAuthResourcesResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) BeforeValidateToken(h transhttp.Context, request *pb.ValidateTokenRequest) (context2.Context, error) {
+func (s AuthServiceHookedBridge) PrepareValidateToken(h transhttp.Context, request *pb.ValidateTokenRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s AuthServiceHookedBridge) ValidateTokenResult(h transhttp.Context, request *pb.ValidateTokenRequest, response *pb.ValidateTokenResponse) error {
+func (s AuthServiceHookedBridge) CompleteValidateToken(h transhttp.Context, request *pb.ValidateTokenRequest, response *pb.ValidateTokenResponse) error {
 	//TODO implement me
 	panic("implement me")
 }

@@ -55,24 +55,24 @@ type DepartmentServiceHookedBridger interface {
 	DepartmentServiceBridger
 }
 type DepartmentServiceCreateDepartmentHooker interface {
-	BeforeCreateDepartment(http.Context, *CreateDepartmentRequest) (context.Context, error)
-	CreateDepartmentResult(http.Context, *CreateDepartmentRequest, *CreateDepartmentResponse) error
+	PrepareCreateDepartment(http.Context, *CreateDepartmentRequest) (context.Context, error)
+	CompleteCreateDepartment(http.Context, *CreateDepartmentRequest, *CreateDepartmentResponse) error
 }
 type DepartmentServiceDeleteDepartmentHooker interface {
-	BeforeDeleteDepartment(http.Context, *DeleteDepartmentRequest) (context.Context, error)
-	DeleteDepartmentResult(http.Context, *DeleteDepartmentRequest, *DeleteDepartmentResponse) error
+	PrepareDeleteDepartment(http.Context, *DeleteDepartmentRequest) (context.Context, error)
+	CompleteDeleteDepartment(http.Context, *DeleteDepartmentRequest, *DeleteDepartmentResponse) error
 }
 type DepartmentServiceGetDepartmentHooker interface {
-	BeforeGetDepartment(http.Context, *GetDepartmentRequest) (context.Context, error)
-	GetDepartmentResult(http.Context, *GetDepartmentRequest, *GetDepartmentResponse) error
+	PrepareGetDepartment(http.Context, *GetDepartmentRequest) (context.Context, error)
+	CompleteGetDepartment(http.Context, *GetDepartmentRequest, *GetDepartmentResponse) error
 }
 type DepartmentServiceListDepartmentsHooker interface {
-	BeforeListDepartments(http.Context, *ListDepartmentsRequest) (context.Context, error)
-	ListDepartmentsResult(http.Context, *ListDepartmentsRequest, *ListDepartmentsResponse) error
+	PrepareListDepartments(http.Context, *ListDepartmentsRequest) (context.Context, error)
+	CompleteListDepartments(http.Context, *ListDepartmentsRequest, *ListDepartmentsResponse) error
 }
 type DepartmentServiceUpdateDepartmentHooker interface {
-	BeforeUpdateDepartment(http.Context, *UpdateDepartmentRequest) (context.Context, error)
-	UpdateDepartmentResult(http.Context, *UpdateDepartmentRequest, *UpdateDepartmentResponse) error
+	PrepareUpdateDepartment(http.Context, *UpdateDepartmentRequest) (context.Context, error)
+	CompleteUpdateDepartment(http.Context, *UpdateDepartmentRequest, *UpdateDepartmentResponse) error
 }
 
 func RegisterDepartmentServiceBridger(s *http.Server, srv DepartmentServiceHookedBridger) {
@@ -95,7 +95,7 @@ func _DepartmentService_ListDepartments0_Bridge_Handler(srv DepartmentServiceHoo
 			return srv.ListDepartments(ctx, req.(*ListDepartmentsRequest))
 		})
 
-		newctx, err := srv.BeforeListDepartments(ctx, &in)
+		newctx, err := srv.PrepareListDepartments(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func _DepartmentService_ListDepartments0_Bridge_Handler(srv DepartmentServiceHoo
 		if err != nil {
 			return err
 		}
-		return srv.ListDepartmentsResult(ctx, &in, out.(*ListDepartmentsResponse))
+		return srv.CompleteListDepartments(ctx, &in, out.(*ListDepartmentsResponse))
 	}
 }
 
@@ -121,7 +121,7 @@ func _DepartmentService_GetDepartment0_Bridge_Handler(srv DepartmentServiceHooke
 			return srv.GetDepartment(ctx, req.(*GetDepartmentRequest))
 		})
 
-		newctx, err := srv.BeforeGetDepartment(ctx, &in)
+		newctx, err := srv.PrepareGetDepartment(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func _DepartmentService_GetDepartment0_Bridge_Handler(srv DepartmentServiceHooke
 		if err != nil {
 			return err
 		}
-		return srv.GetDepartmentResult(ctx, &in, out.(*GetDepartmentResponse))
+		return srv.CompleteGetDepartment(ctx, &in, out.(*GetDepartmentResponse))
 	}
 }
 
@@ -147,7 +147,7 @@ func _DepartmentService_CreateDepartment0_Bridge_Handler(srv DepartmentServiceHo
 			return srv.CreateDepartment(ctx, req.(*CreateDepartmentRequest))
 		})
 
-		newctx, err := srv.BeforeCreateDepartment(ctx, &in)
+		newctx, err := srv.PrepareCreateDepartment(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func _DepartmentService_CreateDepartment0_Bridge_Handler(srv DepartmentServiceHo
 		if err != nil {
 			return err
 		}
-		return srv.CreateDepartmentResult(ctx, &in, out.(*CreateDepartmentResponse))
+		return srv.CompleteCreateDepartment(ctx, &in, out.(*CreateDepartmentResponse))
 	}
 }
 
@@ -176,7 +176,7 @@ func _DepartmentService_UpdateDepartment0_Bridge_Handler(srv DepartmentServiceHo
 			return srv.UpdateDepartment(ctx, req.(*UpdateDepartmentRequest))
 		})
 
-		newctx, err := srv.BeforeUpdateDepartment(ctx, &in)
+		newctx, err := srv.PrepareUpdateDepartment(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -184,7 +184,7 @@ func _DepartmentService_UpdateDepartment0_Bridge_Handler(srv DepartmentServiceHo
 		if err != nil {
 			return err
 		}
-		return srv.UpdateDepartmentResult(ctx, &in, out.(*UpdateDepartmentResponse))
+		return srv.CompleteUpdateDepartment(ctx, &in, out.(*UpdateDepartmentResponse))
 	}
 }
 
@@ -202,7 +202,7 @@ func _DepartmentService_DeleteDepartment0_Bridge_Handler(srv DepartmentServiceHo
 			return srv.DeleteDepartment(ctx, req.(*DeleteDepartmentRequest))
 		})
 
-		newctx, err := srv.BeforeDeleteDepartment(ctx, &in)
+		newctx, err := srv.PrepareDeleteDepartment(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -210,7 +210,7 @@ func _DepartmentService_DeleteDepartment0_Bridge_Handler(srv DepartmentServiceHo
 		if err != nil {
 			return err
 		}
-		return srv.DeleteDepartmentResult(ctx, &in, out.(*DeleteDepartmentResponse))
+		return srv.CompleteDeleteDepartment(ctx, &in, out.(*DeleteDepartmentResponse))
 	}
 }
 
@@ -221,43 +221,43 @@ func _DepartmentService_DeleteDepartment0_Bridge_Handler(srv DepartmentServiceHo
 // pointer dereference when methods are called.
 type UnimplementedDepartmentServiceHooked struct{}
 
-func (UnimplementedDepartmentServiceHooked) BeforeCreateDepartment(ctx http.Context, in *CreateDepartmentRequest) (context.Context, error) {
+func (UnimplementedDepartmentServiceHooked) PrepareCreateDepartment(ctx http.Context, in *CreateDepartmentRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDepartmentServiceHooked) CreateDepartmentResult(ctx http.Context, in *CreateDepartmentRequest, out *CreateDepartmentResponse) error {
+func (UnimplementedDepartmentServiceHooked) CompleteCreateDepartment(ctx http.Context, in *CreateDepartmentRequest, out *CreateDepartmentResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedDepartmentServiceHooked) BeforeDeleteDepartment(ctx http.Context, in *DeleteDepartmentRequest) (context.Context, error) {
+func (UnimplementedDepartmentServiceHooked) PrepareDeleteDepartment(ctx http.Context, in *DeleteDepartmentRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDepartmentServiceHooked) DeleteDepartmentResult(ctx http.Context, in *DeleteDepartmentRequest, out *DeleteDepartmentResponse) error {
+func (UnimplementedDepartmentServiceHooked) CompleteDeleteDepartment(ctx http.Context, in *DeleteDepartmentRequest, out *DeleteDepartmentResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedDepartmentServiceHooked) BeforeGetDepartment(ctx http.Context, in *GetDepartmentRequest) (context.Context, error) {
+func (UnimplementedDepartmentServiceHooked) PrepareGetDepartment(ctx http.Context, in *GetDepartmentRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDepartmentServiceHooked) GetDepartmentResult(ctx http.Context, in *GetDepartmentRequest, out *GetDepartmentResponse) error {
+func (UnimplementedDepartmentServiceHooked) CompleteGetDepartment(ctx http.Context, in *GetDepartmentRequest, out *GetDepartmentResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedDepartmentServiceHooked) BeforeListDepartments(ctx http.Context, in *ListDepartmentsRequest) (context.Context, error) {
+func (UnimplementedDepartmentServiceHooked) PrepareListDepartments(ctx http.Context, in *ListDepartmentsRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDepartmentServiceHooked) ListDepartmentsResult(ctx http.Context, in *ListDepartmentsRequest, out *ListDepartmentsResponse) error {
+func (UnimplementedDepartmentServiceHooked) CompleteListDepartments(ctx http.Context, in *ListDepartmentsRequest, out *ListDepartmentsResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedDepartmentServiceHooked) BeforeUpdateDepartment(ctx http.Context, in *UpdateDepartmentRequest) (context.Context, error) {
+func (UnimplementedDepartmentServiceHooked) PrepareUpdateDepartment(ctx http.Context, in *UpdateDepartmentRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDepartmentServiceHooked) UpdateDepartmentResult(ctx http.Context, in *UpdateDepartmentRequest, out *UpdateDepartmentResponse) error {
+func (UnimplementedDepartmentServiceHooked) CompleteUpdateDepartment(ctx http.Context, in *UpdateDepartmentRequest, out *UpdateDepartmentResponse) error {
 	return ctx.Result(200, out)
 }
 

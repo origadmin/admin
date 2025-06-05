@@ -12,8 +12,8 @@ import (
 	"github.com/google/wire"
 	"github.com/origadmin/contrib/transport/gins"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/bootstrap"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/registry"
 
@@ -33,7 +33,7 @@ type AppOptions struct {
 var (
 	ProviderSet = wire.NewSet(
 		NewRegistrar,
-		MockHttpServer,
+		NewProxyServer,
 		wire.Struct(new(Injector), "*"),
 		wire.Struct(new(InjectorClient), "*"),
 	)

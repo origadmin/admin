@@ -23,7 +23,7 @@ type UserServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (h UserServiceHookedBridge) CreateUserResult(ctx transhttp.Context, request *pb.CreateUserRequest, response *pb.CreateUserResponse) error {
+func (h UserServiceHookedBridge) CompleteCreateUser(ctx transhttp.Context, request *pb.CreateUserRequest, response *pb.CreateUserResponse) error {
 	marshal, err := json.Marshal(response.User)
 	if err != nil {
 		return err
@@ -34,14 +34,14 @@ func (h UserServiceHookedBridge) CreateUserResult(ctx transhttp.Context, request
 	})
 }
 
-func (h UserServiceHookedBridge) DeleteUserResult(ctx transhttp.Context, request *pb.DeleteUserRequest, response *pb.DeleteUserResponse) error {
+func (h UserServiceHookedBridge) CompleteDeleteUser(ctx transhttp.Context, request *pb.DeleteUserRequest, response *pb.DeleteUserResponse) error {
 	return ctx.JSON(http.StatusOK, &resp.SourceData{
 		Success: true,
 		Data:    nil,
 	})
 }
 
-func (h UserServiceHookedBridge) GetUserResult(ctx transhttp.Context, request *pb.GetUserRequest, response *pb.GetUserResponse) error {
+func (h UserServiceHookedBridge) CompleteGetUser(ctx transhttp.Context, request *pb.GetUserRequest, response *pb.GetUserResponse) error {
 	marshal, err := json.Marshal(response.User)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (h UserServiceHookedBridge) GetUserResult(ctx transhttp.Context, request *p
 	})
 }
 
-func (h UserServiceHookedBridge) ListUsersResult(ctx transhttp.Context, request *pb.ListUsersRequest, response *pb.ListUsersResponse) error {
+func (h UserServiceHookedBridge) CompleteListUsers(ctx transhttp.Context, request *pb.ListUsersRequest, response *pb.ListUsersResponse) error {
 	marshal, err := json.Marshal(response.Users)
 	if err != nil {
 		return err
@@ -67,7 +67,7 @@ func (h UserServiceHookedBridge) ListUsersResult(ctx transhttp.Context, request 
 	})
 }
 
-func (h UserServiceHookedBridge) UpdateUserResult(ctx transhttp.Context, request *pb.UpdateUserRequest, response *pb.UpdateUserResponse) error {
+func (h UserServiceHookedBridge) CompleteUpdateUser(ctx transhttp.Context, request *pb.UpdateUserRequest, response *pb.UpdateUserResponse) error {
 	marshal, err := json.Marshal(response.User)
 	if err != nil {
 		return err

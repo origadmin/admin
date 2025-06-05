@@ -6,9 +6,13 @@
 package start
 
 import (
+	"log/slog"
+
 	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/runtime/log"
 	"github.com/spf13/cobra"
 
 	_ "origadmin/application/admin/contrib/consul/config"
@@ -58,8 +62,15 @@ func Cmd() *cobra.Command {
 }
 
 func startCommandRun(cmd *cobra.Command, args []string) error {
-	if err := loader.Bootstrap(cmd.Context(), flags, buildInjectors); err != nil {
-		return err
+	debug, err := cmd.Flags().GetBool(startDebug)
+	if err != nil {
+		debug = false
+	}
+	if debug {
+		flags.SetEnv("debug")
+		flags.SetConfigPath("resources/configs/system_config.toml")
+		flags.SetWorkDir(".")
+		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 	//var registrar registry.KRegistrar
 	//if flags.IsMainService() {
@@ -76,9 +87,17 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	//	Version: flags.Version(),
 	//	Server:  grpcServer,
 	//})
+	ll := log.NewHelper(log.GetLogger())
+	ll.Infof("bootstrap flags: %+v", flags)
+	if err := loader.Bootstrap(cmd.Context(), flags, buildInjectors); err != nil {
+		ll.Infof("failed to bootstrap: %s", err.Error())
+		return err
+	}
+
 	return nil
 }
 
-func NewAppProvider(r runtime.Runtime, injector *loader.InjectorClient) *kratos.App {
-	return r.CreateApp(injector.Server)
+func NewApp(r runtime.Runtime, servers []transport.Server) *kratos.App {
+	r = r.Client()
+	return r.CreateApp(servers...)
 }

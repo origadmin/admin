@@ -23,28 +23,28 @@ type LoginServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (s LoginServiceHookedBridge) CaptchaResult(h transhttp.Context, request *pb.CaptchaRequest, response *pb.CaptchaResponse) error {
+func (s LoginServiceHookedBridge) CompleteCaptcha(h transhttp.Context, request *pb.CaptchaRequest, response *pb.CaptchaResponse) error {
 	return h.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response),
 	})
 }
 
-func (s LoginServiceHookedBridge) CaptchaAudioResult(h transhttp.Context, request *pb.CaptchaAudioRequest, response *pb.CaptchaAudioResponse) error {
+func (s LoginServiceHookedBridge) CompleteCaptchaAudio(h transhttp.Context, request *pb.CaptchaAudioRequest, response *pb.CaptchaAudioResponse) error {
 	return h.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response),
 	})
 }
 
-func (s LoginServiceHookedBridge) CaptchaIdResult(h transhttp.Context, request *pb.CaptchaIdRequest, response *pb.CaptchaIdResponse) error {
+func (s LoginServiceHookedBridge) CompleteCaptchaId(h transhttp.Context, request *pb.CaptchaIdRequest, response *pb.CaptchaIdResponse) error {
 	return h.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response),
 	})
 }
 
-func (s LoginServiceHookedBridge) CaptchaImageResult(h transhttp.Context, request *pb.CaptchaImageRequest, response *pb.CaptchaImageResponse) error {
+func (s LoginServiceHookedBridge) CompleteCaptchaImage(h transhttp.Context, request *pb.CaptchaImageRequest, response *pb.CaptchaImageResponse) error {
 	s.log.Debugf("CaptchaImage: Setting headers: %+v", response.Headers)
 	for k, v := range response.Headers {
 		h.Response().Header().Set(k, v)
@@ -60,37 +60,37 @@ func (s LoginServiceHookedBridge) CaptchaImageResult(h transhttp.Context, reques
 	return nil
 }
 
-func (s LoginServiceHookedBridge) BeforeLogin(h transhttp.Context, request *pb.LoginRequest) (context2.Context, error) {
+func (s LoginServiceHookedBridge) PrepareLogin(h transhttp.Context, request *pb.LoginRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) LoginResult(h transhttp.Context, request *pb.LoginRequest, response *pb.LoginResponse) error {
+func (s LoginServiceHookedBridge) CompleteLogin(h transhttp.Context, request *pb.LoginRequest, response *pb.LoginResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) BeforeLogout(h transhttp.Context, request *pb.LogoutRequest) (context2.Context, error) {
+func (s LoginServiceHookedBridge) PrepareLogout(h transhttp.Context, request *pb.LogoutRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) LogoutResult(h transhttp.Context, request *pb.LogoutRequest, response *pb.LogoutResponse) error {
+func (s LoginServiceHookedBridge) CompleteLogout(h transhttp.Context, request *pb.LogoutRequest, response *pb.LogoutResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) BeforeRegister(h transhttp.Context, request *pb.RegisterRequest) (context2.Context, error) {
+func (s LoginServiceHookedBridge) PrepareRegister(h transhttp.Context, request *pb.RegisterRequest) (context2.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) RegisterResult(h transhttp.Context, request *pb.RegisterRequest, response *pb.RegisterResponse) error {
+func (s LoginServiceHookedBridge) CompleteRegister(h transhttp.Context, request *pb.RegisterRequest, response *pb.RegisterResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) TokenRefreshResult(h transhttp.Context, request *pb.TokenRefreshRequest, response *pb.TokenRefreshResponse) error {
+func (s LoginServiceHookedBridge) CompleteTokenRefresh(h transhttp.Context, request *pb.TokenRefreshRequest, response *pb.TokenRefreshResponse) error {
 	return h.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(resp.FromToken(response.Token)),

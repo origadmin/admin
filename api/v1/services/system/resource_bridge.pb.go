@@ -55,24 +55,24 @@ type ResourceServiceHookedBridger interface {
 	ResourceServiceBridger
 }
 type ResourceServiceCreateResourceHooker interface {
-	BeforeCreateResource(http.Context, *CreateResourceRequest) (context.Context, error)
-	CreateResourceResult(http.Context, *CreateResourceRequest, *CreateResourceResponse) error
+	PrepareCreateResource(http.Context, *CreateResourceRequest) (context.Context, error)
+	CompleteCreateResource(http.Context, *CreateResourceRequest, *CreateResourceResponse) error
 }
 type ResourceServiceDeleteResourceHooker interface {
-	BeforeDeleteResource(http.Context, *DeleteResourceRequest) (context.Context, error)
-	DeleteResourceResult(http.Context, *DeleteResourceRequest, *DeleteResourceResponse) error
+	PrepareDeleteResource(http.Context, *DeleteResourceRequest) (context.Context, error)
+	CompleteDeleteResource(http.Context, *DeleteResourceRequest, *DeleteResourceResponse) error
 }
 type ResourceServiceGetResourceHooker interface {
-	BeforeGetResource(http.Context, *GetResourceRequest) (context.Context, error)
-	GetResourceResult(http.Context, *GetResourceRequest, *GetResourceResponse) error
+	PrepareGetResource(http.Context, *GetResourceRequest) (context.Context, error)
+	CompleteGetResource(http.Context, *GetResourceRequest, *GetResourceResponse) error
 }
 type ResourceServiceListResourcesHooker interface {
-	BeforeListResources(http.Context, *ListResourcesRequest) (context.Context, error)
-	ListResourcesResult(http.Context, *ListResourcesRequest, *ListResourcesResponse) error
+	PrepareListResources(http.Context, *ListResourcesRequest) (context.Context, error)
+	CompleteListResources(http.Context, *ListResourcesRequest, *ListResourcesResponse) error
 }
 type ResourceServiceUpdateResourceHooker interface {
-	BeforeUpdateResource(http.Context, *UpdateResourceRequest) (context.Context, error)
-	UpdateResourceResult(http.Context, *UpdateResourceRequest, *UpdateResourceResponse) error
+	PrepareUpdateResource(http.Context, *UpdateResourceRequest) (context.Context, error)
+	CompleteUpdateResource(http.Context, *UpdateResourceRequest, *UpdateResourceResponse) error
 }
 
 func RegisterResourceServiceBridger(s *http.Server, srv ResourceServiceHookedBridger) {
@@ -95,7 +95,7 @@ func _ResourceService_ListResources0_Bridge_Handler(srv ResourceServiceHookedBri
 			return srv.ListResources(ctx, req.(*ListResourcesRequest))
 		})
 
-		newctx, err := srv.BeforeListResources(ctx, &in)
+		newctx, err := srv.PrepareListResources(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -103,7 +103,7 @@ func _ResourceService_ListResources0_Bridge_Handler(srv ResourceServiceHookedBri
 		if err != nil {
 			return err
 		}
-		return srv.ListResourcesResult(ctx, &in, out.(*ListResourcesResponse))
+		return srv.CompleteListResources(ctx, &in, out.(*ListResourcesResponse))
 	}
 }
 
@@ -121,7 +121,7 @@ func _ResourceService_GetResource0_Bridge_Handler(srv ResourceServiceHookedBridg
 			return srv.GetResource(ctx, req.(*GetResourceRequest))
 		})
 
-		newctx, err := srv.BeforeGetResource(ctx, &in)
+		newctx, err := srv.PrepareGetResource(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func _ResourceService_GetResource0_Bridge_Handler(srv ResourceServiceHookedBridg
 		if err != nil {
 			return err
 		}
-		return srv.GetResourceResult(ctx, &in, out.(*GetResourceResponse))
+		return srv.CompleteGetResource(ctx, &in, out.(*GetResourceResponse))
 	}
 }
 
@@ -147,7 +147,7 @@ func _ResourceService_CreateResource0_Bridge_Handler(srv ResourceServiceHookedBr
 			return srv.CreateResource(ctx, req.(*CreateResourceRequest))
 		})
 
-		newctx, err := srv.BeforeCreateResource(ctx, &in)
+		newctx, err := srv.PrepareCreateResource(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -155,7 +155,7 @@ func _ResourceService_CreateResource0_Bridge_Handler(srv ResourceServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.CreateResourceResult(ctx, &in, out.(*CreateResourceResponse))
+		return srv.CompleteCreateResource(ctx, &in, out.(*CreateResourceResponse))
 	}
 }
 
@@ -176,7 +176,7 @@ func _ResourceService_UpdateResource0_Bridge_Handler(srv ResourceServiceHookedBr
 			return srv.UpdateResource(ctx, req.(*UpdateResourceRequest))
 		})
 
-		newctx, err := srv.BeforeUpdateResource(ctx, &in)
+		newctx, err := srv.PrepareUpdateResource(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -184,7 +184,7 @@ func _ResourceService_UpdateResource0_Bridge_Handler(srv ResourceServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.UpdateResourceResult(ctx, &in, out.(*UpdateResourceResponse))
+		return srv.CompleteUpdateResource(ctx, &in, out.(*UpdateResourceResponse))
 	}
 }
 
@@ -202,7 +202,7 @@ func _ResourceService_DeleteResource0_Bridge_Handler(srv ResourceServiceHookedBr
 			return srv.DeleteResource(ctx, req.(*DeleteResourceRequest))
 		})
 
-		newctx, err := srv.BeforeDeleteResource(ctx, &in)
+		newctx, err := srv.PrepareDeleteResource(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -210,7 +210,7 @@ func _ResourceService_DeleteResource0_Bridge_Handler(srv ResourceServiceHookedBr
 		if err != nil {
 			return err
 		}
-		return srv.DeleteResourceResult(ctx, &in, out.(*DeleteResourceResponse))
+		return srv.CompleteDeleteResource(ctx, &in, out.(*DeleteResourceResponse))
 	}
 }
 
@@ -221,43 +221,43 @@ func _ResourceService_DeleteResource0_Bridge_Handler(srv ResourceServiceHookedBr
 // pointer dereference when methods are called.
 type UnimplementedResourceServiceHooked struct{}
 
-func (UnimplementedResourceServiceHooked) BeforeCreateResource(ctx http.Context, in *CreateResourceRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareCreateResource(ctx http.Context, in *CreateResourceRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) CreateResourceResult(ctx http.Context, in *CreateResourceRequest, out *CreateResourceResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteCreateResource(ctx http.Context, in *CreateResourceRequest, out *CreateResourceResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedResourceServiceHooked) BeforeDeleteResource(ctx http.Context, in *DeleteResourceRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareDeleteResource(ctx http.Context, in *DeleteResourceRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) DeleteResourceResult(ctx http.Context, in *DeleteResourceRequest, out *DeleteResourceResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteDeleteResource(ctx http.Context, in *DeleteResourceRequest, out *DeleteResourceResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedResourceServiceHooked) BeforeGetResource(ctx http.Context, in *GetResourceRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareGetResource(ctx http.Context, in *GetResourceRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) GetResourceResult(ctx http.Context, in *GetResourceRequest, out *GetResourceResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteGetResource(ctx http.Context, in *GetResourceRequest, out *GetResourceResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedResourceServiceHooked) BeforeListResources(ctx http.Context, in *ListResourcesRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareListResources(ctx http.Context, in *ListResourcesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) ListResourcesResult(ctx http.Context, in *ListResourcesRequest, out *ListResourcesResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteListResources(ctx http.Context, in *ListResourcesRequest, out *ListResourcesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedResourceServiceHooked) BeforeUpdateResource(ctx http.Context, in *UpdateResourceRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareUpdateResource(ctx http.Context, in *UpdateResourceRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) UpdateResourceResult(ctx http.Context, in *UpdateResourceRequest, out *UpdateResourceResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteUpdateResource(ctx http.Context, in *UpdateResourceRequest, out *UpdateResourceResponse) error {
 	return ctx.Result(200, out)
 }
 
