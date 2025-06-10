@@ -158,6 +158,7 @@ func CorsMiddleware() middleware.KMiddleware {
 
 func NewProxyGRPCClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[string]*service.GRPCClient {
 	ll := log.NewHelper(r.WithLogger("module", "proxy"))
+	ll.Infof("NewProxyGRPCClients bootstrap: %+v", bootstrap)
 	clients := bootstrap.GetClients()
 	clientServices := make(map[string]*service.GRPCClient, len(clients))
 	for i := range clients {
@@ -165,6 +166,7 @@ func NewProxyGRPCClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[st
 		if len(services) == 0 {
 			continue
 		}
+		ll.Infof("NewProxyGRPCClients: %+v", clients[i].GetCore().GetName())
 		var options []service.GRPCOption
 		discovery, err := r.Builder().NewDiscovery(clients[i].GetCore().GetDiscovery())
 		if err == nil {
@@ -178,7 +180,8 @@ func NewProxyGRPCClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[st
 					ll.Warnf("NewGRPCClient failed: %v", err)
 					continue
 				}
-				clientServices[services[idx].GetName()] = client
+				ll.Infof("NewProxyGRPCClients: %+v", clients[i].GetCore().GetName())
+				clientServices[clients[i].GetCore().GetName()] = client
 			}
 		}
 	}
@@ -206,7 +209,7 @@ func NewProxyHTTPClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[st
 					ll.Warnf("NewHTTPClient failed: %v", err)
 					continue
 				}
-				clientServices[services[idx].GetName()] = client
+				clientServices[clients[i].GetCore().GetName()] = client
 			}
 		}
 	}

@@ -78,17 +78,21 @@ func (c CasbinSourceClient) StreamRules(ctx context.Context, in *pb.StreamRulesR
 
 // NewCasbinSourceClient new a menu service.
 func NewCasbinSourceClient(r runtime.Runtime, clients map[string]*service.GRPCClient) casbin.RuleSource {
+	ll := log.NewHelper(r.WithLogger("module", "service/casbin"))
 	client, ok := clients["auth"]
+	c := NewUnimplementedCasbinSource(r)
 	if ok {
-		return &CasbinSourceClient{
-			client: pb.NewCasbinSourceServiceClient(client),
-			log:    log.NewHelper(r.WithLogger("module", "service/casbin")),
-		}
+		c = pb.NewCasbinSourceServiceClient(client)
 	}
 	return &CasbinSourceClient{
-		client: UnimplementedCasbinSource{
-			log: log.NewHelper(r.WithLogger("module", "service/casbin")),
-		},
+		client: c,
+		log:    ll,
+	}
+}
+
+func NewUnimplementedCasbinSource(r runtime.Runtime) pb.CasbinSourceServiceClient {
+	return UnimplementedCasbinSource{
+		log: log.NewHelper(r.WithLogger("module", "service/casbin")),
 	}
 }
 

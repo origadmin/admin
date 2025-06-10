@@ -1,7 +1,7 @@
 Name = "origadmin.proxy.service.admin.v1"
 Version = "v1.0.0"
 CryptoType = "argon2"
-Mode = "singleton"
+Mode = "cluster"
 EnableDynamicConfig = false
 Id = ""
 Environment = ""

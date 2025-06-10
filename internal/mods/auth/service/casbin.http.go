@@ -37,7 +37,7 @@ func NewCasbinServiceHTTPServer(client pb.CasbinSourceServiceHTTPClient) *Casbin
 }
 
 // NewCasbinSourceServiceHTTPServerPB new a login service.
-func NewCasbinSourceServiceHTTPServerPB(client pb.CasbinSourceServiceHTTPClient) pb.CasbinSourceServiceServer {
+func NewCasbinSourceServiceHTTPServerPB(client pb.CasbinSourceServiceHTTPClient) pb.CasbinSourceServiceHTTPServer {
 	return &CasbinSourceServiceHTTPServer{client: client}
 }
 

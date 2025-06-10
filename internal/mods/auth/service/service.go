@@ -19,8 +19,11 @@ import (
 var ProviderSet = wire.NewSet(
 	NewRegisterServer,
 	NewAuthServiceServerPB,
+	NewAuthServiceHTTPServerPB,
 	NewCasbinSourceServiceServerPB,
+	NewCasbinSourceServiceHTTPServerPB,
 	NewLoginServiceServerPB,
+	NewLoginServiceHTTPServerPB,
 	NewPersonalServiceServerPB,
 	NewPersonalServiceHTTPServerPB,
 	NewCasbinSourceBiz,
@@ -30,8 +33,11 @@ var ProviderSet = wire.NewSet(
 var LocalProviderSet = wire.NewSet(
 	NewRegisterBridgeServer,
 	NewAuthServiceServerPB,
+	NewAuthServiceHTTPServerPB,
 	NewCasbinSourceServiceServerPB,
+	NewCasbinSourceServiceHTTPServerPB,
 	NewLoginServiceServerPB,
+	NewLoginServiceHTTPServerPB,
 	NewPersonalServiceServerPB,
 	NewPersonalServiceHTTPServerPB,
 	NewCasbinSourceBiz,
