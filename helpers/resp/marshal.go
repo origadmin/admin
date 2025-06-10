@@ -122,3 +122,19 @@ func Proto2JSONArray[T proto.Message](msgs ...T) ([]json.RawMessage, error) {
 	}
 	return arr, nil
 }
+
+func Proto2JSON[T proto.Message](msgs ...T) (json.RawMessage, error) {
+	var arr []json.RawMessage
+	for _, msg := range msgs {
+		b, err := protojson.Marshal(msg)
+		if err != nil {
+			return nil, err
+		}
+		arr = append(arr, b)
+	}
+	marshal, err := json.Marshal(arr)
+	if err != nil {
+		return nil, err
+	}
+	return marshal, nil
+}

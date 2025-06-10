@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/goexts/generic/cmp"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
@@ -53,17 +54,21 @@ func (h PermissionServiceHookedBridge) CompleteGetPermission(ctx transhttp.Conte
 }
 
 func (h PermissionServiceHookedBridge) CompleteListPermissions(ctx transhttp.Context, request *pb.ListPermissionsRequest, response *pb.ListPermissionsResponse) error {
-	marshal, err := json.Marshal(response.Permissions)
+	if response == nil {
+		return ctx.JSON(http.StatusOK, &resp.Result{
+			Success: false,
+			Data:    nil,
+		})
+	}
+	marshal, err := resp.Proto2JSON(response.Permissions...)
 	if err != nil {
 		return err
 	}
-	return ctx.JSON(http.StatusOK, &resp.SourcePage{
-		Success: true,
-		Total:   response.GetTotalSize(),
-		Data:    marshal,
-		//Current:  request.GetCurrent(),
-		//PageSize: nil,
-		//Extra: "",
+	return ctx.JSON(http.StatusOK, &resp.Result{
+		Success:       true,
+		Data:          marshal,
+		Total:         response.TotalSize,
+		NextPageToken: cmp.If(response.NextPageToken != "", &response.NextPageToken, nil),
 	})
 }
 

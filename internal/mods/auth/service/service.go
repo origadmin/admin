@@ -26,15 +26,27 @@ var ProviderSet = wire.NewSet(
 	NewCasbinSourceBiz,
 )
 
+// LocalProviderSet is service providers.
+var LocalProviderSet = wire.NewSet(
+	NewRegisterBridgeServer,
+	NewAuthServiceServerPB,
+	NewCasbinSourceServiceServerPB,
+	NewLoginServiceServerPB,
+	NewPersonalServiceServerPB,
+	NewPersonalServiceHTTPServerPB,
+	NewCasbinSourceBiz,
+)
+
 var RemoteProviderSet = wire.NewSet(
-	NewRegisterServer,
+	NewRegisterBridgeServer,
 	NewAuthServiceBridgeClient,
 	NewCasbinServiceBridgeClient,
 	NewLoginServiceBridgeClient,
 	NewPersonalServiceBridgeClient,
 	NewCasbinSourceClient,
-
 )
+
+type AuthServerRegistrar service.ServerRegistrar
 
 type RegisterServer struct {
 	Auth     pb.AuthServiceServer
@@ -73,7 +85,7 @@ func NewRegisterServer(
 	Casbin pb.CasbinSourceServiceServer,
 	Login pb.LoginServiceServer,
 	Personal pb.PersonalServiceServer,
-) *RegisterServer {
+) AuthServerRegistrar {
 	return &RegisterServer{
 		Auth:     Auth,
 		Casbin:   Casbin,
@@ -119,7 +131,7 @@ func NewRegisterBridgeServer(r runtime.Runtime,
 	Casbin pb.CasbinSourceServiceServer,
 	Login pb.LoginServiceServer,
 	Personal pb.PersonalServiceServer,
-) *RegisterBridgeServer {
+) AuthServerRegistrar {
 	return &RegisterBridgeServer{
 		Auth:     NewAuthServiceHookedBridge(r, Auth),
 		Casbin:   NewCasbinServiceHookedBridge(r, Casbin),

@@ -49,8 +49,8 @@ var (
 )
 
 func NewServiceServerRegistrars(
-	system *systemservice.RegisterServer,
-	auth *authservice.RegisterServer,
+	system systemservice.SystemServerRegistrar,
+	auth authservice.AuthServerRegistrar,
 ) []service.ServerRegistrar {
 	return []service.ServerRegistrar{
 		system,

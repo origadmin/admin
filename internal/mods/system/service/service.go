@@ -53,6 +53,8 @@ var RemoteProviderSet = wire.NewSet(
 	//NewPermissionServiceBridge,
 )
 
+type SystemServerRegistrar service.ServerRegistrar
+
 type RegisterServer struct {
 	Resource   pb.ResourceServiceServer
 	Role       pb.RoleServiceServer
@@ -90,7 +92,7 @@ func NewRegisterServer(
 	Role pb.RoleServiceServer,
 	User pb.UserServiceServer,
 	Permission pb.PermissionServiceServer,
-) *RegisterServer {
+) SystemServerRegistrar {
 	return &RegisterServer{
 		Resource:   Resource,
 		Role:       Role,
@@ -136,7 +138,7 @@ func NewRegisterBridgeServer(r runtime.Runtime,
 	Role pb.RoleServiceServer,
 	User pb.UserServiceServer,
 	Permission pb.PermissionServiceServer,
-) *RegisterBridgeServer {
+) SystemServerRegistrar {
 	return &RegisterBridgeServer{
 		Resource:   NewResourceServiceHookedBridge(r, Resource),
 		Role:       NewRoleServiceHookedBridge(r, Role),

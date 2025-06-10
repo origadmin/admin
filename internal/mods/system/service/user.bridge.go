@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/goexts/generic/cmp"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
@@ -53,17 +54,21 @@ func (h UserServiceHookedBridge) CompleteGetUser(ctx transhttp.Context, request 
 }
 
 func (h UserServiceHookedBridge) CompleteListUsers(ctx transhttp.Context, request *pb.ListUsersRequest, response *pb.ListUsersResponse) error {
-	marshal, err := json.Marshal(response.Users)
+	if response == nil {
+		return ctx.JSON(http.StatusOK, &resp.Result{
+			Success: false,
+			Data:    nil,
+		})
+	}
+	marshal, err := resp.Proto2JSON(response.Users...)
 	if err != nil {
 		return err
 	}
-	return ctx.JSON(http.StatusOK, &resp.SourcePage{
-		Success: true,
-		Total:   response.GetTotalSize(),
-		Data:    marshal,
-		//Current:  request.GetCurrent(),
-		//PageSize: nil,
-		//Extra: "",
+	return ctx.JSON(http.StatusOK, &resp.Result{
+		Success:       true,
+		Data:          marshal,
+		Total:         response.TotalSize,
+		NextPageToken: cmp.If(response.NextPageToken != "", &response.NextPageToken, nil),
 	})
 }
 

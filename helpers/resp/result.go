@@ -34,18 +34,21 @@ type Token = datav1.Token
 type StringResult = datav1.StringData
 
 type Result struct {
-	Success bool           `json:"success,omitempty"`
-	Total   int32          `json:"total,omitempty"`
-	Data    any            `json:"data,omitempty"`
-	Error   *httperr.Error `json:"error,omitempty"`
-	Extra   any            `json:"extra,omitempty"`
+	Success       bool            `json:"success,omitempty"`
+	Total         int32           `json:"total,omitempty"`
+	NextPageToken *string         `json:"next_page_token,omitempty"`
+	Data          json.RawMessage `json:"data,omitempty"`
+	Extra         json.RawMessage `json:"extra,omitempty"`
+	Error         *httperr.Error  `json:"error,omitempty"`
 }
 
 type ResultBytes struct {
-	Success bool   `json:"success,omitempty"`
-	Data    []byte `json:"data,omitempty"`
-	Error   []byte `json:"error,omitempty"`
-	Extra   []byte `json:"extra,omitempty"`
+	Success       bool    `json:"success,omitempty"`
+	Total         int32   `json:"total,omitempty"`
+	NextPageToken *string `json:"next_page_token,omitempty"`
+	Data          []byte  `json:"data,omitempty"`
+	Error         []byte  `json:"error,omitempty"`
+	Extra         []byte  `json:"extra,omitempty"`
 }
 
 type PageResponse struct {

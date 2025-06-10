@@ -5,13 +5,14 @@
 package service
 
 import (
-	context2 "context"
+	"context"
 	"net/http"
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
+	"google.golang.org/protobuf/encoding/protojson"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/helpers/resp"
@@ -23,36 +24,40 @@ type LoginServiceHookedBridge struct {
 	log *log.KHelper
 }
 
-func (s LoginServiceHookedBridge) CompleteCaptcha(h transhttp.Context, request *pb.CaptchaRequest, response *pb.CaptchaResponse) error {
-	return h.JSON(http.StatusOK, &resp.Data{
+func (s LoginServiceHookedBridge) CompleteCaptcha(ctx transhttp.Context, request *pb.CaptchaRequest, response *pb.CaptchaResponse) error {
+	marshal, err := protojson.Marshal(response)
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    marshal,
+	})
+}
+
+func (s LoginServiceHookedBridge) CompleteCaptchaAudio(ctx transhttp.Context, request *pb.CaptchaAudioRequest, response *pb.CaptchaAudioResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response),
 	})
 }
 
-func (s LoginServiceHookedBridge) CompleteCaptchaAudio(h transhttp.Context, request *pb.CaptchaAudioRequest, response *pb.CaptchaAudioResponse) error {
-	return h.JSON(http.StatusOK, &resp.Data{
+func (s LoginServiceHookedBridge) CompleteCaptchaId(ctx transhttp.Context, request *pb.CaptchaIdRequest, response *pb.CaptchaIdResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(response),
 	})
 }
 
-func (s LoginServiceHookedBridge) CompleteCaptchaId(h transhttp.Context, request *pb.CaptchaIdRequest, response *pb.CaptchaIdResponse) error {
-	return h.JSON(http.StatusOK, &resp.Data{
-		Success: true,
-		Data:    resp.Proto2Any(response),
-	})
-}
-
-func (s LoginServiceHookedBridge) CompleteCaptchaImage(h transhttp.Context, request *pb.CaptchaImageRequest, response *pb.CaptchaImageResponse) error {
+func (s LoginServiceHookedBridge) CompleteCaptchaImage(ctx transhttp.Context, request *pb.CaptchaImageRequest, response *pb.CaptchaImageResponse) error {
 	s.log.Debugf("CaptchaImage: Setting headers: %+v", response.Headers)
 	for k, v := range response.Headers {
-		h.Response().Header().Set(k, v)
+		ctx.Response().Header().Set(k, v)
 	}
 	s.log.Debugf("CaptchaImage: Writing response headers")
-	h.Response().WriteHeader(http.StatusOK)
+	ctx.Response().WriteHeader(http.StatusOK)
 	s.log.Debugf("CaptchaImage: Writing response image")
-	if _, err := h.Response().Write(response.Image); err != nil {
+	if _, err := ctx.Response().Write(response.Image); err != nil {
 		log.Errorf("CaptchaImage error writing response: %v", err)
 		return err
 	}
@@ -60,38 +65,39 @@ func (s LoginServiceHookedBridge) CompleteCaptchaImage(h transhttp.Context, requ
 	return nil
 }
 
-func (s LoginServiceHookedBridge) PrepareLogin(h transhttp.Context, request *pb.LoginRequest) (context2.Context, error) {
+func (s LoginServiceHookedBridge) CompleteLogin(ctx transhttp.Context, request *pb.LoginRequest, response *pb.LoginResponse) error {
+	marshal, err := protojson.Marshal(resp.FromToken(response.Token))
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(http.StatusOK, &resp.Result{
+		Success: true,
+		Data:    marshal,
+	})
+}
+
+func (s LoginServiceHookedBridge) PrepareLogout(ctx transhttp.Context, request *pb.LogoutRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) CompleteLogin(h transhttp.Context, request *pb.LoginRequest, response *pb.LoginResponse) error {
+func (s LoginServiceHookedBridge) CompleteLogout(ctx transhttp.Context, request *pb.LogoutRequest, response *pb.LogoutResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) PrepareLogout(h transhttp.Context, request *pb.LogoutRequest) (context2.Context, error) {
+func (s LoginServiceHookedBridge) PrepareRegister(ctx transhttp.Context, request *pb.RegisterRequest) (context.Context, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) CompleteLogout(h transhttp.Context, request *pb.LogoutRequest, response *pb.LogoutResponse) error {
+func (s LoginServiceHookedBridge) CompleteRegister(ctx transhttp.Context, request *pb.RegisterRequest, response *pb.RegisterResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s LoginServiceHookedBridge) PrepareRegister(h transhttp.Context, request *pb.RegisterRequest) (context2.Context, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s LoginServiceHookedBridge) CompleteRegister(h transhttp.Context, request *pb.RegisterRequest, response *pb.RegisterResponse) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s LoginServiceHookedBridge) CompleteTokenRefresh(h transhttp.Context, request *pb.TokenRefreshRequest, response *pb.TokenRefreshResponse) error {
-	return h.JSON(http.StatusOK, &resp.Data{
+func (s LoginServiceHookedBridge) CompleteTokenRefresh(ctx transhttp.Context, request *pb.TokenRefreshRequest, response *pb.TokenRefreshResponse) error {
+	return ctx.JSON(http.StatusOK, &resp.Data{
 		Success: true,
 		Data:    resp.Proto2Any(resp.FromToken(response.Token)),
 	})

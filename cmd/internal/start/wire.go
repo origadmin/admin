@@ -36,7 +36,7 @@ func buildLocalInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*krat
 		//systemserver.ProviderSet,
 		authdal.ProviderSet,
 		authbiz.ProviderSet,
-		authservice.ProviderSet,
+		authservice.LocalProviderSet,
 		NewApp))
 }
 

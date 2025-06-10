@@ -27,14 +27,14 @@ type CasbinRuleStream struct {
 func (c CasbinRuleStream) Recv() (*pb.StreamRulesResponse, error) {
 	select {
 	case msg := <-c.receiver:
-		c.client.log.Infof("received message: %v", msg)
+		c.client.log.Debugf("received message: %v", msg)
 		if msg == nil {
-			c.client.log.Info("stream closed")
+			c.client.log.Debugf("stream closed")
 			return nil, io.EOF
 		}
 		return msg, nil
 	case <-c.ctx.Done():
-		c.client.log.Info("no message received")
+		c.client.log.Debugf("no message received")
 		return nil, c.ctx.Err()
 	}
 }
@@ -65,13 +65,13 @@ func (c CasbinRuleStream) RecvMsg(m any) error {
 
 func (c CasbinRuleStream) Start(request *pb.StreamRulesRequest) error {
 	defer close(c.receiver)
-	c.client.log.Infof("sending request: %v", request)
+	//c.client.log.Infof("sending request: %v", request)
 	if request.WithPolicies {
 		policies, err := c.client.ListPolicies(c.ctx, &pb.ListPoliciesRequest{})
 		if err != nil {
 			return err
 		}
-		c.client.log.Infof("sending %d policies", len(policies.Rules))
+		//c.client.log.Infof("sending %d policies", len(policies.Rules))
 		for _, rule := range policies.Rules {
 			c.receiver <- newPolicyResponse(rule)
 		}
@@ -82,7 +82,7 @@ func (c CasbinRuleStream) Start(request *pb.StreamRulesRequest) error {
 		if err != nil {
 			return err
 		}
-		c.client.log.Infof("sending %d groupings", len(groupings.Rules))
+		//c.client.log.Infof("sending %d groupings", len(groupings.Rules))
 		for _, grouping := range groupings.Rules {
 			c.receiver <- newGroupingResponse(grouping)
 		}
