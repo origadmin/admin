@@ -55,7 +55,7 @@ func NewMenuServiceHTTPServer(client pb.MenuServiceHTTPClient, logger log.KLogge
 
 // NewMenuServiceHTTPServerPB new a menu service.
 func NewMenuServiceHTTPServerPB(r runtime.Runtime, client pb.MenuServiceHTTPClient) pb.MenuServiceHTTPServer {
-	return NewMenuServiceHTTPServer(client, r.WithLogger("module", "service/menu"))
+	return NewMenuServiceHTTPServer(client, r.WithLogger("module", "service/system"))
 }
 
 var _ pb.MenuServiceServer = (*MenuServiceHTTPServer)(nil)

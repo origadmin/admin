@@ -80,7 +80,7 @@ func (h ResourceServiceHookedBridge) CompleteUpdateResource(ctx transhttp.Contex
 
 func NewResourceServiceHookedBridge(r runtime.Runtime, client pb.ResourceServiceHTTPServer) pb.ResourceServiceHookedBridger {
 	return pb.WithResourceServiceHook(&ResourceServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/resource")),
+		log: log.NewHelper(r.WithLogger("module", "service/system")),
 	})(client)
 }
 

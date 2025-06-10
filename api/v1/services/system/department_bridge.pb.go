@@ -34,7 +34,7 @@ const DepartmentServiceGetDepartmentBridgeOperation = "/api.v1.services.system.D
 const DepartmentServiceListDepartmentsBridgeOperation = "/api.v1.services.system.DepartmentService/ListDepartments"
 const DepartmentServiceUpdateDepartmentBridgeOperation = "/api.v1.services.system.DepartmentService/UpdateDepartment"
 
-type DepartmentServiceBridger interface {
+type DepartmentServiceBridgeServer interface {
 	CreateDepartment(context.Context, *CreateDepartmentRequest) (*CreateDepartmentResponse, error)
 	DeleteDepartment(context.Context, *DeleteDepartmentRequest) (*DeleteDepartmentResponse, error)
 	GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentResponse, error)
@@ -52,7 +52,7 @@ type DepartmentServiceHooker interface {
 
 type DepartmentServiceHookedBridger interface {
 	DepartmentServiceHooker
-	DepartmentServiceBridger
+	DepartmentServiceBridgeServer
 }
 type DepartmentServiceCreateDepartmentHooker interface {
 	PrepareCreateDepartment(http.Context, *CreateDepartmentRequest) (context.Context, error)
@@ -75,7 +75,7 @@ type DepartmentServiceUpdateDepartmentHooker interface {
 	CompleteUpdateDepartment(http.Context, *UpdateDepartmentRequest, *UpdateDepartmentResponse) error
 }
 
-func RegisterDepartmentServiceBridger(s *http.Server, srv DepartmentServiceHookedBridger) {
+func RegisterDepartmentServiceBridgeServer(s *http.Server, srv DepartmentServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/departments", _DepartmentService_ListDepartments0_Bridge_Handler(srv))
 	r.GET("/sys/departments/:id", _DepartmentService_GetDepartment0_Bridge_Handler(srv))
@@ -261,9 +261,9 @@ func (UnimplementedDepartmentServiceHooked) CompleteUpdateDepartment(ctx http.Co
 	return ctx.Result(200, out)
 }
 
-func WithDepartmentServiceHook(h DepartmentServiceHooker) func(DepartmentServiceBridger) DepartmentServiceHookedBridger {
-	return func(b DepartmentServiceBridger) DepartmentServiceHookedBridger {
-		return DepartmentServiceHookedBridge{DepartmentServiceBridger: b, DepartmentServiceHooker: h}
+func WithDepartmentServiceHook(h DepartmentServiceHooker) func(DepartmentServiceBridgeServer) DepartmentServiceHookedBridger {
+	return func(srv DepartmentServiceBridgeServer) DepartmentServiceHookedBridger {
+		return DepartmentServiceHookedBridge{DepartmentServiceBridgeServer: srv, DepartmentServiceHooker: h}
 	}
 }
 
@@ -271,7 +271,7 @@ func WithDepartmentServiceHook(h DepartmentServiceHooker) func(DepartmentService
 // It implements the HTTP and gRPC implementations of DepartmentService.
 // It forwards requests and responses between the two implementations.
 type DepartmentServiceHookedBridge struct {
-	DepartmentServiceBridger
+	DepartmentServiceBridgeServer
 	DepartmentServiceHooker
 }
 

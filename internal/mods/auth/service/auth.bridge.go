@@ -161,9 +161,9 @@ func (s AuthServiceHookedBridge) AuthLogout(ctx context.Context, request *pb.Aut
 //	return nil, nil
 //}
 
-func NewAuthServiceHookedBridge(r runtime.Runtime, client pb.AuthServiceHTTPServer) pb.AuthServiceHookedBridger {
+func NewAuthServiceHookedBridge(r runtime.Runtime, client pb.AuthServiceServer) pb.AuthServiceHookedBridger {
 	return pb.WithAuthServiceHook(&AuthServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+		log: log.NewHelper(r.WithLogger("module", "service/auth")),
 	})(client)
 }
 

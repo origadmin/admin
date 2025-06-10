@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/google/wire"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -27,8 +28,21 @@ var ProviderSet = wire.NewSet(
 	NewPermissionServiceHTTPServerPB,
 )
 
+// LocalProviderSet is service providers.
+var LocalProviderSet = wire.NewSet(
+	NewRegisterBridgeServer,
+	NewResourceServiceServerPB,
+	NewResourceServiceHTTPServerPB,
+	NewRoleServiceServerPB,
+	NewRoleServiceHTTPServerPB,
+	NewUserServiceServerPB,
+	NewUserServiceHTTPServerPB,
+	NewPermissionServiceServerPB,
+	NewPermissionServiceHTTPServerPB,
+)
+
 var RemoteProviderSet = wire.NewSet(
-	NewRegisterServer,
+	NewRegisterBridgeServer,
 	NewResourceServiceBridgeClient,
 	//NewResourceServiceBridge,
 	NewRoleServiceBridgeClient,
@@ -82,6 +96,52 @@ func NewRegisterServer(
 		Role:       Role,
 		User:       User,
 		Permission: Permission,
+	}
+}
+
+type RegisterBridgeServer struct {
+	Resource   pb.ResourceServiceHookedBridger
+	Role       pb.RoleServiceHookedBridger
+	User       pb.UserServiceHookedBridger
+	Permission pb.PermissionServiceHookedBridger
+}
+
+func (s RegisterBridgeServer) Register(ctx context.Context, svc any) {
+	switch v := svc.(type) {
+	case *service.GRPCServer:
+		s.RegisterGRPC(ctx, v)
+	case *service.HTTPServer:
+		s.RegisterHTTP(ctx, v)
+	}
+}
+
+func (s RegisterBridgeServer) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
+	log.Info("http server system init")
+	pb.RegisterResourceServiceBridgeServer(server, s.Resource)
+	pb.RegisterRoleServiceBridgeServer(server, s.Role)
+	pb.RegisterUserServiceBridgeServer(server, s.User)
+	pb.RegisterPermissionServiceBridgeServer(server, s.Permission)
+}
+
+func (s RegisterBridgeServer) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
+	log.Info("grpc server system init")
+	//pb.RegisterResourceServiceBridgeServer(server, s.Resource)
+	//pb.RegisterRoleServiceBridgeServer(server, s.Role)
+	//pb.RegisterUserServiceBridgeServer(server, s.User)
+	//pb.RegisterPermissionServiceBridgeServer(server, s.Permission)
+}
+
+func NewRegisterBridgeServer(r runtime.Runtime,
+	Resource pb.ResourceServiceServer,
+	Role pb.RoleServiceServer,
+	User pb.UserServiceServer,
+	Permission pb.PermissionServiceServer,
+) *RegisterBridgeServer {
+	return &RegisterBridgeServer{
+		Resource:   NewResourceServiceHookedBridge(r, Resource),
+		Role:       NewRoleServiceHookedBridge(r, Role),
+		User:       NewUserServiceHookedBridge(r, User),
+		Permission: NewPermissionServiceHookedBridge(r, Permission),
 	}
 }
 

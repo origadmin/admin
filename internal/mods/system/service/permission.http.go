@@ -42,7 +42,7 @@ func (s PermissionServiceHTTPServer) UpdatePermission(ctx context.Context, reque
 // NewPermissionServiceHTTPServer new a menu service.
 func NewPermissionServiceHTTPServer(r runtime.Runtime, client *biz.PermissionServiceBiz) *PermissionServiceHTTPServer {
 	return &PermissionServiceHTTPServer{
-		log:    log.NewHelper(r.WithLogger("module", "service/permission")),
+		log:    log.NewHelper(r.WithLogger("module", "service/system")),
 		client: client,
 	}
 }

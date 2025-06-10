@@ -34,7 +34,7 @@ const PositionServiceGetPositionBridgeOperation = "/api.v1.services.system.Posit
 const PositionServiceListPositionsBridgeOperation = "/api.v1.services.system.PositionService/ListPositions"
 const PositionServiceUpdatePositionBridgeOperation = "/api.v1.services.system.PositionService/UpdatePosition"
 
-type PositionServiceBridger interface {
+type PositionServiceBridgeServer interface {
 	CreatePosition(context.Context, *CreatePositionRequest) (*CreatePositionResponse, error)
 	DeletePosition(context.Context, *DeletePositionRequest) (*DeletePositionResponse, error)
 	GetPosition(context.Context, *GetPositionRequest) (*GetPositionResponse, error)
@@ -52,7 +52,7 @@ type PositionServiceHooker interface {
 
 type PositionServiceHookedBridger interface {
 	PositionServiceHooker
-	PositionServiceBridger
+	PositionServiceBridgeServer
 }
 type PositionServiceCreatePositionHooker interface {
 	PrepareCreatePosition(http.Context, *CreatePositionRequest) (context.Context, error)
@@ -75,7 +75,7 @@ type PositionServiceUpdatePositionHooker interface {
 	CompleteUpdatePosition(http.Context, *UpdatePositionRequest, *UpdatePositionResponse) error
 }
 
-func RegisterPositionServiceBridger(s *http.Server, srv PositionServiceHookedBridger) {
+func RegisterPositionServiceBridgeServer(s *http.Server, srv PositionServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/positions", _PositionService_ListPositions0_Bridge_Handler(srv))
 	r.GET("/sys/positions/:id", _PositionService_GetPosition0_Bridge_Handler(srv))
@@ -261,9 +261,9 @@ func (UnimplementedPositionServiceHooked) CompleteUpdatePosition(ctx http.Contex
 	return ctx.Result(200, out)
 }
 
-func WithPositionServiceHook(h PositionServiceHooker) func(PositionServiceBridger) PositionServiceHookedBridger {
-	return func(b PositionServiceBridger) PositionServiceHookedBridger {
-		return PositionServiceHookedBridge{PositionServiceBridger: b, PositionServiceHooker: h}
+func WithPositionServiceHook(h PositionServiceHooker) func(PositionServiceBridgeServer) PositionServiceHookedBridger {
+	return func(srv PositionServiceBridgeServer) PositionServiceHookedBridger {
+		return PositionServiceHookedBridge{PositionServiceBridgeServer: srv, PositionServiceHooker: h}
 	}
 }
 
@@ -271,7 +271,7 @@ func WithPositionServiceHook(h PositionServiceHooker) func(PositionServiceBridge
 // It implements the HTTP and gRPC implementations of PositionService.
 // It forwards requests and responses between the two implementations.
 type PositionServiceHookedBridge struct {
-	PositionServiceBridger
+	PositionServiceBridgeServer
 	PositionServiceHooker
 }
 

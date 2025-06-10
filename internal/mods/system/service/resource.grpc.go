@@ -48,7 +48,7 @@ func (s ResourceServiceServer) DeleteResource(ctx context.Context, request *pb.D
 // NewResourceServiceServer new a menu service.
 func NewResourceServiceServer(r runtime.Runtime, client *biz.ResourceServiceBiz) *ResourceServiceServer {
 	return &ResourceServiceServer{
-		log:    log.NewHelper(r.WithLogger("module", "service/resource")),
+		log:    log.NewHelper(r.WithLogger("module", "service/system")),
 		client: client,
 	}
 }

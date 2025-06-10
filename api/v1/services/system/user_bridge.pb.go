@@ -38,7 +38,7 @@ const UserServiceUpdateUserBridgeOperation = "/api.v1.services.system.UserServic
 const UserServiceUpdateUserRolesBridgeOperation = "/api.v1.services.system.UserService/UpdateUserRoles"
 const UserServiceUpdateUserStatusBridgeOperation = "/api.v1.services.system.UserService/UpdateUserStatus"
 
-type UserServiceBridger interface {
+type UserServiceBridgeServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
@@ -67,7 +67,7 @@ type UserServiceHooker interface {
 
 type UserServiceHookedBridger interface {
 	UserServiceHooker
-	UserServiceBridger
+	UserServiceBridgeServer
 }
 type UserServiceCreateUserHooker interface {
 	PrepareCreateUser(http.Context, *CreateUserRequest) (context.Context, error)
@@ -106,7 +106,7 @@ type UserServiceUpdateUserStatusHooker interface {
 	CompleteUpdateUserStatus(http.Context, *UpdateUserStatusRequest, *UpdateUserStatusResponse) error
 }
 
-func RegisterUserServiceBridger(s *http.Server, srv UserServiceHookedBridger) {
+func RegisterUserServiceBridgeServer(s *http.Server, srv UserServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/users", _UserService_ListUsers0_Bridge_Handler(srv))
 	r.GET("/sys/users/:id/resources", _UserService_ListUserResources0_Bridge_Handler(srv))
@@ -441,9 +441,9 @@ func (UnimplementedUserServiceHooked) CompleteUpdateUserStatus(ctx http.Context,
 	return ctx.Result(200, out)
 }
 
-func WithUserServiceHook(h UserServiceHooker) func(UserServiceBridger) UserServiceHookedBridger {
-	return func(b UserServiceBridger) UserServiceHookedBridger {
-		return UserServiceHookedBridge{UserServiceBridger: b, UserServiceHooker: h}
+func WithUserServiceHook(h UserServiceHooker) func(UserServiceBridgeServer) UserServiceHookedBridger {
+	return func(srv UserServiceBridgeServer) UserServiceHookedBridger {
+		return UserServiceHookedBridge{UserServiceBridgeServer: srv, UserServiceHooker: h}
 	}
 }
 
@@ -451,7 +451,7 @@ func WithUserServiceHook(h UserServiceHooker) func(UserServiceBridger) UserServi
 // It implements the HTTP and gRPC implementations of UserService.
 // It forwards requests and responses between the two implementations.
 type UserServiceHookedBridge struct {
-	UserServiceBridger
+	UserServiceBridgeServer
 	UserServiceHooker
 }
 

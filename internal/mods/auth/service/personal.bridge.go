@@ -92,11 +92,10 @@ func (p PersonalServiceHookedBridge) CompleteUpdatePersonalSetting(context trans
 	panic("implement me")
 }
 
-func NewPersonalServiceHookedBridge(r runtime.Runtime, client pb.PersonalServiceHTTPServer) pb.PersonalServiceHooker {
-	return &PersonalServiceHookedBridge{
-		log:    log.NewHelper(r.WithLogger("module", "service/permission")),
-		client: client,
-	}
+func NewPersonalServiceHookedBridge(r runtime.Runtime, client pb.PersonalServiceHTTPServer) pb.PersonalServiceHookedBridger {
+	return pb.WithPersonalServiceHook(&PersonalServiceHookedBridge{
+		log: log.NewHelper(r.WithLogger("module", "service/auth")),
+	})(client)
 }
 
 // NewPersonalServiceBridge new a menu service.

@@ -43,9 +43,9 @@ type AuthServiceHTTPServer interface {
 
 func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_HTTP_Handler(srv))
+	r.GET("/auth/resources", _AuthService_ListAuthResources0_HTTP_Handler(srv))
 	r.POST("/auth/token", _AuthService_CreateToken0_HTTP_Handler(srv))
-	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_HTTP_Handler(srv))
+	r.GET("/auth/validate", _AuthService_ValidateToken0_HTTP_Handler(srv))
 	r.POST("/auth/destroy", _AuthService_DestroyToken0_HTTP_Handler(srv))
 	r.POST("/auth/authenticate", _AuthService_Authenticate0_HTTP_Handler(srv))
 	r.POST("/auth/logout", _AuthService_AuthLogout0_HTTP_Handler(srv))
@@ -248,7 +248,7 @@ func (c *AuthServiceHTTPClientImpl) DestroyToken(ctx context.Context, in *Destro
 
 func (c *AuthServiceHTTPClientImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...http.CallOption) (*ListAuthResourcesResponse, error) {
 	var out ListAuthResourcesResponse
-	pattern := "/sys/auth/resources"
+	pattern := "/auth/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthServiceListAuthResources))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -261,7 +261,7 @@ func (c *AuthServiceHTTPClientImpl) ListAuthResources(ctx context.Context, in *L
 
 func (c *AuthServiceHTTPClientImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...http.CallOption) (*ValidateTokenResponse, error) {
 	var out ValidateTokenResponse
-	pattern := "/sys/auth/validate"
+	pattern := "/auth/validate"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthServiceValidateToken))
 	opts = append(opts, http.PathTemplate(pattern))

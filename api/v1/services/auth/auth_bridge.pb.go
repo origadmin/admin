@@ -35,7 +35,7 @@ const AuthServiceDestroyTokenBridgeOperation = "/api.v1.services.auth.AuthServic
 const AuthServiceListAuthResourcesBridgeOperation = "/api.v1.services.auth.AuthService/ListAuthResources"
 const AuthServiceValidateTokenBridgeOperation = "/api.v1.services.auth.AuthService/ValidateToken"
 
-type AuthServiceBridger interface {
+type AuthServiceBridgeServer interface {
 	// AuthLogout logs out a user.
 	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
 	// Authenticate authenticates a user.
@@ -61,7 +61,7 @@ type AuthServiceHooker interface {
 
 type AuthServiceHookedBridger interface {
 	AuthServiceHooker
-	AuthServiceBridger
+	AuthServiceBridgeServer
 }
 type AuthServiceAuthLogoutHooker interface {
 	PrepareAuthLogout(http.Context, *AuthLogoutRequest) (context.Context, error)
@@ -88,11 +88,11 @@ type AuthServiceValidateTokenHooker interface {
 	CompleteValidateToken(http.Context, *ValidateTokenRequest, *ValidateTokenResponse) error
 }
 
-func RegisterAuthServiceBridger(s *http.Server, srv AuthServiceHookedBridger) {
+func RegisterAuthServiceBridgeServer(s *http.Server, srv AuthServiceHookedBridger) {
 	r := s.Route("/")
-	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_Bridge_Handler(srv))
+	r.GET("/auth/resources", _AuthService_ListAuthResources0_Bridge_Handler(srv))
 	r.POST("/auth/token", _AuthService_CreateToken0_Bridge_Handler(srv))
-	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_Bridge_Handler(srv))
+	r.GET("/auth/validate", _AuthService_ValidateToken0_Bridge_Handler(srv))
 	r.POST("/auth/destroy", _AuthService_DestroyToken0_Bridge_Handler(srv))
 	r.POST("/auth/authenticate", _AuthService_Authenticate0_Bridge_Handler(srv))
 	r.POST("/auth/logout", _AuthService_AuthLogout0_Bridge_Handler(srv))
@@ -303,9 +303,9 @@ func (UnimplementedAuthServiceHooked) CompleteValidateToken(ctx http.Context, in
 	return ctx.Result(200, out)
 }
 
-func WithAuthServiceHook(h AuthServiceHooker) func(AuthServiceBridger) AuthServiceHookedBridger {
-	return func(b AuthServiceBridger) AuthServiceHookedBridger {
-		return AuthServiceHookedBridge{AuthServiceBridger: b, AuthServiceHooker: h}
+func WithAuthServiceHook(h AuthServiceHooker) func(AuthServiceBridgeServer) AuthServiceHookedBridger {
+	return func(srv AuthServiceBridgeServer) AuthServiceHookedBridger {
+		return AuthServiceHookedBridge{AuthServiceBridgeServer: srv, AuthServiceHooker: h}
 	}
 }
 
@@ -313,7 +313,7 @@ func WithAuthServiceHook(h AuthServiceHooker) func(AuthServiceBridger) AuthServi
 // It implements the HTTP and gRPC implementations of AuthService.
 // It forwards requests and responses between the two implementations.
 type AuthServiceHookedBridge struct {
-	AuthServiceBridger
+	AuthServiceBridgeServer
 	AuthServiceHooker
 }
 

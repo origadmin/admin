@@ -77,7 +77,7 @@ func (h MenuServiceHookedBridge) CompleteUpdateMenu(ctx transhttp.Context, reque
 
 func NewMenuServiceHookedBridge(r runtime.Runtime, client pb.MenuServiceHTTPServer) pb.MenuServiceHookedBridger {
 	return pb.WithMenuServiceHook(&MenuServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/menu")),
+		log: log.NewHelper(r.WithLogger("module", "service/system")),
 	})(client)
 }
 

@@ -34,7 +34,7 @@ const RoleServiceGetRoleBridgeOperation = "/api.v1.services.system.RoleService/G
 const RoleServiceListRolesBridgeOperation = "/api.v1.services.system.RoleService/ListRoles"
 const RoleServiceUpdateRoleBridgeOperation = "/api.v1.services.system.RoleService/UpdateRole"
 
-type RoleServiceBridger interface {
+type RoleServiceBridgeServer interface {
 	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
 	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
 	GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error)
@@ -52,7 +52,7 @@ type RoleServiceHooker interface {
 
 type RoleServiceHookedBridger interface {
 	RoleServiceHooker
-	RoleServiceBridger
+	RoleServiceBridgeServer
 }
 type RoleServiceCreateRoleHooker interface {
 	PrepareCreateRole(http.Context, *CreateRoleRequest) (context.Context, error)
@@ -75,7 +75,7 @@ type RoleServiceUpdateRoleHooker interface {
 	CompleteUpdateRole(http.Context, *UpdateRoleRequest, *UpdateRoleResponse) error
 }
 
-func RegisterRoleServiceBridger(s *http.Server, srv RoleServiceHookedBridger) {
+func RegisterRoleServiceBridgeServer(s *http.Server, srv RoleServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/roles", _RoleService_ListRoles0_Bridge_Handler(srv))
 	r.GET("/sys/roles/:id", _RoleService_GetRole0_Bridge_Handler(srv))
@@ -261,9 +261,9 @@ func (UnimplementedRoleServiceHooked) CompleteUpdateRole(ctx http.Context, in *U
 	return ctx.Result(200, out)
 }
 
-func WithRoleServiceHook(h RoleServiceHooker) func(RoleServiceBridger) RoleServiceHookedBridger {
-	return func(b RoleServiceBridger) RoleServiceHookedBridger {
-		return RoleServiceHookedBridge{RoleServiceBridger: b, RoleServiceHooker: h}
+func WithRoleServiceHook(h RoleServiceHooker) func(RoleServiceBridgeServer) RoleServiceHookedBridger {
+	return func(srv RoleServiceBridgeServer) RoleServiceHookedBridger {
+		return RoleServiceHookedBridge{RoleServiceBridgeServer: srv, RoleServiceHooker: h}
 	}
 }
 
@@ -271,7 +271,7 @@ func WithRoleServiceHook(h RoleServiceHooker) func(RoleServiceBridger) RoleServi
 // It implements the HTTP and gRPC implementations of RoleService.
 // It forwards requests and responses between the two implementations.
 type RoleServiceHookedBridge struct {
-	RoleServiceBridger
+	RoleServiceBridgeServer
 	RoleServiceHooker
 }
 

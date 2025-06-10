@@ -37,7 +37,7 @@ const LoginServiceLogoutBridgeOperation = "/api.v1.services.auth.LoginService/Lo
 const LoginServiceRegisterBridgeOperation = "/api.v1.services.auth.LoginService/Register"
 const LoginServiceTokenRefreshBridgeOperation = "/api.v1.services.auth.LoginService/TokenRefresh"
 
-type LoginServiceBridger interface {
+type LoginServiceBridgeServer interface {
 	Captcha(context.Context, *CaptchaRequest) (*CaptchaResponse, error)
 	CaptchaAudio(context.Context, *CaptchaAudioRequest) (*CaptchaAudioResponse, error)
 	CaptchaId(context.Context, *CaptchaIdRequest) (*CaptchaIdResponse, error)
@@ -61,7 +61,7 @@ type LoginServiceHooker interface {
 
 type LoginServiceHookedBridger interface {
 	LoginServiceHooker
-	LoginServiceBridger
+	LoginServiceBridgeServer
 }
 type LoginServiceCaptchaHooker interface {
 	PrepareCaptcha(http.Context, *CaptchaRequest) (context.Context, error)
@@ -96,7 +96,7 @@ type LoginServiceTokenRefreshHooker interface {
 	CompleteTokenRefresh(http.Context, *TokenRefreshRequest, *TokenRefreshResponse) error
 }
 
-func RegisterLoginServiceBridger(s *http.Server, srv LoginServiceHookedBridger) {
+func RegisterLoginServiceBridgeServer(s *http.Server, srv LoginServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/captcha", _LoginService_Captcha0_Bridge_Handler(srv))
 	r.GET("/captcha/id", _LoginService_CaptchaId0_Bridge_Handler(srv))
@@ -375,9 +375,9 @@ func (UnimplementedLoginServiceHooked) CompleteTokenRefresh(ctx http.Context, in
 	return ctx.Result(200, out)
 }
 
-func WithLoginServiceHook(h LoginServiceHooker) func(LoginServiceBridger) LoginServiceHookedBridger {
-	return func(b LoginServiceBridger) LoginServiceHookedBridger {
-		return LoginServiceHookedBridge{LoginServiceBridger: b, LoginServiceHooker: h}
+func WithLoginServiceHook(h LoginServiceHooker) func(LoginServiceBridgeServer) LoginServiceHookedBridger {
+	return func(srv LoginServiceBridgeServer) LoginServiceHookedBridger {
+		return LoginServiceHookedBridge{LoginServiceBridgeServer: srv, LoginServiceHooker: h}
 	}
 }
 
@@ -385,7 +385,7 @@ func WithLoginServiceHook(h LoginServiceHooker) func(LoginServiceBridger) LoginS
 // It implements the HTTP and gRPC implementations of LoginService.
 // It forwards requests and responses between the two implementations.
 type LoginServiceHookedBridge struct {
-	LoginServiceBridger
+	LoginServiceBridgeServer
 	LoginServiceHooker
 }
 

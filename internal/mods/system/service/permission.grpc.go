@@ -49,7 +49,7 @@ func (s PermissionServiceServer) DeletePermission(ctx context.Context, request *
 // NewPermissionServiceServer new a menu service.
 func NewPermissionServiceServer(r runtime.Runtime, client *biz.PermissionServiceBiz) *PermissionServiceServer {
 	return &PermissionServiceServer{
-		log:    log.NewHelper(r.WithLogger("module", "service/permission")),
+		log:    log.NewHelper(r.WithLogger("module", "service/system")),
 		client: client,
 	}
 }

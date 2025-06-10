@@ -78,9 +78,9 @@ func (h UserServiceHookedBridge) CompleteUpdateUser(ctx transhttp.Context, reque
 	})
 }
 
-func NewUserServiceHookedBridge(r runtime.Runtime, client pb.UserServiceBridger) pb.UserServiceHookedBridger {
+func NewUserServiceHookedBridge(r runtime.Runtime, client pb.UserServiceHTTPServer) pb.UserServiceHookedBridger {
 	return pb.WithUserServiceHook(&UserServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+		log: log.NewHelper(r.WithLogger("module", "service/system")),
 	})(client)
 }
 

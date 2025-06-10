@@ -236,7 +236,7 @@ func (s LoginServiceHookedBridge) CompleteTokenRefresh(h transhttp.Context, requ
 
 func NewLoginServiceHookedBridge(r runtime.Runtime, client pb.LoginServiceHTTPServer) pb.LoginServiceHookedBridger {
 	return pb.WithLoginServiceHook(&LoginServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+		log: log.NewHelper(r.WithLogger("module", "service/auth")),
 	})(client)
 }
 

@@ -34,7 +34,7 @@ const MenuServiceGetMenuBridgeOperation = "/api.v1.services.system.MenuService/G
 const MenuServiceListMenusBridgeOperation = "/api.v1.services.system.MenuService/ListMenus"
 const MenuServiceUpdateMenuBridgeOperation = "/api.v1.services.system.MenuService/UpdateMenu"
 
-type MenuServiceBridger interface {
+type MenuServiceBridgeServer interface {
 	CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuResponse, error)
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuResponse, error)
 	GetMenu(context.Context, *GetMenuRequest) (*GetMenuResponse, error)
@@ -52,7 +52,7 @@ type MenuServiceHooker interface {
 
 type MenuServiceHookedBridger interface {
 	MenuServiceHooker
-	MenuServiceBridger
+	MenuServiceBridgeServer
 }
 type MenuServiceCreateMenuHooker interface {
 	PrepareCreateMenu(http.Context, *CreateMenuRequest) (context.Context, error)
@@ -75,7 +75,7 @@ type MenuServiceUpdateMenuHooker interface {
 	CompleteUpdateMenu(http.Context, *UpdateMenuRequest, *UpdateMenuResponse) error
 }
 
-func RegisterMenuServiceBridger(s *http.Server, srv MenuServiceHookedBridger) {
+func RegisterMenuServiceBridgeServer(s *http.Server, srv MenuServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/menus", _MenuService_ListMenus0_Bridge_Handler(srv))
 	r.GET("/sys/menus/:id", _MenuService_GetMenu0_Bridge_Handler(srv))
@@ -261,9 +261,9 @@ func (UnimplementedMenuServiceHooked) CompleteUpdateMenu(ctx http.Context, in *U
 	return ctx.Result(200, out)
 }
 
-func WithMenuServiceHook(h MenuServiceHooker) func(MenuServiceBridger) MenuServiceHookedBridger {
-	return func(b MenuServiceBridger) MenuServiceHookedBridger {
-		return MenuServiceHookedBridge{MenuServiceBridger: b, MenuServiceHooker: h}
+func WithMenuServiceHook(h MenuServiceHooker) func(MenuServiceBridgeServer) MenuServiceHookedBridger {
+	return func(srv MenuServiceBridgeServer) MenuServiceHookedBridger {
+		return MenuServiceHookedBridge{MenuServiceBridgeServer: srv, MenuServiceHooker: h}
 	}
 }
 
@@ -271,7 +271,7 @@ func WithMenuServiceHook(h MenuServiceHooker) func(MenuServiceBridger) MenuServi
 // It implements the HTTP and gRPC implementations of MenuService.
 // It forwards requests and responses between the two implementations.
 type MenuServiceHookedBridge struct {
-	MenuServiceBridger
+	MenuServiceBridgeServer
 	MenuServiceHooker
 }
 

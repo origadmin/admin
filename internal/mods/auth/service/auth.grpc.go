@@ -22,11 +22,6 @@ func (s AuthServiceServer) ListAuthResources(ctx context.Context, request *pb.Li
 	return s.client.ListAuthResources(ctx, request)
 }
 
-//func (m AuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {
-//	//TODO implement me
-//	panic("implement me")
-//}
-
 // NewAuthServiceServerPB new a menu service.
 func NewAuthServiceServerPB(client *biz.AuthServiceBiz) pb.AuthServiceServer {
 	return &AuthServiceServer{client: client}

@@ -69,7 +69,7 @@ func (s UserServiceServer) DeleteUser(ctx context.Context, req *pb.DeleteUserReq
 func NewUserServiceServer(r runtime.Runtime, client *biz.UserServiceBiz) *UserServiceServer {
 	return &UserServiceServer{
 		log: log.NewHelper(r.WithLogger(
-			"module", "service/user",
+			"module", "service/system",
 		)),
 		client: client,
 	}

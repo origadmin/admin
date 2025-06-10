@@ -41,7 +41,7 @@ func (s RoleServiceServer) DeleteRole(ctx context.Context, req *pb.DeleteRoleReq
 func NewRoleServiceServer(r runtime.Runtime, client *biz.RoleServiceBiz) *RoleServiceServer {
 	return &RoleServiceServer{
 		log: log.NewHelper(r.WithLogger(
-			"module", "service/role",
+			"module", "service/system",
 		)),
 		client: client,
 	}

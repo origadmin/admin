@@ -32,7 +32,7 @@ const CasbinSourceServiceListGroupingsBridgeOperation = "/api.v1.services.auth.C
 const CasbinSourceServiceListPoliciesBridgeOperation = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
 const CasbinSourceServiceWatchUpdateBridgeOperation = "/api.v1.services.auth.CasbinSourceService/WatchUpdate"
 
-type CasbinSourceServiceBridger interface {
+type CasbinSourceServiceBridgeServer interface {
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error)
@@ -46,7 +46,7 @@ type CasbinSourceServiceHooker interface {
 
 type CasbinSourceServiceHookedBridger interface {
 	CasbinSourceServiceHooker
-	CasbinSourceServiceBridger
+	CasbinSourceServiceBridgeServer
 }
 type CasbinSourceServiceListGroupingsHooker interface {
 	PrepareListGroupings(http.Context, *ListGroupingsRequest) (context.Context, error)
@@ -61,7 +61,7 @@ type CasbinSourceServiceWatchUpdateHooker interface {
 	CompleteWatchUpdate(http.Context, *WatchUpdateRequest, *WatchUpdateResponse) error
 }
 
-func RegisterCasbinSourceServiceBridger(s *http.Server, srv CasbinSourceServiceHookedBridger) {
+func RegisterCasbinSourceServiceBridgeServer(s *http.Server, srv CasbinSourceServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/casbin/policies", _CasbinSourceService_ListPolicies0_Bridge_Handler(srv))
 	r.GET("/casbin/groupings", _CasbinSourceService_ListGroupings0_Bridge_Handler(srv))
@@ -168,9 +168,9 @@ func (UnimplementedCasbinSourceServiceHooked) CompleteWatchUpdate(ctx http.Conte
 	return ctx.Result(200, out)
 }
 
-func WithCasbinSourceServiceHook(h CasbinSourceServiceHooker) func(CasbinSourceServiceBridger) CasbinSourceServiceHookedBridger {
-	return func(b CasbinSourceServiceBridger) CasbinSourceServiceHookedBridger {
-		return CasbinSourceServiceHookedBridge{CasbinSourceServiceBridger: b, CasbinSourceServiceHooker: h}
+func WithCasbinSourceServiceHook(h CasbinSourceServiceHooker) func(CasbinSourceServiceBridgeServer) CasbinSourceServiceHookedBridger {
+	return func(srv CasbinSourceServiceBridgeServer) CasbinSourceServiceHookedBridger {
+		return CasbinSourceServiceHookedBridge{CasbinSourceServiceBridgeServer: srv, CasbinSourceServiceHooker: h}
 	}
 }
 
@@ -178,7 +178,7 @@ func WithCasbinSourceServiceHook(h CasbinSourceServiceHooker) func(CasbinSourceS
 // It implements the HTTP and gRPC implementations of CasbinSourceService.
 // It forwards requests and responses between the two implementations.
 type CasbinSourceServiceHookedBridge struct {
-	CasbinSourceServiceBridger
+	CasbinSourceServiceBridgeServer
 	CasbinSourceServiceHooker
 }
 

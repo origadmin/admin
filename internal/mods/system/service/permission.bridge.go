@@ -80,7 +80,7 @@ func (h PermissionServiceHookedBridge) CompleteUpdatePermission(ctx transhttp.Co
 
 func NewPermissionServiceHookedBridge(r runtime.Runtime, client pb.PermissionServiceHTTPServer) pb.PermissionServiceHookedBridger {
 	return pb.WithPermissionServiceHook(&PermissionServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+		log: log.NewHelper(r.WithLogger("module", "service/system")),
 	})(client)
 }
 

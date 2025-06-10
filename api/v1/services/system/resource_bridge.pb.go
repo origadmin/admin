@@ -34,7 +34,7 @@ const ResourceServiceGetResourceBridgeOperation = "/api.v1.services.system.Resou
 const ResourceServiceListResourcesBridgeOperation = "/api.v1.services.system.ResourceService/ListResources"
 const ResourceServiceUpdateResourceBridgeOperation = "/api.v1.services.system.ResourceService/UpdateResource"
 
-type ResourceServiceBridger interface {
+type ResourceServiceBridgeServer interface {
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
 	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
@@ -52,7 +52,7 @@ type ResourceServiceHooker interface {
 
 type ResourceServiceHookedBridger interface {
 	ResourceServiceHooker
-	ResourceServiceBridger
+	ResourceServiceBridgeServer
 }
 type ResourceServiceCreateResourceHooker interface {
 	PrepareCreateResource(http.Context, *CreateResourceRequest) (context.Context, error)
@@ -75,7 +75,7 @@ type ResourceServiceUpdateResourceHooker interface {
 	CompleteUpdateResource(http.Context, *UpdateResourceRequest, *UpdateResourceResponse) error
 }
 
-func RegisterResourceServiceBridger(s *http.Server, srv ResourceServiceHookedBridger) {
+func RegisterResourceServiceBridgeServer(s *http.Server, srv ResourceServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/resources", _ResourceService_ListResources0_Bridge_Handler(srv))
 	r.GET("/sys/resources/:id", _ResourceService_GetResource0_Bridge_Handler(srv))
@@ -261,9 +261,9 @@ func (UnimplementedResourceServiceHooked) CompleteUpdateResource(ctx http.Contex
 	return ctx.Result(200, out)
 }
 
-func WithResourceServiceHook(h ResourceServiceHooker) func(ResourceServiceBridger) ResourceServiceHookedBridger {
-	return func(b ResourceServiceBridger) ResourceServiceHookedBridger {
-		return ResourceServiceHookedBridge{ResourceServiceBridger: b, ResourceServiceHooker: h}
+func WithResourceServiceHook(h ResourceServiceHooker) func(ResourceServiceBridgeServer) ResourceServiceHookedBridger {
+	return func(srv ResourceServiceBridgeServer) ResourceServiceHookedBridger {
+		return ResourceServiceHookedBridge{ResourceServiceBridgeServer: srv, ResourceServiceHooker: h}
 	}
 }
 
@@ -271,7 +271,7 @@ func WithResourceServiceHook(h ResourceServiceHooker) func(ResourceServiceBridge
 // It implements the HTTP and gRPC implementations of ResourceService.
 // It forwards requests and responses between the two implementations.
 type ResourceServiceHookedBridge struct {
-	ResourceServiceBridger
+	ResourceServiceBridgeServer
 	ResourceServiceHooker
 }
 

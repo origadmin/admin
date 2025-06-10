@@ -80,7 +80,7 @@ func (h RoleServiceHookedBridge) CompleteUpdateRole(ctx transhttp.Context, reque
 
 func NewRoleServiceHookedBridge(r runtime.Runtime, client pb.RoleServiceHTTPServer) pb.RoleServiceHookedBridger {
 	return pb.WithRoleServiceHook(&RoleServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+		log: log.NewHelper(r.WithLogger("module", "service/system")),
 	})(client)
 }
 

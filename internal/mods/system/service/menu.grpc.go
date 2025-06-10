@@ -55,7 +55,7 @@ func NewMenuServiceServer(client pb.MenuServiceClient, logger log.KLogger) *Menu
 
 // NewMenuServiceServerPB new a menu service.
 func NewMenuServiceServerPB(r runtime.Runtime, client pb.MenuServiceClient) pb.MenuServiceServer {
-	return NewMenuServiceServer(client, r.WithLogger("module", "service/menu"))
+	return NewMenuServiceServer(client, r.WithLogger("module", "service/system"))
 }
 
 var _ pb.MenuServiceServer = (*MenuServiceServer)(nil)

@@ -186,7 +186,7 @@ func (c CasbinServiceHookedBridge) CompleteWatchUpdate(context http.Context, req
 func NewCasbinServiceHookedBridge(r runtime.Runtime, client pb.CasbinSourceServiceHTTPServer) pb.
 CasbinSourceServiceHookedBridger {
 	return pb.WithCasbinSourceServiceHook(&CasbinServiceHookedBridge{
-		log: log.NewHelper(r.WithLogger("module", "service/permission")),
+		log: log.NewHelper(r.WithLogger("module", "service/auth")),
 	})(client)
 }
 

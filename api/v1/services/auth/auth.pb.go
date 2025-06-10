@@ -864,11 +864,11 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x06method\x18\x04 \x01(\tR\x06method\x12\x1c\n" +
 	"\toperation\x18\x05 \x01(\tR\toperation\"2\n" +
 	"\x14AuthenticateResponse\x12\x1a\n" +
-	"\bis_valid\x18\x01 \x01(\bR\bis_valid2\xb3\x06\n" +
-	"\vAuthService\x12\x91\x01\n" +
-	"\x11ListAuthResources\x12..api.v1.services.auth.ListAuthResourcesRequest\x1a/.api.v1.services.auth.ListAuthResourcesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/auth/resources\x12}\n" +
-	"\vCreateToken\x12(.api.v1.services.auth.CreateTokenRequest\x1a).api.v1.services.auth.CreateTokenResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x04data\"\v/auth/token\x12\x84\x01\n" +
-	"\rValidateToken\x12*.api.v1.services.auth.ValidateTokenRequest\x1a+.api.v1.services.auth.ValidateTokenResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/sys/auth/validate\x12\x82\x01\n" +
+	"\bis_valid\x18\x01 \x01(\bR\bis_valid2\xab\x06\n" +
+	"\vAuthService\x12\x8d\x01\n" +
+	"\x11ListAuthResources\x12..api.v1.services.auth.ListAuthResourcesRequest\x1a/.api.v1.services.auth.ListAuthResourcesResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/auth/resources\x12}\n" +
+	"\vCreateToken\x12(.api.v1.services.auth.CreateTokenRequest\x1a).api.v1.services.auth.CreateTokenResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x04data\"\v/auth/token\x12\x80\x01\n" +
+	"\rValidateToken\x12*.api.v1.services.auth.ValidateTokenRequest\x1a+.api.v1.services.auth.ValidateTokenResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/auth/validate\x12\x82\x01\n" +
 	"\fDestroyToken\x12).api.v1.services.auth.DestroyTokenRequest\x1a*.api.v1.services.auth.DestroyTokenResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x04data\"\r/auth/destroy\x12\x87\x01\n" +
 	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponse\" \x82\xd3\xe4\x93\x02\x1a:\x04data\"\x12/auth/authenticate\x12{\n" +
 	"\n" +

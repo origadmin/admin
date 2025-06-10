@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/google/wire"
+	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
@@ -78,6 +79,52 @@ func NewRegisterServer(
 		Casbin:   Casbin,
 		Login:    Login,
 		Personal: Personal,
+	}
+}
+
+type RegisterBridgeServer struct {
+	Auth     pb.AuthServiceHookedBridger
+	Casbin   pb.CasbinSourceServiceHookedBridger
+	Login    pb.LoginServiceHookedBridger
+	Personal pb.PersonalServiceHookedBridger
+}
+
+func (s RegisterBridgeServer) Register(ctx context.Context, svc any) {
+	switch v := svc.(type) {
+	case *service.GRPCServer:
+		s.RegisterGRPC(ctx, v)
+	case *service.HTTPServer:
+		s.RegisterHTTP(ctx, v)
+	}
+}
+
+func (s RegisterBridgeServer) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
+	log.Info("http server auth init")
+	pb.RegisterAuthServiceBridgeServer(server, s.Auth)
+	pb.RegisterCasbinSourceServiceBridgeServer(server, s.Casbin)
+	pb.RegisterLoginServiceBridgeServer(server, s.Login)
+	pb.RegisterPersonalServiceBridgeServer(server, s.Personal)
+}
+
+func (s RegisterBridgeServer) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
+	log.Info("http server system init")
+	//pb.RegisterResourceServiceBridgeServer(server, s.Resource)
+	//pb.RegisterRoleServiceBridgeServer(server, s.Role)
+	//pb.RegisterUserServiceBridgeServer(server, s.User)
+	//pb.RegisterPermissionServiceBridgeServer(server, s.Permission)
+}
+
+func NewRegisterBridgeServer(r runtime.Runtime,
+	Auth pb.AuthServiceServer,
+	Casbin pb.CasbinSourceServiceServer,
+	Login pb.LoginServiceServer,
+	Personal pb.PersonalServiceServer,
+) *RegisterBridgeServer {
+	return &RegisterBridgeServer{
+		Auth:     NewAuthServiceHookedBridge(r, Auth),
+		Casbin:   NewCasbinServiceHookedBridge(r, Casbin),
+		Login:    NewLoginServiceHookedBridge(r, Login),
+		Personal: NewPersonalServiceHookedBridge(r, Personal),
 	}
 }
 

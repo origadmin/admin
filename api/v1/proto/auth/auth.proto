@@ -15,7 +15,7 @@ option objc_class_prefix = "APIServiceAuthAuth";
 service AuthService {
   // ListAuthResources returns a list of Auths.
   rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
-    option (google.api.http) = {get: "/sys/auth/resources"};
+    option (google.api.http) = {get: "/auth/resources"};
   }
   // CreateToken generates a new JWT token for the given user.
   rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {
@@ -27,7 +27,7 @@ service AuthService {
 
   // ValidateToken verifies the validity of a JWT token.
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
-    option (google.api.http) = {get: "/sys/auth/validate"};
+    option (google.api.http) = {get: "/auth/validate"};
   }
 
   // DestroyToken invalidates a JWT token.

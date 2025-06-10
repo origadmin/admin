@@ -34,7 +34,7 @@ const PermissionServiceGetPermissionBridgeOperation = "/api.v1.services.system.P
 const PermissionServiceListPermissionsBridgeOperation = "/api.v1.services.system.PermissionService/ListPermissions"
 const PermissionServiceUpdatePermissionBridgeOperation = "/api.v1.services.system.PermissionService/UpdatePermission"
 
-type PermissionServiceBridger interface {
+type PermissionServiceBridgeServer interface {
 	CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error)
 	DeletePermission(context.Context, *DeletePermissionRequest) (*DeletePermissionResponse, error)
 	GetPermission(context.Context, *GetPermissionRequest) (*GetPermissionResponse, error)
@@ -52,7 +52,7 @@ type PermissionServiceHooker interface {
 
 type PermissionServiceHookedBridger interface {
 	PermissionServiceHooker
-	PermissionServiceBridger
+	PermissionServiceBridgeServer
 }
 type PermissionServiceCreatePermissionHooker interface {
 	PrepareCreatePermission(http.Context, *CreatePermissionRequest) (context.Context, error)
@@ -75,7 +75,7 @@ type PermissionServiceUpdatePermissionHooker interface {
 	CompleteUpdatePermission(http.Context, *UpdatePermissionRequest, *UpdatePermissionResponse) error
 }
 
-func RegisterPermissionServiceBridger(s *http.Server, srv PermissionServiceHookedBridger) {
+func RegisterPermissionServiceBridgeServer(s *http.Server, srv PermissionServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/permissions", _PermissionService_ListPermissions0_Bridge_Handler(srv))
 	r.GET("/sys/permissions/:id", _PermissionService_GetPermission0_Bridge_Handler(srv))
@@ -261,9 +261,9 @@ func (UnimplementedPermissionServiceHooked) CompleteUpdatePermission(ctx http.Co
 	return ctx.Result(200, out)
 }
 
-func WithPermissionServiceHook(h PermissionServiceHooker) func(PermissionServiceBridger) PermissionServiceHookedBridger {
-	return func(b PermissionServiceBridger) PermissionServiceHookedBridger {
-		return PermissionServiceHookedBridge{PermissionServiceBridger: b, PermissionServiceHooker: h}
+func WithPermissionServiceHook(h PermissionServiceHooker) func(PermissionServiceBridgeServer) PermissionServiceHookedBridger {
+	return func(srv PermissionServiceBridgeServer) PermissionServiceHookedBridger {
+		return PermissionServiceHookedBridge{PermissionServiceBridgeServer: srv, PermissionServiceHooker: h}
 	}
 }
 
@@ -271,7 +271,7 @@ func WithPermissionServiceHook(h PermissionServiceHooker) func(PermissionService
 // It implements the HTTP and gRPC implementations of PermissionService.
 // It forwards requests and responses between the two implementations.
 type PermissionServiceHookedBridge struct {
-	PermissionServiceBridger
+	PermissionServiceBridgeServer
 	PermissionServiceHooker
 }
 
