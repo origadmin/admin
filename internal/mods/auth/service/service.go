@@ -16,20 +16,30 @@ import (
 
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
-	wire.Struct(new(RegisterServer), "*"),
-	NewAuthServiceServerPB,
-	//NewAuthServiceHTTPServerPB,
-	NewCasbinSourceServiceServerPB,
-	//NewCasbinSourceServiceHTTPServerPB,
-	NewLoginServiceServerPB,
-	//NewLoginServiceHTTPServerPB,
 	NewRegisterServer,
+	NewAuthServiceServerPB,
+	NewCasbinSourceServiceServerPB,
+	NewLoginServiceServerPB,
+	NewPersonalServiceServerPB,
+	NewPersonalServiceHTTPServerPB,
+	NewCasbinSourceBiz,
+)
+
+var RemoteProviderSet = wire.NewSet(
+	NewRegisterServer,
+	NewAuthServiceBridgeClient,
+	NewCasbinServiceBridgeClient,
+	NewLoginServiceBridgeClient,
+	NewPersonalServiceBridgeClient,
+	NewCasbinSourceClient,
+
 )
 
 type RegisterServer struct {
-	Auth   pb.AuthServiceServer
-	Casbin pb.CasbinSourceServiceServer
-	Login  pb.LoginServiceServer
+	Auth     pb.AuthServiceServer
+	Casbin   pb.CasbinSourceServiceServer
+	Login    pb.LoginServiceServer
+	Personal pb.PersonalServiceServer
 }
 
 func (s RegisterServer) Register(ctx context.Context, svc any) {
@@ -42,28 +52,32 @@ func (s RegisterServer) Register(ctx context.Context, svc any) {
 }
 
 func (s RegisterServer) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
-	log.Info("grpc server system init")
+	log.Info("grpc server auth init")
 	pb.RegisterAuthServiceServer(server, s.Auth)
 	pb.RegisterCasbinSourceServiceServer(server, s.Casbin)
 	pb.RegisterLoginServiceServer(server, s.Login)
+	pb.RegisterPersonalServiceServer(server, s.Personal)
 }
 
 func (s RegisterServer) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http server system init")
+	log.Info("http server auth init")
 	pb.RegisterAuthServiceHTTPServer(server, s.Auth)
 	pb.RegisterCasbinSourceServiceHTTPServer(server, s.Casbin)
 	pb.RegisterLoginServiceHTTPServer(server, s.Login)
+	pb.RegisterPersonalServiceHTTPServer(server, s.Personal)
 }
 
 func NewRegisterServer(
 	Auth pb.AuthServiceServer,
 	Casbin pb.CasbinSourceServiceServer,
 	Login pb.LoginServiceServer,
-) service.ServerRegistrar {
+	Personal pb.PersonalServiceServer,
+) *RegisterServer {
 	return &RegisterServer{
-		Auth:   Auth,
-		Casbin: Casbin,
-		Login:  Login,
+		Auth:     Auth,
+		Casbin:   Casbin,
+		Login:    Login,
+		Personal: Personal,
 	}
 }
 

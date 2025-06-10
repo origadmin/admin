@@ -43,8 +43,8 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	permissionRepo := dal.NewPermissionRepo(r, dataData)
 	permissionServiceBiz := biz.NewPermissionServiceBiz(r, permissionRepo)
 	permissionServiceServer := service.NewPermissionServiceServerPB(r, permissionServiceBiz)
-	serverRegistrar := service.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
-	v := server.NewSystemServer(r, bootstrap, serverRegistrar)
+	registerServer := service.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
+	v := server.NewSystemServer(r, bootstrap, registerServer)
 	app := NewApp(r, v)
 	return app, func() {
 		cleanup()

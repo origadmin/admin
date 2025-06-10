@@ -89,6 +89,14 @@ func NewRoleServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.Role
 	return pb.NewRoleServiceBridge(client)
 }
 
+func NewRoleServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.RoleServiceServer {
+	if v, ok := clients["system"]; ok {
+		return NewRoleServiceBridge(r, v)
+	} else {
+		return pb.UnimplementedRoleServiceServer{}
+	}
+}
+
 // NewRoleServiceHTTPBridge new a menu service.
 func NewRoleServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.RoleServiceHTTPServer {
 	return pb.NewRoleServiceHTTPBridge(client)

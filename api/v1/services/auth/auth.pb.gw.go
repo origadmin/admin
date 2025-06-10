@@ -229,7 +229,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/CreateToken", runtime.WithHTTPPathPattern("/sys/auth/token"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/CreateToken", runtime.WithHTTPPathPattern("/auth/token"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -269,7 +269,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/DestroyToken", runtime.WithHTTPPathPattern("/sys/auth/destroy"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/DestroyToken", runtime.WithHTTPPathPattern("/auth/destroy"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -289,7 +289,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/Authenticate", runtime.WithHTTPPathPattern("/sys/auth/authenticate"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/Authenticate", runtime.WithHTTPPathPattern("/auth/authenticate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -309,7 +309,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/AuthLogout", runtime.WithHTTPPathPattern("/sys/auth/logout"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/AuthLogout", runtime.WithHTTPPathPattern("/auth/logout"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -384,7 +384,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/CreateToken", runtime.WithHTTPPathPattern("/sys/auth/token"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/CreateToken", runtime.WithHTTPPathPattern("/auth/token"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -418,7 +418,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/DestroyToken", runtime.WithHTTPPathPattern("/sys/auth/destroy"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/DestroyToken", runtime.WithHTTPPathPattern("/auth/destroy"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -435,7 +435,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/Authenticate", runtime.WithHTTPPathPattern("/sys/auth/authenticate"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/Authenticate", runtime.WithHTTPPathPattern("/auth/authenticate"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -452,7 +452,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/AuthLogout", runtime.WithHTTPPathPattern("/sys/auth/logout"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/AuthLogout", runtime.WithHTTPPathPattern("/auth/logout"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -470,11 +470,11 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 
 var (
 	pattern_AuthService_ListAuthResources_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sys", "auth", "resources"}, ""))
-	pattern_AuthService_CreateToken_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sys", "auth", "token"}, ""))
+	pattern_AuthService_CreateToken_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "token"}, ""))
 	pattern_AuthService_ValidateToken_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sys", "auth", "validate"}, ""))
-	pattern_AuthService_DestroyToken_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sys", "auth", "destroy"}, ""))
-	pattern_AuthService_Authenticate_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sys", "auth", "authenticate"}, ""))
-	pattern_AuthService_AuthLogout_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sys", "auth", "logout"}, ""))
+	pattern_AuthService_DestroyToken_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "destroy"}, ""))
+	pattern_AuthService_Authenticate_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "authenticate"}, ""))
+	pattern_AuthService_AuthLogout_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "logout"}, ""))
 )
 
 var (

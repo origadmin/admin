@@ -13,6 +13,7 @@ import (
 var ProviderSet = wire.NewSet(
 	NewAuthServiceBiz,
 	NewLoginServiceBiz,
+	NewPersonalServiceBiz,
 	NewCasbinSourceServiceBiz,
 )
 

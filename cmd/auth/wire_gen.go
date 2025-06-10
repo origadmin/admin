@@ -51,8 +51,11 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	loginRepo := dal.NewLoginRepo(dataData, loginData)
 	loginServiceBiz := biz.NewLoginServiceBiz(r, loginRepo)
 	loginServiceServer := service.NewLoginServiceServerPB(loginServiceBiz)
-	serverRegistrar := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer)
-	v := server.NewAuthServer(r, bootstrap, serverRegistrar)
+	personalRepo := dal.NewPersonalRepo(r, dataData)
+	personalServiceBiz := biz.NewPersonalServiceBiz(r, personalRepo)
+	personalServiceServer := service.NewPersonalServiceServerPB(r, personalServiceBiz)
+	registerServer := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
+	v := server.NewAuthServer(r, bootstrap, registerServer)
 	app := NewApp(r, v)
 	return app, func() {
 		cleanup()

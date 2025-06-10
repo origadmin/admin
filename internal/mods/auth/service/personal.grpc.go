@@ -9,8 +9,8 @@ import (
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/log"
 
-	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/biz"
+	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/mods/auth/biz"
 )
 
 // PersonalServiceServer is a login service.

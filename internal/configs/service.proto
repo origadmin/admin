@@ -24,4 +24,5 @@ message ServiceServer {
 
 message ServiceClient {
   ServiceCore core = 1 [json_name = "core"];
+  repeated config.v1.Service services = 200 [json_name = "services"];
 }

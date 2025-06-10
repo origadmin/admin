@@ -13,7 +13,6 @@ import (
 // CasbinSourceServiceHTTPServer is a login service.
 type CasbinSourceServiceHTTPServer struct {
 	pb.UnimplementedCasbinSourceServiceServer
-
 	client pb.CasbinSourceServiceHTTPClient
 }
 

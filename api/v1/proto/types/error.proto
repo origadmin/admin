@@ -38,5 +38,5 @@ enum AuthErrorReason {
   option (errors.default_code) = 500;
   AUTH_ERROR_REASON_UNSPECIFIED = 0;
   AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND = 2001 [(errors.code) = 404];
+  AUTH_ERROR_REASON_TOKEN_EXPIRED = 2002 [(errors.code) = 401];
 }
-

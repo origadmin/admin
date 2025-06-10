@@ -19,6 +19,7 @@ import (
 	"github.com/origadmin/toolkits/errors"
 
 	"origadmin/application/admin/internal/configs"
+	authservice "origadmin/application/admin/internal/mods/auth/service"
 )
 
 const (
@@ -38,7 +39,7 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
-func NewAuthServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc service.ServerRegistrar) []transport.
+func NewAuthServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc *authservice.RegisterServer) []transport.
 Server {
 	var servers []transport.Server
 	serverConfig := bootstrap.GetServer()

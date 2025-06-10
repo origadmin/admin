@@ -14,12 +14,12 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/gorilla/handlers"
 	"github.com/origadmin/runtime"
-	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/runtime/service"
+	servicegrpc "github.com/origadmin/runtime/service/grpc"
 	servicehttp "github.com/origadmin/runtime/service/http"
 
 	"origadmin/application/admin/api/v1/services/auth"
@@ -29,58 +29,48 @@ import (
 	"origadmin/application/admin/internal/configs"
 )
 
-type data struct {
+type ProxyOptions struct {
+	Authenticator security.Authenticator
+	Authorizer    security.Authorizer
 }
 
-func (d data) QueryRoles(ctx context.Context, subject string) ([]string, error) {
-	//TODO implement me
-	panic("implement me")
-}
+func NewProxyOptions(r runtime.Runtime, bootstrap *configs.Bootstrap,
+	source casbin.RuleSource) (*ProxyOptions, error) {
+	authenticator, err := securityx.NewAuthenticator(bootstrap)
+	if err != nil {
+		return nil, err
+	}
+	opts := []casbin.AuthorizerOption{
+		casbin.WithSource(source),
+	}
 
-func (d data) QueryPermissions(ctx context.Context, subject string) ([]string, error) {
-	//TODO implement me
-	panic("implement me")
+	authorizer, err := securityx.NewAuthorizer(bootstrap, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &ProxyOptions{
+		Authenticator: authenticator,
+		Authorizer:    authorizer,
+	}, nil
 }
 
 // NewProxyServer creates a new proxy server.
-func NewProxyServer(r runtime.Runtime, bootstrap *configs.Bootstrap, registrars []service.ServerRegistrar,
-	client auth.CasbinSourceServiceClient) []transport.Server {
-	clients := bootstrap.GetClients()
-	if clients == nil {
-		panic("no service config")
-	}
+func NewProxyServer(
+	r runtime.Runtime,
+	bootstrap *configs.Bootstrap,
+	registrars []service.ServerRegistrar,
+	opts *ProxyOptions) []transport.Server {
 	paths := bootstrap.GetSecurity().GetSecurity().GetPublicPaths()
 	paths = append(DefaultPaths(), paths...)
 	ms := []middleware.KMiddleware{
 		recovery.Recovery(),
 	}
-	authenticator, err := securityx.NewAuthenticator(bootstrap)
-	if err != nil {
-		panic(err)
-	}
 
-	opts := []casbin.AuthorizerOption{casbin.WithServiceClient(client)}
-
-	authorizer, err := securityx.NewAuthorizer(bootstrap, opts...)
-	if err != nil {
-		panic(err)
-	}
-	bridge := securityx.SecurityBridge{
-		TokenSource:          security.TokenSourceHeader,
-		Scheme:               security.SchemeBearer,
-		AuthenticationHeader: security.HeaderAuthorize,
-		Authenticator:        authenticator,
-		Authorizer:           authorizer,
-		SkipKey:              msecurity.MetadataSecuritySkipKey,
-		PublicPaths:          nil,
-		Skipper: func(path string) bool {
-			return false
-		},
-		IsRoot: func(ctx context.Context, claims security.Claims) bool {
-			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
-		},
-		Provider:    &data{},
-		TokenParser: nil,
+	bridge := securityx.DefaultBridge()
+	bridge.Authenticator = opts.Authenticator
+	bridge.Authorizer = opts.Authorizer
+	bridge.IsRoot = func(ctx context.Context, claims security.Claims) bool {
+		return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
 	}
 	serv := selector.Server(bridge.Middleware()).Match(func(ctx context.Context, operation string) bool {
 		for _, p := range paths {
@@ -94,34 +84,42 @@ func NewProxyServer(r runtime.Runtime, bootstrap *configs.Bootstrap, registrars 
 	})
 	ms = append(ms, serv.Build(), CallLoggerMiddleware())
 	//clients.Get
-	for i := range clients {
-		clients[i].GetCore().GetName()
-
-	}
+	//for i := range clients {
+	//	clients[i].GetCore().GetName()
+	//
+	//}
 	//clients.Name = types.ZeroOr(clients.Name, "ORIGADMIN_SERVICE")
-	srv, err := runtime.NewHTTPServiceServer(bootstrap.GetEntry().GetServer(),
-		servicehttp.WithServerOptions(
-			http.ErrorEncoder(resp.ResponseErrorEncoder),
-			http.Filter(handlers.CORS(
-				handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-				handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
-				handlers.AllowedOrigins([]string{"*"}),
-			))),
-		servicehttp.WithMiddlewares(ms...),
-		servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
-	)
-	if err != nil {
-		panic(err)
+	var servers []transport.Server
+	services := bootstrap.GetEntry().GetServices()
+	for i := range services {
+		if services[i].GetType() != "http" {
+			continue
+		}
+		srv, err := runtime.NewHTTPServiceServer(services[i],
+			servicehttp.WithServerOptions(
+				http.PathPrefix("/api/v1"),
+				http.ErrorEncoder(resp.ResponseErrorEncoder),
+				http.Filter(handlers.CORS(
+					handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+					handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
+					handlers.AllowedOrigins([]string{"*"}),
+				))),
+			servicehttp.WithMiddlewares(ms...),
+			servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+		)
+		if err != nil {
+			panic(err)
+		}
+		for _, registrar := range registrars {
+			registrar.Register(r.Context(), srv)
+		}
+		srv.WalkRoute(func(info http.RouteInfo) error {
+			log.Infof("Registered HTTP route: %s %s", info.Method, info.Path)
+			return nil
+		})
+		servers = append(servers, srv)
 	}
-	for _, registrar := range registrars {
-		registrar.Register(r.Context(), srv)
-	}
-	srv.WalkRoute(func(info http.RouteInfo) error {
-		log.Infof("Registered HTTP route: %s %s", info.Method, info.Path)
-		return nil
-	})
-
-	return []transport.Server{srv}
+	return servers
 }
 
 func DefaultPaths() []string {
@@ -143,7 +141,7 @@ func CallLoggerMiddleware() middleware.KMiddleware {
 			tr, ok := transport.FromServerContext(ctx)
 			log.Infof("Caller Server: %+v, ok: %+v", tr, ok)
 			tr, ok = transport.FromClientContext(ctx)
-			log.Infof("Caller ServiceClient: %+v, ok: %+v", tr, ok)
+			log.Infof("Caller ServiceServer: %+v, ok: %+v", tr, ok)
 			return handler(ctx, req)
 		}
 	}
@@ -156,4 +154,61 @@ func CorsMiddleware() middleware.KMiddleware {
 			return handler(ctx, req)
 		}
 	}
+}
+
+func NewProxyGRPCClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[string]*service.GRPCClient {
+	ll := log.NewHelper(r.WithLogger("module", "proxy"))
+	clients := bootstrap.GetClients()
+	clientServices := make(map[string]*service.GRPCClient, len(clients))
+	for i := range clients {
+		services := clients[i].GetServices()
+		if len(services) == 0 {
+			continue
+		}
+		var options []service.GRPCOption
+		discovery, err := r.Builder().NewDiscovery(clients[i].GetCore().GetDiscovery())
+		if err == nil {
+			options = append(options, servicegrpc.WithDiscovery(clients[i].GetCore().GetDiscovery().GetServiceName(),
+				discovery))
+		}
+		for idx := range services {
+			if services[idx].GetType() == "grpc" {
+				client, err := r.Builder().NewGRPCClient(r.Context(), services[idx], options...)
+				if err != nil {
+					ll.Warnf("NewGRPCClient failed: %v", err)
+					continue
+				}
+				clientServices[services[idx].GetName()] = client
+			}
+		}
+	}
+	return clientServices
+}
+
+func NewProxyHTTPClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[string]*service.HTTPClient {
+	ll := log.NewHelper(r.WithLogger("module", "proxy"))
+	clients := bootstrap.GetClients()
+	clientServices := make(map[string]*service.HTTPClient, len(clients))
+	for i := range clients {
+		services := clients[i].GetServices()
+		if len(services) == 0 {
+			continue
+		}
+		var options []service.HTTPOption
+		discovery, err := r.Builder().NewDiscovery(clients[i].GetCore().GetDiscovery())
+		if err == nil {
+			options = append(options, servicehttp.WithDiscovery(clients[i].GetCore().GetDiscovery().GetServiceName(), discovery))
+		}
+		for idx := range services {
+			if services[idx].GetType() == "http" {
+				client, err := r.Builder().NewHTTPClient(r.Context(), services[idx], options...)
+				if err != nil {
+					ll.Warnf("NewHTTPClient failed: %v", err)
+					continue
+				}
+				clientServices[services[idx].GetName()] = client
+			}
+		}
+	}
+	return clientServices
 }

@@ -37,6 +37,7 @@ var ProviderSet = wire.NewSet(
 	NewAuthRepo,
 	NewLoginRepo,
 	NewCasbinSourceRepo,
+	NewPersonalRepo,
 	RefreshTokenizer,
 )
 

@@ -864,15 +864,15 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x06method\x18\x04 \x01(\tR\x06method\x12\x1c\n" +
 	"\toperation\x18\x05 \x01(\tR\toperation\"2\n" +
 	"\x14AuthenticateResponse\x12\x1a\n" +
-	"\bis_valid\x18\x01 \x01(\bR\bis_valid2\xc4\x06\n" +
+	"\bis_valid\x18\x01 \x01(\bR\bis_valid2\xb3\x06\n" +
 	"\vAuthService\x12\x91\x01\n" +
-	"\x11ListAuthResources\x12..api.v1.services.auth.ListAuthResourcesRequest\x1a/.api.v1.services.auth.ListAuthResourcesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/auth/resources\x12\x81\x01\n" +
-	"\vCreateToken\x12(.api.v1.services.auth.CreateTokenRequest\x1a).api.v1.services.auth.CreateTokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x04data\"\x0f/sys/auth/token\x12\x84\x01\n" +
-	"\rValidateToken\x12*.api.v1.services.auth.ValidateTokenRequest\x1a+.api.v1.services.auth.ValidateTokenResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/sys/auth/validate\x12\x86\x01\n" +
-	"\fDestroyToken\x12).api.v1.services.auth.DestroyTokenRequest\x1a*.api.v1.services.auth.DestroyTokenResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x04data\"\x11/sys/auth/destroy\x12\x8b\x01\n" +
-	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\"\x16/sys/auth/authenticate\x12\x7f\n" +
+	"\x11ListAuthResources\x12..api.v1.services.auth.ListAuthResourcesRequest\x1a/.api.v1.services.auth.ListAuthResourcesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/auth/resources\x12}\n" +
+	"\vCreateToken\x12(.api.v1.services.auth.CreateTokenRequest\x1a).api.v1.services.auth.CreateTokenResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x04data\"\v/auth/token\x12\x84\x01\n" +
+	"\rValidateToken\x12*.api.v1.services.auth.ValidateTokenRequest\x1a+.api.v1.services.auth.ValidateTokenResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/sys/auth/validate\x12\x82\x01\n" +
+	"\fDestroyToken\x12).api.v1.services.auth.DestroyTokenRequest\x1a*.api.v1.services.auth.DestroyTokenResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x04data\"\r/auth/destroy\x12\x87\x01\n" +
+	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponse\" \x82\xd3\xe4\x93\x02\x1a:\x04data\"\x12/auth/authenticate\x12{\n" +
 	"\n" +
-	"AuthLogout\x12'.api.v1.services.auth.AuthLogoutRequest\x1a(.api.v1.services.auth.AuthLogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x04data\"\x10/sys/auth/logoutB\xb4\x01\n" +
+	"AuthLogout\x12'.api.v1.services.auth.AuthLogoutRequest\x1a(.api.v1.services.auth.AuthLogoutResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x04data\"\f/auth/logoutB\xb4\x01\n" +
 	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z\x19api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (

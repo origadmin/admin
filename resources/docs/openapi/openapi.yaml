@@ -17,6 +17,320 @@ servers:
     - url: http://localhost:10080
     - url: https://localhost:10080
 paths:
+    /auth/authenticate:
+        post:
+            tags:
+                - AuthService
+            description: Authenticate authenticates a user.
+            operationId: AuthService_Authenticate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.AuthenticateRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.AuthenticateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/destroy:
+        post:
+            tags:
+                - AuthService
+            description: DestroyToken invalidates a JWT token.
+            operationId: AuthService_DestroyToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/logout:
+        post:
+            tags:
+                - AuthService
+            description: AuthLogout logs out a user.
+            operationId: AuthService_AuthLogout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/logout:
+        post:
+            tags:
+                - PersonalService
+            description: PersonalLogout Personal user logs out
+            operationId: PersonalService_PersonalLogout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.PersonalLogoutResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/password:
+        put:
+            tags:
+                - PersonalService
+            description: UpdatePersonalProfilePassword The user changes the password
+            operationId: PersonalService_UpdatePersonalPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePersonalPasswordResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/profile:
+        get:
+            tags:
+                - PersonalService
+            description: GetPersonalProfile Update the personal user information
+            operationId: PersonalService_GetPersonalProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetPersonalProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - PersonalService
+            description: UpdatePersonalProfile Update the personal user information
+            operationId: PersonalService_UpdatePersonalProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePersonalProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/resources:
+        get:
+            tags:
+                - PersonalService
+            description: ListPersonalResources List the personal user's menu
+            operationId: PersonalService_ListPersonalResources
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.ListPersonalResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/roles:
+        get:
+            tags:
+                - PersonalService
+            description: ListPersonalResources List the personal user's menu
+            operationId: PersonalService_ListPersonalRoles
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.ListPersonalRolesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/setting:
+        put:
+            tags:
+                - PersonalService
+            description: UpdatePersonalSetting User settings are saved
+            operationId: PersonalService_UpdatePersonalSetting
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePersonalSettingResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/personal/token/refresh:
+        post:
+            tags:
+                - PersonalService
+            description: RefreshPersonalToken Refresh the personal user's token
+            operationId: PersonalService_RefreshPersonalToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/google.protobuf.Any'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.RefreshPersonalTokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/token:
+        post:
+            tags:
+                - AuthService
+            description: CreateToken generates a new JWT token for the given user.
+            operationId: AuthService_CreateToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.CreateTokenRequest_Data'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.CreateTokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /captcha:
         get:
             tags:
@@ -347,81 +661,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/auth/authenticate:
-        post:
-            tags:
-                - AuthService
-            description: Authenticate authenticates a user.
-            operationId: AuthService_Authenticate
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.AuthenticateRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.AuthenticateResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/auth/destroy:
-        post:
-            tags:
-                - AuthService
-            description: DestroyToken invalidates a JWT token.
-            operationId: AuthService_DestroyToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/auth/logout:
-        post:
-            tags:
-                - AuthService
-            description: AuthLogout logs out a user.
-            operationId: AuthService_AuthLogout
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /sys/auth/resources:
         get:
             tags:
@@ -458,31 +697,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.auth.ListAuthResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/auth/token:
-        post:
-            tags:
-                - AuthService
-            description: CreateToken generates a new JWT token for the given user.
-            operationId: AuthService_CreateToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.CreateTokenRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.CreateTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -1028,220 +1242,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/logout:
-        post:
-            tags:
-                - PersonalService
-            description: PersonalLogout Personal user logs out
-            operationId: PersonalService_PersonalLogout
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.PersonalLogoutResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/password:
-        put:
-            tags:
-                - PersonalService
-            description: UpdatePersonalProfilePassword The user changes the password
-            operationId: PersonalService_UpdatePersonalPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalPasswordResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/profile:
-        get:
-            tags:
-                - PersonalService
-            description: GetPersonalProfile Update the personal user information
-            operationId: PersonalService_GetPersonalProfile
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.GetPersonalProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        put:
-            tags:
-                - PersonalService
-            description: UpdatePersonalProfile Update the personal user information
-            operationId: PersonalService_UpdatePersonalProfile
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/resources:
-        get:
-            tags:
-                - PersonalService
-            description: ListPersonalResources List the personal user's menu
-            operationId: PersonalService_ListPersonalResources
-            parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
-                - name: current
-                  in: query
-                  description: The current page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_size
-                  in: query
-                  description: The maximum number of items to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
-                  schema:
-                    type: string
-                - name: no_paging
-                  in: query
-                  description: The no_paging is used to disable pagination.
-                  schema:
-                    type: boolean
-                - name: only_count
-                  in: query
-                  description: The only_count is the query parameter for set only to query the total number
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListPersonalResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/roles:
-        get:
-            tags:
-                - PersonalService
-            description: ListPersonalResources List the personal user's menu
-            operationId: PersonalService_ListPersonalRoles
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListPersonalRolesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/setting:
-        put:
-            tags:
-                - PersonalService
-            description: UpdatePersonalSetting User settings are saved
-            operationId: PersonalService_UpdatePersonalSetting
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdatePersonalSettingResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/personal/token/refresh:
-        post:
-            tags:
-                - PersonalService
-            description: RefreshPersonalToken Refresh the personal user's token
-            operationId: PersonalService_RefreshPersonalToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.RefreshPersonalTokenResponse'
                 default:
                     description: Default error response
                     content:
@@ -2347,6 +2347,11 @@ components:
             type: object
             properties: {}
             description: DestroyTokenResponse contains the result of the invalidation.
+        api.v1.services.auth.GetPersonalProfileResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
         api.v1.services.auth.GroupingRule:
             type: object
             properties:
@@ -2375,6 +2380,27 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
+        api.v1.services.auth.ListPersonalResourcesResponse:
+            type: object
+            properties:
+                total_size:
+                    type: string
+                    description: The total number of items in the list.
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: list of resources
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+        api.v1.services.auth.ListPersonalRolesResponse:
+            type: object
+            properties:
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
         api.v1.services.auth.ListPoliciesResponse:
             type: object
             properties:
@@ -2403,6 +2429,11 @@ components:
             properties:
                 success:
                     type: boolean
+        api.v1.services.auth.PersonalLogoutResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
         api.v1.services.auth.PolicyRule:
             type: object
             properties:
@@ -2412,6 +2443,11 @@ components:
                     type: array
                     items:
                         type: string
+        api.v1.services.auth.RefreshPersonalTokenResponse:
+            type: object
+            properties:
+                token:
+                    type: string
         api.v1.services.auth.RegisterRequest_Data:
             type: object
             properties:
@@ -2445,6 +2481,15 @@ components:
             properties:
                 token:
                     $ref: '#/components/schemas/security.jwt.v1.Token'
+        api.v1.services.auth.UpdatePersonalPasswordResponse:
+            type: object
+            properties: {}
+        api.v1.services.auth.UpdatePersonalProfileResponse:
+            type: object
+            properties: {}
+        api.v1.services.auth.UpdatePersonalSettingResponse:
+            type: object
+            properties: {}
         api.v1.services.auth.ValidateTokenResponse:
             type: object
             properties:
@@ -2538,11 +2583,6 @@ components:
             properties:
                 permission:
                     $ref: '#/components/schemas/api.v1.services.types.Permission'
-        api.v1.services.system.GetPersonalProfileResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
         api.v1.services.system.GetPositionResponse:
             type: object
             properties:
@@ -2660,27 +2700,6 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
-        api.v1.services.system.ListPersonalResourcesResponse:
-            type: object
-            properties:
-                total_size:
-                    type: string
-                    description: The total number of items in the list.
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: list of resources
-                next_page_token:
-                    type: string
-                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
-        api.v1.services.system.ListPersonalRolesResponse:
-            type: object
-            properties:
-                roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Role'
         api.v1.services.system.ListPositionsResponse:
             type: object
             properties:
@@ -2816,16 +2835,6 @@ components:
                     description: |-
                         Additional information about this response.
                          content to be added without destroying the current data format
-        api.v1.services.system.PersonalLogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
-        api.v1.services.system.RefreshPersonalTokenResponse:
-            type: object
-            properties:
-                token:
-                    type: string
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
@@ -2845,15 +2854,6 @@ components:
             properties:
                 permission:
                     $ref: '#/components/schemas/api.v1.services.types.Permission'
-        api.v1.services.system.UpdatePersonalPasswordResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdatePersonalProfileResponse:
-            type: object
-            properties: {}
-        api.v1.services.system.UpdatePersonalSettingResponse:
-            type: object
-            properties: {}
         api.v1.services.system.UpdatePositionResponse:
             type: object
             properties:

@@ -10,63 +10,63 @@ import (
 	pb "origadmin/application/admin/api/v1/services/system"
 )
 
-type UserServiceHTTPService struct {
+type UserServiceHTTPServer struct {
 	pb.UnimplementedUserServiceServer
 
 	client pb.UserServiceHTTPClient
 }
 
-func (s UserServiceHTTPService) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
+func (s UserServiceHTTPServer) ListUserResources(ctx context.Context, request *pb.ListUserResourcesRequest) (*pb.ListUserResourcesResponse, error) {
 	return s.client.ListUserResources(ctx, request)
 }
 
-func (s UserServiceHTTPService) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
+func (s UserServiceHTTPServer) ResetUserPassword(ctx context.Context, request *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServiceHTTPService) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
+func (s UserServiceHTTPServer) UpdateUserRoles(ctx context.Context, request *pb.UpdateUserRolesRequest) (*pb.UpdateUserRolesResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServiceHTTPService) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
+func (s UserServiceHTTPServer) UpdateUserStatus(ctx context.Context, request *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServiceHTTPService) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+func (s UserServiceHTTPServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	return s.client.ListUsers(ctx, req)
 }
 
-func (s UserServiceHTTPService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
+func (s UserServiceHTTPServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUserResponse, error) {
 	return s.client.GetUser(ctx, req)
 }
 
-func (s UserServiceHTTPService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
+func (s UserServiceHTTPServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	return s.client.CreateUser(ctx, req)
 }
 
-func (s UserServiceHTTPService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
+func (s UserServiceHTTPServer) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	return s.client.UpdateUser(ctx, req)
 }
 
-func (s UserServiceHTTPService) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+func (s UserServiceHTTPServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
 	return s.client.DeleteUser(ctx, req)
 }
 
 // NewUserServiceHTTPServer new a user service.
-func NewUserServiceHTTPServer(client pb.UserServiceHTTPClient) *UserServiceHTTPService {
-	return &UserServiceHTTPService{
+func NewUserServiceHTTPServer(client pb.UserServiceHTTPClient) *UserServiceHTTPServer {
+	return &UserServiceHTTPServer{
 		client: client,
 	}
 }
 
 // NewUserServiceHTTPServerPB new a user service.
 func NewUserServiceHTTPServerPB(client pb.UserServiceHTTPClient) pb.UserServiceHTTPServer {
-	return &UserServiceHTTPService{
+	return &UserServiceHTTPServer{
 		client: client,
 	}
 }
 
-var _ pb.UserServiceServer = (*UserServiceHTTPService)(nil)
+var _ pb.UserServiceServer = (*UserServiceHTTPServer)(nil)

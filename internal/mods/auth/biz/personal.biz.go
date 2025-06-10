@@ -2,7 +2,7 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package biz is a biz layer for the system module of OrigAdmin.
+// Package biz is a biz layer for the auth module of OrigAdmin.
 package biz
 
 import (
@@ -12,8 +12,8 @@ import (
 	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/runtime/log"
 
-	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/dto"
+	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 // PersonalServiceBiz is a Personal use case.

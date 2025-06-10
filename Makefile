@@ -186,8 +186,9 @@ gen:
 
 	go generate ./internal/generate.go
 
-	go generate ./internal/mods/system/dal/entity/ent/generate.go
+	go generate ./internal/data/entity/ent/generate.go
 	go generate ./cmd/system
+	go generate ./cmd/auth
 
 	go generate ./cmd/internal/start
 

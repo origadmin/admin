@@ -11,7 +11,6 @@ import (
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 
-	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/contrib/security/authz/casbin/internal/model"
 )
 
@@ -21,7 +20,7 @@ import (
 // Watcher:     Optional, policy change watcher
 // Enforcer:    Optional, existing synced enforcer instance
 // SyncInterval: Optional, policy sync interval (default 5s)
-// ServiceClient: gRPC client for policy data service
+// Source: gRPC source for policy data service
 // WildcardItem: Permission matching wildcard (default "*")
 type AuthorizerOptions struct {
 	Model            casbinmodel.Model
@@ -29,7 +28,7 @@ type AuthorizerOptions struct {
 	Watcher          persist.Watcher
 	Enforcer         *casbin.SyncedEnforcer
 	SyncInterval     time.Duration
-	ServiceClient    pb.CasbinSourceServiceClient
+	Source           RuleSource
 	WildcardItem     string
 	EnablePrometheus bool
 }
@@ -128,11 +127,11 @@ func WithWildcardItem(item string) AuthorizerOption {
 	}
 }
 
-// WithServiceClient sets gRPC policy source service client
-// client: gRPC client implementing CasbinSourceService
-func WithServiceClient(client pb.CasbinSourceServiceClient) AuthorizerOption {
+// WithSource sets gRPC policy source service source
+// source: gRPC source implementing CasbinSourceService
+func WithSource(source RuleSource) AuthorizerOption {
 	return func(s *AuthorizerOptions) {
-		s.ServiceClient = client
+		s.Source = source
 	}
 }
 

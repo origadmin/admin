@@ -17,13 +17,21 @@ import (
 	"github.com/goexts/generic/maps"
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
 )
 
+type RuleSource interface {
+	ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error)
+	ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error)
+	WatchUpdate(ctx context.Context, in *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error)
+	StreamRules(ctx context.Context, in *pb.StreamRulesRequest) (grpc.ServerStreamingClient[pb.StreamRulesResponse], error)
+}
+
 type PolicyUpdater struct {
-	client       pb.CasbinSourceServiceClient
+	source       RuleSource
 	adapter      persist.Adapter
 	enforcer     *casbin.SyncedEnforcer
 	lastModified int64
@@ -39,7 +47,7 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 		}
 	}()
 
-	update, err := u.client.WatchUpdate(ctx, &pb.WatchUpdateRequest{
+	update, err := u.source.WatchUpdate(ctx, &pb.WatchUpdateRequest{
 		LastModified: u.lastModified,
 	})
 	if err != nil {
@@ -49,7 +57,8 @@ func (u *PolicyUpdater) Sync(ctx context.Context) (bool, error) {
 		return false, nil
 	}
 	fmt.Printf("Received update: %v to %v\n", u.lastModified, update.ModifiedDate)
-	stream, err := u.client.StreamRules(ctx, &pb.StreamRulesRequest{
+
+	stream, err := u.source.StreamRules(ctx, &pb.StreamRulesRequest{
 		WithGroupings: true,
 		WithPolicies:  true,
 	})
@@ -115,7 +124,7 @@ func (u *PolicyUpdater) Watch(ctx context.Context, notifier persist.Watcher) {
 		select {
 		case <-ticker.C:
 			if update, err := u.Sync(ctx); err != nil || !update {
-				log.Errorf("Policy sync failed: err(%v) update(%t)", err, update)
+				//log.Errorf("Policy sync failed: err(%v) update(%t)", err, update)
 				continue
 			}
 			_ = notifier.Update()

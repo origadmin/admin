@@ -26,7 +26,7 @@ const (
 
 func DefaultBootstrap() *configs.Bootstrap {
 	return &configs.Bootstrap{
-		Name:       "origadmin.agent.service.admin.v1",
+		Name:       "origadmin.service.admin.v1",
 		Mode:       "singleton",
 		Version:    "v1.0.0",
 		CryptoType: "argon2",
@@ -35,41 +35,13 @@ func DefaultBootstrap() *configs.Bootstrap {
 		//},
 		Id: "",
 		Entry: &configs.Bootstrap_Entry{
-			Scheme: "http",
+			Scheme:   "http",
+			Services: DefaultServices(),
 		},
 		Server: &configs.ServiceServer{
-			Services: []*configv1.Service{
-				{
-					Name:            "",
-					DynamicEndpoint: true,
-					Type:            "grpc",
-					Grpc:            DefaultServiceGrpc(),
-					//Http:            DefaultServiceHttp(),
-					Websocket:  DefaultServiceWebsocket(),
-					Message:    DefaultServiceMessage(),
-					Task:       DefaultServiceTask(),
-					Middleware: DefaultServiceMiddleware(),
-					Selector: &configv1.Service_Selector{
-						Version: "v1.0.0",
-						Builder: "bbr",
-					},
-				},
-				{
-					Name:            "",
-					DynamicEndpoint: true,
-					Type:            "http",
-					Http:            DefaultServiceHttp(),
-					Websocket:       DefaultServiceWebsocket(),
-					Message:         DefaultServiceMessage(),
-					Task:            DefaultServiceTask(),
-					Middleware:      DefaultServiceMiddleware(),
-					Selector: &configv1.Service_Selector{
-						Version: "v1.0.0",
-						Builder: "bbr",
-					},
-				},
-			},
+			Services: DefaultServices(),
 		},
+		Clients:    DefaultServiceClients(),
 		Logger:     DefaultLogger(),
 		Storage:    DefaultStorage(),
 		Discovery:  DefaultDiscovery(),
@@ -125,6 +97,59 @@ func DefaultBootstrap() *configs.Bootstrap {
 			},
 		},
 	}
+}
+
+func DefaultServices() []*configv1.Service {
+	return []*configv1.Service{
+		{
+			Name:            "",
+			DynamicEndpoint: true,
+			Type:            "grpc",
+			Grpc:            DefaultServiceGrpc(),
+			Websocket:       DefaultServiceWebsocket(),
+			Message:         DefaultServiceMessage(),
+			Task:            DefaultServiceTask(),
+			Middleware:      DefaultServiceMiddleware(),
+			Selector: &configv1.Service_Selector{
+				Version: "v1.0.0",
+				Builder: "bbr",
+			},
+		},
+		{
+			Name:            "",
+			DynamicEndpoint: true,
+			Type:            "http",
+			Http:            DefaultServiceHttp(),
+			Websocket:       DefaultServiceWebsocket(),
+			Message:         DefaultServiceMessage(),
+			Task:            DefaultServiceTask(),
+			Middleware:      DefaultServiceMiddleware(),
+			Selector: &configv1.Service_Selector{
+				Version: "v1.0.0",
+				Builder: "bbr",
+			},
+		},
+	}
+}
+
+func DefaultServiceClients() []*configs.ServiceClient {
+	serviceNames := map[string]string{
+		"system": "origadmin.service.system.v1",
+		"auth":   "origadmin.service.auth.v1",
+	}
+	clients := make([]*configs.ServiceClient, 0, len(serviceNames))
+	for name, serviceName := range serviceNames {
+		core := &configs.ServiceCore{
+			Name:      name,
+			Discovery: DefaultDiscovery(),
+		}
+		core.Discovery.ServiceName = serviceName
+		clients = append(clients, &configs.ServiceClient{
+			Core:     core,
+			Services: DefaultServices(),
+		})
+	}
+	return clients
 }
 
 func DefaultLogger() *configv1.Logger {

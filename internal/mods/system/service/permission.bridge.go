@@ -89,6 +89,14 @@ func NewPermissionServiceBridge(r runtime.Runtime, client *service.GRPCClient) p
 	return pb.NewPermissionServiceBridge(client)
 }
 
+func NewPermissionServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.PermissionServiceServer {
+	if c, ok := clients["system"]; ok {
+		return pb.NewPermissionServiceBridge(c)
+	} else {
+		return pb.UnimplementedPermissionServiceServer{}
+	}
+}
+
 // NewPermissionServiceHTTPBridge new a menu service.
 func NewPermissionServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.PermissionServiceHTTPServer {
 	return pb.NewPermissionServiceHTTPBridge(client)

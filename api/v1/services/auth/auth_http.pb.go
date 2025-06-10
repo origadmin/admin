@@ -44,11 +44,11 @@ type AuthServiceHTTPServer interface {
 func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_HTTP_Handler(srv))
-	r.POST("/sys/auth/token", _AuthService_CreateToken0_HTTP_Handler(srv))
+	r.POST("/auth/token", _AuthService_CreateToken0_HTTP_Handler(srv))
 	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_HTTP_Handler(srv))
-	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_HTTP_Handler(srv))
-	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_HTTP_Handler(srv))
-	r.POST("/sys/auth/logout", _AuthService_AuthLogout0_HTTP_Handler(srv))
+	r.POST("/auth/destroy", _AuthService_DestroyToken0_HTTP_Handler(srv))
+	r.POST("/auth/authenticate", _AuthService_Authenticate0_HTTP_Handler(srv))
+	r.POST("/auth/logout", _AuthService_AuthLogout0_HTTP_Handler(srv))
 }
 
 func _AuthService_ListAuthResources0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
@@ -196,7 +196,7 @@ func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
 
 func (c *AuthServiceHTTPClientImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...http.CallOption) (*AuthLogoutResponse, error) {
 	var out AuthLogoutResponse
-	pattern := "/sys/auth/logout"
+	pattern := "/auth/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceAuthLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -209,7 +209,7 @@ func (c *AuthServiceHTTPClientImpl) AuthLogout(ctx context.Context, in *AuthLogo
 
 func (c *AuthServiceHTTPClientImpl) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...http.CallOption) (*AuthenticateResponse, error) {
 	var out AuthenticateResponse
-	pattern := "/sys/auth/authenticate"
+	pattern := "/auth/authenticate"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceAuthenticate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -222,7 +222,7 @@ func (c *AuthServiceHTTPClientImpl) Authenticate(ctx context.Context, in *Authen
 
 func (c *AuthServiceHTTPClientImpl) CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...http.CallOption) (*CreateTokenResponse, error) {
 	var out CreateTokenResponse
-	pattern := "/sys/auth/token"
+	pattern := "/auth/token"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceCreateToken))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -235,7 +235,7 @@ func (c *AuthServiceHTTPClientImpl) CreateToken(ctx context.Context, in *CreateT
 
 func (c *AuthServiceHTTPClientImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...http.CallOption) (*DestroyTokenResponse, error) {
 	var out DestroyTokenResponse
-	pattern := "/sys/auth/destroy"
+	pattern := "/auth/destroy"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceDestroyToken))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -15,9 +15,11 @@ import (
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/runtime/registry"
+	"github.com/origadmin/runtime/service"
 
 	"origadmin/application/admin/internal/configs"
+	authservice "origadmin/application/admin/internal/mods/auth/service"
+	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
 // AppOptions 包含微服务核心配置
@@ -32,10 +34,11 @@ type AppOptions struct {
 
 var (
 	ProviderSet = wire.NewSet(
-		NewRegistrar,
+		NewServiceServerRegistrars,
+		NewProxyOptions,
 		NewProxyServer,
-		wire.Struct(new(Injector), "*"),
-		wire.Struct(new(InjectorClient), "*"),
+		NewProxyGRPCClients,
+		NewProxyHTTPClients,
 	)
 )
 
@@ -45,6 +48,16 @@ var (
 	_ *grpc.Server
 )
 
+func NewServiceServerRegistrars(
+	system *systemservice.RegisterServer,
+	auth *authservice.RegisterServer,
+) []service.ServerRegistrar {
+	return []service.ServerRegistrar{
+		system,
+		auth,
+	}
+}
+
 type Loader interface {
 	SetupEnv() error
 }
@@ -53,10 +66,10 @@ type InjectorClient struct {
 	Server *http.Server
 }
 
-type Injector struct {
-	Registrar registry.KRegistrar
-	Servers   []transport.Server
-}
+//type Injector struct {
+//	Registrar  registry.KRegistrar
+//	Registrars []service.ServerRegistrar
+//}
 
 func init() {
 	runtime.RegisterConfigFunc("file", NewFileConfig)
@@ -83,8 +96,4 @@ func NewLoader(bs *bootstrap.Bootstrap) (Loader, error) {
 		flags: bs,
 	}
 	return load, nil
-}
-
-func MockHttpServer() *http.Server {
-	return http.NewServer()
 }

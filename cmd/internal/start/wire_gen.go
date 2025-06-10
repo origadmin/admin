@@ -10,7 +10,14 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/loader"
+	biz2 "origadmin/application/admin/internal/mods/auth/biz"
+	dal2 "origadmin/application/admin/internal/mods/auth/dal"
+	service2 "origadmin/application/admin/internal/mods/auth/service"
+	"origadmin/application/admin/internal/mods/system/biz"
+	"origadmin/application/admin/internal/mods/system/dal"
+	"origadmin/application/admin/internal/mods/system/service"
 )
 
 import (
@@ -22,12 +29,82 @@ import (
 // Injectors from wire.go:
 
 // buildInjectors init kratos application.
-func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
-	server := loader.MockHttpServer()
-	injectorClient := &loader.InjectorClient{
-		Server: server,
+func buildLocalInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
+	dataData, cleanup, err := data.NewData(r, bootstrap)
+	if err != nil {
+		return nil, nil, err
 	}
-	app := NewApp(r, injectorClient)
+	resourceRepo := dal.NewResourceRepo(r, dataData)
+	resourceServiceBiz := biz.NewResourceServiceBiz(r, resourceRepo)
+	resourceServiceServer := service.NewResourceServiceServerPB(r, resourceServiceBiz)
+	roleRepo := dal.NewRoleRepo(r, dataData)
+	roleServiceBiz := biz.NewRoleServiceBiz(r, roleRepo)
+	roleServiceServer := service.NewRoleServiceServerPB(r, roleServiceBiz)
+	userRepo := dal.NewUserRepo(r, dataData)
+	userServiceBiz := biz.NewUserServiceBiz(r, userRepo)
+	userServiceServer := service.NewUserServiceServerPB(r, userServiceBiz)
+	permissionRepo := dal.NewPermissionRepo(r, dataData)
+	permissionServiceBiz := biz.NewPermissionServiceBiz(r, permissionRepo)
+	permissionServiceServer := service.NewPermissionServiceServerPB(r, permissionServiceBiz)
+	registerServer := service.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
+	authRepo := dal2.NewAuthRepo(r, dataData)
+	authServiceBiz := biz2.NewAuthServiceBiz(r, authRepo)
+	authServiceServer := service2.NewAuthServiceServerPB(authServiceBiz)
+	casbinSourceRepo, err := dal2.NewCasbinSourceRepo(dataData)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	casbinSourceServiceBiz := biz2.NewCasbinSourceServiceBiz(r, casbinSourceRepo)
+	casbinSourceServiceServer := service2.NewCasbinSourceServiceServerPB(casbinSourceServiceBiz)
+	tokenizer, err := data.NewTokenizer(bootstrap)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	refreshTokenizer := dal2.RefreshTokenizer(tokenizer)
+	loginData := data.NewLoginData(bootstrap, refreshTokenizer)
+	loginRepo := dal2.NewLoginRepo(dataData, loginData)
+	loginServiceBiz := biz2.NewLoginServiceBiz(r, loginRepo)
+	loginServiceServer := service2.NewLoginServiceServerPB(loginServiceBiz)
+	personalRepo := dal2.NewPersonalRepo(r, dataData)
+	personalServiceBiz := biz2.NewPersonalServiceBiz(r, personalRepo)
+	personalServiceServer := service2.NewPersonalServiceServerPB(r, personalServiceBiz)
+	serviceRegisterServer := service2.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
+	v := loader.NewServiceServerRegistrars(registerServer, serviceRegisterServer)
+	ruleSource := service2.NewCasbinSourceBiz(r, casbinSourceServiceBiz)
+	proxyOptions, err := loader.NewProxyOptions(r, bootstrap, ruleSource)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	v2 := loader.NewProxyServer(r, bootstrap, v, proxyOptions)
+	app := NewApp(r, v2)
+	return app, func() {
+		cleanup()
+	}, nil
+}
+
+func buildRemoteInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
+	v := loader.NewProxyGRPCClients(r, bootstrap)
+	resourceServiceServer := service.NewResourceServiceBridgeClient(r, v)
+	roleServiceServer := service.NewRoleServiceBridgeClient(r, v)
+	userServiceServer := service.NewUserServiceBridgeClient(r, v)
+	permissionServiceServer := service.NewPermissionServiceBridgeClient(r, v)
+	registerServer := service.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
+	authServiceServer := service2.NewAuthServiceBridgeClient(r, v)
+	casbinSourceServiceServer := service2.NewCasbinServiceBridgeClient(r, v)
+	loginServiceServer := service2.NewLoginServiceBridgeClient(r, v)
+	personalServiceServer := service2.NewPersonalServiceBridgeClient(r, v)
+	serviceRegisterServer := service2.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
+	v2 := loader.NewServiceServerRegistrars(registerServer, serviceRegisterServer)
+	ruleSource := service2.NewCasbinSourceClient(r, v)
+	proxyOptions, err := loader.NewProxyOptions(r, bootstrap, ruleSource)
+	if err != nil {
+		return nil, nil, err
+	}
+	v3 := loader.NewProxyServer(r, bootstrap, v2, proxyOptions)
+	app := NewApp(r, v3)
 	return app, func() {
 	}, nil
 }

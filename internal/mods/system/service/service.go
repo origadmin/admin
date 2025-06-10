@@ -16,24 +16,27 @@ import (
 
 // ProviderSet is service providers.
 var ProviderSet = wire.NewSet(
-	wire.Struct(new(RegisterServer), "*"),
-	NewResourceServiceBridge,
+	NewRegisterServer,
 	NewResourceServiceServerPB,
 	NewResourceServiceHTTPServerPB,
-	NewRoleServiceBridge,
 	NewRoleServiceServerPB,
 	NewRoleServiceHTTPServerPB,
-	NewUserServiceBridge,
 	NewUserServiceServerPB,
 	NewUserServiceHTTPServerPB,
-	NewPersonalServiceBridge,
-	NewPersonalServiceServerPB,
-	NewPersonalServiceHTTPServerPB,
-	NewPermissionServiceBridge,
 	NewPermissionServiceServerPB,
 	NewPermissionServiceHTTPServerPB,
-	NewRegisterServer,
+)
 
+var RemoteProviderSet = wire.NewSet(
+	NewRegisterServer,
+	NewResourceServiceBridgeClient,
+	//NewResourceServiceBridge,
+	NewRoleServiceBridgeClient,
+	//NewRoleServiceBridge,
+	NewUserServiceBridgeClient,
+	//NewUserServiceBridge,
+	NewPermissionServiceBridgeClient,
+	//NewPermissionServiceBridge,
 )
 
 type RegisterServer struct {
@@ -73,7 +76,7 @@ func NewRegisterServer(
 	Role pb.RoleServiceServer,
 	User pb.UserServiceServer,
 	Permission pb.PermissionServiceServer,
-) service.ServerRegistrar {
+) *RegisterServer {
 	return &RegisterServer{
 		Resource:   Resource,
 		Role:       Role,

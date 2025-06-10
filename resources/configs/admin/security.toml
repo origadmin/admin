@@ -1,4 +1,26 @@
 [Security]
+[Security.RootUser]
+Enabled = true
+Id = ""
+Username = "admin"
+Password = "admin"
+Salt = ""
+Name = "admin"
+Email = "admin@admin.com"
+Nickname = "admin"
+Avatar = ""
+Mobile = "1380000000"
+Description = ""
+AutoCreate = false
+RandomPassword = true
+[Security.Captcha]
+Length = 4
+Width = 400
+Height = 160
+StorageName = "captcha"
+[Security.Captcha.Storage]
+Name = ""
+Type = ""
 [Security.Security]
 PublicPaths = ["/swagger/*", "/api/v1/health", "/api/v1/health/*", "/api/v1/captcha", "/api/v1/captcha/*", "/api/v1/login", "/api/v1/register", "/api/v1/current/logout", "/api/v1/refresh_token", "/api.v1.services.system.LoginAPI/CaptchaId", "/api.v1.services.system.LoginAPI/CaptchaImage", "/api.v1.services.system.LoginAPI/CaptchaResource", "/api.v1.services.system.LoginAPI/CaptchaResources", "/api.v1.services.system.LoginAPI/Login", "/api.v1.services.system.LoginAPI/Register", "/api.v1.services.system.LoginAPI/Refresh"]
 [Security.Security.Authz]

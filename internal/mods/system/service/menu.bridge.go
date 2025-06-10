@@ -86,6 +86,14 @@ func NewMenuServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.Menu
 	return pb.NewMenuServiceBridge(client)
 }
 
+func NewMenuServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.MenuServiceServer {
+	if c, ok := clients["system"]; ok {
+		return pb.NewMenuServiceBridge(c)
+	} else {
+		return pb.UnimplementedMenuServiceServer{}
+	}
+}
+
 // NewMenuServiceHTTPBridge new a menu service.
 func NewMenuServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.MenuServiceHTTPServer {
 	return pb.NewMenuServiceHTTPBridge(client)

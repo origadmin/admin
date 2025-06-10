@@ -89,6 +89,14 @@ func NewResourceServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.
 	return pb.NewResourceServiceBridge(client)
 }
 
+func NewResourceServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.ResourceServiceServer {
+	if c, ok := clients["system"]; ok {
+		return pb.NewResourceServiceBridge(c)
+	} else {
+		return pb.UnimplementedResourceServiceServer{}
+	}
+}
+
 // NewResourceServiceHTTPBridge new a menu service.
 func NewResourceServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.ResourceServiceHTTPServer {
 	return pb.NewResourceServiceHTTPBridge(client)

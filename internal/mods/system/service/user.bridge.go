@@ -89,6 +89,14 @@ func NewUserServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.User
 	return pb.NewUserServiceBridge(client)
 }
 
+func NewUserServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.UserServiceServer {
+	if c, ok := clients["system"]; ok {
+		return pb.NewUserServiceBridge(c)
+	} else {
+		return pb.UnimplementedUserServiceServer{}
+	}
+}
+
 // NewUserServiceHTTPBridge new a menu service.
 func NewUserServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.UserServiceHTTPServer {
 	return pb.NewUserServiceHTTPBridge(client)

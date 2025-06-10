@@ -8,7 +8,6 @@ package service
 import (
 	"context"
 
-	"github.com/casbin/casbin/v2"
 	"github.com/origadmin/runtime/service"
 	"google.golang.org/grpc"
 
@@ -18,8 +17,7 @@ import (
 
 type CasbinSourceServiceServer struct {
 	pb.UnimplementedCasbinSourceServiceServer
-	client   *biz.CasbinSourceServiceBiz
-	enforcer *casbin.Enforcer
+	client *biz.CasbinSourceServiceBiz
 }
 
 func (c *CasbinSourceServiceServer) WatchUpdate(ctx context.Context, request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {

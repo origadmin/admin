@@ -13,11 +13,11 @@ import (
 	"github.com/goexts/generic/cmp"
 	"github.com/goexts/generic/maps"
 	"github.com/goexts/generic/settings"
-	"github.com/origadmin/runtime/context"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	"github.com/origadmin/runtime/context"
+	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/errors"
-	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -139,8 +139,8 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 	}
 
 	options := settings.ApplyDefault(DefaultAuthorizerOptions, ss)
-	if options.ServiceClient == nil {
-		return nil, errors.New("authorizer casbin client is empty")
+	if options.Source == nil {
+		return nil, errors.New("authorizer casbin source is empty")
 	}
 	err := options.Setup()
 	if err != nil {
@@ -148,7 +148,7 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 	}
 
 	updater := &PolicyUpdater{
-		client:   options.ServiceClient,
+		source:   options.Source,
 		adapter:  options.Adapter,
 		interval: options.SyncInterval,
 		metric:   options.EnablePrometheus,

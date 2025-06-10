@@ -16,8 +16,8 @@ import (
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	securityv1 "github.com/origadmin/runtime/api/gen/go/security/v1"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/interfaces/security"
+	"github.com/origadmin/runtime/log"
 )
 
 const (

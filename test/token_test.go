@@ -106,7 +106,7 @@ func TestGenerateToken(t *testing.T) {
 		panic(err)
 	}
 	//adapter := casbin.NewAdapter()
-	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithServiceClient(casbinSourceServiceClient))
+	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithSource(casbinSourceServiceClient))
 	if err != nil {
 		panic(err)
 	}

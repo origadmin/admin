@@ -20,7 +20,7 @@ service AuthService {
   // CreateToken generates a new JWT token for the given user.
   rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {
     option (google.api.http) = {
-      post: "/sys/auth/token"
+      post: "/auth/token"
       body: "data"
     };
   }
@@ -33,7 +33,7 @@ service AuthService {
   // DestroyToken invalidates a JWT token.
   rpc DestroyToken(DestroyTokenRequest) returns (DestroyTokenResponse) {
     option (google.api.http) = {
-      post: "/sys/auth/destroy"
+      post: "/auth/destroy"
       body: "data"
     };
   }
@@ -41,7 +41,7 @@ service AuthService {
   // Authenticate authenticates a user.
   rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {
     option (google.api.http) = {
-      post: "/sys/auth/authenticate"
+      post: "/auth/authenticate"
       body: "data"
     };
   }
@@ -49,7 +49,7 @@ service AuthService {
   // AuthLogout logs out a user.
   rpc AuthLogout(AuthLogoutRequest) returns (AuthLogoutResponse) {
     option (google.api.http) = {
-      post: "/sys/auth/logout"
+      post: "/auth/logout"
       body: "data"
     };
   }

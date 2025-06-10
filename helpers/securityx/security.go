@@ -273,20 +273,35 @@ func FromTransportServer(authorize string, scheme string) func(ctx context.Conte
 	}
 }
 
+type provider struct {
+}
+
+func (p provider) QueryRoles(ctx context.Context, subject string) ([]string, error) {
+	return []string{}, nil
+}
+
+func (p provider) QueryPermissions(ctx context.Context, subject string) ([]string, error) {
+	return []string{}, nil
+}
+
 func DefaultBridge() *SecurityBridge {
 	bridge := SecurityBridge{
 		TokenSource:          security.TokenSourceHeader,
 		Scheme:               security.SchemeBearer,
 		AuthenticationHeader: security.HeaderAuthorize,
+		Authenticator:        nil,
+		Authorizer:           nil,
 		SkipKey:              msecurity.MetadataSecuritySkipKey,
 		PublicPaths:          nil,
+		Provider:             &provider{},
 		Skipper: func(path string) bool {
 			return false
 		},
 		IsRoot: func(ctx context.Context, claims security.Claims) bool {
 			return claims.GetSubject() == "root" || claims.GetSubject() == "admin"
 		},
-		TokenParser: nil,
+		TokenParser:  nil,
+		PolicyParser: nil,
 	}
 	return &bridge
 }

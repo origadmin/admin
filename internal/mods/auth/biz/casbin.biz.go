@@ -28,7 +28,7 @@ type CasbinSourceServiceBiz struct {
 }
 
 func (c CasbinSourceServiceBiz) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
-	log.Info("StreamRules")
+	c.log.Debug("StreamRules")
 	ctx := stream.Context()
 	if request.WithPolicies {
 		if err := c.streamPolicies(ctx, stream); err != nil {
@@ -45,18 +45,18 @@ func (c CasbinSourceServiceBiz) StreamRules(request *pb.StreamRulesRequest, stre
 }
 
 func (c CasbinSourceServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
-	log.Info("ListPolicies")
+	c.log.Debug("ListPolicies")
 	return c.dao.ListPolicies(ctx, in)
 }
 
 func (c CasbinSourceServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
-	log.Info("ListGroupings")
+	c.log.Debug("ListGroupings")
 	return c.dao.ListGroupings(ctx, in)
 }
 
 func (c CasbinSourceServiceBiz) WatchUpdate(_ context.Context,
 	request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
-	log.Info("WatchUpdate")
+	c.log.Debug("WatchUpdate")
 	return &pb.WatchUpdateResponse{ModifiedDate: c.lastModified.Load()}, nil
 }
 

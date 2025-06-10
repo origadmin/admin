@@ -15,6 +15,7 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
+	"github.com/goexts/generic/settings"
 
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
@@ -26,20 +27,20 @@ const (
 	DefaultDatabase  = "casbin"
 )
 
-type casbinAdapterRepo struct {
+type casbinRepo struct {
 	ctx      context.Context
 	data     *Data
 	filtered bool
 }
 
-type CasbinAdapterSetting struct {
+type CasbinOptions struct {
 	filtered bool
 }
 
-type Option = func(a *CasbinAdapterSetting) error
+type Option = func(a *CasbinOptions) error
 
 func WithFiltered(filtered bool) Option {
-	return func(a *CasbinAdapterSetting) error {
+	return func(a *CasbinOptions) error {
 		a.filtered = filtered
 		return nil
 	}
@@ -71,27 +72,25 @@ func open(driverName, dataSourceName string) (*ent.Client, error) {
 
 // NewAdapter returns an adapter by driver name and data source string.
 func NewAdapter(data *Data, options ...Option) (persist.Adapter, error) {
-	a := &casbinAdapterRepo{
+	a := &casbinRepo{
 		data:     data,
 		filtered: false,
 	}
-	var setting CasbinAdapterSetting
-	for _, option := range options {
-		if err := option(&setting); err != nil {
-			return nil, err
-		}
+	opts, err := settings.ApplyE(&CasbinOptions{}, options)
+	if err != nil {
+		return nil, err
 	}
-	a.filtered = setting.filtered
+	a.filtered = opts.filtered
 	return a, nil
 }
 
 // NewAdapterWithClient create an adapter with client passed in.
 // This method does not ensure the existence of database, user should create database manually.
 func NewAdapterWithClient(client *ent.Client, options ...Option) (persist.Adapter, error) {
-	a := &casbinAdapterRepo{
+	a := &casbinRepo{
 		data: NewDataWithClient(client),
 	}
-	var setting CasbinAdapterSetting
+	var setting CasbinOptions
 	for _, option := range options {
 		if err := option(&setting); err != nil {
 			return nil, err
@@ -102,7 +101,7 @@ func NewAdapterWithClient(client *ent.Client, options ...Option) (persist.Adapte
 }
 
 // LoadPolicy loads all policy rules from the storage.
-func (repo *casbinAdapterRepo) LoadPolicy(model model.Model) error {
+func (repo *casbinRepo) LoadPolicy(model model.Model) error {
 	policies, err := repo.data.CasbinRule(repo.ctx).Query().Order(ent.Asc("id")).All(repo.ctx)
 	if err != nil {
 		return err
@@ -115,7 +114,7 @@ func (repo *casbinAdapterRepo) LoadPolicy(model model.Model) error {
 
 // LoadFilteredPolicy loads only policy rules that match the filter.
 // Filter parameter here is a Filter structure
-func (repo *casbinAdapterRepo) LoadFilteredPolicy(model model.Model, filter interface{}) error {
+func (repo *casbinRepo) LoadFilteredPolicy(model model.Model, filter interface{}) error {
 	filterValue, ok := filter.(Filter)
 	if !ok {
 		return fmt.Errorf("invalid filter type: %v", reflect.TypeOf(filter))
@@ -157,12 +156,12 @@ func (repo *casbinAdapterRepo) LoadFilteredPolicy(model model.Model, filter inte
 }
 
 // IsFiltered returns true if the loaded policy has been filtered.
-func (repo *casbinAdapterRepo) IsFiltered() bool {
+func (repo *casbinRepo) IsFiltered() bool {
 	return repo.filtered
 }
 
 // SavePolicy saves all policy rules to the storage.
-func (repo *casbinAdapterRepo) SavePolicy(model model.Model) error {
+func (repo *casbinRepo) SavePolicy(model model.Model) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		if _, err := repo.data.CasbinRule(ctx).Delete().Exec(repo.ctx); err != nil {
 			return err
@@ -191,7 +190,7 @@ func (repo *casbinAdapterRepo) SavePolicy(model model.Model) error {
 
 // AddPolicy adds a policy rule to the storage.
 // This is part of the Auto-Save feature.
-func (repo *casbinAdapterRepo) AddPolicy(sec string, ptype string, rule []string) error {
+func (repo *casbinRepo) AddPolicy(sec string, ptype string, rule []string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		_, err := repo.savePolicyLine(ctx, ptype, rule).Save(repo.ctx)
 		return err
@@ -200,7 +199,7 @@ func (repo *casbinAdapterRepo) AddPolicy(sec string, ptype string, rule []string
 
 // RemovePolicy removes a policy rule from the storage.
 // This is part of the Auto-Save feature.
-func (repo *casbinAdapterRepo) RemovePolicy(sec string, ptype string, rule []string) error {
+func (repo *casbinRepo) RemovePolicy(sec string, ptype string, rule []string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		instance := repo.toInstance(ptype, rule)
 		_, err := repo.data.CasbinRule(ctx).Delete().Where(
@@ -218,7 +217,7 @@ func (repo *casbinAdapterRepo) RemovePolicy(sec string, ptype string, rule []str
 
 // RemoveFilteredPolicy removes policy rules that match the filter from the storage.
 // This is part of the Auto-Save feature.
-func (repo *casbinAdapterRepo) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, fieldValues ...string) error {
+func (repo *casbinRepo) RemoveFilteredPolicy(sec string, ptype string, fieldIndex int, fieldValues ...string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		cond := make([]predicate.CasbinRule, 0)
 		cond = append(cond, casbinrule.PtypeEQ(ptype))
@@ -247,7 +246,7 @@ func (repo *casbinAdapterRepo) RemoveFilteredPolicy(sec string, ptype string, fi
 
 // AddPolicies adds policy rules to the storage.
 // This is part of the Auto-Save feature.
-func (repo *casbinAdapterRepo) AddPolicies(sec string, ptype string, rules [][]string) error {
+func (repo *casbinRepo) AddPolicies(sec string, ptype string, rules [][]string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		return repo.createPolicies(ctx, ptype, rules)
 	})
@@ -255,7 +254,7 @@ func (repo *casbinAdapterRepo) AddPolicies(sec string, ptype string, rules [][]s
 
 // RemovePolicies removes policy rules from the storage.
 // This is part of the Auto-Save feature.
-func (repo *casbinAdapterRepo) RemovePolicies(sec string, ptype string, rules [][]string) error {
+func (repo *casbinRepo) RemovePolicies(sec string, ptype string, rules [][]string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		for _, rule := range rules {
 			instance := repo.toInstance(ptype, rule)
@@ -299,7 +298,7 @@ func loadPolicyLine(line *ent.CasbinRule, model model.Model) {
 	persist.LoadPolicyLine(lineText, model)
 }
 
-func (repo *casbinAdapterRepo) toInstance(ptype string, rule []string) *ent.CasbinRule {
+func (repo *casbinRepo) toInstance(ptype string, rule []string) *ent.CasbinRule {
 	instance := &ent.CasbinRule{}
 
 	instance.Ptype = ptype
@@ -325,7 +324,7 @@ func (repo *casbinAdapterRepo) toInstance(ptype string, rule []string) *ent.Casb
 	return instance
 }
 
-func (repo *casbinAdapterRepo) savePolicyLine(ctx context.Context, ptype string, rule []string) *ent.CasbinRuleCreate {
+func (repo *casbinRepo) savePolicyLine(ctx context.Context, ptype string, rule []string) *ent.CasbinRuleCreate {
 	line := repo.data.CasbinRule(ctx).Create()
 
 	line.SetPtype(ptype)
@@ -353,7 +352,7 @@ func (repo *casbinAdapterRepo) savePolicyLine(ctx context.Context, ptype string,
 
 // UpdatePolicy updates a policy rule from storage.
 // This is part of the Auto-Save feature.
-func (repo *casbinAdapterRepo) UpdatePolicy(sec string, ptype string, oldRule, newPolicy []string) error {
+func (repo *casbinRepo) UpdatePolicy(sec string, ptype string, oldRule, newPolicy []string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		rule := repo.toInstance(ptype, oldRule)
 		line := repo.data.CasbinRule(ctx).Update().Where(
@@ -378,7 +377,7 @@ func (repo *casbinAdapterRepo) UpdatePolicy(sec string, ptype string, oldRule, n
 }
 
 // UpdatePolicies updates some policy rules to storage, like db, redis.
-func (repo *casbinAdapterRepo) UpdatePolicies(sec string, ptype string, oldRules, newRules [][]string) error {
+func (repo *casbinRepo) UpdatePolicies(sec string, ptype string, oldRules, newRules [][]string) error {
 	return repo.data.Tx(repo.ctx, func(ctx context.Context) error {
 		for _, policy := range oldRules {
 			rule := repo.toInstance(ptype, policy)
@@ -406,7 +405,7 @@ func (repo *casbinAdapterRepo) UpdatePolicies(sec string, ptype string, oldRules
 }
 
 // UpdateFilteredPolicies deletes old rules and adds new rules.
-func (repo *casbinAdapterRepo) UpdateFilteredPolicies(sec string, ptype string, newPolicies [][]string, fieldIndex int,
+func (repo *casbinRepo) UpdateFilteredPolicies(sec string, ptype string, newPolicies [][]string, fieldIndex int,
 	fieldValues ...string) ([][]string, error) {
 	oldPolicies := make([][]string, 0)
 	err := repo.data.Tx(repo.ctx, func(ctx context.Context) error {
@@ -460,7 +459,7 @@ func (repo *casbinAdapterRepo) UpdateFilteredPolicies(sec string, ptype string, 
 	return oldPolicies, nil
 }
 
-func (repo *casbinAdapterRepo) createPolicies(ctx context.Context, ptype string, policies [][]string) error {
+func (repo *casbinRepo) createPolicies(ctx context.Context, ptype string, policies [][]string) error {
 	lines := make([]*ent.CasbinRuleCreate, 0)
 	for _, policy := range policies {
 		lines = append(lines, repo.savePolicyLine(ctx, ptype, policy))

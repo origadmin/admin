@@ -7,7 +7,7 @@ package service
 import (
 	"context"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 )
 
 // PersonalServiceHTTPServer is a login service.

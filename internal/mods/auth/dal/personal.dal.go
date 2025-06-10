@@ -7,18 +7,16 @@ package dal
 import (
 	"context"
 
-	"entgo.io/ent/dialect/sql"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 	typespb "origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/mods/auth/dto"
 )
 
 type personalRepo struct {
@@ -81,18 +79,18 @@ func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListP
 	}
 	return &pb.ListPersonalResourcesResponse{
 		TotalSize: int64(len(resources)),
-		Resources: dto.ConvertResources(resources),
+		Resources: dto.ConvertResources2PB(resources),
 	}, nil
 }
 
-func (repo personalRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
-	var option dto.ResourceQueryOption
-	if len(options) > 0 {
-		option = options[0]
-	}
-	query := repo.db.Resource(ctx).Query()
-	return personalPageQuery(ctx, query, in, option)
-}
+//func (repo personalRepo) ListResources(ctx context.Context, in *dto.ListResourcesRequest, options ...dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+//	var option dto.ResourceQueryOption
+//	if len(options) > 0 {
+//		option = options[0]
+//	}
+//	query := repo.db.Resource(ctx).Query()
+//	return personalPageQuery(ctx, query, in, option)
+//}
 
 // NewPersonalRepo .
 func NewPersonalRepo(r runtime.Runtime, db *data.Data) dto.PersonalRepo {
@@ -101,54 +99,54 @@ func NewPersonalRepo(r runtime.Runtime, db *data.Data) dto.PersonalRepo {
 	}
 }
 
-func personalPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
-	query = personalQueryOptions(query, option)
-	count, err := query.Count(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-	query = personalQueryPage(query, in)
-	result, err := query.All(ctx)
-	return dto.ConvertResources(result), int32(count), err
-}
+//func personalPageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.ListResourcesRequest, option dto.ResourceQueryOption) ([]*dto.ResourcePB, int32, error) {
+//	query = personalQueryOptions(query, option)
+//	count, err := query.Count(ctx)
+//	if err != nil {
+//		return nil, 0, err
+//	}
+//	query = personalQueryPage(query, in)
+//	result, err := query.All(ctx)
+//	return dto.ConvertResources2PB(result), int32(count), err
+//}
+//
+//func personalQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
+//	if in.NoPaging {
+//		pageSize := in.PageSize
+//		if pageSize > 0 {
+//			query = query.Limit(int(pageSize))
+//		}
+//		return query
+//	}
+//
+//	pageSize := in.PageSize
+//	if pageSize > 0 {
+//		query = query.Limit(int(pageSize))
+//	}
+//	current := in.Current
+//	if current > 0 {
+//		query = query.Offset(int((current - 1) * pageSize))
+//	}
+//	return query
+//}
 
-func personalQueryPage(query *ent.ResourceQuery, in *pb.ListResourcesRequest) *ent.ResourceQuery {
-	if in.NoPaging {
-		pageSize := in.PageSize
-		if pageSize > 0 {
-			query = query.Limit(int(pageSize))
-		}
-		return query
-	}
+//func personalQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
+//	if len(option.SelectFields) > 0 {
+//		query = query.Select(option.SelectFields...).ResourceQuery
+//	}
+//	if len(option.OmitFields) > 0 {
+//		query = query.Omit(option.OmitFields...).ResourceQuery
+//	}
+//	if len(option.OrderFields) > 0 {
+//		query = query.Order(personalOrderBy(option.OrderFields)...)
+//	}
+//	return query
+//}
 
-	pageSize := in.PageSize
-	if pageSize > 0 {
-		query = query.Limit(int(pageSize))
-	}
-	current := in.Current
-	if current > 0 {
-		query = query.Offset(int((current - 1) * pageSize))
-	}
-	return query
-}
-
-func personalQueryOptions(query *ent.ResourceQuery, option dto.ResourceQueryOption) *ent.ResourceQuery {
-	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).ResourceQuery
-	}
-	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).ResourceQuery
-	}
-	if len(option.OrderFields) > 0 {
-		query = query.Order(personalOrderBy(option.OrderFields)...)
-	}
-	return query
-}
-
-func personalOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
-	var orders []resource.OrderOption
-	for _, field := range fields {
-		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
-	}
-	return orders
-}
+//func personalOrderBy(fields []string, opts ...sql.OrderTermOption) []resource.OrderOption {
+//	var orders []resource.OrderOption
+//	for _, field := range fields {
+//		orders = append(orders, sql.OrderByField(field, opts...).ToFunc())
+//	}
+//	return orders
+//}

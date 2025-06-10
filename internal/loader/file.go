@@ -7,6 +7,7 @@ package loader
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -96,6 +97,8 @@ func NewFileConfig(sourceConfig *configv1.SourceConfig, _ *config.Options) (conf
 
 func fileFormatter(typo any) file.Formatter {
 	return func(key string, value []byte) (*config.KKeyValue, error) {
+		fmt.Printf("loading config from %s\n", key)
+		// Don't forget to register the codec
 		err := encoding.GetCodec(format(key)).Unmarshal(value, typo)
 		if err != nil {
 			return nil, errors.Wrap(err, "unmarshal config")

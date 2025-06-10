@@ -9,15 +9,18 @@ import (
 	"log/slog"
 
 	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/toolkits/codec/toml"
 	"github.com/spf13/cobra"
 
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
+	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/loader"
 )
 
@@ -46,6 +49,7 @@ var cmd = &cobra.Command{
 }
 
 func init() {
+	encoding.RegisterCodec(toml.Codec)
 	flags.SetServiceInfo(Name, Version)
 }
 
@@ -68,7 +72,7 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 	}
 	if debug {
 		flags.SetEnv("debug")
-		flags.SetConfigPath("resources/configs/system_config.toml")
+		flags.SetConfigPath("resources/configs/config.toml")
 		flags.SetWorkDir(".")
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
@@ -100,4 +104,15 @@ func startCommandRun(cmd *cobra.Command, args []string) error {
 func NewApp(r runtime.Runtime, servers []transport.Server) *kratos.App {
 	r = r.Client()
 	return r.CreateApp(servers...)
+}
+
+func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
+	ll := log.NewHelper(r.Logger())
+	if bootstrap.GetMode() == "cluster" {
+		ll.Infof("start cluster mode")
+		return buildRemoteInjectors(r, bootstrap)
+	} else {
+		ll.Infof("start local mode")
+		return buildLocalInjectors(r, bootstrap)
+	}
 }

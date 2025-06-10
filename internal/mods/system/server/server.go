@@ -19,6 +19,7 @@ import (
 	"github.com/origadmin/toolkits/errors"
 
 	"origadmin/application/admin/internal/configs"
+	systemservice "origadmin/application/admin/internal/mods/system/service"
 )
 
 const (
@@ -38,7 +39,7 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
-func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc service.ServerRegistrar) []transport.
+func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc *systemservice.RegisterServer) []transport.
 Server {
 	var servers []transport.Server
 	serverConfig := bootstrap.GetServer()

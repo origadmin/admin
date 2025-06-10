@@ -12,7 +12,7 @@ import (
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	pb "origadmin/application/admin/api/v1/services/auth"
 )
 
 // PersonalServiceHookedBridge is a menu service.
@@ -28,16 +28,6 @@ func (p PersonalServiceHookedBridge) PrepareGetPersonalProfile(context transhttp
 }
 
 func (p PersonalServiceHookedBridge) CompleteGetPersonalProfile(context transhttp.Context, request *pb.GetPersonalProfileRequest, response *pb.GetPersonalProfileResponse) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p PersonalServiceHookedBridge) PrepareListPersonalResources(context transhttp.Context, request *pb.ListPersonalResourcesRequest) (context.Context, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p PersonalServiceHookedBridge) CompleteListPersonalResources(context transhttp.Context, request *pb.ListPersonalResourcesRequest, response *pb.ListPersonalResourcesResponse) error {
 	//TODO implement me
 	panic("implement me")
 }
@@ -112,6 +102,14 @@ func NewPersonalServiceHookedBridge(r runtime.Runtime, client pb.PersonalService
 // NewPersonalServiceBridge new a menu service.
 func NewPersonalServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.PersonalServiceServer {
 	return pb.NewPersonalServiceBridge(client)
+}
+
+func NewPersonalServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.PersonalServiceServer {
+	if c, ok := clients["auth"]; ok {
+		return pb.NewPersonalServiceBridge(c)
+	} else {
+		return pb.UnimplementedPersonalServiceServer{}
+	}
 }
 
 // NewPersonalServiceHTTPBridge new a menu service.

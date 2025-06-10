@@ -3,8 +3,8 @@ Name = ""
 Type = ""
 [Storage.Database]
 Debug = false
-Dialect = "sqlite3"
-Source = "data/admin.db"
+Dialect = "${database_dialect:sqlite3}"
+Source = "${database_source:data/admin.db}"
 EnableTrace = false
 EnableMetrics = false
 MaxIdleConnections = 0

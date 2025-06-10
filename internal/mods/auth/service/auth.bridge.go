@@ -172,6 +172,14 @@ func NewAuthServiceBridge(r runtime.Runtime, client *service.GRPCClient) pb.Auth
 	return pb.NewAuthServiceBridge(client)
 }
 
+func NewAuthServiceBridgeClient(r runtime.Runtime, clients map[string]*service.GRPCClient) pb.AuthServiceServer {
+	if v, ok := clients["auth"]; ok {
+		return NewAuthServiceBridge(r, v)
+	} else {
+		return pb.UnimplementedAuthServiceServer{}
+	}
+}
+
 // NewAuthServiceHTTPBridge new a menu service.
 func NewAuthServiceHTTPBridge(r runtime.Runtime, client *service.HTTPClient) pb.AuthServiceHTTPServer {
 	return pb.NewAuthServiceHTTPBridge(client)

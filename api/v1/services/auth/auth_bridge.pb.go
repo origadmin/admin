@@ -91,11 +91,11 @@ type AuthServiceValidateTokenHooker interface {
 func RegisterAuthServiceBridger(s *http.Server, srv AuthServiceHookedBridger) {
 	r := s.Route("/")
 	r.GET("/sys/auth/resources", _AuthService_ListAuthResources0_Bridge_Handler(srv))
-	r.POST("/sys/auth/token", _AuthService_CreateToken0_Bridge_Handler(srv))
+	r.POST("/auth/token", _AuthService_CreateToken0_Bridge_Handler(srv))
 	r.GET("/sys/auth/validate", _AuthService_ValidateToken0_Bridge_Handler(srv))
-	r.POST("/sys/auth/destroy", _AuthService_DestroyToken0_Bridge_Handler(srv))
-	r.POST("/sys/auth/authenticate", _AuthService_Authenticate0_Bridge_Handler(srv))
-	r.POST("/sys/auth/logout", _AuthService_AuthLogout0_Bridge_Handler(srv))
+	r.POST("/auth/destroy", _AuthService_DestroyToken0_Bridge_Handler(srv))
+	r.POST("/auth/authenticate", _AuthService_Authenticate0_Bridge_Handler(srv))
+	r.POST("/auth/logout", _AuthService_AuthLogout0_Bridge_Handler(srv))
 }
 
 func _AuthService_ListAuthResources0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
