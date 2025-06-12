@@ -39,7 +39,7 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
-func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc *systemservice.RegisterServer) []transport.
+func NewSystemServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc systemservice.SystemServerRegistrar) []transport.
 Server {
 	var servers []transport.Server
 	serverConfig := bootstrap.GetServer()
@@ -48,39 +48,45 @@ Server {
 	}
 
 	ll := log.NewHelper(r.WithLogger("module", "system/server"))
-	middlewares := middleware.NewServer(bootstrap.GetServer().GetMiddleware())
+	middlewares := r.Builder().Middleware().BuildServer(bootstrap.GetServer().GetMiddleware())
 	services := bootstrap.GetServer().GetServices()
 	coreinfo := bootstrap.GetServer().GetCore()
 	for _, serviceConfig := range services {
 		ll.Infow("msg", "service init", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
+		var option service.ServerOption
 		switch serviceConfig.GetType() {
 		case "grpc":
 			options := []servicegrpc.Option{
 				servicegrpc.WithMiddlewares(middlewares...),
 				servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
 			}
-			grpcServer, err := r.Builder().NewGRPCServer(serviceConfig, options...)
-			if err != nil {
-				continue
-			}
-			ll.Infow("msg", "grpc server init", "name", coreinfo.GetName(), "version",
-				coreinfo.GetVersion())
-			svc.Register(r.Context(), grpcServer)
-			servers = append(servers, grpcServer)
+			option = service.WithGRPC(options...)
 		case "http":
 			options := []servicehttp.Option{
 				servicehttp.WithMiddlewares(middlewares...),
 				servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
 			}
-			httpServer, err := r.Builder().NewHTTPServer(serviceConfig, options...)
-			if err != nil {
-				continue
-			}
-			ll.Infow("msg", "http server init", "name", coreinfo.GetName(), "version",
-				coreinfo.GetVersion())
-			svc.Register(r.Context(), httpServer)
-			servers = append(servers, httpServer)
+			//httpServer, err := r.Builder().NewServer(serviceConfig, options...)
+			//if err != nil {
+			//	continue
+			//}
+			//ll.Infow("msg", "http server init", "name", coreinfo.GetName(), "version",
+			//	coreinfo.GetVersion())
+			//svc.Register(r.Context(), httpServer)
+			//servers = append(servers, httpServer)
+			option = service.WithHTTP(options...)
+		default:
+			ll.Warnw("msg", "service type not support", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
+			continue
 		}
+		grpcServer, err := r.Builder().NewServer("system", serviceConfig, option)
+		if err != nil {
+			continue
+		}
+		ll.Infow("msg", "system server init", "name", coreinfo.GetName(), "version",
+			coreinfo.GetVersion())
+		svc.Register(r.Context(), grpcServer)
+		servers = append(servers, grpcServer)
 	}
 	return servers
 }

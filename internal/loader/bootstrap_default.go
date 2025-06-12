@@ -39,7 +39,8 @@ func DefaultBootstrap() *configs.Bootstrap {
 			Services: DefaultServices(),
 		},
 		Server: &configs.ServiceServer{
-			Services: DefaultServices(),
+			Services:   DefaultServices(),
+			Middleware: DefaultServiceMiddleware(),
 		},
 		Clients:    DefaultServiceClients(),
 		Logger:     DefaultLogger(),
@@ -109,7 +110,7 @@ func DefaultServices() []*configv1.Service {
 			Websocket:       DefaultServiceWebsocket(),
 			Message:         DefaultServiceMessage(),
 			Task:            DefaultServiceTask(),
-			Middleware:      DefaultServiceMiddleware(),
+			//Middleware:      DefaultServiceMiddleware(),
 			Selector: &configv1.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
@@ -123,7 +124,7 @@ func DefaultServices() []*configv1.Service {
 			Websocket:       DefaultServiceWebsocket(),
 			Message:         DefaultServiceMessage(),
 			Task:            DefaultServiceTask(),
-			Middleware:      DefaultServiceMiddleware(),
+			//Middleware:      DefaultServiceMiddleware(),
 			Selector: &configv1.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
@@ -145,8 +146,9 @@ func DefaultServiceClients() []*configs.ServiceClient {
 		}
 		core.Discovery.ServiceName = serviceName
 		clients = append(clients, &configs.ServiceClient{
-			Core:     core,
-			Services: DefaultServices(),
+			Core:       core,
+			Services:   DefaultServices(),
+			Middleware: DefaultServiceMiddleware(),
 		})
 	}
 	return clients

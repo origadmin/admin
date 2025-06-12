@@ -44,7 +44,7 @@ type AuthorizerOption = func(*AuthorizerOptions)
 var (
 	DefaultAuthorizerOptions = AuthorizerOptions{
 		Watcher:      NewWatcher(),
-		SyncInterval: 5 * time.Second,
+		SyncInterval: 30 * time.Second,
 		WildcardItem: "*",
 	}
 )

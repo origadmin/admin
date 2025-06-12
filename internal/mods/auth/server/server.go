@@ -39,7 +39,7 @@ func init() {
 	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
 }
 
-func NewAuthServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc *authservice.RegisterServer) []transport.
+func NewAuthServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc authservice.AuthServerRegistrar) []transport.
 Server {
 	var servers []transport.Server
 	serverConfig := bootstrap.GetServer()
@@ -53,34 +53,48 @@ Server {
 	coreinfo := bootstrap.GetServer().GetCore()
 	for _, serviceConfig := range services {
 		ll.Infow("msg", "service init", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
+		var option service.ServerOption
 		switch serviceConfig.GetType() {
 		case "grpc":
 			options := []servicegrpc.Option{
 				servicegrpc.WithMiddlewares(middlewares...),
 				servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
 			}
-			grpcServer, err := r.Builder().NewGRPCServer(serviceConfig, options...)
-			if err != nil {
-				continue
-			}
-			ll.Infow("msg", "grpc server init", "name", coreinfo.GetName(), "version",
-				coreinfo.GetVersion())
-			svc.Register(r.Context(), grpcServer)
-			servers = append(servers, grpcServer)
+			option = service.WithGRPC(options...)
+			//grpcServer, err := r.Builder().NewGRPCServer(serviceConfig, options...)
+			//if err != nil {
+			//	continue
+			//}
+			//ll.Infow("msg", "grpc server init", "name", coreinfo.GetName(), "version",
+			//	coreinfo.GetVersion())
+			//svc.Register(r.Context(), grpcServer)
+			//servers = append(servers, grpcServer)
 		case "http":
 			options := []servicehttp.Option{
 				servicehttp.WithMiddlewares(middlewares...),
 				servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
 			}
-			httpServer, err := r.Builder().NewHTTPServer(serviceConfig, options...)
-			if err != nil {
-				continue
-			}
-			ll.Infow("msg", "http server init", "name", coreinfo.GetName(), "version",
-				coreinfo.GetVersion())
-			svc.Register(r.Context(), httpServer)
-			servers = append(servers, httpServer)
+			option = service.WithHTTP(options...)
+			//httpServer, err := r.Builder().NewHTTPServer(serviceConfig, options...)
+			//if err != nil {
+			//	continue
+			//}
+			//ll.Infow("msg", "http server init", "name", coreinfo.GetName(), "version",
+			//	coreinfo.GetVersion())
+			//svc.Register(r.Context(), httpServer)
+			//servers = append(servers, httpServer)
+		default:
+			ll.Warnw("msg", "service type not support", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
+			continue
 		}
+		httpServer, err := r.Builder().NewServer("auth", serviceConfig, option)
+		if err != nil {
+			continue
+		}
+		ll.Infow("msg", "auth server init", "name", coreinfo.GetName(), "version",
+			coreinfo.GetVersion())
+		svc.Register(r.Context(), httpServer)
+		servers = append(servers, httpServer)
 	}
 	return servers
 }

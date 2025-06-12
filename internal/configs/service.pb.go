@@ -155,6 +155,7 @@ type ServiceClient struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Core          *ServiceCore           `protobuf:"bytes,1,opt,name=core,proto3" json:"core,omitempty"`
 	Services      []*v1.Service          `protobuf:"bytes,200,rep,name=services,proto3" json:"services,omitempty"`
+	Middleware    *v11.Middleware        `protobuf:"bytes,300,opt,name=middleware,proto3" json:"middleware,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -203,6 +204,13 @@ func (x *ServiceClient) GetServices() []*v1.Service {
 	return nil
 }
 
+func (x *ServiceClient) GetMiddleware() *v11.Middleware {
+	if x != nil {
+		return x.Middleware
+	}
+	return nil
+}
+
 var File_configs_service_proto protoreflect.FileDescriptor
 
 const file_configs_service_proto_rawDesc = "" +
@@ -218,10 +226,13 @@ const file_configs_service_proto_rawDesc = "" +
 	"\bservices\x18\xc8\x01 \x03(\v2\x12.config.v1.ServiceR\bservices\x12:\n" +
 	"\n" +
 	"middleware\x18\xac\x02 \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
-	"middleware\"n\n" +
+	"middleware\"\xaa\x01\n" +
 	"\rServiceClient\x12,\n" +
 	"\x04core\x18\x01 \x01(\v2\x18.api.configs.ServiceCoreR\x04core\x12/\n" +
-	"\bservices\x18\xc8\x01 \x03(\v2\x12.config.v1.ServiceR\bservicesB.Z,origadmin/application/admin/internal/configsb\x06proto3"
+	"\bservices\x18\xc8\x01 \x03(\v2\x12.config.v1.ServiceR\bservices\x12:\n" +
+	"\n" +
+	"middleware\x18\xac\x02 \x01(\v2\x19.middleware.v1.MiddlewareR\n" +
+	"middlewareB.Z,origadmin/application/admin/internal/configsb\x06proto3"
 
 var (
 	file_configs_service_proto_rawDescOnce sync.Once
@@ -253,11 +264,12 @@ var file_configs_service_proto_depIdxs = []int32{
 	6, // 4: api.configs.ServiceServer.middleware:type_name -> middleware.v1.Middleware
 	0, // 5: api.configs.ServiceClient.core:type_name -> api.configs.ServiceCore
 	5, // 6: api.configs.ServiceClient.services:type_name -> config.v1.Service
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	6, // 7: api.configs.ServiceClient.middleware:type_name -> middleware.v1.Middleware
+	8, // [8:8] is the sub-list for method output_type
+	8, // [8:8] is the sub-list for method input_type
+	8, // [8:8] is the sub-list for extension type_name
+	8, // [8:8] is the sub-list for extension extendee
+	0, // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_configs_service_proto_init() }

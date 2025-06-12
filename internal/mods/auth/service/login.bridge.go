@@ -97,9 +97,13 @@ func (s LoginServiceHookedBridge) CompleteRegister(ctx transhttp.Context, reques
 }
 
 func (s LoginServiceHookedBridge) CompleteTokenRefresh(ctx transhttp.Context, request *pb.TokenRefreshRequest, response *pb.TokenRefreshResponse) error {
-	return ctx.JSON(http.StatusOK, &resp.Data{
+	marshal, err := protojson.Marshal(resp.FromToken(response.Token))
+	if err != nil {
+		return err
+	}
+	return ctx.JSON(http.StatusOK, &resp.Result{
 		Success: true,
-		Data:    resp.Proto2Any(resp.FromToken(response.Token)),
+		Data:    marshal,
 	})
 }
 

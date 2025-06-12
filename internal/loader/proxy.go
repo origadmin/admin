@@ -8,6 +8,7 @@ package loader
 import (
 	"strings"
 
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
@@ -79,7 +80,7 @@ func NewProxyServer(
 				return false
 			}
 		}
-		log.Debugf("Operation '%s' no matches public path '%s'", operation, "*")
+		log.Infof("Operation '%s' no matches public path '%s'", operation, "*")
 		return true
 	})
 	ms = append(ms, serv.Build(), CallLoggerMiddleware())
@@ -141,16 +142,26 @@ func CallLoggerMiddleware() middleware.KMiddleware {
 			tr, ok := transport.FromServerContext(ctx)
 			log.Infof("Caller Server: %+v, ok: %+v", tr, ok)
 			tr, ok = transport.FromClientContext(ctx)
-			log.Infof("Caller ServiceServer: %+v, ok: %+v", tr, ok)
+			log.Infof("Caller Client: %+v, ok: %+v", tr, ok)
 			return handler(ctx, req)
 		}
 	}
 }
 
-func CorsMiddleware() middleware.KMiddleware {
+func BridgeMiddleware() middleware.KMiddleware {
 	return func(handler middleware.KHandler) middleware.KHandler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			log.Infof("CorsMiddleware: %+v", ctx)
+			meta, _ := metadata.FromClientContext(ctx)
+			log.Infof("Caller Client Metadata: %+v", meta)
+			smd, ok := metadata.FromServerContext(ctx)
+			if !ok {
+				smd = metadata.New(nil)
+			}
+			log.Infof("Caller Server Metadata: %+v", smd)
+			for k, v := range meta {
+				smd[k] = v
+			}
+			ctx = metadata.NewServerContext(ctx, smd)
 			return handler(ctx, req)
 		}
 	}
@@ -175,6 +186,11 @@ func NewProxyGRPCClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[st
 		}
 		for idx := range services {
 			if services[idx].GetType() == "grpc" {
+				ll.Infof("NewProxyGRPCClient Middleware: %+v", clients[i].GetMiddleware())
+				ms := r.Builder().NewMiddlewaresClient(clients[i].GetMiddleware())
+				if len(ms) > 0 {
+					options = append(options, servicegrpc.WithMiddlewares(ms...))
+				}
 				client, err := r.Builder().NewGRPCClient(r.Context(), services[idx], options...)
 				if err != nil {
 					ll.Warnf("NewGRPCClient failed: %v", err)
@@ -204,6 +220,11 @@ func NewProxyHTTPClients(r runtime.Runtime, bootstrap *configs.Bootstrap) map[st
 		}
 		for idx := range services {
 			if services[idx].GetType() == "http" {
+				ll.Infof("NewProxyHTTPClient Middleware: %+v", clients[i].GetMiddleware())
+				ms := r.Builder().NewMiddlewaresClient(clients[i].GetMiddleware())
+				if len(ms) > 0 {
+					options = append(options, servicehttp.WithMiddlewares(ms...))
+				}
 				client, err := r.Builder().NewHTTPClient(r.Context(), services[idx], options...)
 				if err != nil {
 					ll.Warnf("NewHTTPClient failed: %v", err)

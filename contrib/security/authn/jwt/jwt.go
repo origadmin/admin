@@ -276,4 +276,20 @@ func NewTokenizer(cfg *configv1.Security, ss ...Setting) (security.RefreshTokeni
 	return tokenizer, nil
 }
 
+func jwt2SecurityError(err error) error {
+	//if errors.Is(err, jwtv5.ErrTokenExpired) {
+	return securityv1.ErrorSecurityErrorReasonInvalidAuthentication(err.Error())
+	//}
+	//if errors.Is(err, jwtv5.ErrTokenMalformed) {
+	//	return securityv1.ErrorSecurityErrorReasonTokenMalformed(err.Error())
+	//}
+	//if errors.Is(err, jwtv5.ErrTokenSignatureInvalid) {
+	//	return securityv1.ErrorSecurityErrorReasonTokenSignatureInvalid(err.Error())
+	//}
+	//if errors.Is(err, jwtv5.ErrTokenNotValidYet) {
+	//	return securityv1.ErrorSecurityErrorReasonTokenNotValidYet(err.Error())
+	//}
+	//return err
+}
+
 var _ security.RefreshTokenizer = (*Tokenizer)(nil)

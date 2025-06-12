@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/origadmin/runtime/log"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
@@ -99,6 +100,7 @@ func (r Response) Any(context transhttp.Context, status int, data any, err error
 }
 
 func ResponseErrorEncoder(writer http.ResponseWriter, request *http.Request, err error) {
+	log.NewHelper(log.DefaultLogger).Errorf("ResponseErrorEncoder: %+v", err)
 	ResultError(writer, http.StatusInternalServerError, err)
 	return
 }

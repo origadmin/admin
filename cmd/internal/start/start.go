@@ -21,6 +21,7 @@ import (
 	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/internal/configs"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	"origadmin/application/admin/internal/loader"
 )
 

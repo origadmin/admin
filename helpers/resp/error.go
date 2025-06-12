@@ -16,7 +16,7 @@ import (
 
 func decodeError(alwaysSucceed bool, code int, err error) (int, *Error) {
 	var ierr *Error
-	var status int
+	status := code
 	if ok := errors.As(err, &ierr); ok {
 		status = int(ierr.Code)
 	} else if ke := kerr.FromError(err); ke != nil {
@@ -43,11 +43,8 @@ func decodeError(alwaysSucceed bool, code int, err error) (int, *Error) {
 	if alwaysSucceed {
 		status = http.StatusOK
 	}
-	if !alwaysSucceed && code != status {
-		ierr.Code = int32(status)
-	}
-	if code == 0 {
-		code = status
-	}
-	return code, ierr
+	//if !alwaysSucceed && code != status {
+	//	ierr.Code = int32(status)
+	//}
+	return status, ierr
 }

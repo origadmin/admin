@@ -7,6 +7,7 @@ package dal
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 
@@ -67,6 +68,9 @@ func (repo personalRepo) UpdatePersonalProfile(ctx context.Context, in *pb.Updat
 }
 
 func (repo personalRepo) ListPersonalResources(ctx context.Context, in *pb.ListPersonalResourcesRequest) (*pb.ListPersonalResourcesResponse, error) {
+	tr, ok := transport.FromServerContext(ctx)
+	log.Infof("tr: %+v", tr.RequestHeader())
+	log.Infof("ok: %+v", ok)
 	uid := securityx.GetUserID(ctx)
 	log.Infof("uid: %+v", uid)
 	resourceQuery := repo.db.Resource(ctx).Query()

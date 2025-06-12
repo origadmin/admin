@@ -22,8 +22,8 @@ func GetUserID(ctx context.Context) string {
 	if md, ok := metadata.FromServerContext(ctx); ok {
 		return md.Get(GlobalSecurityUserID)
 	}
-	if md, ok := metadata.FromClientContext(ctx); ok {
-		return md.Get(GlobalSecurityUserID)
-	}
+	//if md, ok := metadata.FromClientContext(ctx); ok {
+	//	return md.Get(GlobalSecurityUserID)
+	//}
 	return ""
 }

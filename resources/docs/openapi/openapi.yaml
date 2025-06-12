@@ -14,8 +14,7 @@ info:
         url: https://github.com/origadmin/backend/blob/master/LICENSE
     version: Version from annotation
 servers:
-    - url: http://localhost:10080
-    - url: https://localhost:10080
+    - url: https://api.foo.com
 paths:
     /auth/authenticate:
         post:
