@@ -37,6 +37,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Entry: &configs.Bootstrap_Entry{
 			Scheme:   "http",
 			Services: DefaultServices(),
+			Cors:     DefaultEntryCors(),
 		},
 		Server: &configs.ServiceServer{
 			Services:   DefaultServices(),
@@ -97,6 +98,17 @@ func DefaultBootstrap() *configs.Bootstrap {
 				},
 			},
 		},
+	}
+}
+
+func DefaultEntryCors() *configv1.Cors {
+	return &configv1.Cors{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"X-Requested-With", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: false,
+		MaxAge:           0,
 	}
 }
 

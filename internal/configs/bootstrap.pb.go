@@ -350,7 +350,8 @@ func (x *Bootstrap_HealthCheck) GetPath() string {
 type Bootstrap_Entry struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Scheme        string                 `protobuf:"bytes,1,opt,name=scheme,proto3" json:"scheme,omitempty"`
-	Services      []*v1.Service          `protobuf:"bytes,2,rep,name=services,proto3" json:"services,omitempty"`
+	Cors          *v1.Cors               `protobuf:"bytes,2,opt,name=cors,proto3" json:"cors,omitempty"`
+	Services      []*v1.Service          `protobuf:"bytes,3,rep,name=services,proto3" json:"services,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -392,6 +393,13 @@ func (x *Bootstrap_Entry) GetScheme() string {
 	return ""
 }
 
+func (x *Bootstrap_Entry) GetCors() *v1.Cors {
+	if x != nil {
+		return x.Cors
+	}
+	return nil
+}
+
 func (x *Bootstrap_Entry) GetServices() []*v1.Service {
 	if x != nil {
 		return x.Services
@@ -403,11 +411,11 @@ var File_configs_bootstrap_proto protoreflect.FileDescriptor
 
 const file_configs_bootstrap_proto_rawDesc = "" +
 	"\n" +
-	"\x17configs/bootstrap.proto\x12\vapi.configs\x1a\x19config/v1/discovery.proto\x1a\x16config/v1/logger.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1dconfigs/security_config.proto\x1a\x15configs/service.proto\x1a\x1emiddleware/v1/middleware.proto\x1a\x17validate/validate.proto\"[\n" +
+	"\x17configs/bootstrap.proto\x12\vapi.configs\x1a\x14config/v1/cors.proto\x1a\x19config/v1/discovery.proto\x1a\x16config/v1/logger.proto\x1a\x17config/v1/service.proto\x1a\x17config/v1/storage.proto\x1a\x1dconfigs/security_config.proto\x1a\x15configs/service.proto\x1a\x1emiddleware/v1/middleware.proto\x1a\x17validate/validate.proto\"[\n" +
 	"\x13EntrySelectorConfig\x12\x16\n" +
 	"\x06global\x18\x02 \x01(\bR\x06global\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x18\n" +
-	"\aversion\x18\x04 \x01(\tR\aversion\"\xff\x06\n" +
+	"\aversion\x18\x04 \x01(\tR\aversion\"\xa4\a\n" +
 	"\tBootstrap\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
 	"\aversion\x18\x02 \x01(\tR\aversion\x12 \n" +
@@ -430,10 +438,11 @@ const file_configs_bootstrap_proto_rawDesc = "" +
 	"\aclients\x18\xee\a \x03(\v2\x1a.api.configs.ServiceClientR\aclients\x1a;\n" +
 	"\vHealthCheck\x12\x18\n" +
 	"\atimeout\x18\x01 \x01(\x05R\atimeout\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\x1aO\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x1at\n" +
 	"\x05Entry\x12\x16\n" +
-	"\x06scheme\x18\x01 \x01(\tR\x06scheme\x12.\n" +
-	"\bservices\x18\x02 \x03(\v2\x12.config.v1.ServiceR\bservices\",\n" +
+	"\x06scheme\x18\x01 \x01(\tR\x06scheme\x12#\n" +
+	"\x04cors\x18\x02 \x01(\v2\x0f.config.v1.CorsR\x04cors\x12.\n" +
+	"\bservices\x18\x03 \x03(\v2\x12.config.v1.ServiceR\bservices\",\n" +
 	"\bSettings\x12 \n" +
 	"\vcrypto_type\x18\x01 \x01(\tR\vcrypto_typeB.Z,origadmin/application/admin/internal/configsb\x06proto3"
 
@@ -463,7 +472,8 @@ var file_configs_bootstrap_proto_goTypes = []any{
 	(*v1.Logger)(nil),             // 9: config.v1.Logger
 	(*ServiceServer)(nil),         // 10: api.configs.ServiceServer
 	(*ServiceClient)(nil),         // 11: api.configs.ServiceClient
-	(*v1.Service)(nil),            // 12: config.v1.Service
+	(*v1.Cors)(nil),               // 12: config.v1.Cors
+	(*v1.Service)(nil),            // 13: config.v1.Service
 }
 var file_configs_bootstrap_proto_depIdxs = []int32{
 	4,  // 0: api.configs.Bootstrap.entry:type_name -> api.configs.Bootstrap.Entry
@@ -475,12 +485,13 @@ var file_configs_bootstrap_proto_depIdxs = []int32{
 	9,  // 6: api.configs.Bootstrap.logger:type_name -> config.v1.Logger
 	10, // 7: api.configs.Bootstrap.server:type_name -> api.configs.ServiceServer
 	11, // 8: api.configs.Bootstrap.clients:type_name -> api.configs.ServiceClient
-	12, // 9: api.configs.Bootstrap.Entry.services:type_name -> config.v1.Service
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	12, // 9: api.configs.Bootstrap.Entry.cors:type_name -> config.v1.Cors
+	13, // 10: api.configs.Bootstrap.Entry.services:type_name -> config.v1.Service
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_configs_bootstrap_proto_init() }

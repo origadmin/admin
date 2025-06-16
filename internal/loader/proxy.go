@@ -15,6 +15,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/gorilla/handlers"
 	"github.com/origadmin/runtime"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
@@ -100,11 +101,7 @@ func NewProxyServer(
 			servicehttp.WithServerOptions(
 				http.PathPrefix("/api/v1"),
 				http.ErrorEncoder(resp.ResponseErrorEncoder),
-				http.Filter(handlers.CORS(
-					handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
-					handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
-					handlers.AllowedOrigins([]string{"*"}),
-				))),
+				http.Filter(BuildProxyCors(bootstrap.GetEntry().GetCors()))),
 			servicehttp.WithMiddlewares(ms...),
 			servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
 		)
@@ -121,6 +118,34 @@ func NewProxyServer(
 		servers = append(servers, srv)
 	}
 	return servers
+}
+
+func BuildProxyCors(cors *configv1.Cors) http.FilterFunc {
+	if cors == nil {
+		return nil
+	}
+	options := []handlers.CORSOption{
+		handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"}),
+		handlers.AllowedOrigins([]string{"*"}),
+	}
+	if cors.GetAllowCredentials() {
+		options = append(options, handlers.AllowCredentials())
+	}
+	if cors.GetMaxAge() > 0 {
+		options = append(options, handlers.MaxAge(int(cors.GetMaxAge())))
+	}
+	if len(cors.GetAllowHeaders()) > 0 {
+		options = append(options, handlers.AllowedHeaders(cors.GetAllowHeaders()))
+	}
+	if len(cors.GetAllowMethods()) > 0 {
+		options = append(options, handlers.AllowedMethods(cors.GetAllowMethods()))
+	}
+
+	if len(cors.GetAllowOrigins()) > 0 {
+		options = append(options, handlers.AllowedOrigins(cors.GetAllowOrigins()))
+	}
+	return handlers.CORS(options...)
 }
 
 func DefaultPaths() []string {

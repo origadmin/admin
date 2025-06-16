@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package api.configs;
 
+import "config/v1/cors.proto";
 import "config/v1/discovery.proto";
 import "config/v1/logger.proto";
 import "config/v1/service.proto";
@@ -53,7 +54,8 @@ message Bootstrap {
   // Entry
   message Entry {
     string scheme = 1 [json_name = "scheme"];
-    repeated config.v1.Service services = 2 [json_name = "services"];
+    config.v1.Cors cors = 2 [json_name = "cors"];
+    repeated config.v1.Service services = 3 [json_name = "services"];
   }
 
   string id = 100 [json_name = "id"];
