@@ -96,7 +96,7 @@ func NewProxyServer(
 		if services[i].GetType() != "http" {
 			continue
 		}
-		srv, err := runtime.NewHTTPServiceServer(services[i],
+		srv, err := r.Builder().NewHTTPServer(services[i],
 			servicehttp.WithServerOptions(
 				http.PathPrefix("/api/v1"),
 				http.ErrorEncoder(resp.ResponseErrorEncoder),

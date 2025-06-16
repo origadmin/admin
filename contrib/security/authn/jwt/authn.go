@@ -9,9 +9,10 @@ import (
 	"context"
 
 	"github.com/goexts/generic/settings"
-	msecurity "github.com/origadmin/runtime/agent/middleware/security"
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/interfaces/security/token"
+
+	contribsecurity "origadmin/application/admin/contrib/security"
 )
 
 type Authenticator struct {
@@ -29,7 +30,7 @@ func (obj Authenticator) Authenticate(ctx context.Context, s string) (security.C
 }
 
 func (obj Authenticator) AuthenticateContext(ctx context.Context, tokenType security.TokenSource) (security.Claims, error) {
-	token, err := msecurity.TokenFromContext(ctx, tokenType, obj.Scheme.String())
+	token, err := contribsecurity.TokenFromContext(ctx, tokenType, obj.Scheme.String())
 	if err != nil {
 		return nil, err
 	}

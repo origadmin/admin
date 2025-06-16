@@ -6,19 +6,26 @@
 package securityx
 
 import (
-	"context"
 	"strings"
 
 	"github.com/go-kratos/kratos/v2/transport"
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
-	msecurity "github.com/origadmin/runtime/agent/middleware/security"
+	"github.com/origadmin/runtime/context"
+
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/middleware"
 
+	"origadmin/application/admin/api/v1/services/types"
+	contribsecurity "origadmin/application/admin/contrib/security"
 	"origadmin/application/admin/contrib/security/authn/jwt"
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/internal/configs"
+)
+
+var (
+	ErrInvalidToken         = types.ErrorSystemErrorReasonInvalidToken("invalid token")
+	ErrInvalidAuthorization = types.ErrorSystemErrorReasonInvalidAuthorization("invalid authorization")
 )
 
 func NewAuthenticator(bootstrap *configs.Bootstrap, ss ...jwt.Setting) (security.Authenticator, error) {
@@ -85,7 +92,7 @@ type SecurityBridge struct {
 	// Authorizer is the authorizer used for the authorization header.
 	Authorizer security.Authorizer
 	// SkipKey is the key used to skip authentication.
-	SkipKey string
+	//SkipKey string
 	// PublicPaths are the public paths that do not require authentication.
 	PublicPaths []string
 	// Provider is the role/permission data from the database.
@@ -101,7 +108,7 @@ type SecurityBridge struct {
 }
 
 func (obj SecurityBridge) SkipFromContext(ctx context.Context) (context.Context, bool) {
-	if msecurity.IsSkipped(ctx, obj.SkipKey) {
+	if context.IsSkipped(ctx) {
 		log.Debugf("NewAuthN: skipping request due to skip key")
 		return ctx, true
 	}
@@ -113,7 +120,7 @@ func (obj SecurityBridge) SkipFromContext(ctx context.Context) (context.Context,
 		log.Debugf("NewAuthNServer ServerContext: checking skipper for operation: %+v", tr.Operation())
 		if obj.Skipper(tr.Operation()) {
 			log.Debugf("NewAuthNServer: skipping request")
-			ctx := msecurity.WithSkipContextServer(msecurity.NewSkipContext(ctx), obj.SkipKey)
+			ctx := context.NewSkip(ctx)
 			return ctx, true
 		}
 	}
@@ -121,7 +128,7 @@ func (obj SecurityBridge) SkipFromContext(ctx context.Context) (context.Context,
 		log.Debugf("NewAuthNServer ClientContext: checking skipper for operation: %+v", tr.Operation())
 		if obj.Skipper(tr.Operation()) {
 			log.Debugf("NewAuthNServer: skipping request")
-			ctx := msecurity.WithSkipContextClient(msecurity.NewSkipContext(ctx), obj.SkipKey)
+			ctx := context.NewSkip(ctx)
 			return ctx, true
 		}
 	}
@@ -170,7 +177,7 @@ func (obj SecurityBridge) Middleware() middleware.KMiddleware {
 			token := obj.TokenParser(ctx)
 			if token == "" {
 				log.Errorf("NewAuthN: missing token, returning error")
-				return nil, msecurity.ErrInvalidToken
+				return nil, types.ErrorSystemErrorReasonInvalidToken("missing token")
 			}
 
 			log.Debugf("NewAuthN: authenticating token")
@@ -195,10 +202,10 @@ func (obj SecurityBridge) Middleware() middleware.KMiddleware {
 			}
 			if ok, err := obj.Authorizer.Authorized(ctx, policy, policy.GetAction(), policy.GetObject()); err != nil {
 				log.Errorf("NewAuthN: authorization failed")
-				return nil, msecurity.ErrInvalidAuthorization
+				return nil, ErrInvalidAuthorization
 			} else if !ok {
 				log.Errorf("NewAuthN: authorization check failed")
-				return nil, msecurity.ErrInvalidAuthorization
+				return nil, ErrInvalidAuthorization
 			} else {
 				log.Debugf("NewAuthN: authorization successful, proceeding with request")
 			}
@@ -210,7 +217,7 @@ func (obj SecurityBridge) Middleware() middleware.KMiddleware {
 }
 
 func (obj SecurityBridge) TokenTo(ctx context.Context, token string) context.Context {
-	return msecurity.TokenToContext(ctx, obj.TokenSource, obj.schemeString(), token)
+	return contribsecurity.TokenToContext(ctx, obj.TokenSource, obj.schemeString(), token)
 }
 func (obj SecurityBridge) policyParser(ctx context.Context, claims security.Claims) (security.Policy, error) {
 	if obj.PolicyParser != nil {
@@ -232,8 +239,8 @@ func (obj SecurityBridge) policyParser(ctx context.Context, claims security.Clai
 
 	req, ok := transhttp.RequestFromServerContext(ctx)
 	if !ok {
-		log.Errorf("PolicyParser: failed to get request from server context, error: %s", msecurity.ErrInvalidToken.Error())
-		return nil, msecurity.ErrInvalidToken
+		log.Errorf("PolicyParser: failed to get request from server context, error: %s", ErrInvalidToken.Error())
+		return nil, ErrInvalidToken
 	}
 	policy := security.RegisteredPolicy{
 		Subject:     claims.GetSubject(),
@@ -291,7 +298,6 @@ func DefaultBridge() *SecurityBridge {
 		AuthenticationHeader: security.HeaderAuthorize,
 		Authenticator:        nil,
 		Authorizer:           nil,
-		SkipKey:              msecurity.MetadataSecuritySkipKey,
 		PublicPaths:          nil,
 		Provider:             &provider{},
 		Skipper: func(path string) bool {
