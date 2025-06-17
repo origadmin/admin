@@ -7,50 +7,11 @@ package service
 import (
 	"context"
 
-	"github.com/google/wire"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-)
-
-// ProviderSet is service providers.
-var ProviderSet = wire.NewSet(
-	NewRegisterServer,
-	NewResourceServiceServerPB,
-	NewResourceServiceHTTPServerPB,
-	NewRoleServiceServerPB,
-	NewRoleServiceHTTPServerPB,
-	NewUserServiceServerPB,
-	NewUserServiceHTTPServerPB,
-	NewPermissionServiceServerPB,
-	NewPermissionServiceHTTPServerPB,
-)
-
-// LocalProviderSet is service providers.
-var LocalProviderSet = wire.NewSet(
-	NewRegisterBridgeServer,
-	NewResourceServiceServerPB,
-	NewResourceServiceHTTPServerPB,
-	NewRoleServiceServerPB,
-	NewRoleServiceHTTPServerPB,
-	NewUserServiceServerPB,
-	NewUserServiceHTTPServerPB,
-	NewPermissionServiceServerPB,
-	NewPermissionServiceHTTPServerPB,
-)
-
-var RemoteProviderSet = wire.NewSet(
-	NewRegisterBridgeServer,
-	NewResourceServiceBridgeClient,
-	//NewResourceServiceBridge,
-	NewRoleServiceBridgeClient,
-	//NewRoleServiceBridge,
-	NewUserServiceBridgeClient,
-	//NewUserServiceBridge,
-	NewPermissionServiceBridgeClient,
-	//NewPermissionServiceBridge,
 )
 
 type SystemServerRegistrar service.ServerRegistrar

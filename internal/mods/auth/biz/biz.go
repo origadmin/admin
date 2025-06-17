@@ -5,16 +5,7 @@
 package biz
 
 import (
-	"github.com/google/wire"
 	"github.com/origadmin/runtime/interfaces/pagination"
-)
-
-// ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(
-	NewAuthServiceBiz,
-	NewLoginServiceBiz,
-	NewPersonalServiceBiz,
-	NewCasbinSourceServiceBiz,
 )
 
 var (

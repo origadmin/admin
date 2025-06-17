@@ -33,16 +33,6 @@ type AppOptions struct {
 }
 
 var (
-	ProviderSet = wire.NewSet(
-		NewServiceServerRegistrars,
-		NewProxyOptions,
-		NewProxyServer,
-		NewProxyGRPCClients,
-		NewProxyHTTPClients,
-	)
-)
-
-var (
 	_ *gins.Server
 	_ *http.Server
 	_ *grpc.Server

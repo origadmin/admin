@@ -11,7 +11,6 @@ import (
 
 	"entgo.io/ent/dialect"
 	"github.com/google/uuid"
-	"github.com/google/wire"
 	"github.com/origadmin/entslog/v3"
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
@@ -30,16 +29,6 @@ const (
 type Data struct {
 	*data.Data
 }
-
-// ProviderSet is data providers.
-var ProviderSet = wire.NewSet(
-	//NewData,
-	NewAuthRepo,
-	NewLoginRepo,
-	NewCasbinSourceRepo,
-	NewPersonalRepo,
-	RefreshTokenizer,
-)
 
 const FKSuffix = "_fk=1"
 

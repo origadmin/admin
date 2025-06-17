@@ -15,6 +15,7 @@ import (
 	biz2 "origadmin/application/admin/internal/mods/auth/biz"
 	dal2 "origadmin/application/admin/internal/mods/auth/dal"
 	service2 "origadmin/application/admin/internal/mods/auth/service"
+	"origadmin/application/admin/internal/mods/gateway"
 	"origadmin/application/admin/internal/mods/system/biz"
 	"origadmin/application/admin/internal/mods/system/dal"
 	"origadmin/application/admin/internal/mods/system/service"
@@ -24,6 +25,7 @@ import (
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 )
 
 // Injectors from wire.go:
@@ -73,12 +75,12 @@ func buildLocalInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*krat
 	authServerRegistrar := service2.NewRegisterBridgeServer(r, authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
 	v := loader.NewServiceServerRegistrars(systemServerRegistrar, authServerRegistrar)
 	ruleSource := service2.NewCasbinSourceBiz(r, casbinSourceServiceBiz)
-	proxyOptions, err := loader.NewProxyOptions(r, bootstrap, ruleSource)
+	proxyOptions, err := gateway.NewProxyOptions(r, bootstrap, ruleSource)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	v2 := loader.NewProxyServer(r, bootstrap, v, proxyOptions)
+	v2 := gateway.NewProxyServer(r, bootstrap, v, proxyOptions)
 	app := NewApp(r, v2)
 	return app, func() {
 		cleanup()
@@ -86,7 +88,7 @@ func buildLocalInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*krat
 }
 
 func buildRemoteInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
-	v := loader.NewProxyGRPCClients(r, bootstrap)
+	v := gateway.NewProxyGRPCClients(r, bootstrap)
 	resourceServiceServer := service.NewResourceServiceBridgeClient(r, v)
 	roleServiceServer := service.NewRoleServiceBridgeClient(r, v)
 	userServiceServer := service.NewUserServiceBridgeClient(r, v)
@@ -99,11 +101,11 @@ func buildRemoteInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kra
 	authServerRegistrar := service2.NewRegisterBridgeServer(r, authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
 	v2 := loader.NewServiceServerRegistrars(systemServerRegistrar, authServerRegistrar)
 	ruleSource := service2.NewCasbinSourceClient(r, v)
-	proxyOptions, err := loader.NewProxyOptions(r, bootstrap, ruleSource)
+	proxyOptions, err := gateway.NewProxyOptions(r, bootstrap, ruleSource)
 	if err != nil {
 		return nil, nil, err
 	}
-	v3 := loader.NewProxyServer(r, bootstrap, v2, proxyOptions)
+	v3 := gateway.NewProxyServer(r, bootstrap, v2, proxyOptions)
 	app := NewApp(r, v3)
 	return app, func() {
 	}, nil

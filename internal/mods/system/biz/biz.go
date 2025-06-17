@@ -7,23 +7,10 @@ package biz
 import (
 	"net/http"
 
-	"github.com/google/wire"
 	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/toolkits/errors/httperr"
 
 	typespb "origadmin/application/admin/api/v1/services/types"
-)
-
-// ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(
-	//NewAuthServiceBiz,
-	//NewLoginServiceBiz,
-	//NewPersonalServiceBiz,
-	NewResourceServiceBiz,
-	NewRoleServiceBiz,
-	NewUserServiceBiz,
-	NewPermissionServiceBiz,
-	//NewCasbinSourceServiceBiz,
 )
 
 var (

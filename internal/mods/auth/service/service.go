@@ -7,49 +7,11 @@ package service
 import (
 	"context"
 
-	"github.com/google/wire"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
-)
-
-// ProviderSet is service providers.
-var ProviderSet = wire.NewSet(
-	NewRegisterServer,
-	NewAuthServiceServerPB,
-	NewAuthServiceHTTPServerPB,
-	NewCasbinSourceServiceServerPB,
-	NewCasbinSourceServiceHTTPServerPB,
-	NewLoginServiceServerPB,
-	NewLoginServiceHTTPServerPB,
-	NewPersonalServiceServerPB,
-	NewPersonalServiceHTTPServerPB,
-	NewCasbinSourceBiz,
-)
-
-// LocalProviderSet is service providers.
-var LocalProviderSet = wire.NewSet(
-	NewRegisterBridgeServer,
-	NewAuthServiceServerPB,
-	NewAuthServiceHTTPServerPB,
-	NewCasbinSourceServiceServerPB,
-	NewCasbinSourceServiceHTTPServerPB,
-	NewLoginServiceServerPB,
-	NewLoginServiceHTTPServerPB,
-	NewPersonalServiceServerPB,
-	NewPersonalServiceHTTPServerPB,
-	NewCasbinSourceBiz,
-)
-
-var RemoteProviderSet = wire.NewSet(
-	NewRegisterBridgeServer,
-	NewAuthServiceBridgeClient,
-	NewCasbinServiceBridgeClient,
-	NewLoginServiceBridgeClient,
-	NewPersonalServiceBridgeClient,
-	NewCasbinSourceClient,
 )
 
 type AuthServerRegistrar service.ServerRegistrar

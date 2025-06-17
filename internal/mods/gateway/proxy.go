@@ -3,7 +3,7 @@
  */
 
 // Package loader implements the functions, types, and interfaces for the module.
-package loader
+package gateway
 
 import (
 	"strings"
@@ -13,6 +13,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/google/wire"
 	"github.com/gorilla/handlers"
 	"github.com/origadmin/runtime"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
@@ -29,6 +30,15 @@ import (
 	"origadmin/application/admin/helpers/resp"
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/configs"
+)
+
+var (
+	ProviderSet = wire.NewSet(
+		NewProxyOptions,
+		NewProxyServer,
+		NewProxyGRPCClients,
+		NewProxyHTTPClients,
+	)
 )
 
 type ProxyOptions struct {

@@ -21,6 +21,7 @@ import (
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 )
 
 // Injectors from wire.go:
@@ -54,8 +55,8 @@ func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.Ap
 	personalRepo := dal.NewPersonalRepo(r, dataData)
 	personalServiceBiz := biz.NewPersonalServiceBiz(r, personalRepo)
 	personalServiceServer := service.NewPersonalServiceServerPB(r, personalServiceBiz)
-	registerServer := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
-	v := server.NewAuthServer(r, bootstrap, registerServer)
+	authServerRegistrar := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
+	v := server.NewAuthServer(r, bootstrap, authServerRegistrar)
 	app := NewApp(r, v)
 	return app, func() {
 		cleanup()
