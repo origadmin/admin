@@ -9,104 +9,96 @@ import (
 	"context"
 	"testing"
 
+	"github.com/go-kratos/kratos/v2/encoding"
+	"github.com/origadmin/runtime"
+	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	"github.com/origadmin/runtime/interfaces/security"
+	"github.com/origadmin/toolkits/codec/toml"
+
+	pb "origadmin/application/admin/api/v1/services/auth"
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
-	_ "github.com/origadmin/contrib/database"
-	"github.com/origadmin/runtime/bootstrap"
-	"github.com/origadmin/runtime/interfaces/security"
-
+	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/securityx"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/loader"
-	"origadmin/application/admin/internal/mods/system/dal"
-	"origadmin/application/admin/internal/mods/system/server"
+	"origadmin/application/admin/internal/mods/auth/dal"
+	"origadmin/application/admin/internal/mods/auth/service"
 )
 
-type data struct {
+type mockData struct {
 }
 
-func (d data) QueryRoles(ctx context.Context, subject string) ([]string, error) {
+func (d mockData) QueryRoles(ctx context.Context, subject string) ([]string, error) {
 	return []string{
 		"role_1",
 	}, nil
 }
 
-func (d data) QueryPermissions(ctx context.Context, subject string) ([]string, error) {
+func (d mockData) QueryPermissions(ctx context.Context, subject string) ([]string, error) {
 	return []string{
 		"user_1",
 	}, nil
 }
 
+func init() {
+	encoding.RegisterCodec(toml.Codec)
+}
+
 func TestGenerateToken(t *testing.T) {
-	bs, err := loader.LoadBootstrap(&loader.Bootstrap{
-		Flags:      bootstrap.Flags{},
-		WorkDir:    "",
-		ConfigPath: "D:\\workspace\\project\\golang\\origadmin\\backend\\resources\\configs\\config_test.toml",
-		Env:        "",
-		Daemon:     false,
-	})
+	sourceConfig := &configv1.SourceConfig{
+		Types: []string{"file"},
+		File: &configv1.SourceConfig_File{
+			Path: "..\\resources\\configs\\config_test.toml",
+		},
+	}
+	bootstrap, err := loader.LoadBootstrap(sourceConfig)
 	if err != nil {
 		t.Fatalf("failed to load bootstrap: %v", err)
 	}
-	dd, cleanup, err := dal.NewData(bs, nil)
-	if err != nil {
-		t.Fatalf("failed to new dd: %v", err)
-	}
-	defer cleanup()
-	//casbinRepo, err := dal.NewCasbinSourceRepo(dd)
-	//if err != nil {
-	//	t.Fatalf("failed to new casbin source repo: %v", err)
-	//}
-	resourceRepo := dal.NewResourceRepo(dd, nil)
-	roleRepo := dal.NewRoleRepo(dd, nil)
-	userRepo := dal.NewUserRepo(dd, nil)
-	basisConfig := loader.NewBasisConfig(bs)
-	//v, err := server.NewSystemClient(bs, nil)
-	//if err != nil {
-	//	t.Fatalf("failed to new system client: %v", err)
-	//}
-	//auth := system.NewAuthServiceClient(v)
-	tokenizer, err := loader.NewTokenizer(bs)
-	if err != nil {
-		t.Fatalf("failed to new tokenizer: %v", err)
-	}
-	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
-	loginData := &dal.LoginData{
-		Tokenizer: refreshTokenizer,
-		Resource:  resourceRepo,
-		Role:      roleRepo,
-		User:      userRepo,
-	}
-	ctx := context.Background()
-	claims, err := loginData.Tokenizer.CreateClaims(ctx, "user_1")
+	r := runtime.Global()
+	dataData, cleanup, err := data.NewData(r, bootstrap)
 	if err != nil {
 		return
 	}
-	token, err := loginData.Tokenizer.CreateToken(ctx, claims)
-	if err != nil {
-		t.Fatalf("failed to create token: %v", err)
-	}
-	t.Logf("token: %s", token)
-
-	v, err := server.NewSystemClient(bs, nil)
-	if err != nil {
-		t.Fatalf("failed to new system client: %v", err)
-	}
-	//registerAgent, err := server.NewSystemServiceAgentClient(v, nil)
+	defer cleanup()
+	authRepo := dal.NewAuthRepo(r, dataData)
+	//authServiceBiz := biz.NewAuthServiceBiz(r, authRepo)
+	//authServiceServer := service.NewAuthServiceServerPB(authServiceBiz)
+	//casbinSourceRepo, err := dal.NewCasbinSourceRepo(dataData)
 	//if err != nil {
-	//	t.Fatalf("failed to new system service agent client: %v", err)
+	//	cleanup()
+	//	return
 	//}
-	//_ := agent.NewRegisterAgent(registerAgent)
-	casbinSourceServiceClient := server.NewCasbinServiceClient(v, nil)
-	_ = casbinSourceServiceClient
-	//casbinBiz := biz.NewCasbinSourceServiceBiz(casbinRepo, nil)
-	//client := service.NewCasbinSourceServiceServerPB(casbinBiz)
-	authenticator, err := securityx.NewAuthenticator(bs)
+	//casbinSourceServiceBiz := biz.NewCasbinSourceServiceBiz(r, casbinSourceRepo)
+	//casbinSourceServiceServer := service.NewCasbinSourceServiceServerPB(casbinSourceServiceBiz)
+	//tokenizer, err := data.NewTokenizer(bootstrap)
+	//if err != nil {
+	//	cleanup()
+	//	return
+	//}
+	//refreshTokenizer := dal.RefreshTokenizer(tokenizer)
+	//loginData := data.NewLoginData(bootstrap, refreshTokenizer)
+	//loginRepo := dal.NewLoginRepo(dataData, loginData)
+	//loginServiceBiz := biz.NewLoginServiceBiz(r, loginRepo)
+	//loginServiceServer := service.NewLoginServiceServerPB(loginServiceBiz)
+	//personalRepo := dal.NewPersonalRepo(r, dataData)
+	//personalServiceBiz := biz.NewPersonalServiceBiz(r, personalRepo)
+	//personalServiceServer := service.NewPersonalServiceServerPB(r, personalServiceBiz)
+	//registerServer := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
+	//v := server.NewAuthServer(r, bootstrap, registerServer)
+	authenticator, err := securityx.NewAuthenticator(bootstrap)
 	if err != nil {
 		panic(err)
 	}
-	//adapter := casbin.NewAdapter()
-	authorizer, err := securityx.NewAuthorizer(bs, casbin.WithSource(casbinSourceServiceClient))
+	clients := loader.NewProxyGRPCClients(r, bootstrap)
+	ruleSource := service.NewCasbinSourceClient(r, clients)
+	opts := []casbin.AuthorizerOption{
+		casbin.WithSource(ruleSource),
+	}
+
+	authorizer, err := securityx.NewAuthorizer(bootstrap, opts...)
 	if err != nil {
 		panic(err)
 	}
@@ -117,17 +109,24 @@ func TestGenerateToken(t *testing.T) {
 			Object:  "/api/v1/sys/users",
 			Action:  "GET",
 			Domain:  "*",
-			//Roles:       roles,
-			//Permissions: permissions,
 		}, nil
 	}
 	bridge.Authenticator = authenticator
 	bridge.Authorizer = authorizer
-	claims2, err := bridge.Authenticator.Authenticate(ctx, token)
+	ctx := context.Background()
+	token, err := authRepo.CreateToken(ctx, &pb.CreateTokenRequest{
+		Data: &pb.CreateTokenRequest_Data{
+			UserId: "user_1",
+		},
+	})
+	if err != nil {
+		t.Fatalf("failed to create token: %v", err)
+	}
+	claims, err := bridge.Authenticator.Authenticate(ctx, token.GetToken())
 	if err != nil {
 		t.Fatalf("failed to authenticate: %v", err)
 	}
-	policy, err := bridge.PolicyParser(ctx, claims2)
+	policy, err := bridge.PolicyParser(ctx, claims)
 	if err != nil {
 		t.Fatalf("failed to parse policy: %v", err)
 	}
