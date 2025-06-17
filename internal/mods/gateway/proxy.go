@@ -44,10 +44,11 @@ var (
 type ProxyOptions struct {
 	Authenticator security.Authenticator
 	Authorizer    security.Authorizer
+	Registrars    []service.ServerRegistrar
 }
 
 func NewProxyOptions(r runtime.Runtime, bootstrap *configs.Bootstrap,
-	source casbin.RuleSource) (*ProxyOptions, error) {
+	source casbin.RuleSource, registrars []service.ServerRegistrar) (*ProxyOptions, error) {
 	authenticator, err := securityx.NewAuthenticator(bootstrap)
 	if err != nil {
 		return nil, err
@@ -63,6 +64,7 @@ func NewProxyOptions(r runtime.Runtime, bootstrap *configs.Bootstrap,
 	return &ProxyOptions{
 		Authenticator: authenticator,
 		Authorizer:    authorizer,
+		Registrars:    registrars,
 	}, nil
 }
 
@@ -70,7 +72,6 @@ func NewProxyOptions(r runtime.Runtime, bootstrap *configs.Bootstrap,
 func NewProxyServer(
 	r runtime.Runtime,
 	bootstrap *configs.Bootstrap,
-	registrars []service.ServerRegistrar,
 	opts *ProxyOptions) []transport.Server {
 	paths := bootstrap.GetSecurity().GetSecurity().GetPublicPaths()
 	paths = append(DefaultPaths(), paths...)
@@ -95,12 +96,6 @@ func NewProxyServer(
 		return true
 	})
 	ms = append(ms, serv.Build(), CallLoggerMiddleware())
-	//clients.Get
-	//for i := range clients {
-	//	clients[i].GetCore().GetName()
-	//
-	//}
-	//clients.Name = types.ZeroOr(clients.Name, "ORIGADMIN_SERVICE")
 	var servers []transport.Server
 	services := bootstrap.GetEntry().GetServices()
 	for i := range services {
@@ -118,7 +113,7 @@ func NewProxyServer(
 		if err != nil {
 			panic(err)
 		}
-		for _, registrar := range registrars {
+		for _, registrar := range opts.Registrars {
 			registrar.Register(r.Context(), srv)
 		}
 		srv.WalkRoute(func(info http.RouteInfo) error {
