@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -190,6 +191,93 @@ func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...stri
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown Department field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *NotificationMutation) SetFields(input *Notification, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case notification.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case notification.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
+		case notification.FieldCreateTime:
+			if input.CreateTime.Unix() != 0 {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case notification.FieldUpdateTime:
+			if input.UpdateTime.Unix() != 0 {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case notification.FieldSubject:
+			// check string with sql.NullString if it is empty
+			if input.Subject != "" {
+				m.SetSubject(input.Subject)
+			}
+		case notification.FieldContent:
+			// check string with sql.NullString if it is empty
+			if input.Content != "" {
+				m.SetContent(input.Content)
+			}
+		case notification.FieldStatus:
+			// check int8 with sql.NullInt64 if it is zero
+			if input.Status != 0 {
+				m.SetStatus(input.Status)
+			}
+		case notification.FieldCategoryID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CategoryID != 0 {
+				m.SetCategoryID(input.CategoryID)
+			}
+		case notification.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown Notification field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *NotificationMutation) SetFieldsWithZero(input *Notification, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case notification.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case notification.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case notification.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case notification.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case notification.FieldSubject:
+			m.SetSubject(input.Subject)
+		case notification.FieldContent:
+			m.SetContent(input.Content)
+		case notification.FieldStatus:
+			m.SetStatus(input.Status)
+		case notification.FieldCategoryID:
+			m.SetCategoryID(input.CategoryID)
+		case notification.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown Notification field %s", fields[i])
 		}
 	}
 	return nil

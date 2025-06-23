@@ -119,6 +119,11 @@ func (db *Database) Department(ctx context.Context) *DepartmentClient {
 	return db.Client(ctx).Department
 }
 
+// Notification is the client for interacting with the Notification builders.
+func (db *Database) Notification(ctx context.Context) *NotificationClient {
+	return db.Client(ctx).Notification
+}
+
 // Permission is the client for interacting with the Permission builders.
 func (db *Database) Permission(ctx context.Context) *PermissionClient {
 	return db.Client(ctx).Permission

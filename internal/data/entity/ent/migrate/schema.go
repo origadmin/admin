@@ -87,6 +87,47 @@ var (
 			},
 		},
 	}
+	// MsgNotificationsColumns holds the columns for the "msg_notifications" table.
+	MsgNotificationsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "subject", Type: field.TypeString, Comment: "entity.notification.field.subject", Default: ""},
+		{Name: "content", Type: field.TypeString, Comment: "entity.notification.field.content", Default: ""},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.notification.field.status", Default: 0},
+		{Name: "category_id", Type: field.TypeInt64, Comment: "entity.notification.field.category_id"},
+	}
+	// MsgNotificationsTable holds the schema information for the "msg_notifications" table.
+	MsgNotificationsTable = &schema.Table{
+		Name:       "msg_notifications",
+		Comment:    "entity.notification.table.comment",
+		Columns:    MsgNotificationsColumns,
+		PrimaryKey: []*schema.Column{MsgNotificationsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "notification_create_author",
+				Unique:  false,
+				Columns: []*schema.Column{MsgNotificationsColumns[1]},
+			},
+			{
+				Name:    "notification_update_author",
+				Unique:  false,
+				Columns: []*schema.Column{MsgNotificationsColumns[2]},
+			},
+			{
+				Name:    "notification_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{MsgNotificationsColumns[3]},
+			},
+			{
+				Name:    "notification_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{MsgNotificationsColumns[4]},
+			},
+		},
+	}
 	// SysPermissionsColumns holds the columns for the "sys_permissions" table.
 	SysPermissionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
@@ -298,12 +339,12 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 32, Comment: "role.field.keyword"},
-		{Name: "name", Type: field.TypeString, Size: 128, Comment: "role.field.name", Default: ""},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "role.field.description", Default: ""},
-		{Name: "type", Type: field.TypeInt8, Comment: "role.field.type", Default: 2},
-		{Name: "sequence", Type: field.TypeInt, Comment: "role.field.sequence", Default: 0},
-		{Name: "status", Type: field.TypeInt8, Comment: "role.field.status", Default: 1},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 32, Comment: "entity.role.field.keyword"},
+		{Name: "name", Type: field.TypeString, Size: 128, Comment: "entity.role.field.name", Default: ""},
+		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.role.field.description", Default: ""},
+		{Name: "type", Type: field.TypeInt8, Comment: "entity.role.field.type", Default: 2},
+		{Name: "sequence", Type: field.TypeInt, Comment: "entity.role.field.sequence", Default: 0},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.role.field.status", Default: 1},
 	}
 	// SysRolesTable holds the schema information for the "sys_roles" table.
 	SysRolesTable = &schema.Table{
@@ -400,7 +441,7 @@ var (
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "entity.user.field.allowed_ip", Default: "0.0.0.0"},
 		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "entity.user.field.username"},
 		{Name: "nickname", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
-		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "user.field.avatar", Default: ""},
+		{Name: "avatar", Type: field.TypeString, Size: 256, Comment: "entity.user.field.avatar", Default: ""},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.user.field.nickname", Default: ""},
 		{Name: "gender", Type: field.TypeEnum, Comment: "entity.user.field.gender", Enums: []string{"male", "female", "unknown"}, Default: "unknown"},
 		{Name: "encrypted_password", Type: field.TypeString, Size: 256, Comment: "entity.user.field.encrypted_password", Default: ""},
@@ -411,7 +452,7 @@ var (
 		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "entity.user.field.remark", Default: ""},
 		{Name: "token", Type: field.TypeString, Size: 512, Comment: "entity.user.field.token", Default: ""},
 		{Name: "status", Type: field.TypeInt8, Comment: "entity.user.field.status", Default: 1},
-		{Name: "is_system", Type: field.TypeBool, Comment: "user.field.is_system", Default: false},
+		{Name: "is_system", Type: field.TypeBool, Comment: "entity.user.field.is_system", Default: false},
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "entity.user.field.last_login_ip", Default: ""},
 		{Name: "last_login_time", Type: field.TypeTime, Comment: "entity.user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "login_time", Type: field.TypeTime, Comment: "entity.user.field.login_time", SchemaType: map[string]string{"mysql": "datetime"}},
@@ -609,6 +650,7 @@ var (
 	Tables = []*schema.Table{
 		CasbinRulesTable,
 		SysDepartmentsTable,
+		MsgNotificationsTable,
 		SysPermissionsTable,
 		SysPermissionResourcesTable,
 		SysPositionsTable,
@@ -627,6 +669,9 @@ func init() {
 	SysDepartmentsTable.ForeignKeys[0].RefTable = SysDepartmentsTable
 	SysDepartmentsTable.Annotation = &entsql.Annotation{
 		Table: "sys_departments",
+	}
+	MsgNotificationsTable.Annotation = &entsql.Annotation{
+		Table: "msg_notifications",
 	}
 	SysPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_permissions",

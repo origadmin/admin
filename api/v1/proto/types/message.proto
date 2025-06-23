@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package api.v1.services.types;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceTypeMessageProto";
+option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceType";
+
+// Menu is the model entity for the Menu schema.
+message Message {
+  // ID of the ent.
+  int64 id = 1 [json_name = "id"];
+
+
+}

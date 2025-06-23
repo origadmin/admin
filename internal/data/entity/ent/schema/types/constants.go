@@ -10,6 +10,7 @@ const (
 	Enabled  = 1
 	Disabled = 2
 
+	Unknown  = Invalid
 	Active   = Enabled
 	Inactive = Disabled
 	Frozen   = Disabled

@@ -35,24 +35,24 @@ func (Role) Fields() []ent.Field {
 		field.String("keyword").
 			MaxLen(32).
 			Unique().
-			Comment("role.field.keyword"), // keyword of role (unique)
+			Comment("entity.role.field.keyword"), // keyword of role (unique)
 		field.String("name").
 			MaxLen(128).
 			Default("").
-			Comment("role.field.name"), // Display name of role
+			Comment("entity.role.field.name"), // Display name of role
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment("role.field.description"), // Details about role
+			Comment("entity.role.field.description"), // Details about role
 		field.Int8("type").
 			Default(RoleTypeUser).
-			Comment("role.field.type"), //("Role type: 1 - System role 2 - User role 3 - Department role"),
+			Comment("entity.role.field.type"), //("Role type: 1 - System role 2 - User role 3 - Department role"),
 		field.Int("sequence").
 			Default(0).
-			Comment("role.field.sequence"), // Sequence for sorting
+			Comment("entity.role.field.sequence"), // Sequence for sorting
 		field.Int8("status").
 			Default(types.Active).
-			Comment("role.field.status"),
+			Comment("entity.role.field.status"),
 	}
 }
 

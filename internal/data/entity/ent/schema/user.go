@@ -54,7 +54,7 @@ func (User) Fields() []ent.Field {
 		field.String("avatar").
 			MaxLen(256).
 			Default("").
-			Comment("user.field.avatar"), // Avatar display avatar of user
+			Comment("entity.user.field.avatar"), // Avatar display avatar of user
 		field.String("name").
 			MaxLen(64).
 			Default("").
@@ -97,7 +97,7 @@ func (User) Fields() []ent.Field {
 			Comment(i18n.Text("entity.user.field.status")),
 		field.Bool("is_system").
 			Default(false).
-			Comment("user.field.is_system"), // Whether the system is built-in (the built-in user cannot be deleted, but can be disabled)
+			Comment("entity.user.field.is_system"), // Whether the system is built-in (the built-in user cannot be deleted, but can be disabled)
 		field.String("last_login_ip").
 			MaxLen(32).
 			Default("").

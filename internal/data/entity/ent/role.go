@@ -22,17 +22,17 @@ type Role struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// role.field.keyword
+	// entity.role.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// role.field.name
+	// entity.role.field.name
 	Name string `json:"name,omitempty"`
-	// role.field.description
+	// entity.role.field.description
 	Description string `json:"description,omitempty"`
-	// role.field.type
+	// entity.role.field.type
 	Type int8 `json:"type,omitempty"`
-	// role.field.sequence
+	// entity.role.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// role.field.status
+	// entity.role.field.status
 	Status int8 `json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.

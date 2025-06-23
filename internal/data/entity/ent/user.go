@@ -36,7 +36,7 @@ type User struct {
 	Username string `json:"username,omitempty"`
 	// entity.user.field.nickname
 	Nickname string `json:"nickname,omitempty"`
-	// user.field.avatar
+	// entity.user.field.avatar
 	Avatar string `json:"avatar,omitempty"`
 	// entity.user.field.nickname
 	Name string `json:"name,omitempty"`
@@ -60,7 +60,7 @@ type User struct {
 	Token string `json:"token,omitempty"`
 	// entity.user.field.status
 	Status int8 `json:"status,omitempty"`
-	// user.field.is_system
+	// entity.user.field.is_system
 	IsSystem bool `json:"is_system,omitempty"`
 	// entity.user.field.last_login_ip
 	LastLoginIP string `json:"last_login_ip,omitempty"`

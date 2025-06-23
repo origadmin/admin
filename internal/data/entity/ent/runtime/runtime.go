@@ -5,6 +5,7 @@ package runtime
 import (
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
 	"origadmin/application/admin/internal/data/entity/ent/department"
+	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/position"
@@ -113,6 +114,57 @@ func init() {
 	department.DefaultID = departmentDescID.Default.(func() int64)
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	department.IDValidator = departmentDescID.Validators[0].(func(int64) error)
+	notificationMixin := schema.Notification{}.Mixin()
+	notificationMixinFields0 := notificationMixin[0].Fields()
+	_ = notificationMixinFields0
+	notificationMixinFields1 := notificationMixin[1].Fields()
+	_ = notificationMixinFields1
+	notificationMixinFields2 := notificationMixin[2].Fields()
+	_ = notificationMixinFields2
+	notificationMixinFields3 := notificationMixin[3].Fields()
+	_ = notificationMixinFields3
+	notificationFields := schema.Notification{}.Fields()
+	_ = notificationFields
+	// notificationDescCreateAuthor is the schema descriptor for create_author field.
+	notificationDescCreateAuthor := notificationMixinFields1[0].Descriptor()
+	// notification.DefaultCreateAuthor holds the default value on creation for the create_author field.
+	notification.DefaultCreateAuthor = notificationDescCreateAuthor.Default.(int64)
+	// notificationDescUpdateAuthor is the schema descriptor for update_author field.
+	notificationDescUpdateAuthor := notificationMixinFields1[1].Descriptor()
+	// notification.DefaultUpdateAuthor holds the default value on creation for the update_author field.
+	notification.DefaultUpdateAuthor = notificationDescUpdateAuthor.Default.(int64)
+	// notificationDescCreateTime is the schema descriptor for create_time field.
+	notificationDescCreateTime := notificationMixinFields2[0].Descriptor()
+	// notification.DefaultCreateTime holds the default value on creation for the create_time field.
+	notification.DefaultCreateTime = notificationDescCreateTime.Default.(func() time.Time)
+	// notificationDescUpdateTime is the schema descriptor for update_time field.
+	notificationDescUpdateTime := notificationMixinFields3[0].Descriptor()
+	// notification.DefaultUpdateTime holds the default value on creation for the update_time field.
+	notification.DefaultUpdateTime = notificationDescUpdateTime.Default.(func() time.Time)
+	// notification.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	notification.UpdateDefaultUpdateTime = notificationDescUpdateTime.UpdateDefault.(func() time.Time)
+	// notificationDescSubject is the schema descriptor for subject field.
+	notificationDescSubject := notificationFields[0].Descriptor()
+	// notification.DefaultSubject holds the default value on creation for the subject field.
+	notification.DefaultSubject = notificationDescSubject.Default.(string)
+	// notificationDescContent is the schema descriptor for content field.
+	notificationDescContent := notificationFields[1].Descriptor()
+	// notification.DefaultContent holds the default value on creation for the content field.
+	notification.DefaultContent = notificationDescContent.Default.(string)
+	// notificationDescStatus is the schema descriptor for status field.
+	notificationDescStatus := notificationFields[2].Descriptor()
+	// notification.DefaultStatus holds the default value on creation for the status field.
+	notification.DefaultStatus = notificationDescStatus.Default.(int8)
+	// notificationDescCategoryID is the schema descriptor for category_id field.
+	notificationDescCategoryID := notificationFields[3].Descriptor()
+	// notification.CategoryIDValidator is a validator for the "category_id" field. It is called by the builders before save.
+	notification.CategoryIDValidator = notificationDescCategoryID.Validators[0].(func(int64) error)
+	// notificationDescID is the schema descriptor for id field.
+	notificationDescID := notificationMixinFields0[0].Descriptor()
+	// notification.DefaultID holds the default value on creation for the id field.
+	notification.DefaultID = notificationDescID.Default.(func() int64)
+	// notification.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	notification.IDValidator = notificationDescID.Validators[0].(func(int64) error)
 	permissionMixin := schema.Permission{}.Mixin()
 	permissionMixinFields0 := permissionMixin[0].Fields()
 	_ = permissionMixinFields0
@@ -569,5 +621,6 @@ func init() {
 }
 
 const (
-	Version = "(devel)" // Version of ent codegen.
+	Version = "v0.14.4"                                         // Version of ent codegen.
+	Sum     = "h1:/DhDraSLXIkBhyiVoJeSshr4ZYi7femzhj6/TckzZuI=" // Sum of ent codegen.
 )
