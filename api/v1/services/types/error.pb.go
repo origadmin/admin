@@ -22,181 +22,60 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type SystemErrorReason int32
+type ErrorReason int32
 
 const (
-	SystemErrorReason_SYSTEM_ERROR_REASON_UNSPECIFIED            SystemErrorReason = 0
-	SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND         SystemErrorReason = 2001
-	SystemErrorReason_SYSTEM_ERROR_REASON_USER_ALREADY_EXISTS    SystemErrorReason = 2002
-	SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_LOGGED_IN     SystemErrorReason = 2003
-	SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_LOGGED_OUT    SystemErrorReason = 2004
-	SystemErrorReason_SYSTEM_ERROR_REASON_TOKEN_EXPIRED          SystemErrorReason = 2005
-	SystemErrorReason_SYSTEM_ERROR_REASON_TOKEN_NOT_FOUND        SystemErrorReason = 2006
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_TOKEN          SystemErrorReason = 2007
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CLAIMS         SystemErrorReason = 2008
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_AUTHENTICATION SystemErrorReason = 2009
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_AUTHORIZATION  SystemErrorReason = 2010
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_REQUEST        SystemErrorReason = 2011
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_RESPONSE       SystemErrorReason = 2012
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_SERVER         SystemErrorReason = 2013
-	SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND   SystemErrorReason = 1001
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID     SystemErrorReason = 1002
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_CODE   SystemErrorReason = 1003
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME       SystemErrorReason = 1005
-	SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD       SystemErrorReason = 1006
+	ErrorReason_ERROR_REASON_UNSPECIFIED ErrorReason = 0
+	ErrorReason_ERROR_REASON_CUSTOMIZED  ErrorReason = 1000
 )
 
-// Enum value maps for SystemErrorReason.
+// Enum value maps for ErrorReason.
 var (
-	SystemErrorReason_name = map[int32]string{
-		0:    "SYSTEM_ERROR_REASON_UNSPECIFIED",
-		2001: "SYSTEM_ERROR_REASON_USER_NOT_FOUND",
-		2002: "SYSTEM_ERROR_REASON_USER_ALREADY_EXISTS",
-		2003: "SYSTEM_ERROR_REASON_USER_NOT_LOGGED_IN",
-		2004: "SYSTEM_ERROR_REASON_USER_NOT_LOGGED_OUT",
-		2005: "SYSTEM_ERROR_REASON_TOKEN_EXPIRED",
-		2006: "SYSTEM_ERROR_REASON_TOKEN_NOT_FOUND",
-		2007: "SYSTEM_ERROR_REASON_INVALID_TOKEN",
-		2008: "SYSTEM_ERROR_REASON_INVALID_CLAIMS",
-		2009: "SYSTEM_ERROR_REASON_INVALID_AUTHENTICATION",
-		2010: "SYSTEM_ERROR_REASON_INVALID_AUTHORIZATION",
-		2011: "SYSTEM_ERROR_REASON_INVALID_REQUEST",
-		2012: "SYSTEM_ERROR_REASON_INVALID_RESPONSE",
-		2013: "SYSTEM_ERROR_REASON_INVALID_SERVER",
-		1001: "SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND",
-		1002: "SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID",
-		1003: "SYSTEM_ERROR_REASON_INVALID_CAPTCHA_CODE",
-		1005: "SYSTEM_ERROR_REASON_INVALID_USERNAME",
-		1006: "SYSTEM_ERROR_REASON_INVALID_PASSWORD",
+	ErrorReason_name = map[int32]string{
+		0:    "ERROR_REASON_UNSPECIFIED",
+		1000: "ERROR_REASON_CUSTOMIZED",
 	}
-	SystemErrorReason_value = map[string]int32{
-		"SYSTEM_ERROR_REASON_UNSPECIFIED":            0,
-		"SYSTEM_ERROR_REASON_USER_NOT_FOUND":         2001,
-		"SYSTEM_ERROR_REASON_USER_ALREADY_EXISTS":    2002,
-		"SYSTEM_ERROR_REASON_USER_NOT_LOGGED_IN":     2003,
-		"SYSTEM_ERROR_REASON_USER_NOT_LOGGED_OUT":    2004,
-		"SYSTEM_ERROR_REASON_TOKEN_EXPIRED":          2005,
-		"SYSTEM_ERROR_REASON_TOKEN_NOT_FOUND":        2006,
-		"SYSTEM_ERROR_REASON_INVALID_TOKEN":          2007,
-		"SYSTEM_ERROR_REASON_INVALID_CLAIMS":         2008,
-		"SYSTEM_ERROR_REASON_INVALID_AUTHENTICATION": 2009,
-		"SYSTEM_ERROR_REASON_INVALID_AUTHORIZATION":  2010,
-		"SYSTEM_ERROR_REASON_INVALID_REQUEST":        2011,
-		"SYSTEM_ERROR_REASON_INVALID_RESPONSE":       2012,
-		"SYSTEM_ERROR_REASON_INVALID_SERVER":         2013,
-		"SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND":   1001,
-		"SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID":     1002,
-		"SYSTEM_ERROR_REASON_INVALID_CAPTCHA_CODE":   1003,
-		"SYSTEM_ERROR_REASON_INVALID_USERNAME":       1005,
-		"SYSTEM_ERROR_REASON_INVALID_PASSWORD":       1006,
+	ErrorReason_value = map[string]int32{
+		"ERROR_REASON_UNSPECIFIED": 0,
+		"ERROR_REASON_CUSTOMIZED":  1000,
 	}
 )
 
-func (x SystemErrorReason) Enum() *SystemErrorReason {
-	p := new(SystemErrorReason)
+func (x ErrorReason) Enum() *ErrorReason {
+	p := new(ErrorReason)
 	*p = x
 	return p
 }
 
-func (x SystemErrorReason) String() string {
+func (x ErrorReason) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (SystemErrorReason) Descriptor() protoreflect.EnumDescriptor {
+func (ErrorReason) Descriptor() protoreflect.EnumDescriptor {
 	return file_types_error_proto_enumTypes[0].Descriptor()
 }
 
-func (SystemErrorReason) Type() protoreflect.EnumType {
+func (ErrorReason) Type() protoreflect.EnumType {
 	return &file_types_error_proto_enumTypes[0]
 }
 
-func (x SystemErrorReason) Number() protoreflect.EnumNumber {
+func (x ErrorReason) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use SystemErrorReason.Descriptor instead.
-func (SystemErrorReason) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use ErrorReason.Descriptor instead.
+func (ErrorReason) EnumDescriptor() ([]byte, []int) {
 	return file_types_error_proto_rawDescGZIP(), []int{0}
-}
-
-type AuthErrorReason int32
-
-const (
-	AuthErrorReason_AUTH_ERROR_REASON_UNSPECIFIED       AuthErrorReason = 0
-	AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND AuthErrorReason = 2001
-	AuthErrorReason_AUTH_ERROR_REASON_TOKEN_EXPIRED     AuthErrorReason = 2002
-)
-
-// Enum value maps for AuthErrorReason.
-var (
-	AuthErrorReason_name = map[int32]string{
-		0:    "AUTH_ERROR_REASON_UNSPECIFIED",
-		2001: "AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND",
-		2002: "AUTH_ERROR_REASON_TOKEN_EXPIRED",
-	}
-	AuthErrorReason_value = map[string]int32{
-		"AUTH_ERROR_REASON_UNSPECIFIED":       0,
-		"AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND": 2001,
-		"AUTH_ERROR_REASON_TOKEN_EXPIRED":     2002,
-	}
-)
-
-func (x AuthErrorReason) Enum() *AuthErrorReason {
-	p := new(AuthErrorReason)
-	*p = x
-	return p
-}
-
-func (x AuthErrorReason) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (AuthErrorReason) Descriptor() protoreflect.EnumDescriptor {
-	return file_types_error_proto_enumTypes[1].Descriptor()
-}
-
-func (AuthErrorReason) Type() protoreflect.EnumType {
-	return &file_types_error_proto_enumTypes[1]
-}
-
-func (x AuthErrorReason) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use AuthErrorReason.Descriptor instead.
-func (AuthErrorReason) EnumDescriptor() ([]byte, []int) {
-	return file_types_error_proto_rawDescGZIP(), []int{1}
 }
 
 var File_types_error_proto protoreflect.FileDescriptor
 
 const file_types_error_proto_rawDesc = "" +
 	"\n" +
-	"\x11types/error.proto\x12\x15api.v1.services.types\x1a\x13errors/errors.proto*\xbf\a\n" +
-	"\x11SystemErrorReason\x12#\n" +
-	"\x1fSYSTEM_ERROR_REASON_UNSPECIFIED\x10\x00\x12-\n" +
-	"\"SYSTEM_ERROR_REASON_USER_NOT_FOUND\x10\xd1\x0f\x1a\x04\xa8E\x94\x03\x122\n" +
-	"'SYSTEM_ERROR_REASON_USER_ALREADY_EXISTS\x10\xd2\x0f\x1a\x04\xa8E\x99\x03\x121\n" +
-	"&SYSTEM_ERROR_REASON_USER_NOT_LOGGED_IN\x10\xd3\x0f\x1a\x04\xa8E\x91\x03\x122\n" +
-	"'SYSTEM_ERROR_REASON_USER_NOT_LOGGED_OUT\x10\xd4\x0f\x1a\x04\xa8E\x91\x03\x12,\n" +
-	"!SYSTEM_ERROR_REASON_TOKEN_EXPIRED\x10\xd5\x0f\x1a\x04\xa8E\x91\x03\x12.\n" +
-	"#SYSTEM_ERROR_REASON_TOKEN_NOT_FOUND\x10\xd6\x0f\x1a\x04\xa8E\x91\x03\x12,\n" +
-	"!SYSTEM_ERROR_REASON_INVALID_TOKEN\x10\xd7\x0f\x1a\x04\xa8E\x91\x03\x12-\n" +
-	"\"SYSTEM_ERROR_REASON_INVALID_CLAIMS\x10\xd8\x0f\x1a\x04\xa8E\x91\x03\x125\n" +
-	"*SYSTEM_ERROR_REASON_INVALID_AUTHENTICATION\x10\xd9\x0f\x1a\x04\xa8E\x91\x03\x124\n" +
-	")SYSTEM_ERROR_REASON_INVALID_AUTHORIZATION\x10\xda\x0f\x1a\x04\xa8E\x93\x03\x12.\n" +
-	"#SYSTEM_ERROR_REASON_INVALID_REQUEST\x10\xdb\x0f\x1a\x04\xa8E\x90\x03\x12/\n" +
-	"$SYSTEM_ERROR_REASON_INVALID_RESPONSE\x10\xdc\x0f\x1a\x04\xa8E\xf4\x03\x12-\n" +
-	"\"SYSTEM_ERROR_REASON_INVALID_SERVER\x10\xdd\x0f\x1a\x04\xa8E\xf4\x03\x123\n" +
-	"(SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND\x10\xe9\a\x1a\x04\xa8E\x94\x03\x121\n" +
-	"&SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID\x10\xea\a\x1a\x04\xa8E\x90\x03\x123\n" +
-	"(SYSTEM_ERROR_REASON_INVALID_CAPTCHA_CODE\x10\xeb\a\x1a\x04\xa8E\x90\x03\x12/\n" +
-	"$SYSTEM_ERROR_REASON_INVALID_USERNAME\x10\xed\a\x1a\x04\xa8E\x90\x03\x12/\n" +
-	"$SYSTEM_ERROR_REASON_INVALID_PASSWORD\x10\xee\a\x1a\x04\xa8E\x90\x03\x1a\x04\xa0E\xf4\x03*\x96\x01\n" +
-	"\x0fAuthErrorReason\x12!\n" +
-	"\x1dAUTH_ERROR_REASON_UNSPECIFIED\x10\x00\x12.\n" +
-	"#AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND\x10\xd1\x0f\x1a\x04\xa8E\x94\x03\x12*\n" +
-	"\x1fAUTH_ERROR_REASON_TOKEN_EXPIRED\x10\xd2\x0f\x1a\x04\xa8E\x91\x03\x1a\x04\xa0E\xf4\x03B\xd8\x01\n" +
+	"\x11types/error.proto\x12\x15api.v1.services.types\x1a\x13errors/errors.proto*O\n" +
+	"\vErrorReason\x12\x1c\n" +
+	"\x18ERROR_REASON_UNSPECIFIED\x10\x00\x12\x1c\n" +
+	"\x17ERROR_REASON_CUSTOMIZED\x10\xe8\a\x1a\x04\xa0E\xf4\x03B\xd8\x01\n" +
 	"\x19com.api.v1.services.typesB\n" +
 	"ErrorProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
@@ -212,10 +91,9 @@ func file_types_error_proto_rawDescGZIP() []byte {
 	return file_types_error_proto_rawDescData
 }
 
-var file_types_error_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_types_error_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_types_error_proto_goTypes = []any{
-	(SystemErrorReason)(0), // 0: api.v1.services.types.SystemErrorReason
-	(AuthErrorReason)(0),   // 1: api.v1.services.types.AuthErrorReason
+	(ErrorReason)(0), // 0: api.v1.services.types.ErrorReason
 }
 var file_types_error_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -235,7 +113,7 @@ func file_types_error_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_error_proto_rawDesc), len(file_types_error_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
