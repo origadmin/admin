@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package api.v1.services.datastore;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "types/datastore.proto";
+import "validate/validate.proto";
+
+option go_package = "api/v1/services/datastore;datastore";
+option java_multiple_files = true;
+option java_outer_classname = "APIV1ServicesDatastoreProto";
+option java_package = "com.origadmin.api.v1.services.datastore";
+
+// The data service definition.
+service DatastoreService {
+  rpc ListDatastore(ListDatastoreRequest) returns (ListDatastoreResponse) {
+    option (google.api.http) = {get: "/datastore"};
+  }
+  rpc GetDatastore(GetDatastoreRequest) returns (GetDatastoreResponse) {
+    option (google.api.http) = {get: "/datastore/{id}"};
+  }
+  rpc CreateDatastore(CreateDatastoreRequest) returns (CreateDatastoreResponse) {
+    option (google.api.http) = {
+      post: "/datastore"
+      body: "data"
+    };
+  }
+  rpc UpdateDatastore(UpdateDatastoreRequest) returns (UpdateDatastoreResponse) {
+    option (google.api.http) = {
+      put: "/datastore/{data.id}"
+      body: "data"
+    };
+  }
+  rpc DeleteDatastore(DeleteDatastoreRequest) returns (DeleteDatastoreResponse) {
+    option (google.api.http) = {delete: "/datastore/{id}"};
+  }
+}
+
+// ListDatastoreRequest is the request for the DatastoreService.ListDatastore method.
+message ListDatastoreRequest {
+  // The parent data id, for example, "shelves/shelf1".
+  int64 id = 1 [json_name = "id"];
+  // The current page number.
+  int32 current = 2 [json_name = "current"];
+  // The maximum number of items to return.
+  int32 page_size = 3 [json_name = "page_size"];
+  // The next_page_token value returned from a previous List request, if any.
+  string page_token = 4 [json_name = "page_token"];
+  // The no_paging is used to disable pagination.
+  bool no_paging = 5 [json_name = "no_paging"];
+  // The only_count is the query parameter for set only to query the total number
+  bool only_count = 6 [json_name = "only_count"];
+  // data type
+  string type = 7 [json_name = "type"];
+}
+
+// ListDatastoreResponse is the response for the DatastoreService.ListDatastore method.
+message ListDatastoreResponse {
+  // The total number of items in the list.
+  int32 total_size = 1 [json_name = "total_size"];
+  // The paging datastore
+  repeated api.v1.services.types.DataObject data = 2 [json_name = "data"];
+  // The current page number.
+  int32 current = 3 [json_name = "current"];
+  // The maximum number of items to return.
+  int32 page_size = 4 [json_name = "page_size"];
+  // Token to retrieve the next page of results, or empty if there are no
+  // more results in the list.
+  string next_page_token = 5 [json_name = "next_page_token"];
+  // Additional information about this response.
+  // content to be added without destroying the current data format
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
+}
+
+// GetDatastoreRequest is the request for the DatastoreService.GetDatastore method.
+message GetDatastoreRequest {
+  // The field will contain id of the data requested, for example:
+  // "shelves/shelf1/datastore/data2"
+  int64 id = 1 [json_name = "id"];
+}
+
+// GetDatastoreResponse is the response for the DatastoreService.GetDatastore method.
+message GetDatastoreResponse {
+  // The field id should match the Noun in the method id.
+  api.v1.services.types.DataObject data = 1 [json_name = "data"];
+}
+
+// CreateDatastoreRequest is the request for the DatastoreService.CreateDatastore method.
+message CreateDatastoreRequest {
+  // The parent data id where the data is to be created.
+  string parent = 1 [json_name = "parent"];
+  // The data id to use for this data.
+  string data_id = 2 [json_name = "data_id"];
+  // The data object to create.
+  api.v1.services.types.DataObject data = 3 [json_name = "data"];
+}
+
+// CreateDatastoreResponse is the response for the DatastoreService.CreateDatastore method.
+message CreateDatastoreResponse {
+  api.v1.services.types.DataObject data = 1 [json_name = "data"];
+}
+
+// UpdateDatastoreRequest is the request for the DatastoreService.UpdateDatastore method.
+message UpdateDatastoreRequest {
+  // The id of the data object to update.
+  int64 id = 1 [json_name = "id"];
+  // The data object which replaces the data on the server.
+  api.v1.services.types.DataObject data = 2 [json_name = "data"];
+}
+
+// UpdateDatastoreResponse is the response for the DatastoreService.UpdateDatastore method.
+message UpdateDatastoreResponse {
+  api.v1.services.types.DataObject data = 1 [json_name = "data"];
+}
+
+// DeleteDatastoreRequest is the request for the DatastoreService.DeleteDatastore method.
+message DeleteDatastoreRequest {
+  // The data id of the data to be deleted, for example:
+  // "shelves/shelf1/datastore/data2"
+  int64 id = 1 [json_name = "id"];
+}
+
+// DeleteDatastoreResponse is the response for the DatastoreService.DeleteDatastore method.
+message DeleteDatastoreResponse {
+  // or Datastore data = 1; or google.protobuf.Empty empty = 1;
+  google.protobuf.Empty empty = 1;
+}

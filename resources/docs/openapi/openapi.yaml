@@ -654,6 +654,180 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /datastore:
+        get:
+            tags:
+                - DatastoreService
+            operationId: DatastoreService_ListDatastore
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent data id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+                - name: type
+                  in: query
+                  description: data type
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.datastore.ListDatastoreResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - DatastoreService
+            operationId: DatastoreService_CreateDatastore
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent data id where the data is to be created.
+                  schema:
+                    type: string
+                - name: data_id
+                  in: query
+                  description: The data id to use for this data.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.datastore.CreateDatastoreResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /datastore/{data.id}:
+        put:
+            tags:
+                - DatastoreService
+            operationId: DatastoreService_UpdateDatastore
+            parameters:
+                - name: data.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  description: The id of the data object to update.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.datastore.UpdateDatastoreResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /datastore/{id}:
+        get:
+            tags:
+                - DatastoreService
+            operationId: DatastoreService_GetDatastore
+            parameters:
+                - name: id
+                  in: path
+                  description: "The field will contain id of the data requested, for example:\r\n \"shelves/shelf1/datastore/data2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.datastore.GetDatastoreResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - DatastoreService
+            operationId: DatastoreService_DeleteDatastore
+            parameters:
+                - name: id
+                  in: path
+                  description: "The data id of the data to be deleted, for example:\r\n \"shelves/shelf1/datastore/data2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.datastore.DeleteDatastoreResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /login:
         post:
             tags:
@@ -2718,6 +2892,58 @@ components:
             properties:
                 modified_date:
                     type: string
+        api.v1.services.datastore.CreateDatastoreResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
+            description: CreateDatastoreResponse is the response for the DatastoreService.CreateDatastore method.
+        api.v1.services.datastore.DeleteDatastoreResponse:
+            type: object
+            properties: {}
+            description: DeleteDatastoreResponse is the response for the DatastoreService.DeleteDatastore method.
+        api.v1.services.datastore.GetDatastoreResponse:
+            type: object
+            properties:
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                    description: The field id should match the Noun in the method id.
+            description: GetDatastoreResponse is the response for the DatastoreService.GetDatastore method.
+        api.v1.services.datastore.ListDatastoreResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                    description: The paging datastore
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
+            description: ListDatastoreResponse is the response for the DatastoreService.ListDatastore method.
+        api.v1.services.datastore.UpdateDatastoreResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
+            description: UpdateDatastoreResponse is the response for the DatastoreService.UpdateDatastore method.
         api.v1.services.message.GetPersonalProfileResponse:
             type: object
             properties:
@@ -3141,6 +3367,40 @@ components:
         api.v1.services.system.UpdateUserStatusResponse:
             type: object
             properties: {}
+        api.v1.services.types.DataObject:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: ID of the ent.
+                create_time:
+                    type: string
+                    description: CreateTime holds the value of the "create_time" field.
+                    format: date-time
+                update_time:
+                    type: string
+                    description: UpdateTime holds the value of the "update_time" field.
+                    format: date-time
+                delete_time:
+                    type: string
+                    description: DeleteTime holds the value of the "delete_time" field.
+                    format: date-time
+                version:
+                    type: string
+                    description: Version holds the value of the "version" field.
+                owner_id:
+                    type: string
+                    description: OwnerID holds the value of the "owner_id" field.
+                metadata:
+                    type: object
+                    additionalProperties:
+                        type: string
+                    description: Metadata holds the value of the "metadata" field.
+                payload:
+                    type: string
+                    description: Payload holds the value of the "payload" field.
+                    format: bytes
+            description: Menu is the model entity for the Menu schema.
         api.v1.services.types.Department:
             type: object
             properties:
@@ -3653,6 +3913,8 @@ tags:
     - name: AuthService
     - name: CasbinSourceService
       description: The Casbin source service definition.
+    - name: DatastoreService
+      description: The data service definition.
     - name: DepartmentService
       description: The login service definition.
     - name: LoginService

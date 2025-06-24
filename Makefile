@@ -192,8 +192,6 @@ gen:
 
 	go generate ./cmd/internal/start
 
-
-
 .PHONY: all
 # generate all
 all:

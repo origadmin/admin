@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package api.v1.services.types;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/types;types";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceTypeMessageProto";
+option java_package = "com.origadmin.api.v1.services.types";
+option objc_class_prefix = "APIServiceType";
+
+// Menu is the model entity for the Menu schema.
+message DataObject {
+  // ID of the ent.
+  string id = 1 [json_name = "id"];
+  // CreateTime holds the value of the "create_time" field.
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
+  // UpdateTime holds the value of the "update_time" field.
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // DeleteTime holds the value of the "delete_time" field.
+  google.protobuf.Timestamp delete_time = 4 [json_name = "delete_time"];
+  // Version holds the value of the "version" field.
+  int64 version = 5 [json_name = "version"];
+  // OwnerID holds the value of the "owner_id" field.
+  string owner_id = 6 [json_name = "owner_id"];
+  // Metadata holds the value of the "metadata" field.
+  map<string, string> metadata = 7 [json_name = "metadata"];
+  // Payload holds the value of the "payload" field.
+  bytes payload = 8 [json_name = "payload"];
+}
