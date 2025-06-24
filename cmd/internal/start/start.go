@@ -19,7 +19,7 @@ import (
 
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
-	_ "origadmin/application/admin/contrib/database"
+	_ "origadmin/application/admin/contrib/database/drivers"
 	"origadmin/application/admin/internal/configs"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	"origadmin/application/admin/internal/loader"
