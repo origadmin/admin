@@ -4,8 +4,8 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
-// Package database implements the functions, types, and interfaces for the module.
-package database
+// Package drivers is the database client wrapper
+package drivers
 
 import (
 	_ "github.com/jackc/pgx/v5/stdlib"
