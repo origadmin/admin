@@ -42,6 +42,7 @@ func (s RegisterServer) RegisterGRPC(ctx context.Context, server *service.GRPCSe
 
 func (s RegisterServer) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
 	log.Info("http server system init")
+	server.Route("/sys")
 	pb.RegisterResourceServiceHTTPServer(server, s.Resource)
 	pb.RegisterRoleServiceHTTPServer(server, s.Role)
 	pb.RegisterUserServiceHTTPServer(server, s.User)

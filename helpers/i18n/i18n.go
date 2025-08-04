@@ -118,7 +118,6 @@ func LocaleText(locale string, key string) string {
 			return text
 		}
 	}
-	//fmt.Println("locale.", "default", "key.", key, "text.", "default")
 	return key
 }
 
