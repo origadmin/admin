@@ -1,14 +1,9 @@
-/*
- * Copyright (c) 2024 OrigAdmin. All rights reserved.
- */
-
-// Package loader implements the functions, types, and interfaces for the module.
 package loader
 
 import (
 	"time"
 
-	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
+	// configv1 "github.com/origadmin/runtime/api/gen/go/config/v1" // REMOVE
 	middlewarev1 "github.com/origadmin/runtime/api/gen/go/middleware/v1"
 	jwtv1 "github.com/origadmin/runtime/api/gen/go/middleware/v1/jwt"
 	"github.com/origadmin/runtime/api/gen/go/middleware/v1/metrics"
@@ -16,8 +11,11 @@ import (
 	"github.com/origadmin/runtime/api/gen/go/middleware/v1/selector"
 	"github.com/origadmin/runtime/api/gen/go/middleware/v1/validator"
 	sjwtv1 "github.com/origadmin/runtime/api/gen/go/security/jwt/v1"
+	securityv1 "github.com/origadmin/runtime/api/gen/go/security/transport/v1" // ADD for TLSConfig
+	transportv1 "github.com/origadmin/runtime/api/gen/go/transport/v1" // ADD
 
 	"origadmin/application/admin/internal/configs"
+	"google.golang.org/protobuf/types/known/durationpb"
 )
 
 const (
@@ -36,11 +34,11 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Id: "",
 		Entry: &configs.Bootstrap_Entry{
 			Scheme:   "http",
-			Services: DefaultServices(),
+			Services: DefaultServices(), // This will cause a type mismatch after this change
 			Cors:     DefaultEntryCors(),
 		},
 		Server: &configs.ServiceServer{
-			Services:   DefaultServices(),
+			Services:   DefaultServices(), // This will cause a type mismatch after this change
 			Middleware: DefaultServiceMiddleware(),
 		},
 		Clients:    DefaultServiceClients(),
@@ -51,7 +49,7 @@ func DefaultBootstrap() *configs.Bootstrap {
 		Security: &configs.SecurityConfig{
 			RootUser: DefaultRootUser(),
 			Captcha:  DefaultCaptcha(),
-			Security: &configv1.Security{
+			Security: &configs.Security{
 				PublicPaths: []string{
 					"/swagger/*",
 					"/api/v1/health",
@@ -73,21 +71,21 @@ func DefaultBootstrap() *configs.Bootstrap {
 					//"/api.v1.services.basis.LoginAPI/CurrentUser",
 					//"/api.v1.services.basis.LoginAPI/CurrentMenus",
 				},
-				Authz: &configv1.AuthZConfig{
+				Authz: &configs.AuthZConfig{
 					Disabled:    false,
 					PublicPaths: nil,
 					Type:        "casbin",
-					Casbin: &configv1.AuthZConfig_CasbinConfig{
+					Casbin: &configs.AuthZConfig_CasbinConfig{
 						PolicyFile: "",
 						ModelFile:  "",
 					},
 					Opa:      nil,
 					Zanzibar: nil,
 				},
-				Authn: &configv1.AuthNConfig{
+				Authn: &configs.AuthNConfig{
 					Disabled: false,
 					Type:     "jwt",
-					Jwt: &configv1.AuthNConfig_JWTConfig{
+					Jwt: &configs.AuthNConfig_JWTConfig{
 						Algorithm:     "HS512",
 						SigningKey:    SigningKey,
 						OldSigningKey: "",
@@ -101,8 +99,8 @@ func DefaultBootstrap() *configs.Bootstrap {
 	}
 }
 
-func DefaultEntryCors() *configv1.Cors {
-	return &configv1.Cors{
+func DefaultEntryCors() *configs.Cors {
+	return &configs.Cors{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "HEAD", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"X-Requested-With", "Content-Type", "Authorization"},
@@ -112,18 +110,18 @@ func DefaultEntryCors() *configv1.Cors {
 	}
 }
 
-func DefaultServices() []*configv1.Service {
-	return []*configv1.Service{
+func DefaultServices() []*configs.Service {
+	return []*configs.Service{
 		{
 			Name:            "",
 			DynamicEndpoint: true,
 			Type:            "grpc",
-			Grpc:            DefaultServiceGrpc(),
+			Grpc:            DefaultServiceGrpc(), // This will cause a type mismatch
 			Websocket:       DefaultServiceWebsocket(),
 			Message:         DefaultServiceMessage(),
 			Task:            DefaultServiceTask(),
 			//Middleware:      DefaultServiceMiddleware(),
-			Selector: &configv1.Service_Selector{
+			Selector: &configs.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
@@ -132,12 +130,12 @@ func DefaultServices() []*configv1.Service {
 			Name:            "",
 			DynamicEndpoint: true,
 			Type:            "http",
-			Http:            DefaultServiceHttp(),
+			Http:            DefaultServiceHttp(), // This will cause a type mismatch
 			Websocket:       DefaultServiceWebsocket(),
 			Message:         DefaultServiceMessage(),
 			Task:            DefaultServiceTask(),
 			//Middleware:      DefaultServiceMiddleware(),
-			Selector: &configv1.Service_Selector{
+			Selector: &configs.Service_Selector{
 				Version: "v1.0.0",
 				Builder: "bbr",
 			},
@@ -159,15 +157,15 @@ func DefaultServiceClients() []*configs.ServiceClient {
 		core.Discovery.ServiceName = serviceName
 		clients = append(clients, &configs.ServiceClient{
 			Core:       core,
-			Services:   DefaultServices(),
+			Services:   DefaultServices(), // This will cause a type mismatch after this change
 			Middleware: DefaultServiceMiddleware(),
 		})
 	}
 	return clients
 }
 
-func DefaultLogger() *configv1.Logger {
-	return &configv1.Logger{
+func DefaultLogger() *configs.Logger {
+	return &configs.Logger{
 		Disabled:      false,
 		Develop:       true,
 		Default:       true,
@@ -178,7 +176,7 @@ func DefaultLogger() *configv1.Logger {
 		DisableCaller: false,
 		CallerSkip:    0,
 		TimeFormat:    "",
-		File: &configv1.Logger_File{
+		File: &configs.Logger_File{
 			Path:       "logs",
 			Lumberjack: true,
 			Compress:   false,
@@ -191,22 +189,22 @@ func DefaultLogger() *configv1.Logger {
 	}
 }
 
-func DefaultServiceWebsocket() *configv1.WebSocket {
-	return &configv1.WebSocket{
+func DefaultServiceWebsocket() *configs.WebSocket {
+	return &configs.WebSocket{
 		Addr: "",
 		Path: "",
 	}
 }
 
-func DefaultStorage() *configv1.Storage {
-	return &configv1.Storage{
+func DefaultStorage() *configs.Storage {
+	return &configs.Storage{
 		Name: "",
 		Type: "",
-		Database: &configv1.Database{
+		Database: &configs.Database{
 			Debug:   false,
 			Dialect: "sqlite3",
 			Source:  "data/admin.db",
-			Migration: &configv1.Migration{
+			Migration: &configs.Migration{
 				Enabled: false,
 				Path:    "",
 				Names:   nil,
@@ -220,22 +218,22 @@ func DefaultStorage() *configv1.Storage {
 			ConnectionMaxLifetime: 0,
 			ConnectionMaxIdleTime: 0,
 		},
-		Cache: &configv1.Cache{
+		Cache: &configs.Cache{
 			Driver: "memory", //["none", "redis", "memcached", "memory"] [string.in]
-			Memcached: &configv1.Memcached{
+			Memcached: &configs.Memcached{
 				Addr:     "",
 				Username: "",
 				Password: "",
 				MaxIdle:  0,
 				Timeout:  0,
 			},
-			Memory: &configv1.Memory{
+			Memory: &configs.Memory{
 				Size:            0,
 				Capacity:        0,
 				Expiration:      0,
 				CleanupInterval: 0,
 			},
-			Redis: &configv1.Redis{
+			Redis: &configs.Redis{
 				Network:      "",
 				Addr:         "",
 				Password:     "",
@@ -244,7 +242,7 @@ func DefaultStorage() *configv1.Storage {
 				ReadTimeout:  0,
 				WriteTimeout: 0,
 			},
-			Badger: &configv1.BadgerDS{
+			Badger: &configs.BadgerDS{
 				Path:             "",
 				SyncWrites:       false,
 				ValueLogFileSize: 0,
@@ -259,71 +257,69 @@ func DefaultStorage() *configv1.Storage {
 	}
 }
 
-func DefaultServiceTask() *configv1.Task {
-	return &configv1.Task{
+func DefaultServiceTask() *configs.Task {
+	return &configs.Task{
 		Type: "none", //["none", "asynq", "machinery", "cron"] [string.in]
 		Name: "",
-		Asynq: &configv1.Task_Asynq{
+		Asynq: &configs.Task_Asynq{
 			Endpoint: "",
 			Password: "",
 			Db:       0,
 			Location: "",
 		},
-		Machinery: &configv1.Task_Machinery{
+		Machinery: &configs.Task_Machinery{
 			Brokers:  nil,
 			Backends: nil,
 		},
-		Cron: &configv1.Task_Cron{
+		Cron: &configs.Task_Cron{
 			Addr: "",
 		},
 	}
 }
 
-func DefaultServiceMessage() *configv1.Message {
-	return &configv1.Message{
+func DefaultServiceMessage() *configs.Message {
+	return &configs.Message{
 		Type: "none", //["none", "mqtt", "kafka", "rabbitmq", "activemq", "nats", "nsq", "pulsar", "redis", "rocketmq"]
 		Name: "",
-		Mqtt: &configv1.Message_MQTT{
+		Mqtt: &configs.Message_MQTT{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Kafka: &configv1.Message_Kafka{
+		Kafka: &configs.Message_Kafka{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Rabbitmq: &configv1.Message_RabbitMQ{
+		Rabbitmq: &configs.Message_RabbitMQ{
+			Endpoint: "",			Codec:    "",
+		},
+		Activemq: &configs.Message_ActiveMQ{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Activemq: &configv1.Message_ActiveMQ{
+		Nats: &configs.Message_NATS{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Nats: &configv1.Message_NATS{
+		Nsq: &configs.Message_NSQ{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Nsq: &configv1.Message_NSQ{
+		Pulsar: &configs.Message_Pulsar{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Pulsar: &configv1.Message_Pulsar{
+		Redis: &configs.Message_Redis{
 			Endpoint: "",
 			Codec:    "",
 		},
-		Redis: &configv1.Message_Redis{
-			Endpoint: "",
-			Codec:    "",
-		},
-		Rocketmq: &configv1.Message_RocketMQ{
+		Rocketmq: &configs.Message_RocketMQ{
 			Endpoint:         "",
 			Codec:            "",
 			EnableTrace:      false,
 			NameServers:      nil,
 			NameServerDomain: "",
 			AccessKey:        "",
-			SecretKey:        "",
-			SecurityToken:    "",
+			SecretKey:        "",			SecurityToken:    "",
 			Namespace:        "",
 			InstanceName:     "",
 			GroupName:        "",
@@ -331,11 +327,11 @@ func DefaultServiceMessage() *configv1.Message {
 	}
 }
 
-func DefaultDiscovery() *configv1.Discovery {
-	return &configv1.Discovery{
+func DefaultDiscovery() *configs.Discovery {
+	return &configs.Discovery{
 		Debug: false,
 		Type:  "consul",
-		Consul: &configv1.Discovery_Consul{
+		Consul: &configs.Discovery_Consul{
 			Address:                        "${consul_address:127.0.0.1:8500}",
 			Scheme:                         "http",
 			Token:                          "",
@@ -404,34 +400,24 @@ func DefaultServiceMiddleware() *middlewarev1.Middleware {
 	}
 }
 
-func DefaultServiceGrpc() *configv1.Service_GRPC {
-	return &configv1.Service_GRPC{
+func DefaultServiceGrpc() *transportv1.GRPCServer {
+	return &transportv1.GRPCServer{
 		Network: "tcp",
 		Addr:    "${grpc_address:0.0.0.0:18000}",
-		UseTls:  false,
-		//CertFile:        "",
-		//KeyFile:         "",
-		Timeout:         0,
-		ShutdownTimeout: 0,
-		ReadTimeout:     0,
-		WriteTimeout:    0,
-		IdleTimeout:     0,
+		Tls:     &securityv1.TLSConfig{Enabled: false}, // Replaced UseTls
+		Timeout: &durationpb.Duration{}, // Use durationpb.Duration
+		ShutdownTimeout: &durationpb.Duration{}, // Use durationpb.Duration
 		Endpoint:        "",
 	}
 }
 
-func DefaultServiceHttp() *configv1.Service_HTTP {
-	return &configv1.Service_HTTP{
+func DefaultServiceHttp() *transportv1.HTTPServer {
+	return &transportv1.HTTPServer{
 		Network: "tcp",
 		Addr:    "${http_address:0.0.0.0:18100}",
-		UseTls:  false,
-		//CertFile:        "",
-		//KeyFile:         "",
-		Timeout:         0,
-		ShutdownTimeout: 0,
-		ReadTimeout:     0,
-		WriteTimeout:    0,
-		IdleTimeout:     0,
+		Tls:     &securityv1.TLSConfig{Enabled: false}, // Replaced UseTls
+		Timeout: &durationpb.Duration{}, // Use durationpb.Duration
+		ShutdownTimeout: &durationpb.Duration{}, // Use durationpb.Duration
 		Endpoint:        "",
 	}
 }
@@ -448,7 +434,7 @@ func DefaultCaptcha() *configs.Captcha {
 		Width:       400,
 		Height:      160,
 		StorageName: "captcha",
-		Storage:     &configv1.Storage{},
+		Storage:     &configs.Storage{},
 	}
 }
 
