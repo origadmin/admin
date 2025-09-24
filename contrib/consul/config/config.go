@@ -53,8 +53,8 @@ func NewConsulConfig(ccfg *configv1.SourceConfig, options *config.Options) (conf
 	//}
 	//
 	//options.Sources = append(options.Sources, configSources...)
-	//if options.Decoder != nil {
-	//	options.ConfigOptions = append(options.ConfigOptions, config.WithDecoder(options.Decoder))
+	//if options.Config != nil {
+	//	options.ConfigOptions = append(options.ConfigOptions, config.WithDecoder(options.Config))
 	//}
 	return source, nil
 }
