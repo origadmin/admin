@@ -1,6 +1,6 @@
 module origadmin/application/admin
 
-go 1.23.7
+go 1.23.1
 
 replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0.5.4
 

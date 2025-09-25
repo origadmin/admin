@@ -1115,6 +1115,7 @@ github.com/origadmin/go-metrics v0.5.4 h1:odg6zeZUGkTCl6cGJ/bS5GlvjZ3x3GU2zyw9Wt
 github.com/origadmin/go-metrics v0.5.4/go.mod h1:KiuAdjBbuXAkjTjy7p7F4g6sjO6WuvH+6hTlMKUxPkg=
 github.com/origadmin/runtime v0.2.0 h1:4FbuNYqJbQZFZrKQB6l/L5RXlC3hr40uWFKjUMUYMgA=
 github.com/origadmin/runtime v0.2.0/go.mod h1:b+TK2xaJlTsna1RESE4+y9Do+qz80Wnz2+KqrA4gLnI=
+github.com/origadmin/runtime v0.2.3/go.mod h1:rgOxokXjWXXbzzHr2ICXW3KNsQ8KNGFqjMcpGo54aOM=
 github.com/origadmin/slog-kratos v1.0.4 h1:1et3TBy61Uwf5N1ZbEBFhMqCjgxqfRXmz2w0Q1dujG0=
 github.com/origadmin/slog-kratos v1.0.4/go.mod h1:WUdhcWLyN0i8TbdemqE2Y/muoj0GaZ86OcdpumAWHPo=
 github.com/origadmin/toolkits v0.3.16 h1:R/Ws2S2W64ZScSkBz4QQ8HPXWpuH/ac+z1z0iHPyG0M=
