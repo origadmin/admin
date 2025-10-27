@@ -6,7 +6,7 @@
 package securityx
 
 import (
-	"github.com/goexts/generic/settings"
+	"github.com/goexts/generic/configure"
 	"github.com/origadmin/runtime/interfaces/security"
 )
 
@@ -18,11 +18,10 @@ type authSecurity struct {
 }
 
 func NewSecurity(authenticator security.Authenticator, authorizer security.Authorizer, ss ...AuthenticatorSetting) security.Security {
-	t := settings.Apply(&authSecurity{
+	return configure.Apply(&authSecurity{
 		Authenticator: authenticator,
 		Authorizer:    authorizer,
 	}, ss)
-	return t
 }
 
 var _ security.Security = (*authSecurity)(nil)

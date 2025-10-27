@@ -8,7 +8,7 @@ package jwt
 import (
 	"context"
 
-	"github.com/goexts/generic/settings"
+	"github.com/goexts/generic/configure"
 	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/interfaces/security/token"
 
@@ -52,7 +52,7 @@ func (obj Authenticator) key(ns, token string) string {
 type AuthenticatorSetting = func(*Authenticator)
 
 func NewAuthenticator(tokenizer security.Tokenizer, ss ...AuthenticatorSetting) security.Authenticator {
-	return settings.Apply(&Authenticator{
+	return configure.Apply(&Authenticator{
 		Tokenizer: tokenizer,
 		Cache:     token.New(),
 		Scheme:    security.SchemeBearer,

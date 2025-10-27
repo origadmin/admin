@@ -11,8 +11,8 @@ import (
 	casbinmodel "github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
 	"github.com/goexts/generic/cmp"
+	"github.com/goexts/generic/configure"
 	"github.com/goexts/generic/maps"
-	"github.com/goexts/generic/settings"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/runtime/interfaces/security"
@@ -138,7 +138,7 @@ func NewAuthorizer(cfg *configv1.Security, ss ...AuthorizerOption) (security.Aut
 		return nil, errors.New("authorizer casbin config is empty")
 	}
 
-	options := settings.ApplyDefault(DefaultAuthorizerOptions, ss)
+	options := configure.ApplyDefault(DefaultAuthorizerOptions, ss)
 	if options.Source == nil {
 		return nil, errors.New("authorizer casbin source is empty")
 	}

@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/dchest/uniuri"
-	"github.com/goexts/generic/settings"
+	"github.com/goexts/generic/configure"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	securityv1 "github.com/origadmin/runtime/api/gen/go/security/v1"
@@ -261,7 +261,7 @@ func NewTokenizer(cfg *configv1.Security, ss ...Setting) (security.RefreshTokeni
 	if config == nil {
 		return nil, errors.New("authenticator jwt config is empty")
 	}
-	option := settings.Apply(&Option{
+	option := configure.Apply(&Option{
 		issuer: defaultIssuerDomain,
 	}, ss)
 	tokenizer := &Tokenizer{
