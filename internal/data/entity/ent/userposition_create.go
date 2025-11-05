@@ -22,40 +22,40 @@ type UserPositionCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (upc *UserPositionCreate) SetUserID(i int64) *UserPositionCreate {
-	upc.mutation.SetUserID(i)
-	return upc
+func (_c *UserPositionCreate) SetUserID(v int64) *UserPositionCreate {
+	_c.mutation.SetUserID(v)
+	return _c
 }
 
 // SetPositionID sets the "position_id" field.
-func (upc *UserPositionCreate) SetPositionID(i int64) *UserPositionCreate {
-	upc.mutation.SetPositionID(i)
-	return upc
+func (_c *UserPositionCreate) SetPositionID(v int64) *UserPositionCreate {
+	_c.mutation.SetPositionID(v)
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (upc *UserPositionCreate) SetUser(u *User) *UserPositionCreate {
-	return upc.SetUserID(u.ID)
+func (_c *UserPositionCreate) SetUser(v *User) *UserPositionCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // SetPosition sets the "position" edge to the Position entity.
-func (upc *UserPositionCreate) SetPosition(p *Position) *UserPositionCreate {
-	return upc.SetPositionID(p.ID)
+func (_c *UserPositionCreate) SetPosition(v *Position) *UserPositionCreate {
+	return _c.SetPositionID(v.ID)
 }
 
 // Mutation returns the UserPositionMutation object of the builder.
-func (upc *UserPositionCreate) Mutation() *UserPositionMutation {
-	return upc.mutation
+func (_c *UserPositionCreate) Mutation() *UserPositionMutation {
+	return _c.mutation
 }
 
 // Save creates the UserPosition in the database.
-func (upc *UserPositionCreate) Save(ctx context.Context) (*UserPosition, error) {
-	return withHooks(ctx, upc.sqlSave, upc.mutation, upc.hooks)
+func (_c *UserPositionCreate) Save(ctx context.Context) (*UserPosition, error) {
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (upc *UserPositionCreate) SaveX(ctx context.Context) *UserPosition {
-	v, err := upc.Save(ctx)
+func (_c *UserPositionCreate) SaveX(ctx context.Context) *UserPosition {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -63,51 +63,51 @@ func (upc *UserPositionCreate) SaveX(ctx context.Context) *UserPosition {
 }
 
 // Exec executes the query.
-func (upc *UserPositionCreate) Exec(ctx context.Context) error {
-	_, err := upc.Save(ctx)
+func (_c *UserPositionCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upc *UserPositionCreate) ExecX(ctx context.Context) {
-	if err := upc.Exec(ctx); err != nil {
+func (_c *UserPositionCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (upc *UserPositionCreate) check() error {
-	if _, ok := upc.mutation.UserID(); !ok {
+func (_c *UserPositionCreate) check() error {
+	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "UserPosition.user_id"`)}
 	}
-	if v, ok := upc.mutation.UserID(); ok {
+	if v, ok := _c.mutation.UserID(); ok {
 		if err := userposition.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.user_id": %w`, err)}
 		}
 	}
-	if _, ok := upc.mutation.PositionID(); !ok {
+	if _, ok := _c.mutation.PositionID(); !ok {
 		return &ValidationError{Name: "position_id", err: errors.New(`ent: missing required field "UserPosition.position_id"`)}
 	}
-	if v, ok := upc.mutation.PositionID(); ok {
+	if v, ok := _c.mutation.PositionID(); ok {
 		if err := userposition.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.position_id": %w`, err)}
 		}
 	}
-	if len(upc.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "UserPosition.user"`)}
 	}
-	if len(upc.mutation.PositionIDs()) == 0 {
+	if len(_c.mutation.PositionIDs()) == 0 {
 		return &ValidationError{Name: "position", err: errors.New(`ent: missing required edge "UserPosition.position"`)}
 	}
 	return nil
 }
 
-func (upc *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, error) {
-	if err := upc.check(); err != nil {
+func (_c *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := upc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, upc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -115,17 +115,17 @@ func (upc *UserPositionCreate) sqlSave(ctx context.Context) (*UserPosition, erro
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	upc.mutation.id = &_node.ID
-	upc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec) {
+func (_c *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec) {
 	var (
-		_node = &UserPosition{config: upc.config}
+		_node = &UserPosition{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
 	)
-	if nodes := upc.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -142,7 +142,7 @@ func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec
 		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := upc.mutation.PositionIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -163,23 +163,23 @@ func (upc *UserPositionCreate) createSpec() (*UserPosition, *sqlgraph.CreateSpec
 }
 
 // SetUserPosition set the UserPosition
-func (upc *UserPositionCreate) SetUserPosition(input *UserPosition, fields ...string) *UserPositionCreate {
-	m := upc.mutation
+func (_c *UserPositionCreate) SetUserPosition(input *UserPosition, fields ...string) *UserPositionCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userposition.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return upc
+	return _c
 }
 
 // SetUserPositionWithZero set the UserPosition
-func (upc *UserPositionCreate) SetUserPositionWithZero(input *UserPosition, fields ...string) *UserPositionCreate {
-	m := upc.mutation
+func (_c *UserPositionCreate) SetUserPositionWithZero(input *UserPosition, fields ...string) *UserPositionCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userposition.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return upc
+	return _c
 }
 
 // UserPositionCreateBulk is the builder for creating many UserPosition entities in bulk.
@@ -190,16 +190,16 @@ type UserPositionCreateBulk struct {
 }
 
 // Save creates the UserPosition entities in the database.
-func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, error) {
-	if upcb.err != nil {
-		return nil, upcb.err
+func (_c *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(upcb.builders))
-	nodes := make([]*UserPosition, len(upcb.builders))
-	mutators := make([]Mutator, len(upcb.builders))
-	for i := range upcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*UserPosition, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := upcb.builders[i]
+			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserPositionMutation)
 				if !ok {
@@ -212,11 +212,11 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, upcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, upcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -240,7 +240,7 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, upcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -248,8 +248,8 @@ func (upcb *UserPositionCreateBulk) Save(ctx context.Context) ([]*UserPosition, 
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (upcb *UserPositionCreateBulk) SaveX(ctx context.Context) []*UserPosition {
-	v, err := upcb.Save(ctx)
+func (_c *UserPositionCreateBulk) SaveX(ctx context.Context) []*UserPosition {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -257,14 +257,14 @@ func (upcb *UserPositionCreateBulk) SaveX(ctx context.Context) []*UserPosition {
 }
 
 // Exec executes the query.
-func (upcb *UserPositionCreateBulk) Exec(ctx context.Context) error {
-	_, err := upcb.Save(ctx)
+func (_c *UserPositionCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upcb *UserPositionCreateBulk) ExecX(ctx context.Context) {
-	if err := upcb.Exec(ctx); err != nil {
+func (_c *UserPositionCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

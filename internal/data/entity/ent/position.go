@@ -121,7 +121,7 @@ func (*Position) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Position fields.
-func (po *Position) assignValues(columns []string, values []any) error {
+func (_m *Position) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -132,45 +132,45 @@ func (po *Position) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			po.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case position.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				po.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case position.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				po.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case position.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				po.Name = value.String
+				_m.Name = value.String
 			}
 		case position.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				po.Keyword = value.String
+				_m.Keyword = value.String
 			}
 		case position.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				po.Description = value.String
+				_m.Description = value.String
 			}
 		case position.FieldDepartmentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field department_id", values[i])
 			} else if value.Valid {
-				po.DepartmentID = value.Int64
+				_m.DepartmentID = value.Int64
 			}
 		default:
-			po.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -178,75 +178,75 @@ func (po *Position) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Position.
 // This includes values selected through modifiers, order, etc.
-func (po *Position) Value(name string) (ent.Value, error) {
-	return po.selectValues.Get(name)
+func (_m *Position) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryDepartment queries the "department" edge of the Position entity.
-func (po *Position) QueryDepartment() *DepartmentQuery {
-	return NewPositionClient(po.config).QueryDepartment(po)
+func (_m *Position) QueryDepartment() *DepartmentQuery {
+	return NewPositionClient(_m.config).QueryDepartment(_m)
 }
 
 // QueryUsers queries the "users" edge of the Position entity.
-func (po *Position) QueryUsers() *UserQuery {
-	return NewPositionClient(po.config).QueryUsers(po)
+func (_m *Position) QueryUsers() *UserQuery {
+	return NewPositionClient(_m.config).QueryUsers(_m)
 }
 
 // QueryPermissions queries the "permissions" edge of the Position entity.
-func (po *Position) QueryPermissions() *PermissionQuery {
-	return NewPositionClient(po.config).QueryPermissions(po)
+func (_m *Position) QueryPermissions() *PermissionQuery {
+	return NewPositionClient(_m.config).QueryPermissions(_m)
 }
 
 // QueryUserPositions queries the "user_positions" edge of the Position entity.
-func (po *Position) QueryUserPositions() *UserPositionQuery {
-	return NewPositionClient(po.config).QueryUserPositions(po)
+func (_m *Position) QueryUserPositions() *UserPositionQuery {
+	return NewPositionClient(_m.config).QueryUserPositions(_m)
 }
 
 // QueryPositionPermissions queries the "position_permissions" edge of the Position entity.
-func (po *Position) QueryPositionPermissions() *PositionPermissionQuery {
-	return NewPositionClient(po.config).QueryPositionPermissions(po)
+func (_m *Position) QueryPositionPermissions() *PositionPermissionQuery {
+	return NewPositionClient(_m.config).QueryPositionPermissions(_m)
 }
 
 // Update returns a builder for updating this Position.
 // Note that you need to call Position.Unwrap() before calling this method if this Position
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (po *Position) Update() *PositionUpdateOne {
-	return NewPositionClient(po.config).UpdateOne(po)
+func (_m *Position) Update() *PositionUpdateOne {
+	return NewPositionClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Position entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (po *Position) Unwrap() *Position {
-	_tx, ok := po.config.driver.(*txDriver)
+func (_m *Position) Unwrap() *Position {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Position is not a transactional entity")
 	}
-	po.config.driver = _tx.drv
-	return po
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (po *Position) String() string {
+func (_m *Position) String() string {
 	var builder strings.Builder
 	builder.WriteString("Position(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", po.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(po.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(po.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(po.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("keyword=")
-	builder.WriteString(po.Keyword)
+	builder.WriteString(_m.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(po.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("department_id=")
-	builder.WriteString(fmt.Sprintf("%v", po.DepartmentID))
+	builder.WriteString(fmt.Sprintf("%v", _m.DepartmentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

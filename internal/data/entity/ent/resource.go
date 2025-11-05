@@ -140,7 +140,7 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Resource fields.
-func (r *Resource) assignValues(columns []string, values []any) error {
+func (_m *Resource) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -151,108 +151,108 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			r.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case resource.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				r.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case resource.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				r.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case resource.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Name = value.String
+				_m.Name = value.String
 			}
 		case resource.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				r.Keyword = value.String
+				_m.Keyword = value.String
 			}
 		case resource.FieldI18nKey:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field i18n_key", values[i])
 			} else if value.Valid {
-				r.I18nKey = value.String
+				_m.I18nKey = value.String
 			}
 		case resource.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				r.Type = value.String
+				_m.Type = value.String
 			}
 		case resource.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				r.Status = int8(value.Int64)
+				_m.Status = int8(value.Int64)
 			}
 		case resource.FieldPath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field path", values[i])
 			} else if value.Valid {
-				r.Path = value.String
+				_m.Path = value.String
 			}
 		case resource.FieldOperation:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field operation", values[i])
 			} else if value.Valid {
-				r.Operation = value.String
+				_m.Operation = value.String
 			}
 		case resource.FieldMethod:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field method", values[i])
 			} else if value.Valid {
-				r.Method = value.String
+				_m.Method = value.String
 			}
 		case resource.FieldComponent:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field component", values[i])
 			} else if value.Valid {
-				r.Component = value.String
+				_m.Component = value.String
 			}
 		case resource.FieldIcon:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field icon", values[i])
 			} else if value.Valid {
-				r.Icon = value.String
+				_m.Icon = value.String
 			}
 		case resource.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sequence", values[i])
 			} else if value.Valid {
-				r.Sequence = int(value.Int64)
+				_m.Sequence = int(value.Int64)
 			}
 		case resource.FieldVisible:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field visible", values[i])
 			} else if value.Valid {
-				r.Visible = value.Bool
+				_m.Visible = value.Bool
 			}
 		case resource.FieldLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field level", values[i])
 			} else if value.Valid {
-				r.Level = int8(value.Int64)
+				_m.Level = int8(value.Int64)
 			}
 		case resource.FieldTreePath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
 			} else if value.Valid {
-				r.TreePath = value.String
+				_m.TreePath = value.String
 			}
 		case resource.FieldProperties:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field properties", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &r.Properties); err != nil {
+				if err := json.Unmarshal(*value, &_m.Properties); err != nil {
 					return fmt.Errorf("unmarshal field properties: %w", err)
 				}
 			}
@@ -260,16 +260,16 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				r.Description = value.String
+				_m.Description = value.String
 			}
 		case resource.FieldParentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				r.ParentID = value.Int64
+				_m.ParentID = value.Int64
 			}
 		default:
-			r.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -277,109 +277,109 @@ func (r *Resource) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Resource.
 // This includes values selected through modifiers, order, etc.
-func (r *Resource) Value(name string) (ent.Value, error) {
-	return r.selectValues.Get(name)
+func (_m *Resource) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryChildren queries the "children" edge of the Resource entity.
-func (r *Resource) QueryChildren() *ResourceQuery {
-	return NewResourceClient(r.config).QueryChildren(r)
+func (_m *Resource) QueryChildren() *ResourceQuery {
+	return NewResourceClient(_m.config).QueryChildren(_m)
 }
 
 // QueryParent queries the "parent" edge of the Resource entity.
-func (r *Resource) QueryParent() *ResourceQuery {
-	return NewResourceClient(r.config).QueryParent(r)
+func (_m *Resource) QueryParent() *ResourceQuery {
+	return NewResourceClient(_m.config).QueryParent(_m)
 }
 
 // QueryPermissions queries the "permissions" edge of the Resource entity.
-func (r *Resource) QueryPermissions() *PermissionQuery {
-	return NewResourceClient(r.config).QueryPermissions(r)
+func (_m *Resource) QueryPermissions() *PermissionQuery {
+	return NewResourceClient(_m.config).QueryPermissions(_m)
 }
 
 // QueryPermissionResources queries the "permission_resources" edge of the Resource entity.
-func (r *Resource) QueryPermissionResources() *PermissionResourceQuery {
-	return NewResourceClient(r.config).QueryPermissionResources(r)
+func (_m *Resource) QueryPermissionResources() *PermissionResourceQuery {
+	return NewResourceClient(_m.config).QueryPermissionResources(_m)
 }
 
 // Update returns a builder for updating this Resource.
 // Note that you need to call Resource.Unwrap() before calling this method if this Resource
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (r *Resource) Update() *ResourceUpdateOne {
-	return NewResourceClient(r.config).UpdateOne(r)
+func (_m *Resource) Update() *ResourceUpdateOne {
+	return NewResourceClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Resource entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (r *Resource) Unwrap() *Resource {
-	_tx, ok := r.config.driver.(*txDriver)
+func (_m *Resource) Unwrap() *Resource {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Resource is not a transactional entity")
 	}
-	r.config.driver = _tx.drv
-	return r
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (r *Resource) String() string {
+func (_m *Resource) String() string {
 	var builder strings.Builder
 	builder.WriteString("Resource(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", r.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(r.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(r.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(r.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("keyword=")
-	builder.WriteString(r.Keyword)
+	builder.WriteString(_m.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("i18n_key=")
-	builder.WriteString(r.I18nKey)
+	builder.WriteString(_m.I18nKey)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(r.Type)
+	builder.WriteString(_m.Type)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", r.Status))
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("path=")
-	builder.WriteString(r.Path)
+	builder.WriteString(_m.Path)
 	builder.WriteString(", ")
 	builder.WriteString("operation=")
-	builder.WriteString(r.Operation)
+	builder.WriteString(_m.Operation)
 	builder.WriteString(", ")
 	builder.WriteString("method=")
-	builder.WriteString(r.Method)
+	builder.WriteString(_m.Method)
 	builder.WriteString(", ")
 	builder.WriteString("component=")
-	builder.WriteString(r.Component)
+	builder.WriteString(_m.Component)
 	builder.WriteString(", ")
 	builder.WriteString("icon=")
-	builder.WriteString(r.Icon)
+	builder.WriteString(_m.Icon)
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
-	builder.WriteString(fmt.Sprintf("%v", r.Sequence))
+	builder.WriteString(fmt.Sprintf("%v", _m.Sequence))
 	builder.WriteString(", ")
 	builder.WriteString("visible=")
-	builder.WriteString(fmt.Sprintf("%v", r.Visible))
+	builder.WriteString(fmt.Sprintf("%v", _m.Visible))
 	builder.WriteString(", ")
 	builder.WriteString("level=")
-	builder.WriteString(fmt.Sprintf("%v", r.Level))
+	builder.WriteString(fmt.Sprintf("%v", _m.Level))
 	builder.WriteString(", ")
 	builder.WriteString("tree_path=")
-	builder.WriteString(r.TreePath)
+	builder.WriteString(_m.TreePath)
 	builder.WriteString(", ")
 	builder.WriteString("properties=")
-	builder.WriteString(fmt.Sprintf("%v", r.Properties))
+	builder.WriteString(fmt.Sprintf("%v", _m.Properties))
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(r.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", r.ParentID))
+	builder.WriteString(fmt.Sprintf("%v", _m.ParentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

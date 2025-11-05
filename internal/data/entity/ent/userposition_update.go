@@ -25,74 +25,74 @@ type UserPositionUpdate struct {
 }
 
 // Where appends a list predicates to the UserPositionUpdate builder.
-func (upu *UserPositionUpdate) Where(ps ...predicate.UserPosition) *UserPositionUpdate {
-	upu.mutation.Where(ps...)
-	return upu
+func (_u *UserPositionUpdate) Where(ps ...predicate.UserPosition) *UserPositionUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetUserID sets the "user_id" field.
-func (upu *UserPositionUpdate) SetUserID(i int64) *UserPositionUpdate {
-	upu.mutation.SetUserID(i)
-	return upu
+func (_u *UserPositionUpdate) SetUserID(v int64) *UserPositionUpdate {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (upu *UserPositionUpdate) SetNillableUserID(i *int64) *UserPositionUpdate {
-	if i != nil {
-		upu.SetUserID(*i)
+func (_u *UserPositionUpdate) SetNillableUserID(v *int64) *UserPositionUpdate {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return upu
+	return _u
 }
 
 // SetPositionID sets the "position_id" field.
-func (upu *UserPositionUpdate) SetPositionID(i int64) *UserPositionUpdate {
-	upu.mutation.SetPositionID(i)
-	return upu
+func (_u *UserPositionUpdate) SetPositionID(v int64) *UserPositionUpdate {
+	_u.mutation.SetPositionID(v)
+	return _u
 }
 
 // SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (upu *UserPositionUpdate) SetNillablePositionID(i *int64) *UserPositionUpdate {
-	if i != nil {
-		upu.SetPositionID(*i)
+func (_u *UserPositionUpdate) SetNillablePositionID(v *int64) *UserPositionUpdate {
+	if v != nil {
+		_u.SetPositionID(*v)
 	}
-	return upu
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (upu *UserPositionUpdate) SetUser(u *User) *UserPositionUpdate {
-	return upu.SetUserID(u.ID)
+func (_u *UserPositionUpdate) SetUser(v *User) *UserPositionUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // SetPosition sets the "position" edge to the Position entity.
-func (upu *UserPositionUpdate) SetPosition(p *Position) *UserPositionUpdate {
-	return upu.SetPositionID(p.ID)
+func (_u *UserPositionUpdate) SetPosition(v *Position) *UserPositionUpdate {
+	return _u.SetPositionID(v.ID)
 }
 
 // Mutation returns the UserPositionMutation object of the builder.
-func (upu *UserPositionUpdate) Mutation() *UserPositionMutation {
-	return upu.mutation
+func (_u *UserPositionUpdate) Mutation() *UserPositionMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (upu *UserPositionUpdate) ClearUser() *UserPositionUpdate {
-	upu.mutation.ClearUser()
-	return upu
+func (_u *UserPositionUpdate) ClearUser() *UserPositionUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearPosition clears the "position" edge to the Position entity.
-func (upu *UserPositionUpdate) ClearPosition() *UserPositionUpdate {
-	upu.mutation.ClearPosition()
-	return upu
+func (_u *UserPositionUpdate) ClearPosition() *UserPositionUpdate {
+	_u.mutation.ClearPosition()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (upu *UserPositionUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, upu.sqlSave, upu.mutation, upu.hooks)
+func (_u *UserPositionUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (upu *UserPositionUpdate) SaveX(ctx context.Context) int {
-	affected, err := upu.Save(ctx)
+func (_u *UserPositionUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -100,58 +100,58 @@ func (upu *UserPositionUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (upu *UserPositionUpdate) Exec(ctx context.Context) error {
-	_, err := upu.Save(ctx)
+func (_u *UserPositionUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upu *UserPositionUpdate) ExecX(ctx context.Context) {
-	if err := upu.Exec(ctx); err != nil {
+func (_u *UserPositionUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (upu *UserPositionUpdate) check() error {
-	if v, ok := upu.mutation.UserID(); ok {
+func (_u *UserPositionUpdate) check() error {
+	if v, ok := _u.mutation.UserID(); ok {
 		if err := userposition.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.user_id": %w`, err)}
 		}
 	}
-	if v, ok := upu.mutation.PositionID(); ok {
+	if v, ok := _u.mutation.PositionID(); ok {
 		if err := userposition.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.position_id": %w`, err)}
 		}
 	}
-	if upu.mutation.UserCleared() && len(upu.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserPosition.user"`)
 	}
-	if upu.mutation.PositionCleared() && len(upu.mutation.PositionIDs()) > 0 {
+	if _u.mutation.PositionCleared() && len(_u.mutation.PositionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserPosition.position"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (upu *UserPositionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserPositionUpdate {
-	upu.modifiers = append(upu.modifiers, modifiers...)
-	return upu
+func (_u *UserPositionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserPositionUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := upu.check(); err != nil {
-		return n, err
+func (_u *UserPositionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
-	if ps := upu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if upu.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -164,7 +164,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := upu.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -180,7 +180,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if upu.mutation.PositionCleared() {
+	if _u.mutation.PositionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -193,7 +193,7 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := upu.mutation.PositionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -209,8 +209,8 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(upu.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, upu.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userposition.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -218,8 +218,8 @@ func (upu *UserPositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	upu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // UserPositionUpdateOne is the builder for updating a single UserPosition entity.
@@ -232,81 +232,81 @@ type UserPositionUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (upuo *UserPositionUpdateOne) SetUserID(i int64) *UserPositionUpdateOne {
-	upuo.mutation.SetUserID(i)
-	return upuo
+func (_u *UserPositionUpdateOne) SetUserID(v int64) *UserPositionUpdateOne {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (upuo *UserPositionUpdateOne) SetNillableUserID(i *int64) *UserPositionUpdateOne {
-	if i != nil {
-		upuo.SetUserID(*i)
+func (_u *UserPositionUpdateOne) SetNillableUserID(v *int64) *UserPositionUpdateOne {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return upuo
+	return _u
 }
 
 // SetPositionID sets the "position_id" field.
-func (upuo *UserPositionUpdateOne) SetPositionID(i int64) *UserPositionUpdateOne {
-	upuo.mutation.SetPositionID(i)
-	return upuo
+func (_u *UserPositionUpdateOne) SetPositionID(v int64) *UserPositionUpdateOne {
+	_u.mutation.SetPositionID(v)
+	return _u
 }
 
 // SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (upuo *UserPositionUpdateOne) SetNillablePositionID(i *int64) *UserPositionUpdateOne {
-	if i != nil {
-		upuo.SetPositionID(*i)
+func (_u *UserPositionUpdateOne) SetNillablePositionID(v *int64) *UserPositionUpdateOne {
+	if v != nil {
+		_u.SetPositionID(*v)
 	}
-	return upuo
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (upuo *UserPositionUpdateOne) SetUser(u *User) *UserPositionUpdateOne {
-	return upuo.SetUserID(u.ID)
+func (_u *UserPositionUpdateOne) SetUser(v *User) *UserPositionUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // SetPosition sets the "position" edge to the Position entity.
-func (upuo *UserPositionUpdateOne) SetPosition(p *Position) *UserPositionUpdateOne {
-	return upuo.SetPositionID(p.ID)
+func (_u *UserPositionUpdateOne) SetPosition(v *Position) *UserPositionUpdateOne {
+	return _u.SetPositionID(v.ID)
 }
 
 // Mutation returns the UserPositionMutation object of the builder.
-func (upuo *UserPositionUpdateOne) Mutation() *UserPositionMutation {
-	return upuo.mutation
+func (_u *UserPositionUpdateOne) Mutation() *UserPositionMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (upuo *UserPositionUpdateOne) ClearUser() *UserPositionUpdateOne {
-	upuo.mutation.ClearUser()
-	return upuo
+func (_u *UserPositionUpdateOne) ClearUser() *UserPositionUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearPosition clears the "position" edge to the Position entity.
-func (upuo *UserPositionUpdateOne) ClearPosition() *UserPositionUpdateOne {
-	upuo.mutation.ClearPosition()
-	return upuo
+func (_u *UserPositionUpdateOne) ClearPosition() *UserPositionUpdateOne {
+	_u.mutation.ClearPosition()
+	return _u
 }
 
 // Where appends a list predicates to the UserPositionUpdate builder.
-func (upuo *UserPositionUpdateOne) Where(ps ...predicate.UserPosition) *UserPositionUpdateOne {
-	upuo.mutation.Where(ps...)
-	return upuo
+func (_u *UserPositionUpdateOne) Where(ps ...predicate.UserPosition) *UserPositionUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (upuo *UserPositionUpdateOne) Select(field string, fields ...string) *UserPositionUpdateOne {
-	upuo.fields = append([]string{field}, fields...)
-	return upuo
+func (_u *UserPositionUpdateOne) Select(field string, fields ...string) *UserPositionUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated UserPosition entity.
-func (upuo *UserPositionUpdateOne) Save(ctx context.Context) (*UserPosition, error) {
-	return withHooks(ctx, upuo.sqlSave, upuo.mutation, upuo.hooks)
+func (_u *UserPositionUpdateOne) Save(ctx context.Context) (*UserPosition, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (upuo *UserPositionUpdateOne) SaveX(ctx context.Context) *UserPosition {
-	node, err := upuo.Save(ctx)
+func (_u *UserPositionUpdateOne) SaveX(ctx context.Context) *UserPosition {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -314,56 +314,56 @@ func (upuo *UserPositionUpdateOne) SaveX(ctx context.Context) *UserPosition {
 }
 
 // Exec executes the query on the entity.
-func (upuo *UserPositionUpdateOne) Exec(ctx context.Context) error {
-	_, err := upuo.Save(ctx)
+func (_u *UserPositionUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upuo *UserPositionUpdateOne) ExecX(ctx context.Context) {
-	if err := upuo.Exec(ctx); err != nil {
+func (_u *UserPositionUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (upuo *UserPositionUpdateOne) check() error {
-	if v, ok := upuo.mutation.UserID(); ok {
+func (_u *UserPositionUpdateOne) check() error {
+	if v, ok := _u.mutation.UserID(); ok {
 		if err := userposition.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.user_id": %w`, err)}
 		}
 	}
-	if v, ok := upuo.mutation.PositionID(); ok {
+	if v, ok := _u.mutation.PositionID(); ok {
 		if err := userposition.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "UserPosition.position_id": %w`, err)}
 		}
 	}
-	if upuo.mutation.UserCleared() && len(upuo.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserPosition.user"`)
 	}
-	if upuo.mutation.PositionCleared() && len(upuo.mutation.PositionIDs()) > 0 {
+	if _u.mutation.PositionCleared() && len(_u.mutation.PositionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserPosition.position"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (upuo *UserPositionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserPositionUpdateOne {
-	upuo.modifiers = append(upuo.modifiers, modifiers...)
-	return upuo
+func (_u *UserPositionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserPositionUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosition, err error) {
-	if err := upuo.check(); err != nil {
+func (_u *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosition, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userposition.Table, userposition.Columns, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
-	id, ok := upuo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserPosition.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := upuo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, userposition.FieldID)
 		for _, f := range fields {
@@ -375,14 +375,14 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 			}
 		}
 	}
-	if ps := upuo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if upuo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -395,7 +395,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := upuo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -411,7 +411,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if upuo.mutation.PositionCleared() {
+	if _u.mutation.PositionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -424,7 +424,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := upuo.mutation.PositionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -440,11 +440,11 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(upuo.modifiers...)
-	_node = &UserPosition{config: upuo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &UserPosition{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, upuo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userposition.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -452,7 +452,7 @@ func (upuo *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPosi
 		}
 		return nil, err
 	}
-	upuo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
 

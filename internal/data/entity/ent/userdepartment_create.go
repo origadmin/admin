@@ -22,40 +22,40 @@ type UserDepartmentCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (udc *UserDepartmentCreate) SetUserID(i int64) *UserDepartmentCreate {
-	udc.mutation.SetUserID(i)
-	return udc
+func (_c *UserDepartmentCreate) SetUserID(v int64) *UserDepartmentCreate {
+	_c.mutation.SetUserID(v)
+	return _c
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (udc *UserDepartmentCreate) SetDepartmentID(i int64) *UserDepartmentCreate {
-	udc.mutation.SetDepartmentID(i)
-	return udc
+func (_c *UserDepartmentCreate) SetDepartmentID(v int64) *UserDepartmentCreate {
+	_c.mutation.SetDepartmentID(v)
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (udc *UserDepartmentCreate) SetUser(u *User) *UserDepartmentCreate {
-	return udc.SetUserID(u.ID)
+func (_c *UserDepartmentCreate) SetUser(v *User) *UserDepartmentCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // SetDepartment sets the "department" edge to the Department entity.
-func (udc *UserDepartmentCreate) SetDepartment(d *Department) *UserDepartmentCreate {
-	return udc.SetDepartmentID(d.ID)
+func (_c *UserDepartmentCreate) SetDepartment(v *Department) *UserDepartmentCreate {
+	return _c.SetDepartmentID(v.ID)
 }
 
 // Mutation returns the UserDepartmentMutation object of the builder.
-func (udc *UserDepartmentCreate) Mutation() *UserDepartmentMutation {
-	return udc.mutation
+func (_c *UserDepartmentCreate) Mutation() *UserDepartmentMutation {
+	return _c.mutation
 }
 
 // Save creates the UserDepartment in the database.
-func (udc *UserDepartmentCreate) Save(ctx context.Context) (*UserDepartment, error) {
-	return withHooks(ctx, udc.sqlSave, udc.mutation, udc.hooks)
+func (_c *UserDepartmentCreate) Save(ctx context.Context) (*UserDepartment, error) {
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (udc *UserDepartmentCreate) SaveX(ctx context.Context) *UserDepartment {
-	v, err := udc.Save(ctx)
+func (_c *UserDepartmentCreate) SaveX(ctx context.Context) *UserDepartment {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -63,51 +63,51 @@ func (udc *UserDepartmentCreate) SaveX(ctx context.Context) *UserDepartment {
 }
 
 // Exec executes the query.
-func (udc *UserDepartmentCreate) Exec(ctx context.Context) error {
-	_, err := udc.Save(ctx)
+func (_c *UserDepartmentCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (udc *UserDepartmentCreate) ExecX(ctx context.Context) {
-	if err := udc.Exec(ctx); err != nil {
+func (_c *UserDepartmentCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (udc *UserDepartmentCreate) check() error {
-	if _, ok := udc.mutation.UserID(); !ok {
+func (_c *UserDepartmentCreate) check() error {
+	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "UserDepartment.user_id"`)}
 	}
-	if v, ok := udc.mutation.UserID(); ok {
+	if v, ok := _c.mutation.UserID(); ok {
 		if err := userdepartment.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.user_id": %w`, err)}
 		}
 	}
-	if _, ok := udc.mutation.DepartmentID(); !ok {
+	if _, ok := _c.mutation.DepartmentID(); !ok {
 		return &ValidationError{Name: "department_id", err: errors.New(`ent: missing required field "UserDepartment.department_id"`)}
 	}
-	if v, ok := udc.mutation.DepartmentID(); ok {
+	if v, ok := _c.mutation.DepartmentID(); ok {
 		if err := userdepartment.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.department_id": %w`, err)}
 		}
 	}
-	if len(udc.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "UserDepartment.user"`)}
 	}
-	if len(udc.mutation.DepartmentIDs()) == 0 {
+	if len(_c.mutation.DepartmentIDs()) == 0 {
 		return &ValidationError{Name: "department", err: errors.New(`ent: missing required edge "UserDepartment.department"`)}
 	}
 	return nil
 }
 
-func (udc *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, error) {
-	if err := udc.check(); err != nil {
+func (_c *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := udc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, udc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -115,17 +115,17 @@ func (udc *UserDepartmentCreate) sqlSave(ctx context.Context) (*UserDepartment, 
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	udc.mutation.id = &_node.ID
-	udc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.CreateSpec) {
+func (_c *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.CreateSpec) {
 	var (
-		_node = &UserDepartment{config: udc.config}
+		_node = &UserDepartment{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(userdepartment.Table, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
 	)
-	if nodes := udc.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -142,7 +142,7 @@ func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.Create
 		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := udc.mutation.DepartmentIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.DepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -163,23 +163,23 @@ func (udc *UserDepartmentCreate) createSpec() (*UserDepartment, *sqlgraph.Create
 }
 
 // SetUserDepartment set the UserDepartment
-func (udc *UserDepartmentCreate) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentCreate {
-	m := udc.mutation
+func (_c *UserDepartmentCreate) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userdepartment.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return udc
+	return _c
 }
 
 // SetUserDepartmentWithZero set the UserDepartment
-func (udc *UserDepartmentCreate) SetUserDepartmentWithZero(input *UserDepartment, fields ...string) *UserDepartmentCreate {
-	m := udc.mutation
+func (_c *UserDepartmentCreate) SetUserDepartmentWithZero(input *UserDepartment, fields ...string) *UserDepartmentCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userdepartment.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return udc
+	return _c
 }
 
 // UserDepartmentCreateBulk is the builder for creating many UserDepartment entities in bulk.
@@ -190,16 +190,16 @@ type UserDepartmentCreateBulk struct {
 }
 
 // Save creates the UserDepartment entities in the database.
-func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartment, error) {
-	if udcb.err != nil {
-		return nil, udcb.err
+func (_c *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartment, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(udcb.builders))
-	nodes := make([]*UserDepartment, len(udcb.builders))
-	mutators := make([]Mutator, len(udcb.builders))
-	for i := range udcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*UserDepartment, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := udcb.builders[i]
+			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserDepartmentMutation)
 				if !ok {
@@ -212,11 +212,11 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, udcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, udcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -240,7 +240,7 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, udcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -248,8 +248,8 @@ func (udcb *UserDepartmentCreateBulk) Save(ctx context.Context) ([]*UserDepartme
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (udcb *UserDepartmentCreateBulk) SaveX(ctx context.Context) []*UserDepartment {
-	v, err := udcb.Save(ctx)
+func (_c *UserDepartmentCreateBulk) SaveX(ctx context.Context) []*UserDepartment {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -257,14 +257,14 @@ func (udcb *UserDepartmentCreateBulk) SaveX(ctx context.Context) []*UserDepartme
 }
 
 // Exec executes the query.
-func (udcb *UserDepartmentCreateBulk) Exec(ctx context.Context) error {
-	_, err := udcb.Save(ctx)
+func (_c *UserDepartmentCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (udcb *UserDepartmentCreateBulk) ExecX(ctx context.Context) {
-	if err := udcb.Exec(ctx); err != nil {
+func (_c *UserDepartmentCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

@@ -25,74 +25,74 @@ type RolePermissionUpdate struct {
 }
 
 // Where appends a list predicates to the RolePermissionUpdate builder.
-func (rpu *RolePermissionUpdate) Where(ps ...predicate.RolePermission) *RolePermissionUpdate {
-	rpu.mutation.Where(ps...)
-	return rpu
+func (_u *RolePermissionUpdate) Where(ps ...predicate.RolePermission) *RolePermissionUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetRoleID sets the "role_id" field.
-func (rpu *RolePermissionUpdate) SetRoleID(i int64) *RolePermissionUpdate {
-	rpu.mutation.SetRoleID(i)
-	return rpu
+func (_u *RolePermissionUpdate) SetRoleID(v int64) *RolePermissionUpdate {
+	_u.mutation.SetRoleID(v)
+	return _u
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (rpu *RolePermissionUpdate) SetNillableRoleID(i *int64) *RolePermissionUpdate {
-	if i != nil {
-		rpu.SetRoleID(*i)
+func (_u *RolePermissionUpdate) SetNillableRoleID(v *int64) *RolePermissionUpdate {
+	if v != nil {
+		_u.SetRoleID(*v)
 	}
-	return rpu
+	return _u
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (rpu *RolePermissionUpdate) SetPermissionID(i int64) *RolePermissionUpdate {
-	rpu.mutation.SetPermissionID(i)
-	return rpu
+func (_u *RolePermissionUpdate) SetPermissionID(v int64) *RolePermissionUpdate {
+	_u.mutation.SetPermissionID(v)
+	return _u
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (rpu *RolePermissionUpdate) SetNillablePermissionID(i *int64) *RolePermissionUpdate {
-	if i != nil {
-		rpu.SetPermissionID(*i)
+func (_u *RolePermissionUpdate) SetNillablePermissionID(v *int64) *RolePermissionUpdate {
+	if v != nil {
+		_u.SetPermissionID(*v)
 	}
-	return rpu
+	return _u
 }
 
 // SetRole sets the "role" edge to the Role entity.
-func (rpu *RolePermissionUpdate) SetRole(r *Role) *RolePermissionUpdate {
-	return rpu.SetRoleID(r.ID)
+func (_u *RolePermissionUpdate) SetRole(v *Role) *RolePermissionUpdate {
+	return _u.SetRoleID(v.ID)
 }
 
 // SetPermission sets the "permission" edge to the Permission entity.
-func (rpu *RolePermissionUpdate) SetPermission(p *Permission) *RolePermissionUpdate {
-	return rpu.SetPermissionID(p.ID)
+func (_u *RolePermissionUpdate) SetPermission(v *Permission) *RolePermissionUpdate {
+	return _u.SetPermissionID(v.ID)
 }
 
 // Mutation returns the RolePermissionMutation object of the builder.
-func (rpu *RolePermissionUpdate) Mutation() *RolePermissionMutation {
-	return rpu.mutation
+func (_u *RolePermissionUpdate) Mutation() *RolePermissionMutation {
+	return _u.mutation
 }
 
 // ClearRole clears the "role" edge to the Role entity.
-func (rpu *RolePermissionUpdate) ClearRole() *RolePermissionUpdate {
-	rpu.mutation.ClearRole()
-	return rpu
+func (_u *RolePermissionUpdate) ClearRole() *RolePermissionUpdate {
+	_u.mutation.ClearRole()
+	return _u
 }
 
 // ClearPermission clears the "permission" edge to the Permission entity.
-func (rpu *RolePermissionUpdate) ClearPermission() *RolePermissionUpdate {
-	rpu.mutation.ClearPermission()
-	return rpu
+func (_u *RolePermissionUpdate) ClearPermission() *RolePermissionUpdate {
+	_u.mutation.ClearPermission()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (rpu *RolePermissionUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, rpu.sqlSave, rpu.mutation, rpu.hooks)
+func (_u *RolePermissionUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (rpu *RolePermissionUpdate) SaveX(ctx context.Context) int {
-	affected, err := rpu.Save(ctx)
+func (_u *RolePermissionUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -100,58 +100,58 @@ func (rpu *RolePermissionUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (rpu *RolePermissionUpdate) Exec(ctx context.Context) error {
-	_, err := rpu.Save(ctx)
+func (_u *RolePermissionUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (rpu *RolePermissionUpdate) ExecX(ctx context.Context) {
-	if err := rpu.Exec(ctx); err != nil {
+func (_u *RolePermissionUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (rpu *RolePermissionUpdate) check() error {
-	if v, ok := rpu.mutation.RoleID(); ok {
+func (_u *RolePermissionUpdate) check() error {
+	if v, ok := _u.mutation.RoleID(); ok {
 		if err := rolepermission.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "RolePermission.role_id": %w`, err)}
 		}
 	}
-	if v, ok := rpu.mutation.PermissionID(); ok {
+	if v, ok := _u.mutation.PermissionID(); ok {
 		if err := rolepermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "RolePermission.permission_id": %w`, err)}
 		}
 	}
-	if rpu.mutation.RoleCleared() && len(rpu.mutation.RoleIDs()) > 0 {
+	if _u.mutation.RoleCleared() && len(_u.mutation.RoleIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "RolePermission.role"`)
 	}
-	if rpu.mutation.PermissionCleared() && len(rpu.mutation.PermissionIDs()) > 0 {
+	if _u.mutation.PermissionCleared() && len(_u.mutation.PermissionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "RolePermission.permission"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (rpu *RolePermissionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *RolePermissionUpdate {
-	rpu.modifiers = append(rpu.modifiers, modifiers...)
-	return rpu
+func (_u *RolePermissionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *RolePermissionUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := rpu.check(); err != nil {
-		return n, err
+func (_u *RolePermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
-	if ps := rpu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if rpu.mutation.RoleCleared() {
+	if _u.mutation.RoleCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -164,7 +164,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := rpu.mutation.RoleIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -180,7 +180,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if rpu.mutation.PermissionCleared() {
+	if _u.mutation.PermissionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -193,7 +193,7 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := rpu.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -209,8 +209,8 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(rpu.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, rpu.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{rolepermission.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -218,8 +218,8 @@ func (rpu *RolePermissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		return 0, err
 	}
-	rpu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // RolePermissionUpdateOne is the builder for updating a single RolePermission entity.
@@ -232,81 +232,81 @@ type RolePermissionUpdateOne struct {
 }
 
 // SetRoleID sets the "role_id" field.
-func (rpuo *RolePermissionUpdateOne) SetRoleID(i int64) *RolePermissionUpdateOne {
-	rpuo.mutation.SetRoleID(i)
-	return rpuo
+func (_u *RolePermissionUpdateOne) SetRoleID(v int64) *RolePermissionUpdateOne {
+	_u.mutation.SetRoleID(v)
+	return _u
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (rpuo *RolePermissionUpdateOne) SetNillableRoleID(i *int64) *RolePermissionUpdateOne {
-	if i != nil {
-		rpuo.SetRoleID(*i)
+func (_u *RolePermissionUpdateOne) SetNillableRoleID(v *int64) *RolePermissionUpdateOne {
+	if v != nil {
+		_u.SetRoleID(*v)
 	}
-	return rpuo
+	return _u
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (rpuo *RolePermissionUpdateOne) SetPermissionID(i int64) *RolePermissionUpdateOne {
-	rpuo.mutation.SetPermissionID(i)
-	return rpuo
+func (_u *RolePermissionUpdateOne) SetPermissionID(v int64) *RolePermissionUpdateOne {
+	_u.mutation.SetPermissionID(v)
+	return _u
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (rpuo *RolePermissionUpdateOne) SetNillablePermissionID(i *int64) *RolePermissionUpdateOne {
-	if i != nil {
-		rpuo.SetPermissionID(*i)
+func (_u *RolePermissionUpdateOne) SetNillablePermissionID(v *int64) *RolePermissionUpdateOne {
+	if v != nil {
+		_u.SetPermissionID(*v)
 	}
-	return rpuo
+	return _u
 }
 
 // SetRole sets the "role" edge to the Role entity.
-func (rpuo *RolePermissionUpdateOne) SetRole(r *Role) *RolePermissionUpdateOne {
-	return rpuo.SetRoleID(r.ID)
+func (_u *RolePermissionUpdateOne) SetRole(v *Role) *RolePermissionUpdateOne {
+	return _u.SetRoleID(v.ID)
 }
 
 // SetPermission sets the "permission" edge to the Permission entity.
-func (rpuo *RolePermissionUpdateOne) SetPermission(p *Permission) *RolePermissionUpdateOne {
-	return rpuo.SetPermissionID(p.ID)
+func (_u *RolePermissionUpdateOne) SetPermission(v *Permission) *RolePermissionUpdateOne {
+	return _u.SetPermissionID(v.ID)
 }
 
 // Mutation returns the RolePermissionMutation object of the builder.
-func (rpuo *RolePermissionUpdateOne) Mutation() *RolePermissionMutation {
-	return rpuo.mutation
+func (_u *RolePermissionUpdateOne) Mutation() *RolePermissionMutation {
+	return _u.mutation
 }
 
 // ClearRole clears the "role" edge to the Role entity.
-func (rpuo *RolePermissionUpdateOne) ClearRole() *RolePermissionUpdateOne {
-	rpuo.mutation.ClearRole()
-	return rpuo
+func (_u *RolePermissionUpdateOne) ClearRole() *RolePermissionUpdateOne {
+	_u.mutation.ClearRole()
+	return _u
 }
 
 // ClearPermission clears the "permission" edge to the Permission entity.
-func (rpuo *RolePermissionUpdateOne) ClearPermission() *RolePermissionUpdateOne {
-	rpuo.mutation.ClearPermission()
-	return rpuo
+func (_u *RolePermissionUpdateOne) ClearPermission() *RolePermissionUpdateOne {
+	_u.mutation.ClearPermission()
+	return _u
 }
 
 // Where appends a list predicates to the RolePermissionUpdate builder.
-func (rpuo *RolePermissionUpdateOne) Where(ps ...predicate.RolePermission) *RolePermissionUpdateOne {
-	rpuo.mutation.Where(ps...)
-	return rpuo
+func (_u *RolePermissionUpdateOne) Where(ps ...predicate.RolePermission) *RolePermissionUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (rpuo *RolePermissionUpdateOne) Select(field string, fields ...string) *RolePermissionUpdateOne {
-	rpuo.fields = append([]string{field}, fields...)
-	return rpuo
+func (_u *RolePermissionUpdateOne) Select(field string, fields ...string) *RolePermissionUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated RolePermission entity.
-func (rpuo *RolePermissionUpdateOne) Save(ctx context.Context) (*RolePermission, error) {
-	return withHooks(ctx, rpuo.sqlSave, rpuo.mutation, rpuo.hooks)
+func (_u *RolePermissionUpdateOne) Save(ctx context.Context) (*RolePermission, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (rpuo *RolePermissionUpdateOne) SaveX(ctx context.Context) *RolePermission {
-	node, err := rpuo.Save(ctx)
+func (_u *RolePermissionUpdateOne) SaveX(ctx context.Context) *RolePermission {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -314,56 +314,56 @@ func (rpuo *RolePermissionUpdateOne) SaveX(ctx context.Context) *RolePermission 
 }
 
 // Exec executes the query on the entity.
-func (rpuo *RolePermissionUpdateOne) Exec(ctx context.Context) error {
-	_, err := rpuo.Save(ctx)
+func (_u *RolePermissionUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (rpuo *RolePermissionUpdateOne) ExecX(ctx context.Context) {
-	if err := rpuo.Exec(ctx); err != nil {
+func (_u *RolePermissionUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (rpuo *RolePermissionUpdateOne) check() error {
-	if v, ok := rpuo.mutation.RoleID(); ok {
+func (_u *RolePermissionUpdateOne) check() error {
+	if v, ok := _u.mutation.RoleID(); ok {
 		if err := rolepermission.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "RolePermission.role_id": %w`, err)}
 		}
 	}
-	if v, ok := rpuo.mutation.PermissionID(); ok {
+	if v, ok := _u.mutation.PermissionID(); ok {
 		if err := rolepermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "RolePermission.permission_id": %w`, err)}
 		}
 	}
-	if rpuo.mutation.RoleCleared() && len(rpuo.mutation.RoleIDs()) > 0 {
+	if _u.mutation.RoleCleared() && len(_u.mutation.RoleIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "RolePermission.role"`)
 	}
-	if rpuo.mutation.PermissionCleared() && len(rpuo.mutation.PermissionIDs()) > 0 {
+	if _u.mutation.PermissionCleared() && len(_u.mutation.PermissionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "RolePermission.permission"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (rpuo *RolePermissionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *RolePermissionUpdateOne {
-	rpuo.modifiers = append(rpuo.modifiers, modifiers...)
-	return rpuo
+func (_u *RolePermissionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *RolePermissionUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePermission, err error) {
-	if err := rpuo.check(); err != nil {
+func (_u *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePermission, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(rolepermission.Table, rolepermission.Columns, sqlgraph.NewFieldSpec(rolepermission.FieldID, field.TypeInt))
-	id, ok := rpuo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "RolePermission.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := rpuo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, rolepermission.FieldID)
 		for _, f := range fields {
@@ -375,14 +375,14 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 			}
 		}
 	}
-	if ps := rpuo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if rpuo.mutation.RoleCleared() {
+	if _u.mutation.RoleCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -395,7 +395,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := rpuo.mutation.RoleIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -411,7 +411,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if rpuo.mutation.PermissionCleared() {
+	if _u.mutation.PermissionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -424,7 +424,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := rpuo.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -440,11 +440,11 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(rpuo.modifiers...)
-	_node = &RolePermission{config: rpuo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &RolePermission{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, rpuo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{rolepermission.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -452,7 +452,7 @@ func (rpuo *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePe
 		}
 		return nil, err
 	}
-	rpuo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
 

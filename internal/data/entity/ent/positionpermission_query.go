@@ -34,44 +34,44 @@ type PositionPermissionQuery struct {
 }
 
 // Where adds a new predicate for the PositionPermissionQuery builder.
-func (ppq *PositionPermissionQuery) Where(ps ...predicate.PositionPermission) *PositionPermissionQuery {
-	ppq.predicates = append(ppq.predicates, ps...)
-	return ppq
+func (_q *PositionPermissionQuery) Where(ps ...predicate.PositionPermission) *PositionPermissionQuery {
+	_q.predicates = append(_q.predicates, ps...)
+	return _q
 }
 
 // Limit the number of records to be returned by this query.
-func (ppq *PositionPermissionQuery) Limit(limit int) *PositionPermissionQuery {
-	ppq.ctx.Limit = &limit
-	return ppq
+func (_q *PositionPermissionQuery) Limit(limit int) *PositionPermissionQuery {
+	_q.ctx.Limit = &limit
+	return _q
 }
 
 // Offset to start from.
-func (ppq *PositionPermissionQuery) Offset(offset int) *PositionPermissionQuery {
-	ppq.ctx.Offset = &offset
-	return ppq
+func (_q *PositionPermissionQuery) Offset(offset int) *PositionPermissionQuery {
+	_q.ctx.Offset = &offset
+	return _q
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
-func (ppq *PositionPermissionQuery) Unique(unique bool) *PositionPermissionQuery {
-	ppq.ctx.Unique = &unique
-	return ppq
+func (_q *PositionPermissionQuery) Unique(unique bool) *PositionPermissionQuery {
+	_q.ctx.Unique = &unique
+	return _q
 }
 
 // Order specifies how the records should be ordered.
-func (ppq *PositionPermissionQuery) Order(o ...positionpermission.OrderOption) *PositionPermissionQuery {
-	ppq.order = append(ppq.order, o...)
-	return ppq
+func (_q *PositionPermissionQuery) Order(o ...positionpermission.OrderOption) *PositionPermissionQuery {
+	_q.order = append(_q.order, o...)
+	return _q
 }
 
 // QueryPosition chains the current query on the "position" edge.
-func (ppq *PositionPermissionQuery) QueryPosition() *PositionQuery {
-	query := (&PositionClient{config: ppq.config}).Query()
+func (_q *PositionPermissionQuery) QueryPosition() *PositionQuery {
+	query := (&PositionClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := ppq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := ppq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -80,20 +80,20 @@ func (ppq *PositionPermissionQuery) QueryPosition() *PositionQuery {
 			sqlgraph.To(position.Table, position.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, positionpermission.PositionTable, positionpermission.PositionColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(ppq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
 }
 
 // QueryPermission chains the current query on the "permission" edge.
-func (ppq *PositionPermissionQuery) QueryPermission() *PermissionQuery {
-	query := (&PermissionClient{config: ppq.config}).Query()
+func (_q *PositionPermissionQuery) QueryPermission() *PermissionQuery {
+	query := (&PermissionClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := ppq.prepareQuery(ctx); err != nil {
+		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
-		selector := ppq.sqlQuery(ctx)
+		selector := _q.sqlQuery(ctx)
 		if err := selector.Err(); err != nil {
 			return nil, err
 		}
@@ -102,7 +102,7 @@ func (ppq *PositionPermissionQuery) QueryPermission() *PermissionQuery {
 			sqlgraph.To(permission.Table, permission.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, positionpermission.PermissionTable, positionpermission.PermissionColumn),
 		)
-		fromU = sqlgraph.SetNeighbors(ppq.driver.Dialect(), step)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
 	}
 	return query
@@ -110,8 +110,8 @@ func (ppq *PositionPermissionQuery) QueryPermission() *PermissionQuery {
 
 // First returns the first PositionPermission entity from the query.
 // Returns a *NotFoundError when no PositionPermission was found.
-func (ppq *PositionPermissionQuery) First(ctx context.Context) (*PositionPermission, error) {
-	nodes, err := ppq.Limit(1).All(setContextOp(ctx, ppq.ctx, ent.OpQueryFirst))
+func (_q *PositionPermissionQuery) First(ctx context.Context) (*PositionPermission, error) {
+	nodes, err := _q.Limit(1).All(setContextOp(ctx, _q.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -122,8 +122,8 @@ func (ppq *PositionPermissionQuery) First(ctx context.Context) (*PositionPermiss
 }
 
 // FirstX is like First, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) FirstX(ctx context.Context) *PositionPermission {
-	node, err := ppq.First(ctx)
+func (_q *PositionPermissionQuery) FirstX(ctx context.Context) *PositionPermission {
+	node, err := _q.First(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -132,9 +132,9 @@ func (ppq *PositionPermissionQuery) FirstX(ctx context.Context) *PositionPermiss
 
 // FirstID returns the first PositionPermission ID from the query.
 // Returns a *NotFoundError when no PositionPermission ID was found.
-func (ppq *PositionPermissionQuery) FirstID(ctx context.Context) (id int, err error) {
+func (_q *PositionPermissionQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ppq.Limit(1).IDs(setContextOp(ctx, ppq.ctx, ent.OpQueryFirstID)); err != nil {
+	if ids, err = _q.Limit(1).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -145,8 +145,8 @@ func (ppq *PositionPermissionQuery) FirstID(ctx context.Context) (id int, err er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) FirstIDX(ctx context.Context) int {
-	id, err := ppq.FirstID(ctx)
+func (_q *PositionPermissionQuery) FirstIDX(ctx context.Context) int {
+	id, err := _q.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
 	}
@@ -156,8 +156,8 @@ func (ppq *PositionPermissionQuery) FirstIDX(ctx context.Context) int {
 // Only returns a single PositionPermission entity found by the query, ensuring it only returns one.
 // Returns a *NotSingularError when more than one PositionPermission entity is found.
 // Returns a *NotFoundError when no PositionPermission entities are found.
-func (ppq *PositionPermissionQuery) Only(ctx context.Context) (*PositionPermission, error) {
-	nodes, err := ppq.Limit(2).All(setContextOp(ctx, ppq.ctx, ent.OpQueryOnly))
+func (_q *PositionPermissionQuery) Only(ctx context.Context) (*PositionPermission, error) {
+	nodes, err := _q.Limit(2).All(setContextOp(ctx, _q.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -172,8 +172,8 @@ func (ppq *PositionPermissionQuery) Only(ctx context.Context) (*PositionPermissi
 }
 
 // OnlyX is like Only, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) OnlyX(ctx context.Context) *PositionPermission {
-	node, err := ppq.Only(ctx)
+func (_q *PositionPermissionQuery) OnlyX(ctx context.Context) *PositionPermission {
+	node, err := _q.Only(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -183,9 +183,9 @@ func (ppq *PositionPermissionQuery) OnlyX(ctx context.Context) *PositionPermissi
 // OnlyID is like Only, but returns the only PositionPermission ID in the query.
 // Returns a *NotSingularError when more than one PositionPermission ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (ppq *PositionPermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
+func (_q *PositionPermissionQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ppq.Limit(2).IDs(setContextOp(ctx, ppq.ctx, ent.OpQueryOnlyID)); err != nil {
+	if ids, err = _q.Limit(2).IDs(setContextOp(ctx, _q.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -200,8 +200,8 @@ func (ppq *PositionPermissionQuery) OnlyID(ctx context.Context) (id int, err err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) OnlyIDX(ctx context.Context) int {
-	id, err := ppq.OnlyID(ctx)
+func (_q *PositionPermissionQuery) OnlyIDX(ctx context.Context) int {
+	id, err := _q.OnlyID(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -209,18 +209,18 @@ func (ppq *PositionPermissionQuery) OnlyIDX(ctx context.Context) int {
 }
 
 // All executes the query and returns a list of PositionPermissions.
-func (ppq *PositionPermissionQuery) All(ctx context.Context) ([]*PositionPermission, error) {
-	ctx = setContextOp(ctx, ppq.ctx, ent.OpQueryAll)
-	if err := ppq.prepareQuery(ctx); err != nil {
+func (_q *PositionPermissionQuery) All(ctx context.Context) ([]*PositionPermission, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryAll)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
 	qr := querierAll[[]*PositionPermission, *PositionPermissionQuery]()
-	return withInterceptors[[]*PositionPermission](ctx, ppq, qr, ppq.inters)
+	return withInterceptors[[]*PositionPermission](ctx, _q, qr, _q.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) AllX(ctx context.Context) []*PositionPermission {
-	nodes, err := ppq.All(ctx)
+func (_q *PositionPermissionQuery) AllX(ctx context.Context) []*PositionPermission {
+	nodes, err := _q.All(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -228,20 +228,20 @@ func (ppq *PositionPermissionQuery) AllX(ctx context.Context) []*PositionPermiss
 }
 
 // IDs executes the query and returns a list of PositionPermission IDs.
-func (ppq *PositionPermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
-	if ppq.ctx.Unique == nil && ppq.path != nil {
-		ppq.Unique(true)
+func (_q *PositionPermissionQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if _q.ctx.Unique == nil && _q.path != nil {
+		_q.Unique(true)
 	}
-	ctx = setContextOp(ctx, ppq.ctx, ent.OpQueryIDs)
-	if err = ppq.Select(positionpermission.FieldID).Scan(ctx, &ids); err != nil {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryIDs)
+	if err = _q.Select(positionpermission.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) IDsX(ctx context.Context) []int {
-	ids, err := ppq.IDs(ctx)
+func (_q *PositionPermissionQuery) IDsX(ctx context.Context) []int {
+	ids, err := _q.IDs(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -249,17 +249,17 @@ func (ppq *PositionPermissionQuery) IDsX(ctx context.Context) []int {
 }
 
 // Count returns the count of the given query.
-func (ppq *PositionPermissionQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, ppq.ctx, ent.OpQueryCount)
-	if err := ppq.prepareQuery(ctx); err != nil {
+func (_q *PositionPermissionQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryCount)
+	if err := _q.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return withInterceptors[int](ctx, ppq, querierCount[*PositionPermissionQuery](), ppq.inters)
+	return withInterceptors[int](ctx, _q, querierCount[*PositionPermissionQuery](), _q.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) CountX(ctx context.Context) int {
-	count, err := ppq.Count(ctx)
+func (_q *PositionPermissionQuery) CountX(ctx context.Context) int {
+	count, err := _q.Count(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -267,9 +267,9 @@ func (ppq *PositionPermissionQuery) CountX(ctx context.Context) int {
 }
 
 // Exist returns true if the query has elements in the graph.
-func (ppq *PositionPermissionQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, ppq.ctx, ent.OpQueryExist)
-	switch _, err := ppq.FirstID(ctx); {
+func (_q *PositionPermissionQuery) Exist(ctx context.Context) (bool, error) {
+	ctx = setContextOp(ctx, _q.ctx, ent.OpQueryExist)
+	switch _, err := _q.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
 	case err != nil:
@@ -280,8 +280,8 @@ func (ppq *PositionPermissionQuery) Exist(ctx context.Context) (bool, error) {
 }
 
 // ExistX is like Exist, but panics if an error occurs.
-func (ppq *PositionPermissionQuery) ExistX(ctx context.Context) bool {
-	exist, err := ppq.Exist(ctx)
+func (_q *PositionPermissionQuery) ExistX(ctx context.Context) bool {
+	exist, err := _q.Exist(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -290,45 +290,45 @@ func (ppq *PositionPermissionQuery) ExistX(ctx context.Context) bool {
 
 // Clone returns a duplicate of the PositionPermissionQuery builder, including all associated steps. It can be
 // used to prepare common query builders and use them differently after the clone is made.
-func (ppq *PositionPermissionQuery) Clone() *PositionPermissionQuery {
-	if ppq == nil {
+func (_q *PositionPermissionQuery) Clone() *PositionPermissionQuery {
+	if _q == nil {
 		return nil
 	}
 	return &PositionPermissionQuery{
-		config:         ppq.config,
-		ctx:            ppq.ctx.Clone(),
-		order:          append([]positionpermission.OrderOption{}, ppq.order...),
-		inters:         append([]Interceptor{}, ppq.inters...),
-		predicates:     append([]predicate.PositionPermission{}, ppq.predicates...),
-		withPosition:   ppq.withPosition.Clone(),
-		withPermission: ppq.withPermission.Clone(),
+		config:         _q.config,
+		ctx:            _q.ctx.Clone(),
+		order:          append([]positionpermission.OrderOption{}, _q.order...),
+		inters:         append([]Interceptor{}, _q.inters...),
+		predicates:     append([]predicate.PositionPermission{}, _q.predicates...),
+		withPosition:   _q.withPosition.Clone(),
+		withPermission: _q.withPermission.Clone(),
 		// clone intermediate query.
-		sql:       ppq.sql.Clone(),
-		path:      ppq.path,
-		modifiers: append([]func(*sql.Selector){}, ppq.modifiers...),
+		sql:       _q.sql.Clone(),
+		path:      _q.path,
+		modifiers: append([]func(*sql.Selector){}, _q.modifiers...),
 	}
 }
 
 // WithPosition tells the query-builder to eager-load the nodes that are connected to
 // the "position" edge. The optional arguments are used to configure the query builder of the edge.
-func (ppq *PositionPermissionQuery) WithPosition(opts ...func(*PositionQuery)) *PositionPermissionQuery {
-	query := (&PositionClient{config: ppq.config}).Query()
+func (_q *PositionPermissionQuery) WithPosition(opts ...func(*PositionQuery)) *PositionPermissionQuery {
+	query := (&PositionClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	ppq.withPosition = query
-	return ppq
+	_q.withPosition = query
+	return _q
 }
 
 // WithPermission tells the query-builder to eager-load the nodes that are connected to
 // the "permission" edge. The optional arguments are used to configure the query builder of the edge.
-func (ppq *PositionPermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *PositionPermissionQuery {
-	query := (&PermissionClient{config: ppq.config}).Query()
+func (_q *PositionPermissionQuery) WithPermission(opts ...func(*PermissionQuery)) *PositionPermissionQuery {
+	query := (&PermissionClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	ppq.withPermission = query
-	return ppq
+	_q.withPermission = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -345,10 +345,10 @@ func (ppq *PositionPermissionQuery) WithPermission(opts ...func(*PermissionQuery
 //		GroupBy(positionpermission.FieldPositionID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-func (ppq *PositionPermissionQuery) GroupBy(field string, fields ...string) *PositionPermissionGroupBy {
-	ppq.ctx.Fields = append([]string{field}, fields...)
-	grbuild := &PositionPermissionGroupBy{build: ppq}
-	grbuild.flds = &ppq.ctx.Fields
+func (_q *PositionPermissionQuery) GroupBy(field string, fields ...string) *PositionPermissionGroupBy {
+	_q.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &PositionPermissionGroupBy{build: _q}
+	grbuild.flds = &_q.ctx.Fields
 	grbuild.label = positionpermission.Label
 	grbuild.scan = grbuild.Scan
 	return grbuild
@@ -366,83 +366,83 @@ func (ppq *PositionPermissionQuery) GroupBy(field string, fields ...string) *Pos
 //	client.PositionPermission.Query().
 //		Select(positionpermission.FieldPositionID).
 //		Scan(ctx, &v)
-func (ppq *PositionPermissionQuery) Select(fields ...string) *PositionPermissionSelect {
-	ppq.ctx.Fields = append(ppq.ctx.Fields, fields...)
-	sbuild := &PositionPermissionSelect{PositionPermissionQuery: ppq}
+func (_q *PositionPermissionQuery) Select(fields ...string) *PositionPermissionSelect {
+	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
+	sbuild := &PositionPermissionSelect{PositionPermissionQuery: _q}
 	sbuild.label = positionpermission.Label
-	sbuild.flds, sbuild.scan = &ppq.ctx.Fields, sbuild.Scan
+	sbuild.flds, sbuild.scan = &_q.ctx.Fields, sbuild.Scan
 	return sbuild
 }
 
 // Aggregate returns a PositionPermissionSelect configured with the given aggregations.
-func (ppq *PositionPermissionQuery) Aggregate(fns ...AggregateFunc) *PositionPermissionSelect {
-	return ppq.Select().Aggregate(fns...)
+func (_q *PositionPermissionQuery) Aggregate(fns ...AggregateFunc) *PositionPermissionSelect {
+	return _q.Select().Aggregate(fns...)
 }
 
-func (ppq *PositionPermissionQuery) prepareQuery(ctx context.Context) error {
-	for _, inter := range ppq.inters {
+func (_q *PositionPermissionQuery) prepareQuery(ctx context.Context) error {
+	for _, inter := range _q.inters {
 		if inter == nil {
 			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
 		}
 		if trv, ok := inter.(Traverser); ok {
-			if err := trv.Traverse(ctx, ppq); err != nil {
+			if err := trv.Traverse(ctx, _q); err != nil {
 				return err
 			}
 		}
 	}
-	for _, f := range ppq.ctx.Fields {
+	for _, f := range _q.ctx.Fields {
 		if !positionpermission.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
-	if ppq.path != nil {
-		prev, err := ppq.path(ctx)
+	if _q.path != nil {
+		prev, err := _q.path(ctx)
 		if err != nil {
 			return err
 		}
-		ppq.sql = prev
+		_q.sql = prev
 	}
 	return nil
 }
 
-func (ppq *PositionPermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*PositionPermission, error) {
+func (_q *PositionPermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*PositionPermission, error) {
 	var (
 		nodes       = []*PositionPermission{}
-		_spec       = ppq.querySpec()
+		_spec       = _q.querySpec()
 		loadedTypes = [2]bool{
-			ppq.withPosition != nil,
-			ppq.withPermission != nil,
+			_q.withPosition != nil,
+			_q.withPermission != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*PositionPermission).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
-		node := &PositionPermission{config: ppq.config}
+		node := &PositionPermission{config: _q.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(ppq.modifiers) > 0 {
-		_spec.Modifiers = ppq.modifiers
+	if len(_q.modifiers) > 0 {
+		_spec.Modifiers = _q.modifiers
 	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
-	if err := sqlgraph.QueryNodes(ctx, ppq.driver, _spec); err != nil {
+	if err := sqlgraph.QueryNodes(ctx, _q.driver, _spec); err != nil {
 		return nil, err
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := ppq.withPosition; query != nil {
-		if err := ppq.loadPosition(ctx, query, nodes, nil,
+	if query := _q.withPosition; query != nil {
+		if err := _q.loadPosition(ctx, query, nodes, nil,
 			func(n *PositionPermission, e *Position) { n.Edges.Position = e }); err != nil {
 			return nil, err
 		}
 	}
-	if query := ppq.withPermission; query != nil {
-		if err := ppq.loadPermission(ctx, query, nodes, nil,
+	if query := _q.withPermission; query != nil {
+		if err := _q.loadPermission(ctx, query, nodes, nil,
 			func(n *PositionPermission, e *Permission) { n.Edges.Permission = e }); err != nil {
 			return nil, err
 		}
@@ -450,7 +450,7 @@ func (ppq *PositionPermissionQuery) sqlAll(ctx context.Context, hooks ...queryHo
 	return nodes, nil
 }
 
-func (ppq *PositionPermissionQuery) loadPosition(ctx context.Context, query *PositionQuery, nodes []*PositionPermission, init func(*PositionPermission), assign func(*PositionPermission, *Position)) error {
+func (_q *PositionPermissionQuery) loadPosition(ctx context.Context, query *PositionQuery, nodes []*PositionPermission, init func(*PositionPermission), assign func(*PositionPermission, *Position)) error {
 	ids := make([]int64, 0, len(nodes))
 	nodeids := make(map[int64][]*PositionPermission)
 	for i := range nodes {
@@ -479,7 +479,7 @@ func (ppq *PositionPermissionQuery) loadPosition(ctx context.Context, query *Pos
 	}
 	return nil
 }
-func (ppq *PositionPermissionQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*PositionPermission, init func(*PositionPermission), assign func(*PositionPermission, *Permission)) error {
+func (_q *PositionPermissionQuery) loadPermission(ctx context.Context, query *PermissionQuery, nodes []*PositionPermission, init func(*PositionPermission), assign func(*PositionPermission, *Permission)) error {
 	ids := make([]int64, 0, len(nodes))
 	nodeids := make(map[int64][]*PositionPermission)
 	for i := range nodes {
@@ -509,27 +509,27 @@ func (ppq *PositionPermissionQuery) loadPermission(ctx context.Context, query *P
 	return nil
 }
 
-func (ppq *PositionPermissionQuery) sqlCount(ctx context.Context) (int, error) {
-	_spec := ppq.querySpec()
-	if len(ppq.modifiers) > 0 {
-		_spec.Modifiers = ppq.modifiers
+func (_q *PositionPermissionQuery) sqlCount(ctx context.Context) (int, error) {
+	_spec := _q.querySpec()
+	if len(_q.modifiers) > 0 {
+		_spec.Modifiers = _q.modifiers
 	}
-	_spec.Node.Columns = ppq.ctx.Fields
-	if len(ppq.ctx.Fields) > 0 {
-		_spec.Unique = ppq.ctx.Unique != nil && *ppq.ctx.Unique
+	_spec.Node.Columns = _q.ctx.Fields
+	if len(_q.ctx.Fields) > 0 {
+		_spec.Unique = _q.ctx.Unique != nil && *_q.ctx.Unique
 	}
-	return sqlgraph.CountNodes(ctx, ppq.driver, _spec)
+	return sqlgraph.CountNodes(ctx, _q.driver, _spec)
 }
 
-func (ppq *PositionPermissionQuery) querySpec() *sqlgraph.QuerySpec {
+func (_q *PositionPermissionQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := sqlgraph.NewQuerySpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
-	_spec.From = ppq.sql
-	if unique := ppq.ctx.Unique; unique != nil {
+	_spec.From = _q.sql
+	if unique := _q.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
-	} else if ppq.path != nil {
+	} else if _q.path != nil {
 		_spec.Unique = true
 	}
-	if fields := ppq.ctx.Fields; len(fields) > 0 {
+	if fields := _q.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, positionpermission.FieldID)
 		for i := range fields {
@@ -537,27 +537,27 @@ func (ppq *PositionPermissionQuery) querySpec() *sqlgraph.QuerySpec {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
-		if ppq.withPosition != nil {
+		if _q.withPosition != nil {
 			_spec.Node.AddColumnOnce(positionpermission.FieldPositionID)
 		}
-		if ppq.withPermission != nil {
+		if _q.withPermission != nil {
 			_spec.Node.AddColumnOnce(positionpermission.FieldPermissionID)
 		}
 	}
-	if ps := ppq.predicates; len(ps) > 0 {
+	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if limit := ppq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := ppq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
-	if ps := ppq.order; len(ps) > 0 {
+	if ps := _q.order; len(ps) > 0 {
 		_spec.Order = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
@@ -567,36 +567,36 @@ func (ppq *PositionPermissionQuery) querySpec() *sqlgraph.QuerySpec {
 	return _spec
 }
 
-func (ppq *PositionPermissionQuery) sqlQuery(ctx context.Context) *sql.Selector {
-	builder := sql.Dialect(ppq.driver.Dialect())
+func (_q *PositionPermissionQuery) sqlQuery(ctx context.Context) *sql.Selector {
+	builder := sql.Dialect(_q.driver.Dialect())
 	t1 := builder.Table(positionpermission.Table)
-	columns := ppq.ctx.Fields
+	columns := _q.ctx.Fields
 	if len(columns) == 0 {
 		columns = positionpermission.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
-	if ppq.sql != nil {
-		selector = ppq.sql
+	if _q.sql != nil {
+		selector = _q.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if ppq.ctx.Unique != nil && *ppq.ctx.Unique {
+	if _q.ctx.Unique != nil && *_q.ctx.Unique {
 		selector.Distinct()
 	}
-	for _, m := range ppq.modifiers {
+	for _, m := range _q.modifiers {
 		m(selector)
 	}
-	for _, p := range ppq.predicates {
+	for _, p := range _q.predicates {
 		p(selector)
 	}
-	for _, p := range ppq.order {
+	for _, p := range _q.order {
 		p(selector)
 	}
-	if offset := ppq.ctx.Offset; offset != nil {
+	if offset := _q.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := ppq.ctx.Limit; limit != nil {
+	if limit := _q.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -605,33 +605,33 @@ func (ppq *PositionPermissionQuery) sqlQuery(ctx context.Context) *sql.Selector 
 // ForUpdate locks the selected rows against concurrent updates, and prevent them from being
 // updated, deleted or "selected ... for update" by other sessions, until the transaction is
 // either committed or rolled-back.
-func (ppq *PositionPermissionQuery) ForUpdate(opts ...sql.LockOption) *PositionPermissionQuery {
-	if ppq.driver.Dialect() == dialect.Postgres {
-		ppq.Unique(false)
+func (_q *PositionPermissionQuery) ForUpdate(opts ...sql.LockOption) *PositionPermissionQuery {
+	if _q.driver.Dialect() == dialect.Postgres {
+		_q.Unique(false)
 	}
-	ppq.modifiers = append(ppq.modifiers, func(s *sql.Selector) {
+	_q.modifiers = append(_q.modifiers, func(s *sql.Selector) {
 		s.ForUpdate(opts...)
 	})
-	return ppq
+	return _q
 }
 
 // ForShare behaves similarly to ForUpdate, except that it acquires a shared mode lock
 // on any rows that are read. Other sessions can read the rows, but cannot modify them
 // until your transaction commits.
-func (ppq *PositionPermissionQuery) ForShare(opts ...sql.LockOption) *PositionPermissionQuery {
-	if ppq.driver.Dialect() == dialect.Postgres {
-		ppq.Unique(false)
+func (_q *PositionPermissionQuery) ForShare(opts ...sql.LockOption) *PositionPermissionQuery {
+	if _q.driver.Dialect() == dialect.Postgres {
+		_q.Unique(false)
 	}
-	ppq.modifiers = append(ppq.modifiers, func(s *sql.Selector) {
+	_q.modifiers = append(_q.modifiers, func(s *sql.Selector) {
 		s.ForShare(opts...)
 	})
-	return ppq
+	return _q
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.
-func (ppq *PositionPermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionPermissionSelect {
-	ppq.modifiers = append(ppq.modifiers, modifiers...)
-	return ppq.Select()
+func (_q *PositionPermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *PositionPermissionSelect {
+	_q.modifiers = append(_q.modifiers, modifiers...)
+	return _q.Select()
 }
 
 // Omit allows the unselect one or more fields/columns for the given query,
@@ -673,41 +673,41 @@ type PositionPermissionGroupBy struct {
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
-func (ppgb *PositionPermissionGroupBy) Aggregate(fns ...AggregateFunc) *PositionPermissionGroupBy {
-	ppgb.fns = append(ppgb.fns, fns...)
-	return ppgb
+func (_g *PositionPermissionGroupBy) Aggregate(fns ...AggregateFunc) *PositionPermissionGroupBy {
+	_g.fns = append(_g.fns, fns...)
+	return _g
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ppgb *PositionPermissionGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ppgb.build.ctx, ent.OpQueryGroupBy)
-	if err := ppgb.build.prepareQuery(ctx); err != nil {
+func (_g *PositionPermissionGroupBy) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _g.build.ctx, ent.OpQueryGroupBy)
+	if err := _g.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*PositionPermissionQuery, *PositionPermissionGroupBy](ctx, ppgb.build, ppgb, ppgb.build.inters, v)
+	return scanWithInterceptors[*PositionPermissionQuery, *PositionPermissionGroupBy](ctx, _g.build, _g, _g.build.inters, v)
 }
 
-func (ppgb *PositionPermissionGroupBy) sqlScan(ctx context.Context, root *PositionPermissionQuery, v any) error {
+func (_g *PositionPermissionGroupBy) sqlScan(ctx context.Context, root *PositionPermissionQuery, v any) error {
 	selector := root.sqlQuery(ctx).Select()
-	aggregation := make([]string, 0, len(ppgb.fns))
-	for _, fn := range ppgb.fns {
+	aggregation := make([]string, 0, len(_g.fns))
+	for _, fn := range _g.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
 	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(*ppgb.flds)+len(ppgb.fns))
-		for _, f := range *ppgb.flds {
+		columns := make([]string, 0, len(*_g.flds)+len(_g.fns))
+		for _, f := range *_g.flds {
 			columns = append(columns, selector.C(f))
 		}
 		columns = append(columns, aggregation...)
 		selector.Select(columns...)
 	}
-	selector.GroupBy(selector.Columns(*ppgb.flds...)...)
+	selector.GroupBy(selector.Columns(*_g.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := ppgb.build.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _g.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -721,27 +721,27 @@ type PositionPermissionSelect struct {
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
-func (pps *PositionPermissionSelect) Aggregate(fns ...AggregateFunc) *PositionPermissionSelect {
-	pps.fns = append(pps.fns, fns...)
-	return pps
+func (_s *PositionPermissionSelect) Aggregate(fns ...AggregateFunc) *PositionPermissionSelect {
+	_s.fns = append(_s.fns, fns...)
+	return _s
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (pps *PositionPermissionSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, pps.ctx, ent.OpQuerySelect)
-	if err := pps.prepareQuery(ctx); err != nil {
+func (_s *PositionPermissionSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, _s.ctx, ent.OpQuerySelect)
+	if err := _s.prepareQuery(ctx); err != nil {
 		return err
 	}
-	return scanWithInterceptors[*PositionPermissionQuery, *PositionPermissionSelect](ctx, pps.PositionPermissionQuery, pps, pps.inters, v)
+	return scanWithInterceptors[*PositionPermissionQuery, *PositionPermissionSelect](ctx, _s.PositionPermissionQuery, _s, _s.inters, v)
 }
 
-func (pps *PositionPermissionSelect) sqlScan(ctx context.Context, root *PositionPermissionQuery, v any) error {
+func (_s *PositionPermissionSelect) sqlScan(ctx context.Context, root *PositionPermissionQuery, v any) error {
 	selector := root.sqlQuery(ctx)
-	aggregation := make([]string, 0, len(pps.fns))
-	for _, fn := range pps.fns {
+	aggregation := make([]string, 0, len(_s.fns))
+	for _, fn := range _s.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	switch n := len(*pps.selector.flds); {
+	switch n := len(*_s.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
 		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
@@ -749,7 +749,7 @@ func (pps *PositionPermissionSelect) sqlScan(ctx context.Context, root *Position
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := pps.driver.Query(ctx, query, args, rows); err != nil {
+	if err := _s.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
@@ -757,7 +757,7 @@ func (pps *PositionPermissionSelect) sqlScan(ctx context.Context, root *Position
 }
 
 // Modify adds a query modifier for attaching custom logic to queries.
-func (pps *PositionPermissionSelect) Modify(modifiers ...func(s *sql.Selector)) *PositionPermissionSelect {
-	pps.modifiers = append(pps.modifiers, modifiers...)
-	return pps
+func (_s *PositionPermissionSelect) Modify(modifiers ...func(s *sql.Selector)) *PositionPermissionSelect {
+	_s.modifiers = append(_s.modifiers, modifiers...)
+	return _s
 }

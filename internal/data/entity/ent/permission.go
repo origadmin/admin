@@ -136,7 +136,7 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Permission fields.
-func (pe *Permission) assignValues(columns []string, values []any) error {
+func (_m *Permission) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -147,48 +147,48 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pe.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case permission.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				pe.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case permission.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				pe.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case permission.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				pe.Name = value.String
+				_m.Name = value.String
 			}
 		case permission.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				pe.Keyword = value.String
+				_m.Keyword = value.String
 			}
 		case permission.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				pe.Description = value.String
+				_m.Description = value.String
 			}
 		case permission.FieldDataScope:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field data_scope", values[i])
 			} else if value.Valid {
-				pe.DataScope = value.String
+				_m.DataScope = value.String
 			}
 		case permission.FieldDataRules:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field data_rules", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &pe.DataRules); err != nil {
+				if err := json.Unmarshal(*value, &_m.DataRules); err != nil {
 					return fmt.Errorf("unmarshal field data_rules: %w", err)
 				}
 			}
@@ -196,10 +196,10 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field actions", values[i])
 			} else if value.Valid {
-				pe.Actions = permission.Actions(value.String)
+				_m.Actions = permission.Actions(value.String)
 			}
 		default:
-			pe.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -207,86 +207,86 @@ func (pe *Permission) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Permission.
 // This includes values selected through modifiers, order, etc.
-func (pe *Permission) Value(name string) (ent.Value, error) {
-	return pe.selectValues.Get(name)
+func (_m *Permission) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryRoles queries the "roles" edge of the Permission entity.
-func (pe *Permission) QueryRoles() *RoleQuery {
-	return NewPermissionClient(pe.config).QueryRoles(pe)
+func (_m *Permission) QueryRoles() *RoleQuery {
+	return NewPermissionClient(_m.config).QueryRoles(_m)
 }
 
 // QueryPositions queries the "positions" edge of the Permission entity.
-func (pe *Permission) QueryPositions() *PositionQuery {
-	return NewPermissionClient(pe.config).QueryPositions(pe)
+func (_m *Permission) QueryPositions() *PositionQuery {
+	return NewPermissionClient(_m.config).QueryPositions(_m)
 }
 
 // QueryResources queries the "resources" edge of the Permission entity.
-func (pe *Permission) QueryResources() *ResourceQuery {
-	return NewPermissionClient(pe.config).QueryResources(pe)
+func (_m *Permission) QueryResources() *ResourceQuery {
+	return NewPermissionClient(_m.config).QueryResources(_m)
 }
 
 // QueryRolePermissions queries the "role_permissions" edge of the Permission entity.
-func (pe *Permission) QueryRolePermissions() *RolePermissionQuery {
-	return NewPermissionClient(pe.config).QueryRolePermissions(pe)
+func (_m *Permission) QueryRolePermissions() *RolePermissionQuery {
+	return NewPermissionClient(_m.config).QueryRolePermissions(_m)
 }
 
 // QueryPositionPermissions queries the "position_permissions" edge of the Permission entity.
-func (pe *Permission) QueryPositionPermissions() *PositionPermissionQuery {
-	return NewPermissionClient(pe.config).QueryPositionPermissions(pe)
+func (_m *Permission) QueryPositionPermissions() *PositionPermissionQuery {
+	return NewPermissionClient(_m.config).QueryPositionPermissions(_m)
 }
 
 // QueryPermissionResources queries the "permission_resources" edge of the Permission entity.
-func (pe *Permission) QueryPermissionResources() *PermissionResourceQuery {
-	return NewPermissionClient(pe.config).QueryPermissionResources(pe)
+func (_m *Permission) QueryPermissionResources() *PermissionResourceQuery {
+	return NewPermissionClient(_m.config).QueryPermissionResources(_m)
 }
 
 // Update returns a builder for updating this Permission.
 // Note that you need to call Permission.Unwrap() before calling this method if this Permission
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (pe *Permission) Update() *PermissionUpdateOne {
-	return NewPermissionClient(pe.config).UpdateOne(pe)
+func (_m *Permission) Update() *PermissionUpdateOne {
+	return NewPermissionClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Permission entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (pe *Permission) Unwrap() *Permission {
-	_tx, ok := pe.config.driver.(*txDriver)
+func (_m *Permission) Unwrap() *Permission {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Permission is not a transactional entity")
 	}
-	pe.config.driver = _tx.drv
-	return pe
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (pe *Permission) String() string {
+func (_m *Permission) String() string {
 	var builder strings.Builder
 	builder.WriteString("Permission(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", pe.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(pe.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(pe.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(pe.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("keyword=")
-	builder.WriteString(pe.Keyword)
+	builder.WriteString(_m.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(pe.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("data_scope=")
-	builder.WriteString(pe.DataScope)
+	builder.WriteString(_m.DataScope)
 	builder.WriteString(", ")
 	builder.WriteString("data_rules=")
-	builder.WriteString(fmt.Sprintf("%v", pe.DataRules))
+	builder.WriteString(fmt.Sprintf("%v", _m.DataRules))
 	builder.WriteString(", ")
 	builder.WriteString("actions=")
-	builder.WriteString(fmt.Sprintf("%v", pe.Actions))
+	builder.WriteString(fmt.Sprintf("%v", _m.Actions))
 	builder.WriteByte(')')
 	return builder.String()
 }

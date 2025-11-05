@@ -22,40 +22,40 @@ type PositionPermissionCreate struct {
 }
 
 // SetPositionID sets the "position_id" field.
-func (ppc *PositionPermissionCreate) SetPositionID(i int64) *PositionPermissionCreate {
-	ppc.mutation.SetPositionID(i)
-	return ppc
+func (_c *PositionPermissionCreate) SetPositionID(v int64) *PositionPermissionCreate {
+	_c.mutation.SetPositionID(v)
+	return _c
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (ppc *PositionPermissionCreate) SetPermissionID(i int64) *PositionPermissionCreate {
-	ppc.mutation.SetPermissionID(i)
-	return ppc
+func (_c *PositionPermissionCreate) SetPermissionID(v int64) *PositionPermissionCreate {
+	_c.mutation.SetPermissionID(v)
+	return _c
 }
 
 // SetPosition sets the "position" edge to the Position entity.
-func (ppc *PositionPermissionCreate) SetPosition(p *Position) *PositionPermissionCreate {
-	return ppc.SetPositionID(p.ID)
+func (_c *PositionPermissionCreate) SetPosition(v *Position) *PositionPermissionCreate {
+	return _c.SetPositionID(v.ID)
 }
 
 // SetPermission sets the "permission" edge to the Permission entity.
-func (ppc *PositionPermissionCreate) SetPermission(p *Permission) *PositionPermissionCreate {
-	return ppc.SetPermissionID(p.ID)
+func (_c *PositionPermissionCreate) SetPermission(v *Permission) *PositionPermissionCreate {
+	return _c.SetPermissionID(v.ID)
 }
 
 // Mutation returns the PositionPermissionMutation object of the builder.
-func (ppc *PositionPermissionCreate) Mutation() *PositionPermissionMutation {
-	return ppc.mutation
+func (_c *PositionPermissionCreate) Mutation() *PositionPermissionMutation {
+	return _c.mutation
 }
 
 // Save creates the PositionPermission in the database.
-func (ppc *PositionPermissionCreate) Save(ctx context.Context) (*PositionPermission, error) {
-	return withHooks(ctx, ppc.sqlSave, ppc.mutation, ppc.hooks)
+func (_c *PositionPermissionCreate) Save(ctx context.Context) (*PositionPermission, error) {
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (ppc *PositionPermissionCreate) SaveX(ctx context.Context) *PositionPermission {
-	v, err := ppc.Save(ctx)
+func (_c *PositionPermissionCreate) SaveX(ctx context.Context) *PositionPermission {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -63,51 +63,51 @@ func (ppc *PositionPermissionCreate) SaveX(ctx context.Context) *PositionPermiss
 }
 
 // Exec executes the query.
-func (ppc *PositionPermissionCreate) Exec(ctx context.Context) error {
-	_, err := ppc.Save(ctx)
+func (_c *PositionPermissionCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ppc *PositionPermissionCreate) ExecX(ctx context.Context) {
-	if err := ppc.Exec(ctx); err != nil {
+func (_c *PositionPermissionCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ppc *PositionPermissionCreate) check() error {
-	if _, ok := ppc.mutation.PositionID(); !ok {
+func (_c *PositionPermissionCreate) check() error {
+	if _, ok := _c.mutation.PositionID(); !ok {
 		return &ValidationError{Name: "position_id", err: errors.New(`ent: missing required field "PositionPermission.position_id"`)}
 	}
-	if v, ok := ppc.mutation.PositionID(); ok {
+	if v, ok := _c.mutation.PositionID(); ok {
 		if err := positionpermission.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.position_id": %w`, err)}
 		}
 	}
-	if _, ok := ppc.mutation.PermissionID(); !ok {
+	if _, ok := _c.mutation.PermissionID(); !ok {
 		return &ValidationError{Name: "permission_id", err: errors.New(`ent: missing required field "PositionPermission.permission_id"`)}
 	}
-	if v, ok := ppc.mutation.PermissionID(); ok {
+	if v, ok := _c.mutation.PermissionID(); ok {
 		if err := positionpermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.permission_id": %w`, err)}
 		}
 	}
-	if len(ppc.mutation.PositionIDs()) == 0 {
+	if len(_c.mutation.PositionIDs()) == 0 {
 		return &ValidationError{Name: "position", err: errors.New(`ent: missing required edge "PositionPermission.position"`)}
 	}
-	if len(ppc.mutation.PermissionIDs()) == 0 {
+	if len(_c.mutation.PermissionIDs()) == 0 {
 		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required edge "PositionPermission.permission"`)}
 	}
 	return nil
 }
 
-func (ppc *PositionPermissionCreate) sqlSave(ctx context.Context) (*PositionPermission, error) {
-	if err := ppc.check(); err != nil {
+func (_c *PositionPermissionCreate) sqlSave(ctx context.Context) (*PositionPermission, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := ppc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, ppc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -115,17 +115,17 @@ func (ppc *PositionPermissionCreate) sqlSave(ctx context.Context) (*PositionPerm
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	ppc.mutation.id = &_node.ID
-	ppc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (ppc *PositionPermissionCreate) createSpec() (*PositionPermission, *sqlgraph.CreateSpec) {
+func (_c *PositionPermissionCreate) createSpec() (*PositionPermission, *sqlgraph.CreateSpec) {
 	var (
-		_node = &PositionPermission{config: ppc.config}
+		_node = &PositionPermission{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(positionpermission.Table, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
 	)
-	if nodes := ppc.mutation.PositionIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -142,7 +142,7 @@ func (ppc *PositionPermissionCreate) createSpec() (*PositionPermission, *sqlgrap
 		_node.PositionID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ppc.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -163,23 +163,23 @@ func (ppc *PositionPermissionCreate) createSpec() (*PositionPermission, *sqlgrap
 }
 
 // SetPositionPermission set the PositionPermission
-func (ppc *PositionPermissionCreate) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionCreate {
-	m := ppc.mutation
+func (_c *PositionPermissionCreate) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = positionpermission.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return ppc
+	return _c
 }
 
 // SetPositionPermissionWithZero set the PositionPermission
-func (ppc *PositionPermissionCreate) SetPositionPermissionWithZero(input *PositionPermission, fields ...string) *PositionPermissionCreate {
-	m := ppc.mutation
+func (_c *PositionPermissionCreate) SetPositionPermissionWithZero(input *PositionPermission, fields ...string) *PositionPermissionCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = positionpermission.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return ppc
+	return _c
 }
 
 // PositionPermissionCreateBulk is the builder for creating many PositionPermission entities in bulk.
@@ -190,16 +190,16 @@ type PositionPermissionCreateBulk struct {
 }
 
 // Save creates the PositionPermission entities in the database.
-func (ppcb *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*PositionPermission, error) {
-	if ppcb.err != nil {
-		return nil, ppcb.err
+func (_c *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*PositionPermission, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(ppcb.builders))
-	nodes := make([]*PositionPermission, len(ppcb.builders))
-	mutators := make([]Mutator, len(ppcb.builders))
-	for i := range ppcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*PositionPermission, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := ppcb.builders[i]
+			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PositionPermissionMutation)
 				if !ok {
@@ -212,11 +212,11 @@ func (ppcb *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*Position
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, ppcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, ppcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -240,7 +240,7 @@ func (ppcb *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*Position
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, ppcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -248,8 +248,8 @@ func (ppcb *PositionPermissionCreateBulk) Save(ctx context.Context) ([]*Position
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ppcb *PositionPermissionCreateBulk) SaveX(ctx context.Context) []*PositionPermission {
-	v, err := ppcb.Save(ctx)
+func (_c *PositionPermissionCreateBulk) SaveX(ctx context.Context) []*PositionPermission {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -257,14 +257,14 @@ func (ppcb *PositionPermissionCreateBulk) SaveX(ctx context.Context) []*Position
 }
 
 // Exec executes the query.
-func (ppcb *PositionPermissionCreateBulk) Exec(ctx context.Context) error {
-	_, err := ppcb.Save(ctx)
+func (_c *PositionPermissionCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ppcb *PositionPermissionCreateBulk) ExecX(ctx context.Context) {
-	if err := ppcb.Exec(ctx); err != nil {
+func (_c *PositionPermissionCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

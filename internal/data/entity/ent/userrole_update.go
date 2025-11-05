@@ -25,74 +25,74 @@ type UserRoleUpdate struct {
 }
 
 // Where appends a list predicates to the UserRoleUpdate builder.
-func (uru *UserRoleUpdate) Where(ps ...predicate.UserRole) *UserRoleUpdate {
-	uru.mutation.Where(ps...)
-	return uru
+func (_u *UserRoleUpdate) Where(ps ...predicate.UserRole) *UserRoleUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetUserID sets the "user_id" field.
-func (uru *UserRoleUpdate) SetUserID(i int64) *UserRoleUpdate {
-	uru.mutation.SetUserID(i)
-	return uru
+func (_u *UserRoleUpdate) SetUserID(v int64) *UserRoleUpdate {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uru *UserRoleUpdate) SetNillableUserID(i *int64) *UserRoleUpdate {
-	if i != nil {
-		uru.SetUserID(*i)
+func (_u *UserRoleUpdate) SetNillableUserID(v *int64) *UserRoleUpdate {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return uru
+	return _u
 }
 
 // SetRoleID sets the "role_id" field.
-func (uru *UserRoleUpdate) SetRoleID(i int64) *UserRoleUpdate {
-	uru.mutation.SetRoleID(i)
-	return uru
+func (_u *UserRoleUpdate) SetRoleID(v int64) *UserRoleUpdate {
+	_u.mutation.SetRoleID(v)
+	return _u
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (uru *UserRoleUpdate) SetNillableRoleID(i *int64) *UserRoleUpdate {
-	if i != nil {
-		uru.SetRoleID(*i)
+func (_u *UserRoleUpdate) SetNillableRoleID(v *int64) *UserRoleUpdate {
+	if v != nil {
+		_u.SetRoleID(*v)
 	}
-	return uru
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (uru *UserRoleUpdate) SetUser(u *User) *UserRoleUpdate {
-	return uru.SetUserID(u.ID)
+func (_u *UserRoleUpdate) SetUser(v *User) *UserRoleUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // SetRole sets the "role" edge to the Role entity.
-func (uru *UserRoleUpdate) SetRole(r *Role) *UserRoleUpdate {
-	return uru.SetRoleID(r.ID)
+func (_u *UserRoleUpdate) SetRole(v *Role) *UserRoleUpdate {
+	return _u.SetRoleID(v.ID)
 }
 
 // Mutation returns the UserRoleMutation object of the builder.
-func (uru *UserRoleUpdate) Mutation() *UserRoleMutation {
-	return uru.mutation
+func (_u *UserRoleUpdate) Mutation() *UserRoleMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (uru *UserRoleUpdate) ClearUser() *UserRoleUpdate {
-	uru.mutation.ClearUser()
-	return uru
+func (_u *UserRoleUpdate) ClearUser() *UserRoleUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearRole clears the "role" edge to the Role entity.
-func (uru *UserRoleUpdate) ClearRole() *UserRoleUpdate {
-	uru.mutation.ClearRole()
-	return uru
+func (_u *UserRoleUpdate) ClearRole() *UserRoleUpdate {
+	_u.mutation.ClearRole()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (uru *UserRoleUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, uru.sqlSave, uru.mutation, uru.hooks)
+func (_u *UserRoleUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (uru *UserRoleUpdate) SaveX(ctx context.Context) int {
-	affected, err := uru.Save(ctx)
+func (_u *UserRoleUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -100,58 +100,58 @@ func (uru *UserRoleUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (uru *UserRoleUpdate) Exec(ctx context.Context) error {
-	_, err := uru.Save(ctx)
+func (_u *UserRoleUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (uru *UserRoleUpdate) ExecX(ctx context.Context) {
-	if err := uru.Exec(ctx); err != nil {
+func (_u *UserRoleUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (uru *UserRoleUpdate) check() error {
-	if v, ok := uru.mutation.UserID(); ok {
+func (_u *UserRoleUpdate) check() error {
+	if v, ok := _u.mutation.UserID(); ok {
 		if err := userrole.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.user_id": %w`, err)}
 		}
 	}
-	if v, ok := uru.mutation.RoleID(); ok {
+	if v, ok := _u.mutation.RoleID(); ok {
 		if err := userrole.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_id": %w`, err)}
 		}
 	}
-	if uru.mutation.UserCleared() && len(uru.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserRole.user"`)
 	}
-	if uru.mutation.RoleCleared() && len(uru.mutation.RoleIDs()) > 0 {
+	if _u.mutation.RoleCleared() && len(_u.mutation.RoleIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserRole.role"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (uru *UserRoleUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserRoleUpdate {
-	uru.modifiers = append(uru.modifiers, modifiers...)
-	return uru
+func (_u *UserRoleUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserRoleUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := uru.check(); err != nil {
-		return n, err
+func (_u *UserRoleUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
-	if ps := uru.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if uru.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -164,7 +164,7 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uru.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -180,7 +180,7 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if uru.mutation.RoleCleared() {
+	if _u.mutation.RoleCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -193,7 +193,7 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uru.mutation.RoleIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -209,8 +209,8 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(uru.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, uru.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userrole.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -218,8 +218,8 @@ func (uru *UserRoleUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	uru.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // UserRoleUpdateOne is the builder for updating a single UserRole entity.
@@ -232,81 +232,81 @@ type UserRoleUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (uruo *UserRoleUpdateOne) SetUserID(i int64) *UserRoleUpdateOne {
-	uruo.mutation.SetUserID(i)
-	return uruo
+func (_u *UserRoleUpdateOne) SetUserID(v int64) *UserRoleUpdateOne {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uruo *UserRoleUpdateOne) SetNillableUserID(i *int64) *UserRoleUpdateOne {
-	if i != nil {
-		uruo.SetUserID(*i)
+func (_u *UserRoleUpdateOne) SetNillableUserID(v *int64) *UserRoleUpdateOne {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return uruo
+	return _u
 }
 
 // SetRoleID sets the "role_id" field.
-func (uruo *UserRoleUpdateOne) SetRoleID(i int64) *UserRoleUpdateOne {
-	uruo.mutation.SetRoleID(i)
-	return uruo
+func (_u *UserRoleUpdateOne) SetRoleID(v int64) *UserRoleUpdateOne {
+	_u.mutation.SetRoleID(v)
+	return _u
 }
 
 // SetNillableRoleID sets the "role_id" field if the given value is not nil.
-func (uruo *UserRoleUpdateOne) SetNillableRoleID(i *int64) *UserRoleUpdateOne {
-	if i != nil {
-		uruo.SetRoleID(*i)
+func (_u *UserRoleUpdateOne) SetNillableRoleID(v *int64) *UserRoleUpdateOne {
+	if v != nil {
+		_u.SetRoleID(*v)
 	}
-	return uruo
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (uruo *UserRoleUpdateOne) SetUser(u *User) *UserRoleUpdateOne {
-	return uruo.SetUserID(u.ID)
+func (_u *UserRoleUpdateOne) SetUser(v *User) *UserRoleUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // SetRole sets the "role" edge to the Role entity.
-func (uruo *UserRoleUpdateOne) SetRole(r *Role) *UserRoleUpdateOne {
-	return uruo.SetRoleID(r.ID)
+func (_u *UserRoleUpdateOne) SetRole(v *Role) *UserRoleUpdateOne {
+	return _u.SetRoleID(v.ID)
 }
 
 // Mutation returns the UserRoleMutation object of the builder.
-func (uruo *UserRoleUpdateOne) Mutation() *UserRoleMutation {
-	return uruo.mutation
+func (_u *UserRoleUpdateOne) Mutation() *UserRoleMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (uruo *UserRoleUpdateOne) ClearUser() *UserRoleUpdateOne {
-	uruo.mutation.ClearUser()
-	return uruo
+func (_u *UserRoleUpdateOne) ClearUser() *UserRoleUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearRole clears the "role" edge to the Role entity.
-func (uruo *UserRoleUpdateOne) ClearRole() *UserRoleUpdateOne {
-	uruo.mutation.ClearRole()
-	return uruo
+func (_u *UserRoleUpdateOne) ClearRole() *UserRoleUpdateOne {
+	_u.mutation.ClearRole()
+	return _u
 }
 
 // Where appends a list predicates to the UserRoleUpdate builder.
-func (uruo *UserRoleUpdateOne) Where(ps ...predicate.UserRole) *UserRoleUpdateOne {
-	uruo.mutation.Where(ps...)
-	return uruo
+func (_u *UserRoleUpdateOne) Where(ps ...predicate.UserRole) *UserRoleUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (uruo *UserRoleUpdateOne) Select(field string, fields ...string) *UserRoleUpdateOne {
-	uruo.fields = append([]string{field}, fields...)
-	return uruo
+func (_u *UserRoleUpdateOne) Select(field string, fields ...string) *UserRoleUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated UserRole entity.
-func (uruo *UserRoleUpdateOne) Save(ctx context.Context) (*UserRole, error) {
-	return withHooks(ctx, uruo.sqlSave, uruo.mutation, uruo.hooks)
+func (_u *UserRoleUpdateOne) Save(ctx context.Context) (*UserRole, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (uruo *UserRoleUpdateOne) SaveX(ctx context.Context) *UserRole {
-	node, err := uruo.Save(ctx)
+func (_u *UserRoleUpdateOne) SaveX(ctx context.Context) *UserRole {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -314,56 +314,56 @@ func (uruo *UserRoleUpdateOne) SaveX(ctx context.Context) *UserRole {
 }
 
 // Exec executes the query on the entity.
-func (uruo *UserRoleUpdateOne) Exec(ctx context.Context) error {
-	_, err := uruo.Save(ctx)
+func (_u *UserRoleUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (uruo *UserRoleUpdateOne) ExecX(ctx context.Context) {
-	if err := uruo.Exec(ctx); err != nil {
+func (_u *UserRoleUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (uruo *UserRoleUpdateOne) check() error {
-	if v, ok := uruo.mutation.UserID(); ok {
+func (_u *UserRoleUpdateOne) check() error {
+	if v, ok := _u.mutation.UserID(); ok {
 		if err := userrole.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.user_id": %w`, err)}
 		}
 	}
-	if v, ok := uruo.mutation.RoleID(); ok {
+	if v, ok := _u.mutation.RoleID(); ok {
 		if err := userrole.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_id": %w`, err)}
 		}
 	}
-	if uruo.mutation.UserCleared() && len(uruo.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserRole.user"`)
 	}
-	if uruo.mutation.RoleCleared() && len(uruo.mutation.RoleIDs()) > 0 {
+	if _u.mutation.RoleCleared() && len(_u.mutation.RoleIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserRole.role"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (uruo *UserRoleUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserRoleUpdateOne {
-	uruo.modifiers = append(uruo.modifiers, modifiers...)
-	return uruo
+func (_u *UserRoleUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserRoleUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, err error) {
-	if err := uruo.check(); err != nil {
+func (_u *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userrole.Table, userrole.Columns, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
-	id, ok := uruo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserRole.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := uruo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, userrole.FieldID)
 		for _, f := range fields {
@@ -375,14 +375,14 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 			}
 		}
 	}
-	if ps := uruo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if uruo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -395,7 +395,7 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uruo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -411,7 +411,7 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if uruo.mutation.RoleCleared() {
+	if _u.mutation.RoleCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -424,7 +424,7 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uruo.mutation.RoleIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -440,11 +440,11 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(uruo.modifiers...)
-	_node = &UserRole{config: uruo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &UserRole{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, uruo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userrole.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -452,7 +452,7 @@ func (uruo *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, er
 		}
 		return nil, err
 	}
-	uruo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
 

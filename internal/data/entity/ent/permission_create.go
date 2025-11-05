@@ -27,219 +27,219 @@ type PermissionCreate struct {
 }
 
 // SetCreateTime sets the "create_time" field.
-func (pc *PermissionCreate) SetCreateTime(t time.Time) *PermissionCreate {
-	pc.mutation.SetCreateTime(t)
-	return pc
+func (_c *PermissionCreate) SetCreateTime(v time.Time) *PermissionCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableCreateTime(t *time.Time) *PermissionCreate {
-	if t != nil {
-		pc.SetCreateTime(*t)
+func (_c *PermissionCreate) SetNillableCreateTime(v *time.Time) *PermissionCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (pc *PermissionCreate) SetUpdateTime(t time.Time) *PermissionCreate {
-	pc.mutation.SetUpdateTime(t)
-	return pc
+func (_c *PermissionCreate) SetUpdateTime(v time.Time) *PermissionCreate {
+	_c.mutation.SetUpdateTime(v)
+	return _c
 }
 
 // SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableUpdateTime(t *time.Time) *PermissionCreate {
-	if t != nil {
-		pc.SetUpdateTime(*t)
+func (_c *PermissionCreate) SetNillableUpdateTime(v *time.Time) *PermissionCreate {
+	if v != nil {
+		_c.SetUpdateTime(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetName sets the "name" field.
-func (pc *PermissionCreate) SetName(s string) *PermissionCreate {
-	pc.mutation.SetName(s)
-	return pc
+func (_c *PermissionCreate) SetName(v string) *PermissionCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableName(s *string) *PermissionCreate {
-	if s != nil {
-		pc.SetName(*s)
+func (_c *PermissionCreate) SetNillableName(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetName(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetKeyword sets the "keyword" field.
-func (pc *PermissionCreate) SetKeyword(s string) *PermissionCreate {
-	pc.mutation.SetKeyword(s)
-	return pc
+func (_c *PermissionCreate) SetKeyword(v string) *PermissionCreate {
+	_c.mutation.SetKeyword(v)
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (pc *PermissionCreate) SetDescription(s string) *PermissionCreate {
-	pc.mutation.SetDescription(s)
-	return pc
+func (_c *PermissionCreate) SetDescription(v string) *PermissionCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableDescription(s *string) *PermissionCreate {
-	if s != nil {
-		pc.SetDescription(*s)
+func (_c *PermissionCreate) SetNillableDescription(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetDescription(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetDataScope sets the "data_scope" field.
-func (pc *PermissionCreate) SetDataScope(s string) *PermissionCreate {
-	pc.mutation.SetDataScope(s)
-	return pc
+func (_c *PermissionCreate) SetDataScope(v string) *PermissionCreate {
+	_c.mutation.SetDataScope(v)
+	return _c
 }
 
 // SetNillableDataScope sets the "data_scope" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableDataScope(s *string) *PermissionCreate {
-	if s != nil {
-		pc.SetDataScope(*s)
+func (_c *PermissionCreate) SetNillableDataScope(v *string) *PermissionCreate {
+	if v != nil {
+		_c.SetDataScope(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetDataRules sets the "data_rules" field.
-func (pc *PermissionCreate) SetDataRules(m map[string]string) *PermissionCreate {
-	pc.mutation.SetDataRules(m)
-	return pc
+func (_c *PermissionCreate) SetDataRules(v map[string]string) *PermissionCreate {
+	_c.mutation.SetDataRules(v)
+	return _c
 }
 
 // SetActions sets the "actions" field.
-func (pc *PermissionCreate) SetActions(pe permission.Actions) *PermissionCreate {
-	pc.mutation.SetActions(pe)
-	return pc
+func (_c *PermissionCreate) SetActions(v permission.Actions) *PermissionCreate {
+	_c.mutation.SetActions(v)
+	return _c
 }
 
 // SetNillableActions sets the "actions" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableActions(pe *permission.Actions) *PermissionCreate {
-	if pe != nil {
-		pc.SetActions(*pe)
+func (_c *PermissionCreate) SetNillableActions(v *permission.Actions) *PermissionCreate {
+	if v != nil {
+		_c.SetActions(*v)
 	}
-	return pc
+	return _c
 }
 
 // SetID sets the "id" field.
-func (pc *PermissionCreate) SetID(i int64) *PermissionCreate {
-	pc.mutation.SetID(i)
-	return pc
+func (_c *PermissionCreate) SetID(v int64) *PermissionCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (pc *PermissionCreate) SetNillableID(i *int64) *PermissionCreate {
-	if i != nil {
-		pc.SetID(*i)
+func (_c *PermissionCreate) SetNillableID(v *int64) *PermissionCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return pc
+	return _c
 }
 
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
-func (pc *PermissionCreate) AddRoleIDs(ids ...int64) *PermissionCreate {
-	pc.mutation.AddRoleIDs(ids...)
-	return pc
+func (_c *PermissionCreate) AddRoleIDs(ids ...int64) *PermissionCreate {
+	_c.mutation.AddRoleIDs(ids...)
+	return _c
 }
 
 // AddRoles adds the "roles" edges to the Role entity.
-func (pc *PermissionCreate) AddRoles(r ...*Role) *PermissionCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_c *PermissionCreate) AddRoles(v ...*Role) *PermissionCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pc.AddRoleIDs(ids...)
+	return _c.AddRoleIDs(ids...)
 }
 
 // AddPositionIDs adds the "positions" edge to the Position entity by IDs.
-func (pc *PermissionCreate) AddPositionIDs(ids ...int64) *PermissionCreate {
-	pc.mutation.AddPositionIDs(ids...)
-	return pc
+func (_c *PermissionCreate) AddPositionIDs(ids ...int64) *PermissionCreate {
+	_c.mutation.AddPositionIDs(ids...)
+	return _c
 }
 
 // AddPositions adds the "positions" edges to the Position entity.
-func (pc *PermissionCreate) AddPositions(p ...*Position) *PermissionCreate {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *PermissionCreate) AddPositions(v ...*Position) *PermissionCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pc.AddPositionIDs(ids...)
+	return _c.AddPositionIDs(ids...)
 }
 
 // AddResourceIDs adds the "resources" edge to the Resource entity by IDs.
-func (pc *PermissionCreate) AddResourceIDs(ids ...int64) *PermissionCreate {
-	pc.mutation.AddResourceIDs(ids...)
-	return pc
+func (_c *PermissionCreate) AddResourceIDs(ids ...int64) *PermissionCreate {
+	_c.mutation.AddResourceIDs(ids...)
+	return _c
 }
 
 // AddResources adds the "resources" edges to the Resource entity.
-func (pc *PermissionCreate) AddResources(r ...*Resource) *PermissionCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_c *PermissionCreate) AddResources(v ...*Resource) *PermissionCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pc.AddResourceIDs(ids...)
+	return _c.AddResourceIDs(ids...)
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
-func (pc *PermissionCreate) AddRolePermissionIDs(ids ...int) *PermissionCreate {
-	pc.mutation.AddRolePermissionIDs(ids...)
-	return pc
+func (_c *PermissionCreate) AddRolePermissionIDs(ids ...int) *PermissionCreate {
+	_c.mutation.AddRolePermissionIDs(ids...)
+	return _c
 }
 
 // AddRolePermissions adds the "role_permissions" edges to the RolePermission entity.
-func (pc *PermissionCreate) AddRolePermissions(r ...*RolePermission) *PermissionCreate {
-	ids := make([]int, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_c *PermissionCreate) AddRolePermissions(v ...*RolePermission) *PermissionCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pc.AddRolePermissionIDs(ids...)
+	return _c.AddRolePermissionIDs(ids...)
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (pc *PermissionCreate) AddPositionPermissionIDs(ids ...int) *PermissionCreate {
-	pc.mutation.AddPositionPermissionIDs(ids...)
-	return pc
+func (_c *PermissionCreate) AddPositionPermissionIDs(ids ...int) *PermissionCreate {
+	_c.mutation.AddPositionPermissionIDs(ids...)
+	return _c
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
-func (pc *PermissionCreate) AddPositionPermissions(p ...*PositionPermission) *PermissionCreate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *PermissionCreate) AddPositionPermissions(v ...*PositionPermission) *PermissionCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pc.AddPositionPermissionIDs(ids...)
+	return _c.AddPositionPermissionIDs(ids...)
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (pc *PermissionCreate) AddPermissionResourceIDs(ids ...int) *PermissionCreate {
-	pc.mutation.AddPermissionResourceIDs(ids...)
-	return pc
+func (_c *PermissionCreate) AddPermissionResourceIDs(ids ...int) *PermissionCreate {
+	_c.mutation.AddPermissionResourceIDs(ids...)
+	return _c
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
-func (pc *PermissionCreate) AddPermissionResources(p ...*PermissionResource) *PermissionCreate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *PermissionCreate) AddPermissionResources(v ...*PermissionResource) *PermissionCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pc.AddPermissionResourceIDs(ids...)
+	return _c.AddPermissionResourceIDs(ids...)
 }
 
 // Mutation returns the PermissionMutation object of the builder.
-func (pc *PermissionCreate) Mutation() *PermissionMutation {
-	return pc.mutation
+func (_c *PermissionCreate) Mutation() *PermissionMutation {
+	return _c.mutation
 }
 
 // Save creates the Permission in the database.
-func (pc *PermissionCreate) Save(ctx context.Context) (*Permission, error) {
-	pc.defaults()
-	return withHooks(ctx, pc.sqlSave, pc.mutation, pc.hooks)
+func (_c *PermissionCreate) Save(ctx context.Context) (*Permission, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (pc *PermissionCreate) SaveX(ctx context.Context) *Permission {
-	v, err := pc.Save(ctx)
+func (_c *PermissionCreate) SaveX(ctx context.Context) *Permission {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -247,94 +247,94 @@ func (pc *PermissionCreate) SaveX(ctx context.Context) *Permission {
 }
 
 // Exec executes the query.
-func (pc *PermissionCreate) Exec(ctx context.Context) error {
-	_, err := pc.Save(ctx)
+func (_c *PermissionCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pc *PermissionCreate) ExecX(ctx context.Context) {
-	if err := pc.Exec(ctx); err != nil {
+func (_c *PermissionCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (pc *PermissionCreate) defaults() {
-	if _, ok := pc.mutation.CreateTime(); !ok {
+func (_c *PermissionCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := permission.DefaultCreateTime()
-		pc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := pc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		v := permission.DefaultUpdateTime()
-		pc.mutation.SetUpdateTime(v)
+		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := pc.mutation.Name(); !ok {
+	if _, ok := _c.mutation.Name(); !ok {
 		v := permission.DefaultName
-		pc.mutation.SetName(v)
+		_c.mutation.SetName(v)
 	}
-	if _, ok := pc.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		v := permission.DefaultDescription
-		pc.mutation.SetDescription(v)
+		_c.mutation.SetDescription(v)
 	}
-	if _, ok := pc.mutation.DataScope(); !ok {
+	if _, ok := _c.mutation.DataScope(); !ok {
 		v := permission.DefaultDataScope
-		pc.mutation.SetDataScope(v)
+		_c.mutation.SetDataScope(v)
 	}
-	if _, ok := pc.mutation.Actions(); !ok {
+	if _, ok := _c.mutation.Actions(); !ok {
 		v := permission.DefaultActions
-		pc.mutation.SetActions(v)
+		_c.mutation.SetActions(v)
 	}
-	if _, ok := pc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.ID(); !ok {
 		v := permission.DefaultID()
-		pc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (pc *PermissionCreate) check() error {
-	if _, ok := pc.mutation.CreateTime(); !ok {
+func (_c *PermissionCreate) check() error {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Permission.create_time"`)}
 	}
-	if _, ok := pc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Permission.update_time"`)}
 	}
-	if _, ok := pc.mutation.Name(); !ok {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Permission.name"`)}
 	}
-	if v, ok := pc.mutation.Name(); ok {
+	if v, ok := _c.mutation.Name(); ok {
 		if err := permission.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Permission.name": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.Keyword(); !ok {
+	if _, ok := _c.mutation.Keyword(); !ok {
 		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Permission.keyword"`)}
 	}
-	if v, ok := pc.mutation.Keyword(); ok {
+	if v, ok := _c.mutation.Keyword(); ok {
 		if err := permission.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Permission.keyword": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Permission.description"`)}
 	}
-	if v, ok := pc.mutation.Description(); ok {
+	if v, ok := _c.mutation.Description(); ok {
 		if err := permission.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
-	if _, ok := pc.mutation.DataScope(); !ok {
+	if _, ok := _c.mutation.DataScope(); !ok {
 		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Permission.data_scope"`)}
 	}
-	if _, ok := pc.mutation.Actions(); !ok {
+	if _, ok := _c.mutation.Actions(); !ok {
 		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "Permission.actions"`)}
 	}
-	if v, ok := pc.mutation.Actions(); ok {
+	if v, ok := _c.mutation.Actions(); ok {
 		if err := permission.ActionsValidator(v); err != nil {
 			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
 		}
 	}
-	if v, ok := pc.mutation.ID(); ok {
+	if v, ok := _c.mutation.ID(); ok {
 		if err := permission.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Permission.id": %w`, err)}
 		}
@@ -342,12 +342,12 @@ func (pc *PermissionCreate) check() error {
 	return nil
 }
 
-func (pc *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
-	if err := pc.check(); err != nil {
+func (_c *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := pc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, pc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -357,53 +357,53 @@ func (pc *PermissionCreate) sqlSave(ctx context.Context) (*Permission, error) {
 		id := _spec.ID.Value.(int64)
 		_node.ID = int64(id)
 	}
-	pc.mutation.id = &_node.ID
-	pc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
+func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Permission{config: pc.config}
+		_node = &Permission{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(permission.Table, sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64))
 	)
-	if id, ok := pc.mutation.ID(); ok {
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := pc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(permission.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
-	if value, ok := pc.mutation.UpdateTime(); ok {
+	if value, ok := _c.mutation.UpdateTime(); ok {
 		_spec.SetField(permission.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := pc.mutation.Name(); ok {
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(permission.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := pc.mutation.Keyword(); ok {
+	if value, ok := _c.mutation.Keyword(); ok {
 		_spec.SetField(permission.FieldKeyword, field.TypeString, value)
 		_node.Keyword = value
 	}
-	if value, ok := pc.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(permission.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if value, ok := pc.mutation.DataScope(); ok {
+	if value, ok := _c.mutation.DataScope(); ok {
 		_spec.SetField(permission.FieldDataScope, field.TypeString, value)
 		_node.DataScope = value
 	}
-	if value, ok := pc.mutation.DataRules(); ok {
+	if value, ok := _c.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
 		_node.DataRules = value
 	}
-	if value, ok := pc.mutation.Actions(); ok {
+	if value, ok := _c.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
 		_node.Actions = value
 	}
-	if nodes := pc.mutation.RolesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -419,7 +419,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := pc.mutation.PositionsIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -435,7 +435,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := pc.mutation.ResourcesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.ResourcesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -451,7 +451,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := pc.mutation.RolePermissionsIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.RolePermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -467,7 +467,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := pc.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -483,7 +483,7 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := pc.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -503,23 +503,23 @@ func (pc *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 }
 
 // SetPermission set the Permission
-func (pc *PermissionCreate) SetPermission(input *Permission, fields ...string) *PermissionCreate {
-	m := pc.mutation
+func (_c *PermissionCreate) SetPermission(input *Permission, fields ...string) *PermissionCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = permission.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return pc
+	return _c
 }
 
 // SetPermissionWithZero set the Permission
-func (pc *PermissionCreate) SetPermissionWithZero(input *Permission, fields ...string) *PermissionCreate {
-	m := pc.mutation
+func (_c *PermissionCreate) SetPermissionWithZero(input *Permission, fields ...string) *PermissionCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = permission.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return pc
+	return _c
 }
 
 // PermissionCreateBulk is the builder for creating many Permission entities in bulk.
@@ -530,16 +530,16 @@ type PermissionCreateBulk struct {
 }
 
 // Save creates the Permission entities in the database.
-func (pcb *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error) {
-	if pcb.err != nil {
-		return nil, pcb.err
+func (_c *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(pcb.builders))
-	nodes := make([]*Permission, len(pcb.builders))
-	mutators := make([]Mutator, len(pcb.builders))
-	for i := range pcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Permission, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := pcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PermissionMutation)
@@ -553,11 +553,11 @@ func (pcb *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, pcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, pcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -581,7 +581,7 @@ func (pcb *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, pcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -589,8 +589,8 @@ func (pcb *PermissionCreateBulk) Save(ctx context.Context) ([]*Permission, error
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pcb *PermissionCreateBulk) SaveX(ctx context.Context) []*Permission {
-	v, err := pcb.Save(ctx)
+func (_c *PermissionCreateBulk) SaveX(ctx context.Context) []*Permission {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -598,14 +598,14 @@ func (pcb *PermissionCreateBulk) SaveX(ctx context.Context) []*Permission {
 }
 
 // Exec executes the query.
-func (pcb *PermissionCreateBulk) Exec(ctx context.Context) error {
-	_, err := pcb.Save(ctx)
+func (_c *PermissionCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pcb *PermissionCreateBulk) ExecX(ctx context.Context) {
-	if err := pcb.Exec(ctx); err != nil {
+func (_c *PermissionCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

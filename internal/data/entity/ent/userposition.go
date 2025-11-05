@@ -77,7 +77,7 @@ func (*UserPosition) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the UserPosition fields.
-func (up *UserPosition) assignValues(columns []string, values []any) error {
+func (_m *UserPosition) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -88,21 +88,21 @@ func (up *UserPosition) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			up.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case userposition.FieldUserID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				up.UserID = value.Int64
+				_m.UserID = value.Int64
 			}
 		case userposition.FieldPositionID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field position_id", values[i])
 			} else if value.Valid {
-				up.PositionID = value.Int64
+				_m.PositionID = value.Int64
 			}
 		default:
-			up.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -110,48 +110,48 @@ func (up *UserPosition) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the UserPosition.
 // This includes values selected through modifiers, order, etc.
-func (up *UserPosition) Value(name string) (ent.Value, error) {
-	return up.selectValues.Get(name)
+func (_m *UserPosition) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUser queries the "user" edge of the UserPosition entity.
-func (up *UserPosition) QueryUser() *UserQuery {
-	return NewUserPositionClient(up.config).QueryUser(up)
+func (_m *UserPosition) QueryUser() *UserQuery {
+	return NewUserPositionClient(_m.config).QueryUser(_m)
 }
 
 // QueryPosition queries the "position" edge of the UserPosition entity.
-func (up *UserPosition) QueryPosition() *PositionQuery {
-	return NewUserPositionClient(up.config).QueryPosition(up)
+func (_m *UserPosition) QueryPosition() *PositionQuery {
+	return NewUserPositionClient(_m.config).QueryPosition(_m)
 }
 
 // Update returns a builder for updating this UserPosition.
 // Note that you need to call UserPosition.Unwrap() before calling this method if this UserPosition
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (up *UserPosition) Update() *UserPositionUpdateOne {
-	return NewUserPositionClient(up.config).UpdateOne(up)
+func (_m *UserPosition) Update() *UserPositionUpdateOne {
+	return NewUserPositionClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the UserPosition entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (up *UserPosition) Unwrap() *UserPosition {
-	_tx, ok := up.config.driver.(*txDriver)
+func (_m *UserPosition) Unwrap() *UserPosition {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: UserPosition is not a transactional entity")
 	}
-	up.config.driver = _tx.drv
-	return up
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (up *UserPosition) String() string {
+func (_m *UserPosition) String() string {
 	var builder strings.Builder
 	builder.WriteString("UserPosition(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", up.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", up.UserID))
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("position_id=")
-	builder.WriteString(fmt.Sprintf("%v", up.PositionID))
+	builder.WriteString(fmt.Sprintf("%v", _m.PositionID))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -20,56 +20,56 @@ type UserPositionDelete struct {
 }
 
 // Where appends a list predicates to the UserPositionDelete builder.
-func (upd *UserPositionDelete) Where(ps ...predicate.UserPosition) *UserPositionDelete {
-	upd.mutation.Where(ps...)
-	return upd
+func (_d *UserPositionDelete) Where(ps ...predicate.UserPosition) *UserPositionDelete {
+	_d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query and returns how many vertices were deleted.
-func (upd *UserPositionDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks(ctx, upd.sqlExec, upd.mutation, upd.hooks)
+func (_d *UserPositionDelete) Exec(ctx context.Context) (int, error) {
+	return withHooks(ctx, _d.sqlExec, _d.mutation, _d.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (upd *UserPositionDelete) ExecX(ctx context.Context) int {
-	n, err := upd.Exec(ctx)
+func (_d *UserPositionDelete) ExecX(ctx context.Context) int {
+	n, err := _d.Exec(ctx)
 	if err != nil {
 		panic(err)
 	}
 	return n
 }
 
-func (upd *UserPositionDelete) sqlExec(ctx context.Context) (int, error) {
+func (_d *UserPositionDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := sqlgraph.NewDeleteSpec(userposition.Table, sqlgraph.NewFieldSpec(userposition.FieldID, field.TypeInt))
-	if ps := upd.mutation.predicates; len(ps) > 0 {
+	if ps := _d.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	affected, err := sqlgraph.DeleteNodes(ctx, upd.driver, _spec)
+	affected, err := sqlgraph.DeleteNodes(ctx, _d.driver, _spec)
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
-	upd.mutation.done = true
+	_d.mutation.done = true
 	return affected, err
 }
 
 // UserPositionDeleteOne is the builder for deleting a single UserPosition entity.
 type UserPositionDeleteOne struct {
-	upd *UserPositionDelete
+	_d *UserPositionDelete
 }
 
 // Where appends a list predicates to the UserPositionDelete builder.
-func (updo *UserPositionDeleteOne) Where(ps ...predicate.UserPosition) *UserPositionDeleteOne {
-	updo.upd.mutation.Where(ps...)
-	return updo
+func (_d *UserPositionDeleteOne) Where(ps ...predicate.UserPosition) *UserPositionDeleteOne {
+	_d._d.mutation.Where(ps...)
+	return _d
 }
 
 // Exec executes the deletion query.
-func (updo *UserPositionDeleteOne) Exec(ctx context.Context) error {
-	n, err := updo.upd.Exec(ctx)
+func (_d *UserPositionDeleteOne) Exec(ctx context.Context) error {
+	n, err := _d._d.Exec(ctx)
 	switch {
 	case err != nil:
 		return err
@@ -81,8 +81,8 @@ func (updo *UserPositionDeleteOne) Exec(ctx context.Context) error {
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (updo *UserPositionDeleteOne) ExecX(ctx context.Context) {
-	if err := updo.Exec(ctx); err != nil {
+func (_d *UserPositionDeleteOne) ExecX(ctx context.Context) {
+	if err := _d.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

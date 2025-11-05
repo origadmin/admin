@@ -22,40 +22,40 @@ type PermissionResourceCreate struct {
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (prc *PermissionResourceCreate) SetPermissionID(i int64) *PermissionResourceCreate {
-	prc.mutation.SetPermissionID(i)
-	return prc
+func (_c *PermissionResourceCreate) SetPermissionID(v int64) *PermissionResourceCreate {
+	_c.mutation.SetPermissionID(v)
+	return _c
 }
 
 // SetResourceID sets the "resource_id" field.
-func (prc *PermissionResourceCreate) SetResourceID(i int64) *PermissionResourceCreate {
-	prc.mutation.SetResourceID(i)
-	return prc
+func (_c *PermissionResourceCreate) SetResourceID(v int64) *PermissionResourceCreate {
+	_c.mutation.SetResourceID(v)
+	return _c
 }
 
 // SetPermission sets the "permission" edge to the Permission entity.
-func (prc *PermissionResourceCreate) SetPermission(p *Permission) *PermissionResourceCreate {
-	return prc.SetPermissionID(p.ID)
+func (_c *PermissionResourceCreate) SetPermission(v *Permission) *PermissionResourceCreate {
+	return _c.SetPermissionID(v.ID)
 }
 
 // SetResource sets the "resource" edge to the Resource entity.
-func (prc *PermissionResourceCreate) SetResource(r *Resource) *PermissionResourceCreate {
-	return prc.SetResourceID(r.ID)
+func (_c *PermissionResourceCreate) SetResource(v *Resource) *PermissionResourceCreate {
+	return _c.SetResourceID(v.ID)
 }
 
 // Mutation returns the PermissionResourceMutation object of the builder.
-func (prc *PermissionResourceCreate) Mutation() *PermissionResourceMutation {
-	return prc.mutation
+func (_c *PermissionResourceCreate) Mutation() *PermissionResourceMutation {
+	return _c.mutation
 }
 
 // Save creates the PermissionResource in the database.
-func (prc *PermissionResourceCreate) Save(ctx context.Context) (*PermissionResource, error) {
-	return withHooks(ctx, prc.sqlSave, prc.mutation, prc.hooks)
+func (_c *PermissionResourceCreate) Save(ctx context.Context) (*PermissionResource, error) {
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (prc *PermissionResourceCreate) SaveX(ctx context.Context) *PermissionResource {
-	v, err := prc.Save(ctx)
+func (_c *PermissionResourceCreate) SaveX(ctx context.Context) *PermissionResource {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -63,51 +63,51 @@ func (prc *PermissionResourceCreate) SaveX(ctx context.Context) *PermissionResou
 }
 
 // Exec executes the query.
-func (prc *PermissionResourceCreate) Exec(ctx context.Context) error {
-	_, err := prc.Save(ctx)
+func (_c *PermissionResourceCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (prc *PermissionResourceCreate) ExecX(ctx context.Context) {
-	if err := prc.Exec(ctx); err != nil {
+func (_c *PermissionResourceCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (prc *PermissionResourceCreate) check() error {
-	if _, ok := prc.mutation.PermissionID(); !ok {
+func (_c *PermissionResourceCreate) check() error {
+	if _, ok := _c.mutation.PermissionID(); !ok {
 		return &ValidationError{Name: "permission_id", err: errors.New(`ent: missing required field "PermissionResource.permission_id"`)}
 	}
-	if v, ok := prc.mutation.PermissionID(); ok {
+	if v, ok := _c.mutation.PermissionID(); ok {
 		if err := permissionresource.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "PermissionResource.permission_id": %w`, err)}
 		}
 	}
-	if _, ok := prc.mutation.ResourceID(); !ok {
+	if _, ok := _c.mutation.ResourceID(); !ok {
 		return &ValidationError{Name: "resource_id", err: errors.New(`ent: missing required field "PermissionResource.resource_id"`)}
 	}
-	if v, ok := prc.mutation.ResourceID(); ok {
+	if v, ok := _c.mutation.ResourceID(); ok {
 		if err := permissionresource.ResourceIDValidator(v); err != nil {
 			return &ValidationError{Name: "resource_id", err: fmt.Errorf(`ent: validator failed for field "PermissionResource.resource_id": %w`, err)}
 		}
 	}
-	if len(prc.mutation.PermissionIDs()) == 0 {
+	if len(_c.mutation.PermissionIDs()) == 0 {
 		return &ValidationError{Name: "permission", err: errors.New(`ent: missing required edge "PermissionResource.permission"`)}
 	}
-	if len(prc.mutation.ResourceIDs()) == 0 {
+	if len(_c.mutation.ResourceIDs()) == 0 {
 		return &ValidationError{Name: "resource", err: errors.New(`ent: missing required edge "PermissionResource.resource"`)}
 	}
 	return nil
 }
 
-func (prc *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionResource, error) {
-	if err := prc.check(); err != nil {
+func (_c *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionResource, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := prc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, prc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -115,17 +115,17 @@ func (prc *PermissionResourceCreate) sqlSave(ctx context.Context) (*PermissionRe
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	prc.mutation.id = &_node.ID
-	prc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgraph.CreateSpec) {
+func (_c *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgraph.CreateSpec) {
 	var (
-		_node = &PermissionResource{config: prc.config}
+		_node = &PermissionResource{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(permissionresource.Table, sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt))
 	)
-	if nodes := prc.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -142,7 +142,7 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 		_node.PermissionID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := prc.mutation.ResourceIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.ResourceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -163,23 +163,23 @@ func (prc *PermissionResourceCreate) createSpec() (*PermissionResource, *sqlgrap
 }
 
 // SetPermissionResource set the PermissionResource
-func (prc *PermissionResourceCreate) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceCreate {
-	m := prc.mutation
+func (_c *PermissionResourceCreate) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = permissionresource.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return prc
+	return _c
 }
 
 // SetPermissionResourceWithZero set the PermissionResource
-func (prc *PermissionResourceCreate) SetPermissionResourceWithZero(input *PermissionResource, fields ...string) *PermissionResourceCreate {
-	m := prc.mutation
+func (_c *PermissionResourceCreate) SetPermissionResourceWithZero(input *PermissionResource, fields ...string) *PermissionResourceCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = permissionresource.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return prc
+	return _c
 }
 
 // PermissionResourceCreateBulk is the builder for creating many PermissionResource entities in bulk.
@@ -190,16 +190,16 @@ type PermissionResourceCreateBulk struct {
 }
 
 // Save creates the PermissionResource entities in the database.
-func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*PermissionResource, error) {
-	if prcb.err != nil {
-		return nil, prcb.err
+func (_c *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*PermissionResource, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(prcb.builders))
-	nodes := make([]*PermissionResource, len(prcb.builders))
-	mutators := make([]Mutator, len(prcb.builders))
-	for i := range prcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*PermissionResource, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := prcb.builders[i]
+			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PermissionResourceMutation)
 				if !ok {
@@ -212,11 +212,11 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, prcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, prcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -240,7 +240,7 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, prcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -248,8 +248,8 @@ func (prcb *PermissionResourceCreateBulk) Save(ctx context.Context) ([]*Permissi
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (prcb *PermissionResourceCreateBulk) SaveX(ctx context.Context) []*PermissionResource {
-	v, err := prcb.Save(ctx)
+func (_c *PermissionResourceCreateBulk) SaveX(ctx context.Context) []*PermissionResource {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -257,14 +257,14 @@ func (prcb *PermissionResourceCreateBulk) SaveX(ctx context.Context) []*Permissi
 }
 
 // Exec executes the query.
-func (prcb *PermissionResourceCreateBulk) Exec(ctx context.Context) error {
-	_, err := prcb.Save(ctx)
+func (_c *PermissionResourceCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (prcb *PermissionResourceCreateBulk) ExecX(ctx context.Context) {
-	if err := prcb.Exec(ctx); err != nil {
+func (_c *PermissionResourceCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

@@ -25,74 +25,74 @@ type UserDepartmentUpdate struct {
 }
 
 // Where appends a list predicates to the UserDepartmentUpdate builder.
-func (udu *UserDepartmentUpdate) Where(ps ...predicate.UserDepartment) *UserDepartmentUpdate {
-	udu.mutation.Where(ps...)
-	return udu
+func (_u *UserDepartmentUpdate) Where(ps ...predicate.UserDepartment) *UserDepartmentUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetUserID sets the "user_id" field.
-func (udu *UserDepartmentUpdate) SetUserID(i int64) *UserDepartmentUpdate {
-	udu.mutation.SetUserID(i)
-	return udu
+func (_u *UserDepartmentUpdate) SetUserID(v int64) *UserDepartmentUpdate {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (udu *UserDepartmentUpdate) SetNillableUserID(i *int64) *UserDepartmentUpdate {
-	if i != nil {
-		udu.SetUserID(*i)
+func (_u *UserDepartmentUpdate) SetNillableUserID(v *int64) *UserDepartmentUpdate {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return udu
+	return _u
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (udu *UserDepartmentUpdate) SetDepartmentID(i int64) *UserDepartmentUpdate {
-	udu.mutation.SetDepartmentID(i)
-	return udu
+func (_u *UserDepartmentUpdate) SetDepartmentID(v int64) *UserDepartmentUpdate {
+	_u.mutation.SetDepartmentID(v)
+	return _u
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (udu *UserDepartmentUpdate) SetNillableDepartmentID(i *int64) *UserDepartmentUpdate {
-	if i != nil {
-		udu.SetDepartmentID(*i)
+func (_u *UserDepartmentUpdate) SetNillableDepartmentID(v *int64) *UserDepartmentUpdate {
+	if v != nil {
+		_u.SetDepartmentID(*v)
 	}
-	return udu
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (udu *UserDepartmentUpdate) SetUser(u *User) *UserDepartmentUpdate {
-	return udu.SetUserID(u.ID)
+func (_u *UserDepartmentUpdate) SetUser(v *User) *UserDepartmentUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // SetDepartment sets the "department" edge to the Department entity.
-func (udu *UserDepartmentUpdate) SetDepartment(d *Department) *UserDepartmentUpdate {
-	return udu.SetDepartmentID(d.ID)
+func (_u *UserDepartmentUpdate) SetDepartment(v *Department) *UserDepartmentUpdate {
+	return _u.SetDepartmentID(v.ID)
 }
 
 // Mutation returns the UserDepartmentMutation object of the builder.
-func (udu *UserDepartmentUpdate) Mutation() *UserDepartmentMutation {
-	return udu.mutation
+func (_u *UserDepartmentUpdate) Mutation() *UserDepartmentMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (udu *UserDepartmentUpdate) ClearUser() *UserDepartmentUpdate {
-	udu.mutation.ClearUser()
-	return udu
+func (_u *UserDepartmentUpdate) ClearUser() *UserDepartmentUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearDepartment clears the "department" edge to the Department entity.
-func (udu *UserDepartmentUpdate) ClearDepartment() *UserDepartmentUpdate {
-	udu.mutation.ClearDepartment()
-	return udu
+func (_u *UserDepartmentUpdate) ClearDepartment() *UserDepartmentUpdate {
+	_u.mutation.ClearDepartment()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (udu *UserDepartmentUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, udu.sqlSave, udu.mutation, udu.hooks)
+func (_u *UserDepartmentUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (udu *UserDepartmentUpdate) SaveX(ctx context.Context) int {
-	affected, err := udu.Save(ctx)
+func (_u *UserDepartmentUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -100,58 +100,58 @@ func (udu *UserDepartmentUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (udu *UserDepartmentUpdate) Exec(ctx context.Context) error {
-	_, err := udu.Save(ctx)
+func (_u *UserDepartmentUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (udu *UserDepartmentUpdate) ExecX(ctx context.Context) {
-	if err := udu.Exec(ctx); err != nil {
+func (_u *UserDepartmentUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (udu *UserDepartmentUpdate) check() error {
-	if v, ok := udu.mutation.UserID(); ok {
+func (_u *UserDepartmentUpdate) check() error {
+	if v, ok := _u.mutation.UserID(); ok {
 		if err := userdepartment.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.user_id": %w`, err)}
 		}
 	}
-	if v, ok := udu.mutation.DepartmentID(); ok {
+	if v, ok := _u.mutation.DepartmentID(); ok {
 		if err := userdepartment.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.department_id": %w`, err)}
 		}
 	}
-	if udu.mutation.UserCleared() && len(udu.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserDepartment.user"`)
 	}
-	if udu.mutation.DepartmentCleared() && len(udu.mutation.DepartmentIDs()) > 0 {
+	if _u.mutation.DepartmentCleared() && len(_u.mutation.DepartmentIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserDepartment.department"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (udu *UserDepartmentUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserDepartmentUpdate {
-	udu.modifiers = append(udu.modifiers, modifiers...)
-	return udu
+func (_u *UserDepartmentUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserDepartmentUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := udu.check(); err != nil {
-		return n, err
+func (_u *UserDepartmentUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
-	if ps := udu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if udu.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -164,7 +164,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := udu.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -180,7 +180,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if udu.mutation.DepartmentCleared() {
+	if _u.mutation.DepartmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -193,7 +193,7 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := udu.mutation.DepartmentIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.DepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -209,8 +209,8 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(udu.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, udu.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userdepartment.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -218,8 +218,8 @@ func (udu *UserDepartmentUpdate) sqlSave(ctx context.Context) (n int, err error)
 		}
 		return 0, err
 	}
-	udu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // UserDepartmentUpdateOne is the builder for updating a single UserDepartment entity.
@@ -232,81 +232,81 @@ type UserDepartmentUpdateOne struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (uduo *UserDepartmentUpdateOne) SetUserID(i int64) *UserDepartmentUpdateOne {
-	uduo.mutation.SetUserID(i)
-	return uduo
+func (_u *UserDepartmentUpdateOne) SetUserID(v int64) *UserDepartmentUpdateOne {
+	_u.mutation.SetUserID(v)
+	return _u
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (uduo *UserDepartmentUpdateOne) SetNillableUserID(i *int64) *UserDepartmentUpdateOne {
-	if i != nil {
-		uduo.SetUserID(*i)
+func (_u *UserDepartmentUpdateOne) SetNillableUserID(v *int64) *UserDepartmentUpdateOne {
+	if v != nil {
+		_u.SetUserID(*v)
 	}
-	return uduo
+	return _u
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (uduo *UserDepartmentUpdateOne) SetDepartmentID(i int64) *UserDepartmentUpdateOne {
-	uduo.mutation.SetDepartmentID(i)
-	return uduo
+func (_u *UserDepartmentUpdateOne) SetDepartmentID(v int64) *UserDepartmentUpdateOne {
+	_u.mutation.SetDepartmentID(v)
+	return _u
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (uduo *UserDepartmentUpdateOne) SetNillableDepartmentID(i *int64) *UserDepartmentUpdateOne {
-	if i != nil {
-		uduo.SetDepartmentID(*i)
+func (_u *UserDepartmentUpdateOne) SetNillableDepartmentID(v *int64) *UserDepartmentUpdateOne {
+	if v != nil {
+		_u.SetDepartmentID(*v)
 	}
-	return uduo
+	return _u
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (uduo *UserDepartmentUpdateOne) SetUser(u *User) *UserDepartmentUpdateOne {
-	return uduo.SetUserID(u.ID)
+func (_u *UserDepartmentUpdateOne) SetUser(v *User) *UserDepartmentUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // SetDepartment sets the "department" edge to the Department entity.
-func (uduo *UserDepartmentUpdateOne) SetDepartment(d *Department) *UserDepartmentUpdateOne {
-	return uduo.SetDepartmentID(d.ID)
+func (_u *UserDepartmentUpdateOne) SetDepartment(v *Department) *UserDepartmentUpdateOne {
+	return _u.SetDepartmentID(v.ID)
 }
 
 // Mutation returns the UserDepartmentMutation object of the builder.
-func (uduo *UserDepartmentUpdateOne) Mutation() *UserDepartmentMutation {
-	return uduo.mutation
+func (_u *UserDepartmentUpdateOne) Mutation() *UserDepartmentMutation {
+	return _u.mutation
 }
 
 // ClearUser clears the "user" edge to the User entity.
-func (uduo *UserDepartmentUpdateOne) ClearUser() *UserDepartmentUpdateOne {
-	uduo.mutation.ClearUser()
-	return uduo
+func (_u *UserDepartmentUpdateOne) ClearUser() *UserDepartmentUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // ClearDepartment clears the "department" edge to the Department entity.
-func (uduo *UserDepartmentUpdateOne) ClearDepartment() *UserDepartmentUpdateOne {
-	uduo.mutation.ClearDepartment()
-	return uduo
+func (_u *UserDepartmentUpdateOne) ClearDepartment() *UserDepartmentUpdateOne {
+	_u.mutation.ClearDepartment()
+	return _u
 }
 
 // Where appends a list predicates to the UserDepartmentUpdate builder.
-func (uduo *UserDepartmentUpdateOne) Where(ps ...predicate.UserDepartment) *UserDepartmentUpdateOne {
-	uduo.mutation.Where(ps...)
-	return uduo
+func (_u *UserDepartmentUpdateOne) Where(ps ...predicate.UserDepartment) *UserDepartmentUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (uduo *UserDepartmentUpdateOne) Select(field string, fields ...string) *UserDepartmentUpdateOne {
-	uduo.fields = append([]string{field}, fields...)
-	return uduo
+func (_u *UserDepartmentUpdateOne) Select(field string, fields ...string) *UserDepartmentUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated UserDepartment entity.
-func (uduo *UserDepartmentUpdateOne) Save(ctx context.Context) (*UserDepartment, error) {
-	return withHooks(ctx, uduo.sqlSave, uduo.mutation, uduo.hooks)
+func (_u *UserDepartmentUpdateOne) Save(ctx context.Context) (*UserDepartment, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (uduo *UserDepartmentUpdateOne) SaveX(ctx context.Context) *UserDepartment {
-	node, err := uduo.Save(ctx)
+func (_u *UserDepartmentUpdateOne) SaveX(ctx context.Context) *UserDepartment {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -314,56 +314,56 @@ func (uduo *UserDepartmentUpdateOne) SaveX(ctx context.Context) *UserDepartment 
 }
 
 // Exec executes the query on the entity.
-func (uduo *UserDepartmentUpdateOne) Exec(ctx context.Context) error {
-	_, err := uduo.Save(ctx)
+func (_u *UserDepartmentUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (uduo *UserDepartmentUpdateOne) ExecX(ctx context.Context) {
-	if err := uduo.Exec(ctx); err != nil {
+func (_u *UserDepartmentUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (uduo *UserDepartmentUpdateOne) check() error {
-	if v, ok := uduo.mutation.UserID(); ok {
+func (_u *UserDepartmentUpdateOne) check() error {
+	if v, ok := _u.mutation.UserID(); ok {
 		if err := userdepartment.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.user_id": %w`, err)}
 		}
 	}
-	if v, ok := uduo.mutation.DepartmentID(); ok {
+	if v, ok := _u.mutation.DepartmentID(); ok {
 		if err := userdepartment.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "UserDepartment.department_id": %w`, err)}
 		}
 	}
-	if uduo.mutation.UserCleared() && len(uduo.mutation.UserIDs()) > 0 {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserDepartment.user"`)
 	}
-	if uduo.mutation.DepartmentCleared() && len(uduo.mutation.DepartmentIDs()) > 0 {
+	if _u.mutation.DepartmentCleared() && len(_u.mutation.DepartmentIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "UserDepartment.department"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (uduo *UserDepartmentUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserDepartmentUpdateOne {
-	uduo.modifiers = append(uduo.modifiers, modifiers...)
-	return uduo
+func (_u *UserDepartmentUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *UserDepartmentUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDepartment, err error) {
-	if err := uduo.check(); err != nil {
+func (_u *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDepartment, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(userdepartment.Table, userdepartment.Columns, sqlgraph.NewFieldSpec(userdepartment.FieldID, field.TypeInt))
-	id, ok := uduo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "UserDepartment.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := uduo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, userdepartment.FieldID)
 		for _, f := range fields {
@@ -375,14 +375,14 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 			}
 		}
 	}
-	if ps := uduo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if uduo.mutation.UserCleared() {
+	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -395,7 +395,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uduo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -411,7 +411,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if uduo.mutation.DepartmentCleared() {
+	if _u.mutation.DepartmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -424,7 +424,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uduo.mutation.DepartmentIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.DepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -440,11 +440,11 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(uduo.modifiers...)
-	_node = &UserDepartment{config: uduo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &UserDepartment{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, uduo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{userdepartment.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -452,7 +452,7 @@ func (uduo *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDe
 		}
 		return nil, err
 	}
-	uduo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
 

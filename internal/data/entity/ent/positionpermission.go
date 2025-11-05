@@ -77,7 +77,7 @@ func (*PositionPermission) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the PositionPermission fields.
-func (pp *PositionPermission) assignValues(columns []string, values []any) error {
+func (_m *PositionPermission) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -88,21 +88,21 @@ func (pp *PositionPermission) assignValues(columns []string, values []any) error
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			pp.ID = int(value.Int64)
+			_m.ID = int(value.Int64)
 		case positionpermission.FieldPositionID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field position_id", values[i])
 			} else if value.Valid {
-				pp.PositionID = value.Int64
+				_m.PositionID = value.Int64
 			}
 		case positionpermission.FieldPermissionID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field permission_id", values[i])
 			} else if value.Valid {
-				pp.PermissionID = value.Int64
+				_m.PermissionID = value.Int64
 			}
 		default:
-			pp.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -110,48 +110,48 @@ func (pp *PositionPermission) assignValues(columns []string, values []any) error
 
 // Value returns the ent.Value that was dynamically selected and assigned to the PositionPermission.
 // This includes values selected through modifiers, order, etc.
-func (pp *PositionPermission) Value(name string) (ent.Value, error) {
-	return pp.selectValues.Get(name)
+func (_m *PositionPermission) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryPosition queries the "position" edge of the PositionPermission entity.
-func (pp *PositionPermission) QueryPosition() *PositionQuery {
-	return NewPositionPermissionClient(pp.config).QueryPosition(pp)
+func (_m *PositionPermission) QueryPosition() *PositionQuery {
+	return NewPositionPermissionClient(_m.config).QueryPosition(_m)
 }
 
 // QueryPermission queries the "permission" edge of the PositionPermission entity.
-func (pp *PositionPermission) QueryPermission() *PermissionQuery {
-	return NewPositionPermissionClient(pp.config).QueryPermission(pp)
+func (_m *PositionPermission) QueryPermission() *PermissionQuery {
+	return NewPositionPermissionClient(_m.config).QueryPermission(_m)
 }
 
 // Update returns a builder for updating this PositionPermission.
 // Note that you need to call PositionPermission.Unwrap() before calling this method if this PositionPermission
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (pp *PositionPermission) Update() *PositionPermissionUpdateOne {
-	return NewPositionPermissionClient(pp.config).UpdateOne(pp)
+func (_m *PositionPermission) Update() *PositionPermissionUpdateOne {
+	return NewPositionPermissionClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the PositionPermission entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (pp *PositionPermission) Unwrap() *PositionPermission {
-	_tx, ok := pp.config.driver.(*txDriver)
+func (_m *PositionPermission) Unwrap() *PositionPermission {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: PositionPermission is not a transactional entity")
 	}
-	pp.config.driver = _tx.drv
-	return pp
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (pp *PositionPermission) String() string {
+func (_m *PositionPermission) String() string {
 	var builder strings.Builder
 	builder.WriteString("PositionPermission(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", pp.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("position_id=")
-	builder.WriteString(fmt.Sprintf("%v", pp.PositionID))
+	builder.WriteString(fmt.Sprintf("%v", _m.PositionID))
 	builder.WriteString(", ")
 	builder.WriteString("permission_id=")
-	builder.WriteString(fmt.Sprintf("%v", pp.PermissionID))
+	builder.WriteString(fmt.Sprintf("%v", _m.PermissionID))
 	builder.WriteByte(')')
 	return builder.String()
 }

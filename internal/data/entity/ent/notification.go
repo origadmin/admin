@@ -57,7 +57,7 @@ func (*Notification) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Notification fields.
-func (n *Notification) assignValues(columns []string, values []any) error {
+func (_m *Notification) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -68,57 +68,57 @@ func (n *Notification) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			n.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case notification.FieldCreateAuthor:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_author", values[i])
 			} else if value.Valid {
-				n.CreateAuthor = value.Int64
+				_m.CreateAuthor = value.Int64
 			}
 		case notification.FieldUpdateAuthor:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field update_author", values[i])
 			} else if value.Valid {
-				n.UpdateAuthor = value.Int64
+				_m.UpdateAuthor = value.Int64
 			}
 		case notification.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				n.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case notification.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				n.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case notification.FieldSubject:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field subject", values[i])
 			} else if value.Valid {
-				n.Subject = value.String
+				_m.Subject = value.String
 			}
 		case notification.FieldContent:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field content", values[i])
 			} else if value.Valid {
-				n.Content = value.String
+				_m.Content = value.String
 			}
 		case notification.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				n.Status = int8(value.Int64)
+				_m.Status = int8(value.Int64)
 			}
 		case notification.FieldCategoryID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field category_id", values[i])
 			} else if value.Valid {
-				n.CategoryID = value.Int64
+				_m.CategoryID = value.Int64
 			}
 		default:
-			n.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -126,56 +126,56 @@ func (n *Notification) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Notification.
 // This includes values selected through modifiers, order, etc.
-func (n *Notification) Value(name string) (ent.Value, error) {
-	return n.selectValues.Get(name)
+func (_m *Notification) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // Update returns a builder for updating this Notification.
 // Note that you need to call Notification.Unwrap() before calling this method if this Notification
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (n *Notification) Update() *NotificationUpdateOne {
-	return NewNotificationClient(n.config).UpdateOne(n)
+func (_m *Notification) Update() *NotificationUpdateOne {
+	return NewNotificationClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Notification entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (n *Notification) Unwrap() *Notification {
-	_tx, ok := n.config.driver.(*txDriver)
+func (_m *Notification) Unwrap() *Notification {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Notification is not a transactional entity")
 	}
-	n.config.driver = _tx.drv
-	return n
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (n *Notification) String() string {
+func (_m *Notification) String() string {
 	var builder strings.Builder
 	builder.WriteString("Notification(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", n.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_author=")
-	builder.WriteString(fmt.Sprintf("%v", n.CreateAuthor))
+	builder.WriteString(fmt.Sprintf("%v", _m.CreateAuthor))
 	builder.WriteString(", ")
 	builder.WriteString("update_author=")
-	builder.WriteString(fmt.Sprintf("%v", n.UpdateAuthor))
+	builder.WriteString(fmt.Sprintf("%v", _m.UpdateAuthor))
 	builder.WriteString(", ")
 	builder.WriteString("create_time=")
-	builder.WriteString(n.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(n.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("subject=")
-	builder.WriteString(n.Subject)
+	builder.WriteString(_m.Subject)
 	builder.WriteString(", ")
 	builder.WriteString("content=")
-	builder.WriteString(n.Content)
+	builder.WriteString(_m.Content)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", n.Status))
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("category_id=")
-	builder.WriteString(fmt.Sprintf("%v", n.CategoryID))
+	builder.WriteString(fmt.Sprintf("%v", _m.CategoryID))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -175,7 +175,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the User fields.
-func (u *User) assignValues(columns []string, values []any) error {
+func (_m *User) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -186,172 +186,172 @@ func (u *User) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			u.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case user.FieldCreateAuthor:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field create_author", values[i])
 			} else if value.Valid {
-				u.CreateAuthor = value.Int64
+				_m.CreateAuthor = value.Int64
 			}
 		case user.FieldUpdateAuthor:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field update_author", values[i])
 			} else if value.Valid {
-				u.UpdateAuthor = value.Int64
+				_m.UpdateAuthor = value.Int64
 			}
 		case user.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				u.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case user.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				u.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case user.FieldDeleteTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field delete_time", values[i])
 			} else if value.Valid {
-				u.DeleteTime = new(time.Time)
-				*u.DeleteTime = value.Time
+				_m.DeleteTime = new(time.Time)
+				*_m.DeleteTime = value.Time
 			}
 		case user.FieldUUID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field uuid", values[i])
 			} else if value.Valid {
-				u.UUID = value.String
+				_m.UUID = value.String
 			}
 		case user.FieldAllowedIP:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field allowed_ip", values[i])
 			} else if value.Valid {
-				u.AllowedIP = value.String
+				_m.AllowedIP = value.String
 			}
 		case user.FieldUsername:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field username", values[i])
 			} else if value.Valid {
-				u.Username = value.String
+				_m.Username = value.String
 			}
 		case user.FieldNickname:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field nickname", values[i])
 			} else if value.Valid {
-				u.Nickname = value.String
+				_m.Nickname = value.String
 			}
 		case user.FieldAvatar:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field avatar", values[i])
 			} else if value.Valid {
-				u.Avatar = value.String
+				_m.Avatar = value.String
 			}
 		case user.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				u.Name = value.String
+				_m.Name = value.String
 			}
 		case user.FieldGender:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field gender", values[i])
 			} else if value.Valid {
-				u.Gender = user.Gender(value.String)
+				_m.Gender = user.Gender(value.String)
 			}
 		case user.FieldEncryptedPassword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field encrypted_password", values[i])
 			} else if value.Valid {
-				u.EncryptedPassword = value.String
+				_m.EncryptedPassword = value.String
 			}
 		case user.FieldSalt:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field salt", values[i])
 			} else if value.Valid {
-				u.Salt = value.String
+				_m.Salt = value.String
 			}
 		case user.FieldPhone:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field phone", values[i])
 			} else if value.Valid {
-				u.Phone = value.String
+				_m.Phone = value.String
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
-				u.Email = value.String
+				_m.Email = value.String
 			}
 		case user.FieldDepartment:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field department", values[i])
 			} else if value.Valid {
-				u.Department = value.String
+				_m.Department = value.String
 			}
 		case user.FieldRemark:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field remark", values[i])
 			} else if value.Valid {
-				u.Remark = value.String
+				_m.Remark = value.String
 			}
 		case user.FieldToken:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field token", values[i])
 			} else if value.Valid {
-				u.Token = value.String
+				_m.Token = value.String
 			}
 		case user.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				u.Status = int8(value.Int64)
+				_m.Status = int8(value.Int64)
 			}
 		case user.FieldIsSystem:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_system", values[i])
 			} else if value.Valid {
-				u.IsSystem = value.Bool
+				_m.IsSystem = value.Bool
 			}
 		case user.FieldLastLoginIP:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field last_login_ip", values[i])
 			} else if value.Valid {
-				u.LastLoginIP = value.String
+				_m.LastLoginIP = value.String
 			}
 		case user.FieldLastLoginTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field last_login_time", values[i])
 			} else if value.Valid {
-				u.LastLoginTime = value.Time
+				_m.LastLoginTime = value.Time
 			}
 		case user.FieldLoginTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field login_time", values[i])
 			} else if value.Valid {
-				u.LoginTime = value.Time
+				_m.LoginTime = value.Time
 			}
 		case user.FieldSanctionDate:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field sanction_date", values[i])
 			} else if value.Valid {
-				u.SanctionDate = value.Time
+				_m.SanctionDate = value.Time
 			}
 		case user.FieldManagerID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field manager_id", values[i])
 			} else if value.Valid {
-				u.ManagerID = value.Int64
+				_m.ManagerID = value.Int64
 			}
 		case user.FieldManager:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field manager", values[i])
 			} else if value.Valid {
-				u.Manager = value.String
+				_m.Manager = value.String
 			}
 		default:
-			u.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -359,145 +359,145 @@ func (u *User) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the User.
 // This includes values selected through modifiers, order, etc.
-func (u *User) Value(name string) (ent.Value, error) {
-	return u.selectValues.Get(name)
+func (_m *User) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryRoles queries the "roles" edge of the User entity.
-func (u *User) QueryRoles() *RoleQuery {
-	return NewUserClient(u.config).QueryRoles(u)
+func (_m *User) QueryRoles() *RoleQuery {
+	return NewUserClient(_m.config).QueryRoles(_m)
 }
 
 // QueryPositions queries the "positions" edge of the User entity.
-func (u *User) QueryPositions() *PositionQuery {
-	return NewUserClient(u.config).QueryPositions(u)
+func (_m *User) QueryPositions() *PositionQuery {
+	return NewUserClient(_m.config).QueryPositions(_m)
 }
 
 // QueryDepartments queries the "departments" edge of the User entity.
-func (u *User) QueryDepartments() *DepartmentQuery {
-	return NewUserClient(u.config).QueryDepartments(u)
+func (_m *User) QueryDepartments() *DepartmentQuery {
+	return NewUserClient(_m.config).QueryDepartments(_m)
 }
 
 // QueryUserRoles queries the "user_roles" edge of the User entity.
-func (u *User) QueryUserRoles() *UserRoleQuery {
-	return NewUserClient(u.config).QueryUserRoles(u)
+func (_m *User) QueryUserRoles() *UserRoleQuery {
+	return NewUserClient(_m.config).QueryUserRoles(_m)
 }
 
 // QueryUserPositions queries the "user_positions" edge of the User entity.
-func (u *User) QueryUserPositions() *UserPositionQuery {
-	return NewUserClient(u.config).QueryUserPositions(u)
+func (_m *User) QueryUserPositions() *UserPositionQuery {
+	return NewUserClient(_m.config).QueryUserPositions(_m)
 }
 
 // QueryUserDepartments queries the "user_departments" edge of the User entity.
-func (u *User) QueryUserDepartments() *UserDepartmentQuery {
-	return NewUserClient(u.config).QueryUserDepartments(u)
+func (_m *User) QueryUserDepartments() *UserDepartmentQuery {
+	return NewUserClient(_m.config).QueryUserDepartments(_m)
 }
 
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (u *User) Update() *UserUpdateOne {
-	return NewUserClient(u.config).UpdateOne(u)
+func (_m *User) Update() *UserUpdateOne {
+	return NewUserClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the User entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (u *User) Unwrap() *User {
-	_tx, ok := u.config.driver.(*txDriver)
+func (_m *User) Unwrap() *User {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: User is not a transactional entity")
 	}
-	u.config.driver = _tx.drv
-	return u
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (u *User) String() string {
+func (_m *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", u.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_author=")
-	builder.WriteString(fmt.Sprintf("%v", u.CreateAuthor))
+	builder.WriteString(fmt.Sprintf("%v", _m.CreateAuthor))
 	builder.WriteString(", ")
 	builder.WriteString("update_author=")
-	builder.WriteString(fmt.Sprintf("%v", u.UpdateAuthor))
+	builder.WriteString(fmt.Sprintf("%v", _m.UpdateAuthor))
 	builder.WriteString(", ")
 	builder.WriteString("create_time=")
-	builder.WriteString(u.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(u.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	if v := u.DeleteTime; v != nil {
+	if v := _m.DeleteTime; v != nil {
 		builder.WriteString("delete_time=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
 	builder.WriteString(", ")
 	builder.WriteString("uuid=")
-	builder.WriteString(u.UUID)
+	builder.WriteString(_m.UUID)
 	builder.WriteString(", ")
 	builder.WriteString("allowed_ip=")
-	builder.WriteString(u.AllowedIP)
+	builder.WriteString(_m.AllowedIP)
 	builder.WriteString(", ")
 	builder.WriteString("username=")
-	builder.WriteString(u.Username)
+	builder.WriteString(_m.Username)
 	builder.WriteString(", ")
 	builder.WriteString("nickname=")
-	builder.WriteString(u.Nickname)
+	builder.WriteString(_m.Nickname)
 	builder.WriteString(", ")
 	builder.WriteString("avatar=")
-	builder.WriteString(u.Avatar)
+	builder.WriteString(_m.Avatar)
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(u.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("gender=")
-	builder.WriteString(fmt.Sprintf("%v", u.Gender))
+	builder.WriteString(fmt.Sprintf("%v", _m.Gender))
 	builder.WriteString(", ")
 	builder.WriteString("encrypted_password=")
-	builder.WriteString(u.EncryptedPassword)
+	builder.WriteString(_m.EncryptedPassword)
 	builder.WriteString(", ")
 	builder.WriteString("salt=")
-	builder.WriteString(u.Salt)
+	builder.WriteString(_m.Salt)
 	builder.WriteString(", ")
 	builder.WriteString("phone=")
-	builder.WriteString(u.Phone)
+	builder.WriteString(_m.Phone)
 	builder.WriteString(", ")
 	builder.WriteString("email=")
-	builder.WriteString(u.Email)
+	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
 	builder.WriteString("department=")
-	builder.WriteString(u.Department)
+	builder.WriteString(_m.Department)
 	builder.WriteString(", ")
 	builder.WriteString("remark=")
-	builder.WriteString(u.Remark)
+	builder.WriteString(_m.Remark)
 	builder.WriteString(", ")
 	builder.WriteString("token=")
-	builder.WriteString(u.Token)
+	builder.WriteString(_m.Token)
 	builder.WriteString(", ")
 	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", u.Status))
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("is_system=")
-	builder.WriteString(fmt.Sprintf("%v", u.IsSystem))
+	builder.WriteString(fmt.Sprintf("%v", _m.IsSystem))
 	builder.WriteString(", ")
 	builder.WriteString("last_login_ip=")
-	builder.WriteString(u.LastLoginIP)
+	builder.WriteString(_m.LastLoginIP)
 	builder.WriteString(", ")
 	builder.WriteString("last_login_time=")
-	builder.WriteString(u.LastLoginTime.Format(time.ANSIC))
+	builder.WriteString(_m.LastLoginTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("login_time=")
-	builder.WriteString(u.LoginTime.Format(time.ANSIC))
+	builder.WriteString(_m.LoginTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("sanction_date=")
-	builder.WriteString(u.SanctionDate.Format(time.ANSIC))
+	builder.WriteString(_m.SanctionDate.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("manager_id=")
-	builder.WriteString(fmt.Sprintf("%v", u.ManagerID))
+	builder.WriteString(fmt.Sprintf("%v", _m.ManagerID))
 	builder.WriteString(", ")
 	builder.WriteString("manager=")
-	builder.WriteString(u.Manager)
+	builder.WriteString(_m.Manager)
 	builder.WriteByte(')')
 	return builder.String()
 }

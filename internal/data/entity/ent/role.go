@@ -111,7 +111,7 @@ func (*Role) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Role fields.
-func (r *Role) assignValues(columns []string, values []any) error {
+func (_m *Role) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -122,57 +122,57 @@ func (r *Role) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			r.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case role.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				r.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case role.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				r.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case role.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				r.Keyword = value.String
+				_m.Keyword = value.String
 			}
 		case role.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				r.Name = value.String
+				_m.Name = value.String
 			}
 		case role.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				r.Description = value.String
+				_m.Description = value.String
 			}
 		case role.FieldType:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				r.Type = int8(value.Int64)
+				_m.Type = int8(value.Int64)
 			}
 		case role.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sequence", values[i])
 			} else if value.Valid {
-				r.Sequence = int(value.Int64)
+				_m.Sequence = int(value.Int64)
 			}
 		case role.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				r.Status = int8(value.Int64)
+				_m.Status = int8(value.Int64)
 			}
 		default:
-			r.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -180,76 +180,76 @@ func (r *Role) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Role.
 // This includes values selected through modifiers, order, etc.
-func (r *Role) Value(name string) (ent.Value, error) {
-	return r.selectValues.Get(name)
+func (_m *Role) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUsers queries the "users" edge of the Role entity.
-func (r *Role) QueryUsers() *UserQuery {
-	return NewRoleClient(r.config).QueryUsers(r)
+func (_m *Role) QueryUsers() *UserQuery {
+	return NewRoleClient(_m.config).QueryUsers(_m)
 }
 
 // QueryPermissions queries the "permissions" edge of the Role entity.
-func (r *Role) QueryPermissions() *PermissionQuery {
-	return NewRoleClient(r.config).QueryPermissions(r)
+func (_m *Role) QueryPermissions() *PermissionQuery {
+	return NewRoleClient(_m.config).QueryPermissions(_m)
 }
 
 // QueryUserRoles queries the "user_roles" edge of the Role entity.
-func (r *Role) QueryUserRoles() *UserRoleQuery {
-	return NewRoleClient(r.config).QueryUserRoles(r)
+func (_m *Role) QueryUserRoles() *UserRoleQuery {
+	return NewRoleClient(_m.config).QueryUserRoles(_m)
 }
 
 // QueryRolePermissions queries the "role_permissions" edge of the Role entity.
-func (r *Role) QueryRolePermissions() *RolePermissionQuery {
-	return NewRoleClient(r.config).QueryRolePermissions(r)
+func (_m *Role) QueryRolePermissions() *RolePermissionQuery {
+	return NewRoleClient(_m.config).QueryRolePermissions(_m)
 }
 
 // Update returns a builder for updating this Role.
 // Note that you need to call Role.Unwrap() before calling this method if this Role
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (r *Role) Update() *RoleUpdateOne {
-	return NewRoleClient(r.config).UpdateOne(r)
+func (_m *Role) Update() *RoleUpdateOne {
+	return NewRoleClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Role entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (r *Role) Unwrap() *Role {
-	_tx, ok := r.config.driver.(*txDriver)
+func (_m *Role) Unwrap() *Role {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Role is not a transactional entity")
 	}
-	r.config.driver = _tx.drv
-	return r
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (r *Role) String() string {
+func (_m *Role) String() string {
 	var builder strings.Builder
 	builder.WriteString("Role(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", r.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(r.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(r.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("keyword=")
-	builder.WriteString(r.Keyword)
+	builder.WriteString(_m.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(r.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(r.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(fmt.Sprintf("%v", r.Type))
+	builder.WriteString(fmt.Sprintf("%v", _m.Type))
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
-	builder.WriteString(fmt.Sprintf("%v", r.Sequence))
+	builder.WriteString(fmt.Sprintf("%v", _m.Sequence))
 	builder.WriteString(", ")
 	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", r.Status))
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteByte(')')
 	return builder.String()
 }

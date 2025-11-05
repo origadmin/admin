@@ -128,7 +128,7 @@ func (*Department) scanValues(columns []string) ([]any, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Department fields.
-func (d *Department) assignValues(columns []string, values []any) error {
+func (_m *Department) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -139,69 +139,69 @@ func (d *Department) assignValues(columns []string, values []any) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			d.ID = int64(value.Int64)
+			_m.ID = int64(value.Int64)
 		case department.FieldCreateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field create_time", values[i])
 			} else if value.Valid {
-				d.CreateTime = value.Time
+				_m.CreateTime = value.Time
 			}
 		case department.FieldUpdateTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field update_time", values[i])
 			} else if value.Valid {
-				d.UpdateTime = value.Time
+				_m.UpdateTime = value.Time
 			}
 		case department.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
-				d.Keyword = value.String
+				_m.Keyword = value.String
 			}
 		case department.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				d.Name = value.String
+				_m.Name = value.String
 			}
 		case department.FieldTreePath:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
 			} else if value.Valid {
-				d.TreePath = value.String
+				_m.TreePath = value.String
 			}
 		case department.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field sequence", values[i])
 			} else if value.Valid {
-				d.Sequence = int(value.Int64)
+				_m.Sequence = int(value.Int64)
 			}
 		case department.FieldStatus:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				d.Status = int8(value.Int64)
+				_m.Status = int8(value.Int64)
 			}
 		case department.FieldLevel:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field level", values[i])
 			} else if value.Valid {
-				d.Level = int(value.Int64)
+				_m.Level = int(value.Int64)
 			}
 		case department.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				d.Description = value.String
+				_m.Description = value.String
 			}
 		case department.FieldParentID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
 			} else if value.Valid {
-				d.ParentID = value.Int64
+				_m.ParentID = value.Int64
 			}
 		default:
-			d.selectValues.Set(columns[i], values[i])
+			_m.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
@@ -209,87 +209,87 @@ func (d *Department) assignValues(columns []string, values []any) error {
 
 // Value returns the ent.Value that was dynamically selected and assigned to the Department.
 // This includes values selected through modifiers, order, etc.
-func (d *Department) Value(name string) (ent.Value, error) {
-	return d.selectValues.Get(name)
+func (_m *Department) Value(name string) (ent.Value, error) {
+	return _m.selectValues.Get(name)
 }
 
 // QueryUsers queries the "users" edge of the Department entity.
-func (d *Department) QueryUsers() *UserQuery {
-	return NewDepartmentClient(d.config).QueryUsers(d)
+func (_m *Department) QueryUsers() *UserQuery {
+	return NewDepartmentClient(_m.config).QueryUsers(_m)
 }
 
 // QueryPositions queries the "positions" edge of the Department entity.
-func (d *Department) QueryPositions() *PositionQuery {
-	return NewDepartmentClient(d.config).QueryPositions(d)
+func (_m *Department) QueryPositions() *PositionQuery {
+	return NewDepartmentClient(_m.config).QueryPositions(_m)
 }
 
 // QueryParent queries the "parent" edge of the Department entity.
-func (d *Department) QueryParent() *DepartmentQuery {
-	return NewDepartmentClient(d.config).QueryParent(d)
+func (_m *Department) QueryParent() *DepartmentQuery {
+	return NewDepartmentClient(_m.config).QueryParent(_m)
 }
 
 // QueryChildren queries the "children" edge of the Department entity.
-func (d *Department) QueryChildren() *DepartmentQuery {
-	return NewDepartmentClient(d.config).QueryChildren(d)
+func (_m *Department) QueryChildren() *DepartmentQuery {
+	return NewDepartmentClient(_m.config).QueryChildren(_m)
 }
 
 // QueryUserDepartments queries the "user_departments" edge of the Department entity.
-func (d *Department) QueryUserDepartments() *UserDepartmentQuery {
-	return NewDepartmentClient(d.config).QueryUserDepartments(d)
+func (_m *Department) QueryUserDepartments() *UserDepartmentQuery {
+	return NewDepartmentClient(_m.config).QueryUserDepartments(_m)
 }
 
 // Update returns a builder for updating this Department.
 // Note that you need to call Department.Unwrap() before calling this method if this Department
 // was returned from a transaction, and the transaction was committed or rolled back.
-func (d *Department) Update() *DepartmentUpdateOne {
-	return NewDepartmentClient(d.config).UpdateOne(d)
+func (_m *Department) Update() *DepartmentUpdateOne {
+	return NewDepartmentClient(_m.config).UpdateOne(_m)
 }
 
 // Unwrap unwraps the Department entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
-func (d *Department) Unwrap() *Department {
-	_tx, ok := d.config.driver.(*txDriver)
+func (_m *Department) Unwrap() *Department {
+	_tx, ok := _m.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Department is not a transactional entity")
 	}
-	d.config.driver = _tx.drv
-	return d
+	_m.config.driver = _tx.drv
+	return _m
 }
 
 // String implements the fmt.Stringer.
-func (d *Department) String() string {
+func (_m *Department) String() string {
 	var builder strings.Builder
 	builder.WriteString("Department(")
-	builder.WriteString(fmt.Sprintf("id=%v, ", d.ID))
+	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
 	builder.WriteString("create_time=")
-	builder.WriteString(d.CreateTime.Format(time.ANSIC))
+	builder.WriteString(_m.CreateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("update_time=")
-	builder.WriteString(d.UpdateTime.Format(time.ANSIC))
+	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("keyword=")
-	builder.WriteString(d.Keyword)
+	builder.WriteString(_m.Keyword)
 	builder.WriteString(", ")
 	builder.WriteString("name=")
-	builder.WriteString(d.Name)
+	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("tree_path=")
-	builder.WriteString(d.TreePath)
+	builder.WriteString(_m.TreePath)
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
-	builder.WriteString(fmt.Sprintf("%v", d.Sequence))
+	builder.WriteString(fmt.Sprintf("%v", _m.Sequence))
 	builder.WriteString(", ")
 	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", d.Status))
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("level=")
-	builder.WriteString(fmt.Sprintf("%v", d.Level))
+	builder.WriteString(fmt.Sprintf("%v", _m.Level))
 	builder.WriteString(", ")
 	builder.WriteString("description=")
-	builder.WriteString(d.Description)
+	builder.WriteString(_m.Description)
 	builder.WriteString(", ")
 	builder.WriteString("parent_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.ParentID))
+	builder.WriteString(fmt.Sprintf("%v", _m.ParentID))
 	builder.WriteByte(')')
 	return builder.String()
 }

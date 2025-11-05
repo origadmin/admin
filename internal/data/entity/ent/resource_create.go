@@ -23,333 +23,333 @@ type ResourceCreate struct {
 }
 
 // SetCreateTime sets the "create_time" field.
-func (rc *ResourceCreate) SetCreateTime(t time.Time) *ResourceCreate {
-	rc.mutation.SetCreateTime(t)
-	return rc
+func (_c *ResourceCreate) SetCreateTime(v time.Time) *ResourceCreate {
+	_c.mutation.SetCreateTime(v)
+	return _c
 }
 
 // SetNillableCreateTime sets the "create_time" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableCreateTime(t *time.Time) *ResourceCreate {
-	if t != nil {
-		rc.SetCreateTime(*t)
+func (_c *ResourceCreate) SetNillableCreateTime(v *time.Time) *ResourceCreate {
+	if v != nil {
+		_c.SetCreateTime(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (rc *ResourceCreate) SetUpdateTime(t time.Time) *ResourceCreate {
-	rc.mutation.SetUpdateTime(t)
-	return rc
+func (_c *ResourceCreate) SetUpdateTime(v time.Time) *ResourceCreate {
+	_c.mutation.SetUpdateTime(v)
+	return _c
 }
 
 // SetNillableUpdateTime sets the "update_time" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableUpdateTime(t *time.Time) *ResourceCreate {
-	if t != nil {
-		rc.SetUpdateTime(*t)
+func (_c *ResourceCreate) SetNillableUpdateTime(v *time.Time) *ResourceCreate {
+	if v != nil {
+		_c.SetUpdateTime(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetName sets the "name" field.
-func (rc *ResourceCreate) SetName(s string) *ResourceCreate {
-	rc.mutation.SetName(s)
-	return rc
+func (_c *ResourceCreate) SetName(v string) *ResourceCreate {
+	_c.mutation.SetName(v)
+	return _c
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableName(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetName(*s)
+func (_c *ResourceCreate) SetNillableName(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetName(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetKeyword sets the "keyword" field.
-func (rc *ResourceCreate) SetKeyword(s string) *ResourceCreate {
-	rc.mutation.SetKeyword(s)
-	return rc
+func (_c *ResourceCreate) SetKeyword(v string) *ResourceCreate {
+	_c.mutation.SetKeyword(v)
+	return _c
 }
 
 // SetI18nKey sets the "i18n_key" field.
-func (rc *ResourceCreate) SetI18nKey(s string) *ResourceCreate {
-	rc.mutation.SetI18nKey(s)
-	return rc
+func (_c *ResourceCreate) SetI18nKey(v string) *ResourceCreate {
+	_c.mutation.SetI18nKey(v)
+	return _c
 }
 
 // SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableI18nKey(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetI18nKey(*s)
+func (_c *ResourceCreate) SetNillableI18nKey(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetI18nKey(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetType sets the "type" field.
-func (rc *ResourceCreate) SetType(s string) *ResourceCreate {
-	rc.mutation.SetType(s)
-	return rc
+func (_c *ResourceCreate) SetType(v string) *ResourceCreate {
+	_c.mutation.SetType(v)
+	return _c
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableType(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetType(*s)
+func (_c *ResourceCreate) SetNillableType(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetType(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetStatus sets the "status" field.
-func (rc *ResourceCreate) SetStatus(i int8) *ResourceCreate {
-	rc.mutation.SetStatus(i)
-	return rc
+func (_c *ResourceCreate) SetStatus(v int8) *ResourceCreate {
+	_c.mutation.SetStatus(v)
+	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableStatus(i *int8) *ResourceCreate {
-	if i != nil {
-		rc.SetStatus(*i)
+func (_c *ResourceCreate) SetNillableStatus(v *int8) *ResourceCreate {
+	if v != nil {
+		_c.SetStatus(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetPath sets the "path" field.
-func (rc *ResourceCreate) SetPath(s string) *ResourceCreate {
-	rc.mutation.SetPath(s)
-	return rc
+func (_c *ResourceCreate) SetPath(v string) *ResourceCreate {
+	_c.mutation.SetPath(v)
+	return _c
 }
 
 // SetNillablePath sets the "path" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillablePath(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetPath(*s)
+func (_c *ResourceCreate) SetNillablePath(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetPath(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetOperation sets the "operation" field.
-func (rc *ResourceCreate) SetOperation(s string) *ResourceCreate {
-	rc.mutation.SetOperation(s)
-	return rc
+func (_c *ResourceCreate) SetOperation(v string) *ResourceCreate {
+	_c.mutation.SetOperation(v)
+	return _c
 }
 
 // SetNillableOperation sets the "operation" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableOperation(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetOperation(*s)
+func (_c *ResourceCreate) SetNillableOperation(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetOperation(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetMethod sets the "method" field.
-func (rc *ResourceCreate) SetMethod(s string) *ResourceCreate {
-	rc.mutation.SetMethod(s)
-	return rc
+func (_c *ResourceCreate) SetMethod(v string) *ResourceCreate {
+	_c.mutation.SetMethod(v)
+	return _c
 }
 
 // SetNillableMethod sets the "method" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableMethod(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetMethod(*s)
+func (_c *ResourceCreate) SetNillableMethod(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetMethod(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetComponent sets the "component" field.
-func (rc *ResourceCreate) SetComponent(s string) *ResourceCreate {
-	rc.mutation.SetComponent(s)
-	return rc
+func (_c *ResourceCreate) SetComponent(v string) *ResourceCreate {
+	_c.mutation.SetComponent(v)
+	return _c
 }
 
 // SetNillableComponent sets the "component" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableComponent(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetComponent(*s)
+func (_c *ResourceCreate) SetNillableComponent(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetComponent(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetIcon sets the "icon" field.
-func (rc *ResourceCreate) SetIcon(s string) *ResourceCreate {
-	rc.mutation.SetIcon(s)
-	return rc
+func (_c *ResourceCreate) SetIcon(v string) *ResourceCreate {
+	_c.mutation.SetIcon(v)
+	return _c
 }
 
 // SetNillableIcon sets the "icon" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableIcon(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetIcon(*s)
+func (_c *ResourceCreate) SetNillableIcon(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetIcon(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetSequence sets the "sequence" field.
-func (rc *ResourceCreate) SetSequence(i int) *ResourceCreate {
-	rc.mutation.SetSequence(i)
-	return rc
+func (_c *ResourceCreate) SetSequence(v int) *ResourceCreate {
+	_c.mutation.SetSequence(v)
+	return _c
 }
 
 // SetNillableSequence sets the "sequence" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableSequence(i *int) *ResourceCreate {
-	if i != nil {
-		rc.SetSequence(*i)
+func (_c *ResourceCreate) SetNillableSequence(v *int) *ResourceCreate {
+	if v != nil {
+		_c.SetSequence(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetVisible sets the "visible" field.
-func (rc *ResourceCreate) SetVisible(b bool) *ResourceCreate {
-	rc.mutation.SetVisible(b)
-	return rc
+func (_c *ResourceCreate) SetVisible(v bool) *ResourceCreate {
+	_c.mutation.SetVisible(v)
+	return _c
 }
 
 // SetNillableVisible sets the "visible" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableVisible(b *bool) *ResourceCreate {
-	if b != nil {
-		rc.SetVisible(*b)
+func (_c *ResourceCreate) SetNillableVisible(v *bool) *ResourceCreate {
+	if v != nil {
+		_c.SetVisible(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetLevel sets the "level" field.
-func (rc *ResourceCreate) SetLevel(i int8) *ResourceCreate {
-	rc.mutation.SetLevel(i)
-	return rc
+func (_c *ResourceCreate) SetLevel(v int8) *ResourceCreate {
+	_c.mutation.SetLevel(v)
+	return _c
 }
 
 // SetNillableLevel sets the "level" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableLevel(i *int8) *ResourceCreate {
-	if i != nil {
-		rc.SetLevel(*i)
+func (_c *ResourceCreate) SetNillableLevel(v *int8) *ResourceCreate {
+	if v != nil {
+		_c.SetLevel(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetTreePath sets the "tree_path" field.
-func (rc *ResourceCreate) SetTreePath(s string) *ResourceCreate {
-	rc.mutation.SetTreePath(s)
-	return rc
+func (_c *ResourceCreate) SetTreePath(v string) *ResourceCreate {
+	_c.mutation.SetTreePath(v)
+	return _c
 }
 
 // SetNillableTreePath sets the "tree_path" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableTreePath(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetTreePath(*s)
+func (_c *ResourceCreate) SetNillableTreePath(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetTreePath(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetProperties sets the "properties" field.
-func (rc *ResourceCreate) SetProperties(m map[string]string) *ResourceCreate {
-	rc.mutation.SetProperties(m)
-	return rc
+func (_c *ResourceCreate) SetProperties(v map[string]string) *ResourceCreate {
+	_c.mutation.SetProperties(v)
+	return _c
 }
 
 // SetDescription sets the "description" field.
-func (rc *ResourceCreate) SetDescription(s string) *ResourceCreate {
-	rc.mutation.SetDescription(s)
-	return rc
+func (_c *ResourceCreate) SetDescription(v string) *ResourceCreate {
+	_c.mutation.SetDescription(v)
+	return _c
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableDescription(s *string) *ResourceCreate {
-	if s != nil {
-		rc.SetDescription(*s)
+func (_c *ResourceCreate) SetNillableDescription(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetDescription(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetParentID sets the "parent_id" field.
-func (rc *ResourceCreate) SetParentID(i int64) *ResourceCreate {
-	rc.mutation.SetParentID(i)
-	return rc
+func (_c *ResourceCreate) SetParentID(v int64) *ResourceCreate {
+	_c.mutation.SetParentID(v)
+	return _c
 }
 
 // SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableParentID(i *int64) *ResourceCreate {
-	if i != nil {
-		rc.SetParentID(*i)
+func (_c *ResourceCreate) SetNillableParentID(v *int64) *ResourceCreate {
+	if v != nil {
+		_c.SetParentID(*v)
 	}
-	return rc
+	return _c
 }
 
 // SetID sets the "id" field.
-func (rc *ResourceCreate) SetID(i int64) *ResourceCreate {
-	rc.mutation.SetID(i)
-	return rc
+func (_c *ResourceCreate) SetID(v int64) *ResourceCreate {
+	_c.mutation.SetID(v)
+	return _c
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (rc *ResourceCreate) SetNillableID(i *int64) *ResourceCreate {
-	if i != nil {
-		rc.SetID(*i)
+func (_c *ResourceCreate) SetNillableID(v *int64) *ResourceCreate {
+	if v != nil {
+		_c.SetID(*v)
 	}
-	return rc
+	return _c
 }
 
 // AddChildIDs adds the "children" edge to the Resource entity by IDs.
-func (rc *ResourceCreate) AddChildIDs(ids ...int64) *ResourceCreate {
-	rc.mutation.AddChildIDs(ids...)
-	return rc
+func (_c *ResourceCreate) AddChildIDs(ids ...int64) *ResourceCreate {
+	_c.mutation.AddChildIDs(ids...)
+	return _c
 }
 
 // AddChildren adds the "children" edges to the Resource entity.
-func (rc *ResourceCreate) AddChildren(r ...*Resource) *ResourceCreate {
-	ids := make([]int64, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+func (_c *ResourceCreate) AddChildren(v ...*Resource) *ResourceCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return rc.AddChildIDs(ids...)
+	return _c.AddChildIDs(ids...)
 }
 
 // SetParent sets the "parent" edge to the Resource entity.
-func (rc *ResourceCreate) SetParent(r *Resource) *ResourceCreate {
-	return rc.SetParentID(r.ID)
+func (_c *ResourceCreate) SetParent(v *Resource) *ResourceCreate {
+	return _c.SetParentID(v.ID)
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (rc *ResourceCreate) AddPermissionIDs(ids ...int64) *ResourceCreate {
-	rc.mutation.AddPermissionIDs(ids...)
-	return rc
+func (_c *ResourceCreate) AddPermissionIDs(ids ...int64) *ResourceCreate {
+	_c.mutation.AddPermissionIDs(ids...)
+	return _c
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
-func (rc *ResourceCreate) AddPermissions(p ...*Permission) *ResourceCreate {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *ResourceCreate) AddPermissions(v ...*Permission) *ResourceCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return rc.AddPermissionIDs(ids...)
+	return _c.AddPermissionIDs(ids...)
 }
 
 // AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (rc *ResourceCreate) AddPermissionResourceIDs(ids ...int) *ResourceCreate {
-	rc.mutation.AddPermissionResourceIDs(ids...)
-	return rc
+func (_c *ResourceCreate) AddPermissionResourceIDs(ids ...int) *ResourceCreate {
+	_c.mutation.AddPermissionResourceIDs(ids...)
+	return _c
 }
 
 // AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
-func (rc *ResourceCreate) AddPermissionResources(p ...*PermissionResource) *ResourceCreate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_c *ResourceCreate) AddPermissionResources(v ...*PermissionResource) *ResourceCreate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return rc.AddPermissionResourceIDs(ids...)
+	return _c.AddPermissionResourceIDs(ids...)
 }
 
 // Mutation returns the ResourceMutation object of the builder.
-func (rc *ResourceCreate) Mutation() *ResourceMutation {
-	return rc.mutation
+func (_c *ResourceCreate) Mutation() *ResourceMutation {
+	return _c.mutation
 }
 
 // Save creates the Resource in the database.
-func (rc *ResourceCreate) Save(ctx context.Context) (*Resource, error) {
-	rc.defaults()
-	return withHooks(ctx, rc.sqlSave, rc.mutation, rc.hooks)
+func (_c *ResourceCreate) Save(ctx context.Context) (*Resource, error) {
+	_c.defaults()
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (rc *ResourceCreate) SaveX(ctx context.Context) *Resource {
-	v, err := rc.Save(ctx)
+func (_c *ResourceCreate) SaveX(ctx context.Context) *Resource {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -357,204 +357,204 @@ func (rc *ResourceCreate) SaveX(ctx context.Context) *Resource {
 }
 
 // Exec executes the query.
-func (rc *ResourceCreate) Exec(ctx context.Context) error {
-	_, err := rc.Save(ctx)
+func (_c *ResourceCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (rc *ResourceCreate) ExecX(ctx context.Context) {
-	if err := rc.Exec(ctx); err != nil {
+func (_c *ResourceCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (rc *ResourceCreate) defaults() {
-	if _, ok := rc.mutation.CreateTime(); !ok {
+func (_c *ResourceCreate) defaults() {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		v := resource.DefaultCreateTime()
-		rc.mutation.SetCreateTime(v)
+		_c.mutation.SetCreateTime(v)
 	}
-	if _, ok := rc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		v := resource.DefaultUpdateTime()
-		rc.mutation.SetUpdateTime(v)
+		_c.mutation.SetUpdateTime(v)
 	}
-	if _, ok := rc.mutation.Name(); !ok {
+	if _, ok := _c.mutation.Name(); !ok {
 		v := resource.DefaultName
-		rc.mutation.SetName(v)
+		_c.mutation.SetName(v)
 	}
-	if _, ok := rc.mutation.I18nKey(); !ok {
+	if _, ok := _c.mutation.I18nKey(); !ok {
 		v := resource.DefaultI18nKey
-		rc.mutation.SetI18nKey(v)
+		_c.mutation.SetI18nKey(v)
 	}
-	if _, ok := rc.mutation.GetType(); !ok {
+	if _, ok := _c.mutation.GetType(); !ok {
 		v := resource.DefaultType
-		rc.mutation.SetType(v)
+		_c.mutation.SetType(v)
 	}
-	if _, ok := rc.mutation.Status(); !ok {
+	if _, ok := _c.mutation.Status(); !ok {
 		v := resource.DefaultStatus
-		rc.mutation.SetStatus(v)
+		_c.mutation.SetStatus(v)
 	}
-	if _, ok := rc.mutation.Path(); !ok {
+	if _, ok := _c.mutation.Path(); !ok {
 		v := resource.DefaultPath
-		rc.mutation.SetPath(v)
+		_c.mutation.SetPath(v)
 	}
-	if _, ok := rc.mutation.Operation(); !ok {
+	if _, ok := _c.mutation.Operation(); !ok {
 		v := resource.DefaultOperation
-		rc.mutation.SetOperation(v)
+		_c.mutation.SetOperation(v)
 	}
-	if _, ok := rc.mutation.Method(); !ok {
+	if _, ok := _c.mutation.Method(); !ok {
 		v := resource.DefaultMethod
-		rc.mutation.SetMethod(v)
+		_c.mutation.SetMethod(v)
 	}
-	if _, ok := rc.mutation.Component(); !ok {
+	if _, ok := _c.mutation.Component(); !ok {
 		v := resource.DefaultComponent
-		rc.mutation.SetComponent(v)
+		_c.mutation.SetComponent(v)
 	}
-	if _, ok := rc.mutation.Icon(); !ok {
+	if _, ok := _c.mutation.Icon(); !ok {
 		v := resource.DefaultIcon
-		rc.mutation.SetIcon(v)
+		_c.mutation.SetIcon(v)
 	}
-	if _, ok := rc.mutation.Sequence(); !ok {
+	if _, ok := _c.mutation.Sequence(); !ok {
 		v := resource.DefaultSequence
-		rc.mutation.SetSequence(v)
+		_c.mutation.SetSequence(v)
 	}
-	if _, ok := rc.mutation.Visible(); !ok {
+	if _, ok := _c.mutation.Visible(); !ok {
 		v := resource.DefaultVisible
-		rc.mutation.SetVisible(v)
+		_c.mutation.SetVisible(v)
 	}
-	if _, ok := rc.mutation.Level(); !ok {
+	if _, ok := _c.mutation.Level(); !ok {
 		v := resource.DefaultLevel
-		rc.mutation.SetLevel(v)
+		_c.mutation.SetLevel(v)
 	}
-	if _, ok := rc.mutation.TreePath(); !ok {
+	if _, ok := _c.mutation.TreePath(); !ok {
 		v := resource.DefaultTreePath
-		rc.mutation.SetTreePath(v)
+		_c.mutation.SetTreePath(v)
 	}
-	if _, ok := rc.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		v := resource.DefaultDescription
-		rc.mutation.SetDescription(v)
+		_c.mutation.SetDescription(v)
 	}
-	if _, ok := rc.mutation.ID(); !ok {
+	if _, ok := _c.mutation.ID(); !ok {
 		v := resource.DefaultID()
-		rc.mutation.SetID(v)
+		_c.mutation.SetID(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (rc *ResourceCreate) check() error {
-	if _, ok := rc.mutation.CreateTime(); !ok {
+func (_c *ResourceCreate) check() error {
+	if _, ok := _c.mutation.CreateTime(); !ok {
 		return &ValidationError{Name: "create_time", err: errors.New(`ent: missing required field "Resource.create_time"`)}
 	}
-	if _, ok := rc.mutation.UpdateTime(); !ok {
+	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Resource.update_time"`)}
 	}
-	if _, ok := rc.mutation.Name(); !ok {
+	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Resource.name"`)}
 	}
-	if v, ok := rc.mutation.Name(); ok {
+	if v, ok := _c.mutation.Name(); ok {
 		if err := resource.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Resource.name": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Keyword(); !ok {
+	if _, ok := _c.mutation.Keyword(); !ok {
 		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Resource.keyword"`)}
 	}
-	if v, ok := rc.mutation.Keyword(); ok {
+	if v, ok := _c.mutation.Keyword(); ok {
 		if err := resource.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.I18nKey(); !ok {
+	if _, ok := _c.mutation.I18nKey(); !ok {
 		return &ValidationError{Name: "i18n_key", err: errors.New(`ent: missing required field "Resource.i18n_key"`)}
 	}
-	if v, ok := rc.mutation.I18nKey(); ok {
+	if v, ok := _c.mutation.I18nKey(); ok {
 		if err := resource.I18nKeyValidator(v); err != nil {
 			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.GetType(); !ok {
+	if _, ok := _c.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Resource.type"`)}
 	}
-	if v, ok := rc.mutation.GetType(); ok {
+	if v, ok := _c.mutation.GetType(); ok {
 		if err := resource.TypeValidator(v); err != nil {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Status(); !ok {
+	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
 	}
-	if _, ok := rc.mutation.Path(); !ok {
+	if _, ok := _c.mutation.Path(); !ok {
 		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Resource.path"`)}
 	}
-	if v, ok := rc.mutation.Path(); ok {
+	if v, ok := _c.mutation.Path(); ok {
 		if err := resource.PathValidator(v); err != nil {
 			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Operation(); !ok {
+	if _, ok := _c.mutation.Operation(); !ok {
 		return &ValidationError{Name: "operation", err: errors.New(`ent: missing required field "Resource.operation"`)}
 	}
-	if v, ok := rc.mutation.Operation(); ok {
+	if v, ok := _c.mutation.Operation(); ok {
 		if err := resource.OperationValidator(v); err != nil {
 			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Method(); !ok {
+	if _, ok := _c.mutation.Method(); !ok {
 		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "Resource.method"`)}
 	}
-	if v, ok := rc.mutation.Method(); ok {
+	if v, ok := _c.mutation.Method(); ok {
 		if err := resource.MethodValidator(v); err != nil {
 			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Component(); !ok {
+	if _, ok := _c.mutation.Component(); !ok {
 		return &ValidationError{Name: "component", err: errors.New(`ent: missing required field "Resource.component"`)}
 	}
-	if v, ok := rc.mutation.Component(); ok {
+	if v, ok := _c.mutation.Component(); ok {
 		if err := resource.ComponentValidator(v); err != nil {
 			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Resource.component": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Icon(); !ok {
+	if _, ok := _c.mutation.Icon(); !ok {
 		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "Resource.icon"`)}
 	}
-	if v, ok := rc.mutation.Icon(); ok {
+	if v, ok := _c.mutation.Icon(); ok {
 		if err := resource.IconValidator(v); err != nil {
 			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Resource.icon": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Sequence(); !ok {
+	if _, ok := _c.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Resource.sequence"`)}
 	}
-	if _, ok := rc.mutation.Visible(); !ok {
+	if _, ok := _c.mutation.Visible(); !ok {
 		return &ValidationError{Name: "visible", err: errors.New(`ent: missing required field "Resource.visible"`)}
 	}
-	if _, ok := rc.mutation.Level(); !ok {
+	if _, ok := _c.mutation.Level(); !ok {
 		return &ValidationError{Name: "level", err: errors.New(`ent: missing required field "Resource.level"`)}
 	}
-	if _, ok := rc.mutation.TreePath(); !ok {
+	if _, ok := _c.mutation.TreePath(); !ok {
 		return &ValidationError{Name: "tree_path", err: errors.New(`ent: missing required field "Resource.tree_path"`)}
 	}
-	if v, ok := rc.mutation.TreePath(); ok {
+	if v, ok := _c.mutation.TreePath(); ok {
 		if err := resource.TreePathValidator(v); err != nil {
 			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Resource.tree_path": %w`, err)}
 		}
 	}
-	if _, ok := rc.mutation.Description(); !ok {
+	if _, ok := _c.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Resource.description"`)}
 	}
-	if v, ok := rc.mutation.Description(); ok {
+	if v, ok := _c.mutation.Description(); ok {
 		if err := resource.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
 		}
 	}
-	if v, ok := rc.mutation.ParentID(); ok {
+	if v, ok := _c.mutation.ParentID(); ok {
 		if err := resource.ParentIDValidator(v); err != nil {
 			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Resource.parent_id": %w`, err)}
 		}
 	}
-	if v, ok := rc.mutation.ID(); ok {
+	if v, ok := _c.mutation.ID(); ok {
 		if err := resource.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Resource.id": %w`, err)}
 		}
@@ -562,12 +562,12 @@ func (rc *ResourceCreate) check() error {
 	return nil
 }
 
-func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
-	if err := rc.check(); err != nil {
+func (_c *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := rc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, rc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -577,93 +577,93 @@ func (rc *ResourceCreate) sqlSave(ctx context.Context) (*Resource, error) {
 		id := _spec.ID.Value.(int64)
 		_node.ID = int64(id)
 	}
-	rc.mutation.id = &_node.ID
-	rc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
+func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	var (
-		_node = &Resource{config: rc.config}
+		_node = &Resource{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(resource.Table, sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64))
 	)
-	if id, ok := rc.mutation.ID(); ok {
+	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = id
 	}
-	if value, ok := rc.mutation.CreateTime(); ok {
+	if value, ok := _c.mutation.CreateTime(); ok {
 		_spec.SetField(resource.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
-	if value, ok := rc.mutation.UpdateTime(); ok {
+	if value, ok := _c.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := rc.mutation.Name(); ok {
+	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(resource.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := rc.mutation.Keyword(); ok {
+	if value, ok := _c.mutation.Keyword(); ok {
 		_spec.SetField(resource.FieldKeyword, field.TypeString, value)
 		_node.Keyword = value
 	}
-	if value, ok := rc.mutation.I18nKey(); ok {
+	if value, ok := _c.mutation.I18nKey(); ok {
 		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
 		_node.I18nKey = value
 	}
-	if value, ok := rc.mutation.GetType(); ok {
+	if value, ok := _c.mutation.GetType(); ok {
 		_spec.SetField(resource.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
-	if value, ok := rc.mutation.Status(); ok {
+	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
-	if value, ok := rc.mutation.Path(); ok {
+	if value, ok := _c.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 		_node.Path = value
 	}
-	if value, ok := rc.mutation.Operation(); ok {
+	if value, ok := _c.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)
 		_node.Operation = value
 	}
-	if value, ok := rc.mutation.Method(); ok {
+	if value, ok := _c.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 		_node.Method = value
 	}
-	if value, ok := rc.mutation.Component(); ok {
+	if value, ok := _c.mutation.Component(); ok {
 		_spec.SetField(resource.FieldComponent, field.TypeString, value)
 		_node.Component = value
 	}
-	if value, ok := rc.mutation.Icon(); ok {
+	if value, ok := _c.mutation.Icon(); ok {
 		_spec.SetField(resource.FieldIcon, field.TypeString, value)
 		_node.Icon = value
 	}
-	if value, ok := rc.mutation.Sequence(); ok {
+	if value, ok := _c.mutation.Sequence(); ok {
 		_spec.SetField(resource.FieldSequence, field.TypeInt, value)
 		_node.Sequence = value
 	}
-	if value, ok := rc.mutation.Visible(); ok {
+	if value, ok := _c.mutation.Visible(); ok {
 		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
 		_node.Visible = value
 	}
-	if value, ok := rc.mutation.Level(); ok {
+	if value, ok := _c.mutation.Level(); ok {
 		_spec.SetField(resource.FieldLevel, field.TypeInt8, value)
 		_node.Level = value
 	}
-	if value, ok := rc.mutation.TreePath(); ok {
+	if value, ok := _c.mutation.TreePath(); ok {
 		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
 		_node.TreePath = value
 	}
-	if value, ok := rc.mutation.Properties(); ok {
+	if value, ok := _c.mutation.Properties(); ok {
 		_spec.SetField(resource.FieldProperties, field.TypeJSON, value)
 		_node.Properties = value
 	}
-	if value, ok := rc.mutation.Description(); ok {
+	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(resource.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
-	if nodes := rc.mutation.ChildrenIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.ChildrenIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
@@ -679,7 +679,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.ParentIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -696,7 +696,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_node.ParentID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.PermissionsIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -712,7 +712,7 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := rc.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -732,23 +732,23 @@ func (rc *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 }
 
 // SetResource set the Resource
-func (rc *ResourceCreate) SetResource(input *Resource, fields ...string) *ResourceCreate {
-	m := rc.mutation
+func (_c *ResourceCreate) SetResource(input *Resource, fields ...string) *ResourceCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = resource.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return rc
+	return _c
 }
 
 // SetResourceWithZero set the Resource
-func (rc *ResourceCreate) SetResourceWithZero(input *Resource, fields ...string) *ResourceCreate {
-	m := rc.mutation
+func (_c *ResourceCreate) SetResourceWithZero(input *Resource, fields ...string) *ResourceCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = resource.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return rc
+	return _c
 }
 
 // ResourceCreateBulk is the builder for creating many Resource entities in bulk.
@@ -759,16 +759,16 @@ type ResourceCreateBulk struct {
 }
 
 // Save creates the Resource entities in the database.
-func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
-	if rcb.err != nil {
-		return nil, rcb.err
+func (_c *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(rcb.builders))
-	nodes := make([]*Resource, len(rcb.builders))
-	mutators := make([]Mutator, len(rcb.builders))
-	for i := range rcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*Resource, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := rcb.builders[i]
+			builder := _c.builders[i]
 			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*ResourceMutation)
@@ -782,11 +782,11 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, rcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, rcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -810,7 +810,7 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, rcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -818,8 +818,8 @@ func (rcb *ResourceCreateBulk) Save(ctx context.Context) ([]*Resource, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (rcb *ResourceCreateBulk) SaveX(ctx context.Context) []*Resource {
-	v, err := rcb.Save(ctx)
+func (_c *ResourceCreateBulk) SaveX(ctx context.Context) []*Resource {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -827,14 +827,14 @@ func (rcb *ResourceCreateBulk) SaveX(ctx context.Context) []*Resource {
 }
 
 // Exec executes the query.
-func (rcb *ResourceCreateBulk) Exec(ctx context.Context) error {
-	_, err := rcb.Save(ctx)
+func (_c *ResourceCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (rcb *ResourceCreateBulk) ExecX(ctx context.Context) {
-	if err := rcb.Exec(ctx); err != nil {
+func (_c *ResourceCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

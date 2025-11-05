@@ -22,40 +22,40 @@ type UserRoleCreate struct {
 }
 
 // SetUserID sets the "user_id" field.
-func (urc *UserRoleCreate) SetUserID(i int64) *UserRoleCreate {
-	urc.mutation.SetUserID(i)
-	return urc
+func (_c *UserRoleCreate) SetUserID(v int64) *UserRoleCreate {
+	_c.mutation.SetUserID(v)
+	return _c
 }
 
 // SetRoleID sets the "role_id" field.
-func (urc *UserRoleCreate) SetRoleID(i int64) *UserRoleCreate {
-	urc.mutation.SetRoleID(i)
-	return urc
+func (_c *UserRoleCreate) SetRoleID(v int64) *UserRoleCreate {
+	_c.mutation.SetRoleID(v)
+	return _c
 }
 
 // SetUser sets the "user" edge to the User entity.
-func (urc *UserRoleCreate) SetUser(u *User) *UserRoleCreate {
-	return urc.SetUserID(u.ID)
+func (_c *UserRoleCreate) SetUser(v *User) *UserRoleCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // SetRole sets the "role" edge to the Role entity.
-func (urc *UserRoleCreate) SetRole(r *Role) *UserRoleCreate {
-	return urc.SetRoleID(r.ID)
+func (_c *UserRoleCreate) SetRole(v *Role) *UserRoleCreate {
+	return _c.SetRoleID(v.ID)
 }
 
 // Mutation returns the UserRoleMutation object of the builder.
-func (urc *UserRoleCreate) Mutation() *UserRoleMutation {
-	return urc.mutation
+func (_c *UserRoleCreate) Mutation() *UserRoleMutation {
+	return _c.mutation
 }
 
 // Save creates the UserRole in the database.
-func (urc *UserRoleCreate) Save(ctx context.Context) (*UserRole, error) {
-	return withHooks(ctx, urc.sqlSave, urc.mutation, urc.hooks)
+func (_c *UserRoleCreate) Save(ctx context.Context) (*UserRole, error) {
+	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
-func (urc *UserRoleCreate) SaveX(ctx context.Context) *UserRole {
-	v, err := urc.Save(ctx)
+func (_c *UserRoleCreate) SaveX(ctx context.Context) *UserRole {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -63,51 +63,51 @@ func (urc *UserRoleCreate) SaveX(ctx context.Context) *UserRole {
 }
 
 // Exec executes the query.
-func (urc *UserRoleCreate) Exec(ctx context.Context) error {
-	_, err := urc.Save(ctx)
+func (_c *UserRoleCreate) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (urc *UserRoleCreate) ExecX(ctx context.Context) {
-	if err := urc.Exec(ctx); err != nil {
+func (_c *UserRoleCreate) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (urc *UserRoleCreate) check() error {
-	if _, ok := urc.mutation.UserID(); !ok {
+func (_c *UserRoleCreate) check() error {
+	if _, ok := _c.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "UserRole.user_id"`)}
 	}
-	if v, ok := urc.mutation.UserID(); ok {
+	if v, ok := _c.mutation.UserID(); ok {
 		if err := userrole.UserIDValidator(v); err != nil {
 			return &ValidationError{Name: "user_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.user_id": %w`, err)}
 		}
 	}
-	if _, ok := urc.mutation.RoleID(); !ok {
+	if _, ok := _c.mutation.RoleID(); !ok {
 		return &ValidationError{Name: "role_id", err: errors.New(`ent: missing required field "UserRole.role_id"`)}
 	}
-	if v, ok := urc.mutation.RoleID(); ok {
+	if v, ok := _c.mutation.RoleID(); ok {
 		if err := userrole.RoleIDValidator(v); err != nil {
 			return &ValidationError{Name: "role_id", err: fmt.Errorf(`ent: validator failed for field "UserRole.role_id": %w`, err)}
 		}
 	}
-	if len(urc.mutation.UserIDs()) == 0 {
+	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "UserRole.user"`)}
 	}
-	if len(urc.mutation.RoleIDs()) == 0 {
+	if len(_c.mutation.RoleIDs()) == 0 {
 		return &ValidationError{Name: "role", err: errors.New(`ent: missing required edge "UserRole.role"`)}
 	}
 	return nil
 }
 
-func (urc *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
-	if err := urc.check(); err != nil {
+func (_c *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
+	if err := _c.check(); err != nil {
 		return nil, err
 	}
-	_node, _spec := urc.createSpec()
-	if err := sqlgraph.CreateNode(ctx, urc.driver, _spec); err != nil {
+	_node, _spec := _c.createSpec()
+	if err := sqlgraph.CreateNode(ctx, _c.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
@@ -115,17 +115,17 @@ func (urc *UserRoleCreate) sqlSave(ctx context.Context) (*UserRole, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
-	urc.mutation.id = &_node.ID
-	urc.mutation.done = true
+	_c.mutation.id = &_node.ID
+	_c.mutation.done = true
 	return _node, nil
 }
 
-func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
+func (_c *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 	var (
-		_node = &UserRole{config: urc.config}
+		_node = &UserRole{config: _c.config}
 		_spec = sqlgraph.NewCreateSpec(userrole.Table, sqlgraph.NewFieldSpec(userrole.FieldID, field.TypeInt))
 	)
-	if nodes := urc.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -142,7 +142,7 @@ func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := urc.mutation.RoleIDs(); len(nodes) > 0 {
+	if nodes := _c.mutation.RoleIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -163,23 +163,23 @@ func (urc *UserRoleCreate) createSpec() (*UserRole, *sqlgraph.CreateSpec) {
 }
 
 // SetUserRole set the UserRole
-func (urc *UserRoleCreate) SetUserRole(input *UserRole, fields ...string) *UserRoleCreate {
-	m := urc.mutation
+func (_c *UserRoleCreate) SetUserRole(input *UserRole, fields ...string) *UserRoleCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userrole.Columns
 	}
 	_ = m.SetFields(input, fields...)
-	return urc
+	return _c
 }
 
 // SetUserRoleWithZero set the UserRole
-func (urc *UserRoleCreate) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleCreate {
-	m := urc.mutation
+func (_c *UserRoleCreate) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleCreate {
+	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userrole.Columns
 	}
 	_ = m.SetFieldsWithZero(input, fields...)
-	return urc
+	return _c
 }
 
 // UserRoleCreateBulk is the builder for creating many UserRole entities in bulk.
@@ -190,16 +190,16 @@ type UserRoleCreateBulk struct {
 }
 
 // Save creates the UserRole entities in the database.
-func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
-	if urcb.err != nil {
-		return nil, urcb.err
+func (_c *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
+	if _c.err != nil {
+		return nil, _c.err
 	}
-	specs := make([]*sqlgraph.CreateSpec, len(urcb.builders))
-	nodes := make([]*UserRole, len(urcb.builders))
-	mutators := make([]Mutator, len(urcb.builders))
-	for i := range urcb.builders {
+	specs := make([]*sqlgraph.CreateSpec, len(_c.builders))
+	nodes := make([]*UserRole, len(_c.builders))
+	mutators := make([]Mutator, len(_c.builders))
+	for i := range _c.builders {
 		func(i int, root context.Context) {
-			builder := urcb.builders[i]
+			builder := _c.builders[i]
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*UserRoleMutation)
 				if !ok {
@@ -212,11 +212,11 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 				var err error
 				nodes[i], specs[i] = builder.createSpec()
 				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, urcb.builders[i+1].mutation)
+					_, err = mutators[i+1].Mutate(root, _c.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
 					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, urcb.driver, spec); err != nil {
+					if err = sqlgraph.BatchCreate(ctx, _c.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
 							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
@@ -240,7 +240,7 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 		}(i, ctx)
 	}
 	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, urcb.builders[0].mutation); err != nil {
+		if _, err := mutators[0].Mutate(ctx, _c.builders[0].mutation); err != nil {
 			return nil, err
 		}
 	}
@@ -248,8 +248,8 @@ func (urcb *UserRoleCreateBulk) Save(ctx context.Context) ([]*UserRole, error) {
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (urcb *UserRoleCreateBulk) SaveX(ctx context.Context) []*UserRole {
-	v, err := urcb.Save(ctx)
+func (_c *UserRoleCreateBulk) SaveX(ctx context.Context) []*UserRole {
+	v, err := _c.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -257,14 +257,14 @@ func (urcb *UserRoleCreateBulk) SaveX(ctx context.Context) []*UserRole {
 }
 
 // Exec executes the query.
-func (urcb *UserRoleCreateBulk) Exec(ctx context.Context) error {
-	_, err := urcb.Save(ctx)
+func (_c *UserRoleCreateBulk) Exec(ctx context.Context) error {
+	_, err := _c.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (urcb *UserRoleCreateBulk) ExecX(ctx context.Context) {
-	if err := urcb.Exec(ctx); err != nil {
+func (_c *UserRoleCreateBulk) ExecX(ctx context.Context) {
+	if err := _c.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

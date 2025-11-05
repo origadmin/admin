@@ -25,74 +25,74 @@ type PositionPermissionUpdate struct {
 }
 
 // Where appends a list predicates to the PositionPermissionUpdate builder.
-func (ppu *PositionPermissionUpdate) Where(ps ...predicate.PositionPermission) *PositionPermissionUpdate {
-	ppu.mutation.Where(ps...)
-	return ppu
+func (_u *PositionPermissionUpdate) Where(ps ...predicate.PositionPermission) *PositionPermissionUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetPositionID sets the "position_id" field.
-func (ppu *PositionPermissionUpdate) SetPositionID(i int64) *PositionPermissionUpdate {
-	ppu.mutation.SetPositionID(i)
-	return ppu
+func (_u *PositionPermissionUpdate) SetPositionID(v int64) *PositionPermissionUpdate {
+	_u.mutation.SetPositionID(v)
+	return _u
 }
 
 // SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (ppu *PositionPermissionUpdate) SetNillablePositionID(i *int64) *PositionPermissionUpdate {
-	if i != nil {
-		ppu.SetPositionID(*i)
+func (_u *PositionPermissionUpdate) SetNillablePositionID(v *int64) *PositionPermissionUpdate {
+	if v != nil {
+		_u.SetPositionID(*v)
 	}
-	return ppu
+	return _u
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (ppu *PositionPermissionUpdate) SetPermissionID(i int64) *PositionPermissionUpdate {
-	ppu.mutation.SetPermissionID(i)
-	return ppu
+func (_u *PositionPermissionUpdate) SetPermissionID(v int64) *PositionPermissionUpdate {
+	_u.mutation.SetPermissionID(v)
+	return _u
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (ppu *PositionPermissionUpdate) SetNillablePermissionID(i *int64) *PositionPermissionUpdate {
-	if i != nil {
-		ppu.SetPermissionID(*i)
+func (_u *PositionPermissionUpdate) SetNillablePermissionID(v *int64) *PositionPermissionUpdate {
+	if v != nil {
+		_u.SetPermissionID(*v)
 	}
-	return ppu
+	return _u
 }
 
 // SetPosition sets the "position" edge to the Position entity.
-func (ppu *PositionPermissionUpdate) SetPosition(p *Position) *PositionPermissionUpdate {
-	return ppu.SetPositionID(p.ID)
+func (_u *PositionPermissionUpdate) SetPosition(v *Position) *PositionPermissionUpdate {
+	return _u.SetPositionID(v.ID)
 }
 
 // SetPermission sets the "permission" edge to the Permission entity.
-func (ppu *PositionPermissionUpdate) SetPermission(p *Permission) *PositionPermissionUpdate {
-	return ppu.SetPermissionID(p.ID)
+func (_u *PositionPermissionUpdate) SetPermission(v *Permission) *PositionPermissionUpdate {
+	return _u.SetPermissionID(v.ID)
 }
 
 // Mutation returns the PositionPermissionMutation object of the builder.
-func (ppu *PositionPermissionUpdate) Mutation() *PositionPermissionMutation {
-	return ppu.mutation
+func (_u *PositionPermissionUpdate) Mutation() *PositionPermissionMutation {
+	return _u.mutation
 }
 
 // ClearPosition clears the "position" edge to the Position entity.
-func (ppu *PositionPermissionUpdate) ClearPosition() *PositionPermissionUpdate {
-	ppu.mutation.ClearPosition()
-	return ppu
+func (_u *PositionPermissionUpdate) ClearPosition() *PositionPermissionUpdate {
+	_u.mutation.ClearPosition()
+	return _u
 }
 
 // ClearPermission clears the "permission" edge to the Permission entity.
-func (ppu *PositionPermissionUpdate) ClearPermission() *PositionPermissionUpdate {
-	ppu.mutation.ClearPermission()
-	return ppu
+func (_u *PositionPermissionUpdate) ClearPermission() *PositionPermissionUpdate {
+	_u.mutation.ClearPermission()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (ppu *PositionPermissionUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks(ctx, ppu.sqlSave, ppu.mutation, ppu.hooks)
+func (_u *PositionPermissionUpdate) Save(ctx context.Context) (int, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ppu *PositionPermissionUpdate) SaveX(ctx context.Context) int {
-	affected, err := ppu.Save(ctx)
+func (_u *PositionPermissionUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -100,58 +100,58 @@ func (ppu *PositionPermissionUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (ppu *PositionPermissionUpdate) Exec(ctx context.Context) error {
-	_, err := ppu.Save(ctx)
+func (_u *PositionPermissionUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ppu *PositionPermissionUpdate) ExecX(ctx context.Context) {
-	if err := ppu.Exec(ctx); err != nil {
+func (_u *PositionPermissionUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ppu *PositionPermissionUpdate) check() error {
-	if v, ok := ppu.mutation.PositionID(); ok {
+func (_u *PositionPermissionUpdate) check() error {
+	if v, ok := _u.mutation.PositionID(); ok {
 		if err := positionpermission.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.position_id": %w`, err)}
 		}
 	}
-	if v, ok := ppu.mutation.PermissionID(); ok {
+	if v, ok := _u.mutation.PermissionID(); ok {
 		if err := positionpermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.permission_id": %w`, err)}
 		}
 	}
-	if ppu.mutation.PositionCleared() && len(ppu.mutation.PositionIDs()) > 0 {
+	if _u.mutation.PositionCleared() && len(_u.mutation.PositionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PositionPermission.position"`)
 	}
-	if ppu.mutation.PermissionCleared() && len(ppu.mutation.PermissionIDs()) > 0 {
+	if _u.mutation.PermissionCleared() && len(_u.mutation.PermissionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PositionPermission.permission"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (ppu *PositionPermissionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionPermissionUpdate {
-	ppu.modifiers = append(ppu.modifiers, modifiers...)
-	return ppu
+func (_u *PositionPermissionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionPermissionUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := ppu.check(); err != nil {
-		return n, err
+func (_u *PositionPermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
-	if ps := ppu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if ppu.mutation.PositionCleared() {
+	if _u.mutation.PositionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -164,7 +164,7 @@ func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err er
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ppu.mutation.PositionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -180,7 +180,7 @@ func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err er
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ppu.mutation.PermissionCleared() {
+	if _u.mutation.PermissionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -193,7 +193,7 @@ func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err er
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ppu.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -209,8 +209,8 @@ func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err er
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(ppu.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, ppu.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{positionpermission.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -218,8 +218,8 @@ func (ppu *PositionPermissionUpdate) sqlSave(ctx context.Context) (n int, err er
 		}
 		return 0, err
 	}
-	ppu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // PositionPermissionUpdateOne is the builder for updating a single PositionPermission entity.
@@ -232,81 +232,81 @@ type PositionPermissionUpdateOne struct {
 }
 
 // SetPositionID sets the "position_id" field.
-func (ppuo *PositionPermissionUpdateOne) SetPositionID(i int64) *PositionPermissionUpdateOne {
-	ppuo.mutation.SetPositionID(i)
-	return ppuo
+func (_u *PositionPermissionUpdateOne) SetPositionID(v int64) *PositionPermissionUpdateOne {
+	_u.mutation.SetPositionID(v)
+	return _u
 }
 
 // SetNillablePositionID sets the "position_id" field if the given value is not nil.
-func (ppuo *PositionPermissionUpdateOne) SetNillablePositionID(i *int64) *PositionPermissionUpdateOne {
-	if i != nil {
-		ppuo.SetPositionID(*i)
+func (_u *PositionPermissionUpdateOne) SetNillablePositionID(v *int64) *PositionPermissionUpdateOne {
+	if v != nil {
+		_u.SetPositionID(*v)
 	}
-	return ppuo
+	return _u
 }
 
 // SetPermissionID sets the "permission_id" field.
-func (ppuo *PositionPermissionUpdateOne) SetPermissionID(i int64) *PositionPermissionUpdateOne {
-	ppuo.mutation.SetPermissionID(i)
-	return ppuo
+func (_u *PositionPermissionUpdateOne) SetPermissionID(v int64) *PositionPermissionUpdateOne {
+	_u.mutation.SetPermissionID(v)
+	return _u
 }
 
 // SetNillablePermissionID sets the "permission_id" field if the given value is not nil.
-func (ppuo *PositionPermissionUpdateOne) SetNillablePermissionID(i *int64) *PositionPermissionUpdateOne {
-	if i != nil {
-		ppuo.SetPermissionID(*i)
+func (_u *PositionPermissionUpdateOne) SetNillablePermissionID(v *int64) *PositionPermissionUpdateOne {
+	if v != nil {
+		_u.SetPermissionID(*v)
 	}
-	return ppuo
+	return _u
 }
 
 // SetPosition sets the "position" edge to the Position entity.
-func (ppuo *PositionPermissionUpdateOne) SetPosition(p *Position) *PositionPermissionUpdateOne {
-	return ppuo.SetPositionID(p.ID)
+func (_u *PositionPermissionUpdateOne) SetPosition(v *Position) *PositionPermissionUpdateOne {
+	return _u.SetPositionID(v.ID)
 }
 
 // SetPermission sets the "permission" edge to the Permission entity.
-func (ppuo *PositionPermissionUpdateOne) SetPermission(p *Permission) *PositionPermissionUpdateOne {
-	return ppuo.SetPermissionID(p.ID)
+func (_u *PositionPermissionUpdateOne) SetPermission(v *Permission) *PositionPermissionUpdateOne {
+	return _u.SetPermissionID(v.ID)
 }
 
 // Mutation returns the PositionPermissionMutation object of the builder.
-func (ppuo *PositionPermissionUpdateOne) Mutation() *PositionPermissionMutation {
-	return ppuo.mutation
+func (_u *PositionPermissionUpdateOne) Mutation() *PositionPermissionMutation {
+	return _u.mutation
 }
 
 // ClearPosition clears the "position" edge to the Position entity.
-func (ppuo *PositionPermissionUpdateOne) ClearPosition() *PositionPermissionUpdateOne {
-	ppuo.mutation.ClearPosition()
-	return ppuo
+func (_u *PositionPermissionUpdateOne) ClearPosition() *PositionPermissionUpdateOne {
+	_u.mutation.ClearPosition()
+	return _u
 }
 
 // ClearPermission clears the "permission" edge to the Permission entity.
-func (ppuo *PositionPermissionUpdateOne) ClearPermission() *PositionPermissionUpdateOne {
-	ppuo.mutation.ClearPermission()
-	return ppuo
+func (_u *PositionPermissionUpdateOne) ClearPermission() *PositionPermissionUpdateOne {
+	_u.mutation.ClearPermission()
+	return _u
 }
 
 // Where appends a list predicates to the PositionPermissionUpdate builder.
-func (ppuo *PositionPermissionUpdateOne) Where(ps ...predicate.PositionPermission) *PositionPermissionUpdateOne {
-	ppuo.mutation.Where(ps...)
-	return ppuo
+func (_u *PositionPermissionUpdateOne) Where(ps ...predicate.PositionPermission) *PositionPermissionUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (ppuo *PositionPermissionUpdateOne) Select(field string, fields ...string) *PositionPermissionUpdateOne {
-	ppuo.fields = append([]string{field}, fields...)
-	return ppuo
+func (_u *PositionPermissionUpdateOne) Select(field string, fields ...string) *PositionPermissionUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated PositionPermission entity.
-func (ppuo *PositionPermissionUpdateOne) Save(ctx context.Context) (*PositionPermission, error) {
-	return withHooks(ctx, ppuo.sqlSave, ppuo.mutation, ppuo.hooks)
+func (_u *PositionPermissionUpdateOne) Save(ctx context.Context) (*PositionPermission, error) {
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (ppuo *PositionPermissionUpdateOne) SaveX(ctx context.Context) *PositionPermission {
-	node, err := ppuo.Save(ctx)
+func (_u *PositionPermissionUpdateOne) SaveX(ctx context.Context) *PositionPermission {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -314,56 +314,56 @@ func (ppuo *PositionPermissionUpdateOne) SaveX(ctx context.Context) *PositionPer
 }
 
 // Exec executes the query on the entity.
-func (ppuo *PositionPermissionUpdateOne) Exec(ctx context.Context) error {
-	_, err := ppuo.Save(ctx)
+func (_u *PositionPermissionUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (ppuo *PositionPermissionUpdateOne) ExecX(ctx context.Context) {
-	if err := ppuo.Exec(ctx); err != nil {
+func (_u *PositionPermissionUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (ppuo *PositionPermissionUpdateOne) check() error {
-	if v, ok := ppuo.mutation.PositionID(); ok {
+func (_u *PositionPermissionUpdateOne) check() error {
+	if v, ok := _u.mutation.PositionID(); ok {
 		if err := positionpermission.PositionIDValidator(v); err != nil {
 			return &ValidationError{Name: "position_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.position_id": %w`, err)}
 		}
 	}
-	if v, ok := ppuo.mutation.PermissionID(); ok {
+	if v, ok := _u.mutation.PermissionID(); ok {
 		if err := positionpermission.PermissionIDValidator(v); err != nil {
 			return &ValidationError{Name: "permission_id", err: fmt.Errorf(`ent: validator failed for field "PositionPermission.permission_id": %w`, err)}
 		}
 	}
-	if ppuo.mutation.PositionCleared() && len(ppuo.mutation.PositionIDs()) > 0 {
+	if _u.mutation.PositionCleared() && len(_u.mutation.PositionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PositionPermission.position"`)
 	}
-	if ppuo.mutation.PermissionCleared() && len(ppuo.mutation.PermissionIDs()) > 0 {
+	if _u.mutation.PermissionCleared() && len(_u.mutation.PermissionIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "PositionPermission.permission"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (ppuo *PositionPermissionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionPermissionUpdateOne {
-	ppuo.modifiers = append(ppuo.modifiers, modifiers...)
-	return ppuo
+func (_u *PositionPermissionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionPermissionUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *PositionPermission, err error) {
-	if err := ppuo.check(); err != nil {
+func (_u *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *PositionPermission, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(positionpermission.Table, positionpermission.Columns, sqlgraph.NewFieldSpec(positionpermission.FieldID, field.TypeInt))
-	id, ok := ppuo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "PositionPermission.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := ppuo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, positionpermission.FieldID)
 		for _, f := range fields {
@@ -375,14 +375,14 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 			}
 		}
 	}
-	if ps := ppuo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if ppuo.mutation.PositionCleared() {
+	if _u.mutation.PositionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -395,7 +395,7 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ppuo.mutation.PositionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PositionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -411,7 +411,7 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if ppuo.mutation.PermissionCleared() {
+	if _u.mutation.PermissionCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -424,7 +424,7 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ppuo.mutation.PermissionIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PermissionIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
@@ -440,11 +440,11 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(ppuo.modifiers...)
-	_node = &PositionPermission{config: ppuo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &PositionPermission{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, ppuo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{positionpermission.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -452,7 +452,7 @@ func (ppuo *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Po
 		}
 		return nil, err
 	}
-	ppuo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
 

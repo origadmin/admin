@@ -29,242 +29,242 @@ type PositionUpdate struct {
 }
 
 // Where appends a list predicates to the PositionUpdate builder.
-func (pu *PositionUpdate) Where(ps ...predicate.Position) *PositionUpdate {
-	pu.mutation.Where(ps...)
-	return pu
+func (_u *PositionUpdate) Where(ps ...predicate.Position) *PositionUpdate {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (pu *PositionUpdate) SetUpdateTime(t time.Time) *PositionUpdate {
-	pu.mutation.SetUpdateTime(t)
-	return pu
+func (_u *PositionUpdate) SetUpdateTime(v time.Time) *PositionUpdate {
+	_u.mutation.SetUpdateTime(v)
+	return _u
 }
 
 // SetName sets the "name" field.
-func (pu *PositionUpdate) SetName(s string) *PositionUpdate {
-	pu.mutation.SetName(s)
-	return pu
+func (_u *PositionUpdate) SetName(v string) *PositionUpdate {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (pu *PositionUpdate) SetNillableName(s *string) *PositionUpdate {
-	if s != nil {
-		pu.SetName(*s)
+func (_u *PositionUpdate) SetNillableName(v *string) *PositionUpdate {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return pu
+	return _u
 }
 
 // SetKeyword sets the "keyword" field.
-func (pu *PositionUpdate) SetKeyword(s string) *PositionUpdate {
-	pu.mutation.SetKeyword(s)
-	return pu
+func (_u *PositionUpdate) SetKeyword(v string) *PositionUpdate {
+	_u.mutation.SetKeyword(v)
+	return _u
 }
 
 // SetNillableKeyword sets the "keyword" field if the given value is not nil.
-func (pu *PositionUpdate) SetNillableKeyword(s *string) *PositionUpdate {
-	if s != nil {
-		pu.SetKeyword(*s)
+func (_u *PositionUpdate) SetNillableKeyword(v *string) *PositionUpdate {
+	if v != nil {
+		_u.SetKeyword(*v)
 	}
-	return pu
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (pu *PositionUpdate) SetDescription(s string) *PositionUpdate {
-	pu.mutation.SetDescription(s)
-	return pu
+func (_u *PositionUpdate) SetDescription(v string) *PositionUpdate {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (pu *PositionUpdate) SetNillableDescription(s *string) *PositionUpdate {
-	if s != nil {
-		pu.SetDescription(*s)
+func (_u *PositionUpdate) SetNillableDescription(v *string) *PositionUpdate {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return pu
+	return _u
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (pu *PositionUpdate) SetDepartmentID(i int64) *PositionUpdate {
-	pu.mutation.SetDepartmentID(i)
-	return pu
+func (_u *PositionUpdate) SetDepartmentID(v int64) *PositionUpdate {
+	_u.mutation.SetDepartmentID(v)
+	return _u
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (pu *PositionUpdate) SetNillableDepartmentID(i *int64) *PositionUpdate {
-	if i != nil {
-		pu.SetDepartmentID(*i)
+func (_u *PositionUpdate) SetNillableDepartmentID(v *int64) *PositionUpdate {
+	if v != nil {
+		_u.SetDepartmentID(*v)
 	}
-	return pu
+	return _u
 }
 
 // SetDepartment sets the "department" edge to the Department entity.
-func (pu *PositionUpdate) SetDepartment(d *Department) *PositionUpdate {
-	return pu.SetDepartmentID(d.ID)
+func (_u *PositionUpdate) SetDepartment(v *Department) *PositionUpdate {
+	return _u.SetDepartmentID(v.ID)
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (pu *PositionUpdate) AddUserIDs(ids ...int64) *PositionUpdate {
-	pu.mutation.AddUserIDs(ids...)
-	return pu
+func (_u *PositionUpdate) AddUserIDs(ids ...int64) *PositionUpdate {
+	_u.mutation.AddUserIDs(ids...)
+	return _u
 }
 
 // AddUsers adds the "users" edges to the User entity.
-func (pu *PositionUpdate) AddUsers(u ...*User) *PositionUpdate {
-	ids := make([]int64, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdate) AddUsers(v ...*User) *PositionUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.AddUserIDs(ids...)
+	return _u.AddUserIDs(ids...)
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (pu *PositionUpdate) AddPermissionIDs(ids ...int64) *PositionUpdate {
-	pu.mutation.AddPermissionIDs(ids...)
-	return pu
+func (_u *PositionUpdate) AddPermissionIDs(ids ...int64) *PositionUpdate {
+	_u.mutation.AddPermissionIDs(ids...)
+	return _u
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
-func (pu *PositionUpdate) AddPermissions(p ...*Permission) *PositionUpdate {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdate) AddPermissions(v ...*Permission) *PositionUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.AddPermissionIDs(ids...)
+	return _u.AddPermissionIDs(ids...)
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (pu *PositionUpdate) AddUserPositionIDs(ids ...int) *PositionUpdate {
-	pu.mutation.AddUserPositionIDs(ids...)
-	return pu
+func (_u *PositionUpdate) AddUserPositionIDs(ids ...int) *PositionUpdate {
+	_u.mutation.AddUserPositionIDs(ids...)
+	return _u
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
-func (pu *PositionUpdate) AddUserPositions(u ...*UserPosition) *PositionUpdate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdate) AddUserPositions(v ...*UserPosition) *PositionUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.AddUserPositionIDs(ids...)
+	return _u.AddUserPositionIDs(ids...)
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (pu *PositionUpdate) AddPositionPermissionIDs(ids ...int) *PositionUpdate {
-	pu.mutation.AddPositionPermissionIDs(ids...)
-	return pu
+func (_u *PositionUpdate) AddPositionPermissionIDs(ids ...int) *PositionUpdate {
+	_u.mutation.AddPositionPermissionIDs(ids...)
+	return _u
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
-func (pu *PositionUpdate) AddPositionPermissions(p ...*PositionPermission) *PositionUpdate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdate) AddPositionPermissions(v ...*PositionPermission) *PositionUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.AddPositionPermissionIDs(ids...)
+	return _u.AddPositionPermissionIDs(ids...)
 }
 
 // Mutation returns the PositionMutation object of the builder.
-func (pu *PositionUpdate) Mutation() *PositionMutation {
-	return pu.mutation
+func (_u *PositionUpdate) Mutation() *PositionMutation {
+	return _u.mutation
 }
 
 // ClearDepartment clears the "department" edge to the Department entity.
-func (pu *PositionUpdate) ClearDepartment() *PositionUpdate {
-	pu.mutation.ClearDepartment()
-	return pu
+func (_u *PositionUpdate) ClearDepartment() *PositionUpdate {
+	_u.mutation.ClearDepartment()
+	return _u
 }
 
 // ClearUsers clears all "users" edges to the User entity.
-func (pu *PositionUpdate) ClearUsers() *PositionUpdate {
-	pu.mutation.ClearUsers()
-	return pu
+func (_u *PositionUpdate) ClearUsers() *PositionUpdate {
+	_u.mutation.ClearUsers()
+	return _u
 }
 
 // RemoveUserIDs removes the "users" edge to User entities by IDs.
-func (pu *PositionUpdate) RemoveUserIDs(ids ...int64) *PositionUpdate {
-	pu.mutation.RemoveUserIDs(ids...)
-	return pu
+func (_u *PositionUpdate) RemoveUserIDs(ids ...int64) *PositionUpdate {
+	_u.mutation.RemoveUserIDs(ids...)
+	return _u
 }
 
 // RemoveUsers removes "users" edges to User entities.
-func (pu *PositionUpdate) RemoveUsers(u ...*User) *PositionUpdate {
-	ids := make([]int64, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdate) RemoveUsers(v ...*User) *PositionUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.RemoveUserIDs(ids...)
+	return _u.RemoveUserIDs(ids...)
 }
 
 // ClearPermissions clears all "permissions" edges to the Permission entity.
-func (pu *PositionUpdate) ClearPermissions() *PositionUpdate {
-	pu.mutation.ClearPermissions()
-	return pu
+func (_u *PositionUpdate) ClearPermissions() *PositionUpdate {
+	_u.mutation.ClearPermissions()
+	return _u
 }
 
 // RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
-func (pu *PositionUpdate) RemovePermissionIDs(ids ...int64) *PositionUpdate {
-	pu.mutation.RemovePermissionIDs(ids...)
-	return pu
+func (_u *PositionUpdate) RemovePermissionIDs(ids ...int64) *PositionUpdate {
+	_u.mutation.RemovePermissionIDs(ids...)
+	return _u
 }
 
 // RemovePermissions removes "permissions" edges to Permission entities.
-func (pu *PositionUpdate) RemovePermissions(p ...*Permission) *PositionUpdate {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdate) RemovePermissions(v ...*Permission) *PositionUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.RemovePermissionIDs(ids...)
+	return _u.RemovePermissionIDs(ids...)
 }
 
 // ClearUserPositions clears all "user_positions" edges to the UserPosition entity.
-func (pu *PositionUpdate) ClearUserPositions() *PositionUpdate {
-	pu.mutation.ClearUserPositions()
-	return pu
+func (_u *PositionUpdate) ClearUserPositions() *PositionUpdate {
+	_u.mutation.ClearUserPositions()
+	return _u
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
-func (pu *PositionUpdate) RemoveUserPositionIDs(ids ...int) *PositionUpdate {
-	pu.mutation.RemoveUserPositionIDs(ids...)
-	return pu
+func (_u *PositionUpdate) RemoveUserPositionIDs(ids ...int) *PositionUpdate {
+	_u.mutation.RemoveUserPositionIDs(ids...)
+	return _u
 }
 
 // RemoveUserPositions removes "user_positions" edges to UserPosition entities.
-func (pu *PositionUpdate) RemoveUserPositions(u ...*UserPosition) *PositionUpdate {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdate) RemoveUserPositions(v ...*UserPosition) *PositionUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.RemoveUserPositionIDs(ids...)
+	return _u.RemoveUserPositionIDs(ids...)
 }
 
 // ClearPositionPermissions clears all "position_permissions" edges to the PositionPermission entity.
-func (pu *PositionUpdate) ClearPositionPermissions() *PositionUpdate {
-	pu.mutation.ClearPositionPermissions()
-	return pu
+func (_u *PositionUpdate) ClearPositionPermissions() *PositionUpdate {
+	_u.mutation.ClearPositionPermissions()
+	return _u
 }
 
 // RemovePositionPermissionIDs removes the "position_permissions" edge to PositionPermission entities by IDs.
-func (pu *PositionUpdate) RemovePositionPermissionIDs(ids ...int) *PositionUpdate {
-	pu.mutation.RemovePositionPermissionIDs(ids...)
-	return pu
+func (_u *PositionUpdate) RemovePositionPermissionIDs(ids ...int) *PositionUpdate {
+	_u.mutation.RemovePositionPermissionIDs(ids...)
+	return _u
 }
 
 // RemovePositionPermissions removes "position_permissions" edges to PositionPermission entities.
-func (pu *PositionUpdate) RemovePositionPermissions(p ...*PositionPermission) *PositionUpdate {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdate) RemovePositionPermissions(v ...*PositionPermission) *PositionUpdate {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return pu.RemovePositionPermissionIDs(ids...)
+	return _u.RemovePositionPermissionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
-func (pu *PositionUpdate) Save(ctx context.Context) (int, error) {
-	pu.defaults()
-	return withHooks(ctx, pu.sqlSave, pu.mutation, pu.hooks)
+func (_u *PositionUpdate) Save(ctx context.Context) (int, error) {
+	_u.defaults()
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (pu *PositionUpdate) SaveX(ctx context.Context) int {
-	affected, err := pu.Save(ctx)
+func (_u *PositionUpdate) SaveX(ctx context.Context) int {
+	affected, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -272,85 +272,85 @@ func (pu *PositionUpdate) SaveX(ctx context.Context) int {
 }
 
 // Exec executes the query.
-func (pu *PositionUpdate) Exec(ctx context.Context) error {
-	_, err := pu.Save(ctx)
+func (_u *PositionUpdate) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (pu *PositionUpdate) ExecX(ctx context.Context) {
-	if err := pu.Exec(ctx); err != nil {
+func (_u *PositionUpdate) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (pu *PositionUpdate) defaults() {
-	if _, ok := pu.mutation.UpdateTime(); !ok {
+func (_u *PositionUpdate) defaults() {
+	if _, ok := _u.mutation.UpdateTime(); !ok {
 		v := position.UpdateDefaultUpdateTime()
-		pu.mutation.SetUpdateTime(v)
+		_u.mutation.SetUpdateTime(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (pu *PositionUpdate) check() error {
-	if v, ok := pu.mutation.Name(); ok {
+func (_u *PositionUpdate) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := position.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Position.name": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.Keyword(); ok {
+	if v, ok := _u.mutation.Keyword(); ok {
 		if err := position.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Position.keyword": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.Description(); ok {
+	if v, ok := _u.mutation.Description(); ok {
 		if err := position.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
 		}
 	}
-	if v, ok := pu.mutation.DepartmentID(); ok {
+	if v, ok := _u.mutation.DepartmentID(); ok {
 		if err := position.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "Position.department_id": %w`, err)}
 		}
 	}
-	if pu.mutation.DepartmentCleared() && len(pu.mutation.DepartmentIDs()) > 0 {
+	if _u.mutation.DepartmentCleared() && len(_u.mutation.DepartmentIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Position.department"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (pu *PositionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionUpdate {
-	pu.modifiers = append(pu.modifiers, modifiers...)
-	return pu
+func (_u *PositionUpdate) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionUpdate {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	if err := pu.check(); err != nil {
-		return n, err
+func (_u *PositionUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64))
-	if ps := pu.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := pu.mutation.UpdateTime(); ok {
+	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(position.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := pu.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(position.FieldName, field.TypeString, value)
 	}
-	if value, ok := pu.mutation.Keyword(); ok {
+	if value, ok := _u.mutation.Keyword(); ok {
 		_spec.SetField(position.FieldKeyword, field.TypeString, value)
 	}
-	if value, ok := pu.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(position.FieldDescription, field.TypeString, value)
 	}
-	if pu.mutation.DepartmentCleared() {
+	if _u.mutation.DepartmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -363,7 +363,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.DepartmentIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.DepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -379,7 +379,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if pu.mutation.UsersCleared() {
+	if _u.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -392,23 +392,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.RemovedUsersIDs(); len(nodes) > 0 && !pu.mutation.UsersCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   position.UsersTable,
-			Columns: position.UsersPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := pu.mutation.UsersIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RemovedUsersIDs(); len(nodes) > 0 && !_u.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -422,9 +406,25 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UsersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   position.UsersTable,
+			Columns: position.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if pu.mutation.PermissionsCleared() {
+	if _u.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -437,7 +437,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !pu.mutation.PermissionsCleared() {
+	if nodes := _u.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !_u.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -453,7 +453,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.PermissionsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -469,7 +469,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if pu.mutation.UserPositionsCleared() {
+	if _u.mutation.UserPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -482,7 +482,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.RemovedUserPositionsIDs(); len(nodes) > 0 && !pu.mutation.UserPositionsCleared() {
+	if nodes := _u.mutation.RemovedUserPositionsIDs(); len(nodes) > 0 && !_u.mutation.UserPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -498,7 +498,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.UserPositionsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserPositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -514,7 +514,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if pu.mutation.PositionPermissionsCleared() {
+	if _u.mutation.PositionPermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -527,7 +527,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.RemovedPositionPermissionsIDs(); len(nodes) > 0 && !pu.mutation.PositionPermissionsCleared() {
+	if nodes := _u.mutation.RemovedPositionPermissionsIDs(); len(nodes) > 0 && !_u.mutation.PositionPermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -543,7 +543,7 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := pu.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -559,8 +559,8 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(pu.modifiers...)
-	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
+	_spec.AddModifiers(_u.modifiers...)
+	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{position.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -568,8 +568,8 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
-	pu.mutation.done = true
-	return n, nil
+	_u.mutation.done = true
+	return _node, nil
 }
 
 // PositionUpdateOne is the builder for updating a single Position entity.
@@ -582,249 +582,249 @@ type PositionUpdateOne struct {
 }
 
 // SetUpdateTime sets the "update_time" field.
-func (puo *PositionUpdateOne) SetUpdateTime(t time.Time) *PositionUpdateOne {
-	puo.mutation.SetUpdateTime(t)
-	return puo
+func (_u *PositionUpdateOne) SetUpdateTime(v time.Time) *PositionUpdateOne {
+	_u.mutation.SetUpdateTime(v)
+	return _u
 }
 
 // SetName sets the "name" field.
-func (puo *PositionUpdateOne) SetName(s string) *PositionUpdateOne {
-	puo.mutation.SetName(s)
-	return puo
+func (_u *PositionUpdateOne) SetName(v string) *PositionUpdateOne {
+	_u.mutation.SetName(v)
+	return _u
 }
 
 // SetNillableName sets the "name" field if the given value is not nil.
-func (puo *PositionUpdateOne) SetNillableName(s *string) *PositionUpdateOne {
-	if s != nil {
-		puo.SetName(*s)
+func (_u *PositionUpdateOne) SetNillableName(v *string) *PositionUpdateOne {
+	if v != nil {
+		_u.SetName(*v)
 	}
-	return puo
+	return _u
 }
 
 // SetKeyword sets the "keyword" field.
-func (puo *PositionUpdateOne) SetKeyword(s string) *PositionUpdateOne {
-	puo.mutation.SetKeyword(s)
-	return puo
+func (_u *PositionUpdateOne) SetKeyword(v string) *PositionUpdateOne {
+	_u.mutation.SetKeyword(v)
+	return _u
 }
 
 // SetNillableKeyword sets the "keyword" field if the given value is not nil.
-func (puo *PositionUpdateOne) SetNillableKeyword(s *string) *PositionUpdateOne {
-	if s != nil {
-		puo.SetKeyword(*s)
+func (_u *PositionUpdateOne) SetNillableKeyword(v *string) *PositionUpdateOne {
+	if v != nil {
+		_u.SetKeyword(*v)
 	}
-	return puo
+	return _u
 }
 
 // SetDescription sets the "description" field.
-func (puo *PositionUpdateOne) SetDescription(s string) *PositionUpdateOne {
-	puo.mutation.SetDescription(s)
-	return puo
+func (_u *PositionUpdateOne) SetDescription(v string) *PositionUpdateOne {
+	_u.mutation.SetDescription(v)
+	return _u
 }
 
 // SetNillableDescription sets the "description" field if the given value is not nil.
-func (puo *PositionUpdateOne) SetNillableDescription(s *string) *PositionUpdateOne {
-	if s != nil {
-		puo.SetDescription(*s)
+func (_u *PositionUpdateOne) SetNillableDescription(v *string) *PositionUpdateOne {
+	if v != nil {
+		_u.SetDescription(*v)
 	}
-	return puo
+	return _u
 }
 
 // SetDepartmentID sets the "department_id" field.
-func (puo *PositionUpdateOne) SetDepartmentID(i int64) *PositionUpdateOne {
-	puo.mutation.SetDepartmentID(i)
-	return puo
+func (_u *PositionUpdateOne) SetDepartmentID(v int64) *PositionUpdateOne {
+	_u.mutation.SetDepartmentID(v)
+	return _u
 }
 
 // SetNillableDepartmentID sets the "department_id" field if the given value is not nil.
-func (puo *PositionUpdateOne) SetNillableDepartmentID(i *int64) *PositionUpdateOne {
-	if i != nil {
-		puo.SetDepartmentID(*i)
+func (_u *PositionUpdateOne) SetNillableDepartmentID(v *int64) *PositionUpdateOne {
+	if v != nil {
+		_u.SetDepartmentID(*v)
 	}
-	return puo
+	return _u
 }
 
 // SetDepartment sets the "department" edge to the Department entity.
-func (puo *PositionUpdateOne) SetDepartment(d *Department) *PositionUpdateOne {
-	return puo.SetDepartmentID(d.ID)
+func (_u *PositionUpdateOne) SetDepartment(v *Department) *PositionUpdateOne {
+	return _u.SetDepartmentID(v.ID)
 }
 
 // AddUserIDs adds the "users" edge to the User entity by IDs.
-func (puo *PositionUpdateOne) AddUserIDs(ids ...int64) *PositionUpdateOne {
-	puo.mutation.AddUserIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) AddUserIDs(ids ...int64) *PositionUpdateOne {
+	_u.mutation.AddUserIDs(ids...)
+	return _u
 }
 
 // AddUsers adds the "users" edges to the User entity.
-func (puo *PositionUpdateOne) AddUsers(u ...*User) *PositionUpdateOne {
-	ids := make([]int64, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdateOne) AddUsers(v ...*User) *PositionUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.AddUserIDs(ids...)
+	return _u.AddUserIDs(ids...)
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
-func (puo *PositionUpdateOne) AddPermissionIDs(ids ...int64) *PositionUpdateOne {
-	puo.mutation.AddPermissionIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) AddPermissionIDs(ids ...int64) *PositionUpdateOne {
+	_u.mutation.AddPermissionIDs(ids...)
+	return _u
 }
 
 // AddPermissions adds the "permissions" edges to the Permission entity.
-func (puo *PositionUpdateOne) AddPermissions(p ...*Permission) *PositionUpdateOne {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdateOne) AddPermissions(v ...*Permission) *PositionUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.AddPermissionIDs(ids...)
+	return _u.AddPermissionIDs(ids...)
 }
 
 // AddUserPositionIDs adds the "user_positions" edge to the UserPosition entity by IDs.
-func (puo *PositionUpdateOne) AddUserPositionIDs(ids ...int) *PositionUpdateOne {
-	puo.mutation.AddUserPositionIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) AddUserPositionIDs(ids ...int) *PositionUpdateOne {
+	_u.mutation.AddUserPositionIDs(ids...)
+	return _u
 }
 
 // AddUserPositions adds the "user_positions" edges to the UserPosition entity.
-func (puo *PositionUpdateOne) AddUserPositions(u ...*UserPosition) *PositionUpdateOne {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdateOne) AddUserPositions(v ...*UserPosition) *PositionUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.AddUserPositionIDs(ids...)
+	return _u.AddUserPositionIDs(ids...)
 }
 
 // AddPositionPermissionIDs adds the "position_permissions" edge to the PositionPermission entity by IDs.
-func (puo *PositionUpdateOne) AddPositionPermissionIDs(ids ...int) *PositionUpdateOne {
-	puo.mutation.AddPositionPermissionIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) AddPositionPermissionIDs(ids ...int) *PositionUpdateOne {
+	_u.mutation.AddPositionPermissionIDs(ids...)
+	return _u
 }
 
 // AddPositionPermissions adds the "position_permissions" edges to the PositionPermission entity.
-func (puo *PositionUpdateOne) AddPositionPermissions(p ...*PositionPermission) *PositionUpdateOne {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdateOne) AddPositionPermissions(v ...*PositionPermission) *PositionUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.AddPositionPermissionIDs(ids...)
+	return _u.AddPositionPermissionIDs(ids...)
 }
 
 // Mutation returns the PositionMutation object of the builder.
-func (puo *PositionUpdateOne) Mutation() *PositionMutation {
-	return puo.mutation
+func (_u *PositionUpdateOne) Mutation() *PositionMutation {
+	return _u.mutation
 }
 
 // ClearDepartment clears the "department" edge to the Department entity.
-func (puo *PositionUpdateOne) ClearDepartment() *PositionUpdateOne {
-	puo.mutation.ClearDepartment()
-	return puo
+func (_u *PositionUpdateOne) ClearDepartment() *PositionUpdateOne {
+	_u.mutation.ClearDepartment()
+	return _u
 }
 
 // ClearUsers clears all "users" edges to the User entity.
-func (puo *PositionUpdateOne) ClearUsers() *PositionUpdateOne {
-	puo.mutation.ClearUsers()
-	return puo
+func (_u *PositionUpdateOne) ClearUsers() *PositionUpdateOne {
+	_u.mutation.ClearUsers()
+	return _u
 }
 
 // RemoveUserIDs removes the "users" edge to User entities by IDs.
-func (puo *PositionUpdateOne) RemoveUserIDs(ids ...int64) *PositionUpdateOne {
-	puo.mutation.RemoveUserIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) RemoveUserIDs(ids ...int64) *PositionUpdateOne {
+	_u.mutation.RemoveUserIDs(ids...)
+	return _u
 }
 
 // RemoveUsers removes "users" edges to User entities.
-func (puo *PositionUpdateOne) RemoveUsers(u ...*User) *PositionUpdateOne {
-	ids := make([]int64, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdateOne) RemoveUsers(v ...*User) *PositionUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.RemoveUserIDs(ids...)
+	return _u.RemoveUserIDs(ids...)
 }
 
 // ClearPermissions clears all "permissions" edges to the Permission entity.
-func (puo *PositionUpdateOne) ClearPermissions() *PositionUpdateOne {
-	puo.mutation.ClearPermissions()
-	return puo
+func (_u *PositionUpdateOne) ClearPermissions() *PositionUpdateOne {
+	_u.mutation.ClearPermissions()
+	return _u
 }
 
 // RemovePermissionIDs removes the "permissions" edge to Permission entities by IDs.
-func (puo *PositionUpdateOne) RemovePermissionIDs(ids ...int64) *PositionUpdateOne {
-	puo.mutation.RemovePermissionIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) RemovePermissionIDs(ids ...int64) *PositionUpdateOne {
+	_u.mutation.RemovePermissionIDs(ids...)
+	return _u
 }
 
 // RemovePermissions removes "permissions" edges to Permission entities.
-func (puo *PositionUpdateOne) RemovePermissions(p ...*Permission) *PositionUpdateOne {
-	ids := make([]int64, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdateOne) RemovePermissions(v ...*Permission) *PositionUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.RemovePermissionIDs(ids...)
+	return _u.RemovePermissionIDs(ids...)
 }
 
 // ClearUserPositions clears all "user_positions" edges to the UserPosition entity.
-func (puo *PositionUpdateOne) ClearUserPositions() *PositionUpdateOne {
-	puo.mutation.ClearUserPositions()
-	return puo
+func (_u *PositionUpdateOne) ClearUserPositions() *PositionUpdateOne {
+	_u.mutation.ClearUserPositions()
+	return _u
 }
 
 // RemoveUserPositionIDs removes the "user_positions" edge to UserPosition entities by IDs.
-func (puo *PositionUpdateOne) RemoveUserPositionIDs(ids ...int) *PositionUpdateOne {
-	puo.mutation.RemoveUserPositionIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) RemoveUserPositionIDs(ids ...int) *PositionUpdateOne {
+	_u.mutation.RemoveUserPositionIDs(ids...)
+	return _u
 }
 
 // RemoveUserPositions removes "user_positions" edges to UserPosition entities.
-func (puo *PositionUpdateOne) RemoveUserPositions(u ...*UserPosition) *PositionUpdateOne {
-	ids := make([]int, len(u))
-	for i := range u {
-		ids[i] = u[i].ID
+func (_u *PositionUpdateOne) RemoveUserPositions(v ...*UserPosition) *PositionUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.RemoveUserPositionIDs(ids...)
+	return _u.RemoveUserPositionIDs(ids...)
 }
 
 // ClearPositionPermissions clears all "position_permissions" edges to the PositionPermission entity.
-func (puo *PositionUpdateOne) ClearPositionPermissions() *PositionUpdateOne {
-	puo.mutation.ClearPositionPermissions()
-	return puo
+func (_u *PositionUpdateOne) ClearPositionPermissions() *PositionUpdateOne {
+	_u.mutation.ClearPositionPermissions()
+	return _u
 }
 
 // RemovePositionPermissionIDs removes the "position_permissions" edge to PositionPermission entities by IDs.
-func (puo *PositionUpdateOne) RemovePositionPermissionIDs(ids ...int) *PositionUpdateOne {
-	puo.mutation.RemovePositionPermissionIDs(ids...)
-	return puo
+func (_u *PositionUpdateOne) RemovePositionPermissionIDs(ids ...int) *PositionUpdateOne {
+	_u.mutation.RemovePositionPermissionIDs(ids...)
+	return _u
 }
 
 // RemovePositionPermissions removes "position_permissions" edges to PositionPermission entities.
-func (puo *PositionUpdateOne) RemovePositionPermissions(p ...*PositionPermission) *PositionUpdateOne {
-	ids := make([]int, len(p))
-	for i := range p {
-		ids[i] = p[i].ID
+func (_u *PositionUpdateOne) RemovePositionPermissions(v ...*PositionPermission) *PositionUpdateOne {
+	ids := make([]int, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
 	}
-	return puo.RemovePositionPermissionIDs(ids...)
+	return _u.RemovePositionPermissionIDs(ids...)
 }
 
 // Where appends a list predicates to the PositionUpdate builder.
-func (puo *PositionUpdateOne) Where(ps ...predicate.Position) *PositionUpdateOne {
-	puo.mutation.Where(ps...)
-	return puo
+func (_u *PositionUpdateOne) Where(ps ...predicate.Position) *PositionUpdateOne {
+	_u.mutation.Where(ps...)
+	return _u
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
-func (puo *PositionUpdateOne) Select(field string, fields ...string) *PositionUpdateOne {
-	puo.fields = append([]string{field}, fields...)
-	return puo
+func (_u *PositionUpdateOne) Select(field string, fields ...string) *PositionUpdateOne {
+	_u.fields = append([]string{field}, fields...)
+	return _u
 }
 
 // Save executes the query and returns the updated Position entity.
-func (puo *PositionUpdateOne) Save(ctx context.Context) (*Position, error) {
-	puo.defaults()
-	return withHooks(ctx, puo.sqlSave, puo.mutation, puo.hooks)
+func (_u *PositionUpdateOne) Save(ctx context.Context) (*Position, error) {
+	_u.defaults()
+	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
-func (puo *PositionUpdateOne) SaveX(ctx context.Context) *Position {
-	node, err := puo.Save(ctx)
+func (_u *PositionUpdateOne) SaveX(ctx context.Context) *Position {
+	node, err := _u.Save(ctx)
 	if err != nil {
 		panic(err)
 	}
@@ -832,71 +832,71 @@ func (puo *PositionUpdateOne) SaveX(ctx context.Context) *Position {
 }
 
 // Exec executes the query on the entity.
-func (puo *PositionUpdateOne) Exec(ctx context.Context) error {
-	_, err := puo.Save(ctx)
+func (_u *PositionUpdateOne) Exec(ctx context.Context) error {
+	_, err := _u.Save(ctx)
 	return err
 }
 
 // ExecX is like Exec, but panics if an error occurs.
-func (puo *PositionUpdateOne) ExecX(ctx context.Context) {
-	if err := puo.Exec(ctx); err != nil {
+func (_u *PositionUpdateOne) ExecX(ctx context.Context) {
+	if err := _u.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
 
 // defaults sets the default values of the builder before save.
-func (puo *PositionUpdateOne) defaults() {
-	if _, ok := puo.mutation.UpdateTime(); !ok {
+func (_u *PositionUpdateOne) defaults() {
+	if _, ok := _u.mutation.UpdateTime(); !ok {
 		v := position.UpdateDefaultUpdateTime()
-		puo.mutation.SetUpdateTime(v)
+		_u.mutation.SetUpdateTime(v)
 	}
 }
 
 // check runs all checks and user-defined validators on the builder.
-func (puo *PositionUpdateOne) check() error {
-	if v, ok := puo.mutation.Name(); ok {
+func (_u *PositionUpdateOne) check() error {
+	if v, ok := _u.mutation.Name(); ok {
 		if err := position.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Position.name": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.Keyword(); ok {
+	if v, ok := _u.mutation.Keyword(); ok {
 		if err := position.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Position.keyword": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.Description(); ok {
+	if v, ok := _u.mutation.Description(); ok {
 		if err := position.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Position.description": %w`, err)}
 		}
 	}
-	if v, ok := puo.mutation.DepartmentID(); ok {
+	if v, ok := _u.mutation.DepartmentID(); ok {
 		if err := position.DepartmentIDValidator(v); err != nil {
 			return &ValidationError{Name: "department_id", err: fmt.Errorf(`ent: validator failed for field "Position.department_id": %w`, err)}
 		}
 	}
-	if puo.mutation.DepartmentCleared() && len(puo.mutation.DepartmentIDs()) > 0 {
+	if _u.mutation.DepartmentCleared() && len(_u.mutation.DepartmentIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Position.department"`)
 	}
 	return nil
 }
 
 // Modify adds a statement modifier for attaching custom logic to the UPDATE statement.
-func (puo *PositionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionUpdateOne {
-	puo.modifiers = append(puo.modifiers, modifiers...)
-	return puo
+func (_u *PositionUpdateOne) Modify(modifiers ...func(u *sql.UpdateBuilder)) *PositionUpdateOne {
+	_u.modifiers = append(_u.modifiers, modifiers...)
+	return _u
 }
 
-func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err error) {
-	if err := puo.check(); err != nil {
+func (_u *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err error) {
+	if err := _u.check(); err != nil {
 		return _node, err
 	}
 	_spec := sqlgraph.NewUpdateSpec(position.Table, position.Columns, sqlgraph.NewFieldSpec(position.FieldID, field.TypeInt64))
-	id, ok := puo.mutation.ID()
+	id, ok := _u.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Position.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
-	if fields := puo.fields; len(fields) > 0 {
+	if fields := _u.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, position.FieldID)
 		for _, f := range fields {
@@ -908,26 +908,26 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 			}
 		}
 	}
-	if ps := puo.mutation.predicates; len(ps) > 0 {
+	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
 				ps[i](selector)
 			}
 		}
 	}
-	if value, ok := puo.mutation.UpdateTime(); ok {
+	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(position.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := puo.mutation.Name(); ok {
+	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(position.FieldName, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.Keyword(); ok {
+	if value, ok := _u.mutation.Keyword(); ok {
 		_spec.SetField(position.FieldKeyword, field.TypeString, value)
 	}
-	if value, ok := puo.mutation.Description(); ok {
+	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(position.FieldDescription, field.TypeString, value)
 	}
-	if puo.mutation.DepartmentCleared() {
+	if _u.mutation.DepartmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -940,7 +940,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.DepartmentIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.DepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
@@ -956,7 +956,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if puo.mutation.UsersCleared() {
+	if _u.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -969,23 +969,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.RemovedUsersIDs(); len(nodes) > 0 && !puo.mutation.UsersCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
-			Inverse: true,
-			Table:   position.UsersTable,
-			Columns: position.UsersPrimaryKey,
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := puo.mutation.UsersIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.RemovedUsersIDs(); len(nodes) > 0 && !_u.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: true,
@@ -999,9 +983,25 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UsersIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   position.UsersTable,
+			Columns: position.UsersPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if puo.mutation.PermissionsCleared() {
+	if _u.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -1014,7 +1014,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !puo.mutation.PermissionsCleared() {
+	if nodes := _u.mutation.RemovedPermissionsIDs(); len(nodes) > 0 && !_u.mutation.PermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -1030,7 +1030,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.PermissionsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
 			Inverse: false,
@@ -1046,7 +1046,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if puo.mutation.UserPositionsCleared() {
+	if _u.mutation.UserPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -1059,7 +1059,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.RemovedUserPositionsIDs(); len(nodes) > 0 && !puo.mutation.UserPositionsCleared() {
+	if nodes := _u.mutation.RemovedUserPositionsIDs(); len(nodes) > 0 && !_u.mutation.UserPositionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -1075,7 +1075,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.UserPositionsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.UserPositionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -1091,7 +1091,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if puo.mutation.PositionPermissionsCleared() {
+	if _u.mutation.PositionPermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -1104,7 +1104,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.RemovedPositionPermissionsIDs(); len(nodes) > 0 && !puo.mutation.PositionPermissionsCleared() {
+	if nodes := _u.mutation.RemovedPositionPermissionsIDs(); len(nodes) > 0 && !_u.mutation.PositionPermissionsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -1120,7 +1120,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := puo.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.PositionPermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: true,
@@ -1136,11 +1136,11 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	_spec.AddModifiers(puo.modifiers...)
-	_node = &Position{config: puo.config}
+	_spec.AddModifiers(_u.modifiers...)
+	_node = &Position{config: _u.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues
-	if err = sqlgraph.UpdateNode(ctx, puo.driver, _spec); err != nil {
+	if err = sqlgraph.UpdateNode(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{position.Label}
 		} else if sqlgraph.IsConstraintError(err) {
@@ -1148,7 +1148,7 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err
 		}
 		return nil, err
 	}
-	puo.mutation.done = true
+	_u.mutation.done = true
 	return _node, nil
 }
 
