@@ -57,7 +57,7 @@ type InjectorClient struct {
 }
 
 //type Injector struct {
-//	Registrar  registry.KRegistrar
+//	ServerRegistrar  registry.KRegistrar
 //	Registrars []service.ServerRegistrar
 //}
 
