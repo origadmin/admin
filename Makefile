@@ -96,9 +96,8 @@ deps:
 	buf export buf.build/envoyproxy/protoc-gen-validate -o $(THIRD_PARTY_PATH)
 	buf export buf.build/gnostic/gnostic -o $(THIRD_PARTY_PATH)
 	buf export buf.build/kratos/apis -o $(THIRD_PARTY_PATH)
-	buf export buf.build/origadmin/rpcerr -o $(THIRD_PARTY_PATH)
 	buf export buf.build/origadmin/runtime -o $(THIRD_PARTY_PATH)
-	buf export buf.build/origadmin/entgen -o $(THIRD_PARTY_PATH)
+	buf export buf.build/origadmin/contrib -o $(THIRD_PARTY_PATH)
 
 .PHONY: config
 # generate internal proto or use ./internal/generate.go

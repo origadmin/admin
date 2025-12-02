@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package conf;
+
+option go_package = "origadmin/application/admin/internal/conf;conf";
+
+import "config/transport/v1/transport.proto";
+import "conf/pb/captcha.proto";
+import "conf/pb/root.proto";
+
+// Bootstrap is the top-level configuration structure for the application.
+message Bootstrap {
+  // Server-side configuration for the service itself.
+  runtime.api.config.transport.v1.Servers servers = 1;
+
+  // Client-side configurations. The key is the logical name of the downstream service, e.g., "user-service".
+  runtime.api.config.transport.v1.Clients clients = 2;
+
+  // Global-level configurations can be placed here.
+  SelectorGlobal selector_global = 3;
+
+  // Captcha feature specific configuration.
+  Captcha captcha = 4;
+
+  // RootUser feature specific configuration for initial user setup.
+  RootUser root_user = 5;
+}
+
+// SelectorGlobal defines the global selector/load-balancing strategy.
+message SelectorGlobal {
+  // builder specifies the global load balancer, e.g., "p2c", "wrr", "random".
+  string builder = 1;
+}

@@ -11,5 +11,5 @@ package internal
 //=paths=source_relative:. outputs to the same directory with the proto file
 
 // uncomment this line to generate the client code to the same directory
-//go:generate protoc -I. -I../third_party --go_out=paths=source_relative:../internal ./configs/*.proto
-//go:generate protoc -I. -I../third_party --validate_out=paths=source_relative,lang=go:../internal  ./configs/*.proto
+//go:generate protoc -I. -I../third_party --go_out=paths=source_relative:../internal ./conf/pb/*.proto
+//go:generate protoc -I. -I../third_party --validate_out=paths=source_relative,lang=go:../internal ./conf/pb/*.proto

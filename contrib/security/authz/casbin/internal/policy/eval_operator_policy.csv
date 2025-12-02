@@ -1,1 +1,0 @@
-p, r.sub == 'admin' || false, r.obj == 'users', write
