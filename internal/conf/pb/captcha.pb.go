@@ -4,7 +4,7 @@
 // 	protoc        v5.28.3
 // source: conf/pb/captcha.proto
 
-package conf
+package confpb
 
 import (
 	v1 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
@@ -102,7 +102,7 @@ var File_conf_pb_captcha_proto protoreflect.FileDescriptor
 
 const file_conf_pb_captcha_proto_rawDesc = "" +
 	"\n" +
-	"\x15conf/pb/captcha.proto\x12\x04conf\x1a\x19config/data/v1/data.proto\"\xab\x01\n" +
+	"\x15conf/pb/captcha.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\"\xab\x01\n" +
 	"\aCaptcha\x12\x16\n" +
 	"\x06length\x18\x01 \x01(\x05R\x06length\x12\x14\n" +
 	"\x05width\x18\x02 \x01(\x05R\x05width\x12\x16\n" +
@@ -110,7 +110,7 @@ const file_conf_pb_captcha_proto_rawDesc = "" +
 	"\n" +
 	"cache_name\x18\x04 \x01(\tR\n" +
 	"cache_name\x12:\n" +
-	"\x06caches\x18\x05 \x01(\v2\".runtime.api.config.data.v1.CachesR\x06cachesB0Z.origadmin/application/admin/internal/conf;confb\x06proto3"
+	"\x06caches\x18\x05 \x01(\v2\".runtime.api.config.data.v1.CachesR\x06cachesB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_conf_pb_captcha_proto_rawDescOnce sync.Once
@@ -126,11 +126,11 @@ func file_conf_pb_captcha_proto_rawDescGZIP() []byte {
 
 var file_conf_pb_captcha_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_conf_pb_captcha_proto_goTypes = []any{
-	(*Captcha)(nil),   // 0: conf.Captcha
+	(*Captcha)(nil),   // 0: conf.pb.Captcha
 	(*v1.Caches)(nil), // 1: runtime.api.config.data.v1.Caches
 }
 var file_conf_pb_captcha_proto_depIdxs = []int32{
-	1, // 0: conf.Captcha.caches:type_name -> runtime.api.config.data.v1.Caches
+	1, // 0: conf.pb.Captcha.caches:type_name -> runtime.api.config.data.v1.Caches
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

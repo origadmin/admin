@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package conf;
+package conf.pb;
 
-option go_package = "origadmin/application/admin/internal/conf;conf";
+option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
 import "config/transport/v1/transport.proto";
 import "conf/pb/captcha.proto";
@@ -20,10 +20,10 @@ message Bootstrap {
   SelectorGlobal selector_global = 3;
 
   // Captcha feature specific configuration.
-  Captcha captcha = 4;
+  conf.pb.Captcha captcha = 4;
 
   // RootUser feature specific configuration for initial user setup.
-  RootUser root_user = 5;
+  conf.pb.RootUser root_user = 5;
 }
 
 // SelectorGlobal defines the global selector/load-balancing strategy.

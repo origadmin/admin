@@ -4,7 +4,7 @@
 // 	protoc        v5.28.3
 // source: conf/pb/root.proto
 
-package conf
+package confpb
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
@@ -166,7 +166,7 @@ var File_conf_pb_root_proto protoreflect.FileDescriptor
 
 const file_conf_pb_root_proto_rawDesc = "" +
 	"\n" +
-	"\x12conf/pb/root.proto\x12\x04conf\x1a\x17validate/validate.proto\"\x8c\x03\n" +
+	"\x12conf/pb/root.proto\x12\aconf.pb\x1a\x17validate/validate.proto\"\x8c\x03\n" +
 	"\bRootUser\x12\x18\n" +
 	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x17\n" +
 	"\x02id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12#\n" +
@@ -181,7 +181,7 @@ const file_conf_pb_root_proto_rawDesc = "" +
 	" \x01(\tR\x06mobile\x12 \n" +
 	"\vdescription\x18\v \x01(\tR\vdescription\x12 \n" +
 	"\vauto_create\x18d \x01(\bR\vauto_create\x12(\n" +
-	"\x0frandom_password\x18e \x01(\bR\x0frandom_passwordB'Z%origadmin/application/admin/conf;confb\x06proto3"
+	"\x0frandom_password\x18e \x01(\bR\x0frandom_passwordB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_conf_pb_root_proto_rawDescOnce sync.Once
@@ -197,7 +197,7 @@ func file_conf_pb_root_proto_rawDescGZIP() []byte {
 
 var file_conf_pb_root_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_conf_pb_root_proto_goTypes = []any{
-	(*RootUser)(nil), // 0: conf.RootUser
+	(*RootUser)(nil), // 0: conf.pb.RootUser
 }
 var file_conf_pb_root_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

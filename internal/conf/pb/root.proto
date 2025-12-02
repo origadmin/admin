@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package conf;
+package conf.pb;
 
 import "validate/validate.proto";
 
-option go_package = "origadmin/application/admin/conf;conf";
+option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
 message RootUser {
   bool enabled = 1 [json_name = "enabled"];

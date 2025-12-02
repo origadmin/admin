@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package conf;
+package conf.pb;
 
 import "config/data/v1/data.proto";
 
-option go_package = "origadmin/application/admin/internal/conf;conf";
+option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
 message Captcha {
   int32 length = 1 [json_name = "length"];

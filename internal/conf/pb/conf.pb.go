@@ -4,13 +4,12 @@
 // 	protoc        v5.28.3
 // source: conf/pb/conf.proto
 
-package conf
+package confpb
 
 import (
 	v1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	conf "origadmin/application/admin/conf"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -35,7 +34,7 @@ type Bootstrap struct {
 	// Captcha feature specific configuration.
 	Captcha *Captcha `protobuf:"bytes,4,opt,name=captcha,proto3" json:"captcha,omitempty"`
 	// RootUser feature specific configuration for initial user setup.
-	RootUser      *conf.RootUser `protobuf:"bytes,5,opt,name=root_user,json=rootUser,proto3" json:"root_user,omitempty"`
+	RootUser      *RootUser `protobuf:"bytes,5,opt,name=root_user,json=rootUser,proto3" json:"root_user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -98,7 +97,7 @@ func (x *Bootstrap) GetCaptcha() *Captcha {
 	return nil
 }
 
-func (x *Bootstrap) GetRootUser() *conf.RootUser {
+func (x *Bootstrap) GetRootUser() *RootUser {
 	if x != nil {
 		return x.RootUser
 	}
@@ -155,15 +154,15 @@ var File_conf_pb_conf_proto protoreflect.FileDescriptor
 
 const file_conf_pb_conf_proto_rawDesc = "" +
 	"\n" +
-	"\x12conf/pb/conf.proto\x12\x04conf\x1a#config/transport/v1/transport.proto\x1a\x15conf/pb/captcha.proto\x1a\x12conf/pb/root.proto\"\xa8\x02\n" +
+	"\x12conf/pb/conf.proto\x12\aconf.pb\x1a#config/transport/v1/transport.proto\x1a\x15conf/pb/captcha.proto\x1a\x12conf/pb/root.proto\"\xb1\x02\n" +
 	"\tBootstrap\x12B\n" +
 	"\aservers\x18\x01 \x01(\v2(.runtime.api.config.transport.v1.ServersR\aservers\x12B\n" +
-	"\aclients\x18\x02 \x01(\v2(.runtime.api.config.transport.v1.ClientsR\aclients\x12=\n" +
-	"\x0fselector_global\x18\x03 \x01(\v2\x14.conf.SelectorGlobalR\x0eselectorGlobal\x12'\n" +
-	"\acaptcha\x18\x04 \x01(\v2\r.conf.CaptchaR\acaptcha\x12+\n" +
-	"\troot_user\x18\x05 \x01(\v2\x0e.conf.RootUserR\brootUser\"*\n" +
+	"\aclients\x18\x02 \x01(\v2(.runtime.api.config.transport.v1.ClientsR\aclients\x12@\n" +
+	"\x0fselector_global\x18\x03 \x01(\v2\x17.conf.pb.SelectorGlobalR\x0eselectorGlobal\x12*\n" +
+	"\acaptcha\x18\x04 \x01(\v2\x10.conf.pb.CaptchaR\acaptcha\x12.\n" +
+	"\troot_user\x18\x05 \x01(\v2\x11.conf.pb.RootUserR\brootUser\"*\n" +
 	"\x0eSelectorGlobal\x12\x18\n" +
-	"\abuilder\x18\x01 \x01(\tR\abuilderB0Z.origadmin/application/admin/internal/conf;confb\x06proto3"
+	"\abuilder\x18\x01 \x01(\tR\abuilderB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_conf_pb_conf_proto_rawDescOnce sync.Once
@@ -179,19 +178,19 @@ func file_conf_pb_conf_proto_rawDescGZIP() []byte {
 
 var file_conf_pb_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_conf_pb_conf_proto_goTypes = []any{
-	(*Bootstrap)(nil),      // 0: conf.Bootstrap
-	(*SelectorGlobal)(nil), // 1: conf.SelectorGlobal
+	(*Bootstrap)(nil),      // 0: conf.pb.Bootstrap
+	(*SelectorGlobal)(nil), // 1: conf.pb.SelectorGlobal
 	(*v1.Servers)(nil),     // 2: runtime.api.config.transport.v1.Servers
 	(*v1.Clients)(nil),     // 3: runtime.api.config.transport.v1.Clients
-	(*Captcha)(nil),        // 4: conf.Captcha
-	(*conf.RootUser)(nil),  // 5: conf.RootUser
+	(*Captcha)(nil),        // 4: conf.pb.Captcha
+	(*RootUser)(nil),       // 5: conf.pb.RootUser
 }
 var file_conf_pb_conf_proto_depIdxs = []int32{
-	2, // 0: conf.Bootstrap.servers:type_name -> runtime.api.config.transport.v1.Servers
-	3, // 1: conf.Bootstrap.clients:type_name -> runtime.api.config.transport.v1.Clients
-	1, // 2: conf.Bootstrap.selector_global:type_name -> conf.SelectorGlobal
-	4, // 3: conf.Bootstrap.captcha:type_name -> conf.Captcha
-	5, // 4: conf.Bootstrap.root_user:type_name -> conf.RootUser
+	2, // 0: conf.pb.Bootstrap.servers:type_name -> runtime.api.config.transport.v1.Servers
+	3, // 1: conf.pb.Bootstrap.clients:type_name -> runtime.api.config.transport.v1.Clients
+	1, // 2: conf.pb.Bootstrap.selector_global:type_name -> conf.pb.SelectorGlobal
+	4, // 3: conf.pb.Bootstrap.captcha:type_name -> conf.pb.Captcha
+	5, // 4: conf.pb.Bootstrap.root_user:type_name -> conf.pb.RootUser
 	5, // [5:5] is the sub-list for method output_type
 	5, // [5:5] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
@@ -205,6 +204,7 @@ func file_conf_pb_conf_proto_init() {
 		return
 	}
 	file_conf_pb_captcha_proto_init()
+	file_conf_pb_root_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
