@@ -2648,6 +2648,180 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /upload:
+        get:
+            tags:
+                - UploadService
+            operationId: UploadService_ListUpload
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent data id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: current
+                  in: query
+                  description: The current page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+                - name: type
+                  in: query
+                  description: data type
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.upload.ListUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - UploadService
+            operationId: UploadService_CreateUpload
+            parameters:
+                - name: parent
+                  in: query
+                  description: The parent data id where the data is to be created.
+                  schema:
+                    type: string
+                - name: data_id
+                  in: query
+                  description: The data id to use for this data.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.upload.CreateUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /upload/{data.id}:
+        put:
+            tags:
+                - UploadService
+            operationId: UploadService_UpdateUpload
+            parameters:
+                - name: data.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: id
+                  in: query
+                  description: The id of the data object to update.
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.upload.UpdateUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /upload/{id}:
+        get:
+            tags:
+                - UploadService
+            operationId: UploadService_GetUpload
+            parameters:
+                - name: id
+                  in: path
+                  description: "The field will contain id of the data requested, for example:\r\n \"shelves/shelf1/upload/data2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.upload.GetUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - UploadService
+            operationId: UploadService_DeleteUpload
+            parameters:
+                - name: id
+                  in: path
+                  description: "The data id of the data to be deleted, for example:\r\n \"shelves/shelf1/upload/data2\""
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.upload.DeleteUploadResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
         api.v1.services.auth.AuthLogoutRequest_Data:
@@ -3400,7 +3574,7 @@ components:
                     type: string
                     description: Payload holds the value of the "payload" field.
                     format: bytes
-            description: Menu is the model entity for the Menu schema.
+            description: DataObject is the model entity for the DataObject schema.
         api.v1.services.types.Department:
             type: object
             properties:
@@ -3858,6 +4032,58 @@ components:
                         type: string
                     description: Role Ids holds the value of the role_ids
             description: User is the model entity for the User schema.
+        api.v1.services.upload.CreateUploadResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
+            description: CreateUploadResponse is the response for the UploadService.CreateUpload method.
+        api.v1.services.upload.DeleteUploadResponse:
+            type: object
+            properties: {}
+            description: DeleteUploadResponse is the response for the UploadService.DeleteUpload method.
+        api.v1.services.upload.GetUploadResponse:
+            type: object
+            properties:
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                    description: The field id should match the Noun in the method id.
+            description: GetUploadResponse is the response for the UploadService.GetUpload method.
+        api.v1.services.upload.ListUploadResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                    description: The paging upload
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
+            description: ListUploadResponse is the response for the UploadService.ListUpload method.
+        api.v1.services.upload.UpdateUploadResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
+            description: UpdateUploadResponse is the response for the UploadService.UpdateUpload method.
         google.protobuf.Any:
             type: object
             properties:
@@ -3933,5 +4159,7 @@ tags:
       description: The resource service definition.
     - name: RoleService
       description: The login service definition.
+    - name: UploadService
+      description: The data service definition.
     - name: UserService
       description: The login service definition.

@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-http v2.9.0
 // - protoc             (unknown)
-// source: auth/personal.proto
+// source: message/message.proto
 
-package auth
+package message
 
 import (
 	context "context"
@@ -19,14 +19,14 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationPersonalServiceGetPersonalProfile = "/api.v1.services.auth.PersonalService/GetPersonalProfile"
-const OperationPersonalServiceListPersonalResources = "/api.v1.services.auth.PersonalService/ListPersonalResources"
-const OperationPersonalServiceListPersonalRoles = "/api.v1.services.auth.PersonalService/ListPersonalRoles"
-const OperationPersonalServicePersonalLogout = "/api.v1.services.auth.PersonalService/PersonalLogout"
-const OperationPersonalServiceRefreshPersonalToken = "/api.v1.services.auth.PersonalService/RefreshPersonalToken"
-const OperationPersonalServiceUpdatePersonalPassword = "/api.v1.services.auth.PersonalService/UpdatePersonalPassword"
-const OperationPersonalServiceUpdatePersonalProfile = "/api.v1.services.auth.PersonalService/UpdatePersonalProfile"
-const OperationPersonalServiceUpdatePersonalSetting = "/api.v1.services.auth.PersonalService/UpdatePersonalSetting"
+const OperationPersonalServiceGetPersonalProfile = "/api.v1.services.message.PersonalService/GetPersonalProfile"
+const OperationPersonalServiceListPersonalResources = "/api.v1.services.message.PersonalService/ListPersonalResources"
+const OperationPersonalServiceListPersonalRoles = "/api.v1.services.message.PersonalService/ListPersonalRoles"
+const OperationPersonalServicePersonalLogout = "/api.v1.services.message.PersonalService/PersonalLogout"
+const OperationPersonalServiceRefreshPersonalToken = "/api.v1.services.message.PersonalService/RefreshPersonalToken"
+const OperationPersonalServiceUpdatePersonalPassword = "/api.v1.services.message.PersonalService/UpdatePersonalPassword"
+const OperationPersonalServiceUpdatePersonalProfile = "/api.v1.services.message.PersonalService/UpdatePersonalProfile"
+const OperationPersonalServiceUpdatePersonalSetting = "/api.v1.services.message.PersonalService/UpdatePersonalSetting"
 
 type PersonalServiceHTTPServer interface {
 	// GetPersonalProfile GetPersonalProfile Update the personal user information
@@ -49,14 +49,14 @@ type PersonalServiceHTTPServer interface {
 
 func RegisterPersonalServiceHTTPServer(s *http.Server, srv PersonalServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/auth/personal/profile", _PersonalService_GetPersonalProfile0_HTTP_Handler(srv))
-	r.GET("/auth/personal/resources", _PersonalService_ListPersonalResources0_HTTP_Handler(srv))
-	r.GET("/auth/personal/roles", _PersonalService_ListPersonalRoles0_HTTP_Handler(srv))
-	r.POST("/auth/personal/logout", _PersonalService_PersonalLogout0_HTTP_Handler(srv))
-	r.POST("/auth/personal/token/refresh", _PersonalService_RefreshPersonalToken0_HTTP_Handler(srv))
-	r.PUT("/auth/personal/password", _PersonalService_UpdatePersonalPassword0_HTTP_Handler(srv))
-	r.PUT("/auth/personal/profile", _PersonalService_UpdatePersonalProfile0_HTTP_Handler(srv))
-	r.PUT("/auth/personal/setting", _PersonalService_UpdatePersonalSetting0_HTTP_Handler(srv))
+	r.GET("/message/personal/profile", _PersonalService_GetPersonalProfile0_HTTP_Handler(srv))
+	r.GET("/message/personal/resources", _PersonalService_ListPersonalResources0_HTTP_Handler(srv))
+	r.GET("/message/personal/roles", _PersonalService_ListPersonalRoles0_HTTP_Handler(srv))
+	r.POST("/message/personal/logout", _PersonalService_PersonalLogout0_HTTP_Handler(srv))
+	r.POST("/message/personal/token/refresh", _PersonalService_RefreshPersonalToken0_HTTP_Handler(srv))
+	r.PUT("/message/personal/password", _PersonalService_UpdatePersonalPassword0_HTTP_Handler(srv))
+	r.PUT("/message/personal/profile", _PersonalService_UpdatePersonalProfile0_HTTP_Handler(srv))
+	r.PUT("/message/personal/setting", _PersonalService_UpdatePersonalSetting0_HTTP_Handler(srv))
 }
 
 func _PersonalService_GetPersonalProfile0_HTTP_Handler(srv PersonalServiceHTTPServer) func(ctx http.Context) error {
@@ -256,7 +256,7 @@ func NewPersonalServiceHTTPClient(client *http.Client) PersonalServiceHTTPClient
 // GetPersonalProfile GetPersonalProfile Update the personal user information
 func (c *PersonalServiceHTTPClientImpl) GetPersonalProfile(ctx context.Context, in *GetPersonalProfileRequest, opts ...http.CallOption) (*GetPersonalProfileResponse, error) {
 	var out GetPersonalProfileResponse
-	pattern := "/auth/personal/profile"
+	pattern := "/message/personal/profile"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPersonalServiceGetPersonalProfile))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -270,7 +270,7 @@ func (c *PersonalServiceHTTPClientImpl) GetPersonalProfile(ctx context.Context, 
 // ListPersonalResources ListPersonalResources List the personal user's menu
 func (c *PersonalServiceHTTPClientImpl) ListPersonalResources(ctx context.Context, in *ListPersonalResourcesRequest, opts ...http.CallOption) (*ListPersonalResourcesResponse, error) {
 	var out ListPersonalResourcesResponse
-	pattern := "/auth/personal/resources"
+	pattern := "/message/personal/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPersonalServiceListPersonalResources))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -284,7 +284,7 @@ func (c *PersonalServiceHTTPClientImpl) ListPersonalResources(ctx context.Contex
 // ListPersonalRoles ListPersonalResources List the personal user's menu
 func (c *PersonalServiceHTTPClientImpl) ListPersonalRoles(ctx context.Context, in *ListPersonalRolesRequest, opts ...http.CallOption) (*ListPersonalRolesResponse, error) {
 	var out ListPersonalRolesResponse
-	pattern := "/auth/personal/roles"
+	pattern := "/message/personal/roles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationPersonalServiceListPersonalRoles))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -298,7 +298,7 @@ func (c *PersonalServiceHTTPClientImpl) ListPersonalRoles(ctx context.Context, i
 // PersonalLogout PersonalLogout Personal user logs out
 func (c *PersonalServiceHTTPClientImpl) PersonalLogout(ctx context.Context, in *PersonalLogoutRequest, opts ...http.CallOption) (*PersonalLogoutResponse, error) {
 	var out PersonalLogoutResponse
-	pattern := "/auth/personal/logout"
+	pattern := "/message/personal/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPersonalServicePersonalLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -312,7 +312,7 @@ func (c *PersonalServiceHTTPClientImpl) PersonalLogout(ctx context.Context, in *
 // RefreshPersonalToken RefreshPersonalToken Refresh the personal user's token
 func (c *PersonalServiceHTTPClientImpl) RefreshPersonalToken(ctx context.Context, in *RefreshPersonalTokenRequest, opts ...http.CallOption) (*RefreshPersonalTokenResponse, error) {
 	var out RefreshPersonalTokenResponse
-	pattern := "/auth/personal/token/refresh"
+	pattern := "/message/personal/token/refresh"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPersonalServiceRefreshPersonalToken))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -326,7 +326,7 @@ func (c *PersonalServiceHTTPClientImpl) RefreshPersonalToken(ctx context.Context
 // UpdatePersonalPassword UpdatePersonalProfilePassword The user changes the password
 func (c *PersonalServiceHTTPClientImpl) UpdatePersonalPassword(ctx context.Context, in *UpdatePersonalPasswordRequest, opts ...http.CallOption) (*UpdatePersonalPasswordResponse, error) {
 	var out UpdatePersonalPasswordResponse
-	pattern := "/auth/personal/password"
+	pattern := "/message/personal/password"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPersonalServiceUpdatePersonalPassword))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -340,7 +340,7 @@ func (c *PersonalServiceHTTPClientImpl) UpdatePersonalPassword(ctx context.Conte
 // UpdatePersonalProfile UpdatePersonalProfile Update the personal user information
 func (c *PersonalServiceHTTPClientImpl) UpdatePersonalProfile(ctx context.Context, in *UpdatePersonalProfileRequest, opts ...http.CallOption) (*UpdatePersonalProfileResponse, error) {
 	var out UpdatePersonalProfileResponse
-	pattern := "/auth/personal/profile"
+	pattern := "/message/personal/profile"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPersonalServiceUpdatePersonalProfile))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -354,7 +354,7 @@ func (c *PersonalServiceHTTPClientImpl) UpdatePersonalProfile(ctx context.Contex
 // UpdatePersonalSetting UpdatePersonalSetting User settings are saved
 func (c *PersonalServiceHTTPClientImpl) UpdatePersonalSetting(ctx context.Context, in *UpdatePersonalSettingRequest, opts ...http.CallOption) (*UpdatePersonalSettingResponse, error) {
 	var out UpdatePersonalSettingResponse
-	pattern := "/auth/personal/setting"
+	pattern := "/message/personal/setting"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPersonalServiceUpdatePersonalSetting))
 	opts = append(opts, http.PathTemplate(pattern))

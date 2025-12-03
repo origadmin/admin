@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.10
 // 	protoc        (unknown)
-// source: auth/personal.proto
+// source: message/message.proto
 
-package auth
+package message
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
@@ -34,7 +34,7 @@ type UpdatePersonalSettingRequest struct {
 
 func (x *UpdatePersonalSettingRequest) Reset() {
 	*x = UpdatePersonalSettingRequest{}
-	mi := &file_auth_personal_proto_msgTypes[0]
+	mi := &file_message_message_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -46,7 +46,7 @@ func (x *UpdatePersonalSettingRequest) String() string {
 func (*UpdatePersonalSettingRequest) ProtoMessage() {}
 
 func (x *UpdatePersonalSettingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[0]
+	mi := &file_message_message_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *UpdatePersonalSettingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalSettingRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalSettingRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{0}
+	return file_message_message_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *UpdatePersonalSettingRequest) GetData() *anypb.Any {
@@ -77,7 +77,7 @@ type UpdatePersonalSettingResponse struct {
 
 func (x *UpdatePersonalSettingResponse) Reset() {
 	*x = UpdatePersonalSettingResponse{}
-	mi := &file_auth_personal_proto_msgTypes[1]
+	mi := &file_message_message_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -89,7 +89,7 @@ func (x *UpdatePersonalSettingResponse) String() string {
 func (*UpdatePersonalSettingResponse) ProtoMessage() {}
 
 func (x *UpdatePersonalSettingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[1]
+	mi := &file_message_message_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -102,7 +102,7 @@ func (x *UpdatePersonalSettingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalSettingResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalSettingResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{1}
+	return file_message_message_proto_rawDescGZIP(), []int{1}
 }
 
 type UpdatePersonalRoleRequest struct {
@@ -114,7 +114,7 @@ type UpdatePersonalRoleRequest struct {
 
 func (x *UpdatePersonalRoleRequest) Reset() {
 	*x = UpdatePersonalRoleRequest{}
-	mi := &file_auth_personal_proto_msgTypes[2]
+	mi := &file_message_message_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -126,7 +126,7 @@ func (x *UpdatePersonalRoleRequest) String() string {
 func (*UpdatePersonalRoleRequest) ProtoMessage() {}
 
 func (x *UpdatePersonalRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[2]
+	mi := &file_message_message_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -139,7 +139,7 @@ func (x *UpdatePersonalRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalRoleRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalRoleRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{2}
+	return file_message_message_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *UpdatePersonalRoleRequest) GetRole() *types.Role {
@@ -157,7 +157,7 @@ type UpdatePersonalRoleResponse struct {
 
 func (x *UpdatePersonalRoleResponse) Reset() {
 	*x = UpdatePersonalRoleResponse{}
-	mi := &file_auth_personal_proto_msgTypes[3]
+	mi := &file_message_message_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -169,7 +169,7 @@ func (x *UpdatePersonalRoleResponse) String() string {
 func (*UpdatePersonalRoleResponse) ProtoMessage() {}
 
 func (x *UpdatePersonalRoleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[3]
+	mi := &file_message_message_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -182,7 +182,7 @@ func (x *UpdatePersonalRoleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalRoleResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalRoleResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{3}
+	return file_message_message_proto_rawDescGZIP(), []int{3}
 }
 
 type ListPersonalResourcesRequest struct {
@@ -205,7 +205,7 @@ type ListPersonalResourcesRequest struct {
 
 func (x *ListPersonalResourcesRequest) Reset() {
 	*x = ListPersonalResourcesRequest{}
-	mi := &file_auth_personal_proto_msgTypes[4]
+	mi := &file_message_message_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -217,7 +217,7 @@ func (x *ListPersonalResourcesRequest) String() string {
 func (*ListPersonalResourcesRequest) ProtoMessage() {}
 
 func (x *ListPersonalResourcesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[4]
+	mi := &file_message_message_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -230,7 +230,7 @@ func (x *ListPersonalResourcesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPersonalResourcesRequest.ProtoReflect.Descriptor instead.
 func (*ListPersonalResourcesRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{4}
+	return file_message_message_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ListPersonalResourcesRequest) GetId() int64 {
@@ -290,7 +290,7 @@ type ListPersonalResourcesResponse struct {
 
 func (x *ListPersonalResourcesResponse) Reset() {
 	*x = ListPersonalResourcesResponse{}
-	mi := &file_auth_personal_proto_msgTypes[5]
+	mi := &file_message_message_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -302,7 +302,7 @@ func (x *ListPersonalResourcesResponse) String() string {
 func (*ListPersonalResourcesResponse) ProtoMessage() {}
 
 func (x *ListPersonalResourcesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[5]
+	mi := &file_message_message_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -315,7 +315,7 @@ func (x *ListPersonalResourcesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPersonalResourcesResponse.ProtoReflect.Descriptor instead.
 func (*ListPersonalResourcesResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{5}
+	return file_message_message_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListPersonalResourcesResponse) GetTotalSize() int64 {
@@ -348,7 +348,7 @@ type UpdatePersonalPasswordRequest struct {
 
 func (x *UpdatePersonalPasswordRequest) Reset() {
 	*x = UpdatePersonalPasswordRequest{}
-	mi := &file_auth_personal_proto_msgTypes[6]
+	mi := &file_message_message_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -360,7 +360,7 @@ func (x *UpdatePersonalPasswordRequest) String() string {
 func (*UpdatePersonalPasswordRequest) ProtoMessage() {}
 
 func (x *UpdatePersonalPasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[6]
+	mi := &file_message_message_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -373,7 +373,7 @@ func (x *UpdatePersonalPasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalPasswordRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalPasswordRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{6}
+	return file_message_message_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UpdatePersonalPasswordRequest) GetData() *anypb.Any {
@@ -391,7 +391,7 @@ type UpdatePersonalPasswordResponse struct {
 
 func (x *UpdatePersonalPasswordResponse) Reset() {
 	*x = UpdatePersonalPasswordResponse{}
-	mi := &file_auth_personal_proto_msgTypes[7]
+	mi := &file_message_message_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +403,7 @@ func (x *UpdatePersonalPasswordResponse) String() string {
 func (*UpdatePersonalPasswordResponse) ProtoMessage() {}
 
 func (x *UpdatePersonalPasswordResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[7]
+	mi := &file_message_message_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +416,7 @@ func (x *UpdatePersonalPasswordResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalPasswordResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalPasswordResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{7}
+	return file_message_message_proto_rawDescGZIP(), []int{7}
 }
 
 type PersonalPasswordRestRequest struct {
@@ -428,7 +428,7 @@ type PersonalPasswordRestRequest struct {
 
 func (x *PersonalPasswordRestRequest) Reset() {
 	*x = PersonalPasswordRestRequest{}
-	mi := &file_auth_personal_proto_msgTypes[8]
+	mi := &file_message_message_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -440,7 +440,7 @@ func (x *PersonalPasswordRestRequest) String() string {
 func (*PersonalPasswordRestRequest) ProtoMessage() {}
 
 func (x *PersonalPasswordRestRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[8]
+	mi := &file_message_message_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -453,7 +453,7 @@ func (x *PersonalPasswordRestRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersonalPasswordRestRequest.ProtoReflect.Descriptor instead.
 func (*PersonalPasswordRestRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{8}
+	return file_message_message_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *PersonalPasswordRestRequest) GetId() int64 {
@@ -471,7 +471,7 @@ type PersonalPasswordRestResponse struct {
 
 func (x *PersonalPasswordRestResponse) Reset() {
 	*x = PersonalPasswordRestResponse{}
-	mi := &file_auth_personal_proto_msgTypes[9]
+	mi := &file_message_message_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -483,7 +483,7 @@ func (x *PersonalPasswordRestResponse) String() string {
 func (*PersonalPasswordRestResponse) ProtoMessage() {}
 
 func (x *PersonalPasswordRestResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[9]
+	mi := &file_message_message_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -496,7 +496,7 @@ func (x *PersonalPasswordRestResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersonalPasswordRestResponse.ProtoReflect.Descriptor instead.
 func (*PersonalPasswordRestResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{9}
+	return file_message_message_proto_rawDescGZIP(), []int{9}
 }
 
 type UpdatePersonalProfileRequest struct {
@@ -508,7 +508,7 @@ type UpdatePersonalProfileRequest struct {
 
 func (x *UpdatePersonalProfileRequest) Reset() {
 	*x = UpdatePersonalProfileRequest{}
-	mi := &file_auth_personal_proto_msgTypes[10]
+	mi := &file_message_message_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -520,7 +520,7 @@ func (x *UpdatePersonalProfileRequest) String() string {
 func (*UpdatePersonalProfileRequest) ProtoMessage() {}
 
 func (x *UpdatePersonalProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[10]
+	mi := &file_message_message_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -533,7 +533,7 @@ func (x *UpdatePersonalProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalProfileRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalProfileRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{10}
+	return file_message_message_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdatePersonalProfileRequest) GetData() *anypb.Any {
@@ -551,7 +551,7 @@ type UpdatePersonalProfileResponse struct {
 
 func (x *UpdatePersonalProfileResponse) Reset() {
 	*x = UpdatePersonalProfileResponse{}
-	mi := &file_auth_personal_proto_msgTypes[11]
+	mi := &file_message_message_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -563,7 +563,7 @@ func (x *UpdatePersonalProfileResponse) String() string {
 func (*UpdatePersonalProfileResponse) ProtoMessage() {}
 
 func (x *UpdatePersonalProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[11]
+	mi := &file_message_message_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -576,7 +576,7 @@ func (x *UpdatePersonalProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePersonalProfileResponse.ProtoReflect.Descriptor instead.
 func (*UpdatePersonalProfileResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{11}
+	return file_message_message_proto_rawDescGZIP(), []int{11}
 }
 
 type PersonalLogoutRequest struct {
@@ -588,7 +588,7 @@ type PersonalLogoutRequest struct {
 
 func (x *PersonalLogoutRequest) Reset() {
 	*x = PersonalLogoutRequest{}
-	mi := &file_auth_personal_proto_msgTypes[12]
+	mi := &file_message_message_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -600,7 +600,7 @@ func (x *PersonalLogoutRequest) String() string {
 func (*PersonalLogoutRequest) ProtoMessage() {}
 
 func (x *PersonalLogoutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[12]
+	mi := &file_message_message_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -613,7 +613,7 @@ func (x *PersonalLogoutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersonalLogoutRequest.ProtoReflect.Descriptor instead.
 func (*PersonalLogoutRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{12}
+	return file_message_message_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PersonalLogoutRequest) GetData() *anypb.Any {
@@ -632,7 +632,7 @@ type PersonalLogoutResponse struct {
 
 func (x *PersonalLogoutResponse) Reset() {
 	*x = PersonalLogoutResponse{}
-	mi := &file_auth_personal_proto_msgTypes[13]
+	mi := &file_message_message_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -644,7 +644,7 @@ func (x *PersonalLogoutResponse) String() string {
 func (*PersonalLogoutResponse) ProtoMessage() {}
 
 func (x *PersonalLogoutResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[13]
+	mi := &file_message_message_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -657,7 +657,7 @@ func (x *PersonalLogoutResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersonalLogoutResponse.ProtoReflect.Descriptor instead.
 func (*PersonalLogoutResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{13}
+	return file_message_message_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *PersonalLogoutResponse) GetSuccess() bool {
@@ -675,7 +675,7 @@ type ListPersonalRolesRequest struct {
 
 func (x *ListPersonalRolesRequest) Reset() {
 	*x = ListPersonalRolesRequest{}
-	mi := &file_auth_personal_proto_msgTypes[14]
+	mi := &file_message_message_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -687,7 +687,7 @@ func (x *ListPersonalRolesRequest) String() string {
 func (*ListPersonalRolesRequest) ProtoMessage() {}
 
 func (x *ListPersonalRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[14]
+	mi := &file_message_message_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -700,7 +700,7 @@ func (x *ListPersonalRolesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPersonalRolesRequest.ProtoReflect.Descriptor instead.
 func (*ListPersonalRolesRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{14}
+	return file_message_message_proto_rawDescGZIP(), []int{14}
 }
 
 type ListPersonalRolesResponse struct {
@@ -712,7 +712,7 @@ type ListPersonalRolesResponse struct {
 
 func (x *ListPersonalRolesResponse) Reset() {
 	*x = ListPersonalRolesResponse{}
-	mi := &file_auth_personal_proto_msgTypes[15]
+	mi := &file_message_message_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -724,7 +724,7 @@ func (x *ListPersonalRolesResponse) String() string {
 func (*ListPersonalRolesResponse) ProtoMessage() {}
 
 func (x *ListPersonalRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[15]
+	mi := &file_message_message_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,7 +737,7 @@ func (x *ListPersonalRolesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPersonalRolesResponse.ProtoReflect.Descriptor instead.
 func (*ListPersonalRolesResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{15}
+	return file_message_message_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListPersonalRolesResponse) GetRoles() []*types.Role {
@@ -755,7 +755,7 @@ type GetPersonalProfileRequest struct {
 
 func (x *GetPersonalProfileRequest) Reset() {
 	*x = GetPersonalProfileRequest{}
-	mi := &file_auth_personal_proto_msgTypes[16]
+	mi := &file_message_message_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -767,7 +767,7 @@ func (x *GetPersonalProfileRequest) String() string {
 func (*GetPersonalProfileRequest) ProtoMessage() {}
 
 func (x *GetPersonalProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[16]
+	mi := &file_message_message_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -780,7 +780,7 @@ func (x *GetPersonalProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPersonalProfileRequest.ProtoReflect.Descriptor instead.
 func (*GetPersonalProfileRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{16}
+	return file_message_message_proto_rawDescGZIP(), []int{16}
 }
 
 type GetPersonalProfileResponse struct {
@@ -792,7 +792,7 @@ type GetPersonalProfileResponse struct {
 
 func (x *GetPersonalProfileResponse) Reset() {
 	*x = GetPersonalProfileResponse{}
-	mi := &file_auth_personal_proto_msgTypes[17]
+	mi := &file_message_message_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -804,7 +804,7 @@ func (x *GetPersonalProfileResponse) String() string {
 func (*GetPersonalProfileResponse) ProtoMessage() {}
 
 func (x *GetPersonalProfileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[17]
+	mi := &file_message_message_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -817,7 +817,7 @@ func (x *GetPersonalProfileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPersonalProfileResponse.ProtoReflect.Descriptor instead.
 func (*GetPersonalProfileResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{17}
+	return file_message_message_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetPersonalProfileResponse) GetUser() *types.User {
@@ -836,7 +836,7 @@ type RefreshPersonalTokenRequest struct {
 
 func (x *RefreshPersonalTokenRequest) Reset() {
 	*x = RefreshPersonalTokenRequest{}
-	mi := &file_auth_personal_proto_msgTypes[18]
+	mi := &file_message_message_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -848,7 +848,7 @@ func (x *RefreshPersonalTokenRequest) String() string {
 func (*RefreshPersonalTokenRequest) ProtoMessage() {}
 
 func (x *RefreshPersonalTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[18]
+	mi := &file_message_message_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -861,7 +861,7 @@ func (x *RefreshPersonalTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshPersonalTokenRequest.ProtoReflect.Descriptor instead.
 func (*RefreshPersonalTokenRequest) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{18}
+	return file_message_message_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *RefreshPersonalTokenRequest) GetData() *anypb.Any {
@@ -880,7 +880,7 @@ type RefreshPersonalTokenResponse struct {
 
 func (x *RefreshPersonalTokenResponse) Reset() {
 	*x = RefreshPersonalTokenResponse{}
-	mi := &file_auth_personal_proto_msgTypes[19]
+	mi := &file_message_message_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -892,7 +892,7 @@ func (x *RefreshPersonalTokenResponse) String() string {
 func (*RefreshPersonalTokenResponse) ProtoMessage() {}
 
 func (x *RefreshPersonalTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_personal_proto_msgTypes[19]
+	mi := &file_message_message_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -905,7 +905,7 @@ func (x *RefreshPersonalTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshPersonalTokenResponse.ProtoReflect.Descriptor instead.
 func (*RefreshPersonalTokenResponse) Descriptor() ([]byte, []int) {
-	return file_auth_personal_proto_rawDescGZIP(), []int{19}
+	return file_message_message_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *RefreshPersonalTokenResponse) GetToken() string {
@@ -915,11 +915,11 @@ func (x *RefreshPersonalTokenResponse) GetToken() string {
 	return ""
 }
 
-var File_auth_personal_proto protoreflect.FileDescriptor
+var File_message_message_proto protoreflect.FileDescriptor
 
-const file_auth_personal_proto_rawDesc = "" +
+const file_message_message_proto_rawDesc = "" +
 	"\n" +
-	"\x13auth/personal.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x12types/system.proto\x1a\x17validate/validate.proto\"H\n" +
+	"\x15message/message.proto\x12\x17api.v1.services.message\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x12types/system.proto\x1a\x17validate/validate.proto\"H\n" +
 	"\x1cUpdatePersonalSettingRequest\x12(\n" +
 	"\x04data\x18\x01 \x01(\v2\x14.google.protobuf.AnyR\x04data\"\x1f\n" +
 	"\x1dUpdatePersonalSettingResponse\"L\n" +
@@ -964,84 +964,84 @@ const file_auth_personal_proto_rawDesc = "" +
 	"\x1bRefreshPersonalTokenRequest\x12(\n" +
 	"\x04data\x18\x01 \x01(\v2\x14.google.protobuf.AnyR\x04data\"4\n" +
 	"\x1cRefreshPersonalTokenResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2\xa3\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token2\xeb\n" +
 	"\n" +
-	"\x0fPersonalService\x12\x97\x01\n" +
-	"\x12GetPersonalProfile\x12/.api.v1.services.auth.GetPersonalProfileRequest\x1a0.api.v1.services.auth.GetPersonalProfileResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\x12\x16/auth/personal/profile\x12\xa2\x01\n" +
-	"\x15ListPersonalResources\x122.api.v1.services.auth.ListPersonalResourcesRequest\x1a3.api.v1.services.auth.ListPersonalResourcesResponse\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/auth/personal/resources\x12\x92\x01\n" +
-	"\x11ListPersonalRoles\x12..api.v1.services.auth.ListPersonalRolesRequest\x1a/.api.v1.services.auth.ListPersonalRolesResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/auth/personal/roles\x12\x90\x01\n" +
-	"\x0ePersonalLogout\x12+.api.v1.services.auth.PersonalLogoutRequest\x1a,.api.v1.services.auth.PersonalLogoutResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x04data\"\x15/auth/personal/logout\x12\xa9\x01\n" +
-	"\x14RefreshPersonalToken\x121.api.v1.services.auth.RefreshPersonalTokenRequest\x1a2.api.v1.services.auth.RefreshPersonalTokenResponse\"*\x82\xd3\xe4\x93\x02$:\x04data\"\x1c/auth/personal/token/refresh\x12\xaa\x01\n" +
-	"\x16UpdatePersonalPassword\x123.api.v1.services.auth.UpdatePersonalPasswordRequest\x1a4.api.v1.services.auth.UpdatePersonalPasswordResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x04data\x1a\x17/auth/personal/password\x12\xa6\x01\n" +
-	"\x15UpdatePersonalProfile\x122.api.v1.services.auth.UpdatePersonalProfileRequest\x1a3.api.v1.services.auth.UpdatePersonalProfileResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\x1a\x16/auth/personal/profile\x12\xa6\x01\n" +
-	"\x15UpdatePersonalSetting\x122.api.v1.services.auth.UpdatePersonalSettingRequest\x1a3.api.v1.services.auth.UpdatePersonalSettingResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x04data\x1a\x16/auth/personal/settingB\xd4\x01\n" +
-	"\x18com.api.v1.services.authB\rPersonalProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
+	"\x0fPersonalService\x12\xa0\x01\n" +
+	"\x12GetPersonalProfile\x122.api.v1.services.message.GetPersonalProfileRequest\x1a3.api.v1.services.message.GetPersonalProfileResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/message/personal/profile\x12\xab\x01\n" +
+	"\x15ListPersonalResources\x125.api.v1.services.message.ListPersonalResourcesRequest\x1a6.api.v1.services.message.ListPersonalResourcesResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/message/personal/resources\x12\x9b\x01\n" +
+	"\x11ListPersonalRoles\x121.api.v1.services.message.ListPersonalRolesRequest\x1a2.api.v1.services.message.ListPersonalRolesResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/message/personal/roles\x12\x99\x01\n" +
+	"\x0ePersonalLogout\x12..api.v1.services.message.PersonalLogoutRequest\x1a/.api.v1.services.message.PersonalLogoutResponse\"&\x82\xd3\xe4\x93\x02 :\x04data\"\x18/message/personal/logout\x12\xb2\x01\n" +
+	"\x14RefreshPersonalToken\x124.api.v1.services.message.RefreshPersonalTokenRequest\x1a5.api.v1.services.message.RefreshPersonalTokenResponse\"-\x82\xd3\xe4\x93\x02':\x04data\"\x1f/message/personal/token/refresh\x12\xb3\x01\n" +
+	"\x16UpdatePersonalPassword\x126.api.v1.services.message.UpdatePersonalPasswordRequest\x1a7.api.v1.services.message.UpdatePersonalPasswordResponse\"(\x82\xd3\xe4\x93\x02\":\x04data\x1a\x1a/message/personal/password\x12\xaf\x01\n" +
+	"\x15UpdatePersonalProfile\x125.api.v1.services.message.UpdatePersonalProfileRequest\x1a6.api.v1.services.message.UpdatePersonalProfileResponse\"'\x82\xd3\xe4\x93\x02!:\x04data\x1a\x19/message/personal/profile\x12\xaf\x01\n" +
+	"\x15UpdatePersonalSetting\x125.api.v1.services.message.UpdatePersonalSettingRequest\x1a6.api.v1.services.message.UpdatePersonalSettingResponse\"'\x82\xd3\xe4\x93\x02!:\x04data\x1a\x19/message/personal/settingB\xe8\x01\n" +
+	"\x1bcom.api.v1.services.messageB\fMessageProtoP\x01Z;origadmin/application/admin/api/v1/services/message;message\xa2\x02\x04AVSM\xaa\x02\x17Api.V1.Services.Message\xca\x02\x17Api\\V1\\Services\\Message\xe2\x02#Api\\V1\\Services\\Message\\GPBMetadata\xea\x02\x1aApi::V1::Services::Messageb\x06proto3"
 
 var (
-	file_auth_personal_proto_rawDescOnce sync.Once
-	file_auth_personal_proto_rawDescData []byte
+	file_message_message_proto_rawDescOnce sync.Once
+	file_message_message_proto_rawDescData []byte
 )
 
-func file_auth_personal_proto_rawDescGZIP() []byte {
-	file_auth_personal_proto_rawDescOnce.Do(func() {
-		file_auth_personal_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_auth_personal_proto_rawDesc), len(file_auth_personal_proto_rawDesc)))
+func file_message_message_proto_rawDescGZIP() []byte {
+	file_message_message_proto_rawDescOnce.Do(func() {
+		file_message_message_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_message_message_proto_rawDesc), len(file_message_message_proto_rawDesc)))
 	})
-	return file_auth_personal_proto_rawDescData
+	return file_message_message_proto_rawDescData
 }
 
-var file_auth_personal_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
-var file_auth_personal_proto_goTypes = []any{
-	(*UpdatePersonalSettingRequest)(nil),   // 0: api.v1.services.auth.UpdatePersonalSettingRequest
-	(*UpdatePersonalSettingResponse)(nil),  // 1: api.v1.services.auth.UpdatePersonalSettingResponse
-	(*UpdatePersonalRoleRequest)(nil),      // 2: api.v1.services.auth.UpdatePersonalRoleRequest
-	(*UpdatePersonalRoleResponse)(nil),     // 3: api.v1.services.auth.UpdatePersonalRoleResponse
-	(*ListPersonalResourcesRequest)(nil),   // 4: api.v1.services.auth.ListPersonalResourcesRequest
-	(*ListPersonalResourcesResponse)(nil),  // 5: api.v1.services.auth.ListPersonalResourcesResponse
-	(*UpdatePersonalPasswordRequest)(nil),  // 6: api.v1.services.auth.UpdatePersonalPasswordRequest
-	(*UpdatePersonalPasswordResponse)(nil), // 7: api.v1.services.auth.UpdatePersonalPasswordResponse
-	(*PersonalPasswordRestRequest)(nil),    // 8: api.v1.services.auth.PersonalPasswordRestRequest
-	(*PersonalPasswordRestResponse)(nil),   // 9: api.v1.services.auth.PersonalPasswordRestResponse
-	(*UpdatePersonalProfileRequest)(nil),   // 10: api.v1.services.auth.UpdatePersonalProfileRequest
-	(*UpdatePersonalProfileResponse)(nil),  // 11: api.v1.services.auth.UpdatePersonalProfileResponse
-	(*PersonalLogoutRequest)(nil),          // 12: api.v1.services.auth.PersonalLogoutRequest
-	(*PersonalLogoutResponse)(nil),         // 13: api.v1.services.auth.PersonalLogoutResponse
-	(*ListPersonalRolesRequest)(nil),       // 14: api.v1.services.auth.ListPersonalRolesRequest
-	(*ListPersonalRolesResponse)(nil),      // 15: api.v1.services.auth.ListPersonalRolesResponse
-	(*GetPersonalProfileRequest)(nil),      // 16: api.v1.services.auth.GetPersonalProfileRequest
-	(*GetPersonalProfileResponse)(nil),     // 17: api.v1.services.auth.GetPersonalProfileResponse
-	(*RefreshPersonalTokenRequest)(nil),    // 18: api.v1.services.auth.RefreshPersonalTokenRequest
-	(*RefreshPersonalTokenResponse)(nil),   // 19: api.v1.services.auth.RefreshPersonalTokenResponse
+var file_message_message_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_message_message_proto_goTypes = []any{
+	(*UpdatePersonalSettingRequest)(nil),   // 0: api.v1.services.message.UpdatePersonalSettingRequest
+	(*UpdatePersonalSettingResponse)(nil),  // 1: api.v1.services.message.UpdatePersonalSettingResponse
+	(*UpdatePersonalRoleRequest)(nil),      // 2: api.v1.services.message.UpdatePersonalRoleRequest
+	(*UpdatePersonalRoleResponse)(nil),     // 3: api.v1.services.message.UpdatePersonalRoleResponse
+	(*ListPersonalResourcesRequest)(nil),   // 4: api.v1.services.message.ListPersonalResourcesRequest
+	(*ListPersonalResourcesResponse)(nil),  // 5: api.v1.services.message.ListPersonalResourcesResponse
+	(*UpdatePersonalPasswordRequest)(nil),  // 6: api.v1.services.message.UpdatePersonalPasswordRequest
+	(*UpdatePersonalPasswordResponse)(nil), // 7: api.v1.services.message.UpdatePersonalPasswordResponse
+	(*PersonalPasswordRestRequest)(nil),    // 8: api.v1.services.message.PersonalPasswordRestRequest
+	(*PersonalPasswordRestResponse)(nil),   // 9: api.v1.services.message.PersonalPasswordRestResponse
+	(*UpdatePersonalProfileRequest)(nil),   // 10: api.v1.services.message.UpdatePersonalProfileRequest
+	(*UpdatePersonalProfileResponse)(nil),  // 11: api.v1.services.message.UpdatePersonalProfileResponse
+	(*PersonalLogoutRequest)(nil),          // 12: api.v1.services.message.PersonalLogoutRequest
+	(*PersonalLogoutResponse)(nil),         // 13: api.v1.services.message.PersonalLogoutResponse
+	(*ListPersonalRolesRequest)(nil),       // 14: api.v1.services.message.ListPersonalRolesRequest
+	(*ListPersonalRolesResponse)(nil),      // 15: api.v1.services.message.ListPersonalRolesResponse
+	(*GetPersonalProfileRequest)(nil),      // 16: api.v1.services.message.GetPersonalProfileRequest
+	(*GetPersonalProfileResponse)(nil),     // 17: api.v1.services.message.GetPersonalProfileResponse
+	(*RefreshPersonalTokenRequest)(nil),    // 18: api.v1.services.message.RefreshPersonalTokenRequest
+	(*RefreshPersonalTokenResponse)(nil),   // 19: api.v1.services.message.RefreshPersonalTokenResponse
 	(*anypb.Any)(nil),                      // 20: google.protobuf.Any
 	(*types.Role)(nil),                     // 21: api.v1.services.types.Role
 	(*types.Resource)(nil),                 // 22: api.v1.services.types.Resource
 	(*types.User)(nil),                     // 23: api.v1.services.types.User
 }
-var file_auth_personal_proto_depIdxs = []int32{
-	20, // 0: api.v1.services.auth.UpdatePersonalSettingRequest.data:type_name -> google.protobuf.Any
-	21, // 1: api.v1.services.auth.UpdatePersonalRoleRequest.role:type_name -> api.v1.services.types.Role
-	22, // 2: api.v1.services.auth.ListPersonalResourcesResponse.resources:type_name -> api.v1.services.types.Resource
-	20, // 3: api.v1.services.auth.UpdatePersonalPasswordRequest.data:type_name -> google.protobuf.Any
-	20, // 4: api.v1.services.auth.UpdatePersonalProfileRequest.data:type_name -> google.protobuf.Any
-	20, // 5: api.v1.services.auth.PersonalLogoutRequest.data:type_name -> google.protobuf.Any
-	21, // 6: api.v1.services.auth.ListPersonalRolesResponse.roles:type_name -> api.v1.services.types.Role
-	23, // 7: api.v1.services.auth.GetPersonalProfileResponse.user:type_name -> api.v1.services.types.User
-	20, // 8: api.v1.services.auth.RefreshPersonalTokenRequest.data:type_name -> google.protobuf.Any
-	16, // 9: api.v1.services.auth.PersonalService.GetPersonalProfile:input_type -> api.v1.services.auth.GetPersonalProfileRequest
-	4,  // 10: api.v1.services.auth.PersonalService.ListPersonalResources:input_type -> api.v1.services.auth.ListPersonalResourcesRequest
-	14, // 11: api.v1.services.auth.PersonalService.ListPersonalRoles:input_type -> api.v1.services.auth.ListPersonalRolesRequest
-	12, // 12: api.v1.services.auth.PersonalService.PersonalLogout:input_type -> api.v1.services.auth.PersonalLogoutRequest
-	18, // 13: api.v1.services.auth.PersonalService.RefreshPersonalToken:input_type -> api.v1.services.auth.RefreshPersonalTokenRequest
-	6,  // 14: api.v1.services.auth.PersonalService.UpdatePersonalPassword:input_type -> api.v1.services.auth.UpdatePersonalPasswordRequest
-	10, // 15: api.v1.services.auth.PersonalService.UpdatePersonalProfile:input_type -> api.v1.services.auth.UpdatePersonalProfileRequest
-	0,  // 16: api.v1.services.auth.PersonalService.UpdatePersonalSetting:input_type -> api.v1.services.auth.UpdatePersonalSettingRequest
-	17, // 17: api.v1.services.auth.PersonalService.GetPersonalProfile:output_type -> api.v1.services.auth.GetPersonalProfileResponse
-	5,  // 18: api.v1.services.auth.PersonalService.ListPersonalResources:output_type -> api.v1.services.auth.ListPersonalResourcesResponse
-	15, // 19: api.v1.services.auth.PersonalService.ListPersonalRoles:output_type -> api.v1.services.auth.ListPersonalRolesResponse
-	13, // 20: api.v1.services.auth.PersonalService.PersonalLogout:output_type -> api.v1.services.auth.PersonalLogoutResponse
-	19, // 21: api.v1.services.auth.PersonalService.RefreshPersonalToken:output_type -> api.v1.services.auth.RefreshPersonalTokenResponse
-	7,  // 22: api.v1.services.auth.PersonalService.UpdatePersonalPassword:output_type -> api.v1.services.auth.UpdatePersonalPasswordResponse
-	11, // 23: api.v1.services.auth.PersonalService.UpdatePersonalProfile:output_type -> api.v1.services.auth.UpdatePersonalProfileResponse
-	1,  // 24: api.v1.services.auth.PersonalService.UpdatePersonalSetting:output_type -> api.v1.services.auth.UpdatePersonalSettingResponse
+var file_message_message_proto_depIdxs = []int32{
+	20, // 0: api.v1.services.message.UpdatePersonalSettingRequest.data:type_name -> google.protobuf.Any
+	21, // 1: api.v1.services.message.UpdatePersonalRoleRequest.role:type_name -> api.v1.services.types.Role
+	22, // 2: api.v1.services.message.ListPersonalResourcesResponse.resources:type_name -> api.v1.services.types.Resource
+	20, // 3: api.v1.services.message.UpdatePersonalPasswordRequest.data:type_name -> google.protobuf.Any
+	20, // 4: api.v1.services.message.UpdatePersonalProfileRequest.data:type_name -> google.protobuf.Any
+	20, // 5: api.v1.services.message.PersonalLogoutRequest.data:type_name -> google.protobuf.Any
+	21, // 6: api.v1.services.message.ListPersonalRolesResponse.roles:type_name -> api.v1.services.types.Role
+	23, // 7: api.v1.services.message.GetPersonalProfileResponse.user:type_name -> api.v1.services.types.User
+	20, // 8: api.v1.services.message.RefreshPersonalTokenRequest.data:type_name -> google.protobuf.Any
+	16, // 9: api.v1.services.message.PersonalService.GetPersonalProfile:input_type -> api.v1.services.message.GetPersonalProfileRequest
+	4,  // 10: api.v1.services.message.PersonalService.ListPersonalResources:input_type -> api.v1.services.message.ListPersonalResourcesRequest
+	14, // 11: api.v1.services.message.PersonalService.ListPersonalRoles:input_type -> api.v1.services.message.ListPersonalRolesRequest
+	12, // 12: api.v1.services.message.PersonalService.PersonalLogout:input_type -> api.v1.services.message.PersonalLogoutRequest
+	18, // 13: api.v1.services.message.PersonalService.RefreshPersonalToken:input_type -> api.v1.services.message.RefreshPersonalTokenRequest
+	6,  // 14: api.v1.services.message.PersonalService.UpdatePersonalPassword:input_type -> api.v1.services.message.UpdatePersonalPasswordRequest
+	10, // 15: api.v1.services.message.PersonalService.UpdatePersonalProfile:input_type -> api.v1.services.message.UpdatePersonalProfileRequest
+	0,  // 16: api.v1.services.message.PersonalService.UpdatePersonalSetting:input_type -> api.v1.services.message.UpdatePersonalSettingRequest
+	17, // 17: api.v1.services.message.PersonalService.GetPersonalProfile:output_type -> api.v1.services.message.GetPersonalProfileResponse
+	5,  // 18: api.v1.services.message.PersonalService.ListPersonalResources:output_type -> api.v1.services.message.ListPersonalResourcesResponse
+	15, // 19: api.v1.services.message.PersonalService.ListPersonalRoles:output_type -> api.v1.services.message.ListPersonalRolesResponse
+	13, // 20: api.v1.services.message.PersonalService.PersonalLogout:output_type -> api.v1.services.message.PersonalLogoutResponse
+	19, // 21: api.v1.services.message.PersonalService.RefreshPersonalToken:output_type -> api.v1.services.message.RefreshPersonalTokenResponse
+	7,  // 22: api.v1.services.message.PersonalService.UpdatePersonalPassword:output_type -> api.v1.services.message.UpdatePersonalPasswordResponse
+	11, // 23: api.v1.services.message.PersonalService.UpdatePersonalProfile:output_type -> api.v1.services.message.UpdatePersonalProfileResponse
+	1,  // 24: api.v1.services.message.PersonalService.UpdatePersonalSetting:output_type -> api.v1.services.message.UpdatePersonalSettingResponse
 	17, // [17:25] is the sub-list for method output_type
 	9,  // [9:17] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
@@ -1049,26 +1049,26 @@ var file_auth_personal_proto_depIdxs = []int32{
 	0,  // [0:9] is the sub-list for field type_name
 }
 
-func init() { file_auth_personal_proto_init() }
-func file_auth_personal_proto_init() {
-	if File_auth_personal_proto != nil {
+func init() { file_message_message_proto_init() }
+func file_message_message_proto_init() {
+	if File_message_message_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_personal_proto_rawDesc), len(file_auth_personal_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_message_message_proto_rawDesc), len(file_message_message_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_auth_personal_proto_goTypes,
-		DependencyIndexes: file_auth_personal_proto_depIdxs,
-		MessageInfos:      file_auth_personal_proto_msgTypes,
+		GoTypes:           file_message_message_proto_goTypes,
+		DependencyIndexes: file_message_message_proto_depIdxs,
+		MessageInfos:      file_message_message_proto_msgTypes,
 	}.Build()
-	File_auth_personal_proto = out.File
-	file_auth_personal_proto_goTypes = nil
-	file_auth_personal_proto_depIdxs = nil
+	File_message_message_proto = out.File
+	file_message_message_proto_goTypes = nil
+	file_message_message_proto_depIdxs = nil
 }

@@ -10,7 +10,9 @@ option java_outer_classname = "APIServiceTypeMessageProto";
 option java_package = "com.origadmin.api.v1.services.types";
 option objc_class_prefix = "APIServiceType";
 
-// Menu is the model entity for the Menu schema.
+// Message is the model entity for the Message schema.
+// NOTE: This message definition is currently incomplete and only contains an ID field.
+// It should be extended with actual message content as needed.
 message Message {
   // ID of the ent.
   int64 id = 1 [json_name = "id"];
