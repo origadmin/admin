@@ -1,4 +1,4 @@
-module github.com/origadmin/backend
+module origadmin/application/admin
 
 go 1.23.1
 
