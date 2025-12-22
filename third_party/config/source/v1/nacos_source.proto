@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+import "config/transport/tls/v1/tls.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// Nacos defines the configuration for Nacos configuration center
+message NacosSource {
+  // Nacos server address (e.g., "localhost:8848")
+  string address = 1 [json_name = "address"];
+  // Namespace ID
+  string namespace = 2 [json_name = "namespace"];
+  // Group name
+  string group = 3 [json_name = "group"];
+  // Data ID
+  string data_id = 4 [json_name = "data_id"];
+  // Username for authentication
+  string username = 5 [json_name = "username"];
+  // Password for authentication
+  string password = 6 [json_name = "password"];
+  // Configuration format (e.g., "yaml", "json")
+  string format = 7 [json_name = "format"];
+  // TLS configuration
+  runtime.api.config.transport.tls.v1.TLSConfig tls = 10 [json_name = "tls"];
+}

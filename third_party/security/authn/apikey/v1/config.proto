@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package contrib.api.security.authn.apikey.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/authn/apikey/v1;apikeyv1";
+
+// Config defines the settings for an API Key authenticator.
+message Config {
+  // Defines where to look for the API key in the incoming request.
+  // The format is "<source>:<name>", e.g., "header:X-API-Key" or "query:api_key".
+  string key_source = 1 [
+    json_name = "key_source",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "Source of the API key in the request, e.g., 'header:X-API-Key'."}
+  ];
+
+  // A list of valid API keys and the principal information they map to.
+  // In a real-world scenario, this might point to a secret management system
+  // or a database instead of being a static list.
+  repeated APIKeyDef keys = 2 [
+    json_name = "keys",
+    (gnostic.openapi.v3.property) = {description: "List of valid API keys and their associated principals."}
+  ];
+}
+
+// APIKeyDef maps a specific API key to a predefined principal.
+message APIKeyDef {
+  // The secret API key string.
+  string key = 1 [
+    json_name = "key",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The secret API key string."}
+  ];
+
+  // The ID of the principal that this key represents.
+  string principal_id = 2 [
+    json_name = "principal_id",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The ID of the principal represented by this key."}
+  ];
+
+  // The roles associated with this principal.
+  repeated string roles = 3 [
+    json_name = "roles",
+    (gnostic.openapi.v3.property) = {description: "A list of roles associated with the principal."}
+  ];
+}

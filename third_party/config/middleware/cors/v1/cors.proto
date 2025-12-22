@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.cors.v1;
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/cors/v1;corsv1";
+
+// CORS configuration for cross-origin resource sharing
+message Cors {
+  // ===== Basic Configuration =====
+
+  // Enable debug logging for CORS processing
+  bool debug = 1 [json_name = "debug"];
+
+  // ===== Origin Control =====
+
+  // When true, allows any origin (equivalent to allowed_origins = ["*"]).
+  // Security Note: Cannot be used with allow_credentials = true.
+  bool allow_any_origin = 2 [json_name = "allow_any_origin"];
+
+  // List of allowed origins (e.g., https://example.com).
+  // Use "*" to allow all origins (not recommended for production).
+  repeated string allowed_origins = 3 [json_name = "allowed_origins"];
+
+  // List of origin patterns that are allowed to make requests.
+  // Supports wildcards (*) for subdomains (e.g., https://*.example.com).
+  // Example: ["https://*.example.com", "http://localhost:*"]
+  repeated string allowed_origin_patterns = 4 [json_name = "allowed_origin_patterns"];
+
+  // Use regular expression to match allowed origins
+  // Example: ".*\\.example\\.com$"
+  string allow_origin_regex = 5 [json_name = "allow_origin_regex"];
+
+  // Allow wildcard (*) in allowed_origins (e.g., "*.example.com")
+  bool allow_wildcard = 6 [json_name = "allow_wildcard"];
+
+  // Allow credentials with wildcard origin (not recommended for security reasons)
+  bool allow_credentials_with_wildcard = 7 [json_name = "allow_credentials_with_wildcard"];
+
+  // ===== Method & Header Control =====
+
+  // List of allowed HTTP methods (e.g., GET, POST, PUT, DELETE, OPTIONS)
+  repeated string allowed_methods = 9 [json_name = "allowed_methods"];
+
+  // When true, allows any HTTP method in the Access-Control-Request-Method header.
+  // If false, only methods listed in allowed_methods are allowed.
+  bool allow_any_method = 10 [json_name = "allow_any_method"];
+
+  // List of allowed HTTP headers in cross-origin requests
+  repeated string allowed_headers = 11 [json_name = "allowed_headers"];
+
+  // When true, allows any header in the Access-Control-Request-Headers header.
+  // If false, only headers listed in allowed_headers are allowed.
+  bool allow_any_header = 12 [json_name = "allow_any_header"];
+
+  // List of headers that can be exposed to the browser in the response
+  repeated string exposed_headers = 13 [json_name = "exposed_headers"];
+
+  // List of allowed request header patterns (supports wildcards)
+  repeated string allowed_request_headers_patterns = 14 [json_name = "allowed_request_headers_patterns"];
+
+  // ===== Preflight & Caching =====
+
+  // Maximum age (in seconds) to cache preflight requests
+  int64 max_age = 19 [json_name = "max_age"];
+
+  // Custom header name for Max-Age (default: "Access-Control-Max-Age")
+  string max_age_header = 20 [json_name = "max_age_header"];
+
+  // When true, passes preflight requests to the next handler
+  bool preflight_continue = 21 [json_name = "preflight_continue"];
+
+  // When true, passes OPTIONS requests to the next handler
+  bool options_passthrough = 22 [json_name = "options_passthrough"];
+
+  // Status code to return for successful OPTIONS requests
+  int32 options_success_status = 23 [json_name = "options_success_status"];
+
+  // ===== Security & Advanced =====
+
+  // Indicates whether the request can include user credentials (cookies, HTTP authentication).
+  // Security Note: Cannot be used with wildcard origins ("*") or allow_any_origin = true.
+  bool allow_credentials = 29 [json_name = "allow_credentials"];
+
+  // List of HTTP status codes that should be exposed to the CORS client
+  repeated int32 exposed_status_codes = 30 [json_name = "exposed_status_codes"];
+
+  // List of response headers that can be exposed to the client
+  repeated string allowed_response_headers = 31 [json_name = "allowed_response_headers"];
+
+  // Allow browser extension schemes (chrome-extension://, moz-extension://, etc.)
+  bool allow_browser_extensions = 32 [json_name = "allow_browser_extensions"];
+
+  // Allow WebSocket connections
+  bool allow_web_sockets = 33 [json_name = "allow_web_sockets"];
+
+  // Allow requests from private network addresses (127.0.0.1, [::1], localhost)
+  bool allow_private_network = 34 [json_name = "allow_private_network"];
+
+  // Allow file:// schema (use with caution, not recommended for production)
+  bool allow_files = 35 [json_name = "allow_files"];
+}

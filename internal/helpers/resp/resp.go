@@ -10,12 +10,13 @@ import (
 	"net/http"
 
 	transhttp "github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/origadmin/runtime/log"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 
-	datav1 "origadmin/application/admin/helpers/resp/data/v1"
+	"github.com/origadmin/runtime/log"
+
+	datav1 "origadmin/application/admin/internal/helpers/resp/data/v1"
 )
 
 const (

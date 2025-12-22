@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package contrib.api.security.v1;
+
+import "errors/errors.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/v1;securityv1";
+
+// SecurityErrorReason defines the application's specific security error codes.
+// These codes supplement the common error codes and provide more specific details
+// for authentication and authorization failures. The naming convention follows SUBJECT_MODIFIER format.
+enum SecurityErrorReason {
+  option (errors.default_code) = 500;
+
+  // The default, unspecified reason. This is required by proto3 syntax.
+  SECURITY_ERROR_REASON_UNSPECIFIED = 0 [(errors.code) = 500];
+
+  // --- Specific Authentication Errors (mapped to common.UNAUTHENTICATED) ---
+
+  // The provided credentials (e.g., username/password) are invalid.
+  CREDENTIALS_INVALID = 1002 [(errors.code) = 401];
+  // The authentication token has expired.
+  TOKEN_EXPIRED = 1003 [(errors.code) = 401];
+  // The authentication token is malformed or invalid.
+  TOKEN_INVALID = 1004 [(errors.code) = 401];
+  // The authentication token is missing from the request.
+  TOKEN_MISSING = 1005 [(errors.code) = 401];
+  // The claims within the token are invalid.
+  CLAIMS_INVALID = 1006 [(errors.code) = 401];
+  // The bearer token is specifically invalid or malformed.
+  BEARER_TOKEN_INVALID = 1007 [(errors.code) = 401];
+  // The signing method used in the token is not supported.
+  SIGNING_METHOD_UNSUPPORTED = 1008 [(errors.code) = 401];
+  // Failed to sign a new token.
+  TOKEN_SIGN_FAILED = 1009 [(errors.code) = 500];
+
+  // --- Specific Authorization Errors (mapped to common.FORBIDDEN) ---
+
+  // The user is authenticated but does not have permission for the specific resource or action.
+  PERMISSION_DENIED = 2000 [(errors.code) = 403];
+}

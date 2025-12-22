@@ -19,6 +19,7 @@ service AuthService {
   rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
     option (google.api.http) = {get: "/auth/resources"};
   }
+
   // CreateToken generates a new JWT token for the given user.
   rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {
     option (google.api.http) = {

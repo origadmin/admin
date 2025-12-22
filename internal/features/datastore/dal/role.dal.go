@@ -18,7 +18,7 @@ import (
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
 )
 
 type roleRepo struct {
@@ -156,10 +156,10 @@ func rolePageQuery(ctx context.Context, query *ent.RoleQuery, in *pb.ListRolesRe
 
 func roleQueryOptions(query *ent.RoleQuery, option dto.RoleQueryOption) *ent.RoleQuery {
 	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).RoleQuery
+		query = query.Select(option.SelectFields...).(*ent.RoleQuery)
 	}
 	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).RoleQuery
+		query = query.Omit(option.OmitFields...).(*ent.RoleQuery)
 	}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(roleOrderBy(option.OrderFields)...)

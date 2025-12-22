@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package runtime.api.config.selector.v1;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/selector/v1;selectorv1";
+
+// SelectorConfig defines the configuration for a client-side selector (e.g., load balancer).
+message SelectorConfig {
+  // version is a filter for the service version.
+  // e.g., "v1.0.0"
+  string version = 1 [json_name = "version"];
+  // strategy specifies the load balancing strategy (e.g., "round_robin", "random", "consistent_hash").
+  optional string strategy = 2 [json_name = "strategy"];
+  // balancer_name specifies the name of the load balancer to use.
+  optional string balancer_name = 3 [json_name = "balancer_name"];
+  // filter_name specifies the name of the filter to use for endpoint selection.
+  optional string filter_name = 4 [json_name = "filter_name"];
+  // custom_config allows for custom configuration for the selector.
+  // It can be used for non-standard or user-defined selector implementations.
+  optional google.protobuf.Struct customize = 100 [json_name = "customize"];
+}

@@ -8,7 +8,7 @@ package dto
 import (
 	"net/http"
 
-	"github.com/origadmin/toolkits/errors/httperr"
+	"github.com/origadmin/runtime/errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	typespb "origadmin/application/admin/api/v1/services/types"
@@ -19,11 +19,11 @@ import (
 
 var (
 	// ErrUserNotFound is user not found.
-	ErrUserNotFound      = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
-	ErrInvalidCaptchaID  = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), http.StatusBadRequest, "invalid captcha id")
-	ErrInvalidPassword   = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), http.StatusBadRequest, "invalid password")
-	ErrInvalidUsername   = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), http.StatusBadRequest, "invalid username")
-	ErrCaptchaIDNotFound = httperr.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), http.StatusBadRequest, "captcha id not found")
+	ErrUserNotFound      = errors.New(http.errors"http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+	ErrInvalidCaptchaID  = errors.New(http.errors"http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_CAPTCHA_ID.String(), http.StatusBadRequest, "invalid captcha id")
+	ErrInvalidPassword   = errors.New(http.errors"http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_PASSWORD.String(), http.StatusBadRequest, "invalid password")
+	ErrInvalidUsername   = errors.New(http.errors"http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_INVALID_USERNAME.String(), http.StatusBadRequest, "invalid username")
+	ErrCaptchaIDNotFound = errors.New(http.errors"http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_CAPTCHA_ID_NOT_FOUND.String(), http.StatusBadRequest, "captcha id not found")
 )
 
 const (

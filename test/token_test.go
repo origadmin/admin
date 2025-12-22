@@ -23,8 +23,8 @@ import (
 	"origadmin/application/admin/helpers/securityx"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/loader"
-	"origadmin/application/admin/internal/mods/auth/dal"
-	"origadmin/application/admin/internal/mods/auth/service"
+	"origadmin/application/admin/internal/features/auth/dal"    // Corrected import path
+	"origadmin/application/admin/internal/features/auth/service" // Corrected import path
 )
 
 type mockData struct {

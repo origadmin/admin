@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package runtime.api.config.transport.grpc.v1;
+
+import "config/selector/v1/selector.proto";
+import "config/transport/tls/v1/tls.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1;grpcv1";
+
+// Server defines the core configuration for a Kratos gRPC server.
+message Server {
+  // network is the network type for the server to listen on.
+  // e.g., "tcp", "unix"
+  string network = 1 [
+    json_name = "network",
+    (gnostic.openapi.v3.property) = {description: "The network type for the server to listen on, e.g., \"tcp\", \"unix\"."}
+  ];
+
+  // addr is the address for the server to listen on.
+  // e.g., "0.0.0.0:9000"
+  string addr = 2 [
+    json_name = "addr",
+    (gnostic.openapi.v3.property) = {description: "The address for the server to listen on, e.g., \"0.0.0.0:9000\"."}
+  ];
+
+  // timeout is the request handling timeout.
+  google.protobuf.Duration timeout = 3 [
+    json_name = "timeout",
+    (gnostic.openapi.v3.property) = {description: "The request handling timeout."}
+  ];
+
+  // middlewares is a list of middleware names to be applied to the server.
+  // The framework will look up these names in a middleware provider.
+  repeated string middlewares = 4 [
+    json_name = "middlewares",
+    (gnostic.openapi.v3.property) = {description: "A list of middleware names to be applied to the server."}
+  ];
+
+  // tls_config defines the TLS settings for the gRPC server.
+  optional runtime.api.config.transport.tls.v1.TLSConfig tls_config = 5 [
+    json_name = "tls_config",
+    (gnostic.openapi.v3.property) = {description: "The TLS settings for the gRPC server."}
+  ];
+}
+
+// Client defines the core configuration for creating a Kratos gRPC client.
+message Client {
+  // endpoint is the target to connect to.
+  // It can be a direct address or a discovery service URI.
+  // e.g., "direct://127.0.0.1:9000" or "discovery:///your-service-name"
+  string endpoint = 1;
+
+  // timeout is the request timeout for a single RPC call.
+  google.protobuf.Duration timeout = 2;
+
+  // middlewares is a list of middleware names to be applied to the client.
+  repeated string middlewares = 3;
+
+  // selector defines the node selection strategy for the client.
+  config.selector.v1.SelectorConfig selector = 4; // Updated type reference
+
+  // discovery_name specifies the name of the discovery client to use from the application container.
+  // If empty, and multiple discovery clients are available, an error will be returned.
+  optional string discovery_name = 5;
+
+  // tls_config defines the TLS settings for the gRPC client.
+  optional runtime.api.config.transport.tls.v1.TLSConfig tls_config = 6;
+}

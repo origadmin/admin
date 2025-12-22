@@ -13,7 +13,7 @@ import (
 
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/mods/auth/dto"
+	"origadmin/application/admin/internal/features/auth/dto" // Corrected import path
 )
 
 type userRepo struct {

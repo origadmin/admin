@@ -18,7 +18,7 @@ import (
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
 )
 
 type userRepo struct {
@@ -207,10 +207,10 @@ func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRe
 
 func userQueryOptions(query *ent.UserQuery, option dto.UserQueryOption) *ent.UserQuery {
 	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).UserQuery
+		query = query.Select(option.SelectFields...).(*ent.UserQuery)
 	}
 	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).UserQuery
+		query = query.Omit(option.OmitFields...).(*ent.UserQuery)
 	}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(userOrderBy(option.OrderFields)...)

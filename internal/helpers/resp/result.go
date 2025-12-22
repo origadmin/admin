@@ -15,7 +15,7 @@ import (
 	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/proto"
 
-	datav1 "origadmin/application/admin/helpers/resp/data/v1"
+	datav1 "origadmin/application/admin/internal/helpers/resp/data/v1"
 )
 
 type Message interface {

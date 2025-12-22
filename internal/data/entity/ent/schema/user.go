@@ -13,8 +13,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
-	"origadmin/application/admin/helpers/ent/mixin"
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/ent/mixin"
+	"origadmin/application/admin/internal/helpers/i18n"
 	"origadmin/application/admin/internal/data/entity/ent/hook"
 	"origadmin/application/admin/internal/data/entity/ent/schema/audit"
 	"origadmin/application/admin/internal/data/entity/ent/schema/types"

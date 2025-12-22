@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package runtime.api.config.bootstrap.v1;
+
+import "config/source/v1/source.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "config/app/v1/app.proto"; // Import app.proto
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/bootstrap/v1;v1";
+
+// Bootstrap defines the structure of the bootstrap configuration file.
+message Bootstrap {
+  // app provides application-specific information that can be defined in the bootstrap configuration.
+  // This information is typically used to establish the application's identity and environment early in the startup process.
+  app.v1.App app = 1 [
+    json_name = "app",
+    (gnostic.openapi.v3.property) = {description: "Application-specific information defined in bootstrap."}
+  ];
+
+  // sources defines the list of configuration sources to be loaded.
+  // These sources are typically remote configuration services or local files.
+  repeated source.v1.SourceConfig sources = 2 [
+    json_name = "sources",
+    (gnostic.openapi.v3.property) = {description: "List of configuration sources to be loaded."}
+  ];
+
+  // paths provides an optional mapping from a component name to its configuration path.
+  // The keys of this map should correspond to the predefined Component* constants
+  // in the Go bootstrap package (e.g., "logger", "registries").
+  map<string, string> paths = 3 [
+    json_name = "paths",
+    (gnostic.openapi.v3.property) = {description: "Optional mapping from a component name to its configuration path."}
+  ];
+}

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package runtime.api.config.data.cache.v1;
+
+import "config/data/cache/v1/memcached.proto"; // Import MemcachedConfig
+import "config/data/cache/v1/memory.proto"; // Import MemoryConfig
+import "config/data/cache/v1/redis.proto"; // Import RedisConfig
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/cache/v1;cachev1";
+
+// CacheConfig defines the configuration for various caching mechanisms.
+// This message was extracted from storage.proto and renamed for consistency.
+message CacheConfig {
+  // The 'driver' field determines which configuration block to use.
+  // For built-in drivers, specify "redis", "memcached", or "memory".
+  // For custom drivers, specify the registered name of the custom driver.
+  // When a custom driver is used, its configuration should be placed in the 'customize' field.
+  string driver = 1 [
+    json_name = "driver",
+    (gnostic.openapi.v3.property) = {description: "Cache driver name. Built-in: 'redis', 'memcached', 'memory'. Custom drivers use their registered name."}
+  ];
+  string name = 2 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "cache name"}
+  ];
+  // Memcached
+  MemcachedConfig memcached = 10 [
+    json_name = "memcached",
+    (gnostic.openapi.v3.property) = {description: "memcached cache configuration"}
+  ];
+  // Memory cache
+  MemoryConfig memory = 11 [
+    json_name = "memory",
+    (gnostic.openapi.v3.property) = {description: "memory cache configuration"}
+  ];
+  // Redis
+  RedisConfig redis = 12 [
+    json_name = "redis",
+    (gnostic.openapi.v3.property) = {description: "redis cache configuration"}
+  ];
+  // Cleanup interval for memory cache in seconds.
+  // If 0 or not set, a default (e.g., 5 minutes) will be used by the implementation.
+  int64 cleanup_interval = 13 [
+    json_name = "cleanup_interval",
+    (gnostic.openapi.v3.property) = {description: "Cleanup interval for memory cache in seconds."}
+  ];
+
+  // Optional custom configuration for cache types not explicitly defined.
+  optional google.protobuf.Struct customize = 14 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for cache types not explicitly defined."}
+  ];
+}

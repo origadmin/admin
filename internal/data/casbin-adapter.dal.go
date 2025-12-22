@@ -15,7 +15,7 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/persist"
-	"github.com/goexts/generic/settings"
+	"github.com/goexts/generic/configure"
 
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/casbinrule"
@@ -76,7 +76,7 @@ func NewAdapter(data *Data, options ...Option) (persist.Adapter, error) {
 		data:     data,
 		filtered: false,
 	}
-	opts, err := settings.ApplyE(&CasbinOptions{}, options)
+	opts, err := configure.ApplyE(&CasbinOptions{}, options)
 	if err != nil {
 		return nil, err
 	}

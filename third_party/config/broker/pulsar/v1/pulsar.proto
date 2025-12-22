@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.pulsar.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/pulsar/v1;pulsarv1";
+
+// PulsarConfig defines the configuration for a Pulsar message queue.
+message PulsarConfig {
+  // Pulsar broker service URL (e.g., "pulsar://localhost:6650").
+  string service_url = 1 [(gnostic.openapi.v3.property) = {description: "Pulsar broker service URL (e.g., \"pulsar://localhost:6650\")."}];
+  // Default topic for producers or consumers.
+  string topic = 2 [(gnostic.openapi.v3.property) = {description: "Default topic for producers or consumers."}];
+  // Subscription name for consumers.
+  optional string subscription_name = 3 [(gnostic.openapi.v3.property) = {description: "Subscription name for consumers."}];
+  // Authentication token.
+  optional string auth_token = 4 [(gnostic.openapi.v3.property) = {description: "Authentication token."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 5 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 6 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 7 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 8 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+  // Operation timeout in milliseconds.
+  optional int32 operation_timeout_ms = 9 [(gnostic.openapi.v3.property) = {description: "Operation timeout in milliseconds."}];
+  // Number of message listeners.
+  optional int32 num_message_listeners = 10 [(gnostic.openapi.v3.property) = {description: "Number of message listeners."}];
+  // Max pending messages.
+  optional int32 max_pending_messages = 11 [(gnostic.openapi.v3.property) = {description: "Max pending messages."}];
+}

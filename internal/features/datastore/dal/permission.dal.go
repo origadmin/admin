@@ -15,7 +15,7 @@ import (
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
 )
 
 type permissionRepo struct {
@@ -152,10 +152,10 @@ func permissionQueryPage(query *ent.PermissionQuery, in *pb.ListPermissionsReque
 
 func permissionQueryOptions(query *ent.PermissionQuery, option dto.PermissionQueryOption) *ent.PermissionQuery {
 	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).PermissionQuery
+		query = query.Select(option.SelectFields...).(*ent.PermissionQuery)
 	}
 	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).PermissionQuery
+		query = query.Omit(option.OmitFields...).(*ent.PermissionQuery)
 	}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(permissionOrderBy(option.OrderFields)...)

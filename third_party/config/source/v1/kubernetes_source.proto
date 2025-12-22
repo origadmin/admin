@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// Kubernetes defines the configuration for Kubernetes configuration source
+message KubernetesSource {
+  // Namespace where the configmap/secret is located
+  string namespace = 1 [json_name = "namespace"];
+  // ConfigMap name
+  string config_map = 2 [json_name = "config_map"];
+  // Secret name
+  string secret = 3 [json_name = "secret"];
+  // Key in the configmap/secret
+  string key = 4 [json_name = "key"];
+  // Whether to watch for changes
+  bool watch = 5 [json_name = "watch"];
+  // Kubeconfig path, if not set will use in-cluster config
+  string kubeconfig = 6 [json_name = "kubeconfig"];
+}

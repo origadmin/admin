@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+package runtime.api.config.data.oss.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/oss/v1;ossv1";
+
+// OssConfig defines the configuration for cloud object storage.
+// This message was extracted from storage.proto and renamed for consistency.
+message OssConfig {
+  string endpoint = 1 [
+    json_name = "endpoint",
+    (gnostic.openapi.v3.property) = {description: "Storage service endpoint"}
+  ];
+  string access_key_id = 2 [
+    json_name = "access_key_id",
+    (gnostic.openapi.v3.property) = {description: "The access key ID for authentication."}
+  ];
+  string access_key_secret = 3 [
+    json_name = "access_key_secret",
+    (gnostic.openapi.v3.property) = {description: "The access key secret for authentication."}
+  ];
+  string bucket = 4 [
+    json_name = "bucket",
+    (gnostic.openapi.v3.property) = {description: "The name of the bucket to use."}
+  ];
+  string region = 5 [
+    json_name = "region",
+    (gnostic.openapi.v3.property) = {description: "The geographic region of the bucket."}
+  ];
+  bool ssl = 6 [
+    json_name = "ssl",
+    (gnostic.openapi.v3.property) = {description: "Whether to use SSL for the connection."}
+  ];
+  int64 connect_timeout = 7 [
+    json_name = "connect_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Connection timeout in milliseconds"}
+  ];
+  int64 read_timeout = 8 [
+    json_name = "read_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Read timeout in milliseconds"}
+  ];
+
+  // Optional: Bucket policy configuration.
+  optional BucketPolicy bucket_policy = 9 [
+    json_name = "bucket_policy",
+    (gnostic.openapi.v3.property) = {description: "Bucket access policy configuration"}
+  ];
+
+  // Optional: Lifecycle management rules.
+  repeated LifecycleRule lifecycle_rules = 10 [
+    json_name = "lifecycle_rules",
+    (gnostic.openapi.v3.property) = {description: "List of lifecycle management rules"}
+  ];
+
+  // Optional: Versioning configuration.
+  optional bool versioning_enabled = 11 [
+    json_name = "versioning_enabled",
+    (gnostic.openapi.v3.property) = {description: "Whether to enable object versioning for the bucket"}
+  ];
+}
+
+// BucketPolicy defines the access control policy for an OSS bucket.
+message BucketPolicy {
+  // Policy document in JSON format.
+  string policy_document = 1 [
+    json_name = "policy_document",
+    (gnostic.openapi.v3.property) = {description: "Access policy document in JSON format"}
+  ];
+}
+
+// LifecycleRule defines a single lifecycle management rule for objects in an OSS bucket.
+message LifecycleRule {
+  // Unique ID for the rule.
+  string id = 1 [
+    json_name = "id",
+    (gnostic.openapi.v3.property) = {description: "Unique ID for the lifecycle rule"}
+  ];
+  // Prefix for objects to which the rule applies.
+  optional string prefix = 2 [
+    json_name = "prefix",
+    (gnostic.openapi.v3.property) = {description: "Object key prefix to which the rule applies"}
+  ];
+  // Status of the rule (e.g., "Enabled", "Disabled").
+  string status = 3 [
+    json_name = "status",
+    (gnostic.openapi.v3.property) = {description: "Status of the lifecycle rule (e.g., Enabled, Disabled)"}
+  ];
+
+  // Actions to take on objects.
+  optional Expiration expiration = 4 [
+    json_name = "expiration",
+    (gnostic.openapi.v3.property) = {description: "Object expiration configuration"}
+  ];
+  optional Transition transition = 5 [
+    json_name = "transition",
+    (gnostic.openapi.v3.property) = {description: "Object transition to another storage class configuration"}
+  ];
+  optional NoncurrentVersionExpiration noncurrent_version_expiration = 6 [
+    json_name = "noncurrent_version_expiration",
+    (gnostic.openapi.v3.property) = {description: "Noncurrent object version expiration configuration"}
+  ];
+}
+
+// Expiration defines when objects expire.
+message Expiration {
+  // Number of days after object creation when it expires.
+  optional int32 days = 1 [
+    json_name = "days",
+    (gnostic.openapi.v3.property) = {description: "Number of days after object creation when it expires"}
+  ];
+  // Specific date when objects expire (YYYY-MM-DD format).
+  optional string date = 2 [
+    json_name = "date",
+    (gnostic.openapi.v3.property) = {description: "Specific date when objects expire (YYYY-MM-DD format)"}
+  ];
+}
+
+// Transition defines when objects transition to another storage class.
+message Transition {
+  // Number of days after object creation when it transitions.
+  optional int32 days = 1 [
+    json_name = "days",
+    (gnostic.openapi.v3.property) = {description: "Number of days after object creation when it transitions"}
+  ];
+  // Target storage class (e.g., "IA", "Archive").
+  string storage_class = 2 [
+    json_name = "storage_class",
+    (gnostic.openapi.v3.property) = {description: "Target storage class (e.g., IA, Archive)"}
+  ];
+}
+
+// NoncurrentVersionExpiration defines when noncurrent object versions expire.
+message NoncurrentVersionExpiration {
+  // Number of days after the object becomes noncurrent when it expires.
+  int32 noncurrent_days = 1 [
+    json_name = "noncurrent_days",
+    (gnostic.openapi.v3.property) = {description: "Number of days after the object becomes noncurrent when it expires"}
+  ];
+}

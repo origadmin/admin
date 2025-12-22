@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package runtime.api.config.discovery.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/discovery/v1;discoveryv1";
+
+//
+// DEPRECATED: This file is deprecated and will be removed in a future version.
+// The concepts of Endpoint and Selector have been merged into the ClientConfig
+// messages within `transport/v1/transport.proto` for better cohesion and clarity.
+//
+// - Use `GrpcClientConfig.discovery_filter` or `HttpClientConfig.discovery_filter`
+//   instead of `Selector`.
+// - Use `GrpcClientConfig.endpoint` or `HttpClientConfig.endpoint`
+//   instead of `Endpoint.uri`.
+//
+
+// Endpoint holds the complete, resolved configuration for a client-side service endpoint.
+message Endpoint {
+  option deprecated = true;
+
+  // The name is the name of the service key in the endpoint.
+  string name = 1 [(gnostic.openapi.v3.property) = {description: "The name of the service key in the endpoint."}];
+
+  // The discovery_name is the name of the service key in the discovery service.
+  string discovery_name = 2 [
+    json_name = "discovery_name",
+    (gnostic.openapi.v3.property) = {description: "The name of the service key in the discovery service."}
+  ];
+
+  // The endpoint URI to resolve, e.g., "discovery:///user-service".
+  string uri = 3 [(gnostic.openapi.v3.property) = {description: "The endpoint URI to resolve, e.g., \"discovery:///user-service\"."}];
+
+  // Selector for client-side load balancing and node filtering.
+  Selector selector = 4 [(gnostic.openapi.v3.property) = {description: "Selector for client-side load balancing and node filtering."}];
+}
+
+// Selector defines the client-side node selection strategy.
+message Selector {
+  option deprecated = true;
+
+  // The type of selector to use, e.g., "random", "wrr", "p2c".
+  string type = 1 [(gnostic.openapi.v3.property) = {description: "The type of selector to use, e.g., \"random\", \"wrr\", \"p2c\"."}];
+  // version is used for version-based routing.
+  string version = 2 [(gnostic.openapi.v3.property) = {description: "Version is used for version-based routing."}];
+}

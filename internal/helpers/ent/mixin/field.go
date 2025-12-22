@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 // ZeroTime represents the zero value for time.Time.

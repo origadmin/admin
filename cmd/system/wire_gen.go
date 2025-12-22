@@ -7,27 +7,26 @@
 package main
 
 import (
-	"github.com/go-kratos/kratos/v2"
-	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/mods/system/biz"
-	"origadmin/application/admin/internal/mods/system/dal"
-	"origadmin/application/admin/internal/mods/system/server"
-	"origadmin/application/admin/internal/mods/system/service"
-)
-
-import (
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
+
+	"github.com/go-kratos/kratos/v2"
+
+	"github.com/origadmin/runtime"
+	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dal"
+	"origadmin/application/admin/internal/features/system/server"
+	"origadmin/application/admin/internal/features/system/service"
 )
 
 // Injectors from wire.go:
 
 // buildInjectors init kratos application.
-func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
+func buildInjectors(r *runtime.App, bootstrap *confpb.Bootstrap) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(r, bootstrap)
 	if err != nil {
 		return nil, nil, err

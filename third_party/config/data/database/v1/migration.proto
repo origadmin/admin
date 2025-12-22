@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package runtime.api.config.data.database.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/database/v1;databasev1";
+
+// Migration defines database migration settings.
+// This message was extracted from mysql.proto for better modularity.
+message Migration {
+  bool enabled = 1 [
+    json_name = "enabled",
+    (gnostic.openapi.v3.property) = {description: "whether to enable migration"}
+  ];
+  string path = 2 [
+    json_name = "path",
+    (gnostic.openapi.v3.property) = {description: "migration path"}
+  ];
+  repeated string names = 3 [
+    json_name = "names",
+    (gnostic.openapi.v3.property) = {description: "migration name"}
+  ];
+  string version = 4 [
+    json_name = "version",
+    (gnostic.openapi.v3.property) = {description: "migration version"}
+  ];
+  string mode = 5 [
+    json_name = "mode",
+    (gnostic.openapi.v3.property) = {description: "migration mode"}
+  ];
+}

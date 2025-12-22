@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package runtime.api.config.common.v1;
+
+import "errors/errors.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/common/v1;commonv1";
+
+// ErrorCategory defines the category of an error.
+// This helps in grouping related errors together for monitoring and client handling.
+enum ErrorCategory {
+  // General errors not specific to any category.
+  ERROR_CATEGORY_GENERAL_UNSPECIFIED = 0;
+  // Authentication and authorization related errors.
+  ERROR_CATEGORY_AUTHENTICATION = 1;
+  // Database related errors.
+  ERROR_CATEGORY_DATABASE = 2;
+  // Business logic related errors.
+  ERROR_CATEGORY_BUSINESS = 3;
+  // External service related errors.
+  ERROR_CATEGORY_EXTERNAL_SERVICE = 4;
+}
+
+// ErrorMetadata contains additional, structured context about an error.
+// It can be used for logging and debugging purposes.
+message ErrorMetadata {
+  // The category of the error.
+  ErrorCategory category = 1 [
+    json_name = "category",
+    (gnostic.openapi.v3.property) = {description: "The category of the error."}
+  ];
+  // Additional key-value pairs providing context about the error.
+  map<string, string> metadata = 2 [
+    json_name = "metadata",
+    (gnostic.openapi.v3.property) = {description: "Additional key-value pairs providing context about the error."}
+  ];
+}
+
+// ErrorReason defines the application's common error codes.
+// These codes are mapped to HTTP status codes and are consistent across all services.
+//
+// The enum values are structured to allow for future expansion by domain-specific errors.
+// - 0-999: General framework errors
+// - 1000-1999: Common Authentication & Authorization Errors
+// - 2000-2999: Common Database Errors
+// - 3000-3999: Common Business Logic Errors
+// - 4000-4999: Common External Service Errors
+//
+// Specific reasons for these errors should be defined within the specific domain's error file.
+enum ErrorReason {
+  option (errors.default_code) = 500;
+
+  // --- General Framework Errors (0-999) ---
+  ERROR_REASON_UNKNOWN_UNSPECIFIED = 0 [(errors.code) = 500];
+  ERROR_REASON_VALIDATION_ERROR = 1 [(errors.code) = 400];
+  ERROR_REASON_NOT_FOUND = 2 [(errors.code) = 404];
+  ERROR_REASON_INTERNAL_SERVER_ERROR = 3 [(errors.code) = 500];
+  ERROR_REASON_METHOD_NOT_ALLOWED = 4 [(errors.code) = 405];
+  ERROR_REASON_REQUEST_TIMEOUT = 5 [(errors.code) = 408];
+  ERROR_REASON_CONFLICT = 6 [(errors.code) = 409];
+  ERROR_REASON_TOO_MANY_REQUESTS = 7 [(errors.code) = 429];
+  ERROR_REASON_SERVICE_UNAVAILABLE = 8 [(errors.code) = 503];
+  ERROR_REASON_GATEWAY_TIMEOUT = 9 [(errors.code) = 504];
+
+  // --- Common Authentication & Authorization Errors (1000-1999) ---
+  ERROR_REASON_UNAUTHENTICATED = 1000 [(errors.code) = 401];
+  ERROR_REASON_FORBIDDEN = 1001 [(errors.code) = 403];
+
+  // --- Common Database Errors (2000-2999) ---
+  ERROR_REASON_DATABASE_ERROR = 2000 [(errors.code) = 500];
+  ERROR_REASON_RECORD_NOT_FOUND = 2001 [(errors.code) = 404];
+  ERROR_REASON_CONSTRAINT_VIOLATION = 2002 [(errors.code) = 409];
+  ERROR_REASON_DUPLICATE_KEY = 2003 [(errors.code) = 409];
+  ERROR_REASON_DATABASE_CONNECTION_FAILED = 2004 [(errors.code) = 503];
+
+  // --- Common Business Logic Errors (3000-3999) ---
+  ERROR_REASON_INVALID_STATE = 3000 [(errors.code) = 400];
+  ERROR_REASON_RESOURCE_EXISTS = 3001 [(errors.code) = 409];
+  ERROR_REASON_RESOURCE_IN_USE = 3002 [(errors.code) = 409];
+  ERROR_REASON_CANCELLED = 3003 [(errors.code) = 499];
+  ERROR_REASON_ABORTED = 3004 [(errors.code) = 409];
+  ERROR_REASON_MISSING_PARAMETER = 3005 [(errors.code) = 400];
+  ERROR_REASON_INVALID_PARAMETER = 3006 [(errors.code) = 400];
+  ERROR_REASON_OPERATION_NOT_ALLOWED = 3007 [(errors.code) = 403];
+
+  // --- Common External Service Errors (4000-4999) ---
+  ERROR_REASON_EXTERNAL_SERVICE_UNAVAILABLE = 4000 [(errors.code) = 503];
+  ERROR_REASON_EXTERNAL_SERVICE_ERROR = 4001 [(errors.code) = 502];
+
+  // --- Common Registry Errors (6000-6999) ---
+  ERROR_REASON_REGISTRY_NOT_FOUND = 6000 [(errors.code) = 404];
+}

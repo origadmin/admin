@@ -8,7 +8,7 @@ import (
 	"golang.org/x/net/context"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/internal/mods/auth/biz"
+	"origadmin/application/admin/internal/features/auth/biz" // Corrected import path
 )
 
 // LoginServiceServer is a login service.

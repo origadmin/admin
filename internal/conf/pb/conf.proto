@@ -4,6 +4,10 @@ package conf.pb;
 
 option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
+import "config/data/v1/data.proto";
+import "config/discovery/v1/discovery.proto";
+import "config/logger/v1/logger.proto";
+import "config/middleware/v1/middleware.proto";
 import "config/transport/v1/transport.proto";
 import "conf/pb/captcha.proto";
 import "conf/pb/root.proto";
@@ -24,6 +28,21 @@ message Bootstrap {
 
   // RootUser feature specific configuration for initial user setup.
   conf.pb.RootUser root_user = 5;
+
+  // Data configuration, including databases, caches, and object stores.
+  runtime.api.config.data.v1.Data data = 6;
+
+  // Discovery configuration for service discovery.
+  runtime.api.config.discovery.v1.Discoveries discoveries = 7;
+
+  // Logger configuration for application logging.
+  runtime.api.config.logger.v1.Logger logger = 8;
+
+  // Middleware configuration for request processing.
+  runtime.api.config.middleware.v1.Middlewares middlewares = 9;
+
+  // Default discovery service name.
+  string default_discovery = 10;
 }
 
 // SelectorGlobal defines the global selector/load-balancing strategy.

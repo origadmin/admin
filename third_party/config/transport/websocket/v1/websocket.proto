@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package runtime.api.config.transport.websocket.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/transport/websocket/v1;websocketv1";
+
+// Server defines the configuration for a WebSocket server.
+message Server {
+  string network = 1 [
+    json_name = "network",
+    (gnostic.openapi.v3.property) = {description: "The network type for the WebSocket server to listen on."}
+  ];
+  string addr = 2 [
+    json_name = "addr",
+    (gnostic.openapi.v3.property) = {description: "The address for the WebSocket server to listen on."}
+  ];
+  google.protobuf.Duration timeout = 3 [
+    json_name = "timeout",
+    (gnostic.openapi.v3.property) = {description: "The request handling timeout for the WebSocket server."}
+  ];
+  // The endpoint that this server advertises to the service registry.
+  string endpoint = 4 [
+    json_name = "endpoint",
+    (gnostic.openapi.v3.property) = {description: "The endpoint that this server advertises to the service registry."}
+  ];
+}

@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 // UUID schema to include control and time fields.

@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package runtime.api.config.transport.v1;
+
+import "config/transport/grpc/v1/grpc.proto";
+import "config/transport/http/v1/http.proto";
+import "config/transport/websocket/v1/websocket.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/transport/v1;transportv1";
+
+// =================================================================
+//  Server Definitions
+// =================================================================
+
+// Server is a generic container for a single server-side transport configuration.
+// It uses optional fields to represent different protocol types, avoiding the use of `oneof`.
+message Server {
+  // name is the logical name for this server configuration.
+  // It is used to identify this server in the application's configuration.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "The logical name for this server configuration."}
+  ];
+
+  // protocol is the name of the transport protocol to use.
+  // e.g., "grpc", "http", "websocket". This name is used to look up a registered ProtocolFactory.
+  string protocol = 2 [
+    json_name = "protocol",
+    (gnostic.openapi.v3.property) = {description: "The name of the transport protocol to use, e.g., \"grpc\", \"http\", \"websocket\"."}
+  ];
+
+  // The following fields are transport-specific configurations.
+  // Only one of these should be set for a given Server instance.
+
+  // gRPC server configuration.
+  optional runtime.api.config.transport.grpc.v1.Server grpc = 3 [
+    json_name = "grpc",
+    (gnostic.openapi.v3.property) = {description: "gRPC server configuration."}
+  ];
+
+  // HTTP server configuration.
+  optional runtime.api.config.transport.http.v1.Server http = 4 [
+    json_name = "http",
+    (gnostic.openapi.v3.property) = {description: "HTTP server configuration."}
+  ];
+
+  // WebSocket server configuration.
+  optional runtime.api.config.transport.websocket.v1.Server websocket = 5 [
+    json_name = "websocket",
+    (gnostic.openapi.v3.property) = {description: "WebSocket server configuration."}
+  ];
+
+  // customize is used for non-standard or user-defined transport protocols.
+  // It allows for flexible configuration without modifying this core proto file.
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Non-standard or user-defined transport protocols configuration."}
+  ];
+}
+
+// Servers defines a collection of server configurations.
+// This message aggregates all server instances that an application needs to run.
+// It does not include `default` or `active` fields, as all configured servers are typically started.
+message Servers {
+  // servers is a list of all available server configurations.
+  // Each server in this list will typically be started by the application.
+  repeated Server configs = 1 [json_name = "configs"];
+}
+
+// =================================================================
+//  Client Definitions
+// =================================================================
+
+// Client is a generic container for a single client-side transport configuration.
+message Client {
+  // name is the logical name for this client configuration.
+  // It is used to uniquely identify this client dependency in the application.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "The logical name for this server configuration."}
+  ];
+
+  // protocol is the name of the transport protocol to use.
+  // e.g., "grpc", "http", "websocket". This name is used to look up a registered ProtocolFactory.
+  string protocol = 2 [
+    json_name = "protocol",
+    (gnostic.openapi.v3.property) = {description: "The name of the transport protocol to use, e.g., \"grpc\", \"http\", \"websocket\"."}
+  ];
+
+  // The following fields are transport-specific configurations.
+  // Only one of these should be set for a given Client instance.
+
+  // gRPC client configuration.
+  optional runtime.api.config.transport.grpc.v1.Client grpc = 3 [json_name = "grpc"];
+
+  // HTTP client configuration.
+  optional runtime.api.config.transport.http.v1.Client http = 4 [json_name = "http"];
+
+  // customize is used for non-standard or user-defined transport protocols.
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Non-standard or user-defined transport protocols configuration."}
+  ];
+}
+
+// Clients defines a collection of client configurations for services that this service depends on.
+// This structure follows the "Broker Pattern" to avoid using maps, providing a clear
+// and explicit way to manage multiple named client instances.
+message Clients {
+  // default is the name of the default client configuration to use from the `clients` list.
+  // If not set, the application can use a predefined default or infer one.
+  optional string default = 1 [json_name = "default"];
+  // active is the name of the active client configuration to use from the `clients` list.
+  // If set, it overrides the `default` selection.
+  optional string active = 2 [json_name = "active"];
+
+  // clients is a list of all available client configurations.
+  repeated Client configs = 3 [json_name = "configs"];
+}

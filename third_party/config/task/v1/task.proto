@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package runtime.api.config.task.v1;
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/task/v1;taskv1";
+
+// Task defines the configuration for a background task or cron job service.
+message Task {
+  // Add task-specific configurations here.
+  // For example, scheduler settings, concurrency limits, etc.
+}

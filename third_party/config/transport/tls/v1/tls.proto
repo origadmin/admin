@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+package runtime.api.config.transport.tls.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/transport/tls/v1;tlsv1";
+
+// TLS configuration for secure connections
+message TLSConfig {
+  // Unique name for this TLS configuration instance.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "Unique name for this TLS configuration instance."}
+  ];
+  // Whether TLS is enabled
+  bool enabled = 2 [
+    json_name = "enabled",
+    (gnostic.openapi.v3.property) = {description: "Whether TLS is enabled for this configuration."}
+  ];
+
+  // Certificate configuration
+  // File-based certificate configuration
+  optional FileConfig file = 3 [
+    json_name = "file",
+    (gnostic.openapi.v3.property) = {description: "File-based certificate configuration."}
+  ];
+  // Inline PEM certificate data
+  optional PEMConfig pem = 4 [
+    json_name = "pem",
+    (gnostic.openapi.v3.property) = {description: "Inline PEM-encoded certificate data."}
+  ];
+
+  // Minimum TLS version
+  // Allowed values: "1.0", "1.1", "1.2", "1.3"
+  // Default: "1.2"
+  string min_version = 5 [
+    (validate.rules).string = {
+      in: [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
+    json_name = "min_version",
+    (gnostic.openapi.v3.property) = {description: "Minimum TLS version to use. Allowed values: \"1.0\", \"1.1\", \"1.2\", \"1.3\". Default: \"1.2\""}
+  ];
+
+  // List of supported cipher suites
+  // Example: ["TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"]
+  repeated string cipher_suites = 6 [
+    json_name = "cipher_suites",
+    (gnostic.openapi.v3.property) = {description: "List of supported cipher suites. Example: [\"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256\"]"}
+  ];
+
+  // Require client certificate
+  // Default: false
+  bool require_client_cert = 7 [
+    json_name = "require_client_cert",
+    (gnostic.openapi.v3.property) = {description: "Whether to require client certificate for mutual TLS authentication. Default: false"}
+  ];
+
+  // Client CA certificate file path (for client cert validation)
+  string client_ca_file = 8 [
+    json_name = "client_ca_file",
+    (gnostic.openapi.v3.property) = {description: "Path to the client CA certificate file used for client certificate validation."}
+  ];
+
+  // Whether to skip server certificate verification
+  // Default: false
+  bool insecure_skip_verify = 9 [
+    json_name = "insecure_skip_verify",
+    (gnostic.openapi.v3.property) = {description: "If true, skips server certificate verification. Only use in development. Default: false"}
+  ];
+
+  // Server name for SNI (Server Name Indication), used by client
+  // Default: ""
+  string server_name = 10 [
+    json_name = "server_name",
+    (gnostic.openapi.v3.property) = {description: "Server name for SNI (Server Name Indication), used by client to specify the hostname being contacted."}
+  ];
+
+  // Optional custom configuration for TLS settings not explicitly defined.
+  optional google.protobuf.Struct customize = 11 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for TLS settings not explicitly defined."}
+  ];
+}
+
+// File-based certificate configuration
+message FileConfig {
+  // Path to certificate file
+  string cert = 1 [
+    (validate.rules).string.min_len = 1,
+    json_name = "cert",
+    (gnostic.openapi.v3.property) = {
+      description: "Path to the certificate file in PEM format."
+      required: ["cert"]
+    }
+  ];
+
+  // Path to private key file
+  string key = 2 [
+    (validate.rules).string.min_len = 1,
+    json_name = "key",
+    (gnostic.openapi.v3.property) = {
+      description: "Path to the private key file in PEM format."
+      required: ["key"]
+    }
+  ];
+
+  // Path to CA certificate file (optional)
+  string ca = 3 [
+    json_name = "ca",
+    (gnostic.openapi.v3.property) = {description: "Path to the CA certificate file for verifying peer certificates. Optional."}
+  ];
+}
+
+// Inline PEM certificate configuration
+message PEMConfig {
+  // Certificate data in PEM format
+  bytes cert = 1 [
+    (validate.rules).bytes.min_len = 1,
+    json_name = "cert",
+    (gnostic.openapi.v3.property) = {
+      description: "PEM-encoded certificate data."
+      required: ["cert"]
+    }
+  ];
+
+  // Private key data in PEM format
+  bytes key = 2 [
+    (validate.rules).bytes.min_len = 1,
+    json_name = "key",
+    (gnostic.openapi.v3.property) = {
+      description: "PEM-encoded private key data."
+      required: ["key"]
+    }
+  ];
+
+  // CA certificate data in PEM format (optional)
+  bytes ca = 3 [
+    json_name = "ca",
+    (gnostic.openapi.v3.property) = {description: "PEM-encoded CA certificate data for verifying peer certificates. Optional."}
+  ];
+}

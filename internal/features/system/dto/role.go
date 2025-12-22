@@ -9,19 +9,14 @@ import (
 	"context"
 	"time"
 
-	"github.com/origadmin/runtime/interfaces/pagination"
 	"google.golang.org/protobuf/proto"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	typespb "origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/helpers/resp"
-	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/helpers/pagination"
+	"origadmin/application/admin/internal/helpers/resp"
 )
 
 type (
-	RoleEdges   = ent.RoleEdges
-	RoleEdgesPB = typespb.RoleEdges
-
 	ListRolesRequest  = pb.ListRolesRequest
 	ListRolesResponse = pb.ListRolesResponse
 )
@@ -47,17 +42,17 @@ type RoleQueryOption struct {
 	IncludePermissions bool
 }
 
-func (o RoleQueryOption) FromListRequest(in *ListRolesRequest, limiter pagination.PageLimiter) error {
+func (o RoleQueryOption) FromListRequest(in *ListRolesRequest, limiter pagination.PageLimiter) error { // Updated usage
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o RoleQueryOption) FromGetRequest(in *pb.GetRoleRequest, limiter pagination.PageLimiter) error {
+func (o RoleQueryOption) FromGetRequest(in *pb.GetRoleRequest, limiter pagination.PageLimiter) error { // Updated usage
 	return nil
 }
 
-func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pagination.PageLimiter) error {
+func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pagination.PageLimiter) error { // Updated usage
 	return nil
 }
 
@@ -90,14 +85,6 @@ func ToListRolesResponse(result []*RolePB, in *ListRolesRequest, total int32, ar
 		Extra:     resp.Any(args...),
 	}
 	return response, nil
-}
-
-func ConvertRoles(roles []*Role) []*RolePB {
-	var result []*RolePB
-	for _, role := range roles {
-		result = append(result, ConvertRole2PB(role))
-	}
-	return result
 }
 
 type RoleQueryResult struct {

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package runtime.api.config.data.oss.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/oss/v1;ossv1";
+
+// OssLocalConfig defines the configuration for local object storage.
+// This message was extracted from storage.proto and renamed for consistency.
+message OssLocalConfig {
+  string root = 1 [
+    json_name = "root",
+    (gnostic.openapi.v3.property) = {description: "root directory"}
+  ];
+}

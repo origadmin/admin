@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// EnvSource is the environment variable source
+message EnvSource {
+  // Environment variable prefixes to include
+  repeated string prefixes = 1 [json_name = "prefixes"];
+  // Additional environment variables to set
+  map<string, string> args = 2 [json_name = "args"];
+  // Whether to watch for environment variable changes
+  bool watch = 3 [json_name = "watch"];
+  // Whether to treat environment variables as nested structure
+  bool nested = 4 [json_name = "nested"];
+}

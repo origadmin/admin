@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package runtime.api.config.mail.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/mail/v1;mailv1";
+
+// Mail represents the general configuration for a mail service.
+message Mail {
+  // Common mailer settings
+  string nickname = 1 [
+    json_name = "nickname",
+    (gnostic.openapi.v3.property) = {description: "The nickname or sender name for the mailer."}
+  ];
+  string from = 2 [
+    json_name = "from",
+    (gnostic.openapi.v3.property) = {description: "The sender email address."}
+  ];
+  int32 max_retries = 3 [
+    json_name = "max_retries",
+    (gnostic.openapi.v3.property) = {description: "Maximum number of retries for sending emails."}
+  ];
+  int64 retry_interval = 4 [
+    json_name = "retry_interval",
+    (gnostic.openapi.v3.property) = {description: "Interval in milliseconds between retries."}
+  ];
+
+  // Mailer-specific configuration. Only one of these should be set.
+  optional SmtpConfig smtp_config = 10 [
+    json_name = "smtp_config",
+    (gnostic.openapi.v3.property) = {description: "SMTP mailer configuration."}
+  ];
+  // Add other mailer types here as needed, e.g.:
+  // optional SendgridConfig sendgrid_config = 11 [json_name = "sendgrid_config"];
+  // optional MailgunConfig mailgun_config = 12 [json_name = "mailgun_config"];
+}
+
+// SmtpConfig represents the configuration for an SMTP mailer.
+message SmtpConfig {
+  string host = 1 [
+    json_name = "host",
+    (gnostic.openapi.v3.property) = {description: "The SMTP server host."}
+  ];
+  int32 port = 2 [
+    json_name = "port",
+    (gnostic.openapi.v3.property) = {description: "The SMTP server port."}
+  ];
+  string username = 3 [
+    json_name = "username",
+    (gnostic.openapi.v3.property) = {description: "Username for SMTP authentication."}
+  ];
+  string password = 4 [
+    json_name = "password",
+    (gnostic.openapi.v3.property) = {description: "Password for SMTP authentication."}
+  ];
+  string token_secret = 5 [
+    json_name = "token_secret",
+    (gnostic.openapi.v3.property) = {description: "Token secret for some SMTP setups or OAuth."}
+  ];
+  bool ssl = 6 [
+    json_name = "ssl",
+    (gnostic.openapi.v3.property) = {description: "Whether to use SSL/TLS for the SMTP connection."}
+  ];
+}

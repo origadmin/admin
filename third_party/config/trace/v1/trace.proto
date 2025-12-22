@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package runtime.api.config.trace.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/trace/v1;tracev1";
+
+// Trace defines the basic configuration for distributed tracing.
+// This provides a minimal set of options, allowing for future expansion.
+message Trace {
+  // name specifies the tracing system to use (e.g., "jaeger", "zipkin", "otlp").
+  // This can be used to select a registered TracerProvider.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "The tracing system to use, e.g., \"jaeger\", \"zipkin\", \"otlp\"."}
+  ];
+
+  // endpoint is the address of the tracing collector/agent.
+  // e.g., "localhost:6831" for Jaeger agent, or "localhost:4317" for OTLP gRPC.
+  string endpoint = 2 [
+    json_name = "endpoint",
+    (gnostic.openapi.v3.property) = {description: "The address of the tracing collector/agent, e.g., \"localhost:6831\" for Jaeger agent, or \"localhost:4317\" for OTLP gRPC."}
+  ];
+
+  // service_name is the name of the service reporting traces.
+  // If not set, it might default to the application's name.
+  string service_name = 3 [
+    json_name = "service_name",
+    (gnostic.openapi.v3.property) = {description: "The name of the service reporting traces. If not set, it might default to the application's name."}
+  ];
+
+  // timeout for trace operations, e.g., exporting spans.
+  optional google.protobuf.Duration timeout = 4 [
+    json_name = "timeout",
+    (gnostic.openapi.v3.property) = {description: "Timeout for trace operations, e.g., exporting spans."}
+  ];
+
+  // ratio is the sampling probability (e.g., 0.01 for 1%).
+  // A value of 1.0 means always sample, 0.0 means never sample.
+  // If not set, a default sampling strategy might be applied.
+  optional double ratio = 5 [
+    json_name = "ratio",
+    (gnostic.openapi.v3.property) = {description: "The sampling probability (e.g., 0.01 for 1%). A value of 1.0 means always sample, 0.0 means never sample."}
+  ];
+}

@@ -15,10 +15,10 @@ import (
 
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/data"
-	authbiz "origadmin/application/admin/internal/mods/auth/biz"
-	authdal "origadmin/application/admin/internal/mods/auth/dal"
-	authserver "origadmin/application/admin/internal/mods/auth/server"
-	authservice "origadmin/application/admin/internal/mods/auth/service"
+	authbiz "origadmin/application/admin/internal/features/auth/biz"       // Corrected import path
+	authdal "origadmin/application/admin/internal/features/auth/dal"       // Corrected import path
+	authserver "origadmin/application/admin/internal/features/auth/server" // Corrected import path
+	authservice "origadmin/application/admin/internal/features/auth/service" // Corrected import path
 )
 
 // buildInjectors init kratos application.

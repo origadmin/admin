@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package runtime.api.config.data.cache.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/cache/v1;cachev1";
+
+// MemcachedConfig defines the configuration for a Memcached client.
+// This message was extracted from storage.proto and renamed for consistency.
+message MemcachedConfig {
+  string addr = 1 [
+    json_name = "addr",
+    (gnostic.openapi.v3.property) = {description: "address"}
+  ];
+  string username = 2 [
+    json_name = "username",
+    (gnostic.openapi.v3.property) = {description: "username"}
+  ];
+  string password = 3 [
+    json_name = "password",
+    (gnostic.openapi.v3.property) = {description: "cipher"}
+  ];
+  int32 max_idle = 4 [
+    json_name = "max_idle",
+    (gnostic.openapi.v3.property) = {
+      description: "maximum number of idle connections"
+      minimum: 1
+    }
+  ];
+  int64 timeout = 5 [
+    json_name = "timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "overtime"}
+  ];
+}

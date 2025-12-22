@@ -8,18 +8,18 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/origadmin/runtime"
 
+	"github.com/origadmin/runtime"
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
+	"origadmin/application/admin/internal/helpers/db"
 )
 
 type permissionRepo struct {
-	db *data.Data
+	db *ent.Database
 }
 
 func (repo permissionRepo) Get(ctx context.Context, id int64, options ...dto.PermissionQueryOption) (*dto.PermissionPB, error) {
@@ -33,7 +33,7 @@ func (repo permissionRepo) Get(ctx context.Context, id int64, options ...dto.Per
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertPermission2PB(result), nil
+	return dto.ConvertPermissionToPermissionPB(result), nil
 }
 
 func (repo permissionRepo) Create(ctx context.Context, permission *dto.PermissionPB, options ...dto.PermissionQueryOption) (*dto.PermissionPB, error) {
@@ -41,20 +41,20 @@ func (repo permissionRepo) Create(ctx context.Context, permission *dto.Permissio
 	if len(options) > 0 {
 		option = options[0]
 	}
-	obj := dto.ConvertPermissionPB2Object(permission)
+	obj := dto.ConvertPermissionPBToPermission(permission)
 	create := repo.db.Permission(ctx).Create()
 	if len(permission.ResourceIds) > 0 {
 		create.AddResourceIDs(permission.ResourceIds...)
 	}
 	if len(permission.Resources) > 0 {
-		create.AddResources(dto.ConvertResourcesPB2Object(permission.Resources)...)
+		create.AddResources(dto.ConvertResourcesPBToResources(permission.Resources)...)
 	}
 	create.SetPermission(obj, option.Fields...)
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertPermission2PB(saved), nil
+	return dto.ConvertPermissionToPermissionPB(saved), nil
 }
 
 func (repo permissionRepo) Delete(ctx context.Context, id int64) error {
@@ -68,21 +68,21 @@ func (repo permissionRepo) Update(ctx context.Context, permission *dto.Permissio
 	}
 
 	update := repo.db.Permission(ctx).UpdateOneID(permission.Id)
-	obj := dto.ConvertPermissionPB2Object(permission)
+	obj := dto.ConvertPermissionPBToPermission(permission)
 	if len(permission.ResourceIds) > 0 {
 		update.ClearResources()
 		update.AddResourceIDs(permission.ResourceIds...)
 	}
 	if len(permission.Resources) > 0 {
 		update.ClearResources()
-		update.AddResources(dto.ConvertResourcesPB2Object(permission.Resources)...)
+		update.AddResources(dto.ConvertResourcesPBToResources(permission.Resources)...)
 	}
 	update.SetPermission(obj, option.Fields...)
 	saved, err := update.Save(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertPermission2PB(saved), nil
+	return dto.ConvertPermissionToPermissionPB(saved), nil
 }
 
 func (repo permissionRepo) List(ctx context.Context, in *dto.ListPermissionsRequest, options ...dto.PermissionQueryOption) ([]*dto.PermissionPB, int32, error) {
@@ -105,9 +105,9 @@ func (repo permissionRepo) List(ctx context.Context, in *dto.ListPermissionsRequ
 }
 
 // NewPermissionRepo .
-func NewPermissionRepo(r runtime.Runtime, db *data.Data) dto.PermissionRepo {
+func NewPermissionRepo(r *runtime.App, d *data.Data) dto.PermissionRepo {
 	return &permissionRepo{
-		db: db,
+		db: d.DB(),
 	}
 }
 
@@ -127,7 +127,7 @@ func permissionPageQuery(ctx context.Context, query *ent.PermissionQuery, in *pb
 	}
 	query = db.Query(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
-	return dto.ConvertPermissions(result), int32(count), err
+	return dto.ConvertPermissionsToPermissionsPB(result), int32(count), err
 }
 
 func permissionQueryPage(query *ent.PermissionQuery, in *pb.ListPermissionsRequest) *ent.PermissionQuery {

@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package contrib.api.security.authn.jwt.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/authn/jwt/v1;jwtv1";
+
+// Claims defines the standard claims for a JSON Web Token (JWT).
+// This message is specifically used within the security module for JWT-related
+// configuration and data transfer, ensuring clarity and preventing confusion
+// with other potential 'Claims' concepts in the project.
+message Claims {
+  string sub = 1 [
+    json_name = "sub",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The subject of the token."}
+  ]; // Subject
+  string iss = 2 [
+    json_name = "iss",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The issuer of the token."}
+  ]; // Issuer
+  repeated string aud = 3 [
+    json_name = "aud",
+    (validate.rules).repeated.min_items = 1,
+    (gnostic.openapi.v3.property) = {description: "The audience for which the token is intended."}
+  ]; // Audience
+  int64 exp = 4 [
+    json_name = "exp",
+    (gnostic.openapi.v3.property) = {description: "The expiration time of the token."}
+  ]; // Expiration Time
+  int64 nbf = 5 [
+    json_name = "nbf",
+    (gnostic.openapi.v3.property) = {description: "The time before which the token must not be accepted."}
+  ]; // Not Before
+  int64 iat = 6 [
+    json_name = "iat",
+    (gnostic.openapi.v3.property) = {description: "The time at which the token was issued."}
+  ]; // Issued At
+  string jti = 7 [
+    json_name = "jti",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The unique identifier for the token."}
+  ]; // JWT ID
+  map<string, bool> scopes = 8 [
+    json_name = "scopes",
+    (gnostic.openapi.v3.property) = {description: "The scopes associated with the token."}
+  ]; // Scopes
+}

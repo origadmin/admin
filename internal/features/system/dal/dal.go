@@ -3,7 +3,3 @@
  */
 
 package dal
-
-import (
-	"github.com/google/wire"
-)

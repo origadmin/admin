@@ -14,7 +14,7 @@ import (
 	"entgo.io/ent/schema/index"
 	"entgo.io/ent/schema/mixin"
 
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 type IDGenerator interface {

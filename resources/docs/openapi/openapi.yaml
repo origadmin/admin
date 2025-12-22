@@ -11,7 +11,7 @@ info:
         email: waitforadding@gmail.com
     license:
         name: MIT
-        url: https://github.com/origadmin/backend/blob/master/LICENSE
+        url: https://origadmin/application/admin/blob/master/LICENSE
     version: Version from annotation
 servers:
     - url: https://api.foo.com
@@ -2984,7 +2984,7 @@ components:
             type: object
             properties:
                 token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
+                    $ref: '#/components/schemas/contrib.api.security.v1.TokenCredential'
         api.v1.services.auth.LogoutResponse:
             type: object
             properties:
@@ -3041,7 +3041,7 @@ components:
             type: object
             properties:
                 token:
-                    $ref: '#/components/schemas/security.jwt.v1.Token'
+                    $ref: '#/components/schemas/contrib.api.security.v1.TokenCredential'
         api.v1.services.auth.UpdatePersonalPasswordResponse:
             type: object
             properties: {}
@@ -4084,6 +4084,22 @@ components:
                 data:
                     $ref: '#/components/schemas/api.v1.services.types.DataObject'
             description: UpdateUploadResponse is the response for the UploadService.UpdateUpload method.
+        contrib.api.security.v1.TokenCredential:
+            type: object
+            properties:
+                access_token:
+                    type: string
+                    description: The access token used for authentication.
+                refresh_token:
+                    type: string
+                    description: The refresh token used to obtain a new access token.
+                expires_in:
+                    type: string
+                    description: The remaining lifetime of the access token in seconds.
+                token_type:
+                    type: string
+                    description: The type of the token, typically 'Bearer'.
+            description: "TokenCredential holds the credentials for token-based authentication flows\r\n like OAuth2 and JWT.\r\n\r\n IMPORTANT: This message represents the full set of tokens typically returned\r\n from a token issuance endpoint (e.g., /login). It is designed for use in\r\n CredentialResponse."
         google.protobuf.Any:
             type: object
             properties:
@@ -4108,25 +4124,6 @@ components:
                         $ref: '#/components/schemas/google.protobuf.Any'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        security.jwt.v1.Token:
-            type: object
-            properties:
-                client_id:
-                    type: string
-                    description: The client ID associated with the token.
-                user_id:
-                    type: string
-                    description: The ID of the user associated with the token.
-                access_token:
-                    type: string
-                    description: The web access token used for authentication.
-                refresh_token:
-                    type: string
-                    description: The refresh token used to obtain a new access token.
-                expiration_time:
-                    type: string
-                    description: The expiration time of the token.
-            description: PWT is a web token that can be used to authenticate a user with protobuf services.
     securitySchemes:
         Basic:
             type: http

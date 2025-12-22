@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.nsq.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/nsq/v1;nsqv1";
+
+// NsqConfig defines the configuration for an NSQ message queue.
+message NsqConfig {
+  // List of NSQD addresses (e.g., "localhost:4150").
+  repeated string nsqd_addresses = 1 [(gnostic.openapi.v3.property) = {description: "List of NSQD addresses (e.g., \"localhost:4150\")."}];
+  // List of NSQLookupD addresses (e.g., "localhost:4161").
+  repeated string nsqlookupd_addresses = 2 [(gnostic.openapi.v3.property) = {description: "List of NSQLookupD addresses (e.g., \"localhost:4161\")."}];
+  // Default topic for publishing or subscribing.
+  string topic = 3 [(gnostic.openapi.v3.property) = {description: "Default topic for publishing or subscribing."}];
+  // Channel name for consumers.
+  optional string channel = 4 [(gnostic.openapi.v3.property) = {description: "Channel name for consumers."}];
+  // Max in flight messages for consumers.
+  optional int32 max_in_flight = 5 [(gnostic.openapi.v3.property) = {description: "Max in flight messages for consumers."}];
+  // Lookupd poll interval in seconds.
+  optional int32 lookupd_poll_interval_seconds = 6 [(gnostic.openapi.v3.property) = {description: "Lookupd poll interval in seconds."}];
+  // Whether to enable TLS.
+  optional bool tls_enabled = 7 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 8 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 9 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 10 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 11 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+}

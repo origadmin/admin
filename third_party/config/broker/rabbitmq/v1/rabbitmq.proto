@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.rabbitmq.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/rabbitmq/v1;rabbitmqv1";
+
+// RabbitMQConfig defines the configuration for a RabbitMQ message queue.
+message RabbitMQConfig {
+  // RabbitMQ connection URI (e.g., "amqp://guest:guest@localhost:5672/").
+  string uri = 1 [(gnostic.openapi.v3.property) = {description: "RabbitMQ connection URI (e.g., \"amqp://guest:guest@localhost:5672/\")."}];
+  // Default exchange name.
+  optional string exchange = 2 [(gnostic.openapi.v3.property) = {description: "Default exchange name."}];
+  // Default queue name.
+  optional string queue = 3 [(gnostic.openapi.v3.property) = {description: "Default queue name."}];
+  // Virtual host to connect to.
+  optional string vhost = 4 [(gnostic.openapi.v3.property) = {description: "Virtual host to connect to."}];
+  // Username for authentication.
+  optional string username = 5 [(gnostic.openapi.v3.property) = {description: "Username for authentication."}];
+  // Password for authentication.
+  optional string password = 6 [(gnostic.openapi.v3.property) = {description: "Password for authentication."}];
+  // Whether to enable TLS.
+  optional bool tls_enabled = 7 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 8 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 9 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 10 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 11 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+  // Consumer tag for consumers.
+  optional string consumer_tag = 12 [(gnostic.openapi.v3.property) = {description: "Consumer tag for consumers."}];
+  // Qos prefetch count.
+  optional int32 qos_prefetch_count = 13 [(gnostic.openapi.v3.property) = {description: "Qos prefetch count."}];
+  // Qos prefetch size.
+  optional int32 qos_prefetch_size = 14 [(gnostic.openapi.v3.property) = {description: "Qos prefetch size."}];
+  // Qos global.
+  optional bool qos_global = 15 [(gnostic.openapi.v3.property) = {description: "Qos global."}];
+  // Whether to auto-ack messages.
+  optional bool auto_ack = 16 [(gnostic.openapi.v3.property) = {description: "Whether to auto-ack messages."}];
+  // Whether to publish messages as persistent.
+  optional bool persistent_messages = 17 [(gnostic.openapi.v3.property) = {description: "Whether to publish messages as persistent."}];
+}

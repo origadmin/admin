@@ -8,10 +8,9 @@ package dto
 import (
 	"context"
 
-	"github.com/origadmin/runtime/interfaces/pagination"
+	"origadmin/application/admin/internal/helpers/pagination" // Corrected import path
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/resp"
 )
 
 type (
@@ -49,35 +48,16 @@ type PermissionQueryOption struct {
 	IncludeRoles     bool
 }
 
-func (o PermissionQueryOption) FromListRequest(in *ListPermissionsRequest, limiter pagination.PageLimiter) error {
+func (o PermissionQueryOption) FromListRequest(in *ListPermissionsRequest, limiter pagination.PageLimiter) error { // Updated usage
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o PermissionQueryOption) FromGetRequest(in *pb.GetPermissionRequest, limiter pagination.PageLimiter) error {
+func (o PermissionQueryOption) FromGetRequest(in *pb.GetPermissionRequest, limiter pagination.PageLimiter) error { // Updated usage
 	return nil
 }
 
-func (o PermissionQueryOption) FromCreateRequest(in *pb.CreatePermissionRequest, limiter pagination.PageLimiter) error {
+func (o PermissionQueryOption) FromCreateRequest(in *pb.CreatePermissionRequest, limiter pagination.PageLimiter) error { // Updated usage
 	return nil
-}
-
-func ToListPermissionsResponse(result []*PermissionPB, in *ListPermissionsRequest, total int32, args ...any) (*ListPermissionsResponse, error) {
-	response := &ListPermissionsResponse{
-		TotalSize:   total,
-		Current:     in.Current,
-		PageSize:    in.PageSize,
-		Permissions: result,
-		Extra:       resp.Any(args...),
-	}
-	return response, nil
-}
-
-func ConvertPermissions(permissions []*Permission) []*PermissionPB {
-	var result []*PermissionPB
-	for _, permission := range permissions {
-		result = append(result, ConvertPermission2PB(permission))
-	}
-	return result
 }

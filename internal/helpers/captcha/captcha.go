@@ -9,13 +9,14 @@ import (
 	"net/http"
 
 	"github.com/mojocn/base64Captcha"
-	"github.com/origadmin/toolkits/errors/httperr"
+
+	"github.com/origadmin/runtime/errors"
 
 	typespb "origadmin/application/admin/api/v1/services/types"
 )
 
 var (
-	ErrNotFound = httperr.New("http.response.status."+typespb.AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND.String(), http.StatusBadRequest, "captcha not found")
+	ErrNotFound = errors.New(400, typespb.AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND.String(), http.StatusBadRequest, "captcha not found")
 )
 
 const (

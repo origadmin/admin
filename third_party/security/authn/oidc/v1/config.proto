@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package contrib.api.security.authn.oidc.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/authn/oidc/v1;oidcv1";
+
+// Config defines the settings for an OpenID Connect (OIDC) authenticator.
+message Config {
+  // The URL of the OIDC provider (issuer).
+  // The provider's discovery document (.well-known/openid-configuration) will be fetched from this URL.
+  string issuer = 1 [
+    json_name = "issuer",
+    (validate.rules).string.uri = true,
+    (gnostic.openapi.v3.property) = {description: "The URL of the OIDC provider (issuer)."}
+  ];
+
+  // The client ID registered with the OIDC provider.
+  string client_id = 2 [
+    json_name = "client_id",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The client ID registered with the OIDC provider."}
+  ];
+
+  // Optional: Defines how to extract the ID token from the request.
+  // Defaults to "header:Authorization" with "Bearer " prefix.
+  // Example: "cookie:id_token"
+  optional string token_source = 3 [
+    json_name = "token_source",
+    (gnostic.openapi.v3.property) = {description: "Defines how to extract the ID token from the request. Defaults to 'header:Authorization'."}
+  ];
+
+  // Optional: A list of required claims that must be present in the ID token.
+  repeated string required_claims = 4 [
+    json_name = "required_claims",
+    (gnostic.openapi.v3.property) = {description: "A list of required claims that must be present in the ID token."}
+  ];
+}

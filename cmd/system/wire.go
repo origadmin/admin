@@ -11,20 +11,21 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
+
 	"github.com/origadmin/runtime"
 
-	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/data"
-	systembiz "origadmin/application/admin/internal/mods/system/biz"
-	systemdal "origadmin/application/admin/internal/mods/system/dal"
-	systemserver "origadmin/application/admin/internal/mods/system/server"
-	systemservice "origadmin/application/admin/internal/mods/system/service"
+	"origadmin/application/admin/internal/conf"
+	"origadmin/application/admin/internal/data" // Added missing import for data package
+	systembiz "origadmin/application/admin/internal/features/system/biz"
+	systemdal "origadmin/application/admin/internal/features/system/dal"
+	systemserver "origadmin/application/admin/internal/features/system/server"
+	systemservice "origadmin/application/admin/internal/features/system/service"
 )
 
-// buildInjectors init kratos application.
-func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
+// wireApp init kratos application.
+func wireApp(r *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		//loader.ProviderSet,
+		//loader.ProviderSet, // Uncomment if loader.ProviderSet is needed
 		data.ProviderSet,
 		systemdal.ProviderSet,
 		systembiz.ProviderSet,

@@ -34,7 +34,7 @@ ifeq ($(GOHOSTOS), windows)
 
 	BUILT_DATE = $(shell powershell -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:ssK'")
 	TREE_STATE = $(shell powershell -Command "if ((git status) -match 'clean') { 'clean' } else { 'dirty' }")
-	TAG = $(shell powershell -Command "if ((git tag --points-at '${gitHash}') -match '^v') { '$(HEAD_TAG)' } else { '${gitHash}' }")
+	TAG = $(shell powershell -Command "if ((git tag --points-at '${gitHash}') -match '^v') { '$(HEAD_HEAD_TAG)' } else { '${gitHash}' }")
 	# buildDate = $(shell TZ=Asia/Shanghai date +%F\ %T%z | tr 'T' ' ')
 	# same as gitHash previously
 	COMMIT = $(shell git log --pretty=format:'%h' -n 1)
@@ -84,8 +84,8 @@ init:
 	go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
 	go install github.com/google/wire/cmd/wire@latest
 	go install github.com/envoyproxy/protoc-gen-validate@latest
-
 	go install github.com/bufbuild/buf/cmd/buf@latest
+	go install entgo.io/ent/cmd/ent@latest
 
 .PHONY: deps
 # update third_party proto
@@ -98,33 +98,6 @@ deps:
 	buf export buf.build/kratos/apis -o $(THIRD_PARTY_PATH)
 	buf export buf.build/origadmin/runtime -o $(THIRD_PARTY_PATH)
 	buf export buf.build/origadmin/contrib -o $(THIRD_PARTY_PATH)
-
-.PHONY: config
-# generate internal proto or use ./internal/generate.go
-config: 
-	protoc ${PROTO_PATH} \
-	--go_out=paths=source_relative:./internal \
-	--validate_out=lang=go:. \
-	$(INTERNAL_PROTO_FILES)
-
-.PHONY: api
-# generate api proto or use ./api/generate.go
-api:
-#	protoc --proto_path=./api \
-#	       --proto_path=$(THIRD_PARTY_PATH) \
-# 	       --go_out=paths=source_relative:./api \
-# 	       --go-http_out=paths=source_relative:./api \
-# 	       --go-grpc_out=paths=source_relative:./api \
-#	       --openapi_out=fq_schema_naming=true,default_response=false:. \
-#	       $(API_PROTO_FILES)
-	protoc ${PROTO_PATH} \
-		--go_out=. \
-		--go-http_out=. \
-		--go-grpc_out=. \
-		--go-gins_out=. \
-		--go-errors_out=. \
-		--validate_out=lang=go:. \
-		$(API_PROTO_FILES)
 
 .PHONY: openapi
 # generate the openapi spec file
@@ -159,7 +132,7 @@ release:
 #.PHONY: server
 ## server used generate a service at first
 #server:
-#	kratos proto server -t ./internal/mods/helloworld/service ./api/v1/protos/helloworld/greeter.proto
+#	kratos proto server -t ./internal/features/helloworld/service ./api/v1/protos/helloworld/greeter.proto
 #
 #.PHONY: client
 ## client used when proto file is in the same directory
@@ -172,8 +145,7 @@ release:
 #buf dep update
 #buf build
 #buf generate # generate proto files
-#go generate ./internal/generate.go  #generate configs
-#go generate ./internal/mods/system/dal/entity/generate.go #generate dal entity
+#go generate ./internal/features/system/dal/entity/generate.go #generate dal entity
 #go generate ./cmd/system #generate system module
 #go generate ./cmd/internal/start #generate main module start
 gen:
@@ -183,20 +155,20 @@ gen:
 	buf build
 	buf generate
 
-	go generate ./internal/generate.go
+	@echo "Generating Protobuf code for helpers/resp/data/v1..."
+	@protoc -I. -I./third_party --go_out=paths=source_relative:. ./helpers/resp/data/v1/*.proto
+
+	@echo "Generating Protobuf code for conf/pb..."
+	@protoc -I. -I./third_party --go_out=paths=source_relative:./internal --validate_out=paths=source_relative,lang=go:./internal ./conf/pb/*.proto
 
 	go generate ./internal/data/entity/ent/generate.go
 	go generate ./cmd/system
 	go generate ./cmd/auth
 
-	go generate ./cmd/internal/start
-
 .PHONY: all
 # generate all
 all:
-	$(MAKE) api;
-	$(MAKE) config;
-	$(MAKE) generate;
+	$(MAKE) gen;
 	$(MAKE) openapi;
 
 .PHONY: http

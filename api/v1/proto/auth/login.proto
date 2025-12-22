@@ -4,7 +4,7 @@ package api.v1.services.auth;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
-import "security/jwt/v1/token.proto";
+import "security/v1/credential.proto";
 import "validate/validate.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
@@ -15,46 +15,46 @@ option objc_class_prefix = "APIServiceAuthLogin";
 
 // The login service definition.
 service LoginService {
-  rpc Captcha (CaptchaRequest) returns (CaptchaResponse) {
+  rpc Captcha(CaptchaRequest) returns (CaptchaResponse) {
     option (google.api.http) = {
       get: "/captcha"
       response_body: "*"
     };
   }
-  rpc CaptchaId (CaptchaIdRequest) returns (CaptchaIdResponse) {
+  rpc CaptchaId(CaptchaIdRequest) returns (CaptchaIdResponse) {
     option (google.api.http) = {get: "/captcha/id"};
   }
-  rpc CaptchaImage (CaptchaImageRequest) returns (CaptchaImageResponse) {
+  rpc CaptchaImage(CaptchaImageRequest) returns (CaptchaImageResponse) {
     option (google.api.http) = {
       get: "/captcha/image"
       response_body: "*"
     };
   }
-  rpc CaptchaAudio (CaptchaAudioRequest) returns (CaptchaAudioResponse) {
+  rpc CaptchaAudio(CaptchaAudioRequest) returns (CaptchaAudioResponse) {
     option (google.api.http) = {
       get: "/captcha/audio"
       response_body: "*"
     };
   }
-  rpc Login (LoginRequest) returns (LoginResponse) {
+  rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/login"
       body: "data"
     };
   }
-  rpc Logout (LogoutRequest) returns (LogoutResponse) {
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
       post: "/logout"
       body: "data"
     };
   }
-  rpc Register (RegisterRequest) returns (RegisterResponse) {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/register"
       body: "data"
     };
   }
-  rpc TokenRefresh (TokenRefreshRequest) returns (TokenRefreshResponse) {
+  rpc TokenRefresh(TokenRefreshRequest) returns (TokenRefreshResponse) {
     option (google.api.http) = {
       post: "/token/refresh"
       body: "data"
@@ -73,7 +73,7 @@ message TokenRefreshRequest {
 }
 
 message TokenRefreshResponse {
-  security.jwt.v1.Token token = 1;
+  contrib.api.security.v1.TokenCredential token = 1;
 }
 
 message LoginRequest {
@@ -99,7 +99,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  security.jwt.v1.Token token = 1;
+  contrib.api.security.v1.TokenCredential token = 1;
 }
 
 message CurrentUserRequestQuery {
@@ -155,7 +155,6 @@ message CaptchaAudioResponse {
   map<string, string> headers = 1 [json_name = "headers"];
   bytes audio = 2 [json_name = "audio"];
 }
-
 
 message CaptchaRequest {
   // The id of the captcha

@@ -12,7 +12,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	"origadmin/application/admin/helpers/ent/mixin"
+	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/hook"
 	"origadmin/application/admin/internal/data/entity/ent/intercept"

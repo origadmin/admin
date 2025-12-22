@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package runtime.api.config.data.v1;
+
+import "config/data/cache/v1/cache.proto";
+import "config/data/database/v1/database.proto";
+import "config/data/database/v1/document.proto";
+import "config/data/oss/v1/objectstore.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/v1;datav1";
+
+// Data is the top-level configuration for all data-related components.
+message Data {
+  // FileStore configurations.
+  optional ObjectStores object_stores = 1 [
+    json_name = "object_stores",
+    (gnostic.openapi.v3.property) = {description: "ObjectStore configurations"}
+  ];
+
+  // Cache configurations.
+  optional Caches caches = 2 [
+    json_name = "caches",
+    (gnostic.openapi.v3.property) = {description: "Cache configurations"}
+  ];
+
+  // Relational Database configurations (SQL).
+  optional Databases databases = 3 [
+    json_name = "databases",
+    (gnostic.openapi.v3.property) = {description: "Relational Database configurations (SQL)"}
+  ];
+
+  // Document Database configurations (e.g., MongoDB).
+  optional Documents documents = 4 [
+    json_name = "documents",
+    (gnostic.openapi.v3.property) = {description: "Document Database configurations (e.g., MongoDB)"}
+  ];
+
+  // Optional custom configuration for Data components not explicitly defined.
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for Data components not explicitly defined."}
+  ];
+}
+
+// FileStores is a collection of named FileStore configurations.
+message ObjectStores {
+  // Default filestore name.
+  optional string default = 1 [
+    json_name = "default",
+    (gnostic.openapi.v3.property) = {description: "Default filestore name"}
+  ];
+  // Active filestore name, overrides default.
+  optional string active = 2 [
+    json_name = "active",
+    (gnostic.openapi.v3.property) = {description: "Active filestore name, overrides default"}
+  ];
+  // List of named FileStore configurations.
+  repeated config.data.oss.v1.ObjectStoreConfig configs = 3 [
+    json_name = "configs",
+    (gnostic.openapi.v3.property) = {description: "List of named FileStore configurations"}
+  ];
+}
+
+// Caches is a collection of named Cache configurations.
+message Caches {
+  // Default cache name.
+  optional string default = 1 [
+    json_name = "default",
+    (gnostic.openapi.v3.property) = {description: "Default cache name"}
+  ];
+  // Active cache name, overrides default.
+  optional string active = 2 [
+    json_name = "active",
+    (gnostic.openapi.v3.property) = {description: "Active cache name, overrides default"}
+  ];
+  // List of named Cache configurations.
+  repeated config.data.cache.v1.CacheConfig configs = 3 [
+    json_name = "configs",
+    (gnostic.openapi.v3.property) = {description: "List of named Cache configurations"}
+  ];
+}
+
+// Databases is a collection of named Relational Database configurations.
+message Databases {
+  // Default database name.
+  optional string default = 1 [
+    json_name = "default",
+    (gnostic.openapi.v3.property) = {description: "Default database name"}
+  ];
+  // Active database name, overrides default.
+  optional string active = 2 [
+    json_name = "active",
+    (gnostic.openapi.v3.property) = {description: "Active database name, overrides default"}
+  ];
+  // List of named Relational Database configurations.
+  repeated config.data.database.v1.DatabaseConfig configs = 3 [
+    json_name = "configs",
+    (gnostic.openapi.v3.property) = {description: "List of named Relational Database configurations"}
+  ];
+}
+
+// Documents is a collection of named Document Database configurations.
+message Documents {
+  // Default document database name.
+  optional string default = 1 [
+    json_name = "default",
+    (gnostic.openapi.v3.property) = {description: "Default document database name"}
+  ];
+  // Active document database name, overrides default.
+  optional string active = 2 [
+    json_name = "active",
+    (gnostic.openapi.v3.property) = {description: "Active document database name, overrides default"}
+  ];
+  // List of named Document Database configurations.
+  repeated config.data.database.v1.DocumentConfig configs = 3 [
+    json_name = "configs",
+    (gnostic.openapi.v3.property) = {description: "List of named Document Database configurations"}
+  ];
+}

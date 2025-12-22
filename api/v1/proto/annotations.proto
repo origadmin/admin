@@ -17,7 +17,7 @@ option (gnostic.openapi.v3.document) = {
     }
     license: {
       name: "MIT"
-      url: "https://github.com/origadmin/backend/blob/master/LICENSE"
+      url: "https://origadmin/application/admin/blob/master/LICENSE"
     }
   }
   servers: [

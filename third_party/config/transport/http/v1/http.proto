@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package runtime.api.config.transport.http.v1;
+
+import "config/middleware/cors/v1/cors.proto";
+import "config/selector/v1/selector.proto";
+import "config/transport/tls/v1/tls.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1;httpv1";
+
+// Server defines the core configuration for a Kratos HTTP server.
+message Server {
+  // addr is the address for the server to listen on.
+  // e.g., "0.0.0.0:8000"
+  string addr = 1 [
+    json_name = "addr",
+    (gnostic.openapi.v3.property) = {description: "The address for the server to listen on, e.g., \"0.0.0.0:8000\"."}
+  ];
+
+  // timeout is the request handling timeout.
+  google.protobuf.Duration timeout = 2 [
+    json_name = "timeout",
+    (gnostic.openapi.v3.property) = {description: "The request handling timeout."}
+  ];
+
+  // middlewares is a list of middleware names to be applied to the server.
+  // The framework will look up these names in a middleware provider.
+  repeated string middlewares = 3 [
+    json_name = "middlewares",
+    (gnostic.openapi.v3.property) = {description: "A list of middleware names to be applied to the server."}
+  ];
+
+  // tls_config defines the TLS settings for the HTTP server.
+  optional runtime.api.config.transport.tls.v1.TLSConfig tls_config = 4 [
+    json_name = "tls_config",
+    (gnostic.openapi.v3.property) = {description: "The TLS settings for the HTTP server."}
+  ];
+
+  // network specifies the network type, e.g., "tcp", "tcp4", "tcp6".
+  string network = 5 [
+    json_name = "network",
+    (gnostic.openapi.v3.property) = {description: "The network type, e.g., \"tcp\", \"tcp4\", \"tcp6\"."}
+  ];
+
+  // cors configuration for the HTTP server
+  optional runtime.api.config.middleware.cors.v1.Cors cors = 6;
+
+  // enable_pprof indicates whether to enable pprof debugging endpoints.
+  bool enable_pprof = 7;
+}
+
+// Client defines the core configuration for creating a Kratos HTTP client.
+message Client {
+  // endpoint is the target to connect to.
+  // It can be a direct address or a discovery service URI.
+  // e.g., "http://127.0.0.1:8000" or "discovery:///your-service-name"
+  string endpoint = 1;
+
+  // timeout is the request timeout for a single HTTP call.
+  google.protobuf.Duration timeout = 2 [
+    json_name = "timeout",
+    (gnostic.openapi.v3.property) = {description: "The request handling timeout."}
+  ];
+
+  // middlewares is a list of middleware names to be applied to the client.
+  repeated string middlewares = 3 [
+    json_name = "middlewares",
+    (gnostic.openapi.v3.property) = {description: "A list of middleware names to be applied to the server."}
+  ];
+
+  // selector defines the node selection strategy for the client.
+  config.selector.v1.SelectorConfig selector = 4; // Updated type reference
+
+  // discovery_name is the name of the discovery client to use for service discovery.
+  // This is used when the endpoint is a discovery service URI.
+  string discovery_name = 5;
+
+  // tls_config defines the TLS settings for the HTTP client.
+  optional runtime.api.config.transport.tls.v1.TLSConfig tls_config = 6;
+
+  // dial_timeout is the timeout for establishing a connection.
+  optional google.protobuf.Duration dial_timeout = 7;
+}

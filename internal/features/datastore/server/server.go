@@ -19,7 +19,7 @@ import (
 	"github.com/origadmin/toolkits/errors"
 
 	"origadmin/application/admin/internal/configs"
-	systemservice "origadmin/application/admin/internal/mods/system/service"
+	systemservice "origadmin/application/admin/internal/features/system/service" // Corrected import path
 )
 
 const (

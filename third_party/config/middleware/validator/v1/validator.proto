@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.validator.v1;
+
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/validator/v1;validatorv1";
+
+message Validator {
+  int32 version = 1 [
+    json_name = "version",
+    (validate.rules).int32 = {
+      gt: 0
+      lt: 3
+    }
+  ];
+  bool fail_fast = 2 [json_name = "fail_fast"];
+}

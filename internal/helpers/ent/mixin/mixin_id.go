@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 
-	"origadmin/application/admin/helpers/i18n"
-	"origadmin/application/admin/helpers/id"
+	"origadmin/application/admin/internal/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/id"
 )
 
 type ID struct {

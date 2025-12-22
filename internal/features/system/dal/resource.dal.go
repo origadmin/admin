@@ -9,17 +9,17 @@ import (
 	"strconv"
 
 	"github.com/origadmin/runtime"
-
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/db"
 )
 
 type resourceRepo struct {
-	db *data.Data
+	db        *ent.Database
+	Delimiter string
 }
 
 func (repo resourceRepo) Get(ctx context.Context, id int64, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
@@ -29,14 +29,14 @@ func (repo resourceRepo) Get(ctx context.Context, id int64, options ...dto.Resou
 	}
 	query := repo.db.Resource(ctx).Query().Where(resource.ID(id))
 	query = resourceQueryOptions(query, option)
-	if option.IncludePermissions {
-		query.WithPermissions()
-	}
+	//if option.IncludePermissions {
+	//	query.WithPermissions()
+	//}
 	result, err := query.First(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertResource2PB(result), nil
+	return dto.ConvertResourceToResourcePB(result), nil
 }
 
 func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, options ...dto.ResourceQueryOption) (*dto.ResourcePB, error) {
@@ -44,13 +44,13 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 	if len(options) > 0 {
 		option = options[0]
 	}
-	obj := dto.ConvertResourcePB2Object(resource)
+	obj := dto.ConvertResourcePBToResource(resource)
 	if obj.ParentID > 0 {
 		parent, err := repo.db.Resource(ctx).Get(ctx, obj.ParentID)
 		if err != nil {
 			return nil, err
 		}
-		obj.TreePath = parent.TreePath + strconv.Itoa(int(parent.ID)) + repo.db.Delimiter
+		obj.TreePath = parent.TreePath + strconv.Itoa(int(parent.ID)) + repo.Delimiter
 	}
 
 	create := repo.db.Resource(ctx).Create()
@@ -59,13 +59,13 @@ func (repo resourceRepo) Create(ctx context.Context, resource *dto.ResourcePB, o
 		create.AddPermissionIDs(resource.PermissionIds...)
 	}
 	if len(resource.Permissions) > 0 {
-		create.AddPermissions(dto.ConvertPermissionsPB2Object(resource.Permissions)...)
+		create.AddPermissions(dto.ConvertPermissionsPBToPermissions(resource.Permissions)...)
 	}
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertResource2PB(saved), nil
+	return dto.ConvertResourceToResourcePB(saved), nil
 }
 
 func (repo resourceRepo) Delete(ctx context.Context, id int64) error {
@@ -79,18 +79,18 @@ func (repo resourceRepo) Update(ctx context.Context, resource *dto.ResourcePB, o
 	}
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.Resource(ctx).UpdateOneID(resource.Id)
-		update.SetResourceWithZero(dto.ConvertResourcePB2Object(resource), option.Fields...)
+		update.SetResourceWithZero(dto.ConvertResourcePBToResource(resource), option.Fields...)
 		if len(resource.PermissionIds) > 0 {
 			update.AddPermissionIDs(resource.PermissionIds...)
 		}
 		if len(resource.Permissions) > 0 {
-			update.AddPermissions(dto.ConvertPermissionsPB2Object(resource.Permissions)...)
+			update.AddPermissions(dto.ConvertPermissionsPBToPermissions(resource.Permissions)...)
 		}
 		saved, err := update.Save(ctx)
 		if err != nil {
 			return err
 		}
-		resource = dto.ConvertResource2PB(saved)
+		resource = dto.ConvertResourceToResourcePB(saved)
 		return nil
 	})
 	if err != nil {
@@ -110,9 +110,9 @@ func (repo resourceRepo) List(ctx context.Context, in *dto.ListResourcesRequest,
 }
 
 // NewResourceRepo .
-func NewResourceRepo(r runtime.Runtime, db *data.Data) dto.ResourceRepo {
+func NewResourceRepo(r *runtime.App, d *data.Data) dto.ResourceRepo {
 	return &resourceRepo{
-		db: db,
+		db: d.DB(),
 	}
 }
 
@@ -131,7 +131,7 @@ func resourcePageQuery(ctx context.Context, query *ent.ResourceQuery, in *pb.Lis
 	}
 	query = db.Query(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
-	return dto.ConvertResources(result), int32(count), err
+	return dto.ConvertResourcesToResourcesPB(result), int32(count), err
 }
 
 func resourceOrderBy(orders []string) []resource.OrderOption {

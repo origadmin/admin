@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package runtime.api.config.app.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/app/v1;appv1";
+
+// App defines the application's identity and metadata.
+// StartTime is intentionally excluded as it's a runtime generated value.
+message App {
+  // Unique identifier of the application
+  string id = 1 [
+    json_name = "id",
+    (gnostic.openapi.v3.property) = {description: "Unique identifier of the application"}
+  ];
+  // Application name
+  string name = 2 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "Application name"}
+  ];
+  // Application version
+  string version = 3 [
+    json_name = "version",
+    (gnostic.openapi.v3.property) = {description: "Application version"}
+  ];
+  // Application running environment (e.g.: dev, test, prod)
+  string env = 4 [
+    json_name = "env",
+    (gnostic.openapi.v3.property) = {description: "Application running environment (e.g.: dev, test, prod)"}
+  ];
+  // Application metadata stored as key-value pairs
+  map<string, string> metadata = 5 [
+    json_name = "metadata",
+    (gnostic.openapi.v3.property) = {description: "Application metadata stored as key-value pairs"}
+  ];
+}

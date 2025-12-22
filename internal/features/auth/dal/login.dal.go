@@ -10,24 +10,21 @@ import (
 	"sync"
 
 	kerr "github.com/go-kratos/kratos/v2/errors"
-	jwtv1 "github.com/origadmin/runtime/api/gen/go/security/jwt/v1"
-	securityv1 "github.com/origadmin/runtime/api/gen/go/security/v1"
+
+	jwtv1 "github.com/origadmin/contrib/api/gen/go/security/authn/jwt/v1"
+	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
+	"github.com/origadmin/contrib/security"
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/runtime/interfaces/security"
+	"github.com/origadmin/runtime/errors" // Changed from httperr
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
-	"github.com/origadmin/toolkits/errors/httperr"
-
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-
-	"origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/helpers/captcha"
-	"origadmin/application/admin/helpers/resp"
-	"origadmin/application/admin/internal/configs"
-	"origadmin/application/admin/internal/mods/auth/dto"
-	authdto "origadmin/application/admin/internal/mods/auth/dto"
+	"origadmin/application/admin/internal/features/auth/dto"         // Corrected import path
+	authdto "origadmin/application/admin/internal/features/auth/dto" // Corrected import path
+	"origadmin/application/admin/internal/helpers/captcha"
+	"origadmin/application/admin/internal/helpers/resp"
 )
 
 type loginRepo struct {
@@ -113,7 +110,7 @@ func (repo loginRepo) Login(ctx context.Context, in *dto.LoginRequest) (*dto.Log
 		return nil, dto.ErrInvalidUsername
 	case userData.Status != authdto.UserStatusActive:
 		log.Warnf("User %s is not activated", data.Username)
-		return nil, httperr.New("unknown", 400, "User status is not activated, please contact the administrator")
+		return nil, errors.New(400, "unknown", "User status is not activated, please contact the administrator") // Corrected errors.New usage
 	default:
 		log.Debugf("User found with ID %d and status %d", userData.ID, userData.Status)
 	}

@@ -15,7 +15,7 @@ import (
 
 	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/contrib/security/authz/casbin"
-	"origadmin/application/admin/internal/mods/auth/biz"
+	"origadmin/application/admin/internal/features/auth/biz" // Corrected import path
 )
 
 // CasbinSourceBiz is a Casbin rule source service.

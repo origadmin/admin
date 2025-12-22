@@ -12,8 +12,8 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/index"
 
-	"origadmin/application/admin/helpers/ent/mixin"
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/ent/mixin"
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 // UserDepartment holds the schema definition for the UserDepartment domain.

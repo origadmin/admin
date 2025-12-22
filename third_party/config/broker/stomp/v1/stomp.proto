@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.stomp.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/stomp/v1;stompv1";
+
+// StompConfig defines the configuration for a STOMP message queue.
+message StompConfig {
+  // STOMP broker address (e.g., "localhost:61613").
+  string address = 1 [(gnostic.openapi.v3.property) = {description: "STOMP broker address (e.g., \"localhost:61613\")."}];
+  // Username for authentication.
+  optional string username = 2 [(gnostic.openapi.v3.property) = {description: "Username for authentication."}];
+  // Password for authentication.
+  optional string password = 3 [(gnostic.openapi.v3.property) = {description: "Password for authentication."}];
+  // Default destination for sending or subscribing.
+  string destination = 4 [(gnostic.openapi.v3.property) = {description: "Default destination for sending or subscribing."}];
+  // Whether to enable TLS.
+  optional bool tls_enabled = 5 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 6 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 7 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 8 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 9 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+  // Heartbeat interval in milliseconds.
+  optional int32 heartbeat_interval_ms = 10 [(gnostic.openapi.v3.property) = {description: "Heartbeat interval in milliseconds."}];
+}

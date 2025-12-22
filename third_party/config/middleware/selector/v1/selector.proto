@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.selector.v1;
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/selector/v1;selectorv1";
+
+// Selector
+message Selector {
+  repeated string includes = 1 [json_name = "includes"];
+  repeated string excludes = 2 [json_name = "excludes"];
+  repeated string paths = 3 [json_name = "paths"];
+  repeated string prefixes = 4 [json_name = "prefixes"];
+  string regex = 5 [json_name = "regex"];
+}

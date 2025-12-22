@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package runtime.api.config.data.database.v1;
+
+import "config/data/database/v1/migration.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/database/v1;databasev1";
+
+// DatabaseConfig defines the configuration for a generic database connection.
+// This message was extracted from mysql.proto and renamed for consistency.
+message DatabaseConfig {
+  // Unique name for this database configuration instance.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "Unique name for this database configuration instance."}
+  ];
+  // Debugging
+  bool debug = 2 [
+    json_name = "debug",
+    (gnostic.openapi.v3.property) = {description: "whether to enable debug mode "}
+  ];
+  // The 'dialect' field determines the database type.
+  // For built-in dialects, specify "mysql", "postgresql", "sqlite", etc.
+  // For custom dialects, specify the registered name of the custom dialect.
+  // When a custom dialect is used, its configuration should be placed in the 'customize' field.
+  string dialect = 3 [
+    json_name = "dialect",
+    (gnostic.openapi.v3.property) = {description: "Database dialect name. Built-in: 'mysql', 'postgresql', 'sqlite', etc. Custom dialects use their registered name."}
+  ];
+  // Data source (DSN string)
+  string source = 4 [
+    json_name = "source",
+    (gnostic.openapi.v3.property) = {description: "data source dsn string"}
+  ];
+  // Data migration
+  Migration migration = 10 [
+    json_name = "migration",
+    (gnostic.openapi.v3.property) = {description: "data migration"}
+  ];
+  // Link tracking switch
+  bool enable_trace = 12 [
+    json_name = "enable_trace",
+    (gnostic.openapi.v3.property) = {description: "link tracking switch"}
+  ];
+  // Performance analysis switch
+  bool enable_metrics = 13 [
+    json_name = "enable_metrics",
+    (gnostic.openapi.v3.property) = {description: "performance analysis switch"}
+  ];
+  // Maximum number of free connections in the connection pool
+  int32 max_idle_connections = 20 [
+    json_name = "max_idle_connections",
+    (gnostic.openapi.v3.property) = {description: "The maximum number of free connections in the connection pool"}
+  ];
+  // Maximum number of open connections in the connection pool
+  int32 max_open_connections = 21 [
+    json_name = "max_open_connections",
+    (gnostic.openapi.v3.property) = {description: "The maximum number of open connections in the connection pool"}
+  ];
+  // Maximum length of time that the connection can be reused
+  int64 connection_max_lifetime = 22 [
+    json_name = "connection_max_lifetime",
+    (gnostic.openapi.v3.property) = {description: "The maximum length of time a connection can be reused"}
+  ];
+  // Maximum number of connections in the connection pool for reading
+  int64 connection_max_idle_time = 23 [
+    json_name = "connection_max_idle_time",
+    (gnostic.openapi.v3.property) = {description: "The maximum number of connections in the connection pool for reading"}
+  ];
+
+  // Optional custom configuration for database types not explicitly defined.
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for database types not explicitly defined."}
+  ];
+}

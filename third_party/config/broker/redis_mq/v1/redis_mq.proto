@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.redis_mq.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/redis_mq/v1;redismqv1";
+
+// RedisMqConfig defines the configuration for Redis used as a message queue (Pub/Sub or List).
+message RedisMqConfig {
+  // Redis address (e.g., "localhost:6379").
+  string address = 1 [(gnostic.openapi.v3.property) = {description: "Redis address (e.g., \"localhost:6379\")."}];
+  // Redis password.
+  optional string password = 2 [(gnostic.openapi.v3.property) = {description: "Redis password."}];
+  // Redis DB number.
+  optional int32 db = 3 [(gnostic.openapi.v3.property) = {description: "Redis DB number."}];
+  // Default channel or list key for Pub/Sub or List operations.
+  string channel_or_list_key = 4 [(gnostic.openapi.v3.property) = {description: "Default channel or list key for Pub/Sub or List operations."}];
+  // Whether to use Redis Pub/Sub (true) or List (false) for messaging.
+  optional bool use_pubsub = 5 [(gnostic.openapi.v3.property) = {description: "Whether to use Redis Pub/Sub (true) or List (false) for messaging."}];
+  // Max number of messages to block for when using List as a queue.
+  optional int32 list_block_timeout_seconds = 6 [(gnostic.openapi.v3.property) = {description: "Max number of messages to block for when using List as a queue."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 7 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 8 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 9 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 10 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+}

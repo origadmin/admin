@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.sqs.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/sqs/v1;sqsv1";
+
+// SqsConfig defines the configuration for an AWS SQS message queue.
+message SqsConfig {
+  // AWS region (e.g., "us-east-1").
+  string region = 1 [(gnostic.openapi.v3.property) = {description: "AWS region (e.g., \"us-east-1\")."}];
+  // AWS Access Key ID.
+  optional string access_key_id = 2 [(gnostic.openapi.v3.property) = {description: "AWS Access Key ID."}];
+  // AWS Secret Access Key.
+  optional string secret_access_key = 3 [(gnostic.openapi.v3.property) = {description: "AWS Secret Access Key."}];
+  // AWS Session Token (for temporary credentials).
+  optional string session_token = 4 [(gnostic.openapi.v3.property) = {description: "AWS Session Token (for temporary credentials)."}];
+  // SQS queue URL.
+  string queue_url = 5 [(gnostic.openapi.v3.property) = {description: "SQS queue URL."}];
+  // Max number of messages to receive in one request.
+  optional int32 max_number_of_messages = 6 [(gnostic.openapi.v3.property) = {description: "Max number of messages to receive in one request."}];
+  // How long to wait for messages (in seconds) before returning.
+  optional int32 wait_time_seconds = 7 [(gnostic.openapi.v3.property) = {description: "How long to wait for messages (in seconds) before returning."}];
+  // Message visibility timeout in seconds.
+  optional int32 visibility_timeout_seconds = 8 [(gnostic.openapi.v3.property) = {description: "Message visibility timeout in seconds."}];
+  // Whether to use long polling.
+  optional bool long_polling_enabled = 9 [(gnostic.openapi.v3.property) = {description: "Whether to use long polling."}];
+}

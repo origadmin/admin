@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 
-	"origadmin/application/admin/helpers/ent/mixin"
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/ent/mixin"
+	"origadmin/application/admin/internal/helpers/i18n"
 	"origadmin/application/admin/internal/data/entity/ent/schema/types"
 )
 

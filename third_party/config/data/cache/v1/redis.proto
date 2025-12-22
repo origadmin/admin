@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package runtime.api.config.data.cache.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/cache/v1;cachev1";
+
+// RedisConfig defines the configuration for a Redis client used as a data store (e.g., cache, key-value store).
+message RedisConfig {
+  string network = 1 [
+    json_name = "network",
+    (gnostic.openapi.v3.property) = {description: "Network type (e.g., tcp)"}
+  ];
+  string addr = 2 [
+    json_name = "addr",
+    (gnostic.openapi.v3.property) = {description: "Redis server address (e.g., localhost:6379)"}
+  ];
+  string password = 3 [
+    json_name = "password",
+    (gnostic.openapi.v3.property) = {description: "Password for Redis authentication"}
+  ];
+  int32 db = 4 [
+    json_name = "db",
+    (gnostic.openapi.v3.property) = {description: "Database index to use"}
+  ];
+  int64 dial_timeout = 5 [
+    json_name = "dial_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Dial timeout in milliseconds"}
+  ];
+  int64 read_timeout = 6 [
+    json_name = "read_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Read timeout in milliseconds"}
+  ];
+  int64 write_timeout = 7 [
+    json_name = "write_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Write timeout in milliseconds"}
+  ];
+  // Maximum number of connections in the connection pool.
+  optional int32 pool_size = 8 [
+    json_name = "pool_size",
+    (validate.rules).int32.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Maximum number of connections in the connection pool"}
+  ];
+  // Minimum number of idle connections in the connection pool.
+  optional int32 min_idle_conns = 9 [
+    json_name = "min_idle_conns",
+    (validate.rules).int32.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Minimum number of idle connections in the connection pool"}
+  ];
+  // Maximum duration a connection can be idle before being closed.
+  optional int64 idle_timeout = 10 [
+    json_name = "idle_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Maximum duration a connection can be idle before being closed (in milliseconds)"}
+  ];
+  // Maximum duration to wait for a connection from the pool.
+  optional int64 pool_timeout = 11 [
+    json_name = "pool_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Maximum duration to wait for a connection from the pool (in milliseconds)"}
+  ];
+  // Whether to enable TLS.
+  optional bool tls_enabled = 12 [
+    json_name = "tls_enabled",
+    (gnostic.openapi.v3.property) = {description: "Whether to enable TLS for the connection"}
+  ];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 13 [
+    json_name = "tls_client_cert_file",
+    (gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file"}
+  ];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 14 [
+    json_name = "tls_client_key_file",
+    (gnostic.openapi.v3.property) = {description: "Path to TLS client key file"}
+  ];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 15 [
+    json_name = "tls_ca_cert_file",
+    (gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file"}
+  ];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 16 [
+    json_name = "tls_insecure_skip_verify",
+    (gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify"}
+  ];
+}

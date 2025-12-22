@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.nats.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/nats/v1;natsv1";
+
+// NatsConfig defines the configuration for a NATS message queue.
+message NatsConfig {
+  // NATS server address (e.g., "nats://localhost:4222").
+  string address = 1 [(gnostic.openapi.v3.property) = {description: "NATS server address (e.g., \"nats://localhost:4222\")."}];
+  // Default subject for publishing or subscribing.
+  optional string subject = 2 [(gnostic.openapi.v3.property) = {description: "Default subject for publishing or subscribing."}];
+  // Queue group name for subscribers.
+  optional string queue_group = 3 [(gnostic.openapi.v3.property) = {description: "Queue group name for subscribers."}];
+  // Path to a user credentials file (.creds).
+  optional string user_credentials_file = 4 [(gnostic.openapi.v3.property) = {description: "Path to a user credentials file (.creds)."}];
+  // NKey seed file for authentication.
+  optional string nkey_seed_file = 5 [(gnostic.openapi.v3.property) = {description: "NKey seed file for authentication."}];
+  // JWT for authentication.
+  optional string jwt = 6 [(gnostic.openapi.v3.property) = {description: "JWT for authentication."}];
+  // Authentication token.
+  optional string token = 7 [(gnostic.openapi.v3.property) = {description: "Authentication token."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 8 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 9 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 10 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 11 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+  // Whether to use JetStream for persistence.
+  optional bool jetstream_enabled = 12 [(gnostic.openapi.v3.property) = {description: "Whether to use JetStream for persistence."}];
+  // JetStream stream name.
+  optional string jetstream_stream_name = 13 [(gnostic.openapi.v3.property) = {description: "JetStream stream name."}];
+}

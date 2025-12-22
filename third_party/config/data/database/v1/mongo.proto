@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package runtime.api.config.data.database.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/database/v1;databasev1";
+
+// MongoConfig defines the configuration for a MongoDB connection.
+// This message was extracted from storage.proto and renamed for consistency.
+message MongoConfig {
+  string uri = 1 [
+    json_name = "uri",
+    (gnostic.openapi.v3.property) = {description: "MongoDB connection URI"}
+  ];
+  string database = 2 [
+    json_name = "database",
+    (gnostic.openapi.v3.property) = {description: "Database name"}
+  ];
+  string username = 3 [
+    json_name = "username",
+    (gnostic.openapi.v3.property) = {description: "username"}
+  ];
+  string password = 4 [
+    json_name = "password",
+    (gnostic.openapi.v3.property) = {description: "password"}
+  ];
+  bool auth_source = 5 [
+    json_name = "auth_source",
+    (gnostic.openapi.v3.property) = {description: "auth source"}
+  ];
+  int32 max_pool_size = 6 [
+    json_name = "max_pool_size",
+    (gnostic.openapi.v3.property) = {description: "max pool size"}
+  ];
+  int32 min_pool_size = 7 [
+    json_name = "min_pool_size",
+    (gnostic.openapi.v3.property) = {description: "min pool size"}
+  ];
+  int64 connect_timeout = 8 [
+    json_name = "connect_timeout",
+    (validate.rules).int64.gte = 0,
+    (gnostic.openapi.v3.property) = {description: "Connection timeout in milliseconds"}
+  ];
+}

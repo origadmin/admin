@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.circuitbreaker.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/circuitbreaker/v1;circuitbreakerv1";
+
+// Endpoint defines a backend service endpoint.
+// This is a local copy to avoid circular dependencies.
+message Endpoint {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The URL path for the endpoint."}];
+  string method = 2 [(gnostic.openapi.v3.property) = {description: "The HTTP method for the endpoint (e.g., GET, POST)."}];
+  string host = 10 [(gnostic.openapi.v3.property) = {description: "The host for the endpoint."}];
+}
+
+// Condition defines a condition for retry or other policies.
+// This is a local copy to avoid circular dependencies.
+message Condition {
+  message Header {
+    string name = 1 [(gnostic.openapi.v3.property) = {description: "The name of the HTTP header."}];
+    string value = 2 [(gnostic.openapi.v3.property) = {description: "The expected value of the HTTP header."}];
+  }
+  // "500-599", "429"
+  optional string by_status_code = 1 [(gnostic.openapi.v3.property) = {description: "Retry if the response status code matches this pattern (e.g., \"500-599\", \"429\")."}];
+  // {"name": "grpc-status", "value": "14"}
+  optional Header by_header = 2 [(gnostic.openapi.v3.property) = {description: "Retry if a specific HTTP header matches the given value."}];
+}
+
+message Header {
+  string key = 1;
+  repeated string value = 2;
+}
+
+message ResponseData {
+  int32 status_code = 1;
+  repeated Header header = 2;
+  bytes body = 3;
+}
+
+message BackupService {
+  Endpoint endpoint = 1 [json_name = "endpoint"];
+}
+
+message SuccessRatio {
+  double success = 1;
+  int32 request = 2;
+  int32 bucket = 3;
+  int64 window = 4;
+}
+
+// CircuitBreaker middleware config.
+message CircuitBreaker {
+  // Only one of success_ratio or ratio should be set.
+  optional SuccessRatio success_ratio = 1 [json_name = "success_ratio"];
+  optional int64 ratio = 2 [json_name = "ratio"];
+
+  // Only one of response_data or backup_service should be set.
+  optional ResponseData response_data = 3 [json_name = "response_data"];
+  optional BackupService backup_service = 4 [json_name = "backup_service"];
+
+  repeated Condition assert_condtions = 5 [json_name = "assert_condtions"];
+}

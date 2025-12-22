@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.rocketmq.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/rocketmq/v1;rocketmqv1";
+
+// RocketMQConfig defines the configuration for a RocketMQ message queue.
+message RocketMQConfig {
+  // List of NameServer addresses (e.g., "localhost:9876").
+  repeated string name_server_addresses = 1 [(gnostic.openapi.v3.property) = {description: "List of NameServer addresses (e.g., \"localhost:9876\")."}];
+  // Default topic for publishing or subscribing.
+  string topic = 2 [(gnostic.openapi.v3.property) = {description: "Default topic for publishing or subscribing."}];
+  // Consumer group ID for consumers.
+  optional string consumer_group_id = 3 [(gnostic.openapi.v3.property) = {description: "Consumer group ID for consumers."}];
+  // Producer group ID for producers.
+  optional string producer_group_id = 4 [(gnostic.openapi.v3.property) = {description: "Producer group ID for producers."}];
+  // Access key for authentication.
+  optional string access_key = 5 [(gnostic.openapi.v3.property) = {description: "Access key for authentication."}];
+  // Secret key for authentication.
+  optional string secret_key = 6 [(gnostic.openapi.v3.property) = {description: "Secret key for authentication."}];
+  // Namespace for message isolation.
+  optional string namespace = 7 [(gnostic.openapi.v3.property) = {description: "Namespace for message isolation."}];
+  // Send message timeout in milliseconds.
+  optional int32 send_timeout_ms = 8 [(gnostic.openapi.v3.property) = {description: "Send message timeout in milliseconds."}];
+  // Consume message timeout in milliseconds.
+  optional int32 consume_timeout_ms = 9 [(gnostic.openapi.v3.property) = {description: "Consume message timeout in milliseconds."}];
+  // Whether to enable TLS.
+  optional bool tls_enabled = 10 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS."}];
+}

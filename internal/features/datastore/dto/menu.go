@@ -6,7 +6,7 @@
 package dto
 
 import (
-	"github.com/origadmin/runtime/interfaces/pagination"
+	"origadmin/application/admin/internal/helpers/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 )

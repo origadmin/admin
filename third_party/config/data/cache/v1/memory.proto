@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package runtime.api.config.data.cache.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/cache/v1;cachev1";
+
+// MemoryConfig defines the configuration for an in-memory cache.
+// This message was extracted from storage.proto and renamed for consistency.
+message MemoryConfig {
+  int32 size = 1 [
+    json_name = "size",
+    (gnostic.openapi.v3.property) = {description: "size"}
+  ];
+  int32 capacity = 2 [
+    json_name = "capacity",
+    (gnostic.openapi.v3.property) = {description: "capacity"}
+  ];
+  int64 expiration = 3 [
+    json_name = "expiration",
+    (gnostic.openapi.v3.property) = {description: "expiration time"}
+  ];
+  int64 cleanup_interval = 4 [
+    json_name = "cleanup_interval",
+    (gnostic.openapi.v3.property) = {description: "clearance interval"}
+  ];
+}

@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.v1;
+
+import "config/middleware/circuitbreaker/v1/circuitbreaker.proto";
+import "config/middleware/cors/v1/cors.proto";
+import "config/middleware/jwt/v1/jwt.proto";
+import "config/middleware/metrics/v1/metrics.proto";
+import "config/middleware/ratelimit/v1/ratelimiter.proto";
+import "config/middleware/selector/v1/selector.proto";
+import "config/middleware/v1/security.proto"; // Import the new security config
+import "config/middleware/validator/v1/validator.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/v1;middlewarev1";
+
+// Metadata configuration for the middleware.
+message Metadata {
+  repeated string prefixes = 1 [
+    json_name = "prefixes",
+    (gnostic.openapi.v3.property) = {description: "List of prefixes for the metadata."}
+  ];
+  map<string, string> data = 2 [
+    json_name = "data",
+    (gnostic.openapi.v3.property) = {description: "Key-value pairs of metadata."}
+  ];
+}
+
+message Logging {
+  // empty is allowed, because parent type will handle it
+  // to decide whether to enable or not logging middleware
+}
+
+message Recovery {
+  // empty is allowed, because parent type will handle it
+  // to decide whether to enable or not recovery middleware
+}
+
+// Middleware represents a single middleware configuration with an enable switch.
+message Middleware {
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "The name of the middleware instance."}
+  ];
+  // The 'type' field determines which configuration block to use.
+  // For built-in types, specify "logging", "recovery", "rate_limiter", etc.
+  // For custom types, specify the registered name of the custom middleware.
+  // When a custom type is used, its configuration should be placed in the 'customize' field.
+  string type = 2 [
+    json_name = "type",
+    (gnostic.openapi.v3.property) = {description: "The type of the middleware. Built-in: 'logging', 'recovery', 'rate_limiter', etc. Custom types use their registered name."}
+  ];
+
+  bool enabled = 3 [
+    json_name = "enabled",
+    (gnostic.openapi.v3.property) = {description: "Whether the middleware is enabled."}
+  ];
+
+  optional runtime.api.config.middleware.ratelimit.v1.RateLimiter rate_limiter = 4 [
+    json_name = "rate_limiter",
+    (gnostic.openapi.v3.property) = {description: "Rate limiter configuration."}
+  ];
+  optional runtime.api.config.middleware.metrics.v1.Metrics metrics = 5 [
+    json_name = "metrics",
+    (gnostic.openapi.v3.property) = {description: "Metrics configuration."}
+  ];
+  optional runtime.api.config.middleware.validator.v1.Validator validator = 6 [
+    json_name = "validator",
+    (gnostic.openapi.v3.property) = {description: "Validator configuration."}
+  ];
+  optional runtime.api.config.middleware.jwt.v1.JWT jwt = 7 [
+    json_name = "jwt",
+    (gnostic.openapi.v3.property) = {description: "JWT middleware configuration."}
+  ];
+  optional runtime.api.config.middleware.selector.v1.Selector selector = 8 [
+    json_name = "selector",
+    (gnostic.openapi.v3.property) = {description: "Selector middleware configuration."}
+  ];
+  optional runtime.api.config.middleware.cors.v1.Cors cors = 9 [
+    json_name = "cors",
+    (gnostic.openapi.v3.property) = {description: "CORS middleware configuration."}
+  ];
+  optional runtime.api.config.middleware.circuitbreaker.v1.CircuitBreaker circuit_breaker = 10 [
+    json_name = "circuit_breaker",
+    (gnostic.openapi.v3.property) = {description: "Circuit breaker configuration."}
+  ];
+  optional Logging logging = 11 [
+    json_name = "logging",
+    (gnostic.openapi.v3.property) = {description: "Logging middleware configuration."}
+  ];
+  optional Recovery recovery = 12 [
+    json_name = "recovery",
+    (gnostic.openapi.v3.property) = {description: "Recovery middleware configuration."}
+  ];
+  optional Metadata metadata = 13 [
+    json_name = "metadata",
+    (gnostic.openapi.v3.property) = {description: "Metadata configuration for the middleware."}
+  ];
+  optional Security security = 14 [
+    json_name = "security",
+    (gnostic.openapi.v3.property) = {description: "Declarative security middleware configuration."}
+  ];
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom middleware configuration."}
+  ];
+  // Add other specific middleware types here as they are defined
+}
+
+// Middlewares is used to configure a chain of middlewares for an entry point.
+message Middlewares {
+  // A list of middleware configurations to be applied in order.
+  repeated Middleware configs = 1 [
+    json_name = "configs",
+    (gnostic.openapi.v3.property) = {description: "A list of middleware configurations to be applied in order."}
+  ];
+}

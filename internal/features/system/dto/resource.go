@@ -8,10 +8,9 @@ package dto
 import (
 	"context"
 
-	"github.com/origadmin/runtime/interfaces/pagination"
-
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/resp"
+	"origadmin/application/admin/internal/helpers/pagination"
+	"origadmin/application/admin/internal/helpers/resp"
 )
 
 type (
@@ -34,32 +33,32 @@ type ResourceRepo interface {
 }
 
 type ResourceQueryOption struct {
-	Name               string   `form:"name" json:"name,omitempty"`
-	Status             int8     `form:"status" json:"status,omitempty"`
-	InIDs              []string `form:"-" json:"-"`
-	UserID             string   `form:"-" json:"-"` // UserPB ID
-	RoleID             string   `form:"-" json:"-"` // RolePB ID
-	ParentID           string   `form:"-" json:"-"` // Parent ID
-	ParentPathPrefix   string   `form:"-" json:"-"`
-	IncludeResources   bool     `form:"-" json:"-"` //　Include resources
-	IncludePermissions bool     `form:"-" json:"-"`
+	Name               string  `form:"name" json:"name,omitempty"`
+	Status             int8    `form:"status" json:"status,omitempty"`
+	InIDs              []int64 `form:"-" json:"-"`
+	UserID             string  `form:"-" json:"-"` // UserPB ID
+	RoleID             string  `form:"-" json:"-"` // RolePB ID
+	ParentID           int64   `form:"-" json:"-"` // Parent ID
+	ParentPathPrefix   string  `form:"-" json:"-"`
+	IncludeResources   bool    `form:"-" json:"-"` //　Include resources
+	IncludePermissions bool    `form:"-" json:"-"`
 	SelectFields       []string
 	OmitFields         []string
 	OrderFields        []string
 	Fields             []string
 }
 
-func (o ResourceQueryOption) FromListRequest(in *ListResourcesRequest, limiter pagination.PageLimiter) error {
+func (o ResourceQueryOption) FromListRequest(in *ListResourcesRequest, limiter pagination.PageLimiter) error { // Updated usage
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o ResourceQueryOption) FromGetRequest(in *pb.GetResourceRequest, limiter pagination.PageLimiter) error {
+func (o ResourceQueryOption) FromGetRequest(in *pb.GetResourceRequest, limiter pagination.PageLimiter) error { // Updated usage
 	return nil
 }
 
-func (o ResourceQueryOption) FromCreateRequest(in *pb.CreateResourceRequest, limiter pagination.PageLimiter) error {
+func (o ResourceQueryOption) FromCreateRequest(in *pb.CreateResourceRequest, limiter pagination.PageLimiter) error { // Updated usage
 	return nil
 }
 
@@ -72,12 +71,4 @@ func ToListResourcesResponse(result []*ResourcePB, in *ListResourcesRequest, tot
 		Extra:     resp.Any(args...),
 	}
 	return response, nil
-}
-
-func ConvertResources(resources []*Resource) []*ResourcePB {
-	var result []*ResourcePB
-	for _, resource := range resources {
-		result = append(result, ConvertResource2PB(resource))
-	}
-	return result
 }

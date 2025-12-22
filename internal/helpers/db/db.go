@@ -10,7 +10,8 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/origadmin/runtime/interfaces/pagination"
+
+	"origadmin/application/admin/internal/helpers/pagination"
 )
 
 type Paginator[T any] interface {
@@ -34,7 +35,13 @@ func Query[P Paginator[P]](query P, in pagination.PageRequest, paging bool) P {
 	return QueryPage(query, in)
 }
 
-func QueryNoPage[P Paginator[P]](query P, in pagination.PageSizeGetter) P {
+type PageRequest interface {
+	GetPageSize() int32
+	GetPageToken() string
+	GetCurrent() int32
+}
+
+func QueryNoPage[P Paginator[P]](query P, in PageRequest) P {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))
@@ -43,14 +50,14 @@ func QueryNoPage[P Paginator[P]](query P, in pagination.PageSizeGetter) P {
 }
 
 func handleTokenPagination[P Paginator[P]](query P, token string) P {
-	// TODO: 实现游标分页逻辑
-	// 示例伪代码：
+	// TODO: Implement cursor pagination logic
+	// Example pseudocode:
 	// decodedToken := decodeToken(token)
 	// query = query.Where(...).Order(...).Limit(...)
 	return query
 }
 
-func QueryPage[P Paginator[P]](query P, in pagination.PageRequest) P {
+func QueryPage[P Paginator[P]](query P, in PageRequest) P {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))

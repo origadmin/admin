@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.kafka.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/kafka/v1;kafkav1";
+
+// KafkaConfig defines the configuration for a Kafka message queue.
+message KafkaConfig {
+  // List of Kafka broker addresses (e.g., "localhost:9092").
+  repeated string addresses = 1 [(gnostic.openapi.v3.property) = {description: "List of Kafka broker addresses."}];
+  // Default topic for producers or consumers.
+  string topic = 2 [(gnostic.openapi.v3.property) = {description: "Default topic for producers or consumers."}];
+  // Consumer group ID for Kafka consumers.
+  optional string consumer_group_id = 3 [(gnostic.openapi.v3.property) = {description: "Consumer group ID for Kafka consumers."}];
+  // Client ID for the Kafka client.
+  optional string client_id = 4 [(gnostic.openapi.v3.property) = {description: "Client ID for the Kafka client."}];
+  // SASL mechanism for authentication (e.g., "PLAIN", "SCRAM-SHA-256").
+  optional string sasl_mechanism = 5 [(gnostic.openapi.v3.property) = {description: "SASL mechanism for authentication."}];
+  // SASL username.
+  optional string sasl_username = 6 [(gnostic.openapi.v3.property) = {description: "SASL username."}];
+  // SASL password.
+  optional string sasl_password = 7 [(gnostic.openapi.v3.property) = {description: "SASL password."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 8 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 9 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 10 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 11 [(gnostic.openapi.v3.property) = {description: "Enable TLS insecure skip verify."}];
+  // Auto offset reset policy (e.g., "earliest", "latest", "none").
+  optional string auto_offset_reset = 12 [(gnostic.openapi.v3.property) = {description: "Auto offset reset policy."}];
+  // Max bytes per partition for fetching messages.
+  optional int32 max_bytes_per_partition = 13 [(gnostic.openapi.v3.property) = {description: "Max bytes per partition for fetching messages."}];
+  // Max wait time in milliseconds for fetching messages.
+  optional int32 max_wait_ms = 14 [(gnostic.openapi.v3.property) = {description: "Max wait time in milliseconds for fetching messages."}];
+  // Whether to enable idempotence for producers.
+  optional bool enable_idempotence = 15 [(gnostic.openapi.v3.property) = {description: "Whether to enable idempotence for producers."}];
+  // Acknowledge level for producers (e.g., "all", "1", "0").
+  optional string acks = 16 [(gnostic.openapi.v3.property) = {description: "Acknowledge level for producers."}];
+  // Compression type for producers (e.g., "none", "gzip", "snappy", "lz4", "zstd").
+  optional string compression_type = 17 [(gnostic.openapi.v3.property) = {description: "Compression type for producers."}];
+}

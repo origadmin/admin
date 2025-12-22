@@ -11,10 +11,10 @@ import (
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/configs"
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/mods/auth/biz"
-	"origadmin/application/admin/internal/mods/auth/dal"
-	"origadmin/application/admin/internal/mods/auth/server"
-	"origadmin/application/admin/internal/mods/auth/service"
+	"origadmin/application/admin/internal/features/auth/biz"    // Corrected import path
+	"origadmin/application/admin/internal/features/auth/dal"    // Corrected import path
+	"origadmin/application/admin/internal/features/auth/server" // Corrected import path
+	"origadmin/application/admin/internal/features/auth/service" // Corrected import path
 )
 
 import (

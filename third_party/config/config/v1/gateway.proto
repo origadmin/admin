@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package runtime.api.config.config.v1;
+
+import "config/transport/tls/v1/tls.proto";
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/config/v1;configv1";
+
+message Gateway {
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "The name of the gateway."}
+  ];
+  string version = 2 [
+    json_name = "version",
+    (gnostic.openapi.v3.property) = {description: "The version of the gateway."}
+  ];
+  repeated string hosts = 3 [
+    json_name = "hosts",
+    deprecated = true,
+    (gnostic.openapi.v3.property) = {description: "Deprecated: Use host in Endpoint instead. List of hosts the gateway serves."}
+  ];
+  repeated Endpoint endpoints = 4 [
+    json_name = "endpoints",
+    (gnostic.openapi.v3.property) = {description: "List of API endpoints configured for the gateway."}
+  ];
+  repeated Middleware middlewares = 5 [
+    json_name = "middlewares",
+    (gnostic.openapi.v3.property) = {description: "List of global middlewares applied to the gateway."}
+  ];
+  map<string, runtime.api.config.transport.tls.v1.TLSConfig> tls_store = 6 [
+    json_name = "tls_store",
+    (gnostic.openapi.v3.property) = {description: "TLS configurations stored by name."}
+  ];
+}
+
+message PriorityConfig {
+  string name = 1 [(gnostic.openapi.v3.property) = {description: "The name of the priority configuration."}];
+  string version = 2 [(gnostic.openapi.v3.property) = {description: "The version of the priority configuration."}];
+  repeated Endpoint endpoints = 3 [(gnostic.openapi.v3.property) = {description: "List of endpoints for this priority configuration."}];
+}
+
+message Endpoint {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The URL path for the endpoint."}];
+  string method = 2 [(gnostic.openapi.v3.property) = {description: "The HTTP method for the endpoint (e.g., GET, POST)."}];
+  string description = 3 [(gnostic.openapi.v3.property) = {description: "A description of the endpoint."}];
+  Protocol protocol = 4 [(gnostic.openapi.v3.property) = {description: "The communication protocol used by the endpoint."}];
+  int64 timeout = 5 [(gnostic.openapi.v3.property) = {description: "The timeout for the endpoint in milliseconds."}];
+  repeated Middleware middlewares = 6 [(gnostic.openapi.v3.property) = {description: "List of middlewares applied to this specific endpoint."}];
+  repeated Backend backends = 7 [(gnostic.openapi.v3.property) = {description: "List of backend services for this endpoint."}];
+  Retry retry = 8 [(gnostic.openapi.v3.property) = {description: "Retry policy for the endpoint."}];
+  map<string, string> metadata = 9 [(gnostic.openapi.v3.property) = {description: "Additional metadata for the endpoint."}];
+  string host = 10 [(gnostic.openapi.v3.property) = {description: "The host for the endpoint."}];
+}
+
+message Middleware {
+  string name = 1 [(gnostic.openapi.v3.property) = {description: "The name of the middleware."}];
+  bytes options = 2 [(gnostic.openapi.v3.property) = {description: "Configuration options for the middleware, as a byte array."}];
+  bool required = 3 [(gnostic.openapi.v3.property) = {description: "Whether the middleware is required."}];
+}
+
+message Backend {
+  // localhost
+  // 127.0.0.1:8000
+  // discovery:///service_name
+  string target = 1 [(gnostic.openapi.v3.property) = {description: "The target address of the backend service (e.g., IP:Port, discovery URL)."}];
+  optional int64 weight = 2 [(gnostic.openapi.v3.property) = {description: "The weight for load balancing among multiple backends."}];
+  HealthCheck health_check = 3 [(gnostic.openapi.v3.property) = {description: "Health check configuration for the backend."}];
+  bool tls = 4 [(gnostic.openapi.v3.property) = {description: "Whether TLS is enabled for the backend connection."}];
+  string tls_config_name = 5 [(gnostic.openapi.v3.property) = {description: "The name of the TLS configuration to use from the tls_store."}];
+  map<string, string> metadata = 6 [(gnostic.openapi.v3.property) = {description: "Additional metadata for the backend."}];
+}
+
+enum Protocol {
+  PROTOCOL_UNSPECIFIED = 0;
+  PROTOCOL_HTTP = 1;
+  PROTOCOL_GRPC = 2;
+  PROTOCOL_CUSTOM = 3;
+}
+
+message HealthCheck {
+  enum CheckType {
+    CHECK_TYPE_UNSPECIFIED = 0;
+    CHECK_TYPE_HTTP = 1;
+    CHECK_TYPE_TCP = 2;
+  }
+  CheckType type = 1 [(gnostic.openapi.v3.property) = {description: "The type of health check to perform."}];
+  string endpoint = 2 [(gnostic.openapi.v3.property) = {description: "The endpoint to check for health."}];
+}
+
+message Retry {
+  // default attempts is 1
+  uint32 attempts = 1 [(gnostic.openapi.v3.property) = {description: "The number of retry attempts (default is 1)."}];
+  int64 per_try_timeout = 2 [(gnostic.openapi.v3.property) = {description: "The timeout for each individual retry attempt in milliseconds."}];
+  repeated Condition conditions = 3 [(gnostic.openapi.v3.property) = {description: "Conditions under which a retry should be performed."}];
+  // primary,secondary
+  repeated string priorities = 4 [(gnostic.openapi.v3.property) = {description: "List of priorities for retrying (e.g., primary, secondary)."}];
+}
+
+message Condition {
+  message Header {
+    string name = 1 [(gnostic.openapi.v3.property) = {description: "The name of the HTTP header."}];
+    string value = 2 [(gnostic.openapi.v3.property) = {description: "The expected value of the HTTP header."}];
+  }
+  // "500-599", "429"
+  optional string by_status_code = 1 [(gnostic.openapi.v3.property) = {description: "Retry if the response status code matches this pattern (e.g., \"500-599\", \"429\")."}];
+  // {"name": "grpc-status", "value": "14"}
+  optional Header by_header = 2 [(gnostic.openapi.v3.property) = {description: "Retry if a specific HTTP header matches the given value."}];
+}

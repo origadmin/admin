@@ -8,11 +8,12 @@ package biz
 import (
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
-	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/runtime/log"
 
+	"origadmin/application/admin/internal/helpers/pagination"
+
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
 )
 
 // RoleServiceBiz is a RolePB use case.

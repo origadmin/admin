@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package contrib.api.service.security.authz.v1;
+
+import "google/api/annotations.proto";
+import "security/authz/v1/authz.proto";
+import "security/v1/principal.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/service/security/authz/v1;authzv1";
+
+// AuthorizerService provides endpoints for performing authorization checks.
+service AuthorizerService {
+  // Authorized performs a single authorization check.
+  rpc Authorized(AuthorizedRequest) returns (AuthorizedResponse) {
+    option (google.api.http) = {
+      post: "/v1/authz/authorized"
+      body: "*"
+    };
+  }
+
+  // FilterAuthorized performs a batch authorization check on a list of rule specs.
+  rpc FilterAuthorized(FilterAuthorizedRequest) returns (FilterAuthorizedResponse) {
+    option (google.api.http) = {
+      post: "/v1/authz/filter"
+      body: "*"
+    };
+  }
+
+  // FilterAuthorizedResources filters a list of resources against a rule template.
+  rpc FilterAuthorizedResources(FilterAuthorizedResourcesRequest) returns (FilterAuthorizedResourcesResponse) {
+    option (google.api.http) = {
+      post: "/v1/authz/filter/resources"
+      body: "*"
+    };
+  }
+
+  // FilterAuthorizedActions filters a list of actions against a rule template.
+  rpc FilterAuthorizedActions(FilterAuthorizedActionsRequest) returns (FilterAuthorizedActionsResponse) {
+    option (google.api.http) = {
+      post: "/v1/authz/filter/actions"
+      body: "*"
+    };
+  }
+
+  // FilterAuthorizedDomains filters a list of domains against a rule template.
+  rpc FilterAuthorizedDomains(FilterAuthorizedDomainsRequest) returns (FilterAuthorizedDomainsResponse) {
+    option (google.api.http) = {
+      post: "/v1/authz/filter/domains"
+      body: "*"
+    };
+  }
+}
+
+// --- Messages for Authorized ---
+message AuthorizedRequest {
+  // The principal performing the action.
+  contrib.api.security.v1.Principal principal = 1;
+  // The rule specification to be checked.
+  contrib.api.security.authz.v1.RuleSpec spec = 2;
+}
+
+message AuthorizedResponse {
+  // True if the principal is authorized, false otherwise.
+  bool allowed = 1;
+}
+
+// --- Messages for FilterAuthorized ---
+message FilterAuthorizedRequest {
+  // The principal performing the action.
+  contrib.api.security.v1.Principal principal = 1;
+  // A list of rule specifications to be checked.
+  repeated contrib.api.security.authz.v1.RuleSpec specs = 2;
+}
+
+message FilterAuthorizedResponse {
+  // A list containing only the rule specifications that the principal is authorized for.
+  repeated contrib.api.security.authz.v1.RuleSpec specs = 1;
+}
+
+// --- Messages for FilterAuthorizedResources ---
+message FilterAuthorizedResourcesRequest {
+  // The principal performing the action.
+  contrib.api.security.v1.Principal principal = 1;
+  // A template for the authorization check. The 'resource' field will be ignored.
+  contrib.api.security.authz.v1.RuleSpec spec_template = 2;
+  // The list of resources to check.
+  repeated string resources = 3;
+}
+
+message FilterAuthorizedResourcesResponse {
+  // A list containing only the resources that the principal is authorized to access.
+  repeated string resources = 1;
+}
+
+// --- Messages for FilterAuthorizedActions ---
+message FilterAuthorizedActionsRequest {
+  // The principal performing the action.
+  contrib.api.security.v1.Principal principal = 1;
+  // A template for the authorization check. The 'action' field will be ignored.
+  contrib.api.security.authz.v1.RuleSpec spec_template = 2;
+  // The list of actions to check.
+  repeated string actions = 3;
+}
+
+message FilterAuthorizedActionsResponse {
+  // A list containing only the actions that the principal is authorized to perform.
+  repeated string actions = 1;
+}
+
+// --- Messages for FilterAuthorizedDomains ---
+message FilterAuthorizedDomainsRequest {
+  // The principal performing the action.
+  contrib.api.security.v1.Principal principal = 1;
+  // A template for the authorization check. The 'domain' field will be ignored.
+  contrib.api.security.authz.v1.RuleSpec spec_template = 2;
+  // The list of domains to check.
+  repeated string domains = 3;
+}
+
+message FilterAuthorizedDomainsResponse {
+  // A list containing only the domains that the principal is authorized to access.
+  repeated string domains = 1;
+}

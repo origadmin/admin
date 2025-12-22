@@ -9,10 +9,11 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/origadmin/runtime/interfaces/pagination"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
+
+	"origadmin/application/admin/internal/helpers/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 	typespb "origadmin/application/admin/api/v1/services/types"

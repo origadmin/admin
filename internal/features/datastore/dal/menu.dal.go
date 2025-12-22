@@ -8,7 +8,7 @@ import (
 	"github.com/origadmin/runtime"
 
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
 )
 
 type menuRepo struct {

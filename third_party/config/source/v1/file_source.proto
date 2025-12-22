@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// FileSource is the file source
+message FileSource {
+  string path = 1 [json_name = "path"];
+  string format = 2 [json_name = "format"];
+  repeated string ignores = 3 [json_name = "ignores"];
+  // supported file formats, if not set, all formats are supported
+  repeated string formats = 4 [json_name = "formats"];
+  bool reload = 6 [json_name = "reload"];
+  bool optional = 7 [json_name = "optional"];
+}

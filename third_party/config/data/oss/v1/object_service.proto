@@ -1,0 +1,200 @@
+syntax = "proto3";
+
+package runtime.api.config.data.oss.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/oss/v1;ossv1";
+
+// ObjectInfo describes an object or a directory-like prefix in object storage.
+message ObjectInfo {
+  string name = 1 [(gnostic.openapi.v3.property) = {description: "The name of the object or directory-like prefix."}];
+  string path = 2 [(gnostic.openapi.v3.property) = {description: "The full path of the object or directory-like prefix."}];
+  bool is_dir = 3 [(gnostic.openapi.v3.property) = {description: "Whether the entry is a directory-like prefix."}];
+  int64 size = 4 [(gnostic.openapi.v3.property) = {description: "The size of the object in bytes."}];
+  google.protobuf.Timestamp mod_time = 5 [(gnostic.openapi.v3.property) = {description: "The last modification time."}];
+}
+
+// ObjectService defines the operations for object and directory-like prefix manipulation in object storage.
+service ObjectService {
+  // --- Basic Operations ---
+
+  // List objects and directory-like prefixes at a given path.
+  rpc List(ListRequest) returns (ListResponse) {
+    option (google.api.http) = {get: "/v1/object/list"};
+  }
+
+  // Get information about a single object or directory-like prefix.
+  rpc Stat(StatRequest) returns (StatResponse) {
+    option (google.api.http) = {get: "/v1/object/stat"};
+  }
+
+  // Create a new directory-like prefix.
+  rpc Mkdir(MkdirRequest) returns (MkdirResponse) {
+    option (google.api.http) = {
+      post: "/v1/object/mkdir"
+      body: "*"
+    };
+  }
+
+  // Delete an object or directory-like prefix.
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+    option (google.api.http) = {
+      post: "/v1/object/delete"
+      body: "*"
+    };
+  }
+
+  // Rename or move an object or directory-like prefix.
+  rpc Rename(RenameRequest) returns (RenameResponse) {
+    option (google.api.http) = {
+      post: "/v1/object/rename"
+      body: "*"
+    };
+  }
+
+  // --- Streaming Operations ---
+
+  // Read an object's content as a stream.
+  rpc Read(ReadRequest) returns (stream ReadResponse) {
+    option (google.api.http) = {get: "/v1/object/read"};
+  }
+
+  // Write an object's content via a stream.
+  // NOTE: This is suitable for reliable networks. For client-side uploads,
+  // use the chunked upload methods.
+  rpc Write(stream WriteRequest) returns (WriteResponse) {}
+
+  // --- Chunked Upload Operations ---
+
+  // Initiates a new chunked upload and returns an upload_id.
+  rpc InitiateUpload(InitiateUploadRequest) returns (InitiateUploadResponse) {
+    option (google.api.http) = {
+      post: "/v1/object/uploads:initiate"
+      body: "*"
+    };
+  }
+
+  // Uploads a chunk of data for a given upload_id.
+  // NOTE: gRPC-Gateway does not support client-streaming RPCs well for object uploads.
+  // This RPC should be called directly via gRPC or a custom HTTP handler.
+  rpc UploadChunk(stream UploadChunkRequest) returns (UploadChunkResponse) {}
+
+  // Finalizes a chunked upload, assembling the chunks into the final object.
+  rpc FinalizeUpload(FinalizeUploadRequest) returns (FinalizeUploadResponse) {
+    option (google.api.http) = {
+      post: "/v1/object/uploads:finalize"
+      body: "*"
+    };
+  }
+}
+
+// --- Message Definitions for Basic Operations ---
+
+message ListRequest {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The path of the directory-like prefix to list."}];
+}
+
+message ListResponse {
+  repeated ObjectInfo files = 1 [(gnostic.openapi.v3.property) = {description: "A list of objects and directory-like prefixes."}];
+}
+
+message StatRequest {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The path of the object or directory-like prefix to get information about."}];
+}
+
+message StatResponse {
+  ObjectInfo file = 1 [(gnostic.openapi.v3.property) = {description: "Information about the object or directory-like prefix."}];
+}
+
+message MkdirRequest {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The path of the directory-like prefix to create."}];
+}
+
+message MkdirResponse {}
+
+message DeleteRequest {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The path of the object or directory-like prefix to delete."}];
+  // Optional: If true and path is a directory-like prefix, delete it recursively.
+  bool recursive = 2 [(gnostic.openapi.v3.property) = {description: "Whether to delete recursively if the path is a directory-like prefix."}];
+}
+
+message DeleteResponse {}
+
+message RenameRequest {
+  string from_path = 1 [(gnostic.openapi.v3.property) = {description: "The original path of the object or directory-like prefix."}];
+  string to_path = 2 [(gnostic.openapi.v3.property) = {description: "The new path for the object or directory-like prefix."}];
+}
+
+message RenameResponse {}
+
+// --- Message Definitions for Streaming Operations ---
+
+message ReadRequest {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The path of the object to read."}];
+}
+
+message ReadResponse {
+  bytes chunk = 1 [(gnostic.openapi.v3.property) = {description: "A chunk of the object's content."}];
+}
+
+message WriteRequest {
+  oneof data {
+    // The first message must contain the metadata.
+    WriteRequestMetadata metadata = 1;
+    // Subsequent messages contain the object's binary chunks.
+    bytes chunk = 2;
+  }
+}
+
+message WriteRequestMetadata {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The path of the object to write to."}];
+}
+
+message WriteResponse {
+  int64 size = 1 [(gnostic.openapi.v3.property) = {description: "The total size of the written object."}];
+  string path = 2 [(gnostic.openapi.v3.property) = {description: "The path of the written object."}];
+}
+
+// --- Message Definitions for Chunked Upload ---
+
+message InitiateUploadRequest {
+  string path = 1 [(gnostic.openapi.v3.property) = {description: "The final path for the object being uploaded."}];
+}
+
+message InitiateUploadResponse {
+  string upload_id = 1 [(gnostic.openapi.v3.property) = {description: "A unique ID for the chunked upload session."}];
+}
+
+message UploadChunkRequest {
+  oneof data {
+    // The first message of a new chunk stream can contain metadata.
+    UploadChunkMetadata metadata = 1;
+    // Subsequent messages contain the object's binary chunks.
+    bytes chunk = 2;
+  }
+}
+
+message UploadChunkMetadata {
+  string upload_id = 1 [(gnostic.openapi.v3.property) = {description: "The ID of the chunked upload session."}];
+  // The position in the object to write this chunk.
+  int64 offset = 2 [(gnostic.openapi.v3.property) = {description: "The byte offset in the object to write this chunk."}];
+}
+
+message UploadChunkResponse {
+  string upload_id = 1 [(gnostic.openapi.v3.property) = {description: "The ID of the chunked upload session."}];
+  // The number of bytes successfully written.
+  int64 written_size = 2 [(gnostic.openapi.v3.property) = {description: "The number of bytes successfully written in this chunk."}];
+}
+
+message FinalizeUploadRequest {
+  string upload_id = 1 [(gnostic.openapi.v3.property) = {description: "The ID of the chunked upload session to finalize."}];
+  // Optional: The SHA256 checksum of the entire object for validation.
+  string content_sha256 = 2 [(gnostic.openapi.v3.property) = {description: "Optional SHA256 checksum of the entire object for validation."}];
+}
+
+message FinalizeUploadResponse {
+  ObjectInfo file = 1 [(gnostic.openapi.v3.property) = {description: "Information about the finalized object."}];
+}

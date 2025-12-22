@@ -14,7 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	datav1 "origadmin/application/admin/helpers/resp/data/v1"
+	datav1 "origadmin/application/admin/internal/helpers/resp/data/v1"
 )
 
 // Any converts the given arguments into a protobuf Any type.

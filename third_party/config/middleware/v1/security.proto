@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/v1;middlewarev1";
+
+// Security defines the configuration for the declarative security middleware.
+message Security {
+  // The name of the default security policy to apply if a route does not specify one.
+  // If not set, and a route has no policy, access will be denied.
+  string default_policy = 1 [
+    json_name = "default_policy",
+    (gnostic.openapi.v3.property) = {description: "The name of the default security policy to apply if a route does not specify one."}
+  ];
+}

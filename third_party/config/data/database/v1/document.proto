@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package runtime.api.config.data.database.v1;
+
+import "config/data/database/v1/mongo.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/database/v1;databasev1";
+
+// DocumentConfig defines the configuration for a document database instance.
+message DocumentConfig {
+  // Unique name for this document database configuration instance.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "Unique name for this document database configuration instance."}
+  ];
+  // The 'type' field determines which document database to use.
+  // For built-in types, specify "mongo".
+  // For custom types, specify the registered name of the custom document database.
+  // When a custom type is used, its configuration should be placed in the 'customize' field.
+  string type = 2 [
+    json_name = "type",
+    (gnostic.openapi.v3.property) = {description: "The type of document database. Built-in: 'mongo'. Custom types use their registered name."}
+  ];
+
+  // Optional MongoDB configuration.
+  optional MongoConfig mongo = 10 [
+    json_name = "mongo",
+    (gnostic.openapi.v3.property) = {description: "MongoDB specific configuration."}
+  ];
+
+  // Optional custom configuration for document database types not explicitly defined.
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for document database types not explicitly defined."}
+  ];
+}

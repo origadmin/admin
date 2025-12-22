@@ -18,7 +18,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
-	"origadmin/application/admin/internal/mods/auth/dto"
+	"origadmin/application/admin/internal/features/auth/dto" // Corrected import path
 )
 
 type authRepo struct {
@@ -142,10 +142,10 @@ func authResourceQueryPage(query *ent.ResourceQuery, in *pb.ListAuthResourcesReq
 
 func authResourceQueryOptions(query *ent.ResourceQuery, option dto.AuthResourceQueryOption) *ent.ResourceQuery {
 	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).ResourceQuery
+		query = query.Select(option.SelectFields...).(*ent.ResourceQuery)
 	}
 	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).ResourceQuery
+		query = query.Omit(option.OmitFields...).(*ent.ResourceQuery)
 	}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(resourceOrderBy(option.OrderFields)...)

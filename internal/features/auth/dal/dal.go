@@ -19,7 +19,7 @@ import (
 
 	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/mods/auth/dto"
+	"origadmin/application/admin/internal/features/auth/dto" // Corrected import path
 )
 
 const (

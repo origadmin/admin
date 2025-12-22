@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package runtime.api.config.data.oss.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/oss/v1;ossv1";
+
+// ObjectMeta defines the metadata for an object in object storage.
+message ObjectMeta {
+  string id = 1 [
+    json_name = "id",
+    (gnostic.openapi.v3.property) = {description: "The unique identifier for the object."}
+  ];
+  string name = 2 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "The name of the object."}
+  ];
+  string hash = 3 [
+    json_name = "hash",
+    (gnostic.openapi.v3.property) = {description: "The hash of the object content (e.g., SHA256)."}
+  ];
+  int64 size = 4 [
+    json_name = "size",
+    (gnostic.openapi.v3.property) = {description: "The size of the object in bytes."}
+  ];
+  string mime_type = 5 [
+    json_name = "mime_type",
+    (gnostic.openapi.v3.property) = {description: "The MIME type of the object."}
+  ];
+  int64 mod_time = 6 [
+    json_name = "mod_time",
+    (gnostic.openapi.v3.property) = {description: "The last modification time as a Unix timestamp."}
+  ];
+}

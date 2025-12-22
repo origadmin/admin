@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package contrib.api.security.authn.v1;
+
+import "security/authn/apikey/v1/config.proto";
+import "security/authn/jwt/v1/config.proto";
+import "security/authn/oidc/v1/config.proto";
+import "security/authn/presharedkey/v1/config.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/authn/v1;authnv1";
+
+// Authenticator defines the configuration for a single authentication mechanism.
+message Authenticator {
+  // A unique name for this authenticator instance. This name is used in
+  // security policies to reference which authenticator to apply.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "A unique name for this authenticator instance."}
+  ];
+
+  // The type of the authenticator. This string MUST match one of the keys
+  // of the configuration fields below (e.g., "jwt", "apikey") or a registered
+  // custom authenticator type. It acts as a discriminator.
+  string type = 2 [
+    json_name = "type",
+    (gnostic.openapi.v3.property) = {description: "The type of the authenticator, e.g., 'jwt', 'apikey', 'presharedkey', 'oidc'."}
+  ];
+
+  // --- Built-in Authenticator Configurations ---
+
+  // Configuration for a JWT-based authenticator.
+  // Must be present if 'type' is "jwt".
+  optional contrib.api.security.authn.jwt.v1.Config jwt = 10 [
+    json_name = "jwt",
+    (gnostic.openapi.v3.property) = {description: "Configuration for a JWT-based authenticator."}
+  ];
+
+  // Configuration for an API Key-based authenticator.
+  // Must be present if 'type' is "apikey".
+  optional contrib.api.security.authn.apikey.v1.Config apikey = 11 [
+    json_name = "apikey",
+    (gnostic.openapi.v3.property) = {description: "Configuration for an API Key-based authenticator."}
+  ];
+
+  // Configuration for a Preshared Key-based authenticator.
+  // Must be present if 'type' is "presharedkey".
+  optional contrib.api.security.authn.presharedkey.v1.Config presharedkey = 12 [
+    json_name = "presharedkey",
+    (gnostic.openapi.v3.property) = {description: "Configuration for a Preshared Key-based authenticator."}
+  ];
+
+  // Configuration for an OpenID Connect (OIDC) authenticator.
+  // Must be present if 'type' is "oidc".
+  optional contrib.api.security.authn.oidc.v1.Config oidc = 13 [
+    json_name = "oidc",
+    (gnostic.openapi.v3.property) = {description: "Configuration for an OpenID Connect (OIDC) authenticator."}
+  ];
+
+  // --- Custom Authenticator Configuration ---
+
+  // For custom types, the 'type' field will contain the custom name,
+  // and this 'customize' field will hold its configuration.
+  optional google.protobuf.Struct customize = 100 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Configuration for a custom authenticator."}
+  ];
+}

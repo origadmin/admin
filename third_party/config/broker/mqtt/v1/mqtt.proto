@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package runtime.api.config.broker.mqtt.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/broker/mqtt/v1;mqttv1";
+
+// MqttConfig defines the configuration for an MQTT message queue.
+message MqttConfig {
+  // MQTT broker address (e.g., "tcp://localhost:1883").
+  string address = 1 [(gnostic.openapi.v3.property) = {description: "MQTT broker address (e.g., \"tcp://localhost:1883\")."}];
+  // Client ID for the MQTT client.
+  optional string client_id = 2 [(gnostic.openapi.v3.property) = {description: "Client ID for the MQTT client."}];
+  // Username for authentication.
+  optional string username = 3 [(gnostic.openapi.v3.property) = {description: "Username for authentication."}];
+  // Password for authentication.
+  optional string password = 4 [(gnostic.openapi.v3.property) = {description: "Password for authentication."}];
+  // Default topic for publishing or subscribing.
+  optional string topic = 5 [(gnostic.openapi.v3.property) = {description: "Default topic for publishing or subscribing."}];
+  // QoS level for messages (0, 1, or 2).
+  optional int32 qos = 6 [(gnostic.openapi.v3.property) = {description: "QoS level for messages (0, 1, or 2)."}];
+  // Whether to retain messages.
+  optional bool retained = 7 [(gnostic.openapi.v3.property) = {description: "Whether to retain messages."}];
+  // Whether to enable TLS.
+  optional bool tls_enabled = 8 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS."}];
+  // Path to TLS client certificate file.
+  optional string tls_client_cert_file = 9 [(gnostic.openapi.v3.property) = {description: "Path to TLS client certificate file."}];
+  // Path to TLS client key file.
+  optional string tls_client_key_file = 10 [(gnostic.openapi.v3.property) = {description: "Path to TLS client key file."}];
+  // Path to TLS CA certificate file.
+  optional string tls_ca_cert_file = 11 [(gnostic.openapi.v3.property) = {description: "Path to TLS CA certificate file."}];
+  // Whether to enable TLS insecure skip verify.
+  optional bool tls_insecure_skip_verify = 12 [(gnostic.openapi.v3.property) = {description: "Whether to enable TLS insecure skip verify."}];
+  // Keep alive interval in seconds.
+  optional int32 keep_alive_interval_seconds = 13 [(gnostic.openapi.v3.property) = {description: "Keep alive interval in seconds."}];
+  // Clean session flag.
+  optional bool clean_session = 14 [(gnostic.openapi.v3.property) = {description: "Clean session flag."}];
+}

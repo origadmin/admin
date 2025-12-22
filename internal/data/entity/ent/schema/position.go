@@ -12,8 +12,8 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 
-	"origadmin/application/admin/helpers/ent/mixin"
-	"origadmin/application/admin/helpers/i18n"
+	"origadmin/application/admin/internal/helpers/ent/mixin"
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
 // Position holds the schema definition for the Position entity.

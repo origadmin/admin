@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package runtime.api.config.data.oss.v1;
+
+import "config/data/oss/v1/oss_local.proto";
+import "config/data/oss/v1/oss.proto";
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/data/oss/v1;ossv1";
+
+// ObjectStoreConfig groups all "object storage" type backends into one category.
+// It uses the 'driver' field to determine which specific implementation to use.
+// This message was extracted from storage.proto and renamed for consistency.
+message ObjectStoreConfig {
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "object store name"}
+  ];
+
+  // The 'driver' field determines which configuration block to use.
+  // For built-in drivers, specify "local" or "oss".
+  // For custom drivers, specify the registered name of the custom driver (e.g., "sftp").
+  // When a custom driver is used, its configuration should be placed in the 'customize' field.
+  string driver = 2 [
+    json_name = "driver",
+    (gnostic.openapi.v3.property) = {description: "Object store driver name. Built-in: 'local', 'oss'. Custom drivers use their registered name."}
+  ];
+
+  // Local file system configuration. Only effective when driver is "local".
+  optional OssLocalConfig local = 3 [
+    json_name = "local",
+    (gnostic.openapi.v3.property) = {description: "local object storage configuration"}
+  ];
+
+  // Cloud object storage configuration. Only effective when driver is "oss".
+  optional OssConfig oss = 4 [
+    json_name = "oss",
+    (gnostic.openapi.v3.property) = {description: "cloud object storage configuration"}
+  ];
+
+  // Chunk size in bytes for splitting large objects.
+  // For OSS, this corresponds to the multipart upload part size.
+  // For local storage, it defines the size of individual blob files.
+  // If 0 or not set, a reasonable default (e.g., 4MB) will be used by the implementation.
+  int64 chunk_size = 5 [
+    json_name = "chunk_size",
+    (gnostic.openapi.v3.property) = {description: "chunk size in bytes"}
+  ];
+
+  // Optional custom configuration for drivers not explicitly defined as 'local' or 'oss'.
+  optional google.protobuf.Struct customize = 6 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for drivers not explicitly defined as 'local' or 'oss'."}
+  ];
+}

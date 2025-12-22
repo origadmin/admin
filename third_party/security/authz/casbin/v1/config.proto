@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package contrib.api.security.authz.casbin.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/authz/casbin/v1;casbinv1";
+
+// Config defines the settings for a Casbin authorizer.
+message Config {
+  // The path to the Casbin model configuration file (e.g., rbac_model.conf).
+  string model_path = 1 [
+    json_name = "model_path",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "Path to the Casbin model configuration file."}
+  ];
+
+  // The path to the Casbin policy file (e.g., rbac_policy.csv).
+  string policy_path = 2 [
+    json_name = "policy_path",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "Path to the Casbin policy file."}
+  ];
+
+  // Optional: The content of the Casbin model configuration file embedded directly.
+  string model = 5 [
+    json_name = "model",
+    (gnostic.openapi.v3.property) = {description: "Content of the Casbin model configuration file embedded directly."}
+  ];
+
+
+  // Optional: Policy rules can also be embedded directly in the configuration.
+  repeated PolicyRule embedded_policies = 3 [
+    json_name = "embedded_policies",
+    (gnostic.openapi.v3.property) = {description: "Embedded Casbin policy rules."}
+  ];
+
+  // Wildcard item used for domain matching. Defaults to "*".
+  string wildcard_item = 4 [
+    json_name = "wildcard_item",
+    (gnostic.openapi.v3.property) = {description: "Wildcard item used for domain matching. Defaults to '*'"}
+  ];
+}
+
+// PolicyRule defines a single Casbin policy rule in a format that Casbin understands.
+message PolicyRule {
+  // The type of the policy rule, e.g., "p" for policy or "g" for grouping/role.
+  string p_type = 1 [
+    json_name = "p_type",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The type of the policy rule (e.g., 'p' or 'g')."}
+  ];
+
+  // The content of the rule as a list of strings.
+  // e.g., for a "p" rule: ["alice", "data1", "read"]
+  // e.g., for a "g" rule: ["bob", "admin"]
+  repeated string rule = 2 [
+    json_name = "rule",
+    (validate.rules).repeated.min_items = 1,
+    (gnostic.openapi.v3.property) = {description: "The content of the rule as a list of strings."}
+  ];
+}

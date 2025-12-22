@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package contrib.api.security.authn.presharedkey.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/origadmin/contrib/api/gen/go/security/authn/presharedkey/v1;presharedkeyv1";
+
+// Config defines the settings for a Preshared Key authenticator.
+message Config {
+  // Defines where to look for the key in the incoming request.
+  // The format is "<source>:<name>", e.g., "header:X-Service-Key".
+  string key_source = 1 [
+    json_name = "key_source",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "Source of the preshared key in the request, e.g., 'header:X-Service-Key'."}
+  ];
+
+  // A list of valid keys and the principal information they map to.
+  repeated KeyDef keys = 2 [
+    json_name = "keys",
+    (gnostic.openapi.v3.property) = {description: "List of valid preshared keys and their associated principals."}
+  ];
+}
+
+// KeyDef maps a specific preshared key to a predefined principal.
+message KeyDef {
+  // The secret preshared key string.
+  string key = 1 [
+    json_name = "key",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The secret preshared key string."}
+  ];
+
+  // The ID of the principal that this key represents (e.g., a service name).
+  string principal_id = 2 [
+    json_name = "principal_id",
+    (validate.rules).string.min_len = 1,
+    (gnostic.openapi.v3.property) = {description: "The ID of the principal (e.g., service name) represented by this key."}
+  ];
+
+  // The roles associated with this principal.
+  repeated string roles = 3 [
+    json_name = "roles",
+    (gnostic.openapi.v3.property) = {description: "A list of roles associated with the principal."}
+  ];
+}

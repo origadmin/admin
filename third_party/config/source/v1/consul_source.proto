@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+import "config/transport/tls/v1/tls.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// ConsulSource is the consul source
+message ConsulSource {
+  string address = 1 [json_name = "address"];
+  string scheme = 2 [json_name = "scheme"];
+  string token = 3 [json_name = "token"];
+  string path = 4 [json_name = "path"];
+  string datacenter = 5 [json_name = "datacenter"];
+  string namespace = 6 [json_name = "namespace"];
+  string wait_time = 7 [json_name = "wait_time"]; // e.g., "10s"
+  string timeout = 8 [json_name = "timeout"]; // e.g., "5s"
+  runtime.api.config.transport.tls.v1.TLSConfig tls = 10 [json_name = "tls"];
+}

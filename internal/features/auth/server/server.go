@@ -19,7 +19,7 @@ import (
 	"github.com/origadmin/toolkits/errors"
 
 	"origadmin/application/admin/internal/configs"
-	authservice "origadmin/application/admin/internal/mods/auth/service"
+	authservice "origadmin/application/admin/internal/features/auth/service" // Corrected import path
 )
 
 const (

@@ -10,7 +10,7 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/internal/mods/auth/biz"
+	"origadmin/application/admin/internal/features/auth/biz" // Corrected import path
 )
 
 // PersonalServiceServer is a login service.

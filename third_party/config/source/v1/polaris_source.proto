@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+import "config/transport/tls/v1/tls.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// Polaris defines the configuration for Polaris configuration center
+message PolarisSource {
+  // Polaris server address (e.g., "127.0.0.1:8091")
+  string address = 1 [json_name = "address"];
+  // Namespace
+  string namespace = 2 [json_name = "namespace"];
+  // File group
+  string group = 3 [json_name = "group"];
+  // File name
+  string file = 4 [json_name = "file"];
+  // Timeout in seconds
+  int32 timeout = 5 [json_name = "timeout"];
+  // TLS configuration
+  runtime.api.config.transport.tls.v1.TLSConfig tls = 10 [json_name = "tls"];
+}

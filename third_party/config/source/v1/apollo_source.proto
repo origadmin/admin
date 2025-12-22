@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package runtime.api.config.source.v1;
+
+import "config/transport/tls/v1/tls.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/source/v1;sourcev1";
+
+// Apollo defines the configuration for Apollo configuration center
+message ApolloSource {
+  // Apollo server address (e.g., "http://localhost:8080")
+  string address = 1 [json_name = "address"];
+  // App ID
+  string app_id = 2 [json_name = "app_id"];
+  // Cluster name
+  string cluster = 3 [json_name = "cluster"];
+  // Namespace name
+  string namespace = 4 [json_name = "namespace"];
+  // Secret key for authentication
+  string secret = 5 [json_name = "secret"];
+  // Cluster list
+  repeated string clusters = 6 [json_name = "clusters"];
+  // TLS configuration
+  runtime.api.config.transport.tls.v1.TLSConfig tls = 10 [json_name = "tls"];
+}

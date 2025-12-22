@@ -9,21 +9,21 @@ import (
 	"errors"
 
 	"entgo.io/ent/dialect/sql"
+
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
 	"github.com/origadmin/toolkits/crypto/rand"
-
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/db"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/role"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
+	"origadmin/application/admin/internal/helpers/db"
 )
 
 type roleRepo struct {
-	gen *rand.Rand
-	db  *data.Data
+	gen rand.Generator
+	db  *ent.Database
 }
 
 func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQueryOption) (*dto.RolePB, error) {
@@ -37,7 +37,7 @@ func (repo roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQuery
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertRole2PB(result), nil
+	return dto.ConvertRoleToRolePB(result), nil
 }
 
 func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...dto.RoleUpdateOption) (*dto.RolePB, error) {
@@ -45,9 +45,13 @@ func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...
 	if len(options) > 0 {
 		option = options[0]
 	}
-	obj := dto.ConvertRolePB2Object(rolePB)
+	obj := dto.ConvertRolePBToRole(rolePB)
 	if obj.Keyword == "" {
-		obj.Keyword = "system:role:" + repo.gen.RandString(12)
+		randString, err := repo.gen.RandString(12)
+		if err != nil {
+			randString = ""
+		}
+		obj.Keyword = "system:role:" + randString
 	}
 	exist, err := repo.db.Role(ctx).Query().Where(role.KeywordEqualFold(rolePB.Keyword)).Exist(ctx)
 	if err != nil || exist {
@@ -60,7 +64,7 @@ func (repo roleRepo) Create(ctx context.Context, rolePB *dto.RolePB, options ...
 		if err != nil {
 			return err
 		}
-		rolePB = dto.ConvertRole2PB(saved)
+		rolePB = dto.ConvertRoleToRolePB(saved)
 		return nil
 	})
 	if err != nil {
@@ -91,13 +95,13 @@ func (repo roleRepo) Update(ctx context.Context, rolePB *dto.RolePB, options ...
 	}
 	if len(rolePB.Permissions) > 0 {
 		update.ClearPermissions()
-		update.AddPermissions(dto.ConvertPermissionsPB2Object(rolePB.Permissions)...)
+		update.AddPermissions(dto.ConvertPermissionsPBToPermissions(rolePB.Permissions)...)
 	}
-	saved, err := update.SetRoleWithZero(dto.ConvertRolePB2Object(rolePB), option.Fields...).Save(ctx)
+	saved, err := update.SetRoleWithZero(dto.ConvertRolePBToRole(rolePB), option.Fields...).Save(ctx)
 	if err != nil {
 		return nil, err
 	}
-	rolePB = dto.ConvertRole2PB(saved)
+	rolePB = dto.ConvertRoleToRolePB(saved)
 	return rolePB, nil
 }
 
@@ -128,10 +132,10 @@ func (repo roleRepo) List(ctx context.Context, in *pb.ListRolesRequest, options 
 }
 
 // NewRoleRepo .
-func NewRoleRepo(r runtime.Runtime, db *data.Data) dto.RoleRepo {
+func NewRoleRepo(r *runtime.App, d *data.Data) dto.RoleRepo {
 	return &roleRepo{
-		gen: rand.DigitAndLowerCase,
-		db:  db,
+		gen: rand.NewGenerator(rand.KindDigit | rand.KindLowerCase),
+		db:  d.DB(),
 	}
 }
 
@@ -151,16 +155,16 @@ func rolePageQuery(ctx context.Context, query *ent.RoleQuery, in *pb.ListRolesRe
 	}
 	query = db.Query(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
-	return dto.ConvertRoles(result), int32(count), err
+	return dto.ConvertRolesToRolesPB(result), int32(count), err
 }
 
 func roleQueryOptions(query *ent.RoleQuery, option dto.RoleQueryOption) *ent.RoleQuery {
-	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).RoleQuery
-	}
-	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).RoleQuery
-	}
+	//if len(option.SelectFields) > 0 {
+	//	query = query.Select(option.SelectFields...).(*ent.RoleQuery)
+	//}
+	//if len(option.OmitFields) > 0 {
+	//	query = query.Omit(option.OmitFields...).(*ent.RoleQuery)
+	//}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(roleOrderBy(option.OrderFields)...)
 	}

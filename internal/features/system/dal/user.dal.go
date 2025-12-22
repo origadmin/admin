@@ -10,19 +10,18 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/context"
-
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/helpers/db"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/mods/system/dto"
+	"origadmin/application/admin/internal/features/system/dto" // Corrected import path
+	"origadmin/application/admin/internal/helpers/db"
 )
 
 type userRepo struct {
-	db *data.Data
+	db *ent.Database
 }
 
 func (repo userRepo) AddRoleIDs(ctx context.Context, i int64, int64s []int64, option ...dto.UserMutationOption) error {
@@ -48,7 +47,7 @@ func (repo userRepo) ListResourceByUserID(ctx context.Context, id int64,
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertResources(resources), nil
+	return dto.ConvertResourcesToResourcesPB(resources), nil
 }
 
 func (repo userRepo) GetByUsername(ctx context.Context, username string, fields ...string) (*dto.UserNode, error) {
@@ -63,7 +62,7 @@ func (repo userRepo) GetByUsername(ctx context.Context, username string, fields 
 		return nil, err
 	}
 	return &dto.UserNode{
-		UserPB:            *dto.ConvertUser2PB(result),
+		UserPB:            *dto.ConvertUserToUserPB(result),
 		EncryptedPassword: result.EncryptedPassword,
 	}, nil
 }
@@ -83,7 +82,7 @@ func (repo userRepo) Get(ctx context.Context, id int64, options ...dto.UserQuery
 	if err != nil {
 		return nil, err
 	}
-	return dto.ConvertUser2PB(result), nil
+	return dto.ConvertUserToUserPB(result), nil
 }
 
 func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...dto.UserMutationOption) (*dto.UserPB, error) {
@@ -97,7 +96,7 @@ func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...
 	if err != nil || exist {
 		return nil, errors.New("user already exists")
 	}
-	obj := dto.ConvertUserPB2Object(userPB)
+	obj := dto.ConvertUserPBToUser(userPB)
 	obj.CreateTime = time.Now()
 	obj.UpdateTime = time.Now()
 	err = repo.db.Tx(ctx, func(ctx context.Context) error {
@@ -107,7 +106,7 @@ func (repo userRepo) Create(ctx context.Context, userPB *dto.UserPB, options ...
 		if err != nil {
 			return err
 		}
-		userPB = dto.ConvertUser2PB(saved)
+		userPB = dto.ConvertUserToUserPB(saved)
 		return nil
 	})
 	if err != nil {
@@ -123,13 +122,13 @@ func (repo userRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...dto.UserMutationOption) (*dto.UserPB, error) {
-	obj := dto.ConvertUserPB2Object(userPB)
+	obj := dto.ConvertUserPBToUser(userPB)
 	obj.UpdateTime = time.Now()
 	err := repo.db.Tx(ctx, func(ctx context.Context) error {
 		update := repo.db.User(ctx).UpdateOneID(userPB.Id)
 		if len(userPB.Roles) > 0 {
 			update.ClearRoles()
-			update.AddRoles(dto.ConvertRolesPB2Object(userPB.Roles)...)
+			update.AddRoles(dto.ConvertRolesPBToRoles(userPB.Roles)...)
 		} else {
 			update.ClearRoles()
 		}
@@ -149,7 +148,7 @@ func (repo userRepo) Update(ctx context.Context, userPB *dto.UserPB, options ...
 		if err != nil {
 			return err
 		}
-		userPB = dto.ConvertUser2PB(saved)
+		userPB = dto.ConvertUserToUserPB(saved)
 		return nil
 	})
 	if err != nil {
@@ -180,7 +179,7 @@ func (repo userRepo) List(ctx context.Context, in *pb.ListUsersRequest, options 
 }
 
 // NewUserRepo .
-func NewUserRepo(r runtime.Runtime, db *data.Data) dto.UserRepo {
+func NewUserRepo(r *runtime.App, db *ent.Database) dto.UserRepo {
 	return &userRepo{
 		db: db,
 	}
@@ -202,16 +201,16 @@ func userPageQuery(ctx context.Context, query *ent.UserQuery, in *pb.ListUsersRe
 	}
 	query = db.Query(query, in, !in.NoPaging)
 	result, err := query.All(ctx)
-	return dto.ConvertUsers(result), int32(count), err
+	return dto.ConvertUsersToUsersPB(result), int32(count), err
 }
 
 func userQueryOptions(query *ent.UserQuery, option dto.UserQueryOption) *ent.UserQuery {
-	if len(option.SelectFields) > 0 {
-		query = query.Select(option.SelectFields...).UserQuery
-	}
-	if len(option.OmitFields) > 0 {
-		query = query.Omit(option.OmitFields...).UserQuery
-	}
+	//if len(option.SelectFields) > 0 {
+	//	query = query.Select(option.SelectFields...).(*ent.UserQuery)
+	//}
+	//if len(option.OmitFields) > 0 {
+	//	query = query.Omit(option.OmitFields...).(*ent.UserQuery)
+	//}
 	if len(option.OrderFields) > 0 {
 		query = query.Order(userOrderBy(option.OrderFields)...)
 	}

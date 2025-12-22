@@ -10,7 +10,7 @@ import (
 	"github.com/origadmin/runtime/log"
 
 	pb "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/mods/system/biz"
+	"origadmin/application/admin/internal/features/system/biz" // Corrected import path
 )
 
 // ResourceServiceServer is a menu service.

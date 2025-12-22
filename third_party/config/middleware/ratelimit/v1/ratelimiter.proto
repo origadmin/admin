@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package runtime.api.config.middleware.ratelimit.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/origadmin/runtime/api/gen/go/config/middleware/ratelimit/v1;ratelimitv1";
+
+// Rate limiter
+message RateLimiter {
+  message Redis {
+    string addr = 1 [json_name = "addr"];
+    string username = 2 [json_name = "username"];
+    string password = 3 [json_name = "password"];
+    int32 db = 4 [json_name = "db"];
+  }
+  message Memory {
+    int64 expiration = 1 [json_name = "expiration"];
+    int64 cleanup_interval = 2 [json_name = "cleanup_interval"];
+  }
+  // The 'name' field determines which rate limiter to use.
+  // For built-in types, specify "bbr", "memory", or "redis".
+  // For custom types, specify the registered name of the custom rate limiter.
+  // When a custom type is used, its configuration should be placed in the 'customize' field.
+  string name = 1 [
+    json_name = "name",
+    (gnostic.openapi.v3.property) = {description: "Rate limiter name. Built-in: 'bbr', 'memory', 'redis'. Custom types use their registered name."}
+  ];
+  // The number of seconds in a rate limit window
+  int32 period = 2 [json_name = "period"];
+
+  // The number of requests allowed in a window of time
+  int32 x_ratelimit_limit = 4 [json_name = "x_ratelimit_limit"];
+  // The number of requests that can still be made in the current window of time
+  int32 x_ratelimit_remaining = 5 [json_name = "x_ratelimit_remaining"];
+  // The number of seconds until the current rate limit window completely resets
+  int32 x_ratelimit_reset = 6 [json_name = "x_ratelimit_reset"];
+  // When rate limited, the number of seconds to wait before another request will be accepted
+  int32 retry_after = 7 [json_name = "retry_after"];
+
+  Memory memory = 101 [json_name = "memory"];
+  Redis redis = 102 [json_name = "redis"];
+  // Optional custom configuration for rate limiter types not explicitly defined.
+  optional google.protobuf.Struct customize = 103 [
+    json_name = "customize",
+    (gnostic.openapi.v3.property) = {description: "Custom configuration for rate limiter types not explicitly defined."}
+  ];
+}

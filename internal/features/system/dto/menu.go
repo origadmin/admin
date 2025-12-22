@@ -6,7 +6,9 @@
 package dto
 
 import (
-	"github.com/origadmin/runtime/interfaces/pagination"
+	"context"
+
+	"origadmin/application/admin/internal/helpers/pagination"
 
 	pb "origadmin/application/admin/api/v1/services/system"
 )
@@ -18,11 +20,11 @@ type (
 
 // MenuRepo is a Menu repository interface.
 type MenuRepo interface {
-	//Get(context.Context, int64, ...MenuQueryOption) (*MenuPB, error)
-	//Create(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
-	//Delete(context.Context, int64) error
-	//Update(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
-	//List(context.Context, *ListMenusRequest, ...MenuQueryOption) ([]*MenuPB, int32, error)
+	Get(context.Context, int64, ...MenuQueryOption) (*MenuPB, error)
+	Create(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
+	Delete(context.Context, int64) error
+	Update(context.Context, *MenuPB, ...MenuQueryOption) (*MenuPB, error)
+	List(context.Context, *ListMenusRequest, ...MenuQueryOption) ([]*MenuPB, int32, error)
 }
 
 type MenuQueryOption struct {

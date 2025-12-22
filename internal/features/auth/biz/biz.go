@@ -5,7 +5,7 @@
 package biz
 
 import (
-	"github.com/origadmin/runtime/interfaces/pagination"
+	"origadmin/application/admin/internal/helpers/pagination"
 )
 
 var (
