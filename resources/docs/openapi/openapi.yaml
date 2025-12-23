@@ -1125,9 +1125,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -1298,9 +1298,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -1468,7 +1468,7 @@ paths:
                     type: string
                 - name: page
                   in: query
-                  description: The page page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -1646,9 +1646,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -1819,9 +1819,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -1997,9 +1997,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -2170,9 +2170,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
@@ -3267,7 +3267,7 @@ components:
         api.v1.services.system.ListDepartmentsResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3276,9 +3276,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Department'
                     description: The paging menus
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3294,11 +3294,11 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
         api.v1.services.system.ListMenusResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3307,9 +3307,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Menu'
                     description: The paging menus
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3325,7 +3325,7 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
             description: ListMenusResponse is the response for the MenuService.ListMenus method.
         api.v1.services.system.ListPermissionsResponse:
             type: object
@@ -3341,7 +3341,7 @@ components:
                     description: The paging menus
                 page:
                     type: integer
-                    description: The page page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3361,7 +3361,7 @@ components:
         api.v1.services.system.ListPositionsResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3370,9 +3370,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Position'
                     description: The paging menus
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3388,11 +3388,11 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
         api.v1.services.system.ListResourcesResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3401,9 +3401,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: The paging resources
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3419,12 +3419,12 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
             description: ListResourcesResponse is the response for the ResourceService.ListResources method.
         api.v1.services.system.ListRolesResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3433,9 +3433,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: The paging menus
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3451,11 +3451,11 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
         api.v1.services.system.ListUserResourcesResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     format: int32
                 resources:
@@ -3465,7 +3465,7 @@ components:
         api.v1.services.system.ListUsersResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3474,9 +3474,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.User'
                     description: The paging menus
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3492,7 +3492,7 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}

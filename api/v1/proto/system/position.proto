@@ -41,8 +41,8 @@ service PositionService {
 message ListPositionsRequest {
   // The parent resource id, for example, "shelves/shelf1".
   int64 id = 1 [json_name = "id"];
-  // The current page number.
-  int32 current = 2 [json_name = "current"];
+  // The page number.
+  int32 page = 2 [json_name = "page"];
   // The maximum number of items to return.
   int32 page_size = 3 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
@@ -55,18 +55,18 @@ message ListPositionsRequest {
 
 message ListPositionsResponse {
   // The total number of items in the list.
-  int32 total_size = 1 [json_name = "total_size"];
+  int32 total = 1 [json_name = "total"];
   // The paging menus
   repeated api.v1.services.types.Position positions = 2 [json_name = "positions"];
-  // The current page number.
-  int32 current = 3 [json_name = "current"];
+  // The page number.
+  int32 page = 3 [json_name = "page"];
   // The maximum number of items to return.
   int32 page_size = 4 [json_name = "page_size"];
   // Token to retrieve the next page of results, or empty if there are no
   // more results in the list.
   string next_page_token = 5 [json_name = "next_page_token"];
   // Additional information about this response.
-  // content to be added without destroying the current data format
+  // content to be added without destroying the page data format
   optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 

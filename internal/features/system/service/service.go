@@ -7,9 +7,10 @@ package service
 import (
 	"context"
 
-	"github.com/origadmin/runtime/service"
+	"github.com/go-kratos/kratos/v2/transport"
 
-	system "origadmin/application/admin/api/v1/system"
+	"github.com/origadmin/runtime/service"
+	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/features/system/biz"
 )
 
@@ -39,7 +40,11 @@ func New(
 	}
 }
 
-func (s *SystemService) Register(ctx context.Context, srv *service.Server) {
+func (s *SystemService) Register(ctx context.Context, srv any) {
+	switch srv.(type) {
+	case *transport.Server:
+	case *service.Server:
+	}
 	system.RegisterResourceServiceServer(srv.GRPC, s)
 	system.RegisterRoleServiceServer(srv.GRPC, s)
 	system.RegisterUserServiceServer(srv.GRPC, s)

@@ -41,7 +41,7 @@ service PermissionService {
 message ListPermissionsRequest {
   // The parent resource id, for example, "shelves/shelf1".
   int64 id = 1 [json_name = "id"];
-  // The page page number.
+  // The page number.
   int32 page = 2 [json_name = "page"];
   // The maximum number of items to return.
   int32 page_size = 3 [json_name = "page_size"];
@@ -60,7 +60,7 @@ message ListPermissionsResponse {
   int32 total = 1 [json_name = "total"];
   // The paging menus
   repeated api.v1.services.types.Permission permissions = 2 [json_name = "permissions"];
-  // The page page number.
+  // The page number.
   int32 page = 3 [json_name = "page"];
   // The maximum number of items to return.
   int32 page_size = 4 [json_name = "page_size"];
