@@ -7,106 +7,46 @@ package service
 import (
 	"context"
 
-	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service"
 
-	pb "origadmin/application/admin/api/v1/services/system"
+	system "origadmin/application/admin/api/v1/system"
+	"origadmin/application/admin/internal/features/system/biz"
 )
 
-type SystemServerRegistrar service.ServerRegistrar
+type SystemService struct {
+	system.UnimplementedResourceServiceServer
+	system.UnimplementedRoleServiceServer
+	system.UnimplementedUserServiceServer
+	system.UnimplementedPermissionServiceServer
 
-type RegisterServer struct {
-	Resource   pb.ResourceServiceServer
-	Role       pb.RoleServiceServer
-	User       pb.UserServiceServer
-	Permission pb.PermissionServiceServer
+	resource   *biz.ResourceUseCase
+	role       *biz.RoleUseCase
+	user       *biz.UserUseCase
+	permission *biz.PermissionUseCase
 }
 
-func (s RegisterServer) Register(ctx context.Context, svc any) {
-	switch v := svc.(type) {
-	case *service.GRPCServer:
-		s.RegisterGRPC(ctx, v)
-	case *service.HTTPServer:
-		s.RegisterHTTP(ctx, v)
+func New(
+	resource *biz.ResourceUseCase,
+	role *biz.RoleUseCase,
+	user *biz.UserUseCase,
+	permission *biz.PermissionUseCase,
+) *SystemService {
+	return &SystemService{
+		resource:   resource,
+		role:       role,
+		user:       user,
+		permission: permission,
 	}
 }
 
-func (s RegisterServer) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
-	log.Info("grpc server system init")
-	pb.RegisterResourceServiceServer(server, s.Resource)
-	pb.RegisterRoleServiceServer(server, s.Role)
-	pb.RegisterUserServiceServer(server, s.User)
-	pb.RegisterPermissionServiceServer(server, s.Permission)
-}
+func (s *SystemService) Register(ctx context.Context, srv *service.Server) {
+	system.RegisterResourceServiceServer(srv.GRPC, s)
+	system.RegisterRoleServiceServer(srv.GRPC, s)
+	system.RegisterUserServiceServer(srv.GRPC, s)
+	system.RegisterPermissionServiceServer(srv.GRPC, s)
 
-func (s RegisterServer) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http server system init")
-	server.Route("/sys")
-	pb.RegisterResourceServiceHTTPServer(server, s.Resource)
-	pb.RegisterRoleServiceHTTPServer(server, s.Role)
-	pb.RegisterUserServiceHTTPServer(server, s.User)
-	pb.RegisterPermissionServiceHTTPServer(server, s.Permission)
+	system.RegisterResourceServiceHTTPServer(srv.HTTP, s)
+	system.RegisterRoleServiceHTTPServer(srv.HTTP, s)
+	system.RegisterUserServiceHTTPServer(srv.HTTP, s)
+	system.RegisterPermissionServiceHTTPServer(srv.HTTP, s)
 }
-
-func NewRegisterServer(
-	Resource pb.ResourceServiceServer,
-	Role pb.RoleServiceServer,
-	User pb.UserServiceServer,
-	Permission pb.PermissionServiceServer,
-) SystemServerRegistrar {
-	return &RegisterServer{
-		Resource:   Resource,
-		Role:       Role,
-		User:       User,
-		Permission: Permission,
-	}
-}
-
-type RegisterBridgeServer struct {
-	Resource   pb.ResourceServiceHookedBridger
-	Role       pb.RoleServiceHookedBridger
-	User       pb.UserServiceHookedBridger
-	Permission pb.PermissionServiceHookedBridger
-}
-
-func (s RegisterBridgeServer) Register(ctx context.Context, svc any) {
-	switch v := svc.(type) {
-	case *service.GRPCServer:
-		s.RegisterGRPC(ctx, v)
-	case *service.HTTPServer:
-		s.RegisterHTTP(ctx, v)
-	}
-}
-
-func (s RegisterBridgeServer) RegisterHTTP(ctx context.Context, server *service.HTTPServer) {
-	log.Info("http server system init")
-	pb.RegisterResourceServiceBridgeServer(server, s.Resource)
-	pb.RegisterRoleServiceBridgeServer(server, s.Role)
-	pb.RegisterUserServiceBridgeServer(server, s.User)
-	pb.RegisterPermissionServiceBridgeServer(server, s.Permission)
-}
-
-func (s RegisterBridgeServer) RegisterGRPC(ctx context.Context, server *service.GRPCServer) {
-	log.Info("grpc server system init")
-	//pb.RegisterResourceServiceBridgeServer(server, s.Resource)
-	//pb.RegisterRoleServiceBridgeServer(server, s.Role)
-	//pb.RegisterUserServiceBridgeServer(server, s.User)
-	//pb.RegisterPermissionServiceBridgeServer(server, s.Permission)
-}
-
-func NewRegisterBridgeServer(r runtime.Runtime,
-	Resource pb.ResourceServiceServer,
-	Role pb.RoleServiceServer,
-	User pb.UserServiceServer,
-	Permission pb.PermissionServiceServer,
-) SystemServerRegistrar {
-	return &RegisterBridgeServer{
-		Resource:   NewResourceServiceHookedBridge(r, Resource),
-		Role:       NewRoleServiceHookedBridge(r, Role),
-		User:       NewUserServiceHookedBridge(r, User),
-		Permission: NewPermissionServiceHookedBridge(r, Permission),
-	}
-}
-
-var _ service.ServerRegistrar = (*RegisterServer)(nil)

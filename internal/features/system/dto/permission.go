@@ -7,57 +7,22 @@ package dto
 
 import (
 	"context"
-
-	"origadmin/application/admin/internal/helpers/pagination" // Corrected import path
-
-	pb "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/api/v1/services/types"
 )
-
-type (
-	ListPermissionsRequest  = pb.ListPermissionsRequest
-	ListPermissionsResponse = pb.ListPermissionsResponse
-)
-
-type PermissionNode struct {
-	PermissionPB
-	ResourceKeywords []string `json:"resource_keywords"`
-}
 
 // PermissionRepo is a Permission repository interface.
 type PermissionRepo interface {
-	Get(context.Context, int64, ...PermissionQueryOption) (*PermissionPB, error)
-	Create(context.Context, *PermissionPB, ...PermissionQueryOption) (*PermissionPB, error)
+	Get(context.Context, int64, ...PermissionQueryOption) (*types.Permission, error)
+	Create(context.Context, *types.Permission, ...PermissionQueryOption) (*types.Permission, error)
 	Delete(context.Context, int64) error
-	Update(context.Context, *PermissionPB, ...PermissionQueryOption) (*PermissionPB, error)
-	List(context.Context, *ListPermissionsRequest, ...PermissionQueryOption) ([]*PermissionPB, int32, error)
+	Update(context.Context, *types.Permission, ...PermissionQueryOption) (*types.Permission, error)
+	List(context.Context, *system.ListPermissionsRequest, ...PermissionQueryOption) ([]*types.Permission, int32, error)
 }
 
 type PermissionQueryOption struct {
-	Name             string   `form:"name" json:"name,omitempty"`
-	Status           int8     `form:"status" json:"status,omitempty"`
-	InIDs            []string `form:"-" json:"-"`
-	UserID           string   `form:"-" json:"-"` // UserPB ID
-	RoleID           string   `form:"-" json:"-"` // RolePB ID
-	ParentID         string   `form:"-" json:"-"` // Parent ID
-	ParentPathPrefix string   `form:"-" json:"-"`
-	SelectFields     []string
-	OmitFields       []string
 	OrderFields      []string
 	Fields           []string
 	IncludeResources bool
 	IncludeRoles     bool
-}
-
-func (o PermissionQueryOption) FromListRequest(in *ListPermissionsRequest, limiter pagination.PageLimiter) error { // Updated usage
-	in.Current = limiter.Current(in.Current)
-	in.PageSize = limiter.PerPage(in.PageSize)
-	return nil
-}
-
-func (o PermissionQueryOption) FromGetRequest(in *pb.GetPermissionRequest, limiter pagination.PageLimiter) error { // Updated usage
-	return nil
-}
-
-func (o PermissionQueryOption) FromCreateRequest(in *pb.CreatePermissionRequest, limiter pagination.PageLimiter) error { // Updated usage
-	return nil
 }

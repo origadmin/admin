@@ -1466,9 +1466,9 @@ paths:
                   description: The parent resource id, for example, "shelves/shelf1".
                   schema:
                     type: string
-                - name: current
+                - name: page
                   in: query
-                  description: The current page number.
+                  description: The page page number.
                   schema:
                     type: integer
                     format: int32
@@ -3330,7 +3330,7 @@ components:
         api.v1.services.system.ListPermissionsResponse:
             type: object
             properties:
-                total_size:
+                total:
                     type: integer
                     description: The total number of items in the list.
                     format: int32
@@ -3339,9 +3339,9 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Permission'
                     description: The paging menus
-                current:
+                page:
                     type: integer
-                    description: The current page number.
+                    description: The page page number.
                     format: int32
                 page_size:
                     type: integer
@@ -3357,7 +3357,7 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: |-
                         Additional information about this response.
-                         content to be added without destroying the current data format
+                         content to be added without destroying the page data format
         api.v1.services.system.ListPositionsResponse:
             type: object
             properties:

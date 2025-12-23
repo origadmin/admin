@@ -7,22 +7,10 @@ package biz
 import (
 	"net/http"
 
-	"github.com/origadmin/runtime/errors" // Changed from httperr
-
-	"origadmin/application/admin/internal/helpers/pagination"
-
-	typespb "origadmin/application/admin/api/v1/services/types"
+	"github.com/origadmin/toolkits/errors"
 )
 
 var (
 	// ErrUserNotFound is user not found.
-	ErrUserNotFound = errors.New("http.response.status."+typespb.SystemErrorReason_SYSTEM_ERROR_REASON_USER_NOT_FOUND.String(), http.StatusNotFound, "user not found")
+	ErrUserNotFound = errors.New(http.StatusNotFound, "USER_NOT_FOUND", "user not found")
 )
-
-var (
-	defaultLimiter = pagination.DefaultLimiter()
-)
-
-type UpdateHooker interface {
-	UpdateRules()
-}
