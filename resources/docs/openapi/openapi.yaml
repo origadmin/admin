@@ -2225,6 +2225,11 @@ paths:
                   description: The parent resource id where the user is to be created.
                   schema:
                     type: string
+                - name: password
+                  in: query
+                  description: The password to use for this user.
+                  schema:
+                    type: string
                 - name: user_id
                   in: query
                   description: The user id to use for this user.

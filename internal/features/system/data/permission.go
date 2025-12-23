@@ -12,7 +12,6 @@ import (
 	"origadmin/application/admin/internal/features/system/data/ent"
 	"origadmin/application/admin/internal/features/system/data/ent/permission"
 	"origadmin/application/admin/internal/features/system/dto"
-	"origadmin/application/admin/internal/helpers/db"
 )
 
 type permissionRepo struct {
@@ -20,7 +19,7 @@ type permissionRepo struct {
 }
 
 func (repo *permissionRepo) Get(ctx context.Context, id int64, options ...dto.PermissionQueryOption) (*types.Permission, error) {
-	result, err := repo.db.Permission.Get(ctx, int(id))
+	result, err := repo.db.Permission.Get(ctx, (id))
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +33,7 @@ func (repo *permissionRepo) Create(ctx context.Context, p *types.Permission, opt
 	if len(p.ResourceIds) > 0 {
 		create.AddResourceIDs(p.ResourceIds...)
 	}
-	
+
 	// ... set other fields
 
 	saved, err := create.Save(ctx)
@@ -45,12 +44,12 @@ func (repo *permissionRepo) Create(ctx context.Context, p *types.Permission, opt
 }
 
 func (repo *permissionRepo) Delete(ctx context.Context, id int64) error {
-	return repo.db.Permission.DeleteOneID(int(id)).Exec(ctx)
+	return repo.db.Permission.DeleteOneID((id)).Exec(ctx)
 }
 
 func (repo *permissionRepo) Update(ctx context.Context, p *types.Permission, options ...dto.PermissionQueryOption) (*types.Permission, error) {
-	update := repo.db.Permission.UpdateOneID(int(p.Id))
-	
+	update := repo.db.Permission.UpdateOneID((p.Id))
+
 	if len(p.ResourceIds) > 0 {
 		update.ClearResources().AddResourceIDs(p.ResourceIds...)
 	}
@@ -80,8 +79,8 @@ func (repo *permissionRepo) List(ctx context.Context, in *system.ListPermissions
 	if err != nil {
 		return nil, 0, err
 	}
-	
-	query = db.QueryPage(query, in)
+
+	//query = db.QueryPage(query, in)
 
 	result, err := query.All(ctx)
 	return dto.ConvertPermissionsToPermissionsPB(result), int32(count), err

@@ -6,7 +6,9 @@ package service
 
 import (
 	"context"
+
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/features/system/dto"
 )
 
 func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPermissionsRequest) (*system.ListPermissionsResponse, error) {
@@ -20,15 +22,15 @@ func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPer
 	}, nil
 }
 
-func (s *SystemService) GetPermission(ctx context.Context, req *system.GetPermissionRequest) (*system.Permission, error) {
+func (s *SystemService) GetPermission(ctx context.Context, req *system.GetPermissionRequest) (*dto.PermissionPB, error) {
 	return s.permission.GetPermission(ctx, req.Id)
 }
 
-func (s *SystemService) CreatePermission(ctx context.Context, req *system.CreatePermissionRequest) (*system.Permission, error) {
+func (s *SystemService) CreatePermission(ctx context.Context, req *system.CreatePermissionRequest) (*dto.PermissionPB, error) {
 	return s.permission.CreatePermission(ctx, req.Permission)
 }
 
-func (s *SystemService) UpdatePermission(ctx context.Context, req *system.UpdatePermissionRequest) (*system.Permission, error) {
+func (s *SystemService) UpdatePermission(ctx context.Context, req *system.UpdatePermissionRequest) (*dto.PermissionPB, error) {
 	return s.permission.UpdatePermission(ctx, req.Permission)
 }
 

@@ -105,7 +105,7 @@ func ConvertPermissionPBToPermission(from *PermissionPB) *Permission {
 	}
 
 	to := &Permission{
-		ID:          int(from.Id),
+		ID:          from.Id,
 		CreateTime:  ConvertTimestampToTime(from.CreateTime),
 		UpdateTime:  ConvertTimestampToTime(from.UpdateTime),
 		Name:        from.Name,
@@ -151,8 +151,8 @@ func ConvertPermissionResourcePBToPermissionResource(from *PermissionResourcePB)
 
 	to := &PermissionResource{
 		ID:           int(from.Id),
-		PermissionID: int(from.PermissionId),
-		ResourceID:   int(from.ResourceId),
+		PermissionID: from.PermissionId,
+		ResourceID:   from.ResourceId,
 	}
 	return to
 }
@@ -165,8 +165,8 @@ func ConvertPermissionResourceToPermissionResourcePB(from *PermissionResource) *
 
 	to := &PermissionResourcePB{
 		Id:           int64(from.ID),
-		PermissionId: int64(from.PermissionID),
-		ResourceId:   int64(from.ResourceID),
+		PermissionId: from.PermissionID,
+		ResourceId:   from.ResourceID,
 	}
 	return to
 }
@@ -202,7 +202,7 @@ func ConvertPermissionToPermissionPB(from *Permission) *PermissionPB {
 	}
 
 	to := &PermissionPB{
-		Id:          int64(from.ID),
+		Id:          from.ID,
 		CreateTime:  ConvertTimeToTimestamp(from.CreateTime),
 		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
 		Name:        from.Name,
@@ -254,7 +254,7 @@ func ConvertResourcePBToResource(from *ResourcePB) *Resource {
 	}
 
 	to := &Resource{
-		ID:          int(from.Id),
+		ID:          from.Id,
 		CreateTime:  ConvertTimestampToTime(from.CreateTime),
 		UpdateTime:  ConvertTimestampToTime(from.UpdateTime),
 		Name:        from.Name,
@@ -269,7 +269,7 @@ func ConvertResourcePBToResource(from *ResourcePB) *Resource {
 		TreePath:    from.TreePath,
 		Properties:  from.Properties,
 		Description: from.Description,
-		ParentID:    int(from.ParentId),
+		ParentID:    from.ParentId,
 	}
 	return to
 }
@@ -281,7 +281,7 @@ func ConvertResourceToResourcePB(from *Resource) *ResourcePB {
 	}
 
 	to := &ResourcePB{
-		Id:          int64(from.ID),
+		Id:          from.ID,
 		CreateTime:  ConvertTimeToTimestamp(from.CreateTime),
 		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
 		Name:        from.Name,
@@ -296,7 +296,7 @@ func ConvertResourceToResourcePB(from *Resource) *ResourcePB {
 		TreePath:    from.TreePath,
 		Properties:  from.Properties,
 		Description: from.Description,
-		ParentId:    int64(from.ParentID),
+		ParentId:    from.ParentID,
 		Children:    ConvertResourcesToResourcesPB(from.Edges.Children),
 		Parent:      ConvertResourceToResourcePB(from.Edges.Parent),
 		Permissions: ConvertPermissionsToPermissionsPB(from.Edges.Permissions),
@@ -361,7 +361,7 @@ func ConvertRolePBToRole(from *RolePB) *Role {
 	}
 
 	to := &Role{
-		ID:          int(from.Id),
+		ID:          from.Id,
 		CreateTime:  ConvertTimestampToTime(from.CreateTime),
 		UpdateTime:  ConvertTimestampToTime(from.UpdateTime),
 		Keyword:     from.Keyword,
@@ -408,8 +408,8 @@ func ConvertRolePermissionPBToRolePermission(from *RolePermissionPB) *RolePermis
 
 	to := &RolePermission{
 		ID:           int(from.Id),
-		RoleID:       int(from.RoleId),
-		PermissionID: int(from.PermissionId),
+		RoleID:       from.RoleId,
+		PermissionID: from.PermissionId,
 	}
 	return to
 }
@@ -422,8 +422,8 @@ func ConvertRolePermissionToRolePermissionPB(from *RolePermission) *RolePermissi
 
 	to := &RolePermissionPB{
 		Id:           int64(from.ID),
-		RoleId:       int64(from.RoleID),
-		PermissionId: int64(from.PermissionID),
+		RoleId:       from.RoleID,
+		PermissionId: from.PermissionID,
 	}
 	return to
 }
@@ -459,7 +459,7 @@ func ConvertRoleToRolePB(from *Role) *RolePB {
 	}
 
 	to := &RolePB{
-		Id:          int64(from.ID),
+		Id:          from.ID,
 		CreateTime:  ConvertTimeToTimestamp(from.CreateTime),
 		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
 		Keyword:     from.Keyword,
@@ -531,7 +531,7 @@ func ConvertUserPBToUser(from *UserPB) *User {
 	}
 
 	to := &User{
-		ID:            int(from.Id),
+		ID:            from.Id,
 		CreateTime:    ConvertTimestampToTime(from.CreateTime),
 		UpdateTime:    ConvertTimestampToTime(from.UpdateTime),
 		UUID:          from.Uuid,
@@ -586,8 +586,8 @@ func ConvertUserRolePBToUserRole(from *UserRolePB) *UserRole {
 
 	to := &UserRole{
 		ID:     int(from.Id),
-		UserID: int(from.UserId),
-		RoleID: int(from.RoleId),
+		UserID: from.UserId,
+		RoleID: from.RoleId,
 	}
 	return to
 }
@@ -600,8 +600,8 @@ func ConvertUserRoleToUserRolePB(from *UserRole) *UserRolePB {
 
 	to := &UserRolePB{
 		Id:     int64(from.ID),
-		UserId: int64(from.UserID),
-		RoleId: int64(from.RoleID),
+		UserId: from.UserID,
+		RoleId: from.RoleID,
 		User:   ConvertUserToUserPB(from.Edges.User),
 		Role:   ConvertRoleToRolePB(from.Edges.Role),
 	}
@@ -639,7 +639,7 @@ func ConvertUserToUserPB(from *User) *UserPB {
 	}
 
 	to := &UserPB{
-		Id:            int64(from.ID),
+		Id:            from.ID,
 		CreateTime:    ConvertTimeToTimestamp(from.CreateTime),
 		UpdateTime:    ConvertTimeToTimestamp(from.UpdateTime),
 		Uuid:          from.UUID,

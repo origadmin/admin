@@ -5,11 +5,6 @@
 package service
 
 import (
-	"context"
-
-	"github.com/go-kratos/kratos/v2/transport"
-
-	"github.com/origadmin/runtime/service"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/features/system/biz"
 )
@@ -38,20 +33,4 @@ func New(
 		user:       user,
 		permission: permission,
 	}
-}
-
-func (s *SystemService) Register(ctx context.Context, srv any) {
-	switch srv.(type) {
-	case *transport.Server:
-	case *service.Server:
-	}
-	system.RegisterResourceServiceServer(srv.GRPC, s)
-	system.RegisterRoleServiceServer(srv.GRPC, s)
-	system.RegisterUserServiceServer(srv.GRPC, s)
-	system.RegisterPermissionServiceServer(srv.GRPC, s)
-
-	system.RegisterResourceServiceHTTPServer(srv.HTTP, s)
-	system.RegisterRoleServiceHTTPServer(srv.HTTP, s)
-	system.RegisterUserServiceHTTPServer(srv.HTTP, s)
-	system.RegisterPermissionServiceHTTPServer(srv.HTTP, s)
 }

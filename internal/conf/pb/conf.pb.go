@@ -2,11 +2,15 @@
 // versions:
 // 	protoc-gen-go v1.36.10
 // 	protoc        v5.28.3
-// source: conf/pb/conf.proto
+// source: internal/conf/pb/conf.proto
 
 package confpb
 
 import (
+	v11 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
+	v12 "github.com/origadmin/runtime/api/gen/go/config/discovery/v1"
+	v13 "github.com/origadmin/runtime/api/gen/go/config/logger/v1"
+	v14 "github.com/origadmin/runtime/api/gen/go/config/middleware/v1"
 	v1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -31,17 +35,27 @@ type Bootstrap struct {
 	Clients *v1.Clients `protobuf:"bytes,2,opt,name=clients,proto3" json:"clients,omitempty"`
 	// Global-level configurations can be placed here.
 	SelectorGlobal *SelectorGlobal `protobuf:"bytes,3,opt,name=selector_global,json=selectorGlobal,proto3" json:"selector_global,omitempty"`
+	// Data configuration, including databases, caches, and object stores.
+	Data *v11.Data `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
+	// Discovery configuration for service discovery.
+	Discoveries *v12.Discoveries `protobuf:"bytes,5,opt,name=discoveries,proto3" json:"discoveries,omitempty"`
+	// Logger configuration for application logging.
+	Logger *v13.Logger `protobuf:"bytes,6,opt,name=logger,proto3" json:"logger,omitempty"`
+	// Middleware configuration for request processing.
+	Middlewares *v14.Middlewares `protobuf:"bytes,7,opt,name=middlewares,proto3" json:"middlewares,omitempty"`
 	// Captcha feature specific configuration.
-	Captcha *Captcha `protobuf:"bytes,4,opt,name=captcha,proto3" json:"captcha,omitempty"`
+	Captcha *Captcha `protobuf:"bytes,8,opt,name=captcha,proto3" json:"captcha,omitempty"`
 	// RootUser feature specific configuration for initial user setup.
-	RootUser      *RootUser `protobuf:"bytes,5,opt,name=root_user,json=rootUser,proto3" json:"root_user,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	RootUser *RootUser `protobuf:"bytes,9,opt,name=root_user,json=rootUser,proto3" json:"root_user,omitempty"`
+	// Default discovery service name.
+	DefaultDiscovery string `protobuf:"bytes,10,opt,name=default_discovery,json=defaultDiscovery,proto3" json:"default_discovery,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *Bootstrap) Reset() {
 	*x = Bootstrap{}
-	mi := &file_conf_pb_conf_proto_msgTypes[0]
+	mi := &file_internal_conf_pb_conf_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -53,7 +67,7 @@ func (x *Bootstrap) String() string {
 func (*Bootstrap) ProtoMessage() {}
 
 func (x *Bootstrap) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_pb_conf_proto_msgTypes[0]
+	mi := &file_internal_conf_pb_conf_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -66,7 +80,7 @@ func (x *Bootstrap) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bootstrap.ProtoReflect.Descriptor instead.
 func (*Bootstrap) Descriptor() ([]byte, []int) {
-	return file_conf_pb_conf_proto_rawDescGZIP(), []int{0}
+	return file_internal_conf_pb_conf_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Bootstrap) GetServers() *v1.Servers {
@@ -90,6 +104,34 @@ func (x *Bootstrap) GetSelectorGlobal() *SelectorGlobal {
 	return nil
 }
 
+func (x *Bootstrap) GetData() *v11.Data {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetDiscoveries() *v12.Discoveries {
+	if x != nil {
+		return x.Discoveries
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetLogger() *v13.Logger {
+	if x != nil {
+		return x.Logger
+	}
+	return nil
+}
+
+func (x *Bootstrap) GetMiddlewares() *v14.Middlewares {
+	if x != nil {
+		return x.Middlewares
+	}
+	return nil
+}
+
 func (x *Bootstrap) GetCaptcha() *Captcha {
 	if x != nil {
 		return x.Captcha
@@ -104,6 +146,13 @@ func (x *Bootstrap) GetRootUser() *RootUser {
 	return nil
 }
 
+func (x *Bootstrap) GetDefaultDiscovery() string {
+	if x != nil {
+		return x.DefaultDiscovery
+	}
+	return ""
+}
+
 // SelectorGlobal defines the global selector/load-balancing strategy.
 type SelectorGlobal struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -115,7 +164,7 @@ type SelectorGlobal struct {
 
 func (x *SelectorGlobal) Reset() {
 	*x = SelectorGlobal{}
-	mi := &file_conf_pb_conf_proto_msgTypes[1]
+	mi := &file_internal_conf_pb_conf_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -127,7 +176,7 @@ func (x *SelectorGlobal) String() string {
 func (*SelectorGlobal) ProtoMessage() {}
 
 func (x *SelectorGlobal) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_pb_conf_proto_msgTypes[1]
+	mi := &file_internal_conf_pb_conf_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -140,7 +189,7 @@ func (x *SelectorGlobal) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SelectorGlobal.ProtoReflect.Descriptor instead.
 func (*SelectorGlobal) Descriptor() ([]byte, []int) {
-	return file_conf_pb_conf_proto_rawDescGZIP(), []int{1}
+	return file_internal_conf_pb_conf_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SelectorGlobal) GetBuilder() string {
@@ -150,76 +199,90 @@ func (x *SelectorGlobal) GetBuilder() string {
 	return ""
 }
 
-var File_conf_pb_conf_proto protoreflect.FileDescriptor
+var File_internal_conf_pb_conf_proto protoreflect.FileDescriptor
 
-const file_conf_pb_conf_proto_rawDesc = "" +
+const file_internal_conf_pb_conf_proto_rawDesc = "" +
 	"\n" +
-	"\x12conf/pb/conf.proto\x12\aconf.pb\x1a#config/transport/v1/transport.proto\x1a\x15conf/pb/captcha.proto\x1a\x12conf/pb/root.proto\"\xb1\x02\n" +
+	"\x1binternal/conf/pb/conf.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\x1a#config/discovery/v1/discovery.proto\x1a\x1dconfig/logger/v1/logger.proto\x1a%config/middleware/v1/middleware.proto\x1a#config/transport/v1/transport.proto\x1a\x1einternal/conf/pb/captcha.proto\x1a\x1binternal/conf/pb/root.proto\"\xf3\x04\n" +
 	"\tBootstrap\x12B\n" +
 	"\aservers\x18\x01 \x01(\v2(.runtime.api.config.transport.v1.ServersR\aservers\x12B\n" +
 	"\aclients\x18\x02 \x01(\v2(.runtime.api.config.transport.v1.ClientsR\aclients\x12@\n" +
-	"\x0fselector_global\x18\x03 \x01(\v2\x17.conf.pb.SelectorGlobalR\x0eselectorGlobal\x12*\n" +
-	"\acaptcha\x18\x04 \x01(\v2\x10.conf.pb.CaptchaR\acaptcha\x12.\n" +
-	"\troot_user\x18\x05 \x01(\v2\x11.conf.pb.RootUserR\brootUser\"*\n" +
+	"\x0fselector_global\x18\x03 \x01(\v2\x17.conf.pb.SelectorGlobalR\x0eselectorGlobal\x124\n" +
+	"\x04data\x18\x04 \x01(\v2 .runtime.api.config.data.v1.DataR\x04data\x12N\n" +
+	"\vdiscoveries\x18\x05 \x01(\v2,.runtime.api.config.discovery.v1.DiscoveriesR\vdiscoveries\x12<\n" +
+	"\x06logger\x18\x06 \x01(\v2$.runtime.api.config.logger.v1.LoggerR\x06logger\x12O\n" +
+	"\vmiddlewares\x18\a \x01(\v2-.runtime.api.config.middleware.v1.MiddlewaresR\vmiddlewares\x12*\n" +
+	"\acaptcha\x18\b \x01(\v2\x10.conf.pb.CaptchaR\acaptcha\x12.\n" +
+	"\troot_user\x18\t \x01(\v2\x11.conf.pb.RootUserR\brootUser\x12+\n" +
+	"\x11default_discovery\x18\n" +
+	" \x01(\tR\x10defaultDiscovery\"*\n" +
 	"\x0eSelectorGlobal\x12\x18\n" +
 	"\abuilder\x18\x01 \x01(\tR\abuilderB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
-	file_conf_pb_conf_proto_rawDescOnce sync.Once
-	file_conf_pb_conf_proto_rawDescData []byte
+	file_internal_conf_pb_conf_proto_rawDescOnce sync.Once
+	file_internal_conf_pb_conf_proto_rawDescData []byte
 )
 
-func file_conf_pb_conf_proto_rawDescGZIP() []byte {
-	file_conf_pb_conf_proto_rawDescOnce.Do(func() {
-		file_conf_pb_conf_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_conf_pb_conf_proto_rawDesc), len(file_conf_pb_conf_proto_rawDesc)))
+func file_internal_conf_pb_conf_proto_rawDescGZIP() []byte {
+	file_internal_conf_pb_conf_proto_rawDescOnce.Do(func() {
+		file_internal_conf_pb_conf_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_conf_pb_conf_proto_rawDesc), len(file_internal_conf_pb_conf_proto_rawDesc)))
 	})
-	return file_conf_pb_conf_proto_rawDescData
+	return file_internal_conf_pb_conf_proto_rawDescData
 }
 
-var file_conf_pb_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_conf_pb_conf_proto_goTypes = []any{
-	(*Bootstrap)(nil),      // 0: conf.pb.Bootstrap
-	(*SelectorGlobal)(nil), // 1: conf.pb.SelectorGlobal
-	(*v1.Servers)(nil),     // 2: runtime.api.config.transport.v1.Servers
-	(*v1.Clients)(nil),     // 3: runtime.api.config.transport.v1.Clients
-	(*Captcha)(nil),        // 4: conf.pb.Captcha
-	(*RootUser)(nil),       // 5: conf.pb.RootUser
+var file_internal_conf_pb_conf_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_internal_conf_pb_conf_proto_goTypes = []any{
+	(*Bootstrap)(nil),       // 0: conf.pb.Bootstrap
+	(*SelectorGlobal)(nil),  // 1: conf.pb.SelectorGlobal
+	(*v1.Servers)(nil),      // 2: runtime.api.config.transport.v1.Servers
+	(*v1.Clients)(nil),      // 3: runtime.api.config.transport.v1.Clients
+	(*v11.Data)(nil),        // 4: runtime.api.config.data.v1.Data
+	(*v12.Discoveries)(nil), // 5: runtime.api.config.discovery.v1.Discoveries
+	(*v13.Logger)(nil),      // 6: runtime.api.config.logger.v1.Logger
+	(*v14.Middlewares)(nil), // 7: runtime.api.config.middleware.v1.Middlewares
+	(*Captcha)(nil),         // 8: conf.pb.Captcha
+	(*RootUser)(nil),        // 9: conf.pb.RootUser
 }
-var file_conf_pb_conf_proto_depIdxs = []int32{
+var file_internal_conf_pb_conf_proto_depIdxs = []int32{
 	2, // 0: conf.pb.Bootstrap.servers:type_name -> runtime.api.config.transport.v1.Servers
 	3, // 1: conf.pb.Bootstrap.clients:type_name -> runtime.api.config.transport.v1.Clients
 	1, // 2: conf.pb.Bootstrap.selector_global:type_name -> conf.pb.SelectorGlobal
-	4, // 3: conf.pb.Bootstrap.captcha:type_name -> conf.pb.Captcha
-	5, // 4: conf.pb.Bootstrap.root_user:type_name -> conf.pb.RootUser
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	4, // 3: conf.pb.Bootstrap.data:type_name -> runtime.api.config.data.v1.Data
+	5, // 4: conf.pb.Bootstrap.discoveries:type_name -> runtime.api.config.discovery.v1.Discoveries
+	6, // 5: conf.pb.Bootstrap.logger:type_name -> runtime.api.config.logger.v1.Logger
+	7, // 6: conf.pb.Bootstrap.middlewares:type_name -> runtime.api.config.middleware.v1.Middlewares
+	8, // 7: conf.pb.Bootstrap.captcha:type_name -> conf.pb.Captcha
+	9, // 8: conf.pb.Bootstrap.root_user:type_name -> conf.pb.RootUser
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
-func init() { file_conf_pb_conf_proto_init() }
-func file_conf_pb_conf_proto_init() {
-	if File_conf_pb_conf_proto != nil {
+func init() { file_internal_conf_pb_conf_proto_init() }
+func file_internal_conf_pb_conf_proto_init() {
+	if File_internal_conf_pb_conf_proto != nil {
 		return
 	}
-	file_conf_pb_captcha_proto_init()
-	file_conf_pb_root_proto_init()
+	file_internal_conf_pb_captcha_proto_init()
+	file_internal_conf_pb_root_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_pb_conf_proto_rawDesc), len(file_conf_pb_conf_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_conf_pb_conf_proto_rawDesc), len(file_internal_conf_pb_conf_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_conf_pb_conf_proto_goTypes,
-		DependencyIndexes: file_conf_pb_conf_proto_depIdxs,
-		MessageInfos:      file_conf_pb_conf_proto_msgTypes,
+		GoTypes:           file_internal_conf_pb_conf_proto_goTypes,
+		DependencyIndexes: file_internal_conf_pb_conf_proto_depIdxs,
+		MessageInfos:      file_internal_conf_pb_conf_proto_msgTypes,
 	}.Build()
-	File_conf_pb_conf_proto = out.File
-	file_conf_pb_conf_proto_goTypes = nil
-	file_conf_pb_conf_proto_depIdxs = nil
+	File_internal_conf_pb_conf_proto = out.File
+	file_internal_conf_pb_conf_proto_goTypes = nil
+	file_internal_conf_pb_conf_proto_depIdxs = nil
 }

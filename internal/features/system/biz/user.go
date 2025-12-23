@@ -8,16 +8,17 @@ package biz
 import (
 	"context"
 	"fmt"
-	"github.com/origadmin/toolkits/auth/authenticator"
+
+	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/features/system/dal"
 )
 
 // UserUseCase is a User use case.
 type UserUseCase struct {
-	repo dto.UserRepo
-	auth authenticator.Authenticator
+	repo   dal.UserRepo
+	hasher hash.Crypto
 }
 
 func (uc *UserUseCase) ListUserResources(ctx context.Context, id int64) ([]*types.Resource, error) {
@@ -66,12 +67,12 @@ func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, erro
 }
 
 func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string) (*types.User, error) {
-	encryptedPassword, err := uc.auth.Create(in.Username, password)
+	hashedPassword, err := uc.hasher.Hash(password)
 	if err != nil {
 		return nil, err
 	}
-	in.Password = encryptedPassword
-	
+	in.Password = hashedPassword
+
 	fmt.Println("Create new user username:", in.Username, "password:", password)
 
 	result, err := uc.repo.Create(ctx, in)
@@ -97,6 +98,6 @@ func (uc *UserUseCase) DeleteUser(ctx context.Context, id int64) error {
 }
 
 // NewUserUseCase new a User use case.
-func NewUserUseCase(repo dto.UserRepo, auth authenticator.Authenticator) (*UserUseCase, error) {
-	return &UserUseCase{repo: repo, auth: auth}, nil
+func NewUserUseCase(repo dal.UserRepo, hasher hash.Crypto) (*UserUseCase, error) {
+	return &UserUseCase{repo: repo, hasher: hasher}, nil
 }

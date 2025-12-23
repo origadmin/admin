@@ -6,7 +6,9 @@ package service
 
 import (
 	"context"
+
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/features/system/dto"
 )
 
 func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
@@ -54,20 +56,20 @@ func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequ
 	}, nil
 }
 
-func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*system.User, error) {
+func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*dto.UserPB, error) {
 	return s.user.GetUser(ctx, req.Id)
 }
 
-func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.User, error) {
+func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*dto.UserPB, error) {
 	return s.user.CreateUser(ctx, req.User, req.Password)
 }
 
-func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*system.User, error) {
+func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*dto.UserPB, error) {
 	return s.user.UpdateUser(ctx, req.User)
 }
 
 func (s *SystemService) DeleteUser(ctx context.Context, req *system.DeleteUserRequest) (*system.DeleteUserResponse, error) {
-	err := s.user.DeleteUser(ctx, req.Id)
+	err := s.user.DeleteUser(ctx, req.GetUser().GetId())
 	if err != nil {
 		return nil, err
 	}

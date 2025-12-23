@@ -137,12 +137,14 @@ message CreateUserRequest {
   string parent = 1;
   // The user resource to be created.
   api.v1.services.types.User user = 2;
+  // The password to use for this user.
+  string password = 3 [json_name = "password"];
   // The user id to use for this user.
-  string user_id = 3 [json_name = "user_id"];
+  string user_id = 4 [json_name = "user_id"];
   // The user is_system to use for this user.
-  bool is_system = 4 [json_name = "is_system"];
+  bool is_system = 5 [json_name = "is_system"];
   // The random_password is the query parameter for set only to generate a random password
-  bool random_password = 5 [json_name = "random_password"];
+  bool random_password = 6 [json_name = "random_password"];
 }
 
 message CreateUserResponse {

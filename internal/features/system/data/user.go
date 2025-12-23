@@ -14,7 +14,6 @@ import (
 	"origadmin/application/admin/internal/features/system/data/ent"
 	"origadmin/application/admin/internal/features/system/data/ent/user"
 	"origadmin/application/admin/internal/features/system/dto"
-	"origadmin/application/admin/internal/helpers/db"
 )
 
 type userRepo struct {
@@ -22,7 +21,7 @@ type userRepo struct {
 }
 
 func (repo *userRepo) Get(ctx context.Context, id int64, options ...dto.UserQueryOption) (*types.User, error) {
-	result, err := repo.db.User.Get(ctx, int(id))
+	result, err := repo.db.User.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +41,11 @@ func (repo *userRepo) Create(ctx context.Context, u *types.User, options ...dto.
 	if err != nil || exist {
 		return nil, errors.New("user already exists")
 	}
-	
+
 	create := repo.db.User.Create().
 		SetUsername(u.Username).
 		SetPassword(u.Password)
-	
+
 	// ... set other fields
 
 	saved, err := create.Save(ctx)
@@ -57,16 +56,16 @@ func (repo *userRepo) Create(ctx context.Context, u *types.User, options ...dto.
 }
 
 func (repo *userRepo) Delete(ctx context.Context, id int64) error {
-	return repo.db.User.DeleteOneID(int(id)).Exec(ctx)
+	return repo.db.User.DeleteOneID(id).Exec(ctx)
 }
 
 func (repo *userRepo) Update(ctx context.Context, u *types.User, options ...dto.UserMutationOption) (*types.User, error) {
-	update := repo.db.User.UpdateOneID(int(u.Id))
-	
+	update := repo.db.User.UpdateOneID(u.Id)
+
 	if len(u.RoleIds) > 0 {
 		update.ClearRoles().AddRoleIDs(u.RoleIds...)
 	}
-	
+
 	// ... set other fields
 
 	saved, err := update.Save(ctx)
@@ -78,13 +77,13 @@ func (repo *userRepo) Update(ctx context.Context, u *types.User, options ...dto.
 
 func (repo *userRepo) List(ctx context.Context, in *system.ListUsersRequest, options ...dto.UserQueryOption) ([]*types.User, int32, error) {
 	query := repo.db.User.Query()
-	
-	if in.Title != nil {
-		query = query.Where(user.Or(user.UsernameContainsFold(*in.Title), user.PhoneContainsFold(*in.Title), user.EmailContainsFold(*in.Title)))
+
+	if in.Title != "" {
+		query = query.Where(user.Or(user.UsernameContainsFold(in.Title), user.PhoneContainsFold(in.Title), user.EmailContainsFold(in.Title)))
 	}
-	if in.Status != nil {
-		query = query.Where(user.StatusEQ(int8(*in.Status)))
-	}
+	//if in.Status != nil {
+	//	query = query.Where(user.StatusEQ(int8(*in.Status)))
+	//}
 
 	if in.OnlyCount {
 		count, err := query.Count(ctx)
@@ -95,19 +94,19 @@ func (repo *userRepo) List(ctx context.Context, in *system.ListUsersRequest, opt
 	if err != nil {
 		return nil, 0, err
 	}
-	
-	query = db.QueryPage(query, in)
+
+	//query = db.QueryPage(query, in)
 
 	result, err := query.All(ctx)
 	return dto.ConvertUsersToUsersPB(result), int32(count), err
 }
 
 func (repo *userRepo) AddRoleIDs(ctx context.Context, id int64, roleIDs []int64, options ...dto.UserMutationOption) error {
-	return repo.db.User.UpdateOneID(int(id)).AddRoleIDs(roleIDs...).Exec(ctx)
+	return repo.db.User.UpdateOneID(id).AddRoleIDs(roleIDs...).Exec(ctx)
 }
 
 func (repo *userRepo) GetRoleIDs(ctx context.Context, id int64) ([]int64, error) {
-	ids, err := repo.db.User.Query().Where(user.ID(int(id))).QueryRoles().IDs(ctx)
+	ids, err := repo.db.User.Query().Where(user.ID(id)).QueryRoles().IDs(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +118,7 @@ func (repo *userRepo) GetRoleIDs(ctx context.Context, id int64) ([]int64, error)
 }
 
 func (repo *userRepo) ListResourceByUserID(ctx context.Context, id int64, options ...dto.UserQueryOption) ([]*types.Resource, error) {
-	resources, err := repo.db.User.Query().Where(user.ID(int(id))).QueryRoles().QueryPermissions().QueryResources().All(ctx)
+	resources, err := repo.db.User.Query().Where(user.ID(id)).QueryRoles().QueryPermissions().QueryResources().All(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +126,7 @@ func (repo *userRepo) ListResourceByUserID(ctx context.Context, id int64, option
 }
 
 func (repo *userRepo) UpdateUserStatus(ctx context.Context, id int64, status int32, options ...dto.UserQueryOption) error {
-	return repo.db.User.UpdateOneID(int(id)).SetStatus(int8(status)).Exec(ctx)
+	return repo.db.User.UpdateOneID(id).SetStatus(int8(status)).Exec(ctx)
 }
 
 func (repo *userRepo) Current(ctx context.Context, id int64) (*types.User, error) {

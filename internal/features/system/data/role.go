@@ -16,7 +16,6 @@ import (
 	"origadmin/application/admin/internal/features/system/data/ent"
 	"origadmin/application/admin/internal/features/system/data/ent/role"
 	"origadmin/application/admin/internal/features/system/dto"
-	"origadmin/application/admin/internal/helpers/db"
 )
 
 type roleRepo struct {
@@ -25,7 +24,7 @@ type roleRepo struct {
 }
 
 func (repo *roleRepo) Get(ctx context.Context, id int64, options ...dto.RoleQueryOption) (*types.Role, error) {
-	result, err := repo.db.Role.Get(ctx, int(id))
+	result, err := repo.db.Role.Get(ctx, (id))
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +43,7 @@ func (repo *roleRepo) Create(ctx context.Context, r *types.Role, options ...dto.
 	if err != nil || exist {
 		return nil, errors.New("role keyword already exists")
 	}
-	
+
 	create := repo.db.Role.Create().
 		SetName(r.Name).
 		SetKeyword(r.Keyword)
@@ -57,15 +56,15 @@ func (repo *roleRepo) Create(ctx context.Context, r *types.Role, options ...dto.
 }
 
 func (repo *roleRepo) Delete(ctx context.Context, id int64) error {
-	return repo.db.Role.DeleteOneID(int(id)).Exec(ctx)
+	return repo.db.Role.DeleteOneID((id)).Exec(ctx)
 }
 
 func (repo *roleRepo) Update(ctx context.Context, r *types.Role, options ...dto.RoleUpdateOption) (*types.Role, error) {
-	update := repo.db.Role.UpdateOneID(int(r.Id))
+	update := repo.db.Role.UpdateOneID((r.Id))
 	if len(r.PermissionIds) > 0 {
 		update.ClearPermissions().AddPermissionIDs(r.PermissionIds...)
 	}
-	
+
 	// ... set other fields
 
 	saved, err := update.Save(ctx)
@@ -77,14 +76,14 @@ func (repo *roleRepo) Update(ctx context.Context, r *types.Role, options ...dto.
 
 func (repo *roleRepo) List(ctx context.Context, in *system.ListRolesRequest, options ...dto.RoleQueryOption) ([]*types.Role, int32, error) {
 	query := repo.db.Role.Query()
-	
-	if in.Name != nil {
-		query = query.Where(role.NameContains(*in.Name))
-	}
-	if in.Status != nil {
-		query = query.Where(role.StatusEQ(*in.Status))
-	}
-	
+
+	//if in.Name != nil {
+	//	query = query.Where(role.NameContains(*in.Name))
+	//}
+	//if in.Status != nil {
+	//	query = query.Where(role.StatusEQ(*in.Status))
+	//}
+
 	if in.OnlyCount {
 		count, err := query.Count(ctx)
 		return nil, int32(count), err
@@ -94,8 +93,8 @@ func (repo *roleRepo) List(ctx context.Context, in *system.ListRolesRequest, opt
 	if err != nil {
 		return nil, 0, err
 	}
-	
-	query = db.QueryPage(query, in)
+
+	//query = db.QueryPage(query, in)
 
 	result, err := query.All(ctx)
 	return dto.ConvertRolesToRolesPB(result), int32(count), err

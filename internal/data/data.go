@@ -18,6 +18,7 @@ import (
 	ifacestorage "github.com/origadmin/runtime/interfaces/storage"
 	"github.com/origadmin/runtime/log"
 
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data/entity/ent"
 )
 
@@ -34,7 +35,7 @@ type Data struct {
 }
 
 // NewData creates a new Data instance.
-func NewData(rt *runtime.App) (*Data, func(), error) {
+func NewData(rt *runtime.App, conf *conf.Config) (*Data, func(), error) {
 	logHelper := log.NewHelper(rt.Logger())
 
 	provider, err := storage.New(rt.StructuredConfig())

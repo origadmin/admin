@@ -6,7 +6,9 @@ package service
 
 import (
 	"context"
+
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/features/system/dto"
 )
 
 func (s *SystemService) ListResources(ctx context.Context, req *system.ListResourcesRequest) (*system.ListResourcesResponse, error) {
@@ -20,15 +22,15 @@ func (s *SystemService) ListResources(ctx context.Context, req *system.ListResou
 	}, nil
 }
 
-func (s *SystemService) GetResource(ctx context.Context, req *system.GetResourceRequest) (*system.Resource, error) {
+func (s *SystemService) GetResource(ctx context.Context, req *system.GetResourceRequest) (*dto.ResourcePB, error) {
 	return s.resource.GetResource(ctx, req.Id)
 }
 
-func (s *SystemService) CreateResource(ctx context.Context, req *system.CreateResourceRequest) (*system.Resource, error) {
+func (s *SystemService) CreateResource(ctx context.Context, req *system.CreateResourceRequest) (*dto.ResourcePB, error) {
 	return s.resource.CreateResource(ctx, req.Resource)
 }
 
-func (s *SystemService) UpdateResource(ctx context.Context, req *system.UpdateResourceRequest) (*system.Resource, error) {
+func (s *SystemService) UpdateResource(ctx context.Context, req *system.UpdateResourceRequest) (*dto.ResourcePB, error) {
 	return s.resource.UpdateResource(ctx, req.Resource)
 }
 

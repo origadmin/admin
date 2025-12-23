@@ -6,7 +6,6 @@ package main
 
 import (
 	"flag"
-	"log"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport"
@@ -17,7 +16,8 @@ import (
 	_ "github.com/origadmin/contrib/registry/consul"
 	"github.com/origadmin/runtime"
 	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
-	"origadmin/application/admin/internal/conf" // Corrected import path
+	"github.com/origadmin/runtime/log"
+	"origadmin/application/admin/internal/conf"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 
@@ -37,13 +37,13 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
 }
 
-func NewApp(r *runtime.App, servers ...transport.Server) *kratos.App { // Changed runtime.Runtime to *runtime.App
+func NewApp(logger log.Logger, appInfo *runtime.AppInfo, servers []transport.Server) *kratos.App {
 	return kratos.New(
-		kratos.ID(r.AppInfo().ID()),
-		kratos.Name(r.AppInfo().Name()),
-		kratos.Version(r.AppInfo().Version()),
-		kratos.Metadata(r.AppInfo().Metadata()),
-		kratos.Logger(r.Logger()),
+		kratos.ID(appInfo.ID()),
+		kratos.Name(appInfo.Name()),
+		kratos.Version(appInfo.Version()),
+		kratos.Metadata(appInfo.Metadata()),
+		kratos.Logger(logger),
 		kratos.Server(
 			servers...,
 		),
@@ -63,7 +63,7 @@ func main() {
 	}
 
 	// Log the config path for debugging
-	log.Printf("Loading configuration from: %s\n", confPath)
+	log.Infof("Loading configuration from: %s\n", confPath)
 
 	// NewFromBootstrap handles config loading, logging, and container setup.
 	rt := runtime.New(Name, Version)
@@ -72,16 +72,16 @@ func main() {
 		log.Fatalf("failed to create runtime: %v", err)
 	}
 	defer rt.Config().Close()
-	log.Printf("Starting %s %s (ID: %s)\n", rt.AppInfo().Name(), rt.AppInfo().Version(), rt.AppInfo().ID())
+	log.Infof("Starting %s %s (ID: %s)\n", rt.AppInfo().Name(), rt.AppInfo().Version(), rt.AppInfo().ID())
 
 	// Get bootstrap config
-	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config) // Changed *configs.Bootstrap to *conf.Config
+	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}
 
 	// wireApp now takes the runtime instance and builds the kratos app.
-	app, cleanupApp, err := wireApp(rt, bootstrapConfig) // Pass bootstrapConfig
+	app, cleanupApp, err := wireApp(rt, bootstrapConfig)
 	if err != nil {
 		log.Fatalf("failed to wire app: %v", err)
 	}

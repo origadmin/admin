@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.10
 // 	protoc        v5.28.3
-// source: conf/pb/root.proto
+// source: internal/conf/pb/root.proto
 
 package confpb
 
@@ -43,7 +43,7 @@ type RootUser struct {
 
 func (x *RootUser) Reset() {
 	*x = RootUser{}
-	mi := &file_conf_pb_root_proto_msgTypes[0]
+	mi := &file_internal_conf_pb_root_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -55,7 +55,7 @@ func (x *RootUser) String() string {
 func (*RootUser) ProtoMessage() {}
 
 func (x *RootUser) ProtoReflect() protoreflect.Message {
-	mi := &file_conf_pb_root_proto_msgTypes[0]
+	mi := &file_internal_conf_pb_root_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -68,7 +68,7 @@ func (x *RootUser) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RootUser.ProtoReflect.Descriptor instead.
 func (*RootUser) Descriptor() ([]byte, []int) {
-	return file_conf_pb_root_proto_rawDescGZIP(), []int{0}
+	return file_internal_conf_pb_root_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *RootUser) GetEnabled() bool {
@@ -162,11 +162,11 @@ func (x *RootUser) GetRandomPassword() bool {
 	return false
 }
 
-var File_conf_pb_root_proto protoreflect.FileDescriptor
+var File_internal_conf_pb_root_proto protoreflect.FileDescriptor
 
-const file_conf_pb_root_proto_rawDesc = "" +
+const file_internal_conf_pb_root_proto_rawDesc = "" +
 	"\n" +
-	"\x12conf/pb/root.proto\x12\aconf.pb\x1a\x17validate/validate.proto\"\x8c\x03\n" +
+	"\x1binternal/conf/pb/root.proto\x12\aconf.pb\x1a\x17validate/validate.proto\"\x8c\x03\n" +
 	"\bRootUser\x12\x18\n" +
 	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x17\n" +
 	"\x02id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12#\n" +
@@ -184,22 +184,22 @@ const file_conf_pb_root_proto_rawDesc = "" +
 	"\x0frandom_password\x18e \x01(\bR\x0frandom_passwordB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
-	file_conf_pb_root_proto_rawDescOnce sync.Once
-	file_conf_pb_root_proto_rawDescData []byte
+	file_internal_conf_pb_root_proto_rawDescOnce sync.Once
+	file_internal_conf_pb_root_proto_rawDescData []byte
 )
 
-func file_conf_pb_root_proto_rawDescGZIP() []byte {
-	file_conf_pb_root_proto_rawDescOnce.Do(func() {
-		file_conf_pb_root_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_conf_pb_root_proto_rawDesc), len(file_conf_pb_root_proto_rawDesc)))
+func file_internal_conf_pb_root_proto_rawDescGZIP() []byte {
+	file_internal_conf_pb_root_proto_rawDescOnce.Do(func() {
+		file_internal_conf_pb_root_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_internal_conf_pb_root_proto_rawDesc), len(file_internal_conf_pb_root_proto_rawDesc)))
 	})
-	return file_conf_pb_root_proto_rawDescData
+	return file_internal_conf_pb_root_proto_rawDescData
 }
 
-var file_conf_pb_root_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_conf_pb_root_proto_goTypes = []any{
+var file_internal_conf_pb_root_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_internal_conf_pb_root_proto_goTypes = []any{
 	(*RootUser)(nil), // 0: conf.pb.RootUser
 }
-var file_conf_pb_root_proto_depIdxs = []int32{
+var file_internal_conf_pb_root_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -207,26 +207,26 @@ var file_conf_pb_root_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_conf_pb_root_proto_init() }
-func file_conf_pb_root_proto_init() {
-	if File_conf_pb_root_proto != nil {
+func init() { file_internal_conf_pb_root_proto_init() }
+func file_internal_conf_pb_root_proto_init() {
+	if File_internal_conf_pb_root_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_conf_pb_root_proto_rawDesc), len(file_conf_pb_root_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_internal_conf_pb_root_proto_rawDesc), len(file_internal_conf_pb_root_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_conf_pb_root_proto_goTypes,
-		DependencyIndexes: file_conf_pb_root_proto_depIdxs,
-		MessageInfos:      file_conf_pb_root_proto_msgTypes,
+		GoTypes:           file_internal_conf_pb_root_proto_goTypes,
+		DependencyIndexes: file_internal_conf_pb_root_proto_depIdxs,
+		MessageInfos:      file_internal_conf_pb_root_proto_msgTypes,
 	}.Build()
-	File_conf_pb_root_proto = out.File
-	file_conf_pb_root_proto_goTypes = nil
-	file_conf_pb_root_proto_depIdxs = nil
+	File_internal_conf_pb_root_proto = out.File
+	file_internal_conf_pb_root_proto_goTypes = nil
+	file_internal_conf_pb_root_proto_depIdxs = nil
 }

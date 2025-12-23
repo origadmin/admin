@@ -159,7 +159,7 @@ gen:
 	@protoc -I. -I./third_party --go_out=paths=source_relative:. ./helpers/resp/data/v1/*.proto
 
 	@echo "Generating Protobuf code for conf/pb..."
-	@protoc -I. -I./third_party --go_out=paths=source_relative:./internal --validate_out=paths=source_relative,lang=go:./internal ./conf/pb/*.proto
+	@protoc -I. -I./third_party --go_out=paths=source_relative:./internal --validate_out=paths=source_relative,lang=go:./internal ./internal/conf/pb/*.proto
 
 	go generate ./internal/data/entity/ent/generate.go
 	go generate ./cmd/system
