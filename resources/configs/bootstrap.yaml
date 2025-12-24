@@ -1,0 +1,16 @@
+# This is the main bootstrap file for the system service.
+# It defines a series of configuration sources to be loaded sequentially.
+# Paths inside are relative to this bootstrap.yaml file.
+sources:
+  # File sources are loaded first to provide default values.
+  - file:
+      path: server.yaml
+    type: file
+  - file:
+      path: databases.yaml
+    type: file
+  - file:
+      path: logger.yaml
+    type: file
+  # Environment variables can be loaded last to override file settings.
+  - type: env

@@ -8,7 +8,6 @@ import (
 	"context"
 
 	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/api/v1/services/types"
 )
 
 func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPermissionsRequest) (*system.ListPermissionsResponse, error) {
@@ -22,20 +21,32 @@ func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPer
 	}, nil
 }
 
-func (s *SystemService) GetPermission(ctx context.Context, req *system.GetPermissionRequest) (*types.Permission, error) {
-	return s.Permission.GetPermission(ctx, req.Id)
+func (s *SystemService) GetPermission(ctx context.Context, req *system.GetPermissionRequest) (*system.GetPermissionResponse, error) {
+	permission, err := s.Permission.GetPermission(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &system.GetPermissionResponse{Permission: permission}, nil
 }
 
-func (s *SystemService) CreatePermission(ctx context.Context, req *system.CreatePermissionRequest) (*types.Permission, error) {
-	return s.Permission.CreatePermission(ctx, req.Permission)
+func (s *SystemService) CreatePermission(ctx context.Context, req *system.CreatePermissionRequest) (*system.CreatePermissionResponse, error) {
+	permission, err := s.Permission.CreatePermission(ctx, req.GetPermission())
+	if err != nil {
+		return nil, err
+	}
+	return &system.CreatePermissionResponse{Permission: permission}, nil
 }
 
-func (s *SystemService) UpdatePermission(ctx context.Context, req *system.UpdatePermissionRequest) (*types.Permission, error) {
-	return s.Permission.UpdatePermission(ctx, req.Permission)
+func (s *SystemService) UpdatePermission(ctx context.Context, req *system.UpdatePermissionRequest) (*system.UpdatePermissionResponse, error) {
+	permission, err := s.Permission.UpdatePermission(ctx, req.GetPermission())
+	if err != nil {
+		return nil, err
+	}
+	return &system.UpdatePermissionResponse{Permission: permission}, nil
 }
 
 func (s *SystemService) DeletePermission(ctx context.Context, req *system.DeletePermissionRequest) (*system.DeletePermissionResponse, error) {
-	err := s.Permission.DeletePermission(ctx, req.Id)
+	err := s.Permission.DeletePermission(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}

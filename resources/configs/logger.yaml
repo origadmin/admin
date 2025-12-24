@@ -1,0 +1,4 @@
+# logger.yaml
+logger:
+  level: debug
+  format: console # or json

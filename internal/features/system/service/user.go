@@ -8,7 +8,6 @@ import (
 	"context"
 
 	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/api/v1/services/types"
 )
 
 func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
@@ -56,16 +55,28 @@ func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequ
 	}, nil
 }
 
-func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*types.User, error) {
-	return s.User.GetUser(ctx, req.GetId())
+func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*system.GetUserResponse, error) {
+	user, err := s.User.GetUser(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &system.GetUserResponse{User: user}, nil
 }
 
-func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*types.User, error) {
-	return s.User.CreateUser(ctx, req.GetUser(), req.GetPassword())
+func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.CreateUserResponse, error) {
+	user, err := s.User.CreateUser(ctx, req.GetUser(), req.GetPassword())
+	if err != nil {
+		return nil, err
+	}
+	return &system.CreateUserResponse{User: user}, nil
 }
 
-func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*types.User, error) {
-	return s.User.UpdateUser(ctx, req.GetUser())
+func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*system.UpdateUserResponse, error) {
+	user, err := s.User.UpdateUser(ctx, req.GetUser())
+	if err != nil {
+		return nil, err
+	}
+	return &system.UpdateUserResponse{User: user}, nil
 }
 
 func (s *SystemService) DeleteUser(ctx context.Context, req *system.DeleteUserRequest) (*system.DeleteUserResponse, error) {

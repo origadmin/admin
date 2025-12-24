@@ -68,10 +68,10 @@ func NewHTTPServer(cfg *httpv1.Server, svc *service.SystemService, logger log.Lo
 	srv := http.NewServer(opts...)
 
 	// Register HTTP handlers
-	systemv1.RegisterUserServiceHTTPServer(srv, svc.User)
-	systemv1.RegisterRoleServiceHTTPServer(srv, svc.Role)
-	systemv1.RegisterPermissionServiceHTTPServer(srv, svc.Permission)
-	systemv1.RegisterResourceServiceHTTPServer(srv, svc.Resource)
+	systemv1.RegisterUserServiceHTTPServer(srv, svc)
+	systemv1.RegisterRoleServiceHTTPServer(srv, svc)
+	systemv1.RegisterPermissionServiceHTTPServer(srv, svc)
+	systemv1.RegisterResourceServiceHTTPServer(srv, svc)
 
 	return srv, nil
 }
@@ -92,10 +92,10 @@ func NewGRPCServer(cfg *grpcv1.Server, svc *service.SystemService, logger log.Lo
 	srv := grpc.NewServer(opts...)
 
 	// Register gRPC handlers
-	systemv1.RegisterUserServiceServer(srv, svc.User)
-	systemv1.RegisterRoleServiceServer(srv, svc.Role)
-	systemv1.RegisterPermissionServiceServer(srv, svc.Permission)
-	systemv1.RegisterResourceServiceServer(srv, svc.Resource)
+	systemv1.RegisterUserServiceServer(srv, svc)
+	systemv1.RegisterRoleServiceServer(srv, svc)
+	systemv1.RegisterPermissionServiceServer(srv, svc)
+	systemv1.RegisterResourceServiceServer(srv, svc)
 
 	return srv, nil
 }
