@@ -33,39 +33,20 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	resourceRepo := dal.NewResourceRepo(dataData)
-	resourceUseCase, err := biz.NewResourceUseCase(resourceRepo)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	roleRepo, err := dal.NewRoleRepo(dataData)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	roleUseCase, err := biz.NewRoleUseCase(roleRepo)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	userRepo := dal.NewUserRepo(dataData)
+	database := data.ProvideDatabase(dataData)
+	resourceRepo := dal.NewResourceRepo(database)
+	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
+	roleRepo := dal.NewRoleRepo(database)
+	roleUseCase := biz.NewRoleUseCase(roleRepo)
+	userRepo := dal.NewUserRepo(database)
 	crypto, err := provideHasher()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	userUseCase, err := biz.NewUserUseCase(userRepo, crypto)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	permissionRepo := dal.NewPermissionRepo(dataData)
-	permissionUseCase, err := biz.NewPermissionUseCase(permissionRepo)
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
+	userUseCase := biz.NewUserUseCase(userRepo, crypto)
+	permissionRepo := dal.NewPermissionRepo(database)
+	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
 	systemService := service.New(resourceUseCase, roleUseCase, userUseCase, permissionUseCase)
 	v := provideLogger(app)
 	v2, err := server.NewServers(servers, systemService, v)

@@ -18,46 +18,32 @@ type RoleUseCase struct {
 	repo dto.RoleRepo
 }
 
+// NewRoleUseCase new a Role use case.
+func NewRoleUseCase(repo dto.RoleRepo) *RoleUseCase {
+	return &RoleUseCase{repo: repo}
+}
+
 func (uc *RoleUseCase) ListRoles(ctx context.Context, in *system.ListRolesRequest) ([]*types.Role, int32, error) {
-	result, total, err := uc.repo.List(ctx, in)
-	if err != nil {
-		return nil, 0, err
-	}
-	return result, total, nil
+	queryOpt := dto.ListRolesRequestToQueryOption(in)
+	return uc.repo.List(ctx, queryOpt)
 }
 
 func (uc *RoleUseCase) GetRole(ctx context.Context, id int64) (*types.Role, error) {
-	result, err := uc.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Get(ctx, id)
 }
 
 func (uc *RoleUseCase) CreateRole(ctx context.Context, in *types.Role) (*types.Role, error) {
-	result, err := uc.repo.Create(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Create(ctx, in)
 }
 
 func (uc *RoleUseCase) UpdateRole(ctx context.Context, in *types.Role) (*types.Role, error) {
-	result, err := uc.repo.Update(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Update(ctx, in)
 }
 
 func (uc *RoleUseCase) DeleteRole(ctx context.Context, id int64) error {
-	if err := uc.repo.Delete(ctx, id); err != nil {
-		return err
-	}
-	return nil
+	return uc.repo.Delete(ctx, id)
 }
 
-// NewRoleUseCase new a Role use case.
-func NewRoleUseCase(repo dto.RoleRepo) (*RoleUseCase, error) {
-	return &RoleUseCase{repo: repo}, nil
+func (uc *RoleUseCase) UpdateRolePermissions(ctx context.Context, id int64, permissionIDs []int64) error {
+	return uc.repo.UpdatePermissions(ctx, id, permissionIDs)
 }

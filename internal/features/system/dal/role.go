@@ -9,11 +9,11 @@ import (
 	"errors"
 
 	"github.com/origadmin/toolkits/crypto/rand"
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 type roleRepo struct {
@@ -27,12 +27,8 @@ func NewRoleRepo(db *ent.Database) dto.RoleRepo {
 	return &roleRepo{db: db, gen: generator}
 }
 
-func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOptions) (*types.Role, error) {
-	opt := &dto.RoleQueryOptions{}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-
+func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOption) (*types.Role, error) {
+	opt := repo.GetFirstOption(opts...)
 	query := r.db.Role(ctx).Query().Where(role.ID(id))
 
 	if opt.WithPermissions {
@@ -46,7 +42,7 @@ func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOpti
 	return dto.ConvertRoleToRolePB(result), nil
 }
 
-func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.RoleCreateOptions) (*types.Role, error) {
+func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.RoleCreateOption) (*types.Role, error) {
 	if rl.Keyword == "" {
 		randString, err := r.gen.RandString(12)
 		if err != nil {
@@ -73,7 +69,7 @@ func (r *roleRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.Role(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOptions) (*types.Role, error) {
+func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOption) (*types.Role, error) {
 	entRole := dto.ConvertRolePBToRole(rl)
 	update := r.db.Role(ctx).UpdateOneID(rl.Id).SetRole(entRole)
 	// ... handle partial updates based on opts ...
@@ -85,16 +81,12 @@ func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.Role
 	return dto.ConvertRoleToRolePB(saved), nil
 }
 
-func (r *roleRepo) List(ctx context.Context, in *system.ListRolesRequest, opts ...*dto.RoleQueryOptions) ([]*types.Role, int32, error) {
-	opt := &dto.RoleQueryOptions{}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-
+func (r *roleRepo) List(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*types.Role, int32, error) {
+	opt := repo.GetFirstOption(opts...)
 	query := r.db.Role(ctx).Query()
 
-	if in.GetKeyword() != "" {
-		query = query.Where(role.NameContainsFold(in.GetKeyword()))
+	if opt.Keyword != "" {
+		query.Where(role.NameContainsFold(opt.Keyword))
 	}
 
 	if opt.Page > 0 && opt.PageSize > 0 {

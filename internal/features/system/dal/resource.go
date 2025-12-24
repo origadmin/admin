@@ -8,11 +8,11 @@ import (
 	"context"
 	"strconv"
 
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 type resourceRepo struct {
@@ -28,12 +28,8 @@ func NewResourceRepo(db *ent.Database) dto.ResourceRepo {
 	}
 }
 
-func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQueryOptions) (*types.Resource, error) {
-	opt := &dto.ResourceQueryOptions{}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-
+func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQueryOption) (*types.Resource, error) {
+	opt := repo.GetFirstOption(opts...)
 	query := r.db.Resource(ctx).Query().Where(resource.ID(id))
 
 	if opt.WithPermissions {
@@ -47,7 +43,7 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 	return dto.ConvertResourceToResourcePB(result), nil
 }
 
-func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOptions) (*types.Resource, error) {
+func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
 	if res.ParentId > 0 {
 		parent, err := r.db.Resource(ctx).Get(ctx, res.ParentId)
 		if err != nil {
@@ -72,7 +68,7 @@ func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.Resource(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOptions) (*types.Resource, error) {
+func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOption) (*types.Resource, error) {
 	entResource := dto.ConvertResourcePBToResource(res)
 	update := r.db.Resource(ctx).UpdateOneID(res.Id).SetResource(entResource)
 
@@ -85,12 +81,8 @@ func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...
 	return dto.ConvertResourceToResourcePB(saved), nil
 }
 
-func (r *resourceRepo) List(ctx context.Context, in *system.ListResourcesRequest, opts ...*dto.ResourceQueryOptions) ([]*types.Resource, int32, error) {
-	opt := &dto.ResourceQueryOptions{}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-
+func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOption) ([]*types.Resource, int32, error) {
+	opt := repo.GetFirstOption(opts...)
 	query := r.db.Resource(ctx).Query()
 
 	if opt.Page > 0 && opt.PageSize > 0 {

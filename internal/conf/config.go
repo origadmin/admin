@@ -7,6 +7,7 @@ import (
 	loggerv1 "github.com/origadmin/runtime/api/gen/go/config/logger/v1"
 	middlewarev1 "github.com/origadmin/runtime/api/gen/go/config/middleware/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/interfaces"
 	confpb "origadmin/application/admin/internal/conf/pb"
 )
@@ -76,8 +77,6 @@ StructuredConfig, error) {
 	return c, nil
 }
 
-func New() Bootstrap.ConfigTransformer {
-	return &Config{
-		Bootstrap: new(confpb.Bootstrap),
-	}
+func New() bootstrap.ConfigTransformer {
+	return &Config{}
 }

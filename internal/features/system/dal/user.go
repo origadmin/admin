@@ -8,11 +8,11 @@ import (
 	"context"
 	"errors"
 
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 type userRepo struct {
@@ -24,12 +24,8 @@ func NewUserRepo(db *ent.Database) dto.UserRepo {
 	return &userRepo{db: db}
 }
 
-func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOptions) (*types.User, error) {
-	opt := &dto.UserQueryOptions{}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-
+func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOption) (*types.User, error) {
+	opt := repo.GetFirstOption(opts...)
 	query := r.db.User(ctx).Query().Where(user.ID(id))
 
 	if opt.WithRoles {
@@ -43,13 +39,16 @@ func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOpti
 	return dto.ConvertUserToUserPB(result), nil
 }
 
-func (r *userRepo) Create(ctx context.Context, u *types.User, opts ...*dto.UserCreateOptions) (*types.User, error) {
+func (r *userRepo) Create(ctx context.Context, u *types.User, password string, opts ...*dto.UserCreateOption) (*types.User, error) {
 	exist, err := r.db.User(ctx).Query().Where(user.UsernameEQ(u.Username)).Exist(ctx)
 	if err != nil || exist {
 		return nil, errors.New("user already exists")
 	}
 
 	entUser := dto.ConvertUserPBToUser(u)
+	if password != "" {
+		entUser.EncryptedPassword = password
+	}
 	create := r.db.User(ctx).Create().SetUser(entUser)
 
 	saved, err := create.Save(ctx)
@@ -63,7 +62,7 @@ func (r *userRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.User(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserUpdateOptions) (*types.User, error) {
+func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserUpdateOption) (*types.User, error) {
 	entUser := dto.ConvertUserPBToUser(u)
 	update := r.db.User(ctx).UpdateOneID(u.Id).SetUser(entUser)
 
@@ -76,16 +75,12 @@ func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserU
 	return dto.ConvertUserToUserPB(saved), nil
 }
 
-func (r *userRepo) List(ctx context.Context, in *system.ListUsersRequest, opts ...*dto.UserQueryOptions) ([]*types.User, int32, error) {
-	opt := &dto.UserQueryOptions{}
-	if len(opts) > 0 {
-		opt = opts[0]
-	}
-
+func (r *userRepo) List(ctx context.Context, opts ...*dto.UserQueryOption) ([]*types.User, int32, error) {
+	opt := repo.GetFirstOption(opts...)
 	query := r.db.User(ctx).Query()
 
-	if in.GetKeyword() != "" {
-		query = query.Where(user.Or(user.UsernameContainsFold(in.GetKeyword()), user.PhoneContainsFold(in.GetKeyword()), user.EmailContainsFold(in.GetKeyword())))
+	if opt.Keyword != "" {
+		query.Where(user.Or(user.UsernameContainsFold(opt.Keyword), user.PhoneContainsFold(opt.Keyword), user.EmailContainsFold(opt.Keyword)))
 	}
 
 	if opt.Page > 0 && opt.PageSize > 0 {

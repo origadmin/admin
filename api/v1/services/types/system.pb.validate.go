@@ -1254,12 +1254,6 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Gender
 
-	// no validation rules for Password
-
-	// no validation rules for ConfirmPassword
-
-	// no validation rules for Salt
-
 	// no validation rules for Phone
 
 	// no validation rules for Email

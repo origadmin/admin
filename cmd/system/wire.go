@@ -12,10 +12,6 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
 	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/crypto/hash"
-	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
-	"github.com/origadmin/toolkits/crypto/hash/types"
 
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
@@ -25,17 +21,6 @@ import (
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
 )
-
-func provideHasher() (hash.Crypto, error) {
-	// Using a default cost for bcrypt. In a real application, this might come from config.
-	return hash.NewCrypto(types.BCRYPT, bcrypt.WithCost(bcrypt.DefaultCost))
-}
-
-func provideLogger(app *runtime.App) log.Logger {
-	return app.Logger()
-}
-
-var infraProviderSet = wire.NewSet(provideLogger, provideHasher)
 
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {

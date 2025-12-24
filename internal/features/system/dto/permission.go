@@ -15,24 +15,36 @@ import (
 
 // PermissionRepo is a Permission repository interface.
 type PermissionRepo interface {
-	Get(context.Context, int64, ...*PermissionQueryOptions) (*types.Permission, error)
-	List(context.Context, *system.ListPermissionsRequest, ...*PermissionQueryOptions) ([]*types.Permission, int32, error)
-	Create(context.Context, *types.Permission, ...*PermissionCreateOptions) (*types.Permission, error)
-	Update(context.Context, *types.Permission, ...*PermissionUpdateOptions) (*types.Permission, error)
+	Get(context.Context, int64, ...*PermissionQueryOption) (*types.Permission, error)
+	List(context.Context, ...*PermissionQueryOption) ([]*types.Permission, int32, error)
+	Create(context.Context, *types.Permission, ...*PermissionCreateOption) (*types.Permission, error)
+	Update(context.Context, *types.Permission, ...*PermissionUpdateOption) (*types.Permission, error)
 	Delete(context.Context, int64) error
 }
 
-// PermissionQueryOptions specifies options for listing permissions.
-type PermissionQueryOptions struct {
+// PermissionQueryOption specifies options for querying permissions.
+type PermissionQueryOption struct {
 	repo.QueryOption
+	DataScopes    []string
 	WithResources bool
 	WithRoles     bool
 }
 
-// PermissionCreateOptions specifies options for creating a permission.
-type PermissionCreateOptions struct {
+// PermissionCreateOption specifies options for creating a permission.
+type PermissionCreateOption struct {
 }
 
-// PermissionUpdateOptions specifies options for updating a permission.
-type PermissionUpdateOptions struct {
+// PermissionUpdateOption specifies options for updating a permission.
+type PermissionUpdateOption struct {
+}
+
+// ListPermissionsRequestToQueryOption converts an API request to a query option object.
+func ListPermissionsRequestToQueryOption(req *system.ListPermissionsRequest) *PermissionQueryOption {
+	if req == nil {
+		return &PermissionQueryOption{}
+	}
+	return &PermissionQueryOption{
+		QueryOption: repo.OptionFromRequest(req),
+		DataScopes:  req.GetDataScopes(),
+	}
 }

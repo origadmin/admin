@@ -18,46 +18,28 @@ type ResourceUseCase struct {
 	repo dto.ResourceRepo
 }
 
+// NewResourceUseCase new a Resource use case.
+func NewResourceUseCase(repo dto.ResourceRepo) *ResourceUseCase {
+	return &ResourceUseCase{repo: repo}
+}
+
 func (uc *ResourceUseCase) ListResources(ctx context.Context, in *system.ListResourcesRequest) ([]*types.Resource, int32, error) {
-	result, total, err := uc.repo.List(ctx, in)
-	if err != nil {
-		return nil, 0, err
-	}
-	return result, total, nil
+	queryOpt := dto.ListResourcesRequestToQueryOption(in)
+	return uc.repo.List(ctx, queryOpt)
 }
 
 func (uc *ResourceUseCase) GetResource(ctx context.Context, id int64) (*types.Resource, error) {
-	result, err := uc.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Get(ctx, id)
 }
 
 func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
-	result, err := uc.repo.Create(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Create(ctx, in)
 }
 
 func (uc *ResourceUseCase) UpdateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
-	result, err := uc.repo.Update(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Update(ctx, in)
 }
 
 func (uc *ResourceUseCase) DeleteResource(ctx context.Context, id int64) error {
-	if err := uc.repo.Delete(ctx, id); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewResourceUseCase new a Resource use case.
-func NewResourceUseCase(repo dto.ResourceRepo) (*ResourceUseCase, error) {
-	return &ResourceUseCase{repo: repo}, nil
+	return uc.repo.Delete(ctx, id)
 }

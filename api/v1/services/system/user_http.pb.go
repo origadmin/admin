@@ -51,9 +51,9 @@ func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r.GET("/sys/users/{id}", _UserService_GetUser0_HTTP_Handler(srv))
 	r.POST("/sys/users", _UserService_CreateUser0_HTTP_Handler(srv))
 	r.PUT("/sys/users/{user.id}", _UserService_UpdateUser0_HTTP_Handler(srv))
-	r.DELETE("/sys/users/{user.id}", _UserService_DeleteUser0_HTTP_Handler(srv))
-	r.PUT("/sys/users/{user.id}/status", _UserService_UpdateUserStatus0_HTTP_Handler(srv))
-	r.PUT("/sys/users/{user.id}/roles", _UserService_UpdateUserRoles0_HTTP_Handler(srv))
+	r.DELETE("/sys/users/{id}", _UserService_DeleteUser0_HTTP_Handler(srv))
+	r.PUT("/sys/users/{id}/status", _UserService_UpdateUserStatus0_HTTP_Handler(srv))
+	r.PUT("/sys/users/{id}/roles", _UserService_UpdateUserRoles0_HTTP_Handler(srv))
 	r.POST("/sys/users/{id}/password/reset", _UserService_ResetUserPassword0_HTTP_Handler(srv))
 }
 
@@ -192,7 +192,7 @@ func _UserService_DeleteUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx h
 func _UserService_UpdateUserStatus0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserStatusRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -217,7 +217,7 @@ func _UserService_UpdateUserStatus0_HTTP_Handler(srv UserServiceHTTPServer) func
 func _UserService_UpdateUserRoles0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateUserRolesRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -242,7 +242,7 @@ func _UserService_UpdateUserRoles0_HTTP_Handler(srv UserServiceHTTPServer) func(
 func _UserService_ResetUserPassword0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetUserPasswordRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		if err := ctx.Bind(&in.Password); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -302,7 +302,7 @@ func (c *UserServiceHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUs
 
 func (c *UserServiceHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*DeleteUserResponse, error) {
 	var out DeleteUserResponse
-	pattern := "/sys/users/{user.id}"
+	pattern := "/sys/users/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserServiceDeleteUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -359,7 +359,7 @@ func (c *UserServiceHTTPClientImpl) ResetUserPassword(ctx context.Context, in *R
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceResetUserPassword))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in.Password, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -382,11 +382,11 @@ func (c *UserServiceHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUs
 // UpdateUserRoles UpdateUserRoles update the user roles
 func (c *UserServiceHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest, opts ...http.CallOption) (*UpdateUserRolesResponse, error) {
 	var out UpdateUserRolesResponse
-	pattern := "/sys/users/{user.id}/roles"
+	pattern := "/sys/users/{id}/roles"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceUpdateUserRoles))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -396,11 +396,11 @@ func (c *UserServiceHTTPClientImpl) UpdateUserRoles(ctx context.Context, in *Upd
 // UpdateUserStatus UpdateUserStatus Update the status of the user information
 func (c *UserServiceHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...http.CallOption) (*UpdateUserStatusResponse, error) {
 	var out UpdateUserStatusResponse
-	pattern := "/sys/users/{user.id}/status"
+	pattern := "/sys/users/{id}/status"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserServiceUpdateUserStatus))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.User, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

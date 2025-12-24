@@ -15,10 +15,10 @@ import (
 
 // RoleRepo is a Role repository interface.
 type RoleRepo interface {
-	Get(context.Context, int64, ...*RoleQueryOptions) (*types.Role, error)
-	List(context.Context, *system.ListRolesRequest, ...*RoleQueryOptions) ([]*types.Role, int32, error)
-	Create(context.Context, *types.Role, ...*RoleCreateOptions) (*types.Role, error)
-	Update(context.Context, *types.Role, ...*RoleUpdateOptions) (*types.Role, error)
+	Get(context.Context, int64, ...*RoleQueryOption) (*types.Role, error)
+	List(context.Context, ...*RoleQueryOption) ([]*types.Role, int32, error)
+	Create(context.Context, *types.Role, ...*RoleCreateOption) (*types.Role, error)
+	Update(context.Context, *types.Role, ...*RoleUpdateOption) (*types.Role, error)
 	Delete(context.Context, int64) error
 
 	// Business-specific methods
@@ -26,16 +26,27 @@ type RoleRepo interface {
 	UpdatePermissions(context.Context, int64, []int64) error
 }
 
-// RoleQueryOptions specifies options for listing roles.
-type RoleQueryOptions struct {
+// RoleQueryOption specifies options for querying roles.
+type RoleQueryOption struct {
 	repo.QueryOption
 	WithPermissions bool
 }
 
-// RoleCreateOptions specifies options for creating a role.
-type RoleCreateOptions struct {
+// RoleCreateOption specifies options for creating a role.
+type RoleCreateOption struct {
 }
 
-// RoleUpdateOptions specifies options for updating a role.
-type RoleUpdateOptions struct {
+// RoleUpdateOption specifies options for updating a role.
+type RoleUpdateOption struct {
+}
+
+// ListRolesRequestToQueryOption converts an API request to a query option object.
+func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOption {
+	if req == nil {
+		return &RoleQueryOption{}
+	}
+	return &RoleQueryOption{
+		QueryOption: repo.OptionFromRequest(req),
+		// WithPermissions: req.GetWithPermissions(), // Assuming this field exists
+	}
 }

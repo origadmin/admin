@@ -142,38 +142,30 @@ message User {
   string name = 11 [json_name = "name"];
   // user.field.gender
   string gender = 12 [json_name = "gender"];
-  // user.field.password
-  // @Decrypted don't show this field in response
-  string password = 13 [json_name = "password"];
-  // user.field.confirm_password
-  string confirm_password = 14 [json_name = "confirm_password"];
-  // user.field.salt
-  // @Decrypted don't show this field in response
-  string salt = 15 [json_name = "salt"];
   // user.field.phone
-  string phone = 16 [json_name = "phone"];
+  string phone = 13 [json_name = "phone"];
   // user.field.email
-  string email = 17 [json_name = "email"];
+  string email = 14 [json_name = "email"];
   // user.field.remark
-  string remark = 18 [json_name = "remark"];
+  string remark = 15 [json_name = "remark"];
   // user.field.token
-  string token = 19 [json_name = "token"];
+  string token = 16 [json_name = "token"];
   // user.field.status
-  int32 status = 20 [json_name = "status"];
+  int32 status = 17 [json_name = "status"];
   // user.field.last_login_ip
-  string last_login_ip = 21 [json_name = "last_login_ip"];
+  string last_login_ip = 18 [json_name = "last_login_ip"];
   // user.field.last_login_time
-  google.protobuf.Timestamp last_login_time = 22 [json_name = "last_login_time"];
+  google.protobuf.Timestamp last_login_time = 19 [json_name = "last_login_time"];
   // user.field.sanction_date
-  optional google.protobuf.Timestamp sanction_date = 23 [json_name = "sanction_date"];
+  optional google.protobuf.Timestamp sanction_date = 20 [json_name = "sanction_date"];
   // user.field.manager_id
-  int64 manager_id = 24 [json_name = "manager_id"];
+  int64 manager_id = 21 [json_name = "manager_id"];
   // user.field.manager
-  string manager = 25 [json_name = "manager"];
+  string manager = 22 [json_name = "manager"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 26 [json_name = "roles"];
+  repeated Role roles = 23 [json_name = "roles"];
   // Role Ids holds the value of the role_ids
-  repeated int64 role_ids = 27 [json_name = "role_ids"];
+  repeated int64 role_ids = 24 [json_name = "role_ids"];
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.

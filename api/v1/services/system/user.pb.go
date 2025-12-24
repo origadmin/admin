@@ -123,7 +123,9 @@ func (x *ListUserResourcesResponse) GetResources() []*types.Resource {
 
 type UpdateUserStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+	User          *types.User            `protobuf:"bytes,3,opt,name=user,proto3,oneof" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -156,6 +158,20 @@ func (x *UpdateUserStatusRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateUserStatusRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserStatusRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UpdateUserStatusRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateUserStatusRequest) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
 }
 
 func (x *UpdateUserStatusRequest) GetUser() *types.User {
@@ -203,8 +219,8 @@ func (*UpdateUserStatusResponse) Descriptor() ([]byte, []int) {
 
 type ResetUserPasswordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Data          *anypb.Any             `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -239,18 +255,18 @@ func (*ResetUserPasswordRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ResetUserPasswordRequest) GetId() string {
+func (x *ResetUserPasswordRequest) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
-	return ""
+	return 0
 }
 
-func (x *ResetUserPasswordRequest) GetData() *anypb.Any {
+func (x *ResetUserPasswordRequest) GetPassword() string {
 	if x != nil {
-		return x.Data
+		return x.Password
 	}
-	return nil
+	return ""
 }
 
 type ResetUserPasswordResponse struct {
@@ -822,9 +838,10 @@ func (x *UpdateUserResponse) GetUser() *types.User {
 
 type DeleteUserRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The resource id of the user to be deleted, for example:
-	// "shelves/shelf1/users/user2"
-	User          *types.User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	// The resource id of the user to be deleted.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The user object, for compatibility.
+	User          *types.User `protobuf:"bytes,2,opt,name=user,proto3,oneof" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -857,6 +874,13 @@ func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
 	return file_system_user_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *DeleteUserRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
 }
 
 func (x *DeleteUserRequest) GetUser() *types.User {
@@ -1023,13 +1047,16 @@ const file_system_user_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"p\n" +
 	"\x19ListUserResourcesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12=\n" +
-	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"J\n" +
-	"\x17UpdateUserStatusRequest\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\x1a\n" +
-	"\x18UpdateUserStatusResponse\"T\n" +
+	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x80\x01\n" +
+	"\x17UpdateUserStatusRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\x05R\x06status\x124\n" +
+	"\x04user\x18\x03 \x01(\v2\x1b.api.v1.services.types.UserH\x00R\x04user\x88\x01\x01B\a\n" +
+	"\x05_user\"\x1a\n" +
+	"\x18UpdateUserStatusResponse\"F\n" +
 	"\x18ResetUserPasswordRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12(\n" +
-	"\x04data\x18\x02 \x01(\v2\x14.google.protobuf.AnyR\x04data\"\x1b\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x1b\n" +
 	"\x19ResetUserPasswordResponse\"\xcc\x01\n" +
 	"\x10ListUsersRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
@@ -1070,9 +1097,11 @@ const file_system_user_proto_rawDesc = "" +
 	"\tis_system\x18\x04 \x01(\bR\tis_system\x12(\n" +
 	"\x0frandom_password\x18\x02 \x01(\bR\x0frandom_password\"E\n" +
 	"\x12UpdateUserResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"D\n" +
-	"\x11DeleteUserRequest\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"B\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"b\n" +
+	"\x11DeleteUserRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x124\n" +
+	"\x04user\x18\x02 \x01(\v2\x1b.api.v1.services.types.UserH\x00R\x04user\x88\x01\x01B\a\n" +
+	"\x05_user\"B\n" +
 	"\x12DeleteUserResponse\x12,\n" +
 	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty\"u\n" +
 	"\x16UpdateUserRolesRequest\x12\x0e\n" +
@@ -1080,8 +1109,7 @@ const file_system_user_proto_rawDesc = "" +
 	"\x04user\x18\x02 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x1a\n" +
 	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"J\n" +
 	"\x17UpdateUserRolesResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\x8e\n" +
-	"\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xfc\t\n" +
 	"\vUserService\x12t\n" +
 	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/sys/users\x12\x9b\x01\n" +
@@ -1091,12 +1119,12 @@ const file_system_user_proto_rawDesc = "" +
 	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x04user\"\n" +
 	"/sys/users\x12\x87\x01\n" +
 	"\n" +
-	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04user\x1a\x14/sys/users/{user.id}\x12\x81\x01\n" +
+	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04user\x1a\x14/sys/users/{user.id}\x12|\n" +
 	"\n" +
-	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"\x1c\x82\xd3\xe4\x93\x02\x16*\x14/sys/users/{user.id}\x12\xa0\x01\n" +
-	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\")\x82\xd3\xe4\x93\x02#:\x04user\x1a\x1b/sys/users/{user.id}/status\x12\x9c\x01\n" +
-	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\"(\x82\xd3\xe4\x93\x02\":\x04user\x1a\x1a/sys/users/{user.id}/roles\x12\xa6\x01\n" +
-	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\",\x82\xd3\xe4\x93\x02&:\x04data\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
+	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/sys/users/{id}\x12\x98\x01\n" +
+	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\x94\x01\n" +
+	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x12\xaa\x01\n" +
+	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\"0\x82\xd3\xe4\x93\x02*:\bpassword\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tUserProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
@@ -1139,41 +1167,40 @@ var file_system_user_proto_goTypes = []any{
 var file_system_user_proto_depIdxs = []int32{
 	18, // 0: api.v1.services.system.ListUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
 	19, // 1: api.v1.services.system.UpdateUserStatusRequest.user:type_name -> api.v1.services.types.User
-	20, // 2: api.v1.services.system.ResetUserPasswordRequest.data:type_name -> google.protobuf.Any
-	19, // 3: api.v1.services.system.ListUsersResponse.users:type_name -> api.v1.services.types.User
-	20, // 4: api.v1.services.system.ListUsersResponse.extra:type_name -> google.protobuf.Any
-	19, // 5: api.v1.services.system.GetUserResponse.user:type_name -> api.v1.services.types.User
-	19, // 6: api.v1.services.system.CreateUserRequest.user:type_name -> api.v1.services.types.User
-	19, // 7: api.v1.services.system.CreateUserResponse.user:type_name -> api.v1.services.types.User
-	19, // 8: api.v1.services.system.UpdateUserRequest.user:type_name -> api.v1.services.types.User
-	19, // 9: api.v1.services.system.UpdateUserResponse.user:type_name -> api.v1.services.types.User
-	19, // 10: api.v1.services.system.DeleteUserRequest.user:type_name -> api.v1.services.types.User
-	21, // 11: api.v1.services.system.DeleteUserResponse.empty:type_name -> google.protobuf.Empty
-	19, // 12: api.v1.services.system.UpdateUserRolesRequest.user:type_name -> api.v1.services.types.User
-	19, // 13: api.v1.services.system.UpdateUserRolesResponse.user:type_name -> api.v1.services.types.User
-	6,  // 14: api.v1.services.system.UserService.ListUsers:input_type -> api.v1.services.system.ListUsersRequest
-	0,  // 15: api.v1.services.system.UserService.ListUserResources:input_type -> api.v1.services.system.ListUserResourcesRequest
-	8,  // 16: api.v1.services.system.UserService.GetUser:input_type -> api.v1.services.system.GetUserRequest
-	10, // 17: api.v1.services.system.UserService.CreateUser:input_type -> api.v1.services.system.CreateUserRequest
-	12, // 18: api.v1.services.system.UserService.UpdateUser:input_type -> api.v1.services.system.UpdateUserRequest
-	14, // 19: api.v1.services.system.UserService.DeleteUser:input_type -> api.v1.services.system.DeleteUserRequest
-	2,  // 20: api.v1.services.system.UserService.UpdateUserStatus:input_type -> api.v1.services.system.UpdateUserStatusRequest
-	16, // 21: api.v1.services.system.UserService.UpdateUserRoles:input_type -> api.v1.services.system.UpdateUserRolesRequest
-	4,  // 22: api.v1.services.system.UserService.ResetUserPassword:input_type -> api.v1.services.system.ResetUserPasswordRequest
-	7,  // 23: api.v1.services.system.UserService.ListUsers:output_type -> api.v1.services.system.ListUsersResponse
-	1,  // 24: api.v1.services.system.UserService.ListUserResources:output_type -> api.v1.services.system.ListUserResourcesResponse
-	9,  // 25: api.v1.services.system.UserService.GetUser:output_type -> api.v1.services.system.GetUserResponse
-	11, // 26: api.v1.services.system.UserService.CreateUser:output_type -> api.v1.services.system.CreateUserResponse
-	13, // 27: api.v1.services.system.UserService.UpdateUser:output_type -> api.v1.services.system.UpdateUserResponse
-	15, // 28: api.v1.services.system.UserService.DeleteUser:output_type -> api.v1.services.system.DeleteUserResponse
-	3,  // 29: api.v1.services.system.UserService.UpdateUserStatus:output_type -> api.v1.services.system.UpdateUserStatusResponse
-	17, // 30: api.v1.services.system.UserService.UpdateUserRoles:output_type -> api.v1.services.system.UpdateUserRolesResponse
-	5,  // 31: api.v1.services.system.UserService.ResetUserPassword:output_type -> api.v1.services.system.ResetUserPasswordResponse
-	23, // [23:32] is the sub-list for method output_type
-	14, // [14:23] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	19, // 2: api.v1.services.system.ListUsersResponse.users:type_name -> api.v1.services.types.User
+	20, // 3: api.v1.services.system.ListUsersResponse.extra:type_name -> google.protobuf.Any
+	19, // 4: api.v1.services.system.GetUserResponse.user:type_name -> api.v1.services.types.User
+	19, // 5: api.v1.services.system.CreateUserRequest.user:type_name -> api.v1.services.types.User
+	19, // 6: api.v1.services.system.CreateUserResponse.user:type_name -> api.v1.services.types.User
+	19, // 7: api.v1.services.system.UpdateUserRequest.user:type_name -> api.v1.services.types.User
+	19, // 8: api.v1.services.system.UpdateUserResponse.user:type_name -> api.v1.services.types.User
+	19, // 9: api.v1.services.system.DeleteUserRequest.user:type_name -> api.v1.services.types.User
+	21, // 10: api.v1.services.system.DeleteUserResponse.empty:type_name -> google.protobuf.Empty
+	19, // 11: api.v1.services.system.UpdateUserRolesRequest.user:type_name -> api.v1.services.types.User
+	19, // 12: api.v1.services.system.UpdateUserRolesResponse.user:type_name -> api.v1.services.types.User
+	6,  // 13: api.v1.services.system.UserService.ListUsers:input_type -> api.v1.services.system.ListUsersRequest
+	0,  // 14: api.v1.services.system.UserService.ListUserResources:input_type -> api.v1.services.system.ListUserResourcesRequest
+	8,  // 15: api.v1.services.system.UserService.GetUser:input_type -> api.v1.services.system.GetUserRequest
+	10, // 16: api.v1.services.system.UserService.CreateUser:input_type -> api.v1.services.system.CreateUserRequest
+	12, // 17: api.v1.services.system.UserService.UpdateUser:input_type -> api.v1.services.system.UpdateUserRequest
+	14, // 18: api.v1.services.system.UserService.DeleteUser:input_type -> api.v1.services.system.DeleteUserRequest
+	2,  // 19: api.v1.services.system.UserService.UpdateUserStatus:input_type -> api.v1.services.system.UpdateUserStatusRequest
+	16, // 20: api.v1.services.system.UserService.UpdateUserRoles:input_type -> api.v1.services.system.UpdateUserRolesRequest
+	4,  // 21: api.v1.services.system.UserService.ResetUserPassword:input_type -> api.v1.services.system.ResetUserPasswordRequest
+	7,  // 22: api.v1.services.system.UserService.ListUsers:output_type -> api.v1.services.system.ListUsersResponse
+	1,  // 23: api.v1.services.system.UserService.ListUserResources:output_type -> api.v1.services.system.ListUserResourcesResponse
+	9,  // 24: api.v1.services.system.UserService.GetUser:output_type -> api.v1.services.system.GetUserResponse
+	11, // 25: api.v1.services.system.UserService.CreateUser:output_type -> api.v1.services.system.CreateUserResponse
+	13, // 26: api.v1.services.system.UserService.UpdateUser:output_type -> api.v1.services.system.UpdateUserResponse
+	15, // 27: api.v1.services.system.UserService.DeleteUser:output_type -> api.v1.services.system.DeleteUserResponse
+	3,  // 28: api.v1.services.system.UserService.UpdateUserStatus:output_type -> api.v1.services.system.UpdateUserStatusResponse
+	17, // 29: api.v1.services.system.UserService.UpdateUserRoles:output_type -> api.v1.services.system.UpdateUserRolesResponse
+	5,  // 30: api.v1.services.system.UserService.ResetUserPassword:output_type -> api.v1.services.system.ResetUserPasswordResponse
+	22, // [22:31] is the sub-list for method output_type
+	13, // [13:22] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_system_user_proto_init() }
@@ -1181,7 +1208,9 @@ func file_system_user_proto_init() {
 	if File_system_user_proto != nil {
 		return
 	}
+	file_system_user_proto_msgTypes[2].OneofWrappers = []any{}
 	file_system_user_proto_msgTypes[7].OneofWrappers = []any{}
+	file_system_user_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

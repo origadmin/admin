@@ -595,38 +595,30 @@ type User struct {
 	Name string `protobuf:"bytes,11,opt,name=name,proto3" json:"name,omitempty"`
 	// user.field.gender
 	Gender string `protobuf:"bytes,12,opt,name=gender,proto3" json:"gender,omitempty"`
-	// user.field.password
-	// @Decrypted don't show this field in response
-	Password string `protobuf:"bytes,13,opt,name=password,proto3" json:"password,omitempty"`
-	// user.field.confirm_password
-	ConfirmPassword string `protobuf:"bytes,14,opt,name=confirm_password,proto3" json:"confirm_password,omitempty"`
-	// user.field.salt
-	// @Decrypted don't show this field in response
-	Salt string `protobuf:"bytes,15,opt,name=salt,proto3" json:"salt,omitempty"`
 	// user.field.phone
-	Phone string `protobuf:"bytes,16,opt,name=phone,proto3" json:"phone,omitempty"`
+	Phone string `protobuf:"bytes,13,opt,name=phone,proto3" json:"phone,omitempty"`
 	// user.field.email
-	Email string `protobuf:"bytes,17,opt,name=email,proto3" json:"email,omitempty"`
+	Email string `protobuf:"bytes,14,opt,name=email,proto3" json:"email,omitempty"`
 	// user.field.remark
-	Remark string `protobuf:"bytes,18,opt,name=remark,proto3" json:"remark,omitempty"`
+	Remark string `protobuf:"bytes,15,opt,name=remark,proto3" json:"remark,omitempty"`
 	// user.field.token
-	Token string `protobuf:"bytes,19,opt,name=token,proto3" json:"token,omitempty"`
+	Token string `protobuf:"bytes,16,opt,name=token,proto3" json:"token,omitempty"`
 	// user.field.status
-	Status int32 `protobuf:"varint,20,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
 	// user.field.last_login_ip
-	LastLoginIp string `protobuf:"bytes,21,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
+	LastLoginIp string `protobuf:"bytes,18,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
 	// user.field.last_login_time
-	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
+	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
 	// user.field.sanction_date
-	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,23,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
+	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
 	// user.field.manager_id
-	ManagerId int64 `protobuf:"varint,24,opt,name=manager_id,proto3" json:"manager_id,omitempty"`
+	ManagerId int64 `protobuf:"varint,21,opt,name=manager_id,proto3" json:"manager_id,omitempty"`
 	// user.field.manager
-	Manager string `protobuf:"bytes,25,opt,name=manager,proto3" json:"manager,omitempty"`
+	Manager string `protobuf:"bytes,22,opt,name=manager,proto3" json:"manager,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,26,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles []*Role `protobuf:"bytes,23,rep,name=roles,proto3" json:"roles,omitempty"`
 	// Role Ids holds the value of the role_ids
-	RoleIds       []int64 `protobuf:"varint,27,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	RoleIds       []int64 `protobuf:"varint,24,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -741,27 +733,6 @@ func (x *User) GetName() string {
 func (x *User) GetGender() string {
 	if x != nil {
 		return x.Gender
-	}
-	return ""
-}
-
-func (x *User) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-func (x *User) GetConfirmPassword() string {
-	if x != nil {
-		return x.ConfirmPassword
-	}
-	return ""
-}
-
-func (x *User) GetSalt() string {
-	if x != nil {
-		return x.Salt
 	}
 	return ""
 }
@@ -2834,7 +2805,7 @@ const file_types_system_proto_rawDesc = "" +
 	"role_menus\x12?\n" +
 	"\n" +
 	"user_roles\x18\x04 \x03(\v2\x1f.api.v1.services.types.UserRoleR\n" +
-	"user_roles\"\xaa\a\n" +
+	"user_roles\"\xce\x06\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
@@ -2850,24 +2821,21 @@ const file_types_system_proto_rawDesc = "" +
 	"\x06avatar\x18\n" +
 	" \x01(\tR\x06avatar\x12\x12\n" +
 	"\x04name\x18\v \x01(\tR\x04name\x12\x16\n" +
-	"\x06gender\x18\f \x01(\tR\x06gender\x12\x1a\n" +
-	"\bpassword\x18\r \x01(\tR\bpassword\x12*\n" +
-	"\x10confirm_password\x18\x0e \x01(\tR\x10confirm_password\x12\x12\n" +
-	"\x04salt\x18\x0f \x01(\tR\x04salt\x12\x14\n" +
-	"\x05phone\x18\x10 \x01(\tR\x05phone\x12\x14\n" +
-	"\x05email\x18\x11 \x01(\tR\x05email\x12\x16\n" +
-	"\x06remark\x18\x12 \x01(\tR\x06remark\x12\x14\n" +
-	"\x05token\x18\x13 \x01(\tR\x05token\x12\x16\n" +
-	"\x06status\x18\x14 \x01(\x05R\x06status\x12$\n" +
-	"\rlast_login_ip\x18\x15 \x01(\tR\rlast_login_ip\x12D\n" +
-	"\x0flast_login_time\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12E\n" +
-	"\rsanction_date\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x12\x1e\n" +
+	"\x06gender\x18\f \x01(\tR\x06gender\x12\x14\n" +
+	"\x05phone\x18\r \x01(\tR\x05phone\x12\x14\n" +
+	"\x05email\x18\x0e \x01(\tR\x05email\x12\x16\n" +
+	"\x06remark\x18\x0f \x01(\tR\x06remark\x12\x14\n" +
+	"\x05token\x18\x10 \x01(\tR\x05token\x12\x16\n" +
+	"\x06status\x18\x11 \x01(\x05R\x06status\x12$\n" +
+	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12D\n" +
+	"\x0flast_login_time\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12E\n" +
+	"\rsanction_date\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x12\x1e\n" +
 	"\n" +
-	"manager_id\x18\x18 \x01(\x03R\n" +
+	"manager_id\x18\x15 \x01(\x03R\n" +
 	"manager_id\x12\x18\n" +
-	"\amanager\x18\x19 \x01(\tR\amanager\x121\n" +
-	"\x05roles\x18\x1a \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
-	"\brole_ids\x18\x1b \x03(\x03R\brole_idsB\x10\n" +
+	"\amanager\x18\x16 \x01(\tR\amanager\x121\n" +
+	"\x05roles\x18\x17 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
+	"\brole_ids\x18\x18 \x03(\x03R\brole_idsB\x10\n" +
 	"\x0e_sanction_date\"\x7f\n" +
 	"\tUserEdges\x121\n" +
 	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12?\n" +

@@ -6,7 +6,7 @@ import (
 
 //go:generate go run github.com/origadmin/abgen/cmd/abgen -debug go run ./cmd/abgen -debug .
 
-//go:abgen:package:path=origadmin/application/admin/internal/features/system/data/ent,alias=ent
+//go:abgen:package:path=origadmin/application/admin/internal/data/entity/ent,alias=ent
 //go:abgen:package:path=origadmin/application/admin/api/v1/services/types,alias=types
 //go:abgen:pair:packages="ent,types"
 //go:abgen:convert:direction="both"
@@ -25,14 +25,4 @@ func ConvertGenderToString(from user.Gender) string {
 func ConvertStringToGender(from string) user.Gender {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
-}
-
-type Pagination struct {
-	Page     int
-	PageSize int
-}
-
-type QueryOption struct {
-	Pagination *Pagination
-	OrderBy    []string
 }

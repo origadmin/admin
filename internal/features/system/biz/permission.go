@@ -18,46 +18,28 @@ type PermissionUseCase struct {
 	repo dto.PermissionRepo
 }
 
+// NewPermissionUseCase new a Permission use case.
+func NewPermissionUseCase(repo dto.PermissionRepo) *PermissionUseCase {
+	return &PermissionUseCase{repo: repo}
+}
+
 func (uc *PermissionUseCase) ListPermissions(ctx context.Context, in *system.ListPermissionsRequest) ([]*types.Permission, int32, error) {
-	result, total, err := uc.repo.List(ctx, in)
-	if err != nil {
-		return nil, 0, err
-	}
-	return result, total, nil
+	queryOpt := dto.ListPermissionsRequestToQueryOption(in)
+	return uc.repo.List(ctx, queryOpt)
 }
 
 func (uc *PermissionUseCase) GetPermission(ctx context.Context, id int64) (*types.Permission, error) {
-	result, err := uc.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Get(ctx, id)
 }
 
 func (uc *PermissionUseCase) CreatePermission(ctx context.Context, in *types.Permission) (*types.Permission, error) {
-	result, err := uc.repo.Create(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Create(ctx, in)
 }
 
 func (uc *PermissionUseCase) UpdatePermission(ctx context.Context, in *types.Permission) (*types.Permission, error) {
-	result, err := uc.repo.Update(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	return uc.repo.Update(ctx, in)
 }
 
 func (uc *PermissionUseCase) DeletePermission(ctx context.Context, id int64) error {
-	if err := uc.repo.Delete(ctx, id); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPermissionUseCase new a Permission use case.
-func NewPermissionUseCase(repo dto.PermissionRepo) (*PermissionUseCase, error) {
-	return &PermissionUseCase{repo: repo}, nil
+	return uc.repo.Delete(ctx, id)
 }

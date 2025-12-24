@@ -2321,113 +2321,14 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/{id}/password/reset:
-        post:
-            tags:
-                - UserService
-            description: ResetUserPassword reset the user s password
-            operationId: UserService_ResetUserPassword
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/{id}/resources:
-        get:
-            tags:
-                - UserService
-            operationId: UserService_ListUserResources
-            parameters:
-                - name: id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListUserResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/{user.id}:
-        put:
-            tags:
-                - UserService
-            operationId: UserService_UpdateUser
-            parameters:
-                - name: user.id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-                - name: user_id
-                  in: query
-                  description: The user id to use for this user.
-                  schema:
-                    type: string
-                - name: is_system
-                  in: query
-                  description: The user is_system to use for this user.
-                  schema:
-                    type: boolean
-                - name: random_password
-                  in: query
-                  description: The random_password is the query parameter for set only to generate a random password
-                  schema:
-                    type: boolean
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.types.User'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdateUserResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
         delete:
             tags:
                 - UserService
             operationId: UserService_DeleteUser
             parameters:
-                - name: user.id
+                - name: id
                   in: path
+                  description: The resource id of the user to be deleted.
                   required: true
                   schema:
                     type: string
@@ -2493,25 +2394,6 @@ paths:
                 - name: user.gender
                   in: query
                   description: user.field.gender
-                  schema:
-                    type: string
-                - name: user.password
-                  in: query
-                  description: |-
-                    user.field.password
-                     @Decrypted don't show this field in response
-                  schema:
-                    type: string
-                - name: user.confirm_password
-                  in: query
-                  description: user.field.confirm_password
-                  schema:
-                    type: string
-                - name: user.salt
-                  in: query
-                  description: |-
-                    user.field.salt
-                     @Decrypted don't show this field in response
                   schema:
                     type: string
                 - name: user.phone
@@ -2587,33 +2469,78 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/{user.id}/roles:
+    /sys/users/{id}/password/reset:
+        post:
+            tags:
+                - UserService
+            description: ResetUserPassword reset the user s password
+            operationId: UserService_ResetUserPassword
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: string
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{id}/resources:
+        get:
+            tags:
+                - UserService
+            operationId: UserService_ListUserResources
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUserResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{id}/roles:
         put:
             tags:
                 - UserService
             description: UpdateUserRoles update the user roles
             operationId: UserService_UpdateUserRoles
             parameters:
-                - name: user.id
+                - name: id
                   in: path
                   required: true
                   schema:
                     type: string
-                - name: id
-                  in: query
-                  schema:
-                    type: string
-                - name: role_ids
-                  in: query
-                  schema:
-                    type: array
-                    items:
-                        type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.User'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateUserRolesRequest'
                 required: true
             responses:
                 "200":
@@ -2628,18 +2555,63 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /sys/users/{user.id}/status:
+    /sys/users/{id}/status:
         put:
             tags:
                 - UserService
             description: UpdateUserStatus Update the status of the user information
             operationId: UserService_UpdateUserStatus
             parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateUserStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateUserStatusResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /sys/users/{user.id}:
+        put:
+            tags:
+                - UserService
+            operationId: UserService_UpdateUser
+            parameters:
                 - name: user.id
                   in: path
                   required: true
                   schema:
                     type: string
+                - name: user_id
+                  in: query
+                  description: The user id to use for this user.
+                  schema:
+                    type: string
+                - name: is_system
+                  in: query
+                  description: The user is_system to use for this user.
+                  schema:
+                    type: boolean
+                - name: random_password
+                  in: query
+                  description: The random_password is the query parameter for set only to generate a random password
+                  schema:
+                    type: boolean
             requestBody:
                 content:
                     application/json:
@@ -2652,7 +2624,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.system.UpdateUserStatusResponse'
+                                $ref: '#/components/schemas/api.v1.services.system.UpdateUserResponse'
                 default:
                     description: Default error response
                     content:
@@ -3568,9 +3540,30 @@ components:
             properties:
                 user:
                     $ref: '#/components/schemas/api.v1.services.types.User'
+        api.v1.services.system.UpdateUserRolesRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+                role_ids:
+                    type: array
+                    items:
+                        type: string
         api.v1.services.system.UpdateUserRolesResponse:
             type: object
             properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+        api.v1.services.system.UpdateUserStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
                 user:
                     $ref: '#/components/schemas/api.v1.services.types.User'
         api.v1.services.system.UpdateUserStatusResponse:
@@ -4010,19 +4003,6 @@ components:
                 gender:
                     type: string
                     description: user.field.gender
-                password:
-                    type: string
-                    description: |-
-                        user.field.password
-                         @Decrypted don't show this field in response
-                confirm_password:
-                    type: string
-                    description: user.field.confirm_password
-                salt:
-                    type: string
-                    description: |-
-                        user.field.salt
-                         @Decrypted don't show this field in response
                 phone:
                     type: string
                     description: user.field.phone

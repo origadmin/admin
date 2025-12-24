@@ -8,11 +8,11 @@ import (
 	"context"
 
 	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/api/v1/services/types"
 )
 
 func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
-	resources, err := s.user.ListUserResources(ctx, req.Id)
+	resources, err := s.User.ListUserResources(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListU
 }
 
 func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
-	err := s.user.UpdateUserRoles(ctx, req.Id, req.RoleIds)
+	err := s.User.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateU
 }
 
 func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.UpdateUserStatusRequest) (*system.UpdateUserStatusResponse, error) {
-	err := s.user.UpdateUserStatus(ctx, req.Id, req.Status)
+	err := s.User.UpdateUserStatus(ctx, req.GetId(), req.GetStatus())
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.Update
 }
 
 func (s *SystemService) ResetUserPassword(ctx context.Context, req *system.ResetUserPasswordRequest) (*system.ResetUserPasswordResponse, error) {
-	err := s.user.ResetUserPassword(ctx, req.Id, req.Password)
+	err := s.User.ResetUserPassword(ctx, req.GetId(), req.GetPassword())
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (s *SystemService) ResetUserPassword(ctx context.Context, req *system.Reset
 }
 
 func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequest) (*system.ListUsersResponse, error) {
-	users, total, err := s.user.ListUsers(ctx, req)
+	users, total, err := s.User.ListUsers(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -56,20 +56,20 @@ func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequ
 	}, nil
 }
 
-func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*dto.UserPB, error) {
-	return s.user.GetUser(ctx, req.Id)
+func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*types.User, error) {
+	return s.User.GetUser(ctx, req.GetId())
 }
 
-func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*dto.UserPB, error) {
-	return s.user.CreateUser(ctx, req.User, req.Password)
+func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*types.User, error) {
+	return s.User.CreateUser(ctx, req.GetUser(), req.GetPassword())
 }
 
-func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*dto.UserPB, error) {
-	return s.user.UpdateUser(ctx, req.User)
+func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*types.User, error) {
+	return s.User.UpdateUser(ctx, req.GetUser())
 }
 
 func (s *SystemService) DeleteUser(ctx context.Context, req *system.DeleteUserRequest) (*system.DeleteUserResponse, error) {
-	err := s.user.DeleteUser(ctx, req.GetUser().GetId())
+	err := s.User.DeleteUser(ctx, req.GetId())
 	if err != nil {
 		return nil, err
 	}

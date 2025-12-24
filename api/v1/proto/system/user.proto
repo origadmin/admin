@@ -39,21 +39,21 @@ service UserService {
     };
   }
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
-    option (google.api.http) = {delete: "/sys/users/{user.id}"};
+    option (google.api.http) = {delete: "/sys/users/{id}"};
   }
   // UpdateUserStatus Update the status of the user information
   rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
     option (google.api.http) = {
-      put: "/sys/users/{user.id}/status"
-      body: "user"
+      put: "/sys/users/{id}/status"
+      body: "*"
     };
   }
 
   // UpdateUserRoles update the user roles
   rpc UpdateUserRoles(UpdateUserRolesRequest) returns (UpdateUserRolesResponse) {
     option (google.api.http) = {
-      put: "/sys/users/{user.id}/roles"
-      body: "user"
+      put: "/sys/users/{id}/roles"
+      body: "*"
     };
   }
 
@@ -61,7 +61,7 @@ service UserService {
   rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
     option (google.api.http) = {
       post: "/sys/users/{id}/password/reset"
-      body: "data"
+      body: "password"
     };
   }
 }
@@ -76,14 +76,16 @@ message ListUserResourcesResponse {
 }
 
 message UpdateUserStatusRequest {
-  api.v1.services.types.User user = 1 [json_name = "user"];
+  int64 id = 1;
+  int32 status = 2;
+  optional api.v1.services.types.User user = 3 [json_name = "user"];
 }
 
 message UpdateUserStatusResponse {}
 
 message ResetUserPasswordRequest {
-  string id = 1 [json_name = "id"];
-  google.protobuf.Any data = 2 [json_name = "data"];
+  int64 id = 1;
+  string password = 2;
 }
 
 message ResetUserPasswordResponse {}
@@ -167,9 +169,10 @@ message UpdateUserResponse {
 }
 
 message DeleteUserRequest {
-  // The resource id of the user to be deleted, for example:
-  // "shelves/shelf1/users/user2"
-  api.v1.services.types.User user = 1;
+  // The resource id of the user to be deleted.
+  int64 id = 1;
+  // The user object, for compatibility.
+  optional api.v1.services.types.User user = 2;
 }
 
 message DeleteUserResponse {

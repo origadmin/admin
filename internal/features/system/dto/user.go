@@ -15,10 +15,10 @@ import (
 
 // UserRepo is a User repository interface.
 type UserRepo interface {
-	Get(context.Context, int64, ...*UserQueryOptions) (*types.User, error)
-	List(context.Context, *system.ListUsersRequest, ...*UserQueryOptions) ([]*types.User, int32, error)
-	Create(context.Context, *types.User, ...*UserCreateOptions) (*types.User, error)
-	Update(context.Context, *types.User, ...*UserUpdateOptions) (*types.User, error)
+	Get(context.Context, int64, ...*UserQueryOption) (*types.User, error)
+	List(context.Context, ...*UserQueryOption) ([]*types.User, int32, error)
+	Create(context.Context, *types.User, string, ...*UserCreateOption) (*types.User, error)
+	Update(context.Context, *types.User, ...*UserUpdateOption) (*types.User, error)
 	Delete(context.Context, int64) error
 
 	// Business-specific methods
@@ -29,20 +29,31 @@ type UserRepo interface {
 	UpdateUserStatus(ctx context.Context, id int64, status int32) error
 }
 
-// UserQueryOptions specifies options for listing users.
-type UserQueryOptions struct {
+// UserQueryOption specifies options for querying users.
+type UserQueryOption struct {
 	repo.QueryOption
 	WithRoles bool
 }
 
-// UserCreateOptions specifies options for creating a user.
-type UserCreateOptions struct {
+// UserCreateOption specifies options for creating a user.
+type UserCreateOption struct {
 	// Example: Immediately load roles after creation
 	LoadRoles bool
 }
 
-// UserUpdateOptions specifies options for updating a user.
-type UserUpdateOptions struct {
+// UserUpdateOption specifies options for updating a user.
+type UserUpdateOption struct {
 	// Example: For partial updates (PATCH)
 	UpdateFields []string
+}
+
+// ListUsersRequestToQueryOption converts an API request to a query option object.
+func ListUsersRequestToQueryOption(req *system.ListUsersRequest) *UserQueryOption {
+	if req == nil {
+		return &UserQueryOption{}
+	}
+	return &UserQueryOption{
+		QueryOption: repo.OptionFromRequest(req),
+		// WithRoles: req.GetWithRoles(), // Assuming this field exists in the request
+	}
 }
