@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	defaultLimiter = pagination.DefaultLimiter()
+	defaultLimiter = repo.DefaultLimiter()
 )
 
 type UpdateHooker interface {

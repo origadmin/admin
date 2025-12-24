@@ -19,7 +19,7 @@ import (
 // AuthServiceBiz is a Auth use case.
 type AuthServiceBiz struct {
 	dao     dto.AuthRepo
-	limiter pagination.PageLimiter
+	limiter repo.PageLimiter
 	log     *log.KHelper
 }
 

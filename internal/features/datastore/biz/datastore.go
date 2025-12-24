@@ -19,7 +19,7 @@ import (
 // PermissionServiceBiz is a PermissionPB use case.
 type PermissionServiceBiz struct {
 	dao     dto.PermissionRepo
-	limiter pagination.PageLimiter
+	limiter repo.PageLimiter
 	log     *log.KHelper
 }
 

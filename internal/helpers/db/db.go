@@ -28,7 +28,7 @@ type FieldSelector[T any] interface {
 	Omit(...string) T
 }
 
-func Query[P Paginator[P]](query P, in pagination.PageRequest, paging bool) P {
+func Query[P Paginator[P]](query P, in repo.PageRequest, paging bool) P {
 	if !paging {
 		return QueryNoPage(query, in)
 	}

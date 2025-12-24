@@ -20,7 +20,7 @@ import (
 // LoginServiceBiz is a Login use case.
 type LoginServiceBiz struct {
 	dao     dto.LoginRepo
-	limiter pagination.PageLimiter
+	limiter repo.PageLimiter
 	log     *log.KHelper
 }
 

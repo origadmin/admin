@@ -35,12 +35,13 @@ func provideLogger(app *runtime.App) log.Logger {
 	return app.Logger()
 }
 
+var infraProviderSet = wire.NewSet(provideLogger, provideHasher)
+
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
 		// The injector function's parameter `app` is an implicit provider for *runtime.App.
-		provideLogger,
-		provideHasher,
+		infraProviderSet,
 		wire.FieldsOf(new(*conf.Config), "Bootstrap"),
 		wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
 		data.ProviderSet,

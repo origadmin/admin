@@ -23,7 +23,7 @@ import (
 // CasbinSourceServiceBiz is a CasbinSource use case.
 type CasbinSourceServiceBiz struct {
 	dao          dto.CasbinSourceRepo
-	limiter      pagination.PageLimiter
+	limiter      repo.PageLimiter
 	log          *log.KHelper
 	lastModified *atomic.Int64
 }

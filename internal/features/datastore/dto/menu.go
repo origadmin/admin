@@ -40,17 +40,17 @@ type MenuQueryOption struct {
 	Fields           []string
 }
 
-func (o MenuQueryOption) FromListRequest(in *ListMenusRequest, limiter pagination.PageLimiter) error {
+func (o MenuQueryOption) FromListRequest(in *ListMenusRequest, limiter repo.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o MenuQueryOption) FromGetRequest(in *pb.GetMenuRequest, limiter pagination.PageLimiter) error {
+func (o MenuQueryOption) FromGetRequest(in *pb.GetMenuRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 
-func (o MenuQueryOption) FromCreateRequest(in *pb.CreateMenuRequest, limiter pagination.PageLimiter) error {
+func (o MenuQueryOption) FromCreateRequest(in *pb.CreateMenuRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 

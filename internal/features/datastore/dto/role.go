@@ -47,17 +47,17 @@ type RoleQueryOption struct {
 	IncludePermissions bool
 }
 
-func (o RoleQueryOption) FromListRequest(in *ListRolesRequest, limiter pagination.PageLimiter) error {
+func (o RoleQueryOption) FromListRequest(in *ListRolesRequest, limiter repo.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o RoleQueryOption) FromGetRequest(in *pb.GetRoleRequest, limiter pagination.PageLimiter) error {
+func (o RoleQueryOption) FromGetRequest(in *pb.GetRoleRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 
-func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter pagination.PageLimiter) error {
+func (o RoleQueryOption) FromCreateRequest(in *pb.CreateRoleRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 

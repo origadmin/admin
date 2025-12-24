@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
@@ -27,15 +28,26 @@ func NewResourceRepo(db *ent.Database) dto.ResourceRepo {
 	}
 }
 
-func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...dto.ResourceQueryOption) (*types.Resource, error) {
-	result, err := r.db.Resource(ctx).Get(ctx, id)
+func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQueryOptions) (*types.Resource, error) {
+	opt := &dto.ResourceQueryOptions{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	query := r.db.Resource(ctx).Query().Where(resource.ID(id))
+
+	if opt.WithPermissions {
+		query.WithPermissions()
+	}
+
+	result, err := query.Only(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ConvertResourceToResourcePB(result), nil
 }
 
-func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...dto.ResourceMutationOption) (*types.Resource, error) {
+func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOptions) (*types.Resource, error) {
 	if res.ParentId > 0 {
 		parent, err := r.db.Resource(ctx).Get(ctx, res.ParentId)
 		if err != nil {
@@ -44,14 +56,8 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 		res.TreePath = parent.TreePath + strconv.FormatInt(int64(parent.ID), 10) + r.Delimiter
 	}
 
-	create := r.db.Resource(ctx).Create().
-		SetName(res.Name).
-		SetParentID(res.ParentId).
-		SetTreePath(res.TreePath)
-
-	//if len(res.PermissionIds) > 0 {
-	//	create.AddPermissionIDs(res.PermissionIds...)
-	//}
+	entResource := dto.ConvertResourcePBToResource(res)
+	create := r.db.Resource(ctx).Create().SetResource(entResource)
 
 	// ... set other fields
 
@@ -66,14 +72,11 @@ func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.Resource(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...dto.ResourceMutationOption) (*types.Resource, error) {
-	update := r.db.Resource(ctx).UpdateOneID(res.Id)
+func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOptions) (*types.Resource, error) {
+	entResource := dto.ConvertResourcePBToResource(res)
+	update := r.db.Resource(ctx).UpdateOneID(res.Id).SetResource(entResource)
 
-	//if len(res.PermissionIds) > 0 {
-	//	update.ClearPermissions().AddPermissionIDs(res.PermissionIds...)
-	//}
-
-	// ... set other fields
+	// ... handle partial updates based on opts ...
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -82,15 +85,26 @@ func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...
 	return dto.ConvertResourceToResourcePB(saved), nil
 }
 
-func (r *resourceRepo) List(ctx context.Context, in *system.ListResourcesRequest, opts ...dto.ResourceQueryOption) ([]*types.Resource, int32, error) {
+func (r *resourceRepo) List(ctx context.Context, in *system.ListResourcesRequest, opts ...*dto.ResourceQueryOptions) ([]*types.Resource, int32, error) {
+	opt := &dto.ResourceQueryOptions{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
 	query := r.db.Resource(ctx).Query()
+
+	if opt.Page > 0 && opt.PageSize > 0 {
+		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
+	}
 
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	//query = db.QueryPage(query, in)
+	if opt.WithPermissions {
+		query.WithPermissions()
+	}
 
 	result, err := query.All(ctx)
 	return dto.ConvertResourcesToResourcesPB(result), int32(count), err

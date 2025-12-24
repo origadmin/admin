@@ -16,7 +16,7 @@ var (
 )
 
 var (
-	defaultLimiter = pagination.PageLimiter{}
+	defaultLimiter = repo.PageLimiter{}
 )
 
 type UpdateHooker interface {

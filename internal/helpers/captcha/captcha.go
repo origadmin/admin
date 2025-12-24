@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	ErrNotFound = errors.New(400, typespb.AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND.String(), http.StatusBadRequest, "captcha not found")
+	ErrNotFound = errors.New(http.StatusBadRequest, typespb.AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND.String(), "captcha not found")
 )
 
 const (

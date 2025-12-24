@@ -22,23 +22,31 @@ type roleRepo struct {
 }
 
 // NewRoleRepo .
-func NewRoleRepo(db *ent.Database) (dto.RoleRepo, error) {
-	generator, err := rand.NewGenerator(rand.KindDigit | rand.KindLowerCase)
-	if err != nil {
-		return nil, err
-	}
-	return &roleRepo{db: db, gen: generator}, nil
+func NewRoleRepo(db *ent.Database) dto.RoleRepo {
+	generator := rand.NewGenerator(rand.KindDigit | rand.KindLowerCase)
+	return &roleRepo{db: db, gen: generator}
 }
 
-func (r *roleRepo) Get(ctx context.Context, id int64, opts ...dto.RoleQueryOption) (*types.Role, error) {
-	result, err := r.db.Role(ctx).Get(ctx, id)
+func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOptions) (*types.Role, error) {
+	opt := &dto.RoleQueryOptions{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	query := r.db.Role(ctx).Query().Where(role.ID(id))
+
+	if opt.WithPermissions {
+		query.WithPermissions()
+	}
+
+	result, err := query.Only(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ConvertRoleToRolePB(result), nil
 }
 
-func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...dto.RoleMutationOption) (*types.Role, error) {
+func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.RoleCreateOptions) (*types.Role, error) {
 	if rl.Keyword == "" {
 		randString, err := r.gen.RandString(12)
 		if err != nil {
@@ -51,9 +59,8 @@ func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...dto.RoleM
 		return nil, errors.New("role keyword already exists")
 	}
 
-	create := r.db.Role(ctx).Create().
-		SetName(rl.Name).
-		SetKeyword(rl.Keyword)
+	entRole := dto.ConvertRolePBToRole(rl)
+	create := r.db.Role(ctx).Create().SetRole(entRole)
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -66,13 +73,10 @@ func (r *roleRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.Role(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...dto.RoleMutationOption) (*types.Role, error) {
-	update := r.db.Role(ctx).UpdateOneID(rl.Id)
-	//if len(rl.PermissionIds) > 0 {
-	//	update.ClearPermissions().AddPermissionIDs(rl.PermissionIds...)
-	//}
-
-	// ... set other fields
+func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOptions) (*types.Role, error) {
+	entRole := dto.ConvertRolePBToRole(rl)
+	update := r.db.Role(ctx).UpdateOneID(rl.Id).SetRole(entRole)
+	// ... handle partial updates based on opts ...
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -81,22 +85,30 @@ func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...dto.RoleM
 	return dto.ConvertRoleToRolePB(saved), nil
 }
 
-func (r *roleRepo) List(ctx context.Context, in *system.ListRolesRequest, opts ...dto.RoleQueryOption) ([]*types.Role, int32, error) {
+func (r *roleRepo) List(ctx context.Context, in *system.ListRolesRequest, opts ...*dto.RoleQueryOptions) ([]*types.Role, int32, error) {
+	opt := &dto.RoleQueryOptions{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
 	query := r.db.Role(ctx).Query()
 
 	if in.GetKeyword() != "" {
 		query = query.Where(role.NameContainsFold(in.GetKeyword()))
 	}
-	//if in.Status != nil {
-	//	query = query.Where(role.StatusEQ(*in.Status))
-	//}
+
+	if opt.Page > 0 && opt.PageSize > 0 {
+		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
+	}
 
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	//query = db.QueryPage(query, in)
+	if opt.WithPermissions {
+		query.WithPermissions()
+	}
 
 	result, err := query.All(ctx)
 	return dto.ConvertRolesToRolesPB(result), int32(count), err

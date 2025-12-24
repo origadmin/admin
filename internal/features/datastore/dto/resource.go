@@ -49,17 +49,17 @@ type ResourceQueryOption struct {
 	Fields             []string
 }
 
-func (o ResourceQueryOption) FromListRequest(in *ListResourcesRequest, limiter pagination.PageLimiter) error {
+func (o ResourceQueryOption) FromListRequest(in *ListResourcesRequest, limiter repo.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o ResourceQueryOption) FromGetRequest(in *pb.GetResourceRequest, limiter pagination.PageLimiter) error {
+func (o ResourceQueryOption) FromGetRequest(in *pb.GetResourceRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 
-func (o ResourceQueryOption) FromCreateRequest(in *pb.CreateResourceRequest, limiter pagination.PageLimiter) error {
+func (o ResourceQueryOption) FromCreateRequest(in *pb.CreateResourceRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 

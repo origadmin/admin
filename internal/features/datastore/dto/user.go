@@ -72,17 +72,17 @@ type UserQueryOption struct {
 	Fields       []string
 }
 
-func (o *UserQueryOption) FromListRequest(in *ListUsersRequest, limiter pagination.PageLimiter) error {
+func (o *UserQueryOption) FromListRequest(in *ListUsersRequest, limiter repo.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil
 }
 
-func (o *UserQueryOption) FromGetRequest(in *pb.GetUserRequest, limiter pagination.PageLimiter) error {
+func (o *UserQueryOption) FromGetRequest(in *pb.GetUserRequest, limiter repo.PageLimiter) error {
 	return nil
 }
 
-func (o *UserMutationOption) FromCreateRequest(in *pb.CreateUserRequest, limiter pagination.PageLimiter) error {
+func (o *UserMutationOption) FromCreateRequest(in *pb.CreateUserRequest, limiter repo.PageLimiter) error {
 	o.RandomPasswd = in.RandomPassword
 	return nil
 }

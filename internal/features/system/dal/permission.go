@@ -23,21 +23,31 @@ func NewPermissionRepo(db *ent.Database) dto.PermissionRepo {
 	return &permissionRepo{db: db}
 }
 
-func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...dto.PermissionQueryOption) (*types.Permission, error) {
-	result, err := r.db.Permission(ctx).Get(ctx, id)
+func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.PermissionQueryOptions) (*types.Permission, error) {
+	opt := &dto.PermissionQueryOptions{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
+	query := r.db.Permission(ctx).Query().Where(permission.ID(id))
+
+	if opt.WithResources {
+		query.WithResources()
+	}
+	if opt.WithRoles {
+		query.WithRoles()
+	}
+
+	result, err := query.Only(ctx)
 	if err != nil {
 		return nil, err
 	}
 	return dto.ConvertPermissionToPermissionPB(result), nil
 }
 
-func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts ...dto.PermissionMutationOption) (*types.Permission, error) {
-	create := r.db.Permission(ctx).Create().
-		SetName(p.Name)
-
-	//if len(p.ResourceIds) > 0 {
-	//	create.AddResourceIDs(p.ResourceIds...)
-	//}
+func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts ...*dto.PermissionCreateOptions) (*types.Permission, error) {
+	entPermission := dto.ConvertPermissionPBToPermission(p)
+	create := r.db.Permission(ctx).Create().SetPermission(entPermission)
 
 	// ... set other fields
 
@@ -52,14 +62,11 @@ func (r *permissionRepo) Delete(ctx context.Context, id int64) error {
 	return r.db.Permission(ctx).DeleteOneID(id).Exec(ctx)
 }
 
-func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts ...dto.PermissionMutationOption) (*types.Permission, error) {
-	update := r.db.Permission(ctx).UpdateOneID(p.Id)
+func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts ...*dto.PermissionUpdateOptions) (*types.Permission, error) {
+	entPermission := dto.ConvertPermissionPBToPermission(p)
+	update := r.db.Permission(ctx).UpdateOneID(p.Id).SetPermission(entPermission)
 
-	//if len(p.ResourceIds) > 0 {
-	//	update.ClearResources().AddResourceIDs(p.ResourceIds...)
-	//}
-
-	// ... set other fields
+	// ... handle partial updates based on opts ...
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -68,11 +75,20 @@ func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts .
 	return dto.ConvertPermissionToPermissionPB(saved), nil
 }
 
-func (r *permissionRepo) List(ctx context.Context, in *system.ListPermissionsRequest, opts ...dto.PermissionQueryOption) ([]*types.Permission, int32, error) {
+func (r *permissionRepo) List(ctx context.Context, in *system.ListPermissionsRequest, opts ...*dto.PermissionQueryOptions) ([]*types.Permission, int32, error) {
+	opt := &dto.PermissionQueryOptions{}
+	if len(opts) > 0 {
+		opt = opts[0]
+	}
+
 	query := r.db.Permission(ctx).Query()
 
 	if len(in.DataScopes) > 0 {
 		query = query.Where(permission.DataScopeIn(in.DataScopes...))
+	}
+
+	if opt.Page > 0 && opt.PageSize > 0 {
+		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
 	}
 
 	count, err := query.Clone().Count(ctx)
@@ -80,7 +96,12 @@ func (r *permissionRepo) List(ctx context.Context, in *system.ListPermissionsReq
 		return nil, 0, err
 	}
 
-	//query = db.QueryPage(query, in)
+	if opt.WithResources {
+		query.WithResources()
+	}
+	if opt.WithRoles {
+		query.WithRoles()
+	}
 
 	result, err := query.All(ctx)
 	return dto.ConvertPermissionsToPermissionsPB(result), int32(count), err

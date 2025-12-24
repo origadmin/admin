@@ -35,7 +35,7 @@ type AuthResourceQueryOption struct {
 	Fields       []string
 }
 
-func (o AuthResourceQueryOption) FromListRequest(in *ListAuthResourcesRequest, limiter pagination.PageLimiter) error {
+func (o AuthResourceQueryOption) FromListRequest(in *ListAuthResourcesRequest, limiter repo.PageLimiter) error {
 	in.Current = limiter.Current(in.Current)
 	in.PageSize = limiter.PerPage(in.PageSize)
 	return nil

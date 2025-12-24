@@ -20,7 +20,7 @@ import (
 // PersonalServiceBiz is a Personal use case.
 type PersonalServiceBiz struct {
 	dao     dto.PersonalRepo
-	limiter pagination.PageLimiter
+	limiter repo.PageLimiter
 	log     *log.KHelper
 }
 

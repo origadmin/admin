@@ -26,3 +26,13 @@ func ConvertStringToGender(from string) user.Gender {
 	// TODO: Implement this custom conversion
 	panic("stub! not implemented")
 }
+
+type Pagination struct {
+	Page     int
+	PageSize int
+}
+
+type QueryOption struct {
+	Pagination *Pagination
+	OrderBy    []string
+}
