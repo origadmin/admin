@@ -31,11 +31,20 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
 // The resource service definition.
+// A Resource represents a backend asset that requires access control, such as an HTTP API or a gRPC method.
+// The definition of the Resource message in types/system.proto should be updated to include fields
+// like service_name, path, method, operation, policy, version_id, last_sync_version_id, and sync_status
+// as specified in 09_Data_Model_Schema.md.
 type ResourceServiceClient interface {
+	// Lists all backend resources.
 	ListResources(ctx context.Context, in *ListResourcesRequest, opts ...grpc.CallOption) (*ListResourcesResponse, error)
+	// Gets a single backend resource.
 	GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceResponse, error)
+	// Creates a new backend resource.
 	CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...grpc.CallOption) (*CreateResourceResponse, error)
+	// Updates a backend resource.
 	UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...grpc.CallOption) (*UpdateResourceResponse, error)
+	// Deletes a backend resource.
 	DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...grpc.CallOption) (*DeleteResourceResponse, error)
 }
 
@@ -102,11 +111,20 @@ func (c *resourceServiceClient) DeleteResource(ctx context.Context, in *DeleteRe
 // for forward compatibility.
 //
 // The resource service definition.
+// A Resource represents a backend asset that requires access control, such as an HTTP API or a gRPC method.
+// The definition of the Resource message in types/system.proto should be updated to include fields
+// like service_name, path, method, operation, policy, version_id, last_sync_version_id, and sync_status
+// as specified in 09_Data_Model_Schema.md.
 type ResourceServiceServer interface {
+	// Lists all backend resources.
 	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	// Gets a single backend resource.
 	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
+	// Creates a new backend resource.
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
+	// Updates a backend resource.
 	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error)
+	// Deletes a backend resource.
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
 	mustEmbedUnimplementedResourceServiceServer()
 }

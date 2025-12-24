@@ -15,4 +15,5 @@ var ProviderSet = wire.NewSet(
 	NewRoleUseCase,
 	NewUserUseCase,
 	NewPermissionUseCase,
+	NewViewUseCase,
 )

@@ -10,8 +10,8 @@ option java_outer_classname = "APIServiceTypeSystemProto";
 option java_package = "com.origadmin.api.v1.services.types";
 option objc_class_prefix = "APIServiceType";
 
-// Menu is the model entity for the Menu schema.
-message Menu {
+// View is the model entity for the View schema.
+message View {
   // ID of the ent.
   int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
@@ -43,27 +43,27 @@ message Menu {
   // ParentPath holds the value of the "parent_path" field.
   string parent_path = 15 [json_name = "parent_path"];
   // Children holds the value of the children edge.
-  repeated Menu children = 21 [json_name = "children"];
+  repeated View children = 21 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Menu parent = 22 [json_name = "parent"];
+  View parent = 22 [json_name = "parent"];
   // Resources holds the value of the resources edge.
   repeated Resource resources = 23 [json_name = "resources"];
   // Roles holds the value of the roles edge.
   repeated Role roles = 24 [json_name = "roles"];
 }
 
-// MenuEdges holds the relations/edges for other nodes in the graph.
-message MenuEdges {
+// ViewEdges holds the relations/edges for other nodes in the graph.
+message ViewEdges {
   // Children holds the value of the children edge.
-  repeated Menu children = 1 [json_name = "children"];
+  repeated View children = 1 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Menu parent = 2 [json_name = "parent"];
+  View parent = 2 [json_name = "parent"];
   // Resources holds the value of the resources edge.
   repeated Resource resources = 3 [json_name = "resources"];
   // Roles holds the value of the roles edge.
   repeated Role roles = 4 [json_name = "roles"];
-  // RoleMenu holds the value of the role_menu edge.
-  repeated RoleMenu role_menus = 5 [json_name = "role_menus"];
+  // RoleView holds the value of the role_view edge.
+  repeated RoleView role_views = 5 [json_name = "role_views"];
 }
 
 // Role is the model entity for the Role schema.
@@ -89,8 +89,8 @@ message Role {
   int32 status = 9 [json_name = "status"];
   // role.field.is_types
   bool is_types = 10 [json_name = "is_types"];
-  // Menus holds the value of the menus edge.
-  repeated Menu menus = 21 [json_name = "menus"];
+  // Views holds the value of the views edge.
+  repeated View views = 21 [json_name = "views"];
   // Users holds the value of the users edge.
   repeated User users = 22 [json_name = "users"];
   // Resources holds the value of the resources edge.
@@ -105,12 +105,12 @@ message Role {
 
 // RoleEdges holds the relations/edges for other nodes in the graph.
 message RoleEdges {
-  // Menus holds the value of the menus edge.
-  repeated Menu menus = 1 [json_name = "menus"];
+  // Views holds the value of the views edge.
+  repeated View views = 1 [json_name = "views"];
   // Users holds the value of the users edge.
   repeated User users = 2 [json_name = "users"];
-  // RoleMenu holds the value of the role_menu edge.
-  repeated RoleMenu role_menus = 3 [json_name = "role_menus"];
+  // RoleView holds the value of the role_view edge.
+  repeated RoleView role_views = 3 [json_name = "role_views"];
   // UserRole holds the value of the user_role edge.
   repeated UserRole user_roles = 4 [json_name = "user_roles"];
 }
@@ -204,8 +204,8 @@ message UserRoleEdges {
   Role role = 2 [json_name = "role"];
 }
 
-// RoleMenu is the model entity for the RoleMenu schema.
-message RoleMenu {
+// RoleView is the model entity for the RoleView schema.
+message RoleView {
   // ID of the ent.
   int64 id = 1 [json_name = "id"];
   // CreateTime holds the value of the "create_time" field.
@@ -214,20 +214,20 @@ message RoleMenu {
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // RoleID holds the value of the "role_id" field.
   int64 role_id = 4 [json_name = "role_id"];
-  // MenuID holds the value of the "menu_id" field.
-  int64 menu_id = 5 [json_name = "menu_id"];
+  // ViewID holds the value of the "view_id" field.
+  int64 view_id = 5 [json_name = "view_id"];
   // Role holds the value of the role edge.
   Role role = 21 [json_name = "role"];
-  // Menu holds the value of the menu edge.
-  Menu menu = 22 [json_name = "menu"];
+  // View holds the value of the view edge.
+  View view = 22 [json_name = "view"];
 }
 
-// RoleMenuEdges holds the relations/edges for other nodes in the graph.
-message RoleMenuEdges {
+// RoleViewEdges holds the relations/edges for other nodes in the graph.
+message RoleViewEdges {
   // Role holds the value of the role edge.
   Role role = 1 [json_name = "role"];
-  // Menu holds the value of the menu edge.
-  Menu menu = 2 [json_name = "menu"];
+  // View holds the value of the view edge.
+  View view = 2 [json_name = "view"];
 }
 
 // Resource is the model entity for the Resource schema.
@@ -283,8 +283,8 @@ message Resource {
 
 // ResourceEdges holds the relations/edges for other nodes in the graph.
 message ResourceEdges {
-  // Menu holds the value of the menu edge.
-  Menu menu = 1 [json_name = "menu"];
+  // View holds the value of the view edge.
+  View view = 1 [json_name = "view"];
 }
 
 // department.table.comment
@@ -300,7 +300,7 @@ message Department {
   string keyword = 4 [json_name = "keyword"];
   // department.field.name
   string name = 5 [json_name = "name"];
-  // menu.field.tree_path
+  // department.field.tree_path
   string tree_path = 6 [json_name = "tree_path"];
   // department.field.sequence
   int32 sequence = 7 [json_name = "sequence"];

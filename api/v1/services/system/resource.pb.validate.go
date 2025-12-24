@@ -69,9 +69,11 @@ func (m *ListResourcesRequest) validate(all bool) error {
 
 	// no validation rules for OnlyCount
 
-	// no validation rules for Type
-
 	// no validation rules for Keyword
+
+	// no validation rules for ServiceName
+
+	// no validation rules for SyncStatus
 
 	if len(errors) > 0 {
 		return ListResourcesRequestMultiError(errors)
@@ -852,8 +854,6 @@ func (m *UpdateResourceRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Id
 
 	if all {
 		switch v := interface{}(m.GetResource()).(type) {

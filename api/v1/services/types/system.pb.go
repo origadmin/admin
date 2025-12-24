@@ -22,8 +22,8 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Menu is the model entity for the Menu schema.
-type Menu struct {
+// View is the model entity for the View schema.
+type View struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the ent.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -56,9 +56,9 @@ type Menu struct {
 	// ParentPath holds the value of the "parent_path" field.
 	ParentPath string `protobuf:"bytes,15,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*Menu `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*View `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *Menu `protobuf:"bytes,22,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *View `protobuf:"bytes,22,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
 	Resources []*Resource `protobuf:"bytes,23,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
@@ -67,20 +67,20 @@ type Menu struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Menu) Reset() {
-	*x = Menu{}
+func (x *View) Reset() {
+	*x = View{}
 	mi := &file_types_system_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Menu) String() string {
+func (x *View) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Menu) ProtoMessage() {}
+func (*View) ProtoMessage() {}
 
-func (x *Menu) ProtoReflect() protoreflect.Message {
+func (x *View) ProtoReflect() protoreflect.Message {
 	mi := &file_types_system_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -92,175 +92,175 @@ func (x *Menu) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Menu.ProtoReflect.Descriptor instead.
-func (*Menu) Descriptor() ([]byte, []int) {
+// Deprecated: Use View.ProtoReflect.Descriptor instead.
+func (*View) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Menu) GetId() int64 {
+func (x *View) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *Menu) GetCreateTime() *timestamppb.Timestamp {
+func (x *View) GetCreateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreateTime
 	}
 	return nil
 }
 
-func (x *Menu) GetUpdateTime() *timestamppb.Timestamp {
+func (x *View) GetUpdateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdateTime
 	}
 	return nil
 }
 
-func (x *Menu) GetKeyword() string {
+func (x *View) GetKeyword() string {
 	if x != nil {
 		return x.Keyword
 	}
 	return ""
 }
 
-func (x *Menu) GetName() string {
+func (x *View) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *Menu) GetI18NKey() string {
+func (x *View) GetI18NKey() string {
 	if x != nil {
 		return x.I18NKey
 	}
 	return ""
 }
 
-func (x *Menu) GetDescription() string {
+func (x *View) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *Menu) GetSequence() int32 {
+func (x *View) GetSequence() int32 {
 	if x != nil {
 		return x.Sequence
 	}
 	return 0
 }
 
-func (x *Menu) GetType() string {
+func (x *View) GetType() string {
 	if x != nil {
 		return x.Type
 	}
 	return ""
 }
 
-func (x *Menu) GetIcon() string {
+func (x *View) GetIcon() string {
 	if x != nil {
 		return x.Icon
 	}
 	return ""
 }
 
-func (x *Menu) GetPath() string {
+func (x *View) GetPath() string {
 	if x != nil {
 		return x.Path
 	}
 	return ""
 }
 
-func (x *Menu) GetProperties() string {
+func (x *View) GetProperties() string {
 	if x != nil {
 		return x.Properties
 	}
 	return ""
 }
 
-func (x *Menu) GetStatus() int32 {
+func (x *View) GetStatus() int32 {
 	if x != nil {
 		return x.Status
 	}
 	return 0
 }
 
-func (x *Menu) GetParentId() int64 {
+func (x *View) GetParentId() int64 {
 	if x != nil {
 		return x.ParentId
 	}
 	return 0
 }
 
-func (x *Menu) GetParentPath() string {
+func (x *View) GetParentPath() string {
 	if x != nil {
 		return x.ParentPath
 	}
 	return ""
 }
 
-func (x *Menu) GetChildren() []*Menu {
+func (x *View) GetChildren() []*View {
 	if x != nil {
 		return x.Children
 	}
 	return nil
 }
 
-func (x *Menu) GetParent() *Menu {
+func (x *View) GetParent() *View {
 	if x != nil {
 		return x.Parent
 	}
 	return nil
 }
 
-func (x *Menu) GetResources() []*Resource {
+func (x *View) GetResources() []*Resource {
 	if x != nil {
 		return x.Resources
 	}
 	return nil
 }
 
-func (x *Menu) GetRoles() []*Role {
+func (x *View) GetRoles() []*Role {
 	if x != nil {
 		return x.Roles
 	}
 	return nil
 }
 
-// MenuEdges holds the relations/edges for other nodes in the graph.
-type MenuEdges struct {
+// ViewEdges holds the relations/edges for other nodes in the graph.
+type ViewEdges struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Children holds the value of the children edge.
-	Children []*Menu `protobuf:"bytes,1,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*View `protobuf:"bytes,1,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *Menu `protobuf:"bytes,2,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *View `protobuf:"bytes,2,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
 	Resources []*Resource `protobuf:"bytes,3,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
 	Roles []*Role `protobuf:"bytes,4,rep,name=roles,proto3" json:"roles,omitempty"`
-	// RoleMenu holds the value of the role_menu edge.
-	RoleMenus     []*RoleMenu `protobuf:"bytes,5,rep,name=role_menus,proto3" json:"role_menus,omitempty"`
+	// RoleView holds the value of the role_view edge.
+	RoleViews     []*RoleView `protobuf:"bytes,5,rep,name=role_views,proto3" json:"role_views,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *MenuEdges) Reset() {
-	*x = MenuEdges{}
+func (x *ViewEdges) Reset() {
+	*x = ViewEdges{}
 	mi := &file_types_system_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MenuEdges) String() string {
+func (x *ViewEdges) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MenuEdges) ProtoMessage() {}
+func (*ViewEdges) ProtoMessage() {}
 
-func (x *MenuEdges) ProtoReflect() protoreflect.Message {
+func (x *ViewEdges) ProtoReflect() protoreflect.Message {
 	mi := &file_types_system_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -272,42 +272,42 @@ func (x *MenuEdges) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MenuEdges.ProtoReflect.Descriptor instead.
-func (*MenuEdges) Descriptor() ([]byte, []int) {
+// Deprecated: Use ViewEdges.ProtoReflect.Descriptor instead.
+func (*ViewEdges) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *MenuEdges) GetChildren() []*Menu {
+func (x *ViewEdges) GetChildren() []*View {
 	if x != nil {
 		return x.Children
 	}
 	return nil
 }
 
-func (x *MenuEdges) GetParent() *Menu {
+func (x *ViewEdges) GetParent() *View {
 	if x != nil {
 		return x.Parent
 	}
 	return nil
 }
 
-func (x *MenuEdges) GetResources() []*Resource {
+func (x *ViewEdges) GetResources() []*Resource {
 	if x != nil {
 		return x.Resources
 	}
 	return nil
 }
 
-func (x *MenuEdges) GetRoles() []*Role {
+func (x *ViewEdges) GetRoles() []*Role {
 	if x != nil {
 		return x.Roles
 	}
 	return nil
 }
 
-func (x *MenuEdges) GetRoleMenus() []*RoleMenu {
+func (x *ViewEdges) GetRoleViews() []*RoleView {
 	if x != nil {
-		return x.RoleMenus
+		return x.RoleViews
 	}
 	return nil
 }
@@ -336,8 +336,8 @@ type Role struct {
 	Status int32 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
 	// role.field.is_types
 	IsTypes bool `protobuf:"varint,10,opt,name=is_types,proto3" json:"is_types,omitempty"`
-	// Menus holds the value of the menus edge.
-	Menus []*Menu `protobuf:"bytes,21,rep,name=menus,proto3" json:"menus,omitempty"`
+	// Views holds the value of the views edge.
+	Views []*View `protobuf:"bytes,21,rep,name=views,proto3" json:"views,omitempty"`
 	// Users holds the value of the users edge.
 	Users []*User `protobuf:"bytes,22,rep,name=users,proto3" json:"users,omitempty"`
 	// Resources holds the value of the resources edge.
@@ -452,9 +452,9 @@ func (x *Role) GetIsTypes() bool {
 	return false
 }
 
-func (x *Role) GetMenus() []*Menu {
+func (x *Role) GetViews() []*View {
 	if x != nil {
-		return x.Menus
+		return x.Views
 	}
 	return nil
 }
@@ -497,12 +497,12 @@ func (x *Role) GetPermissionIds() []int64 {
 // RoleEdges holds the relations/edges for other nodes in the graph.
 type RoleEdges struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Menus holds the value of the menus edge.
-	Menus []*Menu `protobuf:"bytes,1,rep,name=menus,proto3" json:"menus,omitempty"`
+	// Views holds the value of the views edge.
+	Views []*View `protobuf:"bytes,1,rep,name=views,proto3" json:"views,omitempty"`
 	// Users holds the value of the users edge.
 	Users []*User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
-	// RoleMenu holds the value of the role_menu edge.
-	RoleMenus []*RoleMenu `protobuf:"bytes,3,rep,name=role_menus,proto3" json:"role_menus,omitempty"`
+	// RoleView holds the value of the role_view edge.
+	RoleViews []*RoleView `protobuf:"bytes,3,rep,name=role_views,proto3" json:"role_views,omitempty"`
 	// UserRole holds the value of the user_role edge.
 	UserRoles     []*UserRole `protobuf:"bytes,4,rep,name=user_roles,proto3" json:"user_roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -539,9 +539,9 @@ func (*RoleEdges) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *RoleEdges) GetMenus() []*Menu {
+func (x *RoleEdges) GetViews() []*View {
 	if x != nil {
-		return x.Menus
+		return x.Views
 	}
 	return nil
 }
@@ -553,9 +553,9 @@ func (x *RoleEdges) GetUsers() []*User {
 	return nil
 }
 
-func (x *RoleEdges) GetRoleMenus() []*RoleMenu {
+func (x *RoleEdges) GetRoleViews() []*RoleView {
 	if x != nil {
-		return x.RoleMenus
+		return x.RoleViews
 	}
 	return nil
 }
@@ -1040,8 +1040,8 @@ func (x *UserRoleEdges) GetRole() *Role {
 	return nil
 }
 
-// RoleMenu is the model entity for the RoleMenu schema.
-type RoleMenu struct {
+// RoleView is the model entity for the RoleView schema.
+type RoleView struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the ent.
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -1051,30 +1051,30 @@ type RoleMenu struct {
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
 	// RoleID holds the value of the "role_id" field.
 	RoleId int64 `protobuf:"varint,4,opt,name=role_id,proto3" json:"role_id,omitempty"`
-	// MenuID holds the value of the "menu_id" field.
-	MenuId int64 `protobuf:"varint,5,opt,name=menu_id,proto3" json:"menu_id,omitempty"`
+	// ViewID holds the value of the "view_id" field.
+	ViewId int64 `protobuf:"varint,5,opt,name=view_id,proto3" json:"view_id,omitempty"`
 	// Role holds the value of the role edge.
 	Role *Role `protobuf:"bytes,21,opt,name=role,proto3" json:"role,omitempty"`
-	// Menu holds the value of the menu edge.
-	Menu          *Menu `protobuf:"bytes,22,opt,name=menu,proto3" json:"menu,omitempty"`
+	// View holds the value of the view edge.
+	View          *View `protobuf:"bytes,22,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RoleMenu) Reset() {
-	*x = RoleMenu{}
+func (x *RoleView) Reset() {
+	*x = RoleView{}
 	mi := &file_types_system_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RoleMenu) String() string {
+func (x *RoleView) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoleMenu) ProtoMessage() {}
+func (*RoleView) ProtoMessage() {}
 
-func (x *RoleMenu) ProtoReflect() protoreflect.Message {
+func (x *RoleView) ProtoReflect() protoreflect.Message {
 	mi := &file_types_system_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1086,85 +1086,85 @@ func (x *RoleMenu) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RoleMenu.ProtoReflect.Descriptor instead.
-func (*RoleMenu) Descriptor() ([]byte, []int) {
+// Deprecated: Use RoleView.ProtoReflect.Descriptor instead.
+func (*RoleView) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *RoleMenu) GetId() int64 {
+func (x *RoleView) GetId() int64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *RoleMenu) GetCreateTime() *timestamppb.Timestamp {
+func (x *RoleView) GetCreateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreateTime
 	}
 	return nil
 }
 
-func (x *RoleMenu) GetUpdateTime() *timestamppb.Timestamp {
+func (x *RoleView) GetUpdateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdateTime
 	}
 	return nil
 }
 
-func (x *RoleMenu) GetRoleId() int64 {
+func (x *RoleView) GetRoleId() int64 {
 	if x != nil {
 		return x.RoleId
 	}
 	return 0
 }
 
-func (x *RoleMenu) GetMenuId() int64 {
+func (x *RoleView) GetViewId() int64 {
 	if x != nil {
-		return x.MenuId
+		return x.ViewId
 	}
 	return 0
 }
 
-func (x *RoleMenu) GetRole() *Role {
+func (x *RoleView) GetRole() *Role {
 	if x != nil {
 		return x.Role
 	}
 	return nil
 }
 
-func (x *RoleMenu) GetMenu() *Menu {
+func (x *RoleView) GetView() *View {
 	if x != nil {
-		return x.Menu
+		return x.View
 	}
 	return nil
 }
 
-// RoleMenuEdges holds the relations/edges for other nodes in the graph.
-type RoleMenuEdges struct {
+// RoleViewEdges holds the relations/edges for other nodes in the graph.
+type RoleViewEdges struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Role holds the value of the role edge.
 	Role *Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
-	// Menu holds the value of the menu edge.
-	Menu          *Menu `protobuf:"bytes,2,opt,name=menu,proto3" json:"menu,omitempty"`
+	// View holds the value of the view edge.
+	View          *View `protobuf:"bytes,2,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RoleMenuEdges) Reset() {
-	*x = RoleMenuEdges{}
+func (x *RoleViewEdges) Reset() {
+	*x = RoleViewEdges{}
 	mi := &file_types_system_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RoleMenuEdges) String() string {
+func (x *RoleViewEdges) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RoleMenuEdges) ProtoMessage() {}
+func (*RoleViewEdges) ProtoMessage() {}
 
-func (x *RoleMenuEdges) ProtoReflect() protoreflect.Message {
+func (x *RoleViewEdges) ProtoReflect() protoreflect.Message {
 	mi := &file_types_system_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1176,21 +1176,21 @@ func (x *RoleMenuEdges) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RoleMenuEdges.ProtoReflect.Descriptor instead.
-func (*RoleMenuEdges) Descriptor() ([]byte, []int) {
+// Deprecated: Use RoleViewEdges.ProtoReflect.Descriptor instead.
+func (*RoleViewEdges) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *RoleMenuEdges) GetRole() *Role {
+func (x *RoleViewEdges) GetRole() *Role {
 	if x != nil {
 		return x.Role
 	}
 	return nil
 }
 
-func (x *RoleMenuEdges) GetMenu() *Menu {
+func (x *RoleViewEdges) GetView() *View {
 	if x != nil {
-		return x.Menu
+		return x.View
 	}
 	return nil
 }
@@ -1443,8 +1443,8 @@ func (x *Resource) GetPermissions() []*Permission {
 // ResourceEdges holds the relations/edges for other nodes in the graph.
 type ResourceEdges struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Menu holds the value of the menu edge.
-	Menu          *Menu `protobuf:"bytes,1,opt,name=menu,proto3" json:"menu,omitempty"`
+	// View holds the value of the view edge.
+	View          *View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1479,9 +1479,9 @@ func (*ResourceEdges) Descriptor() ([]byte, []int) {
 	return file_types_system_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *ResourceEdges) GetMenu() *Menu {
+func (x *ResourceEdges) GetView() *View {
 	if x != nil {
-		return x.Menu
+		return x.View
 	}
 	return nil
 }
@@ -1500,7 +1500,7 @@ type Department struct {
 	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// department.field.name
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
-	// menu.field.tree_path
+	// department.field.tree_path
 	TreePath string `protobuf:"bytes,6,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// department.field.sequence
 	Sequence int32 `protobuf:"varint,7,opt,name=sequence,proto3" json:"sequence,omitempty"`
@@ -2748,7 +2748,7 @@ var File_types_system_proto protoreflect.FileDescriptor
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
 	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xae\x05\n" +
-	"\x04Menu\x12\x0e\n" +
+	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
@@ -2767,18 +2767,18 @@ const file_types_system_proto_rawDesc = "" +
 	"\x06status\x18\r \x01(\x05R\x06status\x12\x1c\n" +
 	"\tparent_id\x18\x0e \x01(\x03R\tparent_id\x12 \n" +
 	"\vparent_path\x18\x0f \x01(\tR\vparent_path\x127\n" +
-	"\bchildren\x18\x15 \x03(\v2\x1b.api.v1.services.types.MenuR\bchildren\x123\n" +
-	"\x06parent\x18\x16 \x01(\v2\x1b.api.v1.services.types.MenuR\x06parent\x12=\n" +
+	"\bchildren\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
+	"\x06parent\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
 	"\tresources\x18\x17 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
 	"\x05roles\x18\x18 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xac\x02\n" +
-	"\tMenuEdges\x127\n" +
-	"\bchildren\x18\x01 \x03(\v2\x1b.api.v1.services.types.MenuR\bchildren\x123\n" +
-	"\x06parent\x18\x02 \x01(\v2\x1b.api.v1.services.types.MenuR\x06parent\x12=\n" +
+	"\tViewEdges\x127\n" +
+	"\bchildren\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
+	"\x06parent\x18\x02 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
 	"\tresources\x18\x03 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
 	"\x05roles\x18\x04 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12?\n" +
 	"\n" +
-	"role_menus\x18\x05 \x03(\v2\x1f.api.v1.services.types.RoleMenuR\n" +
-	"role_menus\"\xfc\x04\n" +
+	"role_views\x18\x05 \x03(\v2\x1f.api.v1.services.types.RoleViewR\n" +
+	"role_views\"\xfc\x04\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2791,18 +2791,18 @@ const file_types_system_proto_rawDesc = "" +
 	"\x06status\x18\t \x01(\x05R\x06status\x12\x1a\n" +
 	"\bis_types\x18\n" +
 	" \x01(\bR\bis_types\x121\n" +
-	"\x05menus\x18\x15 \x03(\v2\x1b.api.v1.services.types.MenuR\x05menus\x121\n" +
+	"\x05views\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
 	"\x05users\x18\x16 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12=\n" +
 	"\tresources\x18\x17 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
 	"\fresource_ids\x18\x18 \x03(\x03R\fresource_ids\x12C\n" +
 	"\vpermissions\x18\x19 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
 	"\x0epermission_ids\x18\x1a \x03(\x03R\x0epermission_ids\"\xf3\x01\n" +
 	"\tRoleEdges\x121\n" +
-	"\x05menus\x18\x01 \x03(\v2\x1b.api.v1.services.types.MenuR\x05menus\x121\n" +
+	"\x05views\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
 	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12?\n" +
 	"\n" +
-	"role_menus\x18\x03 \x03(\v2\x1f.api.v1.services.types.RoleMenuR\n" +
-	"role_menus\x12?\n" +
+	"role_views\x18\x03 \x03(\v2\x1f.api.v1.services.types.RoleViewR\n" +
+	"role_views\x12?\n" +
 	"\n" +
 	"user_roles\x18\x04 \x03(\v2\x1f.api.v1.services.types.UserRoleR\n" +
 	"user_roles\"\xce\x06\n" +
@@ -2854,17 +2854,17 @@ const file_types_system_proto_rawDesc = "" +
 	"\rUserRoleEdges\x12/\n" +
 	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12/\n" +
 	"\x04role\x18\x02 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x02\n" +
-	"\bRoleMenu\x12\x0e\n" +
+	"\bRoleView\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
 	"\arole_id\x18\x04 \x01(\x03R\arole_id\x12\x18\n" +
-	"\amenu_id\x18\x05 \x01(\x03R\amenu_id\x12/\n" +
+	"\aview_id\x18\x05 \x01(\x03R\aview_id\x12/\n" +
 	"\x04role\x18\x15 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04menu\x18\x16 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"q\n" +
-	"\rRoleMenuEdges\x12/\n" +
+	"\x04view\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"q\n" +
+	"\rRoleViewEdges\x12/\n" +
 	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04menu\x18\x02 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"\x8f\a\n" +
+	"\x04view\x18\x02 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x8f\a\n" +
 	"\bResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2896,7 +2896,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"@\n" +
 	"\rResourceEdges\x12/\n" +
-	"\x04menu\x18\x01 \x01(\v2\x1b.api.v1.services.types.MenuR\x04menu\"\xe8\x03\n" +
+	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xe8\x03\n" +
 	"\n" +
 	"Department\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
@@ -3023,16 +3023,16 @@ func file_types_system_proto_rawDescGZIP() []byte {
 
 var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_types_system_proto_goTypes = []any{
-	(*Menu)(nil),                    // 0: api.v1.services.types.Menu
-	(*MenuEdges)(nil),               // 1: api.v1.services.types.MenuEdges
+	(*View)(nil),                    // 0: api.v1.services.types.View
+	(*ViewEdges)(nil),               // 1: api.v1.services.types.ViewEdges
 	(*Role)(nil),                    // 2: api.v1.services.types.Role
 	(*RoleEdges)(nil),               // 3: api.v1.services.types.RoleEdges
 	(*User)(nil),                    // 4: api.v1.services.types.User
 	(*UserEdges)(nil),               // 5: api.v1.services.types.UserEdges
 	(*UserRole)(nil),                // 6: api.v1.services.types.UserRole
 	(*UserRoleEdges)(nil),           // 7: api.v1.services.types.UserRoleEdges
-	(*RoleMenu)(nil),                // 8: api.v1.services.types.RoleMenu
-	(*RoleMenuEdges)(nil),           // 9: api.v1.services.types.RoleMenuEdges
+	(*RoleView)(nil),                // 8: api.v1.services.types.RoleView
+	(*RoleViewEdges)(nil),           // 9: api.v1.services.types.RoleViewEdges
 	(*Resource)(nil),                // 10: api.v1.services.types.Resource
 	(*ResourceEdges)(nil),           // 11: api.v1.services.types.ResourceEdges
 	(*Department)(nil),              // 12: api.v1.services.types.Department
@@ -3056,26 +3056,26 @@ var file_types_system_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),   // 30: google.protobuf.Timestamp
 }
 var file_types_system_proto_depIdxs = []int32{
-	30, // 0: api.v1.services.types.Menu.create_time:type_name -> google.protobuf.Timestamp
-	30, // 1: api.v1.services.types.Menu.update_time:type_name -> google.protobuf.Timestamp
-	0,  // 2: api.v1.services.types.Menu.children:type_name -> api.v1.services.types.Menu
-	0,  // 3: api.v1.services.types.Menu.parent:type_name -> api.v1.services.types.Menu
-	10, // 4: api.v1.services.types.Menu.resources:type_name -> api.v1.services.types.Resource
-	2,  // 5: api.v1.services.types.Menu.roles:type_name -> api.v1.services.types.Role
-	0,  // 6: api.v1.services.types.MenuEdges.children:type_name -> api.v1.services.types.Menu
-	0,  // 7: api.v1.services.types.MenuEdges.parent:type_name -> api.v1.services.types.Menu
-	10, // 8: api.v1.services.types.MenuEdges.resources:type_name -> api.v1.services.types.Resource
-	2,  // 9: api.v1.services.types.MenuEdges.roles:type_name -> api.v1.services.types.Role
-	8,  // 10: api.v1.services.types.MenuEdges.role_menus:type_name -> api.v1.services.types.RoleMenu
+	30, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
+	30, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
+	0,  // 2: api.v1.services.types.View.children:type_name -> api.v1.services.types.View
+	0,  // 3: api.v1.services.types.View.parent:type_name -> api.v1.services.types.View
+	10, // 4: api.v1.services.types.View.resources:type_name -> api.v1.services.types.Resource
+	2,  // 5: api.v1.services.types.View.roles:type_name -> api.v1.services.types.Role
+	0,  // 6: api.v1.services.types.ViewEdges.children:type_name -> api.v1.services.types.View
+	0,  // 7: api.v1.services.types.ViewEdges.parent:type_name -> api.v1.services.types.View
+	10, // 8: api.v1.services.types.ViewEdges.resources:type_name -> api.v1.services.types.Resource
+	2,  // 9: api.v1.services.types.ViewEdges.roles:type_name -> api.v1.services.types.Role
+	8,  // 10: api.v1.services.types.ViewEdges.role_views:type_name -> api.v1.services.types.RoleView
 	30, // 11: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
 	30, // 12: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
-	0,  // 13: api.v1.services.types.Role.menus:type_name -> api.v1.services.types.Menu
+	0,  // 13: api.v1.services.types.Role.views:type_name -> api.v1.services.types.View
 	4,  // 14: api.v1.services.types.Role.users:type_name -> api.v1.services.types.User
 	10, // 15: api.v1.services.types.Role.resources:type_name -> api.v1.services.types.Resource
 	18, // 16: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
-	0,  // 17: api.v1.services.types.RoleEdges.menus:type_name -> api.v1.services.types.Menu
+	0,  // 17: api.v1.services.types.RoleEdges.views:type_name -> api.v1.services.types.View
 	4,  // 18: api.v1.services.types.RoleEdges.users:type_name -> api.v1.services.types.User
-	8,  // 19: api.v1.services.types.RoleEdges.role_menus:type_name -> api.v1.services.types.RoleMenu
+	8,  // 19: api.v1.services.types.RoleEdges.role_views:type_name -> api.v1.services.types.RoleView
 	6,  // 20: api.v1.services.types.RoleEdges.user_roles:type_name -> api.v1.services.types.UserRole
 	30, // 21: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
 	30, // 22: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
@@ -3090,19 +3090,19 @@ var file_types_system_proto_depIdxs = []int32{
 	2,  // 31: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
 	4,  // 32: api.v1.services.types.UserRoleEdges.user:type_name -> api.v1.services.types.User
 	2,  // 33: api.v1.services.types.UserRoleEdges.role:type_name -> api.v1.services.types.Role
-	30, // 34: api.v1.services.types.RoleMenu.create_time:type_name -> google.protobuf.Timestamp
-	30, // 35: api.v1.services.types.RoleMenu.update_time:type_name -> google.protobuf.Timestamp
-	2,  // 36: api.v1.services.types.RoleMenu.role:type_name -> api.v1.services.types.Role
-	0,  // 37: api.v1.services.types.RoleMenu.menu:type_name -> api.v1.services.types.Menu
-	2,  // 38: api.v1.services.types.RoleMenuEdges.role:type_name -> api.v1.services.types.Role
-	0,  // 39: api.v1.services.types.RoleMenuEdges.menu:type_name -> api.v1.services.types.Menu
+	30, // 34: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
+	30, // 35: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
+	2,  // 36: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
+	0,  // 37: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
+	2,  // 38: api.v1.services.types.RoleViewEdges.role:type_name -> api.v1.services.types.Role
+	0,  // 39: api.v1.services.types.RoleViewEdges.view:type_name -> api.v1.services.types.View
 	30, // 40: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
 	30, // 41: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
 	28, // 42: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
 	10, // 43: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
 	10, // 44: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
 	18, // 45: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
-	0,  // 46: api.v1.services.types.ResourceEdges.menu:type_name -> api.v1.services.types.Menu
+	0,  // 46: api.v1.services.types.ResourceEdges.view:type_name -> api.v1.services.types.View
 	30, // 47: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
 	30, // 48: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
 	12, // 49: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department

@@ -26,10 +26,15 @@ const OperationResourceServiceListResources = "/api.v1.services.system.ResourceS
 const OperationResourceServiceUpdateResource = "/api.v1.services.system.ResourceService/UpdateResource"
 
 type ResourceServiceHTTPServer interface {
+	// CreateResource Creates a new backend resource.
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
+	// DeleteResource Deletes a backend resource.
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
+	// GetResource Gets a single backend resource.
 	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
+	// ListResources Lists all backend resources.
 	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	// UpdateResource Updates a backend resource.
 	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error)
 }
 
@@ -153,10 +158,15 @@ func _ResourceService_DeleteResource0_HTTP_Handler(srv ResourceServiceHTTPServer
 }
 
 type ResourceServiceHTTPClient interface {
+	// CreateResource Creates a new backend resource.
 	CreateResource(ctx context.Context, req *CreateResourceRequest, opts ...http.CallOption) (rsp *CreateResourceResponse, err error)
+	// DeleteResource Deletes a backend resource.
 	DeleteResource(ctx context.Context, req *DeleteResourceRequest, opts ...http.CallOption) (rsp *DeleteResourceResponse, err error)
+	// GetResource Gets a single backend resource.
 	GetResource(ctx context.Context, req *GetResourceRequest, opts ...http.CallOption) (rsp *GetResourceResponse, err error)
+	// ListResources Lists all backend resources.
 	ListResources(ctx context.Context, req *ListResourcesRequest, opts ...http.CallOption) (rsp *ListResourcesResponse, err error)
+	// UpdateResource Updates a backend resource.
 	UpdateResource(ctx context.Context, req *UpdateResourceRequest, opts ...http.CallOption) (rsp *UpdateResourceResponse, err error)
 }
 
@@ -168,6 +178,7 @@ func NewResourceServiceHTTPClient(client *http.Client) ResourceServiceHTTPClient
 	return &ResourceServiceHTTPClientImpl{client}
 }
 
+// CreateResource Creates a new backend resource.
 func (c *ResourceServiceHTTPClientImpl) CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...http.CallOption) (*CreateResourceResponse, error) {
 	var out CreateResourceResponse
 	pattern := "/sys/resources"
@@ -181,6 +192,7 @@ func (c *ResourceServiceHTTPClientImpl) CreateResource(ctx context.Context, in *
 	return &out, nil
 }
 
+// DeleteResource Deletes a backend resource.
 func (c *ResourceServiceHTTPClientImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...http.CallOption) (*DeleteResourceResponse, error) {
 	var out DeleteResourceResponse
 	pattern := "/sys/resources/{id}"
@@ -194,6 +206,7 @@ func (c *ResourceServiceHTTPClientImpl) DeleteResource(ctx context.Context, in *
 	return &out, nil
 }
 
+// GetResource Gets a single backend resource.
 func (c *ResourceServiceHTTPClientImpl) GetResource(ctx context.Context, in *GetResourceRequest, opts ...http.CallOption) (*GetResourceResponse, error) {
 	var out GetResourceResponse
 	pattern := "/sys/resources/{id}"
@@ -207,6 +220,7 @@ func (c *ResourceServiceHTTPClientImpl) GetResource(ctx context.Context, in *Get
 	return &out, nil
 }
 
+// ListResources Lists all backend resources.
 func (c *ResourceServiceHTTPClientImpl) ListResources(ctx context.Context, in *ListResourcesRequest, opts ...http.CallOption) (*ListResourcesResponse, error) {
 	var out ListResourcesResponse
 	pattern := "/sys/resources"
@@ -220,6 +234,7 @@ func (c *ResourceServiceHTTPClientImpl) ListResources(ctx context.Context, in *L
 	return &out, nil
 }
 
+// UpdateResource Updates a backend resource.
 func (c *ResourceServiceHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...http.CallOption) (*UpdateResourceResponse, error) {
 	var out UpdateResourceResponse
 	pattern := "/sys/resources/{resource.id}"

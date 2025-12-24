@@ -35,10 +35,15 @@ const ResourceServiceListResourcesBridgeOperation = "/api.v1.services.system.Res
 const ResourceServiceUpdateResourceBridgeOperation = "/api.v1.services.system.ResourceService/UpdateResource"
 
 type ResourceServiceBridgeServer interface {
+	// Creates a new backend resource.
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
+	// Deletes a backend resource.
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
+	// Gets a single backend resource.
 	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
+	// Lists all backend resources.
 	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	// Updates a backend resource.
 	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error)
 }
 

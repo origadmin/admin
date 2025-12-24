@@ -35,21 +35,21 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on Menu with the rules defined in the proto
+// Validate checks the field values on View with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
-func (m *Menu) Validate() error {
+func (m *View) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Menu with the rules defined in the
+// ValidateAll checks the field values on View with the rules defined in the
 // proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in MenuMultiError, or nil if none found.
-func (m *Menu) ValidateAll() error {
+// a list of violation errors wrapped in ViewMultiError, or nil if none found.
+func (m *View) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Menu) validate(all bool) error {
+func (m *View) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -62,7 +62,7 @@ func (m *Menu) validate(all bool) error {
 		switch v := interface{}(m.GetCreateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuValidationError{
+				errors = append(errors, ViewValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -70,7 +70,7 @@ func (m *Menu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuValidationError{
+				errors = append(errors, ViewValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -79,7 +79,7 @@ func (m *Menu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuValidationError{
+			return ViewValidationError{
 				field:  "CreateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -91,7 +91,7 @@ func (m *Menu) validate(all bool) error {
 		switch v := interface{}(m.GetUpdateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuValidationError{
+				errors = append(errors, ViewValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -99,7 +99,7 @@ func (m *Menu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuValidationError{
+				errors = append(errors, ViewValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -108,7 +108,7 @@ func (m *Menu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuValidationError{
+			return ViewValidationError{
 				field:  "UpdateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -147,7 +147,7 @@ func (m *Menu) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuValidationError{
+					errors = append(errors, ViewValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -155,7 +155,7 @@ func (m *Menu) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuValidationError{
+					errors = append(errors, ViewValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -164,7 +164,7 @@ func (m *Menu) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuValidationError{
+				return ViewValidationError{
 					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -178,7 +178,7 @@ func (m *Menu) validate(all bool) error {
 		switch v := interface{}(m.GetParent()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuValidationError{
+				errors = append(errors, ViewValidationError{
 					field:  "Parent",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -186,7 +186,7 @@ func (m *Menu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuValidationError{
+				errors = append(errors, ViewValidationError{
 					field:  "Parent",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -195,7 +195,7 @@ func (m *Menu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetParent()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuValidationError{
+			return ViewValidationError{
 				field:  "Parent",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -210,7 +210,7 @@ func (m *Menu) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuValidationError{
+					errors = append(errors, ViewValidationError{
 						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -218,7 +218,7 @@ func (m *Menu) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuValidationError{
+					errors = append(errors, ViewValidationError{
 						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -227,7 +227,7 @@ func (m *Menu) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuValidationError{
+				return ViewValidationError{
 					field:  fmt.Sprintf("Resources[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -244,7 +244,7 @@ func (m *Menu) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuValidationError{
+					errors = append(errors, ViewValidationError{
 						field:  fmt.Sprintf("Roles[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -252,7 +252,7 @@ func (m *Menu) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuValidationError{
+					errors = append(errors, ViewValidationError{
 						field:  fmt.Sprintf("Roles[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -261,7 +261,7 @@ func (m *Menu) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuValidationError{
+				return ViewValidationError{
 					field:  fmt.Sprintf("Roles[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -272,18 +272,18 @@ func (m *Menu) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return MenuMultiError(errors)
+		return ViewMultiError(errors)
 	}
 
 	return nil
 }
 
-// MenuMultiError is an error wrapping multiple validation errors returned by
-// Menu.ValidateAll() if the designated constraints aren't met.
-type MenuMultiError []error
+// ViewMultiError is an error wrapping multiple validation errors returned by
+// View.ValidateAll() if the designated constraints aren't met.
+type ViewMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m MenuMultiError) Error() string {
+func (m ViewMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -292,11 +292,11 @@ func (m MenuMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m MenuMultiError) AllErrors() []error { return m }
+func (m ViewMultiError) AllErrors() []error { return m }
 
-// MenuValidationError is the validation error returned by Menu.Validate if the
+// ViewValidationError is the validation error returned by View.Validate if the
 // designated constraints aren't met.
-type MenuValidationError struct {
+type ViewValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -304,22 +304,22 @@ type MenuValidationError struct {
 }
 
 // Field function returns field value.
-func (e MenuValidationError) Field() string { return e.field }
+func (e ViewValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e MenuValidationError) Reason() string { return e.reason }
+func (e ViewValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e MenuValidationError) Cause() error { return e.cause }
+func (e ViewValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e MenuValidationError) Key() bool { return e.key }
+func (e ViewValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e MenuValidationError) ErrorName() string { return "MenuValidationError" }
+func (e ViewValidationError) ErrorName() string { return "ViewValidationError" }
 
 // Error satisfies the builtin error interface
-func (e MenuValidationError) Error() string {
+func (e ViewValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -331,14 +331,14 @@ func (e MenuValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sMenu.%s: %s%s",
+		"invalid %sView.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = MenuValidationError{}
+var _ error = ViewValidationError{}
 
 var _ interface {
 	Field() string
@@ -346,24 +346,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = MenuValidationError{}
+} = ViewValidationError{}
 
-// Validate checks the field values on MenuEdges with the rules defined in the
+// Validate checks the field values on ViewEdges with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *MenuEdges) Validate() error {
+func (m *ViewEdges) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on MenuEdges with the rules defined in
+// ValidateAll checks the field values on ViewEdges with the rules defined in
 // the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in MenuEdgesMultiError, or nil
+// result is a list of violation errors wrapped in ViewEdgesMultiError, or nil
 // if none found.
-func (m *MenuEdges) ValidateAll() error {
+func (m *ViewEdges) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *MenuEdges) validate(all bool) error {
+func (m *ViewEdges) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -377,7 +377,7 @@ func (m *MenuEdges) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
+					errors = append(errors, ViewEdgesValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -385,7 +385,7 @@ func (m *MenuEdges) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
+					errors = append(errors, ViewEdgesValidationError{
 						field:  fmt.Sprintf("Children[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -394,7 +394,7 @@ func (m *MenuEdges) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuEdgesValidationError{
+				return ViewEdgesValidationError{
 					field:  fmt.Sprintf("Children[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -408,7 +408,7 @@ func (m *MenuEdges) validate(all bool) error {
 		switch v := interface{}(m.GetParent()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, MenuEdgesValidationError{
+				errors = append(errors, ViewEdgesValidationError{
 					field:  "Parent",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -416,7 +416,7 @@ func (m *MenuEdges) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, MenuEdgesValidationError{
+				errors = append(errors, ViewEdgesValidationError{
 					field:  "Parent",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -425,7 +425,7 @@ func (m *MenuEdges) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetParent()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return MenuEdgesValidationError{
+			return ViewEdgesValidationError{
 				field:  "Parent",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -440,7 +440,7 @@ func (m *MenuEdges) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
+					errors = append(errors, ViewEdgesValidationError{
 						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -448,7 +448,7 @@ func (m *MenuEdges) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
+					errors = append(errors, ViewEdgesValidationError{
 						field:  fmt.Sprintf("Resources[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -457,7 +457,7 @@ func (m *MenuEdges) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuEdgesValidationError{
+				return ViewEdgesValidationError{
 					field:  fmt.Sprintf("Resources[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -474,7 +474,7 @@ func (m *MenuEdges) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
+					errors = append(errors, ViewEdgesValidationError{
 						field:  fmt.Sprintf("Roles[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -482,7 +482,7 @@ func (m *MenuEdges) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
+					errors = append(errors, ViewEdgesValidationError{
 						field:  fmt.Sprintf("Roles[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -491,7 +491,7 @@ func (m *MenuEdges) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuEdgesValidationError{
+				return ViewEdgesValidationError{
 					field:  fmt.Sprintf("Roles[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -501,23 +501,23 @@ func (m *MenuEdges) validate(all bool) error {
 
 	}
 
-	for idx, item := range m.GetRoleMenus() {
+	for idx, item := range m.GetRoleViews() {
 		_, _ = idx, item
 
 		if all {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
+					errors = append(errors, ViewEdgesValidationError{
+						field:  fmt.Sprintf("RoleViews[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
+					errors = append(errors, ViewEdgesValidationError{
+						field:  fmt.Sprintf("RoleViews[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -525,8 +525,8 @@ func (m *MenuEdges) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MenuEdgesValidationError{
-					field:  fmt.Sprintf("RoleMenus[%v]", idx),
+				return ViewEdgesValidationError{
+					field:  fmt.Sprintf("RoleViews[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -536,18 +536,18 @@ func (m *MenuEdges) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return MenuEdgesMultiError(errors)
+		return ViewEdgesMultiError(errors)
 	}
 
 	return nil
 }
 
-// MenuEdgesMultiError is an error wrapping multiple validation errors returned
-// by MenuEdges.ValidateAll() if the designated constraints aren't met.
-type MenuEdgesMultiError []error
+// ViewEdgesMultiError is an error wrapping multiple validation errors returned
+// by ViewEdges.ValidateAll() if the designated constraints aren't met.
+type ViewEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m MenuEdgesMultiError) Error() string {
+func (m ViewEdgesMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -556,11 +556,11 @@ func (m MenuEdgesMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m MenuEdgesMultiError) AllErrors() []error { return m }
+func (m ViewEdgesMultiError) AllErrors() []error { return m }
 
-// MenuEdgesValidationError is the validation error returned by
-// MenuEdges.Validate if the designated constraints aren't met.
-type MenuEdgesValidationError struct {
+// ViewEdgesValidationError is the validation error returned by
+// ViewEdges.Validate if the designated constraints aren't met.
+type ViewEdgesValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -568,22 +568,22 @@ type MenuEdgesValidationError struct {
 }
 
 // Field function returns field value.
-func (e MenuEdgesValidationError) Field() string { return e.field }
+func (e ViewEdgesValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e MenuEdgesValidationError) Reason() string { return e.reason }
+func (e ViewEdgesValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e MenuEdgesValidationError) Cause() error { return e.cause }
+func (e ViewEdgesValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e MenuEdgesValidationError) Key() bool { return e.key }
+func (e ViewEdgesValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e MenuEdgesValidationError) ErrorName() string { return "MenuEdgesValidationError" }
+func (e ViewEdgesValidationError) ErrorName() string { return "ViewEdgesValidationError" }
 
 // Error satisfies the builtin error interface
-func (e MenuEdgesValidationError) Error() string {
+func (e ViewEdgesValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -595,14 +595,14 @@ func (e MenuEdgesValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sMenuEdges.%s: %s%s",
+		"invalid %sViewEdges.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = MenuEdgesValidationError{}
+var _ error = ViewEdgesValidationError{}
 
 var _ interface {
 	Field() string
@@ -610,7 +610,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = MenuEdgesValidationError{}
+} = ViewEdgesValidationError{}
 
 // Validate checks the field values on Role with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
@@ -707,7 +707,7 @@ func (m *Role) validate(all bool) error {
 
 	// no validation rules for IsTypes
 
-	for idx, item := range m.GetMenus() {
+	for idx, item := range m.GetViews() {
 		_, _ = idx, item
 
 		if all {
@@ -715,7 +715,7 @@ func (m *Role) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, RoleValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
+						field:  fmt.Sprintf("Views[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -723,7 +723,7 @@ func (m *Role) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, RoleValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
+						field:  fmt.Sprintf("Views[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -732,7 +732,7 @@ func (m *Role) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return RoleValidationError{
-					field:  fmt.Sprintf("Menus[%v]", idx),
+					field:  fmt.Sprintf("Views[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -942,7 +942,7 @@ func (m *RoleEdges) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetMenus() {
+	for idx, item := range m.GetViews() {
 		_, _ = idx, item
 
 		if all {
@@ -950,7 +950,7 @@ func (m *RoleEdges) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
+						field:  fmt.Sprintf("Views[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -958,7 +958,7 @@ func (m *RoleEdges) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("Menus[%v]", idx),
+						field:  fmt.Sprintf("Views[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -967,7 +967,7 @@ func (m *RoleEdges) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return RoleEdgesValidationError{
-					field:  fmt.Sprintf("Menus[%v]", idx),
+					field:  fmt.Sprintf("Views[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -1010,7 +1010,7 @@ func (m *RoleEdges) validate(all bool) error {
 
 	}
 
-	for idx, item := range m.GetRoleMenus() {
+	for idx, item := range m.GetRoleViews() {
 		_, _ = idx, item
 
 		if all {
@@ -1018,7 +1018,7 @@ func (m *RoleEdges) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
+						field:  fmt.Sprintf("RoleViews[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -1026,7 +1026,7 @@ func (m *RoleEdges) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, RoleEdgesValidationError{
-						field:  fmt.Sprintf("RoleMenus[%v]", idx),
+						field:  fmt.Sprintf("RoleViews[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -1035,7 +1035,7 @@ func (m *RoleEdges) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return RoleEdgesValidationError{
-					field:  fmt.Sprintf("RoleMenus[%v]", idx),
+					field:  fmt.Sprintf("RoleViews[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -1991,22 +1991,22 @@ var _ interface {
 	ErrorName() string
 } = UserRoleEdgesValidationError{}
 
-// Validate checks the field values on RoleMenu with the rules defined in the
+// Validate checks the field values on RoleView with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *RoleMenu) Validate() error {
+func (m *RoleView) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RoleMenu with the rules defined in
+// ValidateAll checks the field values on RoleView with the rules defined in
 // the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in RoleMenuMultiError, or nil
+// result is a list of violation errors wrapped in RoleViewMultiError, or nil
 // if none found.
-func (m *RoleMenu) ValidateAll() error {
+func (m *RoleView) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RoleMenu) validate(all bool) error {
+func (m *RoleView) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2019,7 +2019,7 @@ func (m *RoleMenu) validate(all bool) error {
 		switch v := interface{}(m.GetCreateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
+				errors = append(errors, RoleViewValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2027,7 +2027,7 @@ func (m *RoleMenu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
+				errors = append(errors, RoleViewValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2036,7 +2036,7 @@ func (m *RoleMenu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RoleMenuValidationError{
+			return RoleViewValidationError{
 				field:  "CreateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2048,7 +2048,7 @@ func (m *RoleMenu) validate(all bool) error {
 		switch v := interface{}(m.GetUpdateTime()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
+				errors = append(errors, RoleViewValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2056,7 +2056,7 @@ func (m *RoleMenu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
+				errors = append(errors, RoleViewValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2065,7 +2065,7 @@ func (m *RoleMenu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RoleMenuValidationError{
+			return RoleViewValidationError{
 				field:  "UpdateTime",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2075,13 +2075,13 @@ func (m *RoleMenu) validate(all bool) error {
 
 	// no validation rules for RoleId
 
-	// no validation rules for MenuId
+	// no validation rules for ViewId
 
 	if all {
 		switch v := interface{}(m.GetRole()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
+				errors = append(errors, RoleViewValidationError{
 					field:  "Role",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2089,7 +2089,7 @@ func (m *RoleMenu) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
+				errors = append(errors, RoleViewValidationError{
 					field:  "Role",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2098,7 +2098,7 @@ func (m *RoleMenu) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetRole()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RoleMenuValidationError{
+			return RoleViewValidationError{
 				field:  "Role",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2107,28 +2107,28 @@ func (m *RoleMenu) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetMenu()).(type) {
+		switch v := interface{}(m.GetView()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
-					field:  "Menu",
+				errors = append(errors, RoleViewValidationError{
+					field:  "View",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleMenuValidationError{
-					field:  "Menu",
+				errors = append(errors, RoleViewValidationError{
+					field:  "View",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetMenu()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetView()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RoleMenuValidationError{
-				field:  "Menu",
+			return RoleViewValidationError{
+				field:  "View",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -2136,18 +2136,18 @@ func (m *RoleMenu) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return RoleMenuMultiError(errors)
+		return RoleViewMultiError(errors)
 	}
 
 	return nil
 }
 
-// RoleMenuMultiError is an error wrapping multiple validation errors returned
-// by RoleMenu.ValidateAll() if the designated constraints aren't met.
-type RoleMenuMultiError []error
+// RoleViewMultiError is an error wrapping multiple validation errors returned
+// by RoleView.ValidateAll() if the designated constraints aren't met.
+type RoleViewMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RoleMenuMultiError) Error() string {
+func (m RoleViewMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2156,11 +2156,11 @@ func (m RoleMenuMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RoleMenuMultiError) AllErrors() []error { return m }
+func (m RoleViewMultiError) AllErrors() []error { return m }
 
-// RoleMenuValidationError is the validation error returned by
-// RoleMenu.Validate if the designated constraints aren't met.
-type RoleMenuValidationError struct {
+// RoleViewValidationError is the validation error returned by
+// RoleView.Validate if the designated constraints aren't met.
+type RoleViewValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2168,22 +2168,22 @@ type RoleMenuValidationError struct {
 }
 
 // Field function returns field value.
-func (e RoleMenuValidationError) Field() string { return e.field }
+func (e RoleViewValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RoleMenuValidationError) Reason() string { return e.reason }
+func (e RoleViewValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RoleMenuValidationError) Cause() error { return e.cause }
+func (e RoleViewValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RoleMenuValidationError) Key() bool { return e.key }
+func (e RoleViewValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RoleMenuValidationError) ErrorName() string { return "RoleMenuValidationError" }
+func (e RoleViewValidationError) ErrorName() string { return "RoleViewValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RoleMenuValidationError) Error() string {
+func (e RoleViewValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2195,14 +2195,14 @@ func (e RoleMenuValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRoleMenu.%s: %s%s",
+		"invalid %sRoleView.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RoleMenuValidationError{}
+var _ error = RoleViewValidationError{}
 
 var _ interface {
 	Field() string
@@ -2210,24 +2210,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RoleMenuValidationError{}
+} = RoleViewValidationError{}
 
-// Validate checks the field values on RoleMenuEdges with the rules defined in
+// Validate checks the field values on RoleViewEdges with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *RoleMenuEdges) Validate() error {
+func (m *RoleViewEdges) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RoleMenuEdges with the rules defined
+// ValidateAll checks the field values on RoleViewEdges with the rules defined
 // in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in RoleMenuEdgesMultiError, or
+// result is a list of violation errors wrapped in RoleViewEdgesMultiError, or
 // nil if none found.
-func (m *RoleMenuEdges) ValidateAll() error {
+func (m *RoleViewEdges) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RoleMenuEdges) validate(all bool) error {
+func (m *RoleViewEdges) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2238,7 +2238,7 @@ func (m *RoleMenuEdges) validate(all bool) error {
 		switch v := interface{}(m.GetRole()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleMenuEdgesValidationError{
+				errors = append(errors, RoleViewEdgesValidationError{
 					field:  "Role",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2246,7 +2246,7 @@ func (m *RoleMenuEdges) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleMenuEdgesValidationError{
+				errors = append(errors, RoleViewEdgesValidationError{
 					field:  "Role",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -2255,7 +2255,7 @@ func (m *RoleMenuEdges) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetRole()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RoleMenuEdgesValidationError{
+			return RoleViewEdgesValidationError{
 				field:  "Role",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -2264,28 +2264,28 @@ func (m *RoleMenuEdges) validate(all bool) error {
 	}
 
 	if all {
-		switch v := interface{}(m.GetMenu()).(type) {
+		switch v := interface{}(m.GetView()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, RoleMenuEdgesValidationError{
-					field:  "Menu",
+				errors = append(errors, RoleViewEdgesValidationError{
+					field:  "View",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, RoleMenuEdgesValidationError{
-					field:  "Menu",
+				errors = append(errors, RoleViewEdgesValidationError{
+					field:  "View",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetMenu()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetView()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return RoleMenuEdgesValidationError{
-				field:  "Menu",
+			return RoleViewEdgesValidationError{
+				field:  "View",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -2293,19 +2293,19 @@ func (m *RoleMenuEdges) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return RoleMenuEdgesMultiError(errors)
+		return RoleViewEdgesMultiError(errors)
 	}
 
 	return nil
 }
 
-// RoleMenuEdgesMultiError is an error wrapping multiple validation errors
-// returned by RoleMenuEdges.ValidateAll() if the designated constraints
+// RoleViewEdgesMultiError is an error wrapping multiple validation errors
+// returned by RoleViewEdges.ValidateAll() if the designated constraints
 // aren't met.
-type RoleMenuEdgesMultiError []error
+type RoleViewEdgesMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RoleMenuEdgesMultiError) Error() string {
+func (m RoleViewEdgesMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2314,11 +2314,11 @@ func (m RoleMenuEdgesMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RoleMenuEdgesMultiError) AllErrors() []error { return m }
+func (m RoleViewEdgesMultiError) AllErrors() []error { return m }
 
-// RoleMenuEdgesValidationError is the validation error returned by
-// RoleMenuEdges.Validate if the designated constraints aren't met.
-type RoleMenuEdgesValidationError struct {
+// RoleViewEdgesValidationError is the validation error returned by
+// RoleViewEdges.Validate if the designated constraints aren't met.
+type RoleViewEdgesValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2326,22 +2326,22 @@ type RoleMenuEdgesValidationError struct {
 }
 
 // Field function returns field value.
-func (e RoleMenuEdgesValidationError) Field() string { return e.field }
+func (e RoleViewEdgesValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RoleMenuEdgesValidationError) Reason() string { return e.reason }
+func (e RoleViewEdgesValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RoleMenuEdgesValidationError) Cause() error { return e.cause }
+func (e RoleViewEdgesValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RoleMenuEdgesValidationError) Key() bool { return e.key }
+func (e RoleViewEdgesValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RoleMenuEdgesValidationError) ErrorName() string { return "RoleMenuEdgesValidationError" }
+func (e RoleViewEdgesValidationError) ErrorName() string { return "RoleViewEdgesValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RoleMenuEdgesValidationError) Error() string {
+func (e RoleViewEdgesValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2353,14 +2353,14 @@ func (e RoleMenuEdgesValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRoleMenuEdges.%s: %s%s",
+		"invalid %sRoleViewEdges.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RoleMenuEdgesValidationError{}
+var _ error = RoleViewEdgesValidationError{}
 
 var _ interface {
 	Field() string
@@ -2368,7 +2368,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RoleMenuEdgesValidationError{}
+} = RoleViewEdgesValidationError{}
 
 // Validate checks the field values on Resource with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
@@ -2681,11 +2681,11 @@ func (m *ResourceEdges) validate(all bool) error {
 	var errors []error
 
 	if all {
-		switch v := interface{}(m.GetMenu()).(type) {
+		switch v := interface{}(m.GetView()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ResourceEdgesValidationError{
-					field:  "Menu",
+					field:  "View",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -2693,16 +2693,16 @@ func (m *ResourceEdges) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ResourceEdgesValidationError{
-					field:  "Menu",
+					field:  "View",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetMenu()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetView()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ResourceEdgesValidationError{
-				field:  "Menu",
+				field:  "View",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
