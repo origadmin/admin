@@ -22,6 +22,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 
 	"entgo.io/ent/dialect/sql"
 )
@@ -460,6 +461,33 @@ func (f TraverseUserRole) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.UserRoleQuery", q)
 }
 
+// The ViewFunc type is an adapter to allow the use of ordinary function as a Querier.
+type ViewFunc func(context.Context, *ent.ViewQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f ViewFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.ViewQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.ViewQuery", q)
+}
+
+// The TraverseView type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseView func(context.Context, *ent.ViewQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseView) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseView) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ViewQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.ViewQuery", q)
+}
+
 // NewQuery returns the generic Query interface for the given typed query.
 func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
@@ -491,6 +519,8 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.UserPositionQuery, predicate.UserPosition, userposition.OrderOption]{typ: ent.TypeUserPosition, tq: q}, nil
 	case *ent.UserRoleQuery:
 		return &query[*ent.UserRoleQuery, predicate.UserRole, userrole.OrderOption]{typ: ent.TypeUserRole, tq: q}, nil
+	case *ent.ViewQuery:
+		return &query[*ent.ViewQuery, predicate.View, view.OrderOption]{typ: ent.TypeView, tq: q}, nil
 	default:
 		return nil, fmt.Errorf("unknown query type %T", q)
 	}

@@ -37,6 +37,8 @@ const (
 	EdgePositions = "positions"
 	// EdgeResources holds the string denoting the resources edge name in mutations.
 	EdgeResources = "resources"
+	// EdgeViews holds the string denoting the views edge name in mutations.
+	EdgeViews = "views"
 	// EdgeRolePermissions holds the string denoting the role_permissions edge name in mutations.
 	EdgeRolePermissions = "role_permissions"
 	// EdgePositionPermissions holds the string denoting the position_permissions edge name in mutations.
@@ -59,7 +61,12 @@ const (
 	ResourcesTable = "sys_permission_resources"
 	// ResourcesInverseTable is the table name for the Resource entity.
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
-	ResourcesInverseTable = "sys_resources"
+	ResourcesInverseTable = "resources"
+	// ViewsTable is the table that holds the views relation/edge. The primary key declared below.
+	ViewsTable = "permission_views"
+	// ViewsInverseTable is the table name for the View entity.
+	// It exists in this package in order to avoid circular dependency with the "view" package.
+	ViewsInverseTable = "views"
 	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
 	RolePermissionsTable = "sys_role_permissions"
 	// RolePermissionsInverseTable is the table name for the RolePermission entity.
@@ -106,6 +113,9 @@ var (
 	// ResourcesPrimaryKey and ResourcesColumn2 are the table columns denoting the
 	// primary key for the resources relation (M2M).
 	ResourcesPrimaryKey = []string{"permission_id", "resource_id"}
+	// ViewsPrimaryKey and ViewsColumn2 are the table columns denoting the
+	// primary key for the views relation (M2M).
+	ViewsPrimaryKey = []string{"permission_id", "view_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -256,6 +266,20 @@ func ByResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	}
 }
 
+// ByViewsCount orders the results by views count.
+func ByViewsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newViewsStep(), opts...)
+	}
+}
+
+// ByViews orders the results by views terms.
+func ByViews(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newViewsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
 // ByRolePermissionsCount orders the results by role_permissions count.
 func ByRolePermissionsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -316,6 +340,13 @@ func newResourcesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ResourcesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2M, false, ResourcesTable, ResourcesPrimaryKey...),
+	)
+}
+func newViewsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ViewsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, ViewsTable, ViewsPrimaryKey...),
 	)
 }
 func newRolePermissionsStep() *sqlgraph.Step {

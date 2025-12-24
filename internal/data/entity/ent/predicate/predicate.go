@@ -47,3 +47,6 @@ type UserPosition func(*sql.Selector)
 
 // UserRole is the predicate function for userrole builders.
 type UserRole func(*sql.Selector)
+
+// View is the predicate function for view builders.
+type View func(*sql.Selector)

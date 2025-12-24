@@ -21,6 +21,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 	"sync"
 	"time"
 
@@ -51,6 +52,7 @@ const (
 	TypeUserDepartment     = "UserDepartment"
 	TypeUserPosition       = "UserPosition"
 	TypeUserRole           = "UserRole"
+	TypeView               = "View"
 )
 
 // CasbinRuleMutation represents an operation that mutates the CasbinRule nodes in the graph.
@@ -2945,6 +2947,9 @@ type PermissionMutation struct {
 	resources                   map[int64]struct{}
 	removedresources            map[int64]struct{}
 	clearedresources            bool
+	views                       map[int64]struct{}
+	removedviews                map[int64]struct{}
+	clearedviews                bool
 	role_permissions            map[int]struct{}
 	removedrole_permissions     map[int]struct{}
 	clearedrole_permissions     bool
@@ -3526,6 +3531,60 @@ func (m *PermissionMutation) ResetResources() {
 	m.removedresources = nil
 }
 
+// AddViewIDs adds the "views" edge to the View entity by ids.
+func (m *PermissionMutation) AddViewIDs(ids ...int64) {
+	if m.views == nil {
+		m.views = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.views[ids[i]] = struct{}{}
+	}
+}
+
+// ClearViews clears the "views" edge to the View entity.
+func (m *PermissionMutation) ClearViews() {
+	m.clearedviews = true
+}
+
+// ViewsCleared reports if the "views" edge to the View entity was cleared.
+func (m *PermissionMutation) ViewsCleared() bool {
+	return m.clearedviews
+}
+
+// RemoveViewIDs removes the "views" edge to the View entity by IDs.
+func (m *PermissionMutation) RemoveViewIDs(ids ...int64) {
+	if m.removedviews == nil {
+		m.removedviews = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.views, ids[i])
+		m.removedviews[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedViews returns the removed IDs of the "views" edge to the View entity.
+func (m *PermissionMutation) RemovedViewsIDs() (ids []int64) {
+	for id := range m.removedviews {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ViewsIDs returns the "views" edge IDs in the mutation.
+func (m *PermissionMutation) ViewsIDs() (ids []int64) {
+	for id := range m.views {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetViews resets all changes to the "views" edge.
+func (m *PermissionMutation) ResetViews() {
+	m.views = nil
+	m.clearedviews = false
+	m.removedviews = nil
+}
+
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by ids.
 func (m *PermissionMutation) AddRolePermissionIDs(ids ...int) {
 	if m.role_permissions == nil {
@@ -3949,7 +4008,7 @@ func (m *PermissionMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *PermissionMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.roles != nil {
 		edges = append(edges, permission.EdgeRoles)
 	}
@@ -3958,6 +4017,9 @@ func (m *PermissionMutation) AddedEdges() []string {
 	}
 	if m.resources != nil {
 		edges = append(edges, permission.EdgeResources)
+	}
+	if m.views != nil {
+		edges = append(edges, permission.EdgeViews)
 	}
 	if m.role_permissions != nil {
 		edges = append(edges, permission.EdgeRolePermissions)
@@ -3993,6 +4055,12 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case permission.EdgeViews:
+		ids := make([]ent.Value, 0, len(m.views))
+		for id := range m.views {
+			ids = append(ids, id)
+		}
+		return ids
 	case permission.EdgeRolePermissions:
 		ids := make([]ent.Value, 0, len(m.role_permissions))
 		for id := range m.role_permissions {
@@ -4017,7 +4085,7 @@ func (m *PermissionMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *PermissionMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.removedroles != nil {
 		edges = append(edges, permission.EdgeRoles)
 	}
@@ -4026,6 +4094,9 @@ func (m *PermissionMutation) RemovedEdges() []string {
 	}
 	if m.removedresources != nil {
 		edges = append(edges, permission.EdgeResources)
+	}
+	if m.removedviews != nil {
+		edges = append(edges, permission.EdgeViews)
 	}
 	if m.removedrole_permissions != nil {
 		edges = append(edges, permission.EdgeRolePermissions)
@@ -4061,6 +4132,12 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case permission.EdgeViews:
+		ids := make([]ent.Value, 0, len(m.removedviews))
+		for id := range m.removedviews {
+			ids = append(ids, id)
+		}
+		return ids
 	case permission.EdgeRolePermissions:
 		ids := make([]ent.Value, 0, len(m.removedrole_permissions))
 		for id := range m.removedrole_permissions {
@@ -4085,7 +4162,7 @@ func (m *PermissionMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *PermissionMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.clearedroles {
 		edges = append(edges, permission.EdgeRoles)
 	}
@@ -4094,6 +4171,9 @@ func (m *PermissionMutation) ClearedEdges() []string {
 	}
 	if m.clearedresources {
 		edges = append(edges, permission.EdgeResources)
+	}
+	if m.clearedviews {
+		edges = append(edges, permission.EdgeViews)
 	}
 	if m.clearedrole_permissions {
 		edges = append(edges, permission.EdgeRolePermissions)
@@ -4117,6 +4197,8 @@ func (m *PermissionMutation) EdgeCleared(name string) bool {
 		return m.clearedpositions
 	case permission.EdgeResources:
 		return m.clearedresources
+	case permission.EdgeViews:
+		return m.clearedviews
 	case permission.EdgeRolePermissions:
 		return m.clearedrole_permissions
 	case permission.EdgePositionPermissions:
@@ -4147,6 +4229,9 @@ func (m *PermissionMutation) ResetEdge(name string) error {
 		return nil
 	case permission.EdgeResources:
 		m.ResetResources()
+		return nil
+	case permission.EdgeViews:
+		m.ResetViews()
 		return nil
 	case permission.EdgeRolePermissions:
 		m.ResetRolePermissions()
@@ -6123,45 +6208,31 @@ func (m *PositionPermissionMutation) ResetEdge(name string) error {
 // ResourceMutation represents an operation that mutates the Resource nodes in the graph.
 type ResourceMutation struct {
 	config
-	op                          Op
-	typ                         string
-	id                          *int64
-	create_time                 *time.Time
-	update_time                 *time.Time
-	name                        *string
-	keyword                     *string
-	i18n_key                    *string
-	_type                       *string
-	status                      *int8
-	addstatus                   *int8
-	_path                       *string
-	operation                   *string
-	method                      *string
-	component                   *string
-	icon                        *string
-	sequence                    *int
-	addsequence                 *int
-	visible                     *bool
-	level                       *int8
-	addlevel                    *int8
-	tree_path                   *string
-	properties                  *map[string]string
-	description                 *string
-	clearedFields               map[string]struct{}
-	children                    map[int64]struct{}
-	removedchildren             map[int64]struct{}
-	clearedchildren             bool
-	parent                      *int64
-	clearedparent               bool
-	permissions                 map[int64]struct{}
-	removedpermissions          map[int64]struct{}
-	clearedpermissions          bool
-	permission_resources        map[int]struct{}
-	removedpermission_resources map[int]struct{}
-	clearedpermission_resources bool
-	done                        bool
-	oldValue                    func(context.Context) (*Resource, error)
-	predicates                  []predicate.Resource
+	op                   Op
+	typ                  string
+	id                   *int64
+	create_time          *time.Time
+	update_time          *time.Time
+	service_name         *string
+	keyword              *string
+	_path                *string
+	method               *string
+	operation            *string
+	policy               *string
+	version_id           *string
+	last_sync_version_id *string
+	sync_status          *string
+	status               *resource.Status
+	clearedFields        map[string]struct{}
+	views                map[int64]struct{}
+	removedviews         map[int64]struct{}
+	clearedviews         bool
+	permissions          map[int64]struct{}
+	removedpermissions   map[int64]struct{}
+	clearedpermissions   bool
+	done                 bool
+	oldValue             func(context.Context) (*Resource, error)
+	predicates           []predicate.Resource
 }
 
 var _ ent.Mutation = (*ResourceMutation)(nil)
@@ -6340,40 +6411,40 @@ func (m *ResourceMutation) ResetUpdateTime() {
 	m.update_time = nil
 }
 
-// SetName sets the "name" field.
-func (m *ResourceMutation) SetName(s string) {
-	m.name = &s
+// SetServiceName sets the "service_name" field.
+func (m *ResourceMutation) SetServiceName(s string) {
+	m.service_name = &s
 }
 
-// Name returns the value of the "name" field in the mutation.
-func (m *ResourceMutation) Name() (r string, exists bool) {
-	v := m.name
+// ServiceName returns the value of the "service_name" field in the mutation.
+func (m *ResourceMutation) ServiceName() (r string, exists bool) {
+	v := m.service_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldName returns the old "name" field's value of the Resource entity.
+// OldServiceName returns the old "service_name" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldName(ctx context.Context) (v string, err error) {
+func (m *ResourceMutation) OldServiceName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
+		return v, errors.New("OldServiceName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
+		return v, errors.New("OldServiceName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
+		return v, fmt.Errorf("querying old value for OldServiceName: %w", err)
 	}
-	return oldValue.Name, nil
+	return oldValue.ServiceName, nil
 }
 
-// ResetName resets all changes to the "name" field.
-func (m *ResourceMutation) ResetName() {
-	m.name = nil
+// ResetServiceName resets all changes to the "service_name" field.
+func (m *ResourceMutation) ResetServiceName() {
+	m.service_name = nil
 }
 
 // SetKeyword sets the "keyword" field.
@@ -6412,134 +6483,6 @@ func (m *ResourceMutation) ResetKeyword() {
 	m.keyword = nil
 }
 
-// SetI18nKey sets the "i18n_key" field.
-func (m *ResourceMutation) SetI18nKey(s string) {
-	m.i18n_key = &s
-}
-
-// I18nKey returns the value of the "i18n_key" field in the mutation.
-func (m *ResourceMutation) I18nKey() (r string, exists bool) {
-	v := m.i18n_key
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldI18nKey returns the old "i18n_key" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldI18nKey(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldI18nKey is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldI18nKey requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldI18nKey: %w", err)
-	}
-	return oldValue.I18nKey, nil
-}
-
-// ResetI18nKey resets all changes to the "i18n_key" field.
-func (m *ResourceMutation) ResetI18nKey() {
-	m.i18n_key = nil
-}
-
-// SetType sets the "type" field.
-func (m *ResourceMutation) SetType(s string) {
-	m._type = &s
-}
-
-// GetType returns the value of the "type" field in the mutation.
-func (m *ResourceMutation) GetType() (r string, exists bool) {
-	v := m._type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldType returns the old "type" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldType: %w", err)
-	}
-	return oldValue.Type, nil
-}
-
-// ResetType resets all changes to the "type" field.
-func (m *ResourceMutation) ResetType() {
-	m._type = nil
-}
-
-// SetStatus sets the "status" field.
-func (m *ResourceMutation) SetStatus(i int8) {
-	m.status = &i
-	m.addstatus = nil
-}
-
-// Status returns the value of the "status" field in the mutation.
-func (m *ResourceMutation) Status() (r int8, exists bool) {
-	v := m.status
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldStatus returns the old "status" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldStatus(ctx context.Context) (v int8, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldStatus requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
-	}
-	return oldValue.Status, nil
-}
-
-// AddStatus adds i to the "status" field.
-func (m *ResourceMutation) AddStatus(i int8) {
-	if m.addstatus != nil {
-		*m.addstatus += i
-	} else {
-		m.addstatus = &i
-	}
-}
-
-// AddedStatus returns the value that was added to the "status" field in this mutation.
-func (m *ResourceMutation) AddedStatus() (r int8, exists bool) {
-	v := m.addstatus
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetStatus resets all changes to the "status" field.
-func (m *ResourceMutation) ResetStatus() {
-	m.status = nil
-	m.addstatus = nil
-}
-
 // SetPath sets the "path" field.
 func (m *ResourceMutation) SetPath(s string) {
 	m._path = &s
@@ -6571,45 +6514,22 @@ func (m *ResourceMutation) OldPath(ctx context.Context) (v string, err error) {
 	return oldValue.Path, nil
 }
 
+// ClearPath clears the value of the "path" field.
+func (m *ResourceMutation) ClearPath() {
+	m._path = nil
+	m.clearedFields[resource.FieldPath] = struct{}{}
+}
+
+// PathCleared returns if the "path" field was cleared in this mutation.
+func (m *ResourceMutation) PathCleared() bool {
+	_, ok := m.clearedFields[resource.FieldPath]
+	return ok
+}
+
 // ResetPath resets all changes to the "path" field.
 func (m *ResourceMutation) ResetPath() {
 	m._path = nil
-}
-
-// SetOperation sets the "operation" field.
-func (m *ResourceMutation) SetOperation(s string) {
-	m.operation = &s
-}
-
-// Operation returns the value of the "operation" field in the mutation.
-func (m *ResourceMutation) Operation() (r string, exists bool) {
-	v := m.operation
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldOperation returns the old "operation" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldOperation(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOperation is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOperation requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOperation: %w", err)
-	}
-	return oldValue.Operation, nil
-}
-
-// ResetOperation resets all changes to the "operation" field.
-func (m *ResourceMutation) ResetOperation() {
-	m.operation = nil
+	delete(m.clearedFields, resource.FieldPath)
 }
 
 // SetMethod sets the "method" field.
@@ -6643,480 +6563,305 @@ func (m *ResourceMutation) OldMethod(ctx context.Context) (v string, err error) 
 	return oldValue.Method, nil
 }
 
+// ClearMethod clears the value of the "method" field.
+func (m *ResourceMutation) ClearMethod() {
+	m.method = nil
+	m.clearedFields[resource.FieldMethod] = struct{}{}
+}
+
+// MethodCleared returns if the "method" field was cleared in this mutation.
+func (m *ResourceMutation) MethodCleared() bool {
+	_, ok := m.clearedFields[resource.FieldMethod]
+	return ok
+}
+
 // ResetMethod resets all changes to the "method" field.
 func (m *ResourceMutation) ResetMethod() {
 	m.method = nil
+	delete(m.clearedFields, resource.FieldMethod)
 }
 
-// SetComponent sets the "component" field.
-func (m *ResourceMutation) SetComponent(s string) {
-	m.component = &s
+// SetOperation sets the "operation" field.
+func (m *ResourceMutation) SetOperation(s string) {
+	m.operation = &s
 }
 
-// Component returns the value of the "component" field in the mutation.
-func (m *ResourceMutation) Component() (r string, exists bool) {
-	v := m.component
+// Operation returns the value of the "operation" field in the mutation.
+func (m *ResourceMutation) Operation() (r string, exists bool) {
+	v := m.operation
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldComponent returns the old "component" field's value of the Resource entity.
+// OldOperation returns the old "operation" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldComponent(ctx context.Context) (v string, err error) {
+func (m *ResourceMutation) OldOperation(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldComponent is only allowed on UpdateOne operations")
+		return v, errors.New("OldOperation is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldComponent requires an ID field in the mutation")
+		return v, errors.New("OldOperation requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldComponent: %w", err)
+		return v, fmt.Errorf("querying old value for OldOperation: %w", err)
 	}
-	return oldValue.Component, nil
+	return oldValue.Operation, nil
 }
 
-// ResetComponent resets all changes to the "component" field.
-func (m *ResourceMutation) ResetComponent() {
-	m.component = nil
+// ClearOperation clears the value of the "operation" field.
+func (m *ResourceMutation) ClearOperation() {
+	m.operation = nil
+	m.clearedFields[resource.FieldOperation] = struct{}{}
 }
 
-// SetIcon sets the "icon" field.
-func (m *ResourceMutation) SetIcon(s string) {
-	m.icon = &s
-}
-
-// Icon returns the value of the "icon" field in the mutation.
-func (m *ResourceMutation) Icon() (r string, exists bool) {
-	v := m.icon
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIcon returns the old "icon" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldIcon(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIcon is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIcon requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIcon: %w", err)
-	}
-	return oldValue.Icon, nil
-}
-
-// ResetIcon resets all changes to the "icon" field.
-func (m *ResourceMutation) ResetIcon() {
-	m.icon = nil
-}
-
-// SetSequence sets the "sequence" field.
-func (m *ResourceMutation) SetSequence(i int) {
-	m.sequence = &i
-	m.addsequence = nil
-}
-
-// Sequence returns the value of the "sequence" field in the mutation.
-func (m *ResourceMutation) Sequence() (r int, exists bool) {
-	v := m.sequence
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSequence returns the old "sequence" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldSequence(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSequence is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSequence requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSequence: %w", err)
-	}
-	return oldValue.Sequence, nil
-}
-
-// AddSequence adds i to the "sequence" field.
-func (m *ResourceMutation) AddSequence(i int) {
-	if m.addsequence != nil {
-		*m.addsequence += i
-	} else {
-		m.addsequence = &i
-	}
-}
-
-// AddedSequence returns the value that was added to the "sequence" field in this mutation.
-func (m *ResourceMutation) AddedSequence() (r int, exists bool) {
-	v := m.addsequence
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetSequence resets all changes to the "sequence" field.
-func (m *ResourceMutation) ResetSequence() {
-	m.sequence = nil
-	m.addsequence = nil
-}
-
-// SetVisible sets the "visible" field.
-func (m *ResourceMutation) SetVisible(b bool) {
-	m.visible = &b
-}
-
-// Visible returns the value of the "visible" field in the mutation.
-func (m *ResourceMutation) Visible() (r bool, exists bool) {
-	v := m.visible
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldVisible returns the old "visible" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldVisible(ctx context.Context) (v bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldVisible is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldVisible requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldVisible: %w", err)
-	}
-	return oldValue.Visible, nil
-}
-
-// ResetVisible resets all changes to the "visible" field.
-func (m *ResourceMutation) ResetVisible() {
-	m.visible = nil
-}
-
-// SetLevel sets the "level" field.
-func (m *ResourceMutation) SetLevel(i int8) {
-	m.level = &i
-	m.addlevel = nil
-}
-
-// Level returns the value of the "level" field in the mutation.
-func (m *ResourceMutation) Level() (r int8, exists bool) {
-	v := m.level
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLevel returns the old "level" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldLevel(ctx context.Context) (v int8, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldLevel is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldLevel requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLevel: %w", err)
-	}
-	return oldValue.Level, nil
-}
-
-// AddLevel adds i to the "level" field.
-func (m *ResourceMutation) AddLevel(i int8) {
-	if m.addlevel != nil {
-		*m.addlevel += i
-	} else {
-		m.addlevel = &i
-	}
-}
-
-// AddedLevel returns the value that was added to the "level" field in this mutation.
-func (m *ResourceMutation) AddedLevel() (r int8, exists bool) {
-	v := m.addlevel
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetLevel resets all changes to the "level" field.
-func (m *ResourceMutation) ResetLevel() {
-	m.level = nil
-	m.addlevel = nil
-}
-
-// SetTreePath sets the "tree_path" field.
-func (m *ResourceMutation) SetTreePath(s string) {
-	m.tree_path = &s
-}
-
-// TreePath returns the value of the "tree_path" field in the mutation.
-func (m *ResourceMutation) TreePath() (r string, exists bool) {
-	v := m.tree_path
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTreePath returns the old "tree_path" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldTreePath(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTreePath is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTreePath requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTreePath: %w", err)
-	}
-	return oldValue.TreePath, nil
-}
-
-// ResetTreePath resets all changes to the "tree_path" field.
-func (m *ResourceMutation) ResetTreePath() {
-	m.tree_path = nil
-}
-
-// SetProperties sets the "properties" field.
-func (m *ResourceMutation) SetProperties(value map[string]string) {
-	m.properties = &value
-}
-
-// Properties returns the value of the "properties" field in the mutation.
-func (m *ResourceMutation) Properties() (r map[string]string, exists bool) {
-	v := m.properties
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldProperties returns the old "properties" field's value of the Resource entity.
-// If the Resource object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldProperties(ctx context.Context) (v map[string]string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldProperties is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldProperties requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldProperties: %w", err)
-	}
-	return oldValue.Properties, nil
-}
-
-// ClearProperties clears the value of the "properties" field.
-func (m *ResourceMutation) ClearProperties() {
-	m.properties = nil
-	m.clearedFields[resource.FieldProperties] = struct{}{}
-}
-
-// PropertiesCleared returns if the "properties" field was cleared in this mutation.
-func (m *ResourceMutation) PropertiesCleared() bool {
-	_, ok := m.clearedFields[resource.FieldProperties]
+// OperationCleared returns if the "operation" field was cleared in this mutation.
+func (m *ResourceMutation) OperationCleared() bool {
+	_, ok := m.clearedFields[resource.FieldOperation]
 	return ok
 }
 
-// ResetProperties resets all changes to the "properties" field.
-func (m *ResourceMutation) ResetProperties() {
-	m.properties = nil
-	delete(m.clearedFields, resource.FieldProperties)
+// ResetOperation resets all changes to the "operation" field.
+func (m *ResourceMutation) ResetOperation() {
+	m.operation = nil
+	delete(m.clearedFields, resource.FieldOperation)
 }
 
-// SetDescription sets the "description" field.
-func (m *ResourceMutation) SetDescription(s string) {
-	m.description = &s
+// SetPolicy sets the "policy" field.
+func (m *ResourceMutation) SetPolicy(s string) {
+	m.policy = &s
 }
 
-// Description returns the value of the "description" field in the mutation.
-func (m *ResourceMutation) Description() (r string, exists bool) {
-	v := m.description
+// Policy returns the value of the "policy" field in the mutation.
+func (m *ResourceMutation) Policy() (r string, exists bool) {
+	v := m.policy
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldDescription returns the old "description" field's value of the Resource entity.
+// OldPolicy returns the old "policy" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldDescription(ctx context.Context) (v string, err error) {
+func (m *ResourceMutation) OldPolicy(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+		return v, errors.New("OldPolicy is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldDescription requires an ID field in the mutation")
+		return v, errors.New("OldPolicy requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+		return v, fmt.Errorf("querying old value for OldPolicy: %w", err)
 	}
-	return oldValue.Description, nil
+	return oldValue.Policy, nil
 }
 
-// ResetDescription resets all changes to the "description" field.
-func (m *ResourceMutation) ResetDescription() {
-	m.description = nil
+// ResetPolicy resets all changes to the "policy" field.
+func (m *ResourceMutation) ResetPolicy() {
+	m.policy = nil
 }
 
-// SetParentID sets the "parent_id" field.
-func (m *ResourceMutation) SetParentID(i int64) {
-	m.parent = &i
+// SetVersionID sets the "version_id" field.
+func (m *ResourceMutation) SetVersionID(s string) {
+	m.version_id = &s
 }
 
-// ParentID returns the value of the "parent_id" field in the mutation.
-func (m *ResourceMutation) ParentID() (r int64, exists bool) {
-	v := m.parent
+// VersionID returns the value of the "version_id" field in the mutation.
+func (m *ResourceMutation) VersionID() (r string, exists bool) {
+	v := m.version_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldParentID returns the old "parent_id" field's value of the Resource entity.
+// OldVersionID returns the old "version_id" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldParentID(ctx context.Context) (v int64, err error) {
+func (m *ResourceMutation) OldVersionID(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
+		return v, errors.New("OldVersionID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldParentID requires an ID field in the mutation")
+		return v, errors.New("OldVersionID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
+		return v, fmt.Errorf("querying old value for OldVersionID: %w", err)
 	}
-	return oldValue.ParentID, nil
+	return oldValue.VersionID, nil
 }
 
-// ClearParentID clears the value of the "parent_id" field.
-func (m *ResourceMutation) ClearParentID() {
-	m.parent = nil
-	m.clearedFields[resource.FieldParentID] = struct{}{}
+// ResetVersionID resets all changes to the "version_id" field.
+func (m *ResourceMutation) ResetVersionID() {
+	m.version_id = nil
 }
 
-// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
-func (m *ResourceMutation) ParentIDCleared() bool {
-	_, ok := m.clearedFields[resource.FieldParentID]
-	return ok
+// SetLastSyncVersionID sets the "last_sync_version_id" field.
+func (m *ResourceMutation) SetLastSyncVersionID(s string) {
+	m.last_sync_version_id = &s
 }
 
-// ResetParentID resets all changes to the "parent_id" field.
-func (m *ResourceMutation) ResetParentID() {
-	m.parent = nil
-	delete(m.clearedFields, resource.FieldParentID)
+// LastSyncVersionID returns the value of the "last_sync_version_id" field in the mutation.
+func (m *ResourceMutation) LastSyncVersionID() (r string, exists bool) {
+	v := m.last_sync_version_id
+	if v == nil {
+		return
+	}
+	return *v, true
 }
 
-// AddChildIDs adds the "children" edge to the Resource entity by ids.
-func (m *ResourceMutation) AddChildIDs(ids ...int64) {
-	if m.children == nil {
-		m.children = make(map[int64]struct{})
+// OldLastSyncVersionID returns the old "last_sync_version_id" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldLastSyncVersionID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLastSyncVersionID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLastSyncVersionID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLastSyncVersionID: %w", err)
+	}
+	return oldValue.LastSyncVersionID, nil
+}
+
+// ResetLastSyncVersionID resets all changes to the "last_sync_version_id" field.
+func (m *ResourceMutation) ResetLastSyncVersionID() {
+	m.last_sync_version_id = nil
+}
+
+// SetSyncStatus sets the "sync_status" field.
+func (m *ResourceMutation) SetSyncStatus(s string) {
+	m.sync_status = &s
+}
+
+// SyncStatus returns the value of the "sync_status" field in the mutation.
+func (m *ResourceMutation) SyncStatus() (r string, exists bool) {
+	v := m.sync_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSyncStatus returns the old "sync_status" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldSyncStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSyncStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSyncStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSyncStatus: %w", err)
+	}
+	return oldValue.SyncStatus, nil
+}
+
+// ResetSyncStatus resets all changes to the "sync_status" field.
+func (m *ResourceMutation) ResetSyncStatus() {
+	m.sync_status = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *ResourceMutation) SetStatus(r resource.Status) {
+	m.status = &r
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *ResourceMutation) Status() (r resource.Status, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Resource entity.
+// If the Resource object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ResourceMutation) OldStatus(ctx context.Context) (v resource.Status, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *ResourceMutation) ResetStatus() {
+	m.status = nil
+}
+
+// AddViewIDs adds the "views" edge to the View entity by ids.
+func (m *ResourceMutation) AddViewIDs(ids ...int64) {
+	if m.views == nil {
+		m.views = make(map[int64]struct{})
 	}
 	for i := range ids {
-		m.children[ids[i]] = struct{}{}
+		m.views[ids[i]] = struct{}{}
 	}
 }
 
-// ClearChildren clears the "children" edge to the Resource entity.
-func (m *ResourceMutation) ClearChildren() {
-	m.clearedchildren = true
+// ClearViews clears the "views" edge to the View entity.
+func (m *ResourceMutation) ClearViews() {
+	m.clearedviews = true
 }
 
-// ChildrenCleared reports if the "children" edge to the Resource entity was cleared.
-func (m *ResourceMutation) ChildrenCleared() bool {
-	return m.clearedchildren
+// ViewsCleared reports if the "views" edge to the View entity was cleared.
+func (m *ResourceMutation) ViewsCleared() bool {
+	return m.clearedviews
 }
 
-// RemoveChildIDs removes the "children" edge to the Resource entity by IDs.
-func (m *ResourceMutation) RemoveChildIDs(ids ...int64) {
-	if m.removedchildren == nil {
-		m.removedchildren = make(map[int64]struct{})
+// RemoveViewIDs removes the "views" edge to the View entity by IDs.
+func (m *ResourceMutation) RemoveViewIDs(ids ...int64) {
+	if m.removedviews == nil {
+		m.removedviews = make(map[int64]struct{})
 	}
 	for i := range ids {
-		delete(m.children, ids[i])
-		m.removedchildren[ids[i]] = struct{}{}
+		delete(m.views, ids[i])
+		m.removedviews[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedChildren returns the removed IDs of the "children" edge to the Resource entity.
-func (m *ResourceMutation) RemovedChildrenIDs() (ids []int64) {
-	for id := range m.removedchildren {
+// RemovedViews returns the removed IDs of the "views" edge to the View entity.
+func (m *ResourceMutation) RemovedViewsIDs() (ids []int64) {
+	for id := range m.removedviews {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ChildrenIDs returns the "children" edge IDs in the mutation.
-func (m *ResourceMutation) ChildrenIDs() (ids []int64) {
-	for id := range m.children {
+// ViewsIDs returns the "views" edge IDs in the mutation.
+func (m *ResourceMutation) ViewsIDs() (ids []int64) {
+	for id := range m.views {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetChildren resets all changes to the "children" edge.
-func (m *ResourceMutation) ResetChildren() {
-	m.children = nil
-	m.clearedchildren = false
-	m.removedchildren = nil
-}
-
-// ClearParent clears the "parent" edge to the Resource entity.
-func (m *ResourceMutation) ClearParent() {
-	m.clearedparent = true
-	m.clearedFields[resource.FieldParentID] = struct{}{}
-}
-
-// ParentCleared reports if the "parent" edge to the Resource entity was cleared.
-func (m *ResourceMutation) ParentCleared() bool {
-	return m.ParentIDCleared() || m.clearedparent
-}
-
-// ParentIDs returns the "parent" edge IDs in the mutation.
-// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// ParentID instead. It exists only for internal usage by the builders.
-func (m *ResourceMutation) ParentIDs() (ids []int64) {
-	if id := m.parent; id != nil {
-		ids = append(ids, *id)
-	}
-	return
-}
-
-// ResetParent resets all changes to the "parent" edge.
-func (m *ResourceMutation) ResetParent() {
-	m.parent = nil
-	m.clearedparent = false
+// ResetViews resets all changes to the "views" edge.
+func (m *ResourceMutation) ResetViews() {
+	m.views = nil
+	m.clearedviews = false
+	m.removedviews = nil
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by ids.
@@ -7173,60 +6918,6 @@ func (m *ResourceMutation) ResetPermissions() {
 	m.removedpermissions = nil
 }
 
-// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by ids.
-func (m *ResourceMutation) AddPermissionResourceIDs(ids ...int) {
-	if m.permission_resources == nil {
-		m.permission_resources = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.permission_resources[ids[i]] = struct{}{}
-	}
-}
-
-// ClearPermissionResources clears the "permission_resources" edge to the PermissionResource entity.
-func (m *ResourceMutation) ClearPermissionResources() {
-	m.clearedpermission_resources = true
-}
-
-// PermissionResourcesCleared reports if the "permission_resources" edge to the PermissionResource entity was cleared.
-func (m *ResourceMutation) PermissionResourcesCleared() bool {
-	return m.clearedpermission_resources
-}
-
-// RemovePermissionResourceIDs removes the "permission_resources" edge to the PermissionResource entity by IDs.
-func (m *ResourceMutation) RemovePermissionResourceIDs(ids ...int) {
-	if m.removedpermission_resources == nil {
-		m.removedpermission_resources = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.permission_resources, ids[i])
-		m.removedpermission_resources[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedPermissionResources returns the removed IDs of the "permission_resources" edge to the PermissionResource entity.
-func (m *ResourceMutation) RemovedPermissionResourcesIDs() (ids []int) {
-	for id := range m.removedpermission_resources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// PermissionResourcesIDs returns the "permission_resources" edge IDs in the mutation.
-func (m *ResourceMutation) PermissionResourcesIDs() (ids []int) {
-	for id := range m.permission_resources {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetPermissionResources resets all changes to the "permission_resources" edge.
-func (m *ResourceMutation) ResetPermissionResources() {
-	m.permission_resources = nil
-	m.clearedpermission_resources = false
-	m.removedpermission_resources = nil
-}
-
 // Where appends a list predicates to the ResourceMutation builder.
 func (m *ResourceMutation) Where(ps ...predicate.Resource) {
 	m.predicates = append(m.predicates, ps...)
@@ -7261,63 +6952,42 @@ func (m *ResourceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ResourceMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 12)
 	if m.create_time != nil {
 		fields = append(fields, resource.FieldCreateTime)
 	}
 	if m.update_time != nil {
 		fields = append(fields, resource.FieldUpdateTime)
 	}
-	if m.name != nil {
-		fields = append(fields, resource.FieldName)
+	if m.service_name != nil {
+		fields = append(fields, resource.FieldServiceName)
 	}
 	if m.keyword != nil {
 		fields = append(fields, resource.FieldKeyword)
 	}
-	if m.i18n_key != nil {
-		fields = append(fields, resource.FieldI18nKey)
-	}
-	if m._type != nil {
-		fields = append(fields, resource.FieldType)
-	}
-	if m.status != nil {
-		fields = append(fields, resource.FieldStatus)
-	}
 	if m._path != nil {
 		fields = append(fields, resource.FieldPath)
-	}
-	if m.operation != nil {
-		fields = append(fields, resource.FieldOperation)
 	}
 	if m.method != nil {
 		fields = append(fields, resource.FieldMethod)
 	}
-	if m.component != nil {
-		fields = append(fields, resource.FieldComponent)
+	if m.operation != nil {
+		fields = append(fields, resource.FieldOperation)
 	}
-	if m.icon != nil {
-		fields = append(fields, resource.FieldIcon)
+	if m.policy != nil {
+		fields = append(fields, resource.FieldPolicy)
 	}
-	if m.sequence != nil {
-		fields = append(fields, resource.FieldSequence)
+	if m.version_id != nil {
+		fields = append(fields, resource.FieldVersionID)
 	}
-	if m.visible != nil {
-		fields = append(fields, resource.FieldVisible)
+	if m.last_sync_version_id != nil {
+		fields = append(fields, resource.FieldLastSyncVersionID)
 	}
-	if m.level != nil {
-		fields = append(fields, resource.FieldLevel)
+	if m.sync_status != nil {
+		fields = append(fields, resource.FieldSyncStatus)
 	}
-	if m.tree_path != nil {
-		fields = append(fields, resource.FieldTreePath)
-	}
-	if m.properties != nil {
-		fields = append(fields, resource.FieldProperties)
-	}
-	if m.description != nil {
-		fields = append(fields, resource.FieldDescription)
-	}
-	if m.parent != nil {
-		fields = append(fields, resource.FieldParentID)
+	if m.status != nil {
+		fields = append(fields, resource.FieldStatus)
 	}
 	return fields
 }
@@ -7331,40 +7001,26 @@ func (m *ResourceMutation) Field(name string) (ent.Value, bool) {
 		return m.CreateTime()
 	case resource.FieldUpdateTime:
 		return m.UpdateTime()
-	case resource.FieldName:
-		return m.Name()
+	case resource.FieldServiceName:
+		return m.ServiceName()
 	case resource.FieldKeyword:
 		return m.Keyword()
-	case resource.FieldI18nKey:
-		return m.I18nKey()
-	case resource.FieldType:
-		return m.GetType()
-	case resource.FieldStatus:
-		return m.Status()
 	case resource.FieldPath:
 		return m.Path()
-	case resource.FieldOperation:
-		return m.Operation()
 	case resource.FieldMethod:
 		return m.Method()
-	case resource.FieldComponent:
-		return m.Component()
-	case resource.FieldIcon:
-		return m.Icon()
-	case resource.FieldSequence:
-		return m.Sequence()
-	case resource.FieldVisible:
-		return m.Visible()
-	case resource.FieldLevel:
-		return m.Level()
-	case resource.FieldTreePath:
-		return m.TreePath()
-	case resource.FieldProperties:
-		return m.Properties()
-	case resource.FieldDescription:
-		return m.Description()
-	case resource.FieldParentID:
-		return m.ParentID()
+	case resource.FieldOperation:
+		return m.Operation()
+	case resource.FieldPolicy:
+		return m.Policy()
+	case resource.FieldVersionID:
+		return m.VersionID()
+	case resource.FieldLastSyncVersionID:
+		return m.LastSyncVersionID()
+	case resource.FieldSyncStatus:
+		return m.SyncStatus()
+	case resource.FieldStatus:
+		return m.Status()
 	}
 	return nil, false
 }
@@ -7378,40 +7034,26 @@ func (m *ResourceMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldCreateTime(ctx)
 	case resource.FieldUpdateTime:
 		return m.OldUpdateTime(ctx)
-	case resource.FieldName:
-		return m.OldName(ctx)
+	case resource.FieldServiceName:
+		return m.OldServiceName(ctx)
 	case resource.FieldKeyword:
 		return m.OldKeyword(ctx)
-	case resource.FieldI18nKey:
-		return m.OldI18nKey(ctx)
-	case resource.FieldType:
-		return m.OldType(ctx)
-	case resource.FieldStatus:
-		return m.OldStatus(ctx)
 	case resource.FieldPath:
 		return m.OldPath(ctx)
-	case resource.FieldOperation:
-		return m.OldOperation(ctx)
 	case resource.FieldMethod:
 		return m.OldMethod(ctx)
-	case resource.FieldComponent:
-		return m.OldComponent(ctx)
-	case resource.FieldIcon:
-		return m.OldIcon(ctx)
-	case resource.FieldSequence:
-		return m.OldSequence(ctx)
-	case resource.FieldVisible:
-		return m.OldVisible(ctx)
-	case resource.FieldLevel:
-		return m.OldLevel(ctx)
-	case resource.FieldTreePath:
-		return m.OldTreePath(ctx)
-	case resource.FieldProperties:
-		return m.OldProperties(ctx)
-	case resource.FieldDescription:
-		return m.OldDescription(ctx)
-	case resource.FieldParentID:
-		return m.OldParentID(ctx)
+	case resource.FieldOperation:
+		return m.OldOperation(ctx)
+	case resource.FieldPolicy:
+		return m.OldPolicy(ctx)
+	case resource.FieldVersionID:
+		return m.OldVersionID(ctx)
+	case resource.FieldLastSyncVersionID:
+		return m.OldLastSyncVersionID(ctx)
+	case resource.FieldSyncStatus:
+		return m.OldSyncStatus(ctx)
+	case resource.FieldStatus:
+		return m.OldStatus(ctx)
 	}
 	return nil, fmt.Errorf("unknown Resource field %s", name)
 }
@@ -7435,12 +7077,12 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUpdateTime(v)
 		return nil
-	case resource.FieldName:
+	case resource.FieldServiceName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetName(v)
+		m.SetServiceName(v)
 		return nil
 	case resource.FieldKeyword:
 		v, ok := value.(string)
@@ -7449,40 +7091,12 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetKeyword(v)
 		return nil
-	case resource.FieldI18nKey:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetI18nKey(v)
-		return nil
-	case resource.FieldType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetType(v)
-		return nil
-	case resource.FieldStatus:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetStatus(v)
-		return nil
 	case resource.FieldPath:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPath(v)
-		return nil
-	case resource.FieldOperation:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetOperation(v)
 		return nil
 	case resource.FieldMethod:
 		v, ok := value.(string)
@@ -7491,68 +7105,47 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetMethod(v)
 		return nil
-	case resource.FieldComponent:
+	case resource.FieldOperation:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetComponent(v)
+		m.SetOperation(v)
 		return nil
-	case resource.FieldIcon:
+	case resource.FieldPolicy:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetIcon(v)
+		m.SetPolicy(v)
 		return nil
-	case resource.FieldSequence:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSequence(v)
-		return nil
-	case resource.FieldVisible:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetVisible(v)
-		return nil
-	case resource.FieldLevel:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLevel(v)
-		return nil
-	case resource.FieldTreePath:
+	case resource.FieldVersionID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetTreePath(v)
+		m.SetVersionID(v)
 		return nil
-	case resource.FieldProperties:
-		v, ok := value.(map[string]string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetProperties(v)
-		return nil
-	case resource.FieldDescription:
+	case resource.FieldLastSyncVersionID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDescription(v)
+		m.SetLastSyncVersionID(v)
 		return nil
-	case resource.FieldParentID:
-		v, ok := value.(int64)
+	case resource.FieldSyncStatus:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetParentID(v)
+		m.SetSyncStatus(v)
+		return nil
+	case resource.FieldStatus:
+		v, ok := value.(resource.Status)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Resource field %s", name)
@@ -7561,31 +7154,13 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *ResourceMutation) AddedFields() []string {
-	var fields []string
-	if m.addstatus != nil {
-		fields = append(fields, resource.FieldStatus)
-	}
-	if m.addsequence != nil {
-		fields = append(fields, resource.FieldSequence)
-	}
-	if m.addlevel != nil {
-		fields = append(fields, resource.FieldLevel)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case resource.FieldStatus:
-		return m.AddedStatus()
-	case resource.FieldSequence:
-		return m.AddedSequence()
-	case resource.FieldLevel:
-		return m.AddedLevel()
-	}
 	return nil, false
 }
 
@@ -7594,27 +7169,6 @@ func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ResourceMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case resource.FieldStatus:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddStatus(v)
-		return nil
-	case resource.FieldSequence:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddSequence(v)
-		return nil
-	case resource.FieldLevel:
-		v, ok := value.(int8)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddLevel(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Resource numeric field %s", name)
 }
@@ -7623,11 +7177,14 @@ func (m *ResourceMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ResourceMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(resource.FieldProperties) {
-		fields = append(fields, resource.FieldProperties)
+	if m.FieldCleared(resource.FieldPath) {
+		fields = append(fields, resource.FieldPath)
 	}
-	if m.FieldCleared(resource.FieldParentID) {
-		fields = append(fields, resource.FieldParentID)
+	if m.FieldCleared(resource.FieldMethod) {
+		fields = append(fields, resource.FieldMethod)
+	}
+	if m.FieldCleared(resource.FieldOperation) {
+		fields = append(fields, resource.FieldOperation)
 	}
 	return fields
 }
@@ -7643,11 +7200,14 @@ func (m *ResourceMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ResourceMutation) ClearField(name string) error {
 	switch name {
-	case resource.FieldProperties:
-		m.ClearProperties()
+	case resource.FieldPath:
+		m.ClearPath()
 		return nil
-	case resource.FieldParentID:
-		m.ClearParentID()
+	case resource.FieldMethod:
+		m.ClearMethod()
+		return nil
+	case resource.FieldOperation:
+		m.ClearOperation()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource nullable field %s", name)
@@ -7663,56 +7223,35 @@ func (m *ResourceMutation) ResetField(name string) error {
 	case resource.FieldUpdateTime:
 		m.ResetUpdateTime()
 		return nil
-	case resource.FieldName:
-		m.ResetName()
+	case resource.FieldServiceName:
+		m.ResetServiceName()
 		return nil
 	case resource.FieldKeyword:
 		m.ResetKeyword()
 		return nil
-	case resource.FieldI18nKey:
-		m.ResetI18nKey()
-		return nil
-	case resource.FieldType:
-		m.ResetType()
-		return nil
-	case resource.FieldStatus:
-		m.ResetStatus()
-		return nil
 	case resource.FieldPath:
 		m.ResetPath()
-		return nil
-	case resource.FieldOperation:
-		m.ResetOperation()
 		return nil
 	case resource.FieldMethod:
 		m.ResetMethod()
 		return nil
-	case resource.FieldComponent:
-		m.ResetComponent()
+	case resource.FieldOperation:
+		m.ResetOperation()
 		return nil
-	case resource.FieldIcon:
-		m.ResetIcon()
+	case resource.FieldPolicy:
+		m.ResetPolicy()
 		return nil
-	case resource.FieldSequence:
-		m.ResetSequence()
+	case resource.FieldVersionID:
+		m.ResetVersionID()
 		return nil
-	case resource.FieldVisible:
-		m.ResetVisible()
+	case resource.FieldLastSyncVersionID:
+		m.ResetLastSyncVersionID()
 		return nil
-	case resource.FieldLevel:
-		m.ResetLevel()
+	case resource.FieldSyncStatus:
+		m.ResetSyncStatus()
 		return nil
-	case resource.FieldTreePath:
-		m.ResetTreePath()
-		return nil
-	case resource.FieldProperties:
-		m.ResetProperties()
-		return nil
-	case resource.FieldDescription:
-		m.ResetDescription()
-		return nil
-	case resource.FieldParentID:
-		m.ResetParentID()
+	case resource.FieldStatus:
+		m.ResetStatus()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource field %s", name)
@@ -7720,18 +7259,12 @@ func (m *ResourceMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ResourceMutation) AddedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.children != nil {
-		edges = append(edges, resource.EdgeChildren)
-	}
-	if m.parent != nil {
-		edges = append(edges, resource.EdgeParent)
+	edges := make([]string, 0, 2)
+	if m.views != nil {
+		edges = append(edges, resource.EdgeViews)
 	}
 	if m.permissions != nil {
 		edges = append(edges, resource.EdgePermissions)
-	}
-	if m.permission_resources != nil {
-		edges = append(edges, resource.EdgePermissionResources)
 	}
 	return edges
 }
@@ -7740,25 +7273,15 @@ func (m *ResourceMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *ResourceMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case resource.EdgeChildren:
-		ids := make([]ent.Value, 0, len(m.children))
-		for id := range m.children {
+	case resource.EdgeViews:
+		ids := make([]ent.Value, 0, len(m.views))
+		for id := range m.views {
 			ids = append(ids, id)
 		}
 		return ids
-	case resource.EdgeParent:
-		if id := m.parent; id != nil {
-			return []ent.Value{*id}
-		}
 	case resource.EdgePermissions:
 		ids := make([]ent.Value, 0, len(m.permissions))
 		for id := range m.permissions {
-			ids = append(ids, id)
-		}
-		return ids
-	case resource.EdgePermissionResources:
-		ids := make([]ent.Value, 0, len(m.permission_resources))
-		for id := range m.permission_resources {
 			ids = append(ids, id)
 		}
 		return ids
@@ -7768,15 +7291,12 @@ func (m *ResourceMutation) AddedIDs(name string) []ent.Value {
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ResourceMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.removedchildren != nil {
-		edges = append(edges, resource.EdgeChildren)
+	edges := make([]string, 0, 2)
+	if m.removedviews != nil {
+		edges = append(edges, resource.EdgeViews)
 	}
 	if m.removedpermissions != nil {
 		edges = append(edges, resource.EdgePermissions)
-	}
-	if m.removedpermission_resources != nil {
-		edges = append(edges, resource.EdgePermissionResources)
 	}
 	return edges
 }
@@ -7785,9 +7305,9 @@ func (m *ResourceMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *ResourceMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case resource.EdgeChildren:
-		ids := make([]ent.Value, 0, len(m.removedchildren))
-		for id := range m.removedchildren {
+	case resource.EdgeViews:
+		ids := make([]ent.Value, 0, len(m.removedviews))
+		for id := range m.removedviews {
 			ids = append(ids, id)
 		}
 		return ids
@@ -7797,30 +7317,18 @@ func (m *ResourceMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
-	case resource.EdgePermissionResources:
-		ids := make([]ent.Value, 0, len(m.removedpermission_resources))
-		for id := range m.removedpermission_resources {
-			ids = append(ids, id)
-		}
-		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ResourceMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 4)
-	if m.clearedchildren {
-		edges = append(edges, resource.EdgeChildren)
-	}
-	if m.clearedparent {
-		edges = append(edges, resource.EdgeParent)
+	edges := make([]string, 0, 2)
+	if m.clearedviews {
+		edges = append(edges, resource.EdgeViews)
 	}
 	if m.clearedpermissions {
 		edges = append(edges, resource.EdgePermissions)
-	}
-	if m.clearedpermission_resources {
-		edges = append(edges, resource.EdgePermissionResources)
 	}
 	return edges
 }
@@ -7829,14 +7337,10 @@ func (m *ResourceMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *ResourceMutation) EdgeCleared(name string) bool {
 	switch name {
-	case resource.EdgeChildren:
-		return m.clearedchildren
-	case resource.EdgeParent:
-		return m.clearedparent
+	case resource.EdgeViews:
+		return m.clearedviews
 	case resource.EdgePermissions:
 		return m.clearedpermissions
-	case resource.EdgePermissionResources:
-		return m.clearedpermission_resources
 	}
 	return false
 }
@@ -7845,9 +7349,6 @@ func (m *ResourceMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *ResourceMutation) ClearEdge(name string) error {
 	switch name {
-	case resource.EdgeParent:
-		m.ClearParent()
-		return nil
 	}
 	return fmt.Errorf("unknown Resource unique edge %s", name)
 }
@@ -7856,17 +7357,11 @@ func (m *ResourceMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *ResourceMutation) ResetEdge(name string) error {
 	switch name {
-	case resource.EdgeChildren:
-		m.ResetChildren()
-		return nil
-	case resource.EdgeParent:
-		m.ResetParent()
+	case resource.EdgeViews:
+		m.ResetViews()
 		return nil
 	case resource.EdgePermissions:
 		m.ResetPermissions()
-		return nil
-	case resource.EdgePermissionResources:
-		m.ResetPermissionResources()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource edge %s", name)
@@ -13436,4 +12931,1350 @@ func (m *UserRoleMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown UserRole edge %s", name)
+}
+
+// ViewMutation represents an operation that mutates the View nodes in the graph.
+type ViewMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *int64
+	create_time        *time.Time
+	update_time        *time.Time
+	keyword            *string
+	scope              *string
+	name               *string
+	_type              *string
+	component          *string
+	_path              *string
+	icon               *string
+	visible            *bool
+	sequence           *int
+	addsequence        *int
+	clearedFields      map[string]struct{}
+	parent             *int64
+	clearedparent      bool
+	children           map[int64]struct{}
+	removedchildren    map[int64]struct{}
+	clearedchildren    bool
+	resources          map[int64]struct{}
+	removedresources   map[int64]struct{}
+	clearedresources   bool
+	permissions        map[int64]struct{}
+	removedpermissions map[int64]struct{}
+	clearedpermissions bool
+	done               bool
+	oldValue           func(context.Context) (*View, error)
+	predicates         []predicate.View
+}
+
+var _ ent.Mutation = (*ViewMutation)(nil)
+
+// viewOption allows management of the mutation configuration using functional options.
+type viewOption func(*ViewMutation)
+
+// newViewMutation creates new mutation for the View entity.
+func newViewMutation(c config, op Op, opts ...viewOption) *ViewMutation {
+	m := &ViewMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeView,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withViewID sets the ID field of the mutation.
+func withViewID(id int64) viewOption {
+	return func(m *ViewMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *View
+		)
+		m.oldValue = func(ctx context.Context) (*View, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().View.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withView sets the old View of the mutation.
+func withView(node *View) viewOption {
+	return func(m *ViewMutation) {
+		m.oldValue = func(context.Context) (*View, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ViewMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ViewMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of View entities.
+func (m *ViewMutation) SetID(id int64) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ViewMutation) ID() (id int64, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ViewMutation) IDs(ctx context.Context) ([]int64, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int64{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().View.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreateTime sets the "create_time" field.
+func (m *ViewMutation) SetCreateTime(t time.Time) {
+	m.create_time = &t
+}
+
+// CreateTime returns the value of the "create_time" field in the mutation.
+func (m *ViewMutation) CreateTime() (r time.Time, exists bool) {
+	v := m.create_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreateTime returns the old "create_time" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldCreateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreateTime: %w", err)
+	}
+	return oldValue.CreateTime, nil
+}
+
+// ResetCreateTime resets all changes to the "create_time" field.
+func (m *ViewMutation) ResetCreateTime() {
+	m.create_time = nil
+}
+
+// SetUpdateTime sets the "update_time" field.
+func (m *ViewMutation) SetUpdateTime(t time.Time) {
+	m.update_time = &t
+}
+
+// UpdateTime returns the value of the "update_time" field in the mutation.
+func (m *ViewMutation) UpdateTime() (r time.Time, exists bool) {
+	v := m.update_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdateTime returns the old "update_time" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldUpdateTime(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdateTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdateTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdateTime: %w", err)
+	}
+	return oldValue.UpdateTime, nil
+}
+
+// ResetUpdateTime resets all changes to the "update_time" field.
+func (m *ViewMutation) ResetUpdateTime() {
+	m.update_time = nil
+}
+
+// SetParentID sets the "parent_id" field.
+func (m *ViewMutation) SetParentID(i int64) {
+	m.parent = &i
+}
+
+// ParentID returns the value of the "parent_id" field in the mutation.
+func (m *ViewMutation) ParentID() (r int64, exists bool) {
+	v := m.parent
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldParentID returns the old "parent_id" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldParentID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldParentID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldParentID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldParentID: %w", err)
+	}
+	return oldValue.ParentID, nil
+}
+
+// ClearParentID clears the value of the "parent_id" field.
+func (m *ViewMutation) ClearParentID() {
+	m.parent = nil
+	m.clearedFields[view.FieldParentID] = struct{}{}
+}
+
+// ParentIDCleared returns if the "parent_id" field was cleared in this mutation.
+func (m *ViewMutation) ParentIDCleared() bool {
+	_, ok := m.clearedFields[view.FieldParentID]
+	return ok
+}
+
+// ResetParentID resets all changes to the "parent_id" field.
+func (m *ViewMutation) ResetParentID() {
+	m.parent = nil
+	delete(m.clearedFields, view.FieldParentID)
+}
+
+// SetKeyword sets the "keyword" field.
+func (m *ViewMutation) SetKeyword(s string) {
+	m.keyword = &s
+}
+
+// Keyword returns the value of the "keyword" field in the mutation.
+func (m *ViewMutation) Keyword() (r string, exists bool) {
+	v := m.keyword
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKeyword returns the old "keyword" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldKeyword(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKeyword is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKeyword requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKeyword: %w", err)
+	}
+	return oldValue.Keyword, nil
+}
+
+// ResetKeyword resets all changes to the "keyword" field.
+func (m *ViewMutation) ResetKeyword() {
+	m.keyword = nil
+}
+
+// SetScope sets the "scope" field.
+func (m *ViewMutation) SetScope(s string) {
+	m.scope = &s
+}
+
+// Scope returns the value of the "scope" field in the mutation.
+func (m *ViewMutation) Scope() (r string, exists bool) {
+	v := m.scope
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScope returns the old "scope" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldScope(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScope is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScope requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScope: %w", err)
+	}
+	return oldValue.Scope, nil
+}
+
+// ResetScope resets all changes to the "scope" field.
+func (m *ViewMutation) ResetScope() {
+	m.scope = nil
+}
+
+// SetName sets the "name" field.
+func (m *ViewMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *ViewMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *ViewMutation) ResetName() {
+	m.name = nil
+}
+
+// SetType sets the "type" field.
+func (m *ViewMutation) SetType(s string) {
+	m._type = &s
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *ViewMutation) GetType() (r string, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *ViewMutation) ResetType() {
+	m._type = nil
+}
+
+// SetComponent sets the "component" field.
+func (m *ViewMutation) SetComponent(s string) {
+	m.component = &s
+}
+
+// Component returns the value of the "component" field in the mutation.
+func (m *ViewMutation) Component() (r string, exists bool) {
+	v := m.component
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldComponent returns the old "component" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldComponent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldComponent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldComponent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldComponent: %w", err)
+	}
+	return oldValue.Component, nil
+}
+
+// ClearComponent clears the value of the "component" field.
+func (m *ViewMutation) ClearComponent() {
+	m.component = nil
+	m.clearedFields[view.FieldComponent] = struct{}{}
+}
+
+// ComponentCleared returns if the "component" field was cleared in this mutation.
+func (m *ViewMutation) ComponentCleared() bool {
+	_, ok := m.clearedFields[view.FieldComponent]
+	return ok
+}
+
+// ResetComponent resets all changes to the "component" field.
+func (m *ViewMutation) ResetComponent() {
+	m.component = nil
+	delete(m.clearedFields, view.FieldComponent)
+}
+
+// SetPath sets the "path" field.
+func (m *ViewMutation) SetPath(s string) {
+	m._path = &s
+}
+
+// Path returns the value of the "path" field in the mutation.
+func (m *ViewMutation) Path() (r string, exists bool) {
+	v := m._path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPath returns the old "path" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldPath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPath: %w", err)
+	}
+	return oldValue.Path, nil
+}
+
+// ClearPath clears the value of the "path" field.
+func (m *ViewMutation) ClearPath() {
+	m._path = nil
+	m.clearedFields[view.FieldPath] = struct{}{}
+}
+
+// PathCleared returns if the "path" field was cleared in this mutation.
+func (m *ViewMutation) PathCleared() bool {
+	_, ok := m.clearedFields[view.FieldPath]
+	return ok
+}
+
+// ResetPath resets all changes to the "path" field.
+func (m *ViewMutation) ResetPath() {
+	m._path = nil
+	delete(m.clearedFields, view.FieldPath)
+}
+
+// SetIcon sets the "icon" field.
+func (m *ViewMutation) SetIcon(s string) {
+	m.icon = &s
+}
+
+// Icon returns the value of the "icon" field in the mutation.
+func (m *ViewMutation) Icon() (r string, exists bool) {
+	v := m.icon
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIcon returns the old "icon" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldIcon(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIcon is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIcon requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIcon: %w", err)
+	}
+	return oldValue.Icon, nil
+}
+
+// ClearIcon clears the value of the "icon" field.
+func (m *ViewMutation) ClearIcon() {
+	m.icon = nil
+	m.clearedFields[view.FieldIcon] = struct{}{}
+}
+
+// IconCleared returns if the "icon" field was cleared in this mutation.
+func (m *ViewMutation) IconCleared() bool {
+	_, ok := m.clearedFields[view.FieldIcon]
+	return ok
+}
+
+// ResetIcon resets all changes to the "icon" field.
+func (m *ViewMutation) ResetIcon() {
+	m.icon = nil
+	delete(m.clearedFields, view.FieldIcon)
+}
+
+// SetVisible sets the "visible" field.
+func (m *ViewMutation) SetVisible(b bool) {
+	m.visible = &b
+}
+
+// Visible returns the value of the "visible" field in the mutation.
+func (m *ViewMutation) Visible() (r bool, exists bool) {
+	v := m.visible
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldVisible returns the old "visible" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldVisible(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldVisible is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldVisible requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldVisible: %w", err)
+	}
+	return oldValue.Visible, nil
+}
+
+// ResetVisible resets all changes to the "visible" field.
+func (m *ViewMutation) ResetVisible() {
+	m.visible = nil
+}
+
+// SetSequence sets the "sequence" field.
+func (m *ViewMutation) SetSequence(i int) {
+	m.sequence = &i
+	m.addsequence = nil
+}
+
+// Sequence returns the value of the "sequence" field in the mutation.
+func (m *ViewMutation) Sequence() (r int, exists bool) {
+	v := m.sequence
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSequence returns the old "sequence" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldSequence(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSequence is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSequence requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSequence: %w", err)
+	}
+	return oldValue.Sequence, nil
+}
+
+// AddSequence adds i to the "sequence" field.
+func (m *ViewMutation) AddSequence(i int) {
+	if m.addsequence != nil {
+		*m.addsequence += i
+	} else {
+		m.addsequence = &i
+	}
+}
+
+// AddedSequence returns the value that was added to the "sequence" field in this mutation.
+func (m *ViewMutation) AddedSequence() (r int, exists bool) {
+	v := m.addsequence
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSequence resets all changes to the "sequence" field.
+func (m *ViewMutation) ResetSequence() {
+	m.sequence = nil
+	m.addsequence = nil
+}
+
+// ClearParent clears the "parent" edge to the View entity.
+func (m *ViewMutation) ClearParent() {
+	m.clearedparent = true
+	m.clearedFields[view.FieldParentID] = struct{}{}
+}
+
+// ParentCleared reports if the "parent" edge to the View entity was cleared.
+func (m *ViewMutation) ParentCleared() bool {
+	return m.ParentIDCleared() || m.clearedparent
+}
+
+// ParentIDs returns the "parent" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ParentID instead. It exists only for internal usage by the builders.
+func (m *ViewMutation) ParentIDs() (ids []int64) {
+	if id := m.parent; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetParent resets all changes to the "parent" edge.
+func (m *ViewMutation) ResetParent() {
+	m.parent = nil
+	m.clearedparent = false
+}
+
+// AddChildIDs adds the "children" edge to the View entity by ids.
+func (m *ViewMutation) AddChildIDs(ids ...int64) {
+	if m.children == nil {
+		m.children = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.children[ids[i]] = struct{}{}
+	}
+}
+
+// ClearChildren clears the "children" edge to the View entity.
+func (m *ViewMutation) ClearChildren() {
+	m.clearedchildren = true
+}
+
+// ChildrenCleared reports if the "children" edge to the View entity was cleared.
+func (m *ViewMutation) ChildrenCleared() bool {
+	return m.clearedchildren
+}
+
+// RemoveChildIDs removes the "children" edge to the View entity by IDs.
+func (m *ViewMutation) RemoveChildIDs(ids ...int64) {
+	if m.removedchildren == nil {
+		m.removedchildren = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.children, ids[i])
+		m.removedchildren[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedChildren returns the removed IDs of the "children" edge to the View entity.
+func (m *ViewMutation) RemovedChildrenIDs() (ids []int64) {
+	for id := range m.removedchildren {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ChildrenIDs returns the "children" edge IDs in the mutation.
+func (m *ViewMutation) ChildrenIDs() (ids []int64) {
+	for id := range m.children {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetChildren resets all changes to the "children" edge.
+func (m *ViewMutation) ResetChildren() {
+	m.children = nil
+	m.clearedchildren = false
+	m.removedchildren = nil
+}
+
+// AddResourceIDs adds the "resources" edge to the Resource entity by ids.
+func (m *ViewMutation) AddResourceIDs(ids ...int64) {
+	if m.resources == nil {
+		m.resources = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.resources[ids[i]] = struct{}{}
+	}
+}
+
+// ClearResources clears the "resources" edge to the Resource entity.
+func (m *ViewMutation) ClearResources() {
+	m.clearedresources = true
+}
+
+// ResourcesCleared reports if the "resources" edge to the Resource entity was cleared.
+func (m *ViewMutation) ResourcesCleared() bool {
+	return m.clearedresources
+}
+
+// RemoveResourceIDs removes the "resources" edge to the Resource entity by IDs.
+func (m *ViewMutation) RemoveResourceIDs(ids ...int64) {
+	if m.removedresources == nil {
+		m.removedresources = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.resources, ids[i])
+		m.removedresources[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedResources returns the removed IDs of the "resources" edge to the Resource entity.
+func (m *ViewMutation) RemovedResourcesIDs() (ids []int64) {
+	for id := range m.removedresources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResourcesIDs returns the "resources" edge IDs in the mutation.
+func (m *ViewMutation) ResourcesIDs() (ids []int64) {
+	for id := range m.resources {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetResources resets all changes to the "resources" edge.
+func (m *ViewMutation) ResetResources() {
+	m.resources = nil
+	m.clearedresources = false
+	m.removedresources = nil
+}
+
+// AddPermissionIDs adds the "permissions" edge to the Permission entity by ids.
+func (m *ViewMutation) AddPermissionIDs(ids ...int64) {
+	if m.permissions == nil {
+		m.permissions = make(map[int64]struct{})
+	}
+	for i := range ids {
+		m.permissions[ids[i]] = struct{}{}
+	}
+}
+
+// ClearPermissions clears the "permissions" edge to the Permission entity.
+func (m *ViewMutation) ClearPermissions() {
+	m.clearedpermissions = true
+}
+
+// PermissionsCleared reports if the "permissions" edge to the Permission entity was cleared.
+func (m *ViewMutation) PermissionsCleared() bool {
+	return m.clearedpermissions
+}
+
+// RemovePermissionIDs removes the "permissions" edge to the Permission entity by IDs.
+func (m *ViewMutation) RemovePermissionIDs(ids ...int64) {
+	if m.removedpermissions == nil {
+		m.removedpermissions = make(map[int64]struct{})
+	}
+	for i := range ids {
+		delete(m.permissions, ids[i])
+		m.removedpermissions[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedPermissions returns the removed IDs of the "permissions" edge to the Permission entity.
+func (m *ViewMutation) RemovedPermissionsIDs() (ids []int64) {
+	for id := range m.removedpermissions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// PermissionsIDs returns the "permissions" edge IDs in the mutation.
+func (m *ViewMutation) PermissionsIDs() (ids []int64) {
+	for id := range m.permissions {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetPermissions resets all changes to the "permissions" edge.
+func (m *ViewMutation) ResetPermissions() {
+	m.permissions = nil
+	m.clearedpermissions = false
+	m.removedpermissions = nil
+}
+
+// Where appends a list predicates to the ViewMutation builder.
+func (m *ViewMutation) Where(ps ...predicate.View) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ViewMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ViewMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.View, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ViewMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ViewMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (View).
+func (m *ViewMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ViewMutation) Fields() []string {
+	fields := make([]string, 0, 12)
+	if m.create_time != nil {
+		fields = append(fields, view.FieldCreateTime)
+	}
+	if m.update_time != nil {
+		fields = append(fields, view.FieldUpdateTime)
+	}
+	if m.parent != nil {
+		fields = append(fields, view.FieldParentID)
+	}
+	if m.keyword != nil {
+		fields = append(fields, view.FieldKeyword)
+	}
+	if m.scope != nil {
+		fields = append(fields, view.FieldScope)
+	}
+	if m.name != nil {
+		fields = append(fields, view.FieldName)
+	}
+	if m._type != nil {
+		fields = append(fields, view.FieldType)
+	}
+	if m.component != nil {
+		fields = append(fields, view.FieldComponent)
+	}
+	if m._path != nil {
+		fields = append(fields, view.FieldPath)
+	}
+	if m.icon != nil {
+		fields = append(fields, view.FieldIcon)
+	}
+	if m.visible != nil {
+		fields = append(fields, view.FieldVisible)
+	}
+	if m.sequence != nil {
+		fields = append(fields, view.FieldSequence)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ViewMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case view.FieldCreateTime:
+		return m.CreateTime()
+	case view.FieldUpdateTime:
+		return m.UpdateTime()
+	case view.FieldParentID:
+		return m.ParentID()
+	case view.FieldKeyword:
+		return m.Keyword()
+	case view.FieldScope:
+		return m.Scope()
+	case view.FieldName:
+		return m.Name()
+	case view.FieldType:
+		return m.GetType()
+	case view.FieldComponent:
+		return m.Component()
+	case view.FieldPath:
+		return m.Path()
+	case view.FieldIcon:
+		return m.Icon()
+	case view.FieldVisible:
+		return m.Visible()
+	case view.FieldSequence:
+		return m.Sequence()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ViewMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case view.FieldCreateTime:
+		return m.OldCreateTime(ctx)
+	case view.FieldUpdateTime:
+		return m.OldUpdateTime(ctx)
+	case view.FieldParentID:
+		return m.OldParentID(ctx)
+	case view.FieldKeyword:
+		return m.OldKeyword(ctx)
+	case view.FieldScope:
+		return m.OldScope(ctx)
+	case view.FieldName:
+		return m.OldName(ctx)
+	case view.FieldType:
+		return m.OldType(ctx)
+	case view.FieldComponent:
+		return m.OldComponent(ctx)
+	case view.FieldPath:
+		return m.OldPath(ctx)
+	case view.FieldIcon:
+		return m.OldIcon(ctx)
+	case view.FieldVisible:
+		return m.OldVisible(ctx)
+	case view.FieldSequence:
+		return m.OldSequence(ctx)
+	}
+	return nil, fmt.Errorf("unknown View field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ViewMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case view.FieldCreateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreateTime(v)
+		return nil
+	case view.FieldUpdateTime:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdateTime(v)
+		return nil
+	case view.FieldParentID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetParentID(v)
+		return nil
+	case view.FieldKeyword:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKeyword(v)
+		return nil
+	case view.FieldScope:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScope(v)
+		return nil
+	case view.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case view.FieldType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case view.FieldComponent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetComponent(v)
+		return nil
+	case view.FieldPath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPath(v)
+		return nil
+	case view.FieldIcon:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIcon(v)
+		return nil
+	case view.FieldVisible:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetVisible(v)
+		return nil
+	case view.FieldSequence:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSequence(v)
+		return nil
+	}
+	return fmt.Errorf("unknown View field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ViewMutation) AddedFields() []string {
+	var fields []string
+	if m.addsequence != nil {
+		fields = append(fields, view.FieldSequence)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ViewMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case view.FieldSequence:
+		return m.AddedSequence()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ViewMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case view.FieldSequence:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSequence(v)
+		return nil
+	}
+	return fmt.Errorf("unknown View numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ViewMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(view.FieldParentID) {
+		fields = append(fields, view.FieldParentID)
+	}
+	if m.FieldCleared(view.FieldComponent) {
+		fields = append(fields, view.FieldComponent)
+	}
+	if m.FieldCleared(view.FieldPath) {
+		fields = append(fields, view.FieldPath)
+	}
+	if m.FieldCleared(view.FieldIcon) {
+		fields = append(fields, view.FieldIcon)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ViewMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ViewMutation) ClearField(name string) error {
+	switch name {
+	case view.FieldParentID:
+		m.ClearParentID()
+		return nil
+	case view.FieldComponent:
+		m.ClearComponent()
+		return nil
+	case view.FieldPath:
+		m.ClearPath()
+		return nil
+	case view.FieldIcon:
+		m.ClearIcon()
+		return nil
+	}
+	return fmt.Errorf("unknown View nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ViewMutation) ResetField(name string) error {
+	switch name {
+	case view.FieldCreateTime:
+		m.ResetCreateTime()
+		return nil
+	case view.FieldUpdateTime:
+		m.ResetUpdateTime()
+		return nil
+	case view.FieldParentID:
+		m.ResetParentID()
+		return nil
+	case view.FieldKeyword:
+		m.ResetKeyword()
+		return nil
+	case view.FieldScope:
+		m.ResetScope()
+		return nil
+	case view.FieldName:
+		m.ResetName()
+		return nil
+	case view.FieldType:
+		m.ResetType()
+		return nil
+	case view.FieldComponent:
+		m.ResetComponent()
+		return nil
+	case view.FieldPath:
+		m.ResetPath()
+		return nil
+	case view.FieldIcon:
+		m.ResetIcon()
+		return nil
+	case view.FieldVisible:
+		m.ResetVisible()
+		return nil
+	case view.FieldSequence:
+		m.ResetSequence()
+		return nil
+	}
+	return fmt.Errorf("unknown View field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ViewMutation) AddedEdges() []string {
+	edges := make([]string, 0, 4)
+	if m.parent != nil {
+		edges = append(edges, view.EdgeParent)
+	}
+	if m.children != nil {
+		edges = append(edges, view.EdgeChildren)
+	}
+	if m.resources != nil {
+		edges = append(edges, view.EdgeResources)
+	}
+	if m.permissions != nil {
+		edges = append(edges, view.EdgePermissions)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ViewMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case view.EdgeParent:
+		if id := m.parent; id != nil {
+			return []ent.Value{*id}
+		}
+	case view.EdgeChildren:
+		ids := make([]ent.Value, 0, len(m.children))
+		for id := range m.children {
+			ids = append(ids, id)
+		}
+		return ids
+	case view.EdgeResources:
+		ids := make([]ent.Value, 0, len(m.resources))
+		for id := range m.resources {
+			ids = append(ids, id)
+		}
+		return ids
+	case view.EdgePermissions:
+		ids := make([]ent.Value, 0, len(m.permissions))
+		for id := range m.permissions {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ViewMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 4)
+	if m.removedchildren != nil {
+		edges = append(edges, view.EdgeChildren)
+	}
+	if m.removedresources != nil {
+		edges = append(edges, view.EdgeResources)
+	}
+	if m.removedpermissions != nil {
+		edges = append(edges, view.EdgePermissions)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ViewMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case view.EdgeChildren:
+		ids := make([]ent.Value, 0, len(m.removedchildren))
+		for id := range m.removedchildren {
+			ids = append(ids, id)
+		}
+		return ids
+	case view.EdgeResources:
+		ids := make([]ent.Value, 0, len(m.removedresources))
+		for id := range m.removedresources {
+			ids = append(ids, id)
+		}
+		return ids
+	case view.EdgePermissions:
+		ids := make([]ent.Value, 0, len(m.removedpermissions))
+		for id := range m.removedpermissions {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ViewMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 4)
+	if m.clearedparent {
+		edges = append(edges, view.EdgeParent)
+	}
+	if m.clearedchildren {
+		edges = append(edges, view.EdgeChildren)
+	}
+	if m.clearedresources {
+		edges = append(edges, view.EdgeResources)
+	}
+	if m.clearedpermissions {
+		edges = append(edges, view.EdgePermissions)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ViewMutation) EdgeCleared(name string) bool {
+	switch name {
+	case view.EdgeParent:
+		return m.clearedparent
+	case view.EdgeChildren:
+		return m.clearedchildren
+	case view.EdgeResources:
+		return m.clearedresources
+	case view.EdgePermissions:
+		return m.clearedpermissions
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ViewMutation) ClearEdge(name string) error {
+	switch name {
+	case view.EdgeParent:
+		m.ClearParent()
+		return nil
+	}
+	return fmt.Errorf("unknown View unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ViewMutation) ResetEdge(name string) error {
+	switch name {
+	case view.EdgeParent:
+		m.ResetParent()
+		return nil
+	case view.EdgeChildren:
+		m.ResetChildren()
+		return nil
+	case view.EdgeResources:
+		m.ResetResources()
+		return nil
+	case view.EdgePermissions:
+		m.ResetPermissions()
+		return nil
+	}
+	return fmt.Errorf("unknown View edge %s", name)
 }

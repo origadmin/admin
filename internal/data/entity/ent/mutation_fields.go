@@ -18,6 +18,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 )
 
 // SetFields sets the values of the fields with the given names. It returns an
@@ -537,88 +538,56 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case resource.FieldName:
+		case resource.FieldServiceName:
 			// check string with sql.NullString if it is empty
-			if input.Name != "" {
-				m.SetName(input.Name)
+			if input.ServiceName != "" {
+				m.SetServiceName(input.ServiceName)
 			}
 		case resource.FieldKeyword:
 			// check string with sql.NullString if it is empty
 			if input.Keyword != "" {
 				m.SetKeyword(input.Keyword)
 			}
-		case resource.FieldI18nKey:
-			// check string with sql.NullString if it is empty
-			if input.I18nKey != "" {
-				m.SetI18nKey(input.I18nKey)
-			}
-		case resource.FieldType:
-			// check string with sql.NullString if it is empty
-			if input.Type != "" {
-				m.SetType(input.Type)
-			}
-		case resource.FieldStatus:
-			// check int8 with sql.NullInt64 if it is zero
-			if input.Status != 0 {
-				m.SetStatus(input.Status)
-			}
 		case resource.FieldPath:
 			// check string with sql.NullString if it is empty
 			if input.Path != "" {
 				m.SetPath(input.Path)
-			}
-		case resource.FieldOperation:
-			// check string with sql.NullString if it is empty
-			if input.Operation != "" {
-				m.SetOperation(input.Operation)
 			}
 		case resource.FieldMethod:
 			// check string with sql.NullString if it is empty
 			if input.Method != "" {
 				m.SetMethod(input.Method)
 			}
-		case resource.FieldComponent:
+		case resource.FieldOperation:
 			// check string with sql.NullString if it is empty
-			if input.Component != "" {
-				m.SetComponent(input.Component)
+			if input.Operation != "" {
+				m.SetOperation(input.Operation)
 			}
-		case resource.FieldIcon:
+		case resource.FieldPolicy:
 			// check string with sql.NullString if it is empty
-			if input.Icon != "" {
-				m.SetIcon(input.Icon)
+			if input.Policy != "" {
+				m.SetPolicy(input.Policy)
 			}
-		case resource.FieldSequence:
-			// check int with sql.NullInt64 if it is zero
-			if input.Sequence != 0 {
-				m.SetSequence(input.Sequence)
-			}
-		case resource.FieldVisible:
-			if input.Visible {
-				m.SetVisible(input.Visible)
-			}
-		case resource.FieldLevel:
-			// check int8 with sql.NullInt64 if it is zero
-			if input.Level != 0 {
-				m.SetLevel(input.Level)
-			}
-		case resource.FieldTreePath:
+		case resource.FieldVersionID:
 			// check string with sql.NullString if it is empty
-			if input.TreePath != "" {
-				m.SetTreePath(input.TreePath)
+			if input.VersionID != "" {
+				m.SetVersionID(input.VersionID)
 			}
-		case resource.FieldProperties:
-			if len(input.Properties) > 0 {
-				m.SetProperties(input.Properties)
-			}
-		case resource.FieldDescription:
+		case resource.FieldLastSyncVersionID:
 			// check string with sql.NullString if it is empty
-			if input.Description != "" {
-				m.SetDescription(input.Description)
+			if input.LastSyncVersionID != "" {
+				m.SetLastSyncVersionID(input.LastSyncVersionID)
 			}
-		case resource.FieldParentID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ParentID != 0 {
-				m.SetParentID(input.ParentID)
+		case resource.FieldSyncStatus:
+			// check string with sql.NullString if it is empty
+			if input.SyncStatus != "" {
+				m.SetSyncStatus(input.SyncStatus)
+			}
+		case resource.FieldStatus:
+			var zero resource.Status
+			// check resource.Status with sql.NullString if it is empty
+			if input.Status != zero {
+				m.SetStatus(input.Status)
 			}
 		case resource.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -642,40 +611,26 @@ func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) 
 			m.SetCreateTime(input.CreateTime)
 		case resource.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case resource.FieldName:
-			m.SetName(input.Name)
+		case resource.FieldServiceName:
+			m.SetServiceName(input.ServiceName)
 		case resource.FieldKeyword:
 			m.SetKeyword(input.Keyword)
-		case resource.FieldI18nKey:
-			m.SetI18nKey(input.I18nKey)
-		case resource.FieldType:
-			m.SetType(input.Type)
-		case resource.FieldStatus:
-			m.SetStatus(input.Status)
 		case resource.FieldPath:
 			m.SetPath(input.Path)
-		case resource.FieldOperation:
-			m.SetOperation(input.Operation)
 		case resource.FieldMethod:
 			m.SetMethod(input.Method)
-		case resource.FieldComponent:
-			m.SetComponent(input.Component)
-		case resource.FieldIcon:
-			m.SetIcon(input.Icon)
-		case resource.FieldSequence:
-			m.SetSequence(input.Sequence)
-		case resource.FieldVisible:
-			m.SetVisible(input.Visible)
-		case resource.FieldLevel:
-			m.SetLevel(input.Level)
-		case resource.FieldTreePath:
-			m.SetTreePath(input.TreePath)
-		case resource.FieldProperties:
-			m.SetProperties(input.Properties)
-		case resource.FieldDescription:
-			m.SetDescription(input.Description)
-		case resource.FieldParentID:
-			m.SetParentID(input.ParentID)
+		case resource.FieldOperation:
+			m.SetOperation(input.Operation)
+		case resource.FieldPolicy:
+			m.SetPolicy(input.Policy)
+		case resource.FieldVersionID:
+			m.SetVersionID(input.VersionID)
+		case resource.FieldLastSyncVersionID:
+			m.SetLastSyncVersionID(input.LastSyncVersionID)
+		case resource.FieldSyncStatus:
+			m.SetSyncStatus(input.SyncStatus)
+		case resource.FieldStatus:
+			m.SetStatus(input.Status)
 		case resource.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -1149,6 +1104,120 @@ func (m *UserRoleMutation) SetFieldsWithZero(input *UserRole, fields ...string) 
 			m.SetRoleID(input.RoleID)
 		default:
 			return fmt.Errorf("unknown UserRole field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ViewMutation) SetFields(input *View, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case view.FieldCreateTime:
+			if input.CreateTime.Unix() != 0 {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case view.FieldUpdateTime:
+			if input.UpdateTime.Unix() != 0 {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case view.FieldParentID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ParentID != 0 {
+				m.SetParentID(input.ParentID)
+			}
+		case view.FieldKeyword:
+			// check string with sql.NullString if it is empty
+			if input.Keyword != "" {
+				m.SetKeyword(input.Keyword)
+			}
+		case view.FieldScope:
+			// check string with sql.NullString if it is empty
+			if input.Scope != "" {
+				m.SetScope(input.Scope)
+			}
+		case view.FieldName:
+			// check string with sql.NullString if it is empty
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case view.FieldType:
+			// check string with sql.NullString if it is empty
+			if input.Type != "" {
+				m.SetType(input.Type)
+			}
+		case view.FieldComponent:
+			// check string with sql.NullString if it is empty
+			if input.Component != "" {
+				m.SetComponent(input.Component)
+			}
+		case view.FieldPath:
+			// check string with sql.NullString if it is empty
+			if input.Path != "" {
+				m.SetPath(input.Path)
+			}
+		case view.FieldIcon:
+			// check string with sql.NullString if it is empty
+			if input.Icon != "" {
+				m.SetIcon(input.Icon)
+			}
+		case view.FieldVisible:
+			if input.Visible {
+				m.SetVisible(input.Visible)
+			}
+		case view.FieldSequence:
+			// check int with sql.NullInt64 if it is zero
+			if input.Sequence != 0 {
+				m.SetSequence(input.Sequence)
+			}
+		case view.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown View field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ViewMutation) SetFieldsWithZero(input *View, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case view.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case view.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case view.FieldParentID:
+			m.SetParentID(input.ParentID)
+		case view.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case view.FieldScope:
+			m.SetScope(input.Scope)
+		case view.FieldName:
+			m.SetName(input.Name)
+		case view.FieldType:
+			m.SetType(input.Type)
+		case view.FieldComponent:
+			m.SetComponent(input.Component)
+		case view.FieldPath:
+			m.SetPath(input.Path)
+		case view.FieldIcon:
+			m.SetIcon(input.Icon)
+		case view.FieldVisible:
+			m.SetVisible(input.Visible)
+		case view.FieldSequence:
+			m.SetSequence(input.Sequence)
+		case view.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown View field %s", fields[i])
 		}
 	}
 	return nil

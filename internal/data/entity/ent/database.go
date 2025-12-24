@@ -179,6 +179,11 @@ func (db *Database) UserRole(ctx context.Context) *UserRoleClient {
 	return db.Client(ctx).UserRole
 }
 
+// View is the client for interacting with the View builders.
+func (db *Database) View(ctx context.Context) *ViewClient {
+	return db.Client(ctx).View
+}
+
 func (db *Database) Migration(ctx context.Context, opts ...schema.MigrateOption) error {
 	return db.Client(ctx).Schema.Create(ctx, opts...)
 }

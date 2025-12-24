@@ -25,6 +25,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -65,6 +66,8 @@ type Client struct {
 	UserPosition *UserPositionClient
 	// UserRole is the client for interacting with the UserRole builders.
 	UserRole *UserRoleClient
+	// View is the client for interacting with the View builders.
+	View *ViewClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -90,6 +93,7 @@ func (c *Client) init() {
 	c.UserDepartment = NewUserDepartmentClient(c.config)
 	c.UserPosition = NewUserPositionClient(c.config)
 	c.UserRole = NewUserRoleClient(c.config)
+	c.View = NewViewClient(c.config)
 }
 
 type (
@@ -196,6 +200,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		UserDepartment:     NewUserDepartmentClient(cfg),
 		UserPosition:       NewUserPositionClient(cfg),
 		UserRole:           NewUserRoleClient(cfg),
+		View:               NewViewClient(cfg),
 	}, nil
 }
 
@@ -229,6 +234,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		UserDepartment:     NewUserDepartmentClient(cfg),
 		UserPosition:       NewUserPositionClient(cfg),
 		UserRole:           NewUserRoleClient(cfg),
+		View:               NewViewClient(cfg),
 	}, nil
 }
 
@@ -260,7 +266,7 @@ func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole,
+		c.UserDepartment, c.UserPosition, c.UserRole, c.View,
 	} {
 		n.Use(hooks...)
 	}
@@ -272,7 +278,7 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole,
+		c.UserDepartment, c.UserPosition, c.UserRole, c.View,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -309,6 +315,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.UserPosition.mutate(ctx, m)
 	case *UserRoleMutation:
 		return c.UserRole.mutate(ctx, m)
+	case *ViewMutation:
+		return c.View.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -942,6 +950,22 @@ func (c *PermissionClient) QueryResources(_m *Permission) *ResourceQuery {
 			sqlgraph.From(permission.Table, permission.FieldID, id),
 			sqlgraph.To(resource.Table, resource.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryViews queries the views edge of a Permission.
+func (c *PermissionClient) QueryViews(_m *Permission) *ViewQuery {
+	query := (&ViewClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, permission.ViewsTable, permission.ViewsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -1673,31 +1697,15 @@ func (c *ResourceClient) GetX(ctx context.Context, id int64) *Resource {
 	return obj
 }
 
-// QueryChildren queries the children edge of a Resource.
-func (c *ResourceClient) QueryChildren(_m *Resource) *ResourceQuery {
-	query := (&ResourceClient{config: c.config}).Query()
+// QueryViews queries the views edge of a Resource.
+func (c *ResourceClient) QueryViews(_m *Resource) *ViewQuery {
+	query := (&ViewClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := _m.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(resource.Table, resource.FieldID, id),
-			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, resource.ChildrenTable, resource.ChildrenColumn),
-		)
-		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryParent queries the parent edge of a Resource.
-func (c *ResourceClient) QueryParent(_m *Resource) *ResourceQuery {
-	query := (&ResourceClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := _m.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(resource.Table, resource.FieldID, id),
-			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, resource.ParentTable, resource.ParentColumn),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, resource.ViewsTable, resource.ViewsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -1714,22 +1722,6 @@ func (c *ResourceClient) QueryPermissions(_m *Resource) *PermissionQuery {
 			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(permission.Table, permission.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, resource.PermissionsTable, resource.PermissionsPrimaryKey...),
-		)
-		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryPermissionResources queries the permission_resources edge of a Resource.
-func (c *ResourceClient) QueryPermissionResources(_m *Resource) *PermissionResourceQuery {
-	query := (&PermissionResourceClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := _m.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(resource.Table, resource.FieldID, id),
-			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, resource.PermissionResourcesTable, resource.PermissionResourcesColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -2850,16 +2842,213 @@ func (c *UserRoleClient) mutate(ctx context.Context, m *UserRoleMutation) (Value
 	}
 }
 
+// ViewClient is a client for the View schema.
+type ViewClient struct {
+	config
+}
+
+// NewViewClient returns a client for the View from the given config.
+func NewViewClient(c config) *ViewClient {
+	return &ViewClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `view.Hooks(f(g(h())))`.
+func (c *ViewClient) Use(hooks ...Hook) {
+	c.hooks.View = append(c.hooks.View, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `view.Intercept(f(g(h())))`.
+func (c *ViewClient) Intercept(interceptors ...Interceptor) {
+	c.inters.View = append(c.inters.View, interceptors...)
+}
+
+// Create returns a builder for creating a View entity.
+func (c *ViewClient) Create() *ViewCreate {
+	mutation := newViewMutation(c.config, OpCreate)
+	return &ViewCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of View entities.
+func (c *ViewClient) CreateBulk(builders ...*ViewCreate) *ViewCreateBulk {
+	return &ViewCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ViewClient) MapCreateBulk(slice any, setFunc func(*ViewCreate, int)) *ViewCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ViewCreateBulk{err: fmt.Errorf("calling to ViewClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ViewCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ViewCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for View.
+func (c *ViewClient) Update() *ViewUpdate {
+	mutation := newViewMutation(c.config, OpUpdate)
+	return &ViewUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ViewClient) UpdateOne(_m *View) *ViewUpdateOne {
+	mutation := newViewMutation(c.config, OpUpdateOne, withView(_m))
+	return &ViewUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ViewClient) UpdateOneID(id int64) *ViewUpdateOne {
+	mutation := newViewMutation(c.config, OpUpdateOne, withViewID(id))
+	return &ViewUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for View.
+func (c *ViewClient) Delete() *ViewDelete {
+	mutation := newViewMutation(c.config, OpDelete)
+	return &ViewDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ViewClient) DeleteOne(_m *View) *ViewDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ViewClient) DeleteOneID(id int64) *ViewDeleteOne {
+	builder := c.Delete().Where(view.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ViewDeleteOne{builder}
+}
+
+// Query returns a query builder for View.
+func (c *ViewClient) Query() *ViewQuery {
+	return &ViewQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeView},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a View entity by its id.
+func (c *ViewClient) Get(ctx context.Context, id int64) (*View, error) {
+	return c.Query().Where(view.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ViewClient) GetX(ctx context.Context, id int64) *View {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryParent queries the parent edge of a View.
+func (c *ViewClient) QueryParent(_m *View) *ViewQuery {
+	query := (&ViewClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(view.Table, view.FieldID, id),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, view.ParentTable, view.ParentColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryChildren queries the children edge of a View.
+func (c *ViewClient) QueryChildren(_m *View) *ViewQuery {
+	query := (&ViewClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(view.Table, view.FieldID, id),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, view.ChildrenTable, view.ChildrenColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryResources queries the resources edge of a View.
+func (c *ViewClient) QueryResources(_m *View) *ResourceQuery {
+	query := (&ResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(view.Table, view.FieldID, id),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, view.ResourcesTable, view.ResourcesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermissions queries the permissions edge of a View.
+func (c *ViewClient) QueryPermissions(_m *View) *PermissionQuery {
+	query := (&PermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(view.Table, view.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, view.PermissionsTable, view.PermissionsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ViewClient) Hooks() []Hook {
+	return c.hooks.View
+}
+
+// Interceptors returns the client interceptors.
+func (c *ViewClient) Interceptors() []Interceptor {
+	return c.inters.View
+}
+
+func (c *ViewClient) mutate(ctx context.Context, m *ViewMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ViewCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ViewUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ViewUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ViewDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown View mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
 		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserRole []ent.Hook
+		UserPosition, UserRole, View []ent.Hook
 	}
 	inters struct {
 		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserRole []ent.Interceptor
+		UserPosition, UserRole, View []ent.Interceptor
 	}
 )

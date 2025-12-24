@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -33,6 +34,7 @@ type PermissionQuery struct {
 	withRoles               *RoleQuery
 	withPositions           *PositionQuery
 	withResources           *ResourceQuery
+	withViews               *ViewQuery
 	withRolePermissions     *RolePermissionQuery
 	withPositionPermissions *PositionPermissionQuery
 	withPermissionResources *PermissionResourceQuery
@@ -132,6 +134,28 @@ func (_q *PermissionQuery) QueryResources() *ResourceQuery {
 			sqlgraph.From(permission.Table, permission.FieldID, selector),
 			sqlgraph.To(resource.Table, resource.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, permission.ResourcesTable, permission.ResourcesPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryViews chains the current query on the "views" edge.
+func (_q *PermissionQuery) QueryViews() *ViewQuery {
+	query := (&ViewClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, selector),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, permission.ViewsTable, permission.ViewsPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -400,6 +424,7 @@ func (_q *PermissionQuery) Clone() *PermissionQuery {
 		withRoles:               _q.withRoles.Clone(),
 		withPositions:           _q.withPositions.Clone(),
 		withResources:           _q.withResources.Clone(),
+		withViews:               _q.withViews.Clone(),
 		withRolePermissions:     _q.withRolePermissions.Clone(),
 		withPositionPermissions: _q.withPositionPermissions.Clone(),
 		withPermissionResources: _q.withPermissionResources.Clone(),
@@ -440,6 +465,17 @@ func (_q *PermissionQuery) WithResources(opts ...func(*ResourceQuery)) *Permissi
 		opt(query)
 	}
 	_q.withResources = query
+	return _q
+}
+
+// WithViews tells the query-builder to eager-load the nodes that are connected to
+// the "views" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *PermissionQuery) WithViews(opts ...func(*ViewQuery)) *PermissionQuery {
+	query := (&ViewClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withViews = query
 	return _q
 }
 
@@ -554,10 +590,11 @@ func (_q *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 	var (
 		nodes       = []*Permission{}
 		_spec       = _q.querySpec()
-		loadedTypes = [6]bool{
+		loadedTypes = [7]bool{
 			_q.withRoles != nil,
 			_q.withPositions != nil,
 			_q.withResources != nil,
+			_q.withViews != nil,
 			_q.withRolePermissions != nil,
 			_q.withPositionPermissions != nil,
 			_q.withPermissionResources != nil,
@@ -602,6 +639,13 @@ func (_q *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 		if err := _q.loadResources(ctx, query, nodes,
 			func(n *Permission) { n.Edges.Resources = []*Resource{} },
 			func(n *Permission, e *Resource) { n.Edges.Resources = append(n.Edges.Resources, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withViews; query != nil {
+		if err := _q.loadViews(ctx, query, nodes,
+			func(n *Permission) { n.Edges.Views = []*View{} },
+			func(n *Permission, e *View) { n.Edges.Views = append(n.Edges.Views, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -809,6 +853,67 @@ func (_q *PermissionQuery) loadResources(ctx context.Context, query *ResourceQue
 		nodes, ok := nids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected "resources" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (_q *PermissionQuery) loadViews(ctx context.Context, query *ViewQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *View)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int64]*Permission)
+	nids := make(map[int64]map[*Permission]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(permission.ViewsTable)
+		s.Join(joinT).On(s.C(view.FieldID), joinT.C(permission.ViewsPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(permission.ViewsPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(permission.ViewsPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullInt64).Int64
+				inValue := values[1].(*sql.NullInt64).Int64
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Permission]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*View](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "views" node returned %v`, n.ID)
 		}
 		for kn := range nodes {
 			assign(kn, n)

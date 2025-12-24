@@ -7,9 +7,9 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
-	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -37,16 +37,16 @@ func (_u *ResourceUpdate) SetUpdateTime(v time.Time) *ResourceUpdate {
 	return _u
 }
 
-// SetName sets the "name" field.
-func (_u *ResourceUpdate) SetName(v string) *ResourceUpdate {
-	_u.mutation.SetName(v)
+// SetServiceName sets the "service_name" field.
+func (_u *ResourceUpdate) SetServiceName(v string) *ResourceUpdate {
+	_u.mutation.SetServiceName(v)
 	return _u
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableName(v *string) *ResourceUpdate {
+// SetNillableServiceName sets the "service_name" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableServiceName(v *string) *ResourceUpdate {
 	if v != nil {
-		_u.SetName(*v)
+		_u.SetServiceName(*v)
 	}
 	return _u
 }
@@ -65,55 +65,6 @@ func (_u *ResourceUpdate) SetNillableKeyword(v *string) *ResourceUpdate {
 	return _u
 }
 
-// SetI18nKey sets the "i18n_key" field.
-func (_u *ResourceUpdate) SetI18nKey(v string) *ResourceUpdate {
-	_u.mutation.SetI18nKey(v)
-	return _u
-}
-
-// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableI18nKey(v *string) *ResourceUpdate {
-	if v != nil {
-		_u.SetI18nKey(*v)
-	}
-	return _u
-}
-
-// SetType sets the "type" field.
-func (_u *ResourceUpdate) SetType(v string) *ResourceUpdate {
-	_u.mutation.SetType(v)
-	return _u
-}
-
-// SetNillableType sets the "type" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableType(v *string) *ResourceUpdate {
-	if v != nil {
-		_u.SetType(*v)
-	}
-	return _u
-}
-
-// SetStatus sets the "status" field.
-func (_u *ResourceUpdate) SetStatus(v int8) *ResourceUpdate {
-	_u.mutation.ResetStatus()
-	_u.mutation.SetStatus(v)
-	return _u
-}
-
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableStatus(v *int8) *ResourceUpdate {
-	if v != nil {
-		_u.SetStatus(*v)
-	}
-	return _u
-}
-
-// AddStatus adds value to the "status" field.
-func (_u *ResourceUpdate) AddStatus(v int8) *ResourceUpdate {
-	_u.mutation.AddStatus(v)
-	return _u
-}
-
 // SetPath sets the "path" field.
 func (_u *ResourceUpdate) SetPath(v string) *ResourceUpdate {
 	_u.mutation.SetPath(v)
@@ -128,17 +79,9 @@ func (_u *ResourceUpdate) SetNillablePath(v *string) *ResourceUpdate {
 	return _u
 }
 
-// SetOperation sets the "operation" field.
-func (_u *ResourceUpdate) SetOperation(v string) *ResourceUpdate {
-	_u.mutation.SetOperation(v)
-	return _u
-}
-
-// SetNillableOperation sets the "operation" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableOperation(v *string) *ResourceUpdate {
-	if v != nil {
-		_u.SetOperation(*v)
-	}
+// ClearPath clears the value of the "path" field.
+func (_u *ResourceUpdate) ClearPath() *ResourceUpdate {
+	_u.mutation.ClearPath()
 	return _u
 }
 
@@ -156,168 +99,115 @@ func (_u *ResourceUpdate) SetNillableMethod(v *string) *ResourceUpdate {
 	return _u
 }
 
-// SetComponent sets the "component" field.
-func (_u *ResourceUpdate) SetComponent(v string) *ResourceUpdate {
-	_u.mutation.SetComponent(v)
+// ClearMethod clears the value of the "method" field.
+func (_u *ResourceUpdate) ClearMethod() *ResourceUpdate {
+	_u.mutation.ClearMethod()
 	return _u
 }
 
-// SetNillableComponent sets the "component" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableComponent(v *string) *ResourceUpdate {
+// SetOperation sets the "operation" field.
+func (_u *ResourceUpdate) SetOperation(v string) *ResourceUpdate {
+	_u.mutation.SetOperation(v)
+	return _u
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableOperation(v *string) *ResourceUpdate {
 	if v != nil {
-		_u.SetComponent(*v)
+		_u.SetOperation(*v)
 	}
 	return _u
 }
 
-// SetIcon sets the "icon" field.
-func (_u *ResourceUpdate) SetIcon(v string) *ResourceUpdate {
-	_u.mutation.SetIcon(v)
+// ClearOperation clears the value of the "operation" field.
+func (_u *ResourceUpdate) ClearOperation() *ResourceUpdate {
+	_u.mutation.ClearOperation()
 	return _u
 }
 
-// SetNillableIcon sets the "icon" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableIcon(v *string) *ResourceUpdate {
+// SetPolicy sets the "policy" field.
+func (_u *ResourceUpdate) SetPolicy(v string) *ResourceUpdate {
+	_u.mutation.SetPolicy(v)
+	return _u
+}
+
+// SetNillablePolicy sets the "policy" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillablePolicy(v *string) *ResourceUpdate {
 	if v != nil {
-		_u.SetIcon(*v)
+		_u.SetPolicy(*v)
 	}
 	return _u
 }
 
-// SetSequence sets the "sequence" field.
-func (_u *ResourceUpdate) SetSequence(v int) *ResourceUpdate {
-	_u.mutation.ResetSequence()
-	_u.mutation.SetSequence(v)
+// SetVersionID sets the "version_id" field.
+func (_u *ResourceUpdate) SetVersionID(v string) *ResourceUpdate {
+	_u.mutation.SetVersionID(v)
 	return _u
 }
 
-// SetNillableSequence sets the "sequence" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableSequence(v *int) *ResourceUpdate {
+// SetNillableVersionID sets the "version_id" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableVersionID(v *string) *ResourceUpdate {
 	if v != nil {
-		_u.SetSequence(*v)
+		_u.SetVersionID(*v)
 	}
 	return _u
 }
 
-// AddSequence adds value to the "sequence" field.
-func (_u *ResourceUpdate) AddSequence(v int) *ResourceUpdate {
-	_u.mutation.AddSequence(v)
+// SetLastSyncVersionID sets the "last_sync_version_id" field.
+func (_u *ResourceUpdate) SetLastSyncVersionID(v string) *ResourceUpdate {
+	_u.mutation.SetLastSyncVersionID(v)
 	return _u
 }
 
-// SetVisible sets the "visible" field.
-func (_u *ResourceUpdate) SetVisible(v bool) *ResourceUpdate {
-	_u.mutation.SetVisible(v)
-	return _u
-}
-
-// SetNillableVisible sets the "visible" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableVisible(v *bool) *ResourceUpdate {
+// SetNillableLastSyncVersionID sets the "last_sync_version_id" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableLastSyncVersionID(v *string) *ResourceUpdate {
 	if v != nil {
-		_u.SetVisible(*v)
+		_u.SetLastSyncVersionID(*v)
 	}
 	return _u
 }
 
-// SetLevel sets the "level" field.
-func (_u *ResourceUpdate) SetLevel(v int8) *ResourceUpdate {
-	_u.mutation.ResetLevel()
-	_u.mutation.SetLevel(v)
+// SetSyncStatus sets the "sync_status" field.
+func (_u *ResourceUpdate) SetSyncStatus(v string) *ResourceUpdate {
+	_u.mutation.SetSyncStatus(v)
 	return _u
 }
 
-// SetNillableLevel sets the "level" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableLevel(v *int8) *ResourceUpdate {
+// SetNillableSyncStatus sets the "sync_status" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableSyncStatus(v *string) *ResourceUpdate {
 	if v != nil {
-		_u.SetLevel(*v)
+		_u.SetSyncStatus(*v)
 	}
 	return _u
 }
 
-// AddLevel adds value to the "level" field.
-func (_u *ResourceUpdate) AddLevel(v int8) *ResourceUpdate {
-	_u.mutation.AddLevel(v)
+// SetStatus sets the "status" field.
+func (_u *ResourceUpdate) SetStatus(v resource.Status) *ResourceUpdate {
+	_u.mutation.SetStatus(v)
 	return _u
 }
 
-// SetTreePath sets the "tree_path" field.
-func (_u *ResourceUpdate) SetTreePath(v string) *ResourceUpdate {
-	_u.mutation.SetTreePath(v)
-	return _u
-}
-
-// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableTreePath(v *string) *ResourceUpdate {
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *ResourceUpdate) SetNillableStatus(v *resource.Status) *ResourceUpdate {
 	if v != nil {
-		_u.SetTreePath(*v)
+		_u.SetStatus(*v)
 	}
 	return _u
 }
 
-// SetProperties sets the "properties" field.
-func (_u *ResourceUpdate) SetProperties(v map[string]string) *ResourceUpdate {
-	_u.mutation.SetProperties(v)
+// AddViewIDs adds the "views" edge to the View entity by IDs.
+func (_u *ResourceUpdate) AddViewIDs(ids ...int64) *ResourceUpdate {
+	_u.mutation.AddViewIDs(ids...)
 	return _u
 }
 
-// ClearProperties clears the value of the "properties" field.
-func (_u *ResourceUpdate) ClearProperties() *ResourceUpdate {
-	_u.mutation.ClearProperties()
-	return _u
-}
-
-// SetDescription sets the "description" field.
-func (_u *ResourceUpdate) SetDescription(v string) *ResourceUpdate {
-	_u.mutation.SetDescription(v)
-	return _u
-}
-
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableDescription(v *string) *ResourceUpdate {
-	if v != nil {
-		_u.SetDescription(*v)
-	}
-	return _u
-}
-
-// SetParentID sets the "parent_id" field.
-func (_u *ResourceUpdate) SetParentID(v int64) *ResourceUpdate {
-	_u.mutation.SetParentID(v)
-	return _u
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableParentID(v *int64) *ResourceUpdate {
-	if v != nil {
-		_u.SetParentID(*v)
-	}
-	return _u
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (_u *ResourceUpdate) ClearParentID() *ResourceUpdate {
-	_u.mutation.ClearParentID()
-	return _u
-}
-
-// AddChildIDs adds the "children" edge to the Resource entity by IDs.
-func (_u *ResourceUpdate) AddChildIDs(ids ...int64) *ResourceUpdate {
-	_u.mutation.AddChildIDs(ids...)
-	return _u
-}
-
-// AddChildren adds the "children" edges to the Resource entity.
-func (_u *ResourceUpdate) AddChildren(v ...*Resource) *ResourceUpdate {
+// AddViews adds the "views" edges to the View entity.
+func (_u *ResourceUpdate) AddViews(v ...*View) *ResourceUpdate {
 	ids := make([]int64, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
-	return _u.AddChildIDs(ids...)
-}
-
-// SetParent sets the "parent" edge to the Resource entity.
-func (_u *ResourceUpdate) SetParent(v *Resource) *ResourceUpdate {
-	return _u.SetParentID(v.ID)
+	return _u.AddViewIDs(ids...)
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
@@ -335,51 +225,30 @@ func (_u *ResourceUpdate) AddPermissions(v ...*Permission) *ResourceUpdate {
 	return _u.AddPermissionIDs(ids...)
 }
 
-// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (_u *ResourceUpdate) AddPermissionResourceIDs(ids ...int) *ResourceUpdate {
-	_u.mutation.AddPermissionResourceIDs(ids...)
-	return _u
-}
-
-// AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
-func (_u *ResourceUpdate) AddPermissionResources(v ...*PermissionResource) *ResourceUpdate {
-	ids := make([]int, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _u.AddPermissionResourceIDs(ids...)
-}
-
 // Mutation returns the ResourceMutation object of the builder.
 func (_u *ResourceUpdate) Mutation() *ResourceMutation {
 	return _u.mutation
 }
 
-// ClearChildren clears all "children" edges to the Resource entity.
-func (_u *ResourceUpdate) ClearChildren() *ResourceUpdate {
-	_u.mutation.ClearChildren()
+// ClearViews clears all "views" edges to the View entity.
+func (_u *ResourceUpdate) ClearViews() *ResourceUpdate {
+	_u.mutation.ClearViews()
 	return _u
 }
 
-// RemoveChildIDs removes the "children" edge to Resource entities by IDs.
-func (_u *ResourceUpdate) RemoveChildIDs(ids ...int64) *ResourceUpdate {
-	_u.mutation.RemoveChildIDs(ids...)
+// RemoveViewIDs removes the "views" edge to View entities by IDs.
+func (_u *ResourceUpdate) RemoveViewIDs(ids ...int64) *ResourceUpdate {
+	_u.mutation.RemoveViewIDs(ids...)
 	return _u
 }
 
-// RemoveChildren removes "children" edges to Resource entities.
-func (_u *ResourceUpdate) RemoveChildren(v ...*Resource) *ResourceUpdate {
+// RemoveViews removes "views" edges to View entities.
+func (_u *ResourceUpdate) RemoveViews(v ...*View) *ResourceUpdate {
 	ids := make([]int64, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
-	return _u.RemoveChildIDs(ids...)
-}
-
-// ClearParent clears the "parent" edge to the Resource entity.
-func (_u *ResourceUpdate) ClearParent() *ResourceUpdate {
-	_u.mutation.ClearParent()
-	return _u
+	return _u.RemoveViewIDs(ids...)
 }
 
 // ClearPermissions clears all "permissions" edges to the Permission entity.
@@ -401,27 +270,6 @@ func (_u *ResourceUpdate) RemovePermissions(v ...*Permission) *ResourceUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemovePermissionIDs(ids...)
-}
-
-// ClearPermissionResources clears all "permission_resources" edges to the PermissionResource entity.
-func (_u *ResourceUpdate) ClearPermissionResources() *ResourceUpdate {
-	_u.mutation.ClearPermissionResources()
-	return _u
-}
-
-// RemovePermissionResourceIDs removes the "permission_resources" edge to PermissionResource entities by IDs.
-func (_u *ResourceUpdate) RemovePermissionResourceIDs(ids ...int) *ResourceUpdate {
-	_u.mutation.RemovePermissionResourceIDs(ids...)
-	return _u
-}
-
-// RemovePermissionResources removes "permission_resources" edges to PermissionResource entities.
-func (_u *ResourceUpdate) RemovePermissionResources(v ...*PermissionResource) *ResourceUpdate {
-	ids := make([]int, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _u.RemovePermissionResourceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -462,64 +310,14 @@ func (_u *ResourceUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ResourceUpdate) check() error {
-	if v, ok := _u.mutation.Name(); ok {
-		if err := resource.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Resource.name": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Keyword(); ok {
 		if err := resource.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.I18nKey(); ok {
-		if err := resource.I18nKeyValidator(v); err != nil {
-			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.GetType(); ok {
-		if err := resource.TypeValidator(v); err != nil {
-			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Path(); ok {
-		if err := resource.PathValidator(v); err != nil {
-			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Operation(); ok {
-		if err := resource.OperationValidator(v); err != nil {
-			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Method(); ok {
-		if err := resource.MethodValidator(v); err != nil {
-			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Component(); ok {
-		if err := resource.ComponentValidator(v); err != nil {
-			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Resource.component": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Icon(); ok {
-		if err := resource.IconValidator(v); err != nil {
-			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Resource.icon": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.TreePath(); ok {
-		if err := resource.TreePathValidator(v); err != nil {
-			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Resource.tree_path": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := resource.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.ParentID(); ok {
-		if err := resource.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Resource.parent_id": %w`, err)}
+	if v, ok := _u.mutation.Status(); ok {
+		if err := resource.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Resource.status": %w`, err)}
 		}
 	}
 	return nil
@@ -546,88 +344,67 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := _u.mutation.Name(); ok {
-		_spec.SetField(resource.FieldName, field.TypeString, value)
+	if value, ok := _u.mutation.ServiceName(); ok {
+		_spec.SetField(resource.FieldServiceName, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Keyword(); ok {
 		_spec.SetField(resource.FieldKeyword, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.I18nKey(); ok {
-		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.GetType(); ok {
-		_spec.SetField(resource.FieldType, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Status(); ok {
-		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := _u.mutation.AddedStatus(); ok {
-		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
-	}
 	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Operation(); ok {
-		_spec.SetField(resource.FieldOperation, field.TypeString, value)
+	if _u.mutation.PathCleared() {
+		_spec.ClearField(resource.FieldPath, field.TypeString)
 	}
 	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Component(); ok {
-		_spec.SetField(resource.FieldComponent, field.TypeString, value)
+	if _u.mutation.MethodCleared() {
+		_spec.ClearField(resource.FieldMethod, field.TypeString)
 	}
-	if value, ok := _u.mutation.Icon(); ok {
-		_spec.SetField(resource.FieldIcon, field.TypeString, value)
+	if value, ok := _u.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Sequence(); ok {
-		_spec.SetField(resource.FieldSequence, field.TypeInt, value)
+	if _u.mutation.OperationCleared() {
+		_spec.ClearField(resource.FieldOperation, field.TypeString)
 	}
-	if value, ok := _u.mutation.AddedSequence(); ok {
-		_spec.AddField(resource.FieldSequence, field.TypeInt, value)
+	if value, ok := _u.mutation.Policy(); ok {
+		_spec.SetField(resource.FieldPolicy, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Visible(); ok {
-		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
+	if value, ok := _u.mutation.VersionID(); ok {
+		_spec.SetField(resource.FieldVersionID, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Level(); ok {
-		_spec.SetField(resource.FieldLevel, field.TypeInt8, value)
+	if value, ok := _u.mutation.LastSyncVersionID(); ok {
+		_spec.SetField(resource.FieldLastSyncVersionID, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.AddedLevel(); ok {
-		_spec.AddField(resource.FieldLevel, field.TypeInt8, value)
+	if value, ok := _u.mutation.SyncStatus(); ok {
+		_spec.SetField(resource.FieldSyncStatus, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.TreePath(); ok {
-		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(resource.FieldStatus, field.TypeEnum, value)
 	}
-	if value, ok := _u.mutation.Properties(); ok {
-		_spec.SetField(resource.FieldProperties, field.TypeJSON, value)
-	}
-	if _u.mutation.PropertiesCleared() {
-		_spec.ClearField(resource.FieldProperties, field.TypeJSON)
-	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(resource.FieldDescription, field.TypeString, value)
-	}
-	if _u.mutation.ChildrenCleared() {
+	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   resource.ChildrenTable,
-			Columns: []string{resource.ChildrenColumn},
-			Bidi:    true,
+			Table:   resource.ViewsTable,
+			Columns: resource.ViewsPrimaryKey,
+			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := _u.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !_u.mutation.ChildrenCleared() {
+	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   resource.ChildrenTable,
-			Columns: []string{resource.ChildrenColumn},
-			Bidi:    true,
+			Table:   resource.ViewsTable,
+			Columns: resource.ViewsPrimaryKey,
+			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -635,44 +412,15 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := _u.mutation.ChildrenIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   resource.ChildrenTable,
-			Columns: []string{resource.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if _u.mutation.ParentCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.ParentTable,
-			Columns: []string{resource.ParentColumn},
+			Table:   resource.ViewsTable,
+			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := _u.mutation.ParentIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.ParentTable,
-			Columns: []string{resource.ParentColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -725,51 +473,6 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if _u.mutation.PermissionResourcesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   resource.PermissionResourcesTable,
-			Columns: []string{resource.PermissionResourcesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := _u.mutation.RemovedPermissionResourcesIDs(); len(nodes) > 0 && !_u.mutation.PermissionResourcesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   resource.PermissionResourcesTable,
-			Columns: []string{resource.PermissionResourcesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := _u.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   resource.PermissionResourcesTable,
-			Columns: []string{resource.PermissionResourcesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	_spec.AddModifiers(_u.modifiers...)
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -798,16 +501,16 @@ func (_u *ResourceUpdateOne) SetUpdateTime(v time.Time) *ResourceUpdateOne {
 	return _u
 }
 
-// SetName sets the "name" field.
-func (_u *ResourceUpdateOne) SetName(v string) *ResourceUpdateOne {
-	_u.mutation.SetName(v)
+// SetServiceName sets the "service_name" field.
+func (_u *ResourceUpdateOne) SetServiceName(v string) *ResourceUpdateOne {
+	_u.mutation.SetServiceName(v)
 	return _u
 }
 
-// SetNillableName sets the "name" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableName(v *string) *ResourceUpdateOne {
+// SetNillableServiceName sets the "service_name" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableServiceName(v *string) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetName(*v)
+		_u.SetServiceName(*v)
 	}
 	return _u
 }
@@ -826,55 +529,6 @@ func (_u *ResourceUpdateOne) SetNillableKeyword(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// SetI18nKey sets the "i18n_key" field.
-func (_u *ResourceUpdateOne) SetI18nKey(v string) *ResourceUpdateOne {
-	_u.mutation.SetI18nKey(v)
-	return _u
-}
-
-// SetNillableI18nKey sets the "i18n_key" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableI18nKey(v *string) *ResourceUpdateOne {
-	if v != nil {
-		_u.SetI18nKey(*v)
-	}
-	return _u
-}
-
-// SetType sets the "type" field.
-func (_u *ResourceUpdateOne) SetType(v string) *ResourceUpdateOne {
-	_u.mutation.SetType(v)
-	return _u
-}
-
-// SetNillableType sets the "type" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableType(v *string) *ResourceUpdateOne {
-	if v != nil {
-		_u.SetType(*v)
-	}
-	return _u
-}
-
-// SetStatus sets the "status" field.
-func (_u *ResourceUpdateOne) SetStatus(v int8) *ResourceUpdateOne {
-	_u.mutation.ResetStatus()
-	_u.mutation.SetStatus(v)
-	return _u
-}
-
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableStatus(v *int8) *ResourceUpdateOne {
-	if v != nil {
-		_u.SetStatus(*v)
-	}
-	return _u
-}
-
-// AddStatus adds value to the "status" field.
-func (_u *ResourceUpdateOne) AddStatus(v int8) *ResourceUpdateOne {
-	_u.mutation.AddStatus(v)
-	return _u
-}
-
 // SetPath sets the "path" field.
 func (_u *ResourceUpdateOne) SetPath(v string) *ResourceUpdateOne {
 	_u.mutation.SetPath(v)
@@ -889,17 +543,9 @@ func (_u *ResourceUpdateOne) SetNillablePath(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// SetOperation sets the "operation" field.
-func (_u *ResourceUpdateOne) SetOperation(v string) *ResourceUpdateOne {
-	_u.mutation.SetOperation(v)
-	return _u
-}
-
-// SetNillableOperation sets the "operation" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableOperation(v *string) *ResourceUpdateOne {
-	if v != nil {
-		_u.SetOperation(*v)
-	}
+// ClearPath clears the value of the "path" field.
+func (_u *ResourceUpdateOne) ClearPath() *ResourceUpdateOne {
+	_u.mutation.ClearPath()
 	return _u
 }
 
@@ -917,168 +563,115 @@ func (_u *ResourceUpdateOne) SetNillableMethod(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// SetComponent sets the "component" field.
-func (_u *ResourceUpdateOne) SetComponent(v string) *ResourceUpdateOne {
-	_u.mutation.SetComponent(v)
+// ClearMethod clears the value of the "method" field.
+func (_u *ResourceUpdateOne) ClearMethod() *ResourceUpdateOne {
+	_u.mutation.ClearMethod()
 	return _u
 }
 
-// SetNillableComponent sets the "component" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableComponent(v *string) *ResourceUpdateOne {
+// SetOperation sets the "operation" field.
+func (_u *ResourceUpdateOne) SetOperation(v string) *ResourceUpdateOne {
+	_u.mutation.SetOperation(v)
+	return _u
+}
+
+// SetNillableOperation sets the "operation" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableOperation(v *string) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetComponent(*v)
+		_u.SetOperation(*v)
 	}
 	return _u
 }
 
-// SetIcon sets the "icon" field.
-func (_u *ResourceUpdateOne) SetIcon(v string) *ResourceUpdateOne {
-	_u.mutation.SetIcon(v)
+// ClearOperation clears the value of the "operation" field.
+func (_u *ResourceUpdateOne) ClearOperation() *ResourceUpdateOne {
+	_u.mutation.ClearOperation()
 	return _u
 }
 
-// SetNillableIcon sets the "icon" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableIcon(v *string) *ResourceUpdateOne {
+// SetPolicy sets the "policy" field.
+func (_u *ResourceUpdateOne) SetPolicy(v string) *ResourceUpdateOne {
+	_u.mutation.SetPolicy(v)
+	return _u
+}
+
+// SetNillablePolicy sets the "policy" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillablePolicy(v *string) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetIcon(*v)
+		_u.SetPolicy(*v)
 	}
 	return _u
 }
 
-// SetSequence sets the "sequence" field.
-func (_u *ResourceUpdateOne) SetSequence(v int) *ResourceUpdateOne {
-	_u.mutation.ResetSequence()
-	_u.mutation.SetSequence(v)
+// SetVersionID sets the "version_id" field.
+func (_u *ResourceUpdateOne) SetVersionID(v string) *ResourceUpdateOne {
+	_u.mutation.SetVersionID(v)
 	return _u
 }
 
-// SetNillableSequence sets the "sequence" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableSequence(v *int) *ResourceUpdateOne {
+// SetNillableVersionID sets the "version_id" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableVersionID(v *string) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetSequence(*v)
+		_u.SetVersionID(*v)
 	}
 	return _u
 }
 
-// AddSequence adds value to the "sequence" field.
-func (_u *ResourceUpdateOne) AddSequence(v int) *ResourceUpdateOne {
-	_u.mutation.AddSequence(v)
+// SetLastSyncVersionID sets the "last_sync_version_id" field.
+func (_u *ResourceUpdateOne) SetLastSyncVersionID(v string) *ResourceUpdateOne {
+	_u.mutation.SetLastSyncVersionID(v)
 	return _u
 }
 
-// SetVisible sets the "visible" field.
-func (_u *ResourceUpdateOne) SetVisible(v bool) *ResourceUpdateOne {
-	_u.mutation.SetVisible(v)
-	return _u
-}
-
-// SetNillableVisible sets the "visible" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableVisible(v *bool) *ResourceUpdateOne {
+// SetNillableLastSyncVersionID sets the "last_sync_version_id" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableLastSyncVersionID(v *string) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetVisible(*v)
+		_u.SetLastSyncVersionID(*v)
 	}
 	return _u
 }
 
-// SetLevel sets the "level" field.
-func (_u *ResourceUpdateOne) SetLevel(v int8) *ResourceUpdateOne {
-	_u.mutation.ResetLevel()
-	_u.mutation.SetLevel(v)
+// SetSyncStatus sets the "sync_status" field.
+func (_u *ResourceUpdateOne) SetSyncStatus(v string) *ResourceUpdateOne {
+	_u.mutation.SetSyncStatus(v)
 	return _u
 }
 
-// SetNillableLevel sets the "level" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableLevel(v *int8) *ResourceUpdateOne {
+// SetNillableSyncStatus sets the "sync_status" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableSyncStatus(v *string) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetLevel(*v)
+		_u.SetSyncStatus(*v)
 	}
 	return _u
 }
 
-// AddLevel adds value to the "level" field.
-func (_u *ResourceUpdateOne) AddLevel(v int8) *ResourceUpdateOne {
-	_u.mutation.AddLevel(v)
+// SetStatus sets the "status" field.
+func (_u *ResourceUpdateOne) SetStatus(v resource.Status) *ResourceUpdateOne {
+	_u.mutation.SetStatus(v)
 	return _u
 }
 
-// SetTreePath sets the "tree_path" field.
-func (_u *ResourceUpdateOne) SetTreePath(v string) *ResourceUpdateOne {
-	_u.mutation.SetTreePath(v)
-	return _u
-}
-
-// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableTreePath(v *string) *ResourceUpdateOne {
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *ResourceUpdateOne) SetNillableStatus(v *resource.Status) *ResourceUpdateOne {
 	if v != nil {
-		_u.SetTreePath(*v)
+		_u.SetStatus(*v)
 	}
 	return _u
 }
 
-// SetProperties sets the "properties" field.
-func (_u *ResourceUpdateOne) SetProperties(v map[string]string) *ResourceUpdateOne {
-	_u.mutation.SetProperties(v)
+// AddViewIDs adds the "views" edge to the View entity by IDs.
+func (_u *ResourceUpdateOne) AddViewIDs(ids ...int64) *ResourceUpdateOne {
+	_u.mutation.AddViewIDs(ids...)
 	return _u
 }
 
-// ClearProperties clears the value of the "properties" field.
-func (_u *ResourceUpdateOne) ClearProperties() *ResourceUpdateOne {
-	_u.mutation.ClearProperties()
-	return _u
-}
-
-// SetDescription sets the "description" field.
-func (_u *ResourceUpdateOne) SetDescription(v string) *ResourceUpdateOne {
-	_u.mutation.SetDescription(v)
-	return _u
-}
-
-// SetNillableDescription sets the "description" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableDescription(v *string) *ResourceUpdateOne {
-	if v != nil {
-		_u.SetDescription(*v)
-	}
-	return _u
-}
-
-// SetParentID sets the "parent_id" field.
-func (_u *ResourceUpdateOne) SetParentID(v int64) *ResourceUpdateOne {
-	_u.mutation.SetParentID(v)
-	return _u
-}
-
-// SetNillableParentID sets the "parent_id" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableParentID(v *int64) *ResourceUpdateOne {
-	if v != nil {
-		_u.SetParentID(*v)
-	}
-	return _u
-}
-
-// ClearParentID clears the value of the "parent_id" field.
-func (_u *ResourceUpdateOne) ClearParentID() *ResourceUpdateOne {
-	_u.mutation.ClearParentID()
-	return _u
-}
-
-// AddChildIDs adds the "children" edge to the Resource entity by IDs.
-func (_u *ResourceUpdateOne) AddChildIDs(ids ...int64) *ResourceUpdateOne {
-	_u.mutation.AddChildIDs(ids...)
-	return _u
-}
-
-// AddChildren adds the "children" edges to the Resource entity.
-func (_u *ResourceUpdateOne) AddChildren(v ...*Resource) *ResourceUpdateOne {
+// AddViews adds the "views" edges to the View entity.
+func (_u *ResourceUpdateOne) AddViews(v ...*View) *ResourceUpdateOne {
 	ids := make([]int64, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
-	return _u.AddChildIDs(ids...)
-}
-
-// SetParent sets the "parent" edge to the Resource entity.
-func (_u *ResourceUpdateOne) SetParent(v *Resource) *ResourceUpdateOne {
-	return _u.SetParentID(v.ID)
+	return _u.AddViewIDs(ids...)
 }
 
 // AddPermissionIDs adds the "permissions" edge to the Permission entity by IDs.
@@ -1096,51 +689,30 @@ func (_u *ResourceUpdateOne) AddPermissions(v ...*Permission) *ResourceUpdateOne
 	return _u.AddPermissionIDs(ids...)
 }
 
-// AddPermissionResourceIDs adds the "permission_resources" edge to the PermissionResource entity by IDs.
-func (_u *ResourceUpdateOne) AddPermissionResourceIDs(ids ...int) *ResourceUpdateOne {
-	_u.mutation.AddPermissionResourceIDs(ids...)
-	return _u
-}
-
-// AddPermissionResources adds the "permission_resources" edges to the PermissionResource entity.
-func (_u *ResourceUpdateOne) AddPermissionResources(v ...*PermissionResource) *ResourceUpdateOne {
-	ids := make([]int, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _u.AddPermissionResourceIDs(ids...)
-}
-
 // Mutation returns the ResourceMutation object of the builder.
 func (_u *ResourceUpdateOne) Mutation() *ResourceMutation {
 	return _u.mutation
 }
 
-// ClearChildren clears all "children" edges to the Resource entity.
-func (_u *ResourceUpdateOne) ClearChildren() *ResourceUpdateOne {
-	_u.mutation.ClearChildren()
+// ClearViews clears all "views" edges to the View entity.
+func (_u *ResourceUpdateOne) ClearViews() *ResourceUpdateOne {
+	_u.mutation.ClearViews()
 	return _u
 }
 
-// RemoveChildIDs removes the "children" edge to Resource entities by IDs.
-func (_u *ResourceUpdateOne) RemoveChildIDs(ids ...int64) *ResourceUpdateOne {
-	_u.mutation.RemoveChildIDs(ids...)
+// RemoveViewIDs removes the "views" edge to View entities by IDs.
+func (_u *ResourceUpdateOne) RemoveViewIDs(ids ...int64) *ResourceUpdateOne {
+	_u.mutation.RemoveViewIDs(ids...)
 	return _u
 }
 
-// RemoveChildren removes "children" edges to Resource entities.
-func (_u *ResourceUpdateOne) RemoveChildren(v ...*Resource) *ResourceUpdateOne {
+// RemoveViews removes "views" edges to View entities.
+func (_u *ResourceUpdateOne) RemoveViews(v ...*View) *ResourceUpdateOne {
 	ids := make([]int64, len(v))
 	for i := range v {
 		ids[i] = v[i].ID
 	}
-	return _u.RemoveChildIDs(ids...)
-}
-
-// ClearParent clears the "parent" edge to the Resource entity.
-func (_u *ResourceUpdateOne) ClearParent() *ResourceUpdateOne {
-	_u.mutation.ClearParent()
-	return _u
+	return _u.RemoveViewIDs(ids...)
 }
 
 // ClearPermissions clears all "permissions" edges to the Permission entity.
@@ -1162,27 +734,6 @@ func (_u *ResourceUpdateOne) RemovePermissions(v ...*Permission) *ResourceUpdate
 		ids[i] = v[i].ID
 	}
 	return _u.RemovePermissionIDs(ids...)
-}
-
-// ClearPermissionResources clears all "permission_resources" edges to the PermissionResource entity.
-func (_u *ResourceUpdateOne) ClearPermissionResources() *ResourceUpdateOne {
-	_u.mutation.ClearPermissionResources()
-	return _u
-}
-
-// RemovePermissionResourceIDs removes the "permission_resources" edge to PermissionResource entities by IDs.
-func (_u *ResourceUpdateOne) RemovePermissionResourceIDs(ids ...int) *ResourceUpdateOne {
-	_u.mutation.RemovePermissionResourceIDs(ids...)
-	return _u
-}
-
-// RemovePermissionResources removes "permission_resources" edges to PermissionResource entities.
-func (_u *ResourceUpdateOne) RemovePermissionResources(v ...*PermissionResource) *ResourceUpdateOne {
-	ids := make([]int, len(v))
-	for i := range v {
-		ids[i] = v[i].ID
-	}
-	return _u.RemovePermissionResourceIDs(ids...)
 }
 
 // Where appends a list predicates to the ResourceUpdate builder.
@@ -1236,64 +787,14 @@ func (_u *ResourceUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ResourceUpdateOne) check() error {
-	if v, ok := _u.mutation.Name(); ok {
-		if err := resource.NameValidator(v); err != nil {
-			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Resource.name": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Keyword(); ok {
 		if err := resource.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.I18nKey(); ok {
-		if err := resource.I18nKeyValidator(v); err != nil {
-			return &ValidationError{Name: "i18n_key", err: fmt.Errorf(`ent: validator failed for field "Resource.i18n_key": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.GetType(); ok {
-		if err := resource.TypeValidator(v); err != nil {
-			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Resource.type": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Path(); ok {
-		if err := resource.PathValidator(v); err != nil {
-			return &ValidationError{Name: "path", err: fmt.Errorf(`ent: validator failed for field "Resource.path": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Operation(); ok {
-		if err := resource.OperationValidator(v); err != nil {
-			return &ValidationError{Name: "operation", err: fmt.Errorf(`ent: validator failed for field "Resource.operation": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Method(); ok {
-		if err := resource.MethodValidator(v); err != nil {
-			return &ValidationError{Name: "method", err: fmt.Errorf(`ent: validator failed for field "Resource.method": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Component(); ok {
-		if err := resource.ComponentValidator(v); err != nil {
-			return &ValidationError{Name: "component", err: fmt.Errorf(`ent: validator failed for field "Resource.component": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Icon(); ok {
-		if err := resource.IconValidator(v); err != nil {
-			return &ValidationError{Name: "icon", err: fmt.Errorf(`ent: validator failed for field "Resource.icon": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.TreePath(); ok {
-		if err := resource.TreePathValidator(v); err != nil {
-			return &ValidationError{Name: "tree_path", err: fmt.Errorf(`ent: validator failed for field "Resource.tree_path": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Description(); ok {
-		if err := resource.DescriptionValidator(v); err != nil {
-			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Resource.description": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.ParentID(); ok {
-		if err := resource.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Resource.parent_id": %w`, err)}
+	if v, ok := _u.mutation.Status(); ok {
+		if err := resource.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Resource.status": %w`, err)}
 		}
 	}
 	return nil
@@ -1337,88 +838,67 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 	if value, ok := _u.mutation.UpdateTime(); ok {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 	}
-	if value, ok := _u.mutation.Name(); ok {
-		_spec.SetField(resource.FieldName, field.TypeString, value)
+	if value, ok := _u.mutation.ServiceName(); ok {
+		_spec.SetField(resource.FieldServiceName, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Keyword(); ok {
 		_spec.SetField(resource.FieldKeyword, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.I18nKey(); ok {
-		_spec.SetField(resource.FieldI18nKey, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.GetType(); ok {
-		_spec.SetField(resource.FieldType, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Status(); ok {
-		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
-	}
-	if value, ok := _u.mutation.AddedStatus(); ok {
-		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
-	}
 	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Operation(); ok {
-		_spec.SetField(resource.FieldOperation, field.TypeString, value)
+	if _u.mutation.PathCleared() {
+		_spec.ClearField(resource.FieldPath, field.TypeString)
 	}
 	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Component(); ok {
-		_spec.SetField(resource.FieldComponent, field.TypeString, value)
+	if _u.mutation.MethodCleared() {
+		_spec.ClearField(resource.FieldMethod, field.TypeString)
 	}
-	if value, ok := _u.mutation.Icon(); ok {
-		_spec.SetField(resource.FieldIcon, field.TypeString, value)
+	if value, ok := _u.mutation.Operation(); ok {
+		_spec.SetField(resource.FieldOperation, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Sequence(); ok {
-		_spec.SetField(resource.FieldSequence, field.TypeInt, value)
+	if _u.mutation.OperationCleared() {
+		_spec.ClearField(resource.FieldOperation, field.TypeString)
 	}
-	if value, ok := _u.mutation.AddedSequence(); ok {
-		_spec.AddField(resource.FieldSequence, field.TypeInt, value)
+	if value, ok := _u.mutation.Policy(); ok {
+		_spec.SetField(resource.FieldPolicy, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Visible(); ok {
-		_spec.SetField(resource.FieldVisible, field.TypeBool, value)
+	if value, ok := _u.mutation.VersionID(); ok {
+		_spec.SetField(resource.FieldVersionID, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Level(); ok {
-		_spec.SetField(resource.FieldLevel, field.TypeInt8, value)
+	if value, ok := _u.mutation.LastSyncVersionID(); ok {
+		_spec.SetField(resource.FieldLastSyncVersionID, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.AddedLevel(); ok {
-		_spec.AddField(resource.FieldLevel, field.TypeInt8, value)
+	if value, ok := _u.mutation.SyncStatus(); ok {
+		_spec.SetField(resource.FieldSyncStatus, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.TreePath(); ok {
-		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(resource.FieldStatus, field.TypeEnum, value)
 	}
-	if value, ok := _u.mutation.Properties(); ok {
-		_spec.SetField(resource.FieldProperties, field.TypeJSON, value)
-	}
-	if _u.mutation.PropertiesCleared() {
-		_spec.ClearField(resource.FieldProperties, field.TypeJSON)
-	}
-	if value, ok := _u.mutation.Description(); ok {
-		_spec.SetField(resource.FieldDescription, field.TypeString, value)
-	}
-	if _u.mutation.ChildrenCleared() {
+	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   resource.ChildrenTable,
-			Columns: []string{resource.ChildrenColumn},
-			Bidi:    true,
+			Table:   resource.ViewsTable,
+			Columns: resource.ViewsPrimaryKey,
+			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := _u.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !_u.mutation.ChildrenCleared() {
+	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   resource.ChildrenTable,
-			Columns: []string{resource.ChildrenColumn},
-			Bidi:    true,
+			Table:   resource.ViewsTable,
+			Columns: resource.ViewsPrimaryKey,
+			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1426,44 +906,15 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := _u.mutation.ChildrenIDs(); len(nodes) > 0 {
+	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   resource.ChildrenTable,
-			Columns: []string{resource.ChildrenColumn},
-			Bidi:    true,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if _u.mutation.ParentCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.ParentTable,
-			Columns: []string{resource.ParentColumn},
+			Table:   resource.ViewsTable,
+			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := _u.mutation.ParentIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   resource.ParentTable,
-			Columns: []string{resource.ParentColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1509,51 +960,6 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if _u.mutation.PermissionResourcesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   resource.PermissionResourcesTable,
-			Columns: []string{resource.PermissionResourcesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := _u.mutation.RemovedPermissionResourcesIDs(); len(nodes) > 0 && !_u.mutation.PermissionResourcesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   resource.PermissionResourcesTable,
-			Columns: []string{resource.PermissionResourcesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := _u.mutation.PermissionResourcesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: true,
-			Table:   resource.PermissionResourcesTable,
-			Columns: []string{resource.PermissionResourcesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

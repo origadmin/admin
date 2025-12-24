@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"math"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
-	"origadmin/application/admin/internal/data/entity/ent/permissionresource"
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -22,15 +22,13 @@ import (
 // ResourceQuery is the builder for querying Resource entities.
 type ResourceQuery struct {
 	config
-	ctx                     *QueryContext
-	order                   []resource.OrderOption
-	inters                  []Interceptor
-	predicates              []predicate.Resource
-	withChildren            *ResourceQuery
-	withParent              *ResourceQuery
-	withPermissions         *PermissionQuery
-	withPermissionResources *PermissionResourceQuery
-	modifiers               []func(*sql.Selector)
+	ctx             *QueryContext
+	order           []resource.OrderOption
+	inters          []Interceptor
+	predicates      []predicate.Resource
+	withViews       *ViewQuery
+	withPermissions *PermissionQuery
+	modifiers       []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -67,9 +65,9 @@ func (_q *ResourceQuery) Order(o ...resource.OrderOption) *ResourceQuery {
 	return _q
 }
 
-// QueryChildren chains the current query on the "children" edge.
-func (_q *ResourceQuery) QueryChildren() *ResourceQuery {
-	query := (&ResourceClient{config: _q.config}).Query()
+// QueryViews chains the current query on the "views" edge.
+func (_q *ResourceQuery) QueryViews() *ViewQuery {
+	query := (&ViewClient{config: _q.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := _q.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -80,30 +78,8 @@ func (_q *ResourceQuery) QueryChildren() *ResourceQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(resource.Table, resource.FieldID, selector),
-			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, resource.ChildrenTable, resource.ChildrenColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryParent chains the current query on the "parent" edge.
-func (_q *ResourceQuery) QueryParent() *ResourceQuery {
-	query := (&ResourceClient{config: _q.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := _q.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := _q.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(resource.Table, resource.FieldID, selector),
-			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, resource.ParentTable, resource.ParentColumn),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, resource.ViewsTable, resource.ViewsPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -126,28 +102,6 @@ func (_q *ResourceQuery) QueryPermissions() *PermissionQuery {
 			sqlgraph.From(resource.Table, resource.FieldID, selector),
 			sqlgraph.To(permission.Table, permission.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, resource.PermissionsTable, resource.PermissionsPrimaryKey...),
-		)
-		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryPermissionResources chains the current query on the "permission_resources" edge.
-func (_q *ResourceQuery) QueryPermissionResources() *PermissionResourceQuery {
-	query := (&PermissionResourceClient{config: _q.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := _q.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := _q.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(resource.Table, resource.FieldID, selector),
-			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, true, resource.PermissionResourcesTable, resource.PermissionResourcesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -342,15 +296,13 @@ func (_q *ResourceQuery) Clone() *ResourceQuery {
 		return nil
 	}
 	return &ResourceQuery{
-		config:                  _q.config,
-		ctx:                     _q.ctx.Clone(),
-		order:                   append([]resource.OrderOption{}, _q.order...),
-		inters:                  append([]Interceptor{}, _q.inters...),
-		predicates:              append([]predicate.Resource{}, _q.predicates...),
-		withChildren:            _q.withChildren.Clone(),
-		withParent:              _q.withParent.Clone(),
-		withPermissions:         _q.withPermissions.Clone(),
-		withPermissionResources: _q.withPermissionResources.Clone(),
+		config:          _q.config,
+		ctx:             _q.ctx.Clone(),
+		order:           append([]resource.OrderOption{}, _q.order...),
+		inters:          append([]Interceptor{}, _q.inters...),
+		predicates:      append([]predicate.Resource{}, _q.predicates...),
+		withViews:       _q.withViews.Clone(),
+		withPermissions: _q.withPermissions.Clone(),
 		// clone intermediate query.
 		sql:       _q.sql.Clone(),
 		path:      _q.path,
@@ -358,25 +310,14 @@ func (_q *ResourceQuery) Clone() *ResourceQuery {
 	}
 }
 
-// WithChildren tells the query-builder to eager-load the nodes that are connected to
-// the "children" edge. The optional arguments are used to configure the query builder of the edge.
-func (_q *ResourceQuery) WithChildren(opts ...func(*ResourceQuery)) *ResourceQuery {
-	query := (&ResourceClient{config: _q.config}).Query()
+// WithViews tells the query-builder to eager-load the nodes that are connected to
+// the "views" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ResourceQuery) WithViews(opts ...func(*ViewQuery)) *ResourceQuery {
+	query := (&ViewClient{config: _q.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	_q.withChildren = query
-	return _q
-}
-
-// WithParent tells the query-builder to eager-load the nodes that are connected to
-// the "parent" edge. The optional arguments are used to configure the query builder of the edge.
-func (_q *ResourceQuery) WithParent(opts ...func(*ResourceQuery)) *ResourceQuery {
-	query := (&ResourceClient{config: _q.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	_q.withParent = query
+	_q.withViews = query
 	return _q
 }
 
@@ -388,17 +329,6 @@ func (_q *ResourceQuery) WithPermissions(opts ...func(*PermissionQuery)) *Resour
 		opt(query)
 	}
 	_q.withPermissions = query
-	return _q
-}
-
-// WithPermissionResources tells the query-builder to eager-load the nodes that are connected to
-// the "permission_resources" edge. The optional arguments are used to configure the query builder of the edge.
-func (_q *ResourceQuery) WithPermissionResources(opts ...func(*PermissionResourceQuery)) *ResourceQuery {
-	query := (&PermissionResourceClient{config: _q.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	_q.withPermissionResources = query
 	return _q
 }
 
@@ -480,11 +410,9 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	var (
 		nodes       = []*Resource{}
 		_spec       = _q.querySpec()
-		loadedTypes = [4]bool{
-			_q.withChildren != nil,
-			_q.withParent != nil,
+		loadedTypes = [2]bool{
+			_q.withViews != nil,
 			_q.withPermissions != nil,
-			_q.withPermissionResources != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -508,16 +436,10 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := _q.withChildren; query != nil {
-		if err := _q.loadChildren(ctx, query, nodes,
-			func(n *Resource) { n.Edges.Children = []*Resource{} },
-			func(n *Resource, e *Resource) { n.Edges.Children = append(n.Edges.Children, e) }); err != nil {
-			return nil, err
-		}
-	}
-	if query := _q.withParent; query != nil {
-		if err := _q.loadParent(ctx, query, nodes, nil,
-			func(n *Resource, e *Resource) { n.Edges.Parent = e }); err != nil {
+	if query := _q.withViews; query != nil {
+		if err := _q.loadViews(ctx, query, nodes,
+			func(n *Resource) { n.Edges.Views = []*View{} },
+			func(n *Resource, e *View) { n.Edges.Views = append(n.Edges.Views, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -528,73 +450,66 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 			return nil, err
 		}
 	}
-	if query := _q.withPermissionResources; query != nil {
-		if err := _q.loadPermissionResources(ctx, query, nodes,
-			func(n *Resource) { n.Edges.PermissionResources = []*PermissionResource{} },
-			func(n *Resource, e *PermissionResource) {
-				n.Edges.PermissionResources = append(n.Edges.PermissionResources, e)
-			}); err != nil {
-			return nil, err
-		}
-	}
 	return nodes, nil
 }
 
-func (_q *ResourceQuery) loadChildren(ctx context.Context, query *ResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *Resource)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int64]*Resource)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
+func (_q *ResourceQuery) loadViews(ctx context.Context, query *ViewQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *View)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[int64]*Resource)
+	nids := make(map[int64]map[*Resource]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
 		if init != nil {
-			init(nodes[i])
+			init(node)
 		}
 	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(resource.FieldParentID)
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(resource.ViewsTable)
+		s.Join(joinT).On(s.C(view.FieldID), joinT.C(resource.ViewsPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(resource.ViewsPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(resource.ViewsPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
 	}
-	query.Where(predicate.Resource(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(resource.ChildrenColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullInt64).Int64
+				inValue := values[1].(*sql.NullInt64).Int64
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Resource]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*View](ctx, query, qr, query.inters)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.ParentID
-		node, ok := nodeids[fk]
+		nodes, ok := nids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "parent_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected "views" node returned %v`, n.ID)
 		}
-		assign(node, n)
-	}
-	return nil
-}
-func (_q *ResourceQuery) loadParent(ctx context.Context, query *ResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *Resource)) error {
-	ids := make([]int64, 0, len(nodes))
-	nodeids := make(map[int64][]*Resource)
-	for i := range nodes {
-		fk := nodes[i].ParentID
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
-		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
-	}
-	if len(ids) == 0 {
-		return nil
-	}
-	query.Where(resource.IDIn(ids...))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
-		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "parent_id" returned %v`, n.ID)
-		}
-		for i := range nodes {
-			assign(nodes[i], n)
+		for kn := range nodes {
+			assign(kn, n)
 		}
 	}
 	return nil
@@ -660,36 +575,6 @@ func (_q *ResourceQuery) loadPermissions(ctx context.Context, query *PermissionQ
 	}
 	return nil
 }
-func (_q *ResourceQuery) loadPermissionResources(ctx context.Context, query *PermissionResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *PermissionResource)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[int64]*Resource)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
-		if init != nil {
-			init(nodes[i])
-		}
-	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(permissionresource.FieldResourceID)
-	}
-	query.Where(predicate.PermissionResource(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(resource.PermissionResourcesColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		fk := n.ResourceID
-		node, ok := nodeids[fk]
-		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "resource_id" returned %v for node %v`, fk, n.ID)
-		}
-		assign(node, n)
-	}
-	return nil
-}
 
 func (_q *ResourceQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := _q.querySpec()
@@ -718,9 +603,6 @@ func (_q *ResourceQuery) querySpec() *sqlgraph.QuerySpec {
 			if fields[i] != resource.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
-		}
-		if _q.withParent != nil {
-			_spec.Node.AddColumnOnce(resource.FieldParentID)
 		}
 	}
 	if ps := _q.predicates; len(ps) > 0 {
@@ -820,46 +702,32 @@ func (_q *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	var v []struct {
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
-//	  Name string `json:"name,omitempty"`
+//	  ServiceName string `json:"service_name,omitempty"`
 //	  Keyword string `json:"keyword,omitempty"`
-//	  I18nKey string `json:"i18n_key,omitempty"`
-//	  Type string `json:"type,omitempty"`
-//	  Status int8 `json:"status,omitempty"`
 //	  Path string `json:"path,omitempty"`
-//	  Operation string `json:"operation,omitempty"`
 //	  Method string `json:"method,omitempty"`
-//	  Component string `json:"component,omitempty"`
-//	  Icon string `json:"icon,omitempty"`
-//	  Sequence int `json:"sequence,omitempty"`
-//	  Visible bool `json:"visible,omitempty"`
-//	  Level int8 `json:"level,omitempty"`
-//	  TreePath string `json:"tree_path,omitempty"`
-//	  Properties map[string]string `json:"properties,omitempty"`
-//	  Description string `json:"description,omitempty"`
-//	  ParentID int64 `json:"parent_id,omitempty"`
+//	  Operation string `json:"operation,omitempty"`
+//	  Policy string `json:"policy,omitempty"`
+//	  VersionID string `json:"version_id,omitempty"`
+//	  LastSyncVersionID string `json:"last_sync_version_id,omitempty"`
+//	  SyncStatus string `json:"sync_status,omitempty"`
+//	  Status resource.Status `json:"status,omitempty"`
 //	}
 //
 //	client.Resource.Query().
 //	  Omit(
 //	  resource.FieldCreateTime,
 //	  resource.FieldUpdateTime,
-//	  resource.FieldName,
+//	  resource.FieldServiceName,
 //	  resource.FieldKeyword,
-//	  resource.FieldI18nKey,
-//	  resource.FieldType,
-//	  resource.FieldStatus,
 //	  resource.FieldPath,
-//	  resource.FieldOperation,
 //	  resource.FieldMethod,
-//	  resource.FieldComponent,
-//	  resource.FieldIcon,
-//	  resource.FieldSequence,
-//	  resource.FieldVisible,
-//	  resource.FieldLevel,
-//	  resource.FieldTreePath,
-//	  resource.FieldProperties,
-//	  resource.FieldDescription,
-//	  resource.FieldParentID,
+//	  resource.FieldOperation,
+//	  resource.FieldPolicy,
+//	  resource.FieldVersionID,
+//	  resource.FieldLastSyncVersionID,
+//	  resource.FieldSyncStatus,
+//	  resource.FieldStatus,
 //	  ).
 //	  Scan(ctx, &v)
 func (rq *ResourceQuery) Omit(fields ...string) *ResourceSelect {

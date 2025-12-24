@@ -208,13 +208,12 @@ func (m updateMixin) Indexes() []ent.Index {
 // DeleteMixin schema to include control and time fields.
 type DeleteMixin struct {
 	mixin.Schema
-	DeleteField string
 }
 
 // Fields of the Model.
 func (m DeleteMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time(m.DeleteField).
+		field.Time("delete_time").
 			Comment(i18n.Text("delete_time.field.comment")).
 			Optional().
 			Nillable(),
@@ -224,7 +223,7 @@ func (m DeleteMixin) Fields() []ent.Field {
 // Indexes of the mixin.
 func (m DeleteMixin) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields(m.DeleteField),
+		index.Fields("delete_time"),
 	}
 }
 

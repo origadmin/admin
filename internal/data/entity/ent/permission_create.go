@@ -13,6 +13,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -179,6 +180,21 @@ func (_c *PermissionCreate) AddResources(v ...*Resource) *PermissionCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddResourceIDs(ids...)
+}
+
+// AddViewIDs adds the "views" edge to the View entity by IDs.
+func (_c *PermissionCreate) AddViewIDs(ids ...int64) *PermissionCreate {
+	_c.mutation.AddViewIDs(ids...)
+	return _c
+}
+
+// AddViews adds the "views" edges to the View entity.
+func (_c *PermissionCreate) AddViews(v ...*View) *PermissionCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddViewIDs(ids...)
 }
 
 // AddRolePermissionIDs adds the "role_permissions" edge to the RolePermission entity by IDs.
@@ -444,6 +460,22 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ViewsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   permission.ViewsTable,
+			Columns: permission.ViewsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

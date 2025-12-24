@@ -18,6 +18,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 	"time"
 )
 
@@ -292,90 +293,26 @@ func init() {
 	resource.DefaultUpdateTime = resourceDescUpdateTime.Default.(func() time.Time)
 	// resource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	resource.UpdateDefaultUpdateTime = resourceDescUpdateTime.UpdateDefault.(func() time.Time)
-	// resourceDescName is the schema descriptor for name field.
-	resourceDescName := resourceFields[0].Descriptor()
-	// resource.DefaultName holds the default value on creation for the name field.
-	resource.DefaultName = resourceDescName.Default.(string)
-	// resource.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	resource.NameValidator = resourceDescName.Validators[0].(func(string) error)
 	// resourceDescKeyword is the schema descriptor for keyword field.
 	resourceDescKeyword := resourceFields[1].Descriptor()
 	// resource.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	resource.KeywordValidator = resourceDescKeyword.Validators[0].(func(string) error)
-	// resourceDescI18nKey is the schema descriptor for i18n_key field.
-	resourceDescI18nKey := resourceFields[2].Descriptor()
-	// resource.DefaultI18nKey holds the default value on creation for the i18n_key field.
-	resource.DefaultI18nKey = resourceDescI18nKey.Default.(string)
-	// resource.I18nKeyValidator is a validator for the "i18n_key" field. It is called by the builders before save.
-	resource.I18nKeyValidator = resourceDescI18nKey.Validators[0].(func(string) error)
-	// resourceDescType is the schema descriptor for type field.
-	resourceDescType := resourceFields[3].Descriptor()
-	// resource.DefaultType holds the default value on creation for the type field.
-	resource.DefaultType = resourceDescType.Default.(string)
-	// resource.TypeValidator is a validator for the "type" field. It is called by the builders before save.
-	resource.TypeValidator = resourceDescType.Validators[0].(func(string) error)
-	// resourceDescStatus is the schema descriptor for status field.
-	resourceDescStatus := resourceFields[4].Descriptor()
-	// resource.DefaultStatus holds the default value on creation for the status field.
-	resource.DefaultStatus = resourceDescStatus.Default.(int8)
-	// resourceDescPath is the schema descriptor for path field.
-	resourceDescPath := resourceFields[5].Descriptor()
-	// resource.DefaultPath holds the default value on creation for the path field.
-	resource.DefaultPath = resourceDescPath.Default.(string)
-	// resource.PathValidator is a validator for the "path" field. It is called by the builders before save.
-	resource.PathValidator = resourceDescPath.Validators[0].(func(string) error)
-	// resourceDescOperation is the schema descriptor for operation field.
-	resourceDescOperation := resourceFields[6].Descriptor()
-	// resource.DefaultOperation holds the default value on creation for the operation field.
-	resource.DefaultOperation = resourceDescOperation.Default.(string)
-	// resource.OperationValidator is a validator for the "operation" field. It is called by the builders before save.
-	resource.OperationValidator = resourceDescOperation.Validators[0].(func(string) error)
-	// resourceDescMethod is the schema descriptor for method field.
-	resourceDescMethod := resourceFields[7].Descriptor()
-	// resource.DefaultMethod holds the default value on creation for the method field.
-	resource.DefaultMethod = resourceDescMethod.Default.(string)
-	// resource.MethodValidator is a validator for the "method" field. It is called by the builders before save.
-	resource.MethodValidator = resourceDescMethod.Validators[0].(func(string) error)
-	// resourceDescComponent is the schema descriptor for component field.
-	resourceDescComponent := resourceFields[8].Descriptor()
-	// resource.DefaultComponent holds the default value on creation for the component field.
-	resource.DefaultComponent = resourceDescComponent.Default.(string)
-	// resource.ComponentValidator is a validator for the "component" field. It is called by the builders before save.
-	resource.ComponentValidator = resourceDescComponent.Validators[0].(func(string) error)
-	// resourceDescIcon is the schema descriptor for icon field.
-	resourceDescIcon := resourceFields[9].Descriptor()
-	// resource.DefaultIcon holds the default value on creation for the icon field.
-	resource.DefaultIcon = resourceDescIcon.Default.(string)
-	// resource.IconValidator is a validator for the "icon" field. It is called by the builders before save.
-	resource.IconValidator = resourceDescIcon.Validators[0].(func(string) error)
-	// resourceDescSequence is the schema descriptor for sequence field.
-	resourceDescSequence := resourceFields[10].Descriptor()
-	// resource.DefaultSequence holds the default value on creation for the sequence field.
-	resource.DefaultSequence = resourceDescSequence.Default.(int)
-	// resourceDescVisible is the schema descriptor for visible field.
-	resourceDescVisible := resourceFields[11].Descriptor()
-	// resource.DefaultVisible holds the default value on creation for the visible field.
-	resource.DefaultVisible = resourceDescVisible.Default.(bool)
-	// resourceDescLevel is the schema descriptor for level field.
-	resourceDescLevel := resourceFields[12].Descriptor()
-	// resource.DefaultLevel holds the default value on creation for the level field.
-	resource.DefaultLevel = resourceDescLevel.Default.(int8)
-	// resourceDescTreePath is the schema descriptor for tree_path field.
-	resourceDescTreePath := resourceFields[13].Descriptor()
-	// resource.DefaultTreePath holds the default value on creation for the tree_path field.
-	resource.DefaultTreePath = resourceDescTreePath.Default.(string)
-	// resource.TreePathValidator is a validator for the "tree_path" field. It is called by the builders before save.
-	resource.TreePathValidator = resourceDescTreePath.Validators[0].(func(string) error)
-	// resourceDescDescription is the schema descriptor for description field.
-	resourceDescDescription := resourceFields[15].Descriptor()
-	// resource.DefaultDescription holds the default value on creation for the description field.
-	resource.DefaultDescription = resourceDescDescription.Default.(string)
-	// resource.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
-	resource.DescriptionValidator = resourceDescDescription.Validators[0].(func(string) error)
-	// resourceDescParentID is the schema descriptor for parent_id field.
-	resourceDescParentID := resourceFields[16].Descriptor()
-	// resource.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	resource.ParentIDValidator = resourceDescParentID.Validators[0].(func(int64) error)
+	// resourceDescPolicy is the schema descriptor for policy field.
+	resourceDescPolicy := resourceFields[5].Descriptor()
+	// resource.DefaultPolicy holds the default value on creation for the policy field.
+	resource.DefaultPolicy = resourceDescPolicy.Default.(string)
+	// resourceDescVersionID is the schema descriptor for version_id field.
+	resourceDescVersionID := resourceFields[6].Descriptor()
+	// resource.DefaultVersionID holds the default value on creation for the version_id field.
+	resource.DefaultVersionID = resourceDescVersionID.Default.(string)
+	// resourceDescLastSyncVersionID is the schema descriptor for last_sync_version_id field.
+	resourceDescLastSyncVersionID := resourceFields[7].Descriptor()
+	// resource.DefaultLastSyncVersionID holds the default value on creation for the last_sync_version_id field.
+	resource.DefaultLastSyncVersionID = resourceDescLastSyncVersionID.Default.(string)
+	// resourceDescSyncStatus is the schema descriptor for sync_status field.
+	resourceDescSyncStatus := resourceFields[8].Descriptor()
+	// resource.DefaultSyncStatus holds the default value on creation for the sync_status field.
+	resource.DefaultSyncStatus = resourceDescSyncStatus.Default.(string)
 	// resourceDescID is the schema descriptor for id field.
 	resourceDescID := resourceMixinFields0[0].Descriptor()
 	// resource.DefaultID holds the default value on creation for the id field.
@@ -618,6 +555,57 @@ func init() {
 	userroleDescRoleID := userroleFields[1].Descriptor()
 	// userrole.RoleIDValidator is a validator for the "role_id" field. It is called by the builders before save.
 	userrole.RoleIDValidator = userroleDescRoleID.Validators[0].(func(int64) error)
+	viewMixin := schema.View{}.Mixin()
+	viewMixinFields0 := viewMixin[0].Fields()
+	_ = viewMixinFields0
+	viewMixinFields1 := viewMixin[1].Fields()
+	_ = viewMixinFields1
+	viewMixinFields2 := viewMixin[2].Fields()
+	_ = viewMixinFields2
+	viewFields := schema.View{}.Fields()
+	_ = viewFields
+	// viewDescCreateTime is the schema descriptor for create_time field.
+	viewDescCreateTime := viewMixinFields1[0].Descriptor()
+	// view.DefaultCreateTime holds the default value on creation for the create_time field.
+	view.DefaultCreateTime = viewDescCreateTime.Default.(func() time.Time)
+	// viewDescUpdateTime is the schema descriptor for update_time field.
+	viewDescUpdateTime := viewMixinFields2[0].Descriptor()
+	// view.DefaultUpdateTime holds the default value on creation for the update_time field.
+	view.DefaultUpdateTime = viewDescUpdateTime.Default.(func() time.Time)
+	// view.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	view.UpdateDefaultUpdateTime = viewDescUpdateTime.UpdateDefault.(func() time.Time)
+	// viewDescParentID is the schema descriptor for parent_id field.
+	viewDescParentID := viewFields[0].Descriptor()
+	// view.ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
+	view.ParentIDValidator = viewDescParentID.Validators[0].(func(int64) error)
+	// viewDescKeyword is the schema descriptor for keyword field.
+	viewDescKeyword := viewFields[1].Descriptor()
+	// view.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
+	view.KeywordValidator = viewDescKeyword.Validators[0].(func(string) error)
+	// viewDescScope is the schema descriptor for scope field.
+	viewDescScope := viewFields[2].Descriptor()
+	// view.DefaultScope holds the default value on creation for the scope field.
+	view.DefaultScope = viewDescScope.Default.(string)
+	// viewDescType is the schema descriptor for type field.
+	viewDescType := viewFields[4].Descriptor()
+	// view.DefaultType holds the default value on creation for the type field.
+	view.DefaultType = viewDescType.Default.(string)
+	// view.TypeValidator is a validator for the "type" field. It is called by the builders before save.
+	view.TypeValidator = viewDescType.Validators[0].(func(string) error)
+	// viewDescVisible is the schema descriptor for visible field.
+	viewDescVisible := viewFields[8].Descriptor()
+	// view.DefaultVisible holds the default value on creation for the visible field.
+	view.DefaultVisible = viewDescVisible.Default.(bool)
+	// viewDescSequence is the schema descriptor for sequence field.
+	viewDescSequence := viewFields[9].Descriptor()
+	// view.DefaultSequence holds the default value on creation for the sequence field.
+	view.DefaultSequence = viewDescSequence.Default.(int)
+	// viewDescID is the schema descriptor for id field.
+	viewDescID := viewMixinFields0[0].Descriptor()
+	// view.DefaultID holds the default value on creation for the id field.
+	view.DefaultID = viewDescID.Default.(func() int64)
+	// view.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	view.IDValidator = viewDescID.Validators[0].(func(int64) error)
 }
 
 const (

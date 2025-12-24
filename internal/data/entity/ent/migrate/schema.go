@@ -179,9 +179,9 @@ var (
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "sys_permission_resources_sys_resources_resource",
+				Symbol:     "sys_permission_resources_resources_resource",
 				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
-				RefColumns: []*schema.Column{SysResourcesColumns[0]},
+				RefColumns: []*schema.Column{ResourcesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
@@ -274,63 +274,37 @@ var (
 			},
 		},
 	}
-	// SysResourcesColumns holds the columns for the "sys_resources" table.
-	SysResourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
-		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
-		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "name", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.name", Default: ""},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.resource.field.keyword"},
-		{Name: "i18n_key", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.i18n_key", Default: ""},
-		{Name: "type", Type: field.TypeString, Size: 2, Comment: "entity.resource.field.type", Default: "M"},
-		{Name: "status", Type: field.TypeInt8, Comment: "entity.resource.field.status", Default: 1},
-		{Name: "path", Type: field.TypeString, Size: 256, Comment: "entity.resource.field.path", Default: ""},
-		{Name: "operation", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.operation", Default: ""},
-		{Name: "method", Type: field.TypeString, Size: 16, Comment: "entity.resource.field.method", Default: ""},
-		{Name: "component", Type: field.TypeString, Size: 128, Comment: "entity.resource.field.component", Default: ""},
-		{Name: "icon", Type: field.TypeString, Size: 64, Comment: "entity.resource.field.icon", Default: ""},
-		{Name: "sequence", Type: field.TypeInt, Comment: "entity.resource.field.sequence", Default: 0},
-		{Name: "visible", Type: field.TypeBool, Comment: "entity.resource.field.visible", Default: true},
-		{Name: "level", Type: field.TypeInt8, Comment: "entity.resource.field.level", Default: 0},
-		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "entity.resource.field.tree_path", Default: ""},
-		{Name: "properties", Type: field.TypeJSON, Nullable: true, Comment: "entity.resource.field.properties"},
-		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.resource.field.description", Default: ""},
-		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "resource.field.parent_id"},
+	// ResourcesColumns holds the columns for the "resources" table.
+	ResourcesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "service_name", Type: field.TypeString},
+		{Name: "keyword", Type: field.TypeString, Unique: true},
+		{Name: "path", Type: field.TypeString, Nullable: true},
+		{Name: "method", Type: field.TypeString, Nullable: true},
+		{Name: "operation", Type: field.TypeString, Nullable: true},
+		{Name: "policy", Type: field.TypeString, Default: ""},
+		{Name: "version_id", Type: field.TypeString, Default: ""},
+		{Name: "last_sync_version_id", Type: field.TypeString, Default: ""},
+		{Name: "sync_status", Type: field.TypeString, Default: "Synced"},
+		{Name: "status", Type: field.TypeEnum, Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 	}
-	// SysResourcesTable holds the schema information for the "sys_resources" table.
-	SysResourcesTable = &schema.Table{
-		Name:       "sys_resources",
-		Comment:    "entity.resource.table.comment",
-		Columns:    SysResourcesColumns,
-		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:     "sys_resources_sys_resources_children",
-				Columns:    []*schema.Column{SysResourcesColumns[19]},
-				RefColumns: []*schema.Column{SysResourcesColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-		},
+	// ResourcesTable holds the schema information for the "resources" table.
+	ResourcesTable = &schema.Table{
+		Name:       "resources",
+		Columns:    ResourcesColumns,
+		PrimaryKey: []*schema.Column{ResourcesColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "resource_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[1]},
+				Columns: []*schema.Column{ResourcesColumns[1]},
 			},
 			{
 				Name:    "resource_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[2]},
-			},
-			{
-				Name:    "resource_parent_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[19]},
-			},
-			{
-				Name:    "resource_level",
-				Unique:  false,
-				Columns: []*schema.Column{SysResourcesColumns[15]},
+				Columns: []*schema.Column{ResourcesColumns[2]},
 			},
 		},
 	}
@@ -646,6 +620,98 @@ var (
 			},
 		},
 	}
+	// ViewsColumns holds the columns for the "views" table.
+	ViewsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "keyword", Type: field.TypeString, Unique: true},
+		{Name: "scope", Type: field.TypeString, Default: "default"},
+		{Name: "name", Type: field.TypeString},
+		{Name: "type", Type: field.TypeString, Size: 1, Default: "U"},
+		{Name: "component", Type: field.TypeString, Nullable: true},
+		{Name: "path", Type: field.TypeString, Nullable: true},
+		{Name: "icon", Type: field.TypeString, Nullable: true},
+		{Name: "visible", Type: field.TypeBool, Default: true},
+		{Name: "sequence", Type: field.TypeInt, Default: 0},
+		{Name: "parent_id", Type: field.TypeInt64, Nullable: true},
+	}
+	// ViewsTable holds the schema information for the "views" table.
+	ViewsTable = &schema.Table{
+		Name:       "views",
+		Columns:    ViewsColumns,
+		PrimaryKey: []*schema.Column{ViewsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "views_views_children",
+				Columns:    []*schema.Column{ViewsColumns[12]},
+				RefColumns: []*schema.Column{ViewsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "view_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{ViewsColumns[1]},
+			},
+			{
+				Name:    "view_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{ViewsColumns[2]},
+			},
+		},
+	}
+	// PermissionViewsColumns holds the columns for the "permission_views" table.
+	PermissionViewsColumns = []*schema.Column{
+		{Name: "permission_id", Type: field.TypeInt64},
+		{Name: "view_id", Type: field.TypeInt64},
+	}
+	// PermissionViewsTable holds the schema information for the "permission_views" table.
+	PermissionViewsTable = &schema.Table{
+		Name:       "permission_views",
+		Columns:    PermissionViewsColumns,
+		PrimaryKey: []*schema.Column{PermissionViewsColumns[0], PermissionViewsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "permission_views_permission_id",
+				Columns:    []*schema.Column{PermissionViewsColumns[0]},
+				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "permission_views_view_id",
+				Columns:    []*schema.Column{PermissionViewsColumns[1]},
+				RefColumns: []*schema.Column{ViewsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// ResourceViewsColumns holds the columns for the "resource_views" table.
+	ResourceViewsColumns = []*schema.Column{
+		{Name: "resource_id", Type: field.TypeInt64},
+		{Name: "view_id", Type: field.TypeInt64},
+	}
+	// ResourceViewsTable holds the schema information for the "resource_views" table.
+	ResourceViewsTable = &schema.Table{
+		Name:       "resource_views",
+		Columns:    ResourceViewsColumns,
+		PrimaryKey: []*schema.Column{ResourceViewsColumns[0], ResourceViewsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "resource_views_resource_id",
+				Columns:    []*schema.Column{ResourceViewsColumns[0]},
+				RefColumns: []*schema.Column{ResourcesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "resource_views_view_id",
+				Columns:    []*schema.Column{ResourceViewsColumns[1]},
+				RefColumns: []*schema.Column{ViewsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		CasbinRulesTable,
@@ -655,13 +721,16 @@ var (
 		SysPermissionResourcesTable,
 		SysPositionsTable,
 		SysPositionPermissionsTable,
-		SysResourcesTable,
+		ResourcesTable,
 		SysRolesTable,
 		SysRolePermissionsTable,
 		SysUsersTable,
 		SysUserDepartmentsTable,
 		SysUserPositionsTable,
 		SysUserRolesTable,
+		ViewsTable,
+		PermissionViewsTable,
+		ResourceViewsTable,
 	}
 )
 
@@ -677,7 +746,7 @@ func init() {
 		Table: "sys_permissions",
 	}
 	SysPermissionResourcesTable.ForeignKeys[0].RefTable = SysPermissionsTable
-	SysPermissionResourcesTable.ForeignKeys[1].RefTable = SysResourcesTable
+	SysPermissionResourcesTable.ForeignKeys[1].RefTable = ResourcesTable
 	SysPermissionResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_permission_resources",
 	}
@@ -689,10 +758,6 @@ func init() {
 	SysPositionPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
 	SysPositionPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_position_permissions",
-	}
-	SysResourcesTable.ForeignKeys[0].RefTable = SysResourcesTable
-	SysResourcesTable.Annotation = &entsql.Annotation{
-		Table: "sys_resources",
 	}
 	SysRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_roles",
@@ -720,4 +785,9 @@ func init() {
 	SysUserRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_user_roles",
 	}
+	ViewsTable.ForeignKeys[0].RefTable = ViewsTable
+	PermissionViewsTable.ForeignKeys[0].RefTable = SysPermissionsTable
+	PermissionViewsTable.ForeignKeys[1].RefTable = ViewsTable
+	ResourceViewsTable.ForeignKeys[0].RefTable = ResourcesTable
+	ResourceViewsTable.ForeignKeys[1].RefTable = ViewsTable
 }

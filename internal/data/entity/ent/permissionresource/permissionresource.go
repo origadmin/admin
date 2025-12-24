@@ -33,7 +33,7 @@ const (
 	ResourceTable = "sys_permission_resources"
 	// ResourceInverseTable is the table name for the Resource entity.
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
-	ResourceInverseTable = "sys_resources"
+	ResourceInverseTable = "resources"
 	// ResourceColumn is the table column denoting the resource relation/edge.
 	ResourceColumn = "resource_id"
 )

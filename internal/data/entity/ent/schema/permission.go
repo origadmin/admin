@@ -88,5 +88,7 @@ func (Permission) Edges() []ent.Edge {
 			Through("position_permissions", PositionPermission.Type),
 		edge.To("resources", Resource.Type).
 			Through("permission_resources", PermissionResource.Type),
+		// Add the inverse edge to View, resolving the generation error.
+		edge.To("views", View.Type),
 	}
 }

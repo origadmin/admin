@@ -524,6 +524,29 @@ func HasResourcesWith(preds ...predicate.Resource) predicate.Permission {
 	})
 }
 
+// HasViews applies the HasEdge predicate on the "views" edge.
+func HasViews() predicate.Permission {
+	return predicate.Permission(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, ViewsTable, ViewsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasViewsWith applies the HasEdge predicate on the "views" edge with a given conditions (other predicates).
+func HasViewsWith(preds ...predicate.View) predicate.Permission {
+	return predicate.Permission(func(s *sql.Selector) {
+		step := newViewsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasRolePermissions applies the HasEdge predicate on the "role_permissions" edge.
 func HasRolePermissions() predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
