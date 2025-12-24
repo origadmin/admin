@@ -86,7 +86,7 @@ func (obj UUID) PK(name string) ent.Field {
 	return obj.ToField()
 }
 
-func (obj UUID) OP(name string) ent.Field {
+func (obj UUID) OptionalFK(name string) ent.Field {
 	obj.Key = name
 	obj.Optional = true
 	if obj.CommentKey == "" {

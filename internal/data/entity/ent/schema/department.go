@@ -51,7 +51,7 @@ func (Department) Fields() []ent.Field {
 			MaxLen(1024).
 			Default("").
 			Comment(i18n.Text("entity.department.field.description")),
-		mixin.OP("parent_id", "department.field.parent_id"),
+		mixin.OptionalFK("parent_id", "department.field.parent_id"),
 	}
 }
 

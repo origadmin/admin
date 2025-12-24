@@ -88,7 +88,7 @@ func (obj ID) PK(name string) ent.Field {
 	return obj.ToField()
 }
 
-func (obj ID) OP(name string) ent.Field {
+func (obj ID) OptionalFK(name string) ent.Field {
 	obj.Key = name
 	obj.Positive = true
 	obj.Optional = true

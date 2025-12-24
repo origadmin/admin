@@ -3,6 +3,7 @@
 package tools
 
 import (
+	_ "entgo.io/ent/cmd/ent"
 	_ "github.com/bufbuild/buf/cmd/buf"
 	_ "github.com/bufbuild/buf/cmd/protoc-gen-buf-breaking"
 	_ "github.com/bufbuild/buf/cmd/protoc-gen-buf-lint"

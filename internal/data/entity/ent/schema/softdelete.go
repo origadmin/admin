@@ -20,7 +20,7 @@ import (
 
 // SoftDelete is schema to include control and time fields.
 type SoftDelete struct {
-	mixin.DeleteSchema
+	mixin.DeleteMixin
 }
 
 //Interceptors of the SoftDeleteMixin.
@@ -65,6 +65,6 @@ func (s SoftDelete) Hooks() []ent.Hook {
 // P adds a storage-level predicate to the queries and mutations.
 func (s SoftDelete) P(w interface{ WhereP(...func(*sql.Selector)) }) {
 	w.WhereP(
-		sql.FieldIsNull(s.DeleteSchema.Fields()[0].Descriptor().Name),
+		sql.FieldIsNull(s.DeleteMixin.Fields()[0].Descriptor().Name),
 	)
 }

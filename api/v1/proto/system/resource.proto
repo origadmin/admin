@@ -14,118 +14,100 @@ option java_package = "com.origadmin.api.v1.services.system";
 option objc_class_prefix = "APIServiceSystemResource";
 
 // The resource service definition.
+// A Resource represents a backend asset that requires access control, such as an HTTP API or a gRPC method.
+// The definition of the Resource message in types/system.proto should be updated to include fields
+// like service_name, path, method, operation, policy, version_id, last_sync_version_id, and sync_status
+// as specified in 09_Data_Model_Schema.md.
 service ResourceService {
+  // Lists all backend resources.
   rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
     option (google.api.http) = {get: "/sys/resources"};
   }
+  // Gets a single backend resource.
   rpc GetResource(GetResourceRequest) returns (GetResourceResponse) {
     option (google.api.http) = {get: "/sys/resources/{id}"};
   }
+  // Creates a new backend resource.
   rpc CreateResource(CreateResourceRequest) returns (CreateResourceResponse) {
     option (google.api.http) = {
       post: "/sys/resources"
       body: "*"
     };
   }
+  // Updates a backend resource.
   rpc UpdateResource(UpdateResourceRequest) returns (UpdateResourceResponse) {
     option (google.api.http) = {
       put: "/sys/resources/{resource.id}"
       body: "resource"
     };
   }
+  // Deletes a backend resource.
   rpc DeleteResource(DeleteResourceRequest) returns (DeleteResourceResponse) {
     option (google.api.http) = {delete: "/sys/resources/{id}"};
   }
 }
 
-// ListResourcesRequest is the request for the ResourceService.ListResources method.
+// Request message for ResourceService.ListResources.
 message ListResourcesRequest {
-  // The parent resource id, for example, "shelves/shelf1".
   int64 id = 1 [json_name = "id"];
-  // The page number.
   int32 page = 2 [json_name = "page"];
-  // The maximum number of items to return.
   int32 page_size = 3 [json_name = "page_size"];
-  // The next_page_token value returned from a previous List request, if any.
   string page_token = 4 [json_name = "page_token"];
-  // The no_paging is used to disable pagination.
   bool no_paging = 5 [json_name = "no_paging"];
-  // The only_count is the query parameter for set only to query the total number
   bool only_count = 6 [json_name = "only_count"];
-  // resource type
-  string type = 7 [json_name = "type"];
-  // The resource name keyword
-  string keyword = 8 [json_name = "keyword"];
+  string keyword = 7 [json_name = "keyword"];
+  string service_name = 8 [json_name = "service_name"];
+  string sync_status = 9 [json_name = "sync_status"];
 }
 
-// ListResourcesResponse is the response for the ResourceService.ListResources method.
+// Response message for ResourceService.ListResources.
 message ListResourcesResponse {
-  // The total number of items in the list.
   int32 total = 1 [json_name = "total"];
-  // The paging resources
   repeated api.v1.services.types.Resource resources = 2 [json_name = "resources"];
-  // The page number.
   int32 page = 3 [json_name = "page"];
-  // The maximum number of items to return.
   int32 page_size = 4 [json_name = "page_size"];
-  // Token to retrieve the next page of results, or empty if there are no
-  // more results in the list.
   string next_page_token = 5 [json_name = "next_page_token"];
-  // Additional information about this response.
-  // content to be added without destroying the page data format
   optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
-// GetResourceRequest is the request for the ResourceService.GetResource method.
+// Request message for ResourceService.GetResource.
 message GetResourceRequest {
-  // The field will contain id of the resource requested, for example:
-  // "shelves/shelf1/resources/resource2"
-  int64 id = 1 [json_name = "id"];
+  int64 id = 1;
 }
 
-// GetResourceResponse is the response for the ResourceService.GetResource method.
+// Response message for ResourceService.GetResource.
 message GetResourceResponse {
-  // The field id should match the Noun in the method id.
-  api.v1.services.types.Resource resource = 1 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1;
 }
 
-// CreateResourceRequest is the request for the ResourceService.CreateResource method.
+// Request message for ResourceService.CreateResource.
 message CreateResourceRequest {
-  // The parent resource id where the resource is to be created.
-  string parent = 1 [json_name = "parent"];
-  // The resource id to use for this resource.
-  string resource_id = 2 [json_name = "resource_id"];
-  // The resource object to create.
-  api.v1.services.types.Resource resource = 3 [json_name = "resource"];
+  string parent = 1;
+  string resource_id = 2;
+  api.v1.services.types.Resource resource = 3;
 }
 
-// CreateResourceResponse is the response for the ResourceService.CreateResource method.
+// Response message for ResourceService.CreateResource.
 message CreateResourceResponse {
-  api.v1.services.types.Resource resource = 1 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1;
 }
 
-// UpdateResourceRequest is the request for the ResourceService.UpdateResource method.
+// Request message for ResourceService.UpdateResource.
 message UpdateResourceRequest {
-  // The id of the resource object to update.
-  int64 id = 1 [json_name = "id"];
-  // The resource object which replaces the resource on the server.
-  api.v1.services.types.Resource resource = 2 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1;
 }
 
-// UpdateResourceResponse is the response for the ResourceService.UpdateResource method.
+// Response message for ResourceService.UpdateResource.
 message UpdateResourceResponse {
-  api.v1.services.types.Resource resource = 1 [json_name = "resource"];
+  api.v1.services.types.Resource resource = 1;
 }
 
-// DeleteResourceRequest is the request for the ResourceService.DeleteResource method.
+// Request message for ResourceService.DeleteResource.
 message DeleteResourceRequest {
-  // The resource id of the resource to be deleted, for example:
-  // "shelves/shelf1/resources/resource2"
-  int64 id = 1 [json_name = "id"];
+  int64 id = 1;
 }
 
-// DeleteResourceResponse is the response for the ResourceService.DeleteResource method.
+// Response message for ResourceService.DeleteResource.
 message DeleteResourceResponse {
-  // or Resource resource = 1; or google.protobuf.Empty empty = 1;
   google.protobuf.Empty empty = 1;
 }

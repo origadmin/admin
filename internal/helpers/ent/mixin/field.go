@@ -17,39 +17,39 @@ import (
 
 // ZeroTime represents the zero value for time.Time.
 var ZeroTime = time.Time{}
-var _id = ID{}
+var innerID = ID{}
 
 func Comment(key string) IDGenerator {
-	return _id.Comment(key)
+	return innerID.Comment(key)
 }
 
 func I18nComment(key string) IDGenerator {
-	return _id.Comment(i18n.Text(key))
+	return innerID.Comment(i18n.Text(key))
 }
 
 func PK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return _id.PK(name)
+		return innerID.PK(name)
 	}
-	return _id.Comment(comment[0]).PK(name)
+	return innerID.Comment(comment[0]).PK(name)
 }
 
 func FK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return _id.FK(name)
+		return innerID.FK(name)
 	}
-	return _id.Comment(comment[0]).FK(name)
+	return innerID.Comment(comment[0]).FK(name)
 }
 
-func OP(name string, comment ...string) ent.Field {
+func OptionalFK(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return _id.OP(name)
+		return innerID.OptionalFK(name)
 	}
-	return _id.Comment(comment[0]).OP(name)
+	return innerID.Comment(comment[0]).OptionalFK(name)
 }
 
-// TimeOP returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
-func TimeOP(name string, comment ...string) ent.Field {
+// TimeOptional returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
+func TimeOptional(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
 		return field.Time(name).
 			Optional().
@@ -97,10 +97,10 @@ func FieldFK(name string) ent.Field {
 	return ID{}.FK(name)
 }
 
-// FieldOP returns an optional string field with a maximum length of 36 characters.
-func FieldOP(name string) ent.Field {
+// FieldOptional returns an optional string field with a maximum length of 36 characters.
+func FieldOptional(name string) ent.Field {
 	// Create an optional string field with the given name and maximum length.
-	return ID{}.OP(name)
+	return ID{}.OptionalFK(name)
 }
 
 func FieldUUIDPK(name string, comment ...string) ent.Field {
@@ -119,12 +119,12 @@ func FieldUUIDFK(name string, comment ...string) ent.Field {
 	return UUID{}.Comment(comment[0]).FK(name)
 }
 
-func FieldUUIDOP(name string, comment ...string) ent.Field {
+func FieldUUIDOptional(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return UUID{}.OP(name)
+		return UUID{}.OptionalFK(name)
 	}
 	// Create an optional string field with the given name and maximum length.
-	return UUID{}.Comment(comment[0]).OP(name)
+	return UUID{}.Comment(comment[0]).OptionalFK(name)
 }
 
 // FieldTime returns a time field with a default value of ZeroTime and a custom schema type for MySQL.

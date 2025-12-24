@@ -19,25 +19,42 @@ import (
 
 type IDGenerator interface {
 	Comment(key string) IDGenerator
-	OP(name string) ent.Field
+	OptionalFK(name string) ent.Field
 	FK(name string) ent.Field
 	PK(name string) ent.Field
 }
 
 // Audit schema to include control and time fields.
-type Audit struct {
+type auditMixin struct {
 	mixin.Schema
+	CreateField string
+	UpdateField string
+}
+
+func DefaultAudit() ent.Mixin {
+	return auditMixin{
+		CreateField: "create_author",
+		UpdateField: "update_author",
+	}
+}
+
+// Audit returns a new audit mixin with configurable field names.
+func Audit(createField, updateField string) ent.Mixin {
+	return auditMixin{
+		CreateField: createField,
+		UpdateField: updateField,
+	}
 }
 
 // Fields of the mixin.
-func (Audit) Fields() []ent.Field {
-	auditCreate := _id
-	auditCreate.Key = "create_author"
+func (m auditMixin) Fields() []ent.Field {
+	auditCreate := innerID
+	auditCreate.Key = m.CreateField
 	auditCreate.CommentKey = i18n.Text("create_author.field.comment")
 	auditCreate.UseDefault = true
 	auditCreate.Optional = true
-	auditUpdate := _id
-	auditUpdate.Key = "update_author"
+	auditUpdate := innerID
+	auditUpdate.Key = m.UpdateField
 	auditUpdate.CommentKey = i18n.Text("update_author.field.comment")
 	auditUpdate.UseDefault = true
 	auditUpdate.Optional = true
@@ -48,10 +65,10 @@ func (Audit) Fields() []ent.Field {
 }
 
 // Indexes of the mixin.
-func (Audit) Indexes() []ent.Index {
+func (m auditMixin) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("create_author"),
-		index.Fields("update_author"),
+		index.Fields(m.CreateField),
+		index.Fields(m.UpdateField),
 	}
 }
 
@@ -62,7 +79,7 @@ type ManagerSchema struct {
 
 // Fields of the Model.
 func (ManagerSchema) Fields() []ent.Field {
-	manager := _id
+	manager := innerID
 	manager.Key = "manager_id"
 	manager.CommentKey = i18n.Text("manager_id.field.comment")
 	manager.Optional = true
@@ -82,36 +99,65 @@ func (ManagerSchema) Indexes() []ent.Index {
 	}
 }
 
-// CreateUpdateSchema schema to include control and time fields.
-type CreateUpdateSchema struct {
+// createUpdateMixin schema to include control and time fields.
+type createUpdateMixin struct {
 	mixin.Schema
+	UpdateField string
+	CreateField string
+}
+
+func DefaultCreateUpdateMixin() ent.Mixin {
+	return createUpdateMixin{
+		UpdateField: "update_time",
+		CreateField: "create_time",
+	}
+}
+
+func CreateUpdateMixin(updateField, createField string) ent.Mixin {
+	return createUpdateMixin{
+		UpdateField: updateField,
+		CreateField: createField,
+	}
 }
 
 // Fields of the mixin.
-func (CreateUpdateSchema) Fields() []ent.Field {
+func (m createUpdateMixin) Fields() []ent.Field {
 	return append(
-		CreateSchema{}.Fields(),
-		UpdateSchema{}.Fields()...,
+		CreateMixin(m.CreateField).Fields(),
+		UpdateMixin(m.UpdateField).Fields()...,
 	)
 }
 
 // Indexes of the mixin.
-func (CreateUpdateSchema) Indexes() []ent.Index {
+func (m createUpdateMixin) Indexes() []ent.Index {
 	return append(
-		CreateSchema{}.Indexes(),
-		UpdateSchema{}.Indexes()...,
+		CreateMixin(m.CreateField).Indexes(),
+		UpdateMixin(m.UpdateField).Indexes()...,
 	)
 }
 
-// CreateSchema schema to include control and time fields.
-type CreateSchema struct {
+// createMixin schema to include control and time fields.
+type createMixin struct {
 	mixin.Schema
+	CreateField string
+}
+
+func DefaultCreateMixin() ent.Mixin {
+	return createMixin{
+		CreateField: "create_time",
+	}
+}
+
+func CreateMixin(fieldName string) ent.Mixin {
+	return createMixin{
+		CreateField: fieldName,
+	}
 }
 
 // Fields of the mixin.
-func (CreateSchema) Fields() []ent.Field {
+func (m createMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("create_time").
+		field.Time(m.CreateField).
 			Comment(i18n.Text("create_time.field.comment")).
 			Default(time.Now).
 			Immutable(),
@@ -119,21 +165,33 @@ func (CreateSchema) Fields() []ent.Field {
 }
 
 // Indexes of the mixin.
-func (CreateSchema) Indexes() []ent.Index {
+func (m createMixin) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("create_time"),
+		index.Fields(m.CreateField),
 	}
 }
 
-// UpdateSchema schema to include control and time fields.
-type UpdateSchema struct {
+// updateMixin schema to include control and time fields.
+type updateMixin struct {
 	mixin.Schema
+	UpdateField string
+}
+
+func DefaultUpdateMixin() ent.Mixin {
+	return updateMixin{
+		UpdateField: "update_time",
+	}
+}
+func UpdateMixin(fieldName string) ent.Mixin {
+	return updateMixin{
+		UpdateField: fieldName,
+	}
 }
 
 // Fields of the mixin.
-func (UpdateSchema) Fields() []ent.Field {
+func (m updateMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("update_time").
+		field.Time(m.UpdateField).
 			Comment(i18n.Text("update_time.field.comment")).
 			Default(time.Now).
 			UpdateDefault(time.Now),
@@ -141,21 +199,22 @@ func (UpdateSchema) Fields() []ent.Field {
 }
 
 // Indexes of the mixin.
-func (UpdateSchema) Indexes() []ent.Index {
+func (m updateMixin) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("update_time"),
+		index.Fields(m.UpdateField),
 	}
 }
 
-// DeleteSchema schema to include control and time fields.
-type DeleteSchema struct {
+// DeleteMixin schema to include control and time fields.
+type DeleteMixin struct {
 	mixin.Schema
+	DeleteField string
 }
 
 // Fields of the Model.
-func (DeleteSchema) Fields() []ent.Field {
+func (m DeleteMixin) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("delete_time").
+		field.Time(m.DeleteField).
 			Comment(i18n.Text("delete_time.field.comment")).
 			Optional().
 			Nillable(),
@@ -163,23 +222,23 @@ func (DeleteSchema) Fields() []ent.Field {
 }
 
 // Indexes of the mixin.
-func (DeleteSchema) Indexes() []ent.Index {
+func (m DeleteMixin) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("delete_time"),
+		index.Fields(m.DeleteField),
 	}
 }
 
 var (
 	ModelMixin = []ent.Mixin{
-		_id,
-		CreateSchema{},
-		UpdateSchema{},
+		innerID,
+		DefaultCreateMixin(),
+		DefaultUpdateMixin(),
 	}
 	AuditModelMixin = []ent.Mixin{
-		_id,
-		Audit{},
-		CreateSchema{},
-		UpdateSchema{},
+		innerID,
+		DefaultAudit(),
+		DefaultCreateMixin(),
+		DefaultUpdateMixin(),
 	}
 )
 

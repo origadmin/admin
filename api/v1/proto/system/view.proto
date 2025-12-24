@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package api.v1.services.system;
+
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "types/system.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/system;system";
+option java_multiple_files = true;
+option java_outer_classname = "APIServiceSystemViewProto";
+option java_package = "com.origadmin.api.v1.services.system";
+option objc_class_prefix = "APIServiceSystemView";
+
+// The view service definition.
+// A View represents a UI element that can be controlled by permissions, such as a menu, button, or page.
+service ViewService {
+  // Lists all view elements.
+  rpc ListViews(ListViewsRequest) returns (ListViewsResponse) {
+    option (google.api.http) = {get: "/sys/views"};
+  }
+  // Gets a single view element.
+  rpc GetView(GetViewRequest) returns (GetViewResponse) {
+    option (google.api.http) = {get: "/sys/views/{id}"};
+  }
+  // Creates a new view element.
+  rpc CreateView(CreateViewRequest) returns (CreateViewResponse) {
+    option (google.api.http) = {
+      post: "/sys/views"
+      body: "*"
+    };
+  }
+  // Updates a view element.
+  rpc UpdateView(UpdateViewRequest) returns (UpdateViewResponse) {
+    option (google.api.http) = {
+      put: "/sys/views/{view.id}"
+      body: "view"
+    };
+  }
+  // Deletes a view element.
+  rpc DeleteView(DeleteViewRequest) returns (DeleteViewResponse) {
+    option (google.api.http) = {delete: "/sys/views/{id}"};
+  }
+}
+
+// Request message for ViewService.ListViews.
+message ListViewsRequest {
+  int64 id = 1 [json_name = "id"];
+  int32 page = 2 [json_name = "page"];
+  int32 page_size = 3 [json_name = "page_size"];
+  string page_token = 4 [json_name = "page_token"];
+  bool no_paging = 5 [json_name = "no_paging"];
+  bool only_count = 6 [json_name = "only_count"];
+  string keyword = 7 [json_name = "keyword"];
+  string scope = 8 [json_name = "scope"];
+}
+
+// Response message for ViewService.ListViews.
+message ListViewsResponse {
+  int32 total = 1 [json_name = "total"];
+  repeated api.v1.services.types.View views = 2 [json_name = "views"];
+  int32 page = 3 [json_name = "page"];
+  int32 page_size = 4 [json_name = "page_size"];
+  string next_page_token = 5 [json_name = "next_page_token"];
+  optional google.protobuf.Any extra = 6 [json_name = "extra"];
+}
+
+// Request message for ViewService.GetView.
+message GetViewRequest {
+  int64 id = 1;
+}
+
+// Response message for ViewService.GetView.
+message GetViewResponse {
+  api.v1.services.types.View view = 1;
+}
+
+// Request message for ViewService.CreateView.
+message CreateViewRequest {
+  string parent = 1;
+  string view_id = 2;
+  api.v1.services.types.View view = 3;
+}
+
+// Response message for ViewService.CreateView.
+message CreateViewResponse {
+  api.v1.services.types.View view = 1;
+}
+
+// Request message for ViewService.UpdateView.
+message UpdateViewRequest {
+  api.v1.services.types.View view = 1;
+}
+
+// Response message for ViewService.UpdateView.
+message UpdateViewResponse {
+  api.v1.services.types.View view = 1;
+}
+
+// Request message for ViewService.DeleteView.
+message DeleteViewRequest {
+  int64 id = 1;
+}
+
+// Response message for ViewService.DeleteView.
+message DeleteViewResponse {
+  google.protobuf.Empty empty = 1;
+}
