@@ -410,7 +410,7 @@ var (
 		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "delete_time.field.comment"},
+		{Name: "delete_time", Type: field.TypeTime, Nullable: true, Comment: "Time of soft-delete"},
 		{Name: "uuid", Type: field.TypeString, Size: 36, Comment: "entity.user.field.uuid"},
 		{Name: "allowed_ip", Type: field.TypeString, Comment: "entity.user.field.allowed_ip", Default: "0.0.0.0"},
 		{Name: "username", Type: field.TypeString, Unique: true, Size: 32, Comment: "entity.user.field.username"},
@@ -460,11 +460,6 @@ var (
 				Name:    "user_update_time",
 				Unique:  false,
 				Columns: []*schema.Column{SysUsersColumns[4]},
-			},
-			{
-				Name:    "user_delete_time",
-				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[5]},
 			},
 			{
 				Name:    "user_username",

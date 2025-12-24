@@ -26,7 +26,7 @@ type User struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// delete_time.field.comment
+	// Time of soft-delete
 	DeleteTime *time.Time `json:"delete_time,omitempty"`
 	// entity.user.field.uuid
 	UUID string `json:"uuid,omitempty"`
