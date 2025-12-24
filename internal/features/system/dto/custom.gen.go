@@ -2,21 +2,3 @@
 // More info: https://github.com/origadmin/abgen
 
 package dto
-
-import (
-	"origadmin/application/admin/internal/features/system/data/ent/user"
-)
-
-// ConvertGenderToString is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertGenderToString(from user.Gender) string {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStringToGender is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStringToGender(from string) user.Gender {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}

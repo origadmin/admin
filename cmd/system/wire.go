@@ -19,29 +19,32 @@ import (
 
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
-	"origadmin/application/admin/internal/features/system/data"
+	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
 )
 
-func provideLogger(r *runtime.App) log.Logger {
-	return r.Logger()
+func provideHasher() (hash.Crypto, error) {
+	// Using a default cost for bcrypt. In a real application, this might come from config.
+	return hash.NewCrypto(types.BCRYPT, bcrypt.WithCost(bcrypt.DefaultCost))
 }
 
-func provideHasher() (hash.Crypto, error) {
-	return hash.NewCrypto(types.BCRYPT, bcrypt.WithCost(10))
+func provideLogger(app *runtime.App) log.Logger {
+	return app.Logger()
 }
 
 // wireApp init kratos application.
-func wireApp(r *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
+		// The injector function's parameter `app` is an implicit provider for *runtime.App.
 		provideLogger,
 		provideHasher,
-		wire.FieldsOf(new(*runtime.App), "AppInfo"),
 		wire.FieldsOf(new(*conf.Config), "Bootstrap"),
 		wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
 		data.ProviderSet,
+		dal.ProviderSet,
 		biz.ProviderSet,
 		service.ProviderSet,
 		server.ProviderSet,

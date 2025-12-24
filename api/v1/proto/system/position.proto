@@ -51,6 +51,8 @@ message ListPositionsRequest {
   bool no_paging = 5 [json_name = "no_paging"];
   // The only_count is the query parameter for set only to query the total number
   bool only_count = 6 [json_name = "only_count"];
+  // The keyword is the query parameter for set only to query the position by keyword
+  string keyword = 7 [json_name = "keyword"];
 }
 
 message ListPositionsResponse {

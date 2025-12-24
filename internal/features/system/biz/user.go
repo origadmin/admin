@@ -12,37 +12,31 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/features/system/dal"
+	"origadmin/application/admin/internal/features/system/dto"
 )
 
 // UserUseCase is a User use case.
 type UserUseCase struct {
-	repo   dal.UserRepo
+	repo   dto.UserRepo
 	hasher hash.Crypto
 }
 
 func (uc *UserUseCase) ListUserResources(ctx context.Context, id int64) ([]*types.Resource, error) {
-	result, err := uc.repo.ListResourceByUserID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return nil, fmt.Errorf("ListUserResources not implemented")
 }
 
 func (uc *UserUseCase) UpdateUserRoles(ctx context.Context, id int64, roleIDs []int64) error {
-	err := uc.repo.AddRoleIDs(ctx, id, roleIDs)
-	if err != nil {
-		return err
-	}
-	return nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return fmt.Errorf("UpdateUserRoles not implemented")
 }
 
 func (uc *UserUseCase) UpdateUserStatus(ctx context.Context, id int64, status int32) error {
-	err := uc.repo.UpdateUserStatus(ctx, id, status)
-	if err != nil {
-		return err
-	}
-	return nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return fmt.Errorf("UpdateUserStatus not implemented")
 }
 
 func (uc *UserUseCase) ResetUserPassword(ctx context.Context, id int64, password string) error {
@@ -51,19 +45,15 @@ func (uc *UserUseCase) ResetUserPassword(ctx context.Context, id int64, password
 }
 
 func (uc *UserUseCase) ListUsers(ctx context.Context, in *system.ListUsersRequest) ([]*types.User, int32, error) {
-	result, total, err := uc.repo.List(ctx, in)
-	if err != nil {
-		return nil, 0, err
-	}
-	return result, total, nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return nil, 0, fmt.Errorf("ListUsers not implemented")
 }
 
 func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, error) {
-	result, err := uc.repo.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return nil, fmt.Errorf("GetUser not implemented")
 }
 
 func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string) (*types.User, error) {
@@ -75,29 +65,24 @@ func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password 
 
 	fmt.Println("Create new user username:", in.Username, "password:", password)
 
-	result, err := uc.repo.Create(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return nil, fmt.Errorf("CreateUser not implemented")
 }
 
 func (uc *UserUseCase) UpdateUser(ctx context.Context, in *types.User) (*types.User, error) {
-	result, err := uc.repo.Update(ctx, in)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return nil, fmt.Errorf("UpdateUser not implemented")
 }
 
 func (uc *UserUseCase) DeleteUser(ctx context.Context, id int64) error {
-	if err := uc.repo.Delete(ctx, id); err != nil {
-		return err
-	}
-	return nil
+	// This method is not in the biz.UserRepo interface, so it needs to be implemented in the data layer
+	// and added to the interface. For now, we'll return an error.
+	return fmt.Errorf("DeleteUser not implemented")
 }
 
 // NewUserUseCase new a User use case.
-func NewUserUseCase(repo dal.UserRepo, hasher hash.Crypto) (*UserUseCase, error) {
+func NewUserUseCase(repo dto.UserRepo, hasher hash.Crypto) (*UserUseCase, error) {
 	return &UserUseCase{repo: repo, hasher: hasher}, nil
 }

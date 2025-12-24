@@ -102,7 +102,7 @@ message ListUsersRequest {
   // The only_count is the query parameter for set only to query the total number
   bool only_count = 6 [json_name = "only_count"];
   // The title query parameter for set only to query the title
-  string title = 7 [json_name = "title"];
+  string keyword = 7 [json_name = "keyword"];
 }
 
 message ListUsersResponse {

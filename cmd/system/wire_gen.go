@@ -12,34 +12,69 @@ import (
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
+)
+
+import (
+	_ "github.com/origadmin/contrib/config/consul"
+	_ "github.com/origadmin/contrib/registry/consul"
+	_ "github.com/sqlite3ent/sqlite3"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(r *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(r, bootstrap)
+func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+	confpbBootstrap := &bootstrap.Bootstrap
+	servers := confpbBootstrap.Servers
+	dataData, cleanup, err := data.NewData(app, bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	resourceRepo := dal.NewResourceRepo(r, dataData)
-	resourceServiceBiz := biz.NewResourceServiceBiz(r, resourceRepo)
-	resourceServiceServer := service.NewResourceServiceServerPB(r, resourceServiceBiz)
-	roleRepo := dal.NewRoleRepo(r, dataData)
-	roleServiceBiz := biz.NewRoleServiceBiz(r, roleRepo)
-	roleServiceServer := service.NewRoleServiceServerPB(r, roleServiceBiz)
-	userRepo := dal.NewUserRepo(r, dataData)
-	userServiceBiz := biz.NewUserServiceBiz(r, userRepo)
-	userServiceServer := service.NewUserServiceServerPB(r, userServiceBiz)
-	permissionRepo := dal.NewPermissionRepo(r, dataData)
-	permissionServiceBiz := biz.NewPermissionServiceBiz(r, permissionRepo)
-	permissionServiceServer := service.NewPermissionServiceServerPB(r, permissionServiceBiz)
-	systemServerRegistrar := service.NewRegisterServer(resourceServiceServer, roleServiceServer, userServiceServer, permissionServiceServer)
-	v := server.NewSystemServer(r, bootstrap, systemServerRegistrar)
-	app := NewApp(r, v)
-	return app, func() {
+	resourceRepo := dal.NewResourceRepo(dataData)
+	resourceUseCase, err := biz.NewResourceUseCase(resourceRepo)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	roleRepo, err := dal.NewRoleRepo(dataData)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	roleUseCase, err := biz.NewRoleUseCase(roleRepo)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	userRepo := dal.NewUserRepo(dataData)
+	crypto, err := provideHasher()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	userUseCase, err := biz.NewUserUseCase(userRepo, crypto)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	permissionRepo := dal.NewPermissionRepo(dataData)
+	permissionUseCase, err := biz.NewPermissionUseCase(permissionRepo)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	systemService := service.New(resourceUseCase, roleUseCase, userUseCase, permissionUseCase)
+	v := provideLogger(app)
+	v2, err := server.NewServers(servers, systemService, v)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	kratosApp := NewApp(app, v2)
+	return kratosApp, func() {
 		cleanup()
 	}, nil
 }

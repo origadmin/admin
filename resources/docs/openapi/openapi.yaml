@@ -1152,6 +1152,11 @@ paths:
                   description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
+                - name: keyword
+                  in: query
+                  description: The keyword is the query parameter for set only to query the department by keyword
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1325,6 +1330,11 @@ paths:
                   description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
+                - name: keyword
+                  in: query
+                  description: The keyword is the query parameter for set only to query the menu by keyword
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1500,6 +1510,11 @@ paths:
                     type: array
                     items:
                         type: string
+                - name: keyword
+                  in: query
+                  description: The keyword is the query parameter for set only to query the permission by keyword
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1673,6 +1688,11 @@ paths:
                   description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
+                - name: keyword
+                  in: query
+                  description: The keyword is the query parameter for set only to query the position by keyword
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1851,6 +1871,11 @@ paths:
                   description: resource type
                   schema:
                     type: string
+                - name: keyword
+                  in: query
+                  description: The resource name keyword
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -2024,6 +2049,11 @@ paths:
                   description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
+                - name: keyword
+                  in: query
+                  description: The keyword is the query parameter for set only to query the role by keyword
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -2197,7 +2227,7 @@ paths:
                   description: The only_count is the query parameter for set only to query the total number
                   schema:
                     type: boolean
-                - name: title
+                - name: keyword
                   in: query
                   description: The title query parameter for set only to query the title
                   schema:

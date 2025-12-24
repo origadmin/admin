@@ -53,6 +53,8 @@ message ListPermissionsRequest {
   bool only_count = 6 [json_name = "only_count"];
   // The data_scopes is used to query the permission by data scopes.
   repeated string data_scopes = 7 [json_name = "data_scopes"];
+  // The keyword is the query parameter for set only to query the permission by keyword
+  string keyword = 8 [json_name = "keyword"];
 }
 
 message ListPermissionsResponse {
