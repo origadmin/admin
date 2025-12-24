@@ -12,5 +12,5 @@ sources:
   - file:
       path: logger.yaml
     type: file
-  # Environment variables can be loaded last to override file settings.
+  # Environment variables are loaded last to override file settings.
   - type: env

@@ -14,7 +14,7 @@ managed:
 plugins:
   # comment with error: duplicate generated file name "openapi.yaml". Generation will continue without error here and drop the second occurrence of this file, but please raise an issue with the maintainer of the plugin.
   - local: protoc-gen-openapi
-    out: resources/docs/openapi
+    out: resources/api-docs/openapi
     opt:
       - naming=proto # Naming convention. Using "proto" passes the name directly from the proto file. The default value is json
       #      - depth=2 # Recursion depth of the loop message. The default value is 2

@@ -8,7 +8,7 @@ THIRD_PARTY_PATH=third_party
 PROTO_INTERNAL_PATH=internal
 PROTO_TOOLKITS_PATH=toolkits
 PROTO_API_PATH=api
-OPENAPI_DOCS_PATH=resources/docs/openapi
+OPENAPI_DOCS_PATH=resources/api-docs/openapi
 
 ifeq ($(GOHOSTOS), windows)
 	#the `find.exe` is different from `find` in bash/shell.

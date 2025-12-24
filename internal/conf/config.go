@@ -72,8 +72,12 @@ func (c *Config) DecodedConfig() any {
 	return &c.Bootstrap
 }
 
-func (c *Config) Transform(config interfaces.Config, config2 interfaces.StructuredConfig) (interfaces.
+func (c *Config) Transform(config interfaces.Config, sc interfaces.StructuredConfig) (interfaces.
 StructuredConfig, error) {
+	err := config.Decode("", &c.Bootstrap)
+	if err != nil {
+		return nil, err
+	}
 	return c, nil
 }
 

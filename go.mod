@@ -12,16 +12,16 @@ replace github.com/origadmin/contrib v1.1.0 => ../../contrib
 
 require (
 	entgo.io/ent v0.14.5
-	github.com/casbin/casbin/v2 v2.134.0
-	github.com/envoyproxy/protoc-gen-validate v1.2.1
-	github.com/go-kratos/kratos/v2 v2.9.1
+	github.com/casbin/casbin/v2 v2.135.0
+	github.com/envoyproxy/protoc-gen-validate v1.3.0
+	github.com/go-kratos/kratos/v2 v2.9.2
 	github.com/goexts/generic v0.14.0
 	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect
 	github.com/google/gnostic v0.7.1 // indirect
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.7.0
 	github.com/gorilla/handlers v1.5.2
-	github.com/mattn/go-sqlite3 v1.14.28 // indirect
+	github.com/mattn/go-sqlite3 v1.14.32 // indirect
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/origadmin/contrib v1.1.0
 	github.com/origadmin/entslog/v3 v3.1.0
@@ -29,7 +29,7 @@ require (
 	github.com/origadmin/slog-kratos v1.0.5 // indirect
 	github.com/origadmin/toolkits v1.2.0
 	github.com/origadmin/toolkits/codec v1.2.0
-	github.com/origadmin/toolkits/crypto  v1.2.0
+	github.com/origadmin/toolkits/crypto v1.2.0
 	github.com/origadmin/toolkits/errors v1.2.0
 	github.com/sony/sonyflake v1.3.0
 	github.com/sqlite3ent/sqlite3 v1.40.0
@@ -95,9 +95,9 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-chi/chi/v5 v5.2.3 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
-	github.com/go-kratos/kratos/cmd/kratos/v2 v2.0.0-20251106012513-9262193e351a // indirect
-	github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2 v2.0.0-20251106012513-9262193e351a // indirect
-	github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20251106012513-9262193e351a // indirect
+	github.com/go-kratos/kratos/cmd/kratos/v2 v2.0.0-20251201062103-6f0b3015b803 // indirect
+	github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2 v2.0.0-20251201062103-6f0b3015b803 // indirect
+	github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20251201062103-6f0b3015b803 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
@@ -193,7 +193,7 @@ require (
 	golang.org/x/text v0.31.0 // indirect
 	golang.org/x/tools v0.39.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251124214823-79d6a2a48846 // indirect
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1 // indirect
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.6.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

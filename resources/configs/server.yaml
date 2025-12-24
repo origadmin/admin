@@ -1,10 +1,21 @@
 # server.yaml
 servers:
-  - protocol: http
-    http:
-      addr: 0.0.0.0:8000
-      timeout: 1s
-  - protocol: grpc
-    grpc:
-      addr: 0.0.0.0:9000
-      timeout: 1s
+  configs:
+    - grpc:
+        # Reads the port from the GRPC_PORT environment variable; defaults to 9090 if not present.
+        addr: 0.0.0.0:${GRPC_PORT:9090}
+        middlewares:
+          - recovery
+          - logger
+        network: tcp
+      name: grpc_server
+      protocol: grpc
+    - http:
+        # Reads the port from the HTTP_PORT environment variable; defaults to 8080 if not present.
+        addr: 0.0.0.0:${HTTP_PORT:8080}
+        middlewares:
+          - recovery
+          - logger
+        network: tcp
+      name: http_server
+      protocol: http

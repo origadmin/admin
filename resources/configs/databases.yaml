@@ -1,6 +1,7 @@
 # databases.yaml
 data:
-  database:
-    default:
-      driver: sqlite3
-      source: file:data.db?cache=shared&_fk=1
+  databases:
+    configs:
+      - dialect: sqlite3
+        name: default
+        source: file:./data.db?cache=shared&mode=memory&_fk=1

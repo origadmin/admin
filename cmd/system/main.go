@@ -70,7 +70,6 @@ func main() {
 	if !ok {
 		log.Fatalf("failed to get bootstrap config")
 	}
-
 	// wireApp now takes the runtime instance and builds the kratos app.
 	app, cleanupApp, err := wireApp(rt, bootstrapConfig)
 	if err != nil {

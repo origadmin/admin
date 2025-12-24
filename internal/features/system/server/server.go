@@ -6,6 +6,7 @@ package server
 
 import (
 	"errors"
+	stdhttp "net/http"
 
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -72,7 +73,9 @@ func NewHTTPServer(cfg *httpv1.Server, svc *service.SystemService, logger log.Lo
 	systemv1.RegisterRoleServiceHTTPServer(srv, svc)
 	systemv1.RegisterPermissionServiceHTTPServer(srv, svc)
 	systemv1.RegisterResourceServiceHTTPServer(srv, svc)
-
+	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
+		log.Infof("HTTP %s %s", method, path)
+	})
 	return srv, nil
 }
 
