@@ -2,19 +2,19 @@
 @host = http://127.0.0.1:8080
 
 ###
-# RBAC - Resources
+# RBAC - Resources (Direct Service Test)
 ###
 
 # @name ListResources
 # List all resources with pagination
-GET {{host}}/api/v1/sys/resources?page=1&page_size=10
+GET {{host}}/sys/resources?page=1&page_size=10
 Authorization: Bearer {{token}}
 
 ###
 
 # @name CreateResource
 # Create a new resource
-POST {{host}}/api/v1/sys/resources
+POST {{host}}/sys/resources
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -27,19 +27,19 @@ Content-Type: application/json
 }
 
 ###
-# RBAC - Roles
+# RBAC - Roles (Direct Service Test)
 ###
 
 # @name ListRoles
 # List all roles with pagination
-GET {{host}}/api/v1/sys/roles?page=1&page_size=10
+GET {{host}}/sys/roles?page=1&page_size=10
 Authorization: Bearer {{token}}
 
 ###
 
 # @name CreateRole
 # Create a new role
-POST {{host}}/api/v1/sys/roles
+POST {{host}}/sys/roles
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -54,19 +54,19 @@ Content-Type: application/json
 }
 
 ###
-# RBAC - Users
+# RBAC - Users (Direct Service Test)
 ###
 
 # @name ListUsers
 # List all users with pagination
-GET {{host}}/api/v1/sys/users?page=1&page_size=10
+GET {{host}}/sys/users?page=1&page_size=10
 Authorization: Bearer {{token}}
 
 ###
 
 # @name CreateUser
 # Create a new user
-POST {{host}}/api/v1/sys/users
+POST {{host}}/sys/users
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -85,7 +85,7 @@ Content-Type: application/json
 
 # @name CreateUserWithRandomPassword
 # Create a new user with a random password
-POST {{host}}/api/v1/sys/users
+POST {{host}}/sys/users
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -101,19 +101,19 @@ Content-Type: application/json
 }
 
 ###
-# RBAC - Permissions
+# RBAC - Permissions (Direct Service Test)
 ###
 
 # @name ListPermissions
 # List all permissions with pagination
-GET {{host}}/api/v1/sys/permissions?page=1&page_size=10
+GET {{host}}/sys/permissions?page=1&page_size=10
 Authorization: Bearer {{token}}
 
 ###
 
 # @name CreatePermission
 # Create a new permission
-POST {{host}}/api/v1/sys/permissions
+POST {{host}}/sys/permissions
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -125,12 +125,12 @@ Content-Type: application/json
 }
 
 ###
-# RBAC - Departments
+# RBAC - Departments (Direct Service Test)
 ###
 
 # @name CreateDepartment
 # Create a new department
-POST {{host}}/api/v1/sys/departments
+POST {{host}}/sys/departments
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -142,12 +142,12 @@ Content-Type: application/json
 }
 
 ###
-# RBAC - Menus
+# RBAC - Menus (Direct Service Test)
 ###
 
 # @name CreateMenu
 # Create a new menu
-POST {{host}}/api/v1/sys/menus
+POST {{host}}/sys/menus
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -160,12 +160,12 @@ Content-Type: application/json
 }
 
 ###
-# RBAC - Positions
+# RBAC - Positions (Direct Service Test)
 ###
 
 # @name CreatePosition
 # Create a new position
-POST {{host}}/api/v1/sys/positions
+POST {{host}}/sys/positions
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

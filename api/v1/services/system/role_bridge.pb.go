@@ -136,7 +136,7 @@ func _RoleService_GetRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(ctx
 func _RoleService_CreateRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateRoleRequest
-		if err := ctx.Bind(&in.Role); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

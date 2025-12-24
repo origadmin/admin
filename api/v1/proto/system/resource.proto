@@ -24,7 +24,7 @@ service ResourceService {
   rpc CreateResource(CreateResourceRequest) returns (CreateResourceResponse) {
     option (google.api.http) = {
       post: "/sys/resources"
-      body: "resource"
+      body: "*"
     };
   }
   rpc UpdateResource(UpdateResourceRequest) returns (UpdateResourceResponse) {

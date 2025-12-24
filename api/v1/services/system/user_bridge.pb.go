@@ -197,7 +197,7 @@ func _UserService_GetUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx
 func _UserService_CreateUser0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateUserRequest
-		if err := ctx.Bind(&in.User); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

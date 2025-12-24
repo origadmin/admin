@@ -18,6 +18,7 @@ import (
 	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/runtime/log"
 	"origadmin/application/admin/internal/conf"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 

@@ -136,7 +136,7 @@ func _DepartmentService_GetDepartment0_Bridge_Handler(srv DepartmentServiceHooke
 func _DepartmentService_CreateDepartment0_Bridge_Handler(srv DepartmentServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateDepartmentRequest
-		if err := ctx.Bind(&in.Department); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

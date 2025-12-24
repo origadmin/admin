@@ -18,6 +18,8 @@ func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPer
 	return &system.ListPermissionsResponse{
 		Permissions: permissions,
 		Total:       total,
+		Page:        req.GetPage(),
+		PageSize:    req.GetPageSize(),
 	}, nil
 }
 

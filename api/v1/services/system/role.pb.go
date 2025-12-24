@@ -645,13 +645,13 @@ const file_system_role_proto_rawDesc = "" +
 	"\x11DeleteRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteRoleResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xff\x04\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xfc\x04\n" +
 	"\vRoleService\x12t\n" +
 	"\tListRoles\x12(.api.v1.services.system.ListRolesRequest\x1a).api.v1.services.system.ListRolesResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/sys/roles\x12s\n" +
-	"\aGetRole\x12&.api.v1.services.system.GetRoleRequest\x1a'.api.v1.services.system.GetRoleResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/roles/{id}\x12}\n" +
+	"\aGetRole\x12&.api.v1.services.system.GetRoleRequest\x1a'.api.v1.services.system.GetRoleResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/roles/{id}\x12z\n" +
 	"\n" +
-	"CreateRole\x12).api.v1.services.system.CreateRoleRequest\x1a*.api.v1.services.system.CreateRoleResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x04role\"\n" +
+	"CreateRole\x12).api.v1.services.system.CreateRoleRequest\x1a*.api.v1.services.system.CreateRoleResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
 	"/sys/roles\x12\x87\x01\n" +
 	"\n" +
 	"UpdateRole\x12).api.v1.services.system.UpdateRoleRequest\x1a*.api.v1.services.system.UpdateRoleResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04role\x1a\x14/sys/roles/{role.id}\x12|\n" +

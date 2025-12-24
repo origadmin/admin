@@ -86,7 +86,7 @@ func _ResourceService_GetResource0_HTTP_Handler(srv ResourceServiceHTTPServer) f
 func _ResourceService_CreateResource0_HTTP_Handler(srv ResourceServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateResourceRequest
-		if err := ctx.Bind(&in.Resource); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -174,7 +174,7 @@ func (c *ResourceServiceHTTPClientImpl) CreateResource(ctx context.Context, in *
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationResourceServiceCreateResource))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Resource, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

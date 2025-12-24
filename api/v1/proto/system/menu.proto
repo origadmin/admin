@@ -24,7 +24,7 @@ service MenuService {
   rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse) {
     option (google.api.http) = {
       post: "/sys/menus"
-      body: "menu"
+      body: "*"
     };
   }
   rpc UpdateMenu(UpdateMenuRequest) returns (UpdateMenuResponse) {

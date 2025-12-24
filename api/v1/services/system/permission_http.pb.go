@@ -86,7 +86,7 @@ func _PermissionService_GetPermission0_HTTP_Handler(srv PermissionServiceHTTPSer
 func _PermissionService_CreatePermission0_HTTP_Handler(srv PermissionServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreatePermissionRequest
-		if err := ctx.Bind(&in.Permission); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -174,7 +174,7 @@ func (c *PermissionServiceHTTPClientImpl) CreatePermission(ctx context.Context, 
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationPermissionServiceCreatePermission))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Permission, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

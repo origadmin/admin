@@ -136,7 +136,7 @@ func _PermissionService_GetPermission0_Bridge_Handler(srv PermissionServiceHooke
 func _PermissionService_CreatePermission0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreatePermissionRequest
-		if err := ctx.Bind(&in.Permission); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

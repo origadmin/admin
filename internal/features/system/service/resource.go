@@ -18,6 +18,8 @@ func (s *SystemService) ListResources(ctx context.Context, req *system.ListResou
 	return &system.ListResourcesResponse{
 		Resources: resources,
 		Total:     total,
+		Page:      req.GetPage(),
+		PageSize:  req.GetPageSize(),
 	}, nil
 }
 

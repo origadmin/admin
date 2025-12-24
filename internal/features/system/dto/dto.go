@@ -16,13 +16,21 @@ import (
 // ConvertGenderToString is a custom conversion function stub.
 // Please implement this function to complete the conversion.
 func ConvertGenderToString(from user.Gender) string {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
+	switch from {
+	case user.GenderFemale:
+		return "female"
+	default:
+		return "male"
+	}
 }
 
 // ConvertStringToGender is a custom conversion function stub.
 // Please implement this function to complete the conversion.
 func ConvertStringToGender(from string) user.Gender {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
+	switch from {
+	case "female":
+		return user.GenderFemale
+	default:
+		return user.GenderMale
+	}
 }

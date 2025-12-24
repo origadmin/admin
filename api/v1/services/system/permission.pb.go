@@ -665,12 +665,11 @@ const file_system_permission_proto_rawDesc = "" +
 	"\x17DeletePermissionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
 	"\x18DeletePermissionResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x93\x06\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x8a\x06\n" +
 	"\x11PermissionService\x12\x8c\x01\n" +
 	"\x0fListPermissions\x12..api.v1.services.system.ListPermissionsRequest\x1a/.api.v1.services.system.ListPermissionsResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/sys/permissions\x12\x8b\x01\n" +
-	"\rGetPermission\x12,.api.v1.services.system.GetPermissionRequest\x1a-.api.v1.services.system.GetPermissionResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/sys/permissions/{id}\x12\x9b\x01\n" +
-	"\x10CreatePermission\x12/.api.v1.services.system.CreatePermissionRequest\x1a0.api.v1.services.system.CreatePermissionResponse\"$\x82\xd3\xe4\x93\x02\x1e:\n" +
-	"permission\"\x10/sys/permissions\x12\xab\x01\n" +
+	"\rGetPermission\x12,.api.v1.services.system.GetPermissionRequest\x1a-.api.v1.services.system.GetPermissionResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/sys/permissions/{id}\x12\x92\x01\n" +
+	"\x10CreatePermission\x12/.api.v1.services.system.CreatePermissionRequest\x1a0.api.v1.services.system.CreatePermissionResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/permissions\x12\xab\x01\n" +
 	"\x10UpdatePermission\x12/.api.v1.services.system.UpdatePermissionRequest\x1a0.api.v1.services.system.UpdatePermissionResponse\"4\x82\xd3\xe4\x93\x02.:\n" +
 	"permission\x1a /sys/permissions/{permission.id}\x12\x94\x01\n" +
 	"\x10DeletePermission\x12/.api.v1.services.system.DeletePermissionRequest\x1a0.api.v1.services.system.DeletePermissionResponse\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/sys/permissions/{id}B\xe4\x01\n" +

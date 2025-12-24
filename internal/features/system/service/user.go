@@ -50,8 +50,10 @@ func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequ
 		return nil, err
 	}
 	return &system.ListUsersResponse{
-		Users: users,
-		Total: total,
+		Users:    users,
+		Total:    total,
+		Page:     req.GetPage(),
+		PageSize: req.GetPageSize(),
 	}, nil
 }
 

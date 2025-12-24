@@ -86,7 +86,7 @@ func _MenuService_GetMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http
 func _MenuService_CreateMenu0_HTTP_Handler(srv MenuServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateMenuRequest
-		if err := ctx.Bind(&in.Menu); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -174,7 +174,7 @@ func (c *MenuServiceHTTPClientImpl) CreateMenu(ctx context.Context, in *CreateMe
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationMenuServiceCreateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Menu, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

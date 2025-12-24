@@ -136,7 +136,7 @@ func _MenuService_GetMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx
 func _MenuService_CreateMenu0_Bridge_Handler(srv MenuServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateMenuRequest
-		if err := ctx.Bind(&in.Menu); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

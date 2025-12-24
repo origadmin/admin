@@ -17,8 +17,10 @@ func (s *SystemService) ListRoles(ctx context.Context, req *system.ListRolesRequ
 	}
 
 	return &system.ListRolesResponse{
-		Roles: roles,
-		Total: total,
+		Roles:    roles,
+		Total:    total,
+		Page:     req.GetPage(),
+		PageSize: req.GetPageSize(),
 	}, nil
 }
 func (s *SystemService) GetRole(ctx context.Context, req *system.GetRoleRequest) (*system.GetRoleResponse, error) {

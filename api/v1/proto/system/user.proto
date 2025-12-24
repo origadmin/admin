@@ -29,7 +29,7 @@ service UserService {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/sys/users"
-      body: "user"
+      body: "*"
     };
   }
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {

@@ -24,7 +24,7 @@ service RoleService {
   rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
       post: "/sys/roles"
-      body: "role"
+      body: "*"
     };
   }
   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {

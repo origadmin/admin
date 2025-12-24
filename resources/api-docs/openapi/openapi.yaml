@@ -1174,22 +1174,11 @@ paths:
             tags:
                 - DepartmentService
             operationId: DepartmentService_CreateDepartment
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the department is to be created.
-                  schema:
-                    type: string
-                - name: department_id
-                  in: query
-                  description: The department id to use for this department.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Department'
+                            $ref: '#/components/schemas/api.v1.services.system.CreateDepartmentRequest'
                 required: true
             responses:
                 "200":
@@ -1352,22 +1341,11 @@ paths:
             tags:
                 - MenuService
             operationId: MenuService_CreateMenu
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the menu is to be created.
-                  schema:
-                    type: string
-                - name: menu_id
-                  in: query
-                  description: The menu id to use for this menu.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Menu'
+                            $ref: '#/components/schemas/api.v1.services.system.CreateMenuRequest'
                 required: true
             responses:
                 "200":
@@ -1532,22 +1510,11 @@ paths:
             tags:
                 - PermissionService
             operationId: PermissionService_CreatePermission
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the permission is to be created.
-                  schema:
-                    type: string
-                - name: permission_id
-                  in: query
-                  description: The permission id to use for this permission.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Permission'
+                            $ref: '#/components/schemas/api.v1.services.system.CreatePermissionRequest'
                 required: true
             responses:
                 "200":
@@ -1710,22 +1677,11 @@ paths:
             tags:
                 - PositionService
             operationId: PositionService_CreatePosition
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the position is to be created.
-                  schema:
-                    type: string
-                - name: position_id
-                  in: query
-                  description: The position id to use for this position.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Position'
+                            $ref: '#/components/schemas/api.v1.services.system.CreatePositionRequest'
                 required: true
             responses:
                 "200":
@@ -1893,22 +1849,11 @@ paths:
             tags:
                 - ResourceService
             operationId: ResourceService_CreateResource
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the resource is to be created.
-                  schema:
-                    type: string
-                - name: resource_id
-                  in: query
-                  description: The resource id to use for this resource.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Resource'
+                            $ref: '#/components/schemas/api.v1.services.system.CreateResourceRequest'
                 required: true
             responses:
                 "200":
@@ -2071,22 +2016,11 @@ paths:
             tags:
                 - RoleService
             operationId: RoleService_CreateRole
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the role is to be created.
-                  schema:
-                    type: string
-                - name: role_id
-                  in: query
-                  description: The role id to use for this role.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Role'
+                            $ref: '#/components/schemas/api.v1.services.system.CreateRoleRequest'
                 required: true
             responses:
                 "200":
@@ -2249,37 +2183,11 @@ paths:
             tags:
                 - UserService
             operationId: UserService_CreateUser
-            parameters:
-                - name: parent
-                  in: query
-                  description: The parent resource id where the user is to be created.
-                  schema:
-                    type: string
-                - name: password
-                  in: query
-                  description: The password to use for this user.
-                  schema:
-                    type: string
-                - name: user_id
-                  in: query
-                  description: The user id to use for this user.
-                  schema:
-                    type: string
-                - name: is_system
-                  in: query
-                  description: The user is_system to use for this user.
-                  schema:
-                    type: boolean
-                - name: random_password
-                  in: query
-                  description: The random_password is the query parameter for set only to generate a random password
-                  schema:
-                    type: boolean
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.User'
+                            $ref: '#/components/schemas/api.v1.services.system.CreateUserRequest'
                 required: true
             responses:
                 "200":
@@ -3170,38 +3078,148 @@ components:
         api.v1.services.message.UpdatePersonalSettingResponse:
             type: object
             properties: {}
+        api.v1.services.system.CreateDepartmentRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the department is to be created.
+                department_id:
+                    type: string
+                    description: The department id to use for this department.
+                department:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Department'
+                    description: |-
+                        The department resource to create.
+                         The field id should match the Noun in the method id.
         api.v1.services.system.CreateDepartmentResponse:
             type: object
             properties:
                 department:
                     $ref: '#/components/schemas/api.v1.services.types.Department'
+        api.v1.services.system.CreateMenuRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the menu is to be created.
+                menu_id:
+                    type: string
+                    description: The menu id to use for this menu.
+                menu:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Menu'
+                    description: |-
+                        The menu resource to create.
+                         The field id should match the Noun in the method id.
+            description: CreateMenuRequest is the request for the MenuService.CreateMenu method.
         api.v1.services.system.CreateMenuResponse:
             type: object
             properties:
                 menu:
                     $ref: '#/components/schemas/api.v1.services.types.Menu'
             description: CreateMenuResponse is the response for the MenuService.CreateMenu method.
+        api.v1.services.system.CreatePermissionRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the permission is to be created.
+                permission_id:
+                    type: string
+                    description: The permission id to use for this permission.
+                permission:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: |-
+                        The permission resource to create.
+                         The field id should match the Noun in the method id.
         api.v1.services.system.CreatePermissionResponse:
             type: object
             properties:
                 permission:
                     $ref: '#/components/schemas/api.v1.services.types.Permission'
+        api.v1.services.system.CreatePositionRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the position is to be created.
+                position_id:
+                    type: string
+                    description: The position id to use for this position.
+                position:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Position'
+                    description: The position object to create.
         api.v1.services.system.CreatePositionResponse:
             type: object
             properties:
                 position:
                     $ref: '#/components/schemas/api.v1.services.types.Position'
+        api.v1.services.system.CreateResourceRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the resource is to be created.
+                resource_id:
+                    type: string
+                    description: The resource id to use for this resource.
+                resource:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The resource object to create.
+            description: CreateResourceRequest is the request for the ResourceService.CreateResource method.
         api.v1.services.system.CreateResourceResponse:
             type: object
             properties:
                 resource:
                     $ref: '#/components/schemas/api.v1.services.types.Resource'
             description: CreateResourceResponse is the response for the ResourceService.CreateResource method.
+        api.v1.services.system.CreateRoleRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the role is to be created.
+                role_id:
+                    type: string
+                    description: The role id to use for this role.
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: |-
+                        The role resource to create.
+                         The field id should match the Noun in the method id.
         api.v1.services.system.CreateRoleResponse:
             type: object
             properties:
                 role:
                     $ref: '#/components/schemas/api.v1.services.types.Role'
+        api.v1.services.system.CreateUserRequest:
+            type: object
+            properties:
+                parent:
+                    type: string
+                    description: The parent resource id where the user is to be created.
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The user resource to be created.
+                password:
+                    type: string
+                    description: The password to use for this user.
+                user_id:
+                    type: string
+                    description: The user id to use for this user.
+                is_system:
+                    type: boolean
+                    description: The user is_system to use for this user.
+                random_password:
+                    type: boolean
+                    description: The random_password is the query parameter for set only to generate a random password
         api.v1.services.system.CreateUserResponse:
             type: object
             properties:

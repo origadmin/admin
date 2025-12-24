@@ -8,6 +8,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
+
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
@@ -46,6 +48,11 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 	}
 
 	entUser := dto.ConvertUserPBToUser(u)
+	uuid, err := uuid.NewRandom()
+	if err != nil {
+		return nil, err
+	}
+	entUser.UUID = uuid.String()
 	if password != "" {
 		entUser.EncryptedPassword = password
 	}

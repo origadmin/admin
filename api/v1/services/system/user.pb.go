@@ -1109,14 +1109,14 @@ const file_system_user_proto_rawDesc = "" +
 	"\x04user\x18\x02 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12\x1a\n" +
 	"\brole_ids\x18\x03 \x03(\x03R\brole_ids\"J\n" +
 	"\x17UpdateUserRolesResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xfc\t\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf9\t\n" +
 	"\vUserService\x12t\n" +
 	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/sys/users\x12\x9b\x01\n" +
 	"\x11ListUserResources\x120.api.v1.services.system.ListUserResourcesRequest\x1a1.api.v1.services.system.ListUserResourcesResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/sys/users/{id}/resources\x12s\n" +
-	"\aGetUser\x12&.api.v1.services.system.GetUserRequest\x1a'.api.v1.services.system.GetUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/users/{id}\x12}\n" +
+	"\aGetUser\x12&.api.v1.services.system.GetUserRequest\x1a'.api.v1.services.system.GetUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/users/{id}\x12z\n" +
 	"\n" +
-	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x04user\"\n" +
+	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
 	"/sys/users\x12\x87\x01\n" +
 	"\n" +
 	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04user\x1a\x14/sys/users/{user.id}\x12|\n" +

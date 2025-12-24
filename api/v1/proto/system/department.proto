@@ -24,7 +24,7 @@ service DepartmentService {
   rpc CreateDepartment(CreateDepartmentRequest) returns (CreateDepartmentResponse) {
     option (google.api.http) = {
       post: "/sys/departments"
-      body: "department"
+      body: "*"
     };
   }
   rpc UpdateDepartment(UpdateDepartmentRequest) returns (UpdateDepartmentResponse) {

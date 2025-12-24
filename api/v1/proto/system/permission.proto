@@ -24,7 +24,7 @@ service PermissionService {
   rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse) {
     option (google.api.http) = {
       post: "/sys/permissions"
-      body: "permission"
+      body: "*"
     };
   }
   rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {

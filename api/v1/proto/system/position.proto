@@ -24,7 +24,7 @@ service PositionService {
   rpc CreatePosition(CreatePositionRequest) returns (CreatePositionResponse) {
     option (google.api.http) = {
       post: "/sys/positions"
-      body: "position"
+      body: "*"
     };
   }
   rpc UpdatePosition(UpdatePositionRequest) returns (UpdatePositionResponse) {
