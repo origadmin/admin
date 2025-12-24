@@ -4,7 +4,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
 )
 
-//go:generate go run github.com/origadmin/abgen/cmd/abgen -debug go run ./cmd/abgen -debug .
+//go:generate abgen -debug .
 
 //go:abgen:package:path=origadmin/application/admin/internal/data/entity/ent,alias=ent
 //go:abgen:package:path=origadmin/application/admin/api/v1/services/types,alias=types
