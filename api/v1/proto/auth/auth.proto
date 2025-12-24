@@ -14,7 +14,6 @@ option java_package = "com.origadmin.api.v1.services.auth";
 option objc_class_prefix = "APIServiceAuthAuth";
 
 service AuthService {
-  option (google.api.default_host) = "api.foo.com";
   // ListAuthResources returns a list of Auths.
   rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
     option (google.api.http) = {get: "/auth/resources"};
