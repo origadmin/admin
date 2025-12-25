@@ -78,7 +78,7 @@ type queryable[T any] interface {
 	Only(ctx context.Context) (T, error)
 }
 
-// normalizeQueryOption 统一处理QueryOption的初始化和验证
+// normalizeQueryOption handles unified initialization and validation of QueryOption
 func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 	if opt == nil {
 		return &repo.QueryOption{
@@ -87,12 +87,12 @@ func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 		}
 	}
 
-	// 规范化页码
+	// Normalize page number
 	if opt.Page <= 0 {
 		opt.Page = 1
 	}
 
-	// 规范化页大小
+	// Normalize page size
 	if opt.NoPaging {
 		if opt.PageSize <= 0 || opt.PageSize > repo.HardLimit {
 			opt.PageSize = repo.HardLimit
@@ -110,7 +110,7 @@ func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 }
 
 func applyPageSize(opt *repo.QueryOption) int {
-	// 注意：这个函数现在只处理页大小，页码验证在normalizeQueryOption中处理
+	// Note: This function now only handles page size, page validation is handled in normalizeQueryOption
 	if opt == nil {
 		return repo.DefaultPageSize
 	}
@@ -164,7 +164,7 @@ func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](que
 	return query
 }
 
-// PageCount 执行count查询并返回结果
+// PageCount executes count query and returns the result
 func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
@@ -176,10 +176,10 @@ func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
-	// 统一初始化和验证选项
+	// Unified initialization and validation of options
 	o = normalizeQueryOption(o)
 
-	// 如果只需要计数，直接执行count查询
+	// If only count is needed, execute count query directly
 	if o.OnlyCount {
 		count, err := PageCount(ctx, query)
 		if err != nil {
@@ -188,31 +188,31 @@ func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx co
 		return nil, count, nil
 	}
 
-	// 先克隆原始查询用于count查询（必须在分页之前）
+	// Clone original query for count query (must be before pagination)
 	var count int32
 	var countErr error
 
-	// 只有在非cursor分页时才执行count查询
+	// Execute count query only for non-cursor pagination
 	if o.PageToken == "" {
 		count, countErr = PageCount(ctx, query)
 		if countErr != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", countErr)
 		}
 
-		// 检查请求的页码是否超出总页数
+		// Check if requested page exceeds total pages
 		if count > 0 && o.PageSize > 0 {
-			totalPages := (count + int32(o.PageSize) - 1) / int32(o.PageSize) // 向上取整
+			totalPages := (count + int32(o.PageSize) - 1) / int32(o.PageSize) // round up
 			if o.Page > int(totalPages) {
-				// 页码超出范围，返回空结果
+				// Page number out of range, return empty result
 				return []R{}, count, nil
 			}
 		} else if count == 0 {
-			// 没有数据，返回空结果
+			// No data, return empty result
 			return []R{}, count, nil
 		}
 	}
 
-	// 对原始查询应用分页
+	// Apply pagination to original query
 	query = Paginate(query, o, callbacks...)
 	result, err := query.All(ctx)
 	if err != nil {
