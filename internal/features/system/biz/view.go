@@ -2,8 +2,10 @@ package biz
 
 import (
 	"context"
+
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
@@ -30,6 +32,15 @@ func (uc *ViewUseCase) GetView(ctx context.Context, id int64) (*types.View, erro
 
 // CreateView creates a new view.
 func (uc *ViewUseCase) CreateView(ctx context.Context, in *types.View) (*types.View, error) {
+	// Set business-defined default values before passing to the data layer.
+	// This is the correct layer to ensure the business object is valid.
+	if in.Type == "" || in.Type == dto.ViewTypeUnknown.String() {
+		in.Type = dto.ViewTypePage.String()
+	}
+	if in.Status == 0 {
+		in.Status = int32(enums.StatusEnabled)
+	}
+
 	return uc.repo.Create(ctx, in)
 }
 

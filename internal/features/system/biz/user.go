@@ -12,6 +12,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
@@ -53,6 +54,11 @@ func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, erro
 }
 
 func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string) (*types.User, error) {
+	// Set business-defined default values.
+	if in.Status == 0 {
+		in.Status = int32(enums.StatusEnabled)
+	}
+
 	hashedPassword, err := uc.hasher.Hash(password)
 	if err != nil {
 		return nil, err

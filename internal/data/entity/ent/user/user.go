@@ -257,8 +257,6 @@ var (
 	DefaultLastLoginTime func() time.Time
 	// DefaultLoginTime holds the default value on creation for the "login_time" field.
 	DefaultLoginTime func() time.Time
-	// ManagerIDValidator is a validator for the "manager_id" field. It is called by the builders before save.
-	ManagerIDValidator func(int64) error
 	// DefaultManager holds the default value on creation for the "manager" field.
 	DefaultManager string
 	// DefaultID holds the default value on creation for the "id" field.

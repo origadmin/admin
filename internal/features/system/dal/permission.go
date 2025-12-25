@@ -51,7 +51,7 @@ func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.Permiss
 
 func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts ...*dto.PermissionCreateOption) (*types.Permission, error) {
 	entPermission := dto.ConvertPermissionPBToPermission(p)
-	create := r.db.Permission(ctx).Create().SetPermission(entPermission)
+	create := r.db.Permission(ctx).Create().SetPermissionSkipZero(entPermission)
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -71,9 +71,11 @@ func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts .
 
 	updateCols := db.UpdateFields(opt.UpdateMask, permission.ValidColumn, p)
 	if len(updateCols) > 0 {
+		// If a field mask is present, update only the specified fields, including zero values.
 		update.SetPermission(entPermission, updateCols...)
 	} else {
-		update.SetPermission(entPermission)
+		// If no field mask, skip zero values to prevent accidental clearing of fields.
+		update.SetPermissionSkipZero(entPermission)
 	}
 
 	saved, err := update.Save(ctx)

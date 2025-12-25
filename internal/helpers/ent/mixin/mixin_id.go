@@ -90,7 +90,7 @@ func (obj ID) PK(name string) ent.Field {
 
 func (obj ID) OptionalFK(name string) ent.Field {
 	obj.Key = name
-	obj.Positive = true
+	// obj.Positive = true // This was the error. An optional FK can be 0.
 	obj.Optional = true
 	if obj.CommentKey == "" {
 		obj.CommentKey = "field.optional_key.comment"

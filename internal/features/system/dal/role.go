@@ -64,7 +64,7 @@ func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.Role
 	}
 
 	entRole := dto.ConvertRolePBToRole(rl)
-	create := r.db.Role(ctx).Create().SetRole(entRole)
+	create := r.db.Role(ctx).Create().SetRoleSkipZero(entRole)
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -84,9 +84,11 @@ func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.Role
 
 	updateCols := db.UpdateFields(opt.UpdateMask, role.ValidColumn, rl)
 	if len(updateCols) > 0 {
+		// If a field mask is present, update only the specified fields, including zero values.
 		update.SetRole(entRole, updateCols...)
 	} else {
-		update.SetRole(entRole)
+		// If no field mask, skip zero values to prevent accidental clearing of fields.
+		update.SetRoleSkipZero(entRole)
 	}
 
 	saved, err := update.Save(ctx)

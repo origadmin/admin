@@ -357,11 +357,6 @@ func (_c *ViewCreate) check() error {
 	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "View.update_time"`)}
 	}
-	if v, ok := _c.mutation.ParentID(); ok {
-		if err := view.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "View.parent_id": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.Keyword(); !ok {
 		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "View.keyword"`)}
 	}

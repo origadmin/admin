@@ -6,6 +6,7 @@ package dal
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	"origadmin/application/admin/api/v1/services/types"
@@ -88,6 +89,9 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 
 // Create creates a new view.
 func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.ViewCreateOption) (*types.View, error) {
+	if in == nil {
+		return nil, errors.New("input view data cannot be nil")
+	}
 	// Calculate TreePath before converting to ent object
 	if in.ParentId > 0 {
 		parent, err := r.db.View(ctx).Get(ctx, in.ParentId)
@@ -98,7 +102,7 @@ func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.View
 	}
 
 	entView := dto.ConvertViewPBToView(in)
-	create := r.db.View(ctx).Create().SetView(entView)
+	create := r.db.View(ctx).Create().SetViewSkipZero(entView)
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
@@ -114,9 +118,11 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 
 	updateCols := db.UpdateFields(opt.UpdateMask, view.ValidColumn, in)
 	if len(updateCols) > 0 {
+		// If a field mask is present, update only the specified fields, including zero values.
 		update.SetView(entView, updateCols...)
 	} else {
-		update.SetView(entView)
+		// If no field mask, skip zero values to prevent accidental clearing of fields.
+		update.SetViewSkipZero(entView)
 	}
 
 	saved, err := update.Save(ctx)

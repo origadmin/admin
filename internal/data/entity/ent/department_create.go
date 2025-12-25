@@ -344,11 +344,6 @@ func (_c *DepartmentCreate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
 		}
 	}
-	if v, ok := _c.mutation.ParentID(); ok {
-		if err := department.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Department.parent_id": %w`, err)}
-		}
-	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := department.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Department.id": %w`, err)}

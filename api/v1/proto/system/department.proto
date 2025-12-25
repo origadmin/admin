@@ -58,7 +58,7 @@ message ListDepartmentsRequest {
 message ListDepartmentsResponse {
   // The total number of items in the list.
   int32 total = 1 [json_name = "total"];
-  // The paging menus
+  // The paging departments
   repeated api.v1.services.types.Department departments = 2 [json_name = "departments"];
   // The page number.
   int32 page = 3 [json_name = "page"];

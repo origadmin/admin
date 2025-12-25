@@ -52,7 +52,7 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 
 func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
 	entResource := dto.ConvertResourcePBToResource(res)
-	create := r.db.Resource(ctx).Create().SetResource(entResource)
+	create := r.db.Resource(ctx).Create().SetResourceSkipZero(entResource)
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -72,9 +72,11 @@ func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...
 
 	updateCols := db.UpdateFields(opt.UpdateMask, resource.ValidColumn, res)
 	if len(updateCols) > 0 {
+		// If a field mask is present, update only the specified fields, including zero values.
 		update.SetResource(entResource, updateCols...)
 	} else {
-		update.SetResource(entResource)
+		// If no field mask, skip zero values to prevent accidental clearing of fields.
+		update.SetResourceSkipZero(entResource)
 	}
 
 	saved, err := update.Save(ctx)

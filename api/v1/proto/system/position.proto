@@ -58,7 +58,7 @@ message ListPositionsRequest {
 message ListPositionsResponse {
   // The total number of items in the list.
   int32 total = 1 [json_name = "total"];
-  // The paging menus
+  // The paging positions
   repeated api.v1.services.types.Position positions = 2 [json_name = "positions"];
   // The page number.
   int32 page = 3 [json_name = "page"];

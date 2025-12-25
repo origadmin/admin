@@ -464,11 +464,6 @@ func (_u *ViewUpdate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ViewUpdate) check() error {
-	if v, ok := _u.mutation.ParentID(); ok {
-		if err := view.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "View.parent_id": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Keyword(); ok {
 		if err := view.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "View.keyword": %w`, err)}
@@ -1310,11 +1305,6 @@ func (_u *ViewUpdateOne) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ViewUpdateOne) check() error {
-	if v, ok := _u.mutation.ParentID(); ok {
-		if err := view.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "View.parent_id": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Keyword(); ok {
 		if err := view.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "View.keyword": %w`, err)}

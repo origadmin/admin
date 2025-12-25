@@ -65,7 +65,7 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 	if password != "" {
 		entUser.EncryptedPassword = password
 	}
-	create := r.db.User(ctx).Create().SetUser(entUser)
+	create := r.db.User(ctx).Create().SetUserSkipZero(entUser)
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err
@@ -84,9 +84,11 @@ func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserU
 
 	updateCols := db.UpdateFields(opt.UpdateMask, user.ValidColumn, u)
 	if len(updateCols) > 0 {
+		// If a field mask is present, update only the specified fields, including zero values.
 		update.SetUser(entUser, updateCols...)
 	} else {
-		update.SetUser(entUser)
+		// If no field mask, skip zero values to prevent accidental clearing of fields.
+		update.SetUserSkipZero(entUser)
 	}
 
 	saved, err := update.Save(ctx)

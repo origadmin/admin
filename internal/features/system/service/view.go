@@ -2,7 +2,10 @@ package service
 
 import (
 	"context"
+
+	"github.com/origadmin/runtime/errors"
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/data/entity/ent"
 )
 
 // ListViews handles the RPC for listing views.
@@ -23,6 +26,9 @@ func (s *SystemService) ListViews(ctx context.Context, req *system.ListViewsRequ
 func (s *SystemService) GetView(ctx context.Context, req *system.GetViewRequest) (*system.GetViewResponse, error) {
 	view, err := s.View.GetView(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")
+		}
 		return nil, err
 	}
 	return &system.GetViewResponse{View: view}, nil
@@ -41,6 +47,9 @@ func (s *SystemService) CreateView(ctx context.Context, req *system.CreateViewRe
 func (s *SystemService) UpdateView(ctx context.Context, req *system.UpdateViewRequest) (*system.UpdateViewResponse, error) {
 	view, err := s.View.UpdateView(ctx, req.GetView())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")
+		}
 		return nil, err
 	}
 	return &system.UpdateViewResponse{View: view}, nil
@@ -50,6 +59,9 @@ func (s *SystemService) UpdateView(ctx context.Context, req *system.UpdateViewRe
 func (s *SystemService) DeleteView(ctx context.Context, req *system.DeleteViewRequest) (*system.DeleteViewResponse, error) {
 	err := s.View.DeleteView(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")
+		}
 		return nil, err
 	}
 	return &system.DeleteViewResponse{}, nil

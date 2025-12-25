@@ -395,11 +395,6 @@ func (_u *DepartmentUpdate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.ParentID(); ok {
-		if err := department.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Department.parent_id": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -1059,11 +1054,6 @@ func (_u *DepartmentUpdateOne) check() error {
 	if v, ok := _u.mutation.Description(); ok {
 		if err := department.DescriptionValidator(v); err != nil {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Department.description": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.ParentID(); ok {
-		if err := department.ParentIDValidator(v); err != nil {
-			return &ValidationError{Name: "parent_id", err: fmt.Errorf(`ent: validator failed for field "Department.parent_id": %w`, err)}
 		}
 	}
 	return nil

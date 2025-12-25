@@ -60,7 +60,7 @@ message ListPermissionsRequest {
 message ListPermissionsResponse {
   // The total number of items in the list.
   int32 total = 1 [json_name = "total"];
-  // The paging menus
+  // The paging permissions
   repeated api.v1.services.types.Permission permissions = 2 [json_name = "permissions"];
   // The page number.
   int32 page = 3 [json_name = "page"];

@@ -785,11 +785,6 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.ManagerID(); ok {
-		if err := user.ManagerIDValidator(v); err != nil {
-			return &ValidationError{Name: "manager_id", err: fmt.Errorf(`ent: validator failed for field "User.manager_id": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -1968,11 +1963,6 @@ func (_u *UserUpdateOne) check() error {
 	if v, ok := _u.mutation.LastLoginIP(); ok {
 		if err := user.LastLoginIPValidator(v); err != nil {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.ManagerID(); ok {
-		if err := user.ManagerIDValidator(v); err != nil {
-			return &ValidationError{Name: "manager_id", err: fmt.Errorf(`ent: validator failed for field "User.manager_id": %w`, err)}
 		}
 	}
 	return nil

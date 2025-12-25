@@ -133,8 +133,6 @@ var (
 	DefaultUpdateTime func() time.Time
 	// UpdateDefaultUpdateTime holds the default value on update for the "update_time" field.
 	UpdateDefaultUpdateTime func() time.Time
-	// ParentIDValidator is a validator for the "parent_id" field. It is called by the builders before save.
-	ParentIDValidator func(int64) error
 	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	KeywordValidator func(string) error
 	// DefaultScope holds the default value on creation for the "scope" field.

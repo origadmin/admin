@@ -7,12 +7,17 @@ package service
 import (
 	"context"
 
+	"github.com/origadmin/runtime/errors"
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/data/entity/ent"
 )
 
 func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
 	resources, err := s.User.ListUserResources(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.ListUserResourcesResponse{
@@ -23,6 +28,9 @@ func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListU
 func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
 	err := s.User.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.UpdateUserRolesResponse{}, nil
@@ -31,6 +39,9 @@ func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateU
 func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.UpdateUserStatusRequest) (*system.UpdateUserStatusResponse, error) {
 	err := s.User.UpdateUserStatus(ctx, req.GetId(), int8(req.GetStatus()))
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.UpdateUserStatusResponse{}, nil
@@ -39,6 +50,9 @@ func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.Update
 func (s *SystemService) ResetUserPassword(ctx context.Context, req *system.ResetUserPasswordRequest) (*system.ResetUserPasswordResponse, error) {
 	err := s.User.ResetUserPassword(ctx, req.GetId(), req.GetPassword())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.ResetUserPasswordResponse{}, nil
@@ -60,6 +74,9 @@ func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequ
 func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*system.GetUserResponse, error) {
 	user, err := s.User.GetUser(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.GetUserResponse{User: user}, nil
@@ -76,6 +93,9 @@ func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRe
 func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*system.UpdateUserResponse, error) {
 	user, err := s.User.UpdateUser(ctx, req.GetUser())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.UpdateUserResponse{User: user}, nil
@@ -84,6 +104,9 @@ func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRe
 func (s *SystemService) DeleteUser(ctx context.Context, req *system.DeleteUserRequest) (*system.DeleteUserResponse, error) {
 	err := s.User.DeleteUser(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
+		}
 		return nil, err
 	}
 	return &system.DeleteUserResponse{}, nil

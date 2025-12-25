@@ -1,5 +1,7 @@
 @token = eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYyNzEyMDEsImlzcyI6ImxvY2FsaG9zdCIsInN1YiI6ImFkbWluIn0.3x9WnK9OZQUFdYYBAwVwqtNrMK3VRZJjBgQXRnQLNd8K4m0WwfTyAiA1TfwlUyh8t95WXfl99AkXJEJUWAQppg
 @host = http://127.0.0.1:8080
+# Default ID for the view. This will be overwritten by the CreateView request.
+@viewId = 1
 
 ###
 # RBAC - Resources (Direct Service Test)
@@ -175,5 +177,68 @@ Content-Type: application/json
     "keyword": "swe"
   }
 }
+
+###
+# RBAC - Views (Service Test)
+#
+# IMPORTANT: You must run "CreateView" first to set the {{viewId}} variable.
+###
+
+# @name CreateView
+# STEP 1: Create a new view and capture its ID
+POST {{host}}/sys/views
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "view": {
+    "keyword": "dashboard_view_test_keyword",
+    "name": "dashboard_view_test",
+    "title": "Dashboard View Test",
+    "path": "/dashboard_test",
+    "component": "pages/DashboardTest",
+    "scope": "system"
+  }
+}
+
+> {%
+    // This script runs after the request and saves the new ID to the 'viewId' variable
+    client.global.set("viewId", response.body.id);
+%}
+
+###
+
+# @name ListView
+# List all views, with filtering
+GET {{host}}/sys/views?scope=system&keyword=dashboard
+Authorization: Bearer {{token}}
+
+###
+
+# @name GetView
+# STEP 2: Get the view created in STEP 1
+GET {{host}}/sys/views/{{viewId}}
+Authorization: Bearer {{token}}
+
+###
+
+# @name UpdateView
+# STEP 3: Update the view created in STEP 1
+PUT {{host}}/sys/views/{{viewId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "view": {
+    "title": "System Dashboard View (Updated)"
+  }
+}
+
+###
+
+# @name DeleteView
+# STEP 4: Delete the view created in STEP 1
+DELETE {{host}}/sys/views/{{viewId}}
+Authorization: Bearer {{token}}
 
 ###

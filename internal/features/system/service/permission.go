@@ -7,7 +7,9 @@ package service
 import (
 	"context"
 
+	"github.com/origadmin/runtime/errors"
 	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/data/entity/ent"
 )
 
 func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPermissionsRequest) (*system.ListPermissionsResponse, error) {
@@ -26,6 +28,9 @@ func (s *SystemService) ListPermissions(ctx context.Context, req *system.ListPer
 func (s *SystemService) GetPermission(ctx context.Context, req *system.GetPermissionRequest) (*system.GetPermissionResponse, error) {
 	permission, err := s.Permission.GetPermission(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("PERMISSION_NOT_FOUND", "Permission not found")
+		}
 		return nil, err
 	}
 	return &system.GetPermissionResponse{Permission: permission}, nil
@@ -42,6 +47,9 @@ func (s *SystemService) CreatePermission(ctx context.Context, req *system.Create
 func (s *SystemService) UpdatePermission(ctx context.Context, req *system.UpdatePermissionRequest) (*system.UpdatePermissionResponse, error) {
 	permission, err := s.Permission.UpdatePermission(ctx, req.GetPermission())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("PERMISSION_NOT_FOUND", "Permission not found")
+		}
 		return nil, err
 	}
 	return &system.UpdatePermissionResponse{Permission: permission}, nil
@@ -50,6 +58,9 @@ func (s *SystemService) UpdatePermission(ctx context.Context, req *system.Update
 func (s *SystemService) DeletePermission(ctx context.Context, req *system.DeletePermissionRequest) (*system.DeletePermissionResponse, error) {
 	err := s.Permission.DeletePermission(ctx, req.GetId())
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, errors.NotFound("PERMISSION_NOT_FOUND", "Permission not found")
+		}
 		return nil, err
 	}
 	return &system.DeletePermissionResponse{}, nil

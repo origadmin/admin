@@ -775,11 +775,6 @@ func (_c *UserCreate) check() error {
 	if _, ok := _c.mutation.LoginTime(); !ok {
 		return &ValidationError{Name: "login_time", err: errors.New(`ent: missing required field "User.login_time"`)}
 	}
-	if v, ok := _c.mutation.ManagerID(); ok {
-		if err := user.ManagerIDValidator(v); err != nil {
-			return &ValidationError{Name: "manager_id", err: fmt.Errorf(`ent: validator failed for field "User.manager_id": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.Manager(); !ok {
 		return &ValidationError{Name: "manager", err: errors.New(`ent: missing required field "User.manager"`)}
 	}

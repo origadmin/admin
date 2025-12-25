@@ -10,6 +10,7 @@ import (
 
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
@@ -33,6 +34,11 @@ func (uc *ResourceUseCase) GetResource(ctx context.Context, id int64) (*types.Re
 }
 
 func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
+	// Set business-defined default values.
+	if in.Status == 0 {
+		in.Status = int32(enums.StatusEnabled)
+	}
+
 	return uc.repo.Create(ctx, in)
 }
 
