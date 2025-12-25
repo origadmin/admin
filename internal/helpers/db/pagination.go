@@ -17,7 +17,11 @@ import (
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
-type Cursor map[string]interface{}
+type Cursor struct {
+	ID    int64  `json:"id"`
+	Field string `json:"field"`
+	Desc  bool   `json:"desc"`
+}
 
 func EncodeCursor(c Cursor) (string, error) {
 	var buf bytes.Buffer
@@ -28,13 +32,14 @@ func EncodeCursor(c Cursor) (string, error) {
 }
 
 func DecodeCursor(token string) (Cursor, error) {
+	var c Cursor
 	data, err := base64.StdEncoding.DecodeString(token)
 	if err != nil {
-		return nil, fmt.Errorf("base64 decode token: %w", err)
+		return c, fmt.Errorf("base64 decode token: %w", err)
 	}
-	var c Cursor
+
 	if err := gob.NewDecoder(bytes.NewReader(data)).Decode(&c); err != nil {
-		return nil, fmt.Errorf("gob decode cursor: %w", err)
+		return c, fmt.Errorf("gob decode cursor: %w", err)
 	}
 	return c, nil
 }
@@ -44,7 +49,7 @@ func DecodeCursor(token string) (Cursor, error) {
 type paginateable[T any, W selectable, O selectable, R any] interface {
 	counter[T]
 	cloneable[T]
-	whereFilterable[T, W]
+	filterable[T, W]
 	orderable[T, O]
 	queryable[R]
 	Limit(int) T
@@ -55,7 +60,7 @@ type orderable[T any, O selectable] interface {
 	Order(...O) T
 }
 
-type whereFilterable[T any, W selectable] interface {
+type filterable[T any, W selectable] interface {
 	Where(...W) T
 }
 
