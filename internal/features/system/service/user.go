@@ -29,7 +29,7 @@ func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateU
 }
 
 func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.UpdateUserStatusRequest) (*system.UpdateUserStatusResponse, error) {
-	err := s.User.UpdateUserStatus(ctx, req.GetId(), req.GetStatus())
+	err := s.User.UpdateUserStatus(ctx, req.GetId(), int8(req.GetStatus()))
 	if err != nil {
 		return nil, err
 	}

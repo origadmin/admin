@@ -6,7 +6,6 @@ package dal
 
 import (
 	"context"
-	"strconv"
 
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -52,14 +51,6 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 }
 
 func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
-	if res.ParentId > 0 {
-		parent, err := r.db.Resource(ctx).Get(ctx, res.ParentId)
-		if err != nil {
-			return nil, err
-		}
-		res.TreePath = parent.TreePath + strconv.FormatInt(parent.ID, 10) + r.Delimiter
-	}
-
 	entResource := dto.ConvertResourcePBToResource(res)
 	create := r.db.Resource(ctx).Create().SetResource(entResource)
 

@@ -27,7 +27,7 @@ type Role struct {
 func (Role) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("keyword").
-			MaxLen(32).
+			MaxLen(255).
 			Unique().
 			Comment(i18n.Text("entity.role.field.keyword")), // keyword of role (unique)
 		field.String("name").

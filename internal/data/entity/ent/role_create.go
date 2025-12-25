@@ -460,12 +460,12 @@ func (_c *RoleCreate) SetRole(input *Role, fields ...string) *RoleCreate {
 }
 
 // SetRoleWithZero set the Role
-func (_c *RoleCreate) SetRoleWithZero(input *Role, fields ...string) *RoleCreate {
+func (_c *RoleCreate) SetRoleSkipZero(input *Role, fields ...string) *RoleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = role.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

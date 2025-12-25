@@ -2,8 +2,11 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
@@ -21,6 +24,7 @@ func (View) Fields() []ent.Field {
 		// Use OptionalFK for an optional foreign key, as designed in the mixin package.
 		mixin.OptionalFK("parent_id", i18n.Text("view.parent_id.comment")),
 		field.String("keyword").
+			MaxLen(255).
 			Comment(i18n.Text("view.keyword.comment")).
 			Unique().
 			NotEmpty(),
@@ -58,6 +62,9 @@ func (View) Fields() []ent.Field {
 		field.Int("sequence").
 			Comment(i18n.Text("view.sequence.comment")).
 			Default(0),
+		field.String("tree_path").
+			Comment(i18n.Text("view.tree_path.comment")).
+			Optional(),
 	}
 }
 
@@ -78,4 +85,21 @@ func (View) Edges() []ent.Edge {
 // Mixin of the View.
 func (View) Mixin() []ent.Mixin {
 	return mixin.ModelMixin
+}
+
+// Indexes of the View.
+func (View) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("keyword", "scope").
+			Unique(),
+	}
+}
+
+// Annotations of the View.
+func (View) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_views"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("entity.view.table.comment")),
+	}
 }

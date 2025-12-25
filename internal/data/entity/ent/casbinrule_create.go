@@ -273,12 +273,12 @@ func (_c *CasbinRuleCreate) SetCasbinRule(input *CasbinRule, fields ...string) *
 }
 
 // SetCasbinRuleWithZero set the CasbinRule
-func (_c *CasbinRuleCreate) SetCasbinRuleWithZero(input *CasbinRule, fields ...string) *CasbinRuleCreate {
+func (_c *CasbinRuleCreate) SetCasbinRuleSkipZero(input *CasbinRule, fields ...string) *CasbinRuleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = casbinrule.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

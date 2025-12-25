@@ -302,12 +302,12 @@ func (_c *ViewPermissionCreate) SetViewPermission(input *ViewPermission, fields 
 }
 
 // SetViewPermissionWithZero set the ViewPermission
-func (_c *ViewPermissionCreate) SetViewPermissionWithZero(input *ViewPermission, fields ...string) *ViewPermissionCreate {
+func (_c *ViewPermissionCreate) SetViewPermissionSkipZero(input *ViewPermission, fields ...string) *ViewPermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = viewpermission.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

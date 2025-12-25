@@ -21,6 +21,7 @@ import (
 	_ "github.com/origadmin/contrib/config/consul"
 	_ "github.com/origadmin/contrib/registry/consul"
 	_ "github.com/sqlite3ent/sqlite3"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 )
 
 // Injectors from wire.go:
@@ -47,7 +48,9 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	userUseCase := biz.NewUserUseCase(userRepo, crypto)
 	permissionRepo := dal.NewPermissionRepo(database)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
-	systemService := service.New(resourceUseCase, roleUseCase, userUseCase, permissionUseCase)
+	viewRepo := dal.NewViewRepo(database)
+	viewUseCase := biz.NewViewUseCase(viewRepo)
+	systemService := service.New(resourceUseCase, roleUseCase, userUseCase, permissionUseCase, viewUseCase)
 	v := provideLogger(app)
 	v2, err := server.NewServers(servers, systemService, v)
 	if err != nil {

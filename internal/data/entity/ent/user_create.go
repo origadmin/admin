@@ -1038,12 +1038,12 @@ func (_c *UserCreate) SetUser(input *User, fields ...string) *UserCreate {
 }
 
 // SetUserWithZero set the User
-func (_c *UserCreate) SetUserWithZero(input *User, fields ...string) *UserCreate {
+func (_c *UserCreate) SetUserSkipZero(input *User, fields ...string) *UserCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = user.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

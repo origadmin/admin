@@ -210,6 +210,26 @@ func (_u *ViewUpdate) AddSequence(v int) *ViewUpdate {
 	return _u
 }
 
+// SetTreePath sets the "tree_path" field.
+func (_u *ViewUpdate) SetTreePath(v string) *ViewUpdate {
+	_u.mutation.SetTreePath(v)
+	return _u
+}
+
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (_u *ViewUpdate) SetNillableTreePath(v *string) *ViewUpdate {
+	if v != nil {
+		_u.SetTreePath(*v)
+	}
+	return _u
+}
+
+// ClearTreePath clears the value of the "tree_path" field.
+func (_u *ViewUpdate) ClearTreePath() *ViewUpdate {
+	_u.mutation.ClearTreePath()
+	return _u
+}
+
 // SetParent sets the "parent" edge to the View entity.
 func (_u *ViewUpdate) SetParent(v *View) *ViewUpdate {
 	return _u.SetParentID(v.ID)
@@ -521,6 +541,12 @@ func (_u *ViewUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.AddedSequence(); ok {
 		_spec.AddField(view.FieldSequence, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.TreePath(); ok {
+		_spec.SetField(view.FieldTreePath, field.TypeString, value)
+	}
+	if _u.mutation.TreePathCleared() {
+		_spec.ClearField(view.FieldTreePath, field.TypeString)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1017,6 +1043,26 @@ func (_u *ViewUpdateOne) AddSequence(v int) *ViewUpdateOne {
 	return _u
 }
 
+// SetTreePath sets the "tree_path" field.
+func (_u *ViewUpdateOne) SetTreePath(v string) *ViewUpdateOne {
+	_u.mutation.SetTreePath(v)
+	return _u
+}
+
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (_u *ViewUpdateOne) SetNillableTreePath(v *string) *ViewUpdateOne {
+	if v != nil {
+		_u.SetTreePath(*v)
+	}
+	return _u
+}
+
+// ClearTreePath clears the value of the "tree_path" field.
+func (_u *ViewUpdateOne) ClearTreePath() *ViewUpdateOne {
+	_u.mutation.ClearTreePath()
+	return _u
+}
+
 // SetParent sets the "parent" edge to the View entity.
 func (_u *ViewUpdateOne) SetParent(v *View) *ViewUpdateOne {
 	return _u.SetParentID(v.ID)
@@ -1358,6 +1404,12 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	}
 	if value, ok := _u.mutation.AddedSequence(); ok {
 		_spec.AddField(view.FieldSequence, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.TreePath(); ok {
+		_spec.SetField(view.FieldTreePath, field.TypeString, value)
+	}
+	if _u.mutation.TreePathCleared() {
+		_spec.ClearField(view.FieldTreePath, field.TypeString)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{

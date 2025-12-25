@@ -6,6 +6,7 @@ package dal
 
 import (
 	"context"
+	"strconv"
 
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
@@ -16,12 +17,16 @@ import (
 )
 
 type viewRepo struct {
-	db *ent.Database
+	db        *ent.Database
+	Delimiter string
 }
 
 // NewViewRepo creates a new view repository.
 func NewViewRepo(database *ent.Database) dto.ViewRepo {
-	return &viewRepo{db: database}
+	return &viewRepo{
+		db:        database,
+		Delimiter: "/",
+	}
 }
 
 // Get retrieves a single view by its ID.
@@ -83,8 +88,16 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 
 // Create creates a new view.
 func (r *viewRepo) Create(ctx context.Context, in *types.View, opts ...*dto.ViewCreateOption) (*types.View, error) {
+	// Calculate TreePath before converting to ent object
+	if in.ParentId > 0 {
+		parent, err := r.db.View(ctx).Get(ctx, in.ParentId)
+		if err != nil {
+			return nil, err
+		}
+		in.TreePath = parent.TreePath + strconv.FormatInt(parent.ID, 10) + r.Delimiter
+	}
+
 	entView := dto.ConvertViewPBToView(in)
-	// After template modification, SetView is now the method that includes zero values.
 	create := r.db.View(ctx).Create().SetView(entView)
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -99,11 +112,8 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 	entView := dto.ConvertViewPBToView(in)
 	update := r.db.View(ctx).UpdateOneID(in.Id)
 
-	// After template modification, SetView is now the method that includes zero values.
 	updateCols := db.UpdateFields(opt.UpdateMask, view.ValidColumn, in)
 	if len(updateCols) > 0 {
-		// The primary key should never be in the update list.
-		// UpdateFields already ensures this.
 		update.SetView(entView, updateCols...)
 	} else {
 		update.SetView(entView)

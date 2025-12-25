@@ -1141,6 +1141,8 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 			m.SetVisible(input.Visible)
 		case view.FieldSequence:
 			m.SetSequence(input.Sequence)
+		case view.FieldTreePath:
+			m.SetTreePath(input.TreePath)
 		case view.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -1213,6 +1215,11 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 			// check int with sql.NullInt64 if it is zero
 			if input.Sequence != 0 {
 				m.SetSequence(input.Sequence)
+			}
+		case view.FieldTreePath:
+			// check string with sql.NullString if it is empty
+			if input.TreePath != "" {
+				m.SetTreePath(input.TreePath)
 			}
 		case view.FieldID:
 			// check int64 with sql.NullInt64 if it is zero

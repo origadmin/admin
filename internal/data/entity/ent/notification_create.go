@@ -316,12 +316,12 @@ func (_c *NotificationCreate) SetNotification(input *Notification, fields ...str
 }
 
 // SetNotificationWithZero set the Notification
-func (_c *NotificationCreate) SetNotificationWithZero(input *Notification, fields ...string) *NotificationCreate {
+func (_c *NotificationCreate) SetNotificationSkipZero(input *Notification, fields ...string) *NotificationCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = notification.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

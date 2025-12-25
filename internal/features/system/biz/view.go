@@ -19,12 +19,7 @@ func NewViewUseCase(repo dto.ViewRepo) *ViewUseCase {
 
 // ListViews retrieves a list of views.
 func (uc *ViewUseCase) ListViews(ctx context.Context, in *system.ListViewsRequest) ([]*types.View, int32, error) {
-	queryOpt := &dto.ViewQueryOption{
-		Keyword: in.GetKeyword(),
-		Scope:   in.GetScope(),
-	}
-	queryOpt.SetPaging(in.GetPage(), in.GetPageSize(), in.GetNoPaging())
-
+	queryOpt := dto.ListViewsRequestToQueryOption(in)
 	return uc.repo.List(ctx, queryOpt)
 }
 

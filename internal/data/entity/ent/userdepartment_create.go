@@ -173,12 +173,12 @@ func (_c *UserDepartmentCreate) SetUserDepartment(input *UserDepartment, fields 
 }
 
 // SetUserDepartmentWithZero set the UserDepartment
-func (_c *UserDepartmentCreate) SetUserDepartmentWithZero(input *UserDepartment, fields ...string) *UserDepartmentCreate {
+func (_c *UserDepartmentCreate) SetUserDepartmentSkipZero(input *UserDepartment, fields ...string) *UserDepartmentCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userdepartment.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

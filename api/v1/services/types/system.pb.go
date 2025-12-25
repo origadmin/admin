@@ -53,22 +53,24 @@ type View struct {
 	Visible bool `protobuf:"varint,13,opt,name=visible,proto3" json:"visible,omitempty"`
 	// Path holds the value of the "path" field.
 	Path string `protobuf:"bytes,14,opt,name=path,proto3" json:"path,omitempty"`
+	// TreePath holds the value of the "tree_path" field.
+	TreePath string `protobuf:"bytes,15,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// Properties holds the value of the "properties" field.
-	Properties string `protobuf:"bytes,15,opt,name=properties,proto3" json:"properties,omitempty"`
+	Properties string `protobuf:"bytes,16,opt,name=properties,proto3" json:"properties,omitempty"`
 	// Status holds the value of the "status" field.
-	Status int32 `protobuf:"varint,16,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
 	// ParentID holds the value of the "parent_id" field.
-	ParentId int64 `protobuf:"varint,17,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	ParentId int64 `protobuf:"varint,18,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
-	ParentPath string `protobuf:"bytes,18,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
+	ParentPath string `protobuf:"bytes,19,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*View `protobuf:"bytes,19,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*View `protobuf:"bytes,20,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *View `protobuf:"bytes,20,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *View `protobuf:"bytes,21,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,21,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,22,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles         []*Role `protobuf:"bytes,22,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles         []*Role `protobuf:"bytes,23,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -197,6 +199,13 @@ func (x *View) GetVisible() bool {
 func (x *View) GetPath() string {
 	if x != nil {
 		return x.Path
+	}
+	return ""
+}
+
+func (x *View) GetTreePath() string {
+	if x != nil {
+		return x.TreePath
 	}
 	return ""
 }
@@ -2774,7 +2783,7 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf8\x05\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x06\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2790,17 +2799,18 @@ const file_types_system_proto_rawDesc = "" +
 	"\acomment\x18\v \x01(\tR\acomment\x12\x12\n" +
 	"\x04icon\x18\f \x01(\tR\x04icon\x12\x18\n" +
 	"\avisible\x18\r \x01(\bR\avisible\x12\x12\n" +
-	"\x04path\x18\x0e \x01(\tR\x04path\x12\x1e\n" +
+	"\x04path\x18\x0e \x01(\tR\x04path\x12\x1c\n" +
+	"\ttree_path\x18\x0f \x01(\tR\ttree_path\x12\x1e\n" +
 	"\n" +
-	"properties\x18\x0f \x01(\tR\n" +
+	"properties\x18\x10 \x01(\tR\n" +
 	"properties\x12\x16\n" +
-	"\x06status\x18\x10 \x01(\x05R\x06status\x12\x1c\n" +
-	"\tparent_id\x18\x11 \x01(\x03R\tparent_id\x12 \n" +
-	"\vparent_path\x18\x12 \x01(\tR\vparent_path\x127\n" +
-	"\bchildren\x18\x13 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
-	"\x06parent\x18\x14 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18\x15 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
-	"\x05roles\x18\x16 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xac\x02\n" +
+	"\x06status\x18\x11 \x01(\x05R\x06status\x12\x1c\n" +
+	"\tparent_id\x18\x12 \x01(\x03R\tparent_id\x12 \n" +
+	"\vparent_path\x18\x13 \x01(\tR\vparent_path\x127\n" +
+	"\bchildren\x18\x14 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
+	"\x06parent\x18\x15 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
+	"\tresources\x18\x16 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
+	"\x05roles\x18\x17 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xac\x02\n" +
 	"\tViewEdges\x127\n" +
 	"\bchildren\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
 	"\x06parent\x18\x02 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +

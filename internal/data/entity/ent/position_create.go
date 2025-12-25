@@ -412,12 +412,12 @@ func (_c *PositionCreate) SetPosition(input *Position, fields ...string) *Positi
 }
 
 // SetPositionWithZero set the Position
-func (_c *PositionCreate) SetPositionWithZero(input *Position, fields ...string) *PositionCreate {
+func (_c *PositionCreate) SetPositionSkipZero(input *Position, fields ...string) *PositionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = position.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

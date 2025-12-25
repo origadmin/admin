@@ -13122,6 +13122,7 @@ type ViewMutation struct {
 	visible                 *bool
 	sequence                *int
 	addsequence             *int
+	tree_path               *string
 	clearedFields           map[string]struct{}
 	parent                  *int64
 	clearedparent           bool
@@ -13753,6 +13754,55 @@ func (m *ViewMutation) ResetSequence() {
 	m.addsequence = nil
 }
 
+// SetTreePath sets the "tree_path" field.
+func (m *ViewMutation) SetTreePath(s string) {
+	m.tree_path = &s
+}
+
+// TreePath returns the value of the "tree_path" field in the mutation.
+func (m *ViewMutation) TreePath() (r string, exists bool) {
+	v := m.tree_path
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTreePath returns the old "tree_path" field's value of the View entity.
+// If the View object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ViewMutation) OldTreePath(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTreePath is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTreePath requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTreePath: %w", err)
+	}
+	return oldValue.TreePath, nil
+}
+
+// ClearTreePath clears the value of the "tree_path" field.
+func (m *ViewMutation) ClearTreePath() {
+	m.tree_path = nil
+	m.clearedFields[view.FieldTreePath] = struct{}{}
+}
+
+// TreePathCleared returns if the "tree_path" field was cleared in this mutation.
+func (m *ViewMutation) TreePathCleared() bool {
+	_, ok := m.clearedFields[view.FieldTreePath]
+	return ok
+}
+
+// ResetTreePath resets all changes to the "tree_path" field.
+func (m *ViewMutation) ResetTreePath() {
+	m.tree_path = nil
+	delete(m.clearedFields, view.FieldTreePath)
+}
+
 // ClearParent clears the "parent" edge to the View entity.
 func (m *ViewMutation) ClearParent() {
 	m.clearedparent = true
@@ -14084,7 +14134,7 @@ func (m *ViewMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ViewMutation) Fields() []string {
-	fields := make([]string, 0, 12)
+	fields := make([]string, 0, 13)
 	if m.create_time != nil {
 		fields = append(fields, view.FieldCreateTime)
 	}
@@ -14121,6 +14171,9 @@ func (m *ViewMutation) Fields() []string {
 	if m.sequence != nil {
 		fields = append(fields, view.FieldSequence)
 	}
+	if m.tree_path != nil {
+		fields = append(fields, view.FieldTreePath)
+	}
 	return fields
 }
 
@@ -14153,6 +14206,8 @@ func (m *ViewMutation) Field(name string) (ent.Value, bool) {
 		return m.Visible()
 	case view.FieldSequence:
 		return m.Sequence()
+	case view.FieldTreePath:
+		return m.TreePath()
 	}
 	return nil, false
 }
@@ -14186,6 +14241,8 @@ func (m *ViewMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldVisible(ctx)
 	case view.FieldSequence:
 		return m.OldSequence(ctx)
+	case view.FieldTreePath:
+		return m.OldTreePath(ctx)
 	}
 	return nil, fmt.Errorf("unknown View field %s", name)
 }
@@ -14279,6 +14336,13 @@ func (m *ViewMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSequence(v)
 		return nil
+	case view.FieldTreePath:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTreePath(v)
+		return nil
 	}
 	return fmt.Errorf("unknown View field %s", name)
 }
@@ -14336,6 +14400,9 @@ func (m *ViewMutation) ClearedFields() []string {
 	if m.FieldCleared(view.FieldIcon) {
 		fields = append(fields, view.FieldIcon)
 	}
+	if m.FieldCleared(view.FieldTreePath) {
+		fields = append(fields, view.FieldTreePath)
+	}
 	return fields
 }
 
@@ -14361,6 +14428,9 @@ func (m *ViewMutation) ClearField(name string) error {
 		return nil
 	case view.FieldIcon:
 		m.ClearIcon()
+		return nil
+	case view.FieldTreePath:
+		m.ClearTreePath()
 		return nil
 	}
 	return fmt.Errorf("unknown View nullable field %s", name)
@@ -14405,6 +14475,9 @@ func (m *ViewMutation) ResetField(name string) error {
 		return nil
 	case view.FieldSequence:
 		m.ResetSequence()
+		return nil
+	case view.FieldTreePath:
+		m.ResetTreePath()
 		return nil
 	}
 	return fmt.Errorf("unknown View field %s", name)

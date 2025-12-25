@@ -26,7 +26,7 @@ type Department struct {
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("keyword").
-			MaxLen(64).
+			MaxLen(255).
 			Unique().
 			Comment(i18n.Text("entity.department.field.keyword")),
 		field.String("name").

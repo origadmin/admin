@@ -37,7 +37,7 @@ func (Permission) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("entity.permission.field.name")),
 		field.String("keyword").
-			MaxLen(64).
+			MaxLen(255).
 			Unique().
 			Comment(i18n.Text("entity.permission.field.keyword")),
 		field.String("description").

@@ -40,22 +40,24 @@ message View {
   bool visible = 13 [json_name = "visible"];
   // Path holds the value of the "path" field.
   string path = 14 [json_name = "path"];
+  // TreePath holds the value of the "tree_path" field.
+  string tree_path = 15 [json_name = "tree_path"];
   // Properties holds the value of the "properties" field.
-  string properties = 15 [json_name = "properties"];
+  string properties = 16 [json_name = "properties"];
   // Status holds the value of the "status" field.
-  int32 status = 16 [json_name = "status"];
+  int32 status = 17 [json_name = "status"];
   // ParentID holds the value of the "parent_id" field.
-  int64 parent_id = 17 [json_name = "parent_id"];
+  int64 parent_id = 18 [json_name = "parent_id"];
   // ParentPath holds the value of the "parent_path" field.
-  string parent_path = 18 [json_name = "parent_path"];
+  string parent_path = 19 [json_name = "parent_path"];
   // Children holds the value of the children edge.
-  repeated View children = 19 [json_name = "children"];
+  repeated View children = 20 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  View parent = 20 [json_name = "parent"];
+  View parent = 21 [json_name = "parent"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 21 [json_name = "resources"];
+  repeated Resource resources = 22 [json_name = "resources"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 22 [json_name = "roles"];
+  repeated Role roles = 23 [json_name = "roles"];
 }
 
 // ViewEdges holds the relations/edges for other nodes in the graph.

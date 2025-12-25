@@ -173,12 +173,12 @@ func (_c *UserPositionCreate) SetUserPosition(input *UserPosition, fields ...str
 }
 
 // SetUserPositionWithZero set the UserPosition
-func (_c *UserPositionCreate) SetUserPositionWithZero(input *UserPosition, fields ...string) *UserPositionCreate {
+func (_c *UserPositionCreate) SetUserPositionSkipZero(input *UserPosition, fields ...string) *UserPositionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userposition.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

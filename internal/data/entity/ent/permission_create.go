@@ -584,12 +584,12 @@ func (_c *PermissionCreate) SetPermission(input *Permission, fields ...string) *
 }
 
 // SetPermissionWithZero set the Permission
-func (_c *PermissionCreate) SetPermissionWithZero(input *Permission, fields ...string) *PermissionCreate {
+func (_c *PermissionCreate) SetPermissionSkipZero(input *Permission, fields ...string) *PermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = permission.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

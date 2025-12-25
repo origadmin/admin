@@ -173,12 +173,12 @@ func (_c *PositionPermissionCreate) SetPositionPermission(input *PositionPermiss
 }
 
 // SetPositionPermissionWithZero set the PositionPermission
-func (_c *PositionPermissionCreate) SetPositionPermissionWithZero(input *PositionPermission, fields ...string) *PositionPermissionCreate {
+func (_c *PositionPermissionCreate) SetPositionPermissionSkipZero(input *PositionPermission, fields ...string) *PositionPermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = positionpermission.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

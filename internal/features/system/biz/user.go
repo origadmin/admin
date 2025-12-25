@@ -34,7 +34,7 @@ func (uc *UserUseCase) UpdateUserRoles(ctx context.Context, id int64, roleIDs []
 	return uc.repo.AddRoleIDs(ctx, id, roleIDs)
 }
 
-func (uc *UserUseCase) UpdateUserStatus(ctx context.Context, id int64, status int32) error {
+func (uc *UserUseCase) UpdateUserStatus(ctx context.Context, id int64, status int8) error {
 	return uc.repo.UpdateUserStatus(ctx, id, status)
 }
 

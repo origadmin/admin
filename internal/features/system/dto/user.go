@@ -26,7 +26,7 @@ type UserRepo interface {
 	GetByUsername(context.Context, string) (*types.User, error)
 	GetRoleIDs(context.Context, int64) ([]int64, error)
 	ListResourceByUserID(context.Context, int64) ([]*types.Resource, error)
-	UpdateUserStatus(ctx context.Context, id int64, status int32) error
+	UpdateUserStatus(ctx context.Context, id int64, status int8) error
 }
 
 // UserQueryOption specifies options for querying users.

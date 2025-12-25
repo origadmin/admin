@@ -31,7 +31,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.department.field.keyword"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.department.field.keyword"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.department.field.name", Default: ""},
 		{Name: "tree_path", Type: field.TypeString, Size: 256, Comment: "entity.menu.field.tree_path", Default: ""},
 		{Name: "sequence", Type: field.TypeInt, Comment: "entity.department.field.sequence"},
@@ -134,7 +134,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "name", Type: field.TypeString, Size: 64, Comment: "entity.permission.field.name", Default: ""},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.permission.field.keyword"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.permission.field.keyword"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.permission.field.description", Default: ""},
 		{Name: "data_scope", Type: field.TypeString, Comment: "entity.permission.field.data_scope", Default: "self"},
 		{Name: "data_rules", Type: field.TypeJSON, Nullable: true, Comment: "entity.permission.field.data_rules"},
@@ -199,7 +199,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.position.field.name"},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 64, Comment: "entity.position.field.keyword"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.position.field.keyword"},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.position.field.description", Default: ""},
 		{Name: "department_id", Type: field.TypeInt64, Comment: "entity.department.field.department_id"},
 	}
@@ -270,7 +270,7 @@ var (
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
 		{Name: "service_name", Type: field.TypeString},
-		{Name: "keyword", Type: field.TypeString, Unique: true},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255},
 		{Name: "path", Type: field.TypeString, Nullable: true},
 		{Name: "method", Type: field.TypeString, Nullable: true},
 		{Name: "operation", Type: field.TypeString, Nullable: true},
@@ -303,7 +303,7 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 32, Comment: "entity.role.field.keyword"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.role.field.keyword"},
 		{Name: "name", Type: field.TypeString, Size: 128, Comment: "entity.role.field.name", Default: ""},
 		{Name: "description", Type: field.TypeString, Size: 1024, Comment: "entity.role.field.description", Default: ""},
 		{Name: "type", Type: field.TypeInt8, Comment: "entity.role.field.type", Default: 2},
@@ -565,32 +565,34 @@ var (
 			},
 		},
 	}
-	// ViewsColumns holds the columns for the "views" table.
-	ViewsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
-		{Name: "keyword", Type: field.TypeString, Unique: true},
-		{Name: "scope", Type: field.TypeString, Default: "default"},
-		{Name: "name", Type: field.TypeString},
-		{Name: "type", Type: field.TypeEnum, Enums: []string{"T", "G", "M", "L", "P", "B", "E", "R", "U"}, Default: "U"},
-		{Name: "component", Type: field.TypeString, Nullable: true},
-		{Name: "path", Type: field.TypeString, Nullable: true},
-		{Name: "icon", Type: field.TypeString, Nullable: true},
-		{Name: "visible", Type: field.TypeBool, Default: true},
-		{Name: "sequence", Type: field.TypeInt, Default: 0},
-		{Name: "parent_id", Type: field.TypeInt64, Nullable: true},
+	// SysViewsColumns holds the columns for the "sys_views" table.
+	SysViewsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "view.keyword.comment"},
+		{Name: "scope", Type: field.TypeString, Comment: "view.scope.comment", Default: "default"},
+		{Name: "name", Type: field.TypeString, Comment: "view.name.comment"},
+		{Name: "type", Type: field.TypeEnum, Comment: "view.type.comment", Enums: []string{"T", "G", "M", "L", "P", "B", "E", "R", "U"}, Default: "U"},
+		{Name: "component", Type: field.TypeString, Nullable: true, Comment: "view.component.comment"},
+		{Name: "path", Type: field.TypeString, Nullable: true, Comment: "view.path.comment"},
+		{Name: "icon", Type: field.TypeString, Nullable: true, Comment: "view.icon.comment"},
+		{Name: "visible", Type: field.TypeBool, Comment: "view.visible.comment", Default: true},
+		{Name: "sequence", Type: field.TypeInt, Comment: "view.sequence.comment", Default: 0},
+		{Name: "tree_path", Type: field.TypeString, Nullable: true, Comment: "view.tree_path.comment"},
+		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "view.parent_id.comment"},
 	}
-	// ViewsTable holds the schema information for the "views" table.
-	ViewsTable = &schema.Table{
-		Name:       "views",
-		Columns:    ViewsColumns,
-		PrimaryKey: []*schema.Column{ViewsColumns[0]},
+	// SysViewsTable holds the schema information for the "sys_views" table.
+	SysViewsTable = &schema.Table{
+		Name:       "sys_views",
+		Comment:    "entity.view.table.comment",
+		Columns:    SysViewsColumns,
+		PrimaryKey: []*schema.Column{SysViewsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "views_views_children",
-				Columns:    []*schema.Column{ViewsColumns[12]},
-				RefColumns: []*schema.Column{ViewsColumns[0]},
+				Symbol:     "sys_views_sys_views_children",
+				Columns:    []*schema.Column{SysViewsColumns[13]},
+				RefColumns: []*schema.Column{SysViewsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -598,12 +600,17 @@ var (
 			{
 				Name:    "view_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{ViewsColumns[1]},
+				Columns: []*schema.Column{SysViewsColumns[1]},
 			},
 			{
 				Name:    "view_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{ViewsColumns[2]},
+				Columns: []*schema.Column{SysViewsColumns[2]},
+			},
+			{
+				Name:    "view_keyword_scope",
+				Unique:  true,
+				Columns: []*schema.Column{SysViewsColumns[3], SysViewsColumns[4]},
 			},
 		},
 	}
@@ -625,9 +632,9 @@ var (
 		PrimaryKey: []*schema.Column{SysViewPermissionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_view_permissions_views_view",
+				Symbol:     "sys_view_permissions_sys_views_view",
 				Columns:    []*schema.Column{SysViewPermissionsColumns[5]},
-				RefColumns: []*schema.Column{ViewsColumns[0]},
+				RefColumns: []*schema.Column{SysViewsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
@@ -683,9 +690,9 @@ var (
 		PrimaryKey: []*schema.Column{SysViewResourcesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "sys_view_resources_views_view",
+				Symbol:     "sys_view_resources_sys_views_view",
 				Columns:    []*schema.Column{SysViewResourcesColumns[5]},
-				RefColumns: []*schema.Column{ViewsColumns[0]},
+				RefColumns: []*schema.Column{SysViewsColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
@@ -739,7 +746,7 @@ var (
 		SysUserDepartmentsTable,
 		SysUserPositionsTable,
 		SysUserRolesTable,
-		ViewsTable,
+		SysViewsTable,
 		SysViewPermissionsTable,
 		SysViewResourcesTable,
 	}
@@ -796,13 +803,16 @@ func init() {
 	SysUserRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_user_roles",
 	}
-	ViewsTable.ForeignKeys[0].RefTable = ViewsTable
-	SysViewPermissionsTable.ForeignKeys[0].RefTable = ViewsTable
+	SysViewsTable.ForeignKeys[0].RefTable = SysViewsTable
+	SysViewsTable.Annotation = &entsql.Annotation{
+		Table: "sys_views",
+	}
+	SysViewPermissionsTable.ForeignKeys[0].RefTable = SysViewsTable
 	SysViewPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
 	SysViewPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_view_permissions",
 	}
-	SysViewResourcesTable.ForeignKeys[0].RefTable = ViewsTable
+	SysViewResourcesTable.ForeignKeys[0].RefTable = SysViewsTable
 	SysViewResourcesTable.ForeignKeys[1].RefTable = ResourcesTable
 	SysViewResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_view_resources",

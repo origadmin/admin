@@ -22,12 +22,12 @@
 		}
 
     {{ print "// Set" .Name "WithZero set the " .Name }}
-		func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}WithZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
+		func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}SkipZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
 		m := {{ $receiver }}.mutation
 		if len(fields) == 0 {
 		fields = {{ $const }}.Columns
 		}
-		_ = m.SetFieldsWithZero(input, fields...)
+		_ = m.SetFieldsSkipZero(input, fields...)
 		return {{ $receiver }}
 		}
 

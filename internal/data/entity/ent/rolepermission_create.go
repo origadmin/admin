@@ -173,12 +173,12 @@ func (_c *RolePermissionCreate) SetRolePermission(input *RolePermission, fields 
 }
 
 // SetRolePermissionWithZero set the RolePermission
-func (_c *RolePermissionCreate) SetRolePermissionWithZero(input *RolePermission, fields ...string) *RolePermissionCreate {
+func (_c *RolePermissionCreate) SetRolePermissionSkipZero(input *RolePermission, fields ...string) *RolePermissionCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = rolepermission.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

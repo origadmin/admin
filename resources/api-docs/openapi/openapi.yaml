@@ -3992,6 +3992,9 @@ components:
                 path:
                     type: string
                     description: Path holds the value of the "path" field.
+                tree_path:
+                    type: string
+                    description: TreePath holds the value of the "tree_path" field.
                 properties:
                     type: string
                     description: Properties holds the value of the "properties" field.

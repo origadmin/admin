@@ -110,6 +110,11 @@ func Sequence(v int) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldSequence, v))
 }
 
+// TreePath applies equality check predicate on the "tree_path" field. It's identical to TreePathEQ.
+func TreePath(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldTreePath, v))
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldCreateTime, v))
@@ -708,6 +713,81 @@ func SequenceLT(v int) predicate.View {
 // SequenceLTE applies the LTE predicate on the "sequence" field.
 func SequenceLTE(v int) predicate.View {
 	return predicate.View(sql.FieldLTE(FieldSequence, v))
+}
+
+// TreePathEQ applies the EQ predicate on the "tree_path" field.
+func TreePathEQ(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldTreePath, v))
+}
+
+// TreePathNEQ applies the NEQ predicate on the "tree_path" field.
+func TreePathNEQ(v string) predicate.View {
+	return predicate.View(sql.FieldNEQ(FieldTreePath, v))
+}
+
+// TreePathIn applies the In predicate on the "tree_path" field.
+func TreePathIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldIn(FieldTreePath, vs...))
+}
+
+// TreePathNotIn applies the NotIn predicate on the "tree_path" field.
+func TreePathNotIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldNotIn(FieldTreePath, vs...))
+}
+
+// TreePathGT applies the GT predicate on the "tree_path" field.
+func TreePathGT(v string) predicate.View {
+	return predicate.View(sql.FieldGT(FieldTreePath, v))
+}
+
+// TreePathGTE applies the GTE predicate on the "tree_path" field.
+func TreePathGTE(v string) predicate.View {
+	return predicate.View(sql.FieldGTE(FieldTreePath, v))
+}
+
+// TreePathLT applies the LT predicate on the "tree_path" field.
+func TreePathLT(v string) predicate.View {
+	return predicate.View(sql.FieldLT(FieldTreePath, v))
+}
+
+// TreePathLTE applies the LTE predicate on the "tree_path" field.
+func TreePathLTE(v string) predicate.View {
+	return predicate.View(sql.FieldLTE(FieldTreePath, v))
+}
+
+// TreePathContains applies the Contains predicate on the "tree_path" field.
+func TreePathContains(v string) predicate.View {
+	return predicate.View(sql.FieldContains(FieldTreePath, v))
+}
+
+// TreePathHasPrefix applies the HasPrefix predicate on the "tree_path" field.
+func TreePathHasPrefix(v string) predicate.View {
+	return predicate.View(sql.FieldHasPrefix(FieldTreePath, v))
+}
+
+// TreePathHasSuffix applies the HasSuffix predicate on the "tree_path" field.
+func TreePathHasSuffix(v string) predicate.View {
+	return predicate.View(sql.FieldHasSuffix(FieldTreePath, v))
+}
+
+// TreePathIsNil applies the IsNil predicate on the "tree_path" field.
+func TreePathIsNil() predicate.View {
+	return predicate.View(sql.FieldIsNull(FieldTreePath))
+}
+
+// TreePathNotNil applies the NotNil predicate on the "tree_path" field.
+func TreePathNotNil() predicate.View {
+	return predicate.View(sql.FieldNotNull(FieldTreePath))
+}
+
+// TreePathEqualFold applies the EqualFold predicate on the "tree_path" field.
+func TreePathEqualFold(v string) predicate.View {
+	return predicate.View(sql.FieldEqualFold(FieldTreePath, v))
+}
+
+// TreePathContainsFold applies the ContainsFold predicate on the "tree_path" field.
+func TreePathContainsFold(v string) predicate.View {
+	return predicate.View(sql.FieldContainsFold(FieldTreePath, v))
 }
 
 // HasParent applies the HasEdge predicate on the "parent" edge.

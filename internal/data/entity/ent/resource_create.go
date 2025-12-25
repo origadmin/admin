@@ -496,12 +496,12 @@ func (_c *ResourceCreate) SetResource(input *Resource, fields ...string) *Resour
 }
 
 // SetResourceWithZero set the Resource
-func (_c *ResourceCreate) SetResourceWithZero(input *Resource, fields ...string) *ResourceCreate {
+func (_c *ResourceCreate) SetResourceSkipZero(input *Resource, fields ...string) *ResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = resource.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

@@ -1007,6 +1007,7 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  Icon string `json:"icon,omitempty"`
 //	  Visible bool `json:"visible,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
+//	  TreePath string `json:"tree_path,omitempty"`
 //	}
 //
 //	client.View.Query().
@@ -1023,6 +1024,7 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  view.FieldIcon,
 //	  view.FieldVisible,
 //	  view.FieldSequence,
+//	  view.FieldTreePath,
 //	  ).
 //	  Scan(ctx, &v)
 func (vq *ViewQuery) Omit(fields ...string) *ViewSelect {

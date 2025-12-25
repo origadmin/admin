@@ -36,7 +36,7 @@ const (
 	ViewTable = "sys_view_permissions"
 	// ViewInverseTable is the table name for the View entity.
 	// It exists in this package in order to avoid circular dependency with the "view" package.
-	ViewInverseTable = "views"
+	ViewInverseTable = "sys_views"
 	// ViewColumn is the table column denoting the view relation/edge.
 	ViewColumn = "view_id"
 	// PermissionTable is the table that holds the permission relation/edge.

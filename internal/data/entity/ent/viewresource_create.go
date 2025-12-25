@@ -302,12 +302,12 @@ func (_c *ViewResourceCreate) SetViewResource(input *ViewResource, fields ...str
 }
 
 // SetViewResourceWithZero set the ViewResource
-func (_c *ViewResourceCreate) SetViewResourceWithZero(input *ViewResource, fields ...string) *ViewResourceCreate {
+func (_c *ViewResourceCreate) SetViewResourceSkipZero(input *ViewResource, fields ...string) *ViewResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = viewresource.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

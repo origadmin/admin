@@ -138,6 +138,8 @@ func (m *View) validate(all bool) error {
 
 	// no validation rules for Path
 
+	// no validation rules for TreePath
+
 	// no validation rules for Properties
 
 	// no validation rules for Status

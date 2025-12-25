@@ -68,7 +68,7 @@ const (
 	ViewsTable = "sys_view_permissions"
 	// ViewsInverseTable is the table name for the View entity.
 	// It exists in this package in order to avoid circular dependency with the "view" package.
-	ViewsInverseTable = "views"
+	ViewsInverseTable = "sys_views"
 	// RolePermissionsTable is the table that holds the role_permissions relation/edge.
 	RolePermissionsTable = "sys_role_permissions"
 	// RolePermissionsInverseTable is the table name for the RolePermission entity.

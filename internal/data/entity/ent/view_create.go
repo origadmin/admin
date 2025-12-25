@@ -176,6 +176,20 @@ func (_c *ViewCreate) SetNillableSequence(v *int) *ViewCreate {
 	return _c
 }
 
+// SetTreePath sets the "tree_path" field.
+func (_c *ViewCreate) SetTreePath(v string) *ViewCreate {
+	_c.mutation.SetTreePath(v)
+	return _c
+}
+
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (_c *ViewCreate) SetNillableTreePath(v *string) *ViewCreate {
+	if v != nil {
+		_c.SetTreePath(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *ViewCreate) SetID(v int64) *ViewCreate {
 	_c.mutation.SetID(v)
@@ -457,6 +471,10 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 		_spec.SetField(view.FieldSequence, field.TypeInt, value)
 		_node.Sequence = value
 	}
+	if value, ok := _c.mutation.TreePath(); ok {
+		_spec.SetField(view.FieldTreePath, field.TypeString, value)
+		_node.TreePath = value
+	}
 	if nodes := _c.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -582,12 +600,12 @@ func (_c *ViewCreate) SetView(input *View, fields ...string) *ViewCreate {
 }
 
 // SetViewWithZero set the View
-func (_c *ViewCreate) SetViewWithZero(input *View, fields ...string) *ViewCreate {
+func (_c *ViewCreate) SetViewSkipZero(input *View, fields ...string) *ViewCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = view.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

@@ -517,12 +517,12 @@ func (_c *DepartmentCreate) SetDepartment(input *Department, fields ...string) *
 }
 
 // SetDepartmentWithZero set the Department
-func (_c *DepartmentCreate) SetDepartmentWithZero(input *Department, fields ...string) *DepartmentCreate {
+func (_c *DepartmentCreate) SetDepartmentSkipZero(input *Department, fields ...string) *DepartmentCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = department.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

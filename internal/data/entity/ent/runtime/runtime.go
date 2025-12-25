@@ -299,7 +299,21 @@ func init() {
 	// resourceDescKeyword is the schema descriptor for keyword field.
 	resourceDescKeyword := resourceFields[1].Descriptor()
 	// resource.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
-	resource.KeywordValidator = resourceDescKeyword.Validators[0].(func(string) error)
+	resource.KeywordValidator = func() func(string) error {
+		validators := resourceDescKeyword.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(keyword string) error {
+			for _, fn := range fns {
+				if err := fn(keyword); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// resourceDescPolicy is the schema descriptor for policy field.
 	resourceDescPolicy := resourceFields[5].Descriptor()
 	// resource.DefaultPolicy holds the default value on creation for the policy field.
@@ -582,7 +596,21 @@ func init() {
 	// viewDescKeyword is the schema descriptor for keyword field.
 	viewDescKeyword := viewFields[1].Descriptor()
 	// view.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
-	view.KeywordValidator = viewDescKeyword.Validators[0].(func(string) error)
+	view.KeywordValidator = func() func(string) error {
+		validators := viewDescKeyword.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(keyword string) error {
+			for _, fn := range fns {
+				if err := fn(keyword); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// viewDescScope is the schema descriptor for scope field.
 	viewDescScope := viewFields[2].Descriptor()
 	// view.DefaultScope holds the default value on creation for the scope field.

@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// View is the model entity for the View schema.
+// entity.view.table.comment
 type View struct {
 	config `json:"-"`
 	// ID of the ent.
@@ -42,6 +42,8 @@ type View struct {
 	Visible bool `json:"visible,omitempty"`
 	// view.sequence.comment
 	Sequence int `json:"sequence,omitempty"`
+	// view.tree_path.comment
+	TreePath string `json:"tree_path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ViewQuery when eager-loading is set.
 	Edges        ViewEdges `json:"edges"`
@@ -132,7 +134,7 @@ func (*View) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case view.FieldID, view.FieldParentID, view.FieldSequence:
 			values[i] = new(sql.NullInt64)
-		case view.FieldKeyword, view.FieldScope, view.FieldName, view.FieldType, view.FieldComponent, view.FieldPath, view.FieldIcon:
+		case view.FieldKeyword, view.FieldScope, view.FieldName, view.FieldType, view.FieldComponent, view.FieldPath, view.FieldIcon, view.FieldTreePath:
 			values[i] = new(sql.NullString)
 		case view.FieldCreateTime, view.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -228,6 +230,12 @@ func (_m *View) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field sequence", values[i])
 			} else if value.Valid {
 				_m.Sequence = int(value.Int64)
+			}
+		case view.FieldTreePath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
+			} else if value.Valid {
+				_m.TreePath = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -330,6 +338,9 @@ func (_m *View) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("sequence=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Sequence))
+	builder.WriteString(", ")
+	builder.WriteString("tree_path=")
+	builder.WriteString(_m.TreePath)
 	builder.WriteByte(')')
 	return builder.String()
 }

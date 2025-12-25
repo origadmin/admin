@@ -1200,11 +1200,14 @@ func ConvertViewPBToView(from *ViewPB) *View {
 		UpdateTime: ConvertTimestampToTime(from.UpdateTime),
 		ParentID:   from.ParentId,
 		Keyword:    from.Keyword,
+		Scope:      from.Scope,
 		Name:       from.Name,
 		Type:       ConvertStringToType(from.Type),
 		Path:       from.Path,
 		Icon:       from.Icon,
+		Visible:    from.Visible,
 		Sequence:   int(from.Sequence),
+		TreePath:   from.TreePath,
 	}
 	return to
 }
@@ -1221,10 +1224,13 @@ func ConvertViewToViewPB(from *View) *ViewPB {
 		UpdateTime: ConvertTimeToTimestamp(from.UpdateTime),
 		Keyword:    from.Keyword,
 		Name:       from.Name,
+		Scope:      from.Scope,
 		Sequence:   int32(from.Sequence),
 		Type:       ConvertTypeToString(from.Type),
 		Icon:       from.Icon,
+		Visible:    from.Visible,
 		Path:       from.Path,
+		TreePath:   from.TreePath,
 		ParentId:   from.ParentID,
 		Children:   ConvertViewsToViewsPB(from.Edges.Children),
 		Parent:     ConvertViewToViewPB(from.Edges.Parent),

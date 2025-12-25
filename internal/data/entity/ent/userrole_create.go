@@ -173,12 +173,12 @@ func (_c *UserRoleCreate) SetUserRole(input *UserRole, fields ...string) *UserRo
 }
 
 // SetUserRoleWithZero set the UserRole
-func (_c *UserRoleCreate) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleCreate {
+func (_c *UserRoleCreate) SetUserRoleSkipZero(input *UserRole, fields ...string) *UserRoleCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = userrole.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

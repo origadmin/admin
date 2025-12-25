@@ -173,12 +173,12 @@ func (_c *PermissionResourceCreate) SetPermissionResource(input *PermissionResou
 }
 
 // SetPermissionResourceWithZero set the PermissionResource
-func (_c *PermissionResourceCreate) SetPermissionResourceWithZero(input *PermissionResource, fields ...string) *PermissionResourceCreate {
+func (_c *PermissionResourceCreate) SetPermissionResourceSkipZero(input *PermissionResource, fields ...string) *PermissionResourceCreate {
 	m := _c.mutation
 	if len(fields) == 0 {
 		fields = permissionresource.Columns
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return _c
 }
 

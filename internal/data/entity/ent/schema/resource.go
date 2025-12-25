@@ -19,6 +19,7 @@ func (Resource) Fields() []ent.Field {
 		field.String("service_name").
 			Comment(i18n.Text("resource.service_name.comment")),
 		field.String("keyword").
+			MaxLen(255).
 			Comment(i18n.Text("resource.keyword.comment")).
 			Unique().
 			NotEmpty(),

@@ -39,6 +39,8 @@ const (
 	FieldVisible = "visible"
 	// FieldSequence holds the string denoting the sequence field in the database.
 	FieldSequence = "sequence"
+	// FieldTreePath holds the string denoting the tree_path field in the database.
+	FieldTreePath = "tree_path"
 	// EdgeParent holds the string denoting the parent edge name in mutations.
 	EdgeParent = "parent"
 	// EdgeChildren holds the string denoting the children edge name in mutations.
@@ -52,13 +54,13 @@ const (
 	// EdgeViewPermissions holds the string denoting the view_permissions edge name in mutations.
 	EdgeViewPermissions = "view_permissions"
 	// Table holds the table name of the view in the database.
-	Table = "views"
+	Table = "sys_views"
 	// ParentTable is the table that holds the parent relation/edge.
-	ParentTable = "views"
+	ParentTable = "sys_views"
 	// ParentColumn is the table column denoting the parent relation/edge.
 	ParentColumn = "parent_id"
 	// ChildrenTable is the table that holds the children relation/edge.
-	ChildrenTable = "views"
+	ChildrenTable = "sys_views"
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "parent_id"
 	// ResourcesTable is the table that holds the resources relation/edge. The primary key declared below.
@@ -102,6 +104,7 @@ var Columns = []string{
 	FieldIcon,
 	FieldVisible,
 	FieldSequence,
+	FieldTreePath,
 }
 
 var (
@@ -245,6 +248,11 @@ func ByVisible(opts ...sql.OrderTermOption) OrderOption {
 // BySequence orders the results by the sequence field.
 func BySequence(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSequence, opts...).ToFunc()
+}
+
+// ByTreePath orders the results by the tree_path field.
+func ByTreePath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTreePath, opts...).ToFunc()
 }
 
 // ByParentField orders the results by parent field.
