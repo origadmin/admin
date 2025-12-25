@@ -78,7 +78,39 @@ type queryable[T any] interface {
 	Only(ctx context.Context) (T, error)
 }
 
+// normalizeQueryOption 统一处理QueryOption的初始化和验证
+func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
+	if opt == nil {
+		return &repo.QueryOption{
+			Page:     1,
+			PageSize: repo.DefaultPageSize,
+		}
+	}
+
+	// 规范化页码
+	if opt.Page <= 0 {
+		opt.Page = 1
+	}
+
+	// 规范化页大小
+	if opt.NoPaging {
+		if opt.PageSize <= 0 || opt.PageSize > repo.HardLimit {
+			opt.PageSize = repo.HardLimit
+		}
+	} else {
+		if opt.PageSize <= 0 {
+			opt.PageSize = repo.DefaultPageSize
+		}
+		if opt.PageSize > repo.MaxPageSize {
+			opt.PageSize = repo.MaxPageSize
+		}
+	}
+
+	return opt
+}
+
 func applyPageSize(opt *repo.QueryOption) int {
+	// 注意：这个函数现在只处理页大小，页码验证在normalizeQueryOption中处理
 	if opt == nil {
 		return repo.DefaultPageSize
 	}
@@ -87,14 +119,7 @@ func applyPageSize(opt *repo.QueryOption) int {
 		return repo.HardLimit
 	}
 
-	pageSize := opt.PageSize
-	if pageSize <= 0 {
-		pageSize = repo.DefaultPageSize
-	}
-	if pageSize > repo.MaxPageSize {
-		pageSize = repo.MaxPageSize
-	}
-	return pageSize
+	return opt.PageSize
 }
 
 type cursorCallback[T selectable] func(cursor Cursor) T
@@ -102,8 +127,13 @@ type cursorCallback[T selectable] func(cursor Cursor) T
 // Paginate is the single, unified function for applying pagination logic.
 // It ONLY handles Limit and Offset based on the provided options.
 // All WHERE and ORDER clauses are the responsibility of the caller in the DAL layer.
+// Note: Page boundary validation is handled in the Query function.
 func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](query P, opt *repo.QueryOption,
 	callbacks ...cursorCallback[W]) P {
+	if opt == nil {
+		return query.Limit(repo.DefaultPageSize)
+	}
+
 	// 1. Handle NoPaging case with a hard security limit.
 	// 2. Determine the final page size for standard pagination.
 	pageSize := applyPageSize(opt)
@@ -114,17 +144,20 @@ func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](que
 	}
 
 	// 3. Apply offset only if it's not a token-based pagination request.
-	if opt.PageToken == "" && opt.Page > 0 {
+	if opt.PageToken == "" {
 		query = query.Offset((opt.Page - 1) * pageSize)
 	}
+
 	// 4. Apply cursor-based pagination if a token is provided.
 	if opt.PageToken != "" {
 		cursor, err := DecodeCursor(opt.PageToken)
 		if err != nil {
-			return query
-		}
-		for _, cb := range callbacks {
-			query = query.Where(cb(cursor))
+			query = query.Limit(0)
+		} else {
+			query.Order(OrderByField[O](cursor.Field, cursor.Desc))
+			for _, cb := range callbacks {
+				query = query.Where(cb(cursor))
+			}
 		}
 	}
 
@@ -143,8 +176,11 @@ func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
+	// 统一初始化和验证选项
+	o = normalizeQueryOption(o)
+
 	// 如果只需要计数，直接执行count查询
-	if o != nil && o.OnlyCount {
+	if o.OnlyCount {
 		count, err := PageCount(ctx, query)
 		if err != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", err)
@@ -157,10 +193,22 @@ func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx co
 	var countErr error
 
 	// 只有在非cursor分页时才执行count查询
-	if o == nil || o.PageToken == "" {
+	if o.PageToken == "" {
 		count, countErr = PageCount(ctx, query)
 		if countErr != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", countErr)
+		}
+
+		// 检查请求的页码是否超出总页数
+		if count > 0 && o.PageSize > 0 {
+			totalPages := (count + int32(o.PageSize) - 1) / int32(o.PageSize) // 向上取整
+			if o.Page > int(totalPages) {
+				// 页码超出范围，返回空结果
+				return []R{}, count, nil
+			}
+		} else if count == 0 {
+			// 没有数据，返回空结果
+			return []R{}, count, nil
 		}
 	}
 

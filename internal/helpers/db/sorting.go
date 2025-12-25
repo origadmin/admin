@@ -36,3 +36,13 @@ func OrderBy[T selectable](fields []string, orders ...T) []T {
 	}
 	return orders
 }
+
+func OrderByField[T selectable](fieldName string, desc bool) T {
+	var orderOpt sql.OrderTermOption
+	if desc {
+		orderOpt = sql.OrderDesc()
+	} else {
+		orderOpt = sql.OrderAsc()
+	}
+	return sql.OrderByField(fieldName, orderOpt).ToFunc()
+}
