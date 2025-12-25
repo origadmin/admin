@@ -26,7 +26,7 @@ func TestLocaleText(t *testing.T) {
 				locale: "en_US",
 				key:    "test",
 			},
-			want: "test",
+			want: "en_US test",
 		},
 		{
 			name: "test2",
@@ -34,12 +34,12 @@ func TestLocaleText(t *testing.T) {
 				locale: "zh_CN",
 				key:    "test",
 			},
-			want: "测试",
+			want: "中文测试",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := LocaleText(tt.args.locale, tt.args.key); got != tt.want {
+			if got := TextFor(tt.args.locale, tt.args.key); got != tt.want {
 				t.Errorf("LocaleText() = %v, want %v", got, tt.want)
 			}
 		})

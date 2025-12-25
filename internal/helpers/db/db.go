@@ -11,7 +11,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 
-	"origadmin/application/admin/internal/helpers/pagination"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 type Paginator[T any] interface {
@@ -28,20 +28,14 @@ type FieldSelector[T any] interface {
 	Omit(...string) T
 }
 
-func Query[P Paginator[P]](query P, in repo.PageRequest, paging bool) P {
+func Query[P Paginator[P]](query P, in repo.PaginatingRequest, paging bool) P {
 	if !paging {
 		return QueryNoPage(query, in)
 	}
 	return QueryPage(query, in)
 }
 
-type PageRequest interface {
-	GetPageSize() int32
-	GetPageToken() string
-	GetCurrent() int32
-}
-
-func QueryNoPage[P Paginator[P]](query P, in PageRequest) P {
+func QueryNoPage[P Paginator[P]](query P, in repo.PaginatingRequest) P {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))
@@ -57,7 +51,7 @@ func handleTokenPagination[P Paginator[P]](query P, token string) P {
 	return query
 }
 
-func QueryPage[P Paginator[P]](query P, in PageRequest) P {
+func QueryPage[P Paginator[P]](query P, in repo.PaginatingRequest) P {
 	pageSize := in.GetPageSize()
 	if pageSize > 0 {
 		query = query.Limit(int(pageSize))
@@ -66,7 +60,7 @@ func QueryPage[P Paginator[P]](query P, in PageRequest) P {
 	if token != "" {
 		return handleTokenPagination(query, token)
 	}
-	current := in.GetCurrent()
+	current := in.GetPage()
 	if current > 0 {
 		return query.Offset(int((current - 1) * pageSize))
 	}
