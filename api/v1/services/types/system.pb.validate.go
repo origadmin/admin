@@ -120,6 +120,8 @@ func (m *View) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Scope
+
 	// no validation rules for I18NKey
 
 	// no validation rules for Description
@@ -128,7 +130,11 @@ func (m *View) validate(all bool) error {
 
 	// no validation rules for Type
 
+	// no validation rules for Comment
+
 	// no validation rules for Icon
+
+	// no validation rules for Visible
 
 	// no validation rules for Path
 

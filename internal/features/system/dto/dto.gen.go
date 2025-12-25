@@ -9,6 +9,7 @@ package dto
 import (
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -94,6 +95,12 @@ type (
 	ViewEdges                 = ent.ViewEdges
 	ViewEdgesPB               = types.ViewEdges
 	ViewPB                    = types.View
+	ViewPermission            = ent.ViewPermission
+	ViewPermissionEdges       = ent.ViewPermissionEdges
+	ViewPermissions           = []*ent.ViewPermission
+	ViewResource              = ent.ViewResource
+	ViewResourceEdges         = ent.ViewResourceEdges
+	ViewResources             = []*ent.ViewResource
 	Views                     = []*ent.View
 	ViewsPB                   = []*types.View
 )
@@ -667,9 +674,9 @@ func ConvertRolePBToRole(from *RolePB) *Role {
 		Keyword:     from.Keyword,
 		Name:        from.Name,
 		Description: from.Description,
-		Type:        int8(from.Type),
+		Type:        enums.RoleType(from.Type),
 		Sequence:    int(from.Sequence),
-		Status:      int8(from.Status),
+		Status:      enums.Status(from.Status),
 	}
 	return to
 }
@@ -927,7 +934,7 @@ func ConvertUserPBToUser(from *UserPB) *User {
 		Email:         from.Email,
 		Remark:        from.Remark,
 		Token:         from.Token,
-		Status:        int8(from.Status),
+		Status:        enums.Status(from.Status),
 		LastLoginIP:   from.LastLoginIp,
 		LastLoginTime: ConvertTimestampToTime(from.LastLoginTime),
 		SanctionDate:  ConvertTimestampToTime(from.SanctionDate),
@@ -1194,7 +1201,7 @@ func ConvertViewPBToView(from *ViewPB) *View {
 		ParentID:   from.ParentId,
 		Keyword:    from.Keyword,
 		Name:       from.Name,
-		Type:       from.Type,
+		Type:       ConvertStringToType(from.Type),
 		Path:       from.Path,
 		Icon:       from.Icon,
 		Sequence:   int(from.Sequence),
@@ -1215,7 +1222,7 @@ func ConvertViewToViewPB(from *View) *ViewPB {
 		Keyword:    from.Keyword,
 		Name:       from.Name,
 		Sequence:   int32(from.Sequence),
-		Type:       from.Type,
+		Type:       ConvertTypeToString(from.Type),
 		Icon:       from.Icon,
 		Path:       from.Path,
 		ParentId:   from.ParentID,

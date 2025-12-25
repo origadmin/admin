@@ -2,7 +2,7 @@ package dto
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
-	"origadmin/application/admin/internal/data/enums"
+	"origadmin/application/admin/internal/data/entity/ent/view"
 )
 
 //go:generate abgen -debug .
@@ -34,4 +34,16 @@ func ConvertStringToGender(from string) user.Gender {
 	default:
 		return user.GenderMale
 	}
+}
+
+// ConvertStringToType is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToType(from string) view.Type {
+	return ViewTypeCode(from)
+}
+
+// ConvertTypeToString is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertTypeToString(from view.Type) string {
+	return ViewTypeName(from)
 }

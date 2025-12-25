@@ -3964,9 +3964,12 @@ components:
                 name:
                     type: string
                     description: Name holds the value of the "name" field.
+                scope:
+                    type: string
+                    description: Scope holds the value of the "scope" field.
                 i18n_key:
                     type: string
-                    description: I18nKey holds the value
+                    description: I18nKey holds the value of the "i18n_key" field.
                 description:
                     type: string
                     description: Description holds the value of the "description" field.
@@ -3977,9 +3980,15 @@ components:
                 type:
                     type: string
                     description: Type holds the value of the "type" field.
+                comment:
+                    type: string
+                    description: Comment holds the value of the "comment" field.
                 icon:
                     type: string
                     description: Icon holds the value of the "icon" field.
+                visible:
+                    type: boolean
+                    description: Visible holds the value of the "visible" field.
                 path:
                     type: string
                     description: Path holds the value of the "path" field.

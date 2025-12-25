@@ -2,21 +2,3 @@
 // More info: https://github.com/origadmin/abgen
 
 package dto
-
-import (
-	"origadmin/application/admin/internal/data/entity/ent/resource"
-)
-
-// ConvertInt32ToStatus is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertInt32ToStatus(from int32) resource.Status {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}
-
-// ConvertStatusToInt32 is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStatusToInt32(from resource.Status) int32 {
-	// TODO: Implement this custom conversion
-	panic("stub! not implemented")
-}

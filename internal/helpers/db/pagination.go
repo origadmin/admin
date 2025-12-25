@@ -2,6 +2,9 @@
  * Copyright (c) 2024 OrigAdmin. All rights reserved.
  */
 
+// Package db provides common, generic helpers for database operations.
+// Its scope is strictly limited to functionalities that are truly generic
+// and do not depend on schema-specific types like predicates.
 package db
 
 import (
@@ -11,19 +14,14 @@ import (
 	"encoding/gob"
 	"fmt"
 
-	"entgo.io/ent/dialect/sql"
-
 	"origadmin/application/admin/internal/helpers/repo"
 )
-
-// Cursor, EncodeCursor, DecodeCursor, OrderFunc, and counter remain the same as the user's correct version.
 
 type Cursor map[string]interface{}
 
 func EncodeCursor(c Cursor) (string, error) {
 	var buf bytes.Buffer
-	encoder := gob.NewEncoder(&buf)
-	if err := encoder.Encode(c); err != nil {
+	if err := gob.NewEncoder(&buf).Encode(c); err != nil {
 		return "", fmt.Errorf("gob encode cursor: %w", err)
 	}
 	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
@@ -35,44 +33,56 @@ func DecodeCursor(token string) (Cursor, error) {
 		return nil, fmt.Errorf("base64 decode token: %w", err)
 	}
 	var c Cursor
-	decoder := gob.NewDecoder(bytes.NewReader(data))
-	if err := decoder.Decode(&c); err != nil {
+	if err := gob.NewDecoder(bytes.NewReader(data)).Decode(&c); err != nil {
 		return nil, fmt.Errorf("gob decode cursor: %w", err)
 	}
 	return c, nil
 }
 
-type OrderFunc = func(*sql.Selector)
-
-type paginateable[T any] interface {
+// paginateable is the minimal, correct interface for applying Limit and Offset.
+// It does not include `Where` or `Order` as they are not generically solvable.
+type paginateable[T any, W selectable, O selectable, R any] interface {
+	counter[T]
+	cloneable[T]
+	whereFilterable[T, W]
+	orderable[T, O]
+	queryable[R]
 	Limit(int) T
 	Offset(int) T
-	Order(...OrderFunc) T
 }
 
+type orderable[T any, O selectable] interface {
+	Order(...O) T
+}
+
+type whereFilterable[T any, W selectable] interface {
+	Where(...W) T
+}
+
+type cloneable[T any] interface {
+	Clone() T
+}
+
+// counter defines an interface for queries that can count their results.
 type counter[T any] interface {
+	cloneable[T]
 	Count(ctx context.Context) (int, error)
 }
 
-type queryable interface {
-	~func(*sql.Selector)
+type queryable[T any] interface {
+	All(ctx context.Context) ([]T, error)
+	Only(ctx context.Context) (T, error)
 }
-
-type Where[T queryable] interface {
-	Limit(int) Where[T]
-	Offset(int) Where[T]
-	Order(...OrderFunc) Where[T]
-	Where(...T) Where[T]
-}
-
-type cursorCallback[T queryable] func(cursor Cursor) T
 
 func applyPageSize(opt *repo.QueryOption) int {
+	if opt == nil {
+		return repo.DefaultPageSize
+	}
+
 	if opt.NoPaging {
 		return repo.HardLimit
 	}
 
-	// 2. Determine the final page size for standard pagination.
 	pageSize := opt.PageSize
 	if pageSize <= 0 {
 		pageSize = repo.DefaultPageSize
@@ -83,11 +93,15 @@ func applyPageSize(opt *repo.QueryOption) int {
 	return pageSize
 }
 
-// Paginate is the single, unified function for applying all pagination logic.
-// It correctly handles NoPaging with a hard limit, and standard pagination with default/max sizes.
-// It is the caller's responsibility to apply WHERE and ORDER clauses.
-func Paginate[P paginateable[P]](query P, opt *repo.QueryOption) P {
+type cursorCallback[T selectable] func(cursor Cursor) T
+
+// Paginate is the single, unified function for applying pagination logic.
+// It ONLY handles Limit and Offset based on the provided options.
+// All WHERE and ORDER clauses are the responsibility of the caller in the DAL layer.
+func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](query P, opt *repo.QueryOption,
+	callbacks ...cursorCallback[W]) P {
 	// 1. Handle NoPaging case with a hard security limit.
+	// 2. Determine the final page size for standard pagination.
 	pageSize := applyPageSize(opt)
 	query = query.Limit(pageSize)
 
@@ -99,36 +113,42 @@ func Paginate[P paginateable[P]](query P, opt *repo.QueryOption) P {
 	if opt.PageToken == "" && opt.Page > 0 {
 		query = query.Offset((opt.Page - 1) * pageSize)
 	}
+	// 4. Apply cursor-based pagination if a token is provided.
+	if opt.PageToken != "" {
+		cursor, err := DecodeCursor(opt.PageToken)
+		if err != nil {
+			return query
+		}
+		for _, cb := range callbacks {
+			query = query.Where(cb(cursor))
+		}
+	}
 
 	return query
 }
 
-func Token[T queryable](query Where[T], opt *repo.QueryOption, callback cursorCallback[T]) (Where[T], error) {
-	// 1. Handle NoPaging case with a hard security limit.
-	pageSize := applyPageSize(opt)
-	query = query.Limit(pageSize)
-
-	if opt.NoPaging {
-		return query, nil
-	}
-
-	// 3. Apply cursor-based pagination if a token is provided.
-	if opt.PageToken != "" {
-		cursor, err := DecodeCursor(opt.PageToken)
-		if err != nil {
-			return query, fmt.Errorf("decode cursor: %w", err)
-		}
-		query = query.Where(callback(cursor))
-	}
-
-	return query, nil
-}
-
 // PageCount remains the same.
 func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
-	count, err := query.Count(ctx)
+	count, err := query.Clone().Count(ctx)
 	if err != nil {
 		return 0, err
 	}
 	return int32(count), nil
+}
+
+func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx context.Context, query P,
+	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
+	if o.OnlyCount {
+		count, err := PageCount(ctx, query)
+		if err != nil {
+			return nil, 0, err
+		}
+		return nil, count, nil
+	}
+	query = Paginate(query, o, callbacks...)
+	result, err := query.All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return result, 0, nil
 }

@@ -22,34 +22,40 @@ message View {
   string keyword = 4 [json_name = "keyword"];
   // Name holds the value of the "name" field.
   string name = 5 [json_name = "name"];
-  // I18nKey holds the value
-  string i18n_key = 6 [json_name = "i18n_key"];
+  // Scope holds the value of the "scope" field.
+  string scope = 6 [json_name = "scope"];
+  // I18nKey holds the value of the "i18n_key" field.
+  string i18n_key = 7 [json_name = "i18n_key"];
   // Description holds the value of the "description" field.
-  string description = 7 [json_name = "description"];
+  string description = 8 [json_name = "description"];
   // Sequence holds the value of the "sequence" field.
-  int32 sequence = 8 [json_name = "sequence"];
+  int32 sequence = 9 [json_name = "sequence"];
   // Type holds the value of the "type" field.
-  string type = 9 [json_name = "type"];
+  string type = 10 [json_name = "type"];
+  // Comment holds the value of the "comment" field.
+  string comment = 11 [json_name = "comment"];
   // Icon holds the value of the "icon" field.
-  string icon = 10 [json_name = "icon"];
+  string icon = 12 [json_name = "icon"];
+  // Visible holds the value of the "visible" field.
+  bool visible = 13 [json_name = "visible"];
   // Path holds the value of the "path" field.
-  string path = 11 [json_name = "path"];
+  string path = 14 [json_name = "path"];
   // Properties holds the value of the "properties" field.
-  string properties = 12 [json_name = "properties"];
+  string properties = 15 [json_name = "properties"];
   // Status holds the value of the "status" field.
-  int32 status = 13 [json_name = "status"];
+  int32 status = 16 [json_name = "status"];
   // ParentID holds the value of the "parent_id" field.
-  int64 parent_id = 14 [json_name = "parent_id"];
+  int64 parent_id = 17 [json_name = "parent_id"];
   // ParentPath holds the value of the "parent_path" field.
-  string parent_path = 15 [json_name = "parent_path"];
+  string parent_path = 18 [json_name = "parent_path"];
   // Children holds the value of the children edge.
-  repeated View children = 21 [json_name = "children"];
+  repeated View children = 19 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  View parent = 22 [json_name = "parent"];
+  View parent = 20 [json_name = "parent"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 23 [json_name = "resources"];
+  repeated Resource resources = 21 [json_name = "resources"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 24 [json_name = "roles"];
+  repeated Role roles = 22 [json_name = "roles"];
 }
 
 // ViewEdges holds the relations/edges for other nodes in the graph.

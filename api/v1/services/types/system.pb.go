@@ -35,34 +35,40 @@ type View struct {
 	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
-	// I18nKey holds the value
-	I18NKey string `protobuf:"bytes,6,opt,name=i18n_key,proto3" json:"i18n_key,omitempty"`
+	// Scope holds the value of the "scope" field.
+	Scope string `protobuf:"bytes,6,opt,name=scope,proto3" json:"scope,omitempty"`
+	// I18nKey holds the value of the "i18n_key" field.
+	I18NKey string `protobuf:"bytes,7,opt,name=i18n_key,proto3" json:"i18n_key,omitempty"`
 	// Description holds the value of the "description" field.
-	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
 	// Sequence holds the value of the "sequence" field.
-	Sequence int32 `protobuf:"varint,8,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	Sequence int32 `protobuf:"varint,9,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// Type holds the value of the "type" field.
-	Type string `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
+	Type string `protobuf:"bytes,10,opt,name=type,proto3" json:"type,omitempty"`
+	// Comment holds the value of the "comment" field.
+	Comment string `protobuf:"bytes,11,opt,name=comment,proto3" json:"comment,omitempty"`
 	// Icon holds the value of the "icon" field.
-	Icon string `protobuf:"bytes,10,opt,name=icon,proto3" json:"icon,omitempty"`
+	Icon string `protobuf:"bytes,12,opt,name=icon,proto3" json:"icon,omitempty"`
+	// Visible holds the value of the "visible" field.
+	Visible bool `protobuf:"varint,13,opt,name=visible,proto3" json:"visible,omitempty"`
 	// Path holds the value of the "path" field.
-	Path string `protobuf:"bytes,11,opt,name=path,proto3" json:"path,omitempty"`
+	Path string `protobuf:"bytes,14,opt,name=path,proto3" json:"path,omitempty"`
 	// Properties holds the value of the "properties" field.
-	Properties string `protobuf:"bytes,12,opt,name=properties,proto3" json:"properties,omitempty"`
+	Properties string `protobuf:"bytes,15,opt,name=properties,proto3" json:"properties,omitempty"`
 	// Status holds the value of the "status" field.
-	Status int32 `protobuf:"varint,13,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,16,opt,name=status,proto3" json:"status,omitempty"`
 	// ParentID holds the value of the "parent_id" field.
-	ParentId int64 `protobuf:"varint,14,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	ParentId int64 `protobuf:"varint,17,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
-	ParentPath string `protobuf:"bytes,15,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
+	ParentPath string `protobuf:"bytes,18,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*View `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*View `protobuf:"bytes,19,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *View `protobuf:"bytes,22,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *View `protobuf:"bytes,20,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,23,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,21,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles         []*Role `protobuf:"bytes,24,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles         []*Role `protobuf:"bytes,22,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -132,6 +138,13 @@ func (x *View) GetName() string {
 	return ""
 }
 
+func (x *View) GetScope() string {
+	if x != nil {
+		return x.Scope
+	}
+	return ""
+}
+
 func (x *View) GetI18NKey() string {
 	if x != nil {
 		return x.I18NKey
@@ -160,11 +173,25 @@ func (x *View) GetType() string {
 	return ""
 }
 
+func (x *View) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
 func (x *View) GetIcon() string {
 	if x != nil {
 		return x.Icon
 	}
 	return ""
+}
+
+func (x *View) GetVisible() bool {
+	if x != nil {
+		return x.Visible
+	}
+	return false
 }
 
 func (x *View) GetPath() string {
@@ -2747,30 +2774,33 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xae\x05\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf8\x05\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
 	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\x12\x1a\n" +
-	"\bi18n_key\x18\x06 \x01(\tR\bi18n_key\x12 \n" +
-	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1a\n" +
-	"\bsequence\x18\b \x01(\x05R\bsequence\x12\x12\n" +
-	"\x04type\x18\t \x01(\tR\x04type\x12\x12\n" +
-	"\x04icon\x18\n" +
-	" \x01(\tR\x04icon\x12\x12\n" +
-	"\x04path\x18\v \x01(\tR\x04path\x12\x1e\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x14\n" +
+	"\x05scope\x18\x06 \x01(\tR\x05scope\x12\x1a\n" +
+	"\bi18n_key\x18\a \x01(\tR\bi18n_key\x12 \n" +
+	"\vdescription\x18\b \x01(\tR\vdescription\x12\x1a\n" +
+	"\bsequence\x18\t \x01(\x05R\bsequence\x12\x12\n" +
+	"\x04type\x18\n" +
+	" \x01(\tR\x04type\x12\x18\n" +
+	"\acomment\x18\v \x01(\tR\acomment\x12\x12\n" +
+	"\x04icon\x18\f \x01(\tR\x04icon\x12\x18\n" +
+	"\avisible\x18\r \x01(\bR\avisible\x12\x12\n" +
+	"\x04path\x18\x0e \x01(\tR\x04path\x12\x1e\n" +
 	"\n" +
-	"properties\x18\f \x01(\tR\n" +
+	"properties\x18\x0f \x01(\tR\n" +
 	"properties\x12\x16\n" +
-	"\x06status\x18\r \x01(\x05R\x06status\x12\x1c\n" +
-	"\tparent_id\x18\x0e \x01(\x03R\tparent_id\x12 \n" +
-	"\vparent_path\x18\x0f \x01(\tR\vparent_path\x127\n" +
-	"\bchildren\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
-	"\x06parent\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18\x17 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
-	"\x05roles\x18\x18 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xac\x02\n" +
+	"\x06status\x18\x10 \x01(\x05R\x06status\x12\x1c\n" +
+	"\tparent_id\x18\x11 \x01(\x03R\tparent_id\x12 \n" +
+	"\vparent_path\x18\x12 \x01(\tR\vparent_path\x127\n" +
+	"\bchildren\x18\x13 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
+	"\x06parent\x18\x14 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
+	"\tresources\x18\x15 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
+	"\x05roles\x18\x16 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xac\x02\n" +
 	"\tViewEdges\x127\n" +
 	"\bchildren\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
 	"\x06parent\x18\x02 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
