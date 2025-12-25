@@ -2,6 +2,7 @@ package dto
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/user"
+	"origadmin/application/admin/internal/data/enums"
 )
 
 //go:generate abgen -debug .

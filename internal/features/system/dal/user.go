@@ -57,7 +57,6 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 		entUser.EncryptedPassword = password
 	}
 	create := r.db.User(ctx).Create().SetUser(entUser)
-
 	saved, err := create.Save(ctx)
 	if err != nil {
 		return nil, err

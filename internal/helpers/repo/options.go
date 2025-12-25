@@ -6,10 +6,15 @@
 // focusing on abstracting common query patterns like pagination.
 package repo
 
-// PaginatingRequest defines the contract for any request that supports pagination.
+// PaginatingRequest defines the contract for any request that supports offset-based pagination.
 type PaginatingRequest interface {
 	GetPage() int32
 	GetPageSize() int32
+}
+
+// TokenPaginatingRequest defines the contract for any request that supports token-based pagination.
+type TokenPaginatingRequest interface {
+	GetPageToken() string
 }
 
 // CountingRequest defines the contract for any request that supports "count-only" mode.
@@ -27,20 +32,24 @@ type KeywordRequest interface {
 type QueryOption struct {
 	Page      int
 	PageSize  int
+	PageToken string // Added for cursor pagination
 	OnlyCount bool
 	Keyword   string
 	OrderBy   []string
 }
 
 // OptionFromRequest creates a QueryOption with common details
-// extracted from any request that satisfies the PaginatingRequest,
-// CountingRequest, or KeywordRequest interfaces.
+// extracted from any request that satisfies the supported interfaces.
 func OptionFromRequest(req interface{}) QueryOption {
 	opt := QueryOption{}
 
 	if r, ok := req.(PaginatingRequest); ok {
 		opt.Page = int(r.GetPage())
 		opt.PageSize = int(r.GetPageSize())
+	}
+
+	if r, ok := req.(TokenPaginatingRequest); ok {
+		opt.PageToken = r.GetPageToken()
 	}
 
 	if r, ok := req.(CountingRequest); ok {
