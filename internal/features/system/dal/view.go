@@ -50,7 +50,7 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 		query.Where(view.ScopeEQ(opt.Scope))
 	}
 
-	result, count, err := db.Query(ctx, query, &opt.QueryOption)
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
 	if err != nil {
 		return nil, 0, err
 	}
