@@ -1046,7 +1046,7 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  Department string `json:"department,omitempty"`
 //	  Remark string `json:"remark,omitempty"`
 //	  Token string `json:"token,omitempty"`
-//	  Status int8 `json:"status,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
 //	  IsSystem bool `json:"is_system,omitempty"`
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
 //	  LastLoginTime time.Time `json:"last_login_time,omitempty"`

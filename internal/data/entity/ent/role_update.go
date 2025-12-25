@@ -12,6 +12,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -82,14 +83,14 @@ func (_u *RoleUpdate) SetNillableDescription(v *string) *RoleUpdate {
 }
 
 // SetType sets the "type" field.
-func (_u *RoleUpdate) SetType(v int8) *RoleUpdate {
+func (_u *RoleUpdate) SetType(v enums.RoleType) *RoleUpdate {
 	_u.mutation.ResetType()
 	_u.mutation.SetType(v)
 	return _u
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (_u *RoleUpdate) SetNillableType(v *int8) *RoleUpdate {
+func (_u *RoleUpdate) SetNillableType(v *enums.RoleType) *RoleUpdate {
 	if v != nil {
 		_u.SetType(*v)
 	}
@@ -97,7 +98,7 @@ func (_u *RoleUpdate) SetNillableType(v *int8) *RoleUpdate {
 }
 
 // AddType adds value to the "type" field.
-func (_u *RoleUpdate) AddType(v int8) *RoleUpdate {
+func (_u *RoleUpdate) AddType(v enums.RoleType) *RoleUpdate {
 	_u.mutation.AddType(v)
 	return _u
 }
@@ -124,14 +125,14 @@ func (_u *RoleUpdate) AddSequence(v int) *RoleUpdate {
 }
 
 // SetStatus sets the "status" field.
-func (_u *RoleUpdate) SetStatus(v int8) *RoleUpdate {
+func (_u *RoleUpdate) SetStatus(v enums.Status) *RoleUpdate {
 	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *RoleUpdate) SetNillableStatus(v *int8) *RoleUpdate {
+func (_u *RoleUpdate) SetNillableStatus(v *enums.Status) *RoleUpdate {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
@@ -139,7 +140,7 @@ func (_u *RoleUpdate) SetNillableStatus(v *int8) *RoleUpdate {
 }
 
 // AddStatus adds value to the "status" field.
-func (_u *RoleUpdate) AddStatus(v int8) *RoleUpdate {
+func (_u *RoleUpdate) AddStatus(v enums.Status) *RoleUpdate {
 	_u.mutation.AddStatus(v)
 	return _u
 }
@@ -648,14 +649,14 @@ func (_u *RoleUpdateOne) SetNillableDescription(v *string) *RoleUpdateOne {
 }
 
 // SetType sets the "type" field.
-func (_u *RoleUpdateOne) SetType(v int8) *RoleUpdateOne {
+func (_u *RoleUpdateOne) SetType(v enums.RoleType) *RoleUpdateOne {
 	_u.mutation.ResetType()
 	_u.mutation.SetType(v)
 	return _u
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (_u *RoleUpdateOne) SetNillableType(v *int8) *RoleUpdateOne {
+func (_u *RoleUpdateOne) SetNillableType(v *enums.RoleType) *RoleUpdateOne {
 	if v != nil {
 		_u.SetType(*v)
 	}
@@ -663,7 +664,7 @@ func (_u *RoleUpdateOne) SetNillableType(v *int8) *RoleUpdateOne {
 }
 
 // AddType adds value to the "type" field.
-func (_u *RoleUpdateOne) AddType(v int8) *RoleUpdateOne {
+func (_u *RoleUpdateOne) AddType(v enums.RoleType) *RoleUpdateOne {
 	_u.mutation.AddType(v)
 	return _u
 }
@@ -690,14 +691,14 @@ func (_u *RoleUpdateOne) AddSequence(v int) *RoleUpdateOne {
 }
 
 // SetStatus sets the "status" field.
-func (_u *RoleUpdateOne) SetStatus(v int8) *RoleUpdateOne {
+func (_u *RoleUpdateOne) SetStatus(v enums.Status) *RoleUpdateOne {
 	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *RoleUpdateOne) SetNillableStatus(v *int8) *RoleUpdateOne {
+func (_u *RoleUpdateOne) SetNillableStatus(v *enums.Status) *RoleUpdateOne {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
@@ -705,7 +706,7 @@ func (_u *RoleUpdateOne) SetNillableStatus(v *int8) *RoleUpdateOne {
 }
 
 // AddStatus adds value to the "status" field.
-func (_u *RoleUpdateOne) AddStatus(v int8) *RoleUpdateOne {
+func (_u *RoleUpdateOne) AddStatus(v enums.Status) *RoleUpdateOne {
 	_u.mutation.AddStatus(v)
 	return _u
 }

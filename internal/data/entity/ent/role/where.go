@@ -4,6 +4,7 @@ package role
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -81,8 +82,9 @@ func Description(v string) predicate.Role {
 }
 
 // Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
-func Type(v int8) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldType, v))
+func Type(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldEQ(FieldType, vc))
 }
 
 // Sequence applies equality check predicate on the "sequence" field. It's identical to SequenceEQ.
@@ -91,8 +93,9 @@ func Sequence(v int) predicate.Role {
 }
 
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
-func Status(v int8) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldStatus, v))
+func Status(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldEQ(FieldStatus, vc))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -371,43 +374,57 @@ func DescriptionContainsFold(v string) predicate.Role {
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
-func TypeEQ(v int8) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldType, v))
+func TypeEQ(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldEQ(FieldType, vc))
 }
 
 // TypeNEQ applies the NEQ predicate on the "type" field.
-func TypeNEQ(v int8) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldType, v))
+func TypeNEQ(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldNEQ(FieldType, vc))
 }
 
 // TypeIn applies the In predicate on the "type" field.
-func TypeIn(vs ...int8) predicate.Role {
-	return predicate.Role(sql.FieldIn(FieldType, vs...))
+func TypeIn(vs ...enums.RoleType) predicate.Role {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Role(sql.FieldIn(FieldType, v...))
 }
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
-func TypeNotIn(vs ...int8) predicate.Role {
-	return predicate.Role(sql.FieldNotIn(FieldType, vs...))
+func TypeNotIn(vs ...enums.RoleType) predicate.Role {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Role(sql.FieldNotIn(FieldType, v...))
 }
 
 // TypeGT applies the GT predicate on the "type" field.
-func TypeGT(v int8) predicate.Role {
-	return predicate.Role(sql.FieldGT(FieldType, v))
+func TypeGT(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldGT(FieldType, vc))
 }
 
 // TypeGTE applies the GTE predicate on the "type" field.
-func TypeGTE(v int8) predicate.Role {
-	return predicate.Role(sql.FieldGTE(FieldType, v))
+func TypeGTE(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldGTE(FieldType, vc))
 }
 
 // TypeLT applies the LT predicate on the "type" field.
-func TypeLT(v int8) predicate.Role {
-	return predicate.Role(sql.FieldLT(FieldType, v))
+func TypeLT(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldLT(FieldType, vc))
 }
 
 // TypeLTE applies the LTE predicate on the "type" field.
-func TypeLTE(v int8) predicate.Role {
-	return predicate.Role(sql.FieldLTE(FieldType, v))
+func TypeLTE(v enums.RoleType) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldLTE(FieldType, vc))
 }
 
 // SequenceEQ applies the EQ predicate on the "sequence" field.
@@ -451,43 +468,57 @@ func SequenceLTE(v int) predicate.Role {
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
-func StatusEQ(v int8) predicate.Role {
-	return predicate.Role(sql.FieldEQ(FieldStatus, v))
+func StatusEQ(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldEQ(FieldStatus, vc))
 }
 
 // StatusNEQ applies the NEQ predicate on the "status" field.
-func StatusNEQ(v int8) predicate.Role {
-	return predicate.Role(sql.FieldNEQ(FieldStatus, v))
+func StatusNEQ(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldNEQ(FieldStatus, vc))
 }
 
 // StatusIn applies the In predicate on the "status" field.
-func StatusIn(vs ...int8) predicate.Role {
-	return predicate.Role(sql.FieldIn(FieldStatus, vs...))
+func StatusIn(vs ...enums.Status) predicate.Role {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Role(sql.FieldIn(FieldStatus, v...))
 }
 
 // StatusNotIn applies the NotIn predicate on the "status" field.
-func StatusNotIn(vs ...int8) predicate.Role {
-	return predicate.Role(sql.FieldNotIn(FieldStatus, vs...))
+func StatusNotIn(vs ...enums.Status) predicate.Role {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Role(sql.FieldNotIn(FieldStatus, v...))
 }
 
 // StatusGT applies the GT predicate on the "status" field.
-func StatusGT(v int8) predicate.Role {
-	return predicate.Role(sql.FieldGT(FieldStatus, v))
+func StatusGT(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldGT(FieldStatus, vc))
 }
 
 // StatusGTE applies the GTE predicate on the "status" field.
-func StatusGTE(v int8) predicate.Role {
-	return predicate.Role(sql.FieldGTE(FieldStatus, v))
+func StatusGTE(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldGTE(FieldStatus, vc))
 }
 
 // StatusLT applies the LT predicate on the "status" field.
-func StatusLT(v int8) predicate.Role {
-	return predicate.Role(sql.FieldLT(FieldStatus, v))
+func StatusLT(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldLT(FieldStatus, vc))
 }
 
 // StatusLTE applies the LTE predicate on the "status" field.
-func StatusLTE(v int8) predicate.Role {
-	return predicate.Role(sql.FieldLTE(FieldStatus, v))
+func StatusLTE(v enums.Status) predicate.Role {
+	vc := int8(v)
+	return predicate.Role(sql.FieldLTE(FieldStatus, vc))
 }
 
 // HasUsers applies the HasEdge predicate on the "users" edge.

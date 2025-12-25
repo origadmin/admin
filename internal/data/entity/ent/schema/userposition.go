@@ -39,8 +39,6 @@ func (UserPosition) Mixin() []ent.Mixin {
 // Indexes of the UserPosition.
 func (UserPosition) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id"),     // From User.ID
-		index.Fields("position_id"), // From Position.ID
 		index.Fields("user_id", "position_id").
 			Unique(),
 	}

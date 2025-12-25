@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
+	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
 
@@ -31,7 +32,7 @@ type Notification struct {
 	// entity.notification.field.content
 	Content string `json:"content,omitempty"`
 	// entity.notification.field.status
-	Status int8 `json:"status,omitempty"`
+	Status enums.Status `json:"status,omitempty"`
 	// entity.notification.field.category_id
 	CategoryID   int64 `json:"category_id,omitempty"`
 	selectValues sql.SelectValues
@@ -109,7 +110,7 @@ func (_m *Notification) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				_m.Status = int8(value.Int64)
+				_m.Status = enums.Status(value.Int64)
 			}
 		case notification.FieldCategoryID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {

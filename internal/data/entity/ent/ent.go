@@ -21,6 +21,8 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 	"reflect"
 	"sync"
 
@@ -102,6 +104,8 @@ func checkColumn(t, c string) error {
 			userposition.Table:       userposition.ValidColumn,
 			userrole.Table:           userrole.ValidColumn,
 			view.Table:               view.ValidColumn,
+			viewpermission.Table:     viewpermission.ValidColumn,
+			viewresource.Table:       viewresource.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

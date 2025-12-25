@@ -37,8 +37,6 @@ func (RolePermission) Mixin() []ent.Mixin {
 // Indexes of the RolePermission.
 func (RolePermission) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("role_id"),       // From Role.ID
-		index.Fields("permission_id"), // From Permission.ID
 		index.Fields("role_id", "permission_id").
 			Unique(),
 	}

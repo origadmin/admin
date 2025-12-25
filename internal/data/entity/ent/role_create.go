@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -87,13 +88,13 @@ func (_c *RoleCreate) SetNillableDescription(v *string) *RoleCreate {
 }
 
 // SetType sets the "type" field.
-func (_c *RoleCreate) SetType(v int8) *RoleCreate {
+func (_c *RoleCreate) SetType(v enums.RoleType) *RoleCreate {
 	_c.mutation.SetType(v)
 	return _c
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (_c *RoleCreate) SetNillableType(v *int8) *RoleCreate {
+func (_c *RoleCreate) SetNillableType(v *enums.RoleType) *RoleCreate {
 	if v != nil {
 		_c.SetType(*v)
 	}
@@ -115,13 +116,13 @@ func (_c *RoleCreate) SetNillableSequence(v *int) *RoleCreate {
 }
 
 // SetStatus sets the "status" field.
-func (_c *RoleCreate) SetStatus(v int8) *RoleCreate {
+func (_c *RoleCreate) SetStatus(v enums.Status) *RoleCreate {
 	_c.mutation.SetStatus(v)
 	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_c *RoleCreate) SetNillableStatus(v *int8) *RoleCreate {
+func (_c *RoleCreate) SetNillableStatus(v *enums.Status) *RoleCreate {
 	if v != nil {
 		_c.SetStatus(*v)
 	}

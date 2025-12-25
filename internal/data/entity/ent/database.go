@@ -184,6 +184,16 @@ func (db *Database) View(ctx context.Context) *ViewClient {
 	return db.Client(ctx).View
 }
 
+// ViewPermission is the client for interacting with the ViewPermission builders.
+func (db *Database) ViewPermission(ctx context.Context) *ViewPermissionClient {
+	return db.Client(ctx).ViewPermission
+}
+
+// ViewResource is the client for interacting with the ViewResource builders.
+func (db *Database) ViewResource(ctx context.Context) *ViewResourceClient {
+	return db.Client(ctx).ViewResource
+}
+
 func (db *Database) Migration(ctx context.Context, opts ...schema.MigrateOption) error {
 	return db.Client(ctx).Schema.Create(ctx, opts...)
 }

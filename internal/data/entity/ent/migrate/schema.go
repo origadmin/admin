@@ -258,16 +258,6 @@ var (
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "positionpermission_permission_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysPositionPermissionsColumns[2]},
-			},
-			{
-				Name:    "positionpermission_position_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysPositionPermissionsColumns[1]},
-			},
-			{
 				Name:    "positionpermission_position_id_permission_id",
 				Unique:  true,
 				Columns: []*schema.Column{SysPositionPermissionsColumns[1], SysPositionPermissionsColumns[2]},
@@ -387,16 +377,6 @@ var (
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "rolepermission_role_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysRolePermissionsColumns[1]},
-			},
-			{
-				Name:    "rolepermission_permission_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysRolePermissionsColumns[2]},
-			},
-			{
 				Name:    "rolepermission_role_id_permission_id",
 				Unique:  true,
 				Columns: []*schema.Column{SysRolePermissionsColumns[1], SysRolePermissionsColumns[2]},
@@ -511,16 +491,6 @@ var (
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "userdepartment_user_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserDepartmentsColumns[1]},
-			},
-			{
-				Name:    "userdepartment_department_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserDepartmentsColumns[2]},
-			},
-			{
 				Name:    "userdepartment_user_id_department_id",
 				Unique:  true,
 				Columns: []*schema.Column{SysUserDepartmentsColumns[1], SysUserDepartmentsColumns[2]},
@@ -555,16 +525,6 @@ var (
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "userposition_user_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserPositionsColumns[1]},
-			},
-			{
-				Name:    "userposition_position_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserPositionsColumns[2]},
-			},
-			{
 				Name:    "userposition_user_id_position_id",
 				Unique:  true,
 				Columns: []*schema.Column{SysUserPositionsColumns[1], SysUserPositionsColumns[2]},
@@ -580,7 +540,7 @@ var (
 	// SysUserRolesTable holds the schema information for the "sys_user_roles" table.
 	SysUserRolesTable = &schema.Table{
 		Name:       "sys_user_roles",
-		Comment:    "entity.(1).(2).(3)",
+		Comment:    "entity.user_role.table.comment",
 		Columns:    SysUserRolesColumns,
 		PrimaryKey: []*schema.Column{SysUserRolesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
@@ -599,16 +559,6 @@ var (
 		},
 		Indexes: []*schema.Index{
 			{
-				Name:    "userrole_user_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserRolesColumns[1]},
-			},
-			{
-				Name:    "userrole_role_id",
-				Unique:  false,
-				Columns: []*schema.Column{SysUserRolesColumns[2]},
-			},
-			{
 				Name:    "userrole_user_id_role_id",
 				Unique:  true,
 				Columns: []*schema.Column{SysUserRolesColumns[1], SysUserRolesColumns[2]},
@@ -623,7 +573,7 @@ var (
 		{Name: "keyword", Type: field.TypeString, Unique: true},
 		{Name: "scope", Type: field.TypeString, Default: "default"},
 		{Name: "name", Type: field.TypeString},
-		{Name: "type", Type: field.TypeString, Size: 1, Default: "U"},
+		{Name: "type", Type: field.TypeEnum, Enums: []string{"T", "G", "M", "L", "P", "B", "E", "R", "U"}, Default: "U"},
 		{Name: "component", Type: field.TypeString, Nullable: true},
 		{Name: "path", Type: field.TypeString, Nullable: true},
 		{Name: "icon", Type: field.TypeString, Nullable: true},
@@ -657,53 +607,119 @@ var (
 			},
 		},
 	}
-	// PermissionViewsColumns holds the columns for the "permission_views" table.
-	PermissionViewsColumns = []*schema.Column{
-		{Name: "permission_id", Type: field.TypeInt64},
-		{Name: "view_id", Type: field.TypeInt64},
+	// SysViewPermissionsColumns holds the columns for the "sys_view_permissions" table.
+	SysViewPermissionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "view_id", Type: field.TypeInt64, Comment: "view_permission.view_id.comment"},
+		{Name: "permission_id", Type: field.TypeInt64, Comment: "view_permission.permission_id.comment"},
 	}
-	// PermissionViewsTable holds the schema information for the "permission_views" table.
-	PermissionViewsTable = &schema.Table{
-		Name:       "permission_views",
-		Columns:    PermissionViewsColumns,
-		PrimaryKey: []*schema.Column{PermissionViewsColumns[0], PermissionViewsColumns[1]},
+	// SysViewPermissionsTable holds the schema information for the "sys_view_permissions" table.
+	SysViewPermissionsTable = &schema.Table{
+		Name:       "sys_view_permissions",
+		Comment:    "entity.view_permission.table.comment",
+		Columns:    SysViewPermissionsColumns,
+		PrimaryKey: []*schema.Column{SysViewPermissionsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "permission_views_permission_id",
-				Columns:    []*schema.Column{PermissionViewsColumns[0]},
-				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
-				OnDelete:   schema.Cascade,
+				Symbol:     "sys_view_permissions_views_view",
+				Columns:    []*schema.Column{SysViewPermissionsColumns[5]},
+				RefColumns: []*schema.Column{ViewsColumns[0]},
+				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "permission_views_view_id",
-				Columns:    []*schema.Column{PermissionViewsColumns[1]},
-				RefColumns: []*schema.Column{ViewsColumns[0]},
-				OnDelete:   schema.Cascade,
+				Symbol:     "sys_view_permissions_sys_permissions_permission",
+				Columns:    []*schema.Column{SysViewPermissionsColumns[6]},
+				RefColumns: []*schema.Column{SysPermissionsColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "viewpermission_create_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewPermissionsColumns[1]},
+			},
+			{
+				Name:    "viewpermission_update_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewPermissionsColumns[2]},
+			},
+			{
+				Name:    "viewpermission_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewPermissionsColumns[3]},
+			},
+			{
+				Name:    "viewpermission_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewPermissionsColumns[4]},
+			},
+			{
+				Name:    "viewpermission_view_id_permission_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysViewPermissionsColumns[5], SysViewPermissionsColumns[6]},
 			},
 		},
 	}
-	// ResourceViewsColumns holds the columns for the "resource_views" table.
-	ResourceViewsColumns = []*schema.Column{
-		{Name: "resource_id", Type: field.TypeInt64},
-		{Name: "view_id", Type: field.TypeInt64},
+	// SysViewResourcesColumns holds the columns for the "sys_view_resources" table.
+	SysViewResourcesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_author", Type: field.TypeInt64, Nullable: true, Comment: "create_author.field.comment", Default: 0},
+		{Name: "update_author", Type: field.TypeInt64, Nullable: true, Comment: "update_author.field.comment", Default: 0},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "view_id", Type: field.TypeInt64, Comment: "view_resource.view_id.comment"},
+		{Name: "resource_id", Type: field.TypeInt64, Comment: "view_resource.resource_id.comment"},
 	}
-	// ResourceViewsTable holds the schema information for the "resource_views" table.
-	ResourceViewsTable = &schema.Table{
-		Name:       "resource_views",
-		Columns:    ResourceViewsColumns,
-		PrimaryKey: []*schema.Column{ResourceViewsColumns[0], ResourceViewsColumns[1]},
+	// SysViewResourcesTable holds the schema information for the "sys_view_resources" table.
+	SysViewResourcesTable = &schema.Table{
+		Name:       "sys_view_resources",
+		Comment:    "entity.view_resource.table.comment",
+		Columns:    SysViewResourcesColumns,
+		PrimaryKey: []*schema.Column{SysViewResourcesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "resource_views_resource_id",
-				Columns:    []*schema.Column{ResourceViewsColumns[0]},
-				RefColumns: []*schema.Column{ResourcesColumns[0]},
-				OnDelete:   schema.Cascade,
+				Symbol:     "sys_view_resources_views_view",
+				Columns:    []*schema.Column{SysViewResourcesColumns[5]},
+				RefColumns: []*schema.Column{ViewsColumns[0]},
+				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "resource_views_view_id",
-				Columns:    []*schema.Column{ResourceViewsColumns[1]},
-				RefColumns: []*schema.Column{ViewsColumns[0]},
-				OnDelete:   schema.Cascade,
+				Symbol:     "sys_view_resources_resources_resource",
+				Columns:    []*schema.Column{SysViewResourcesColumns[6]},
+				RefColumns: []*schema.Column{ResourcesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "viewresource_create_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewResourcesColumns[1]},
+			},
+			{
+				Name:    "viewresource_update_author",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewResourcesColumns[2]},
+			},
+			{
+				Name:    "viewresource_create_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewResourcesColumns[3]},
+			},
+			{
+				Name:    "viewresource_update_time",
+				Unique:  false,
+				Columns: []*schema.Column{SysViewResourcesColumns[4]},
+			},
+			{
+				Name:    "viewresource_view_id_resource_id",
+				Unique:  true,
+				Columns: []*schema.Column{SysViewResourcesColumns[5], SysViewResourcesColumns[6]},
 			},
 		},
 	}
@@ -724,8 +740,8 @@ var (
 		SysUserPositionsTable,
 		SysUserRolesTable,
 		ViewsTable,
-		PermissionViewsTable,
-		ResourceViewsTable,
+		SysViewPermissionsTable,
+		SysViewResourcesTable,
 	}
 )
 
@@ -781,8 +797,14 @@ func init() {
 		Table: "sys_user_roles",
 	}
 	ViewsTable.ForeignKeys[0].RefTable = ViewsTable
-	PermissionViewsTable.ForeignKeys[0].RefTable = SysPermissionsTable
-	PermissionViewsTable.ForeignKeys[1].RefTable = ViewsTable
-	ResourceViewsTable.ForeignKeys[0].RefTable = ResourcesTable
-	ResourceViewsTable.ForeignKeys[1].RefTable = ViewsTable
+	SysViewPermissionsTable.ForeignKeys[0].RefTable = ViewsTable
+	SysViewPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
+	SysViewPermissionsTable.Annotation = &entsql.Annotation{
+		Table: "sys_view_permissions",
+	}
+	SysViewResourcesTable.ForeignKeys[0].RefTable = ViewsTable
+	SysViewResourcesTable.ForeignKeys[1].RefTable = ResourcesTable
+	SysViewResourcesTable.Annotation = &entsql.Annotation{
+		Table: "sys_view_resources",
+	}
 }

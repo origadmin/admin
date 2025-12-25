@@ -3,6 +3,7 @@
 package role
 
 import (
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -116,11 +117,11 @@ var (
 	// DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
 	DescriptionValidator func(string) error
 	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType int8
+	DefaultType enums.RoleType
 	// DefaultSequence holds the default value on creation for the "sequence" field.
 	DefaultSequence int
 	// DefaultStatus holds the default value on creation for the "status" field.
-	DefaultStatus int8
+	DefaultStatus enums.Status
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.

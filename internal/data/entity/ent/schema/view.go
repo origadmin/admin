@@ -68,10 +68,10 @@ func (View) Edges() []ent.Edge {
 			From("parent").
 			Field("parent_id").
 			Unique(),
-		edge.From("resources", Resource.Type).
-			Ref("views"),
-		edge.From("permissions", Permission.Type).
-			Ref("views"),
+		edge.To("resources", Resource.Type).
+			Through("view_resources", ViewResource.Type),
+		edge.To("permissions", Permission.Type).
+			Through("view_permissions", ViewPermission.Type),
 	}
 }
 

@@ -9,6 +9,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -218,6 +219,21 @@ func (_c *ResourceCreate) AddPermissions(v ...*Permission) *ResourceCreate {
 	return _c.AddPermissionIDs(ids...)
 }
 
+// AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
+func (_c *ResourceCreate) AddViewResourceIDs(ids ...int64) *ResourceCreate {
+	_c.mutation.AddViewResourceIDs(ids...)
+	return _c
+}
+
+// AddViewResources adds the "view_resources" edges to the ViewResource entity.
+func (_c *ResourceCreate) AddViewResources(v ...*ViewResource) *ResourceCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddViewResourceIDs(ids...)
+}
+
 // Mutation returns the ResourceMutation object of the builder.
 func (_c *ResourceCreate) Mutation() *ResourceMutation {
 	return _c.mutation
@@ -414,7 +430,7 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 	if nodes := _c.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
@@ -424,6 +440,13 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewResourceCreate{config: _c.config, mutation: newViewResourceMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
@@ -436,6 +459,22 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ViewResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

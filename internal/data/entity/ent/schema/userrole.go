@@ -39,8 +39,6 @@ func (UserRole) Mixin() []ent.Mixin {
 // Indexes of the UserRole.
 func (UserRole) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id"), // From User.ID
-		index.Fields("role_id"), // From Role.ID
 		index.Fields("user_id", "role_id").
 			Unique(),
 	}
@@ -51,7 +49,7 @@ func (UserRole) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_user_roles"),
 		entsql.WithComments(true),
-		schema.Comment(i18n.Text("entity.(1).(2).(3)")),
+		schema.Comment(i18n.Text("entity.user_role.table.comment")),
 	}
 }
 

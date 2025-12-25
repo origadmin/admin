@@ -19,6 +19,8 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 )
 
 // SetFields sets the values of the fields with the given names. It returns an
@@ -232,7 +234,7 @@ func (m *NotificationMutation) SetFields(input *Notification, fields ...string) 
 				m.SetContent(input.Content)
 			}
 		case notification.FieldStatus:
-			// check int8 with sql.NullInt64 if it is zero
+			// check enums.Status with sql.NullInt64 if it is zero
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
@@ -670,7 +672,7 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 				m.SetDescription(input.Description)
 			}
 		case role.FieldType:
-			// check int8 with sql.NullInt64 if it is zero
+			// check enums.RoleType with sql.NullInt64 if it is zero
 			if input.Type != 0 {
 				m.SetType(input.Type)
 			}
@@ -680,7 +682,7 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 				m.SetSequence(input.Sequence)
 			}
 		case role.FieldStatus:
-			// check int8 with sql.NullInt64 if it is zero
+			// check enums.Status with sql.NullInt64 if it is zero
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
@@ -869,7 +871,7 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 				m.SetToken(input.Token)
 			}
 		case user.FieldStatus:
-			// check int8 with sql.NullInt64 if it is zero
+			// check enums.Status with sql.NullInt64 if it is zero
 			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
@@ -1144,8 +1146,9 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 				m.SetName(input.Name)
 			}
 		case view.FieldType:
-			// check string with sql.NullString if it is empty
-			if input.Type != "" {
+			var zero view.Type
+			// check view.Type with sql.NullString if it is empty
+			if input.Type != zero {
 				m.SetType(input.Type)
 			}
 		case view.FieldComponent:
@@ -1218,6 +1221,152 @@ func (m *ViewMutation) SetFieldsWithZero(input *View, fields ...string) error {
 			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown View field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case viewpermission.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case viewpermission.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
+		case viewpermission.FieldCreateTime:
+			if input.CreateTime.Unix() != 0 {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case viewpermission.FieldUpdateTime:
+			if input.UpdateTime.Unix() != 0 {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case viewpermission.FieldViewID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ViewID != 0 {
+				m.SetViewID(input.ViewID)
+			}
+		case viewpermission.FieldPermissionID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.PermissionID != 0 {
+				m.SetPermissionID(input.PermissionID)
+			}
+		case viewpermission.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ViewPermissionMutation) SetFieldsWithZero(input *ViewPermission, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case viewpermission.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case viewpermission.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case viewpermission.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case viewpermission.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case viewpermission.FieldViewID:
+			m.SetViewID(input.ViewID)
+		case viewpermission.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case viewpermission.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFields sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case viewresource.FieldCreateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.CreateAuthor != 0 {
+				m.SetCreateAuthor(input.CreateAuthor)
+			}
+		case viewresource.FieldUpdateAuthor:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.UpdateAuthor != 0 {
+				m.SetUpdateAuthor(input.UpdateAuthor)
+			}
+		case viewresource.FieldCreateTime:
+			if input.CreateTime.Unix() != 0 {
+				m.SetCreateTime(input.CreateTime)
+			}
+		case viewresource.FieldUpdateTime:
+			if input.UpdateTime.Unix() != 0 {
+				m.SetUpdateTime(input.UpdateTime)
+			}
+		case viewresource.FieldViewID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ViewID != 0 {
+				m.SetViewID(input.ViewID)
+			}
+		case viewresource.FieldResourceID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ResourceID != 0 {
+				m.SetResourceID(input.ResourceID)
+			}
+		case viewresource.FieldID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ID != 0 {
+				m.SetID(input.ID)
+			}
+		default:
+			return fmt.Errorf("unknown ViewResource field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *ViewResourceMutation) SetFieldsWithZero(input *ViewResource, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case viewresource.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case viewresource.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case viewresource.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case viewresource.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case viewresource.FieldViewID:
+			m.SetViewID(input.ViewID)
+		case viewresource.FieldResourceID:
+			m.SetResourceID(input.ResourceID)
+		case viewresource.FieldID:
+			m.SetID(input.ID)
+		default:
+			return fmt.Errorf("unknown ViewResource field %s", fields[i])
 		}
 	}
 	return nil

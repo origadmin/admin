@@ -13,6 +13,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -277,13 +278,13 @@ func (_c *UserCreate) SetNillableToken(v *string) *UserCreate {
 }
 
 // SetStatus sets the "status" field.
-func (_c *UserCreate) SetStatus(v int8) *UserCreate {
+func (_c *UserCreate) SetStatus(v enums.Status) *UserCreate {
 	_c.mutation.SetStatus(v)
 	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_c *UserCreate) SetNillableStatus(v *int8) *UserCreate {
+func (_c *UserCreate) SetNillableStatus(v *enums.Status) *UserCreate {
 	if v != nil {
 		_c.SetStatus(*v)
 	}

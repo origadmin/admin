@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/user"
+	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
 
@@ -59,7 +60,7 @@ type User struct {
 	// entity.user.field.token
 	Token string `json:"token,omitempty"`
 	// entity.user.field.status
-	Status int8 `json:"status,omitempty"`
+	Status enums.Status `json:"status,omitempty"`
 	// entity.user.field.is_system
 	IsSystem bool `json:"is_system,omitempty"`
 	// entity.user.field.last_login_ip
@@ -306,7 +307,7 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				_m.Status = int8(value.Int64)
+				_m.Status = enums.Status(value.Int64)
 			}
 		case user.FieldIsSystem:
 			if value, ok := values[i].(*sql.NullBool); !ok {

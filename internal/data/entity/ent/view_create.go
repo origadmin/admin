@@ -9,6 +9,8 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -91,13 +93,13 @@ func (_c *ViewCreate) SetName(v string) *ViewCreate {
 }
 
 // SetType sets the "type" field.
-func (_c *ViewCreate) SetType(v string) *ViewCreate {
+func (_c *ViewCreate) SetType(v view.Type) *ViewCreate {
 	_c.mutation.SetType(v)
 	return _c
 }
 
 // SetNillableType sets the "type" field if the given value is not nil.
-func (_c *ViewCreate) SetNillableType(v *string) *ViewCreate {
+func (_c *ViewCreate) SetNillableType(v *view.Type) *ViewCreate {
 	if v != nil {
 		_c.SetType(*v)
 	}
@@ -236,6 +238,36 @@ func (_c *ViewCreate) AddPermissions(v ...*Permission) *ViewCreate {
 		ids[i] = v[i].ID
 	}
 	return _c.AddPermissionIDs(ids...)
+}
+
+// AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
+func (_c *ViewCreate) AddViewResourceIDs(ids ...int64) *ViewCreate {
+	_c.mutation.AddViewResourceIDs(ids...)
+	return _c
+}
+
+// AddViewResources adds the "view_resources" edges to the ViewResource entity.
+func (_c *ViewCreate) AddViewResources(v ...*ViewResource) *ViewCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddViewResourceIDs(ids...)
+}
+
+// AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
+func (_c *ViewCreate) AddViewPermissionIDs(ids ...int64) *ViewCreate {
+	_c.mutation.AddViewPermissionIDs(ids...)
+	return _c
+}
+
+// AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
+func (_c *ViewCreate) AddViewPermissions(v ...*ViewPermission) *ViewCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddViewPermissionIDs(ids...)
 }
 
 // Mutation returns the ViewMutation object of the builder.
@@ -402,7 +434,7 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := _c.mutation.GetType(); ok {
-		_spec.SetField(view.FieldType, field.TypeString, value)
+		_spec.SetField(view.FieldType, field.TypeEnum, value)
 		_node.Type = value
 	}
 	if value, ok := _c.mutation.Component(); ok {
@@ -461,7 +493,7 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 	if nodes := _c.mutation.ResourcesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: true,
+			Inverse: false,
 			Table:   view.ResourcesTable,
 			Columns: view.ResourcesPrimaryKey,
 			Bidi:    false,
@@ -472,17 +504,63 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &ViewResourceCreate{config: _c.config, mutation: newViewResourceMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.PermissionsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: true,
+			Inverse: false,
 			Table:   view.PermissionsTable,
 			Columns: view.PermissionsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewPermissionCreate{config: _c.config, mutation: newViewPermissionMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ViewResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   view.ViewResourcesTable,
+			Columns: []string{view.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ViewPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   view.ViewPermissionsTable,
+			Columns: []string{view.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

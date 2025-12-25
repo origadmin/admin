@@ -39,8 +39,6 @@ func (PositionPermission) Mixin() []ent.Mixin {
 // Indexes of the PositionPermission.
 func (PositionPermission) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("permission_id"), // From Permission.ID
-		index.Fields("position_id"),   // From Position.ID
 		index.Fields("position_id", "permission_id").
 			Unique(),
 	}

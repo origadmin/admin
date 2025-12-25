@@ -491,7 +491,7 @@ func (_q *NotificationQuery) Modify(modifiers ...func(s *sql.Selector)) *Notific
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
 //	  Subject string `json:"subject,omitempty"`
 //	  Content string `json:"content,omitempty"`
-//	  Status int8 `json:"status,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
 //	  CategoryID int64 `json:"category_id,omitempty"`
 //	}
 //

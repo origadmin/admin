@@ -33,8 +33,6 @@ func (Department) Fields() []ent.Field {
 			MaxLen(64).
 			Default("").
 			Comment(i18n.Text("entity.department.field.name")),
-		// use materialized path model to store the tree structure
-		// Parent path of the menu item
 		field.String("tree_path").
 			MaxLen(256).
 			Default("").
@@ -74,8 +72,6 @@ func (Department) Indexes() []ent.Index {
 func (Department) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entsql.Table("sys_departments"),
-		// Adding this annotation to the schema enables
-		// comments for the table and all its fields.
 		entsql.WithComments(true),
 		schema.Comment(i18n.Text("entity.department.table.comment")),
 	}
@@ -90,10 +86,5 @@ func (Department) Edges() []ent.Edge {
 		edge.To("positions", Position.Type),
 		edge.To("children", Department.Type).
 			From("parent").Unique().Field("parent_id"),
-		//edge.To("children", Department.Type),
-		//edge.From("parent", Department.Type).
-		//	Ref("children").
-		//	Field("parent_id").
-		//	Unique(),
 	}
 }

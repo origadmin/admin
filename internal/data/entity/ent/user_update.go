@@ -14,6 +14,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userdepartment"
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -312,14 +313,14 @@ func (_u *UserUpdate) SetNillableToken(v *string) *UserUpdate {
 }
 
 // SetStatus sets the "status" field.
-func (_u *UserUpdate) SetStatus(v int8) *UserUpdate {
+func (_u *UserUpdate) SetStatus(v enums.Status) *UserUpdate {
 	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableStatus(v *int8) *UserUpdate {
+func (_u *UserUpdate) SetNillableStatus(v *enums.Status) *UserUpdate {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
@@ -327,7 +328,7 @@ func (_u *UserUpdate) SetNillableStatus(v *int8) *UserUpdate {
 }
 
 // AddStatus adds value to the "status" field.
-func (_u *UserUpdate) AddStatus(v int8) *UserUpdate {
+func (_u *UserUpdate) AddStatus(v enums.Status) *UserUpdate {
 	_u.mutation.AddStatus(v)
 	return _u
 }
@@ -1484,14 +1485,14 @@ func (_u *UserUpdateOne) SetNillableToken(v *string) *UserUpdateOne {
 }
 
 // SetStatus sets the "status" field.
-func (_u *UserUpdateOne) SetStatus(v int8) *UserUpdateOne {
+func (_u *UserUpdateOne) SetStatus(v enums.Status) *UserUpdateOne {
 	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableStatus(v *int8) *UserUpdateOne {
+func (_u *UserUpdateOne) SetNillableStatus(v *enums.Status) *UserUpdateOne {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
@@ -1499,7 +1500,7 @@ func (_u *UserUpdateOne) SetNillableStatus(v *int8) *UserUpdateOne {
 }
 
 // AddStatus adds value to the "status" field.
-func (_u *UserUpdateOne) AddStatus(v int8) *UserUpdateOne {
+func (_u *UserUpdateOne) AddStatus(v enums.Status) *UserUpdateOne {
 	_u.mutation.AddStatus(v)
 	return _u
 }

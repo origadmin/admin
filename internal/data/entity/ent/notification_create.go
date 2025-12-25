@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -105,13 +106,13 @@ func (_c *NotificationCreate) SetNillableContent(v *string) *NotificationCreate 
 }
 
 // SetStatus sets the "status" field.
-func (_c *NotificationCreate) SetStatus(v int8) *NotificationCreate {
+func (_c *NotificationCreate) SetStatus(v enums.Status) *NotificationCreate {
 	_c.mutation.SetStatus(v)
 	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_c *NotificationCreate) SetNillableStatus(v *int8) *NotificationCreate {
+func (_c *NotificationCreate) SetNillableStatus(v *enums.Status) *NotificationCreate {
 	if v != nil {
 		_c.SetStatus(*v)
 	}

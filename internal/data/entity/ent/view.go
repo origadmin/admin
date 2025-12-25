@@ -31,7 +31,7 @@ type View struct {
 	// view.name.comment
 	Name string `json:"name,omitempty"`
 	// view.type.comment
-	Type string `json:"type,omitempty"`
+	Type view.Type `json:"type,omitempty"`
 	// view.component.comment
 	Component string `json:"component,omitempty"`
 	// view.path.comment
@@ -58,9 +58,13 @@ type ViewEdges struct {
 	Resources []*Resource `json:"resources,omitempty"`
 	// Permissions holds the value of the permissions edge.
 	Permissions []*Permission `json:"permissions,omitempty"`
+	// ViewResources holds the value of the view_resources edge.
+	ViewResources []*ViewResource `json:"view_resources,omitempty"`
+	// ViewPermissions holds the value of the view_permissions edge.
+	ViewPermissions []*ViewPermission `json:"view_permissions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [4]bool
+	loadedTypes [6]bool
 }
 
 // ParentOrErr returns the Parent value or an error if the edge
@@ -99,6 +103,24 @@ func (e ViewEdges) PermissionsOrErr() ([]*Permission, error) {
 		return e.Permissions, nil
 	}
 	return nil, &NotLoadedError{edge: "permissions"}
+}
+
+// ViewResourcesOrErr returns the ViewResources value or an error if the edge
+// was not loaded in eager-loading.
+func (e ViewEdges) ViewResourcesOrErr() ([]*ViewResource, error) {
+	if e.loadedTypes[4] {
+		return e.ViewResources, nil
+	}
+	return nil, &NotLoadedError{edge: "view_resources"}
+}
+
+// ViewPermissionsOrErr returns the ViewPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e ViewEdges) ViewPermissionsOrErr() ([]*ViewPermission, error) {
+	if e.loadedTypes[5] {
+		return e.ViewPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "view_permissions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -175,7 +197,7 @@ func (_m *View) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				_m.Type = value.String
+				_m.Type = view.Type(value.String)
 			}
 		case view.FieldComponent:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -240,6 +262,16 @@ func (_m *View) QueryPermissions() *PermissionQuery {
 	return NewViewClient(_m.config).QueryPermissions(_m)
 }
 
+// QueryViewResources queries the "view_resources" edge of the View entity.
+func (_m *View) QueryViewResources() *ViewResourceQuery {
+	return NewViewClient(_m.config).QueryViewResources(_m)
+}
+
+// QueryViewPermissions queries the "view_permissions" edge of the View entity.
+func (_m *View) QueryViewPermissions() *ViewPermissionQuery {
+	return NewViewClient(_m.config).QueryViewPermissions(_m)
+}
+
 // Update returns a builder for updating this View.
 // Note that you need to call View.Unwrap() before calling this method if this View
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -282,7 +314,7 @@ func (_m *View) String() string {
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
 	builder.WriteString("type=")
-	builder.WriteString(_m.Type)
+	builder.WriteString(fmt.Sprintf("%v", _m.Type))
 	builder.WriteString(", ")
 	builder.WriteString("component=")
 	builder.WriteString(_m.Component)

@@ -23,6 +23,8 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 
 	"entgo.io/ent/dialect/sql"
 )
@@ -488,6 +490,60 @@ func (f TraverseView) Traverse(ctx context.Context, q ent.Query) error {
 	return fmt.Errorf("unexpected query type %T. expect *ent.ViewQuery", q)
 }
 
+// The ViewPermissionFunc type is an adapter to allow the use of ordinary function as a Querier.
+type ViewPermissionFunc func(context.Context, *ent.ViewPermissionQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f ViewPermissionFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.ViewPermissionQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.ViewPermissionQuery", q)
+}
+
+// The TraverseViewPermission type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseViewPermission func(context.Context, *ent.ViewPermissionQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseViewPermission) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseViewPermission) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ViewPermissionQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.ViewPermissionQuery", q)
+}
+
+// The ViewResourceFunc type is an adapter to allow the use of ordinary function as a Querier.
+type ViewResourceFunc func(context.Context, *ent.ViewResourceQuery) (ent.Value, error)
+
+// Query calls f(ctx, q).
+func (f ViewResourceFunc) Query(ctx context.Context, q ent.Query) (ent.Value, error) {
+	if q, ok := q.(*ent.ViewResourceQuery); ok {
+		return f(ctx, q)
+	}
+	return nil, fmt.Errorf("unexpected query type %T. expect *ent.ViewResourceQuery", q)
+}
+
+// The TraverseViewResource type is an adapter to allow the use of ordinary function as Traverser.
+type TraverseViewResource func(context.Context, *ent.ViewResourceQuery) error
+
+// Intercept is a dummy implementation of Intercept that returns the next Querier in the pipeline.
+func (f TraverseViewResource) Intercept(next ent.Querier) ent.Querier {
+	return next
+}
+
+// Traverse calls f(ctx, q).
+func (f TraverseViewResource) Traverse(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ViewResourceQuery); ok {
+		return f(ctx, q)
+	}
+	return fmt.Errorf("unexpected query type %T. expect *ent.ViewResourceQuery", q)
+}
+
 // NewQuery returns the generic Query interface for the given typed query.
 func NewQuery(q ent.Query) (Query, error) {
 	switch q := q.(type) {
@@ -521,6 +577,10 @@ func NewQuery(q ent.Query) (Query, error) {
 		return &query[*ent.UserRoleQuery, predicate.UserRole, userrole.OrderOption]{typ: ent.TypeUserRole, tq: q}, nil
 	case *ent.ViewQuery:
 		return &query[*ent.ViewQuery, predicate.View, view.OrderOption]{typ: ent.TypeView, tq: q}, nil
+	case *ent.ViewPermissionQuery:
+		return &query[*ent.ViewPermissionQuery, predicate.ViewPermission, viewpermission.OrderOption]{typ: ent.TypeViewPermission, tq: q}, nil
+	case *ent.ViewResourceQuery:
+		return &query[*ent.ViewResourceQuery, predicate.ViewResource, viewresource.OrderOption]{typ: ent.TypeViewResource, tq: q}, nil
 	default:
 		return nil, fmt.Errorf("unknown query type %T", q)
 	}

@@ -45,6 +45,8 @@ const (
 	EdgePositionPermissions = "position_permissions"
 	// EdgePermissionResources holds the string denoting the permission_resources edge name in mutations.
 	EdgePermissionResources = "permission_resources"
+	// EdgeViewPermissions holds the string denoting the view_permissions edge name in mutations.
+	EdgeViewPermissions = "view_permissions"
 	// Table holds the table name of the permission in the database.
 	Table = "sys_permissions"
 	// RolesTable is the table that holds the roles relation/edge. The primary key declared below.
@@ -63,7 +65,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
 	ResourcesInverseTable = "resources"
 	// ViewsTable is the table that holds the views relation/edge. The primary key declared below.
-	ViewsTable = "permission_views"
+	ViewsTable = "sys_view_permissions"
 	// ViewsInverseTable is the table name for the View entity.
 	// It exists in this package in order to avoid circular dependency with the "view" package.
 	ViewsInverseTable = "views"
@@ -88,6 +90,13 @@ const (
 	PermissionResourcesInverseTable = "sys_permission_resources"
 	// PermissionResourcesColumn is the table column denoting the permission_resources relation/edge.
 	PermissionResourcesColumn = "permission_id"
+	// ViewPermissionsTable is the table that holds the view_permissions relation/edge.
+	ViewPermissionsTable = "sys_view_permissions"
+	// ViewPermissionsInverseTable is the table name for the ViewPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "viewpermission" package.
+	ViewPermissionsInverseTable = "sys_view_permissions"
+	// ViewPermissionsColumn is the table column denoting the view_permissions relation/edge.
+	ViewPermissionsColumn = "permission_id"
 )
 
 // Columns holds all SQL columns for permission fields.
@@ -115,7 +124,7 @@ var (
 	ResourcesPrimaryKey = []string{"permission_id", "resource_id"}
 	// ViewsPrimaryKey and ViewsColumn2 are the table columns denoting the
 	// primary key for the views relation (M2M).
-	ViewsPrimaryKey = []string{"permission_id", "view_id"}
+	ViewsPrimaryKey = []string{"view_id", "permission_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -321,6 +330,20 @@ func ByPermissionResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOpti
 		sqlgraph.OrderByNeighborTerms(s, newPermissionResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByViewPermissionsCount orders the results by view_permissions count.
+func ByViewPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newViewPermissionsStep(), opts...)
+	}
+}
+
+// ByViewPermissions orders the results by view_permissions terms.
+func ByViewPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newViewPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newRolesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -346,7 +369,7 @@ func newViewsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ViewsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, false, ViewsTable, ViewsPrimaryKey...),
+		sqlgraph.Edge(sqlgraph.M2M, true, ViewsTable, ViewsPrimaryKey...),
 	)
 }
 func newRolePermissionsStep() *sqlgraph.Step {
@@ -368,6 +391,13 @@ func newPermissionResourcesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(PermissionResourcesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, true, PermissionResourcesTable, PermissionResourcesColumn),
+	)
+}
+func newViewPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ViewPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, ViewPermissionsTable, ViewPermissionsColumn),
 	)
 }
 

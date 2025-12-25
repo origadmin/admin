@@ -4,6 +4,7 @@ package notification
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -85,8 +86,9 @@ func Content(v string) predicate.Notification {
 }
 
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
-func Status(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldEQ(FieldStatus, v))
+func Status(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldEQ(FieldStatus, vc))
 }
 
 // CategoryID applies equality check predicate on the "category_id" field. It's identical to CategoryIDEQ.
@@ -405,43 +407,57 @@ func ContentContainsFold(v string) predicate.Notification {
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
-func StatusEQ(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldEQ(FieldStatus, v))
+func StatusEQ(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldEQ(FieldStatus, vc))
 }
 
 // StatusNEQ applies the NEQ predicate on the "status" field.
-func StatusNEQ(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldNEQ(FieldStatus, v))
+func StatusNEQ(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldNEQ(FieldStatus, vc))
 }
 
 // StatusIn applies the In predicate on the "status" field.
-func StatusIn(vs ...int8) predicate.Notification {
-	return predicate.Notification(sql.FieldIn(FieldStatus, vs...))
+func StatusIn(vs ...enums.Status) predicate.Notification {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Notification(sql.FieldIn(FieldStatus, v...))
 }
 
 // StatusNotIn applies the NotIn predicate on the "status" field.
-func StatusNotIn(vs ...int8) predicate.Notification {
-	return predicate.Notification(sql.FieldNotIn(FieldStatus, vs...))
+func StatusNotIn(vs ...enums.Status) predicate.Notification {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Notification(sql.FieldNotIn(FieldStatus, v...))
 }
 
 // StatusGT applies the GT predicate on the "status" field.
-func StatusGT(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldGT(FieldStatus, v))
+func StatusGT(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldGT(FieldStatus, vc))
 }
 
 // StatusGTE applies the GTE predicate on the "status" field.
-func StatusGTE(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldGTE(FieldStatus, v))
+func StatusGTE(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldGTE(FieldStatus, vc))
 }
 
 // StatusLT applies the LT predicate on the "status" field.
-func StatusLT(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldLT(FieldStatus, v))
+func StatusLT(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldLT(FieldStatus, vc))
 }
 
 // StatusLTE applies the LTE predicate on the "status" field.
-func StatusLTE(v int8) predicate.Notification {
-	return predicate.Notification(sql.FieldLTE(FieldStatus, v))
+func StatusLTE(v enums.Status) predicate.Notification {
+	vc := int8(v)
+	return predicate.Notification(sql.FieldLTE(FieldStatus, vc))
 }
 
 // CategoryIDEQ applies the EQ predicate on the "category_id" field.

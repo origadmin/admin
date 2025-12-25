@@ -26,6 +26,8 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -68,6 +70,10 @@ type Client struct {
 	UserRole *UserRoleClient
 	// View is the client for interacting with the View builders.
 	View *ViewClient
+	// ViewPermission is the client for interacting with the ViewPermission builders.
+	ViewPermission *ViewPermissionClient
+	// ViewResource is the client for interacting with the ViewResource builders.
+	ViewResource *ViewResourceClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -94,6 +100,8 @@ func (c *Client) init() {
 	c.UserPosition = NewUserPositionClient(c.config)
 	c.UserRole = NewUserRoleClient(c.config)
 	c.View = NewViewClient(c.config)
+	c.ViewPermission = NewViewPermissionClient(c.config)
+	c.ViewResource = NewViewResourceClient(c.config)
 }
 
 type (
@@ -201,6 +209,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		UserPosition:       NewUserPositionClient(cfg),
 		UserRole:           NewUserRoleClient(cfg),
 		View:               NewViewClient(cfg),
+		ViewPermission:     NewViewPermissionClient(cfg),
+		ViewResource:       NewViewResourceClient(cfg),
 	}, nil
 }
 
@@ -235,6 +245,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		UserPosition:       NewUserPositionClient(cfg),
 		UserRole:           NewUserRoleClient(cfg),
 		View:               NewViewClient(cfg),
+		ViewPermission:     NewViewPermissionClient(cfg),
+		ViewResource:       NewViewResourceClient(cfg),
 	}, nil
 }
 
@@ -266,7 +278,8 @@ func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole, c.View,
+		c.UserDepartment, c.UserPosition, c.UserRole, c.View, c.ViewPermission,
+		c.ViewResource,
 	} {
 		n.Use(hooks...)
 	}
@@ -278,7 +291,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.CasbinRule, c.Department, c.Notification, c.Permission, c.PermissionResource,
 		c.Position, c.PositionPermission, c.Resource, c.Role, c.RolePermission, c.User,
-		c.UserDepartment, c.UserPosition, c.UserRole, c.View,
+		c.UserDepartment, c.UserPosition, c.UserRole, c.View, c.ViewPermission,
+		c.ViewResource,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -317,6 +331,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.UserRole.mutate(ctx, m)
 	case *ViewMutation:
 		return c.View.mutate(ctx, m)
+	case *ViewPermissionMutation:
+		return c.ViewPermission.mutate(ctx, m)
+	case *ViewResourceMutation:
+		return c.ViewResource.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -965,7 +983,7 @@ func (c *PermissionClient) QueryViews(_m *Permission) *ViewQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(permission.Table, permission.FieldID, id),
 			sqlgraph.To(view.Table, view.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, permission.ViewsTable, permission.ViewsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, true, permission.ViewsTable, permission.ViewsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -1014,6 +1032,22 @@ func (c *PermissionClient) QueryPermissionResources(_m *Permission) *PermissionR
 			sqlgraph.From(permission.Table, permission.FieldID, id),
 			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryViewPermissions queries the view_permissions edge of a Permission.
+func (c *PermissionClient) QueryViewPermissions(_m *Permission) *ViewPermissionQuery {
+	query := (&ViewPermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(viewpermission.Table, viewpermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, permission.ViewPermissionsTable, permission.ViewPermissionsColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -1705,7 +1739,7 @@ func (c *ResourceClient) QueryViews(_m *Resource) *ViewQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(view.Table, view.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, resource.ViewsTable, resource.ViewsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, true, resource.ViewsTable, resource.ViewsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -1722,6 +1756,22 @@ func (c *ResourceClient) QueryPermissions(_m *Resource) *PermissionQuery {
 			sqlgraph.From(resource.Table, resource.FieldID, id),
 			sqlgraph.To(permission.Table, permission.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, resource.PermissionsTable, resource.PermissionsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryViewResources queries the view_resources edge of a Resource.
+func (c *ResourceClient) QueryViewResources(_m *Resource) *ViewResourceQuery {
+	query := (&ViewResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, id),
+			sqlgraph.To(viewresource.Table, viewresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, resource.ViewResourcesTable, resource.ViewResourcesColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -2990,7 +3040,7 @@ func (c *ViewClient) QueryResources(_m *View) *ResourceQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(view.Table, view.FieldID, id),
 			sqlgraph.To(resource.Table, resource.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, view.ResourcesTable, view.ResourcesPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, false, view.ResourcesTable, view.ResourcesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -3006,7 +3056,39 @@ func (c *ViewClient) QueryPermissions(_m *View) *PermissionQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(view.Table, view.FieldID, id),
 			sqlgraph.To(permission.Table, permission.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, view.PermissionsTable, view.PermissionsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, false, view.PermissionsTable, view.PermissionsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryViewResources queries the view_resources edge of a View.
+func (c *ViewClient) QueryViewResources(_m *View) *ViewResourceQuery {
+	query := (&ViewResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(view.Table, view.FieldID, id),
+			sqlgraph.To(viewresource.Table, viewresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, view.ViewResourcesTable, view.ViewResourcesColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryViewPermissions queries the view_permissions edge of a View.
+func (c *ViewClient) QueryViewPermissions(_m *View) *ViewPermissionQuery {
+	query := (&ViewPermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(view.Table, view.FieldID, id),
+			sqlgraph.To(viewpermission.Table, viewpermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, view.ViewPermissionsTable, view.ViewPermissionsColumn),
 		)
 		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
 		return fromV, nil
@@ -3039,16 +3121,346 @@ func (c *ViewClient) mutate(ctx context.Context, m *ViewMutation) (Value, error)
 	}
 }
 
+// ViewPermissionClient is a client for the ViewPermission schema.
+type ViewPermissionClient struct {
+	config
+}
+
+// NewViewPermissionClient returns a client for the ViewPermission from the given config.
+func NewViewPermissionClient(c config) *ViewPermissionClient {
+	return &ViewPermissionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `viewpermission.Hooks(f(g(h())))`.
+func (c *ViewPermissionClient) Use(hooks ...Hook) {
+	c.hooks.ViewPermission = append(c.hooks.ViewPermission, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `viewpermission.Intercept(f(g(h())))`.
+func (c *ViewPermissionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ViewPermission = append(c.inters.ViewPermission, interceptors...)
+}
+
+// Create returns a builder for creating a ViewPermission entity.
+func (c *ViewPermissionClient) Create() *ViewPermissionCreate {
+	mutation := newViewPermissionMutation(c.config, OpCreate)
+	return &ViewPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ViewPermission entities.
+func (c *ViewPermissionClient) CreateBulk(builders ...*ViewPermissionCreate) *ViewPermissionCreateBulk {
+	return &ViewPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ViewPermissionClient) MapCreateBulk(slice any, setFunc func(*ViewPermissionCreate, int)) *ViewPermissionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ViewPermissionCreateBulk{err: fmt.Errorf("calling to ViewPermissionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ViewPermissionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ViewPermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ViewPermission.
+func (c *ViewPermissionClient) Update() *ViewPermissionUpdate {
+	mutation := newViewPermissionMutation(c.config, OpUpdate)
+	return &ViewPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ViewPermissionClient) UpdateOne(_m *ViewPermission) *ViewPermissionUpdateOne {
+	mutation := newViewPermissionMutation(c.config, OpUpdateOne, withViewPermission(_m))
+	return &ViewPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ViewPermissionClient) UpdateOneID(id int64) *ViewPermissionUpdateOne {
+	mutation := newViewPermissionMutation(c.config, OpUpdateOne, withViewPermissionID(id))
+	return &ViewPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ViewPermission.
+func (c *ViewPermissionClient) Delete() *ViewPermissionDelete {
+	mutation := newViewPermissionMutation(c.config, OpDelete)
+	return &ViewPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ViewPermissionClient) DeleteOne(_m *ViewPermission) *ViewPermissionDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ViewPermissionClient) DeleteOneID(id int64) *ViewPermissionDeleteOne {
+	builder := c.Delete().Where(viewpermission.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ViewPermissionDeleteOne{builder}
+}
+
+// Query returns a query builder for ViewPermission.
+func (c *ViewPermissionClient) Query() *ViewPermissionQuery {
+	return &ViewPermissionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeViewPermission},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ViewPermission entity by its id.
+func (c *ViewPermissionClient) Get(ctx context.Context, id int64) (*ViewPermission, error) {
+	return c.Query().Where(viewpermission.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ViewPermissionClient) GetX(ctx context.Context, id int64) *ViewPermission {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryView queries the view edge of a ViewPermission.
+func (c *ViewPermissionClient) QueryView(_m *ViewPermission) *ViewQuery {
+	query := (&ViewClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(viewpermission.Table, viewpermission.FieldID, id),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, viewpermission.ViewTable, viewpermission.ViewColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPermission queries the permission edge of a ViewPermission.
+func (c *ViewPermissionClient) QueryPermission(_m *ViewPermission) *PermissionQuery {
+	query := (&PermissionClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(viewpermission.Table, viewpermission.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, viewpermission.PermissionTable, viewpermission.PermissionColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ViewPermissionClient) Hooks() []Hook {
+	return c.hooks.ViewPermission
+}
+
+// Interceptors returns the client interceptors.
+func (c *ViewPermissionClient) Interceptors() []Interceptor {
+	return c.inters.ViewPermission
+}
+
+func (c *ViewPermissionClient) mutate(ctx context.Context, m *ViewPermissionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ViewPermissionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ViewPermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ViewPermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ViewPermissionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ViewPermission mutation op: %q", m.Op())
+	}
+}
+
+// ViewResourceClient is a client for the ViewResource schema.
+type ViewResourceClient struct {
+	config
+}
+
+// NewViewResourceClient returns a client for the ViewResource from the given config.
+func NewViewResourceClient(c config) *ViewResourceClient {
+	return &ViewResourceClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `viewresource.Hooks(f(g(h())))`.
+func (c *ViewResourceClient) Use(hooks ...Hook) {
+	c.hooks.ViewResource = append(c.hooks.ViewResource, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `viewresource.Intercept(f(g(h())))`.
+func (c *ViewResourceClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ViewResource = append(c.inters.ViewResource, interceptors...)
+}
+
+// Create returns a builder for creating a ViewResource entity.
+func (c *ViewResourceClient) Create() *ViewResourceCreate {
+	mutation := newViewResourceMutation(c.config, OpCreate)
+	return &ViewResourceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ViewResource entities.
+func (c *ViewResourceClient) CreateBulk(builders ...*ViewResourceCreate) *ViewResourceCreateBulk {
+	return &ViewResourceCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ViewResourceClient) MapCreateBulk(slice any, setFunc func(*ViewResourceCreate, int)) *ViewResourceCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ViewResourceCreateBulk{err: fmt.Errorf("calling to ViewResourceClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ViewResourceCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ViewResourceCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ViewResource.
+func (c *ViewResourceClient) Update() *ViewResourceUpdate {
+	mutation := newViewResourceMutation(c.config, OpUpdate)
+	return &ViewResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ViewResourceClient) UpdateOne(_m *ViewResource) *ViewResourceUpdateOne {
+	mutation := newViewResourceMutation(c.config, OpUpdateOne, withViewResource(_m))
+	return &ViewResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ViewResourceClient) UpdateOneID(id int64) *ViewResourceUpdateOne {
+	mutation := newViewResourceMutation(c.config, OpUpdateOne, withViewResourceID(id))
+	return &ViewResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ViewResource.
+func (c *ViewResourceClient) Delete() *ViewResourceDelete {
+	mutation := newViewResourceMutation(c.config, OpDelete)
+	return &ViewResourceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ViewResourceClient) DeleteOne(_m *ViewResource) *ViewResourceDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ViewResourceClient) DeleteOneID(id int64) *ViewResourceDeleteOne {
+	builder := c.Delete().Where(viewresource.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ViewResourceDeleteOne{builder}
+}
+
+// Query returns a query builder for ViewResource.
+func (c *ViewResourceClient) Query() *ViewResourceQuery {
+	return &ViewResourceQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeViewResource},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ViewResource entity by its id.
+func (c *ViewResourceClient) Get(ctx context.Context, id int64) (*ViewResource, error) {
+	return c.Query().Where(viewresource.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ViewResourceClient) GetX(ctx context.Context, id int64) *ViewResource {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryView queries the view edge of a ViewResource.
+func (c *ViewResourceClient) QueryView(_m *ViewResource) *ViewQuery {
+	query := (&ViewClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(viewresource.Table, viewresource.FieldID, id),
+			sqlgraph.To(view.Table, view.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, viewresource.ViewTable, viewresource.ViewColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryResource queries the resource edge of a ViewResource.
+func (c *ViewResourceClient) QueryResource(_m *ViewResource) *ResourceQuery {
+	query := (&ResourceClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := _m.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(viewresource.Table, viewresource.FieldID, id),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, viewresource.ResourceTable, viewresource.ResourceColumn),
+		)
+		fromV = sqlgraph.Neighbors(_m.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ViewResourceClient) Hooks() []Hook {
+	return c.hooks.ViewResource
+}
+
+// Interceptors returns the client interceptors.
+func (c *ViewResourceClient) Interceptors() []Interceptor {
+	return c.inters.ViewResource
+}
+
+func (c *ViewResourceClient) mutate(ctx context.Context, m *ViewResourceMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ViewResourceCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ViewResourceUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ViewResourceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ViewResourceDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ViewResource mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
 		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserRole, View []ent.Hook
+		UserPosition, UserRole, View, ViewPermission, ViewResource []ent.Hook
 	}
 	inters struct {
 		CasbinRule, Department, Notification, Permission, PermissionResource, Position,
 		PositionPermission, Resource, Role, RolePermission, User, UserDepartment,
-		UserPosition, UserRole, View []ent.Interceptor
+		UserPosition, UserRole, View, ViewPermission, ViewResource []ent.Interceptor
 	}
 )

@@ -50,3 +50,9 @@ type UserRole func(*sql.Selector)
 
 // View is the predicate function for view builders.
 type View func(*sql.Selector)
+
+// ViewPermission is the predicate function for viewpermission builders.
+type ViewPermission func(*sql.Selector)
+
+// ViewResource is the predicate function for viewresource builders.
+type ViewResource func(*sql.Selector)

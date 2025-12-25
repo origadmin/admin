@@ -3,6 +3,7 @@
 package view
 
 import (
+	"fmt"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -46,6 +47,10 @@ const (
 	EdgeResources = "resources"
 	// EdgePermissions holds the string denoting the permissions edge name in mutations.
 	EdgePermissions = "permissions"
+	// EdgeViewResources holds the string denoting the view_resources edge name in mutations.
+	EdgeViewResources = "view_resources"
+	// EdgeViewPermissions holds the string denoting the view_permissions edge name in mutations.
+	EdgeViewPermissions = "view_permissions"
 	// Table holds the table name of the view in the database.
 	Table = "views"
 	// ParentTable is the table that holds the parent relation/edge.
@@ -57,15 +62,29 @@ const (
 	// ChildrenColumn is the table column denoting the children relation/edge.
 	ChildrenColumn = "parent_id"
 	// ResourcesTable is the table that holds the resources relation/edge. The primary key declared below.
-	ResourcesTable = "resource_views"
+	ResourcesTable = "sys_view_resources"
 	// ResourcesInverseTable is the table name for the Resource entity.
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
 	ResourcesInverseTable = "resources"
 	// PermissionsTable is the table that holds the permissions relation/edge. The primary key declared below.
-	PermissionsTable = "permission_views"
+	PermissionsTable = "sys_view_permissions"
 	// PermissionsInverseTable is the table name for the Permission entity.
 	// It exists in this package in order to avoid circular dependency with the "permission" package.
 	PermissionsInverseTable = "sys_permissions"
+	// ViewResourcesTable is the table that holds the view_resources relation/edge.
+	ViewResourcesTable = "sys_view_resources"
+	// ViewResourcesInverseTable is the table name for the ViewResource entity.
+	// It exists in this package in order to avoid circular dependency with the "viewresource" package.
+	ViewResourcesInverseTable = "sys_view_resources"
+	// ViewResourcesColumn is the table column denoting the view_resources relation/edge.
+	ViewResourcesColumn = "view_id"
+	// ViewPermissionsTable is the table that holds the view_permissions relation/edge.
+	ViewPermissionsTable = "sys_view_permissions"
+	// ViewPermissionsInverseTable is the table name for the ViewPermission entity.
+	// It exists in this package in order to avoid circular dependency with the "viewpermission" package.
+	ViewPermissionsInverseTable = "sys_view_permissions"
+	// ViewPermissionsColumn is the table column denoting the view_permissions relation/edge.
+	ViewPermissionsColumn = "view_id"
 )
 
 // Columns holds all SQL columns for view fields.
@@ -88,10 +107,10 @@ var Columns = []string{
 var (
 	// ResourcesPrimaryKey and ResourcesColumn2 are the table columns denoting the
 	// primary key for the resources relation (M2M).
-	ResourcesPrimaryKey = []string{"resource_id", "view_id"}
+	ResourcesPrimaryKey = []string{"view_id", "resource_id"}
 	// PermissionsPrimaryKey and PermissionsColumn2 are the table columns denoting the
 	// primary key for the permissions relation (M2M).
-	PermissionsPrimaryKey = []string{"permission_id", "view_id"}
+	PermissionsPrimaryKey = []string{"view_id", "permission_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -117,10 +136,6 @@ var (
 	KeywordValidator func(string) error
 	// DefaultScope holds the default value on creation for the "scope" field.
 	DefaultScope string
-	// DefaultType holds the default value on creation for the "type" field.
-	DefaultType string
-	// TypeValidator is a validator for the "type" field. It is called by the builders before save.
-	TypeValidator func(string) error
 	// DefaultVisible holds the default value on creation for the "visible" field.
 	DefaultVisible bool
 	// DefaultSequence holds the default value on creation for the "sequence" field.
@@ -130,6 +145,39 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )
+
+// Type defines the type for the "type" enum field.
+type Type string
+
+// TypeU is the default value of the Type enum.
+const DefaultType = TypeU
+
+// Type values.
+const (
+	TypeT Type = "T"
+	TypeG Type = "G"
+	TypeM Type = "M"
+	TypeL Type = "L"
+	TypeP Type = "P"
+	TypeB Type = "B"
+	TypeE Type = "E"
+	TypeR Type = "R"
+	TypeU Type = "U"
+)
+
+func (_type Type) String() string {
+	return string(_type)
+}
+
+// TypeValidator is a validator for the "type" field enum values. It is called by the builders before save.
+func TypeValidator(_type Type) error {
+	switch _type {
+	case TypeT, TypeG, TypeM, TypeL, TypeP, TypeB, TypeE, TypeR, TypeU:
+		return nil
+	default:
+		return fmt.Errorf("view: invalid enum value for type field: %q", _type)
+	}
+}
 
 // OrderOption defines the ordering options for the View queries.
 type OrderOption func(*sql.Selector)
@@ -247,6 +295,34 @@ func ByPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByViewResourcesCount orders the results by view_resources count.
+func ByViewResourcesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newViewResourcesStep(), opts...)
+	}
+}
+
+// ByViewResources orders the results by view_resources terms.
+func ByViewResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newViewResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByViewPermissionsCount orders the results by view_permissions count.
+func ByViewPermissionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newViewPermissionsStep(), opts...)
+	}
+}
+
+// ByViewPermissions orders the results by view_permissions terms.
+func ByViewPermissions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newViewPermissionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newParentStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -265,14 +341,28 @@ func newResourcesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ResourcesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, true, ResourcesTable, ResourcesPrimaryKey...),
+		sqlgraph.Edge(sqlgraph.M2M, false, ResourcesTable, ResourcesPrimaryKey...),
 	)
 }
 func newPermissionsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(PermissionsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2M, true, PermissionsTable, PermissionsPrimaryKey...),
+		sqlgraph.Edge(sqlgraph.M2M, false, PermissionsTable, PermissionsPrimaryKey...),
+	)
+}
+func newViewResourcesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ViewResourcesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, ViewResourcesTable, ViewResourcesColumn),
+	)
+}
+func newViewPermissionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ViewPermissionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, ViewPermissionsTable, ViewPermissionsColumn),
 	)
 }
 

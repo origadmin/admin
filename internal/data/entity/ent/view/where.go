@@ -85,11 +85,6 @@ func Name(v string) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldName, v))
 }
 
-// Type applies equality check predicate on the "type" field. It's identical to TypeEQ.
-func Type(v string) predicate.View {
-	return predicate.View(sql.FieldEQ(FieldType, v))
-}
-
 // Component applies equality check predicate on the "component" field. It's identical to ComponentEQ.
 func Component(v string) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldComponent, v))
@@ -421,68 +416,23 @@ func NameContainsFold(v string) predicate.View {
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
-func TypeEQ(v string) predicate.View {
+func TypeEQ(v Type) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldType, v))
 }
 
 // TypeNEQ applies the NEQ predicate on the "type" field.
-func TypeNEQ(v string) predicate.View {
+func TypeNEQ(v Type) predicate.View {
 	return predicate.View(sql.FieldNEQ(FieldType, v))
 }
 
 // TypeIn applies the In predicate on the "type" field.
-func TypeIn(vs ...string) predicate.View {
+func TypeIn(vs ...Type) predicate.View {
 	return predicate.View(sql.FieldIn(FieldType, vs...))
 }
 
 // TypeNotIn applies the NotIn predicate on the "type" field.
-func TypeNotIn(vs ...string) predicate.View {
+func TypeNotIn(vs ...Type) predicate.View {
 	return predicate.View(sql.FieldNotIn(FieldType, vs...))
-}
-
-// TypeGT applies the GT predicate on the "type" field.
-func TypeGT(v string) predicate.View {
-	return predicate.View(sql.FieldGT(FieldType, v))
-}
-
-// TypeGTE applies the GTE predicate on the "type" field.
-func TypeGTE(v string) predicate.View {
-	return predicate.View(sql.FieldGTE(FieldType, v))
-}
-
-// TypeLT applies the LT predicate on the "type" field.
-func TypeLT(v string) predicate.View {
-	return predicate.View(sql.FieldLT(FieldType, v))
-}
-
-// TypeLTE applies the LTE predicate on the "type" field.
-func TypeLTE(v string) predicate.View {
-	return predicate.View(sql.FieldLTE(FieldType, v))
-}
-
-// TypeContains applies the Contains predicate on the "type" field.
-func TypeContains(v string) predicate.View {
-	return predicate.View(sql.FieldContains(FieldType, v))
-}
-
-// TypeHasPrefix applies the HasPrefix predicate on the "type" field.
-func TypeHasPrefix(v string) predicate.View {
-	return predicate.View(sql.FieldHasPrefix(FieldType, v))
-}
-
-// TypeHasSuffix applies the HasSuffix predicate on the "type" field.
-func TypeHasSuffix(v string) predicate.View {
-	return predicate.View(sql.FieldHasSuffix(FieldType, v))
-}
-
-// TypeEqualFold applies the EqualFold predicate on the "type" field.
-func TypeEqualFold(v string) predicate.View {
-	return predicate.View(sql.FieldEqualFold(FieldType, v))
-}
-
-// TypeContainsFold applies the ContainsFold predicate on the "type" field.
-func TypeContainsFold(v string) predicate.View {
-	return predicate.View(sql.FieldContainsFold(FieldType, v))
 }
 
 // ComponentEQ applies the EQ predicate on the "component" field.
@@ -811,7 +761,7 @@ func HasResources() predicate.View {
 	return predicate.View(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, ResourcesTable, ResourcesPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, false, ResourcesTable, ResourcesPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -834,7 +784,7 @@ func HasPermissions() predicate.View {
 	return predicate.View(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, PermissionsTable, PermissionsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, false, PermissionsTable, PermissionsPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -844,6 +794,52 @@ func HasPermissions() predicate.View {
 func HasPermissionsWith(preds ...predicate.Permission) predicate.View {
 	return predicate.View(func(s *sql.Selector) {
 		step := newPermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasViewResources applies the HasEdge predicate on the "view_resources" edge.
+func HasViewResources() predicate.View {
+	return predicate.View(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, ViewResourcesTable, ViewResourcesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasViewResourcesWith applies the HasEdge predicate on the "view_resources" edge with a given conditions (other predicates).
+func HasViewResourcesWith(preds ...predicate.ViewResource) predicate.View {
+	return predicate.View(func(s *sql.Selector) {
+		step := newViewResourcesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasViewPermissions applies the HasEdge predicate on the "view_permissions" edge.
+func HasViewPermissions() predicate.View {
+	return predicate.View(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, ViewPermissionsTable, ViewPermissionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasViewPermissionsWith applies the HasEdge predicate on the "view_permissions" edge with a given conditions (other predicates).
+func HasViewPermissionsWith(preds ...predicate.ViewPermission) predicate.View {
+	return predicate.View(func(s *sql.Selector) {
+		step := newViewPermissionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -57,9 +57,11 @@ type PermissionEdges struct {
 	PositionPermissions []*PositionPermission `json:"position_permissions,omitempty"`
 	// PermissionResources holds the value of the permission_resources edge.
 	PermissionResources []*PermissionResource `json:"permission_resources,omitempty"`
+	// ViewPermissions holds the value of the view_permissions edge.
+	ViewPermissions []*ViewPermission `json:"view_permissions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [7]bool
+	loadedTypes [8]bool
 }
 
 // RolesOrErr returns the Roles value or an error if the edge
@@ -123,6 +125,15 @@ func (e PermissionEdges) PermissionResourcesOrErr() ([]*PermissionResource, erro
 		return e.PermissionResources, nil
 	}
 	return nil, &NotLoadedError{edge: "permission_resources"}
+}
+
+// ViewPermissionsOrErr returns the ViewPermissions value or an error if the edge
+// was not loaded in eager-loading.
+func (e PermissionEdges) ViewPermissionsOrErr() ([]*ViewPermission, error) {
+	if e.loadedTypes[7] {
+		return e.ViewPermissions, nil
+	}
+	return nil, &NotLoadedError{edge: "view_permissions"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -255,6 +266,11 @@ func (_m *Permission) QueryPositionPermissions() *PositionPermissionQuery {
 // QueryPermissionResources queries the "permission_resources" edge of the Permission entity.
 func (_m *Permission) QueryPermissionResources() *PermissionResourceQuery {
 	return NewPermissionClient(_m.config).QueryPermissionResources(_m)
+}
+
+// QueryViewPermissions queries the "view_permissions" edge of the Permission entity.
+func (_m *Permission) QueryViewPermissions() *ViewPermissionQuery {
+	return NewPermissionClient(_m.config).QueryViewPermissions(_m)
 }
 
 // Update returns a builder for updating this Permission.

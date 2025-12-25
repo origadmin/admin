@@ -53,7 +53,9 @@ func (Resource) Fields() []ent.Field {
 // Edges of the Resource.
 func (Resource) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("views", View.Type),
+		edge.From("views", View.Type).
+			Ref("resources").
+			Through("view_resources", ViewResource.Type),
 		edge.From("permissions", Permission.Type).
 			Ref("resources"),
 	}

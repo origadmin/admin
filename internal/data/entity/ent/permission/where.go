@@ -529,7 +529,7 @@ func HasViews() predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, ViewsTable, ViewsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, true, ViewsTable, ViewsPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -608,6 +608,29 @@ func HasPermissionResources() predicate.Permission {
 func HasPermissionResourcesWith(preds ...predicate.PermissionResource) predicate.Permission {
 	return predicate.Permission(func(s *sql.Selector) {
 		step := newPermissionResourcesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasViewPermissions applies the HasEdge predicate on the "view_permissions" edge.
+func HasViewPermissions() predicate.Permission {
+	return predicate.Permission(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, ViewPermissionsTable, ViewPermissionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasViewPermissionsWith applies the HasEdge predicate on the "view_permissions" edge with a given conditions (other predicates).
+func HasViewPermissionsWith(preds ...predicate.ViewPermission) predicate.Permission {
+	return predicate.Permission(func(s *sql.Selector) {
+		step := newViewPermissionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -825,7 +825,7 @@ func HasViews() predicate.Resource {
 	return predicate.Resource(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, ViewsTable, ViewsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, true, ViewsTable, ViewsPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -858,6 +858,29 @@ func HasPermissions() predicate.Resource {
 func HasPermissionsWith(preds ...predicate.Permission) predicate.Resource {
 	return predicate.Resource(func(s *sql.Selector) {
 		step := newPermissionsStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasViewResources applies the HasEdge predicate on the "view_resources" edge.
+func HasViewResources() predicate.Resource {
+	return predicate.Resource(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, ViewResourcesTable, ViewResourcesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasViewResourcesWith applies the HasEdge predicate on the "view_resources" edge with a given conditions (other predicates).
+func HasViewResourcesWith(preds ...predicate.ViewResource) predicate.Resource {
+	return predicate.Resource(func(s *sql.Selector) {
+		step := newViewResourcesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

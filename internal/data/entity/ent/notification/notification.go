@@ -3,6 +3,7 @@
 package notification
 
 import (
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -72,7 +73,7 @@ var (
 	// DefaultContent holds the default value on creation for the "content" field.
 	DefaultContent string
 	// DefaultStatus holds the default value on creation for the "status" field.
-	DefaultStatus int8
+	DefaultStatus enums.Status
 	// CategoryIDValidator is a validator for the "category_id" field. It is called by the builders before save.
 	CategoryIDValidator func(int64) error
 	// DefaultID holds the default value on creation for the "id" field.

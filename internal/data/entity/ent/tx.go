@@ -42,6 +42,10 @@ type Tx struct {
 	UserRole *UserRoleClient
 	// View is the client for interacting with the View builders.
 	View *ViewClient
+	// ViewPermission is the client for interacting with the ViewPermission builders.
+	ViewPermission *ViewPermissionClient
+	// ViewResource is the client for interacting with the ViewResource builders.
+	ViewResource *ViewResourceClient
 
 	// lazily loaded.
 	client     *Client
@@ -188,6 +192,8 @@ func (tx *Tx) init() {
 	tx.UserPosition = NewUserPositionClient(tx.config)
 	tx.UserRole = NewUserRoleClient(tx.config)
 	tx.View = NewViewClient(tx.config)
+	tx.ViewPermission = NewViewPermissionClient(tx.config)
+	tx.ViewResource = NewViewResourceClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

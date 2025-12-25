@@ -39,8 +39,6 @@ func (UserDepartment) Mixin() []ent.Mixin {
 // Indexes of the UserDepartment.
 func (UserDepartment) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("user_id"),
-		index.Fields("department_id"),
 		index.Fields("user_id", "department_id").
 			Unique(),
 	}

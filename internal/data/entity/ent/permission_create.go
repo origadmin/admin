@@ -14,6 +14,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -240,6 +241,21 @@ func (_c *PermissionCreate) AddPermissionResources(v ...*PermissionResource) *Pe
 		ids[i] = v[i].ID
 	}
 	return _c.AddPermissionResourceIDs(ids...)
+}
+
+// AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
+func (_c *PermissionCreate) AddViewPermissionIDs(ids ...int64) *PermissionCreate {
+	_c.mutation.AddViewPermissionIDs(ids...)
+	return _c
+}
+
+// AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
+func (_c *PermissionCreate) AddViewPermissions(v ...*ViewPermission) *PermissionCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddViewPermissionIDs(ids...)
 }
 
 // Mutation returns the PermissionMutation object of the builder.
@@ -470,7 +486,7 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if nodes := _c.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
@@ -480,6 +496,13 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewPermissionCreate{config: _c.config, mutation: newViewPermissionMutation(_c.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
@@ -524,6 +547,22 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ViewPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

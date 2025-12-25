@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -22,13 +23,14 @@ import (
 // ResourceQuery is the builder for querying Resource entities.
 type ResourceQuery struct {
 	config
-	ctx             *QueryContext
-	order           []resource.OrderOption
-	inters          []Interceptor
-	predicates      []predicate.Resource
-	withViews       *ViewQuery
-	withPermissions *PermissionQuery
-	modifiers       []func(*sql.Selector)
+	ctx               *QueryContext
+	order             []resource.OrderOption
+	inters            []Interceptor
+	predicates        []predicate.Resource
+	withViews         *ViewQuery
+	withPermissions   *PermissionQuery
+	withViewResources *ViewResourceQuery
+	modifiers         []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -79,7 +81,7 @@ func (_q *ResourceQuery) QueryViews() *ViewQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(resource.Table, resource.FieldID, selector),
 			sqlgraph.To(view.Table, view.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, resource.ViewsTable, resource.ViewsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, true, resource.ViewsTable, resource.ViewsPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -102,6 +104,28 @@ func (_q *ResourceQuery) QueryPermissions() *PermissionQuery {
 			sqlgraph.From(resource.Table, resource.FieldID, selector),
 			sqlgraph.To(permission.Table, permission.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, resource.PermissionsTable, resource.PermissionsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryViewResources chains the current query on the "view_resources" edge.
+func (_q *ResourceQuery) QueryViewResources() *ViewResourceQuery {
+	query := (&ViewResourceClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, selector),
+			sqlgraph.To(viewresource.Table, viewresource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, resource.ViewResourcesTable, resource.ViewResourcesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -296,13 +320,14 @@ func (_q *ResourceQuery) Clone() *ResourceQuery {
 		return nil
 	}
 	return &ResourceQuery{
-		config:          _q.config,
-		ctx:             _q.ctx.Clone(),
-		order:           append([]resource.OrderOption{}, _q.order...),
-		inters:          append([]Interceptor{}, _q.inters...),
-		predicates:      append([]predicate.Resource{}, _q.predicates...),
-		withViews:       _q.withViews.Clone(),
-		withPermissions: _q.withPermissions.Clone(),
+		config:            _q.config,
+		ctx:               _q.ctx.Clone(),
+		order:             append([]resource.OrderOption{}, _q.order...),
+		inters:            append([]Interceptor{}, _q.inters...),
+		predicates:        append([]predicate.Resource{}, _q.predicates...),
+		withViews:         _q.withViews.Clone(),
+		withPermissions:   _q.withPermissions.Clone(),
+		withViewResources: _q.withViewResources.Clone(),
 		// clone intermediate query.
 		sql:       _q.sql.Clone(),
 		path:      _q.path,
@@ -329,6 +354,17 @@ func (_q *ResourceQuery) WithPermissions(opts ...func(*PermissionQuery)) *Resour
 		opt(query)
 	}
 	_q.withPermissions = query
+	return _q
+}
+
+// WithViewResources tells the query-builder to eager-load the nodes that are connected to
+// the "view_resources" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ResourceQuery) WithViewResources(opts ...func(*ViewResourceQuery)) *ResourceQuery {
+	query := (&ViewResourceClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withViewResources = query
 	return _q
 }
 
@@ -410,9 +446,10 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	var (
 		nodes       = []*Resource{}
 		_spec       = _q.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			_q.withViews != nil,
 			_q.withPermissions != nil,
+			_q.withViewResources != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -450,6 +487,13 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 			return nil, err
 		}
 	}
+	if query := _q.withViewResources; query != nil {
+		if err := _q.loadViewResources(ctx, query, nodes,
+			func(n *Resource) { n.Edges.ViewResources = []*ViewResource{} },
+			func(n *Resource, e *ViewResource) { n.Edges.ViewResources = append(n.Edges.ViewResources, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
@@ -466,10 +510,10 @@ func (_q *ResourceQuery) loadViews(ctx context.Context, query *ViewQuery, nodes 
 	}
 	query.Where(func(s *sql.Selector) {
 		joinT := sql.Table(resource.ViewsTable)
-		s.Join(joinT).On(s.C(view.FieldID), joinT.C(resource.ViewsPrimaryKey[1]))
-		s.Where(sql.InValues(joinT.C(resource.ViewsPrimaryKey[0]), edgeIDs...))
+		s.Join(joinT).On(s.C(view.FieldID), joinT.C(resource.ViewsPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(resource.ViewsPrimaryKey[1]), edgeIDs...))
 		columns := s.SelectedColumns()
-		s.Select(joinT.C(resource.ViewsPrimaryKey[0]))
+		s.Select(joinT.C(resource.ViewsPrimaryKey[1]))
 		s.AppendSelect(columns...)
 		s.SetDistinct(false)
 	})
@@ -572,6 +616,36 @@ func (_q *ResourceQuery) loadPermissions(ctx context.Context, query *PermissionQ
 		for kn := range nodes {
 			assign(kn, n)
 		}
+	}
+	return nil
+}
+func (_q *ResourceQuery) loadViewResources(ctx context.Context, query *ViewResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *ViewResource)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*Resource)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(viewresource.FieldResourceID)
+	}
+	query.Where(predicate.ViewResource(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(resource.ViewResourcesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ResourceID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "resource_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
 	}
 	return nil
 }

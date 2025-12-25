@@ -31,8 +31,8 @@ func (Notification) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("entity.notification.field.content")),
 		field.Int8("status").
-			GoType(enums.Status(0)).              // Tell entc to generate the Go type as enums.Status
-			Default(int8(enums.StatusUnknown)). // Provide the underlying type (int8) to the builder method
+			GoType(enums.Status(0)).
+			Default(int8(enums.StatusUnknown)).
 			Comment(i18n.Text("entity.notification.field.status")),
 		mixin.FK("category_id", i18n.Text("entity.notification.field.category_id")),
 	}

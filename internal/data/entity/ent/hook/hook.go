@@ -188,6 +188,30 @@ func (f ViewFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ViewMutation", m)
 }
 
+// The ViewPermissionFunc type is an adapter to allow the use of ordinary
+// function as ViewPermission mutator.
+type ViewPermissionFunc func(context.Context, *ent.ViewPermissionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ViewPermissionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ViewPermissionMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ViewPermissionMutation", m)
+}
+
+// The ViewResourceFunc type is an adapter to allow the use of ordinary
+// function as ViewResource mutator.
+type ViewResourceFunc func(context.Context, *ent.ViewResourceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ViewResourceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ViewResourceMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ViewResourceMutation", m)
+}
+
 // Condition is a hook condition function.
 type Condition func(context.Context, ent.Mutation) bool
 

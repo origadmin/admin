@@ -10,6 +10,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -225,6 +226,21 @@ func (_u *ResourceUpdate) AddPermissions(v ...*Permission) *ResourceUpdate {
 	return _u.AddPermissionIDs(ids...)
 }
 
+// AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
+func (_u *ResourceUpdate) AddViewResourceIDs(ids ...int64) *ResourceUpdate {
+	_u.mutation.AddViewResourceIDs(ids...)
+	return _u
+}
+
+// AddViewResources adds the "view_resources" edges to the ViewResource entity.
+func (_u *ResourceUpdate) AddViewResources(v ...*ViewResource) *ResourceUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddViewResourceIDs(ids...)
+}
+
 // Mutation returns the ResourceMutation object of the builder.
 func (_u *ResourceUpdate) Mutation() *ResourceMutation {
 	return _u.mutation
@@ -270,6 +286,27 @@ func (_u *ResourceUpdate) RemovePermissions(v ...*Permission) *ResourceUpdate {
 		ids[i] = v[i].ID
 	}
 	return _u.RemovePermissionIDs(ids...)
+}
+
+// ClearViewResources clears all "view_resources" edges to the ViewResource entity.
+func (_u *ResourceUpdate) ClearViewResources() *ResourceUpdate {
+	_u.mutation.ClearViewResources()
+	return _u
+}
+
+// RemoveViewResourceIDs removes the "view_resources" edge to ViewResource entities by IDs.
+func (_u *ResourceUpdate) RemoveViewResourceIDs(ids ...int64) *ResourceUpdate {
+	_u.mutation.RemoveViewResourceIDs(ids...)
+	return _u
+}
+
+// RemoveViewResources removes "view_resources" edges to ViewResource entities.
+func (_u *ResourceUpdate) RemoveViewResources(v ...*ViewResource) *ResourceUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveViewResourceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -386,20 +423,27 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
+		}
+		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
@@ -409,13 +453,20 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
@@ -425,6 +476,13 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -466,6 +524,51 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ViewResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedViewResourcesIDs(); len(nodes) > 0 && !_u.mutation.ViewResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ViewResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -689,6 +792,21 @@ func (_u *ResourceUpdateOne) AddPermissions(v ...*Permission) *ResourceUpdateOne
 	return _u.AddPermissionIDs(ids...)
 }
 
+// AddViewResourceIDs adds the "view_resources" edge to the ViewResource entity by IDs.
+func (_u *ResourceUpdateOne) AddViewResourceIDs(ids ...int64) *ResourceUpdateOne {
+	_u.mutation.AddViewResourceIDs(ids...)
+	return _u
+}
+
+// AddViewResources adds the "view_resources" edges to the ViewResource entity.
+func (_u *ResourceUpdateOne) AddViewResources(v ...*ViewResource) *ResourceUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddViewResourceIDs(ids...)
+}
+
 // Mutation returns the ResourceMutation object of the builder.
 func (_u *ResourceUpdateOne) Mutation() *ResourceMutation {
 	return _u.mutation
@@ -734,6 +852,27 @@ func (_u *ResourceUpdateOne) RemovePermissions(v ...*Permission) *ResourceUpdate
 		ids[i] = v[i].ID
 	}
 	return _u.RemovePermissionIDs(ids...)
+}
+
+// ClearViewResources clears all "view_resources" edges to the ViewResource entity.
+func (_u *ResourceUpdateOne) ClearViewResources() *ResourceUpdateOne {
+	_u.mutation.ClearViewResources()
+	return _u
+}
+
+// RemoveViewResourceIDs removes the "view_resources" edge to ViewResource entities by IDs.
+func (_u *ResourceUpdateOne) RemoveViewResourceIDs(ids ...int64) *ResourceUpdateOne {
+	_u.mutation.RemoveViewResourceIDs(ids...)
+	return _u
+}
+
+// RemoveViewResources removes "view_resources" edges to ViewResource entities.
+func (_u *ResourceUpdateOne) RemoveViewResources(v ...*ViewResource) *ResourceUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveViewResourceIDs(ids...)
 }
 
 // Where appends a list predicates to the ResourceUpdate builder.
@@ -880,20 +1019,27 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
+		}
+		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
@@ -903,13 +1049,20 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   resource.ViewsTable,
 			Columns: resource.ViewsPrimaryKey,
 			Bidi:    false,
@@ -919,6 +1072,13 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -960,6 +1120,51 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ViewResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedViewResourcesIDs(); len(nodes) > 0 && !_u.mutation.ViewResourcesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ViewResourcesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   resource.ViewResourcesTable,
+			Columns: []string{resource.ViewResourcesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewresource.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

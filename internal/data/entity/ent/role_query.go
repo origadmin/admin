@@ -853,9 +853,9 @@ func (_q *RoleQuery) Modify(modifiers ...func(s *sql.Selector)) *RoleSelect {
 //	  Keyword string `json:"keyword,omitempty"`
 //	  Name string `json:"name,omitempty"`
 //	  Description string `json:"description,omitempty"`
-//	  Type int8 `json:"type,omitempty"`
+//	  Type enums.RoleType `json:"type,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
-//	  Status int8 `json:"status,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
 //	}
 //
 //	client.Role.Query().

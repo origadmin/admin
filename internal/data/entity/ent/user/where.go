@@ -4,6 +4,7 @@ package user
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -146,8 +147,9 @@ func Token(v string) predicate.User {
 }
 
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
-func Status(v int8) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldStatus, v))
+func Status(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldEQ(FieldStatus, vc))
 }
 
 // IsSystem applies equality check predicate on the "is_system" field. It's identical to IsSystemEQ.
@@ -1281,43 +1283,57 @@ func TokenContainsFold(v string) predicate.User {
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
-func StatusEQ(v int8) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldStatus, v))
+func StatusEQ(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldEQ(FieldStatus, vc))
 }
 
 // StatusNEQ applies the NEQ predicate on the "status" field.
-func StatusNEQ(v int8) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldStatus, v))
+func StatusNEQ(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldNEQ(FieldStatus, vc))
 }
 
 // StatusIn applies the In predicate on the "status" field.
-func StatusIn(vs ...int8) predicate.User {
-	return predicate.User(sql.FieldIn(FieldStatus, vs...))
+func StatusIn(vs ...enums.Status) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.User(sql.FieldIn(FieldStatus, v...))
 }
 
 // StatusNotIn applies the NotIn predicate on the "status" field.
-func StatusNotIn(vs ...int8) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldStatus, vs...))
+func StatusNotIn(vs ...enums.Status) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.User(sql.FieldNotIn(FieldStatus, v...))
 }
 
 // StatusGT applies the GT predicate on the "status" field.
-func StatusGT(v int8) predicate.User {
-	return predicate.User(sql.FieldGT(FieldStatus, v))
+func StatusGT(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldGT(FieldStatus, vc))
 }
 
 // StatusGTE applies the GTE predicate on the "status" field.
-func StatusGTE(v int8) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldStatus, v))
+func StatusGTE(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldGTE(FieldStatus, vc))
 }
 
 // StatusLT applies the LT predicate on the "status" field.
-func StatusLT(v int8) predicate.User {
-	return predicate.User(sql.FieldLT(FieldStatus, v))
+func StatusLT(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldLT(FieldStatus, vc))
 }
 
 // StatusLTE applies the LTE predicate on the "status" field.
-func StatusLTE(v int8) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldStatus, v))
+func StatusLTE(v enums.Status) predicate.User {
+	vc := int8(v)
+	return predicate.User(sql.FieldLTE(FieldStatus, vc))
 }
 
 // IsSystemEQ applies the EQ predicate on the "is_system" field.

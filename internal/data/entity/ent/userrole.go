@@ -13,7 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// entity.(1).(2).(3)
+// entity.user_role.table.comment
 type UserRole struct {
 	config `json:"-"`
 	// ID of the ent.

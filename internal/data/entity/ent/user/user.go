@@ -4,6 +4,7 @@ package user
 
 import (
 	"fmt"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent"
@@ -186,7 +187,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "origadmin/application/admin/internal/data/entity/ent/runtime"
 var (
-	Hooks        [2]ent.Hook
+	Hooks        [1]ent.Hook
 	Interceptors [1]ent.Interceptor
 	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
 	DefaultCreateAuthor int64
@@ -245,7 +246,7 @@ var (
 	// TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	TokenValidator func(string) error
 	// DefaultStatus holds the default value on creation for the "status" field.
-	DefaultStatus int8
+	DefaultStatus enums.Status
 	// DefaultIsSystem holds the default value on creation for the "is_system" field.
 	DefaultIsSystem bool
 	// DefaultLastLoginIP holds the default value on creation for the "last_login_ip" field.

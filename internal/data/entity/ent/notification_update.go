@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/notification"
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -118,14 +119,14 @@ func (_u *NotificationUpdate) SetNillableContent(v *string) *NotificationUpdate 
 }
 
 // SetStatus sets the "status" field.
-func (_u *NotificationUpdate) SetStatus(v int8) *NotificationUpdate {
+func (_u *NotificationUpdate) SetStatus(v enums.Status) *NotificationUpdate {
 	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *NotificationUpdate) SetNillableStatus(v *int8) *NotificationUpdate {
+func (_u *NotificationUpdate) SetNillableStatus(v *enums.Status) *NotificationUpdate {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
@@ -133,7 +134,7 @@ func (_u *NotificationUpdate) SetNillableStatus(v *int8) *NotificationUpdate {
 }
 
 // AddStatus adds value to the "status" field.
-func (_u *NotificationUpdate) AddStatus(v int8) *NotificationUpdate {
+func (_u *NotificationUpdate) AddStatus(v enums.Status) *NotificationUpdate {
 	_u.mutation.AddStatus(v)
 	return _u
 }
@@ -378,14 +379,14 @@ func (_u *NotificationUpdateOne) SetNillableContent(v *string) *NotificationUpda
 }
 
 // SetStatus sets the "status" field.
-func (_u *NotificationUpdateOne) SetStatus(v int8) *NotificationUpdateOne {
+func (_u *NotificationUpdateOne) SetStatus(v enums.Status) *NotificationUpdateOne {
 	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *NotificationUpdateOne) SetNillableStatus(v *int8) *NotificationUpdateOne {
+func (_u *NotificationUpdateOne) SetNillableStatus(v *enums.Status) *NotificationUpdateOne {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
@@ -393,7 +394,7 @@ func (_u *NotificationUpdateOne) SetNillableStatus(v *int8) *NotificationUpdateO
 }
 
 // AddStatus adds value to the "status" field.
-func (_u *NotificationUpdateOne) AddStatus(v int8) *NotificationUpdateOne {
+func (_u *NotificationUpdateOne) AddStatus(v enums.Status) *NotificationUpdateOne {
 	_u.mutation.AddStatus(v)
 	return _u
 }

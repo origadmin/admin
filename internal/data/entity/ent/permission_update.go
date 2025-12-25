@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -229,6 +230,21 @@ func (_u *PermissionUpdate) AddPermissionResources(v ...*PermissionResource) *Pe
 	return _u.AddPermissionResourceIDs(ids...)
 }
 
+// AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
+func (_u *PermissionUpdate) AddViewPermissionIDs(ids ...int64) *PermissionUpdate {
+	_u.mutation.AddViewPermissionIDs(ids...)
+	return _u
+}
+
+// AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
+func (_u *PermissionUpdate) AddViewPermissions(v ...*ViewPermission) *PermissionUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddViewPermissionIDs(ids...)
+}
+
 // Mutation returns the PermissionMutation object of the builder.
 func (_u *PermissionUpdate) Mutation() *PermissionMutation {
 	return _u.mutation
@@ -379,6 +395,27 @@ func (_u *PermissionUpdate) RemovePermissionResources(v ...*PermissionResource) 
 		ids[i] = v[i].ID
 	}
 	return _u.RemovePermissionResourceIDs(ids...)
+}
+
+// ClearViewPermissions clears all "view_permissions" edges to the ViewPermission entity.
+func (_u *PermissionUpdate) ClearViewPermissions() *PermissionUpdate {
+	_u.mutation.ClearViewPermissions()
+	return _u
+}
+
+// RemoveViewPermissionIDs removes the "view_permissions" edge to ViewPermission entities by IDs.
+func (_u *PermissionUpdate) RemoveViewPermissionIDs(ids ...int64) *PermissionUpdate {
+	_u.mutation.RemoveViewPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveViewPermissions removes "view_permissions" edges to ViewPermission entities.
+func (_u *PermissionUpdate) RemoveViewPermissions(v ...*ViewPermission) *PermissionUpdate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveViewPermissionIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -622,20 +659,27 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
+		}
+		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
@@ -645,13 +689,20 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
@@ -661,6 +712,13 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -792,6 +850,51 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ViewPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedViewPermissionsIDs(); len(nodes) > 0 && !_u.mutation.ViewPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ViewPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {
@@ -1014,6 +1117,21 @@ func (_u *PermissionUpdateOne) AddPermissionResources(v ...*PermissionResource) 
 	return _u.AddPermissionResourceIDs(ids...)
 }
 
+// AddViewPermissionIDs adds the "view_permissions" edge to the ViewPermission entity by IDs.
+func (_u *PermissionUpdateOne) AddViewPermissionIDs(ids ...int64) *PermissionUpdateOne {
+	_u.mutation.AddViewPermissionIDs(ids...)
+	return _u
+}
+
+// AddViewPermissions adds the "view_permissions" edges to the ViewPermission entity.
+func (_u *PermissionUpdateOne) AddViewPermissions(v ...*ViewPermission) *PermissionUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddViewPermissionIDs(ids...)
+}
+
 // Mutation returns the PermissionMutation object of the builder.
 func (_u *PermissionUpdateOne) Mutation() *PermissionMutation {
 	return _u.mutation
@@ -1164,6 +1282,27 @@ func (_u *PermissionUpdateOne) RemovePermissionResources(v ...*PermissionResourc
 		ids[i] = v[i].ID
 	}
 	return _u.RemovePermissionResourceIDs(ids...)
+}
+
+// ClearViewPermissions clears all "view_permissions" edges to the ViewPermission entity.
+func (_u *PermissionUpdateOne) ClearViewPermissions() *PermissionUpdateOne {
+	_u.mutation.ClearViewPermissions()
+	return _u
+}
+
+// RemoveViewPermissionIDs removes the "view_permissions" edge to ViewPermission entities by IDs.
+func (_u *PermissionUpdateOne) RemoveViewPermissionIDs(ids ...int64) *PermissionUpdateOne {
+	_u.mutation.RemoveViewPermissionIDs(ids...)
+	return _u
+}
+
+// RemoveViewPermissions removes "view_permissions" edges to ViewPermission entities.
+func (_u *PermissionUpdateOne) RemoveViewPermissions(v ...*ViewPermission) *PermissionUpdateOne {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveViewPermissionIDs(ids...)
 }
 
 // Where appends a list predicates to the PermissionUpdate builder.
@@ -1437,20 +1576,27 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(view.FieldID, field.TypeInt64),
 			},
+		}
+		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.RemovedViewsIDs(); len(nodes) > 0 && !_u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
@@ -1460,13 +1606,20 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := _u.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   permission.ViewsTable,
 			Columns: permission.ViewsPrimaryKey,
 			Bidi:    false,
@@ -1476,6 +1629,13 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -1607,6 +1767,51 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(permissionresource.FieldID, field.TypeInt),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ViewPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedViewPermissionsIDs(); len(nodes) > 0 && !_u.mutation.ViewPermissionsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ViewPermissionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   permission.ViewPermissionsTable,
+			Columns: []string{permission.ViewPermissionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(viewpermission.FieldID, field.TypeInt64),
 			},
 		}
 		for _, k := range nodes {

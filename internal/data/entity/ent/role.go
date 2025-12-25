@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/role"
+	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
 
@@ -29,11 +30,11 @@ type Role struct {
 	// entity.role.field.description
 	Description string `json:"description,omitempty"`
 	// entity.role.field.type
-	Type int8 `json:"type,omitempty"`
+	Type enums.RoleType `json:"type,omitempty"`
 	// entity.role.field.sequence
 	Sequence int `json:"sequence,omitempty"`
 	// entity.role.field.status
-	Status int8 `json:"status,omitempty"`
+	Status enums.Status `json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoleQuery when eager-loading is set.
 	Edges        RoleEdges `json:"edges"`
@@ -157,7 +158,7 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
-				_m.Type = int8(value.Int64)
+				_m.Type = enums.RoleType(value.Int64)
 			}
 		case role.FieldSequence:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -169,7 +170,7 @@ func (_m *Role) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				_m.Status = int8(value.Int64)
+				_m.Status = enums.Status(value.Int64)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])

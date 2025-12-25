@@ -16,6 +16,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -38,6 +39,7 @@ type PermissionQuery struct {
 	withRolePermissions     *RolePermissionQuery
 	withPositionPermissions *PositionPermissionQuery
 	withPermissionResources *PermissionResourceQuery
+	withViewPermissions     *ViewPermissionQuery
 	modifiers               []func(*sql.Selector)
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -155,7 +157,7 @@ func (_q *PermissionQuery) QueryViews() *ViewQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(permission.Table, permission.FieldID, selector),
 			sqlgraph.To(view.Table, view.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, permission.ViewsTable, permission.ViewsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2M, true, permission.ViewsTable, permission.ViewsPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -222,6 +224,28 @@ func (_q *PermissionQuery) QueryPermissionResources() *PermissionResourceQuery {
 			sqlgraph.From(permission.Table, permission.FieldID, selector),
 			sqlgraph.To(permissionresource.Table, permissionresource.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, permission.PermissionResourcesTable, permission.PermissionResourcesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryViewPermissions chains the current query on the "view_permissions" edge.
+func (_q *PermissionQuery) QueryViewPermissions() *ViewPermissionQuery {
+	query := (&ViewPermissionClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, selector),
+			sqlgraph.To(viewpermission.Table, viewpermission.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, permission.ViewPermissionsTable, permission.ViewPermissionsColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -428,6 +452,7 @@ func (_q *PermissionQuery) Clone() *PermissionQuery {
 		withRolePermissions:     _q.withRolePermissions.Clone(),
 		withPositionPermissions: _q.withPositionPermissions.Clone(),
 		withPermissionResources: _q.withPermissionResources.Clone(),
+		withViewPermissions:     _q.withViewPermissions.Clone(),
 		// clone intermediate query.
 		sql:       _q.sql.Clone(),
 		path:      _q.path,
@@ -512,6 +537,17 @@ func (_q *PermissionQuery) WithPermissionResources(opts ...func(*PermissionResou
 	return _q
 }
 
+// WithViewPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "view_permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *PermissionQuery) WithViewPermissions(opts ...func(*ViewPermissionQuery)) *PermissionQuery {
+	query := (&ViewPermissionClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withViewPermissions = query
+	return _q
+}
+
 // GroupBy is used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -590,7 +626,7 @@ func (_q *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 	var (
 		nodes       = []*Permission{}
 		_spec       = _q.querySpec()
-		loadedTypes = [7]bool{
+		loadedTypes = [8]bool{
 			_q.withRoles != nil,
 			_q.withPositions != nil,
 			_q.withResources != nil,
@@ -598,6 +634,7 @@ func (_q *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 			_q.withRolePermissions != nil,
 			_q.withPositionPermissions != nil,
 			_q.withPermissionResources != nil,
+			_q.withViewPermissions != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -671,6 +708,13 @@ func (_q *PermissionQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*P
 			func(n *Permission, e *PermissionResource) {
 				n.Edges.PermissionResources = append(n.Edges.PermissionResources, e)
 			}); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withViewPermissions; query != nil {
+		if err := _q.loadViewPermissions(ctx, query, nodes,
+			func(n *Permission) { n.Edges.ViewPermissions = []*ViewPermission{} },
+			func(n *Permission, e *ViewPermission) { n.Edges.ViewPermissions = append(n.Edges.ViewPermissions, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -873,10 +917,10 @@ func (_q *PermissionQuery) loadViews(ctx context.Context, query *ViewQuery, node
 	}
 	query.Where(func(s *sql.Selector) {
 		joinT := sql.Table(permission.ViewsTable)
-		s.Join(joinT).On(s.C(view.FieldID), joinT.C(permission.ViewsPrimaryKey[1]))
-		s.Where(sql.InValues(joinT.C(permission.ViewsPrimaryKey[0]), edgeIDs...))
+		s.Join(joinT).On(s.C(view.FieldID), joinT.C(permission.ViewsPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(permission.ViewsPrimaryKey[1]), edgeIDs...))
 		columns := s.SelectedColumns()
-		s.Select(joinT.C(permission.ViewsPrimaryKey[0]))
+		s.Select(joinT.C(permission.ViewsPrimaryKey[1]))
 		s.AppendSelect(columns...)
 		s.SetDistinct(false)
 	})
@@ -996,6 +1040,36 @@ func (_q *PermissionQuery) loadPermissionResources(ctx context.Context, query *P
 	}
 	query.Where(predicate.PermissionResource(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(permission.PermissionResourcesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.PermissionID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "permission_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *PermissionQuery) loadViewPermissions(ctx context.Context, query *ViewPermissionQuery, nodes []*Permission, init func(*Permission), assign func(*Permission, *ViewPermission)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*Permission)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(viewpermission.FieldPermissionID)
+	}
+	query.Where(predicate.ViewPermission(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(permission.ViewPermissionsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {

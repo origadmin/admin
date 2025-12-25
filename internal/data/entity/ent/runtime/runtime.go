@@ -19,6 +19,9 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/userposition"
 	"origadmin/application/admin/internal/data/entity/ent/userrole"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/entity/ent/viewresource"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 )
 
@@ -155,7 +158,7 @@ func init() {
 	// notificationDescStatus is the schema descriptor for status field.
 	notificationDescStatus := notificationFields[2].Descriptor()
 	// notification.DefaultStatus holds the default value on creation for the status field.
-	notification.DefaultStatus = notificationDescStatus.Default.(int8)
+	notification.DefaultStatus = enums.Status(notificationDescStatus.Default.(int8))
 	// notificationDescCategoryID is the schema descriptor for category_id field.
 	notificationDescCategoryID := notificationFields[3].Descriptor()
 	// notification.CategoryIDValidator is a validator for the "category_id" field. It is called by the builders before save.
@@ -357,7 +360,7 @@ func init() {
 	// roleDescType is the schema descriptor for type field.
 	roleDescType := roleFields[3].Descriptor()
 	// role.DefaultType holds the default value on creation for the type field.
-	role.DefaultType = roleDescType.Default.(int8)
+	role.DefaultType = enums.RoleType(roleDescType.Default.(int8))
 	// roleDescSequence is the schema descriptor for sequence field.
 	roleDescSequence := roleFields[4].Descriptor()
 	// role.DefaultSequence holds the default value on creation for the sequence field.
@@ -365,7 +368,7 @@ func init() {
 	// roleDescStatus is the schema descriptor for status field.
 	roleDescStatus := roleFields[5].Descriptor()
 	// role.DefaultStatus holds the default value on creation for the status field.
-	role.DefaultStatus = roleDescStatus.Default.(int8)
+	role.DefaultStatus = enums.Status(roleDescStatus.Default.(int8))
 	// roleDescID is the schema descriptor for id field.
 	roleDescID := roleMixinFields0[0].Descriptor()
 	// role.DefaultID holds the default value on creation for the id field.
@@ -384,9 +387,7 @@ func init() {
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks4 := userMixin[4].Hooks()
-	userHooks := schema.User{}.Hooks()
 	user.Hooks[0] = userMixinHooks4[0]
-	user.Hooks[1] = userHooks[0]
 	userMixinInters4 := userMixin[4].Interceptors()
 	user.Interceptors[0] = userMixinInters4[0]
 	userMixinFields0 := userMixin[0].Fields()
@@ -492,7 +493,7 @@ func init() {
 	// userDescStatus is the schema descriptor for status field.
 	userDescStatus := userFields[14].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
-	user.DefaultStatus = userDescStatus.Default.(int8)
+	user.DefaultStatus = enums.Status(userDescStatus.Default.(int8))
 	// userDescIsSystem is the schema descriptor for is_system field.
 	userDescIsSystem := userFields[15].Descriptor()
 	// user.DefaultIsSystem holds the default value on creation for the is_system field.
@@ -586,12 +587,6 @@ func init() {
 	viewDescScope := viewFields[2].Descriptor()
 	// view.DefaultScope holds the default value on creation for the scope field.
 	view.DefaultScope = viewDescScope.Default.(string)
-	// viewDescType is the schema descriptor for type field.
-	viewDescType := viewFields[4].Descriptor()
-	// view.DefaultType holds the default value on creation for the type field.
-	view.DefaultType = viewDescType.Default.(string)
-	// view.TypeValidator is a validator for the "type" field. It is called by the builders before save.
-	view.TypeValidator = viewDescType.Validators[0].(func(string) error)
 	// viewDescVisible is the schema descriptor for visible field.
 	viewDescVisible := viewFields[8].Descriptor()
 	// view.DefaultVisible holds the default value on creation for the visible field.
@@ -606,6 +601,92 @@ func init() {
 	view.DefaultID = viewDescID.Default.(func() int64)
 	// view.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	view.IDValidator = viewDescID.Validators[0].(func(int64) error)
+	viewpermissionMixin := schema.ViewPermission{}.Mixin()
+	viewpermissionMixinFields0 := viewpermissionMixin[0].Fields()
+	_ = viewpermissionMixinFields0
+	viewpermissionMixinFields1 := viewpermissionMixin[1].Fields()
+	_ = viewpermissionMixinFields1
+	viewpermissionMixinFields2 := viewpermissionMixin[2].Fields()
+	_ = viewpermissionMixinFields2
+	viewpermissionMixinFields3 := viewpermissionMixin[3].Fields()
+	_ = viewpermissionMixinFields3
+	viewpermissionFields := schema.ViewPermission{}.Fields()
+	_ = viewpermissionFields
+	// viewpermissionDescCreateAuthor is the schema descriptor for create_author field.
+	viewpermissionDescCreateAuthor := viewpermissionMixinFields1[0].Descriptor()
+	// viewpermission.DefaultCreateAuthor holds the default value on creation for the create_author field.
+	viewpermission.DefaultCreateAuthor = viewpermissionDescCreateAuthor.Default.(int64)
+	// viewpermissionDescUpdateAuthor is the schema descriptor for update_author field.
+	viewpermissionDescUpdateAuthor := viewpermissionMixinFields1[1].Descriptor()
+	// viewpermission.DefaultUpdateAuthor holds the default value on creation for the update_author field.
+	viewpermission.DefaultUpdateAuthor = viewpermissionDescUpdateAuthor.Default.(int64)
+	// viewpermissionDescCreateTime is the schema descriptor for create_time field.
+	viewpermissionDescCreateTime := viewpermissionMixinFields2[0].Descriptor()
+	// viewpermission.DefaultCreateTime holds the default value on creation for the create_time field.
+	viewpermission.DefaultCreateTime = viewpermissionDescCreateTime.Default.(func() time.Time)
+	// viewpermissionDescUpdateTime is the schema descriptor for update_time field.
+	viewpermissionDescUpdateTime := viewpermissionMixinFields3[0].Descriptor()
+	// viewpermission.DefaultUpdateTime holds the default value on creation for the update_time field.
+	viewpermission.DefaultUpdateTime = viewpermissionDescUpdateTime.Default.(func() time.Time)
+	// viewpermission.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	viewpermission.UpdateDefaultUpdateTime = viewpermissionDescUpdateTime.UpdateDefault.(func() time.Time)
+	// viewpermissionDescViewID is the schema descriptor for view_id field.
+	viewpermissionDescViewID := viewpermissionFields[0].Descriptor()
+	// viewpermission.ViewIDValidator is a validator for the "view_id" field. It is called by the builders before save.
+	viewpermission.ViewIDValidator = viewpermissionDescViewID.Validators[0].(func(int64) error)
+	// viewpermissionDescPermissionID is the schema descriptor for permission_id field.
+	viewpermissionDescPermissionID := viewpermissionFields[1].Descriptor()
+	// viewpermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
+	viewpermission.PermissionIDValidator = viewpermissionDescPermissionID.Validators[0].(func(int64) error)
+	// viewpermissionDescID is the schema descriptor for id field.
+	viewpermissionDescID := viewpermissionMixinFields0[0].Descriptor()
+	// viewpermission.DefaultID holds the default value on creation for the id field.
+	viewpermission.DefaultID = viewpermissionDescID.Default.(func() int64)
+	// viewpermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	viewpermission.IDValidator = viewpermissionDescID.Validators[0].(func(int64) error)
+	viewresourceMixin := schema.ViewResource{}.Mixin()
+	viewresourceMixinFields0 := viewresourceMixin[0].Fields()
+	_ = viewresourceMixinFields0
+	viewresourceMixinFields1 := viewresourceMixin[1].Fields()
+	_ = viewresourceMixinFields1
+	viewresourceMixinFields2 := viewresourceMixin[2].Fields()
+	_ = viewresourceMixinFields2
+	viewresourceMixinFields3 := viewresourceMixin[3].Fields()
+	_ = viewresourceMixinFields3
+	viewresourceFields := schema.ViewResource{}.Fields()
+	_ = viewresourceFields
+	// viewresourceDescCreateAuthor is the schema descriptor for create_author field.
+	viewresourceDescCreateAuthor := viewresourceMixinFields1[0].Descriptor()
+	// viewresource.DefaultCreateAuthor holds the default value on creation for the create_author field.
+	viewresource.DefaultCreateAuthor = viewresourceDescCreateAuthor.Default.(int64)
+	// viewresourceDescUpdateAuthor is the schema descriptor for update_author field.
+	viewresourceDescUpdateAuthor := viewresourceMixinFields1[1].Descriptor()
+	// viewresource.DefaultUpdateAuthor holds the default value on creation for the update_author field.
+	viewresource.DefaultUpdateAuthor = viewresourceDescUpdateAuthor.Default.(int64)
+	// viewresourceDescCreateTime is the schema descriptor for create_time field.
+	viewresourceDescCreateTime := viewresourceMixinFields2[0].Descriptor()
+	// viewresource.DefaultCreateTime holds the default value on creation for the create_time field.
+	viewresource.DefaultCreateTime = viewresourceDescCreateTime.Default.(func() time.Time)
+	// viewresourceDescUpdateTime is the schema descriptor for update_time field.
+	viewresourceDescUpdateTime := viewresourceMixinFields3[0].Descriptor()
+	// viewresource.DefaultUpdateTime holds the default value on creation for the update_time field.
+	viewresource.DefaultUpdateTime = viewresourceDescUpdateTime.Default.(func() time.Time)
+	// viewresource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	viewresource.UpdateDefaultUpdateTime = viewresourceDescUpdateTime.UpdateDefault.(func() time.Time)
+	// viewresourceDescViewID is the schema descriptor for view_id field.
+	viewresourceDescViewID := viewresourceFields[0].Descriptor()
+	// viewresource.ViewIDValidator is a validator for the "view_id" field. It is called by the builders before save.
+	viewresource.ViewIDValidator = viewresourceDescViewID.Validators[0].(func(int64) error)
+	// viewresourceDescResourceID is the schema descriptor for resource_id field.
+	viewresourceDescResourceID := viewresourceFields[1].Descriptor()
+	// viewresource.ResourceIDValidator is a validator for the "resource_id" field. It is called by the builders before save.
+	viewresource.ResourceIDValidator = viewresourceDescResourceID.Validators[0].(func(int64) error)
+	// viewresourceDescID is the schema descriptor for id field.
+	viewresourceDescID := viewresourceMixinFields0[0].Descriptor()
+	// viewresource.DefaultID holds the default value on creation for the id field.
+	viewresource.DefaultID = viewresourceDescID.Default.(func() int64)
+	// viewresource.IDValidator is a validator for the "id" field. It is called by the builders before save.
+	viewresource.IDValidator = viewresourceDescID.Validators[0].(func(int64) error)
 }
 
 const (
