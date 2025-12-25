@@ -1835,7 +1835,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	return _node, nil
 }
 
-// SetPermission set the Permission
+// SetPermission set the Permission. This method includes zero values in the update.
 func (pu *PermissionUpdate) SetPermission(input *Permission, fields ...string) *PermissionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
@@ -1845,17 +1845,17 @@ func (pu *PermissionUpdate) SetPermission(input *Permission, fields ...string) *
 	return pu
 }
 
-// SetPermissionWithZero set the Permission
-func (pu *PermissionUpdate) SetPermissionWithZero(input *Permission, fields ...string) *PermissionUpdate {
+// SetPermissionSkipZero set the Permission, skipping zero values.
+func (pu *PermissionUpdate) SetPermissionSkipZero(input *Permission, fields ...string) *PermissionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
-		fields = permission.Columns
+		fields = permission.OmitColumns(permission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return pu
 }
 
-// SetPermission set the Permission
+// SetPermission set the Permission. This method includes zero values in the update.
 func (puo *PermissionUpdateOne) SetPermission(input *Permission, fields ...string) *PermissionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
@@ -1865,13 +1865,13 @@ func (puo *PermissionUpdateOne) SetPermission(input *Permission, fields ...strin
 	return puo
 }
 
-// SetPermissionWithZero set the Permission
-func (puo *PermissionUpdateOne) SetPermissionWithZero(input *Permission, fields ...string) *PermissionUpdateOne {
+// SetPermissionSkipZero set the Permission, skipping zero values.
+func (puo *PermissionUpdateOne) SetPermissionSkipZero(input *Permission, fields ...string) *PermissionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
-		fields = permission.Columns
+		fields = permission.OmitColumns(permission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return puo
 }
 

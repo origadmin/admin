@@ -6,6 +6,10 @@
 // focusing on abstracting common query patterns like pagination.
 package repo
 
+import (
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
+)
+
 const (
 	// DefaultPageSize is the page size used when the client does not specify one.
 	DefaultPageSize = 10
@@ -52,6 +56,7 @@ type QueryOption struct {
 	OnlyCount bool
 	Keyword   string
 	OrderBy   []string
+	ReadMask  *fieldmaskpb.FieldMask // Use FieldMask for field selection
 }
 
 // OptionFromRequest creates a QueryOption with common details
@@ -79,6 +84,13 @@ func OptionFromRequest(req interface{}) QueryOption {
 	if r, ok := req.(KeywordRequest); ok {
 		opt.Keyword = r.GetKeyword()
 	}
+
+	// This is a generic helper. The ReadMask should be populated from the specific
+	// request type in the service layer, as the field name (`read_mask`) can vary.
+	// Example in service layer:
+	// if r, ok := req.(interface{ GetReadMask() *fieldmaskpb.FieldMask }); ok {
+	// 	opt.ReadMask = r.GetReadMask()
+	// }
 
 	return opt
 }

@@ -456,7 +456,7 @@ func (_u *PermissionResourceUpdateOne) sqlSave(ctx context.Context) (_node *Perm
 	return _node, nil
 }
 
-// SetPermissionResource set the PermissionResource
+// SetPermissionResource set the PermissionResource. This method includes zero values in the update.
 func (pru *PermissionResourceUpdate) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceUpdate {
 	m := pru.mutation
 	if len(fields) == 0 {
@@ -466,17 +466,17 @@ func (pru *PermissionResourceUpdate) SetPermissionResource(input *PermissionReso
 	return pru
 }
 
-// SetPermissionResourceWithZero set the PermissionResource
-func (pru *PermissionResourceUpdate) SetPermissionResourceWithZero(input *PermissionResource, fields ...string) *PermissionResourceUpdate {
+// SetPermissionResourceSkipZero set the PermissionResource, skipping zero values.
+func (pru *PermissionResourceUpdate) SetPermissionResourceSkipZero(input *PermissionResource, fields ...string) *PermissionResourceUpdate {
 	m := pru.mutation
 	if len(fields) == 0 {
-		fields = permissionresource.Columns
+		fields = permissionresource.OmitColumns(permissionresource.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return pru
 }
 
-// SetPermissionResource set the PermissionResource
+// SetPermissionResource set the PermissionResource. This method includes zero values in the update.
 func (pruo *PermissionResourceUpdateOne) SetPermissionResource(input *PermissionResource, fields ...string) *PermissionResourceUpdateOne {
 	m := pruo.mutation
 	if len(fields) == 0 {
@@ -486,13 +486,13 @@ func (pruo *PermissionResourceUpdateOne) SetPermissionResource(input *Permission
 	return pruo
 }
 
-// SetPermissionResourceWithZero set the PermissionResource
-func (pruo *PermissionResourceUpdateOne) SetPermissionResourceWithZero(input *PermissionResource, fields ...string) *PermissionResourceUpdateOne {
+// SetPermissionResourceSkipZero set the PermissionResource, skipping zero values.
+func (pruo *PermissionResourceUpdateOne) SetPermissionResourceSkipZero(input *PermissionResource, fields ...string) *PermissionResourceUpdateOne {
 	m := pruo.mutation
 	if len(fields) == 0 {
-		fields = permissionresource.Columns
+		fields = permissionresource.OmitColumns(permissionresource.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return pruo
 }
 

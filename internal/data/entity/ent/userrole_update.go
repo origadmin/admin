@@ -456,7 +456,7 @@ func (_u *UserRoleUpdateOne) sqlSave(ctx context.Context) (_node *UserRole, err 
 	return _node, nil
 }
 
-// SetUserRole set the UserRole
+// SetUserRole set the UserRole. This method includes zero values in the update.
 func (uru *UserRoleUpdate) SetUserRole(input *UserRole, fields ...string) *UserRoleUpdate {
 	m := uru.mutation
 	if len(fields) == 0 {
@@ -466,17 +466,17 @@ func (uru *UserRoleUpdate) SetUserRole(input *UserRole, fields ...string) *UserR
 	return uru
 }
 
-// SetUserRoleWithZero set the UserRole
-func (uru *UserRoleUpdate) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleUpdate {
+// SetUserRoleSkipZero set the UserRole, skipping zero values.
+func (uru *UserRoleUpdate) SetUserRoleSkipZero(input *UserRole, fields ...string) *UserRoleUpdate {
 	m := uru.mutation
 	if len(fields) == 0 {
-		fields = userrole.Columns
+		fields = userrole.OmitColumns(userrole.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return uru
 }
 
-// SetUserRole set the UserRole
+// SetUserRole set the UserRole. This method includes zero values in the update.
 func (uruo *UserRoleUpdateOne) SetUserRole(input *UserRole, fields ...string) *UserRoleUpdateOne {
 	m := uruo.mutation
 	if len(fields) == 0 {
@@ -486,13 +486,13 @@ func (uruo *UserRoleUpdateOne) SetUserRole(input *UserRole, fields ...string) *U
 	return uruo
 }
 
-// SetUserRoleWithZero set the UserRole
-func (uruo *UserRoleUpdateOne) SetUserRoleWithZero(input *UserRole, fields ...string) *UserRoleUpdateOne {
+// SetUserRoleSkipZero set the UserRole, skipping zero values.
+func (uruo *UserRoleUpdateOne) SetUserRoleSkipZero(input *UserRole, fields ...string) *UserRoleUpdateOne {
 	m := uruo.mutation
 	if len(fields) == 0 {
-		fields = userrole.Columns
+		fields = userrole.OmitColumns(userrole.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return uruo
 }
 

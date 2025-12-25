@@ -2404,7 +2404,7 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	return _node, nil
 }
 
-// SetUser set the User
+// SetUser set the User. This method includes zero values in the update.
 func (uu *UserUpdate) SetUser(input *User, fields ...string) *UserUpdate {
 	m := uu.mutation
 	if len(fields) == 0 {
@@ -2414,17 +2414,17 @@ func (uu *UserUpdate) SetUser(input *User, fields ...string) *UserUpdate {
 	return uu
 }
 
-// SetUserWithZero set the User
-func (uu *UserUpdate) SetUserWithZero(input *User, fields ...string) *UserUpdate {
+// SetUserSkipZero set the User, skipping zero values.
+func (uu *UserUpdate) SetUserSkipZero(input *User, fields ...string) *UserUpdate {
 	m := uu.mutation
 	if len(fields) == 0 {
-		fields = user.Columns
+		fields = user.OmitColumns(user.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return uu
 }
 
-// SetUser set the User
+// SetUser set the User. This method includes zero values in the update.
 func (uuo *UserUpdateOne) SetUser(input *User, fields ...string) *UserUpdateOne {
 	m := uuo.mutation
 	if len(fields) == 0 {
@@ -2434,13 +2434,13 @@ func (uuo *UserUpdateOne) SetUser(input *User, fields ...string) *UserUpdateOne 
 	return uuo
 }
 
-// SetUserWithZero set the User
-func (uuo *UserUpdateOne) SetUserWithZero(input *User, fields ...string) *UserUpdateOne {
+// SetUserSkipZero set the User, skipping zero values.
+func (uuo *UserUpdateOne) SetUserSkipZero(input *User, fields ...string) *UserUpdateOne {
 	m := uuo.mutation
 	if len(fields) == 0 {
-		fields = user.Columns
+		fields = user.OmitColumns(user.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return uuo
 }
 

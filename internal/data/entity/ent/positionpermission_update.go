@@ -456,7 +456,7 @@ func (_u *PositionPermissionUpdateOne) sqlSave(ctx context.Context) (_node *Posi
 	return _node, nil
 }
 
-// SetPositionPermission set the PositionPermission
+// SetPositionPermission set the PositionPermission. This method includes zero values in the update.
 func (ppu *PositionPermissionUpdate) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionUpdate {
 	m := ppu.mutation
 	if len(fields) == 0 {
@@ -466,17 +466,17 @@ func (ppu *PositionPermissionUpdate) SetPositionPermission(input *PositionPermis
 	return ppu
 }
 
-// SetPositionPermissionWithZero set the PositionPermission
-func (ppu *PositionPermissionUpdate) SetPositionPermissionWithZero(input *PositionPermission, fields ...string) *PositionPermissionUpdate {
+// SetPositionPermissionSkipZero set the PositionPermission, skipping zero values.
+func (ppu *PositionPermissionUpdate) SetPositionPermissionSkipZero(input *PositionPermission, fields ...string) *PositionPermissionUpdate {
 	m := ppu.mutation
 	if len(fields) == 0 {
-		fields = positionpermission.Columns
+		fields = positionpermission.OmitColumns(positionpermission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return ppu
 }
 
-// SetPositionPermission set the PositionPermission
+// SetPositionPermission set the PositionPermission. This method includes zero values in the update.
 func (ppuo *PositionPermissionUpdateOne) SetPositionPermission(input *PositionPermission, fields ...string) *PositionPermissionUpdateOne {
 	m := ppuo.mutation
 	if len(fields) == 0 {
@@ -486,13 +486,13 @@ func (ppuo *PositionPermissionUpdateOne) SetPositionPermission(input *PositionPe
 	return ppuo
 }
 
-// SetPositionPermissionWithZero set the PositionPermission
-func (ppuo *PositionPermissionUpdateOne) SetPositionPermissionWithZero(input *PositionPermission, fields ...string) *PositionPermissionUpdateOne {
+// SetPositionPermissionSkipZero set the PositionPermission, skipping zero values.
+func (ppuo *PositionPermissionUpdateOne) SetPositionPermissionSkipZero(input *PositionPermission, fields ...string) *PositionPermissionUpdateOne {
 	m := ppuo.mutation
 	if len(fields) == 0 {
-		fields = positionpermission.Columns
+		fields = positionpermission.OmitColumns(positionpermission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return ppuo
 }
 

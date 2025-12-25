@@ -9,9 +9,7 @@
     {{ $deps := list }}{{ with $.Config.Annotations }}{{ $deps = $.Config.Annotations.Dependencies }}{{ end }}
 
 		import (
-		"log"
-
-		"entgo.io/ent/dialect"
+		"fmt"
 
     {{- range $n := $.Nodes }}
         {{ $n.PackageAlias }} "{{ $n.Config.Package }}/{{ $n.PackageDir }}"
@@ -19,7 +17,6 @@
     {{- range $dep := $deps }}
         {{ $dep.Type.PkgName }} "{{ $dep.Type.PkgPath }}"
     {{- end }}
-		"{{ $.Config.Package }}/migrate"
     {{- range $import := $.Storage.Imports }}
 			"{{ $import }}"
     {{- end -}}
@@ -32,10 +29,39 @@
             {{ $fields = append $fields .ID }}
         {{- end }}
         {{ $mutation := $n.MutationName }}
+
 				// SetFields sets the values of the fields with the given names. It returns an
 				// error if the field is not defined in the schema, or if the type mismatched the
-				// field type.
+				// field type. This method includes zero values in the update.
 				func (m *{{ $mutation }}) SetFields(input *{{ .Name }}, fields ...string) error {
+				for i := range fields {
+				switch fields[i] {
+        {{- range $f := $fields }}
+            {{- $const := print $n.Package "." $f.Constant }}
+            {{- $setter := print "Set" $f.StructField }}
+            {{- $clear := print "Reset" $f.StructField }}
+						case {{ $const }}:
+            {{- if $f.Nillable}}
+							if input.{{ $f.StructField }}!= nil {
+							m.{{ $setter }}(*input.{{ $f.StructField }})
+							}else{
+							m.{{ $clear }}()
+							}
+            {{- else}}
+							m.{{ $setter }}(input.{{ $f.StructField }})
+            {{- end}}
+        {{- end }}
+				default:
+				return fmt.Errorf("unknown {{ .Name }} field %s", fields[i])
+				}
+				}
+				return nil
+				}
+
+				// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+				// It returns an error if the field is not defined in the schema, or if the type mismatched the
+				// field type.
+				func (m *{{ $mutation }}) SetFieldsSkipZero(input *{{ .Name }}, fields ...string) error {
 				for i := range fields {
 				switch fields[i] {
         {{- range $f := $fields }}
@@ -85,35 +111,6 @@
 				}
 				return nil
 				}
-
-				// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-				// error if the field is not defined in the schema, or if the type mismatched the
-				// field type.
-				func (m *{{ $mutation }}) SetFieldsWithZero(input *{{ .Name }}, fields ...string) error {
-				for i := range fields {
-				switch fields[i] {
-        {{- range $f := $fields }}
-            {{- $const := print $n.Package "." $f.Constant }}
-            {{- $setter := print "Set" $f.StructField }}
-            {{- $clear := print "Reset" $f.StructField }}
-						case {{ $const }}:
-            {{- if $f.Nillable}}
-							if input.{{ $f.StructField }}!= nil {
-							m.{{ $setter }}(*input.{{ $f.StructField }})
-							}else{
-							m.{{ $clear }}()
-							}
-            {{- else}}
-							m.{{ $setter }}(input.{{ $f.StructField }})
-            {{- end}}
-        {{- end }}
-				default:
-				return fmt.Errorf("unknown {{ .Name }} field %s", fields[i])
-				}
-				}
-				return nil
-				}
     {{- end }}
 
 {{ end }}
-

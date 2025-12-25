@@ -5,24 +5,25 @@
     {{ $builder := $.UpdateOneName }}
     {{- if hasSuffix $builder "UpdateOne" }}
         {{ $receiver := receiver $builder }}
-        {{ print "// Set" .Name " set the " .Name }}
+        {{ $const := print .Package}}
+
+        {{ print "// Set" .Name " set the " .Name ". This method includes zero values in the update." }}
 				func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}(input *{{ .Name }}, fields ...string) *{{ $builder }} {
-        {{- $const := print .Package}}
 				m := {{ $receiver }}.mutation
 				if len(fields) == 0 {
-				fields =  {{$const}}.OmitColumns({{$const}}.FieldID)
+				    fields =  {{$const}}.OmitColumns({{$const}}.FieldID)
 				}
 				_ = m.SetFields(input, fields...)
 				return {{ $receiver }}
 				}
 
-        {{ print "// Set" .Name "WithZero set the " .Name }}
-				func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}WithZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
+        {{ print "// Set" .Name "SkipZero set the " .Name ", skipping zero values." }}
+				func ({{ $receiver }} *{{ $builder }}) Set{{ .Name }}SkipZero(input *{{ .Name }}, fields ...string) *{{ $builder }} {
 				m := {{ $receiver }}.mutation
 				if len(fields) == 0 {
-				fields = {{ $const }}.Columns
+				    fields =  {{$const}}.OmitColumns({{$const}}.FieldID)
 				}
-				_ = m.SetFieldsWithZero(input, fields...)
+				_ = m.SetFieldsSkipZero(input, fields...)
 				return {{ $receiver }}
 				}
 

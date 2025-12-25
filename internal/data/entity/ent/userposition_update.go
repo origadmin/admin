@@ -456,7 +456,7 @@ func (_u *UserPositionUpdateOne) sqlSave(ctx context.Context) (_node *UserPositi
 	return _node, nil
 }
 
-// SetUserPosition set the UserPosition
+// SetUserPosition set the UserPosition. This method includes zero values in the update.
 func (upu *UserPositionUpdate) SetUserPosition(input *UserPosition, fields ...string) *UserPositionUpdate {
 	m := upu.mutation
 	if len(fields) == 0 {
@@ -466,17 +466,17 @@ func (upu *UserPositionUpdate) SetUserPosition(input *UserPosition, fields ...st
 	return upu
 }
 
-// SetUserPositionWithZero set the UserPosition
-func (upu *UserPositionUpdate) SetUserPositionWithZero(input *UserPosition, fields ...string) *UserPositionUpdate {
+// SetUserPositionSkipZero set the UserPosition, skipping zero values.
+func (upu *UserPositionUpdate) SetUserPositionSkipZero(input *UserPosition, fields ...string) *UserPositionUpdate {
 	m := upu.mutation
 	if len(fields) == 0 {
-		fields = userposition.Columns
+		fields = userposition.OmitColumns(userposition.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return upu
 }
 
-// SetUserPosition set the UserPosition
+// SetUserPosition set the UserPosition. This method includes zero values in the update.
 func (upuo *UserPositionUpdateOne) SetUserPosition(input *UserPosition, fields ...string) *UserPositionUpdateOne {
 	m := upuo.mutation
 	if len(fields) == 0 {
@@ -486,13 +486,13 @@ func (upuo *UserPositionUpdateOne) SetUserPosition(input *UserPosition, fields .
 	return upuo
 }
 
-// SetUserPositionWithZero set the UserPosition
-func (upuo *UserPositionUpdateOne) SetUserPositionWithZero(input *UserPosition, fields ...string) *UserPositionUpdateOne {
+// SetUserPositionSkipZero set the UserPosition, skipping zero values.
+func (upuo *UserPositionUpdateOne) SetUserPositionSkipZero(input *UserPosition, fields ...string) *UserPositionUpdateOne {
 	m := upuo.mutation
 	if len(fields) == 0 {
-		fields = userposition.Columns
+		fields = userposition.OmitColumns(userposition.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return upuo
 }
 

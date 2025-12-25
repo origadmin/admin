@@ -1671,7 +1671,7 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	return _node, nil
 }
 
-// SetView set the View
+// SetView set the View. This method includes zero values in the update.
 func (vu *ViewUpdate) SetView(input *View, fields ...string) *ViewUpdate {
 	m := vu.mutation
 	if len(fields) == 0 {
@@ -1681,17 +1681,17 @@ func (vu *ViewUpdate) SetView(input *View, fields ...string) *ViewUpdate {
 	return vu
 }
 
-// SetViewWithZero set the View
-func (vu *ViewUpdate) SetViewWithZero(input *View, fields ...string) *ViewUpdate {
+// SetViewSkipZero set the View, skipping zero values.
+func (vu *ViewUpdate) SetViewSkipZero(input *View, fields ...string) *ViewUpdate {
 	m := vu.mutation
 	if len(fields) == 0 {
-		fields = view.Columns
+		fields = view.OmitColumns(view.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return vu
 }
 
-// SetView set the View
+// SetView set the View. This method includes zero values in the update.
 func (vuo *ViewUpdateOne) SetView(input *View, fields ...string) *ViewUpdateOne {
 	m := vuo.mutation
 	if len(fields) == 0 {
@@ -1701,13 +1701,13 @@ func (vuo *ViewUpdateOne) SetView(input *View, fields ...string) *ViewUpdateOne 
 	return vuo
 }
 
-// SetViewWithZero set the View
-func (vuo *ViewUpdateOne) SetViewWithZero(input *View, fields ...string) *ViewUpdateOne {
+// SetViewSkipZero set the View, skipping zero values.
+func (vuo *ViewUpdateOne) SetViewSkipZero(input *View, fields ...string) *ViewUpdateOne {
 	m := vuo.mutation
 	if len(fields) == 0 {
-		fields = view.Columns
+		fields = view.OmitColumns(view.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return vuo
 }
 

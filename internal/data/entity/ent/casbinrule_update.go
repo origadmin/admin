@@ -428,7 +428,7 @@ func (_u *CasbinRuleUpdateOne) sqlSave(ctx context.Context) (_node *CasbinRule, 
 	return _node, nil
 }
 
-// SetCasbinRule set the CasbinRule
+// SetCasbinRule set the CasbinRule. This method includes zero values in the update.
 func (cru *CasbinRuleUpdate) SetCasbinRule(input *CasbinRule, fields ...string) *CasbinRuleUpdate {
 	m := cru.mutation
 	if len(fields) == 0 {
@@ -438,17 +438,17 @@ func (cru *CasbinRuleUpdate) SetCasbinRule(input *CasbinRule, fields ...string) 
 	return cru
 }
 
-// SetCasbinRuleWithZero set the CasbinRule
-func (cru *CasbinRuleUpdate) SetCasbinRuleWithZero(input *CasbinRule, fields ...string) *CasbinRuleUpdate {
+// SetCasbinRuleSkipZero set the CasbinRule, skipping zero values.
+func (cru *CasbinRuleUpdate) SetCasbinRuleSkipZero(input *CasbinRule, fields ...string) *CasbinRuleUpdate {
 	m := cru.mutation
 	if len(fields) == 0 {
-		fields = casbinrule.Columns
+		fields = casbinrule.OmitColumns(casbinrule.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return cru
 }
 
-// SetCasbinRule set the CasbinRule
+// SetCasbinRule set the CasbinRule. This method includes zero values in the update.
 func (cruo *CasbinRuleUpdateOne) SetCasbinRule(input *CasbinRule, fields ...string) *CasbinRuleUpdateOne {
 	m := cruo.mutation
 	if len(fields) == 0 {
@@ -458,13 +458,13 @@ func (cruo *CasbinRuleUpdateOne) SetCasbinRule(input *CasbinRule, fields ...stri
 	return cruo
 }
 
-// SetCasbinRuleWithZero set the CasbinRule
-func (cruo *CasbinRuleUpdateOne) SetCasbinRuleWithZero(input *CasbinRule, fields ...string) *CasbinRuleUpdateOne {
+// SetCasbinRuleSkipZero set the CasbinRule, skipping zero values.
+func (cruo *CasbinRuleUpdateOne) SetCasbinRuleSkipZero(input *CasbinRule, fields ...string) *CasbinRuleUpdateOne {
 	m := cruo.mutation
 	if len(fields) == 0 {
-		fields = casbinrule.Columns
+		fields = casbinrule.OmitColumns(casbinrule.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return cruo
 }
 

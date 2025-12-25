@@ -1152,7 +1152,7 @@ func (_u *PositionUpdateOne) sqlSave(ctx context.Context) (_node *Position, err 
 	return _node, nil
 }
 
-// SetPosition set the Position
+// SetPosition set the Position. This method includes zero values in the update.
 func (pu *PositionUpdate) SetPosition(input *Position, fields ...string) *PositionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
@@ -1162,17 +1162,17 @@ func (pu *PositionUpdate) SetPosition(input *Position, fields ...string) *Positi
 	return pu
 }
 
-// SetPositionWithZero set the Position
-func (pu *PositionUpdate) SetPositionWithZero(input *Position, fields ...string) *PositionUpdate {
+// SetPositionSkipZero set the Position, skipping zero values.
+func (pu *PositionUpdate) SetPositionSkipZero(input *Position, fields ...string) *PositionUpdate {
 	m := pu.mutation
 	if len(fields) == 0 {
-		fields = position.Columns
+		fields = position.OmitColumns(position.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return pu
 }
 
-// SetPosition set the Position
+// SetPosition set the Position. This method includes zero values in the update.
 func (puo *PositionUpdateOne) SetPosition(input *Position, fields ...string) *PositionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
@@ -1182,13 +1182,13 @@ func (puo *PositionUpdateOne) SetPosition(input *Position, fields ...string) *Po
 	return puo
 }
 
-// SetPositionWithZero set the Position
-func (puo *PositionUpdateOne) SetPositionWithZero(input *Position, fields ...string) *PositionUpdateOne {
+// SetPositionSkipZero set the Position, skipping zero values.
+func (puo *PositionUpdateOne) SetPositionSkipZero(input *Position, fields ...string) *PositionUpdateOne {
 	m := puo.mutation
 	if len(fields) == 0 {
-		fields = position.Columns
+		fields = position.OmitColumns(position.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return puo
 }
 

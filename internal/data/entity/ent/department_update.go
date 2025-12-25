@@ -1362,7 +1362,7 @@ func (_u *DepartmentUpdateOne) sqlSave(ctx context.Context) (_node *Department, 
 	return _node, nil
 }
 
-// SetDepartment set the Department
+// SetDepartment set the Department. This method includes zero values in the update.
 func (du *DepartmentUpdate) SetDepartment(input *Department, fields ...string) *DepartmentUpdate {
 	m := du.mutation
 	if len(fields) == 0 {
@@ -1372,17 +1372,17 @@ func (du *DepartmentUpdate) SetDepartment(input *Department, fields ...string) *
 	return du
 }
 
-// SetDepartmentWithZero set the Department
-func (du *DepartmentUpdate) SetDepartmentWithZero(input *Department, fields ...string) *DepartmentUpdate {
+// SetDepartmentSkipZero set the Department, skipping zero values.
+func (du *DepartmentUpdate) SetDepartmentSkipZero(input *Department, fields ...string) *DepartmentUpdate {
 	m := du.mutation
 	if len(fields) == 0 {
-		fields = department.Columns
+		fields = department.OmitColumns(department.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return du
 }
 
-// SetDepartment set the Department
+// SetDepartment set the Department. This method includes zero values in the update.
 func (duo *DepartmentUpdateOne) SetDepartment(input *Department, fields ...string) *DepartmentUpdateOne {
 	m := duo.mutation
 	if len(fields) == 0 {
@@ -1392,13 +1392,13 @@ func (duo *DepartmentUpdateOne) SetDepartment(input *Department, fields ...strin
 	return duo
 }
 
-// SetDepartmentWithZero set the Department
-func (duo *DepartmentUpdateOne) SetDepartmentWithZero(input *Department, fields ...string) *DepartmentUpdateOne {
+// SetDepartmentSkipZero set the Department, skipping zero values.
+func (duo *DepartmentUpdateOne) SetDepartmentSkipZero(input *Department, fields ...string) *DepartmentUpdateOne {
 	m := duo.mutation
 	if len(fields) == 0 {
-		fields = department.Columns
+		fields = department.OmitColumns(department.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return duo
 }
 

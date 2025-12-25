@@ -637,7 +637,7 @@ func (_u *ViewPermissionUpdateOne) sqlSave(ctx context.Context) (_node *ViewPerm
 	return _node, nil
 }
 
-// SetViewPermission set the ViewPermission
+// SetViewPermission set the ViewPermission. This method includes zero values in the update.
 func (vpu *ViewPermissionUpdate) SetViewPermission(input *ViewPermission, fields ...string) *ViewPermissionUpdate {
 	m := vpu.mutation
 	if len(fields) == 0 {
@@ -647,17 +647,17 @@ func (vpu *ViewPermissionUpdate) SetViewPermission(input *ViewPermission, fields
 	return vpu
 }
 
-// SetViewPermissionWithZero set the ViewPermission
-func (vpu *ViewPermissionUpdate) SetViewPermissionWithZero(input *ViewPermission, fields ...string) *ViewPermissionUpdate {
+// SetViewPermissionSkipZero set the ViewPermission, skipping zero values.
+func (vpu *ViewPermissionUpdate) SetViewPermissionSkipZero(input *ViewPermission, fields ...string) *ViewPermissionUpdate {
 	m := vpu.mutation
 	if len(fields) == 0 {
-		fields = viewpermission.Columns
+		fields = viewpermission.OmitColumns(viewpermission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return vpu
 }
 
-// SetViewPermission set the ViewPermission
+// SetViewPermission set the ViewPermission. This method includes zero values in the update.
 func (vpuo *ViewPermissionUpdateOne) SetViewPermission(input *ViewPermission, fields ...string) *ViewPermissionUpdateOne {
 	m := vpuo.mutation
 	if len(fields) == 0 {
@@ -667,13 +667,13 @@ func (vpuo *ViewPermissionUpdateOne) SetViewPermission(input *ViewPermission, fi
 	return vpuo
 }
 
-// SetViewPermissionWithZero set the ViewPermission
-func (vpuo *ViewPermissionUpdateOne) SetViewPermissionWithZero(input *ViewPermission, fields ...string) *ViewPermissionUpdateOne {
+// SetViewPermissionSkipZero set the ViewPermission, skipping zero values.
+func (vpuo *ViewPermissionUpdateOne) SetViewPermissionSkipZero(input *ViewPermission, fields ...string) *ViewPermissionUpdateOne {
 	m := vpuo.mutation
 	if len(fields) == 0 {
-		fields = viewpermission.Columns
+		fields = viewpermission.OmitColumns(viewpermission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return vpuo
 }
 

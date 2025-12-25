@@ -574,7 +574,7 @@ func (_u *NotificationUpdateOne) sqlSave(ctx context.Context) (_node *Notificati
 	return _node, nil
 }
 
-// SetNotification set the Notification
+// SetNotification set the Notification. This method includes zero values in the update.
 func (nu *NotificationUpdate) SetNotification(input *Notification, fields ...string) *NotificationUpdate {
 	m := nu.mutation
 	if len(fields) == 0 {
@@ -584,17 +584,17 @@ func (nu *NotificationUpdate) SetNotification(input *Notification, fields ...str
 	return nu
 }
 
-// SetNotificationWithZero set the Notification
-func (nu *NotificationUpdate) SetNotificationWithZero(input *Notification, fields ...string) *NotificationUpdate {
+// SetNotificationSkipZero set the Notification, skipping zero values.
+func (nu *NotificationUpdate) SetNotificationSkipZero(input *Notification, fields ...string) *NotificationUpdate {
 	m := nu.mutation
 	if len(fields) == 0 {
-		fields = notification.Columns
+		fields = notification.OmitColumns(notification.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return nu
 }
 
-// SetNotification set the Notification
+// SetNotification set the Notification. This method includes zero values in the update.
 func (nuo *NotificationUpdateOne) SetNotification(input *Notification, fields ...string) *NotificationUpdateOne {
 	m := nuo.mutation
 	if len(fields) == 0 {
@@ -604,13 +604,13 @@ func (nuo *NotificationUpdateOne) SetNotification(input *Notification, fields ..
 	return nuo
 }
 
-// SetNotificationWithZero set the Notification
-func (nuo *NotificationUpdateOne) SetNotificationWithZero(input *Notification, fields ...string) *NotificationUpdateOne {
+// SetNotificationSkipZero set the Notification, skipping zero values.
+func (nuo *NotificationUpdateOne) SetNotificationSkipZero(input *Notification, fields ...string) *NotificationUpdateOne {
 	m := nuo.mutation
 	if len(fields) == 0 {
-		fields = notification.Columns
+		fields = notification.OmitColumns(notification.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return nuo
 }
 

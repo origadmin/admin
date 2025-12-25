@@ -25,8 +25,35 @@ import (
 
 // SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
+// field type. This method includes zero values in the update.
 func (m *CasbinRuleMutation) SetFields(input *CasbinRule, fields ...string) error {
+	for i := range fields {
+		switch fields[i] {
+		case casbinrule.FieldPtype:
+			m.SetPtype(input.Ptype)
+		case casbinrule.FieldV0:
+			m.SetV0(input.V0)
+		case casbinrule.FieldV1:
+			m.SetV1(input.V1)
+		case casbinrule.FieldV2:
+			m.SetV2(input.V2)
+		case casbinrule.FieldV3:
+			m.SetV3(input.V3)
+		case casbinrule.FieldV4:
+			m.SetV4(input.V4)
+		case casbinrule.FieldV5:
+			m.SetV5(input.V5)
+		default:
+			return fmt.Errorf("unknown CasbinRule field %s", fields[i])
+		}
+	}
+	return nil
+}
+
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
+// field type.
+func (m *CasbinRuleMutation) SetFieldsSkipZero(input *CasbinRule, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case casbinrule.FieldPtype:
@@ -71,37 +98,45 @@ func (m *CasbinRuleMutation) SetFields(input *CasbinRule, fields ...string) erro
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *CasbinRuleMutation) SetFieldsWithZero(input *CasbinRule, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *DepartmentMutation) SetFields(input *Department, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case casbinrule.FieldPtype:
-			m.SetPtype(input.Ptype)
-		case casbinrule.FieldV0:
-			m.SetV0(input.V0)
-		case casbinrule.FieldV1:
-			m.SetV1(input.V1)
-		case casbinrule.FieldV2:
-			m.SetV2(input.V2)
-		case casbinrule.FieldV3:
-			m.SetV3(input.V3)
-		case casbinrule.FieldV4:
-			m.SetV4(input.V4)
-		case casbinrule.FieldV5:
-			m.SetV5(input.V5)
+		case department.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case department.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case department.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case department.FieldName:
+			m.SetName(input.Name)
+		case department.FieldTreePath:
+			m.SetTreePath(input.TreePath)
+		case department.FieldSequence:
+			m.SetSequence(input.Sequence)
+		case department.FieldStatus:
+			m.SetStatus(input.Status)
+		case department.FieldLevel:
+			m.SetLevel(input.Level)
+		case department.FieldDescription:
+			m.SetDescription(input.Description)
+		case department.FieldParentID:
+			m.SetParentID(input.ParentID)
+		case department.FieldID:
+			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown CasbinRule field %s", fields[i])
+			return fmt.Errorf("unknown Department field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *DepartmentMutation) SetFields(input *Department, fields ...string) error {
+func (m *DepartmentMutation) SetFieldsSkipZero(input *Department, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case department.FieldCreateTime:
@@ -164,45 +199,41 @@ func (m *DepartmentMutation) SetFields(input *Department, fields ...string) erro
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *DepartmentMutation) SetFieldsWithZero(input *Department, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *NotificationMutation) SetFields(input *Notification, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case department.FieldCreateTime:
+		case notification.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case notification.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case notification.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
-		case department.FieldUpdateTime:
+		case notification.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case department.FieldKeyword:
-			m.SetKeyword(input.Keyword)
-		case department.FieldName:
-			m.SetName(input.Name)
-		case department.FieldTreePath:
-			m.SetTreePath(input.TreePath)
-		case department.FieldSequence:
-			m.SetSequence(input.Sequence)
-		case department.FieldStatus:
+		case notification.FieldSubject:
+			m.SetSubject(input.Subject)
+		case notification.FieldContent:
+			m.SetContent(input.Content)
+		case notification.FieldStatus:
 			m.SetStatus(input.Status)
-		case department.FieldLevel:
-			m.SetLevel(input.Level)
-		case department.FieldDescription:
-			m.SetDescription(input.Description)
-		case department.FieldParentID:
-			m.SetParentID(input.ParentID)
-		case department.FieldID:
+		case notification.FieldCategoryID:
+			m.SetCategoryID(input.CategoryID)
+		case notification.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Department field %s", fields[i])
+			return fmt.Errorf("unknown Notification field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *NotificationMutation) SetFields(input *Notification, fields ...string) error {
+func (m *NotificationMutation) SetFieldsSkipZero(input *Notification, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case notification.FieldCreateAuthor:
@@ -255,41 +286,41 @@ func (m *NotificationMutation) SetFields(input *Notification, fields ...string) 
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *NotificationMutation) SetFieldsWithZero(input *Notification, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *PermissionMutation) SetFields(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case notification.FieldCreateAuthor:
-			m.SetCreateAuthor(input.CreateAuthor)
-		case notification.FieldUpdateAuthor:
-			m.SetUpdateAuthor(input.UpdateAuthor)
-		case notification.FieldCreateTime:
+		case permission.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
-		case notification.FieldUpdateTime:
+		case permission.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case notification.FieldSubject:
-			m.SetSubject(input.Subject)
-		case notification.FieldContent:
-			m.SetContent(input.Content)
-		case notification.FieldStatus:
-			m.SetStatus(input.Status)
-		case notification.FieldCategoryID:
-			m.SetCategoryID(input.CategoryID)
-		case notification.FieldID:
+		case permission.FieldName:
+			m.SetName(input.Name)
+		case permission.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case permission.FieldDescription:
+			m.SetDescription(input.Description)
+		case permission.FieldDataScope:
+			m.SetDataScope(input.DataScope)
+		case permission.FieldDataRules:
+			m.SetDataRules(input.DataRules)
+		case permission.FieldActions:
+			m.SetActions(input.Actions)
+		case permission.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Notification field %s", fields[i])
+			return fmt.Errorf("unknown Permission field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *PermissionMutation) SetFields(input *Permission, fields ...string) error {
+func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case permission.FieldCreateTime:
@@ -342,41 +373,27 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *PermissionMutation) SetFieldsWithZero(input *Permission, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case permission.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case permission.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
-		case permission.FieldName:
-			m.SetName(input.Name)
-		case permission.FieldKeyword:
-			m.SetKeyword(input.Keyword)
-		case permission.FieldDescription:
-			m.SetDescription(input.Description)
-		case permission.FieldDataScope:
-			m.SetDataScope(input.DataScope)
-		case permission.FieldDataRules:
-			m.SetDataRules(input.DataRules)
-		case permission.FieldActions:
-			m.SetActions(input.Actions)
-		case permission.FieldID:
-			m.SetID(input.ID)
+		case permissionresource.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case permissionresource.FieldResourceID:
+			m.SetResourceID(input.ResourceID)
 		default:
-			return fmt.Errorf("unknown Permission field %s", fields[i])
+			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields ...string) error {
+func (m *PermissionResourceMutation) SetFieldsSkipZero(input *PermissionResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case permissionresource.FieldPermissionID:
@@ -396,27 +413,37 @@ func (m *PermissionResourceMutation) SetFields(input *PermissionResource, fields
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *PermissionResourceMutation) SetFieldsWithZero(input *PermissionResource, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case permissionresource.FieldPermissionID:
-			m.SetPermissionID(input.PermissionID)
-		case permissionresource.FieldResourceID:
-			m.SetResourceID(input.ResourceID)
+		case position.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case position.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case position.FieldName:
+			m.SetName(input.Name)
+		case position.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case position.FieldDescription:
+			m.SetDescription(input.Description)
+		case position.FieldDepartmentID:
+			m.SetDepartmentID(input.DepartmentID)
+		case position.FieldID:
+			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown PermissionResource field %s", fields[i])
+			return fmt.Errorf("unknown Position field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
+func (m *PositionMutation) SetFieldsSkipZero(input *Position, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case position.FieldCreateTime:
@@ -459,37 +486,27 @@ func (m *PositionMutation) SetFields(input *Position, fields ...string) error {
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *PositionMutation) SetFieldsWithZero(input *Position, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case position.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case position.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
-		case position.FieldName:
-			m.SetName(input.Name)
-		case position.FieldKeyword:
-			m.SetKeyword(input.Keyword)
-		case position.FieldDescription:
-			m.SetDescription(input.Description)
-		case position.FieldDepartmentID:
-			m.SetDepartmentID(input.DepartmentID)
-		case position.FieldID:
-			m.SetID(input.ID)
+		case positionpermission.FieldPositionID:
+			m.SetPositionID(input.PositionID)
+		case positionpermission.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
 		default:
-			return fmt.Errorf("unknown Position field %s", fields[i])
+			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields ...string) error {
+func (m *PositionPermissionMutation) SetFieldsSkipZero(input *PositionPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case positionpermission.FieldPositionID:
@@ -509,27 +526,49 @@ func (m *PositionPermissionMutation) SetFields(input *PositionPermission, fields
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *PositionPermissionMutation) SetFieldsWithZero(input *PositionPermission, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case positionpermission.FieldPositionID:
-			m.SetPositionID(input.PositionID)
-		case positionpermission.FieldPermissionID:
-			m.SetPermissionID(input.PermissionID)
+		case resource.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case resource.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case resource.FieldServiceName:
+			m.SetServiceName(input.ServiceName)
+		case resource.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case resource.FieldPath:
+			m.SetPath(input.Path)
+		case resource.FieldMethod:
+			m.SetMethod(input.Method)
+		case resource.FieldOperation:
+			m.SetOperation(input.Operation)
+		case resource.FieldPolicy:
+			m.SetPolicy(input.Policy)
+		case resource.FieldVersionID:
+			m.SetVersionID(input.VersionID)
+		case resource.FieldLastSyncVersionID:
+			m.SetLastSyncVersionID(input.LastSyncVersionID)
+		case resource.FieldSyncStatus:
+			m.SetSyncStatus(input.SyncStatus)
+		case resource.FieldStatus:
+			m.SetStatus(input.Status)
+		case resource.FieldID:
+			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown PositionPermission field %s", fields[i])
+			return fmt.Errorf("unknown Resource field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
+func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case resource.FieldCreateTime:
@@ -603,49 +642,41 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *ResourceMutation) SetFieldsWithZero(input *Resource, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case resource.FieldCreateTime:
+		case role.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
-		case resource.FieldUpdateTime:
+		case role.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case resource.FieldServiceName:
-			m.SetServiceName(input.ServiceName)
-		case resource.FieldKeyword:
+		case role.FieldKeyword:
 			m.SetKeyword(input.Keyword)
-		case resource.FieldPath:
-			m.SetPath(input.Path)
-		case resource.FieldMethod:
-			m.SetMethod(input.Method)
-		case resource.FieldOperation:
-			m.SetOperation(input.Operation)
-		case resource.FieldPolicy:
-			m.SetPolicy(input.Policy)
-		case resource.FieldVersionID:
-			m.SetVersionID(input.VersionID)
-		case resource.FieldLastSyncVersionID:
-			m.SetLastSyncVersionID(input.LastSyncVersionID)
-		case resource.FieldSyncStatus:
-			m.SetSyncStatus(input.SyncStatus)
-		case resource.FieldStatus:
+		case role.FieldName:
+			m.SetName(input.Name)
+		case role.FieldDescription:
+			m.SetDescription(input.Description)
+		case role.FieldType:
+			m.SetType(input.Type)
+		case role.FieldSequence:
+			m.SetSequence(input.Sequence)
+		case role.FieldStatus:
 			m.SetStatus(input.Status)
-		case resource.FieldID:
+		case role.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown Resource field %s", fields[i])
+			return fmt.Errorf("unknown Role field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
+func (m *RoleMutation) SetFieldsSkipZero(input *Role, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case role.FieldCreateTime:
@@ -698,41 +729,27 @@ func (m *RoleMutation) SetFields(input *Role, fields ...string) error {
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *RoleMutation) SetFieldsWithZero(input *Role, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case role.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case role.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
-		case role.FieldKeyword:
-			m.SetKeyword(input.Keyword)
-		case role.FieldName:
-			m.SetName(input.Name)
-		case role.FieldDescription:
-			m.SetDescription(input.Description)
-		case role.FieldType:
-			m.SetType(input.Type)
-		case role.FieldSequence:
-			m.SetSequence(input.Sequence)
-		case role.FieldStatus:
-			m.SetStatus(input.Status)
-		case role.FieldID:
-			m.SetID(input.ID)
+		case rolepermission.FieldRoleID:
+			m.SetRoleID(input.RoleID)
+		case rolepermission.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
 		default:
-			return fmt.Errorf("unknown Role field %s", fields[i])
+			return fmt.Errorf("unknown RolePermission field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...string) error {
+func (m *RolePermissionMutation) SetFieldsSkipZero(input *RolePermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case rolepermission.FieldRoleID:
@@ -752,27 +769,83 @@ func (m *RolePermissionMutation) SetFields(input *RolePermission, fields ...stri
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *RolePermissionMutation) SetFieldsWithZero(input *RolePermission, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *UserMutation) SetFields(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case rolepermission.FieldRoleID:
-			m.SetRoleID(input.RoleID)
-		case rolepermission.FieldPermissionID:
-			m.SetPermissionID(input.PermissionID)
+		case user.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case user.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case user.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case user.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case user.FieldDeleteTime:
+			if input.DeleteTime != nil {
+				m.SetDeleteTime(*input.DeleteTime)
+			} else {
+				m.ResetDeleteTime()
+			}
+		case user.FieldUUID:
+			m.SetUUID(input.UUID)
+		case user.FieldAllowedIP:
+			m.SetAllowedIP(input.AllowedIP)
+		case user.FieldUsername:
+			m.SetUsername(input.Username)
+		case user.FieldNickname:
+			m.SetNickname(input.Nickname)
+		case user.FieldAvatar:
+			m.SetAvatar(input.Avatar)
+		case user.FieldName:
+			m.SetName(input.Name)
+		case user.FieldGender:
+			m.SetGender(input.Gender)
+		case user.FieldEncryptedPassword:
+			m.SetEncryptedPassword(input.EncryptedPassword)
+		case user.FieldSalt:
+			m.SetSalt(input.Salt)
+		case user.FieldPhone:
+			m.SetPhone(input.Phone)
+		case user.FieldEmail:
+			m.SetEmail(input.Email)
+		case user.FieldDepartment:
+			m.SetDepartment(input.Department)
+		case user.FieldRemark:
+			m.SetRemark(input.Remark)
+		case user.FieldToken:
+			m.SetToken(input.Token)
+		case user.FieldStatus:
+			m.SetStatus(input.Status)
+		case user.FieldIsSystem:
+			m.SetIsSystem(input.IsSystem)
+		case user.FieldLastLoginIP:
+			m.SetLastLoginIP(input.LastLoginIP)
+		case user.FieldLastLoginTime:
+			m.SetLastLoginTime(input.LastLoginTime)
+		case user.FieldLoginTime:
+			m.SetLoginTime(input.LoginTime)
+		case user.FieldSanctionDate:
+			m.SetSanctionDate(input.SanctionDate)
+		case user.FieldManagerID:
+			m.SetManagerID(input.ManagerID)
+		case user.FieldManager:
+			m.SetManager(input.Manager)
+		case user.FieldID:
+			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown RolePermission field %s", fields[i])
+			return fmt.Errorf("unknown User field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *UserMutation) SetFields(input *User, fields ...string) error {
+func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case user.FieldCreateAuthor:
@@ -918,83 +991,27 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *UserMutation) SetFieldsWithZero(input *User, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case user.FieldCreateAuthor:
-			m.SetCreateAuthor(input.CreateAuthor)
-		case user.FieldUpdateAuthor:
-			m.SetUpdateAuthor(input.UpdateAuthor)
-		case user.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case user.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
-		case user.FieldDeleteTime:
-			if input.DeleteTime != nil {
-				m.SetDeleteTime(*input.DeleteTime)
-			} else {
-				m.ResetDeleteTime()
-			}
-		case user.FieldUUID:
-			m.SetUUID(input.UUID)
-		case user.FieldAllowedIP:
-			m.SetAllowedIP(input.AllowedIP)
-		case user.FieldUsername:
-			m.SetUsername(input.Username)
-		case user.FieldNickname:
-			m.SetNickname(input.Nickname)
-		case user.FieldAvatar:
-			m.SetAvatar(input.Avatar)
-		case user.FieldName:
-			m.SetName(input.Name)
-		case user.FieldGender:
-			m.SetGender(input.Gender)
-		case user.FieldEncryptedPassword:
-			m.SetEncryptedPassword(input.EncryptedPassword)
-		case user.FieldSalt:
-			m.SetSalt(input.Salt)
-		case user.FieldPhone:
-			m.SetPhone(input.Phone)
-		case user.FieldEmail:
-			m.SetEmail(input.Email)
-		case user.FieldDepartment:
-			m.SetDepartment(input.Department)
-		case user.FieldRemark:
-			m.SetRemark(input.Remark)
-		case user.FieldToken:
-			m.SetToken(input.Token)
-		case user.FieldStatus:
-			m.SetStatus(input.Status)
-		case user.FieldIsSystem:
-			m.SetIsSystem(input.IsSystem)
-		case user.FieldLastLoginIP:
-			m.SetLastLoginIP(input.LastLoginIP)
-		case user.FieldLastLoginTime:
-			m.SetLastLoginTime(input.LastLoginTime)
-		case user.FieldLoginTime:
-			m.SetLoginTime(input.LoginTime)
-		case user.FieldSanctionDate:
-			m.SetSanctionDate(input.SanctionDate)
-		case user.FieldManagerID:
-			m.SetManagerID(input.ManagerID)
-		case user.FieldManager:
-			m.SetManager(input.Manager)
-		case user.FieldID:
-			m.SetID(input.ID)
+		case userdepartment.FieldUserID:
+			m.SetUserID(input.UserID)
+		case userdepartment.FieldDepartmentID:
+			m.SetDepartmentID(input.DepartmentID)
 		default:
-			return fmt.Errorf("unknown User field %s", fields[i])
+			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...string) error {
+func (m *UserDepartmentMutation) SetFieldsSkipZero(input *UserDepartment, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case userdepartment.FieldUserID:
@@ -1014,27 +1031,27 @@ func (m *UserDepartmentMutation) SetFields(input *UserDepartment, fields ...stri
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *UserDepartmentMutation) SetFieldsWithZero(input *UserDepartment, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case userdepartment.FieldUserID:
+		case userposition.FieldUserID:
 			m.SetUserID(input.UserID)
-		case userdepartment.FieldDepartmentID:
-			m.SetDepartmentID(input.DepartmentID)
+		case userposition.FieldPositionID:
+			m.SetPositionID(input.PositionID)
 		default:
-			return fmt.Errorf("unknown UserDepartment field %s", fields[i])
+			return fmt.Errorf("unknown UserPosition field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) error {
+func (m *UserPositionMutation) SetFieldsSkipZero(input *UserPosition, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case userposition.FieldUserID:
@@ -1054,27 +1071,27 @@ func (m *UserPositionMutation) SetFields(input *UserPosition, fields ...string) 
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *UserPositionMutation) SetFieldsWithZero(input *UserPosition, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case userposition.FieldUserID:
+		case userrole.FieldUserID:
 			m.SetUserID(input.UserID)
-		case userposition.FieldPositionID:
-			m.SetPositionID(input.PositionID)
+		case userrole.FieldRoleID:
+			m.SetRoleID(input.RoleID)
 		default:
-			return fmt.Errorf("unknown UserPosition field %s", fields[i])
+			return fmt.Errorf("unknown UserRole field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
+func (m *UserRoleMutation) SetFieldsSkipZero(input *UserRole, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case userrole.FieldUserID:
@@ -1094,27 +1111,49 @@ func (m *UserRoleMutation) SetFields(input *UserRole, fields ...string) error {
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *UserRoleMutation) SetFieldsWithZero(input *UserRole, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case userrole.FieldUserID:
-			m.SetUserID(input.UserID)
-		case userrole.FieldRoleID:
-			m.SetRoleID(input.RoleID)
+		case view.FieldCreateTime:
+			m.SetCreateTime(input.CreateTime)
+		case view.FieldUpdateTime:
+			m.SetUpdateTime(input.UpdateTime)
+		case view.FieldParentID:
+			m.SetParentID(input.ParentID)
+		case view.FieldKeyword:
+			m.SetKeyword(input.Keyword)
+		case view.FieldScope:
+			m.SetScope(input.Scope)
+		case view.FieldName:
+			m.SetName(input.Name)
+		case view.FieldType:
+			m.SetType(input.Type)
+		case view.FieldComponent:
+			m.SetComponent(input.Component)
+		case view.FieldPath:
+			m.SetPath(input.Path)
+		case view.FieldIcon:
+			m.SetIcon(input.Icon)
+		case view.FieldVisible:
+			m.SetVisible(input.Visible)
+		case view.FieldSequence:
+			m.SetSequence(input.Sequence)
+		case view.FieldID:
+			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown UserRole field %s", fields[i])
+			return fmt.Errorf("unknown View field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *ViewMutation) SetFields(input *View, fields ...string) error {
+func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case view.FieldCreateTime:
@@ -1187,49 +1226,37 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *ViewMutation) SetFieldsWithZero(input *View, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case view.FieldCreateTime:
+		case viewpermission.FieldCreateAuthor:
+			m.SetCreateAuthor(input.CreateAuthor)
+		case viewpermission.FieldUpdateAuthor:
+			m.SetUpdateAuthor(input.UpdateAuthor)
+		case viewpermission.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
-		case view.FieldUpdateTime:
+		case viewpermission.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case view.FieldParentID:
-			m.SetParentID(input.ParentID)
-		case view.FieldKeyword:
-			m.SetKeyword(input.Keyword)
-		case view.FieldScope:
-			m.SetScope(input.Scope)
-		case view.FieldName:
-			m.SetName(input.Name)
-		case view.FieldType:
-			m.SetType(input.Type)
-		case view.FieldComponent:
-			m.SetComponent(input.Component)
-		case view.FieldPath:
-			m.SetPath(input.Path)
-		case view.FieldIcon:
-			m.SetIcon(input.Icon)
-		case view.FieldVisible:
-			m.SetVisible(input.Visible)
-		case view.FieldSequence:
-			m.SetSequence(input.Sequence)
-		case view.FieldID:
+		case viewpermission.FieldViewID:
+			m.SetViewID(input.ViewID)
+		case viewpermission.FieldPermissionID:
+			m.SetPermissionID(input.PermissionID)
+		case viewpermission.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown View field %s", fields[i])
+			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...string) error {
+func (m *ViewPermissionMutation) SetFieldsSkipZero(input *ViewPermission, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case viewpermission.FieldCreateAuthor:
@@ -1272,37 +1299,37 @@ func (m *ViewPermissionMutation) SetFields(input *ViewPermission, fields ...stri
 	return nil
 }
 
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
+// SetFields sets the values of the fields with the given names. It returns an
 // error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *ViewPermissionMutation) SetFieldsWithZero(input *ViewPermission, fields ...string) error {
+// field type. This method includes zero values in the update.
+func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
-		case viewpermission.FieldCreateAuthor:
+		case viewresource.FieldCreateAuthor:
 			m.SetCreateAuthor(input.CreateAuthor)
-		case viewpermission.FieldUpdateAuthor:
+		case viewresource.FieldUpdateAuthor:
 			m.SetUpdateAuthor(input.UpdateAuthor)
-		case viewpermission.FieldCreateTime:
+		case viewresource.FieldCreateTime:
 			m.SetCreateTime(input.CreateTime)
-		case viewpermission.FieldUpdateTime:
+		case viewresource.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case viewpermission.FieldViewID:
+		case viewresource.FieldViewID:
 			m.SetViewID(input.ViewID)
-		case viewpermission.FieldPermissionID:
-			m.SetPermissionID(input.PermissionID)
-		case viewpermission.FieldID:
+		case viewresource.FieldResourceID:
+			m.SetResourceID(input.ResourceID)
+		case viewresource.FieldID:
 			m.SetID(input.ID)
 		default:
-			return fmt.Errorf("unknown ViewPermission field %s", fields[i])
+			return fmt.Errorf("unknown ViewResource field %s", fields[i])
 		}
 	}
 	return nil
 }
 
-// SetFields sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
+// SetFieldsSkipZero sets the values of the fields with the given names, skipping zero values.
+// It returns an error if the field is not defined in the schema, or if the type mismatched the
 // field type.
-func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) error {
+func (m *ViewResourceMutation) SetFieldsSkipZero(input *ViewResource, fields ...string) error {
 	for i := range fields {
 		switch fields[i] {
 		case viewresource.FieldCreateAuthor:
@@ -1338,33 +1365,6 @@ func (m *ViewResourceMutation) SetFields(input *ViewResource, fields ...string) 
 			if input.ID != 0 {
 				m.SetID(input.ID)
 			}
-		default:
-			return fmt.Errorf("unknown ViewResource field %s", fields[i])
-		}
-	}
-	return nil
-}
-
-// SetFieldsWithZero sets the values of the fields with the given names. It returns an
-// error if the field is not defined in the schema, or if the type mismatched the
-// field type.
-func (m *ViewResourceMutation) SetFieldsWithZero(input *ViewResource, fields ...string) error {
-	for i := range fields {
-		switch fields[i] {
-		case viewresource.FieldCreateAuthor:
-			m.SetCreateAuthor(input.CreateAuthor)
-		case viewresource.FieldUpdateAuthor:
-			m.SetUpdateAuthor(input.UpdateAuthor)
-		case viewresource.FieldCreateTime:
-			m.SetCreateTime(input.CreateTime)
-		case viewresource.FieldUpdateTime:
-			m.SetUpdateTime(input.UpdateTime)
-		case viewresource.FieldViewID:
-			m.SetViewID(input.ViewID)
-		case viewresource.FieldResourceID:
-			m.SetResourceID(input.ResourceID)
-		case viewresource.FieldID:
-			m.SetID(input.ID)
 		default:
 			return fmt.Errorf("unknown ViewResource field %s", fields[i])
 		}

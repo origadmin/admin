@@ -1188,7 +1188,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 	return _node, nil
 }
 
-// SetResource set the Resource
+// SetResource set the Resource. This method includes zero values in the update.
 func (ru *ResourceUpdate) SetResource(input *Resource, fields ...string) *ResourceUpdate {
 	m := ru.mutation
 	if len(fields) == 0 {
@@ -1198,17 +1198,17 @@ func (ru *ResourceUpdate) SetResource(input *Resource, fields ...string) *Resour
 	return ru
 }
 
-// SetResourceWithZero set the Resource
-func (ru *ResourceUpdate) SetResourceWithZero(input *Resource, fields ...string) *ResourceUpdate {
+// SetResourceSkipZero set the Resource, skipping zero values.
+func (ru *ResourceUpdate) SetResourceSkipZero(input *Resource, fields ...string) *ResourceUpdate {
 	m := ru.mutation
 	if len(fields) == 0 {
-		fields = resource.Columns
+		fields = resource.OmitColumns(resource.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return ru
 }
 
-// SetResource set the Resource
+// SetResource set the Resource. This method includes zero values in the update.
 func (ruo *ResourceUpdateOne) SetResource(input *Resource, fields ...string) *ResourceUpdateOne {
 	m := ruo.mutation
 	if len(fields) == 0 {
@@ -1218,13 +1218,13 @@ func (ruo *ResourceUpdateOne) SetResource(input *Resource, fields ...string) *Re
 	return ruo
 }
 
-// SetResourceWithZero set the Resource
-func (ruo *ResourceUpdateOne) SetResourceWithZero(input *Resource, fields ...string) *ResourceUpdateOne {
+// SetResourceSkipZero set the Resource, skipping zero values.
+func (ruo *ResourceUpdateOne) SetResourceSkipZero(input *Resource, fields ...string) *ResourceUpdateOne {
 	m := ruo.mutation
 	if len(fields) == 0 {
-		fields = resource.Columns
+		fields = resource.OmitColumns(resource.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return ruo
 }
 

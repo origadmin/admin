@@ -1190,7 +1190,7 @@ func (_u *RoleUpdateOne) sqlSave(ctx context.Context) (_node *Role, err error) {
 	return _node, nil
 }
 
-// SetRole set the Role
+// SetRole set the Role. This method includes zero values in the update.
 func (ru *RoleUpdate) SetRole(input *Role, fields ...string) *RoleUpdate {
 	m := ru.mutation
 	if len(fields) == 0 {
@@ -1200,17 +1200,17 @@ func (ru *RoleUpdate) SetRole(input *Role, fields ...string) *RoleUpdate {
 	return ru
 }
 
-// SetRoleWithZero set the Role
-func (ru *RoleUpdate) SetRoleWithZero(input *Role, fields ...string) *RoleUpdate {
+// SetRoleSkipZero set the Role, skipping zero values.
+func (ru *RoleUpdate) SetRoleSkipZero(input *Role, fields ...string) *RoleUpdate {
 	m := ru.mutation
 	if len(fields) == 0 {
-		fields = role.Columns
+		fields = role.OmitColumns(role.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return ru
 }
 
-// SetRole set the Role
+// SetRole set the Role. This method includes zero values in the update.
 func (ruo *RoleUpdateOne) SetRole(input *Role, fields ...string) *RoleUpdateOne {
 	m := ruo.mutation
 	if len(fields) == 0 {
@@ -1220,13 +1220,13 @@ func (ruo *RoleUpdateOne) SetRole(input *Role, fields ...string) *RoleUpdateOne 
 	return ruo
 }
 
-// SetRoleWithZero set the Role
-func (ruo *RoleUpdateOne) SetRoleWithZero(input *Role, fields ...string) *RoleUpdateOne {
+// SetRoleSkipZero set the Role, skipping zero values.
+func (ruo *RoleUpdateOne) SetRoleSkipZero(input *Role, fields ...string) *RoleUpdateOne {
 	m := ruo.mutation
 	if len(fields) == 0 {
-		fields = role.Columns
+		fields = role.OmitColumns(role.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return ruo
 }
 

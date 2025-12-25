@@ -7,6 +7,9 @@ package dto
 
 import (
 	"context"
+
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
+
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -30,4 +33,6 @@ type ViewQueryOption struct {
 type ViewCreateOption struct{}
 
 // ViewUpdateOption specifies options for updating a view.
-type ViewUpdateOption struct{}
+type ViewUpdateOption struct {
+	UpdateMask *fieldmaskpb.FieldMask
+}

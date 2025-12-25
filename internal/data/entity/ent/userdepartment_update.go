@@ -456,7 +456,7 @@ func (_u *UserDepartmentUpdateOne) sqlSave(ctx context.Context) (_node *UserDepa
 	return _node, nil
 }
 
-// SetUserDepartment set the UserDepartment
+// SetUserDepartment set the UserDepartment. This method includes zero values in the update.
 func (udu *UserDepartmentUpdate) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentUpdate {
 	m := udu.mutation
 	if len(fields) == 0 {
@@ -466,17 +466,17 @@ func (udu *UserDepartmentUpdate) SetUserDepartment(input *UserDepartment, fields
 	return udu
 }
 
-// SetUserDepartmentWithZero set the UserDepartment
-func (udu *UserDepartmentUpdate) SetUserDepartmentWithZero(input *UserDepartment, fields ...string) *UserDepartmentUpdate {
+// SetUserDepartmentSkipZero set the UserDepartment, skipping zero values.
+func (udu *UserDepartmentUpdate) SetUserDepartmentSkipZero(input *UserDepartment, fields ...string) *UserDepartmentUpdate {
 	m := udu.mutation
 	if len(fields) == 0 {
-		fields = userdepartment.Columns
+		fields = userdepartment.OmitColumns(userdepartment.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return udu
 }
 
-// SetUserDepartment set the UserDepartment
+// SetUserDepartment set the UserDepartment. This method includes zero values in the update.
 func (uduo *UserDepartmentUpdateOne) SetUserDepartment(input *UserDepartment, fields ...string) *UserDepartmentUpdateOne {
 	m := uduo.mutation
 	if len(fields) == 0 {
@@ -486,13 +486,13 @@ func (uduo *UserDepartmentUpdateOne) SetUserDepartment(input *UserDepartment, fi
 	return uduo
 }
 
-// SetUserDepartmentWithZero set the UserDepartment
-func (uduo *UserDepartmentUpdateOne) SetUserDepartmentWithZero(input *UserDepartment, fields ...string) *UserDepartmentUpdateOne {
+// SetUserDepartmentSkipZero set the UserDepartment, skipping zero values.
+func (uduo *UserDepartmentUpdateOne) SetUserDepartmentSkipZero(input *UserDepartment, fields ...string) *UserDepartmentUpdateOne {
 	m := uduo.mutation
 	if len(fields) == 0 {
-		fields = userdepartment.Columns
+		fields = userdepartment.OmitColumns(userdepartment.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return uduo
 }
 

@@ -456,7 +456,7 @@ func (_u *RolePermissionUpdateOne) sqlSave(ctx context.Context) (_node *RolePerm
 	return _node, nil
 }
 
-// SetRolePermission set the RolePermission
+// SetRolePermission set the RolePermission. This method includes zero values in the update.
 func (rpu *RolePermissionUpdate) SetRolePermission(input *RolePermission, fields ...string) *RolePermissionUpdate {
 	m := rpu.mutation
 	if len(fields) == 0 {
@@ -466,17 +466,17 @@ func (rpu *RolePermissionUpdate) SetRolePermission(input *RolePermission, fields
 	return rpu
 }
 
-// SetRolePermissionWithZero set the RolePermission
-func (rpu *RolePermissionUpdate) SetRolePermissionWithZero(input *RolePermission, fields ...string) *RolePermissionUpdate {
+// SetRolePermissionSkipZero set the RolePermission, skipping zero values.
+func (rpu *RolePermissionUpdate) SetRolePermissionSkipZero(input *RolePermission, fields ...string) *RolePermissionUpdate {
 	m := rpu.mutation
 	if len(fields) == 0 {
-		fields = rolepermission.Columns
+		fields = rolepermission.OmitColumns(rolepermission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return rpu
 }
 
-// SetRolePermission set the RolePermission
+// SetRolePermission set the RolePermission. This method includes zero values in the update.
 func (rpuo *RolePermissionUpdateOne) SetRolePermission(input *RolePermission, fields ...string) *RolePermissionUpdateOne {
 	m := rpuo.mutation
 	if len(fields) == 0 {
@@ -486,13 +486,13 @@ func (rpuo *RolePermissionUpdateOne) SetRolePermission(input *RolePermission, fi
 	return rpuo
 }
 
-// SetRolePermissionWithZero set the RolePermission
-func (rpuo *RolePermissionUpdateOne) SetRolePermissionWithZero(input *RolePermission, fields ...string) *RolePermissionUpdateOne {
+// SetRolePermissionSkipZero set the RolePermission, skipping zero values.
+func (rpuo *RolePermissionUpdateOne) SetRolePermissionSkipZero(input *RolePermission, fields ...string) *RolePermissionUpdateOne {
 	m := rpuo.mutation
 	if len(fields) == 0 {
-		fields = rolepermission.Columns
+		fields = rolepermission.OmitColumns(rolepermission.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return rpuo
 }
 

@@ -637,7 +637,7 @@ func (_u *ViewResourceUpdateOne) sqlSave(ctx context.Context) (_node *ViewResour
 	return _node, nil
 }
 
-// SetViewResource set the ViewResource
+// SetViewResource set the ViewResource. This method includes zero values in the update.
 func (vru *ViewResourceUpdate) SetViewResource(input *ViewResource, fields ...string) *ViewResourceUpdate {
 	m := vru.mutation
 	if len(fields) == 0 {
@@ -647,17 +647,17 @@ func (vru *ViewResourceUpdate) SetViewResource(input *ViewResource, fields ...st
 	return vru
 }
 
-// SetViewResourceWithZero set the ViewResource
-func (vru *ViewResourceUpdate) SetViewResourceWithZero(input *ViewResource, fields ...string) *ViewResourceUpdate {
+// SetViewResourceSkipZero set the ViewResource, skipping zero values.
+func (vru *ViewResourceUpdate) SetViewResourceSkipZero(input *ViewResource, fields ...string) *ViewResourceUpdate {
 	m := vru.mutation
 	if len(fields) == 0 {
-		fields = viewresource.Columns
+		fields = viewresource.OmitColumns(viewresource.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return vru
 }
 
-// SetViewResource set the ViewResource
+// SetViewResource set the ViewResource. This method includes zero values in the update.
 func (vruo *ViewResourceUpdateOne) SetViewResource(input *ViewResource, fields ...string) *ViewResourceUpdateOne {
 	m := vruo.mutation
 	if len(fields) == 0 {
@@ -667,13 +667,13 @@ func (vruo *ViewResourceUpdateOne) SetViewResource(input *ViewResource, fields .
 	return vruo
 }
 
-// SetViewResourceWithZero set the ViewResource
-func (vruo *ViewResourceUpdateOne) SetViewResourceWithZero(input *ViewResource, fields ...string) *ViewResourceUpdateOne {
+// SetViewResourceSkipZero set the ViewResource, skipping zero values.
+func (vruo *ViewResourceUpdateOne) SetViewResourceSkipZero(input *ViewResource, fields ...string) *ViewResourceUpdateOne {
 	m := vruo.mutation
 	if len(fields) == 0 {
-		fields = viewresource.Columns
+		fields = viewresource.OmitColumns(viewresource.FieldID)
 	}
-	_ = m.SetFieldsWithZero(input, fields...)
+	_ = m.SetFieldsSkipZero(input, fields...)
 	return vruo
 }
 
