@@ -44,36 +44,41 @@ func DecodeCursor(token string) (Cursor, error) {
 	return c, nil
 }
 
-// paginateable defines an interface for queries that can be paginated.
-type paginateable[T any, W selectable, O selectable, R any] interface {
-	counter[T]
-	cloneable[T]
-	filterable[T, W]
-	orderable[T, O]
-	queryable[R]
+// Pageable defines the interface for queries that can be paginated.
+// It aggregates capabilities for counting, cloning, filtering, ordering, and fetching results.
+type Pageable[T any, W any, O any, R any] interface {
+	Counter[T]
+	Cloner[T]
+	Filterer[T, W]
+	Orderer[T, O]
+	Fetcher[R]
 	Limit(int) T
 	Offset(int) T
 }
 
-type orderable[T any, O selectable] interface {
+// Orderer defines the interface for queries that can be ordered.
+type Orderer[T any, O any] interface {
 	Order(...O) T
 }
 
-type filterable[T any, W selectable] interface {
+// Filterer defines the interface for queries that can be filtered.
+type Filterer[T any, W any] interface {
 	Where(...W) T
 }
 
-type cloneable[T any] interface {
+// Cloner defines the interface for objects that can clone themselves.
+type Cloner[T any] interface {
 	Clone() T
 }
 
-// counter defines an interface for queries that can count their results.
-type counter[T any] interface {
-	cloneable[T]
+// Counter defines the interface for queries that can count their results.
+type Counter[T any] interface {
+	Cloner[T]
 	Count(ctx context.Context) (int, error)
 }
 
-type queryable[T any] interface {
+// Fetcher defines the interface for queries that can execute and fetch results.
+type Fetcher[T any] interface {
 	All(ctx context.Context) ([]T, error)
 	Only(ctx context.Context) (T, error)
 }
@@ -122,13 +127,13 @@ func applyPageSize(opt *repo.QueryOption) int {
 	return opt.PageSize
 }
 
-type cursorCallback[T selectable] func(cursor Cursor) T
+type cursorCallback[T any] func(cursor Cursor) T
 
 // Paginate is the single, unified function for applying pagination logic.
 // It ONLY handles Limit and Offset based on the provided options.
 // All WHERE and ORDER clauses are the responsibility of the caller in the DAL layer.
-// Note: Page boundary validation is handled in the Query function.
-func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](query P, opt *repo.QueryOption,
+// Note: Page boundary validation is handled in the Find function.
+func Paginate[R any, W any, O any, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
 	callbacks ...cursorCallback[W]) P {
 	if opt == nil {
 		return query.Limit(repo.DefaultPageSize)
@@ -164,8 +169,9 @@ func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](que
 	return query
 }
 
-// PageCount executes count query and returns the result
-func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
+// CountTotal executes the count query and returns the total number of records.
+// It clones the query to avoid side effects on the original query builder.
+func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
 		return 0, err
@@ -173,47 +179,56 @@ func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 	return int32(count), nil
 }
 
-func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx context.Context, query P,
+// Find executes the query with pagination options and returns the results and total count.
+// It handles both offset-based and cursor-based pagination.
+// For offset-based pagination, it performs an optimization to skip the data query
+// if the total count is 0 or the requested page is out of range.
+func Find[R any, W any, O any, P Pageable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
 	// Unified initialization and validation of options
 	o = normalizeQueryOption(o)
 
-	// If only count is needed, execute count query directly
+	// Optimization: If only count is needed, execute count query directly
 	if o.OnlyCount {
-		count, err := PageCount(ctx, query)
+		count, err := CountTotal(ctx, query)
 		if err != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", err)
 		}
 		return nil, count, nil
 	}
 
-	// Clone original query for count query (must be before pagination)
 	var count int32
-	var countErr error
+	var err error
 
-	// Execute count query only for non-cursor pagination
+	// Execute count query only for non-cursor pagination (Offset-based)
 	if o.PageToken == "" {
-		count, countErr = PageCount(ctx, query)
-		if countErr != nil {
-			return nil, 0, fmt.Errorf("count query failed: %w", countErr)
+		count, err = CountTotal(ctx, query)
+		if err != nil {
+			return nil, 0, fmt.Errorf("count query failed: %w", err)
 		}
 
-		// Check if requested page exceeds total pages
-		if count > 0 && o.PageSize > 0 {
-			totalPages := (count + int32(o.PageSize) - 1) / int32(o.PageSize) // round up
-			if o.Page > int(totalPages) {
+		// Optimization: Early exit if no data found
+		if count == 0 {
+			return []R{}, 0, nil
+		}
+
+		// Optimization: Early exit if requested page exceeds total pages
+		// Note: o.PageSize is guaranteed to be > 0 by normalizeQueryOption (unless NoPaging is true, where Page is 1)
+		if o.PageSize > 0 {
+			// Calculate total pages: ceil(count / pageSize)
+			totalPages := (int(count) + o.PageSize - 1) / o.PageSize
+			if o.Page > totalPages {
 				// Page number out of range, return empty result
 				return []R{}, count, nil
 			}
-		} else if count == 0 {
-			// No data, return empty result
-			return []R{}, count, nil
 		}
 	}
 
-	// Apply pagination to original query
+	// Apply pagination logic (Limit, Offset, Cursor) to the query
 	query = Paginate(query, o, callbacks...)
+
+	// Execute the data query
 	result, err := query.All(ctx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("data query failed: %w", err)
