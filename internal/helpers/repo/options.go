@@ -6,6 +6,16 @@
 // focusing on abstracting common query patterns like pagination.
 package repo
 
+const (
+	// DefaultPageSize is the page size used when the client does not specify one.
+	DefaultPageSize = 10
+	// MaxPageSize is the maximum page size allowed for normal pagination.
+	MaxPageSize = 100
+	// HardLimit is the absolute maximum number of records that can be returned in a single query,
+	// typically used when NoPaging is requested.
+	HardLimit = 1000
+)
+
 // PaginatingRequest defines the contract for any request that supports offset-based pagination.
 type PaginatingRequest interface {
 	GetPage() int32
@@ -15,6 +25,11 @@ type PaginatingRequest interface {
 // TokenPaginatingRequest defines the contract for any request that supports token-based pagination.
 type TokenPaginatingRequest interface {
 	GetPageToken() string
+}
+
+// NoPagingRequest defines the contract for any request that can disable pagination.
+type NoPagingRequest interface {
+	GetNoPaging() bool
 }
 
 // CountingRequest defines the contract for any request that supports "count-only" mode.
@@ -32,7 +47,8 @@ type KeywordRequest interface {
 type QueryOption struct {
 	Page      int
 	PageSize  int
-	PageToken string // Added for cursor pagination
+	PageToken string
+	NoPaging  bool
 	OnlyCount bool
 	Keyword   string
 	OrderBy   []string
@@ -50,6 +66,10 @@ func OptionFromRequest(req interface{}) QueryOption {
 
 	if r, ok := req.(TokenPaginatingRequest); ok {
 		opt.PageToken = r.GetPageToken()
+	}
+
+	if r, ok := req.(NoPagingRequest); ok {
+		opt.NoPaging = r.GetNoPaging()
 	}
 
 	if r, ok := req.(CountingRequest); ok {
