@@ -39,7 +39,6 @@ func NewServers(cfg *transportv1.Servers, svc *service.SystemService, logger log
 			if err != nil {
 				return nil, err
 			}
-			srv.Server
 			transportServers = append(transportServers, srv)
 		case "grpc":
 			srv, err := NewGRPCServer(serverCfg.GetGrpc(), svc, logger)

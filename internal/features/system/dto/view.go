@@ -8,8 +8,7 @@ package dto
 import (
 	"context"
 
-	"google.golang.org/protobuf/types/known/fieldmaskpb"
-
+	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -35,4 +34,25 @@ type ViewCreateOption struct{}
 // ViewUpdateOption specifies options for updating a view.
 type ViewUpdateOption struct {
 	repo.UpdateOption
+}
+
+// ListViewsRequestToQueryOption converts an API request to a query option object.
+func ListViewsRequestToQueryOption(req *system.ListViewsRequest) *ViewQueryOption {
+	if req == nil {
+		return &ViewQueryOption{}
+	}
+	return &ViewQueryOption{
+		QueryOption: repo.QueryOptionFromRequest(req),
+		Scope:       req.GetScope(),
+	}
+}
+
+// UpdateViewRequestToUpdateOption converts an API request to an update option object.
+func UpdateViewRequestToUpdateOption(req *system.UpdateViewRequest) *ViewUpdateOption {
+	if req == nil {
+		return &ViewUpdateOption{}
+	}
+	return &ViewUpdateOption{
+		UpdateOption: repo.UpdateOptionFromRequest(req),
+	}
 }

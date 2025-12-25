@@ -38,6 +38,7 @@ type RoleCreateOption struct {
 
 // RoleUpdateOption specifies options for updating a role.
 type RoleUpdateOption struct {
+	repo.UpdateOption
 }
 
 // ListRolesRequestToQueryOption converts an API request to a query option object.
@@ -46,6 +47,16 @@ func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOptio
 		return &RoleQueryOption{}
 	}
 	return &RoleQueryOption{
-		QueryOption: repo.OptionFromRequest(req),
+		QueryOption: repo.QueryOptionFromRequest(req),
+	}
+}
+
+// UpdateRoleRequestToUpdateOption converts an API request to an update option object.
+func UpdateRoleRequestToUpdateOption(req *system.UpdateRoleRequest) *RoleUpdateOption {
+	if req == nil {
+		return &RoleUpdateOption{}
+	}
+	return &RoleUpdateOption{
+		UpdateOption: repo.UpdateOptionFromRequest(req),
 	}
 }

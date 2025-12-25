@@ -30,7 +30,7 @@ func (r *viewRepo) Get(ctx context.Context, id int64, opts ...*dto.ViewQueryOpti
 	query := r.db.View(ctx).Query().Where(view.ID(id))
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, view.ValidColumn, new(types.View))
+		selectCols := db.SelectFields(opt.ReadMask, view.ValidColumn, view.FieldID, new(types.View))
 		if len(selectCols) > 0 {
 			query.Select(selectCols...)
 		}
@@ -60,7 +60,7 @@ func (r *viewRepo) List(ctx context.Context, opts ...*dto.ViewQueryOption) ([]*t
 	}
 
 	if opt.ReadMask != nil {
-		selectCols := db.SelectFields(opt.ReadMask, view.ValidColumn, new(types.View))
+		selectCols := db.SelectFields(opt.ReadMask, view.ValidColumn, view.FieldID, new(types.View))
 		if len(selectCols) > 0 {
 			query.Select(selectCols...)
 		}
@@ -102,6 +102,8 @@ func (r *viewRepo) Update(ctx context.Context, in *types.View, opts ...*dto.View
 	// After template modification, SetView is now the method that includes zero values.
 	updateCols := db.UpdateFields(opt.UpdateMask, view.ValidColumn, in)
 	if len(updateCols) > 0 {
+		// The primary key should never be in the update list.
+		// UpdateFields already ensures this.
 		update.SetView(entView, updateCols...)
 	} else {
 		update.SetView(entView)

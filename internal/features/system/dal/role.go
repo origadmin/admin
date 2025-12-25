@@ -13,6 +13,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/db"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -22,9 +23,9 @@ type roleRepo struct {
 }
 
 // NewRoleRepo .
-func NewRoleRepo(db *ent.Database) dto.RoleRepo {
+func NewRoleRepo(database *ent.Database) dto.RoleRepo {
 	generator := rand.NewGenerator(rand.KindDigit | rand.KindLowerCase)
-	return &roleRepo{db: db, gen: generator}
+	return &roleRepo{db: database, gen: generator}
 }
 
 func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOption) (*types.Role, error) {
@@ -33,6 +34,13 @@ func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOpti
 
 	if opt.WithPermissions {
 		query.WithPermissions()
+	}
+
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, role.ValidColumn, role.FieldID, new(types.Role))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
 	}
 
 	result, err := query.Only(ctx)
@@ -70,9 +78,16 @@ func (r *roleRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *roleRepo) Update(ctx context.Context, rl *types.Role, opts ...*dto.RoleUpdateOption) (*types.Role, error) {
+	opt := repo.GetFirstOption(opts...)
 	entRole := dto.ConvertRolePBToRole(rl)
-	update := r.db.Role(ctx).UpdateOneID(rl.Id).SetRole(entRole)
-	// ... handle partial updates based on opts ...
+	update := r.db.Role(ctx).UpdateOneID(rl.Id)
+
+	updateCols := db.UpdateFields(opt.UpdateMask, role.ValidColumn, rl)
+	if len(updateCols) > 0 {
+		update.SetRole(entRole, updateCols...)
+	} else {
+		update.SetRole(entRole)
+	}
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -89,21 +104,30 @@ func (r *roleRepo) List(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*t
 		query.Where(role.NameContainsFold(opt.Keyword))
 	}
 
-	if opt.Page > 0 && opt.PageSize > 0 {
-		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
-	}
-
-	count, err := query.Clone().Count(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	if opt.WithPermissions {
 		query.WithPermissions()
 	}
 
-	result, err := query.All(ctx)
-	return dto.ConvertRolesToRolesPB(result), int32(count), err
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, role.ValidColumn, role.FieldID, new(types.Role))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
+	}
+
+	if opt.OrderBy != nil {
+		orders := db.OrderBy[role.OrderOption](opt.OrderBy)
+		if len(orders) > 0 {
+			query.Order(orders...)
+		}
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return dto.ConvertRolesToRolesPB(result), count, err
 }
 
 func (r *roleRepo) GetPermissions(ctx context.Context, id int64) ([]*types.Permission, error) {

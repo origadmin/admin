@@ -14,6 +14,8 @@ import (
 	"encoding/gob"
 	"fmt"
 
+	"entgo.io/ent/dialect/sql"
+
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -54,6 +56,10 @@ type Pageable[T any, W any, O any, R any] interface {
 	Fetcher[R]
 	Limit(int) T
 	Offset(int) T
+}
+
+type Selector interface {
+	~func(*sql.Selector)
 }
 
 // Orderer defines the interface for queries that can be ordered.
@@ -133,7 +139,7 @@ type cursorCallback[T any] func(cursor Cursor) T
 // It ONLY handles Limit and Offset based on the provided options.
 // All WHERE and ORDER clauses are the responsibility of the caller in the DAL layer.
 // Note: Page boundary validation is handled in the Find function.
-func Paginate[R any, W any, O any, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
+func Paginate[R any, W any, O Selector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
 	callbacks ...cursorCallback[W]) P {
 	if opt == nil {
 		return query.Limit(repo.DefaultPageSize)
@@ -183,7 +189,7 @@ func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 // It handles both offset-based and cursor-based pagination.
 // For offset-based pagination, it performs an optimization to skip the data query
 // if the total count is 0 or the requested page is out of range.
-func Find[R any, W any, O any, P Pageable[P, W, O, R]](ctx context.Context, query P,
+func Find[R any, W any, O Selector, P Pageable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
 	// Unified initialization and validation of options

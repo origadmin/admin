@@ -9,6 +9,7 @@ import (
 	"context"
 	"time"
 
+	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -25,14 +26,18 @@ type PermissionRepo interface {
 // PermissionQueryOption specifies options for querying permissions.
 type PermissionQueryOption struct {
 	repo.QueryOption
-	DataScopes []string
+	DataScopes    []string
+	WithResources bool
+	WithRoles     bool
 }
 
 // PermissionCreateOption specifies options for creating a permission.
 type PermissionCreateOption struct{}
 
 // PermissionUpdateOption specifies options for updating a permission.
-type PermissionUpdateOption struct{}
+type PermissionUpdateOption struct {
+	repo.UpdateOption
+}
 
 // PermissionCondition represents a single condition for a permission.
 type PermissionCondition struct {
@@ -48,4 +53,25 @@ type PermissionAccessControl struct {
 	ValidFrom  *time.Time        `json:"valid_from"`
 	ValidUntil *time.Time        `json:"valid_until"`
 	Attributes map[string]any    `json:"attributes"`
+}
+
+// ListPermissionsRequestToQueryOption converts an API request to a query option object.
+func ListPermissionsRequestToQueryOption(req *system.ListPermissionsRequest) *PermissionQueryOption {
+	if req == nil {
+		return &PermissionQueryOption{}
+	}
+	return &PermissionQueryOption{
+		QueryOption: repo.QueryOptionFromRequest(req),
+		DataScopes:  req.GetDataScopes(),
+	}
+}
+
+// UpdatePermissionRequestToUpdateOption converts an API request to an update option object.
+func UpdatePermissionRequestToUpdateOption(req *system.UpdatePermissionRequest) *PermissionUpdateOption {
+	if req == nil {
+		return &PermissionUpdateOption{}
+	}
+	return &PermissionUpdateOption{
+		UpdateOption: repo.UpdateOptionFromRequest(req),
+	}
 }

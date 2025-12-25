@@ -43,8 +43,7 @@ type UserCreateOption struct {
 
 // UserUpdateOption specifies options for updating a user.
 type UserUpdateOption struct {
-	// Example: For partial updates (PATCH)
-	UpdateFields []string
+	repo.UpdateOption
 }
 
 // ListUsersRequestToQueryOption converts an API request to a query option object.
@@ -53,6 +52,16 @@ func ListUsersRequestToQueryOption(req *system.ListUsersRequest) *UserQueryOptio
 		return &UserQueryOption{}
 	}
 	return &UserQueryOption{
-		QueryOption: repo.OptionFromRequest(req),
+		QueryOption: repo.QueryOptionFromRequest(req),
+	}
+}
+
+// UpdateUserRequestToUpdateOption converts an API request to an update option object.
+func UpdateUserRequestToUpdateOption(req *system.UpdateUserRequest) *UserUpdateOption {
+	if req == nil {
+		return &UserUpdateOption{}
+	}
+	return &UserUpdateOption{
+		UpdateOption: repo.UpdateOptionFromRequest(req),
 	}
 }

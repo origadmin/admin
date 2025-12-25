@@ -12,6 +12,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/db"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -21,9 +22,9 @@ type resourceRepo struct {
 }
 
 // NewResourceRepo .
-func NewResourceRepo(db *ent.Database) dto.ResourceRepo {
+func NewResourceRepo(database *ent.Database) dto.ResourceRepo {
 	return &resourceRepo{
-		db:        db,
+		db:        database,
 		Delimiter: "/",
 	}
 }
@@ -34,6 +35,13 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 
 	if opt.WithPermissions {
 		query.WithPermissions()
+	}
+
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
 	}
 
 	result, err := query.Only(ctx)
@@ -49,13 +57,11 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 		if err != nil {
 			return nil, err
 		}
-		res.TreePath = parent.TreePath + strconv.FormatInt(int64(parent.ID), 10) + r.Delimiter
+		res.TreePath = parent.TreePath + strconv.FormatInt(parent.ID, 10) + r.Delimiter
 	}
 
 	entResource := dto.ConvertResourcePBToResource(res)
 	create := r.db.Resource(ctx).Create().SetResource(entResource)
-
-	// ... set other fields
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -69,10 +75,16 @@ func (r *resourceRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *resourceRepo) Update(ctx context.Context, res *types.Resource, opts ...*dto.ResourceUpdateOption) (*types.Resource, error) {
+	opt := repo.GetFirstOption(opts...)
 	entResource := dto.ConvertResourcePBToResource(res)
-	update := r.db.Resource(ctx).UpdateOneID(res.Id).SetResource(entResource)
+	update := r.db.Resource(ctx).UpdateOneID(res.Id)
 
-	// ... handle partial updates based on opts ...
+	updateCols := db.UpdateFields(opt.UpdateMask, resource.ValidColumn, res)
+	if len(updateCols) > 0 {
+		update.SetResource(entResource, updateCols...)
+	} else {
+		update.SetResource(entResource)
+	}
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -85,19 +97,28 @@ func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOptio
 	opt := repo.GetFirstOption(opts...)
 	query := r.db.Resource(ctx).Query()
 
-	if opt.Page > 0 && opt.PageSize > 0 {
-		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
-	}
-
-	count, err := query.Clone().Count(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	if opt.WithPermissions {
 		query.WithPermissions()
 	}
 
-	result, err := query.All(ctx)
-	return dto.ConvertResourcesToResourcesPB(result), int32(count), err
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
+	}
+
+	if opt.OrderBy != nil {
+		orders := db.OrderBy[resource.OrderOption](opt.OrderBy)
+		if len(orders) > 0 {
+			query.Order(orders...)
+		}
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return dto.ConvertResourcesToResourcesPB(result), count, err
 }

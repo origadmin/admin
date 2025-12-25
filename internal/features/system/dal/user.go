@@ -13,7 +13,9 @@ import (
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/db"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -22,8 +24,8 @@ type userRepo struct {
 }
 
 // NewUserRepo .
-func NewUserRepo(db *ent.Database) dto.UserRepo {
-	return &userRepo{db: db}
+func NewUserRepo(database *ent.Database) dto.UserRepo {
+	return &userRepo{db: database}
 }
 
 func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOption) (*types.User, error) {
@@ -32,6 +34,13 @@ func (r *userRepo) Get(ctx context.Context, id int64, opts ...*dto.UserQueryOpti
 
 	if opt.WithRoles {
 		query.WithRoles()
+	}
+
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, user.ValidColumn, user.FieldID, new(types.User))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
 	}
 
 	result, err := query.Only(ctx)
@@ -48,11 +57,11 @@ func (r *userRepo) Create(ctx context.Context, u *types.User, password string, o
 	}
 
 	entUser := dto.ConvertUserPBToUser(u)
-	uuid, err := uuid.NewRandom()
+	uid, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
 	}
-	entUser.UUID = uuid.String()
+	entUser.UUID = uid.String()
 	if password != "" {
 		entUser.EncryptedPassword = password
 	}
@@ -69,10 +78,16 @@ func (r *userRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *userRepo) Update(ctx context.Context, u *types.User, opts ...*dto.UserUpdateOption) (*types.User, error) {
+	opt := repo.GetFirstOption(opts...)
 	entUser := dto.ConvertUserPBToUser(u)
-	update := r.db.User(ctx).UpdateOneID(u.Id).SetUser(entUser)
+	update := r.db.User(ctx).UpdateOneID(u.Id)
 
-	// ... handle partial updates based on opts
+	updateCols := db.UpdateFields(opt.UpdateMask, user.ValidColumn, u)
+	if len(updateCols) > 0 {
+		update.SetUser(entUser, updateCols...)
+	} else {
+		update.SetUser(entUser)
+	}
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -89,21 +104,30 @@ func (r *userRepo) List(ctx context.Context, opts ...*dto.UserQueryOption) ([]*t
 		query.Where(user.Or(user.UsernameContainsFold(opt.Keyword), user.PhoneContainsFold(opt.Keyword), user.EmailContainsFold(opt.Keyword)))
 	}
 
-	if opt.Page > 0 && opt.PageSize > 0 {
-		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
-	}
-
-	count, err := query.Clone().Count(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	if opt.WithRoles {
 		query.WithRoles()
 	}
 
-	result, err := query.All(ctx)
-	return dto.ConvertUsersToUsersPB(result), int32(count), err
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, user.ValidColumn, user.FieldID, new(types.User))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
+	}
+
+	if opt.OrderBy != nil {
+		orders := db.OrderBy[user.OrderOption](opt.OrderBy)
+		if len(orders) > 0 {
+			query.Order(orders...)
+		}
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return dto.ConvertUsersToUsersPB(result), count, err
 }
 
 func (r *userRepo) AddRoleIDs(ctx context.Context, id int64, roleIDs []int64) error {
@@ -134,6 +158,6 @@ func (r *userRepo) ListResourceByUserID(ctx context.Context, id int64) ([]*types
 	return dto.ConvertResourcesToResourcesPB(resources), nil
 }
 
-func (r *userRepo) UpdateUserStatus(ctx context.Context, id int64, status int32) error {
-	return r.db.User(ctx).UpdateOneID(id).SetStatus(int8(status)).Exec(ctx)
+func (r *userRepo) UpdateUserStatus(ctx context.Context, id int64, status int8) error {
+	return r.db.User(ctx).UpdateOneID(id).SetStatus(enums.Status(status)).Exec(ctx)
 }

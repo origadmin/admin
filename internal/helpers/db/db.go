@@ -7,44 +7,61 @@
 package db
 
 import (
-	"entgo.io/ent/dialect/sql"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
-// selectable is a generic constraint for types that can be used as order functions in Ent.
-// It's an alias for any type whose underlying type is func(*sql.Selector).
-type selectable interface {
-	~func(*sql.Selector)
-}
-
 // ColumnValidator is a function type for validating if a string is a valid column name for an entity.
 type ColumnValidator func(string) bool
 
-func SelectFields(mask *fieldmaskpb.FieldMask, validator ColumnValidator, messageType proto.Message) []string {
-	var selectCols []string
-	if mask != nil {
-		mask.Normalize()
-		if mask.IsValid(messageType) {
-			for _, path := range mask.GetPaths() {
-				if validator(path) {
-					selectCols = append(selectCols, path)
-				}
-			}
+// processMask is an unexported helper that contains the common logic for processing a FieldMask.
+// It normalizes, validates, and filters the paths in the mask, returning a slice of valid column names.
+func processMask(mask *fieldmaskpb.FieldMask, validator ColumnValidator, messageType proto.Message) []string {
+	if mask == nil {
+		return nil
+	}
+	// Normalize must be called before IsValid.
+	mask.Normalize()
+	if !mask.IsValid(messageType) {
+		return nil
+	}
+
+	var cols []string
+	for _, path := range mask.GetPaths() {
+		if validator(path) {
+			cols = append(cols, path)
 		}
 	}
+	return cols
+}
+
+// SelectFields parses a ReadMask and returns a slice of column names for selection.
+// CRITICAL: It automatically adds the primary key (idField) to the selection if other fields are selected,
+// which is essential for ent to hydrate the model correctly.
+func SelectFields(mask *fieldmaskpb.FieldMask, validator ColumnValidator, idField string, messageType proto.Message) []string {
+	selectCols := processMask(mask, validator, messageType)
+
+	// If any columns are selected, always ensure the ID field is also selected.
+	if len(selectCols) > 0 {
+		hasID := false
+		for _, col := range selectCols {
+			if col == idField {
+				hasID = true
+				break
+			}
+		}
+		if !hasID {
+			selectCols = append(selectCols, idField)
+		}
+	}
+
 	return selectCols
 }
 
+// UpdateFields parses an UpdateMask and returns a slice of column names for a partial update.
+// It will NOT add the ID field.
 func UpdateFields(mask *fieldmaskpb.FieldMask, validator ColumnValidator, messageType proto.Message) []string {
-	var updateCols []string
-	if mask == nil || !mask.IsValid(messageType) {
-		return updateCols
-	}
-	for _, path := range mask.GetPaths() {
-		if validator(path) {
-			updateCols = append(updateCols, path)
-		}
-	}
-	return updateCols
+	// The primary key should never be included in an update operation.
+	// processMask already ensures this by simply validating columns, and we don't add the idField here.
+	return processMask(mask, validator, messageType)
 }

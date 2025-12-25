@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
 	"origadmin/application/admin/internal/features/system/dto"
+	"origadmin/application/admin/internal/helpers/db"
 	"origadmin/application/admin/internal/helpers/repo"
 )
 
@@ -19,8 +20,8 @@ type permissionRepo struct {
 }
 
 // NewPermissionRepo .
-func NewPermissionRepo(db *ent.Database) dto.PermissionRepo {
-	return &permissionRepo{db: db}
+func NewPermissionRepo(database *ent.Database) dto.PermissionRepo {
+	return &permissionRepo{db: database}
 }
 
 func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.PermissionQueryOption) (*types.Permission, error) {
@@ -34,6 +35,13 @@ func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.Permiss
 		query.WithRoles()
 	}
 
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, permission.ValidColumn, permission.FieldID, new(types.Permission))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
+	}
+
 	result, err := query.Only(ctx)
 	if err != nil {
 		return nil, err
@@ -44,8 +52,6 @@ func (r *permissionRepo) Get(ctx context.Context, id int64, opts ...*dto.Permiss
 func (r *permissionRepo) Create(ctx context.Context, p *types.Permission, opts ...*dto.PermissionCreateOption) (*types.Permission, error) {
 	entPermission := dto.ConvertPermissionPBToPermission(p)
 	create := r.db.Permission(ctx).Create().SetPermission(entPermission)
-
-	// ... set other fields
 
 	saved, err := create.Save(ctx)
 	if err != nil {
@@ -59,10 +65,16 @@ func (r *permissionRepo) Delete(ctx context.Context, id int64) error {
 }
 
 func (r *permissionRepo) Update(ctx context.Context, p *types.Permission, opts ...*dto.PermissionUpdateOption) (*types.Permission, error) {
+	opt := repo.GetFirstOption(opts...)
 	entPermission := dto.ConvertPermissionPBToPermission(p)
-	update := r.db.Permission(ctx).UpdateOneID(p.Id).SetPermission(entPermission)
+	update := r.db.Permission(ctx).UpdateOneID(p.Id)
 
-	// ... handle partial updates based on opts ...
+	updateCols := db.UpdateFields(opt.UpdateMask, permission.ValidColumn, p)
+	if len(updateCols) > 0 {
+		update.SetPermission(entPermission, updateCols...)
+	} else {
+		update.SetPermission(entPermission)
+	}
 
 	saved, err := update.Save(ctx)
 	if err != nil {
@@ -79,15 +91,6 @@ func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryO
 		query.Where(permission.DataScopeIn(opt.DataScopes...))
 	}
 
-	if opt.Page > 0 && opt.PageSize > 0 {
-		query.Offset((opt.Page - 1) * opt.PageSize).Limit(opt.PageSize)
-	}
-
-	count, err := query.Clone().Count(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	if opt.WithResources {
 		query.WithResources()
 	}
@@ -95,6 +98,24 @@ func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryO
 		query.WithRoles()
 	}
 
-	result, err := query.All(ctx)
-	return dto.ConvertPermissionsToPermissionsPB(result), int32(count), err
+	if opt.ReadMask != nil {
+		selectCols := db.SelectFields(opt.ReadMask, permission.ValidColumn, permission.FieldID, new(types.Permission))
+		if len(selectCols) > 0 {
+			query.Select(selectCols...)
+		}
+	}
+
+	if opt.OrderBy != nil {
+		orders := db.OrderBy[permission.OrderOption](opt.OrderBy)
+		if len(orders) > 0 {
+			query.Order(orders...)
+		}
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return dto.ConvertPermissionsToPermissionsPB(result), count, err
 }

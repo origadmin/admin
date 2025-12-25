@@ -34,6 +34,7 @@ type ResourceCreateOption struct {
 
 // ResourceUpdateOption specifies options for updating a resource.
 type ResourceUpdateOption struct {
+	repo.UpdateOption
 }
 
 // ListResourcesRequestToQueryOption converts an API request to a query option object.
@@ -42,6 +43,16 @@ func ListResourcesRequestToQueryOption(req *system.ListResourcesRequest) *Resour
 		return &ResourceQueryOption{}
 	}
 	return &ResourceQueryOption{
-		QueryOption: repo.OptionFromRequest(req),
+		QueryOption: repo.QueryOptionFromRequest(req),
+	}
+}
+
+// UpdateResourceRequestToUpdateOption converts an API request to an update option object.
+func UpdateResourceRequestToUpdateOption(req *system.UpdateResourceRequest) *ResourceUpdateOption {
+	if req == nil {
+		return &ResourceUpdateOption{}
+	}
+	return &ResourceUpdateOption{
+		UpdateOption: repo.UpdateOptionFromRequest(req),
 	}
 }
