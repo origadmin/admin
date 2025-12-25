@@ -13,7 +13,6 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"fmt"
-	"time"
 
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -132,7 +131,7 @@ func Paginate[R any, W selectable, O selectable, P paginateable[P, W, O, R]](que
 	return query
 }
 
-// PageCount remains the same.
+// PageCount 执行count查询并返回结果
 func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 	count, err := query.Clone().Count(ctx)
 	if err != nil {
@@ -143,38 +142,34 @@ func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 
 func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
-	
-	// 记录查询开始时间用于监控
-	start := time.Now()
-	defer func() {
-		// 这里可以添加监控代码，记录查询耗时
-		_ = time.Since(start)
-	}()
-	
-	// 只有在需要时才执行count查询
-	var count int32
-	var err error
-	
-	if o.OnlyCount {
-		count, err = PageCount(ctx, query)
+
+	// 如果只需要计数，直接执行count查询
+	if o != nil && o.OnlyCount {
+		count, err := PageCount(ctx, query)
 		if err != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", err)
 		}
 		return nil, count, nil
 	}
-	
-	// 如果明确需要总数或者不是cursor分页，才执行count查询
-	if o.IncludeCount || o.PageToken == "" {
-		count, err = PageCount(ctx, query)
-		if err != nil {
-			return nil, 0, fmt.Errorf("count query failed: %w", err)
+
+	// 先克隆原始查询用于count查询（必须在分页之前）
+	var count int32
+	var countErr error
+
+	// 只有在非cursor分页时才执行count查询
+	if o == nil || o.PageToken == "" {
+		count, countErr = PageCount(ctx, query)
+		if countErr != nil {
+			return nil, 0, fmt.Errorf("count query failed: %w", countErr)
 		}
 	}
-	
+
+	// 对原始查询应用分页
 	query = Paginate(query, o, callbacks...)
 	result, err := query.All(ctx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("data query failed: %w", err)
 	}
+
 	return result, count, nil
 }

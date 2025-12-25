@@ -50,7 +50,6 @@ type QueryOption struct {
 	PageToken string
 	NoPaging  bool
 	OnlyCount bool
-	IncludeCount bool
 	Keyword   string
 	OrderBy   []string
 }
