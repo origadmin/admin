@@ -59,9 +59,9 @@ type QueryOption struct {
 	ReadMask  *fieldmaskpb.FieldMask // Use FieldMask for field selection
 }
 
-// OptionFromRequest creates a QueryOption with common details
+// QueryOptionFromRequest creates a QueryOption with common details
 // extracted from any request that satisfies the supported interfaces.
-func OptionFromRequest(req interface{}) QueryOption {
+func QueryOptionFromRequest(req interface{}) QueryOption {
 	opt := QueryOption{}
 
 	if r, ok := req.(PaginatingRequest); ok {
@@ -92,6 +92,18 @@ func OptionFromRequest(req interface{}) QueryOption {
 	// 	opt.ReadMask = r.GetReadMask()
 	// }
 
+	return opt
+}
+
+type UpdateOption struct {
+	UpdateMask *fieldmaskpb.FieldMask
+}
+
+func UpdateOptionFromRequest(req interface{}) UpdateOption {
+	opt := UpdateOption{}
+	if r, ok := req.(interface{ GetUpdateMask() *fieldmaskpb.FieldMask }); ok {
+		opt.UpdateMask = r.GetUpdateMask()
+	}
 	return opt
 }
 

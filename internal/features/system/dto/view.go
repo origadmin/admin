@@ -34,5 +34,5 @@ type ViewCreateOption struct{}
 
 // ViewUpdateOption specifies options for updating a view.
 type ViewUpdateOption struct {
-	UpdateMask *fieldmaskpb.FieldMask
+	repo.UpdateOption
 }
