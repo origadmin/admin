@@ -43,6 +43,5 @@ func ListResourcesRequestToQueryOption(req *system.ListResourcesRequest) *Resour
 	}
 	return &ResourceQueryOption{
 		QueryOption: repo.OptionFromRequest(req),
-		// WithPermissions: req.GetWithPermissions(), // Assuming this field exists
 	}
 }

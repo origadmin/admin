@@ -13,22 +13,11 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
+	"origadmin/application/admin/internal/data/entity/ent/hook"
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
-	"origadmin/application/admin/internal/data/entity/ent/hook"
-	"origadmin/application/admin/internal/data/entity/ent/schema/audit"
-	"origadmin/application/admin/internal/data/entity/ent/schema/types"
-)
-
-const (
-	UserStatusActive = types.Active
-	UserStatusFrozen = types.Frozen
-)
-
-const (
-	UserGenderMale    = "male"
-	UserGenderFemale  = "female"
-	UserGenderUnknown = "unknown"
+	"origadmin/application/admin/internal/services/audit"
 )
 
 // User holds the schema definition for the User domain.
@@ -60,8 +49,12 @@ func (User) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("entity.user.field.nickname")), // Name of user
 		field.Enum("gender").
-			Values(UserGenderMale, UserGenderFemale, UserGenderUnknown).
-			Default(UserGenderUnknown).
+			Values(
+				string(enums.GenderMale),
+				string(enums.GenderFemale),
+				string(enums.GenderUnknown),
+			).
+			Default(string(enums.GenderUnknown)).
 			Comment(i18n.Text("entity.user.field.gender")), // Gender of user
 		field.String("encrypted_password").
 			MaxLen(256).
@@ -93,7 +86,8 @@ func (User) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("entity.user.field.token")), // Token for login
 		field.Int8("status").
-			Default(UserStatusActive).
+			GoType(enums.Status(0)).
+			Default(int8(enums.StatusActive)).
 			Comment(i18n.Text("entity.user.field.status")),
 		field.Bool("is_system").
 			Default(false).
@@ -105,10 +99,10 @@ func (User) Fields() []ent.Field {
 		mixin.Time("last_login_time", i18n.Text("entity.user.field.last_login_time")),
 		mixin.Time("login_time", i18n.Text("entity.user.field.login_time")),
 		mixin.TimeOptional("sanction_date", i18n.Text("entity.user.field.sanction_date")),
-		mixin.OptionalFK("manager_id", i18n.Text("entity.user.field.manager_id")), // 管理员ID
+		mixin.OptionalFK("manager_id", i18n.Text("entity.user.field.manager_id")),
 		field.String("manager").
 			Default("").
-			Comment(i18n.Text("entity.user.field.manager")), // 管理员
+			Comment(i18n.Text("entity.user.field.manager")),
 	}
 }
 

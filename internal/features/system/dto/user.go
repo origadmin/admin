@@ -54,6 +54,5 @@ func ListUsersRequestToQueryOption(req *system.ListUsersRequest) *UserQueryOptio
 	}
 	return &UserQueryOption{
 		QueryOption: repo.OptionFromRequest(req),
-		// WithRoles: req.GetWithRoles(), // Assuming this field exists in the request
 	}
 }

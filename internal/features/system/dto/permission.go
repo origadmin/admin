@@ -1,50 +1,19 @@
-/*
- * Copyright (c) 2024 OrigAdmin. All rights reserved.
- */
-
-// Package dto is the data transfer object package for the system module.
 package dto
 
-import (
-	"context"
+import "time"
 
-	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/helpers/repo"
-)
-
-// PermissionRepo is a Permission repository interface.
-type PermissionRepo interface {
-	Get(context.Context, int64, ...*PermissionQueryOption) (*types.Permission, error)
-	List(context.Context, ...*PermissionQueryOption) ([]*types.Permission, int32, error)
-	Create(context.Context, *types.Permission, ...*PermissionCreateOption) (*types.Permission, error)
-	Update(context.Context, *types.Permission, ...*PermissionUpdateOption) (*types.Permission, error)
-	Delete(context.Context, int64) error
+// PermissionCondition represents a single condition for a permission.
+type PermissionCondition struct {
+	Field    string `json:"field"`
+	Operator string `json:"operator"`
+	Value    string `json:"value"`
 }
 
-// PermissionQueryOption specifies options for querying permissions.
-type PermissionQueryOption struct {
-	repo.QueryOption
-	DataScopes    []string
-	WithResources bool
-	WithRoles     bool
-}
-
-// PermissionCreateOption specifies options for creating a permission.
-type PermissionCreateOption struct {
-}
-
-// PermissionUpdateOption specifies options for updating a permission.
-type PermissionUpdateOption struct {
-}
-
-// ListPermissionsRequestToQueryOption converts an API request to a query option object.
-func ListPermissionsRequestToQueryOption(req *system.ListPermissionsRequest) *PermissionQueryOption {
-	if req == nil {
-		return &PermissionQueryOption{}
-	}
-	return &PermissionQueryOption{
-		QueryOption: repo.OptionFromRequest(req),
-		DataScopes:  req.GetDataScopes(),
-	}
+// PermissionAccessControl defines the access control rules for a permission.
+type PermissionAccessControl struct {
+	Actions    []string          `json:"actions"`
+	Conditions map[string]string `json:"conditions"`
+	ValidFrom  *time.Time        `json:"valid_from"`
+	ValidUntil *time.Time        `json:"valid_until"`
+	Attributes map[string]any    `json:"attributes"`
 }

@@ -47,6 +47,5 @@ func ListRolesRequestToQueryOption(req *system.ListRolesRequest) *RoleQueryOptio
 	}
 	return &RoleQueryOption{
 		QueryOption: repo.OptionFromRequest(req),
-		// WithPermissions: req.GetWithPermissions(), // Assuming this field exists
 	}
 }

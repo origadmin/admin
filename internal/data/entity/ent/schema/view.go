@@ -4,6 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
 )
@@ -27,10 +29,20 @@ func (View) Fields() []ent.Field {
 			Default("default"),
 		field.String("name").
 			Comment(i18n.Text("view.name.comment")),
-		field.String("type").
+		field.Enum("type").
 			Comment(i18n.Text("view.type.comment")).
-			MaxLen(1).
-			Default("U"),
+			Values(
+				string(enums.ViewTypeRoot),
+				string(enums.ViewTypeGroup),
+				string(enums.ViewTypeMenu),
+				string(enums.ViewTypeLink),
+				string(enums.ViewTypePage),
+				string(enums.ViewTypeButton),
+				string(enums.ViewTypeElement),
+				string(enums.ViewTypeRedirect),
+				string(enums.ViewTypeUnknown),
+			).
+			Default(string(enums.ViewTypeUnknown)),
 		field.String("component").
 			Comment(i18n.Text("view.component.comment")).
 			Optional(),

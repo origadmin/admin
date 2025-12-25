@@ -13,15 +13,9 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
-	"origadmin/application/admin/internal/data/entity/ent/schema/types"
-)
-
-// Role type constant
-const (
-	RoleTypeSystem int8 = 1 // System roles (e.g., Super Admin)
-	RoleTypeUser   int8 = 2 // User roles (e.g., general user, operation, customer service)
 )
 
 // Role holds the schema definition for the Role domain.
@@ -35,24 +29,26 @@ func (Role) Fields() []ent.Field {
 		field.String("keyword").
 			MaxLen(32).
 			Unique().
-			Comment("entity.role.field.keyword"), // keyword of role (unique)
+			Comment(i18n.Text("entity.role.field.keyword")), // keyword of role (unique)
 		field.String("name").
 			MaxLen(128).
 			Default("").
-			Comment("entity.role.field.name"), // Display name of role
+			Comment(i18n.Text("entity.role.field.name")), // Display name of role
 		field.String("description").
 			MaxLen(1024).
 			Default("").
-			Comment("entity.role.field.description"), // Details about role
+			Comment(i18n.Text("entity.role.field.description")), // Details about role
 		field.Int8("type").
-			Default(RoleTypeUser).
-			Comment("entity.role.field.type"), //("Role type: 1 - System role 2 - User role 3 - Department role"),
+			GoType(enums.RoleType(0)).
+			Default(int8(enums.RoleTypeUser)).
+			Comment(i18n.Text("entity.role.field.type")), // Role type: 1 - System role 2 - User role
 		field.Int("sequence").
 			Default(0).
-			Comment("entity.role.field.sequence"), // Sequence for sorting
+			Comment(i18n.Text("entity.role.field.sequence")), // Sequence for sorting
 		field.Int8("status").
-			Default(types.Active).
-			Comment("entity.role.field.status"),
+			GoType(enums.Status(0)).
+			Default(int8(enums.StatusActive)).
+			Comment(i18n.Text("entity.role.field.status")),
 	}
 }
 

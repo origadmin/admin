@@ -11,9 +11,9 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
-	"origadmin/application/admin/internal/data/entity/ent/schema/types"
 )
 
 // Notification holds the schema definition for the Notification entity.
@@ -31,9 +31,10 @@ func (Notification) Fields() []ent.Field {
 			Default("").
 			Comment(i18n.Text("entity.notification.field.content")),
 		field.Int8("status").
-			Default(types.Unknown).
+			GoType(enums.Status(0)).              // Tell entc to generate the Go type as enums.Status
+			Default(int8(enums.StatusUnknown)). // Provide the underlying type (int8) to the builder method
 			Comment(i18n.Text("entity.notification.field.status")),
-		mixin.FK("category_id", "entity.notification.field.category_id"),
+		mixin.FK("category_id", i18n.Text("entity.notification.field.category_id")),
 	}
 }
 

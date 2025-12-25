@@ -31,9 +31,7 @@ func (RolePermission) Fields() []ent.Field {
 
 // Mixin of the RolePermission.
 func (RolePermission) Mixin() []ent.Mixin {
-	return []ent.Mixin{
-		//mixin.ID{},
-	}
+	return []ent.Mixin{}
 }
 
 // Indexes of the RolePermission.
