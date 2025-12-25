@@ -13,6 +13,7 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"fmt"
+	"time"
 
 	"origadmin/application/admin/internal/helpers/repo"
 )
@@ -44,8 +45,7 @@ func DecodeCursor(token string) (Cursor, error) {
 	return c, nil
 }
 
-// paginateable is the minimal, correct interface for applying Limit and Offset.
-// It does not include `Where` or `Order` as they are not generically solvable.
+// paginateable defines an interface for queries that can be paginated.
 type paginateable[T any, W selectable, O selectable, R any] interface {
 	counter[T]
 	cloneable[T]
@@ -143,17 +143,38 @@ func PageCount[Q counter[Q]](ctx context.Context, query Q) (int32, error) {
 
 func Query[R any, W selectable, O selectable, P paginateable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
+	
+	// 记录查询开始时间用于监控
+	start := time.Now()
+	defer func() {
+		// 这里可以添加监控代码，记录查询耗时
+		_ = time.Since(start)
+	}()
+	
+	// 只有在需要时才执行count查询
+	var count int32
+	var err error
+	
 	if o.OnlyCount {
-		count, err := PageCount(ctx, query)
+		count, err = PageCount(ctx, query)
 		if err != nil {
-			return nil, 0, err
+			return nil, 0, fmt.Errorf("count query failed: %w", err)
 		}
 		return nil, count, nil
 	}
+	
+	// 如果明确需要总数或者不是cursor分页，才执行count查询
+	if o.IncludeCount || o.PageToken == "" {
+		count, err = PageCount(ctx, query)
+		if err != nil {
+			return nil, 0, fmt.Errorf("count query failed: %w", err)
+		}
+	}
+	
 	query = Paginate(query, o, callbacks...)
 	result, err := query.All(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("data query failed: %w", err)
 	}
-	return result, 0, nil
+	return result, count, nil
 }
