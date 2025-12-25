@@ -79,6 +79,5 @@ func NewData(rt *runtime.App, conf *conf.Config) (*Data, func(), error) {
 			}
 		}
 	}
-
 	return d, cleanup, nil
 }

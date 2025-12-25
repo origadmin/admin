@@ -13,11 +13,9 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 
-	"origadmin/application/admin/internal/data/entity/ent/hook"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
-	"origadmin/application/admin/internal/services/audit"
 )
 
 // User holds the schema definition for the User domain.
@@ -150,12 +148,5 @@ func (User) Edges() []ent.Edge {
 }
 
 func (User) Hooks() []ent.Hook {
-	auditService := audit.NewService()
-	// todo audit service: inject audit service
-	if auditService == nil {
-		return nil
-	}
-	return []ent.Hook{
-		hook.On(UserAuditHook(auditService), ent.OpCreate|ent.OpUpdate|ent.OpDelete),
-	}
+	return []ent.Hook{}
 }

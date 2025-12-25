@@ -22,8 +22,6 @@ type (
 	DepartmentPB              = types.Department
 	Departments               = []*ent.Department
 	DepartmentsPB             = []*types.Department
-	MenuPB                    = types.Menu
-	MenusPB                   = []*types.Menu
 	Permission                = ent.Permission
 	PermissionEdges           = ent.PermissionEdges
 	PermissionEdgesPB         = types.PermissionEdges
@@ -57,8 +55,6 @@ type (
 	Role                      = ent.Role
 	RoleEdges                 = ent.RoleEdges
 	RoleEdgesPB               = types.RoleEdges
-	RoleMenuPB                = types.RoleMenu
-	RoleMenusPB               = []*types.RoleMenu
 	RolePB                    = types.Role
 	RolePermission            = ent.RolePermission
 	RolePermissionEdges       = ent.RolePermissionEdges
@@ -66,6 +62,8 @@ type (
 	RolePermissionPB          = types.RolePermission
 	RolePermissions           = []*ent.RolePermission
 	RolePermissionsPB         = []*types.RolePermission
+	RoleViewPB                = types.RoleView
+	RoleViewsPB               = []*types.RoleView
 	Roles                     = []*ent.Role
 	RolesPB                   = []*types.Role
 	User                      = ent.User
@@ -94,7 +92,10 @@ type (
 	UsersPB                   = []*types.User
 	View                      = ent.View
 	ViewEdges                 = ent.ViewEdges
+	ViewEdgesPB               = types.ViewEdges
+	ViewPB                    = types.View
 	Views                     = []*ent.View
+	ViewsPB                   = []*types.View
 )
 
 // ConvertDepartmentEdgesPBToDepartmentEdges converts DepartmentEdgesPB to DepartmentEdges.
@@ -1148,6 +1149,103 @@ func ConvertUsersToUsersPB(froms Users) UsersPB {
 	tos := make(UsersPB, len(froms))
 	for i, f := range froms {
 		tos[i] = ConvertUserToUserPB(f)
+	}
+	return tos
+}
+
+// ConvertViewEdgesPBToViewEdges converts ViewEdgesPB to ViewEdges.
+func ConvertViewEdgesPBToViewEdges(from *ViewEdgesPB) *ViewEdges {
+	if from == nil {
+		return nil
+	}
+
+	to := &ViewEdges{
+		Parent:    ConvertViewPBToView(from.Parent),
+		Children:  ConvertViewsPBToViews(from.Children),
+		Resources: ConvertResourcesPBToResources(from.Resources),
+	}
+	return to
+}
+
+// ConvertViewEdgesToViewEdgesPB converts ViewEdges to ViewEdgesPB.
+func ConvertViewEdgesToViewEdgesPB(from *ViewEdges) *ViewEdgesPB {
+	if from == nil {
+		return nil
+	}
+
+	to := &ViewEdgesPB{
+		Children:  ConvertViewsToViewsPB(from.Children),
+		Parent:    ConvertViewToViewPB(from.Parent),
+		Resources: ConvertResourcesToResourcesPB(from.Resources),
+	}
+	return to
+}
+
+// ConvertViewPBToView converts ViewPB to View.
+func ConvertViewPBToView(from *ViewPB) *View {
+	if from == nil {
+		return nil
+	}
+
+	to := &View{
+		ID:         from.Id,
+		CreateTime: ConvertTimestampToTime(from.CreateTime),
+		UpdateTime: ConvertTimestampToTime(from.UpdateTime),
+		ParentID:   from.ParentId,
+		Keyword:    from.Keyword,
+		Name:       from.Name,
+		Type:       from.Type,
+		Path:       from.Path,
+		Icon:       from.Icon,
+		Sequence:   int(from.Sequence),
+	}
+	return to
+}
+
+// ConvertViewToViewPB converts View to ViewPB.
+func ConvertViewToViewPB(from *View) *ViewPB {
+	if from == nil {
+		return nil
+	}
+
+	to := &ViewPB{
+		Id:         from.ID,
+		CreateTime: ConvertTimeToTimestamp(from.CreateTime),
+		UpdateTime: ConvertTimeToTimestamp(from.UpdateTime),
+		Keyword:    from.Keyword,
+		Name:       from.Name,
+		Sequence:   int32(from.Sequence),
+		Type:       from.Type,
+		Icon:       from.Icon,
+		Path:       from.Path,
+		ParentId:   from.ParentID,
+		Children:   ConvertViewsToViewsPB(from.Edges.Children),
+		Parent:     ConvertViewToViewPB(from.Edges.Parent),
+		Resources:  ConvertResourcesToResourcesPB(from.Edges.Resources),
+	}
+	return to
+}
+
+// ConvertViewsPBToViews converts a slice of *ViewPB to a slice of *View.
+func ConvertViewsPBToViews(froms ViewsPB) Views {
+	if froms == nil {
+		return nil
+	}
+	tos := make(Views, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertViewPBToView(f)
+	}
+	return tos
+}
+
+// ConvertViewsToViewsPB converts a slice of *View to a slice of *ViewPB.
+func ConvertViewsToViewsPB(froms Views) ViewsPB {
+	if froms == nil {
+		return nil
+	}
+	tos := make(ViewsPB, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertViewToViewPB(f)
 	}
 	return tos
 }
