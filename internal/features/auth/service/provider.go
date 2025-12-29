@@ -10,38 +10,4 @@ import (
 )
 
 // ProviderSet is service providers.
-var ProviderSet = wire.NewSet(
-	NewRegisterServer,
-	NewAuthServiceServerPB,
-	NewAuthServiceHTTPServerPB,
-	NewCasbinSourceServiceServerPB,
-	NewCasbinSourceServiceHTTPServerPB,
-	NewLoginServiceServerPB,
-	NewLoginServiceHTTPServerPB,
-	NewPersonalServiceServerPB,
-	NewPersonalServiceHTTPServerPB,
-	NewCasbinSourceBiz,
-)
-
-// LocalProviderSet is service providers.
-var LocalProviderSet = wire.NewSet(
-	NewRegisterBridgeServer,
-	NewAuthServiceServerPB,
-	NewAuthServiceHTTPServerPB,
-	NewCasbinSourceServiceServerPB,
-	NewCasbinSourceServiceHTTPServerPB,
-	NewLoginServiceServerPB,
-	NewLoginServiceHTTPServerPB,
-	NewPersonalServiceServerPB,
-	NewPersonalServiceHTTPServerPB,
-	NewCasbinSourceBiz,
-)
-
-var RemoteProviderSet = wire.NewSet(
-	NewRegisterBridgeServer,
-	NewAuthServiceBridgeClient,
-	NewCasbinServiceBridgeClient,
-	NewLoginServiceBridgeClient,
-	NewPersonalServiceBridgeClient,
-	NewCasbinSourceClient,
-)
+var ProviderSet = wire.NewSet(NewAuthService, NewMeService, NewCasbinSourceService)

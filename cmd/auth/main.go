@@ -1,84 +1,81 @@
-/*
- * Copyright (c) 2024 OrigAdmin. All rights reserved.
- */
-
 package main
 
 import (
-	"context"
 	"flag"
-	"log/slog"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/bootstrap"
-	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/toolkits/codec/toml"
+	"github.com/joho/godotenv"
+	_ "github.com/sqlite3ent/sqlite3" // Import for sqlite3 driver
 
-	_ "origadmin/application/admin/contrib/consul/config"
-	_ "origadmin/application/admin/contrib/consul/registry"
-	_ "origadmin/application/admin/contrib/database/drivers"
+	_ "github.com/origadmin/contrib/config/consul"
+	_ "github.com/origadmin/contrib/registry/consul"
+	"github.com/origadmin/runtime"
+	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/runtime/log"
+	"origadmin/application/admin/internal/conf"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
-	"origadmin/application/admin/internal/loader"
+	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 
-// go build -ldflags "-X main.Version=vx.y.z -X main.Name=origadmin.service.auth.v1"
 var (
-	// Name is the Name of the compiled software.
+	// Name is the name of the compiled software.
 	Name = "origadmin.service.auth.v1"
-	// Version is the Version of the compiled software.
+	// Version is the version of the compiled software.
 	Version = "v1.0.0"
-	// boot are the bootstrap boot.
-	flags = bootstrap.New()
-	// debug mode
-	debug = false
-	// configPath is the config path, default is config.toml
-	configPath = ""
+
+	// flagconf is the config flag.
+	flagconf string
 )
 
 func init() {
-	encoding.RegisterCodec(toml.Codec)
-	flags.SetServiceInfo(Name, Version)
-	flag.BoolVar(&debug, "debug", false, "set environment, eg: -debug")
-	flag.StringVar(&configPath, "c", "config.toml", "config path, eg: -c config.toml")
+	// The config path should be the directory containing configuration files.
+	// The default is empty, so we can detect if the user has provided it.
+	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
+}
+
+func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
+	return app.NewApp(servers)
 }
 
 func main() {
+	// Load .env file for local development from resources directory.
+	// It's safe to ignore the error, as the file may not exist in production.
+	_ = godotenv.Load("resources/.env.auth")
+
 	flag.Parse()
 
-	// the release mode, work dir sets to empty, use config path as work dir
-	if debug {
-		flags.SetEnv("debug")
-		flags.SetConfigPath("resources/configs/auth_config.toml")
-		flags.SetWorkDir(".")
-		slog.SetLogLoggerLevel(slog.LevelDebug)
+	confPath := confhelper.FindConfPath(flagconf)
+	if confPath == "" {
+		log.Fatalf("Could not find configuration file. Searched -conf flag, executable path, and development path.")
 	}
 
-	//r, err := runtime.Load(flags)
-	//if err != nil {
-	//	return
-	//}
-	//l := r.Logger(
-	//	"ts", log.DefaultTimestamp,
-	//	"caller", log.DefaultCaller,
-	//	"service.id", flags.ServiceID(),
-	//	"service.name", flags.ServiceName(),
-	//	"service.version", flags.Version(),
-	//	"trace.id", tracing.TraceID(),
-	//	"span.id", tracing.SpanID(),
-	//)
-	//log.SetLogger(l)
-	ll := log.NewHelper(log.GetLogger())
-	ll.Infof("bootstrap flags: %+v", flags)
-	if err := loader.Bootstrap(context.Background(), flags, buildInjectors); err != nil {
-		ll.Infof("failed to bootstrap: %s", err.Error())
-		return
-	}
-}
+	// Log the config path for debugging
+	log.Infof("Loading configuration from: %s\n", confPath)
 
-// NewApp new app with runtime and injector
-func NewApp(r runtime.Runtime, servers []transport.Server) *kratos.App {
-	return r.CreateApp(servers...)
+	// NewFromBootstrap handles config loading, logging, and container setup.
+	rt := runtime.New(Name, Version)
+	err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.New()))
+	if err != nil {
+		log.Fatalf("failed to create runtime: %v", err)
+	}
+	defer rt.Config().Close()
+	log.Infof("Starting %s %s (ID: %s)\n", rt.AppInfo().Name(), rt.AppInfo().Version(), rt.AppInfo().ID())
+
+	// Get bootstrap config
+	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)
+	if !ok {
+		log.Fatalf("failed to get bootstrap config")
+	}
+	// wireApp now takes the runtime instance and builds the kratos app.
+	app, cleanupApp, err := wireApp(rt, bootstrapConfig)
+	if err != nil {
+		log.Fatalf("failed to wire app: %v", err)
+	}
+	defer cleanupApp()
+
+	// Run the application
+	if err := app.Run(); err != nil {
+		log.Fatalf("app run failed: %v", err)
+	}
 }

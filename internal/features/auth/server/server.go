@@ -1,153 +1,117 @@
-/*
- * Copyright (c) 2024 OrigAdmin. All rights reserved.
- */
-
 package server
 
 import (
-	"github.com/go-kratos/kratos/v2/metadata"
+	"errors"
+	stdhttp "net/http"
+
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
-	"github.com/origadmin/runtime"
-	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
-	"github.com/origadmin/runtime/context"
+
 	"github.com/origadmin/runtime/log"
-	"github.com/origadmin/runtime/middleware"
-	"github.com/origadmin/runtime/service"
-	servicegrpc "github.com/origadmin/runtime/service/grpc"
-	servicehttp "github.com/origadmin/runtime/service/http"
-	"github.com/origadmin/toolkits/errors"
+	authv1 "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/features/auth/service"
 
-	"origadmin/application/admin/internal/configs"
-	authservice "origadmin/application/admin/internal/features/auth/service" // Corrected import path
+	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
+	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
+	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 )
 
-const (
-	// ServiceName is service name.
-	ServiceName = "auth"
-)
+// ProviderSet is server providers.
+var ProviderSet = wire.NewSet(NewServers)
 
-var (
-	// ProviderSet is server providers.
-	ProviderSet = wire.NewSet(
-		NewAuthClient,
-		NewAuthServer,
-	)
-)
-
-func init() {
-	runtime.RegisterService(ServiceName, service.DefaultServiceFactory)
-}
-
-func NewAuthServer(r runtime.Runtime, bootstrap *configs.Bootstrap, svc authservice.AuthServerRegistrar) []transport.
-Server {
-	var servers []transport.Server
-	serverConfig := bootstrap.GetServer()
-	if serverConfig == nil {
-		return servers
+// NewServers creates and configures the auth service servers (gRPC, HTTP).
+func NewServers(
+	cfg *transportv1.Servers,
+	authSvc *service.AuthService,
+	meSvc *service.MeService,
+	casbinSvc *service.CasbinSourceService,
+	logger log.Logger,
+) ([]transport.Server, error) {
+	if cfg == nil {
+		return nil, errors.New("servers config is nil")
 	}
 
-	ll := log.NewHelper(r.WithLogger("module", "auth/server"))
-	middlewares := middleware.NewServer(bootstrap.GetServer().GetMiddleware())
-	services := bootstrap.GetServer().GetServices()
-	coreinfo := bootstrap.GetServer().GetCore()
-	for _, serviceConfig := range services {
-		ll.Infow("msg", "service init", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
-		var option service.ServerOption
-		switch serviceConfig.GetType() {
-		case "grpc":
-			options := []servicegrpc.Option{
-				servicegrpc.WithMiddlewares(middlewares...),
-				servicegrpc.WithPrefix(runtime.DefaultEnvPrefix),
-			}
-			option = service.WithGRPC(options...)
-			//grpcServer, err := r.Builder().NewGRPCServer(serviceConfig, options...)
-			//if err != nil {
-			//	continue
-			//}
-			//ll.Infow("msg", "grpc server init", "name", coreinfo.GetName(), "version",
-			//	coreinfo.GetVersion())
-			//svc.Register(r.Context(), grpcServer)
-			//servers = append(servers, grpcServer)
+	var transportServers []transport.Server
+	for _, serverCfg := range cfg.GetConfigs() {
+		switch serverCfg.GetProtocol() {
 		case "http":
-			options := []servicehttp.Option{
-				servicehttp.WithMiddlewares(middlewares...),
-				servicehttp.WithPrefix(runtime.DefaultEnvPrefix),
+			srv, err := NewHTTPServer(serverCfg.GetHttp(), authSvc, meSvc, casbinSvc, logger)
+			if err != nil {
+				return nil, err
 			}
-			option = service.WithHTTP(options...)
-			//httpServer, err := r.Builder().NewHTTPServer(serviceConfig, options...)
-			//if err != nil {
-			//	continue
-			//}
-			//ll.Infow("msg", "http server init", "name", coreinfo.GetName(), "version",
-			//	coreinfo.GetVersion())
-			//svc.Register(r.Context(), httpServer)
-			//servers = append(servers, httpServer)
+			transportServers = append(transportServers, srv)
+		case "grpc":
+			srv, err := NewGRPCServer(serverCfg.GetGrpc(), authSvc, meSvc, casbinSvc, logger)
+			if err != nil {
+				return nil, err
+			}
+			transportServers = append(transportServers, srv)
 		default:
-			ll.Warnw("msg", "service type not support", "name", serviceConfig.GetName(), "type", serviceConfig.GetType())
-			continue
+			return nil, errors.New("protocol is not supported: " + serverCfg.GetProtocol())
 		}
-		httpServer, err := r.Builder().NewServer("auth", serviceConfig, option)
-		if err != nil {
-			continue
-		}
-		ll.Infow("msg", "auth server init", "name", coreinfo.GetName(), "version",
-			coreinfo.GetVersion())
-		svc.Register(r.Context(), httpServer)
-		servers = append(servers, httpServer)
 	}
-	return servers
+	return transportServers, nil
 }
 
-func NewAuthClient(r runtime.Runtime, bootstrap *configs.Bootstrap) (*service.GRPCClient, error) {
-	discovery := bootstrap.GetDiscovery()
-	if discovery == nil {
-		return nil, errors.New("no discovery")
+// NewHTTPServer new an HTTP server.
+func NewHTTPServer(
+	cfg *httpv1.Server,
+	authSvc *service.AuthService,
+	meSvc *service.MeService,
+	casbinSvc *service.CasbinSourceService,
+	logger log.Logger,
+) (*http.Server, error) {
+	if cfg == nil {
+		return nil, errors.New("http config is nil")
 	}
-	serviceConfig := &configv1.Service{
-		Name: ServiceName,
-		Selector: &configv1.Service_Selector{
-			Version: "v1.0.0",
-			Builder: "bbr",
-		},
+
+	var opts []http.ServerOption
+	if cfg.GetAddr() != "" {
+		opts = append(opts, http.Address(cfg.GetAddr()))
 	}
-	helper := log.NewHelper(r.Logger())
-	helper.Infof("service name: %s", discovery.ServiceName)
-	discover, err := runtime.NewDiscovery(discovery)
-	if err != nil {
-		return nil, errors.Wrap(err, "create discovery")
+	if cfg.GetTimeout() != nil {
+		opts = append(opts, http.Timeout(cfg.GetTimeout().AsDuration()))
 	}
-	var ms []middleware.KMiddleware
-	options := []servicegrpc.Option{
-		servicegrpc.WithDiscovery(discovery.ServiceName, discover),
-	}
-	ms = append(ms, middleware.NewClient(bootstrap.GetMiddleware())...)
-	ms = append(ms, MiddlewareServer())
-	if len(ms) > 0 {
-		options = append(options, servicegrpc.WithMiddlewares(ms...))
-	}
-	client, err := runtime.NewGRPCServiceClient(context.Background(), serviceConfig, options...)
-	if err != nil {
-		return nil, errors.Wrap(err, "create menu grpc client")
-	}
-	return client, nil
+	srv := http.NewServer(opts...)
+
+	// Register HTTP handlers
+	authv1.RegisterAuthHTTPServer(srv, authSvc)
+	authv1.RegisterMeHTTPServer(srv, meSvc)
+	authv1.RegisterCasbinSourceServiceHTTPServer(srv, casbinSvc)
+
+	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
+		log.Infof("HTTP %s %s", method, path)
+	})
+	return srv, nil
 }
 
-func MiddlewareServer() middleware.KMiddleware {
-	return func(handler middleware.KHandler) middleware.KHandler {
-		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			if md, ok := metadata.FromClientContext(ctx); ok {
-				log.Debugf("MiddlewareServer: found client context metadata: %+v", md)
-			} else {
-				log.Debugf("MiddlewareServer: no client context metadata found")
-			}
-			if md, ok := metadata.FromServerContext(ctx); ok {
-				log.Debugf("MiddlewareServer: found server context metadata: %+v", md)
-			} else {
-				log.Debugf("MiddlewareServer: no server context metadata found")
-			}
-			reply, err = handler(ctx, req)
-			return
-		}
+// NewGRPCServer new a gRPC server.
+func NewGRPCServer(
+	cfg *grpcv1.Server,
+	authSvc *service.AuthService,
+	meSvc *service.MeService,
+	casbinSvc *service.CasbinSourceService,
+	logger log.Logger,
+) (*grpc.Server, error) {
+	if cfg == nil {
+		return nil, errors.New("grpc config is nil")
 	}
+
+	var opts []grpc.ServerOption
+	if cfg.GetAddr() != "" {
+		opts = append(opts, grpc.Address(cfg.GetAddr()))
+	}
+	if cfg.GetTimeout() != nil {
+		opts = append(opts, grpc.Timeout(cfg.GetTimeout().AsDuration()))
+	}
+	srv := grpc.NewServer(opts...)
+
+	// Register gRPC handlers
+	authv1.RegisterAuthServer(srv, authSvc)
+	authv1.RegisterMeServer(srv, meSvc)
+	authv1.RegisterCasbinSourceServiceServer(srv, casbinSvc)
+
+	return srv, nil
 }
