@@ -2,24 +2,27 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
+	"github.com/origadmin/contrib/security/authn/jwt"
+	securityPrincipal "github.com/origadmin/contrib/security/principal"
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/biz"
-	"origadmin/application/admin/internal/pkg/token"
 )
 
 // AuthService is a service for authentication.
 type AuthService struct {
 	v1.UnimplementedAuthServer
-	uc *biz.AuthUseCase
-	tm token.Manager
+	uc    *biz.AuthUseCase
+	authn *jwt.Authenticator
 }
 
 // NewAuthService creates a new authentication service.
-func NewAuthService(uc *biz.AuthUseCase, tm token.Manager) *AuthService {
-	return &AuthService{uc: uc, tm: tm}
+func NewAuthService(uc *biz.AuthUseCase, authn *jwt.Authenticator) *AuthService {
+	return &AuthService{uc: uc, authn: authn}
 }
 
 // Login authenticates a user and returns a token pair.
@@ -29,15 +32,23 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		return nil, err
 	}
 
-	accessToken, refreshToken, err := s.tm.Generate(ctx, userID)
+	// Create a principal for the user.
+	p := securityPrincipal.New(fmt.Sprint(userID))
+
+	// Create a credential (which contains the token).
+	credResp, err := s.authn.CreateCredential(ctx, p)
 	if err != nil {
 		return nil, err
 	}
-
+	token := credResp.Response().GetPayload().GetToken()
+	if token == nil {
+		return nil, securityv1.ErrorTokenInvalid("token is missing")
+	}
 	return &v1.LoginResponse{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-		TokenType:    "Bearer",
+		AccessToken:  token.GetAccessToken(),
+		RefreshToken: token.GetRefreshToken(),
+		TokenType:    token.GetTokenType(),
+		ExpiresIn:    token.GetExpiresIn(),
 	}, nil
 }
 
