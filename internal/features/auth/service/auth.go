@@ -6,23 +6,24 @@ import (
 
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
-	"github.com/origadmin/contrib/security/authn/jwt"
-	securityPrincipal "github.com/origadmin/contrib/security/principal"
 	v1 "origadmin/application/admin/api/v1/services/auth"
+	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
+	"github.com/origadmin/contrib/security/credential"
+	securityPrincipal "github.com/origadmin/contrib/security/principal"
 	"origadmin/application/admin/internal/features/auth/biz"
 )
 
 // AuthService is a service for authentication.
 type AuthService struct {
 	v1.UnimplementedAuthServer
-	uc    *biz.AuthUseCase
-	authn *jwt.Authenticator
+	uc        *biz.AuthUseCase
+	captchaUC *biz.CaptchaUseCase
+	creator   credential.Creator
 }
 
 // NewAuthService creates a new authentication service.
-func NewAuthService(uc *biz.AuthUseCase, authn *jwt.Authenticator) *AuthService {
-	return &AuthService{uc: uc, authn: authn}
+func NewAuthService(uc *biz.AuthUseCase, captchaUC *biz.CaptchaUseCase, creator credential.Creator) *AuthService {
+	return &AuthService{uc: uc, captchaUC: captchaUC, creator: creator}
 }
 
 // Login authenticates a user and returns a token pair.
@@ -36,19 +37,33 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 	p := securityPrincipal.New(fmt.Sprint(userID))
 
 	// Create a credential (which contains the token).
-	credResp, err := s.authn.CreateCredential(ctx, p)
+	credResp, err := s.creator.CreateCredential(ctx, p)
 	if err != nil {
 		return nil, err
 	}
-	token := credResp.Response().GetPayload().GetToken()
+
+	token := credResp.Payload().GetToken()
 	if token == nil {
 		return nil, securityv1.ErrorTokenInvalid("token is missing")
 	}
+
 	return &v1.LoginResponse{
 		AccessToken:  token.GetAccessToken(),
 		RefreshToken: token.GetRefreshToken(),
 		TokenType:    token.GetTokenType(),
 		ExpiresIn:    token.GetExpiresIn(),
+	}, nil
+}
+
+// GetCaptcha generates a new captcha.
+func (s *AuthService) GetCaptcha(ctx context.Context, req *v1.GetCaptchaRequest) (*v1.GetCaptchaResponse, error) {
+	id, b64s, err := s.captchaUC.GenerateCaptcha(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GetCaptchaResponse{
+		CaptchaId:    id,
+		CaptchaImage: b64s,
 	}, nil
 }
 
@@ -67,12 +82,8 @@ func (s *AuthService) RefreshToken(ctx context.Context, req *v1.RefreshTokenRequ
 	return &v1.RefreshTokenResponse{}, nil
 }
 
-// GetCaptcha generates a new captcha.
-func (s *AuthService) GetCaptcha(ctx context.Context, req *v1.GetCaptchaRequest) (*v1.GetCaptchaResponse, error) {
-	return &v1.GetCaptchaResponse{}, nil
-}
-
 // Authenticate is for internal use by the gateway to verify user access via gRPC.
 func (s *AuthService) Authenticate(ctx context.Context, req *v1.AuthenticateRequest) (*v1.AuthenticateResponse, error) {
+	// This should be implemented using an authn.Authenticator, which can be a separate dependency.
 	return &v1.AuthenticateResponse{}, nil
 }

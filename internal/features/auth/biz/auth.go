@@ -5,22 +5,24 @@ import (
 	"errors"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/origadmin/toolkits/crypto/hash"
 
 	"origadmin/application/admin/internal/features/auth/dto"
 )
 
 // AuthUseCase is a authentication use case.
 type AuthUseCase struct {
-	repo dto.AuthRepo
-	log  *log.Helper
+	repo   dto.AuthRepo
+	hasher hash.Crypto
+	log    *log.Helper
 }
 
 // NewAuthUseCase new a authentication use case.
-func NewAuthUseCase(repo dto.AuthRepo, logger log.Logger) *AuthUseCase {
+func NewAuthUseCase(repo dto.AuthRepo, hasher hash.Crypto, logger log.Logger) *AuthUseCase {
 	return &AuthUseCase{
-		repo: repo,
-		log:  log.NewHelper(logger),
+		repo:   repo,
+		hasher: hasher,
+		log:    log.NewHelper(logger),
 	}
 }
 
@@ -32,9 +34,8 @@ func (uc *AuthUseCase) VerifyUser(ctx context.Context, username, password string
 	}
 
 	// Compare the provided password with the stored hash.
-	err = bcrypt.CompareHashAndPassword([]byte(user.EncryptedPassword), []byte(password))
-	if err != nil {
-		// If the passwords don't match, return a generic error.
+	ok, err := uc.hasher.Compare(user.EncryptedPassword, password)
+	if err != nil || !ok {
 		return 0, errors.New("invalid username or password")
 	}
 
