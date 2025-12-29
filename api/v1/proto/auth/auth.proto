@@ -3,137 +3,131 @@ syntax = "proto3";
 package api.v1.services.auth;
 
 import "google/api/annotations.proto";
-import "google/api/client.proto";
 import "google/protobuf/empty.proto";
-import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
-option java_outer_classname = "APIServiceAuthAuthProto";
 option java_package = "com.origadmin.api.v1.services.auth";
-option objc_class_prefix = "APIServiceAuthAuth";
+option java_outer_classname = "APIServiceAuthProto";
 
-service AuthService {
-  // ListAuthResources returns a list of Auths.
-  rpc ListAuthResources(ListAuthResourcesRequest) returns (ListAuthResourcesResponse) {
-    option (google.api.http) = {get: "/auth/resources"};
-  }
+// Service Auth provides APIs for the authentication lifecycle.
+service Auth {
+  // --- Authentication ---
 
-  // CreateToken generates a new JWT token for the given user.
-  rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse) {
+  // Login authenticates a user and returns a token pair.
+  rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
-      post: "/auth/token"
-      body: "data"
+      post: "/api/v1/auth/login"
+      body: "*"
     };
   }
 
-  // ValidateToken verifies the validity of a JWT token.
-  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
-    option (google.api.http) = {get: "/auth/validate"};
-  }
-
-  // DestroyToken invalidates a JWT token.
-  rpc DestroyToken(DestroyTokenRequest) returns (DestroyTokenResponse) {
+  // Register creates a new user account.
+  rpc Register(RegisterRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/auth/destroy"
-      body: "data"
+      post: "/api/v1/auth/register"
+      body: "*"
     };
   }
 
-  // Authenticate authenticates a user.
-  rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse) {
+  // Logout invalidates the user's session.
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/auth/authenticate"
-      body: "data"
+      post: "/api/v1/auth/logout"
+      body: "*"
     };
   }
 
-  // AuthLogout logs out a user.
-  rpc AuthLogout(AuthLogoutRequest) returns (AuthLogoutResponse) {
+  // RefreshToken provides a new access token.
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
     option (google.api.http) = {
-      post: "/auth/logout"
-      body: "data"
+      post: "/api/v1/auth/token"
+      body: "*"
     };
   }
-}
 
-message AuthLogoutRequest {
-  message Data {
-    string token = 1 [json_name = "token"];
+  // --- Captcha ---
+
+  // GetCaptcha generates a new captcha.
+  rpc GetCaptcha(GetCaptchaRequest) returns (GetCaptchaResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/captcha"
+    };
   }
-  Data data = 1 [json_name = "data"];
+
+  // --- Internal ---
+
+  // Authenticate is for internal use by the gateway to verify user access via gRPC.
+  // It does not have an HTTP binding.
+  rpc Authenticate(AuthenticateRequest) returns (AuthenticateResponse);
 }
 
-message AuthLogoutResponse {
-  google.protobuf.Empty empty = 1;
+// --- Message Definitions ---
+
+// The request message for the Login RPC.
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+  string captcha_id = 3;
+  string captcha_code = 4;
 }
 
-message ListAuthResourcesRequest {
-  // The maximum number of Auths to return.
-  int32 page_size = 1 [json_name = "page_size"];
-  // The next_page_token value returned from a previous List request, if any.
-  string page_token = 2 [json_name = "page_token"];
-  // The current page number.
-  int32 current = 3 [json_name = "current"];
-  // The no_paging is used to disable pagination.
-  bool no_paging = 4 [json_name = "no_paging"];
+// The response message for the Login RPC.
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  string token_type = 3;
+  int64 expires_in = 4;
 }
 
-message ListAuthResourcesResponse {
-  // The list of Auths.
-  repeated api.v1.services.types.Resource resources = 1 [json_name = "resources"];
-  // The total number of Auths in the result set.
-  int32 total_size = 2 [json_name = "total_size"];
+// The request message for the Register RPC.
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+  string captcha_id = 4;
+  string captcha_code = 5;
 }
 
-// CreateTokenRequest contains the information needed to create a token.
-message CreateTokenRequest {
-  message Data {
-    string user_id = 1 [json_name = "user_id"];
-    repeated string scopes = 2 [json_name = "scopes"];
-  }
-  Data data = 1 [json_name = "data"];
+// The request message for the Logout RPC.
+message LogoutRequest {
+  string refresh_token = 1;
 }
 
-// CreateTokenResponse contains the generated token.
-message CreateTokenResponse {
-  string token = 1 [json_name = "token"];
+// The request message for the RefreshToken RPC.
+message RefreshTokenRequest {
+  string refresh_token = 1;
 }
 
-// VerifyTokenRequest contains the token to be verified.
-message ValidateTokenRequest {
-  string token = 1 [json_name = "token"];
+// The response message for the RefreshToken RPC.
+message RefreshTokenResponse {
+  string access_token = 1;
+  string token_type = 2;
+  int64 expires_in = 3;
 }
 
-// VerifyTokenResponse contains the result of the verification.
-message ValidateTokenResponse {
-  bool is_valid = 1 [json_name = "is_valid"];
-  map<string, string> claims = 2 [json_name = "claims"];
+// The request message for the GetCaptcha RPC.
+message GetCaptchaRequest {
+  // If true, forces reloading of the captcha.
+  bool reload = 1;
 }
 
-// DestroyTokenRequest contains the token to be invalidated.
-message DestroyTokenRequest {
-  message Data {
-    string token = 1 [json_name = "token"];
-  }
-  Data data = 1 [json_name = "data"];
+// The response message for the GetCaptcha RPC.
+message GetCaptchaResponse {
+  string captcha_id = 1;
+  // Base64 encoded image data.
+  string captcha_image = 2;
 }
 
-// DestroyTokenResponse contains the result of the invalidation.
-message DestroyTokenResponse {
-  google.protobuf.Empty empty = 1;
-}
-
+// The request message for the Authenticate RPC.
 message AuthenticateRequest {
-  message Data {
-    string token = 1 [json_name = "token"];
-    string path = 3 [json_name = "path"];
-    string method = 4 [json_name = "method"];
-    string operation = 5 [json_name = "operation"];
-  }
-  Data data = 1 [json_name = "data"];
+  string token = 1;
+  string path = 2;
+  string method = 3;
 }
 
+// The response message for the Authenticate RPC.
 message AuthenticateResponse {
-  bool is_valid = 1 [json_name = "is_valid"];
+  bool authorized = 1;
+  string user_id = 2;
 }

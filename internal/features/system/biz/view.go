@@ -30,12 +30,11 @@ func (uc *ViewUseCase) GetView(ctx context.Context, id int64) (*types.View, erro
 	return uc.repo.Get(ctx, id)
 }
 
-// CreateView creates a new view.
+// CreateView creates a new view, ensuring essential fields have valid default values.
 func (uc *ViewUseCase) CreateView(ctx context.Context, in *types.View) (*types.View, error) {
-	// Set business-defined default values before passing to the data layer.
-	// This is the correct layer to ensure the business object is valid.
-	if in.Type == "" || in.Type == dto.ViewTypeUnknown.String() {
-		in.Type = dto.ViewTypePage.String()
+	// The backend must always enforce data integrity, regardless of frontend behavior.
+	if in.Type == "" || in.Type == enums.ViewTypeUnknown.String() {
+		in.Type = enums.ViewTypePage.String()
 	}
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)

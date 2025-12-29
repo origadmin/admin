@@ -10,7 +10,6 @@ import (
 
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
-	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
 )
 
@@ -34,6 +33,7 @@ func (uc *PermissionUseCase) GetPermission(ctx context.Context, id int64) (*type
 }
 
 func (uc *PermissionUseCase) CreatePermission(ctx context.Context, in *types.Permission) (*types.Permission, error) {
+	// Permission does not have a status field, so no default value is needed here.
 	return uc.repo.Create(ctx, in)
 }
 

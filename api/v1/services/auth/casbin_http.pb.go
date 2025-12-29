@@ -31,9 +31,9 @@ type CasbinSourceServiceHTTPServer interface {
 
 func RegisterCasbinSourceServiceHTTPServer(s *http.Server, srv CasbinSourceServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/casbin/policies", _CasbinSourceService_ListPolicies0_HTTP_Handler(srv))
-	r.GET("/casbin/groupings", _CasbinSourceService_ListGroupings0_HTTP_Handler(srv))
-	r.GET("/casbin/watch", _CasbinSourceService_WatchUpdate0_HTTP_Handler(srv))
+	r.GET("/api/v1/casbin/policies", _CasbinSourceService_ListPolicies0_HTTP_Handler(srv))
+	r.GET("/api/v1/casbin/groupings", _CasbinSourceService_ListGroupings0_HTTP_Handler(srv))
+	r.GET("/api/v1/casbin/watch", _CasbinSourceService_WatchUpdate0_HTTP_Handler(srv))
 }
 
 func _CasbinSourceService_ListPolicies0_HTTP_Handler(srv CasbinSourceServiceHTTPServer) func(ctx http.Context) error {
@@ -109,7 +109,7 @@ func NewCasbinSourceServiceHTTPClient(client *http.Client) CasbinSourceServiceHT
 
 func (c *CasbinSourceServiceHTTPClientImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...http.CallOption) (*ListGroupingsResponse, error) {
 	var out ListGroupingsResponse
-	pattern := "/casbin/groupings"
+	pattern := "/api/v1/casbin/groupings"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCasbinSourceServiceListGroupings))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -122,7 +122,7 @@ func (c *CasbinSourceServiceHTTPClientImpl) ListGroupings(ctx context.Context, i
 
 func (c *CasbinSourceServiceHTTPClientImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...http.CallOption) (*ListPoliciesResponse, error) {
 	var out ListPoliciesResponse
-	pattern := "/casbin/policies"
+	pattern := "/api/v1/casbin/policies"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCasbinSourceServiceListPolicies))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -135,7 +135,7 @@ func (c *CasbinSourceServiceHTTPClientImpl) ListPolicies(ctx context.Context, in
 
 func (c *CasbinSourceServiceHTTPClientImpl) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...http.CallOption) (*WatchUpdateResponse, error) {
 	var out WatchUpdateResponse
-	pattern := "/casbin/watch"
+	pattern := "/api/v1/casbin/watch"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCasbinSourceServiceWatchUpdate))
 	opts = append(opts, http.PathTemplate(pattern))

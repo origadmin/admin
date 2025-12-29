@@ -128,7 +128,7 @@ type ListRolesResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The total number of items in the list.
 	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	// The paging menus
+	// The paging roles
 	Roles []*types.Role `protobuf:"bytes,2,rep,name=roles,proto3" json:"roles,omitempty"`
 	// The page number.
 	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`

@@ -17,17 +17,17 @@ servers:
     - url: http://localhost:10080
     - url: https://localhost:10080
 paths:
-    /auth/authenticate:
+    /api/v1/auth/login:
         post:
             tags:
-                - AuthService
-            description: Authenticate authenticates a user.
-            operationId: AuthService_Authenticate
+                - Auth
+            description: Login authenticates a user and returns a token pair.
+            operationId: Auth_Login
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.AuthenticateRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest'
                 required: true
             responses:
                 "200":
@@ -35,74 +35,68 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.AuthenticateResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /auth/destroy:
+    /api/v1/auth/logout:
         post:
             tags:
-                - AuthService
-            description: DestroyToken invalidates a JWT token.
-            operationId: AuthService_DestroyToken
+                - Auth
+            description: Logout invalidates the user's session.
+            operationId: Auth_Logout
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.LogoutRequest'
                 required: true
             responses:
                 "200":
                     description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.DestroyTokenResponse'
+                    content: {}
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /auth/logout:
+    /api/v1/auth/register:
         post:
             tags:
-                - AuthService
-            description: AuthLogout logs out a user.
-            operationId: AuthService_AuthLogout
+                - Auth
+            description: Register creates a new user account.
+            operationId: Auth_Register
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutRequest_Data'
+                            $ref: '#/components/schemas/api.v1.services.auth.RegisterRequest'
                 required: true
             responses:
                 "200":
                     description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.AuthLogoutResponse'
+                    content: {}
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/logout:
+    /api/v1/auth/token:
         post:
             tags:
-                - PersonalService
-            description: PersonalLogout Personal user logs out
-            operationId: PersonalService_PersonalLogout
+                - Auth
+            description: RefreshToken provides a new access token.
+            operationId: Auth_RefreshToken
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
+                            $ref: '#/components/schemas/api.v1.services.auth.RefreshTokenRequest'
                 required: true
             responses:
                 "200":
@@ -110,411 +104,23 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.PersonalLogoutResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.RefreshTokenResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/password:
-        put:
-            tags:
-                - PersonalService
-            description: UpdatePersonalProfilePassword The user changes the password
-            operationId: PersonalService_UpdatePersonalPassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePersonalPasswordResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/profile:
+    /api/v1/captcha:
         get:
             tags:
-                - PersonalService
-            description: GetPersonalProfile Update the personal user information
-            operationId: PersonalService_GetPersonalProfile
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.GetPersonalProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        put:
-            tags:
-                - PersonalService
-            description: UpdatePersonalProfile Update the personal user information
-            operationId: PersonalService_UpdatePersonalProfile
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePersonalProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/resources:
-        get:
-            tags:
-                - PersonalService
-            description: ListPersonalResources List the personal user's menu
-            operationId: PersonalService_ListPersonalResources
+                - Auth
+            description: GetCaptcha generates a new captcha.
+            operationId: Auth_GetCaptcha
             parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
-                - name: current
-                  in: query
-                  description: The current page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_size
-                  in: query
-                  description: The maximum number of items to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
-                  schema:
-                    type: string
-                - name: no_paging
-                  in: query
-                  description: The no_paging is used to disable pagination.
-                  schema:
-                    type: boolean
-                - name: only_count
-                  in: query
-                  description: The only_count is the query parameter for set only to query the total number
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.ListPersonalResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/roles:
-        get:
-            tags:
-                - PersonalService
-            description: ListPersonalResources List the personal user's menu
-            operationId: PersonalService_ListPersonalRoles
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.ListPersonalRolesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/setting:
-        put:
-            tags:
-                - PersonalService
-            description: UpdatePersonalSetting User settings are saved
-            operationId: PersonalService_UpdatePersonalSetting
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePersonalSettingResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/personal/token/refresh:
-        post:
-            tags:
-                - PersonalService
-            description: RefreshPersonalToken Refresh the personal user's token
-            operationId: PersonalService_RefreshPersonalToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.RefreshPersonalTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/resources:
-        get:
-            tags:
-                - AuthService
-            description: ListAuthResources returns a list of Auths.
-            operationId: AuthService_ListAuthResources
-            parameters:
-                - name: page_size
-                  in: query
-                  description: The maximum number of Auths to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
-                  schema:
-                    type: string
-                - name: current
-                  in: query
-                  description: The current page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: no_paging
-                  in: query
-                  description: The no_paging is used to disable pagination.
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.ListAuthResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/token:
-        post:
-            tags:
-                - AuthService
-            description: CreateToken generates a new JWT token for the given user.
-            operationId: AuthService_CreateToken
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.CreateTokenRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.CreateTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /auth/validate:
-        get:
-            tags:
-                - AuthService
-            description: ValidateToken verifies the validity of a JWT token.
-            operationId: AuthService_ValidateToken
-            parameters:
-                - name: token
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.ValidateTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /captcha:
-        get:
-            tags:
-                - LoginService
-            operationId: LoginService_Captcha
-            parameters:
-                - name: id
-                  in: query
-                  description: The id of the captcha
-                  schema:
-                    type: string
-                - name: type
-                  in: query
-                  description: The type of the captcha
-                  schema:
-                    type: string
                 - name: reload
                   in: query
-                  description: The reload is used to reload the captcha
-                  schema:
-                    type: boolean
-                - name: ts
-                  in: query
-                  description: The timestamp of the request prevent caching of the same result
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /captcha/audio:
-        get:
-            tags:
-                - LoginService
-            operationId: LoginService_CaptchaAudio
-            parameters:
-                - name: id
-                  in: query
-                  schema:
-                    type: string
-                - name: reload
-                  in: query
-                  schema:
-                    type: string
-                - name: data.type_url
-                  in: query
-                  description: |-
-                    A URL/resource name that uniquely identifies the type of the serialized
-                     protocol buffer message. This string must contain at least
-                     one "/" character. The last segment of the URL's path must represent
-                     the fully qualified name of the type (as in
-                     `path/google.protobuf.Duration`). The name should be in a canonical form
-                     (e.g., leading "." is not accepted).
-
-                     In practice, teams usually precompile into the binary all types that they
-                     expect it to use in the context of Any. However, for URLs which use the
-                     scheme `http`, `https`, or no scheme, one can optionally set up a type
-                     server that maps type URLs to message definitions as follows:
-
-                     * If no scheme is provided, `https` is assumed.
-                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-                       value in binary format, or produce an error.
-                     * Applications are allowed to cache lookup results based on the
-                       URL, or have them precompiled into a binary to avoid any
-                       lookup. Therefore, binary compatibility needs to be preserved
-                       on changes to types. (Use versioned type names to manage
-                       breaking changes.)
-
-                     Note: this functionality is not currently available in the official
-                     protobuf release, and it is not used for type URLs beginning with
-                     type.googleapis.com. As of May 2023, there are no widely used type server
-                     implementations and no plans to implement one.
-
-                     Schemes other than `http`, `https` (or the empty scheme) might be
-                     used with implementation specific semantics.
-                  schema:
-                    type: string
-                - name: data.value
-                  in: query
-                  description: Must be a valid serialized protocol buffer of the above specified type.
-                  schema:
-                    type: string
-                    format: bytes
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaAudioResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /captcha/id:
-        get:
-            tags:
-                - LoginService
-            operationId: LoginService_CaptchaId
-            parameters:
-                - name: ts
-                  in: query
-                  description: The timestamp of the request prevent caching of the same result
-                  schema:
-                    type: string
-                - name: reload
-                  in: query
+                  description: If true, forces reloading of the captcha.
                   schema:
                     type: boolean
             responses:
@@ -523,80 +129,14 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaIdResponse'
+                                $ref: '#/components/schemas/api.v1.services.auth.GetCaptchaResponse'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /captcha/image:
-        get:
-            tags:
-                - LoginService
-            operationId: LoginService_CaptchaImage
-            parameters:
-                - name: id
-                  in: query
-                  schema:
-                    type: string
-                - name: reload
-                  in: query
-                  schema:
-                    type: string
-                - name: data.type_url
-                  in: query
-                  description: |-
-                    A URL/resource name that uniquely identifies the type of the serialized
-                     protocol buffer message. This string must contain at least
-                     one "/" character. The last segment of the URL's path must represent
-                     the fully qualified name of the type (as in
-                     `path/google.protobuf.Duration`). The name should be in a canonical form
-                     (e.g., leading "." is not accepted).
-
-                     In practice, teams usually precompile into the binary all types that they
-                     expect it to use in the context of Any. However, for URLs which use the
-                     scheme `http`, `https`, or no scheme, one can optionally set up a type
-                     server that maps type URLs to message definitions as follows:
-
-                     * If no scheme is provided, `https` is assumed.
-                     * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-                       value in binary format, or produce an error.
-                     * Applications are allowed to cache lookup results based on the
-                       URL, or have them precompiled into a binary to avoid any
-                       lookup. Therefore, binary compatibility needs to be preserved
-                       on changes to types. (Use versioned type names to manage
-                       breaking changes.)
-
-                     Note: this functionality is not currently available in the official
-                     protobuf release, and it is not used for type URLs beginning with
-                     type.googleapis.com. As of May 2023, there are no widely used type server
-                     implementations and no plans to implement one.
-
-                     Schemes other than `http`, `https` (or the empty scheme) might be
-                     used with implementation specific semantics.
-                  schema:
-                    type: string
-                - name: data.value
-                  in: query
-                  description: Must be a valid serialized protocol buffer of the above specified type.
-                  schema:
-                    type: string
-                    format: bytes
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.CaptchaImageResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/groupings:
+    /api/v1/casbin/groupings:
         get:
             tags:
                 - CasbinSourceService
@@ -614,7 +154,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/policies:
+    /api/v1/casbin/policies:
         get:
             tags:
                 - CasbinSourceService
@@ -632,7 +172,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /casbin/watch:
+    /api/v1/casbin/watch:
         get:
             tags:
                 - CasbinSourceService
@@ -649,6 +189,106 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.auth.WatchUpdateResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/me/password:
+        put:
+            tags:
+                - Me
+            description: UpdatePassword changes the password for the currently authenticated user.
+            operationId: Me_UpdatePassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.UpdatePasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/me/profile:
+        get:
+            tags:
+                - Me
+            description: GetProfile retrieves the profile of the currently authenticated user.
+            operationId: Me_GetProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.types.User'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - Me
+            description: UpdateProfile updates the profile of the currently authenticated user.
+            operationId: Me_UpdateProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.UpdateProfileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/me/resources:
+        get:
+            tags:
+                - Me
+            description: GetUserResources retrieves the menu/resource list for the current user.
+            operationId: Me_GetUserResources
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetUserResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/me/roles:
+        get:
+            tags:
+                - Me
+            description: GetUserRoles retrieves the role list for the current user.
+            operationId: Me_GetUserRoles
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetUserRolesResponse'
                 default:
                     description: Default error response
                     content:
@@ -823,54 +463,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.datastore.DeleteDatastoreResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /login:
-        post:
-            tags:
-                - LoginService
-            operationId: LoginService_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /logout:
-        post:
-            tags:
-                - LoginService
-            operationId: LoginService_Logout
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/google.protobuf.Any'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.LogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -1085,30 +677,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.message.RefreshPersonalTokenResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /register:
-        post:
-            tags:
-                - LoginService
-            operationId: LoginService_Register
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.RegisterRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.RegisterResponse'
                 default:
                     description: Default error response
                     content:
@@ -2526,30 +2094,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /token/refresh:
-        post:
-            tags:
-                - LoginService
-            operationId: LoginService_TokenRefresh
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.TokenRefreshRequest_Data'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.TokenRefreshResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /upload:
         get:
             tags:
@@ -2726,95 +2270,31 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
 components:
     schemas:
-        api.v1.services.auth.AuthLogoutRequest_Data:
+        api.v1.services.auth.GetCaptchaResponse:
             type: object
             properties:
-                token:
+                captcha_id:
                     type: string
-        api.v1.services.auth.AuthLogoutResponse:
-            type: object
-            properties: {}
-        api.v1.services.auth.AuthenticateRequest_Data:
-            type: object
-            properties:
-                token:
+                captcha_image:
                     type: string
-                path:
-                    type: string
-                method:
-                    type: string
-                operation:
-                    type: string
-        api.v1.services.auth.AuthenticateResponse:
+                    description: Base64 encoded image data.
+            description: The response message for the GetCaptcha RPC.
+        api.v1.services.auth.GetUserResourcesResponse:
             type: object
             properties:
-                is_valid:
-                    type: boolean
-        api.v1.services.auth.CaptchaAudioResponse:
-            type: object
-            properties:
-                headers:
-                    type: object
-                    additionalProperties:
-                        type: string
-                audio:
-                    type: string
-                    format: bytes
-            description: The response message containing the greetings
-        api.v1.services.auth.CaptchaIdResponse:
-            type: object
-            properties:
-                data:
-                    type: string
-        api.v1.services.auth.CaptchaImageResponse:
-            type: object
-            properties:
-                headers:
-                    type: object
-                    additionalProperties:
-                        type: string
-                image:
-                    type: string
-                    format: bytes
-            description: The response message containing the greetings
-        api.v1.services.auth.CaptchaResponse:
-            type: object
-            properties:
-                id:
-                    type: string
-                type:
-                    type: string
-                data:
-                    type: string
-        api.v1.services.auth.CreateTokenRequest_Data:
-            type: object
-            properties:
-                user_id:
-                    type: string
-                scopes:
+                resources:
                     type: array
                     items:
-                        type: string
-        api.v1.services.auth.CreateTokenResponse:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+            description: The response message for the GetUserResources RPC.
+        api.v1.services.auth.GetUserRolesResponse:
             type: object
             properties:
-                token:
-                    type: string
-            description: CreateTokenResponse contains the generated token.
-        api.v1.services.auth.DestroyTokenRequest_Data:
-            type: object
-            properties:
-                token:
-                    type: string
-        api.v1.services.auth.DestroyTokenResponse:
-            type: object
-            properties: {}
-            description: DestroyTokenResponse contains the result of the invalidation.
-        api.v1.services.auth.GetPersonalProfileResponse:
-            type: object
-            properties:
-                user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Role'
+            description: The response message for the GetUserRoles RPC.
         api.v1.services.auth.GroupingRule:
             type: object
             properties:
@@ -2824,18 +2304,6 @@ components:
                     type: array
                     items:
                         type: string
-        api.v1.services.auth.ListAuthResourcesResponse:
-            type: object
-            properties:
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: The list of Auths.
-                total_size:
-                    type: integer
-                    description: The total number of Auths in the result set.
-                    format: int32
         api.v1.services.auth.ListGroupingsResponse:
             type: object
             properties:
@@ -2843,27 +2311,6 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.auth.GroupingRule'
-        api.v1.services.auth.ListPersonalResourcesResponse:
-            type: object
-            properties:
-                total_size:
-                    type: string
-                    description: The total number of items in the list.
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: list of resources
-                next_page_token:
-                    type: string
-                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
-        api.v1.services.auth.ListPersonalRolesResponse:
-            type: object
-            properties:
-                roles:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Role'
         api.v1.services.auth.ListPoliciesResponse:
             type: object
             properties:
@@ -2871,7 +2318,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.auth.PolicyRule'
-        api.v1.services.auth.LoginRequest_Data:
+        api.v1.services.auth.LoginRequest:
             type: object
             properties:
                 username:
@@ -2882,21 +2329,25 @@ components:
                     type: string
                 captcha_code:
                     type: string
+            description: The request message for the Login RPC.
         api.v1.services.auth.LoginResponse:
             type: object
             properties:
-                token:
-                    $ref: '#/components/schemas/contrib.api.security.v1.TokenCredential'
-        api.v1.services.auth.LogoutResponse:
+                access_token:
+                    type: string
+                refresh_token:
+                    type: string
+                token_type:
+                    type: string
+                expires_in:
+                    type: string
+            description: The response message for the Login RPC.
+        api.v1.services.auth.LogoutRequest:
             type: object
             properties:
-                success:
-                    type: boolean
-        api.v1.services.auth.PersonalLogoutResponse:
-            type: object
-            properties:
-                success:
-                    type: boolean
+                refresh_token:
+                    type: string
+            description: The request message for the Logout RPC.
         api.v1.services.auth.PolicyRule:
             type: object
             properties:
@@ -2906,63 +2357,52 @@ components:
                     type: array
                     items:
                         type: string
-        api.v1.services.auth.RefreshPersonalTokenResponse:
+        api.v1.services.auth.RefreshTokenRequest:
             type: object
             properties:
-                token:
+                refresh_token:
                     type: string
-        api.v1.services.auth.RegisterRequest_Data:
+            description: The request message for the RefreshToken RPC.
+        api.v1.services.auth.RefreshTokenResponse:
+            type: object
+            properties:
+                access_token:
+                    type: string
+                token_type:
+                    type: string
+                expires_in:
+                    type: string
+            description: The response message for the RefreshToken RPC.
+        api.v1.services.auth.RegisterRequest:
             type: object
             properties:
                 username:
                     type: string
                 password:
                     type: string
+                email:
+                    type: string
                 captcha_id:
                     type: string
                 captcha_code:
                     type: string
-        api.v1.services.auth.RegisterResponse:
+            description: The request message for the Register RPC.
+        api.v1.services.auth.UpdatePasswordRequest:
             type: object
             properties:
-                success:
-                    type: boolean
-                data:
-                    $ref: '#/components/schemas/api.v1.services.auth.RegisterResponse_Data'
-        api.v1.services.auth.RegisterResponse_Data:
-            type: object
-            properties:
-                redirect:
+                old_password:
                     type: string
-        api.v1.services.auth.TokenRefreshRequest_Data:
-            type: object
-            properties:
-                refresh_token:
+                new_password:
                     type: string
-        api.v1.services.auth.TokenRefreshResponse:
+            description: The request message for the UpdatePassword RPC.
+        api.v1.services.auth.UpdateProfileRequest:
             type: object
             properties:
-                token:
-                    $ref: '#/components/schemas/contrib.api.security.v1.TokenCredential'
-        api.v1.services.auth.UpdatePersonalPasswordResponse:
-            type: object
-            properties: {}
-        api.v1.services.auth.UpdatePersonalProfileResponse:
-            type: object
-            properties: {}
-        api.v1.services.auth.UpdatePersonalSettingResponse:
-            type: object
-            properties: {}
-        api.v1.services.auth.ValidateTokenResponse:
-            type: object
-            properties:
-                is_valid:
-                    type: boolean
-                claims:
-                    type: object
-                    additionalProperties:
-                        type: string
-            description: VerifyTokenResponse contains the result of the verification.
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The fields to update.
+            description: The request message for the UpdateProfile RPC.
         api.v1.services.auth.WatchUpdateResponse:
             type: object
             properties:
@@ -3273,7 +2713,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Department'
-                    description: The paging menus
+                    description: The paging departments
                 page:
                     type: integer
                     description: The page number.
@@ -3304,7 +2744,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Permission'
-                    description: The paging menus
+                    description: The paging permissions
                 page:
                     type: integer
                     description: The page number.
@@ -3335,7 +2775,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Position'
-                    description: The paging menus
+                    description: The paging positions
                 page:
                     type: integer
                     description: The page number.
@@ -3387,7 +2827,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
-                    description: The paging menus
+                    description: The paging roles
                 page:
                     type: integer
                     description: The page number.
@@ -3428,7 +2868,7 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.User'
-                    description: The paging menus
+                    description: The paging users
                 page:
                     type: integer
                     description: The page number.
@@ -4080,22 +3520,6 @@ components:
                 data:
                     $ref: '#/components/schemas/api.v1.services.types.DataObject'
             description: UpdateUploadResponse is the response for the UploadService.UpdateUpload method.
-        contrib.api.security.v1.TokenCredential:
-            type: object
-            properties:
-                access_token:
-                    type: string
-                    description: The access token used for authentication.
-                refresh_token:
-                    type: string
-                    description: The refresh token used to obtain a new access token.
-                expires_in:
-                    type: string
-                    description: The remaining lifetime of the access token in seconds.
-                token_type:
-                    type: string
-                    description: The type of the token, typically 'Bearer'.
-            description: "TokenCredential holds the credentials for token-based authentication flows\r\n like OAuth2 and JWT.\r\n\r\n IMPORTANT: This message represents the full set of tokens typically returned\r\n from a token issuance endpoint (e.g., /login). It is designed for use in\r\n CredentialResponse."
         google.protobuf.Any:
             type: object
             properties:
@@ -4129,19 +3553,18 @@ components:
             name: Authorization
             in: header
 tags:
-    - name: AuthService
+    - name: Auth
+      description: Service Auth provides APIs for the authentication lifecycle.
     - name: CasbinSourceService
       description: The Casbin source service definition.
     - name: DatastoreService
       description: The data service definition.
     - name: DepartmentService
       description: The login service definition.
-    - name: LoginService
-      description: The login service definition.
+    - name: Me
+      description: Service Me provides APIs for the currently authenticated user to manage their own profile and data.
     - name: PermissionService
       description: The login service definition.
-    - name: PersonalService
-      description: PersonalService Personal user service
     - name: PersonalService
       description: PersonalService Personal user service
     - name: PositionService

@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,249 +20,168 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationAuthServiceAuthLogout = "/api.v1.services.auth.AuthService/AuthLogout"
-const OperationAuthServiceAuthenticate = "/api.v1.services.auth.AuthService/Authenticate"
-const OperationAuthServiceCreateToken = "/api.v1.services.auth.AuthService/CreateToken"
-const OperationAuthServiceDestroyToken = "/api.v1.services.auth.AuthService/DestroyToken"
-const OperationAuthServiceListAuthResources = "/api.v1.services.auth.AuthService/ListAuthResources"
-const OperationAuthServiceValidateToken = "/api.v1.services.auth.AuthService/ValidateToken"
+const OperationAuthGetCaptcha = "/api.v1.services.auth.Auth/GetCaptcha"
+const OperationAuthLogin = "/api.v1.services.auth.Auth/Login"
+const OperationAuthLogout = "/api.v1.services.auth.Auth/Logout"
+const OperationAuthRefreshToken = "/api.v1.services.auth.Auth/RefreshToken"
+const OperationAuthRegister = "/api.v1.services.auth.Auth/Register"
 
-type AuthServiceHTTPServer interface {
-	// AuthLogout AuthLogout logs out a user.
-	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
-	// Authenticate Authenticate authenticates a user.
-	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
-	// CreateToken CreateToken generates a new JWT token for the given user.
-	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
-	// DestroyToken DestroyToken invalidates a JWT token.
-	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
-	// ListAuthResources ListAuthResources returns a list of Auths.
-	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
-	// ValidateToken ValidateToken verifies the validity of a JWT token.
-	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
+type AuthHTTPServer interface {
+	// GetCaptcha GetCaptcha generates a new captcha.
+	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
+	// Login Login authenticates a user and returns a token pair.
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// Logout Logout invalidates the user's session.
+	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
+	// RefreshToken RefreshToken provides a new access token.
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	// Register Register creates a new user account.
+	Register(context.Context, *RegisterRequest) (*emptypb.Empty, error)
 }
 
-func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
+func RegisterAuthHTTPServer(s *http.Server, srv AuthHTTPServer) {
 	r := s.Route("/")
-	r.GET("/auth/resources", _AuthService_ListAuthResources0_HTTP_Handler(srv))
-	r.POST("/auth/token", _AuthService_CreateToken0_HTTP_Handler(srv))
-	r.GET("/auth/validate", _AuthService_ValidateToken0_HTTP_Handler(srv))
-	r.POST("/auth/destroy", _AuthService_DestroyToken0_HTTP_Handler(srv))
-	r.POST("/auth/authenticate", _AuthService_Authenticate0_HTTP_Handler(srv))
-	r.POST("/auth/logout", _AuthService_AuthLogout0_HTTP_Handler(srv))
+	r.POST("/api/v1/auth/login", _Auth_Login0_HTTP_Handler(srv))
+	r.POST("/api/v1/auth/register", _Auth_Register0_HTTP_Handler(srv))
+	r.POST("/api/v1/auth/logout", _Auth_Logout0_HTTP_Handler(srv))
+	r.POST("/api/v1/auth/token", _Auth_RefreshToken0_HTTP_Handler(srv))
+	r.GET("/api/v1/captcha", _Auth_GetCaptcha0_HTTP_Handler(srv))
 }
 
-func _AuthService_ListAuthResources0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+func _Auth_Login0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListAuthResourcesRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceListAuthResources)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListAuthResourcesResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_CreateToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceCreateToken)
+		http.SetOperation(ctx, OperationAuthLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
+			return srv.Login(ctx, req.(*LoginRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateTokenResponse)
+		reply := out.(*LoginResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _AuthService_ValidateToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+func _Auth_Register0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ValidateTokenRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceValidateToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ValidateTokenResponse)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _AuthService_DestroyToken0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DestroyTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in RegisterRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceDestroyToken)
+		http.SetOperation(ctx, OperationAuthRegister)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
+			return srv.Register(ctx, req.(*RegisterRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DestroyTokenResponse)
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _AuthService_Authenticate0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+func _Auth_Logout0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AuthenticateRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in LogoutRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceAuthenticate)
+		http.SetOperation(ctx, OperationAuthLogout)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
+			return srv.Logout(ctx, req.(*LogoutRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*AuthenticateResponse)
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _AuthService_AuthLogout0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
+func _Auth_RefreshToken0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AuthLogoutRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in RefreshTokenRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceAuthLogout)
+		http.SetOperation(ctx, OperationAuthRefreshToken)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AuthLogout(ctx, req.(*AuthLogoutRequest))
+			return srv.RefreshToken(ctx, req.(*RefreshTokenRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*AuthLogoutResponse)
+		reply := out.(*RefreshTokenResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-type AuthServiceHTTPClient interface {
-	// AuthLogout AuthLogout logs out a user.
-	AuthLogout(ctx context.Context, req *AuthLogoutRequest, opts ...http.CallOption) (rsp *AuthLogoutResponse, err error)
-	// Authenticate Authenticate authenticates a user.
-	Authenticate(ctx context.Context, req *AuthenticateRequest, opts ...http.CallOption) (rsp *AuthenticateResponse, err error)
-	// CreateToken CreateToken generates a new JWT token for the given user.
-	CreateToken(ctx context.Context, req *CreateTokenRequest, opts ...http.CallOption) (rsp *CreateTokenResponse, err error)
-	// DestroyToken DestroyToken invalidates a JWT token.
-	DestroyToken(ctx context.Context, req *DestroyTokenRequest, opts ...http.CallOption) (rsp *DestroyTokenResponse, err error)
-	// ListAuthResources ListAuthResources returns a list of Auths.
-	ListAuthResources(ctx context.Context, req *ListAuthResourcesRequest, opts ...http.CallOption) (rsp *ListAuthResourcesResponse, err error)
-	// ValidateToken ValidateToken verifies the validity of a JWT token.
-	ValidateToken(ctx context.Context, req *ValidateTokenRequest, opts ...http.CallOption) (rsp *ValidateTokenResponse, err error)
+func _Auth_GetCaptcha0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetCaptchaRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthGetCaptcha)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetCaptcha(ctx, req.(*GetCaptchaRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetCaptchaResponse)
+		return ctx.Result(200, reply)
+	}
 }
 
-type AuthServiceHTTPClientImpl struct {
+type AuthHTTPClient interface {
+	// GetCaptcha GetCaptcha generates a new captcha.
+	GetCaptcha(ctx context.Context, req *GetCaptchaRequest, opts ...http.CallOption) (rsp *GetCaptchaResponse, err error)
+	// Login Login authenticates a user and returns a token pair.
+	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
+	// Logout Logout invalidates the user's session.
+	Logout(ctx context.Context, req *LogoutRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	// RefreshToken RefreshToken provides a new access token.
+	RefreshToken(ctx context.Context, req *RefreshTokenRequest, opts ...http.CallOption) (rsp *RefreshTokenResponse, err error)
+	// Register Register creates a new user account.
+	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+}
+
+type AuthHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
-	return &AuthServiceHTTPClientImpl{client}
+func NewAuthHTTPClient(client *http.Client) AuthHTTPClient {
+	return &AuthHTTPClientImpl{client}
 }
 
-// AuthLogout AuthLogout logs out a user.
-func (c *AuthServiceHTTPClientImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...http.CallOption) (*AuthLogoutResponse, error) {
-	var out AuthLogoutResponse
-	pattern := "/auth/logout"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceAuthLogout))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// Authenticate Authenticate authenticates a user.
-func (c *AuthServiceHTTPClientImpl) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...http.CallOption) (*AuthenticateResponse, error) {
-	var out AuthenticateResponse
-	pattern := "/auth/authenticate"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceAuthenticate))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// CreateToken CreateToken generates a new JWT token for the given user.
-func (c *AuthServiceHTTPClientImpl) CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...http.CallOption) (*CreateTokenResponse, error) {
-	var out CreateTokenResponse
-	pattern := "/auth/token"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceCreateToken))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// DestroyToken DestroyToken invalidates a JWT token.
-func (c *AuthServiceHTTPClientImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...http.CallOption) (*DestroyTokenResponse, error) {
-	var out DestroyTokenResponse
-	pattern := "/auth/destroy"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthServiceDestroyToken))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in.Data, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, nil
-}
-
-// ListAuthResources ListAuthResources returns a list of Auths.
-func (c *AuthServiceHTTPClientImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...http.CallOption) (*ListAuthResourcesResponse, error) {
-	var out ListAuthResourcesResponse
-	pattern := "/auth/resources"
+// GetCaptcha GetCaptcha generates a new captcha.
+func (c *AuthHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...http.CallOption) (*GetCaptchaResponse, error) {
+	var out GetCaptchaResponse
+	pattern := "/api/v1/captcha"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceListAuthResources))
+	opts = append(opts, http.Operation(OperationAuthGetCaptcha))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -270,14 +190,56 @@ func (c *AuthServiceHTTPClientImpl) ListAuthResources(ctx context.Context, in *L
 	return &out, nil
 }
 
-// ValidateToken ValidateToken verifies the validity of a JWT token.
-func (c *AuthServiceHTTPClientImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...http.CallOption) (*ValidateTokenResponse, error) {
-	var out ValidateTokenResponse
-	pattern := "/auth/validate"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthServiceValidateToken))
+// Login Login authenticates a user and returns a token pair.
+func (c *AuthHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
+	var out LoginResponse
+	pattern := "/api/v1/auth/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthLogin))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Logout Logout invalidates the user's session.
+func (c *AuthHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/api/v1/auth/logout"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthLogout))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// RefreshToken RefreshToken provides a new access token.
+func (c *AuthHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RefreshTokenResponse, error) {
+	var out RefreshTokenResponse
+	pattern := "/api/v1/auth/token"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthRefreshToken))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+// Register Register creates a new user account.
+func (c *AuthHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/api/v1/auth/register"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthRegister))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

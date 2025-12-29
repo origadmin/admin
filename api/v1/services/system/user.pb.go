@@ -408,7 +408,7 @@ type ListUsersResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The total number of items in the list.
 	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	// The paging menus
+	// The paging users
 	Users []*types.User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
 	// The page number.
 	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`

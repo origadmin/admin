@@ -53,8 +53,9 @@ func (uc *UserUseCase) GetUser(ctx context.Context, id int64) (*types.User, erro
 	return uc.repo.Get(ctx, id)
 }
 
+// CreateUser creates a new user, ensuring essential fields have valid default values.
 func (uc *UserUseCase) CreateUser(ctx context.Context, in *types.User, password string) (*types.User, error) {
-	// Set business-defined default values.
+	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
 	}

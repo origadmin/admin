@@ -12,6 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
 )
 
@@ -28,88 +29,82 @@ var (
 	_ = codes.Unimplemented
 )
 
-const AuthServiceAuthLogoutBridgeOperation = "/api.v1.services.auth.AuthService/AuthLogout"
-const AuthServiceAuthenticateBridgeOperation = "/api.v1.services.auth.AuthService/Authenticate"
-const AuthServiceCreateTokenBridgeOperation = "/api.v1.services.auth.AuthService/CreateToken"
-const AuthServiceDestroyTokenBridgeOperation = "/api.v1.services.auth.AuthService/DestroyToken"
-const AuthServiceListAuthResourcesBridgeOperation = "/api.v1.services.auth.AuthService/ListAuthResources"
-const AuthServiceValidateTokenBridgeOperation = "/api.v1.services.auth.AuthService/ValidateToken"
+const AuthGetCaptchaBridgeOperation = "/api.v1.services.auth.Auth/GetCaptcha"
+const AuthLoginBridgeOperation = "/api.v1.services.auth.Auth/Login"
+const AuthLogoutBridgeOperation = "/api.v1.services.auth.Auth/Logout"
+const AuthRefreshTokenBridgeOperation = "/api.v1.services.auth.Auth/RefreshToken"
+const AuthRegisterBridgeOperation = "/api.v1.services.auth.Auth/Register"
 
-type AuthServiceBridgeServer interface {
-	// AuthLogout logs out a user.
-	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
-	// Authenticate authenticates a user.
-	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
-	// CreateToken generates a new JWT token for the given user.
-	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
-	// DestroyToken invalidates a JWT token.
-	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
-	// ListAuthResources returns a list of Auths.
-	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
-	// ValidateToken verifies the validity of a JWT token.
-	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
+type AuthBridgeServer interface {
+	// GetCaptcha generates a new captcha.
+	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
+	// Login authenticates a user and returns a token pair.
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// Logout invalidates the user's session.
+	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
+	// RefreshToken provides a new access token.
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	// Register creates a new user account.
+	Register(context.Context, *RegisterRequest) (*emptypb.Empty, error)
 }
 
-type AuthServiceHooker interface {
-	AuthServiceAuthLogoutHooker
-	AuthServiceAuthenticateHooker
-	AuthServiceCreateTokenHooker
-	AuthServiceDestroyTokenHooker
-	AuthServiceListAuthResourcesHooker
-	AuthServiceValidateTokenHooker
+type AuthHooker interface {
+	AuthGetCaptchaHooker
+	AuthLoginHooker
+	AuthLogoutHooker
+	AuthRefreshTokenHooker
+	AuthRegisterHooker
 }
 
-type AuthServiceHookedBridger interface {
-	AuthServiceHooker
-	AuthServiceBridgeServer
+type AuthHookedBridger interface {
+	AuthHooker
+	AuthBridgeServer
 }
-type AuthServiceAuthLogoutHooker interface {
-	PrepareAuthLogout(http.Context, *AuthLogoutRequest) (context.Context, error)
-	CompleteAuthLogout(http.Context, *AuthLogoutRequest, *AuthLogoutResponse) error
+type AuthGetCaptchaHooker interface {
+	PrepareGetCaptcha(http.Context, *GetCaptchaRequest) (context.Context, error)
+	CompleteGetCaptcha(http.Context, *GetCaptchaRequest, *GetCaptchaResponse) error
 }
-type AuthServiceAuthenticateHooker interface {
-	PrepareAuthenticate(http.Context, *AuthenticateRequest) (context.Context, error)
-	CompleteAuthenticate(http.Context, *AuthenticateRequest, *AuthenticateResponse) error
+type AuthLoginHooker interface {
+	PrepareLogin(http.Context, *LoginRequest) (context.Context, error)
+	CompleteLogin(http.Context, *LoginRequest, *LoginResponse) error
 }
-type AuthServiceCreateTokenHooker interface {
-	PrepareCreateToken(http.Context, *CreateTokenRequest) (context.Context, error)
-	CompleteCreateToken(http.Context, *CreateTokenRequest, *CreateTokenResponse) error
+type AuthLogoutHooker interface {
+	PrepareLogout(http.Context, *LogoutRequest) (context.Context, error)
+	CompleteLogout(http.Context, *LogoutRequest, *emptypb.Empty) error
 }
-type AuthServiceDestroyTokenHooker interface {
-	PrepareDestroyToken(http.Context, *DestroyTokenRequest) (context.Context, error)
-	CompleteDestroyToken(http.Context, *DestroyTokenRequest, *DestroyTokenResponse) error
+type AuthRefreshTokenHooker interface {
+	PrepareRefreshToken(http.Context, *RefreshTokenRequest) (context.Context, error)
+	CompleteRefreshToken(http.Context, *RefreshTokenRequest, *RefreshTokenResponse) error
 }
-type AuthServiceListAuthResourcesHooker interface {
-	PrepareListAuthResources(http.Context, *ListAuthResourcesRequest) (context.Context, error)
-	CompleteListAuthResources(http.Context, *ListAuthResourcesRequest, *ListAuthResourcesResponse) error
-}
-type AuthServiceValidateTokenHooker interface {
-	PrepareValidateToken(http.Context, *ValidateTokenRequest) (context.Context, error)
-	CompleteValidateToken(http.Context, *ValidateTokenRequest, *ValidateTokenResponse) error
+type AuthRegisterHooker interface {
+	PrepareRegister(http.Context, *RegisterRequest) (context.Context, error)
+	CompleteRegister(http.Context, *RegisterRequest, *emptypb.Empty) error
 }
 
-func RegisterAuthServiceBridgeServer(s *http.Server, srv AuthServiceHookedBridger) {
+func RegisterAuthBridgeServer(s *http.Server, srv AuthHookedBridger) {
 	r := s.Route("/")
-	r.GET("/auth/resources", _AuthService_ListAuthResources0_Bridge_Handler(srv))
-	r.POST("/auth/token", _AuthService_CreateToken0_Bridge_Handler(srv))
-	r.GET("/auth/validate", _AuthService_ValidateToken0_Bridge_Handler(srv))
-	r.POST("/auth/destroy", _AuthService_DestroyToken0_Bridge_Handler(srv))
-	r.POST("/auth/authenticate", _AuthService_Authenticate0_Bridge_Handler(srv))
-	r.POST("/auth/logout", _AuthService_AuthLogout0_Bridge_Handler(srv))
+	r.POST("/api/v1/auth/login", _Auth_Login0_Bridge_Handler(srv))
+	r.POST("/api/v1/auth/register", _Auth_Register0_Bridge_Handler(srv))
+	r.POST("/api/v1/auth/logout", _Auth_Logout0_Bridge_Handler(srv))
+	r.POST("/api/v1/auth/token", _Auth_RefreshToken0_Bridge_Handler(srv))
+	r.GET("/api/v1/captcha", _Auth_GetCaptcha0_Bridge_Handler(srv))
 }
 
-func _AuthService_ListAuthResources0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
+func _Auth_Login0_Bridge_Handler(srv AuthHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListAuthResourcesRequest
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceListAuthResources)
+		http.SetOperation(ctx, OperationAuthLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
+			return srv.Login(ctx, req.(*LoginRequest))
 		})
 
-		newctx, err := srv.PrepareListAuthResources(ctx, &in)
+		newctx, err := srv.PrepareLogin(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -117,25 +112,25 @@ func _AuthService_ListAuthResources0_Bridge_Handler(srv AuthServiceHookedBridger
 		if err != nil {
 			return err
 		}
-		return srv.CompleteListAuthResources(ctx, &in, out.(*ListAuthResourcesResponse))
+		return srv.CompleteLogin(ctx, &in, out.(*LoginResponse))
 	}
 }
 
-func _AuthService_CreateToken0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
+func _Auth_Register0_Bridge_Handler(srv AuthHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in RegisterRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceCreateToken)
+		http.SetOperation(ctx, OperationAuthRegister)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.CreateToken(ctx, req.(*CreateTokenRequest))
+			return srv.Register(ctx, req.(*RegisterRequest))
 		})
 
-		newctx, err := srv.PrepareCreateToken(ctx, &in)
+		newctx, err := srv.PrepareRegister(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -143,22 +138,25 @@ func _AuthService_CreateToken0_Bridge_Handler(srv AuthServiceHookedBridger) func
 		if err != nil {
 			return err
 		}
-		return srv.CompleteCreateToken(ctx, &in, out.(*CreateTokenResponse))
+		return srv.CompleteRegister(ctx, &in, out.(*emptypb.Empty))
 	}
 }
 
-func _AuthService_ValidateToken0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
+func _Auth_Logout0_Bridge_Handler(srv AuthHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ValidateTokenRequest
+		var in LogoutRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceValidateToken)
+		http.SetOperation(ctx, OperationAuthLogout)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ValidateToken(ctx, req.(*ValidateTokenRequest))
+			return srv.Logout(ctx, req.(*LogoutRequest))
 		})
 
-		newctx, err := srv.PrepareValidateToken(ctx, &in)
+		newctx, err := srv.PrepareLogout(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -166,25 +164,25 @@ func _AuthService_ValidateToken0_Bridge_Handler(srv AuthServiceHookedBridger) fu
 		if err != nil {
 			return err
 		}
-		return srv.CompleteValidateToken(ctx, &in, out.(*ValidateTokenResponse))
+		return srv.CompleteLogout(ctx, &in, out.(*emptypb.Empty))
 	}
 }
 
-func _AuthService_DestroyToken0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
+func _Auth_RefreshToken0_Bridge_Handler(srv AuthHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DestroyTokenRequest
-		if err := ctx.Bind(&in.Data); err != nil {
+		var in RefreshTokenRequest
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceDestroyToken)
+		http.SetOperation(ctx, OperationAuthRefreshToken)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.DestroyToken(ctx, req.(*DestroyTokenRequest))
+			return srv.RefreshToken(ctx, req.(*RefreshTokenRequest))
 		})
 
-		newctx, err := srv.PrepareDestroyToken(ctx, &in)
+		newctx, err := srv.PrepareRefreshToken(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -192,25 +190,22 @@ func _AuthService_DestroyToken0_Bridge_Handler(srv AuthServiceHookedBridger) fun
 		if err != nil {
 			return err
 		}
-		return srv.CompleteDestroyToken(ctx, &in, out.(*DestroyTokenResponse))
+		return srv.CompleteRefreshToken(ctx, &in, out.(*RefreshTokenResponse))
 	}
 }
 
-func _AuthService_Authenticate0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
+func _Auth_GetCaptcha0_Bridge_Handler(srv AuthHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AuthenticateRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
+		var in GetCaptchaRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthServiceAuthenticate)
+		http.SetOperation(ctx, OperationAuthGetCaptcha)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Authenticate(ctx, req.(*AuthenticateRequest))
+			return srv.GetCaptcha(ctx, req.(*GetCaptchaRequest))
 		})
 
-		newctx, err := srv.PrepareAuthenticate(ctx, &in)
+		newctx, err := srv.PrepareGetCaptcha(ctx, &in)
 		if err != nil {
 			return err
 		}
@@ -218,233 +213,183 @@ func _AuthService_Authenticate0_Bridge_Handler(srv AuthServiceHookedBridger) fun
 		if err != nil {
 			return err
 		}
-		return srv.CompleteAuthenticate(ctx, &in, out.(*AuthenticateResponse))
+		return srv.CompleteGetCaptcha(ctx, &in, out.(*GetCaptchaResponse))
 	}
 }
 
-func _AuthService_AuthLogout0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in AuthLogoutRequest
-		if err := ctx.Bind(&in.Data); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAuthServiceAuthLogout)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AuthLogout(ctx, req.(*AuthLogoutRequest))
-		})
-
-		newctx, err := srv.PrepareAuthLogout(ctx, &in)
-		if err != nil {
-			return err
-		}
-		out, err := h(newctx, &in)
-		if err != nil {
-			return err
-		}
-		return srv.CompleteAuthLogout(ctx, &in, out.(*AuthLogoutResponse))
-	}
-}
-
-// UnimplementedAuthServiceHooked must be embedded to have
+// UnimplementedAuthHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAuthServiceHooked struct{}
+type UnimplementedAuthHooked struct{}
 
-func (UnimplementedAuthServiceHooked) PrepareAuthLogout(ctx http.Context, in *AuthLogoutRequest) (context.Context, error) {
+func (UnimplementedAuthHooked) PrepareGetCaptcha(ctx http.Context, in *GetCaptchaRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAuthServiceHooked) CompleteAuthLogout(ctx http.Context, in *AuthLogoutRequest, out *AuthLogoutResponse) error {
+func (UnimplementedAuthHooked) CompleteGetCaptcha(ctx http.Context, in *GetCaptchaRequest, out *GetCaptchaResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAuthServiceHooked) PrepareAuthenticate(ctx http.Context, in *AuthenticateRequest) (context.Context, error) {
+func (UnimplementedAuthHooked) PrepareLogin(ctx http.Context, in *LoginRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAuthServiceHooked) CompleteAuthenticate(ctx http.Context, in *AuthenticateRequest, out *AuthenticateResponse) error {
+func (UnimplementedAuthHooked) CompleteLogin(ctx http.Context, in *LoginRequest, out *LoginResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAuthServiceHooked) PrepareCreateToken(ctx http.Context, in *CreateTokenRequest) (context.Context, error) {
+func (UnimplementedAuthHooked) PrepareLogout(ctx http.Context, in *LogoutRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAuthServiceHooked) CompleteCreateToken(ctx http.Context, in *CreateTokenRequest, out *CreateTokenResponse) error {
+func (UnimplementedAuthHooked) CompleteLogout(ctx http.Context, in *LogoutRequest, out *emptypb.Empty) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAuthServiceHooked) PrepareDestroyToken(ctx http.Context, in *DestroyTokenRequest) (context.Context, error) {
+func (UnimplementedAuthHooked) PrepareRefreshToken(ctx http.Context, in *RefreshTokenRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAuthServiceHooked) CompleteDestroyToken(ctx http.Context, in *DestroyTokenRequest, out *DestroyTokenResponse) error {
+func (UnimplementedAuthHooked) CompleteRefreshToken(ctx http.Context, in *RefreshTokenRequest, out *RefreshTokenResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAuthServiceHooked) PrepareListAuthResources(ctx http.Context, in *ListAuthResourcesRequest) (context.Context, error) {
+func (UnimplementedAuthHooked) PrepareRegister(ctx http.Context, in *RegisterRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedAuthServiceHooked) CompleteListAuthResources(ctx http.Context, in *ListAuthResourcesRequest, out *ListAuthResourcesResponse) error {
+func (UnimplementedAuthHooked) CompleteRegister(ctx http.Context, in *RegisterRequest, out *emptypb.Empty) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedAuthServiceHooked) PrepareValidateToken(ctx http.Context, in *ValidateTokenRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedAuthServiceHooked) CompleteValidateToken(ctx http.Context, in *ValidateTokenRequest, out *ValidateTokenResponse) error {
-	return ctx.Result(200, out)
-}
-
-func WithAuthServiceHook(h AuthServiceHooker) func(AuthServiceBridgeServer) AuthServiceHookedBridger {
-	return func(srv AuthServiceBridgeServer) AuthServiceHookedBridger {
-		return AuthServiceHookedBridge{AuthServiceBridgeServer: srv, AuthServiceHooker: h}
+func WithAuthHook(h AuthHooker) func(AuthBridgeServer) AuthHookedBridger {
+	return func(srv AuthBridgeServer) AuthHookedBridger {
+		return AuthHookedBridge{AuthBridgeServer: srv, AuthHooker: h}
 	}
 }
 
-// AuthServiceHookedBridge is a bridge between the HTTP and gRPC implementations of AuthService.
-// It implements the HTTP and gRPC implementations of AuthService.
+// AuthHookedBridge is a bridge between the HTTP and gRPC implementations of Auth.
+// It implements the HTTP and gRPC implementations of Auth.
 // It forwards requests and responses between the two implementations.
-type AuthServiceHookedBridge struct {
-	AuthServiceBridgeServer
-	AuthServiceHooker
+type AuthHookedBridge struct {
+	AuthBridgeServer
+	AuthHooker
 }
 
-type AuthServiceHTTPBridgeImpl struct {
-	client AuthServiceHTTPClient
+type AuthHTTPBridgeImpl struct {
+	client AuthHTTPClient
 }
 
-func NewAuthServiceHTTPBridge(client *http.Client) AuthServiceHTTPServer {
-	return &AuthServiceHTTPBridgeImpl{client: NewAuthServiceHTTPClient(client)}
+func NewAuthHTTPBridge(client *http.Client) AuthHTTPServer {
+	return &AuthHTTPBridgeImpl{client: NewAuthHTTPClient(client)}
 }
 
-func (c *AuthServiceHTTPBridgeImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest) (*AuthLogoutResponse, error) {
-	return c.client.AuthLogout(ctx, in)
+func (c *AuthHTTPBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
+	return c.client.GetCaptcha(ctx, in)
 }
 
-func (c *AuthServiceHTTPBridgeImpl) Authenticate(ctx context.Context, in *AuthenticateRequest) (*AuthenticateResponse, error) {
-	return c.client.Authenticate(ctx, in)
+func (c *AuthHTTPBridgeImpl) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	return c.client.Login(ctx, in)
 }
 
-func (c *AuthServiceHTTPBridgeImpl) CreateToken(ctx context.Context, in *CreateTokenRequest) (*CreateTokenResponse, error) {
-	return c.client.CreateToken(ctx, in)
+func (c *AuthHTTPBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (*emptypb.Empty, error) {
+	return c.client.Logout(ctx, in)
 }
 
-func (c *AuthServiceHTTPBridgeImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest) (*DestroyTokenResponse, error) {
-	return c.client.DestroyToken(ctx, in)
+func (c *AuthHTTPBridgeImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return c.client.RefreshToken(ctx, in)
 }
 
-func (c *AuthServiceHTTPBridgeImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
-	return c.client.ListAuthResources(ctx, in)
+func (c *AuthHTTPBridgeImpl) Register(ctx context.Context, in *RegisterRequest) (*emptypb.Empty, error) {
+	return c.client.Register(ctx, in)
 }
 
-func (c *AuthServiceHTTPBridgeImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest) (*ValidateTokenResponse, error) {
-	return c.client.ValidateToken(ctx, in)
+type AuthBridgeImpl struct {
+	client AuthClient
 }
 
-type AuthServiceBridgeImpl struct {
-	client AuthServiceClient
+func NewAuthBridge(client grpc.ClientConnInterface) AuthServer {
+	return &AuthBridgeImpl{client: NewAuthClient(client)}
 }
 
-func NewAuthServiceBridge(client grpc.ClientConnInterface) AuthServiceServer {
-	return &AuthServiceBridgeImpl{client: NewAuthServiceClient(client)}
+func (c *AuthBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
+	return c.client.GetCaptcha(ctx, in)
 }
 
-func (c *AuthServiceBridgeImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest) (*AuthLogoutResponse, error) {
-	return c.client.AuthLogout(ctx, in)
+func (c *AuthBridgeImpl) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	return c.client.Login(ctx, in)
 }
 
-func (c *AuthServiceBridgeImpl) Authenticate(ctx context.Context, in *AuthenticateRequest) (*AuthenticateResponse, error) {
-	return c.client.Authenticate(ctx, in)
+func (c *AuthBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (*emptypb.Empty, error) {
+	return c.client.Logout(ctx, in)
 }
 
-func (c *AuthServiceBridgeImpl) CreateToken(ctx context.Context, in *CreateTokenRequest) (*CreateTokenResponse, error) {
-	return c.client.CreateToken(ctx, in)
+func (c *AuthBridgeImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return c.client.RefreshToken(ctx, in)
 }
 
-func (c *AuthServiceBridgeImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest) (*DestroyTokenResponse, error) {
-	return c.client.DestroyToken(ctx, in)
+func (c *AuthBridgeImpl) Register(ctx context.Context, in *RegisterRequest) (*emptypb.Empty, error) {
+	return c.client.Register(ctx, in)
 }
 
-func (c *AuthServiceBridgeImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
-	return c.client.ListAuthResources(ctx, in)
+func (c *AuthBridgeImpl) mustEmbedUnimplementedAuthServer() {}
+
+type AuthGRPC2HTTPBridgeImpl struct {
+	client AuthClient
 }
 
-func (c *AuthServiceBridgeImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest) (*ValidateTokenResponse, error) {
-	return c.client.ValidateToken(ctx, in)
+func NewAuthGRPC2HTTP(client grpc.ClientConnInterface) AuthHTTPServer {
+	return &AuthGRPC2HTTPBridgeImpl{client: NewAuthClient(client)}
 }
 
-func (c *AuthServiceBridgeImpl) mustEmbedUnimplementedAuthServiceServer() {}
-
-type AuthServiceGRPC2HTTPBridgeImpl struct {
-	client AuthServiceClient
+func (c *AuthGRPC2HTTPBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
+	return c.client.GetCaptcha(ctx, in)
 }
 
-func NewAuthServiceGRPC2HTTP(client grpc.ClientConnInterface) AuthServiceHTTPServer {
-	return &AuthServiceGRPC2HTTPBridgeImpl{client: NewAuthServiceClient(client)}
+func (c *AuthGRPC2HTTPBridgeImpl) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	return c.client.Login(ctx, in)
 }
 
-func (c *AuthServiceGRPC2HTTPBridgeImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest) (*AuthLogoutResponse, error) {
-	return c.client.AuthLogout(ctx, in)
+func (c *AuthGRPC2HTTPBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (*emptypb.Empty, error) {
+	return c.client.Logout(ctx, in)
 }
 
-func (c *AuthServiceGRPC2HTTPBridgeImpl) Authenticate(ctx context.Context, in *AuthenticateRequest) (*AuthenticateResponse, error) {
-	return c.client.Authenticate(ctx, in)
+func (c *AuthGRPC2HTTPBridgeImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return c.client.RefreshToken(ctx, in)
 }
 
-func (c *AuthServiceGRPC2HTTPBridgeImpl) CreateToken(ctx context.Context, in *CreateTokenRequest) (*CreateTokenResponse, error) {
-	return c.client.CreateToken(ctx, in)
+func (c *AuthGRPC2HTTPBridgeImpl) Register(ctx context.Context, in *RegisterRequest) (*emptypb.Empty, error) {
+	return c.client.Register(ctx, in)
 }
 
-func (c *AuthServiceGRPC2HTTPBridgeImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest) (*DestroyTokenResponse, error) {
-	return c.client.DestroyToken(ctx, in)
+type AuthHTTP2GRPCBridgeImpl struct {
+	client AuthHTTPClient
 }
 
-func (c *AuthServiceGRPC2HTTPBridgeImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
-	return c.client.ListAuthResources(ctx, in)
+func NewAuthHTTP2GRPC(client *http.Client) AuthServer {
+	return &AuthHTTP2GRPCBridgeImpl{client: NewAuthHTTPClient(client)}
 }
 
-func (c *AuthServiceGRPC2HTTPBridgeImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest) (*ValidateTokenResponse, error) {
-	return c.client.ValidateToken(ctx, in)
+func (c *AuthHTTP2GRPCBridgeImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest) (*GetCaptchaResponse, error) {
+	return c.client.GetCaptcha(ctx, in)
 }
 
-type AuthServiceHTTP2GRPCBridgeImpl struct {
-	client AuthServiceHTTPClient
+func (c *AuthHTTP2GRPCBridgeImpl) Login(ctx context.Context, in *LoginRequest) (*LoginResponse, error) {
+	return c.client.Login(ctx, in)
 }
 
-func NewAuthServiceHTTP2GRPC(client *http.Client) AuthServiceServer {
-	return &AuthServiceHTTP2GRPCBridgeImpl{client: NewAuthServiceHTTPClient(client)}
+func (c *AuthHTTP2GRPCBridgeImpl) Logout(ctx context.Context, in *LogoutRequest) (*emptypb.Empty, error) {
+	return c.client.Logout(ctx, in)
 }
 
-func (c *AuthServiceHTTP2GRPCBridgeImpl) AuthLogout(ctx context.Context, in *AuthLogoutRequest) (*AuthLogoutResponse, error) {
-	return c.client.AuthLogout(ctx, in)
+func (c *AuthHTTP2GRPCBridgeImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return c.client.RefreshToken(ctx, in)
 }
 
-func (c *AuthServiceHTTP2GRPCBridgeImpl) Authenticate(ctx context.Context, in *AuthenticateRequest) (*AuthenticateResponse, error) {
-	return c.client.Authenticate(ctx, in)
+func (c *AuthHTTP2GRPCBridgeImpl) Register(ctx context.Context, in *RegisterRequest) (*emptypb.Empty, error) {
+	return c.client.Register(ctx, in)
 }
 
-func (c *AuthServiceHTTP2GRPCBridgeImpl) CreateToken(ctx context.Context, in *CreateTokenRequest) (*CreateTokenResponse, error) {
-	return c.client.CreateToken(ctx, in)
-}
-
-func (c *AuthServiceHTTP2GRPCBridgeImpl) DestroyToken(ctx context.Context, in *DestroyTokenRequest) (*DestroyTokenResponse, error) {
-	return c.client.DestroyToken(ctx, in)
-}
-
-func (c *AuthServiceHTTP2GRPCBridgeImpl) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
-	return c.client.ListAuthResources(ctx, in)
-}
-
-func (c *AuthServiceHTTP2GRPCBridgeImpl) ValidateToken(ctx context.Context, in *ValidateTokenRequest) (*ValidateTokenResponse, error) {
-	return c.client.ValidateToken(ctx, in)
-}
-
-func (c *AuthServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedAuthServiceServer() {}
+func (c *AuthHTTP2GRPCBridgeImpl) mustEmbedUnimplementedAuthServer() {}

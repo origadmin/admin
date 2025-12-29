@@ -14,19 +14,19 @@ option objc_class_prefix = "APIServiceAuthCasbin";
 service CasbinSourceService {
   rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
     option (google.api.http) = {
-      get: "/casbin/policies"
+      get: "/api/v1/casbin/policies"
       response_body: "*"
     };
   }
   rpc ListGroupings(ListGroupingsRequest) returns (ListGroupingsResponse) {
     option (google.api.http) = {
-      get: "/casbin/groupings"
+      get: "/api/v1/casbin/groupings"
       response_body: "*"
     };
   }
   rpc WatchUpdate(WatchUpdateRequest) returns (WatchUpdateResponse) {
     option (google.api.http) = {
-      get: "/casbin/watch"
+      get: "/api/v1/casbin/watch"
       response_body: "*"
     };
   }

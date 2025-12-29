@@ -128,7 +128,7 @@ type ListDepartmentsResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The total number of items in the list.
 	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	// The paging menus
+	// The paging departments
 	Departments []*types.Department `protobuf:"bytes,2,rep,name=departments,proto3" json:"departments,omitempty"`
 	// The page number.
 	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`

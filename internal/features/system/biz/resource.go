@@ -33,8 +33,9 @@ func (uc *ResourceUseCase) GetResource(ctx context.Context, id int64) (*types.Re
 	return uc.repo.Get(ctx, id)
 }
 
+// CreateResource creates a new resource, ensuring essential fields have valid default values.
 func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
-	// Set business-defined default values.
+	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
 	}

@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,303 +20,309 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_ListAuthResources_FullMethodName = "/api.v1.services.auth.AuthService/ListAuthResources"
-	AuthService_CreateToken_FullMethodName       = "/api.v1.services.auth.AuthService/CreateToken"
-	AuthService_ValidateToken_FullMethodName     = "/api.v1.services.auth.AuthService/ValidateToken"
-	AuthService_DestroyToken_FullMethodName      = "/api.v1.services.auth.AuthService/DestroyToken"
-	AuthService_Authenticate_FullMethodName      = "/api.v1.services.auth.AuthService/Authenticate"
-	AuthService_AuthLogout_FullMethodName        = "/api.v1.services.auth.AuthService/AuthLogout"
+	Auth_Login_FullMethodName        = "/api.v1.services.auth.Auth/Login"
+	Auth_Register_FullMethodName     = "/api.v1.services.auth.Auth/Register"
+	Auth_Logout_FullMethodName       = "/api.v1.services.auth.Auth/Logout"
+	Auth_RefreshToken_FullMethodName = "/api.v1.services.auth.Auth/RefreshToken"
+	Auth_GetCaptcha_FullMethodName   = "/api.v1.services.auth.Auth/GetCaptcha"
+	Auth_Authenticate_FullMethodName = "/api.v1.services.auth.Auth/Authenticate"
 )
 
-// AuthServiceClient is the client API for AuthService service.
+// AuthClient is the client API for Auth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AuthServiceClient interface {
-	// ListAuthResources returns a list of Auths.
-	ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error)
-	// CreateToken generates a new JWT token for the given user.
-	CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*CreateTokenResponse, error)
-	// ValidateToken verifies the validity of a JWT token.
-	ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
-	// DestroyToken invalidates a JWT token.
-	DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error)
-	// Authenticate authenticates a user.
+//
+// Service Auth provides APIs for the authentication lifecycle.
+type AuthClient interface {
+	// Login authenticates a user and returns a token pair.
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	// Register creates a new user account.
+	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Logout invalidates the user's session.
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// RefreshToken provides a new access token.
+	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	// GetCaptcha generates a new captcha.
+	GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...grpc.CallOption) (*GetCaptchaResponse, error)
+	// Authenticate is for internal use by the gateway to verify user access via gRPC.
+	// It does not have an HTTP binding.
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error)
-	// AuthLogout logs out a user.
-	AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...grpc.CallOption) (*AuthLogoutResponse, error)
 }
 
-type authServiceClient struct {
+type authClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
-	return &authServiceClient{cc}
+func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
+	return &authClient{cc}
 }
 
-func (c *authServiceClient) ListAuthResources(ctx context.Context, in *ListAuthResourcesRequest, opts ...grpc.CallOption) (*ListAuthResourcesResponse, error) {
+func (c *authClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListAuthResourcesResponse)
-	err := c.cc.Invoke(ctx, AuthService_ListAuthResources_FullMethodName, in, out, cOpts...)
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, Auth_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) CreateToken(ctx context.Context, in *CreateTokenRequest, opts ...grpc.CallOption) (*CreateTokenResponse, error) {
+func (c *authClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateTokenResponse)
-	err := c.cc.Invoke(ctx, AuthService_CreateToken_FullMethodName, in, out, cOpts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Auth_Register_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) ValidateToken(ctx context.Context, in *ValidateTokenRequest, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+func (c *authClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ValidateTokenResponse)
-	err := c.cc.Invoke(ctx, AuthService_ValidateToken_FullMethodName, in, out, cOpts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Auth_Logout_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) DestroyToken(ctx context.Context, in *DestroyTokenRequest, opts ...grpc.CallOption) (*DestroyTokenResponse, error) {
+func (c *authClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DestroyTokenResponse)
-	err := c.cc.Invoke(ctx, AuthService_DestroyToken_FullMethodName, in, out, cOpts...)
+	out := new(RefreshTokenResponse)
+	err := c.cc.Invoke(ctx, Auth_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error) {
+func (c *authClient) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...grpc.CallOption) (*GetCaptchaResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCaptchaResponse)
+	err := c.cc.Invoke(ctx, Auth_GetCaptcha_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AuthenticateResponse)
-	err := c.cc.Invoke(ctx, AuthService_Authenticate_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Auth_Authenticate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) AuthLogout(ctx context.Context, in *AuthLogoutRequest, opts ...grpc.CallOption) (*AuthLogoutResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AuthLogoutResponse)
-	err := c.cc.Invoke(ctx, AuthService_AuthLogout_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// AuthServiceServer is the server API for AuthService service.
-// All implementations must embed UnimplementedAuthServiceServer
+// AuthServer is the server API for Auth service.
+// All implementations must embed UnimplementedAuthServer
 // for forward compatibility.
-type AuthServiceServer interface {
-	// ListAuthResources returns a list of Auths.
-	ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error)
-	// CreateToken generates a new JWT token for the given user.
-	CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error)
-	// ValidateToken verifies the validity of a JWT token.
-	ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error)
-	// DestroyToken invalidates a JWT token.
-	DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error)
-	// Authenticate authenticates a user.
+//
+// Service Auth provides APIs for the authentication lifecycle.
+type AuthServer interface {
+	// Login authenticates a user and returns a token pair.
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// Register creates a new user account.
+	Register(context.Context, *RegisterRequest) (*emptypb.Empty, error)
+	// Logout invalidates the user's session.
+	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
+	// RefreshToken provides a new access token.
+	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	// GetCaptcha generates a new captcha.
+	GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error)
+	// Authenticate is for internal use by the gateway to verify user access via gRPC.
+	// It does not have an HTTP binding.
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error)
-	// AuthLogout logs out a user.
-	AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error)
-	mustEmbedUnimplementedAuthServiceServer()
+	mustEmbedUnimplementedAuthServer()
 }
 
-// UnimplementedAuthServiceServer must be embedded to have
+// UnimplementedAuthServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAuthServiceServer struct{}
+type UnimplementedAuthServer struct{}
 
-func (UnimplementedAuthServiceServer) ListAuthResources(context.Context, *ListAuthResourcesRequest) (*ListAuthResourcesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAuthResources not implemented")
+func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthServiceServer) CreateToken(context.Context, *CreateTokenRequest) (*CreateTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateToken not implemented")
+func (UnimplementedAuthServer) Register(context.Context, *RegisterRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedAuthServiceServer) ValidateToken(context.Context, *ValidateTokenRequest) (*ValidateTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
+func (UnimplementedAuthServer) Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedAuthServiceServer) DestroyToken(context.Context, *DestroyTokenRequest) (*DestroyTokenResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DestroyToken not implemented")
+func (UnimplementedAuthServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedAuthServiceServer) Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error) {
+func (UnimplementedAuthServer) GetCaptcha(context.Context, *GetCaptchaRequest) (*GetCaptchaResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCaptcha not implemented")
+}
+func (UnimplementedAuthServer) Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
 }
-func (UnimplementedAuthServiceServer) AuthLogout(context.Context, *AuthLogoutRequest) (*AuthLogoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AuthLogout not implemented")
-}
-func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
-func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
+func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
+func (UnimplementedAuthServer) testEmbeddedByValue()              {}
 
-// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AuthServiceServer will
+// UnsafeAuthServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AuthServer will
 // result in compilation errors.
-type UnsafeAuthServiceServer interface {
-	mustEmbedUnimplementedAuthServiceServer()
+type UnsafeAuthServer interface {
+	mustEmbedUnimplementedAuthServer()
 }
 
-func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
-	// If the following call pancis, it indicates UnimplementedAuthServiceServer was
+func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
+	// If the following call pancis, it indicates UnimplementedAuthServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&AuthService_ServiceDesc, srv)
+	s.RegisterService(&Auth_ServiceDesc, srv)
 }
 
-func _AuthService_ListAuthResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAuthResourcesRequest)
+func _Auth_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).ListAuthResources(ctx, in)
+		return srv.(AuthServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_ListAuthResources_FullMethodName,
+		FullMethod: Auth_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).ListAuthResources(ctx, req.(*ListAuthResourcesRequest))
+		return srv.(AuthServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_CreateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateTokenRequest)
+func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).CreateToken(ctx, in)
+		return srv.(AuthServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_CreateToken_FullMethodName,
+		FullMethod: Auth_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).CreateToken(ctx, req.(*CreateTokenRequest))
+		return srv.(AuthServer).Register(ctx, req.(*RegisterRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ValidateTokenRequest)
+func _Auth_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).ValidateToken(ctx, in)
+		return srv.(AuthServer).Logout(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_ValidateToken_FullMethodName,
+		FullMethod: Auth_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).ValidateToken(ctx, req.(*ValidateTokenRequest))
+		return srv.(AuthServer).Logout(ctx, req.(*LogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_DestroyToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DestroyTokenRequest)
+func _Auth_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).DestroyToken(ctx, in)
+		return srv.(AuthServer).RefreshToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_DestroyToken_FullMethodName,
+		FullMethod: Auth_RefreshToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).DestroyToken(ctx, req.(*DestroyTokenRequest))
+		return srv.(AuthServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Auth_GetCaptcha_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCaptchaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).GetCaptcha(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_GetCaptcha_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).GetCaptcha(ctx, req.(*GetCaptchaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AuthenticateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).Authenticate(ctx, in)
+		return srv.(AuthServer).Authenticate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_Authenticate_FullMethodName,
+		FullMethod: Auth_Authenticate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Authenticate(ctx, req.(*AuthenticateRequest))
+		return srv.(AuthServer).Authenticate(ctx, req.(*AuthenticateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_AuthLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthLogoutRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).AuthLogout(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_AuthLogout_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).AuthLogout(ctx, req.(*AuthLogoutRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
+// Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.auth.AuthService",
-	HandlerType: (*AuthServiceServer)(nil),
+var Auth_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.v1.services.auth.Auth",
+	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListAuthResources",
-			Handler:    _AuthService_ListAuthResources_Handler,
+			MethodName: "Login",
+			Handler:    _Auth_Login_Handler,
 		},
 		{
-			MethodName: "CreateToken",
-			Handler:    _AuthService_CreateToken_Handler,
+			MethodName: "Register",
+			Handler:    _Auth_Register_Handler,
 		},
 		{
-			MethodName: "ValidateToken",
-			Handler:    _AuthService_ValidateToken_Handler,
+			MethodName: "Logout",
+			Handler:    _Auth_Logout_Handler,
 		},
 		{
-			MethodName: "DestroyToken",
-			Handler:    _AuthService_DestroyToken_Handler,
+			MethodName: "RefreshToken",
+			Handler:    _Auth_RefreshToken_Handler,
+		},
+		{
+			MethodName: "GetCaptcha",
+			Handler:    _Auth_GetCaptcha_Handler,
 		},
 		{
 			MethodName: "Authenticate",
-			Handler:    _AuthService_Authenticate_Handler,
-		},
-		{
-			MethodName: "AuthLogout",
-			Handler:    _AuthService_AuthLogout_Handler,
+			Handler:    _Auth_Authenticate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

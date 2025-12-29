@@ -33,8 +33,9 @@ func (uc *RoleUseCase) GetRole(ctx context.Context, id int64) (*types.Role, erro
 	return uc.repo.Get(ctx, id)
 }
 
+// CreateRole creates a new role, ensuring essential fields have valid default values.
 func (uc *RoleUseCase) CreateRole(ctx context.Context, in *types.Role) (*types.Role, error) {
-	// Set business-defined default values.
+	// The backend must always enforce data integrity, regardless of frontend behavior.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
 	}

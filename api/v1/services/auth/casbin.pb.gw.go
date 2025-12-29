@@ -118,7 +118,7 @@ func RegisterCasbinSourceServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListPolicies", runtime.WithHTTPPathPattern("/casbin/policies"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListPolicies", runtime.WithHTTPPathPattern("/api/v1/casbin/policies"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -138,7 +138,7 @@ func RegisterCasbinSourceServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListGroupings", runtime.WithHTTPPathPattern("/casbin/groupings"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListGroupings", runtime.WithHTTPPathPattern("/api/v1/casbin/groupings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -158,7 +158,7 @@ func RegisterCasbinSourceServiceHandlerServer(ctx context.Context, mux *runtime.
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/WatchUpdate", runtime.WithHTTPPathPattern("/casbin/watch"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/WatchUpdate", runtime.WithHTTPPathPattern("/api/v1/casbin/watch"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -216,7 +216,7 @@ func RegisterCasbinSourceServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListPolicies", runtime.WithHTTPPathPattern("/casbin/policies"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListPolicies", runtime.WithHTTPPathPattern("/api/v1/casbin/policies"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -233,7 +233,7 @@ func RegisterCasbinSourceServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListGroupings", runtime.WithHTTPPathPattern("/casbin/groupings"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/ListGroupings", runtime.WithHTTPPathPattern("/api/v1/casbin/groupings"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -250,7 +250,7 @@ func RegisterCasbinSourceServiceHandlerClient(ctx context.Context, mux *runtime.
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/WatchUpdate", runtime.WithHTTPPathPattern("/casbin/watch"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.CasbinSourceService/WatchUpdate", runtime.WithHTTPPathPattern("/api/v1/casbin/watch"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -267,9 +267,9 @@ func RegisterCasbinSourceServiceHandlerClient(ctx context.Context, mux *runtime.
 }
 
 var (
-	pattern_CasbinSourceService_ListPolicies_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "policies"}, ""))
-	pattern_CasbinSourceService_ListGroupings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "groupings"}, ""))
-	pattern_CasbinSourceService_WatchUpdate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"casbin", "watch"}, ""))
+	pattern_CasbinSourceService_ListPolicies_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "casbin", "policies"}, ""))
+	pattern_CasbinSourceService_ListGroupings_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "casbin", "groupings"}, ""))
+	pattern_CasbinSourceService_WatchUpdate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "casbin", "watch"}, ""))
 )
 
 var (
