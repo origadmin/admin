@@ -13,7 +13,6 @@ import (
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
 	"origadmin/application/admin/internal/gateway/service"
-	"origadmin/application/admin/internal/helpers/providers"
 )
 
 import (
@@ -37,13 +36,15 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	gatewayService := service.NewGatewayService(authServiceClient, userServiceClient)
-	v := providers.ProvideLogger(app)
-	v2, err := server.NewServers(servers, gatewayService, v)
+	gatewayService, err := service.NewGatewayService(authServiceClient, userServiceClient)
 	if err != nil {
 		return nil, nil, err
 	}
-	kratosApp := NewApp(app, v2)
+	v, err := server.NewServers(app, servers, gatewayService)
+	if err != nil {
+		return nil, nil, err
+	}
+	kratosApp := NewApp(app, v)
 	return kratosApp, func() {
 	}, nil
 }

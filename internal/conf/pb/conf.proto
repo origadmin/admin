@@ -40,8 +40,8 @@ message Bootstrap {
   // Security configuration for authentication and authorization.
   contrib.api.security.v1.Security security = 8;
 
-  // CORS configuration for cross-origin resource sharing.
-  runtime.api.config.middleware.cors.v1.Cors cors = 9;
+//  // CORS configuration for cross-origin resource sharing.
+//  runtime.api.config.middleware.cors.v1.Cors cors = 9;
 
   // Captcha feature specific configuration.
   conf.pb.Captcha captcha = 10;
