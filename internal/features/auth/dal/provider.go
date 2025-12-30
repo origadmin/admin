@@ -1,6 +1,12 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package dal
 
-import "github.com/google/wire"
+import (
+	"github.com/google/wire"
+)
 
 // ProviderSet is dal providers.
-var ProviderSet = wire.NewSet(NewAuthRepo, NewMeRepo, NewCaptchaRepo)
+var ProviderSet = wire.NewSet(NewAuthRepo, NewCasbinRepo)

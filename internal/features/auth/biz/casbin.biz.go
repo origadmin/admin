@@ -10,12 +10,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/origadmin/runtime"
-	"github.com/origadmin/runtime/log"
 	"google.golang.org/grpc"
+
+	"github.com/origadmin/runtime/log"
 
 	"origadmin/application/admin/internal/helpers/repo"
 
+	"github.com/origadmin/runtime"
 	pb "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/dto"
 )
@@ -24,7 +25,7 @@ import (
 type CasbinSourceServiceBiz struct {
 	dao          dto.CasbinSourceRepo
 	limiter      repo.PageLimiter
-	log          *log.KHelper
+	log          *log.Helper
 	lastModified *atomic.Int64
 }
 
@@ -105,7 +106,7 @@ func newGroupingResponse(rule *pb.GroupingRule) *pb.StreamRulesResponse {
 }
 
 // NewCasbinSourceServiceBiz new a CasbinSource use case.
-func NewCasbinSourceServiceBiz(r runtime.Runtime, repo dto.CasbinSourceRepo) *CasbinSourceServiceBiz {
-	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(r.WithLogger("module", "biz/casbin")),
+func NewCasbinSourceServiceBiz(r *runtime.App, repo dto.CasbinSourceRepo) *CasbinSourceServiceBiz {
+	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(log.With(r.Logger(), "module", "biz/casbin")),
 		lastModified: &atomic.Int64{}}
 }

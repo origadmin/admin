@@ -32,9 +32,10 @@ func (uc *CaptchaUseCase) GenerateCaptcha(ctx context.Context) (id, b64s string,
 		int(uc.config.GetHeight()),
 		int(uc.config.GetWidth()),
 		int(uc.config.GetLength()),
-		uc.config.GetMaxskew(),
-		uc.config.GetDotcount(),
+		float64(uc.config.GetMaxskew()),
+		uc.config.GetDotCount(),
 	)
 	c := base64Captcha.NewCaptcha(driver, uc.repo)
-	return c.Generate()
+	id, content, err := c.Generate()
+	return id, content, err
 }

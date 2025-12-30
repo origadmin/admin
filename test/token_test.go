@@ -64,7 +64,7 @@ func TestGenerateToken(t *testing.T) {
 	authRepo := dal.NewAuthRepo(r, dataData)
 	//authServiceBiz := biz.NewAuthServiceBiz(r, authRepo)
 	//authServiceServer := service.NewAuthServiceServerPB(authServiceBiz)
-	//casbinSourceRepo, err := dal.NewCasbinSourceRepo(dataData)
+	//casbinSourceRepo, err := dal.NewCasbinRepo(dataData)
 	//if err != nil {
 	//	cleanup()
 	//	return

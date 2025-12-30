@@ -34,7 +34,7 @@ func (uc *AuthUseCase) VerifyUser(ctx context.Context, username, password string
 	}
 
 	// Compare the provided password with the stored hash.
-	ok, err := uc.hasher.Compare(user.EncryptedPassword, password)
+	ok, err := uc.hasher.Verify(user.EncryptedPassword, password)
 	if err != nil || !ok {
 		return 0, errors.New("invalid username or password")
 	}

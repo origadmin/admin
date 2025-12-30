@@ -16,9 +16,9 @@ type authRepo struct {
 }
 
 // NewAuthRepo .
-func NewAuthRepo(database *ent.Database, logger log.Logger) dto.AuthRepo {
+func NewAuthRepo(db *ent.Database, logger log.Logger) dto.AuthRepo {
 	return &authRepo{
-		db:  database,
+		db:  db,
 		log: log.NewHelper(logger),
 	}
 }
@@ -31,8 +31,8 @@ func (r *authRepo) GetUserByUsername(ctx context.Context, username string) (*dto
 	}
 
 	return &dto.User{
-		ID:              u.ID,
-		Username:        u.Username,
+		ID:                u.ID,
+		Username:          u.Username,
 		EncryptedPassword: u.EncryptedPassword,
 	}, nil
 }
