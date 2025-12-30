@@ -8,7 +8,12 @@ import (
 
 // CasbinSourceService is a service for Casbin.
 type CasbinSourceService struct {
-	v1.UnimplementedCasbinSourceServiceServer
+	v1.UnimplementedCasbinServiceServer
+}
+
+func (s *CasbinSourceService) mustEmbedUnimplementedCasbinServiceServer() {
+	//TODO implement me
+	panic("implement me")
 }
 
 // NewCasbinSourceService creates a new Casbin source service.
@@ -32,6 +37,6 @@ func (s *CasbinSourceService) WatchUpdate(ctx context.Context, req *v1.WatchUpda
 }
 
 // StreamRules returns a stream of rules.
-func (s *CasbinSourceService) StreamRules(req *v1.StreamRulesRequest, stream v1.CasbinSourceService_StreamRulesServer) error {
+func (s *CasbinSourceService) StreamRules(req *v1.StreamRulesRequest, stream v1.CasbinService_StreamRulesServer) error {
 	return nil
 }

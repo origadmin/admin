@@ -3,16 +3,13 @@ package service
 import (
 	"context"
 
-	"google.golang.org/protobuf/types/known/emptypb"
-
 	v1 "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/features/auth/biz"
 )
 
 // MeService is a service for the currently authenticated user.
 type MeService struct {
-	v1.UnimplementedMeServer
+	v1.UnimplementedMeServiceServer
 	uc *biz.MeUseCase
 }
 
@@ -22,20 +19,24 @@ func NewMeService(uc *biz.MeUseCase) *MeService {
 }
 
 // GetProfile retrieves the profile of the currently authenticated user.
-func (s *MeService) GetProfile(ctx context.Context, req *v1.GetProfileRequest) (*types.User, error) {
+func (s *MeService) GetProfile(ctx context.Context, req *v1.GetProfileRequest) (*v1.GetProfileResponse, error) {
 	// TODO: Get userID from context
 	userID := int64(1) // Placeholder
-	return s.uc.GetProfile(ctx, userID)
+	user, err := s.uc.GetProfile(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GetProfileResponse{User: user}, nil
 }
 
 // UpdateProfile updates the profile of the currently authenticated user.
-func (s *MeService) UpdateProfile(ctx context.Context, req *v1.UpdateProfileRequest) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
+func (s *MeService) UpdateProfile(ctx context.Context, req *v1.UpdateProfileRequest) (*v1.UpdateProfileResponse, error) {
+	return &v1.UpdateProfileResponse{}, nil
 }
 
 // UpdatePassword changes the password for the currently authenticated user.
-func (s *MeService) UpdatePassword(ctx context.Context, req *v1.UpdatePasswordRequest) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
+func (s *MeService) UpdatePassword(ctx context.Context, req *v1.UpdatePasswordRequest) (*v1.UpdatePasswordResponse, error) {
+	return &v1.UpdatePasswordResponse{}, nil
 }
 
 // GetUserResources retrieves the menu/resource list for the current user.

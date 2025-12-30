@@ -77,9 +77,9 @@ func NewHTTPServer(
 	srv := http.NewServer(opts...)
 
 	// Register HTTP handlers
-	authv1.RegisterAuthHTTPServer(srv, authSvc)
-	authv1.RegisterMeHTTPServer(srv, meSvc)
-	authv1.RegisterCasbinSourceServiceHTTPServer(srv, casbinSvc)
+	authv1.RegisterAuthServiceHTTPServer(srv, authSvc)
+	authv1.RegisterMeServiceHTTPServer(srv, meSvc)
+	authv1.RegisterCasbinServiceHTTPServer(srv, casbinSvc)
 
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
 		log.Infof("HTTP %s %s", method, path)
@@ -109,9 +109,9 @@ func NewGRPCServer(
 	srv := grpc.NewServer(opts...)
 
 	// Register gRPC handlers
-	authv1.RegisterAuthServer(srv, authSvc)
-	authv1.RegisterMeServer(srv, meSvc)
-	authv1.RegisterCasbinSourceServiceServer(srv, casbinSvc)
+	authv1.RegisterAuthServiceServer(srv, authSvc)
+	authv1.RegisterMeServiceServer(srv, meSvc)
+	authv1.RegisterCasbinServiceServer(srv, casbinSvc)
 
 	return srv, nil
 }

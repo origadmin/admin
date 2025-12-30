@@ -19,30 +19,30 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationCasbinSourceServiceListGroupings = "/api.v1.services.auth.CasbinSourceService/ListGroupings"
-const OperationCasbinSourceServiceListPolicies = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
-const OperationCasbinSourceServiceWatchUpdate = "/api.v1.services.auth.CasbinSourceService/WatchUpdate"
+const OperationCasbinServiceListGroupings = "/api.v1.services.auth.CasbinService/ListGroupings"
+const OperationCasbinServiceListPolicies = "/api.v1.services.auth.CasbinService/ListPolicies"
+const OperationCasbinServiceWatchUpdate = "/api.v1.services.auth.CasbinService/WatchUpdate"
 
-type CasbinSourceServiceHTTPServer interface {
+type CasbinServiceHTTPServer interface {
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error)
 }
 
-func RegisterCasbinSourceServiceHTTPServer(s *http.Server, srv CasbinSourceServiceHTTPServer) {
+func RegisterCasbinServiceHTTPServer(s *http.Server, srv CasbinServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/v1/casbin/policies", _CasbinSourceService_ListPolicies0_HTTP_Handler(srv))
-	r.GET("/api/v1/casbin/groupings", _CasbinSourceService_ListGroupings0_HTTP_Handler(srv))
-	r.GET("/api/v1/casbin/watch", _CasbinSourceService_WatchUpdate0_HTTP_Handler(srv))
+	r.GET("/api/v1/casbin/policies", _CasbinService_ListPolicies0_HTTP_Handler(srv))
+	r.GET("/api/v1/casbin/groupings", _CasbinService_ListGroupings0_HTTP_Handler(srv))
+	r.GET("/api/v1/casbin/watch", _CasbinService_WatchUpdate0_HTTP_Handler(srv))
 }
 
-func _CasbinSourceService_ListPolicies0_HTTP_Handler(srv CasbinSourceServiceHTTPServer) func(ctx http.Context) error {
+func _CasbinService_ListPolicies0_HTTP_Handler(srv CasbinServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListPoliciesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCasbinSourceServiceListPolicies)
+		http.SetOperation(ctx, OperationCasbinServiceListPolicies)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListPolicies(ctx, req.(*ListPoliciesRequest))
 		})
@@ -55,13 +55,13 @@ func _CasbinSourceService_ListPolicies0_HTTP_Handler(srv CasbinSourceServiceHTTP
 	}
 }
 
-func _CasbinSourceService_ListGroupings0_HTTP_Handler(srv CasbinSourceServiceHTTPServer) func(ctx http.Context) error {
+func _CasbinService_ListGroupings0_HTTP_Handler(srv CasbinServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListGroupingsRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCasbinSourceServiceListGroupings)
+		http.SetOperation(ctx, OperationCasbinServiceListGroupings)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.ListGroupings(ctx, req.(*ListGroupingsRequest))
 		})
@@ -74,13 +74,13 @@ func _CasbinSourceService_ListGroupings0_HTTP_Handler(srv CasbinSourceServiceHTT
 	}
 }
 
-func _CasbinSourceService_WatchUpdate0_HTTP_Handler(srv CasbinSourceServiceHTTPServer) func(ctx http.Context) error {
+func _CasbinService_WatchUpdate0_HTTP_Handler(srv CasbinServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in WatchUpdateRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationCasbinSourceServiceWatchUpdate)
+		http.SetOperation(ctx, OperationCasbinServiceWatchUpdate)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.WatchUpdate(ctx, req.(*WatchUpdateRequest))
 		})
@@ -93,25 +93,25 @@ func _CasbinSourceService_WatchUpdate0_HTTP_Handler(srv CasbinSourceServiceHTTPS
 	}
 }
 
-type CasbinSourceServiceHTTPClient interface {
+type CasbinServiceHTTPClient interface {
 	ListGroupings(ctx context.Context, req *ListGroupingsRequest, opts ...http.CallOption) (rsp *ListGroupingsResponse, err error)
 	ListPolicies(ctx context.Context, req *ListPoliciesRequest, opts ...http.CallOption) (rsp *ListPoliciesResponse, err error)
 	WatchUpdate(ctx context.Context, req *WatchUpdateRequest, opts ...http.CallOption) (rsp *WatchUpdateResponse, err error)
 }
 
-type CasbinSourceServiceHTTPClientImpl struct {
+type CasbinServiceHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewCasbinSourceServiceHTTPClient(client *http.Client) CasbinSourceServiceHTTPClient {
-	return &CasbinSourceServiceHTTPClientImpl{client}
+func NewCasbinServiceHTTPClient(client *http.Client) CasbinServiceHTTPClient {
+	return &CasbinServiceHTTPClientImpl{client}
 }
 
-func (c *CasbinSourceServiceHTTPClientImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...http.CallOption) (*ListGroupingsResponse, error) {
+func (c *CasbinServiceHTTPClientImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...http.CallOption) (*ListGroupingsResponse, error) {
 	var out ListGroupingsResponse
 	pattern := "/api/v1/casbin/groupings"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationCasbinSourceServiceListGroupings))
+	opts = append(opts, http.Operation(OperationCasbinServiceListGroupings))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -120,11 +120,11 @@ func (c *CasbinSourceServiceHTTPClientImpl) ListGroupings(ctx context.Context, i
 	return &out, nil
 }
 
-func (c *CasbinSourceServiceHTTPClientImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...http.CallOption) (*ListPoliciesResponse, error) {
+func (c *CasbinServiceHTTPClientImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...http.CallOption) (*ListPoliciesResponse, error) {
 	var out ListPoliciesResponse
 	pattern := "/api/v1/casbin/policies"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationCasbinSourceServiceListPolicies))
+	opts = append(opts, http.Operation(OperationCasbinServiceListPolicies))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -133,11 +133,11 @@ func (c *CasbinSourceServiceHTTPClientImpl) ListPolicies(ctx context.Context, in
 	return &out, nil
 }
 
-func (c *CasbinSourceServiceHTTPClientImpl) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...http.CallOption) (*WatchUpdateResponse, error) {
+func (c *CasbinServiceHTTPClientImpl) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...http.CallOption) (*WatchUpdateResponse, error) {
 	var out WatchUpdateResponse
 	pattern := "/api/v1/casbin/watch"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationCasbinSourceServiceWatchUpdate))
+	opts = append(opts, http.Operation(OperationCasbinServiceWatchUpdate))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

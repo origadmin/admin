@@ -2,6 +2,7 @@ package providers
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -65,6 +66,9 @@ func ProvideCache(r *runtime.App) (container.CacheProvider, error) {
 }
 
 func ProvideCaptcha(p container.CacheProvider, cfg *confpb.Captcha) (*captcha.Captcha, error) {
+	if cfg == nil {
+		return nil, fmt.Errorf("captcha configuration is missing")
+	}
 	cache, err := p.Cache(cfg.CacheName)
 	if err != nil {
 		return nil, err

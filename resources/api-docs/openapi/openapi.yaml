@@ -145,8 +145,8 @@ paths:
     /api/v1/casbin/groupings:
         get:
             tags:
-                - CasbinSourceService
-            operationId: CasbinSourceService_ListGroupings
+                - CasbinService
+            operationId: CasbinService_ListGroupings
             responses:
                 "200":
                     description: OK
@@ -163,8 +163,8 @@ paths:
     /api/v1/casbin/policies:
         get:
             tags:
-                - CasbinSourceService
-            operationId: CasbinSourceService_ListPolicies
+                - CasbinService
+            operationId: CasbinService_ListPolicies
             responses:
                 "200":
                     description: OK
@@ -181,8 +181,8 @@ paths:
     /api/v1/casbin/watch:
         get:
             tags:
-                - CasbinSourceService
-            operationId: CasbinSourceService_WatchUpdate
+                - CasbinService
+            operationId: CasbinService_WatchUpdate
             parameters:
                 - name: last_modified
                   in: query
@@ -3589,8 +3589,8 @@ components:
 tags:
     - name: AuthService
       description: Service AuthService provides APIs for the authentication lifecycle.
-    - name: CasbinSourceService
-      description: The Casbin source service definition.
+    - name: CasbinService
+      description: The Casbin service definition.
     - name: DatastoreService
       description: The data service definition.
     - name: DepartmentService

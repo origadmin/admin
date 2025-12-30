@@ -19,65 +19,65 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CasbinSourceService_ListPolicies_FullMethodName  = "/api.v1.services.auth.CasbinSourceService/ListPolicies"
-	CasbinSourceService_ListGroupings_FullMethodName = "/api.v1.services.auth.CasbinSourceService/ListGroupings"
-	CasbinSourceService_WatchUpdate_FullMethodName   = "/api.v1.services.auth.CasbinSourceService/WatchUpdate"
-	CasbinSourceService_StreamRules_FullMethodName   = "/api.v1.services.auth.CasbinSourceService/StreamRules"
+	CasbinService_ListPolicies_FullMethodName  = "/api.v1.services.auth.CasbinService/ListPolicies"
+	CasbinService_ListGroupings_FullMethodName = "/api.v1.services.auth.CasbinService/ListGroupings"
+	CasbinService_WatchUpdate_FullMethodName   = "/api.v1.services.auth.CasbinService/WatchUpdate"
+	CasbinService_StreamRules_FullMethodName   = "/api.v1.services.auth.CasbinService/StreamRules"
 )
 
-// CasbinSourceServiceClient is the client API for CasbinSourceService service.
+// CasbinServiceClient is the client API for CasbinService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// The Casbin source service definition.
-type CasbinSourceServiceClient interface {
+// The Casbin service definition.
+type CasbinServiceClient interface {
 	ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...grpc.CallOption) (*ListPoliciesResponse, error)
 	ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...grpc.CallOption) (*ListGroupingsResponse, error)
 	WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (*WatchUpdateResponse, error)
 	StreamRules(ctx context.Context, in *StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamRulesResponse], error)
 }
 
-type casbinSourceServiceClient struct {
+type casbinServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCasbinSourceServiceClient(cc grpc.ClientConnInterface) CasbinSourceServiceClient {
-	return &casbinSourceServiceClient{cc}
+func NewCasbinServiceClient(cc grpc.ClientConnInterface) CasbinServiceClient {
+	return &casbinServiceClient{cc}
 }
 
-func (c *casbinSourceServiceClient) ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...grpc.CallOption) (*ListPoliciesResponse, error) {
+func (c *casbinServiceClient) ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...grpc.CallOption) (*ListPoliciesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListPoliciesResponse)
-	err := c.cc.Invoke(ctx, CasbinSourceService_ListPolicies_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CasbinService_ListPolicies_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *casbinSourceServiceClient) ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...grpc.CallOption) (*ListGroupingsResponse, error) {
+func (c *casbinServiceClient) ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...grpc.CallOption) (*ListGroupingsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListGroupingsResponse)
-	err := c.cc.Invoke(ctx, CasbinSourceService_ListGroupings_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CasbinService_ListGroupings_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *casbinSourceServiceClient) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (*WatchUpdateResponse, error) {
+func (c *casbinServiceClient) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...grpc.CallOption) (*WatchUpdateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(WatchUpdateResponse)
-	err := c.cc.Invoke(ctx, CasbinSourceService_WatchUpdate_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, CasbinService_WatchUpdate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *casbinSourceServiceClient) StreamRules(ctx context.Context, in *StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamRulesResponse], error) {
+func (c *casbinServiceClient) StreamRules(ctx context.Context, in *StreamRulesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[StreamRulesResponse], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	stream, err := c.cc.NewStream(ctx, &CasbinSourceService_ServiceDesc.Streams[0], CasbinSourceService_StreamRules_FullMethodName, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &CasbinService_ServiceDesc.Streams[0], CasbinService_StreamRules_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,150 +92,150 @@ func (c *casbinSourceServiceClient) StreamRules(ctx context.Context, in *StreamR
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type CasbinSourceService_StreamRulesClient = grpc.ServerStreamingClient[StreamRulesResponse]
+type CasbinService_StreamRulesClient = grpc.ServerStreamingClient[StreamRulesResponse]
 
-// CasbinSourceServiceServer is the server API for CasbinSourceService service.
-// All implementations must embed UnimplementedCasbinSourceServiceServer
+// CasbinServiceServer is the server API for CasbinService service.
+// All implementations must embed UnimplementedCasbinServiceServer
 // for forward compatibility.
 //
-// The Casbin source service definition.
-type CasbinSourceServiceServer interface {
+// The Casbin service definition.
+type CasbinServiceServer interface {
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
 	WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error)
 	StreamRules(*StreamRulesRequest, grpc.ServerStreamingServer[StreamRulesResponse]) error
-	mustEmbedUnimplementedCasbinSourceServiceServer()
+	mustEmbedUnimplementedCasbinServiceServer()
 }
 
-// UnimplementedCasbinSourceServiceServer must be embedded to have
+// UnimplementedCasbinServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedCasbinSourceServiceServer struct{}
+type UnimplementedCasbinServiceServer struct{}
 
-func (UnimplementedCasbinSourceServiceServer) ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error) {
+func (UnimplementedCasbinServiceServer) ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPolicies not implemented")
 }
-func (UnimplementedCasbinSourceServiceServer) ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error) {
+func (UnimplementedCasbinServiceServer) ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListGroupings not implemented")
 }
-func (UnimplementedCasbinSourceServiceServer) WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error) {
+func (UnimplementedCasbinServiceServer) WatchUpdate(context.Context, *WatchUpdateRequest) (*WatchUpdateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WatchUpdate not implemented")
 }
-func (UnimplementedCasbinSourceServiceServer) StreamRules(*StreamRulesRequest, grpc.ServerStreamingServer[StreamRulesResponse]) error {
+func (UnimplementedCasbinServiceServer) StreamRules(*StreamRulesRequest, grpc.ServerStreamingServer[StreamRulesResponse]) error {
 	return status.Errorf(codes.Unimplemented, "method StreamRules not implemented")
 }
-func (UnimplementedCasbinSourceServiceServer) mustEmbedUnimplementedCasbinSourceServiceServer() {}
-func (UnimplementedCasbinSourceServiceServer) testEmbeddedByValue()                             {}
+func (UnimplementedCasbinServiceServer) mustEmbedUnimplementedCasbinServiceServer() {}
+func (UnimplementedCasbinServiceServer) testEmbeddedByValue()                       {}
 
-// UnsafeCasbinSourceServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CasbinSourceServiceServer will
+// UnsafeCasbinServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CasbinServiceServer will
 // result in compilation errors.
-type UnsafeCasbinSourceServiceServer interface {
-	mustEmbedUnimplementedCasbinSourceServiceServer()
+type UnsafeCasbinServiceServer interface {
+	mustEmbedUnimplementedCasbinServiceServer()
 }
 
-func RegisterCasbinSourceServiceServer(s grpc.ServiceRegistrar, srv CasbinSourceServiceServer) {
-	// If the following call pancis, it indicates UnimplementedCasbinSourceServiceServer was
+func RegisterCasbinServiceServer(s grpc.ServiceRegistrar, srv CasbinServiceServer) {
+	// If the following call pancis, it indicates UnimplementedCasbinServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&CasbinSourceService_ServiceDesc, srv)
+	s.RegisterService(&CasbinService_ServiceDesc, srv)
 }
 
-func _CasbinSourceService_ListPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CasbinService_ListPolicies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListPoliciesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CasbinSourceServiceServer).ListPolicies(ctx, in)
+		return srv.(CasbinServiceServer).ListPolicies(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CasbinSourceService_ListPolicies_FullMethodName,
+		FullMethod: CasbinService_ListPolicies_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CasbinSourceServiceServer).ListPolicies(ctx, req.(*ListPoliciesRequest))
+		return srv.(CasbinServiceServer).ListPolicies(ctx, req.(*ListPoliciesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CasbinSourceService_ListGroupings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CasbinService_ListGroupings_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListGroupingsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CasbinSourceServiceServer).ListGroupings(ctx, in)
+		return srv.(CasbinServiceServer).ListGroupings(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CasbinSourceService_ListGroupings_FullMethodName,
+		FullMethod: CasbinService_ListGroupings_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CasbinSourceServiceServer).ListGroupings(ctx, req.(*ListGroupingsRequest))
+		return srv.(CasbinServiceServer).ListGroupings(ctx, req.(*ListGroupingsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CasbinSourceService_WatchUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CasbinService_WatchUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(WatchUpdateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CasbinSourceServiceServer).WatchUpdate(ctx, in)
+		return srv.(CasbinServiceServer).WatchUpdate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CasbinSourceService_WatchUpdate_FullMethodName,
+		FullMethod: CasbinService_WatchUpdate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CasbinSourceServiceServer).WatchUpdate(ctx, req.(*WatchUpdateRequest))
+		return srv.(CasbinServiceServer).WatchUpdate(ctx, req.(*WatchUpdateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CasbinSourceService_StreamRules_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _CasbinService_StreamRules_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(StreamRulesRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(CasbinSourceServiceServer).StreamRules(m, &grpc.GenericServerStream[StreamRulesRequest, StreamRulesResponse]{ServerStream: stream})
+	return srv.(CasbinServiceServer).StreamRules(m, &grpc.GenericServerStream[StreamRulesRequest, StreamRulesResponse]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type CasbinSourceService_StreamRulesServer = grpc.ServerStreamingServer[StreamRulesResponse]
+type CasbinService_StreamRulesServer = grpc.ServerStreamingServer[StreamRulesResponse]
 
-// CasbinSourceService_ServiceDesc is the grpc.ServiceDesc for CasbinSourceService service.
+// CasbinService_ServiceDesc is the grpc.ServiceDesc for CasbinService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var CasbinSourceService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.auth.CasbinSourceService",
-	HandlerType: (*CasbinSourceServiceServer)(nil),
+var CasbinService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.v1.services.auth.CasbinService",
+	HandlerType: (*CasbinServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "ListPolicies",
-			Handler:    _CasbinSourceService_ListPolicies_Handler,
+			Handler:    _CasbinService_ListPolicies_Handler,
 		},
 		{
 			MethodName: "ListGroupings",
-			Handler:    _CasbinSourceService_ListGroupings_Handler,
+			Handler:    _CasbinService_ListGroupings_Handler,
 		},
 		{
 			MethodName: "WatchUpdate",
-			Handler:    _CasbinSourceService_WatchUpdate_Handler,
+			Handler:    _CasbinService_WatchUpdate_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "StreamRules",
-			Handler:       _CasbinSourceService_StreamRules_Handler,
+			Handler:       _CasbinService_StreamRules_Handler,
 			ServerStreams: true,
 		},
 	},

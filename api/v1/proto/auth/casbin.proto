@@ -10,8 +10,8 @@ option java_outer_classname = "APIServiceAuthCasbinProto";
 option java_package = "com.origadmin.api.v1.services.auth";
 option objc_class_prefix = "APIServiceAuthCasbin";
 
-// The Casbin source service definition.
-service CasbinSourceService {
+// The Casbin service definition.
+service CasbinService {
   rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
     option (google.api.http) = {
       get: "/api/v1/casbin/policies"

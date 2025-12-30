@@ -536,8 +536,8 @@ const file_auth_casbin_proto_rawDesc = "" +
 	"\x12WatchUpdateRequest\x12$\n" +
 	"\rlast_modified\x18\x01 \x01(\x03R\rlast_modified\";\n" +
 	"\x13WatchUpdateResponse\x12$\n" +
-	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\x9f\x04\n" +
-	"\x13CasbinSourceService\x12\x89\x01\n" +
+	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\x99\x04\n" +
+	"\rCasbinService\x12\x89\x01\n" +
 	"\fListPolicies\x12).api.v1.services.auth.ListPoliciesRequest\x1a*.api.v1.services.auth.ListPoliciesResponse\"\"\x82\xd3\xe4\x93\x02\x1cb\x01*\x12\x17/api/v1/casbin/policies\x12\x8d\x01\n" +
 	"\rListGroupings\x12*.api.v1.services.auth.ListGroupingsRequest\x1a+.api.v1.services.auth.ListGroupingsResponse\"#\x82\xd3\xe4\x93\x02\x1db\x01*\x12\x18/api/v1/casbin/groupings\x12\x83\x01\n" +
 	"\vWatchUpdate\x12(.api.v1.services.auth.WatchUpdateRequest\x1a).api.v1.services.auth.WatchUpdateResponse\"\x1f\x82\xd3\xe4\x93\x02\x19b\x01*\x12\x14/api/v1/casbin/watch\x12f\n" +
@@ -574,14 +574,14 @@ var file_auth_casbin_proto_depIdxs = []int32{
 	5, // 1: api.v1.services.auth.ListGroupingsResponse.rules:type_name -> api.v1.services.auth.GroupingRule
 	2, // 2: api.v1.services.auth.StreamRulesResponse.policy:type_name -> api.v1.services.auth.PolicyRule
 	5, // 3: api.v1.services.auth.StreamRulesResponse.grouping:type_name -> api.v1.services.auth.GroupingRule
-	0, // 4: api.v1.services.auth.CasbinSourceService.ListPolicies:input_type -> api.v1.services.auth.ListPoliciesRequest
-	3, // 5: api.v1.services.auth.CasbinSourceService.ListGroupings:input_type -> api.v1.services.auth.ListGroupingsRequest
-	8, // 6: api.v1.services.auth.CasbinSourceService.WatchUpdate:input_type -> api.v1.services.auth.WatchUpdateRequest
-	6, // 7: api.v1.services.auth.CasbinSourceService.StreamRules:input_type -> api.v1.services.auth.StreamRulesRequest
-	1, // 8: api.v1.services.auth.CasbinSourceService.ListPolicies:output_type -> api.v1.services.auth.ListPoliciesResponse
-	4, // 9: api.v1.services.auth.CasbinSourceService.ListGroupings:output_type -> api.v1.services.auth.ListGroupingsResponse
-	9, // 10: api.v1.services.auth.CasbinSourceService.WatchUpdate:output_type -> api.v1.services.auth.WatchUpdateResponse
-	7, // 11: api.v1.services.auth.CasbinSourceService.StreamRules:output_type -> api.v1.services.auth.StreamRulesResponse
+	0, // 4: api.v1.services.auth.CasbinService.ListPolicies:input_type -> api.v1.services.auth.ListPoliciesRequest
+	3, // 5: api.v1.services.auth.CasbinService.ListGroupings:input_type -> api.v1.services.auth.ListGroupingsRequest
+	8, // 6: api.v1.services.auth.CasbinService.WatchUpdate:input_type -> api.v1.services.auth.WatchUpdateRequest
+	6, // 7: api.v1.services.auth.CasbinService.StreamRules:input_type -> api.v1.services.auth.StreamRulesRequest
+	1, // 8: api.v1.services.auth.CasbinService.ListPolicies:output_type -> api.v1.services.auth.ListPoliciesResponse
+	4, // 9: api.v1.services.auth.CasbinService.ListGroupings:output_type -> api.v1.services.auth.ListGroupingsResponse
+	9, // 10: api.v1.services.auth.CasbinService.WatchUpdate:output_type -> api.v1.services.auth.WatchUpdateResponse
+	7, // 11: api.v1.services.auth.CasbinService.StreamRules:output_type -> api.v1.services.auth.StreamRulesResponse
 	8, // [8:12] is the sub-list for method output_type
 	4, // [4:8] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

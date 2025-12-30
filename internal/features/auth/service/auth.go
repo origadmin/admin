@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"google.golang.org/protobuf/types/known/emptypb"
-
+	"github.com/go-kratos/kratos/v2/errors"
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
 	"github.com/origadmin/contrib/security/credential"
@@ -16,7 +15,7 @@ import (
 
 // AuthService is a service for authentication.
 type AuthService struct {
-	v1.UnimplementedAuthServer
+	v1.UnimplementedAuthServiceServer
 	uc         *biz.AuthUseCase
 	captcha    *captcha.Captcha
 	creator    credential.Creator
@@ -31,7 +30,7 @@ func NewAuthService(uc *biz.AuthUseCase, captcha *captcha.Captcha, creator crede
 func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResponse, error) {
 	// Verify captcha
 	if !s.captcha.Verify(req.GetCaptchaId(), req.GetCaptchaCode(), true) {
-		return nil, v1.ErrorCaptchaInvalid("invalid captcha")
+		return nil, errors.New(400, "CAPTCHA_INVALID", "invalid captcha")
 	}
 
 	userID, err := s.uc.VerifyUser(ctx, req.Username, req.Password)
@@ -74,13 +73,13 @@ func (s *AuthService) GetCaptcha(ctx context.Context, req *v1.GetCaptchaRequest)
 }
 
 // Register creates a new user account.
-func (s *AuthService) Register(ctx context.Context, req *v1.RegisterRequest) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
+func (s *AuthService) Register(ctx context.Context, req *v1.RegisterRequest) (*v1.RegisterResponse, error) {
+	return &v1.RegisterResponse{}, nil
 }
 
 // Logout invalidates the user's session.
-func (s *AuthService) Logout(ctx context.Context, req *v1.LogoutRequest) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
+func (s *AuthService) Logout(ctx context.Context, req *v1.LogoutRequest) (*v1.LogoutResponse, error) {
+	return &v1.LogoutResponse{}, nil
 }
 
 // RefreshToken provides a new access token.

@@ -1,10 +1,13 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package dal
 
 import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
-
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/user"
@@ -17,9 +20,9 @@ type meRepo struct {
 }
 
 // NewMeRepo .
-func NewMeRepo(database *ent.Database, logger log.Logger) dto.MeRepo {
+func NewMeRepo(db *ent.Database, logger log.Logger) dto.MeRepo {
 	return &meRepo{
-		db:  database,
+		db:  db,
 		log: log.NewHelper(logger),
 	}
 }

@@ -9,4 +9,4 @@ import (
 )
 
 // ProviderSet is dal providers.
-var ProviderSet = wire.NewSet(NewAuthRepo, NewCasbinRepo)
+var ProviderSet = wire.NewSet(NewAuthRepo, NewCasbinRepo, NewMeRepo)
