@@ -18,5 +18,8 @@ sources:
   - file:
       path: security.yaml
     type: file
+  - file:
+      path: clients.yaml
+    type: file
   # Environment variables are loaded last to override file settings.
   - type: env

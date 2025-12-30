@@ -20,7 +20,7 @@ import (
 
 var (
 	// Name is the name of the compiled software.
-	Name = "origadmin.service.auth.v1"
+	Name = "origadmin.service.auth"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
 

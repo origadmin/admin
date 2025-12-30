@@ -201,6 +201,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/login:
+        post:
+            tags:
+                - GatewayService
+            description: Login authenticates a user.
+            operationId: GatewayService_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
     /api/v1/me/password:
         put:
             tags:
@@ -3595,6 +3620,8 @@ tags:
       description: The data service definition.
     - name: DepartmentService
       description: The login service definition.
+    - name: GatewayService
+      description: "GatewayService is the public-facing API gateway.\r\n It proxies requests to backend services."
     - name: MeService
       description: Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
     - name: PermissionService
