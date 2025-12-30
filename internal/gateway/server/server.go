@@ -7,51 +7,71 @@ package server
 import (
 	"errors"
 
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 
-	gatewayAPI "origadmin/application/admin/api/v1/services/gateway"
-	confpb "origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/gateway/service"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
+	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/service/transport"
+	"github.com/origadmin/runtime/service/transport/http"
+	gatewayAPI "origadmin/application/admin/api/v1/services/gateway"
+	"origadmin/application/admin/internal/gateway/service"
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewHTTPServer)
+var ProviderSet = wire.NewSet(NewServers)
 
-// NewHTTPServer new an HTTP server.
-func NewHTTPServer(bootstrap *confpb.Bootstrap, gw *service.GatewayService, logger log.Logger) (transport.Server,
-	error) {
-	var opts = []http.ServerOption{
-		http.Middleware(
-			// Add any HTTP middleware here if needed
-		),
+// NewServers creates and configures the gateway service servers (HTTP).
+func NewServers(cfg *transportv1.Servers, svc *service.GatewayService, logger log.Logger) ([]transport.Server, error) {
+	if cfg == nil {
+		return nil, errors.New("servers config is nil")
 	}
 
-	var httpServerConfig *httpv1.Server
-	if bootstrap.Servers != nil {
-		for _, srv := range bootstrap.Servers.Configs {
-			if srv.Protocol == "http" {
-				httpServerConfig = srv.GetHttp()
-				break
+	var transportServers []transport.Server
+	for _, serverCfg := range cfg.GetConfigs() {
+		// Filter server configurations by name.
+		if serverCfg.GetName() != "gateway" {
+			continue
+		}
+
+		switch serverCfg.GetProtocol() {
+		case "http":
+			srv, err := NewHTTPServer(serverCfg.GetHttp(), svc, logger)
+			if err != nil {
+				return nil, err
 			}
+			transportServers = append(transportServers, srv)
+		default:
+			// Log a warning for unsupported protocols but don't return an error
+			// to allow other servers to start.
+			log.NewHelper(logger).Warnf("protocol is not supported: %s", serverCfg.GetProtocol())
 		}
 	}
 
-	if httpServerConfig == nil {
-		return nil, errors.New("http server config is not found")
+	if len(transportServers) == 0 {
+		return nil, errors.New("no servers named 'gateway' were created")
 	}
 
-	if httpServerConfig.Addr != "" {
-		opts = append(opts, http.Address(httpServerConfig.Addr))
-	}
-	if httpServerConfig.Timeout != nil {
-		opts = append(opts, http.Timeout(httpServerConfig.Timeout.AsDuration()))
+	return transportServers, nil
+}
+
+// NewHTTPServer new an HTTP server.
+func NewHTTPServer(cfg *httpv1.Server, svc *service.GatewayService, logger log.Logger) (transport.Server, error) {
+	if cfg == nil {
+		return nil, errors.New("http config is nil")
 	}
 
-	srv := http.NewServer(opts...)
-	gatewayAPI.RegisterGatewayServiceHTTPServer(srv, gw)
+	// Create server options. The runtime's NewServer will handle middleware
+	// and other configurations like CORS based on the provided cfg.
+	opts := &http.ServerOptions{}
+
+	// Create the HTTP server.
+	srv, err := http.NewServer(cfg, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	// Register the gateway service.
+	gatewayAPI.RegisterGatewayServiceHTTPServer(srv, svc)
 	return srv, nil
 }

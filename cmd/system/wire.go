@@ -14,7 +14,6 @@ import (
 
 	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf"
-	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/system/biz"
 	"origadmin/application/admin/internal/features/system/dal"
@@ -28,10 +27,6 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	panic(wire.Build(
 		// Shared infrastructure providers
 		providers.ProviderSet,
-
-		// Instructions for wire to extract nested configs
-		wire.FieldsOf(new(*conf.Config), "Bootstrap"),
-		wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
 
 		// Service-specific providers
 		data.ProviderSet,

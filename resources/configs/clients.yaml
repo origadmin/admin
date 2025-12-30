@@ -1,0 +1,10 @@
+clients:
+  configs:
+    - name: "client.auth"
+      grpc:
+        endpoint: "discovery:///auth"
+        timeout: 5s
+    - name: "client.system"
+      grpc:
+        endpoint: "discovery:///system"
+        timeout: 5s

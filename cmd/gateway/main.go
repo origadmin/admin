@@ -1,76 +1,71 @@
-/*
- * Copyright (c) 2024 OrigAdmin. All rights reserved.
- */
-
 package main
 
 import (
-	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/config"
-	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/transport"
+	"flag"
 
-	confpb "origadmin/application/admin/internal/conf/pb"
+	"github.com/go-kratos/kratos/v2"
+	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/joho/godotenv"
+	_ "github.com/sqlite3ent/sqlite3" // Import for sqlite3 driver
+
+	_ "github.com/origadmin/contrib/config/consul"
+	_ "github.com/origadmin/contrib/registry/consul"
+	"github.com/origadmin/runtime"
+	runtimebootstrap "github.com/origadmin/runtime/bootstrap"
+	"github.com/origadmin/runtime/log"
+	"origadmin/application/admin/internal/conf"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
+	confhelper "origadmin/application/admin/internal/helpers/conf"
 )
 
 var (
 	// Name is the name of the compiled software.
 	Name = "origadmin.gateway.v1"
 	// Version is the version of the compiled software.
-	Version string
+	Version = "v1.0.0"
+
 	// flagconf is the config flag.
 	flagconf string
 )
 
 func init() {
-	// You can use flags to get configuration file path
-	// flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
+	flag.StringVar(&flagconf, "conf", "", "config path, eg: -conf bootstrap.yaml")
 }
-
-func newApp(logger log.Logger, srv transport.Server) *kratos.App {
-	return kratos.New(
-		kratos.Name(Name),
-		kratos.Version(Version),
-		kratos.Metadata(map[string]string{}),
-		kratos.Logger(logger),
-		kratos.Server(
-			srv,
-		),
-	)
+func NewApp(app *runtime.App, servers []transport.Server) *kratos.App {
+	return app.NewApp(servers)
 }
 
 func main() {
-	// use -conf to get config file path
-	// flag.Parse()
+	_ = godotenv.Load("resources/.env.gateway")
 
-	// for this example, we use a hardcoded config path
-	flagconf = "resources/configs"
+	flag.Parse()
 
-	c := config.New(
-		config.WithSource(
-			file.NewSource(flagconf),
-		),
-	)
-	defer c.Close()
-
-	if err := c.Load(); err != nil {
-		panic(err)
+	confPath := confhelper.FindConfPath(flagconf)
+	if confPath == "" {
+		log.Fatalf("Could not find configuration file. Searched -conf flag, executable path, and development path.")
 	}
 
-	var bc confpb.Bootstrap
-	if err := c.Scan(&bc); err != nil {
-		panic(err)
-	}
+	log.Infof("Loading configuration from: %s\n", confPath)
 
-	app, cleanup, err := wireApp(&bc, log.DefaultLogger)
+	rt := runtime.New(Name, Version)
+	err := rt.Load(confPath, runtimebootstrap.WithConfigTransformer(conf.New()))
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to create runtime: %v", err)
 	}
-	defer cleanup()
+	defer rt.Config().Close()
+	log.Infof("Starting %s %s (ID: %s)\n", rt.AppInfo().Name(), rt.AppInfo().Version(), rt.AppInfo().ID())
 
-	// start and wait for stop signal
+	bootstrapConfig, ok := rt.StructuredConfig().(*conf.Config)
+	if !ok {
+		log.Fatalf("failed to get bootstrap config")
+	}
+	app, cleanupApp, err := wireApp(rt, bootstrapConfig)
+	if err != nil {
+		log.Fatalf("failed to wire app: %v", err)
+	}
+	defer cleanupApp()
+
 	if err := app.Run(); err != nil {
-		panic(err)
+		log.Fatalf("app run failed: %v", err)
 	}
 }

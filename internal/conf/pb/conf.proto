@@ -5,11 +5,12 @@ package conf.pb;
 import "config/data/v1/data.proto";
 import "config/discovery/v1/discovery.proto";
 import "config/logger/v1/logger.proto";
+import "config/middleware/cors/v1/cors.proto";
 import "config/middleware/v1/middleware.proto";
 import "config/transport/v1/transport.proto";
-import "security/v1/security.proto";
 import "internal/conf/pb/captcha.proto";
 import "internal/conf/pb/root.proto";
+import "security/v1/security.proto";
 
 option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
@@ -39,14 +40,17 @@ message Bootstrap {
   // Security configuration for authentication and authorization.
   contrib.api.security.v1.Security security = 8;
 
+  // CORS configuration for cross-origin resource sharing.
+  runtime.api.config.middleware.cors.v1.Cors cors = 9;
+
   // Captcha feature specific configuration.
-  conf.pb.Captcha captcha = 9;
+  conf.pb.Captcha captcha = 10;
 
   // RootUser feature specific configuration for initial user setup.
-  conf.pb.RootUser root_user = 10;
+  conf.pb.RootUser root_user = 11;
 
   // Default discovery service name.
-  string default_discovery = 11;
+  string default_discovery = 12;
 }
 
 // SelectorGlobal defines the global selector/load-balancing strategy.

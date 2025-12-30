@@ -8,27 +8,42 @@ package main
 
 import (
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
-	"origadmin/application/admin/internal/conf/pb"
+	"github.com/origadmin/runtime"
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
 	"origadmin/application/admin/internal/gateway/service"
+	"origadmin/application/admin/internal/helpers/providers"
+)
+
+import (
+	_ "github.com/origadmin/contrib/config/consul"
+	_ "github.com/origadmin/contrib/registry/consul"
+	_ "github.com/sqlite3ent/sqlite3"
+	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(bootstrap *confpb.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+	confpbBootstrap := &bootstrap.Bootstrap
+	servers := confpbBootstrap.Servers
 	authServiceClient, err := client.NewAuthClient(bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	gatewayService := service.NewGatewayService(authServiceClient)
-	v, err := server.NewServers(bootstrap, gatewayService, logger)
+	userServiceClient, err := client.NewSystemClient(bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	app := newApp(logger, v)
-	return app, func() {
+	gatewayService := service.NewGatewayService(authServiceClient, userServiceClient)
+	v := providers.ProvideLogger(app)
+	v2, err := server.NewServers(servers, gatewayService, v)
+	if err != nil {
+		return nil, nil, err
+	}
+	kratosApp := NewApp(app, v2)
+	return kratosApp, func() {
 	}, nil
 }

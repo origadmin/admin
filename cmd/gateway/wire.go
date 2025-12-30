@@ -10,16 +10,26 @@ package main
 
 import (
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 
-	confpb "origadmin/application/admin/internal/conf/pb"
+	"github.com/origadmin/runtime"
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
 	"origadmin/application/admin/internal/gateway/service"
+	"origadmin/application/admin/internal/helpers/providers"
 )
 
 // wireApp init kratos application.
-func wireApp(bootstrap *confpb.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
-	panic(wire.Build(server.ProviderSet, client.ProviderSet, service.ProviderSet, newApp))
+func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+	panic(wire.Build(
+		// Shared infrastructure providers
+		providers.ProviderSet,
+
+		// Service-specific providers
+		server.ProviderSet,
+		client.ProviderSet,
+		service.ProviderSet,
+		NewApp,
+	))
 }

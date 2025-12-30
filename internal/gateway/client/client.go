@@ -14,17 +14,17 @@ import (
 	"github.com/origadmin/runtime/service/transport/grpc"
 	"origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/api/v1/services/system"
-	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/conf"
 )
 
 // ProviderSet is client providers.
 var ProviderSet = wire.NewSet(NewAuthClient, NewSystemClient)
 
 // NewAuthClient creates a new AuthAPI client.
-func NewAuthClient(bootstrap *confpb.Bootstrap) (auth.AuthServiceClient, error) {
+func NewAuthClient(bootstrap *conf.Config) (auth.AuthServiceClient, error) {
 	var clientConfig *transportv1.Client
-	if bootstrap.Clients != nil {
-		for _, cli := range bootstrap.Clients.Configs {
+	if bootstrap.Bootstrap.Clients != nil {
+		for _, cli := range bootstrap.Bootstrap.Clients.Configs {
 			if cli.Name == "client.auth" {
 				clientConfig = cli
 				break
@@ -49,10 +49,10 @@ func NewAuthClient(bootstrap *confpb.Bootstrap) (auth.AuthServiceClient, error) 
 }
 
 // NewSystemClient creates a new SystemAPI client.
-func NewSystemClient(bootstrap *confpb.Bootstrap) (system.UserServiceClient, error) {
+func NewSystemClient(bootstrap *conf.Config) (system.UserServiceClient, error) {
 	var clientConfig *transportv1.Client
-	if bootstrap.Clients != nil {
-		for _, cli := range bootstrap.Clients.Configs {
+	if bootstrap.Bootstrap.Clients != nil {
+		for _, cli := range bootstrap.Bootstrap.Clients.Configs {
 			if cli.Name == "client.system" {
 				clientConfig = cli
 				break

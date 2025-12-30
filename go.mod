@@ -6,7 +6,7 @@ replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0
 
 replace github.com/origadmin/toolkits/i18n v0.0.0 => ../../toolkits/i18n
 
-replace github.com/origadmin/runtime v0.2.13 => ../../runtime
+replace github.com/origadmin/runtime v0.2.15 => ../../runtime
 
 replace github.com/origadmin/contrib v1.1.0 => ../../contrib
 

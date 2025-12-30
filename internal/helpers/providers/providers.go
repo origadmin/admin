@@ -102,6 +102,10 @@ func ProvideLogger(app *runtime.App) log.Logger {
 }
 
 var ProviderSet = wire.NewSet(
+	// Instructions for wire to extract nested configs
+	wire.FieldsOf(new(*conf.Config), "Bootstrap"),
+	wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
+	wire.FieldsOf(new(*confpb.Bootstrap), "Captcha"),
 	ProvideLogger,
 	ProvideCache,
 	ProvideAuthenticatorOptions,
