@@ -3,15 +3,14 @@ syntax = "proto3";
 package api.v1.services.auth;
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
 option java_package = "com.origadmin.api.v1.services.auth";
 option java_outer_classname = "APIServiceAuthProto";
 
-// Service Auth provides APIs for the authentication lifecycle.
-service Auth {
+// Service AuthService provides APIs for the authentication lifecycle.
+service AuthService {
   // --- Authentication ---
 
   // Login authenticates a user and returns a token pair.
@@ -23,7 +22,7 @@ service Auth {
   }
 
   // Register creates a new user account.
-  rpc Register(RegisterRequest) returns (google.protobuf.Empty) {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/api/v1/auth/register"
       body: "*"
@@ -31,7 +30,7 @@ service Auth {
   }
 
   // Logout invalidates the user's session.
-  rpc Logout(LogoutRequest) returns (google.protobuf.Empty) {
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
       post: "/api/v1/auth/logout"
       body: "*"
@@ -89,10 +88,16 @@ message RegisterRequest {
   string captcha_code = 5;
 }
 
+// The response message for the Register RPC.
+message RegisterResponse {}
+
 // The request message for the Logout RPC.
 message LogoutRequest {
   string refresh_token = 1;
 }
+
+// The response message for the Logout RPC.
+message LogoutResponse {}
 
 // The request message for the RefreshToken RPC.
 message RefreshTokenRequest {

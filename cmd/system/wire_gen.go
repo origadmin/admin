@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
+	"origadmin/application/admin/internal/helpers/providers"
 )
 
 import (
@@ -30,17 +31,21 @@ import (
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	confpbBootstrap := &bootstrap.Bootstrap
 	servers := confpbBootstrap.Servers
-	dataData, cleanup, err := data.NewData(app, bootstrap)
+	provider, err := data.NewStorageProvider(app)
 	if err != nil {
 		return nil, nil, err
 	}
-	database := data.ProvideDatabase(dataData)
+	v := providers.ProvideLogger(app)
+	database, cleanup, err := data.ProvideDatabase(provider, v)
+	if err != nil {
+		return nil, nil, err
+	}
 	resourceRepo := dal.NewResourceRepo(database)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
 	roleRepo := dal.NewRoleRepo(database)
 	roleUseCase := biz.NewRoleUseCase(roleRepo)
 	userRepo := dal.NewUserRepo(database)
-	crypto, err := provideHasher()
+	crypto, err := providers.ProvideHasher()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -51,7 +56,6 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	viewRepo := dal.NewViewRepo(database)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
 	systemService := service.New(resourceUseCase, roleUseCase, userUseCase, permissionUseCase, viewUseCase)
-	v := provideLogger(app)
 	v2, err := server.NewServers(servers, systemService, v)
 	if err != nil {
 		cleanup()

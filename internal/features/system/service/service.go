@@ -15,14 +15,12 @@ type SystemService struct {
 	system.UnimplementedUserServiceServer
 	system.UnimplementedPermissionServiceServer
 	system.UnimplementedViewServiceServer
-	system.UnimplementedPersonalServiceServer
 
 	Resource   *biz.ResourceUseCase
 	Role       *biz.RoleUseCase
 	User       *biz.UserUseCase
 	Permission *biz.PermissionUseCase
 	View       *biz.ViewUseCase
-	Personal   *biz.PersonalUseCase
 }
 
 func New(
@@ -31,7 +29,6 @@ func New(
 	user *biz.UserUseCase,
 	permission *biz.PermissionUseCase,
 	view *biz.ViewUseCase,
-	personal *biz.PersonalUseCase,
 ) *SystemService {
 	return &SystemService{
 		Resource:   resource,
@@ -39,6 +36,5 @@ func New(
 		User:       user,
 		Permission: permission,
 		View:       view,
-		Personal:   personal,
 	}
 }

@@ -3,7 +3,6 @@ syntax = "proto3";
 package api.v1.services.auth;
 
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
@@ -11,17 +10,17 @@ option java_multiple_files = true;
 option java_package = "com.origadmin.api.v1.services.auth";
 option java_outer_classname = "APIServiceMeProto";
 
-// Service Me provides APIs for the currently authenticated user to manage their own profile and data.
-service Me {
+// Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
+service MeService {
   // GetProfile retrieves the profile of the currently authenticated user.
-  rpc GetProfile(GetProfileRequest) returns (api.v1.services.types.User) {
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
     option (google.api.http) = {
       get: "/api/v1/me/profile"
     };
   }
 
   // UpdateProfile updates the profile of the currently authenticated user.
-  rpc UpdateProfile(UpdateProfileRequest) returns (google.protobuf.Empty) {
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
     option (google.api.http) = {
       put: "/api/v1/me/profile"
       body: "*"
@@ -29,7 +28,7 @@ service Me {
   }
 
   // UpdatePassword changes the password for the currently authenticated user.
-  rpc UpdatePassword(UpdatePasswordRequest) returns (google.protobuf.Empty) {
+  rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse) {
     option (google.api.http) = {
       put: "/api/v1/me/password"
       body: "*"
@@ -54,17 +53,28 @@ service Me {
 // The request message for the GetProfile RPC.
 message GetProfileRequest {}
 
+// The response message for the GetProfile RPC.
+message GetProfileResponse {
+  api.v1.services.types.User user = 1;
+}
+
 // The request message for the UpdateProfile RPC.
 message UpdateProfileRequest {
   // The fields to update.
   api.v1.services.types.User user = 1;
 }
 
+// The response message for the UpdateProfile RPC.
+message UpdateProfileResponse {}
+
 // The request message for the UpdatePassword RPC.
 message UpdatePasswordRequest {
   string old_password = 1;
   string new_password = 2;
 }
+
+// The response message for the UpdatePassword RPC.
+message UpdatePasswordResponse {}
 
 // The request message for the GetUserResources RPC.
 message GetUserResourcesRequest {}

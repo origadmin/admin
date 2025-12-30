@@ -20,15 +20,20 @@ import (
 	"origadmin/application/admin/internal/features/system/dal"
 	"origadmin/application/admin/internal/features/system/server"
 	"origadmin/application/admin/internal/features/system/service"
+	"origadmin/application/admin/internal/helpers/providers"
 )
 
 // wireApp init kratos application.
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	panic(wire.Build(
-		// The injector function's parameter `app` is an implicit provider for *runtime.App.
-		infraProviderSet,
+		// Shared infrastructure providers
+		providers.ProviderSet,
+
+		// Instructions for wire to extract nested configs
 		wire.FieldsOf(new(*conf.Config), "Bootstrap"),
 		wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
+
+		// Service-specific providers
 		data.ProviderSet,
 		dal.ProviderSet,
 		biz.ProviderSet,

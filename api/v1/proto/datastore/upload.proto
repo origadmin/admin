@@ -1,17 +1,16 @@
 syntax = "proto3";
 
-package api.v1.services.upload;
+package api.v1.services.datastore;
 
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "types/datastore.proto";
-import "validate/validate.proto";
 
-option go_package = "origadmin/application/admin/api/v1/services/upload;upload";
+option go_package = "origadmin/application/admin/api/v1/services/datastore;datastore";
 option java_multiple_files = true;
 option java_outer_classname = "APIV1ServicesUploadProto";
-option java_package = "com.origadmin.api.v1.services.upload";
+option java_package = "com.origadmin.api.v1.services.datastore";
 
 // The data service definition.
 service UploadService {

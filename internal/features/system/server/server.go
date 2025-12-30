@@ -74,7 +74,6 @@ func NewHTTPServer(cfg *httpv1.Server, svc *service.SystemService, logger log.Lo
 	systemv1.RegisterPermissionServiceHTTPServer(srv, svc)
 	systemv1.RegisterResourceServiceHTTPServer(srv, svc)
 	systemv1.RegisterViewServiceHTTPServer(srv, svc)
-	systemv1.RegisterPersonalServiceHTTPServer(srv, svc)
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
 		log.Infof("HTTP %s %s", method, path)
 	})
@@ -102,7 +101,6 @@ func NewGRPCServer(cfg *grpcv1.Server, svc *service.SystemService, logger log.Lo
 	systemv1.RegisterPermissionServiceServer(srv, svc)
 	systemv1.RegisterResourceServiceServer(srv, svc)
 	systemv1.RegisterViewServiceServer(srv, svc)
-	systemv1.RegisterPersonalServiceServer(srv, svc)
 
 	return srv, nil
 }

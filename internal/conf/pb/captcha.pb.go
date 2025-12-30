@@ -7,7 +7,6 @@
 package confpb
 
 import (
-	v1 "github.com/origadmin/runtime/api/gen/go/config/data/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,8 +26,9 @@ type Captcha struct {
 	Length        int32                  `protobuf:"varint,1,opt,name=length,proto3" json:"length,omitempty"`
 	Width         int32                  `protobuf:"varint,2,opt,name=width,proto3" json:"width,omitempty"`
 	Height        int32                  `protobuf:"varint,3,opt,name=height,proto3" json:"height,omitempty"`
-	CacheName     string                 `protobuf:"bytes,4,opt,name=cache_name,proto3" json:"cache_name,omitempty"`
-	Caches        *v1.Caches             `protobuf:"bytes,5,opt,name=caches,proto3" json:"caches,omitempty"`
+	Maxskew       float32                `protobuf:"fixed32,4,opt,name=maxskew,proto3" json:"maxskew,omitempty"`
+	DotCount      int32                  `protobuf:"varint,5,opt,name=dot_count,proto3" json:"dot_count,omitempty"`
+	CacheName     string                 `protobuf:"bytes,6,opt,name=cache_name,proto3" json:"cache_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -84,6 +84,20 @@ func (x *Captcha) GetHeight() int32 {
 	return 0
 }
 
+func (x *Captcha) GetMaxskew() float32 {
+	if x != nil {
+		return x.Maxskew
+	}
+	return 0
+}
+
+func (x *Captcha) GetDotCount() int32 {
+	if x != nil {
+		return x.DotCount
+	}
+	return 0
+}
+
 func (x *Captcha) GetCacheName() string {
 	if x != nil {
 		return x.CacheName
@@ -91,26 +105,20 @@ func (x *Captcha) GetCacheName() string {
 	return ""
 }
 
-func (x *Captcha) GetCaches() *v1.Caches {
-	if x != nil {
-		return x.Caches
-	}
-	return nil
-}
-
 var File_internal_conf_pb_captcha_proto protoreflect.FileDescriptor
 
 const file_internal_conf_pb_captcha_proto_rawDesc = "" +
 	"\n" +
-	"\x1einternal/conf/pb/captcha.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\"\xab\x01\n" +
+	"\x1einternal/conf/pb/captcha.proto\x12\aconf.pb\"\xa7\x01\n" +
 	"\aCaptcha\x12\x16\n" +
 	"\x06length\x18\x01 \x01(\x05R\x06length\x12\x14\n" +
 	"\x05width\x18\x02 \x01(\x05R\x05width\x12\x16\n" +
-	"\x06height\x18\x03 \x01(\x05R\x06height\x12\x1e\n" +
+	"\x06height\x18\x03 \x01(\x05R\x06height\x12\x18\n" +
+	"\amaxskew\x18\x04 \x01(\x02R\amaxskew\x12\x1c\n" +
+	"\tdot_count\x18\x05 \x01(\x05R\tdot_count\x12\x1e\n" +
 	"\n" +
-	"cache_name\x18\x04 \x01(\tR\n" +
-	"cache_name\x12:\n" +
-	"\x06caches\x18\x05 \x01(\v2\".runtime.api.config.data.v1.CachesR\x06cachesB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
+	"cache_name\x18\x06 \x01(\tR\n" +
+	"cache_nameB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_internal_conf_pb_captcha_proto_rawDescOnce sync.Once
@@ -126,16 +134,14 @@ func file_internal_conf_pb_captcha_proto_rawDescGZIP() []byte {
 
 var file_internal_conf_pb_captcha_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_internal_conf_pb_captcha_proto_goTypes = []any{
-	(*Captcha)(nil),   // 0: conf.pb.Captcha
-	(*v1.Caches)(nil), // 1: runtime.api.config.data.v1.Caches
+	(*Captcha)(nil), // 0: conf.pb.Captcha
 }
 var file_internal_conf_pb_captcha_proto_depIdxs = []int32{
-	1, // 0: conf.pb.Captcha.caches:type_name -> runtime.api.config.data.v1.Caches
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_internal_conf_pb_captcha_proto_init() }

@@ -71,17 +71,8 @@ func NewCaptcha(config *Config) *Captcha {
 	if config.DriverAudio == nil {
 		config.DriverAudio = base64Captcha.DefaultDriverAudio
 	}
-	//if config.DriverString == nil {
-	//	config.DriverString = base64Captcha.DefaultDriverString
-	//}
 	if config.DriverDigit == nil {
 		config.DriverDigit = base64Captcha.DefaultDriverDigit
-	}
-	if config.DriverChinese == nil {
-		//config.DriverChinese = base64Captcha.NewDriverChinese()
-	}
-	if config.DriverMath == nil {
-		//config.DriverMath = base64Captcha.NewDriverMath()
 	}
 	return &Captcha{
 		DriverAudio: base64Captcha.NewCaptcha(config.DriverAudio, config.Store),
@@ -106,30 +97,8 @@ func (c *Captcha) GenerateChinese() (string, string, string, error) {
 	return c.DriverChinese.Generate()
 }
 
-func (c *Captcha) ServerHTTP(w http.ResponseWriter, r *http.Request) {
-
-}
+func (c *Captcha) ServerHTTP(w http.ResponseWriter, r *http.Request) {}
 
 func (c *Captcha) Verify(id, answer string, clear bool) bool {
 	return c.Store.Verify(id, answer, clear)
-}
-
-func (c *Captcha) Reload(typ string, id string) bool {
-	if typ == TypeAudio {
-		return c.reload(c.DriverAudio.Driver, id)
-	}
-	return c.reload(c.DriverDigit.Driver, id)
-}
-
-func (c *Captcha) reload(d base64Captcha.Driver, id string) bool {
-	old := c.Store.Get(id, false)
-	if old == "" {
-		return false
-	}
-	_, _, old = d.GenerateIdQuestionAnswer()
-	err := c.Store.Set(id, old)
-	if err != nil {
-		return false
-	}
-	return true
 }

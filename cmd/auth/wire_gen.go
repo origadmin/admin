@@ -9,56 +9,77 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/origadmin/runtime"
-	"origadmin/application/admin/internal/configs"
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
-	"origadmin/application/admin/internal/features/auth/biz"    // Corrected import path
-	"origadmin/application/admin/internal/features/auth/dal"    // Corrected import path
-	"origadmin/application/admin/internal/features/auth/server" // Corrected import path
-	"origadmin/application/admin/internal/features/auth/service" // Corrected import path
+	"origadmin/application/admin/internal/features/auth/biz"
+	"origadmin/application/admin/internal/features/auth/dal"
+	"origadmin/application/admin/internal/features/auth/server"
+	"origadmin/application/admin/internal/features/auth/service"
+	"origadmin/application/admin/internal/helpers/providers"
 )
 
 import (
-	_ "origadmin/application/admin/contrib/consul/config"
-	_ "origadmin/application/admin/contrib/consul/registry"
-	_ "origadmin/application/admin/contrib/database"
+	_ "github.com/origadmin/contrib/config/consul"
+	_ "github.com/origadmin/contrib/registry/consul"
+	_ "github.com/sqlite3ent/sqlite3"
 	_ "origadmin/application/admin/internal/data/entity/ent/runtime"
 )
 
 // Injectors from wire.go:
 
-// buildInjectors init kratos application.
-func buildInjectors(r runtime.Runtime, bootstrap *configs.Bootstrap) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(r, bootstrap)
+// wireApp init kratos application.
+func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
+	confpbBootstrap := &bootstrap.Bootstrap
+	servers := confpbBootstrap.Servers
+	provider, err := data.NewStorageProvider(app)
 	if err != nil {
 		return nil, nil, err
 	}
-	authRepo := dal.NewAuthRepo(r, dataData)
-	authServiceBiz := biz.NewAuthServiceBiz(r, authRepo)
-	authServiceServer := service.NewAuthServiceServerPB(authServiceBiz)
-	casbinSourceRepo, err := dal.NewCasbinSourceRepo(dataData)
+	v := providers.ProvideLogger(app)
+	database, cleanup, err := data.ProvideDatabase(provider, v)
 	if err != nil {
-		cleanup()
 		return nil, nil, err
 	}
-	casbinSourceServiceBiz := biz.NewCasbinSourceServiceBiz(r, casbinSourceRepo)
-	casbinSourceServiceServer := service.NewCasbinSourceServiceServerPB(casbinSourceServiceBiz)
-	tokenizer, err := data.NewTokenizer(bootstrap)
+	authRepo := dal.NewAuthRepo(database, v)
+	crypto, err := providers.ProvideHasher()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	refreshTokenizer := dal.RefreshTokenizer(tokenizer)
-	loginData := data.NewLoginData(bootstrap, refreshTokenizer)
-	loginRepo := dal.NewLoginRepo(dataData, loginData)
-	loginServiceBiz := biz.NewLoginServiceBiz(r, loginRepo)
-	loginServiceServer := service.NewLoginServiceServerPB(loginServiceBiz)
-	personalRepo := dal.NewPersonalRepo(r, dataData)
-	personalServiceBiz := biz.NewPersonalServiceBiz(r, personalRepo)
-	personalServiceServer := service.NewPersonalServiceServerPB(r, personalServiceBiz)
-	authServerRegistrar := service.NewRegisterServer(authServiceServer, casbinSourceServiceServer, loginServiceServer, personalServiceServer)
-	v := server.NewAuthServer(r, bootstrap, authServerRegistrar)
-	app := NewApp(r, v)
-	return app, func() {
+	authUseCase := biz.NewAuthUseCase(authRepo, crypto, v)
+	cacheProvider, err := providers.ProvideCache(app)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	captcha := confpbBootstrap.Captcha
+	captchaCaptcha, err := providers.ProvideCaptcha(cacheProvider, captcha)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	options, err := providers.ProvideAuthenticatorOptions(bootstrap)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	creator, err := providers.ProvideCredentialCreator(options, v)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	authService := service.NewAuthService(authUseCase, captchaCaptcha, creator)
+	meRepo := dal.NewMeRepo(database, v)
+	meUseCase := biz.NewMeUseCase(meRepo, v)
+	meService := service.NewMeService(meUseCase)
+	casbinSourceService := service.NewCasbinSourceService()
+	v2, err := server.NewServers(servers, authService, meService, casbinSourceService, v)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	kratosApp := NewApp(app, v2)
+	return kratosApp, func() {
 		cleanup()
 	}, nil
 }

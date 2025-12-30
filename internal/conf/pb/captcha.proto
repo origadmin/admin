@@ -2,18 +2,17 @@ syntax = "proto3";
 
 package conf.pb;
 
-import "config/data/v1/data.proto";
-
 option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
 message Captcha {
   int32 length = 1 [json_name = "length"];
   int32 width = 2 [json_name = "width"];
   int32 height = 3 [json_name = "height"];
+  float maxskew = 4 [json_name = "maxskew"];
+  int32 dot_count = 5 [json_name = "dot_count"];
+  string cache_name = 6 [json_name = "cache_name"];
 
-  string cache_name = 4 [json_name = "cache_name"];
-
-  runtime.api.config.data.v1.Caches caches = 5 [json_name = "caches"];
+  //  runtime.api.config.data.v1.Caches caches = 5 [json_name = "caches"];
   // 注释原有Redis配置（应由公共配置管理）
   // message Redis {
   //   string addr = 1 [json_name = "addr"];

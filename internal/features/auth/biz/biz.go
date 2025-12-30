@@ -5,7 +5,7 @@
 package biz
 
 import (
-	"origadmin/application/admin/internal/helpers/pagination"
+	"origadmin/application/admin/internal/helpers/repo"
 )
 
 var (

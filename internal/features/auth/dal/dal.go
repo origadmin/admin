@@ -12,12 +12,9 @@ import (
 	"entgo.io/ent/dialect"
 	"github.com/google/uuid"
 	"github.com/origadmin/entslog/v3"
-	"github.com/origadmin/runtime/interfaces/security"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/rand"
-
-	"origadmin/application/admin/helpers/id"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/auth/dto" // Corrected import path
 )
@@ -32,7 +29,7 @@ type Data struct {
 
 const FKSuffix = "_fk=1"
 
-var random = rand.NewRand(rand.KindDigit | rand.KindLowerCase | rand.KindUpperCase)
+var random = rand.NewGenerator(rand.KindDigit | rand.KindLowerCase | rand.KindUpperCase)
 
 func FixSource(source string) string {
 	// Check if the source already contains the FK parameter
@@ -527,7 +524,7 @@ func MakeCreateUser(user *dto.UserPB, username, password string, option dto.User
 	user.Id = registerID
 	user.Uuid = uuid.Must(uuid.NewRandom()).String()
 	user.Username = username
-	user.Name = "user_" + random.RandString(8)
+	user.Name = "user_" + random.String(8)
 	user.Status = 1
 	return user, password, nil
 }

@@ -14,10 +14,10 @@ import (
 	"github.com/origadmin/runtime/log"
 	"google.golang.org/grpc"
 
-	"origadmin/application/admin/internal/helpers/pagination"
+	"origadmin/application/admin/internal/helpers/repo"
 
 	pb "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/internal/mods/auth/dto"
+	"origadmin/application/admin/internal/features/auth/dto"
 )
 
 // CasbinSourceServiceBiz is a CasbinSource use case.

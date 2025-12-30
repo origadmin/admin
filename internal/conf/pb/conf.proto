@@ -7,6 +7,7 @@ import "config/discovery/v1/discovery.proto";
 import "config/logger/v1/logger.proto";
 import "config/middleware/v1/middleware.proto";
 import "config/transport/v1/transport.proto";
+import "security/v1/security.proto";
 import "internal/conf/pb/captcha.proto";
 import "internal/conf/pb/root.proto";
 
@@ -35,14 +36,17 @@ message Bootstrap {
   // Middleware configuration for request processing.
   runtime.api.config.middleware.v1.Middlewares middlewares = 7;
 
+  // Security configuration for authentication and authorization.
+  contrib.api.security.v1.Security security = 8;
+
   // Captcha feature specific configuration.
-  conf.pb.Captcha captcha = 8;
+  conf.pb.Captcha captcha = 9;
 
   // RootUser feature specific configuration for initial user setup.
-  conf.pb.RootUser root_user = 9;
+  conf.pb.RootUser root_user = 10;
 
   // Default discovery service name.
-  string default_discovery = 10;
+  string default_discovery = 11;
 }
 
 // SelectorGlobal defines the global selector/load-balancing strategy.

@@ -10,20 +10,23 @@ import (
 	"testing"
 
 	"github.com/go-kratos/kratos/v2/encoding"
-	"github.com/origadmin/runtime"
-	configv1 "github.com/origadmin/runtime/api/gen/go/config/v1"
 	"github.com/origadmin/runtime/interfaces/security"
+
+	"github.com/origadmin/runtime"
+	sourcev1 "github.com/origadmin/runtime/api/gen/go/config/source/v1"
+	"github.com/origadmin/runtime/bootstrap"
 	"github.com/origadmin/toolkits/codec/toml"
 
-	pb "origadmin/application/admin/api/v1/services/auth"
 	_ "origadmin/application/admin/contrib/consul/config"
 	_ "origadmin/application/admin/contrib/consul/registry"
 	_ "origadmin/application/admin/contrib/database"
 	"origadmin/application/admin/contrib/security/authz/casbin"
 	"origadmin/application/admin/helpers/securityx"
-	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/loader"
-	"origadmin/application/admin/internal/features/auth/dal"    // Corrected import path
+
+	pb "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/features/auth/dal"     // Corrected import path
 	"origadmin/application/admin/internal/features/auth/service" // Corrected import path
 )
 
@@ -47,17 +50,12 @@ func init() {
 }
 
 func TestGenerateToken(t *testing.T) {
-	sourceConfig := &configv1.SourceConfig{
-		Types: []string{"file"},
-		File: &configv1.SourceConfig_File{
-			Path: "..\\resources\\configs\\config_test.toml",
-		},
-	}
-	bootstrap, err := loader.LoadBootstrap(sourceConfig)
+
+	r := runtime.New("test", "v0.0.1")
+	err := r.Load("", bootstrap.WithDirectly())
 	if err != nil {
-		t.Fatalf("failed to load bootstrap: %v", err)
+		return
 	}
-	r := runtime.Global()
 	dataData, cleanup, err := data.NewData(r, bootstrap)
 	if err != nil {
 		return

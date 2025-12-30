@@ -19,7 +19,7 @@ import (
 
 type roleRepo struct {
 	db  *ent.Database
-	gen rand.Generator
+	gen rand.Rand
 }
 
 // NewRoleRepo .
@@ -52,7 +52,7 @@ func (r *roleRepo) Get(ctx context.Context, id int64, opts ...*dto.RoleQueryOpti
 
 func (r *roleRepo) Create(ctx context.Context, rl *types.Role, opts ...*dto.RoleCreateOption) (*types.Role, error) {
 	if rl.Keyword == "" {
-		randString, err := r.gen.RandString(12)
+		randString, err := r.gen.String(12)
 		if err != nil {
 			randString = ""
 		}

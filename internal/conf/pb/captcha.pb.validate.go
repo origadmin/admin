@@ -62,36 +62,11 @@ func (m *Captcha) validate(all bool) error {
 
 	// no validation rules for Height
 
-	// no validation rules for CacheName
+	// no validation rules for Maxskew
 
-	if all {
-		switch v := interface{}(m.GetCaches()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CaptchaValidationError{
-					field:  "Caches",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CaptchaValidationError{
-					field:  "Caches",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetCaches()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CaptchaValidationError{
-				field:  "Caches",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for DotCount
+
+	// no validation rules for CacheName
 
 	if len(errors) > 0 {
 		return CaptchaMultiError(errors)
