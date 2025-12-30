@@ -5,7 +5,7 @@ package api.v1.services.auth;
 import "google/api/annotations.proto";
 import "types/system.proto";
 
-option go_package = "origadmin/application/admin/services/auth;auth";
+option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
 option java_package = "com.origadmin.api.v1.services.auth";
 option java_outer_classname = "APIServiceMeProto";

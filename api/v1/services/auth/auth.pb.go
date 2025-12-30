@@ -736,8 +736,8 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
 	"\x12\b/captcha\x12e\n" +
-	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponseB\xc9\x01\n" +
-	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z.origadmin/application/admin/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
+	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponseB\xd0\x01\n" +
+	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
 	file_auth_auth_proto_rawDescOnce sync.Once

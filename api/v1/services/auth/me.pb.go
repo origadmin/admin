@@ -469,8 +469,8 @@ const file_auth_me_proto_rawDesc = "" +
 	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\x1a\v/me/profile\x12\x84\x01\n" +
 	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/password\x12\x88\x01\n" +
 	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12x\n" +
-	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xc7\x01\n" +
-	"\x18com.api.v1.services.authB\aMeProtoP\x01Z.origadmin/application/admin/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
+	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xce\x01\n" +
+	"\x18com.api.v1.services.authB\aMeProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
 	file_auth_me_proto_rawDescOnce sync.Once
