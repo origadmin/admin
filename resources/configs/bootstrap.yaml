@@ -12,5 +12,11 @@ sources:
   - file:
       path: logger.yaml
     type: file
+  - file:
+      path: cache.yaml
+    type: file
+  - file:
+      path: security.yaml
+    type: file
   # Environment variables are loaded last to override file settings.
   - type: env

@@ -1,0 +1,10 @@
+# security.yaml
+security:
+  authn:
+    configs:
+      - type: jwt
+        jwt:
+          signing_key: "your-default-secret-key-change-it" # IMPORTANT: Change this in production
+          signing_method: "HS256"
+          access_token_ttl: 3600s
+          refresh_token_ttl: 7200s

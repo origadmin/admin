@@ -1,0 +1,6 @@
+# cache.yaml
+data:
+  caches:
+    configs:
+      - name: default
+        driver: memory
