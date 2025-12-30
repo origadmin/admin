@@ -82,11 +82,11 @@ type MeServiceGetUserRolesHooker interface {
 
 func RegisterMeServiceBridgeServer(s *http.Server, srv MeServiceHookedBridger) {
 	r := s.Route("/")
-	r.GET("/api/v1/me/profile", _MeService_GetProfile0_Bridge_Handler(srv))
-	r.PUT("/api/v1/me/profile", _MeService_UpdateProfile0_Bridge_Handler(srv))
-	r.PUT("/api/v1/me/password", _MeService_UpdatePassword0_Bridge_Handler(srv))
-	r.GET("/api/v1/me/resources", _MeService_GetUserResources0_Bridge_Handler(srv))
-	r.GET("/api/v1/me/roles", _MeService_GetUserRoles0_Bridge_Handler(srv))
+	r.GET("/me/profile", _MeService_GetProfile0_Bridge_Handler(srv))
+	r.PUT("/me/profile", _MeService_UpdateProfile0_Bridge_Handler(srv))
+	r.PUT("/me/password", _MeService_UpdatePassword0_Bridge_Handler(srv))
+	r.GET("/me/resources", _MeService_GetUserResources0_Bridge_Handler(srv))
+	r.GET("/me/roles", _MeService_GetUserRoles0_Bridge_Handler(srv))
 }
 
 func _MeService_GetProfile0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {

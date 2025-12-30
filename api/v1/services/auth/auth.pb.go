@@ -727,16 +727,17 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"authorized\x18\x01 \x01(\bR\n" +
 	"authorized\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId2\xd8\x05\n" +
-	"\vAuthService\x12o\n" +
-	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/login\x12{\n" +
-	"\bRegister\x12%.api.v1.services.auth.RegisterRequest\x1a&.api.v1.services.auth.RegisterResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\"\x15/api/v1/auth/register\x12s\n" +
-	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/auth/logout\x12\x84\x01\n" +
-	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/api/v1/auth/token\x12x\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId2\xb4\x05\n" +
+	"\vAuthService\x12h\n" +
+	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12t\n" +
+	"\bRegister\x12%.api.v1.services.auth.RegisterRequest\x1a&.api.v1.services.auth.RegisterResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/register\x12l\n" +
+	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12}\n" +
+	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/token\x12q\n" +
 	"\n" +
-	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/api/v1/captcha\x12e\n" +
-	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponseB\xd0\x01\n" +
-	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
+	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
+	"\x12\b/captcha\x12e\n" +
+	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponseB\xc9\x01\n" +
+	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z.origadmin/application/admin/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
 	file_auth_auth_proto_rawDescOnce sync.Once

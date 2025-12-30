@@ -462,15 +462,15 @@ const file_auth_me_proto_rawDesc = "" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x15\n" +
 	"\x13GetUserRolesRequest\"I\n" +
 	"\x14GetUserRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xb3\x05\n" +
-	"\tMeService\x12{\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\x90\x05\n" +
+	"\tMeService\x12t\n" +
 	"\n" +
-	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/me/profile\x12\x87\x01\n" +
-	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\x1a\x12/api/v1/me/profile\x12\x8b\x01\n" +
-	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\x1a\x13/api/v1/me/password\x12\x8f\x01\n" +
-	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/me/resources\x12\x7f\n" +
-	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/me/rolesB\xce\x01\n" +
-	"\x18com.api.v1.services.authB\aMeProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
+	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/me/profile\x12\x80\x01\n" +
+	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\x1a\v/me/profile\x12\x84\x01\n" +
+	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/password\x12\x88\x01\n" +
+	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12x\n" +
+	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xc7\x01\n" +
+	"\x18com.api.v1.services.authB\aMeProtoP\x01Z.origadmin/application/admin/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (
 	file_auth_me_proto_rawDescOnce sync.Once

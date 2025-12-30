@@ -91,11 +91,11 @@ type AuthServiceAuthenticateHooker interface {
 
 func RegisterAuthServiceBridgeServer(s *http.Server, srv AuthServiceHookedBridger) {
 	r := s.Route("/")
-	r.POST("/api/v1/auth/login", _AuthService_Login0_Bridge_Handler(srv))
-	r.POST("/api/v1/auth/register", _AuthService_Register0_Bridge_Handler(srv))
-	r.POST("/api/v1/auth/logout", _AuthService_Logout0_Bridge_Handler(srv))
-	r.POST("/api/v1/auth/token", _AuthService_RefreshToken0_Bridge_Handler(srv))
-	r.GET("/api/v1/captcha", _AuthService_GetCaptcha0_Bridge_Handler(srv))
+	r.POST("/auth/login", _AuthService_Login0_Bridge_Handler(srv))
+	r.POST("/auth/register", _AuthService_Register0_Bridge_Handler(srv))
+	r.POST("/auth/logout", _AuthService_Logout0_Bridge_Handler(srv))
+	r.POST("/auth/token", _AuthService_RefreshToken0_Bridge_Handler(srv))
+	r.GET("/captcha", _AuthService_GetCaptcha0_Bridge_Handler(srv))
 }
 
 func _AuthService_Login0_Bridge_Handler(srv AuthServiceHookedBridger) func(ctx http.Context) error {

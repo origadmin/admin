@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package api.v1.services.gateway;
+
+import "google/api/annotations.proto";
+import "auth/auth.proto";
+import "auth/me.proto";
+import "system/user.proto";
+import "system/role.proto";
+import "system/resource.proto";
+import "types/system.proto";
+
+option go_package = "origadmin/application/admin/api/v1/services/gateway;gateway";
+
+// GatewayService is the public-facing API gateway.
+// It proxies requests to backend services.
+service GatewayService {
+  // --- Auth Service ---
+  rpc Login (auth.LoginRequest) returns (auth.LoginResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/login",
+      body: "*"
+    };
+  }
+
+  rpc GetCaptcha (auth.GetCaptchaRequest) returns (auth.GetCaptchaResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/captcha"
+    };
+  }
+
+  // --- Me Service ---
+  rpc GetProfile(auth.GetProfileRequest) returns (auth.GetProfileResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/me/profile"
+    };
+  }
+
+  // --- System User Service ---
+  rpc ListUsers(system.ListUsersRequest) returns (system.ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/users"
+    };
+  }
+
+  rpc GetUser(system.GetUserRequest) returns (types.User) {
+    option (google.api.http) = {
+      get: "/api/v1/users/{id}"
+    };
+  }
+
+  rpc CreateUser(system.CreateUserRequest) returns (types.User) {
+    option (google.api.http) = {
+      post: "/api/v1/users",
+      body: "*"
+    };
+  }
+
+  rpc UpdateUser(system.UpdateUserRequest) returns (types.User) {
+    option (google.api.http) = {
+      put: "/api/v1/users/{user.id}",
+      body: "user"
+    };
+  }
+
+  rpc DeleteUser(system.DeleteUserRequest) returns (system.DeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/api/v1/users/{id}"
+    };
+  }
+}

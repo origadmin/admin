@@ -4,7 +4,7 @@ package api.v1.services.auth;
 
 import "google/api/annotations.proto";
 
-option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
+option go_package = "origadmin/application/admin/services/auth;auth";
 option java_multiple_files = true;
 option java_outer_classname = "APIServiceAuthCasbinProto";
 option java_package = "com.origadmin.api.v1.services.auth";
@@ -14,19 +14,19 @@ option objc_class_prefix = "APIServiceAuthCasbin";
 service CasbinService {
   rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/casbin/policies"
+      get: "/casbin/policies"
       response_body: "*"
     };
   }
   rpc ListGroupings(ListGroupingsRequest) returns (ListGroupingsResponse) {
     option (google.api.http) = {
-      get: "/api/v1/casbin/groupings"
+      get: "/casbin/groupings"
       response_body: "*"
     };
   }
   rpc WatchUpdate(WatchUpdateRequest) returns (WatchUpdateResponse) {
     option (google.api.http) = {
-      get: "/api/v1/casbin/watch"
+      get: "/casbin/watch"
       response_body: "*"
     };
   }

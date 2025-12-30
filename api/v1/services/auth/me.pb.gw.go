@@ -152,7 +152,7 @@ func RegisterMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetProfile", runtime.WithHTTPPathPattern("/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -172,7 +172,7 @@ func RegisterMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdateProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdateProfile", runtime.WithHTTPPathPattern("/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -192,7 +192,7 @@ func RegisterMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdatePassword", runtime.WithHTTPPathPattern("/api/v1/me/password"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdatePassword", runtime.WithHTTPPathPattern("/me/password"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -212,7 +212,7 @@ func RegisterMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserResources", runtime.WithHTTPPathPattern("/api/v1/me/resources"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserResources", runtime.WithHTTPPathPattern("/me/resources"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -232,7 +232,7 @@ func RegisterMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserRoles", runtime.WithHTTPPathPattern("/api/v1/me/roles"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserRoles", runtime.WithHTTPPathPattern("/me/roles"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -290,7 +290,7 @@ func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetProfile", runtime.WithHTTPPathPattern("/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -307,7 +307,7 @@ func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdateProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdateProfile", runtime.WithHTTPPathPattern("/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -324,7 +324,7 @@ func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdatePassword", runtime.WithHTTPPathPattern("/api/v1/me/password"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdatePassword", runtime.WithHTTPPathPattern("/me/password"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -341,7 +341,7 @@ func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserResources", runtime.WithHTTPPathPattern("/api/v1/me/resources"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserResources", runtime.WithHTTPPathPattern("/me/resources"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -358,7 +358,7 @@ func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserRoles", runtime.WithHTTPPathPattern("/api/v1/me/roles"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserRoles", runtime.WithHTTPPathPattern("/me/roles"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -375,11 +375,11 @@ func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 }
 
 var (
-	pattern_MeService_GetProfile_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "profile"}, ""))
-	pattern_MeService_UpdateProfile_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "profile"}, ""))
-	pattern_MeService_UpdatePassword_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "password"}, ""))
-	pattern_MeService_GetUserResources_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "resources"}, ""))
-	pattern_MeService_GetUserRoles_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "roles"}, ""))
+	pattern_MeService_GetProfile_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"me", "profile"}, ""))
+	pattern_MeService_UpdateProfile_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"me", "profile"}, ""))
+	pattern_MeService_UpdatePassword_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"me", "password"}, ""))
+	pattern_MeService_GetUserResources_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"me", "resources"}, ""))
+	pattern_MeService_GetUserRoles_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"me", "roles"}, ""))
 )
 
 var (

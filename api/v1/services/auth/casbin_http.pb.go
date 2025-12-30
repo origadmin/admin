@@ -31,9 +31,9 @@ type CasbinServiceHTTPServer interface {
 
 func RegisterCasbinServiceHTTPServer(s *http.Server, srv CasbinServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/v1/casbin/policies", _CasbinService_ListPolicies0_HTTP_Handler(srv))
-	r.GET("/api/v1/casbin/groupings", _CasbinService_ListGroupings0_HTTP_Handler(srv))
-	r.GET("/api/v1/casbin/watch", _CasbinService_WatchUpdate0_HTTP_Handler(srv))
+	r.GET("/casbin/policies", _CasbinService_ListPolicies0_HTTP_Handler(srv))
+	r.GET("/casbin/groupings", _CasbinService_ListGroupings0_HTTP_Handler(srv))
+	r.GET("/casbin/watch", _CasbinService_WatchUpdate0_HTTP_Handler(srv))
 }
 
 func _CasbinService_ListPolicies0_HTTP_Handler(srv CasbinServiceHTTPServer) func(ctx http.Context) error {
@@ -109,7 +109,7 @@ func NewCasbinServiceHTTPClient(client *http.Client) CasbinServiceHTTPClient {
 
 func (c *CasbinServiceHTTPClientImpl) ListGroupings(ctx context.Context, in *ListGroupingsRequest, opts ...http.CallOption) (*ListGroupingsResponse, error) {
 	var out ListGroupingsResponse
-	pattern := "/api/v1/casbin/groupings"
+	pattern := "/casbin/groupings"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCasbinServiceListGroupings))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -122,7 +122,7 @@ func (c *CasbinServiceHTTPClientImpl) ListGroupings(ctx context.Context, in *Lis
 
 func (c *CasbinServiceHTTPClientImpl) ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...http.CallOption) (*ListPoliciesResponse, error) {
 	var out ListPoliciesResponse
-	pattern := "/api/v1/casbin/policies"
+	pattern := "/casbin/policies"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCasbinServiceListPolicies))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -135,7 +135,7 @@ func (c *CasbinServiceHTTPClientImpl) ListPolicies(ctx context.Context, in *List
 
 func (c *CasbinServiceHTTPClientImpl) WatchUpdate(ctx context.Context, in *WatchUpdateRequest, opts ...http.CallOption) (*WatchUpdateResponse, error) {
 	var out WatchUpdateResponse
-	pattern := "/api/v1/casbin/watch"
+	pattern := "/casbin/watch"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationCasbinServiceWatchUpdate))
 	opts = append(opts, http.PathTemplate(pattern))

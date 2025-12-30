@@ -17,7 +17,375 @@ servers:
     - url: http://localhost:10080
     - url: https://localhost:10080
 paths:
-    /api/v1/auth/login:
+    /api/v1/captcha:
+        get:
+            tags:
+                - GatewayService
+            operationId: GatewayService_GetCaptcha
+            parameters:
+                - name: reload
+                  in: query
+                  description: If true, forces reloading of the captcha.
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetCaptchaResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/login:
+        post:
+            tags:
+                - GatewayService
+            description: '--- Auth Service ---'
+            operationId: GatewayService_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/me/profile:
+        get:
+            tags:
+                - GatewayService
+            description: '--- Me Service ---'
+            operationId: GatewayService_GetProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/users:
+        get:
+            tags:
+                - GatewayService
+            description: '--- System User Service ---'
+            operationId: GatewayService_ListUsers
+            parameters:
+                - name: id
+                  in: query
+                  description: The parent resource id, for example, "shelves/shelf1".
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  description: The page number.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_size
+                  in: query
+                  description: The maximum number of items to return.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page_token
+                  in: query
+                  description: The next_page_token value returned from a previous List request, if any.
+                  schema:
+                    type: string
+                - name: no_paging
+                  in: query
+                  description: The no_paging is used to disable pagination.
+                  schema:
+                    type: boolean
+                - name: only_count
+                  in: query
+                  description: The only_count is the query parameter for set only to query the total number
+                  schema:
+                    type: boolean
+                - name: keyword
+                  in: query
+                  description: The title query parameter for set only to query the title
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.ListUsersResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        post:
+            tags:
+                - GatewayService
+            operationId: GatewayService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.system.CreateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.types.User'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/users/{id}:
+        get:
+            tags:
+                - GatewayService
+            operationId: GatewayService_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  description: |-
+                    The field will contain id of the resource requested, for example:
+                     "shelves/shelf1/users/user2"
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.types.User'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        delete:
+            tags:
+                - GatewayService
+            operationId: GatewayService_DeleteUser
+            parameters:
+                - name: id
+                  in: path
+                  description: The resource id of the user to be deleted.
+                  required: true
+                  schema:
+                    type: string
+                - name: user.id
+                  in: query
+                  description: |-
+                    ID of the ent.
+                     field.primary_key.comment
+                  schema:
+                    type: string
+                - name: user.create_author
+                  in: query
+                  description: create_author.field.comment
+                  schema:
+                    type: string
+                - name: user.update_author
+                  in: query
+                  description: update_author.field.comment
+                  schema:
+                    type: string
+                - name: user.create_time
+                  in: query
+                  description: create_time.field.comment
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.update_time
+                  in: query
+                  description: update_time.field.comment
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.uuid
+                  in: query
+                  description: user.field.uuid
+                  schema:
+                    type: string
+                - name: user.allowed_ip
+                  in: query
+                  description: user.field.allowed_ip
+                  schema:
+                    type: string
+                - name: user.username
+                  in: query
+                  description: user.field.username
+                  schema:
+                    type: string
+                - name: user.nickname
+                  in: query
+                  description: user.field.nickname
+                  schema:
+                    type: string
+                - name: user.avatar
+                  in: query
+                  description: user.field.avatar
+                  schema:
+                    type: string
+                - name: user.name
+                  in: query
+                  description: user.field.nickname
+                  schema:
+                    type: string
+                - name: user.gender
+                  in: query
+                  description: user.field.gender
+                  schema:
+                    type: string
+                - name: user.phone
+                  in: query
+                  description: user.field.phone
+                  schema:
+                    type: string
+                - name: user.email
+                  in: query
+                  description: user.field.email
+                  schema:
+                    type: string
+                - name: user.remark
+                  in: query
+                  description: user.field.remark
+                  schema:
+                    type: string
+                - name: user.token
+                  in: query
+                  description: user.field.token
+                  schema:
+                    type: string
+                - name: user.status
+                  in: query
+                  description: user.field.status
+                  schema:
+                    type: integer
+                    format: int32
+                - name: user.last_login_ip
+                  in: query
+                  description: user.field.last_login_ip
+                  schema:
+                    type: string
+                - name: user.last_login_time
+                  in: query
+                  description: user.field.last_login_time
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.sanction_date
+                  in: query
+                  description: user.field.sanction_date
+                  schema:
+                    type: string
+                    format: date-time
+                - name: user.manager_id
+                  in: query
+                  description: user.field.manager_id
+                  schema:
+                    type: string
+                - name: user.manager
+                  in: query
+                  description: user.field.manager
+                  schema:
+                    type: string
+                - name: user.role_ids
+                  in: query
+                  description: Role Ids holds the value of the role_ids
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.system.DeleteUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /api/v1/users/{user.id}:
+        put:
+            tags:
+                - GatewayService
+            operationId: GatewayService_UpdateUser
+            parameters:
+                - name: user.id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: user_id
+                  in: query
+                  description: The user id to use for this user.
+                  schema:
+                    type: string
+                - name: is_system
+                  in: query
+                  description: The user is_system to use for this user.
+                  schema:
+                    type: boolean
+                - name: random_password
+                  in: query
+                  description: The random_password is the query parameter for set only to generate a random password
+                  schema:
+                    type: boolean
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.types.User'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.types.User'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /auth/login:
         post:
             tags:
                 - AuthService
@@ -42,7 +410,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/auth/logout:
+    /auth/logout:
         post:
             tags:
                 - AuthService
@@ -67,7 +435,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/auth/register:
+    /auth/register:
         post:
             tags:
                 - AuthService
@@ -92,7 +460,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/auth/token:
+    /auth/token:
         post:
             tags:
                 - AuthService
@@ -117,7 +485,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/captcha:
+    /captcha:
         get:
             tags:
                 - AuthService
@@ -142,7 +510,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/casbin/groupings:
+    /casbin/groupings:
         get:
             tags:
                 - CasbinService
@@ -160,7 +528,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/casbin/policies:
+    /casbin/policies:
         get:
             tags:
                 - CasbinService
@@ -178,7 +546,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/casbin/watch:
+    /casbin/watch:
         get:
             tags:
                 - CasbinService
@@ -195,137 +563,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.auth.WatchUpdateResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/login:
-        post:
-            tags:
-                - GatewayService
-            description: Login authenticates a user.
-            operationId: GatewayService_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/me/password:
-        put:
-            tags:
-                - MeService
-            description: UpdatePassword changes the password for the currently authenticated user.
-            operationId: MeService_UpdatePassword
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.UpdatePasswordRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePasswordResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/me/profile:
-        get:
-            tags:
-                - MeService
-            description: GetProfile retrieves the profile of the currently authenticated user.
-            operationId: MeService_GetProfile
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.GetProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        put:
-            tags:
-                - MeService
-            description: UpdateProfile updates the profile of the currently authenticated user.
-            operationId: MeService_UpdateProfile
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.UpdateProfileRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.UpdateProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/me/resources:
-        get:
-            tags:
-                - MeService
-            description: GetUserResources retrieves the menu/resource list for the current user.
-            operationId: MeService_GetUserResources
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.GetUserResourcesResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/me/roles:
-        get:
-            tags:
-                - MeService
-            description: GetUserRoles retrieves the role list for the current user.
-            operationId: MeService_GetUserRoles
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.GetUserRolesResponse'
                 default:
                     description: Default error response
                     content:
@@ -500,6 +737,112 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.v1.services.datastore.DeleteDatastoreResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /me/password:
+        put:
+            tags:
+                - MeService
+            description: UpdatePassword changes the password for the currently authenticated user.
+            operationId: MeService_UpdatePassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.UpdatePasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePasswordResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /me/profile:
+        get:
+            tags:
+                - MeService
+            description: GetProfile retrieves the profile of the currently authenticated user.
+            operationId: MeService_GetProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+        put:
+            tags:
+                - MeService
+            description: UpdateProfile updates the profile of the currently authenticated user.
+            operationId: MeService_UpdateProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.services.auth.UpdateProfileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdateProfileResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /me/resources:
+        get:
+            tags:
+                - MeService
+            description: GetUserResources retrieves the menu/resource list for the current user.
+            operationId: MeService_GetUserResources
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetUserResourcesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/google.rpc.Status'
+    /me/roles:
+        get:
+            tags:
+                - MeService
+            description: GetUserRoles retrieves the role list for the current user.
+            operationId: MeService_GetUserRoles
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.GetUserRolesResponse'
                 default:
                     description: Default error response
                     content:

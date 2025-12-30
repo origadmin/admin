@@ -40,11 +40,11 @@ type AuthServiceHTTPServer interface {
 
 func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/v1/auth/login", _AuthService_Login0_HTTP_Handler(srv))
-	r.POST("/api/v1/auth/register", _AuthService_Register0_HTTP_Handler(srv))
-	r.POST("/api/v1/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
-	r.POST("/api/v1/auth/token", _AuthService_RefreshToken0_HTTP_Handler(srv))
-	r.GET("/api/v1/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
+	r.POST("/auth/login", _AuthService_Login0_HTTP_Handler(srv))
+	r.POST("/auth/register", _AuthService_Register0_HTTP_Handler(srv))
+	r.POST("/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
+	r.POST("/auth/token", _AuthService_RefreshToken0_HTTP_Handler(srv))
+	r.GET("/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
 }
 
 func _AuthService_Login0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
@@ -178,7 +178,7 @@ func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
 // GetCaptcha GetCaptcha generates a new captcha.
 func (c *AuthServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...http.CallOption) (*GetCaptchaResponse, error) {
 	var out GetCaptchaResponse
-	pattern := "/api/v1/captcha"
+	pattern := "/captcha"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthServiceGetCaptcha))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -192,7 +192,7 @@ func (c *AuthServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptc
 // Login Login authenticates a user and returns a token pair.
 func (c *AuthServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginResponse, error) {
 	var out LoginResponse
-	pattern := "/api/v1/auth/login"
+	pattern := "/auth/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceLogin))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -206,7 +206,7 @@ func (c *AuthServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest,
 // Logout Logout invalidates the user's session.
 func (c *AuthServiceHTTPClientImpl) Logout(ctx context.Context, in *LogoutRequest, opts ...http.CallOption) (*LogoutResponse, error) {
 	var out LogoutResponse
-	pattern := "/api/v1/auth/logout"
+	pattern := "/auth/logout"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceLogout))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -220,7 +220,7 @@ func (c *AuthServiceHTTPClientImpl) Logout(ctx context.Context, in *LogoutReques
 // RefreshToken RefreshToken provides a new access token.
 func (c *AuthServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RefreshTokenResponse, error) {
 	var out RefreshTokenResponse
-	pattern := "/api/v1/auth/token"
+	pattern := "/auth/token"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -234,7 +234,7 @@ func (c *AuthServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *Refres
 // Register Register creates a new user account.
 func (c *AuthServiceHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*RegisterResponse, error) {
 	var out RegisterResponse
-	pattern := "/api/v1/auth/register"
+	pattern := "/auth/register"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceRegister))
 	opts = append(opts, http.PathTemplate(pattern))

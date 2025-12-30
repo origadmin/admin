@@ -4,7 +4,7 @@ package api.v1.services.auth;
 
 import "google/api/annotations.proto";
 
-option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
+option go_package = "origadmin/application/admin/services/auth;auth";
 option java_multiple_files = true;
 option java_package = "com.origadmin.api.v1.services.auth";
 option java_outer_classname = "APIServiceAuthProto";
@@ -16,7 +16,7 @@ service AuthService {
   // Login authenticates a user and returns a token pair.
   rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
-      post: "/api/v1/auth/login"
+      post: "/auth/login"
       body: "*"
     };
   }
@@ -24,7 +24,7 @@ service AuthService {
   // Register creates a new user account.
   rpc Register(RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
-      post: "/api/v1/auth/register"
+      post: "/auth/register"
       body: "*"
     };
   }
@@ -32,7 +32,7 @@ service AuthService {
   // Logout invalidates the user's session.
   rpc Logout(LogoutRequest) returns (LogoutResponse) {
     option (google.api.http) = {
-      post: "/api/v1/auth/logout"
+      post: "/auth/logout"
       body: "*"
     };
   }
@@ -40,7 +40,7 @@ service AuthService {
   // RefreshToken provides a new access token.
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
     option (google.api.http) = {
-      post: "/api/v1/auth/token"
+      post: "/auth/token"
       body: "*"
     };
   }
@@ -50,7 +50,7 @@ service AuthService {
   // GetCaptcha generates a new captcha.
   rpc GetCaptcha(GetCaptchaRequest) returns (GetCaptchaResponse) {
     option (google.api.http) = {
-      get: "/api/v1/captcha"
+      get: "/captcha"
     };
   }
 

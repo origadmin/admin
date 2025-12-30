@@ -20,6 +20,6 @@ import (
 )
 
 // wireApp init kratos application.
-func wireApp(*confpb.Bootstrap, log.Logger) (*kratos.App, func(), error) {
+func wireApp(bootstrap *confpb.Bootstrap, logger log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, client.ProviderSet, service.ProviderSet, newApp))
 }

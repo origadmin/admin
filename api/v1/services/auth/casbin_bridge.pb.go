@@ -64,9 +64,9 @@ type CasbinServiceWatchUpdateHooker interface {
 
 func RegisterCasbinServiceBridgeServer(s *http.Server, srv CasbinServiceHookedBridger) {
 	r := s.Route("/")
-	r.GET("/api/v1/casbin/policies", _CasbinService_ListPolicies0_Bridge_Handler(srv))
-	r.GET("/api/v1/casbin/groupings", _CasbinService_ListGroupings0_Bridge_Handler(srv))
-	r.GET("/api/v1/casbin/watch", _CasbinService_WatchUpdate0_Bridge_Handler(srv))
+	r.GET("/casbin/policies", _CasbinService_ListPolicies0_Bridge_Handler(srv))
+	r.GET("/casbin/groupings", _CasbinService_ListGroupings0_Bridge_Handler(srv))
+	r.GET("/casbin/watch", _CasbinService_WatchUpdate0_Bridge_Handler(srv))
 }
 
 func _CasbinService_ListPolicies0_Bridge_Handler(srv CasbinServiceHookedBridger) func(ctx http.Context) error {

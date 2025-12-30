@@ -5,7 +5,7 @@ package api.v1.services.auth;
 import "google/api/annotations.proto";
 import "types/system.proto";
 
-option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
+option go_package = "origadmin/application/admin/services/auth;auth";
 option java_multiple_files = true;
 option java_package = "com.origadmin.api.v1.services.auth";
 option java_outer_classname = "APIServiceMeProto";
@@ -15,14 +15,14 @@ service MeService {
   // GetProfile retrieves the profile of the currently authenticated user.
   rpc GetProfile(GetProfileRequest) returns (GetProfileResponse) {
     option (google.api.http) = {
-      get: "/api/v1/me/profile"
+      get: "/me/profile"
     };
   }
 
   // UpdateProfile updates the profile of the currently authenticated user.
   rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {
     option (google.api.http) = {
-      put: "/api/v1/me/profile"
+      put: "/me/profile"
       body: "*"
     };
   }
@@ -30,7 +30,7 @@ service MeService {
   // UpdatePassword changes the password for the currently authenticated user.
   rpc UpdatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse) {
     option (google.api.http) = {
-      put: "/api/v1/me/password"
+      put: "/me/password"
       body: "*"
     };
   }
@@ -38,14 +38,14 @@ service MeService {
   // GetUserResources retrieves the menu/resource list for the current user.
   rpc GetUserResources(GetUserResourcesRequest) returns (GetUserResourcesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/me/resources"
+      get: "/me/resources"
     };
   }
 
   // GetUserRoles retrieves the role list for the current user.
   rpc GetUserRoles(GetUserRolesRequest) returns (GetUserRolesResponse) {
     option (google.api.http) = {
-      get: "/api/v1/me/roles"
+      get: "/me/roles"
     };
   }
 }
