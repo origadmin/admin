@@ -12,9 +12,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
-	types "origadmin/application/admin/api/v1/services/types"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -30,74 +28,74 @@ var (
 	_ = codes.Unimplemented
 )
 
-const MeGetProfileBridgeOperation = "/api.v1.services.auth.Me/GetProfile"
-const MeGetUserResourcesBridgeOperation = "/api.v1.services.auth.Me/GetUserResources"
-const MeGetUserRolesBridgeOperation = "/api.v1.services.auth.Me/GetUserRoles"
-const MeUpdatePasswordBridgeOperation = "/api.v1.services.auth.Me/UpdatePassword"
-const MeUpdateProfileBridgeOperation = "/api.v1.services.auth.Me/UpdateProfile"
+const MeServiceGetProfileBridgeOperation = "/api.v1.services.auth.MeService/GetProfile"
+const MeServiceUpdateProfileBridgeOperation = "/api.v1.services.auth.MeService/UpdateProfile"
+const MeServiceUpdatePasswordBridgeOperation = "/api.v1.services.auth.MeService/UpdatePassword"
+const MeServiceGetUserResourcesBridgeOperation = "/api.v1.services.auth.MeService/GetUserResources"
+const MeServiceGetUserRolesBridgeOperation = "/api.v1.services.auth.MeService/GetUserRoles"
 
-type MeBridgeServer interface {
+type MeServiceBridgeServer interface {
 	// GetProfile retrieves the profile of the currently authenticated user.
-	GetProfile(context.Context, *GetProfileRequest) (*types.User, error)
+	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
+	// UpdateProfile updates the profile of the currently authenticated user.
+	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
+	// UpdatePassword changes the password for the currently authenticated user.
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	// GetUserResources retrieves the menu/resource list for the current user.
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
-	// UpdatePassword changes the password for the currently authenticated user.
-	UpdatePassword(context.Context, *UpdatePasswordRequest) (*emptypb.Empty, error)
-	// UpdateProfile updates the profile of the currently authenticated user.
-	UpdateProfile(context.Context, *UpdateProfileRequest) (*emptypb.Empty, error)
 }
 
-type MeHooker interface {
-	MeGetProfileHooker
-	MeGetUserResourcesHooker
-	MeGetUserRolesHooker
-	MeUpdatePasswordHooker
-	MeUpdateProfileHooker
+type MeServiceHooker interface {
+	MeServiceGetProfileHooker
+	MeServiceUpdateProfileHooker
+	MeServiceUpdatePasswordHooker
+	MeServiceGetUserResourcesHooker
+	MeServiceGetUserRolesHooker
 }
 
-type MeHookedBridger interface {
-	MeHooker
-	MeBridgeServer
+type MeServiceHookedBridger interface {
+	MeServiceHooker
+	MeServiceBridgeServer
 }
-type MeGetProfileHooker interface {
+type MeServiceGetProfileHooker interface {
 	PrepareGetProfile(http.Context, *GetProfileRequest) (context.Context, error)
-	CompleteGetProfile(http.Context, *GetProfileRequest, *types.User) error
+	CompleteGetProfile(http.Context, *GetProfileRequest, *GetProfileResponse) error
 }
-type MeGetUserResourcesHooker interface {
+type MeServiceUpdateProfileHooker interface {
+	PrepareUpdateProfile(http.Context, *UpdateProfileRequest) (context.Context, error)
+	CompleteUpdateProfile(http.Context, *UpdateProfileRequest, *UpdateProfileResponse) error
+}
+type MeServiceUpdatePasswordHooker interface {
+	PrepareUpdatePassword(http.Context, *UpdatePasswordRequest) (context.Context, error)
+	CompleteUpdatePassword(http.Context, *UpdatePasswordRequest, *UpdatePasswordResponse) error
+}
+type MeServiceGetUserResourcesHooker interface {
 	PrepareGetUserResources(http.Context, *GetUserResourcesRequest) (context.Context, error)
 	CompleteGetUserResources(http.Context, *GetUserResourcesRequest, *GetUserResourcesResponse) error
 }
-type MeGetUserRolesHooker interface {
+type MeServiceGetUserRolesHooker interface {
 	PrepareGetUserRoles(http.Context, *GetUserRolesRequest) (context.Context, error)
 	CompleteGetUserRoles(http.Context, *GetUserRolesRequest, *GetUserRolesResponse) error
 }
-type MeUpdatePasswordHooker interface {
-	PrepareUpdatePassword(http.Context, *UpdatePasswordRequest) (context.Context, error)
-	CompleteUpdatePassword(http.Context, *UpdatePasswordRequest, *emptypb.Empty) error
-}
-type MeUpdateProfileHooker interface {
-	PrepareUpdateProfile(http.Context, *UpdateProfileRequest) (context.Context, error)
-	CompleteUpdateProfile(http.Context, *UpdateProfileRequest, *emptypb.Empty) error
-}
 
-func RegisterMeBridgeServer(s *http.Server, srv MeHookedBridger) {
+func RegisterMeServiceBridgeServer(s *http.Server, srv MeServiceHookedBridger) {
 	r := s.Route("/")
-	r.GET("/api/v1/me/profile", _Me_GetProfile0_Bridge_Handler(srv))
-	r.PUT("/api/v1/me/profile", _Me_UpdateProfile0_Bridge_Handler(srv))
-	r.PUT("/api/v1/me/password", _Me_UpdatePassword0_Bridge_Handler(srv))
-	r.GET("/api/v1/me/resources", _Me_GetUserResources0_Bridge_Handler(srv))
-	r.GET("/api/v1/me/roles", _Me_GetUserRoles0_Bridge_Handler(srv))
+	r.GET("/api/v1/me/profile", _MeService_GetProfile0_Bridge_Handler(srv))
+	r.PUT("/api/v1/me/profile", _MeService_UpdateProfile0_Bridge_Handler(srv))
+	r.PUT("/api/v1/me/password", _MeService_UpdatePassword0_Bridge_Handler(srv))
+	r.GET("/api/v1/me/resources", _MeService_GetUserResources0_Bridge_Handler(srv))
+	r.GET("/api/v1/me/roles", _MeService_GetUserRoles0_Bridge_Handler(srv))
 }
 
-func _Me_GetProfile0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context) error {
+func _MeService_GetProfile0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetProfileRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeGetProfile)
+		http.SetOperation(ctx, OperationMeServiceGetProfile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetProfile(ctx, req.(*GetProfileRequest))
 		})
@@ -110,11 +108,11 @@ func _Me_GetProfile0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context) 
 		if err != nil {
 			return err
 		}
-		return srv.CompleteGetProfile(ctx, &in, out.(*types.User))
+		return srv.CompleteGetProfile(ctx, &in, out.(*GetProfileResponse))
 	}
 }
 
-func _Me_UpdateProfile0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context) error {
+func _MeService_UpdateProfile0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateProfileRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -123,7 +121,7 @@ func _Me_UpdateProfile0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Contex
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeUpdateProfile)
+		http.SetOperation(ctx, OperationMeServiceUpdateProfile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateProfile(ctx, req.(*UpdateProfileRequest))
 		})
@@ -136,11 +134,11 @@ func _Me_UpdateProfile0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Contex
 		if err != nil {
 			return err
 		}
-		return srv.CompleteUpdateProfile(ctx, &in, out.(*emptypb.Empty))
+		return srv.CompleteUpdateProfile(ctx, &in, out.(*UpdateProfileResponse))
 	}
 }
 
-func _Me_UpdatePassword0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context) error {
+func _MeService_UpdatePassword0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePasswordRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -149,7 +147,7 @@ func _Me_UpdatePassword0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Conte
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeUpdatePassword)
+		http.SetOperation(ctx, OperationMeServiceUpdatePassword)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdatePassword(ctx, req.(*UpdatePasswordRequest))
 		})
@@ -162,17 +160,17 @@ func _Me_UpdatePassword0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Conte
 		if err != nil {
 			return err
 		}
-		return srv.CompleteUpdatePassword(ctx, &in, out.(*emptypb.Empty))
+		return srv.CompleteUpdatePassword(ctx, &in, out.(*UpdatePasswordResponse))
 	}
 }
 
-func _Me_GetUserResources0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context) error {
+func _MeService_GetUserResources0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeGetUserResources)
+		http.SetOperation(ctx, OperationMeServiceGetUserResources)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUserResources(ctx, req.(*GetUserResourcesRequest))
 		})
@@ -189,13 +187,13 @@ func _Me_GetUserResources0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Con
 	}
 }
 
-func _Me_GetUserRoles0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context) error {
+func _MeService_GetUserRoles0_Bridge_Handler(srv MeServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserRolesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeGetUserRoles)
+		http.SetOperation(ctx, OperationMeServiceGetUserRoles)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUserRoles(ctx, req.(*GetUserRolesRequest))
 		})
@@ -212,179 +210,179 @@ func _Me_GetUserRoles0_Bridge_Handler(srv MeHookedBridger) func(ctx http.Context
 	}
 }
 
-// UnimplementedMeHooked must be embedded to have
+// UnimplementedMeServiceHooked must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMeHooked struct{}
+type UnimplementedMeServiceHooked struct{}
 
-func (UnimplementedMeHooked) PrepareGetProfile(ctx http.Context, in *GetProfileRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareGetProfile(ctx http.Context, in *GetProfileRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeHooked) CompleteGetProfile(ctx http.Context, in *GetProfileRequest, out *types.User) error {
+func (UnimplementedMeServiceHooked) CompleteGetProfile(ctx http.Context, in *GetProfileRequest, out *GetProfileResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeHooked) PrepareGetUserResources(ctx http.Context, in *GetUserResourcesRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareUpdateProfile(ctx http.Context, in *UpdateProfileRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeHooked) CompleteGetUserResources(ctx http.Context, in *GetUserResourcesRequest, out *GetUserResourcesResponse) error {
+func (UnimplementedMeServiceHooked) CompleteUpdateProfile(ctx http.Context, in *UpdateProfileRequest, out *UpdateProfileResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeHooked) PrepareGetUserRoles(ctx http.Context, in *GetUserRolesRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareUpdatePassword(ctx http.Context, in *UpdatePasswordRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeHooked) CompleteGetUserRoles(ctx http.Context, in *GetUserRolesRequest, out *GetUserRolesResponse) error {
+func (UnimplementedMeServiceHooked) CompleteUpdatePassword(ctx http.Context, in *UpdatePasswordRequest, out *UpdatePasswordResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeHooked) PrepareUpdatePassword(ctx http.Context, in *UpdatePasswordRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareGetUserResources(ctx http.Context, in *GetUserResourcesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeHooked) CompleteUpdatePassword(ctx http.Context, in *UpdatePasswordRequest, out *emptypb.Empty) error {
+func (UnimplementedMeServiceHooked) CompleteGetUserResources(ctx http.Context, in *GetUserResourcesRequest, out *GetUserResourcesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedMeHooked) PrepareUpdateProfile(ctx http.Context, in *UpdateProfileRequest) (context.Context, error) {
+func (UnimplementedMeServiceHooked) PrepareGetUserRoles(ctx http.Context, in *GetUserRolesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedMeHooked) CompleteUpdateProfile(ctx http.Context, in *UpdateProfileRequest, out *emptypb.Empty) error {
+func (UnimplementedMeServiceHooked) CompleteGetUserRoles(ctx http.Context, in *GetUserRolesRequest, out *GetUserRolesResponse) error {
 	return ctx.Result(200, out)
 }
 
-func WithMeHook(h MeHooker) func(MeBridgeServer) MeHookedBridger {
-	return func(srv MeBridgeServer) MeHookedBridger {
-		return MeHookedBridge{MeBridgeServer: srv, MeHooker: h}
+func WithMeServiceHook(h MeServiceHooker) func(MeServiceBridgeServer) MeServiceHookedBridger {
+	return func(srv MeServiceBridgeServer) MeServiceHookedBridger {
+		return MeServiceHookedBridge{MeServiceBridgeServer: srv, MeServiceHooker: h}
 	}
 }
 
-// MeHookedBridge is a bridge between the HTTP and gRPC implementations of Me.
-// It implements the HTTP and gRPC implementations of Me.
+// MeServiceHookedBridge is a bridge between the HTTP and gRPC implementations of MeService.
+// It implements the HTTP and gRPC implementations of MeService.
 // It forwards requests and responses between the two implementations.
-type MeHookedBridge struct {
-	MeBridgeServer
-	MeHooker
+type MeServiceHookedBridge struct {
+	MeServiceBridgeServer
+	MeServiceHooker
 }
 
-type MeHTTPBridgeImpl struct {
-	client MeHTTPClient
+type MeServiceHTTPBridgeImpl struct {
+	client MeServiceHTTPClient
 }
 
-func NewMeHTTPBridge(client *http.Client) MeHTTPServer {
-	return &MeHTTPBridgeImpl{client: NewMeHTTPClient(client)}
+func NewMeServiceHTTPBridge(client *http.Client) MeServiceHTTPServer {
+	return &MeServiceHTTPBridgeImpl{client: NewMeServiceHTTPClient(client)}
 }
 
-func (c *MeHTTPBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*types.User, error) {
+func (c *MeServiceHTTPBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
 	return c.client.GetProfile(ctx, in)
 }
 
-func (c *MeHTTPBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
-	return c.client.GetUserResources(ctx, in)
-}
-
-func (c *MeHTTPBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
-	return c.client.GetUserRoles(ctx, in)
-}
-
-func (c *MeHTTPBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*emptypb.Empty, error) {
-	return c.client.UpdatePassword(ctx, in)
-}
-
-func (c *MeHTTPBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*emptypb.Empty, error) {
+func (c *MeServiceHTTPBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*UpdateProfileResponse, error) {
 	return c.client.UpdateProfile(ctx, in)
 }
 
-type MeBridgeImpl struct {
-	client MeClient
+func (c *MeServiceHTTPBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
+	return c.client.UpdatePassword(ctx, in)
 }
 
-func NewMeBridge(client grpc.ClientConnInterface) MeServer {
-	return &MeBridgeImpl{client: NewMeClient(client)}
+func (c *MeServiceHTTPBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
+	return c.client.GetUserResources(ctx, in)
 }
 
-func (c *MeBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*types.User, error) {
+func (c *MeServiceHTTPBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
+	return c.client.GetUserRoles(ctx, in)
+}
+
+type MeServiceBridgeImpl struct {
+	client MeServiceClient
+}
+
+func NewMeServiceBridge(client grpc.ClientConnInterface) MeServiceServer {
+	return &MeServiceBridgeImpl{client: NewMeServiceClient(client)}
+}
+
+func (c *MeServiceBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
 	return c.client.GetProfile(ctx, in)
 }
 
-func (c *MeBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
-	return c.client.GetUserResources(ctx, in)
-}
-
-func (c *MeBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
-	return c.client.GetUserRoles(ctx, in)
-}
-
-func (c *MeBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*emptypb.Empty, error) {
-	return c.client.UpdatePassword(ctx, in)
-}
-
-func (c *MeBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*emptypb.Empty, error) {
+func (c *MeServiceBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*UpdateProfileResponse, error) {
 	return c.client.UpdateProfile(ctx, in)
 }
 
-func (c *MeBridgeImpl) mustEmbedUnimplementedMeServer() {}
-
-type MeGRPC2HTTPBridgeImpl struct {
-	client MeClient
+func (c *MeServiceBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
+	return c.client.UpdatePassword(ctx, in)
 }
 
-func NewMeGRPC2HTTP(client grpc.ClientConnInterface) MeHTTPServer {
-	return &MeGRPC2HTTPBridgeImpl{client: NewMeClient(client)}
+func (c *MeServiceBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
+	return c.client.GetUserResources(ctx, in)
 }
 
-func (c *MeGRPC2HTTPBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*types.User, error) {
+func (c *MeServiceBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
+	return c.client.GetUserRoles(ctx, in)
+}
+
+func (c *MeServiceBridgeImpl) mustEmbedUnimplementedMeServiceServer() {}
+
+type MeServiceGRPC2HTTPBridgeImpl struct {
+	client MeServiceClient
+}
+
+func NewMeServiceGRPC2HTTP(client grpc.ClientConnInterface) MeServiceHTTPServer {
+	return &MeServiceGRPC2HTTPBridgeImpl{client: NewMeServiceClient(client)}
+}
+
+func (c *MeServiceGRPC2HTTPBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
 	return c.client.GetProfile(ctx, in)
 }
 
-func (c *MeGRPC2HTTPBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
-	return c.client.GetUserResources(ctx, in)
-}
-
-func (c *MeGRPC2HTTPBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
-	return c.client.GetUserRoles(ctx, in)
-}
-
-func (c *MeGRPC2HTTPBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*emptypb.Empty, error) {
-	return c.client.UpdatePassword(ctx, in)
-}
-
-func (c *MeGRPC2HTTPBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*emptypb.Empty, error) {
+func (c *MeServiceGRPC2HTTPBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*UpdateProfileResponse, error) {
 	return c.client.UpdateProfile(ctx, in)
 }
 
-type MeHTTP2GRPCBridgeImpl struct {
-	client MeHTTPClient
+func (c *MeServiceGRPC2HTTPBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
+	return c.client.UpdatePassword(ctx, in)
 }
 
-func NewMeHTTP2GRPC(client *http.Client) MeServer {
-	return &MeHTTP2GRPCBridgeImpl{client: NewMeHTTPClient(client)}
+func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
+	return c.client.GetUserResources(ctx, in)
 }
 
-func (c *MeHTTP2GRPCBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*types.User, error) {
+func (c *MeServiceGRPC2HTTPBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
+	return c.client.GetUserRoles(ctx, in)
+}
+
+type MeServiceHTTP2GRPCBridgeImpl struct {
+	client MeServiceHTTPClient
+}
+
+func NewMeServiceHTTP2GRPC(client *http.Client) MeServiceServer {
+	return &MeServiceHTTP2GRPCBridgeImpl{client: NewMeServiceHTTPClient(client)}
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) GetProfile(ctx context.Context, in *GetProfileRequest) (*GetProfileResponse, error) {
 	return c.client.GetProfile(ctx, in)
 }
 
-func (c *MeHTTP2GRPCBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
-	return c.client.GetUserResources(ctx, in)
-}
-
-func (c *MeHTTP2GRPCBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
-	return c.client.GetUserRoles(ctx, in)
-}
-
-func (c *MeHTTP2GRPCBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*emptypb.Empty, error) {
-	return c.client.UpdatePassword(ctx, in)
-}
-
-func (c *MeHTTP2GRPCBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*emptypb.Empty, error) {
+func (c *MeServiceHTTP2GRPCBridgeImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest) (*UpdateProfileResponse, error) {
 	return c.client.UpdateProfile(ctx, in)
 }
 
-func (c *MeHTTP2GRPCBridgeImpl) mustEmbedUnimplementedMeServer() {}
+func (c *MeServiceHTTP2GRPCBridgeImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
+	return c.client.UpdatePassword(ctx, in)
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
+	return c.client.GetUserResources(ctx, in)
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest) (*GetUserRolesResponse, error) {
+	return c.client.GetUserRoles(ctx, in)
+}
+
+func (c *MeServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedMeServiceServer() {}

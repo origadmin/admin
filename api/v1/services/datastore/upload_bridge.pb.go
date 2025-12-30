@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: datastore/upload.proto
 
-package upload
+package datastore
 
 import (
 	context "context"
@@ -28,51 +28,51 @@ var (
 	_ = codes.Unimplemented
 )
 
-const UploadServiceCreateUploadBridgeOperation = "/api.v1.services.upload.UploadService/CreateUpload"
-const UploadServiceDeleteUploadBridgeOperation = "/api.v1.services.upload.UploadService/DeleteUpload"
-const UploadServiceGetUploadBridgeOperation = "/api.v1.services.upload.UploadService/GetUpload"
-const UploadServiceListUploadBridgeOperation = "/api.v1.services.upload.UploadService/ListUpload"
-const UploadServiceUpdateUploadBridgeOperation = "/api.v1.services.upload.UploadService/UpdateUpload"
+const UploadServiceListUploadBridgeOperation = "/api.v1.services.datastore.UploadService/ListUpload"
+const UploadServiceGetUploadBridgeOperation = "/api.v1.services.datastore.UploadService/GetUpload"
+const UploadServiceCreateUploadBridgeOperation = "/api.v1.services.datastore.UploadService/CreateUpload"
+const UploadServiceUpdateUploadBridgeOperation = "/api.v1.services.datastore.UploadService/UpdateUpload"
+const UploadServiceDeleteUploadBridgeOperation = "/api.v1.services.datastore.UploadService/DeleteUpload"
 
 type UploadServiceBridgeServer interface {
-	CreateUpload(context.Context, *CreateUploadRequest) (*CreateUploadResponse, error)
-	DeleteUpload(context.Context, *DeleteUploadRequest) (*DeleteUploadResponse, error)
-	GetUpload(context.Context, *GetUploadRequest) (*GetUploadResponse, error)
 	ListUpload(context.Context, *ListUploadRequest) (*ListUploadResponse, error)
+	GetUpload(context.Context, *GetUploadRequest) (*GetUploadResponse, error)
+	CreateUpload(context.Context, *CreateUploadRequest) (*CreateUploadResponse, error)
 	UpdateUpload(context.Context, *UpdateUploadRequest) (*UpdateUploadResponse, error)
+	DeleteUpload(context.Context, *DeleteUploadRequest) (*DeleteUploadResponse, error)
 }
 
 type UploadServiceHooker interface {
-	UploadServiceCreateUploadHooker
-	UploadServiceDeleteUploadHooker
-	UploadServiceGetUploadHooker
 	UploadServiceListUploadHooker
+	UploadServiceGetUploadHooker
+	UploadServiceCreateUploadHooker
 	UploadServiceUpdateUploadHooker
+	UploadServiceDeleteUploadHooker
 }
 
 type UploadServiceHookedBridger interface {
 	UploadServiceHooker
 	UploadServiceBridgeServer
 }
-type UploadServiceCreateUploadHooker interface {
-	PrepareCreateUpload(http.Context, *CreateUploadRequest) (context.Context, error)
-	CompleteCreateUpload(http.Context, *CreateUploadRequest, *CreateUploadResponse) error
-}
-type UploadServiceDeleteUploadHooker interface {
-	PrepareDeleteUpload(http.Context, *DeleteUploadRequest) (context.Context, error)
-	CompleteDeleteUpload(http.Context, *DeleteUploadRequest, *DeleteUploadResponse) error
+type UploadServiceListUploadHooker interface {
+	PrepareListUpload(http.Context, *ListUploadRequest) (context.Context, error)
+	CompleteListUpload(http.Context, *ListUploadRequest, *ListUploadResponse) error
 }
 type UploadServiceGetUploadHooker interface {
 	PrepareGetUpload(http.Context, *GetUploadRequest) (context.Context, error)
 	CompleteGetUpload(http.Context, *GetUploadRequest, *GetUploadResponse) error
 }
-type UploadServiceListUploadHooker interface {
-	PrepareListUpload(http.Context, *ListUploadRequest) (context.Context, error)
-	CompleteListUpload(http.Context, *ListUploadRequest, *ListUploadResponse) error
+type UploadServiceCreateUploadHooker interface {
+	PrepareCreateUpload(http.Context, *CreateUploadRequest) (context.Context, error)
+	CompleteCreateUpload(http.Context, *CreateUploadRequest, *CreateUploadResponse) error
 }
 type UploadServiceUpdateUploadHooker interface {
 	PrepareUpdateUpload(http.Context, *UpdateUploadRequest) (context.Context, error)
 	CompleteUpdateUpload(http.Context, *UpdateUploadRequest, *UpdateUploadResponse) error
+}
+type UploadServiceDeleteUploadHooker interface {
+	PrepareDeleteUpload(http.Context, *DeleteUploadRequest) (context.Context, error)
+	CompleteDeleteUpload(http.Context, *DeleteUploadRequest, *DeleteUploadResponse) error
 }
 
 func RegisterUploadServiceBridgeServer(s *http.Server, srv UploadServiceHookedBridger) {
@@ -221,19 +221,11 @@ func _UploadService_DeleteUpload0_Bridge_Handler(srv UploadServiceHookedBridger)
 // pointer dereference when methods are called.
 type UnimplementedUploadServiceHooked struct{}
 
-func (UnimplementedUploadServiceHooked) PrepareCreateUpload(ctx http.Context, in *CreateUploadRequest) (context.Context, error) {
+func (UnimplementedUploadServiceHooked) PrepareListUpload(ctx http.Context, in *ListUploadRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedUploadServiceHooked) CompleteCreateUpload(ctx http.Context, in *CreateUploadRequest, out *CreateUploadResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUploadServiceHooked) PrepareDeleteUpload(ctx http.Context, in *DeleteUploadRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUploadServiceHooked) CompleteDeleteUpload(ctx http.Context, in *DeleteUploadRequest, out *DeleteUploadResponse) error {
+func (UnimplementedUploadServiceHooked) CompleteListUpload(ctx http.Context, in *ListUploadRequest, out *ListUploadResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -245,11 +237,11 @@ func (UnimplementedUploadServiceHooked) CompleteGetUpload(ctx http.Context, in *
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedUploadServiceHooked) PrepareListUpload(ctx http.Context, in *ListUploadRequest) (context.Context, error) {
+func (UnimplementedUploadServiceHooked) PrepareCreateUpload(ctx http.Context, in *CreateUploadRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedUploadServiceHooked) CompleteListUpload(ctx http.Context, in *ListUploadRequest, out *ListUploadResponse) error {
+func (UnimplementedUploadServiceHooked) CompleteCreateUpload(ctx http.Context, in *CreateUploadRequest, out *CreateUploadResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -258,6 +250,14 @@ func (UnimplementedUploadServiceHooked) PrepareUpdateUpload(ctx http.Context, in
 }
 
 func (UnimplementedUploadServiceHooked) CompleteUpdateUpload(ctx http.Context, in *UpdateUploadRequest, out *UpdateUploadResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUploadServiceHooked) PrepareDeleteUpload(ctx http.Context, in *DeleteUploadRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUploadServiceHooked) CompleteDeleteUpload(ctx http.Context, in *DeleteUploadRequest, out *DeleteUploadResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -283,24 +283,24 @@ func NewUploadServiceHTTPBridge(client *http.Client) UploadServiceHTTPServer {
 	return &UploadServiceHTTPBridgeImpl{client: NewUploadServiceHTTPClient(client)}
 }
 
-func (c *UploadServiceHTTPBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
-	return c.client.CreateUpload(ctx, in)
-}
-
-func (c *UploadServiceHTTPBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
-	return c.client.DeleteUpload(ctx, in)
+func (c *UploadServiceHTTPBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
+	return c.client.ListUpload(ctx, in)
 }
 
 func (c *UploadServiceHTTPBridgeImpl) GetUpload(ctx context.Context, in *GetUploadRequest) (*GetUploadResponse, error) {
 	return c.client.GetUpload(ctx, in)
 }
 
-func (c *UploadServiceHTTPBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
-	return c.client.ListUpload(ctx, in)
+func (c *UploadServiceHTTPBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
+	return c.client.CreateUpload(ctx, in)
 }
 
 func (c *UploadServiceHTTPBridgeImpl) UpdateUpload(ctx context.Context, in *UpdateUploadRequest) (*UpdateUploadResponse, error) {
 	return c.client.UpdateUpload(ctx, in)
+}
+
+func (c *UploadServiceHTTPBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
+	return c.client.DeleteUpload(ctx, in)
 }
 
 type UploadServiceBridgeImpl struct {
@@ -311,24 +311,24 @@ func NewUploadServiceBridge(client grpc.ClientConnInterface) UploadServiceServer
 	return &UploadServiceBridgeImpl{client: NewUploadServiceClient(client)}
 }
 
-func (c *UploadServiceBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
-	return c.client.CreateUpload(ctx, in)
-}
-
-func (c *UploadServiceBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
-	return c.client.DeleteUpload(ctx, in)
+func (c *UploadServiceBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
+	return c.client.ListUpload(ctx, in)
 }
 
 func (c *UploadServiceBridgeImpl) GetUpload(ctx context.Context, in *GetUploadRequest) (*GetUploadResponse, error) {
 	return c.client.GetUpload(ctx, in)
 }
 
-func (c *UploadServiceBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
-	return c.client.ListUpload(ctx, in)
+func (c *UploadServiceBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
+	return c.client.CreateUpload(ctx, in)
 }
 
 func (c *UploadServiceBridgeImpl) UpdateUpload(ctx context.Context, in *UpdateUploadRequest) (*UpdateUploadResponse, error) {
 	return c.client.UpdateUpload(ctx, in)
+}
+
+func (c *UploadServiceBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
+	return c.client.DeleteUpload(ctx, in)
 }
 
 func (c *UploadServiceBridgeImpl) mustEmbedUnimplementedUploadServiceServer() {}
@@ -341,24 +341,24 @@ func NewUploadServiceGRPC2HTTP(client grpc.ClientConnInterface) UploadServiceHTT
 	return &UploadServiceGRPC2HTTPBridgeImpl{client: NewUploadServiceClient(client)}
 }
 
-func (c *UploadServiceGRPC2HTTPBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
-	return c.client.CreateUpload(ctx, in)
-}
-
-func (c *UploadServiceGRPC2HTTPBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
-	return c.client.DeleteUpload(ctx, in)
+func (c *UploadServiceGRPC2HTTPBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
+	return c.client.ListUpload(ctx, in)
 }
 
 func (c *UploadServiceGRPC2HTTPBridgeImpl) GetUpload(ctx context.Context, in *GetUploadRequest) (*GetUploadResponse, error) {
 	return c.client.GetUpload(ctx, in)
 }
 
-func (c *UploadServiceGRPC2HTTPBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
-	return c.client.ListUpload(ctx, in)
+func (c *UploadServiceGRPC2HTTPBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
+	return c.client.CreateUpload(ctx, in)
 }
 
 func (c *UploadServiceGRPC2HTTPBridgeImpl) UpdateUpload(ctx context.Context, in *UpdateUploadRequest) (*UpdateUploadResponse, error) {
 	return c.client.UpdateUpload(ctx, in)
+}
+
+func (c *UploadServiceGRPC2HTTPBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
+	return c.client.DeleteUpload(ctx, in)
 }
 
 type UploadServiceHTTP2GRPCBridgeImpl struct {
@@ -369,24 +369,24 @@ func NewUploadServiceHTTP2GRPC(client *http.Client) UploadServiceServer {
 	return &UploadServiceHTTP2GRPCBridgeImpl{client: NewUploadServiceHTTPClient(client)}
 }
 
-func (c *UploadServiceHTTP2GRPCBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
-	return c.client.CreateUpload(ctx, in)
-}
-
-func (c *UploadServiceHTTP2GRPCBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
-	return c.client.DeleteUpload(ctx, in)
+func (c *UploadServiceHTTP2GRPCBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
+	return c.client.ListUpload(ctx, in)
 }
 
 func (c *UploadServiceHTTP2GRPCBridgeImpl) GetUpload(ctx context.Context, in *GetUploadRequest) (*GetUploadResponse, error) {
 	return c.client.GetUpload(ctx, in)
 }
 
-func (c *UploadServiceHTTP2GRPCBridgeImpl) ListUpload(ctx context.Context, in *ListUploadRequest) (*ListUploadResponse, error) {
-	return c.client.ListUpload(ctx, in)
+func (c *UploadServiceHTTP2GRPCBridgeImpl) CreateUpload(ctx context.Context, in *CreateUploadRequest) (*CreateUploadResponse, error) {
+	return c.client.CreateUpload(ctx, in)
 }
 
 func (c *UploadServiceHTTP2GRPCBridgeImpl) UpdateUpload(ctx context.Context, in *UpdateUploadRequest) (*UpdateUploadResponse, error) {
 	return c.client.UpdateUpload(ctx, in)
+}
+
+func (c *UploadServiceHTTP2GRPCBridgeImpl) DeleteUpload(ctx context.Context, in *DeleteUploadRequest) (*DeleteUploadResponse, error) {
+	return c.client.DeleteUpload(ctx, in)
 }
 
 func (c *UploadServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedUploadServiceServer() {}

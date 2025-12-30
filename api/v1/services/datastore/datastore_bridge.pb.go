@@ -28,51 +28,51 @@ var (
 	_ = codes.Unimplemented
 )
 
-const DatastoreServiceCreateDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/CreateDatastore"
-const DatastoreServiceDeleteDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/DeleteDatastore"
-const DatastoreServiceGetDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/GetDatastore"
 const DatastoreServiceListDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/ListDatastore"
+const DatastoreServiceGetDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/GetDatastore"
+const DatastoreServiceCreateDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/CreateDatastore"
 const DatastoreServiceUpdateDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/UpdateDatastore"
+const DatastoreServiceDeleteDatastoreBridgeOperation = "/api.v1.services.datastore.DatastoreService/DeleteDatastore"
 
 type DatastoreServiceBridgeServer interface {
-	CreateDatastore(context.Context, *CreateDatastoreRequest) (*CreateDatastoreResponse, error)
-	DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error)
-	GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error)
 	ListDatastore(context.Context, *ListDatastoreRequest) (*ListDatastoreResponse, error)
+	GetDatastore(context.Context, *GetDatastoreRequest) (*GetDatastoreResponse, error)
+	CreateDatastore(context.Context, *CreateDatastoreRequest) (*CreateDatastoreResponse, error)
 	UpdateDatastore(context.Context, *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error)
+	DeleteDatastore(context.Context, *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error)
 }
 
 type DatastoreServiceHooker interface {
-	DatastoreServiceCreateDatastoreHooker
-	DatastoreServiceDeleteDatastoreHooker
-	DatastoreServiceGetDatastoreHooker
 	DatastoreServiceListDatastoreHooker
+	DatastoreServiceGetDatastoreHooker
+	DatastoreServiceCreateDatastoreHooker
 	DatastoreServiceUpdateDatastoreHooker
+	DatastoreServiceDeleteDatastoreHooker
 }
 
 type DatastoreServiceHookedBridger interface {
 	DatastoreServiceHooker
 	DatastoreServiceBridgeServer
 }
-type DatastoreServiceCreateDatastoreHooker interface {
-	PrepareCreateDatastore(http.Context, *CreateDatastoreRequest) (context.Context, error)
-	CompleteCreateDatastore(http.Context, *CreateDatastoreRequest, *CreateDatastoreResponse) error
-}
-type DatastoreServiceDeleteDatastoreHooker interface {
-	PrepareDeleteDatastore(http.Context, *DeleteDatastoreRequest) (context.Context, error)
-	CompleteDeleteDatastore(http.Context, *DeleteDatastoreRequest, *DeleteDatastoreResponse) error
+type DatastoreServiceListDatastoreHooker interface {
+	PrepareListDatastore(http.Context, *ListDatastoreRequest) (context.Context, error)
+	CompleteListDatastore(http.Context, *ListDatastoreRequest, *ListDatastoreResponse) error
 }
 type DatastoreServiceGetDatastoreHooker interface {
 	PrepareGetDatastore(http.Context, *GetDatastoreRequest) (context.Context, error)
 	CompleteGetDatastore(http.Context, *GetDatastoreRequest, *GetDatastoreResponse) error
 }
-type DatastoreServiceListDatastoreHooker interface {
-	PrepareListDatastore(http.Context, *ListDatastoreRequest) (context.Context, error)
-	CompleteListDatastore(http.Context, *ListDatastoreRequest, *ListDatastoreResponse) error
+type DatastoreServiceCreateDatastoreHooker interface {
+	PrepareCreateDatastore(http.Context, *CreateDatastoreRequest) (context.Context, error)
+	CompleteCreateDatastore(http.Context, *CreateDatastoreRequest, *CreateDatastoreResponse) error
 }
 type DatastoreServiceUpdateDatastoreHooker interface {
 	PrepareUpdateDatastore(http.Context, *UpdateDatastoreRequest) (context.Context, error)
 	CompleteUpdateDatastore(http.Context, *UpdateDatastoreRequest, *UpdateDatastoreResponse) error
+}
+type DatastoreServiceDeleteDatastoreHooker interface {
+	PrepareDeleteDatastore(http.Context, *DeleteDatastoreRequest) (context.Context, error)
+	CompleteDeleteDatastore(http.Context, *DeleteDatastoreRequest, *DeleteDatastoreResponse) error
 }
 
 func RegisterDatastoreServiceBridgeServer(s *http.Server, srv DatastoreServiceHookedBridger) {
@@ -221,19 +221,11 @@ func _DatastoreService_DeleteDatastore0_Bridge_Handler(srv DatastoreServiceHooke
 // pointer dereference when methods are called.
 type UnimplementedDatastoreServiceHooked struct{}
 
-func (UnimplementedDatastoreServiceHooked) PrepareCreateDatastore(ctx http.Context, in *CreateDatastoreRequest) (context.Context, error) {
+func (UnimplementedDatastoreServiceHooked) PrepareListDatastore(ctx http.Context, in *ListDatastoreRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDatastoreServiceHooked) CompleteCreateDatastore(ctx http.Context, in *CreateDatastoreRequest, out *CreateDatastoreResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedDatastoreServiceHooked) PrepareDeleteDatastore(ctx http.Context, in *DeleteDatastoreRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedDatastoreServiceHooked) CompleteDeleteDatastore(ctx http.Context, in *DeleteDatastoreRequest, out *DeleteDatastoreResponse) error {
+func (UnimplementedDatastoreServiceHooked) CompleteListDatastore(ctx http.Context, in *ListDatastoreRequest, out *ListDatastoreResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -245,11 +237,11 @@ func (UnimplementedDatastoreServiceHooked) CompleteGetDatastore(ctx http.Context
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedDatastoreServiceHooked) PrepareListDatastore(ctx http.Context, in *ListDatastoreRequest) (context.Context, error) {
+func (UnimplementedDatastoreServiceHooked) PrepareCreateDatastore(ctx http.Context, in *CreateDatastoreRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedDatastoreServiceHooked) CompleteListDatastore(ctx http.Context, in *ListDatastoreRequest, out *ListDatastoreResponse) error {
+func (UnimplementedDatastoreServiceHooked) CompleteCreateDatastore(ctx http.Context, in *CreateDatastoreRequest, out *CreateDatastoreResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -258,6 +250,14 @@ func (UnimplementedDatastoreServiceHooked) PrepareUpdateDatastore(ctx http.Conte
 }
 
 func (UnimplementedDatastoreServiceHooked) CompleteUpdateDatastore(ctx http.Context, in *UpdateDatastoreRequest, out *UpdateDatastoreResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedDatastoreServiceHooked) PrepareDeleteDatastore(ctx http.Context, in *DeleteDatastoreRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedDatastoreServiceHooked) CompleteDeleteDatastore(ctx http.Context, in *DeleteDatastoreRequest, out *DeleteDatastoreResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -283,24 +283,24 @@ func NewDatastoreServiceHTTPBridge(client *http.Client) DatastoreServiceHTTPServ
 	return &DatastoreServiceHTTPBridgeImpl{client: NewDatastoreServiceHTTPClient(client)}
 }
 
-func (c *DatastoreServiceHTTPBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
-	return c.client.CreateDatastore(ctx, in)
-}
-
-func (c *DatastoreServiceHTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
-	return c.client.DeleteDatastore(ctx, in)
+func (c *DatastoreServiceHTTPBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
+	return c.client.ListDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceHTTPBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
 	return c.client.GetDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceHTTPBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceHTTPBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
+	return c.client.CreateDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceHTTPBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
+}
+
+func (c *DatastoreServiceHTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+	return c.client.DeleteDatastore(ctx, in)
 }
 
 type DatastoreServiceBridgeImpl struct {
@@ -311,24 +311,24 @@ func NewDatastoreServiceBridge(client grpc.ClientConnInterface) DatastoreService
 	return &DatastoreServiceBridgeImpl{client: NewDatastoreServiceClient(client)}
 }
 
-func (c *DatastoreServiceBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
-	return c.client.CreateDatastore(ctx, in)
-}
-
-func (c *DatastoreServiceBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
-	return c.client.DeleteDatastore(ctx, in)
+func (c *DatastoreServiceBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
+	return c.client.ListDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
 	return c.client.GetDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
+	return c.client.CreateDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
+}
+
+func (c *DatastoreServiceBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+	return c.client.DeleteDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceBridgeImpl) mustEmbedUnimplementedDatastoreServiceServer() {}
@@ -341,24 +341,24 @@ func NewDatastoreServiceGRPC2HTTP(client grpc.ClientConnInterface) DatastoreServ
 	return &DatastoreServiceGRPC2HTTPBridgeImpl{client: NewDatastoreServiceClient(client)}
 }
 
-func (c *DatastoreServiceGRPC2HTTPBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
-	return c.client.CreateDatastore(ctx, in)
-}
-
-func (c *DatastoreServiceGRPC2HTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
-	return c.client.DeleteDatastore(ctx, in)
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
+	return c.client.ListDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceGRPC2HTTPBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
 	return c.client.GetDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceGRPC2HTTPBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
+	return c.client.CreateDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceGRPC2HTTPBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
+}
+
+func (c *DatastoreServiceGRPC2HTTPBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+	return c.client.DeleteDatastore(ctx, in)
 }
 
 type DatastoreServiceHTTP2GRPCBridgeImpl struct {
@@ -369,24 +369,24 @@ func NewDatastoreServiceHTTP2GRPC(client *http.Client) DatastoreServiceServer {
 	return &DatastoreServiceHTTP2GRPCBridgeImpl{client: NewDatastoreServiceHTTPClient(client)}
 }
 
-func (c *DatastoreServiceHTTP2GRPCBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
-	return c.client.CreateDatastore(ctx, in)
-}
-
-func (c *DatastoreServiceHTTP2GRPCBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
-	return c.client.DeleteDatastore(ctx, in)
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
+	return c.client.ListDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceHTTP2GRPCBridgeImpl) GetDatastore(ctx context.Context, in *GetDatastoreRequest) (*GetDatastoreResponse, error) {
 	return c.client.GetDatastore(ctx, in)
 }
 
-func (c *DatastoreServiceHTTP2GRPCBridgeImpl) ListDatastore(ctx context.Context, in *ListDatastoreRequest) (*ListDatastoreResponse, error) {
-	return c.client.ListDatastore(ctx, in)
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) CreateDatastore(ctx context.Context, in *CreateDatastoreRequest) (*CreateDatastoreResponse, error) {
+	return c.client.CreateDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceHTTP2GRPCBridgeImpl) UpdateDatastore(ctx context.Context, in *UpdateDatastoreRequest) (*UpdateDatastoreResponse, error) {
 	return c.client.UpdateDatastore(ctx, in)
+}
+
+func (c *DatastoreServiceHTTP2GRPCBridgeImpl) DeleteDatastore(ctx context.Context, in *DeleteDatastoreRequest) (*DeleteDatastoreResponse, error) {
+	return c.client.DeleteDatastore(ctx, in)
 }
 
 func (c *DatastoreServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedDatastoreServiceServer() {}

@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: datastore/upload.proto
 
-package upload
+package datastore
 
 import (
 	context "context"
@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UploadService_ListUpload_FullMethodName   = "/api.v1.services.upload.UploadService/ListUpload"
-	UploadService_GetUpload_FullMethodName    = "/api.v1.services.upload.UploadService/GetUpload"
-	UploadService_CreateUpload_FullMethodName = "/api.v1.services.upload.UploadService/CreateUpload"
-	UploadService_UpdateUpload_FullMethodName = "/api.v1.services.upload.UploadService/UpdateUpload"
-	UploadService_DeleteUpload_FullMethodName = "/api.v1.services.upload.UploadService/DeleteUpload"
+	UploadService_ListUpload_FullMethodName   = "/api.v1.services.datastore.UploadService/ListUpload"
+	UploadService_GetUpload_FullMethodName    = "/api.v1.services.datastore.UploadService/GetUpload"
+	UploadService_CreateUpload_FullMethodName = "/api.v1.services.datastore.UploadService/CreateUpload"
+	UploadService_UpdateUpload_FullMethodName = "/api.v1.services.datastore.UploadService/UpdateUpload"
+	UploadService_DeleteUpload_FullMethodName = "/api.v1.services.datastore.UploadService/DeleteUpload"
 )
 
 // UploadServiceClient is the client API for UploadService service.
@@ -248,7 +248,7 @@ func _UploadService_DeleteUpload_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UploadService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.upload.UploadService",
+	ServiceName: "api.v1.services.datastore.UploadService",
 	HandlerType: (*UploadServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

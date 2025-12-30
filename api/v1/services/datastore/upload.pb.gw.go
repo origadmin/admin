@@ -2,11 +2,11 @@
 // source: datastore/upload.proto
 
 /*
-Package upload is a reverse proxy.
+Package datastore is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package upload
+package datastore
 
 import (
 	"context"
@@ -248,7 +248,7 @@ func RegisterUploadServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.upload.UploadService/ListUpload", runtime.WithHTTPPathPattern("/upload"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/ListUpload", runtime.WithHTTPPathPattern("/upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -268,7 +268,7 @@ func RegisterUploadServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.upload.UploadService/GetUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/GetUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -288,7 +288,7 @@ func RegisterUploadServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.upload.UploadService/CreateUpload", runtime.WithHTTPPathPattern("/upload"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/CreateUpload", runtime.WithHTTPPathPattern("/upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -308,7 +308,7 @@ func RegisterUploadServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.upload.UploadService/UpdateUpload", runtime.WithHTTPPathPattern("/upload/{data.id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/UpdateUpload", runtime.WithHTTPPathPattern("/upload/{data.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -328,7 +328,7 @@ func RegisterUploadServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.upload.UploadService/DeleteUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/DeleteUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -386,7 +386,7 @@ func RegisterUploadServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.upload.UploadService/ListUpload", runtime.WithHTTPPathPattern("/upload"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/ListUpload", runtime.WithHTTPPathPattern("/upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -403,7 +403,7 @@ func RegisterUploadServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.upload.UploadService/GetUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/GetUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -420,7 +420,7 @@ func RegisterUploadServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.upload.UploadService/CreateUpload", runtime.WithHTTPPathPattern("/upload"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/CreateUpload", runtime.WithHTTPPathPattern("/upload"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -437,7 +437,7 @@ func RegisterUploadServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.upload.UploadService/UpdateUpload", runtime.WithHTTPPathPattern("/upload/{data.id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/UpdateUpload", runtime.WithHTTPPathPattern("/upload/{data.id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -454,7 +454,7 @@ func RegisterUploadServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.upload.UploadService/DeleteUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.datastore.UploadService/DeleteUpload", runtime.WithHTTPPathPattern("/upload/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

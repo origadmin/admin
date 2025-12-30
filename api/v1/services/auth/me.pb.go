@@ -10,7 +10,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	types "origadmin/application/admin/api/v1/services/types"
 	reflect "reflect"
 	sync "sync"
@@ -61,6 +60,51 @@ func (*GetProfileRequest) Descriptor() ([]byte, []int) {
 	return file_auth_me_proto_rawDescGZIP(), []int{0}
 }
 
+// The response message for the GetProfile RPC.
+type GetProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	User          *types.User            `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProfileResponse) Reset() {
+	*x = GetProfileResponse{}
+	mi := &file_auth_me_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProfileResponse) ProtoMessage() {}
+
+func (x *GetProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProfileResponse.ProtoReflect.Descriptor instead.
+func (*GetProfileResponse) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetProfileResponse) GetUser() *types.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 // The request message for the UpdateProfile RPC.
 type UpdateProfileRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -72,7 +116,7 @@ type UpdateProfileRequest struct {
 
 func (x *UpdateProfileRequest) Reset() {
 	*x = UpdateProfileRequest{}
-	mi := &file_auth_me_proto_msgTypes[1]
+	mi := &file_auth_me_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -84,7 +128,7 @@ func (x *UpdateProfileRequest) String() string {
 func (*UpdateProfileRequest) ProtoMessage() {}
 
 func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_me_proto_msgTypes[1]
+	mi := &file_auth_me_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -97,7 +141,7 @@ func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateProfileRequest.ProtoReflect.Descriptor instead.
 func (*UpdateProfileRequest) Descriptor() ([]byte, []int) {
-	return file_auth_me_proto_rawDescGZIP(), []int{1}
+	return file_auth_me_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *UpdateProfileRequest) GetUser() *types.User {
@@ -105,6 +149,43 @@ func (x *UpdateProfileRequest) GetUser() *types.User {
 		return x.User
 	}
 	return nil
+}
+
+// The response message for the UpdateProfile RPC.
+type UpdateProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateProfileResponse) Reset() {
+	*x = UpdateProfileResponse{}
+	mi := &file_auth_me_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateProfileResponse) ProtoMessage() {}
+
+func (x *UpdateProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateProfileResponse.ProtoReflect.Descriptor instead.
+func (*UpdateProfileResponse) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{3}
 }
 
 // The request message for the UpdatePassword RPC.
@@ -118,7 +199,7 @@ type UpdatePasswordRequest struct {
 
 func (x *UpdatePasswordRequest) Reset() {
 	*x = UpdatePasswordRequest{}
-	mi := &file_auth_me_proto_msgTypes[2]
+	mi := &file_auth_me_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -130,7 +211,7 @@ func (x *UpdatePasswordRequest) String() string {
 func (*UpdatePasswordRequest) ProtoMessage() {}
 
 func (x *UpdatePasswordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_me_proto_msgTypes[2]
+	mi := &file_auth_me_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -143,7 +224,7 @@ func (x *UpdatePasswordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePasswordRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePasswordRequest) Descriptor() ([]byte, []int) {
-	return file_auth_me_proto_rawDescGZIP(), []int{2}
+	return file_auth_me_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpdatePasswordRequest) GetOldPassword() string {
@@ -160,6 +241,43 @@ func (x *UpdatePasswordRequest) GetNewPassword() string {
 	return ""
 }
 
+// The response message for the UpdatePassword RPC.
+type UpdatePasswordResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePasswordResponse) Reset() {
+	*x = UpdatePasswordResponse{}
+	mi := &file_auth_me_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePasswordResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePasswordResponse) ProtoMessage() {}
+
+func (x *UpdatePasswordResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_me_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePasswordResponse.ProtoReflect.Descriptor instead.
+func (*UpdatePasswordResponse) Descriptor() ([]byte, []int) {
+	return file_auth_me_proto_rawDescGZIP(), []int{5}
+}
+
 // The request message for the GetUserResources RPC.
 type GetUserResourcesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -169,7 +287,7 @@ type GetUserResourcesRequest struct {
 
 func (x *GetUserResourcesRequest) Reset() {
 	*x = GetUserResourcesRequest{}
-	mi := &file_auth_me_proto_msgTypes[3]
+	mi := &file_auth_me_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -181,7 +299,7 @@ func (x *GetUserResourcesRequest) String() string {
 func (*GetUserResourcesRequest) ProtoMessage() {}
 
 func (x *GetUserResourcesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_me_proto_msgTypes[3]
+	mi := &file_auth_me_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -194,7 +312,7 @@ func (x *GetUserResourcesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserResourcesRequest.ProtoReflect.Descriptor instead.
 func (*GetUserResourcesRequest) Descriptor() ([]byte, []int) {
-	return file_auth_me_proto_rawDescGZIP(), []int{3}
+	return file_auth_me_proto_rawDescGZIP(), []int{6}
 }
 
 // The response message for the GetUserResources RPC.
@@ -207,7 +325,7 @@ type GetUserResourcesResponse struct {
 
 func (x *GetUserResourcesResponse) Reset() {
 	*x = GetUserResourcesResponse{}
-	mi := &file_auth_me_proto_msgTypes[4]
+	mi := &file_auth_me_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -219,7 +337,7 @@ func (x *GetUserResourcesResponse) String() string {
 func (*GetUserResourcesResponse) ProtoMessage() {}
 
 func (x *GetUserResourcesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_me_proto_msgTypes[4]
+	mi := &file_auth_me_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -232,7 +350,7 @@ func (x *GetUserResourcesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserResourcesResponse.ProtoReflect.Descriptor instead.
 func (*GetUserResourcesResponse) Descriptor() ([]byte, []int) {
-	return file_auth_me_proto_rawDescGZIP(), []int{4}
+	return file_auth_me_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetUserResourcesResponse) GetResources() []*types.Resource {
@@ -251,7 +369,7 @@ type GetUserRolesRequest struct {
 
 func (x *GetUserRolesRequest) Reset() {
 	*x = GetUserRolesRequest{}
-	mi := &file_auth_me_proto_msgTypes[5]
+	mi := &file_auth_me_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -263,7 +381,7 @@ func (x *GetUserRolesRequest) String() string {
 func (*GetUserRolesRequest) ProtoMessage() {}
 
 func (x *GetUserRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_me_proto_msgTypes[5]
+	mi := &file_auth_me_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -276,7 +394,7 @@ func (x *GetUserRolesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRolesRequest.ProtoReflect.Descriptor instead.
 func (*GetUserRolesRequest) Descriptor() ([]byte, []int) {
-	return file_auth_me_proto_rawDescGZIP(), []int{5}
+	return file_auth_me_proto_rawDescGZIP(), []int{8}
 }
 
 // The response message for the GetUserRoles RPC.
@@ -289,7 +407,7 @@ type GetUserRolesResponse struct {
 
 func (x *GetUserRolesResponse) Reset() {
 	*x = GetUserRolesResponse{}
-	mi := &file_auth_me_proto_msgTypes[6]
+	mi := &file_auth_me_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -301,7 +419,7 @@ func (x *GetUserRolesResponse) String() string {
 func (*GetUserRolesResponse) ProtoMessage() {}
 
 func (x *GetUserRolesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_me_proto_msgTypes[6]
+	mi := &file_auth_me_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -314,7 +432,7 @@ func (x *GetUserRolesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserRolesResponse.ProtoReflect.Descriptor instead.
 func (*GetUserRolesResponse) Descriptor() ([]byte, []int) {
-	return file_auth_me_proto_rawDescGZIP(), []int{6}
+	return file_auth_me_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetUserRolesResponse) GetRoles() []*types.Role {
@@ -328,24 +446,28 @@ var File_auth_me_proto protoreflect.FileDescriptor
 
 const file_auth_me_proto_rawDesc = "" +
 	"\n" +
-	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\x13\n" +
-	"\x11GetProfileRequest\"G\n" +
+	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x12types/system.proto\"\x13\n" +
+	"\x11GetProfileRequest\"E\n" +
+	"\x12GetProfileResponse\x12/\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"G\n" +
 	"\x14UpdateProfileRequest\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"]\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"\x17\n" +
+	"\x15UpdateProfileResponse\"]\n" +
 	"\x15UpdatePasswordRequest\x12!\n" +
 	"\fold_password\x18\x01 \x01(\tR\voldPassword\x12!\n" +
-	"\fnew_password\x18\x02 \x01(\tR\vnewPassword\"\x19\n" +
+	"\fnew_password\x18\x02 \x01(\tR\vnewPassword\"\x18\n" +
+	"\x16UpdatePasswordResponse\"\x19\n" +
 	"\x17GetUserResourcesRequest\"Y\n" +
 	"\x18GetUserResourcesResponse\x12=\n" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x15\n" +
 	"\x13GetUserRolesRequest\"I\n" +
 	"\x14GetUserRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xf2\x04\n" +
-	"\x02Me\x12n\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xb3\x05\n" +
+	"\tMeService\x12{\n" +
 	"\n" +
-	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a\x1b.api.v1.services.types.User\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/me/profile\x12r\n" +
-	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a\x16.google.protobuf.Empty\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\x1a\x12/api/v1/me/profile\x12u\n" +
-	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a\x16.google.protobuf.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\x1a\x13/api/v1/me/password\x12\x8f\x01\n" +
+	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/api/v1/me/profile\x12\x87\x01\n" +
+	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\x1a\x12/api/v1/me/profile\x12\x8b\x01\n" +
+	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\x1a\x13/api/v1/me/password\x12\x8f\x01\n" +
 	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/api/v1/me/resources\x12\x7f\n" +
 	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/api/v1/me/rolesB\xce\x01\n" +
 	"\x18com.api.v1.services.authB\aMeProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
@@ -362,39 +484,42 @@ func file_auth_me_proto_rawDescGZIP() []byte {
 	return file_auth_me_proto_rawDescData
 }
 
-var file_auth_me_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_auth_me_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_auth_me_proto_goTypes = []any{
 	(*GetProfileRequest)(nil),        // 0: api.v1.services.auth.GetProfileRequest
-	(*UpdateProfileRequest)(nil),     // 1: api.v1.services.auth.UpdateProfileRequest
-	(*UpdatePasswordRequest)(nil),    // 2: api.v1.services.auth.UpdatePasswordRequest
-	(*GetUserResourcesRequest)(nil),  // 3: api.v1.services.auth.GetUserResourcesRequest
-	(*GetUserResourcesResponse)(nil), // 4: api.v1.services.auth.GetUserResourcesResponse
-	(*GetUserRolesRequest)(nil),      // 5: api.v1.services.auth.GetUserRolesRequest
-	(*GetUserRolesResponse)(nil),     // 6: api.v1.services.auth.GetUserRolesResponse
-	(*types.User)(nil),               // 7: api.v1.services.types.User
-	(*types.Resource)(nil),           // 8: api.v1.services.types.Resource
-	(*types.Role)(nil),               // 9: api.v1.services.types.Role
-	(*emptypb.Empty)(nil),            // 10: google.protobuf.Empty
+	(*GetProfileResponse)(nil),       // 1: api.v1.services.auth.GetProfileResponse
+	(*UpdateProfileRequest)(nil),     // 2: api.v1.services.auth.UpdateProfileRequest
+	(*UpdateProfileResponse)(nil),    // 3: api.v1.services.auth.UpdateProfileResponse
+	(*UpdatePasswordRequest)(nil),    // 4: api.v1.services.auth.UpdatePasswordRequest
+	(*UpdatePasswordResponse)(nil),   // 5: api.v1.services.auth.UpdatePasswordResponse
+	(*GetUserResourcesRequest)(nil),  // 6: api.v1.services.auth.GetUserResourcesRequest
+	(*GetUserResourcesResponse)(nil), // 7: api.v1.services.auth.GetUserResourcesResponse
+	(*GetUserRolesRequest)(nil),      // 8: api.v1.services.auth.GetUserRolesRequest
+	(*GetUserRolesResponse)(nil),     // 9: api.v1.services.auth.GetUserRolesResponse
+	(*types.User)(nil),               // 10: api.v1.services.types.User
+	(*types.Resource)(nil),           // 11: api.v1.services.types.Resource
+	(*types.Role)(nil),               // 12: api.v1.services.types.Role
 }
 var file_auth_me_proto_depIdxs = []int32{
-	7,  // 0: api.v1.services.auth.UpdateProfileRequest.user:type_name -> api.v1.services.types.User
-	8,  // 1: api.v1.services.auth.GetUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
-	9,  // 2: api.v1.services.auth.GetUserRolesResponse.roles:type_name -> api.v1.services.types.Role
-	0,  // 3: api.v1.services.auth.Me.GetProfile:input_type -> api.v1.services.auth.GetProfileRequest
-	1,  // 4: api.v1.services.auth.Me.UpdateProfile:input_type -> api.v1.services.auth.UpdateProfileRequest
-	2,  // 5: api.v1.services.auth.Me.UpdatePassword:input_type -> api.v1.services.auth.UpdatePasswordRequest
-	3,  // 6: api.v1.services.auth.Me.GetUserResources:input_type -> api.v1.services.auth.GetUserResourcesRequest
-	5,  // 7: api.v1.services.auth.Me.GetUserRoles:input_type -> api.v1.services.auth.GetUserRolesRequest
-	7,  // 8: api.v1.services.auth.Me.GetProfile:output_type -> api.v1.services.types.User
-	10, // 9: api.v1.services.auth.Me.UpdateProfile:output_type -> google.protobuf.Empty
-	10, // 10: api.v1.services.auth.Me.UpdatePassword:output_type -> google.protobuf.Empty
-	4,  // 11: api.v1.services.auth.Me.GetUserResources:output_type -> api.v1.services.auth.GetUserResourcesResponse
-	6,  // 12: api.v1.services.auth.Me.GetUserRoles:output_type -> api.v1.services.auth.GetUserRolesResponse
-	8,  // [8:13] is the sub-list for method output_type
-	3,  // [3:8] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	10, // 0: api.v1.services.auth.GetProfileResponse.user:type_name -> api.v1.services.types.User
+	10, // 1: api.v1.services.auth.UpdateProfileRequest.user:type_name -> api.v1.services.types.User
+	11, // 2: api.v1.services.auth.GetUserResourcesResponse.resources:type_name -> api.v1.services.types.Resource
+	12, // 3: api.v1.services.auth.GetUserRolesResponse.roles:type_name -> api.v1.services.types.Role
+	0,  // 4: api.v1.services.auth.MeService.GetProfile:input_type -> api.v1.services.auth.GetProfileRequest
+	2,  // 5: api.v1.services.auth.MeService.UpdateProfile:input_type -> api.v1.services.auth.UpdateProfileRequest
+	4,  // 6: api.v1.services.auth.MeService.UpdatePassword:input_type -> api.v1.services.auth.UpdatePasswordRequest
+	6,  // 7: api.v1.services.auth.MeService.GetUserResources:input_type -> api.v1.services.auth.GetUserResourcesRequest
+	8,  // 8: api.v1.services.auth.MeService.GetUserRoles:input_type -> api.v1.services.auth.GetUserRolesRequest
+	1,  // 9: api.v1.services.auth.MeService.GetProfile:output_type -> api.v1.services.auth.GetProfileResponse
+	3,  // 10: api.v1.services.auth.MeService.UpdateProfile:output_type -> api.v1.services.auth.UpdateProfileResponse
+	5,  // 11: api.v1.services.auth.MeService.UpdatePassword:output_type -> api.v1.services.auth.UpdatePasswordResponse
+	7,  // 12: api.v1.services.auth.MeService.GetUserResources:output_type -> api.v1.services.auth.GetUserResourcesResponse
+	9,  // 13: api.v1.services.auth.MeService.GetUserRoles:output_type -> api.v1.services.auth.GetUserRolesResponse
+	9,  // [9:14] is the sub-list for method output_type
+	4,  // [4:9] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_auth_me_proto_init() }
@@ -408,7 +533,7 @@ func file_auth_me_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_me_proto_rawDesc), len(file_auth_me_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

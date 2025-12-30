@@ -4,7 +4,7 @@
 // - protoc             (unknown)
 // source: datastore/upload.proto
 
-package upload
+package datastore
 
 import (
 	context "context"
@@ -19,11 +19,11 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUploadServiceCreateUpload = "/api.v1.services.upload.UploadService/CreateUpload"
-const OperationUploadServiceDeleteUpload = "/api.v1.services.upload.UploadService/DeleteUpload"
-const OperationUploadServiceGetUpload = "/api.v1.services.upload.UploadService/GetUpload"
-const OperationUploadServiceListUpload = "/api.v1.services.upload.UploadService/ListUpload"
-const OperationUploadServiceUpdateUpload = "/api.v1.services.upload.UploadService/UpdateUpload"
+const OperationUploadServiceCreateUpload = "/api.v1.services.datastore.UploadService/CreateUpload"
+const OperationUploadServiceDeleteUpload = "/api.v1.services.datastore.UploadService/DeleteUpload"
+const OperationUploadServiceGetUpload = "/api.v1.services.datastore.UploadService/GetUpload"
+const OperationUploadServiceListUpload = "/api.v1.services.datastore.UploadService/ListUpload"
+const OperationUploadServiceUpdateUpload = "/api.v1.services.datastore.UploadService/UpdateUpload"
 
 type UploadServiceHTTPServer interface {
 	CreateUpload(context.Context, *CreateUploadRequest) (*CreateUploadResponse, error)

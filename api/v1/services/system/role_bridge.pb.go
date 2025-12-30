@@ -28,51 +28,51 @@ var (
 	_ = codes.Unimplemented
 )
 
-const RoleServiceCreateRoleBridgeOperation = "/api.v1.services.system.RoleService/CreateRole"
-const RoleServiceDeleteRoleBridgeOperation = "/api.v1.services.system.RoleService/DeleteRole"
-const RoleServiceGetRoleBridgeOperation = "/api.v1.services.system.RoleService/GetRole"
 const RoleServiceListRolesBridgeOperation = "/api.v1.services.system.RoleService/ListRoles"
+const RoleServiceGetRoleBridgeOperation = "/api.v1.services.system.RoleService/GetRole"
+const RoleServiceCreateRoleBridgeOperation = "/api.v1.services.system.RoleService/CreateRole"
 const RoleServiceUpdateRoleBridgeOperation = "/api.v1.services.system.RoleService/UpdateRole"
+const RoleServiceDeleteRoleBridgeOperation = "/api.v1.services.system.RoleService/DeleteRole"
 
 type RoleServiceBridgeServer interface {
-	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
-	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
-	GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error)
 	ListRoles(context.Context, *ListRolesRequest) (*ListRolesResponse, error)
+	GetRole(context.Context, *GetRoleRequest) (*GetRoleResponse, error)
+	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleResponse, error)
 	UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleResponse, error)
+	DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleResponse, error)
 }
 
 type RoleServiceHooker interface {
-	RoleServiceCreateRoleHooker
-	RoleServiceDeleteRoleHooker
-	RoleServiceGetRoleHooker
 	RoleServiceListRolesHooker
+	RoleServiceGetRoleHooker
+	RoleServiceCreateRoleHooker
 	RoleServiceUpdateRoleHooker
+	RoleServiceDeleteRoleHooker
 }
 
 type RoleServiceHookedBridger interface {
 	RoleServiceHooker
 	RoleServiceBridgeServer
 }
-type RoleServiceCreateRoleHooker interface {
-	PrepareCreateRole(http.Context, *CreateRoleRequest) (context.Context, error)
-	CompleteCreateRole(http.Context, *CreateRoleRequest, *CreateRoleResponse) error
-}
-type RoleServiceDeleteRoleHooker interface {
-	PrepareDeleteRole(http.Context, *DeleteRoleRequest) (context.Context, error)
-	CompleteDeleteRole(http.Context, *DeleteRoleRequest, *DeleteRoleResponse) error
+type RoleServiceListRolesHooker interface {
+	PrepareListRoles(http.Context, *ListRolesRequest) (context.Context, error)
+	CompleteListRoles(http.Context, *ListRolesRequest, *ListRolesResponse) error
 }
 type RoleServiceGetRoleHooker interface {
 	PrepareGetRole(http.Context, *GetRoleRequest) (context.Context, error)
 	CompleteGetRole(http.Context, *GetRoleRequest, *GetRoleResponse) error
 }
-type RoleServiceListRolesHooker interface {
-	PrepareListRoles(http.Context, *ListRolesRequest) (context.Context, error)
-	CompleteListRoles(http.Context, *ListRolesRequest, *ListRolesResponse) error
+type RoleServiceCreateRoleHooker interface {
+	PrepareCreateRole(http.Context, *CreateRoleRequest) (context.Context, error)
+	CompleteCreateRole(http.Context, *CreateRoleRequest, *CreateRoleResponse) error
 }
 type RoleServiceUpdateRoleHooker interface {
 	PrepareUpdateRole(http.Context, *UpdateRoleRequest) (context.Context, error)
 	CompleteUpdateRole(http.Context, *UpdateRoleRequest, *UpdateRoleResponse) error
+}
+type RoleServiceDeleteRoleHooker interface {
+	PrepareDeleteRole(http.Context, *DeleteRoleRequest) (context.Context, error)
+	CompleteDeleteRole(http.Context, *DeleteRoleRequest, *DeleteRoleResponse) error
 }
 
 func RegisterRoleServiceBridgeServer(s *http.Server, srv RoleServiceHookedBridger) {
@@ -221,19 +221,11 @@ func _RoleService_DeleteRole0_Bridge_Handler(srv RoleServiceHookedBridger) func(
 // pointer dereference when methods are called.
 type UnimplementedRoleServiceHooked struct{}
 
-func (UnimplementedRoleServiceHooked) PrepareCreateRole(ctx http.Context, in *CreateRoleRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareListRoles(ctx http.Context, in *ListRolesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) CompleteCreateRole(ctx http.Context, in *CreateRoleRequest, out *CreateRoleResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedRoleServiceHooked) PrepareDeleteRole(ctx http.Context, in *DeleteRoleRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedRoleServiceHooked) CompleteDeleteRole(ctx http.Context, in *DeleteRoleRequest, out *DeleteRoleResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteListRoles(ctx http.Context, in *ListRolesRequest, out *ListRolesResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -245,11 +237,11 @@ func (UnimplementedRoleServiceHooked) CompleteGetRole(ctx http.Context, in *GetR
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedRoleServiceHooked) PrepareListRoles(ctx http.Context, in *ListRolesRequest) (context.Context, error) {
+func (UnimplementedRoleServiceHooked) PrepareCreateRole(ctx http.Context, in *CreateRoleRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedRoleServiceHooked) CompleteListRoles(ctx http.Context, in *ListRolesRequest, out *ListRolesResponse) error {
+func (UnimplementedRoleServiceHooked) CompleteCreateRole(ctx http.Context, in *CreateRoleRequest, out *CreateRoleResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -258,6 +250,14 @@ func (UnimplementedRoleServiceHooked) PrepareUpdateRole(ctx http.Context, in *Up
 }
 
 func (UnimplementedRoleServiceHooked) CompleteUpdateRole(ctx http.Context, in *UpdateRoleRequest, out *UpdateRoleResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedRoleServiceHooked) PrepareDeleteRole(ctx http.Context, in *DeleteRoleRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedRoleServiceHooked) CompleteDeleteRole(ctx http.Context, in *DeleteRoleRequest, out *DeleteRoleResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -283,24 +283,24 @@ func NewRoleServiceHTTPBridge(client *http.Client) RoleServiceHTTPServer {
 	return &RoleServiceHTTPBridgeImpl{client: NewRoleServiceHTTPClient(client)}
 }
 
-func (c *RoleServiceHTTPBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
-	return c.client.CreateRole(ctx, in)
-}
-
-func (c *RoleServiceHTTPBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
-	return c.client.DeleteRole(ctx, in)
+func (c *RoleServiceHTTPBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
+	return c.client.ListRoles(ctx, in)
 }
 
 func (c *RoleServiceHTTPBridgeImpl) GetRole(ctx context.Context, in *GetRoleRequest) (*GetRoleResponse, error) {
 	return c.client.GetRole(ctx, in)
 }
 
-func (c *RoleServiceHTTPBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
-	return c.client.ListRoles(ctx, in)
+func (c *RoleServiceHTTPBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
+	return c.client.CreateRole(ctx, in)
 }
 
 func (c *RoleServiceHTTPBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest) (*UpdateRoleResponse, error) {
 	return c.client.UpdateRole(ctx, in)
+}
+
+func (c *RoleServiceHTTPBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	return c.client.DeleteRole(ctx, in)
 }
 
 type RoleServiceBridgeImpl struct {
@@ -311,24 +311,24 @@ func NewRoleServiceBridge(client grpc.ClientConnInterface) RoleServiceServer {
 	return &RoleServiceBridgeImpl{client: NewRoleServiceClient(client)}
 }
 
-func (c *RoleServiceBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
-	return c.client.CreateRole(ctx, in)
-}
-
-func (c *RoleServiceBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
-	return c.client.DeleteRole(ctx, in)
+func (c *RoleServiceBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
+	return c.client.ListRoles(ctx, in)
 }
 
 func (c *RoleServiceBridgeImpl) GetRole(ctx context.Context, in *GetRoleRequest) (*GetRoleResponse, error) {
 	return c.client.GetRole(ctx, in)
 }
 
-func (c *RoleServiceBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
-	return c.client.ListRoles(ctx, in)
+func (c *RoleServiceBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
+	return c.client.CreateRole(ctx, in)
 }
 
 func (c *RoleServiceBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest) (*UpdateRoleResponse, error) {
 	return c.client.UpdateRole(ctx, in)
+}
+
+func (c *RoleServiceBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	return c.client.DeleteRole(ctx, in)
 }
 
 func (c *RoleServiceBridgeImpl) mustEmbedUnimplementedRoleServiceServer() {}
@@ -341,24 +341,24 @@ func NewRoleServiceGRPC2HTTP(client grpc.ClientConnInterface) RoleServiceHTTPSer
 	return &RoleServiceGRPC2HTTPBridgeImpl{client: NewRoleServiceClient(client)}
 }
 
-func (c *RoleServiceGRPC2HTTPBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
-	return c.client.CreateRole(ctx, in)
-}
-
-func (c *RoleServiceGRPC2HTTPBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
-	return c.client.DeleteRole(ctx, in)
+func (c *RoleServiceGRPC2HTTPBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
+	return c.client.ListRoles(ctx, in)
 }
 
 func (c *RoleServiceGRPC2HTTPBridgeImpl) GetRole(ctx context.Context, in *GetRoleRequest) (*GetRoleResponse, error) {
 	return c.client.GetRole(ctx, in)
 }
 
-func (c *RoleServiceGRPC2HTTPBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
-	return c.client.ListRoles(ctx, in)
+func (c *RoleServiceGRPC2HTTPBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
+	return c.client.CreateRole(ctx, in)
 }
 
 func (c *RoleServiceGRPC2HTTPBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest) (*UpdateRoleResponse, error) {
 	return c.client.UpdateRole(ctx, in)
+}
+
+func (c *RoleServiceGRPC2HTTPBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	return c.client.DeleteRole(ctx, in)
 }
 
 type RoleServiceHTTP2GRPCBridgeImpl struct {
@@ -369,24 +369,24 @@ func NewRoleServiceHTTP2GRPC(client *http.Client) RoleServiceServer {
 	return &RoleServiceHTTP2GRPCBridgeImpl{client: NewRoleServiceHTTPClient(client)}
 }
 
-func (c *RoleServiceHTTP2GRPCBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
-	return c.client.CreateRole(ctx, in)
-}
-
-func (c *RoleServiceHTTP2GRPCBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
-	return c.client.DeleteRole(ctx, in)
+func (c *RoleServiceHTTP2GRPCBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
+	return c.client.ListRoles(ctx, in)
 }
 
 func (c *RoleServiceHTTP2GRPCBridgeImpl) GetRole(ctx context.Context, in *GetRoleRequest) (*GetRoleResponse, error) {
 	return c.client.GetRole(ctx, in)
 }
 
-func (c *RoleServiceHTTP2GRPCBridgeImpl) ListRoles(ctx context.Context, in *ListRolesRequest) (*ListRolesResponse, error) {
-	return c.client.ListRoles(ctx, in)
+func (c *RoleServiceHTTP2GRPCBridgeImpl) CreateRole(ctx context.Context, in *CreateRoleRequest) (*CreateRoleResponse, error) {
+	return c.client.CreateRole(ctx, in)
 }
 
 func (c *RoleServiceHTTP2GRPCBridgeImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest) (*UpdateRoleResponse, error) {
 	return c.client.UpdateRole(ctx, in)
+}
+
+func (c *RoleServiceHTTP2GRPCBridgeImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest) (*DeleteRoleResponse, error) {
+	return c.client.DeleteRole(ctx, in)
 }
 
 func (c *RoleServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedRoleServiceServer() {}

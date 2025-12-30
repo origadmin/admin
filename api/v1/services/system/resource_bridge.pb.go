@@ -28,56 +28,56 @@ var (
 	_ = codes.Unimplemented
 )
 
-const ResourceServiceCreateResourceBridgeOperation = "/api.v1.services.system.ResourceService/CreateResource"
-const ResourceServiceDeleteResourceBridgeOperation = "/api.v1.services.system.ResourceService/DeleteResource"
-const ResourceServiceGetResourceBridgeOperation = "/api.v1.services.system.ResourceService/GetResource"
 const ResourceServiceListResourcesBridgeOperation = "/api.v1.services.system.ResourceService/ListResources"
+const ResourceServiceGetResourceBridgeOperation = "/api.v1.services.system.ResourceService/GetResource"
+const ResourceServiceCreateResourceBridgeOperation = "/api.v1.services.system.ResourceService/CreateResource"
 const ResourceServiceUpdateResourceBridgeOperation = "/api.v1.services.system.ResourceService/UpdateResource"
+const ResourceServiceDeleteResourceBridgeOperation = "/api.v1.services.system.ResourceService/DeleteResource"
 
 type ResourceServiceBridgeServer interface {
-	// Creates a new backend resource.
-	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
-	// Deletes a backend resource.
-	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
-	// Gets a single backend resource.
-	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
 	// Lists all backend resources.
 	ListResources(context.Context, *ListResourcesRequest) (*ListResourcesResponse, error)
+	// Gets a single backend resource.
+	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
+	// Creates a new backend resource.
+	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
 	// Updates a backend resource.
 	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceResponse, error)
+	// Deletes a backend resource.
+	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
 }
 
 type ResourceServiceHooker interface {
-	ResourceServiceCreateResourceHooker
-	ResourceServiceDeleteResourceHooker
-	ResourceServiceGetResourceHooker
 	ResourceServiceListResourcesHooker
+	ResourceServiceGetResourceHooker
+	ResourceServiceCreateResourceHooker
 	ResourceServiceUpdateResourceHooker
+	ResourceServiceDeleteResourceHooker
 }
 
 type ResourceServiceHookedBridger interface {
 	ResourceServiceHooker
 	ResourceServiceBridgeServer
 }
-type ResourceServiceCreateResourceHooker interface {
-	PrepareCreateResource(http.Context, *CreateResourceRequest) (context.Context, error)
-	CompleteCreateResource(http.Context, *CreateResourceRequest, *CreateResourceResponse) error
-}
-type ResourceServiceDeleteResourceHooker interface {
-	PrepareDeleteResource(http.Context, *DeleteResourceRequest) (context.Context, error)
-	CompleteDeleteResource(http.Context, *DeleteResourceRequest, *DeleteResourceResponse) error
+type ResourceServiceListResourcesHooker interface {
+	PrepareListResources(http.Context, *ListResourcesRequest) (context.Context, error)
+	CompleteListResources(http.Context, *ListResourcesRequest, *ListResourcesResponse) error
 }
 type ResourceServiceGetResourceHooker interface {
 	PrepareGetResource(http.Context, *GetResourceRequest) (context.Context, error)
 	CompleteGetResource(http.Context, *GetResourceRequest, *GetResourceResponse) error
 }
-type ResourceServiceListResourcesHooker interface {
-	PrepareListResources(http.Context, *ListResourcesRequest) (context.Context, error)
-	CompleteListResources(http.Context, *ListResourcesRequest, *ListResourcesResponse) error
+type ResourceServiceCreateResourceHooker interface {
+	PrepareCreateResource(http.Context, *CreateResourceRequest) (context.Context, error)
+	CompleteCreateResource(http.Context, *CreateResourceRequest, *CreateResourceResponse) error
 }
 type ResourceServiceUpdateResourceHooker interface {
 	PrepareUpdateResource(http.Context, *UpdateResourceRequest) (context.Context, error)
 	CompleteUpdateResource(http.Context, *UpdateResourceRequest, *UpdateResourceResponse) error
+}
+type ResourceServiceDeleteResourceHooker interface {
+	PrepareDeleteResource(http.Context, *DeleteResourceRequest) (context.Context, error)
+	CompleteDeleteResource(http.Context, *DeleteResourceRequest, *DeleteResourceResponse) error
 }
 
 func RegisterResourceServiceBridgeServer(s *http.Server, srv ResourceServiceHookedBridger) {
@@ -226,19 +226,11 @@ func _ResourceService_DeleteResource0_Bridge_Handler(srv ResourceServiceHookedBr
 // pointer dereference when methods are called.
 type UnimplementedResourceServiceHooked struct{}
 
-func (UnimplementedResourceServiceHooked) PrepareCreateResource(ctx http.Context, in *CreateResourceRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareListResources(ctx http.Context, in *ListResourcesRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) CompleteCreateResource(ctx http.Context, in *CreateResourceRequest, out *CreateResourceResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedResourceServiceHooked) PrepareDeleteResource(ctx http.Context, in *DeleteResourceRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedResourceServiceHooked) CompleteDeleteResource(ctx http.Context, in *DeleteResourceRequest, out *DeleteResourceResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteListResources(ctx http.Context, in *ListResourcesRequest, out *ListResourcesResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -250,11 +242,11 @@ func (UnimplementedResourceServiceHooked) CompleteGetResource(ctx http.Context, 
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedResourceServiceHooked) PrepareListResources(ctx http.Context, in *ListResourcesRequest) (context.Context, error) {
+func (UnimplementedResourceServiceHooked) PrepareCreateResource(ctx http.Context, in *CreateResourceRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedResourceServiceHooked) CompleteListResources(ctx http.Context, in *ListResourcesRequest, out *ListResourcesResponse) error {
+func (UnimplementedResourceServiceHooked) CompleteCreateResource(ctx http.Context, in *CreateResourceRequest, out *CreateResourceResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -263,6 +255,14 @@ func (UnimplementedResourceServiceHooked) PrepareUpdateResource(ctx http.Context
 }
 
 func (UnimplementedResourceServiceHooked) CompleteUpdateResource(ctx http.Context, in *UpdateResourceRequest, out *UpdateResourceResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedResourceServiceHooked) PrepareDeleteResource(ctx http.Context, in *DeleteResourceRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedResourceServiceHooked) CompleteDeleteResource(ctx http.Context, in *DeleteResourceRequest, out *DeleteResourceResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -288,24 +288,24 @@ func NewResourceServiceHTTPBridge(client *http.Client) ResourceServiceHTTPServer
 	return &ResourceServiceHTTPBridgeImpl{client: NewResourceServiceHTTPClient(client)}
 }
 
-func (c *ResourceServiceHTTPBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
-	return c.client.CreateResource(ctx, in)
-}
-
-func (c *ResourceServiceHTTPBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
-	return c.client.DeleteResource(ctx, in)
+func (c *ResourceServiceHTTPBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return c.client.ListResources(ctx, in)
 }
 
 func (c *ResourceServiceHTTPBridgeImpl) GetResource(ctx context.Context, in *GetResourceRequest) (*GetResourceResponse, error) {
 	return c.client.GetResource(ctx, in)
 }
 
-func (c *ResourceServiceHTTPBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
-	return c.client.ListResources(ctx, in)
+func (c *ResourceServiceHTTPBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
+	return c.client.CreateResource(ctx, in)
 }
 
 func (c *ResourceServiceHTTPBridgeImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest) (*UpdateResourceResponse, error) {
 	return c.client.UpdateResource(ctx, in)
+}
+
+func (c *ResourceServiceHTTPBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+	return c.client.DeleteResource(ctx, in)
 }
 
 type ResourceServiceBridgeImpl struct {
@@ -316,24 +316,24 @@ func NewResourceServiceBridge(client grpc.ClientConnInterface) ResourceServiceSe
 	return &ResourceServiceBridgeImpl{client: NewResourceServiceClient(client)}
 }
 
-func (c *ResourceServiceBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
-	return c.client.CreateResource(ctx, in)
-}
-
-func (c *ResourceServiceBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
-	return c.client.DeleteResource(ctx, in)
+func (c *ResourceServiceBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return c.client.ListResources(ctx, in)
 }
 
 func (c *ResourceServiceBridgeImpl) GetResource(ctx context.Context, in *GetResourceRequest) (*GetResourceResponse, error) {
 	return c.client.GetResource(ctx, in)
 }
 
-func (c *ResourceServiceBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
-	return c.client.ListResources(ctx, in)
+func (c *ResourceServiceBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
+	return c.client.CreateResource(ctx, in)
 }
 
 func (c *ResourceServiceBridgeImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest) (*UpdateResourceResponse, error) {
 	return c.client.UpdateResource(ctx, in)
+}
+
+func (c *ResourceServiceBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+	return c.client.DeleteResource(ctx, in)
 }
 
 func (c *ResourceServiceBridgeImpl) mustEmbedUnimplementedResourceServiceServer() {}
@@ -346,24 +346,24 @@ func NewResourceServiceGRPC2HTTP(client grpc.ClientConnInterface) ResourceServic
 	return &ResourceServiceGRPC2HTTPBridgeImpl{client: NewResourceServiceClient(client)}
 }
 
-func (c *ResourceServiceGRPC2HTTPBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
-	return c.client.CreateResource(ctx, in)
-}
-
-func (c *ResourceServiceGRPC2HTTPBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
-	return c.client.DeleteResource(ctx, in)
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return c.client.ListResources(ctx, in)
 }
 
 func (c *ResourceServiceGRPC2HTTPBridgeImpl) GetResource(ctx context.Context, in *GetResourceRequest) (*GetResourceResponse, error) {
 	return c.client.GetResource(ctx, in)
 }
 
-func (c *ResourceServiceGRPC2HTTPBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
-	return c.client.ListResources(ctx, in)
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
+	return c.client.CreateResource(ctx, in)
 }
 
 func (c *ResourceServiceGRPC2HTTPBridgeImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest) (*UpdateResourceResponse, error) {
 	return c.client.UpdateResource(ctx, in)
+}
+
+func (c *ResourceServiceGRPC2HTTPBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+	return c.client.DeleteResource(ctx, in)
 }
 
 type ResourceServiceHTTP2GRPCBridgeImpl struct {
@@ -374,24 +374,24 @@ func NewResourceServiceHTTP2GRPC(client *http.Client) ResourceServiceServer {
 	return &ResourceServiceHTTP2GRPCBridgeImpl{client: NewResourceServiceHTTPClient(client)}
 }
 
-func (c *ResourceServiceHTTP2GRPCBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
-	return c.client.CreateResource(ctx, in)
-}
-
-func (c *ResourceServiceHTTP2GRPCBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
-	return c.client.DeleteResource(ctx, in)
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
+	return c.client.ListResources(ctx, in)
 }
 
 func (c *ResourceServiceHTTP2GRPCBridgeImpl) GetResource(ctx context.Context, in *GetResourceRequest) (*GetResourceResponse, error) {
 	return c.client.GetResource(ctx, in)
 }
 
-func (c *ResourceServiceHTTP2GRPCBridgeImpl) ListResources(ctx context.Context, in *ListResourcesRequest) (*ListResourcesResponse, error) {
-	return c.client.ListResources(ctx, in)
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) CreateResource(ctx context.Context, in *CreateResourceRequest) (*CreateResourceResponse, error) {
+	return c.client.CreateResource(ctx, in)
 }
 
 func (c *ResourceServiceHTTP2GRPCBridgeImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest) (*UpdateResourceResponse, error) {
 	return c.client.UpdateResource(ctx, in)
+}
+
+func (c *ResourceServiceHTTP2GRPCBridgeImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest) (*DeleteResourceResponse, error) {
+	return c.client.DeleteResource(ctx, in)
 }
 
 func (c *ResourceServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedResourceServiceServer() {}

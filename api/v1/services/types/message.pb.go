@@ -9,7 +9,6 @@ package types
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -74,7 +73,7 @@ var File_types_message_proto protoreflect.FileDescriptor
 
 const file_types_message_proto_rawDesc = "" +
 	"\n" +
-	"\x13types/message.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x19\n" +
+	"\x13types/message.proto\x12\x15api.v1.services.types\"\x19\n" +
 	"\aMessage\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02idB\xda\x01\n" +
 	"\x19com.api.v1.services.typesB\fMessageProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"

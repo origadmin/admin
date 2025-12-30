@@ -4,10 +4,9 @@
 // 	protoc        (unknown)
 // source: datastore/upload.proto
 
-package upload
+package datastore
 
 import (
-	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -618,7 +617,7 @@ var File_datastore_upload_proto protoreflect.FileDescriptor
 
 const file_datastore_upload_proto_rawDesc = "" +
 	"\n" +
-	"\x16datastore/upload.proto\x12\x16api.v1.services.upload\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15types/datastore.proto\x1a\x17validate/validate.proto\"\xcd\x01\n" +
+	"\x16datastore/upload.proto\x12\x19api.v1.services.datastore\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15types/datastore.proto\"\xcd\x01\n" +
 	"\x11ListUploadRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +
@@ -659,15 +658,15 @@ const file_datastore_upload_proto_rawDesc = "" +
 	"\x13DeleteUploadRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"D\n" +
 	"\x14DeleteUploadResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\x8e\x05\n" +
-	"\rUploadService\x12t\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xad\x05\n" +
+	"\rUploadService\x12z\n" +
 	"\n" +
-	"ListUpload\x12).api.v1.services.upload.ListUploadRequest\x1a*.api.v1.services.upload.ListUploadResponse\"\x0f\x82\xd3\xe4\x93\x02\t\x12\a/upload\x12v\n" +
-	"\tGetUpload\x12(.api.v1.services.upload.GetUploadRequest\x1a).api.v1.services.upload.GetUploadResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/upload/{id}\x12\x80\x01\n" +
-	"\fCreateUpload\x12+.api.v1.services.upload.CreateUploadRequest\x1a,.api.v1.services.upload.CreateUploadResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x04data\"\a/upload\x12\x8a\x01\n" +
-	"\fUpdateUpload\x12+.api.v1.services.upload.UpdateUploadRequest\x1a,.api.v1.services.upload.UpdateUploadResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x04data\x1a\x11/upload/{data.id}\x12\x7f\n" +
-	"\fDeleteUpload\x12+.api.v1.services.upload.DeleteUploadRequest\x1a,.api.v1.services.upload.DeleteUploadResponse\"\x14\x82\xd3\xe4\x93\x02\x0e*\f/upload/{id}B\xe0\x01\n" +
-	"\x1acom.api.v1.services.uploadB\vUploadProtoP\x01Z9origadmin/application/admin/api/v1/services/upload;upload\xa2\x02\x04AVSU\xaa\x02\x16Api.V1.Services.Upload\xca\x02\x16Api\\V1\\Services\\Upload\xe2\x02\"Api\\V1\\Services\\Upload\\GPBMetadata\xea\x02\x19Api::V1::Services::Uploadb\x06proto3"
+	"ListUpload\x12,.api.v1.services.datastore.ListUploadRequest\x1a-.api.v1.services.datastore.ListUploadResponse\"\x0f\x82\xd3\xe4\x93\x02\t\x12\a/upload\x12|\n" +
+	"\tGetUpload\x12+.api.v1.services.datastore.GetUploadRequest\x1a,.api.v1.services.datastore.GetUploadResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/upload/{id}\x12\x86\x01\n" +
+	"\fCreateUpload\x12..api.v1.services.datastore.CreateUploadRequest\x1a/.api.v1.services.datastore.CreateUploadResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x04data\"\a/upload\x12\x90\x01\n" +
+	"\fUpdateUpload\x12..api.v1.services.datastore.UpdateUploadRequest\x1a/.api.v1.services.datastore.UpdateUploadResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x04data\x1a\x11/upload/{data.id}\x12\x85\x01\n" +
+	"\fDeleteUpload\x12..api.v1.services.datastore.DeleteUploadRequest\x1a/.api.v1.services.datastore.DeleteUploadResponse\"\x14\x82\xd3\xe4\x93\x02\x0e*\f/upload/{id}B\xf5\x01\n" +
+	"\x1dcom.api.v1.services.datastoreB\vUploadProtoP\x01Z?origadmin/application/admin/api/v1/services/datastore;datastore\xa2\x02\x04AVSD\xaa\x02\x19Api.V1.Services.Datastore\xca\x02\x19Api\\V1\\Services\\Datastore\xe2\x02%Api\\V1\\Services\\Datastore\\GPBMetadata\xea\x02\x1cApi::V1::Services::Datastoreb\x06proto3"
 
 var (
 	file_datastore_upload_proto_rawDescOnce sync.Once
@@ -683,39 +682,39 @@ func file_datastore_upload_proto_rawDescGZIP() []byte {
 
 var file_datastore_upload_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_datastore_upload_proto_goTypes = []any{
-	(*ListUploadRequest)(nil),    // 0: api.v1.services.upload.ListUploadRequest
-	(*ListUploadResponse)(nil),   // 1: api.v1.services.upload.ListUploadResponse
-	(*GetUploadRequest)(nil),     // 2: api.v1.services.upload.GetUploadRequest
-	(*GetUploadResponse)(nil),    // 3: api.v1.services.upload.GetUploadResponse
-	(*CreateUploadRequest)(nil),  // 4: api.v1.services.upload.CreateUploadRequest
-	(*CreateUploadResponse)(nil), // 5: api.v1.services.upload.CreateUploadResponse
-	(*UpdateUploadRequest)(nil),  // 6: api.v1.services.upload.UpdateUploadRequest
-	(*UpdateUploadResponse)(nil), // 7: api.v1.services.upload.UpdateUploadResponse
-	(*DeleteUploadRequest)(nil),  // 8: api.v1.services.upload.DeleteUploadRequest
-	(*DeleteUploadResponse)(nil), // 9: api.v1.services.upload.DeleteUploadResponse
+	(*ListUploadRequest)(nil),    // 0: api.v1.services.datastore.ListUploadRequest
+	(*ListUploadResponse)(nil),   // 1: api.v1.services.datastore.ListUploadResponse
+	(*GetUploadRequest)(nil),     // 2: api.v1.services.datastore.GetUploadRequest
+	(*GetUploadResponse)(nil),    // 3: api.v1.services.datastore.GetUploadResponse
+	(*CreateUploadRequest)(nil),  // 4: api.v1.services.datastore.CreateUploadRequest
+	(*CreateUploadResponse)(nil), // 5: api.v1.services.datastore.CreateUploadResponse
+	(*UpdateUploadRequest)(nil),  // 6: api.v1.services.datastore.UpdateUploadRequest
+	(*UpdateUploadResponse)(nil), // 7: api.v1.services.datastore.UpdateUploadResponse
+	(*DeleteUploadRequest)(nil),  // 8: api.v1.services.datastore.DeleteUploadRequest
+	(*DeleteUploadResponse)(nil), // 9: api.v1.services.datastore.DeleteUploadResponse
 	(*types.DataObject)(nil),     // 10: api.v1.services.types.DataObject
 	(*anypb.Any)(nil),            // 11: google.protobuf.Any
 	(*emptypb.Empty)(nil),        // 12: google.protobuf.Empty
 }
 var file_datastore_upload_proto_depIdxs = []int32{
-	10, // 0: api.v1.services.upload.ListUploadResponse.data:type_name -> api.v1.services.types.DataObject
-	11, // 1: api.v1.services.upload.ListUploadResponse.extra:type_name -> google.protobuf.Any
-	10, // 2: api.v1.services.upload.GetUploadResponse.data:type_name -> api.v1.services.types.DataObject
-	10, // 3: api.v1.services.upload.CreateUploadRequest.data:type_name -> api.v1.services.types.DataObject
-	10, // 4: api.v1.services.upload.CreateUploadResponse.data:type_name -> api.v1.services.types.DataObject
-	10, // 5: api.v1.services.upload.UpdateUploadRequest.data:type_name -> api.v1.services.types.DataObject
-	10, // 6: api.v1.services.upload.UpdateUploadResponse.data:type_name -> api.v1.services.types.DataObject
-	12, // 7: api.v1.services.upload.DeleteUploadResponse.empty:type_name -> google.protobuf.Empty
-	0,  // 8: api.v1.services.upload.UploadService.ListUpload:input_type -> api.v1.services.upload.ListUploadRequest
-	2,  // 9: api.v1.services.upload.UploadService.GetUpload:input_type -> api.v1.services.upload.GetUploadRequest
-	4,  // 10: api.v1.services.upload.UploadService.CreateUpload:input_type -> api.v1.services.upload.CreateUploadRequest
-	6,  // 11: api.v1.services.upload.UploadService.UpdateUpload:input_type -> api.v1.services.upload.UpdateUploadRequest
-	8,  // 12: api.v1.services.upload.UploadService.DeleteUpload:input_type -> api.v1.services.upload.DeleteUploadRequest
-	1,  // 13: api.v1.services.upload.UploadService.ListUpload:output_type -> api.v1.services.upload.ListUploadResponse
-	3,  // 14: api.v1.services.upload.UploadService.GetUpload:output_type -> api.v1.services.upload.GetUploadResponse
-	5,  // 15: api.v1.services.upload.UploadService.CreateUpload:output_type -> api.v1.services.upload.CreateUploadResponse
-	7,  // 16: api.v1.services.upload.UploadService.UpdateUpload:output_type -> api.v1.services.upload.UpdateUploadResponse
-	9,  // 17: api.v1.services.upload.UploadService.DeleteUpload:output_type -> api.v1.services.upload.DeleteUploadResponse
+	10, // 0: api.v1.services.datastore.ListUploadResponse.data:type_name -> api.v1.services.types.DataObject
+	11, // 1: api.v1.services.datastore.ListUploadResponse.extra:type_name -> google.protobuf.Any
+	10, // 2: api.v1.services.datastore.GetUploadResponse.data:type_name -> api.v1.services.types.DataObject
+	10, // 3: api.v1.services.datastore.CreateUploadRequest.data:type_name -> api.v1.services.types.DataObject
+	10, // 4: api.v1.services.datastore.CreateUploadResponse.data:type_name -> api.v1.services.types.DataObject
+	10, // 5: api.v1.services.datastore.UpdateUploadRequest.data:type_name -> api.v1.services.types.DataObject
+	10, // 6: api.v1.services.datastore.UpdateUploadResponse.data:type_name -> api.v1.services.types.DataObject
+	12, // 7: api.v1.services.datastore.DeleteUploadResponse.empty:type_name -> google.protobuf.Empty
+	0,  // 8: api.v1.services.datastore.UploadService.ListUpload:input_type -> api.v1.services.datastore.ListUploadRequest
+	2,  // 9: api.v1.services.datastore.UploadService.GetUpload:input_type -> api.v1.services.datastore.GetUploadRequest
+	4,  // 10: api.v1.services.datastore.UploadService.CreateUpload:input_type -> api.v1.services.datastore.CreateUploadRequest
+	6,  // 11: api.v1.services.datastore.UploadService.UpdateUpload:input_type -> api.v1.services.datastore.UpdateUploadRequest
+	8,  // 12: api.v1.services.datastore.UploadService.DeleteUpload:input_type -> api.v1.services.datastore.DeleteUploadRequest
+	1,  // 13: api.v1.services.datastore.UploadService.ListUpload:output_type -> api.v1.services.datastore.ListUploadResponse
+	3,  // 14: api.v1.services.datastore.UploadService.GetUpload:output_type -> api.v1.services.datastore.GetUploadResponse
+	5,  // 15: api.v1.services.datastore.UploadService.CreateUpload:output_type -> api.v1.services.datastore.CreateUploadResponse
+	7,  // 16: api.v1.services.datastore.UploadService.UpdateUpload:output_type -> api.v1.services.datastore.UpdateUploadResponse
+	9,  // 17: api.v1.services.datastore.UploadService.DeleteUpload:output_type -> api.v1.services.datastore.DeleteUploadResponse
 	13, // [13:18] is the sub-list for method output_type
 	8,  // [8:13] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name

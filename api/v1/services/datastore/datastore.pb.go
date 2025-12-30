@@ -7,7 +7,6 @@
 package datastore
 
 import (
-	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -618,7 +617,7 @@ var File_datastore_datastore_proto protoreflect.FileDescriptor
 
 const file_datastore_datastore_proto_rawDesc = "" +
 	"\n" +
-	"\x19datastore/datastore.proto\x12\x19api.v1.services.datastore\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15types/datastore.proto\x1a\x17validate/validate.proto\"\xd0\x01\n" +
+	"\x19datastore/datastore.proto\x12\x19api.v1.services.datastore\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x15types/datastore.proto\"\xd0\x01\n" +
 	"\x14ListDatastoreRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\acurrent\x18\x02 \x01(\x05R\acurrent\x12\x1c\n" +

@@ -11,8 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	types "origadmin/application/admin/api/v1/services/types"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -21,267 +19,267 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Me_GetProfile_FullMethodName       = "/api.v1.services.auth.Me/GetProfile"
-	Me_UpdateProfile_FullMethodName    = "/api.v1.services.auth.Me/UpdateProfile"
-	Me_UpdatePassword_FullMethodName   = "/api.v1.services.auth.Me/UpdatePassword"
-	Me_GetUserResources_FullMethodName = "/api.v1.services.auth.Me/GetUserResources"
-	Me_GetUserRoles_FullMethodName     = "/api.v1.services.auth.Me/GetUserRoles"
+	MeService_GetProfile_FullMethodName       = "/api.v1.services.auth.MeService/GetProfile"
+	MeService_UpdateProfile_FullMethodName    = "/api.v1.services.auth.MeService/UpdateProfile"
+	MeService_UpdatePassword_FullMethodName   = "/api.v1.services.auth.MeService/UpdatePassword"
+	MeService_GetUserResources_FullMethodName = "/api.v1.services.auth.MeService/GetUserResources"
+	MeService_GetUserRoles_FullMethodName     = "/api.v1.services.auth.MeService/GetUserRoles"
 )
 
-// MeClient is the client API for Me service.
+// MeServiceClient is the client API for MeService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 //
-// Service Me provides APIs for the currently authenticated user to manage their own profile and data.
-type MeClient interface {
+// Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
+type MeServiceClient interface {
 	// GetProfile retrieves the profile of the currently authenticated user.
-	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*types.User, error)
+	GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error)
 	// UpdateProfile updates the profile of the currently authenticated user.
-	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error)
 	// UpdatePassword changes the password for the currently authenticated user.
-	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error)
 	// GetUserResources retrieves the menu/resource list for the current user.
 	GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...grpc.CallOption) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesResponse, error)
 }
 
-type meClient struct {
+type meServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewMeClient(cc grpc.ClientConnInterface) MeClient {
-	return &meClient{cc}
+func NewMeServiceClient(cc grpc.ClientConnInterface) MeServiceClient {
+	return &meServiceClient{cc}
 }
 
-func (c *meClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*types.User, error) {
+func (c *meServiceClient) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...grpc.CallOption) (*GetProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(types.User)
-	err := c.cc.Invoke(ctx, Me_GetProfile_FullMethodName, in, out, cOpts...)
+	out := new(GetProfileResponse)
+	err := c.cc.Invoke(ctx, MeService_GetProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *meClient) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *meServiceClient) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*UpdateProfileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Me_UpdateProfile_FullMethodName, in, out, cOpts...)
+	out := new(UpdateProfileResponse)
+	err := c.cc.Invoke(ctx, MeService_UpdateProfile_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *meClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *meServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*UpdatePasswordResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Me_UpdatePassword_FullMethodName, in, out, cOpts...)
+	out := new(UpdatePasswordResponse)
+	err := c.cc.Invoke(ctx, MeService_UpdatePassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *meClient) GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...grpc.CallOption) (*GetUserResourcesResponse, error) {
+func (c *meServiceClient) GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...grpc.CallOption) (*GetUserResourcesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserResourcesResponse)
-	err := c.cc.Invoke(ctx, Me_GetUserResources_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MeService_GetUserResources_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *meClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesResponse, error) {
+func (c *meServiceClient) GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserRolesResponse)
-	err := c.cc.Invoke(ctx, Me_GetUserRoles_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MeService_GetUserRoles_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MeServer is the server API for Me service.
-// All implementations must embed UnimplementedMeServer
+// MeServiceServer is the server API for MeService service.
+// All implementations must embed UnimplementedMeServiceServer
 // for forward compatibility.
 //
-// Service Me provides APIs for the currently authenticated user to manage their own profile and data.
-type MeServer interface {
+// Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
+type MeServiceServer interface {
 	// GetProfile retrieves the profile of the currently authenticated user.
-	GetProfile(context.Context, *GetProfileRequest) (*types.User, error)
+	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
 	// UpdateProfile updates the profile of the currently authenticated user.
-	UpdateProfile(context.Context, *UpdateProfileRequest) (*emptypb.Empty, error)
+	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 	// UpdatePassword changes the password for the currently authenticated user.
-	UpdatePassword(context.Context, *UpdatePasswordRequest) (*emptypb.Empty, error)
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	// GetUserResources retrieves the menu/resource list for the current user.
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
-	mustEmbedUnimplementedMeServer()
+	mustEmbedUnimplementedMeServiceServer()
 }
 
-// UnimplementedMeServer must be embedded to have
+// UnimplementedMeServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedMeServer struct{}
+type UnimplementedMeServiceServer struct{}
 
-func (UnimplementedMeServer) GetProfile(context.Context, *GetProfileRequest) (*types.User, error) {
+func (UnimplementedMeServiceServer) GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfile not implemented")
 }
-func (UnimplementedMeServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*emptypb.Empty, error) {
+func (UnimplementedMeServiceServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
 }
-func (UnimplementedMeServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*emptypb.Empty, error) {
+func (UnimplementedMeServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
-func (UnimplementedMeServer) GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
+func (UnimplementedMeServiceServer) GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserResources not implemented")
 }
-func (UnimplementedMeServer) GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error) {
+func (UnimplementedMeServiceServer) GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoles not implemented")
 }
-func (UnimplementedMeServer) mustEmbedUnimplementedMeServer() {}
-func (UnimplementedMeServer) testEmbeddedByValue()            {}
+func (UnimplementedMeServiceServer) mustEmbedUnimplementedMeServiceServer() {}
+func (UnimplementedMeServiceServer) testEmbeddedByValue()                   {}
 
-// UnsafeMeServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to MeServer will
+// UnsafeMeServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MeServiceServer will
 // result in compilation errors.
-type UnsafeMeServer interface {
-	mustEmbedUnimplementedMeServer()
+type UnsafeMeServiceServer interface {
+	mustEmbedUnimplementedMeServiceServer()
 }
 
-func RegisterMeServer(s grpc.ServiceRegistrar, srv MeServer) {
-	// If the following call pancis, it indicates UnimplementedMeServer was
+func RegisterMeServiceServer(s grpc.ServiceRegistrar, srv MeServiceServer) {
+	// If the following call pancis, it indicates UnimplementedMeServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Me_ServiceDesc, srv)
+	s.RegisterService(&MeService_ServiceDesc, srv)
 }
 
-func _Me_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MeService_GetProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MeServer).GetProfile(ctx, in)
+		return srv.(MeServiceServer).GetProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Me_GetProfile_FullMethodName,
+		FullMethod: MeService_GetProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServer).GetProfile(ctx, req.(*GetProfileRequest))
+		return srv.(MeServiceServer).GetProfile(ctx, req.(*GetProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Me_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MeService_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProfileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MeServer).UpdateProfile(ctx, in)
+		return srv.(MeServiceServer).UpdateProfile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Me_UpdateProfile_FullMethodName,
+		FullMethod: MeService_UpdateProfile_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServer).UpdateProfile(ctx, req.(*UpdateProfileRequest))
+		return srv.(MeServiceServer).UpdateProfile(ctx, req.(*UpdateProfileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Me_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MeService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdatePasswordRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MeServer).UpdatePassword(ctx, in)
+		return srv.(MeServiceServer).UpdatePassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Me_UpdatePassword_FullMethodName,
+		FullMethod: MeService_UpdatePassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
+		return srv.(MeServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Me_GetUserResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MeService_GetUserResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserResourcesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MeServer).GetUserResources(ctx, in)
+		return srv.(MeServiceServer).GetUserResources(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Me_GetUserResources_FullMethodName,
+		FullMethod: MeService_GetUserResources_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServer).GetUserResources(ctx, req.(*GetUserResourcesRequest))
+		return srv.(MeServiceServer).GetUserResources(ctx, req.(*GetUserResourcesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Me_GetUserRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MeService_GetUserRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserRolesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MeServer).GetUserRoles(ctx, in)
+		return srv.(MeServiceServer).GetUserRoles(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Me_GetUserRoles_FullMethodName,
+		FullMethod: MeService_GetUserRoles_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MeServer).GetUserRoles(ctx, req.(*GetUserRolesRequest))
+		return srv.(MeServiceServer).GetUserRoles(ctx, req.(*GetUserRolesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Me_ServiceDesc is the grpc.ServiceDesc for Me service.
+// MeService_ServiceDesc is the grpc.ServiceDesc for MeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Me_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.services.auth.Me",
-	HandlerType: (*MeServer)(nil),
+var MeService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.v1.services.auth.MeService",
+	HandlerType: (*MeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetProfile",
-			Handler:    _Me_GetProfile_Handler,
+			Handler:    _MeService_GetProfile_Handler,
 		},
 		{
 			MethodName: "UpdateProfile",
-			Handler:    _Me_UpdateProfile_Handler,
+			Handler:    _MeService_UpdateProfile_Handler,
 		},
 		{
 			MethodName: "UpdatePassword",
-			Handler:    _Me_UpdatePassword_Handler,
+			Handler:    _MeService_UpdatePassword_Handler,
 		},
 		{
 			MethodName: "GetUserResources",
-			Handler:    _Me_GetUserResources_Handler,
+			Handler:    _MeService_GetUserResources_Handler,
 		},
 		{
 			MethodName: "GetUserRoles",
-			Handler:    _Me_GetUserRoles_Handler,
+			Handler:    _MeService_GetUserRoles_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

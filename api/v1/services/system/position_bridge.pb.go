@@ -28,51 +28,51 @@ var (
 	_ = codes.Unimplemented
 )
 
-const PositionServiceCreatePositionBridgeOperation = "/api.v1.services.system.PositionService/CreatePosition"
-const PositionServiceDeletePositionBridgeOperation = "/api.v1.services.system.PositionService/DeletePosition"
-const PositionServiceGetPositionBridgeOperation = "/api.v1.services.system.PositionService/GetPosition"
 const PositionServiceListPositionsBridgeOperation = "/api.v1.services.system.PositionService/ListPositions"
+const PositionServiceGetPositionBridgeOperation = "/api.v1.services.system.PositionService/GetPosition"
+const PositionServiceCreatePositionBridgeOperation = "/api.v1.services.system.PositionService/CreatePosition"
 const PositionServiceUpdatePositionBridgeOperation = "/api.v1.services.system.PositionService/UpdatePosition"
+const PositionServiceDeletePositionBridgeOperation = "/api.v1.services.system.PositionService/DeletePosition"
 
 type PositionServiceBridgeServer interface {
-	CreatePosition(context.Context, *CreatePositionRequest) (*CreatePositionResponse, error)
-	DeletePosition(context.Context, *DeletePositionRequest) (*DeletePositionResponse, error)
-	GetPosition(context.Context, *GetPositionRequest) (*GetPositionResponse, error)
 	ListPositions(context.Context, *ListPositionsRequest) (*ListPositionsResponse, error)
+	GetPosition(context.Context, *GetPositionRequest) (*GetPositionResponse, error)
+	CreatePosition(context.Context, *CreatePositionRequest) (*CreatePositionResponse, error)
 	UpdatePosition(context.Context, *UpdatePositionRequest) (*UpdatePositionResponse, error)
+	DeletePosition(context.Context, *DeletePositionRequest) (*DeletePositionResponse, error)
 }
 
 type PositionServiceHooker interface {
-	PositionServiceCreatePositionHooker
-	PositionServiceDeletePositionHooker
-	PositionServiceGetPositionHooker
 	PositionServiceListPositionsHooker
+	PositionServiceGetPositionHooker
+	PositionServiceCreatePositionHooker
 	PositionServiceUpdatePositionHooker
+	PositionServiceDeletePositionHooker
 }
 
 type PositionServiceHookedBridger interface {
 	PositionServiceHooker
 	PositionServiceBridgeServer
 }
-type PositionServiceCreatePositionHooker interface {
-	PrepareCreatePosition(http.Context, *CreatePositionRequest) (context.Context, error)
-	CompleteCreatePosition(http.Context, *CreatePositionRequest, *CreatePositionResponse) error
-}
-type PositionServiceDeletePositionHooker interface {
-	PrepareDeletePosition(http.Context, *DeletePositionRequest) (context.Context, error)
-	CompleteDeletePosition(http.Context, *DeletePositionRequest, *DeletePositionResponse) error
+type PositionServiceListPositionsHooker interface {
+	PrepareListPositions(http.Context, *ListPositionsRequest) (context.Context, error)
+	CompleteListPositions(http.Context, *ListPositionsRequest, *ListPositionsResponse) error
 }
 type PositionServiceGetPositionHooker interface {
 	PrepareGetPosition(http.Context, *GetPositionRequest) (context.Context, error)
 	CompleteGetPosition(http.Context, *GetPositionRequest, *GetPositionResponse) error
 }
-type PositionServiceListPositionsHooker interface {
-	PrepareListPositions(http.Context, *ListPositionsRequest) (context.Context, error)
-	CompleteListPositions(http.Context, *ListPositionsRequest, *ListPositionsResponse) error
+type PositionServiceCreatePositionHooker interface {
+	PrepareCreatePosition(http.Context, *CreatePositionRequest) (context.Context, error)
+	CompleteCreatePosition(http.Context, *CreatePositionRequest, *CreatePositionResponse) error
 }
 type PositionServiceUpdatePositionHooker interface {
 	PrepareUpdatePosition(http.Context, *UpdatePositionRequest) (context.Context, error)
 	CompleteUpdatePosition(http.Context, *UpdatePositionRequest, *UpdatePositionResponse) error
+}
+type PositionServiceDeletePositionHooker interface {
+	PrepareDeletePosition(http.Context, *DeletePositionRequest) (context.Context, error)
+	CompleteDeletePosition(http.Context, *DeletePositionRequest, *DeletePositionResponse) error
 }
 
 func RegisterPositionServiceBridgeServer(s *http.Server, srv PositionServiceHookedBridger) {
@@ -221,19 +221,11 @@ func _PositionService_DeletePosition0_Bridge_Handler(srv PositionServiceHookedBr
 // pointer dereference when methods are called.
 type UnimplementedPositionServiceHooked struct{}
 
-func (UnimplementedPositionServiceHooked) PrepareCreatePosition(ctx http.Context, in *CreatePositionRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareListPositions(ctx http.Context, in *ListPositionsRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) CompleteCreatePosition(ctx http.Context, in *CreatePositionRequest, out *CreatePositionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPositionServiceHooked) PrepareDeletePosition(ctx http.Context, in *DeletePositionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPositionServiceHooked) CompleteDeletePosition(ctx http.Context, in *DeletePositionRequest, out *DeletePositionResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteListPositions(ctx http.Context, in *ListPositionsRequest, out *ListPositionsResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -245,11 +237,11 @@ func (UnimplementedPositionServiceHooked) CompleteGetPosition(ctx http.Context, 
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPositionServiceHooked) PrepareListPositions(ctx http.Context, in *ListPositionsRequest) (context.Context, error) {
+func (UnimplementedPositionServiceHooked) PrepareCreatePosition(ctx http.Context, in *CreatePositionRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPositionServiceHooked) CompleteListPositions(ctx http.Context, in *ListPositionsRequest, out *ListPositionsResponse) error {
+func (UnimplementedPositionServiceHooked) CompleteCreatePosition(ctx http.Context, in *CreatePositionRequest, out *CreatePositionResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -258,6 +250,14 @@ func (UnimplementedPositionServiceHooked) PrepareUpdatePosition(ctx http.Context
 }
 
 func (UnimplementedPositionServiceHooked) CompleteUpdatePosition(ctx http.Context, in *UpdatePositionRequest, out *UpdatePositionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPositionServiceHooked) PrepareDeletePosition(ctx http.Context, in *DeletePositionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPositionServiceHooked) CompleteDeletePosition(ctx http.Context, in *DeletePositionRequest, out *DeletePositionResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -283,24 +283,24 @@ func NewPositionServiceHTTPBridge(client *http.Client) PositionServiceHTTPServer
 	return &PositionServiceHTTPBridgeImpl{client: NewPositionServiceHTTPClient(client)}
 }
 
-func (c *PositionServiceHTTPBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
-	return c.client.CreatePosition(ctx, in)
-}
-
-func (c *PositionServiceHTTPBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
-	return c.client.DeletePosition(ctx, in)
+func (c *PositionServiceHTTPBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
+	return c.client.ListPositions(ctx, in)
 }
 
 func (c *PositionServiceHTTPBridgeImpl) GetPosition(ctx context.Context, in *GetPositionRequest) (*GetPositionResponse, error) {
 	return c.client.GetPosition(ctx, in)
 }
 
-func (c *PositionServiceHTTPBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
-	return c.client.ListPositions(ctx, in)
+func (c *PositionServiceHTTPBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
+	return c.client.CreatePosition(ctx, in)
 }
 
 func (c *PositionServiceHTTPBridgeImpl) UpdatePosition(ctx context.Context, in *UpdatePositionRequest) (*UpdatePositionResponse, error) {
 	return c.client.UpdatePosition(ctx, in)
+}
+
+func (c *PositionServiceHTTPBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
+	return c.client.DeletePosition(ctx, in)
 }
 
 type PositionServiceBridgeImpl struct {
@@ -311,24 +311,24 @@ func NewPositionServiceBridge(client grpc.ClientConnInterface) PositionServiceSe
 	return &PositionServiceBridgeImpl{client: NewPositionServiceClient(client)}
 }
 
-func (c *PositionServiceBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
-	return c.client.CreatePosition(ctx, in)
-}
-
-func (c *PositionServiceBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
-	return c.client.DeletePosition(ctx, in)
+func (c *PositionServiceBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
+	return c.client.ListPositions(ctx, in)
 }
 
 func (c *PositionServiceBridgeImpl) GetPosition(ctx context.Context, in *GetPositionRequest) (*GetPositionResponse, error) {
 	return c.client.GetPosition(ctx, in)
 }
 
-func (c *PositionServiceBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
-	return c.client.ListPositions(ctx, in)
+func (c *PositionServiceBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
+	return c.client.CreatePosition(ctx, in)
 }
 
 func (c *PositionServiceBridgeImpl) UpdatePosition(ctx context.Context, in *UpdatePositionRequest) (*UpdatePositionResponse, error) {
 	return c.client.UpdatePosition(ctx, in)
+}
+
+func (c *PositionServiceBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
+	return c.client.DeletePosition(ctx, in)
 }
 
 func (c *PositionServiceBridgeImpl) mustEmbedUnimplementedPositionServiceServer() {}
@@ -341,24 +341,24 @@ func NewPositionServiceGRPC2HTTP(client grpc.ClientConnInterface) PositionServic
 	return &PositionServiceGRPC2HTTPBridgeImpl{client: NewPositionServiceClient(client)}
 }
 
-func (c *PositionServiceGRPC2HTTPBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
-	return c.client.CreatePosition(ctx, in)
-}
-
-func (c *PositionServiceGRPC2HTTPBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
-	return c.client.DeletePosition(ctx, in)
+func (c *PositionServiceGRPC2HTTPBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
+	return c.client.ListPositions(ctx, in)
 }
 
 func (c *PositionServiceGRPC2HTTPBridgeImpl) GetPosition(ctx context.Context, in *GetPositionRequest) (*GetPositionResponse, error) {
 	return c.client.GetPosition(ctx, in)
 }
 
-func (c *PositionServiceGRPC2HTTPBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
-	return c.client.ListPositions(ctx, in)
+func (c *PositionServiceGRPC2HTTPBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
+	return c.client.CreatePosition(ctx, in)
 }
 
 func (c *PositionServiceGRPC2HTTPBridgeImpl) UpdatePosition(ctx context.Context, in *UpdatePositionRequest) (*UpdatePositionResponse, error) {
 	return c.client.UpdatePosition(ctx, in)
+}
+
+func (c *PositionServiceGRPC2HTTPBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
+	return c.client.DeletePosition(ctx, in)
 }
 
 type PositionServiceHTTP2GRPCBridgeImpl struct {
@@ -369,24 +369,24 @@ func NewPositionServiceHTTP2GRPC(client *http.Client) PositionServiceServer {
 	return &PositionServiceHTTP2GRPCBridgeImpl{client: NewPositionServiceHTTPClient(client)}
 }
 
-func (c *PositionServiceHTTP2GRPCBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
-	return c.client.CreatePosition(ctx, in)
-}
-
-func (c *PositionServiceHTTP2GRPCBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
-	return c.client.DeletePosition(ctx, in)
+func (c *PositionServiceHTTP2GRPCBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
+	return c.client.ListPositions(ctx, in)
 }
 
 func (c *PositionServiceHTTP2GRPCBridgeImpl) GetPosition(ctx context.Context, in *GetPositionRequest) (*GetPositionResponse, error) {
 	return c.client.GetPosition(ctx, in)
 }
 
-func (c *PositionServiceHTTP2GRPCBridgeImpl) ListPositions(ctx context.Context, in *ListPositionsRequest) (*ListPositionsResponse, error) {
-	return c.client.ListPositions(ctx, in)
+func (c *PositionServiceHTTP2GRPCBridgeImpl) CreatePosition(ctx context.Context, in *CreatePositionRequest) (*CreatePositionResponse, error) {
+	return c.client.CreatePosition(ctx, in)
 }
 
 func (c *PositionServiceHTTP2GRPCBridgeImpl) UpdatePosition(ctx context.Context, in *UpdatePositionRequest) (*UpdatePositionResponse, error) {
 	return c.client.UpdatePosition(ctx, in)
+}
+
+func (c *PositionServiceHTTP2GRPCBridgeImpl) DeletePosition(ctx context.Context, in *DeletePositionRequest) (*DeletePositionResponse, error) {
+	return c.client.DeletePosition(ctx, in)
 }
 
 func (c *PositionServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedPositionServiceServer() {}

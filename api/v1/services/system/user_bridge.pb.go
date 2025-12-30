@@ -28,82 +28,82 @@ var (
 	_ = codes.Unimplemented
 )
 
-const UserServiceCreateUserBridgeOperation = "/api.v1.services.system.UserService/CreateUser"
-const UserServiceDeleteUserBridgeOperation = "/api.v1.services.system.UserService/DeleteUser"
-const UserServiceGetUserBridgeOperation = "/api.v1.services.system.UserService/GetUser"
-const UserServiceListUserResourcesBridgeOperation = "/api.v1.services.system.UserService/ListUserResources"
 const UserServiceListUsersBridgeOperation = "/api.v1.services.system.UserService/ListUsers"
-const UserServiceResetUserPasswordBridgeOperation = "/api.v1.services.system.UserService/ResetUserPassword"
+const UserServiceListUserResourcesBridgeOperation = "/api.v1.services.system.UserService/ListUserResources"
+const UserServiceGetUserBridgeOperation = "/api.v1.services.system.UserService/GetUser"
+const UserServiceCreateUserBridgeOperation = "/api.v1.services.system.UserService/CreateUser"
 const UserServiceUpdateUserBridgeOperation = "/api.v1.services.system.UserService/UpdateUser"
-const UserServiceUpdateUserRolesBridgeOperation = "/api.v1.services.system.UserService/UpdateUserRoles"
+const UserServiceDeleteUserBridgeOperation = "/api.v1.services.system.UserService/DeleteUser"
 const UserServiceUpdateUserStatusBridgeOperation = "/api.v1.services.system.UserService/UpdateUserStatus"
+const UserServiceUpdateUserRolesBridgeOperation = "/api.v1.services.system.UserService/UpdateUserRoles"
+const UserServiceResetUserPasswordBridgeOperation = "/api.v1.services.system.UserService/ResetUserPassword"
 
 type UserServiceBridgeServer interface {
-	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
-	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
-	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
-	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
-	// ResetUserPassword reset the user s password
-	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
+	ListUserResources(context.Context, *ListUserResourcesRequest) (*ListUserResourcesResponse, error)
+	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
+	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
-	// UpdateUserRoles update the user roles
-	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	// UpdateUserStatus Update the status of the user information
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error)
+	// UpdateUserRoles update the user roles
+	UpdateUserRoles(context.Context, *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error)
+	// ResetUserPassword reset the user s password
+	ResetUserPassword(context.Context, *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error)
 }
 
 type UserServiceHooker interface {
-	UserServiceCreateUserHooker
-	UserServiceDeleteUserHooker
-	UserServiceGetUserHooker
-	UserServiceListUserResourcesHooker
 	UserServiceListUsersHooker
-	UserServiceResetUserPasswordHooker
+	UserServiceListUserResourcesHooker
+	UserServiceGetUserHooker
+	UserServiceCreateUserHooker
 	UserServiceUpdateUserHooker
-	UserServiceUpdateUserRolesHooker
+	UserServiceDeleteUserHooker
 	UserServiceUpdateUserStatusHooker
+	UserServiceUpdateUserRolesHooker
+	UserServiceResetUserPasswordHooker
 }
 
 type UserServiceHookedBridger interface {
 	UserServiceHooker
 	UserServiceBridgeServer
 }
-type UserServiceCreateUserHooker interface {
-	PrepareCreateUser(http.Context, *CreateUserRequest) (context.Context, error)
-	CompleteCreateUser(http.Context, *CreateUserRequest, *CreateUserResponse) error
-}
-type UserServiceDeleteUserHooker interface {
-	PrepareDeleteUser(http.Context, *DeleteUserRequest) (context.Context, error)
-	CompleteDeleteUser(http.Context, *DeleteUserRequest, *DeleteUserResponse) error
-}
-type UserServiceGetUserHooker interface {
-	PrepareGetUser(http.Context, *GetUserRequest) (context.Context, error)
-	CompleteGetUser(http.Context, *GetUserRequest, *GetUserResponse) error
+type UserServiceListUsersHooker interface {
+	PrepareListUsers(http.Context, *ListUsersRequest) (context.Context, error)
+	CompleteListUsers(http.Context, *ListUsersRequest, *ListUsersResponse) error
 }
 type UserServiceListUserResourcesHooker interface {
 	PrepareListUserResources(http.Context, *ListUserResourcesRequest) (context.Context, error)
 	CompleteListUserResources(http.Context, *ListUserResourcesRequest, *ListUserResourcesResponse) error
 }
-type UserServiceListUsersHooker interface {
-	PrepareListUsers(http.Context, *ListUsersRequest) (context.Context, error)
-	CompleteListUsers(http.Context, *ListUsersRequest, *ListUsersResponse) error
+type UserServiceGetUserHooker interface {
+	PrepareGetUser(http.Context, *GetUserRequest) (context.Context, error)
+	CompleteGetUser(http.Context, *GetUserRequest, *GetUserResponse) error
 }
-type UserServiceResetUserPasswordHooker interface {
-	PrepareResetUserPassword(http.Context, *ResetUserPasswordRequest) (context.Context, error)
-	CompleteResetUserPassword(http.Context, *ResetUserPasswordRequest, *ResetUserPasswordResponse) error
+type UserServiceCreateUserHooker interface {
+	PrepareCreateUser(http.Context, *CreateUserRequest) (context.Context, error)
+	CompleteCreateUser(http.Context, *CreateUserRequest, *CreateUserResponse) error
 }
 type UserServiceUpdateUserHooker interface {
 	PrepareUpdateUser(http.Context, *UpdateUserRequest) (context.Context, error)
 	CompleteUpdateUser(http.Context, *UpdateUserRequest, *UpdateUserResponse) error
 }
-type UserServiceUpdateUserRolesHooker interface {
-	PrepareUpdateUserRoles(http.Context, *UpdateUserRolesRequest) (context.Context, error)
-	CompleteUpdateUserRoles(http.Context, *UpdateUserRolesRequest, *UpdateUserRolesResponse) error
+type UserServiceDeleteUserHooker interface {
+	PrepareDeleteUser(http.Context, *DeleteUserRequest) (context.Context, error)
+	CompleteDeleteUser(http.Context, *DeleteUserRequest, *DeleteUserResponse) error
 }
 type UserServiceUpdateUserStatusHooker interface {
 	PrepareUpdateUserStatus(http.Context, *UpdateUserStatusRequest) (context.Context, error)
 	CompleteUpdateUserStatus(http.Context, *UpdateUserStatusRequest, *UpdateUserStatusResponse) error
+}
+type UserServiceUpdateUserRolesHooker interface {
+	PrepareUpdateUserRoles(http.Context, *UpdateUserRolesRequest) (context.Context, error)
+	CompleteUpdateUserRoles(http.Context, *UpdateUserRolesRequest, *UpdateUserRolesResponse) error
+}
+type UserServiceResetUserPasswordHooker interface {
+	PrepareResetUserPassword(http.Context, *ResetUserPasswordRequest) (context.Context, error)
+	CompleteResetUserPassword(http.Context, *ResetUserPasswordRequest, *ResetUserPasswordResponse) error
 }
 
 func RegisterUserServiceBridgeServer(s *http.Server, srv UserServiceHookedBridger) {
@@ -369,27 +369,11 @@ func _UserService_ResetUserPassword0_Bridge_Handler(srv UserServiceHookedBridger
 // pointer dereference when methods are called.
 type UnimplementedUserServiceHooked struct{}
 
-func (UnimplementedUserServiceHooked) PrepareCreateUser(ctx http.Context, in *CreateUserRequest) (context.Context, error) {
+func (UnimplementedUserServiceHooked) PrepareListUsers(ctx http.Context, in *ListUsersRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedUserServiceHooked) CompleteCreateUser(ctx http.Context, in *CreateUserRequest, out *CreateUserResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceHooked) PrepareDeleteUser(ctx http.Context, in *DeleteUserRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceHooked) CompleteDeleteUser(ctx http.Context, in *DeleteUserRequest, out *DeleteUserResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedUserServiceHooked) PrepareGetUser(ctx http.Context, in *GetUserRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedUserServiceHooked) CompleteGetUser(ctx http.Context, in *GetUserRequest, out *GetUserResponse) error {
+func (UnimplementedUserServiceHooked) CompleteListUsers(ctx http.Context, in *ListUsersRequest, out *ListUsersResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -401,19 +385,19 @@ func (UnimplementedUserServiceHooked) CompleteListUserResources(ctx http.Context
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedUserServiceHooked) PrepareListUsers(ctx http.Context, in *ListUsersRequest) (context.Context, error) {
+func (UnimplementedUserServiceHooked) PrepareGetUser(ctx http.Context, in *GetUserRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedUserServiceHooked) CompleteListUsers(ctx http.Context, in *ListUsersRequest, out *ListUsersResponse) error {
+func (UnimplementedUserServiceHooked) CompleteGetUser(ctx http.Context, in *GetUserRequest, out *GetUserResponse) error {
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedUserServiceHooked) PrepareResetUserPassword(ctx http.Context, in *ResetUserPasswordRequest) (context.Context, error) {
+func (UnimplementedUserServiceHooked) PrepareCreateUser(ctx http.Context, in *CreateUserRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedUserServiceHooked) CompleteResetUserPassword(ctx http.Context, in *ResetUserPasswordRequest, out *ResetUserPasswordResponse) error {
+func (UnimplementedUserServiceHooked) CompleteCreateUser(ctx http.Context, in *CreateUserRequest, out *CreateUserResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -425,11 +409,11 @@ func (UnimplementedUserServiceHooked) CompleteUpdateUser(ctx http.Context, in *U
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedUserServiceHooked) PrepareUpdateUserRoles(ctx http.Context, in *UpdateUserRolesRequest) (context.Context, error) {
+func (UnimplementedUserServiceHooked) PrepareDeleteUser(ctx http.Context, in *DeleteUserRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedUserServiceHooked) CompleteUpdateUserRoles(ctx http.Context, in *UpdateUserRolesRequest, out *UpdateUserRolesResponse) error {
+func (UnimplementedUserServiceHooked) CompleteDeleteUser(ctx http.Context, in *DeleteUserRequest, out *DeleteUserResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -438,6 +422,22 @@ func (UnimplementedUserServiceHooked) PrepareUpdateUserStatus(ctx http.Context, 
 }
 
 func (UnimplementedUserServiceHooked) CompleteUpdateUserStatus(ctx http.Context, in *UpdateUserStatusRequest, out *UpdateUserStatusResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) PrepareUpdateUserRoles(ctx http.Context, in *UpdateUserRolesRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) CompleteUpdateUserRoles(ctx http.Context, in *UpdateUserRolesRequest, out *UpdateUserRolesResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedUserServiceHooked) PrepareResetUserPassword(ctx http.Context, in *ResetUserPasswordRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedUserServiceHooked) CompleteResetUserPassword(ctx http.Context, in *ResetUserPasswordRequest, out *ResetUserPasswordResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -463,40 +463,40 @@ func NewUserServiceHTTPBridge(client *http.Client) UserServiceHTTPServer {
 	return &UserServiceHTTPBridgeImpl{client: NewUserServiceHTTPClient(client)}
 }
 
-func (c *UserServiceHTTPBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
-	return c.client.CreateUser(ctx, in)
-}
-
-func (c *UserServiceHTTPBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
-	return c.client.DeleteUser(ctx, in)
-}
-
-func (c *UserServiceHTTPBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
-	return c.client.GetUser(ctx, in)
+func (c *UserServiceHTTPBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
+	return c.client.ListUsers(ctx, in)
 }
 
 func (c *UserServiceHTTPBridgeImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
 	return c.client.ListUserResources(ctx, in)
 }
 
-func (c *UserServiceHTTPBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
-	return c.client.ListUsers(ctx, in)
+func (c *UserServiceHTTPBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
+	return c.client.GetUser(ctx, in)
 }
 
-func (c *UserServiceHTTPBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
-	return c.client.ResetUserPassword(ctx, in)
+func (c *UserServiceHTTPBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
+	return c.client.CreateUser(ctx, in)
 }
 
 func (c *UserServiceHTTPBridgeImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return c.client.UpdateUser(ctx, in)
 }
 
-func (c *UserServiceHTTPBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
-	return c.client.UpdateUserRoles(ctx, in)
+func (c *UserServiceHTTPBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return c.client.DeleteUser(ctx, in)
 }
 
 func (c *UserServiceHTTPBridgeImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
 	return c.client.UpdateUserStatus(ctx, in)
+}
+
+func (c *UserServiceHTTPBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
+	return c.client.UpdateUserRoles(ctx, in)
+}
+
+func (c *UserServiceHTTPBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return c.client.ResetUserPassword(ctx, in)
 }
 
 type UserServiceBridgeImpl struct {
@@ -507,40 +507,40 @@ func NewUserServiceBridge(client grpc.ClientConnInterface) UserServiceServer {
 	return &UserServiceBridgeImpl{client: NewUserServiceClient(client)}
 }
 
-func (c *UserServiceBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
-	return c.client.CreateUser(ctx, in)
-}
-
-func (c *UserServiceBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
-	return c.client.DeleteUser(ctx, in)
-}
-
-func (c *UserServiceBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
-	return c.client.GetUser(ctx, in)
+func (c *UserServiceBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
+	return c.client.ListUsers(ctx, in)
 }
 
 func (c *UserServiceBridgeImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
 	return c.client.ListUserResources(ctx, in)
 }
 
-func (c *UserServiceBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
-	return c.client.ListUsers(ctx, in)
+func (c *UserServiceBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
+	return c.client.GetUser(ctx, in)
 }
 
-func (c *UserServiceBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
-	return c.client.ResetUserPassword(ctx, in)
+func (c *UserServiceBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
+	return c.client.CreateUser(ctx, in)
 }
 
 func (c *UserServiceBridgeImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return c.client.UpdateUser(ctx, in)
 }
 
-func (c *UserServiceBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
-	return c.client.UpdateUserRoles(ctx, in)
+func (c *UserServiceBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return c.client.DeleteUser(ctx, in)
 }
 
 func (c *UserServiceBridgeImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
 	return c.client.UpdateUserStatus(ctx, in)
+}
+
+func (c *UserServiceBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
+	return c.client.UpdateUserRoles(ctx, in)
+}
+
+func (c *UserServiceBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return c.client.ResetUserPassword(ctx, in)
 }
 
 func (c *UserServiceBridgeImpl) mustEmbedUnimplementedUserServiceServer() {}
@@ -553,40 +553,40 @@ func NewUserServiceGRPC2HTTP(client grpc.ClientConnInterface) UserServiceHTTPSer
 	return &UserServiceGRPC2HTTPBridgeImpl{client: NewUserServiceClient(client)}
 }
 
-func (c *UserServiceGRPC2HTTPBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
-	return c.client.CreateUser(ctx, in)
-}
-
-func (c *UserServiceGRPC2HTTPBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
-	return c.client.DeleteUser(ctx, in)
-}
-
-func (c *UserServiceGRPC2HTTPBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
-	return c.client.GetUser(ctx, in)
+func (c *UserServiceGRPC2HTTPBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
+	return c.client.ListUsers(ctx, in)
 }
 
 func (c *UserServiceGRPC2HTTPBridgeImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
 	return c.client.ListUserResources(ctx, in)
 }
 
-func (c *UserServiceGRPC2HTTPBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
-	return c.client.ListUsers(ctx, in)
+func (c *UserServiceGRPC2HTTPBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
+	return c.client.GetUser(ctx, in)
 }
 
-func (c *UserServiceGRPC2HTTPBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
-	return c.client.ResetUserPassword(ctx, in)
+func (c *UserServiceGRPC2HTTPBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
+	return c.client.CreateUser(ctx, in)
 }
 
 func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return c.client.UpdateUser(ctx, in)
 }
 
-func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
-	return c.client.UpdateUserRoles(ctx, in)
+func (c *UserServiceGRPC2HTTPBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return c.client.DeleteUser(ctx, in)
 }
 
 func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
 	return c.client.UpdateUserStatus(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
+	return c.client.UpdateUserRoles(ctx, in)
+}
+
+func (c *UserServiceGRPC2HTTPBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return c.client.ResetUserPassword(ctx, in)
 }
 
 type UserServiceHTTP2GRPCBridgeImpl struct {
@@ -597,40 +597,40 @@ func NewUserServiceHTTP2GRPC(client *http.Client) UserServiceServer {
 	return &UserServiceHTTP2GRPCBridgeImpl{client: NewUserServiceHTTPClient(client)}
 }
 
-func (c *UserServiceHTTP2GRPCBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
-	return c.client.CreateUser(ctx, in)
-}
-
-func (c *UserServiceHTTP2GRPCBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
-	return c.client.DeleteUser(ctx, in)
-}
-
-func (c *UserServiceHTTP2GRPCBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
-	return c.client.GetUser(ctx, in)
+func (c *UserServiceHTTP2GRPCBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
+	return c.client.ListUsers(ctx, in)
 }
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) ListUserResources(ctx context.Context, in *ListUserResourcesRequest) (*ListUserResourcesResponse, error) {
 	return c.client.ListUserResources(ctx, in)
 }
 
-func (c *UserServiceHTTP2GRPCBridgeImpl) ListUsers(ctx context.Context, in *ListUsersRequest) (*ListUsersResponse, error) {
-	return c.client.ListUsers(ctx, in)
+func (c *UserServiceHTTP2GRPCBridgeImpl) GetUser(ctx context.Context, in *GetUserRequest) (*GetUserResponse, error) {
+	return c.client.GetUser(ctx, in)
 }
 
-func (c *UserServiceHTTP2GRPCBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
-	return c.client.ResetUserPassword(ctx, in)
+func (c *UserServiceHTTP2GRPCBridgeImpl) CreateUser(ctx context.Context, in *CreateUserRequest) (*CreateUserResponse, error) {
+	return c.client.CreateUser(ctx, in)
 }
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return c.client.UpdateUser(ctx, in)
 }
 
-func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
-	return c.client.UpdateUserRoles(ctx, in)
+func (c *UserServiceHTTP2GRPCBridgeImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return c.client.DeleteUser(ctx, in)
 }
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest) (*UpdateUserStatusResponse, error) {
 	return c.client.UpdateUserStatus(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) UpdateUserRoles(ctx context.Context, in *UpdateUserRolesRequest) (*UpdateUserRolesResponse, error) {
+	return c.client.UpdateUserRoles(ctx, in)
+}
+
+func (c *UserServiceHTTP2GRPCBridgeImpl) ResetUserPassword(ctx context.Context, in *ResetUserPasswordRequest) (*ResetUserPasswordResponse, error) {
+	return c.client.ResetUserPassword(ctx, in)
 }
 
 func (c *UserServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedUserServiceServer() {}

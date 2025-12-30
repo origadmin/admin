@@ -28,51 +28,51 @@ var (
 	_ = codes.Unimplemented
 )
 
-const PermissionServiceCreatePermissionBridgeOperation = "/api.v1.services.system.PermissionService/CreatePermission"
-const PermissionServiceDeletePermissionBridgeOperation = "/api.v1.services.system.PermissionService/DeletePermission"
-const PermissionServiceGetPermissionBridgeOperation = "/api.v1.services.system.PermissionService/GetPermission"
 const PermissionServiceListPermissionsBridgeOperation = "/api.v1.services.system.PermissionService/ListPermissions"
+const PermissionServiceGetPermissionBridgeOperation = "/api.v1.services.system.PermissionService/GetPermission"
+const PermissionServiceCreatePermissionBridgeOperation = "/api.v1.services.system.PermissionService/CreatePermission"
 const PermissionServiceUpdatePermissionBridgeOperation = "/api.v1.services.system.PermissionService/UpdatePermission"
+const PermissionServiceDeletePermissionBridgeOperation = "/api.v1.services.system.PermissionService/DeletePermission"
 
 type PermissionServiceBridgeServer interface {
-	CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error)
-	DeletePermission(context.Context, *DeletePermissionRequest) (*DeletePermissionResponse, error)
-	GetPermission(context.Context, *GetPermissionRequest) (*GetPermissionResponse, error)
 	ListPermissions(context.Context, *ListPermissionsRequest) (*ListPermissionsResponse, error)
+	GetPermission(context.Context, *GetPermissionRequest) (*GetPermissionResponse, error)
+	CreatePermission(context.Context, *CreatePermissionRequest) (*CreatePermissionResponse, error)
 	UpdatePermission(context.Context, *UpdatePermissionRequest) (*UpdatePermissionResponse, error)
+	DeletePermission(context.Context, *DeletePermissionRequest) (*DeletePermissionResponse, error)
 }
 
 type PermissionServiceHooker interface {
-	PermissionServiceCreatePermissionHooker
-	PermissionServiceDeletePermissionHooker
-	PermissionServiceGetPermissionHooker
 	PermissionServiceListPermissionsHooker
+	PermissionServiceGetPermissionHooker
+	PermissionServiceCreatePermissionHooker
 	PermissionServiceUpdatePermissionHooker
+	PermissionServiceDeletePermissionHooker
 }
 
 type PermissionServiceHookedBridger interface {
 	PermissionServiceHooker
 	PermissionServiceBridgeServer
 }
-type PermissionServiceCreatePermissionHooker interface {
-	PrepareCreatePermission(http.Context, *CreatePermissionRequest) (context.Context, error)
-	CompleteCreatePermission(http.Context, *CreatePermissionRequest, *CreatePermissionResponse) error
-}
-type PermissionServiceDeletePermissionHooker interface {
-	PrepareDeletePermission(http.Context, *DeletePermissionRequest) (context.Context, error)
-	CompleteDeletePermission(http.Context, *DeletePermissionRequest, *DeletePermissionResponse) error
+type PermissionServiceListPermissionsHooker interface {
+	PrepareListPermissions(http.Context, *ListPermissionsRequest) (context.Context, error)
+	CompleteListPermissions(http.Context, *ListPermissionsRequest, *ListPermissionsResponse) error
 }
 type PermissionServiceGetPermissionHooker interface {
 	PrepareGetPermission(http.Context, *GetPermissionRequest) (context.Context, error)
 	CompleteGetPermission(http.Context, *GetPermissionRequest, *GetPermissionResponse) error
 }
-type PermissionServiceListPermissionsHooker interface {
-	PrepareListPermissions(http.Context, *ListPermissionsRequest) (context.Context, error)
-	CompleteListPermissions(http.Context, *ListPermissionsRequest, *ListPermissionsResponse) error
+type PermissionServiceCreatePermissionHooker interface {
+	PrepareCreatePermission(http.Context, *CreatePermissionRequest) (context.Context, error)
+	CompleteCreatePermission(http.Context, *CreatePermissionRequest, *CreatePermissionResponse) error
 }
 type PermissionServiceUpdatePermissionHooker interface {
 	PrepareUpdatePermission(http.Context, *UpdatePermissionRequest) (context.Context, error)
 	CompleteUpdatePermission(http.Context, *UpdatePermissionRequest, *UpdatePermissionResponse) error
+}
+type PermissionServiceDeletePermissionHooker interface {
+	PrepareDeletePermission(http.Context, *DeletePermissionRequest) (context.Context, error)
+	CompleteDeletePermission(http.Context, *DeletePermissionRequest, *DeletePermissionResponse) error
 }
 
 func RegisterPermissionServiceBridgeServer(s *http.Server, srv PermissionServiceHookedBridger) {
@@ -221,19 +221,11 @@ func _PermissionService_DeletePermission0_Bridge_Handler(srv PermissionServiceHo
 // pointer dereference when methods are called.
 type UnimplementedPermissionServiceHooked struct{}
 
-func (UnimplementedPermissionServiceHooked) PrepareCreatePermission(ctx http.Context, in *CreatePermissionRequest) (context.Context, error) {
+func (UnimplementedPermissionServiceHooked) PrepareListPermissions(ctx http.Context, in *ListPermissionsRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPermissionServiceHooked) CompleteCreatePermission(ctx http.Context, in *CreatePermissionRequest, out *CreatePermissionResponse) error {
-	return ctx.Result(200, out)
-}
-
-func (UnimplementedPermissionServiceHooked) PrepareDeletePermission(ctx http.Context, in *DeletePermissionRequest) (context.Context, error) {
-	return ctx, nil
-}
-
-func (UnimplementedPermissionServiceHooked) CompleteDeletePermission(ctx http.Context, in *DeletePermissionRequest, out *DeletePermissionResponse) error {
+func (UnimplementedPermissionServiceHooked) CompleteListPermissions(ctx http.Context, in *ListPermissionsRequest, out *ListPermissionsResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -245,11 +237,11 @@ func (UnimplementedPermissionServiceHooked) CompleteGetPermission(ctx http.Conte
 	return ctx.Result(200, out)
 }
 
-func (UnimplementedPermissionServiceHooked) PrepareListPermissions(ctx http.Context, in *ListPermissionsRequest) (context.Context, error) {
+func (UnimplementedPermissionServiceHooked) PrepareCreatePermission(ctx http.Context, in *CreatePermissionRequest) (context.Context, error) {
 	return ctx, nil
 }
 
-func (UnimplementedPermissionServiceHooked) CompleteListPermissions(ctx http.Context, in *ListPermissionsRequest, out *ListPermissionsResponse) error {
+func (UnimplementedPermissionServiceHooked) CompleteCreatePermission(ctx http.Context, in *CreatePermissionRequest, out *CreatePermissionResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -258,6 +250,14 @@ func (UnimplementedPermissionServiceHooked) PrepareUpdatePermission(ctx http.Con
 }
 
 func (UnimplementedPermissionServiceHooked) CompleteUpdatePermission(ctx http.Context, in *UpdatePermissionRequest, out *UpdatePermissionResponse) error {
+	return ctx.Result(200, out)
+}
+
+func (UnimplementedPermissionServiceHooked) PrepareDeletePermission(ctx http.Context, in *DeletePermissionRequest) (context.Context, error) {
+	return ctx, nil
+}
+
+func (UnimplementedPermissionServiceHooked) CompleteDeletePermission(ctx http.Context, in *DeletePermissionRequest, out *DeletePermissionResponse) error {
 	return ctx.Result(200, out)
 }
 
@@ -283,24 +283,24 @@ func NewPermissionServiceHTTPBridge(client *http.Client) PermissionServiceHTTPSe
 	return &PermissionServiceHTTPBridgeImpl{client: NewPermissionServiceHTTPClient(client)}
 }
 
-func (c *PermissionServiceHTTPBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
-	return c.client.CreatePermission(ctx, in)
-}
-
-func (c *PermissionServiceHTTPBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
-	return c.client.DeletePermission(ctx, in)
+func (c *PermissionServiceHTTPBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
+	return c.client.ListPermissions(ctx, in)
 }
 
 func (c *PermissionServiceHTTPBridgeImpl) GetPermission(ctx context.Context, in *GetPermissionRequest) (*GetPermissionResponse, error) {
 	return c.client.GetPermission(ctx, in)
 }
 
-func (c *PermissionServiceHTTPBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
-	return c.client.ListPermissions(ctx, in)
+func (c *PermissionServiceHTTPBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return c.client.CreatePermission(ctx, in)
 }
 
 func (c *PermissionServiceHTTPBridgeImpl) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
 	return c.client.UpdatePermission(ctx, in)
+}
+
+func (c *PermissionServiceHTTPBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return c.client.DeletePermission(ctx, in)
 }
 
 type PermissionServiceBridgeImpl struct {
@@ -311,24 +311,24 @@ func NewPermissionServiceBridge(client grpc.ClientConnInterface) PermissionServi
 	return &PermissionServiceBridgeImpl{client: NewPermissionServiceClient(client)}
 }
 
-func (c *PermissionServiceBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
-	return c.client.CreatePermission(ctx, in)
-}
-
-func (c *PermissionServiceBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
-	return c.client.DeletePermission(ctx, in)
+func (c *PermissionServiceBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
+	return c.client.ListPermissions(ctx, in)
 }
 
 func (c *PermissionServiceBridgeImpl) GetPermission(ctx context.Context, in *GetPermissionRequest) (*GetPermissionResponse, error) {
 	return c.client.GetPermission(ctx, in)
 }
 
-func (c *PermissionServiceBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
-	return c.client.ListPermissions(ctx, in)
+func (c *PermissionServiceBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return c.client.CreatePermission(ctx, in)
 }
 
 func (c *PermissionServiceBridgeImpl) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
 	return c.client.UpdatePermission(ctx, in)
+}
+
+func (c *PermissionServiceBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return c.client.DeletePermission(ctx, in)
 }
 
 func (c *PermissionServiceBridgeImpl) mustEmbedUnimplementedPermissionServiceServer() {}
@@ -341,24 +341,24 @@ func NewPermissionServiceGRPC2HTTP(client grpc.ClientConnInterface) PermissionSe
 	return &PermissionServiceGRPC2HTTPBridgeImpl{client: NewPermissionServiceClient(client)}
 }
 
-func (c *PermissionServiceGRPC2HTTPBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
-	return c.client.CreatePermission(ctx, in)
-}
-
-func (c *PermissionServiceGRPC2HTTPBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
-	return c.client.DeletePermission(ctx, in)
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
+	return c.client.ListPermissions(ctx, in)
 }
 
 func (c *PermissionServiceGRPC2HTTPBridgeImpl) GetPermission(ctx context.Context, in *GetPermissionRequest) (*GetPermissionResponse, error) {
 	return c.client.GetPermission(ctx, in)
 }
 
-func (c *PermissionServiceGRPC2HTTPBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
-	return c.client.ListPermissions(ctx, in)
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return c.client.CreatePermission(ctx, in)
 }
 
 func (c *PermissionServiceGRPC2HTTPBridgeImpl) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
 	return c.client.UpdatePermission(ctx, in)
+}
+
+func (c *PermissionServiceGRPC2HTTPBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return c.client.DeletePermission(ctx, in)
 }
 
 type PermissionServiceHTTP2GRPCBridgeImpl struct {
@@ -369,24 +369,24 @@ func NewPermissionServiceHTTP2GRPC(client *http.Client) PermissionServiceServer 
 	return &PermissionServiceHTTP2GRPCBridgeImpl{client: NewPermissionServiceHTTPClient(client)}
 }
 
-func (c *PermissionServiceHTTP2GRPCBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
-	return c.client.CreatePermission(ctx, in)
-}
-
-func (c *PermissionServiceHTTP2GRPCBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
-	return c.client.DeletePermission(ctx, in)
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
+	return c.client.ListPermissions(ctx, in)
 }
 
 func (c *PermissionServiceHTTP2GRPCBridgeImpl) GetPermission(ctx context.Context, in *GetPermissionRequest) (*GetPermissionResponse, error) {
 	return c.client.GetPermission(ctx, in)
 }
 
-func (c *PermissionServiceHTTP2GRPCBridgeImpl) ListPermissions(ctx context.Context, in *ListPermissionsRequest) (*ListPermissionsResponse, error) {
-	return c.client.ListPermissions(ctx, in)
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) CreatePermission(ctx context.Context, in *CreatePermissionRequest) (*CreatePermissionResponse, error) {
+	return c.client.CreatePermission(ctx, in)
 }
 
 func (c *PermissionServiceHTTP2GRPCBridgeImpl) UpdatePermission(ctx context.Context, in *UpdatePermissionRequest) (*UpdatePermissionResponse, error) {
 	return c.client.UpdatePermission(ctx, in)
+}
+
+func (c *PermissionServiceHTTP2GRPCBridgeImpl) DeletePermission(ctx context.Context, in *DeletePermissionRequest) (*DeletePermissionResponse, error) {
+	return c.client.DeletePermission(ctx, in)
 }
 
 func (c *PermissionServiceHTTP2GRPCBridgeImpl) mustEmbedUnimplementedPermissionServiceServer() {}

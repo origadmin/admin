@@ -35,7 +35,7 @@ var (
 	_ = metadata.Join
 )
 
-func request_Me_GetProfile_0(ctx context.Context, marshaler runtime.Marshaler, client MeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MeService_GetProfile_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetProfileRequest
 		metadata runtime.ServerMetadata
@@ -45,7 +45,7 @@ func request_Me_GetProfile_0(ctx context.Context, marshaler runtime.Marshaler, c
 	return msg, metadata, err
 }
 
-func local_request_Me_GetProfile_0(ctx context.Context, marshaler runtime.Marshaler, server MeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MeService_GetProfile_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetProfileRequest
 		metadata runtime.ServerMetadata
@@ -54,7 +54,7 @@ func local_request_Me_GetProfile_0(ctx context.Context, marshaler runtime.Marsha
 	return msg, metadata, err
 }
 
-func request_Me_UpdateProfile_0(ctx context.Context, marshaler runtime.Marshaler, client MeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MeService_UpdateProfile_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdateProfileRequest
 		metadata runtime.ServerMetadata
@@ -66,7 +66,7 @@ func request_Me_UpdateProfile_0(ctx context.Context, marshaler runtime.Marshaler
 	return msg, metadata, err
 }
 
-func local_request_Me_UpdateProfile_0(ctx context.Context, marshaler runtime.Marshaler, server MeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MeService_UpdateProfile_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdateProfileRequest
 		metadata runtime.ServerMetadata
@@ -78,7 +78,7 @@ func local_request_Me_UpdateProfile_0(ctx context.Context, marshaler runtime.Mar
 	return msg, metadata, err
 }
 
-func request_Me_UpdatePassword_0(ctx context.Context, marshaler runtime.Marshaler, client MeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MeService_UpdatePassword_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdatePasswordRequest
 		metadata runtime.ServerMetadata
@@ -90,7 +90,7 @@ func request_Me_UpdatePassword_0(ctx context.Context, marshaler runtime.Marshale
 	return msg, metadata, err
 }
 
-func local_request_Me_UpdatePassword_0(ctx context.Context, marshaler runtime.Marshaler, server MeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MeService_UpdatePassword_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq UpdatePasswordRequest
 		metadata runtime.ServerMetadata
@@ -102,7 +102,7 @@ func local_request_Me_UpdatePassword_0(ctx context.Context, marshaler runtime.Ma
 	return msg, metadata, err
 }
 
-func request_Me_GetUserResources_0(ctx context.Context, marshaler runtime.Marshaler, client MeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MeService_GetUserResources_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserResourcesRequest
 		metadata runtime.ServerMetadata
@@ -112,7 +112,7 @@ func request_Me_GetUserResources_0(ctx context.Context, marshaler runtime.Marsha
 	return msg, metadata, err
 }
 
-func local_request_Me_GetUserResources_0(ctx context.Context, marshaler runtime.Marshaler, server MeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MeService_GetUserResources_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserResourcesRequest
 		metadata runtime.ServerMetadata
@@ -121,7 +121,7 @@ func local_request_Me_GetUserResources_0(ctx context.Context, marshaler runtime.
 	return msg, metadata, err
 }
 
-func request_Me_GetUserRoles_0(ctx context.Context, marshaler runtime.Marshaler, client MeClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MeService_GetUserRoles_0(ctx context.Context, marshaler runtime.Marshaler, client MeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserRolesRequest
 		metadata runtime.ServerMetadata
@@ -131,7 +131,7 @@ func request_Me_GetUserRoles_0(ctx context.Context, marshaler runtime.Marshaler,
 	return msg, metadata, err
 }
 
-func local_request_Me_GetUserRoles_0(ctx context.Context, marshaler runtime.Marshaler, server MeServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_MeService_GetUserRoles_0(ctx context.Context, marshaler runtime.Marshaler, server MeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetUserRolesRequest
 		metadata runtime.ServerMetadata
@@ -140,119 +140,119 @@ func local_request_Me_GetUserRoles_0(ctx context.Context, marshaler runtime.Mars
 	return msg, metadata, err
 }
 
-// RegisterMeHandlerServer registers the http handlers for service Me to "mux".
-// UnaryRPC     :call MeServer directly.
+// RegisterMeServiceHandlerServer registers the http handlers for service MeService to "mux".
+// UnaryRPC     :call MeServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
-// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMeHandlerFromEndpoint instead.
+// Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterMeServiceHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
-func RegisterMeHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MeServer) error {
-	mux.Handle(http.MethodGet, pattern_Me_GetProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+func RegisterMeServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server MeServiceServer) error {
+	mux.Handle(http.MethodGet, pattern_MeService_GetProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.Me/GetProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Me_GetProfile_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MeService_GetProfile_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_GetProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_GetProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_Me_UpdateProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_MeService_UpdateProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.Me/UpdateProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdateProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Me_UpdateProfile_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MeService_UpdateProfile_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_UpdateProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_UpdateProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_Me_UpdatePassword_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_MeService_UpdatePassword_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.Me/UpdatePassword", runtime.WithHTTPPathPattern("/api/v1/me/password"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdatePassword", runtime.WithHTTPPathPattern("/api/v1/me/password"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Me_UpdatePassword_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MeService_UpdatePassword_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_UpdatePassword_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_UpdatePassword_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_Me_GetUserResources_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_MeService_GetUserResources_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.Me/GetUserResources", runtime.WithHTTPPathPattern("/api/v1/me/resources"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserResources", runtime.WithHTTPPathPattern("/api/v1/me/resources"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Me_GetUserResources_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MeService_GetUserResources_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_GetUserResources_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_GetUserResources_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_Me_GetUserRoles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_MeService_GetUserRoles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.Me/GetUserRoles", runtime.WithHTTPPathPattern("/api/v1/me/roles"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserRoles", runtime.WithHTTPPathPattern("/api/v1/me/roles"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_Me_GetUserRoles_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_MeService_GetUserRoles_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_GetUserRoles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_GetUserRoles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
 }
 
-// RegisterMeHandlerFromEndpoint is same as RegisterMeHandler but
+// RegisterMeServiceHandlerFromEndpoint is same as RegisterMeServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMeHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterMeServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.NewClient(endpoint, opts...)
 	if err != nil {
 		return err
@@ -271,121 +271,121 @@ func RegisterMeHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, e
 			}
 		}()
 	}()
-	return RegisterMeHandler(ctx, mux, conn)
+	return RegisterMeServiceHandler(ctx, mux, conn)
 }
 
-// RegisterMeHandler registers the http handlers for service Me to "mux".
+// RegisterMeServiceHandler registers the http handlers for service MeService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMeHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMeHandlerClient(ctx, mux, NewMeClient(conn))
+func RegisterMeServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterMeServiceHandlerClient(ctx, mux, NewMeServiceClient(conn))
 }
 
-// RegisterMeHandlerClient registers the http handlers for service Me
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MeClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MeClient"
+// RegisterMeServiceHandlerClient registers the http handlers for service MeService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MeServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MeServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MeClient" to call the correct interceptors. This client ignores the HTTP middlewares.
-func RegisterMeHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MeClient) error {
-	mux.Handle(http.MethodGet, pattern_Me_GetProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+// "MeServiceClient" to call the correct interceptors. This client ignores the HTTP middlewares.
+func RegisterMeServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MeServiceClient) error {
+	mux.Handle(http.MethodGet, pattern_MeService_GetProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.Me/GetProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Me_GetProfile_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MeService_GetProfile_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_GetProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_GetProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_Me_UpdateProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_MeService_UpdateProfile_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.Me/UpdateProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdateProfile", runtime.WithHTTPPathPattern("/api/v1/me/profile"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Me_UpdateProfile_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MeService_UpdateProfile_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_UpdateProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_UpdateProfile_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPut, pattern_Me_UpdatePassword_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPut, pattern_MeService_UpdatePassword_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.Me/UpdatePassword", runtime.WithHTTPPathPattern("/api/v1/me/password"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/UpdatePassword", runtime.WithHTTPPathPattern("/api/v1/me/password"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Me_UpdatePassword_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MeService_UpdatePassword_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_UpdatePassword_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_UpdatePassword_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_Me_GetUserResources_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_MeService_GetUserResources_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.Me/GetUserResources", runtime.WithHTTPPathPattern("/api/v1/me/resources"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserResources", runtime.WithHTTPPathPattern("/api/v1/me/resources"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Me_GetUserResources_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MeService_GetUserResources_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_GetUserResources_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_GetUserResources_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_Me_GetUserRoles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_MeService_GetUserRoles_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.Me/GetUserRoles", runtime.WithHTTPPathPattern("/api/v1/me/roles"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.MeService/GetUserRoles", runtime.WithHTTPPathPattern("/api/v1/me/roles"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Me_GetUserRoles_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MeService_GetUserRoles_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_Me_GetUserRoles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MeService_GetUserRoles_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_Me_GetProfile_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "profile"}, ""))
-	pattern_Me_UpdateProfile_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "profile"}, ""))
-	pattern_Me_UpdatePassword_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "password"}, ""))
-	pattern_Me_GetUserResources_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "resources"}, ""))
-	pattern_Me_GetUserRoles_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "roles"}, ""))
+	pattern_MeService_GetProfile_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "profile"}, ""))
+	pattern_MeService_UpdateProfile_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "profile"}, ""))
+	pattern_MeService_UpdatePassword_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "password"}, ""))
+	pattern_MeService_GetUserResources_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "resources"}, ""))
+	pattern_MeService_GetUserRoles_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "me", "roles"}, ""))
 )
 
 var (
-	forward_Me_GetProfile_0       = runtime.ForwardResponseMessage
-	forward_Me_UpdateProfile_0    = runtime.ForwardResponseMessage
-	forward_Me_UpdatePassword_0   = runtime.ForwardResponseMessage
-	forward_Me_GetUserResources_0 = runtime.ForwardResponseMessage
-	forward_Me_GetUserRoles_0     = runtime.ForwardResponseMessage
+	forward_MeService_GetProfile_0       = runtime.ForwardResponseMessage
+	forward_MeService_UpdateProfile_0    = runtime.ForwardResponseMessage
+	forward_MeService_UpdatePassword_0   = runtime.ForwardResponseMessage
+	forward_MeService_GetUserResources_0 = runtime.ForwardResponseMessage
+	forward_MeService_GetUserRoles_0     = runtime.ForwardResponseMessage
 )

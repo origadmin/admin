@@ -10,8 +10,6 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	types "origadmin/application/admin/api/v1/services/types"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -21,41 +19,41 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationMeGetProfile = "/api.v1.services.auth.Me/GetProfile"
-const OperationMeGetUserResources = "/api.v1.services.auth.Me/GetUserResources"
-const OperationMeGetUserRoles = "/api.v1.services.auth.Me/GetUserRoles"
-const OperationMeUpdatePassword = "/api.v1.services.auth.Me/UpdatePassword"
-const OperationMeUpdateProfile = "/api.v1.services.auth.Me/UpdateProfile"
+const OperationMeServiceGetProfile = "/api.v1.services.auth.MeService/GetProfile"
+const OperationMeServiceGetUserResources = "/api.v1.services.auth.MeService/GetUserResources"
+const OperationMeServiceGetUserRoles = "/api.v1.services.auth.MeService/GetUserRoles"
+const OperationMeServiceUpdatePassword = "/api.v1.services.auth.MeService/UpdatePassword"
+const OperationMeServiceUpdateProfile = "/api.v1.services.auth.MeService/UpdateProfile"
 
-type MeHTTPServer interface {
+type MeServiceHTTPServer interface {
 	// GetProfile GetProfile retrieves the profile of the currently authenticated user.
-	GetProfile(context.Context, *GetProfileRequest) (*types.User, error)
+	GetProfile(context.Context, *GetProfileRequest) (*GetProfileResponse, error)
 	// GetUserResources GetUserResources retrieves the menu/resource list for the current user.
 	GetUserResources(context.Context, *GetUserResourcesRequest) (*GetUserResourcesResponse, error)
 	// GetUserRoles GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesResponse, error)
 	// UpdatePassword UpdatePassword changes the password for the currently authenticated user.
-	UpdatePassword(context.Context, *UpdatePasswordRequest) (*emptypb.Empty, error)
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*UpdatePasswordResponse, error)
 	// UpdateProfile UpdateProfile updates the profile of the currently authenticated user.
-	UpdateProfile(context.Context, *UpdateProfileRequest) (*emptypb.Empty, error)
+	UpdateProfile(context.Context, *UpdateProfileRequest) (*UpdateProfileResponse, error)
 }
 
-func RegisterMeHTTPServer(s *http.Server, srv MeHTTPServer) {
+func RegisterMeServiceHTTPServer(s *http.Server, srv MeServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/v1/me/profile", _Me_GetProfile0_HTTP_Handler(srv))
-	r.PUT("/api/v1/me/profile", _Me_UpdateProfile0_HTTP_Handler(srv))
-	r.PUT("/api/v1/me/password", _Me_UpdatePassword0_HTTP_Handler(srv))
-	r.GET("/api/v1/me/resources", _Me_GetUserResources0_HTTP_Handler(srv))
-	r.GET("/api/v1/me/roles", _Me_GetUserRoles0_HTTP_Handler(srv))
+	r.GET("/api/v1/me/profile", _MeService_GetProfile0_HTTP_Handler(srv))
+	r.PUT("/api/v1/me/profile", _MeService_UpdateProfile0_HTTP_Handler(srv))
+	r.PUT("/api/v1/me/password", _MeService_UpdatePassword0_HTTP_Handler(srv))
+	r.GET("/api/v1/me/resources", _MeService_GetUserResources0_HTTP_Handler(srv))
+	r.GET("/api/v1/me/roles", _MeService_GetUserRoles0_HTTP_Handler(srv))
 }
 
-func _Me_GetProfile0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) error {
+func _MeService_GetProfile0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetProfileRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeGetProfile)
+		http.SetOperation(ctx, OperationMeServiceGetProfile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetProfile(ctx, req.(*GetProfileRequest))
 		})
@@ -63,12 +61,12 @@ func _Me_GetProfile0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) error
 		if err != nil {
 			return err
 		}
-		reply := out.(*types.User)
+		reply := out.(*GetProfileResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Me_UpdateProfile0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) error {
+func _MeService_UpdateProfile0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateProfileRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -77,7 +75,7 @@ func _Me_UpdateProfile0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) er
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeUpdateProfile)
+		http.SetOperation(ctx, OperationMeServiceUpdateProfile)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateProfile(ctx, req.(*UpdateProfileRequest))
 		})
@@ -85,12 +83,12 @@ func _Me_UpdateProfile0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) er
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*UpdateProfileResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Me_UpdatePassword0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) error {
+func _MeService_UpdatePassword0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePasswordRequest
 		if err := ctx.Bind(&in); err != nil {
@@ -99,7 +97,7 @@ func _Me_UpdatePassword0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) e
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeUpdatePassword)
+		http.SetOperation(ctx, OperationMeServiceUpdatePassword)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdatePassword(ctx, req.(*UpdatePasswordRequest))
 		})
@@ -107,18 +105,18 @@ func _Me_UpdatePassword0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) e
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*UpdatePasswordResponse)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Me_GetUserResources0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) error {
+func _MeService_GetUserResources0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserResourcesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeGetUserResources)
+		http.SetOperation(ctx, OperationMeServiceGetUserResources)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUserResources(ctx, req.(*GetUserResourcesRequest))
 		})
@@ -131,13 +129,13 @@ func _Me_GetUserResources0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context)
 	}
 }
 
-func _Me_GetUserRoles0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) error {
+func _MeService_GetUserRoles0_HTTP_Handler(srv MeServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetUserRolesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMeGetUserRoles)
+		http.SetOperation(ctx, OperationMeServiceGetUserRoles)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.GetUserRoles(ctx, req.(*GetUserRolesRequest))
 		})
@@ -150,33 +148,33 @@ func _Me_GetUserRoles0_HTTP_Handler(srv MeHTTPServer) func(ctx http.Context) err
 	}
 }
 
-type MeHTTPClient interface {
+type MeServiceHTTPClient interface {
 	// GetProfile GetProfile retrieves the profile of the currently authenticated user.
-	GetProfile(ctx context.Context, req *GetProfileRequest, opts ...http.CallOption) (rsp *types.User, err error)
+	GetProfile(ctx context.Context, req *GetProfileRequest, opts ...http.CallOption) (rsp *GetProfileResponse, err error)
 	// GetUserResources GetUserResources retrieves the menu/resource list for the current user.
 	GetUserResources(ctx context.Context, req *GetUserResourcesRequest, opts ...http.CallOption) (rsp *GetUserResourcesResponse, err error)
 	// GetUserRoles GetUserRoles retrieves the role list for the current user.
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesResponse, err error)
 	// UpdatePassword UpdatePassword changes the password for the currently authenticated user.
-	UpdatePassword(ctx context.Context, req *UpdatePasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdatePassword(ctx context.Context, req *UpdatePasswordRequest, opts ...http.CallOption) (rsp *UpdatePasswordResponse, err error)
 	// UpdateProfile UpdateProfile updates the profile of the currently authenticated user.
-	UpdateProfile(ctx context.Context, req *UpdateProfileRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateProfile(ctx context.Context, req *UpdateProfileRequest, opts ...http.CallOption) (rsp *UpdateProfileResponse, err error)
 }
 
-type MeHTTPClientImpl struct {
+type MeServiceHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewMeHTTPClient(client *http.Client) MeHTTPClient {
-	return &MeHTTPClientImpl{client}
+func NewMeServiceHTTPClient(client *http.Client) MeServiceHTTPClient {
+	return &MeServiceHTTPClientImpl{client}
 }
 
 // GetProfile GetProfile retrieves the profile of the currently authenticated user.
-func (c *MeHTTPClientImpl) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...http.CallOption) (*types.User, error) {
-	var out types.User
+func (c *MeServiceHTTPClientImpl) GetProfile(ctx context.Context, in *GetProfileRequest, opts ...http.CallOption) (*GetProfileResponse, error) {
+	var out GetProfileResponse
 	pattern := "/api/v1/me/profile"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationMeGetProfile))
+	opts = append(opts, http.Operation(OperationMeServiceGetProfile))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -186,11 +184,11 @@ func (c *MeHTTPClientImpl) GetProfile(ctx context.Context, in *GetProfileRequest
 }
 
 // GetUserResources GetUserResources retrieves the menu/resource list for the current user.
-func (c *MeHTTPClientImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...http.CallOption) (*GetUserResourcesResponse, error) {
+func (c *MeServiceHTTPClientImpl) GetUserResources(ctx context.Context, in *GetUserResourcesRequest, opts ...http.CallOption) (*GetUserResourcesResponse, error) {
 	var out GetUserResourcesResponse
 	pattern := "/api/v1/me/resources"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationMeGetUserResources))
+	opts = append(opts, http.Operation(OperationMeServiceGetUserResources))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -200,11 +198,11 @@ func (c *MeHTTPClientImpl) GetUserResources(ctx context.Context, in *GetUserReso
 }
 
 // GetUserRoles GetUserRoles retrieves the role list for the current user.
-func (c *MeHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...http.CallOption) (*GetUserRolesResponse, error) {
+func (c *MeServiceHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...http.CallOption) (*GetUserRolesResponse, error) {
 	var out GetUserRolesResponse
 	pattern := "/api/v1/me/roles"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationMeGetUserRoles))
+	opts = append(opts, http.Operation(OperationMeServiceGetUserRoles))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -214,11 +212,11 @@ func (c *MeHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserRolesReq
 }
 
 // UpdatePassword UpdatePassword changes the password for the currently authenticated user.
-func (c *MeHTTPClientImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *MeServiceHTTPClientImpl) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...http.CallOption) (*UpdatePasswordResponse, error) {
+	var out UpdatePasswordResponse
 	pattern := "/api/v1/me/password"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationMeUpdatePassword))
+	opts = append(opts, http.Operation(OperationMeServiceUpdatePassword))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
@@ -228,11 +226,11 @@ func (c *MeHTTPClientImpl) UpdatePassword(ctx context.Context, in *UpdatePasswor
 }
 
 // UpdateProfile UpdateProfile updates the profile of the currently authenticated user.
-func (c *MeHTTPClientImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *MeServiceHTTPClientImpl) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...http.CallOption) (*UpdateProfileResponse, error) {
+	var out UpdateProfileResponse
 	pattern := "/api/v1/me/profile"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationMeUpdateProfile))
+	opts = append(opts, http.Operation(OperationMeServiceUpdateProfile))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

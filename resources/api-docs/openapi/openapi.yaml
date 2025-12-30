@@ -20,9 +20,9 @@ paths:
     /api/v1/auth/login:
         post:
             tags:
-                - Auth
+                - AuthService
             description: Login authenticates a user and returns a token pair.
-            operationId: Auth_Login
+            operationId: AuthService_Login
             requestBody:
                 content:
                     application/json:
@@ -45,9 +45,9 @@ paths:
     /api/v1/auth/logout:
         post:
             tags:
-                - Auth
+                - AuthService
             description: Logout invalidates the user's session.
-            operationId: Auth_Logout
+            operationId: AuthService_Logout
             requestBody:
                 content:
                     application/json:
@@ -57,7 +57,10 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.LogoutResponse'
                 default:
                     description: Default error response
                     content:
@@ -67,9 +70,9 @@ paths:
     /api/v1/auth/register:
         post:
             tags:
-                - Auth
+                - AuthService
             description: Register creates a new user account.
-            operationId: Auth_Register
+            operationId: AuthService_Register
             requestBody:
                 content:
                     application/json:
@@ -79,7 +82,10 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.RegisterResponse'
                 default:
                     description: Default error response
                     content:
@@ -89,9 +95,9 @@ paths:
     /api/v1/auth/token:
         post:
             tags:
-                - Auth
+                - AuthService
             description: RefreshToken provides a new access token.
-            operationId: Auth_RefreshToken
+            operationId: AuthService_RefreshToken
             requestBody:
                 content:
                     application/json:
@@ -114,9 +120,9 @@ paths:
     /api/v1/captcha:
         get:
             tags:
-                - Auth
+                - AuthService
             description: GetCaptcha generates a new captcha.
-            operationId: Auth_GetCaptcha
+            operationId: AuthService_GetCaptcha
             parameters:
                 - name: reload
                   in: query
@@ -198,9 +204,9 @@ paths:
     /api/v1/me/password:
         put:
             tags:
-                - Me
+                - MeService
             description: UpdatePassword changes the password for the currently authenticated user.
-            operationId: Me_UpdatePassword
+            operationId: MeService_UpdatePassword
             requestBody:
                 content:
                     application/json:
@@ -210,7 +216,10 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdatePasswordResponse'
                 default:
                     description: Default error response
                     content:
@@ -220,16 +229,16 @@ paths:
     /api/v1/me/profile:
         get:
             tags:
-                - Me
+                - MeService
             description: GetProfile retrieves the profile of the currently authenticated user.
-            operationId: Me_GetProfile
+            operationId: MeService_GetProfile
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.types.User'
+                                $ref: '#/components/schemas/api.v1.services.auth.GetProfileResponse'
                 default:
                     description: Default error response
                     content:
@@ -238,9 +247,9 @@ paths:
                                 $ref: '#/components/schemas/google.rpc.Status'
         put:
             tags:
-                - Me
+                - MeService
             description: UpdateProfile updates the profile of the currently authenticated user.
-            operationId: Me_UpdateProfile
+            operationId: MeService_UpdateProfile
             requestBody:
                 content:
                     application/json:
@@ -250,7 +259,10 @@ paths:
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.services.auth.UpdateProfileResponse'
                 default:
                     description: Default error response
                     content:
@@ -260,9 +272,9 @@ paths:
     /api/v1/me/resources:
         get:
             tags:
-                - Me
+                - MeService
             description: GetUserResources retrieves the menu/resource list for the current user.
-            operationId: Me_GetUserResources
+            operationId: MeService_GetUserResources
             responses:
                 "200":
                     description: OK
@@ -279,9 +291,9 @@ paths:
     /api/v1/me/roles:
         get:
             tags:
-                - Me
+                - MeService
             description: GetUserRoles retrieves the role list for the current user.
-            operationId: Me_GetUserRoles
+            operationId: MeService_GetUserRoles
             responses:
                 "200":
                     description: OK
@@ -2143,7 +2155,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.upload.ListUploadResponse'
+                                $ref: '#/components/schemas/api.v1.services.datastore.ListUploadResponse'
                 default:
                     description: Default error response
                     content:
@@ -2177,7 +2189,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.upload.CreateUploadResponse'
+                                $ref: '#/components/schemas/api.v1.services.datastore.CreateUploadResponse'
                 default:
                     description: Default error response
                     content:
@@ -2212,7 +2224,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.upload.UpdateUploadResponse'
+                                $ref: '#/components/schemas/api.v1.services.datastore.UpdateUploadResponse'
                 default:
                     description: Default error response
                     content:
@@ -2237,7 +2249,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.upload.GetUploadResponse'
+                                $ref: '#/components/schemas/api.v1.services.datastore.GetUploadResponse'
                 default:
                     description: Default error response
                     content:
@@ -2261,7 +2273,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.services.upload.DeleteUploadResponse'
+                                $ref: '#/components/schemas/api.v1.services.datastore.DeleteUploadResponse'
                 default:
                     description: Default error response
                     content:
@@ -2279,6 +2291,12 @@ components:
                     type: string
                     description: Base64 encoded image data.
             description: The response message for the GetCaptcha RPC.
+        api.v1.services.auth.GetProfileResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.v1.services.types.User'
+            description: The response message for the GetProfile RPC.
         api.v1.services.auth.GetUserResourcesResponse:
             type: object
             properties:
@@ -2348,6 +2366,10 @@ components:
                 refresh_token:
                     type: string
             description: The request message for the Logout RPC.
+        api.v1.services.auth.LogoutResponse:
+            type: object
+            properties: {}
+            description: The response message for the Logout RPC.
         api.v1.services.auth.PolicyRule:
             type: object
             properties:
@@ -2387,6 +2409,10 @@ components:
                 captcha_code:
                     type: string
             description: The request message for the Register RPC.
+        api.v1.services.auth.RegisterResponse:
+            type: object
+            properties: {}
+            description: The response message for the Register RPC.
         api.v1.services.auth.UpdatePasswordRequest:
             type: object
             properties:
@@ -2395,6 +2421,10 @@ components:
                 new_password:
                     type: string
             description: The request message for the UpdatePassword RPC.
+        api.v1.services.auth.UpdatePasswordResponse:
+            type: object
+            properties: {}
+            description: The response message for the UpdatePassword RPC.
         api.v1.services.auth.UpdateProfileRequest:
             type: object
             properties:
@@ -2403,6 +2433,10 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.types.User'
                     description: The fields to update.
             description: The request message for the UpdateProfile RPC.
+        api.v1.services.auth.UpdateProfileResponse:
+            type: object
+            properties: {}
+            description: The response message for the UpdateProfile RPC.
         api.v1.services.auth.WatchUpdateResponse:
             type: object
             properties:
@@ -2414,10 +2448,20 @@ components:
                 data:
                     $ref: '#/components/schemas/api.v1.services.types.DataObject'
             description: CreateDatastoreResponse is the response for the DatastoreService.CreateDatastore method.
+        api.v1.services.datastore.CreateUploadResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
+            description: CreateUploadResponse is the response for the UploadService.CreateUpload method.
         api.v1.services.datastore.DeleteDatastoreResponse:
             type: object
             properties: {}
             description: DeleteDatastoreResponse is the response for the DatastoreService.DeleteDatastore method.
+        api.v1.services.datastore.DeleteUploadResponse:
+            type: object
+            properties: {}
+            description: DeleteUploadResponse is the response for the UploadService.DeleteUpload method.
         api.v1.services.datastore.GetDatastoreResponse:
             type: object
             properties:
@@ -2426,6 +2470,14 @@ components:
                         - $ref: '#/components/schemas/api.v1.services.types.DataObject'
                     description: The field id should match the Noun in the method id.
             description: GetDatastoreResponse is the response for the DatastoreService.GetDatastore method.
+        api.v1.services.datastore.GetUploadResponse:
+            type: object
+            properties:
+                data:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                    description: The field id should match the Noun in the method id.
+            description: GetUploadResponse is the response for the UploadService.GetUpload method.
         api.v1.services.datastore.ListDatastoreResponse:
             type: object
             properties:
@@ -2454,12 +2506,46 @@ components:
                         - $ref: '#/components/schemas/google.protobuf.Any'
                     description: "Additional information about this response.\r\n content to be added without destroying the current data format"
             description: ListDatastoreResponse is the response for the DatastoreService.ListDatastore method.
+        api.v1.services.datastore.ListUploadResponse:
+            type: object
+            properties:
+                total_size:
+                    type: integer
+                    description: The total number of items in the list.
+                    format: int32
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.DataObject'
+                    description: The paging upload
+                current:
+                    type: integer
+                    description: The current page number.
+                    format: int32
+                page_size:
+                    type: integer
+                    description: The maximum number of items to return.
+                    format: int32
+                next_page_token:
+                    type: string
+                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
+                extra:
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
+            description: ListUploadResponse is the response for the UploadService.ListUpload method.
         api.v1.services.datastore.UpdateDatastoreResponse:
             type: object
             properties:
                 data:
                     $ref: '#/components/schemas/api.v1.services.types.DataObject'
             description: UpdateDatastoreResponse is the response for the DatastoreService.UpdateDatastore method.
+        api.v1.services.datastore.UpdateUploadResponse:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
+            description: UpdateUploadResponse is the response for the UploadService.UpdateUpload method.
         api.v1.services.message.GetPersonalProfileResponse:
             type: object
             properties:
@@ -3468,58 +3554,6 @@ components:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
                     description: Roles holds the value of the roles edge.
             description: View is the model entity for the View schema.
-        api.v1.services.upload.CreateUploadResponse:
-            type: object
-            properties:
-                data:
-                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: CreateUploadResponse is the response for the UploadService.CreateUpload method.
-        api.v1.services.upload.DeleteUploadResponse:
-            type: object
-            properties: {}
-            description: DeleteUploadResponse is the response for the UploadService.DeleteUpload method.
-        api.v1.services.upload.GetUploadResponse:
-            type: object
-            properties:
-                data:
-                    allOf:
-                        - $ref: '#/components/schemas/api.v1.services.types.DataObject'
-                    description: The field id should match the Noun in the method id.
-            description: GetUploadResponse is the response for the UploadService.GetUpload method.
-        api.v1.services.upload.ListUploadResponse:
-            type: object
-            properties:
-                total_size:
-                    type: integer
-                    description: The total number of items in the list.
-                    format: int32
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.DataObject'
-                    description: The paging upload
-                current:
-                    type: integer
-                    description: The current page number.
-                    format: int32
-                page_size:
-                    type: integer
-                    description: The maximum number of items to return.
-                    format: int32
-                next_page_token:
-                    type: string
-                    description: "Token to retrieve the next page of results, or empty if there are no\r\n more results in the list."
-                extra:
-                    allOf:
-                        - $ref: '#/components/schemas/google.protobuf.Any'
-                    description: "Additional information about this response.\r\n content to be added without destroying the current data format"
-            description: ListUploadResponse is the response for the UploadService.ListUpload method.
-        api.v1.services.upload.UpdateUploadResponse:
-            type: object
-            properties:
-                data:
-                    $ref: '#/components/schemas/api.v1.services.types.DataObject'
-            description: UpdateUploadResponse is the response for the UploadService.UpdateUpload method.
         google.protobuf.Any:
             type: object
             properties:
@@ -3553,16 +3587,16 @@ components:
             name: Authorization
             in: header
 tags:
-    - name: Auth
-      description: Service Auth provides APIs for the authentication lifecycle.
+    - name: AuthService
+      description: Service AuthService provides APIs for the authentication lifecycle.
     - name: CasbinSourceService
       description: The Casbin source service definition.
     - name: DatastoreService
       description: The data service definition.
     - name: DepartmentService
       description: The login service definition.
-    - name: Me
-      description: Service Me provides APIs for the currently authenticated user to manage their own profile and data.
+    - name: MeService
+      description: Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
     - name: PermissionService
       description: The login service definition.
     - name: PersonalService
