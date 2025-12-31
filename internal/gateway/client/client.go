@@ -84,9 +84,18 @@ func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string) (*grpc.C
 	if err != nil {
 		return nil, err
 	}
+	middlewareProvider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
+	}
+	middlewares, err := middlewareProvider.ClientMiddlewares()
+	if err != nil {
+		return nil, err
+	}
 
 	return runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
-		Discoveries: discoveries,
+		Discoveries:       discoveries,
+		ClientMiddlewares: middlewares,
 	})
 }
 
