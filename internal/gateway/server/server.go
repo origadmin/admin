@@ -34,7 +34,7 @@ func NewServers(
 	var transportServers []transport.Server
 	for _, serverCfg := range serversCfg.GetConfigs() {
 		// Filter server configurations by name.
-		if serverCfg.GetName() != "gateway" {
+		if serverCfg.GetName() != "gateway" && serverCfg.GetName() != "origadmin.server.gateway" {
 			continue
 		}
 
@@ -51,7 +51,7 @@ func NewServers(
 	}
 
 	if len(transportServers) == 0 {
-		return nil, errors.New("no servers named 'gateway' were created")
+		return nil, errors.New("no servers named 'gateway' or 'origadmin.server.gateway' were created")
 	}
 
 	return transportServers, nil

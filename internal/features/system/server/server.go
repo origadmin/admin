@@ -34,6 +34,9 @@ func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemS
 
 	var transportServers []transport.Server
 	for _, serverCfg := range cfg.GetConfigs() {
+		if serverCfg.GetName() != "system" && serverCfg.GetName() != "origadmin.service.system" {
+			continue
+		}
 		switch serverCfg.GetProtocol() {
 		case "http":
 			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, logger)
@@ -50,6 +53,9 @@ func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemS
 		default:
 			return nil, errors.New("protocol is not supported: " + serverCfg.GetProtocol())
 		}
+	}
+	if len(transportServers) == 0 {
+		return nil, errors.New("no servers named 'system' or 'origadmin.service.system' were created")
 	}
 	return transportServers, nil
 }

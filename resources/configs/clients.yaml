@@ -4,7 +4,7 @@ clients:
       grpc:
 #        endpoint: "discovery:///auth"
         timeout: 5s
-    - name: "origadmin.service.system.client.grpcm"
+    - name: "origadmin.service.system.client.grpc"
       grpc:
 #        endpoint: "discovery:///system"
         timeout: 5s

@@ -35,6 +35,9 @@ func NewServers(
 
 	var transportServers []transport.Server
 	for _, serverCfg := range cfg.GetConfigs() {
+		if serverCfg.GetName() != "auth" && serverCfg.GetName() != "origadmin.service.auth" {
+			continue
+		}
 		switch serverCfg.GetProtocol() {
 		case "http":
 			srv, err := NewHTTPServer(serverCfg.GetHttp(), authSvc, meSvc, casbinSvc, logger)
@@ -51,6 +54,9 @@ func NewServers(
 		default:
 			return nil, errors.New("protocol is not supported: " + serverCfg.GetProtocol())
 		}
+	}
+	if len(transportServers) == 0 {
+		return nil, errors.New("no servers named 'auth' or 'origadmin.service.auth' were created")
 	}
 	return transportServers, nil
 }

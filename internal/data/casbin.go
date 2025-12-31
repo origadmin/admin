@@ -14,7 +14,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
 )
 
-// casbinAdapter implements the persist.Adapter for casbin.
+// casbinAdapter implements the casbin persist.Adapter for casbin.
 type casbinAdapter struct {
 	db *ent.Database
 }
@@ -199,3 +199,5 @@ func buildFilteredFilter(ptype string, fieldIndex int, fieldValues ...string) []
 	}
 	return cond
 }
+
+var _ persist.Adapter = (*casbinAdapter)(nil)
