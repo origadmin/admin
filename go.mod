@@ -4,9 +4,9 @@ go 1.25.3
 
 replace github.com/armon/go-metrics v0.5.4 => github.com/origadmin/go-metrics v0.5.4
 
-//replace github.com/origadmin/runtime v0.2.15 => ../../runtime
-//
-//replace github.com/origadmin/contrib v1.1.0 => ../../contrib
+replace github.com/origadmin/runtime v0.2.15 => ../../runtime
+
+replace github.com/origadmin/contrib v1.1.0 => ../../contrib
 
 require (
 	entgo.io/ent v0.14.5

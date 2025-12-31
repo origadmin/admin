@@ -16,52 +16,114 @@ type Config struct {
 	Bootstrap confpb.Bootstrap
 }
 
+// Data returns the data configuration.
+func (c *Config) Data() *datav1.Data {
+	return c.Bootstrap.GetData()
+}
+
+// Caches returns the caches configuration.
+func (c *Config) Caches() *datav1.Caches {
+	return c.Bootstrap.GetData().GetCaches()
+}
+
+// Databases returns the databases configuration.
+func (c *Config) Databases() *datav1.Databases {
+	return c.Bootstrap.GetData().GetDatabases()
+}
+
+// ObjectStores returns the object stores configuration.
+func (c *Config) ObjectStores() *datav1.ObjectStores {
+	return c.Bootstrap.GetData().GetObjectStores()
+}
+
+// DefaultDiscovery returns the default discovery name.
+func (c *Config) DefaultDiscovery() string {
+	return c.Bootstrap.GetDefaultDiscovery()
+}
+
+// Discoveries returns the discoveries configuration.
+func (c *Config) Discoveries() *discoveryv1.Discoveries {
+	return c.Bootstrap.GetDiscoveries()
+}
+
+// Logger returns the logger configuration.
+func (c *Config) Logger() *loggerv1.Logger {
+	return c.Bootstrap.GetLogger()
+}
+
+// Middlewares returns the middlewares configuration.
+func (c *Config) Middlewares() *middlewarev1.Middlewares {
+	return c.Bootstrap.GetMiddlewares()
+}
+
+// Servers returns the servers configuration.
+func (c *Config) Servers() *transportv1.Servers {
+	return c.Bootstrap.GetServers()
+}
+
+// Clients returns the clients configuration.
+func (c *Config) Clients() *transportv1.Clients {
+	return c.Bootstrap.GetClients()
+}
+
+// Captcha returns the captcha configuration.
+func (c *Config) Captcha() *confpb.Captcha {
+	return c.Bootstrap.GetCaptcha()
+}
+
+// RootUser returns the root user configuration.
+func (c *Config) RootUser() *confpb.RootUser {
+	return c.Bootstrap.GetRootUser()
+}
+
+// --- Runtime Interface Adapters (Deprecated: Use direct getters above) ---
+
 func (c *Config) DecodeData() (*datav1.Data, error) {
-	return c.Bootstrap.GetData(), nil
+	return c.Data(), nil
 }
 
 func (c *Config) DecodeCaches() (*datav1.Caches, error) {
-	return c.Bootstrap.GetData().GetCaches(), nil
+	return c.Caches(), nil
 }
 
 func (c *Config) DecodeDatabases() (*datav1.Databases, error) {
-	return c.Bootstrap.GetData().GetDatabases(), nil
+	return c.Databases(), nil
 }
 
 func (c *Config) DecodeObjectStores() (*datav1.ObjectStores, error) {
-	return c.Bootstrap.GetData().GetObjectStores(), nil
+	return c.ObjectStores(), nil
 }
 
 func (c *Config) DecodeDefaultDiscovery() (string, error) {
-	return c.Bootstrap.GetDefaultDiscovery(), nil
+	return c.DefaultDiscovery(), nil
 }
 
 func (c *Config) DecodeDiscoveries() (*discoveryv1.Discoveries, error) {
-	return c.Bootstrap.GetDiscoveries(), nil
+	return c.Discoveries(), nil
 }
 
 func (c *Config) DecodeLogger() (*loggerv1.Logger, error) {
-	return c.Bootstrap.GetLogger(), nil
+	return c.Logger(), nil
 }
 
 func (c *Config) DecodeMiddlewares() (*middlewarev1.Middlewares, error) {
-	return c.Bootstrap.GetMiddlewares(), nil
+	return c.Middlewares(), nil
 }
 
 func (c *Config) DecodeServers() (*transportv1.Servers, error) {
-	return c.Bootstrap.GetServers(), nil
+	return c.Servers(), nil
 }
 
 func (c *Config) DecodeClients() (*transportv1.Clients, error) {
-	return c.Bootstrap.GetClients(), nil
+	return c.Clients(), nil
 }
 
 func (c *Config) GetCaptcha() (*confpb.Captcha, error) {
-	return c.Bootstrap.GetCaptcha(), nil
+	return c.Captcha(), nil
 }
 
 func (c *Config) GetRootUser() (*confpb.RootUser, error) {
-	return c.Bootstrap.GetRootUser(), nil
+	return c.RootUser(), nil
 }
 
 func (c *Config) GetBootstrap() *confpb.Bootstrap {
@@ -72,8 +134,7 @@ func (c *Config) DecodedConfig() any {
 	return &c.Bootstrap
 }
 
-func (c *Config) Transform(config interfaces.Config, sc interfaces.StructuredConfig) (interfaces.
-StructuredConfig, error) {
+func (c *Config) Transform(config interfaces.ConfigLoader, sc interfaces.StructuredConfig) (interfaces.StructuredConfig, error) {
 	err := config.Decode("", &c.Bootstrap)
 	if err != nil {
 		return nil, err

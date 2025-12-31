@@ -57,8 +57,10 @@ func NewGRPCConn(ctx context.Context, bootstrap *conf.Config, name string) (*grp
 	// The conventional name for gRPC clients
 	convention := fmt.Sprintf("origadmin.service.%s.client.grpc", name)
 
-	if bootstrap.Bootstrap.Clients != nil {
-		for _, cli := range bootstrap.Bootstrap.Clients.Configs {
+	// Use the new, cleaner getter method
+	clients := bootstrap.Clients()
+	if clients != nil {
+		for _, cli := range clients.Configs {
 			// Capability Check: Must have gRPC config
 			if cli.GetGrpc() == nil {
 				continue
