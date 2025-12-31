@@ -5,11 +5,8 @@
 package service
 
 import (
-	stdhttp "net/http"
-
 	"github.com/google/wire"
 
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service/transport"
 	"origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/api/v1/services/system"
@@ -50,9 +47,4 @@ func (s *GatewayService) RegisterHTTPHandlers(srv *transport.HTTPServer) {
 	// Register handlers for the 'auth' service
 	auth.RegisterAuthServiceHTTPServer(srv, s.Auth.Auth)
 	auth.RegisterMeServiceHTTPServer(srv, s.Auth.Me)
-
-	// Log all registered HTTP routes for debugging and verification
-	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		log.Infof("HTTP %s %s", method, path)
-	})
 }

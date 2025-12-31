@@ -6,8 +6,10 @@ package server
 
 import (
 	"errors"
+	stdhttp "net/http"
 
 	"github.com/go-kratos/kratos/v2/log"
+	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
@@ -76,6 +78,9 @@ func NewHTTPServer(
 		return nil, err
 	}
 	opts := &http.ServerOptions{
+		ServerOptions: []kratoshttp.ServerOption{
+			kratoshttp.PathPrefix("/api/v1"),
+		},
 		ServerMiddlewares: mws,
 	}
 
@@ -85,5 +90,9 @@ func NewHTTPServer(
 	}
 	// Register all services using the GatewayService method.
 	svc.RegisterHTTPHandlers(srv)
+	// Log all registered HTTP routes for debugging and verification
+	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
+		log.Infof("HTTP %s %s", method, path)
+	})
 	return srv, nil
 }
