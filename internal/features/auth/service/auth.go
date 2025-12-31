@@ -5,10 +5,12 @@ import (
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/errors"
-	v1 "origadmin/application/admin/api/v1/services/auth"
+
 	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
 	"github.com/origadmin/contrib/security/credential"
 	securityPrincipal "github.com/origadmin/contrib/security/principal"
+	"github.com/origadmin/runtime/log"
+	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/biz"
 	"origadmin/application/admin/internal/helpers/captcha"
 )
@@ -16,9 +18,9 @@ import (
 // AuthService is a service for authentication.
 type AuthService struct {
 	v1.UnimplementedAuthServiceServer
-	uc         *biz.AuthUseCase
-	captcha    *captcha.Captcha
-	creator    credential.Creator
+	uc      *biz.AuthUseCase
+	captcha *captcha.Captcha
+	creator credential.Creator
 }
 
 // NewAuthService creates a new authentication service.
@@ -62,10 +64,11 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 
 // GetCaptcha generates a new captcha.
 func (s *AuthService) GetCaptcha(ctx context.Context, req *v1.GetCaptchaRequest) (*v1.GetCaptchaResponse, error) {
-	_, id, b64s, err := s.captcha.GenerateDigit()
+	id, b64s, answer, err := s.captcha.GenerateDigit()
 	if err != nil {
 		return nil, err
 	}
+	log.Infof("Captcha generated: id=%s, answer=%s", id, answer)
 	return &v1.GetCaptchaResponse{
 		CaptchaId:    id,
 		CaptchaImage: b64s,

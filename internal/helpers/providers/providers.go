@@ -217,12 +217,27 @@ func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvi
 	return provider, nil
 }
 
-func ProvideSkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker {
-	helper := log.NewHelper(log.With(app.Logger(), "module", "security.skip"))
+func ProvideGatewaySkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker {
 	return func(ctx context.Context, req security.Request) bool {
-		helper.Infow("kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
-			req.GetRouteTemplate())
-		if v, ok := policies[req.GetOperation()]; ok && v.Name == "public" {
+		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
+			req.GetRouteTemplate()))
+
+		if v, ok := policies[req.GetOperation()]; ok && (v.Name == "public") {
+			helper.Infof("skip checker: %s", v.Name)
+			return true
+		}
+		helper.Infof("unskipped request: %s", req.GetOperation())
+		return false
+	}
+}
+
+func ProvideSkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker {
+	//helper := log.NewHelper(log.With(app.Logger(), "module", "security.skip"))
+	return func(ctx context.Context, req security.Request) bool {
+		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
+			req.GetRouteTemplate()))
+		if v, ok := policies[req.GetOperation()]; ok && (v.Name == "jwt-auth" || v.Name == "public") {
+			helper.Infof("skip checker: %s", v.Name)
 			return true
 		}
 		return false
@@ -232,7 +247,7 @@ func ProvideSkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker
 var ProviderGatewaySet = wire.NewSet(
 	ProvideClientMiddlewares,
 	ProvideGatewayMiddlewares,
-	ProvideSkipChecker,
+	ProvideGatewaySkipChecker,
 )
 
 var ProviderBackendSet = wire.NewSet(

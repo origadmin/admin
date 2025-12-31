@@ -12,6 +12,7 @@ import (
 
 	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/container"
 	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
 	"origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/api/v1/services/system"
@@ -50,7 +51,7 @@ type SystemBridgeSet struct {
 // and establishes a gRPC connection.
 //
 // The provided context is used for the client lifecycle.
-func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string) (*grpc.ClientConn, error) {
+func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string, middlewareProvider container.ClientMiddlewareProvider) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
 
 	// The conventional name for gRPC clients
@@ -84,10 +85,6 @@ func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string) (*grpc.C
 	if err != nil {
 		return nil, err
 	}
-	middlewareProvider, err := app.MiddlewareProvider()
-	if err != nil {
-		return nil, err
-	}
 	middlewares, err := middlewareProvider.ClientMiddlewares()
 	if err != nil {
 		return nil, err
@@ -100,10 +97,10 @@ func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string) (*grpc.C
 }
 
 // NewAuthBridgeSet creates a set of clients for the auth service.
-func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config) (*AuthBridgeSet, error) {
+func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*AuthBridgeSet, error) {
 	// Use the application's root context. This ensures that the client's lifecycle
 	// is tied to the application's lifecycle.
-	conn, err := NewGRPCConn(app, bootstrap, ServiceNameAuth)
+	conn, err := NewGRPCConn(app, bootstrap, ServiceNameAuth, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}
@@ -114,9 +111,9 @@ func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config) (*AuthBridgeSet,
 }
 
 // NewSystemBridgeSet creates a set of clients for the system service.
-func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config) (*SystemBridgeSet, error) {
+func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config, middlewareProvider container.ClientMiddlewareProvider) (*SystemBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := NewGRPCConn(app, bootstrap, ServiceNameSystem)
+	conn, err := NewGRPCConn(app, bootstrap, ServiceNameSystem, middlewareProvider)
 	if err != nil {
 		return nil, err
 	}

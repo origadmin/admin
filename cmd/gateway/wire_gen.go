@@ -29,11 +29,15 @@ import (
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	confpbBootstrap := &bootstrap.Bootstrap
 	servers := confpbBootstrap.Servers
-	authBridgeSet, err := client.NewAuthBridgeSet(app, bootstrap)
+	clientMiddlewareProvider, err := providers.ProvideClientMiddlewares(app)
 	if err != nil {
 		return nil, nil, err
 	}
-	systemBridgeSet, err := client.NewSystemBridgeSet(app, bootstrap)
+	authBridgeSet, err := client.NewAuthBridgeSet(app, bootstrap, clientMiddlewareProvider)
+	if err != nil {
+		return nil, nil, err
+	}
+	systemBridgeSet, err := client.NewSystemBridgeSet(app, bootstrap, clientMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -45,7 +49,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	skipChecker := providers.ProvideSkipChecker(app, bootstrap)
+	skipChecker := providers.ProvideGatewaySkipChecker(app, bootstrap)
 	serverMiddlewareProvider, err := providers.ProvideGatewayMiddlewares(app, authenticator, skipChecker)
 	if err != nil {
 		return nil, nil, err

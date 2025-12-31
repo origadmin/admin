@@ -81,19 +81,19 @@ func NewCaptcha(config *Config) *Captcha {
 	}
 }
 
-func (c *Captcha) GenerateDigit() (string, string, string, error) {
+func (c *Captcha) GenerateDigit() (id, b64s, answer string, err error) {
 	return c.DriverDigit.Generate()
 }
 
-func (c *Captcha) GenerateString() (string, string, string, error) {
+func (c *Captcha) GenerateString() (id, b64s, answer string, err error) {
 	return c.DriverString.Generate()
 }
 
-func (c *Captcha) GenerateAudio() (string, string, string, error) {
+func (c *Captcha) GenerateAudio() (id, b64s, answer string, err error) {
 	return c.DriverAudio.Generate()
 }
 
-func (c *Captcha) GenerateChinese() (string, string, string, error) {
+func (c *Captcha) GenerateChinese() (id, b64s, answer string, err error) {
 	return c.DriverChinese.Generate()
 }
 
