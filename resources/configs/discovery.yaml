@@ -1,0 +1,13 @@
+discoveries:
+  default: default_consul
+  active: default_consul
+  configs:
+    - name: default_consul
+      type: consul
+      debug: true
+      consul:
+        address: 127.0.0.1:8500
+        scheme: http
+        health_check: true
+        health_check_interval: 10
+        deregister_critical_service_after: 30

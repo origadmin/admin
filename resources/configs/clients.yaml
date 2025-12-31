@@ -2,9 +2,11 @@ clients:
   configs:
     - name: "origadmin.service.auth.client.grpc"
       grpc:
-#        endpoint: "discovery:///auth"
+        endpoint: "discovery:///origadmin.service.auth"
         timeout: 5s
+        discovery_name: "default_consul"
     - name: "origadmin.service.system.client.grpc"
       grpc:
-#        endpoint: "discovery:///system"
+        endpoint: "discovery:///origadmin.service.system"
         timeout: 5s
+        discovery_name: "default_consul"

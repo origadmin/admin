@@ -21,5 +21,8 @@ sources:
   - file:
       path: clients.yaml
     type: file
+  - file:
+      path: discovery.yaml
+    type: file
   # Environment variables are loaded last to override file settings.
   - type: env

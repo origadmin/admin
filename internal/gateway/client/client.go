@@ -5,7 +5,6 @@
 package client
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/google/wire"
@@ -51,7 +50,7 @@ type SystemBridgeSet struct {
 // and establishes a gRPC connection.
 //
 // The provided context is used for the client lifecycle.
-func NewGRPCConn(ctx context.Context, bootstrap *conf.Config, name string) (*grpc.ClientConn, error) {
+func NewGRPCConn(app *runtime.App, bootstrap *conf.Config, name string) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
 
 	// The conventional name for gRPC clients
@@ -77,15 +76,25 @@ func NewGRPCConn(ctx context.Context, bootstrap *conf.Config, name string) (*grp
 	if clientConfig == nil {
 		return nil, fmt.Errorf("gRPC client config not found for service: %s (checked name: '%s' and '%s')", name, name, convention)
 	}
+	registryProvider, err := app.RegistryProvider()
+	if err != nil {
+		return nil, err
+	}
+	discoveries, err := registryProvider.Discoveries()
+	if err != nil {
+		return nil, err
+	}
 
-	return runtimegrpc.NewClient(ctx, clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{})
+	return runtimegrpc.NewClient(app.Context(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{
+		Discoveries: discoveries,
+	})
 }
 
 // NewAuthBridgeSet creates a set of clients for the auth service.
 func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config) (*AuthBridgeSet, error) {
 	// Use the application's root context. This ensures that the client's lifecycle
 	// is tied to the application's lifecycle.
-	conn, err := NewGRPCConn(app.Context(), bootstrap, ServiceNameAuth)
+	conn, err := NewGRPCConn(app, bootstrap, ServiceNameAuth)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +107,7 @@ func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config) (*AuthBridgeSet,
 // NewSystemBridgeSet creates a set of clients for the system service.
 func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config) (*SystemBridgeSet, error) {
 	// Use the application's root context.
-	conn, err := NewGRPCConn(app.Context(), bootstrap, ServiceNameSystem)
+	conn, err := NewGRPCConn(app, bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, err
 	}

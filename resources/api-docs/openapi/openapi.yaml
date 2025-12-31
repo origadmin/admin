@@ -17,374 +17,6 @@ servers:
     - url: http://localhost:10080
     - url: https://localhost:10080
 paths:
-    /api/v1/captcha:
-        get:
-            tags:
-                - GatewayService
-            operationId: GatewayService_GetCaptcha
-            parameters:
-                - name: reload
-                  in: query
-                  description: If true, forces reloading of the captcha.
-                  schema:
-                    type: boolean
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.GetCaptchaResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/login:
-        post:
-            tags:
-                - GatewayService
-            description: '--- Auth Service ---'
-            operationId: GatewayService_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.auth.LoginRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.LoginResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/me/profile:
-        get:
-            tags:
-                - GatewayService
-            description: '--- Me Service ---'
-            operationId: GatewayService_GetProfile
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.auth.GetProfileResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/users:
-        get:
-            tags:
-                - GatewayService
-            description: '--- System User Service ---'
-            operationId: GatewayService_ListUsers
-            parameters:
-                - name: id
-                  in: query
-                  description: The parent resource id, for example, "shelves/shelf1".
-                  schema:
-                    type: string
-                - name: page
-                  in: query
-                  description: The page number.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_size
-                  in: query
-                  description: The maximum number of items to return.
-                  schema:
-                    type: integer
-                    format: int32
-                - name: page_token
-                  in: query
-                  description: The next_page_token value returned from a previous List request, if any.
-                  schema:
-                    type: string
-                - name: no_paging
-                  in: query
-                  description: The no_paging is used to disable pagination.
-                  schema:
-                    type: boolean
-                - name: only_count
-                  in: query
-                  description: The only_count is the query parameter for set only to query the total number
-                  schema:
-                    type: boolean
-                - name: keyword
-                  in: query
-                  description: The title query parameter for set only to query the title
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.ListUsersResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        post:
-            tags:
-                - GatewayService
-            operationId: GatewayService_CreateUser
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.system.CreateUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.types.User'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/users/{id}:
-        get:
-            tags:
-                - GatewayService
-            operationId: GatewayService_GetUser
-            parameters:
-                - name: id
-                  in: path
-                  description: |-
-                    The field will contain id of the resource requested, for example:
-                     "shelves/shelf1/users/user2"
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.types.User'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-        delete:
-            tags:
-                - GatewayService
-            operationId: GatewayService_DeleteUser
-            parameters:
-                - name: id
-                  in: path
-                  description: The resource id of the user to be deleted.
-                  required: true
-                  schema:
-                    type: string
-                - name: user.id
-                  in: query
-                  description: |-
-                    ID of the ent.
-                     field.primary_key.comment
-                  schema:
-                    type: string
-                - name: user.create_author
-                  in: query
-                  description: create_author.field.comment
-                  schema:
-                    type: string
-                - name: user.update_author
-                  in: query
-                  description: update_author.field.comment
-                  schema:
-                    type: string
-                - name: user.create_time
-                  in: query
-                  description: create_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.update_time
-                  in: query
-                  description: update_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.uuid
-                  in: query
-                  description: user.field.uuid
-                  schema:
-                    type: string
-                - name: user.allowed_ip
-                  in: query
-                  description: user.field.allowed_ip
-                  schema:
-                    type: string
-                - name: user.username
-                  in: query
-                  description: user.field.username
-                  schema:
-                    type: string
-                - name: user.nickname
-                  in: query
-                  description: user.field.nickname
-                  schema:
-                    type: string
-                - name: user.avatar
-                  in: query
-                  description: user.field.avatar
-                  schema:
-                    type: string
-                - name: user.name
-                  in: query
-                  description: user.field.nickname
-                  schema:
-                    type: string
-                - name: user.gender
-                  in: query
-                  description: user.field.gender
-                  schema:
-                    type: string
-                - name: user.phone
-                  in: query
-                  description: user.field.phone
-                  schema:
-                    type: string
-                - name: user.email
-                  in: query
-                  description: user.field.email
-                  schema:
-                    type: string
-                - name: user.remark
-                  in: query
-                  description: user.field.remark
-                  schema:
-                    type: string
-                - name: user.token
-                  in: query
-                  description: user.field.token
-                  schema:
-                    type: string
-                - name: user.status
-                  in: query
-                  description: user.field.status
-                  schema:
-                    type: integer
-                    format: int32
-                - name: user.last_login_ip
-                  in: query
-                  description: user.field.last_login_ip
-                  schema:
-                    type: string
-                - name: user.last_login_time
-                  in: query
-                  description: user.field.last_login_time
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.sanction_date
-                  in: query
-                  description: user.field.sanction_date
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.manager_id
-                  in: query
-                  description: user.field.manager_id
-                  schema:
-                    type: string
-                - name: user.manager
-                  in: query
-                  description: user.field.manager
-                  schema:
-                    type: string
-                - name: user.role_ids
-                  in: query
-                  description: Role Ids holds the value of the role_ids
-                  schema:
-                    type: array
-                    items:
-                        type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.system.DeleteUserResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
-    /api/v1/users/{user.id}:
-        put:
-            tags:
-                - GatewayService
-            operationId: GatewayService_UpdateUser
-            parameters:
-                - name: user.id
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-                - name: user_id
-                  in: query
-                  description: The user id to use for this user.
-                  schema:
-                    type: string
-                - name: is_system
-                  in: query
-                  description: The user is_system to use for this user.
-                  schema:
-                    type: boolean
-                - name: random_password
-                  in: query
-                  description: The random_password is the query parameter for set only to generate a random password
-                  schema:
-                    type: boolean
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.v1.services.types.User'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.v1.services.types.User'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/google.rpc.Status'
     /auth/login:
         post:
             tags:
@@ -2017,130 +1649,6 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: user.id
-                  in: query
-                  description: |-
-                    ID of the ent.
-                     field.primary_key.comment
-                  schema:
-                    type: string
-                - name: user.create_author
-                  in: query
-                  description: create_author.field.comment
-                  schema:
-                    type: string
-                - name: user.update_author
-                  in: query
-                  description: update_author.field.comment
-                  schema:
-                    type: string
-                - name: user.create_time
-                  in: query
-                  description: create_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.update_time
-                  in: query
-                  description: update_time.field.comment
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.uuid
-                  in: query
-                  description: user.field.uuid
-                  schema:
-                    type: string
-                - name: user.allowed_ip
-                  in: query
-                  description: user.field.allowed_ip
-                  schema:
-                    type: string
-                - name: user.username
-                  in: query
-                  description: user.field.username
-                  schema:
-                    type: string
-                - name: user.nickname
-                  in: query
-                  description: user.field.nickname
-                  schema:
-                    type: string
-                - name: user.avatar
-                  in: query
-                  description: user.field.avatar
-                  schema:
-                    type: string
-                - name: user.name
-                  in: query
-                  description: user.field.nickname
-                  schema:
-                    type: string
-                - name: user.gender
-                  in: query
-                  description: user.field.gender
-                  schema:
-                    type: string
-                - name: user.phone
-                  in: query
-                  description: user.field.phone
-                  schema:
-                    type: string
-                - name: user.email
-                  in: query
-                  description: user.field.email
-                  schema:
-                    type: string
-                - name: user.remark
-                  in: query
-                  description: user.field.remark
-                  schema:
-                    type: string
-                - name: user.token
-                  in: query
-                  description: user.field.token
-                  schema:
-                    type: string
-                - name: user.status
-                  in: query
-                  description: user.field.status
-                  schema:
-                    type: integer
-                    format: int32
-                - name: user.last_login_ip
-                  in: query
-                  description: user.field.last_login_ip
-                  schema:
-                    type: string
-                - name: user.last_login_time
-                  in: query
-                  description: user.field.last_login_time
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.sanction_date
-                  in: query
-                  description: user.field.sanction_date
-                  schema:
-                    type: string
-                    format: date-time
-                - name: user.manager_id
-                  in: query
-                  description: user.field.manager_id
-                  schema:
-                    type: string
-                - name: user.manager
-                  in: query
-                  description: user.field.manager
-                  schema:
-                    type: string
-                - name: user.role_ids
-                  in: query
-                  description: Role Ids holds the value of the role_ids
-                  schema:
-                    type: array
-                    items:
-                        type: string
             responses:
                 "200":
                     description: OK
@@ -2272,7 +1780,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{user.id}:
-        put:
+        patch:
             tags:
                 - UserService
             operationId: UserService_UpdateUser
@@ -2282,26 +1790,11 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: user_id
-                  in: query
-                  description: The user id to use for this user.
-                  schema:
-                    type: string
-                - name: is_system
-                  in: query
-                  description: The user is_system to use for this user.
-                  schema:
-                    type: boolean
-                - name: random_password
-                  in: query
-                  description: The random_password is the query parameter for set only to generate a random password
-                  schema:
-                    type: boolean
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.User'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateUserRequest'
                 required: true
             responses:
                 "200":
@@ -3065,16 +2558,9 @@ components:
                     description: The user resource to be created.
                 password:
                     type: string
-                    description: The password to use for this user.
-                user_id:
-                    type: string
-                    description: The user id to use for this user.
-                is_system:
-                    type: boolean
-                    description: The user is_system to use for this user.
-                random_password:
-                    type: boolean
-                    description: The random_password is the query parameter for set only to generate a random password
+                    description: |-
+                        The password to use for this user.
+                         If this field is left empty, a random password will be generated by the server.
         api.v1.services.system.CreateUserResponse:
             type: object
             properties:
@@ -3392,6 +2878,19 @@ components:
             properties:
                 role:
                     $ref: '#/components/schemas/api.v1.services.types.Role'
+        api.v1.services.system.UpdateUserRequest:
+            type: object
+            properties:
+                user:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.User'
+                    description: The user resource which replaces the resource on the server.
+                update_mask:
+                    type: string
+                    description: |-
+                        The update mask applies to the resource. For the `FieldMask` definition,
+                         see https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask
+                    format: field-mask
         api.v1.services.system.UpdateUserResponse:
             type: object
             properties:
@@ -3402,8 +2901,6 @@ components:
             properties:
                 id:
                     type: string
-                user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
                 role_ids:
                     type: array
                     items:
@@ -3421,8 +2918,6 @@ components:
                 status:
                     type: integer
                     format: int32
-                user:
-                    $ref: '#/components/schemas/api.v1.services.types.User'
         api.v1.services.system.UpdateUserStatusResponse:
             type: object
             properties: {}
@@ -3963,8 +3458,6 @@ tags:
       description: The data service definition.
     - name: DepartmentService
       description: The login service definition.
-    - name: GatewayService
-      description: "GatewayService is the public-facing API gateway.\r\n It proxies requests to backend services."
     - name: MeService
       description: Service MeService provides APIs for the currently authenticated user to manage their own profile and data.
     - name: PermissionService

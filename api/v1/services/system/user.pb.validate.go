@@ -303,39 +303,6 @@ func (m *UpdateUserStatusRequest) validate(all bool) error {
 
 	// no validation rules for Status
 
-	if m.User != nil {
-
-		if all {
-			switch v := interface{}(m.GetUser()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, UpdateUserStatusRequestValidationError{
-						field:  "User",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, UpdateUserStatusRequestValidationError{
-						field:  "User",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return UpdateUserStatusRequestValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return UpdateUserStatusRequestMultiError(errors)
 	}
@@ -1303,12 +1270,6 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	// no validation rules for Password
 
-	// no validation rules for UserId
-
-	// no validation rules for IsSystem
-
-	// no validation rules for RandomPassword
-
 	if len(errors) > 0 {
 		return CreateUserRequestMultiError(errors)
 	}
@@ -1571,11 +1532,34 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for UserId
-
-	// no validation rules for IsSystem
-
-	// no validation rules for RandomPassword
+	if all {
+		switch v := interface{}(m.GetUpdateMask()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UpdateUserRequestValidationError{
+					field:  "UpdateMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UpdateUserRequestValidationError{
+					field:  "UpdateMask",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUpdateMask()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateUserRequestValidationError{
+				field:  "UpdateMask",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return UpdateUserRequestMultiError(errors)
@@ -1812,39 +1796,6 @@ func (m *DeleteUserRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if m.User != nil {
-
-		if all {
-			switch v := interface{}(m.GetUser()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, DeleteUserRequestValidationError{
-						field:  "User",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, DeleteUserRequestValidationError{
-						field:  "User",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return DeleteUserRequestValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if len(errors) > 0 {
 		return DeleteUserRequestMultiError(errors)
 	}
@@ -2079,35 +2030,6 @@ func (m *UpdateUserRolesRequest) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	if all {
-		switch v := interface{}(m.GetUser()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, UpdateUserRolesRequestValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, UpdateUserRolesRequestValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return UpdateUserRolesRequestValidationError{
-				field:  "User",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
 
 	if len(errors) > 0 {
 		return UpdateUserRolesRequestMultiError(errors)
