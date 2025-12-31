@@ -10,10 +10,20 @@ import (
 	"github.com/origadmin/runtime/errors"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/features/system/biz"
 )
 
-func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
-	resources, err := s.User.ListUserResources(ctx, req.GetId())
+type UserService struct {
+	system.UnimplementedUserServiceServer
+	uc *biz.UserUseCase
+}
+
+func NewUserService(uc *biz.UserUseCase) *UserService {
+	return &UserService{uc: uc}
+}
+
+func (s *UserService) ListUserResources(ctx context.Context, req *system.ListUserResourcesRequest) (*system.ListUserResourcesResponse, error) {
+	resources, err := s.uc.ListUserResources(ctx, req.GetId())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -25,8 +35,8 @@ func (s *SystemService) ListUserResources(ctx context.Context, req *system.ListU
 	}, nil
 }
 
-func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
-	err := s.User.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
+func (s *UserService) UpdateUserRoles(ctx context.Context, req *system.UpdateUserRolesRequest) (*system.UpdateUserRolesResponse, error) {
+	err := s.uc.UpdateUserRoles(ctx, req.GetId(), req.GetRoleIds())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -36,8 +46,8 @@ func (s *SystemService) UpdateUserRoles(ctx context.Context, req *system.UpdateU
 	return &system.UpdateUserRolesResponse{}, nil
 }
 
-func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.UpdateUserStatusRequest) (*system.UpdateUserStatusResponse, error) {
-	err := s.User.UpdateUserStatus(ctx, req.GetId(), int8(req.GetStatus()))
+func (s *UserService) UpdateUserStatus(ctx context.Context, req *system.UpdateUserStatusRequest) (*system.UpdateUserStatusResponse, error) {
+	err := s.uc.UpdateUserStatus(ctx, req.GetId(), int8(req.GetStatus()))
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -47,8 +57,8 @@ func (s *SystemService) UpdateUserStatus(ctx context.Context, req *system.Update
 	return &system.UpdateUserStatusResponse{}, nil
 }
 
-func (s *SystemService) ResetUserPassword(ctx context.Context, req *system.ResetUserPasswordRequest) (*system.ResetUserPasswordResponse, error) {
-	err := s.User.ResetUserPassword(ctx, req.GetId(), req.GetPassword())
+func (s *UserService) ResetUserPassword(ctx context.Context, req *system.ResetUserPasswordRequest) (*system.ResetUserPasswordResponse, error) {
+	err := s.uc.ResetUserPassword(ctx, req.GetId(), req.GetPassword())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -58,8 +68,8 @@ func (s *SystemService) ResetUserPassword(ctx context.Context, req *system.Reset
 	return &system.ResetUserPasswordResponse{}, nil
 }
 
-func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequest) (*system.ListUsersResponse, error) {
-	users, total, err := s.User.ListUsers(ctx, req)
+func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersRequest) (*system.ListUsersResponse, error) {
+	users, total, err := s.uc.ListUsers(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -71,8 +81,8 @@ func (s *SystemService) ListUsers(ctx context.Context, req *system.ListUsersRequ
 	}, nil
 }
 
-func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest) (*system.GetUserResponse, error) {
-	user, err := s.User.GetUser(ctx, req.GetId())
+func (s *UserService) GetUser(ctx context.Context, req *system.GetUserRequest) (*system.GetUserResponse, error) {
+	user, err := s.uc.GetUser(ctx, req.GetId())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -82,16 +92,16 @@ func (s *SystemService) GetUser(ctx context.Context, req *system.GetUserRequest)
 	return &system.GetUserResponse{User: user}, nil
 }
 
-func (s *SystemService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.CreateUserResponse, error) {
-	user, err := s.User.CreateUser(ctx, req.GetUser(), req.GetPassword())
+func (s *UserService) CreateUser(ctx context.Context, req *system.CreateUserRequest) (*system.CreateUserResponse, error) {
+	user, err := s.uc.CreateUser(ctx, req.GetUser(), req.GetPassword())
 	if err != nil {
 		return nil, err
 	}
 	return &system.CreateUserResponse{User: user}, nil
 }
 
-func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*system.UpdateUserResponse, error) {
-	user, err := s.User.UpdateUser(ctx, req.GetUser())
+func (s *UserService) UpdateUser(ctx context.Context, req *system.UpdateUserRequest) (*system.UpdateUserResponse, error) {
+	user, err := s.uc.UpdateUser(ctx, req.GetUser())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")
@@ -101,8 +111,8 @@ func (s *SystemService) UpdateUser(ctx context.Context, req *system.UpdateUserRe
 	return &system.UpdateUserResponse{User: user}, nil
 }
 
-func (s *SystemService) DeleteUser(ctx context.Context, req *system.DeleteUserRequest) (*system.DeleteUserResponse, error) {
-	err := s.User.DeleteUser(ctx, req.GetId())
+func (s *UserService) DeleteUser(ctx context.Context, req *system.DeleteUserRequest) (*system.DeleteUserResponse, error) {
+	err := s.uc.DeleteUser(ctx, req.GetId())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("USER_NOT_FOUND", "User not found")

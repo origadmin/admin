@@ -6,11 +6,21 @@ import (
 	"github.com/origadmin/runtime/errors"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/features/system/biz"
 )
 
+type ViewService struct {
+	system.UnimplementedViewServiceServer
+	uc *biz.ViewUseCase
+}
+
+func NewViewService(uc *biz.ViewUseCase) *ViewService {
+	return &ViewService{uc: uc}
+}
+
 // ListViews handles the RPC for listing views.
-func (s *SystemService) ListViews(ctx context.Context, req *system.ListViewsRequest) (*system.ListViewsResponse, error) {
-	views, total, err := s.View.ListViews(ctx, req)
+func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsRequest) (*system.ListViewsResponse, error) {
+	views, total, err := s.uc.ListViews(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -23,8 +33,8 @@ func (s *SystemService) ListViews(ctx context.Context, req *system.ListViewsRequ
 }
 
 // GetView handles the RPC for getting a single view.
-func (s *SystemService) GetView(ctx context.Context, req *system.GetViewRequest) (*system.GetViewResponse, error) {
-	view, err := s.View.GetView(ctx, req.GetId())
+func (s *ViewService) GetView(ctx context.Context, req *system.GetViewRequest) (*system.GetViewResponse, error) {
+	view, err := s.uc.GetView(ctx, req.GetId())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")
@@ -35,8 +45,8 @@ func (s *SystemService) GetView(ctx context.Context, req *system.GetViewRequest)
 }
 
 // CreateView handles the RPC for creating a new view.
-func (s *SystemService) CreateView(ctx context.Context, req *system.CreateViewRequest) (*system.CreateViewResponse, error) {
-	view, err := s.View.CreateView(ctx, req.GetView())
+func (s *ViewService) CreateView(ctx context.Context, req *system.CreateViewRequest) (*system.CreateViewResponse, error) {
+	view, err := s.uc.CreateView(ctx, req.GetView())
 	if err != nil {
 		return nil, err
 	}
@@ -44,8 +54,8 @@ func (s *SystemService) CreateView(ctx context.Context, req *system.CreateViewRe
 }
 
 // UpdateView handles the RPC for updating an existing view.
-func (s *SystemService) UpdateView(ctx context.Context, req *system.UpdateViewRequest) (*system.UpdateViewResponse, error) {
-	view, err := s.View.UpdateView(ctx, req.GetView())
+func (s *ViewService) UpdateView(ctx context.Context, req *system.UpdateViewRequest) (*system.UpdateViewResponse, error) {
+	view, err := s.uc.UpdateView(ctx, req.GetView())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")
@@ -56,8 +66,8 @@ func (s *SystemService) UpdateView(ctx context.Context, req *system.UpdateViewRe
 }
 
 // DeleteView handles the RPC for deleting a view.
-func (s *SystemService) DeleteView(ctx context.Context, req *system.DeleteViewRequest) (*system.DeleteViewResponse, error) {
-	err := s.View.DeleteView(ctx, req.GetId())
+func (s *ViewService) DeleteView(ctx context.Context, req *system.DeleteViewRequest) (*system.DeleteViewResponse, error) {
+	err := s.uc.DeleteView(ctx, req.GetId())
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, errors.NotFound("VIEW_NOT_FOUND", "View not found")

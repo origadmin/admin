@@ -4,31 +4,20 @@
 
 package service
 
-import (
-	"origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/features/system/biz"
-)
-
 type SystemService struct {
-	system.UnimplementedResourceServiceServer
-	system.UnimplementedRoleServiceServer
-	system.UnimplementedUserServiceServer
-	system.UnimplementedPermissionServiceServer
-	system.UnimplementedViewServiceServer
-
-	Resource   *biz.ResourceUseCase
-	Role       *biz.RoleUseCase
-	User       *biz.UserUseCase
-	Permission *biz.PermissionUseCase
-	View       *biz.ViewUseCase
+	Resource   *ResourceService
+	Role       *RoleService
+	User       *UserService
+	Permission *PermissionService
+	View       *ViewService
 }
 
-func New(
-	resource *biz.ResourceUseCase,
-	role *biz.RoleUseCase,
-	user *biz.UserUseCase,
-	permission *biz.PermissionUseCase,
-	view *biz.ViewUseCase,
+func NewSystemService(
+	resource *ResourceService,
+	role *RoleService,
+	user *UserService,
+	permission *PermissionService,
+	view *ViewService,
 ) *SystemService {
 	return &SystemService{
 		Resource:   resource,

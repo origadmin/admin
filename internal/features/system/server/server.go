@@ -8,25 +8,26 @@ import (
 	"errors"
 	stdhttp "net/http"
 
-	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 
-	"github.com/origadmin/runtime/log"
-	systemv1 "origadmin/application/admin/api/v1/services/system"
-	"origadmin/application/admin/internal/features/system/service"
-
+	"github.com/origadmin/runtime"
 	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/service/transport"
+	"github.com/origadmin/runtime/service/transport/grpc"
+	"github.com/origadmin/runtime/service/transport/http"
+	systemv1 "origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/features/system/service"
 )
 
 // ProviderSet is server providers.
 var ProviderSet = wire.NewSet(NewServers)
 
 // NewServers creates and configures the system service servers (gRPC, HTTP).
-func NewServers(cfg *transportv1.Servers, svc *service.SystemService, logger log.Logger) ([]transport.Server, error) {
+func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemService, logger log.Logger) ([]transport.Server,
+	error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
 	}
@@ -35,13 +36,13 @@ func NewServers(cfg *transportv1.Servers, svc *service.SystemService, logger log
 	for _, serverCfg := range cfg.GetConfigs() {
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(serverCfg.GetHttp(), svc, logger)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, logger)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(serverCfg.GetGrpc(), svc, logger)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), svc, logger)
 			if err != nil {
 				return nil, err
 			}
@@ -54,26 +55,34 @@ func NewServers(cfg *transportv1.Servers, svc *service.SystemService, logger log
 }
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(cfg *httpv1.Server, svc *service.SystemService, logger log.Logger) (*http.Server, error) {
+func NewHTTPServer(app *runtime.App, cfg *httpv1.Server, svc *service.SystemService, logger log.Logger) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	var opts []http.ServerOption
-	if cfg.GetAddr() != "" {
-		opts = append(opts, http.Address(cfg.GetAddr()))
+	middlewareProvider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
 	}
-	if cfg.GetTimeout() != nil {
-		opts = append(opts, http.Timeout(cfg.GetTimeout().AsDuration()))
+	mws, err := middlewareProvider.ServerMiddlewares()
+	if err != nil {
+		return nil, err
 	}
-	srv := http.NewServer(opts...)
+	opts := &http.ServerOptions{
+		ServerMiddlewares: mws,
+	}
+
+	srv, err := http.NewServer(cfg, opts)
+	if err != nil {
+		return nil, err
+	}
 
 	// Register HTTP handlers
-	systemv1.RegisterUserServiceHTTPServer(srv, svc)
-	systemv1.RegisterRoleServiceHTTPServer(srv, svc)
-	systemv1.RegisterPermissionServiceHTTPServer(srv, svc)
-	systemv1.RegisterResourceServiceHTTPServer(srv, svc)
-	systemv1.RegisterViewServiceHTTPServer(srv, svc)
+	systemv1.RegisterUserServiceHTTPServer(srv, svc.User)
+	systemv1.RegisterRoleServiceHTTPServer(srv, svc.Role)
+	systemv1.RegisterPermissionServiceHTTPServer(srv, svc.Permission)
+	systemv1.RegisterResourceServiceHTTPServer(srv, svc.Resource)
+	systemv1.RegisterViewServiceHTTPServer(srv, svc.View)
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
 		log.Infof("HTTP %s %s", method, path)
 	})
@@ -81,26 +90,33 @@ func NewHTTPServer(cfg *httpv1.Server, svc *service.SystemService, logger log.Lo
 }
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(cfg *grpcv1.Server, svc *service.SystemService, logger log.Logger) (*grpc.Server, error) {
+func NewGRPCServer(app *runtime.App, cfg *grpcv1.Server, svc *service.SystemService, logger log.Logger) (*transport.GRPCServer, error) {
 	if cfg == nil {
 		return nil, errors.New("grpc config is nil")
 	}
 
-	var opts []grpc.ServerOption
-	if cfg.GetAddr() != "" {
-		opts = append(opts, grpc.Address(cfg.GetAddr()))
+	middlewareProvider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
 	}
-	if cfg.GetTimeout() != nil {
-		opts = append(opts, grpc.Timeout(cfg.GetTimeout().AsDuration()))
+	mws, err := middlewareProvider.ServerMiddlewares()
+	if err != nil {
+		return nil, err
 	}
-	srv := grpc.NewServer(opts...)
+	opts := &grpc.ServerOptions{
+		ServerMiddlewares: mws,
+	}
+	srv, err := grpc.NewServer(cfg, opts)
+	if err != nil {
+		return nil, err
+	}
 
 	// Register gRPC handlers
-	systemv1.RegisterUserServiceServer(srv, svc)
-	systemv1.RegisterRoleServiceServer(srv, svc)
-	systemv1.RegisterPermissionServiceServer(srv, svc)
-	systemv1.RegisterResourceServiceServer(srv, svc)
-	systemv1.RegisterViewServiceServer(srv, svc)
+	systemv1.RegisterUserServiceServer(srv, svc.User)
+	systemv1.RegisterRoleServiceServer(srv, svc.Role)
+	systemv1.RegisterPermissionServiceServer(srv, svc.Permission)
+	systemv1.RegisterResourceServiceServer(srv, svc.Resource)
+	systemv1.RegisterViewServiceServer(srv, svc.View)
 
 	return srv, nil
 }

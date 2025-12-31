@@ -42,8 +42,10 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	}
 	resourceRepo := dal.NewResourceRepo(database)
 	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
+	resourceService := service.NewResourceService(resourceUseCase)
 	roleRepo := dal.NewRoleRepo(database)
 	roleUseCase := biz.NewRoleUseCase(roleRepo)
+	roleService := service.NewRoleService(roleUseCase)
 	userRepo := dal.NewUserRepo(database)
 	crypto, err := providers.ProvideHasher()
 	if err != nil {
@@ -51,12 +53,15 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		return nil, nil, err
 	}
 	userUseCase := biz.NewUserUseCase(userRepo, crypto)
+	userService := service.NewUserService(userUseCase)
 	permissionRepo := dal.NewPermissionRepo(database)
 	permissionUseCase := biz.NewPermissionUseCase(permissionRepo)
+	permissionService := service.NewPermissionService(permissionUseCase)
 	viewRepo := dal.NewViewRepo(database)
 	viewUseCase := biz.NewViewUseCase(viewRepo)
-	systemService := service.New(resourceUseCase, roleUseCase, userUseCase, permissionUseCase, viewUseCase)
-	v2, err := server.NewServers(servers, systemService, v)
+	viewService := service.NewViewService(viewUseCase)
+	systemService := service.NewSystemService(resourceService, roleService, userService, permissionService, viewService)
+	v2, err := server.NewServers(app, servers, systemService, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

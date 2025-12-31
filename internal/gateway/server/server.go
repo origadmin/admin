@@ -83,6 +83,7 @@ func NewHTTPServer(
 	if err != nil {
 		return nil, err
 	}
+	srv.HandlePrefix("/api/v1", srv)
 	// Register all services using the GatewayService method.
 	svc.RegisterHTTPHandlers(srv)
 	return srv, nil
