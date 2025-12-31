@@ -7,6 +7,7 @@
 package auth
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -680,7 +681,7 @@ var File_auth_auth_proto protoreflect.FileDescriptor
 
 const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\"\x88\x01\n" +
+	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\"\x88\x01\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1d\n" +
@@ -727,14 +728,21 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
 	"authorized\x18\x01 \x01(\bR\n" +
 	"authorized\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId2\xb4\x05\n" +
-	"\vAuthService\x12h\n" +
-	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12t\n" +
-	"\bRegister\x12%.api.v1.services.auth.RegisterRequest\x1a&.api.v1.services.auth.RegisterResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/register\x12l\n" +
-	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12}\n" +
-	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/token\x12q\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId2\xf6\x05\n" +
+	"\vAuthService\x12t\n" +
+	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\"\xea\xea\x1b\b\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12\x80\x01\n" +
+	"\bRegister\x12%.api.v1.services.auth.RegisterRequest\x1a&.api.v1.services.auth.RegisterResponse\"%\xea\xea\x1b\b\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/auth/register\x12z\n" +
+	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"%\xea\xea\x1b\n" +
 	"\n" +
-	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12\x8b\x01\n" +
+	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"$\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/token\x12}\n" +
+	"\n" +
+	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"\x1c\xea\xea\x1b\b\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\n" +
 	"\x12\b/captcha\x12e\n" +
 	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponseB\xd0\x01\n" +
 	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"

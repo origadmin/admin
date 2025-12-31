@@ -7,6 +7,7 @@
 package auth
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -512,7 +513,7 @@ var File_auth_casbin_proto protoreflect.FileDescriptor
 
 const file_auth_casbin_proto_rawDesc = "" +
 	"\n" +
-	"\x11auth/casbin.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\"\x15\n" +
+	"\x11auth/casbin.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\"\x15\n" +
 	"\x13ListPoliciesRequest\"N\n" +
 	"\x14ListPoliciesResponse\x126\n" +
 	"\x05rules\x18\x01 \x03(\v2 .api.v1.services.auth.PolicyRuleR\x05rules\"<\n" +
@@ -536,12 +537,20 @@ const file_auth_casbin_proto_rawDesc = "" +
 	"\x12WatchUpdateRequest\x12$\n" +
 	"\rlast_modified\x18\x01 \x01(\x03R\rlast_modified\";\n" +
 	"\x13WatchUpdateResponse\x12$\n" +
-	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\x83\x04\n" +
-	"\rCasbinService\x12\x82\x01\n" +
-	"\fListPolicies\x12).api.v1.services.auth.ListPoliciesRequest\x1a*.api.v1.services.auth.ListPoliciesResponse\"\x1b\x82\xd3\xe4\x93\x02\x15b\x01*\x12\x10/casbin/policies\x12\x86\x01\n" +
-	"\rListGroupings\x12*.api.v1.services.auth.ListGroupingsRequest\x1a+.api.v1.services.auth.ListGroupingsResponse\"\x1c\x82\xd3\xe4\x93\x02\x16b\x01*\x12\x11/casbin/groupings\x12|\n" +
-	"\vWatchUpdate\x12(.api.v1.services.auth.WatchUpdateRequest\x1a).api.v1.services.auth.WatchUpdateResponse\"\x18\x82\xd3\xe4\x93\x02\x12b\x01*\x12\r/casbin/watch\x12f\n" +
-	"\vStreamRules\x12(.api.v1.services.auth.StreamRulesRequest\x1a).api.v1.services.auth.StreamRulesResponse\"\x000\x01B\xd2\x01\n" +
+	"\rmodified_date\x18\x01 \x01(\x03R\rmodified_date2\xbc\x04\n" +
+	"\rCasbinService\x12\x90\x01\n" +
+	"\fListPolicies\x12).api.v1.services.auth.ListPoliciesRequest\x1a*.api.v1.services.auth.ListPoliciesResponse\")\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15b\x01*\x12\x10/casbin/policies\x12\x94\x01\n" +
+	"\rListGroupings\x12*.api.v1.services.auth.ListGroupingsRequest\x1a+.api.v1.services.auth.ListGroupingsResponse\"*\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x16b\x01*\x12\x11/casbin/groupings\x12\x8a\x01\n" +
+	"\vWatchUpdate\x12(.api.v1.services.auth.WatchUpdateRequest\x1a).api.v1.services.auth.WatchUpdateResponse\"&\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x12b\x01*\x12\r/casbin/watch\x12t\n" +
+	"\vStreamRules\x12(.api.v1.services.auth.StreamRulesRequest\x1a).api.v1.services.auth.StreamRulesResponse\"\x0e\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth0\x01B\xd2\x01\n" +
 	"\x18com.api.v1.services.authB\vCasbinProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (

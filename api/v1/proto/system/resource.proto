@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -22,10 +23,12 @@ service ResourceService {
   // Lists all backend resources.
   rpc ListResources(ListResourcesRequest) returns (ListResourcesResponse) {
     option (google.api.http) = {get: "/sys/resources"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Gets a single backend resource.
   rpc GetResource(GetResourceRequest) returns (GetResourceResponse) {
     option (google.api.http) = {get: "/sys/resources/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Creates a new backend resource.
   rpc CreateResource(CreateResourceRequest) returns (CreateResourceResponse) {
@@ -33,6 +36,7 @@ service ResourceService {
       post: "/sys/resources"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Updates a backend resource.
   rpc UpdateResource(UpdateResourceRequest) returns (UpdateResourceResponse) {
@@ -40,10 +44,12 @@ service ResourceService {
       put: "/sys/resources/{resource.id}"
       body: "resource"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Deletes a backend resource.
   rpc DeleteResource(DeleteResourceRequest) returns (DeleteResourceResponse) {
     option (google.api.http) = {delete: "/sys/resources/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

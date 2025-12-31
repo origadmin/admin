@@ -7,6 +7,7 @@
 package system
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -591,7 +592,7 @@ var File_system_view_proto protoreflect.FileDescriptor
 
 const file_system_view_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xe2\x01\n" +
+	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xe2\x01\n" +
 	"\x10ListViewsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
@@ -630,18 +631,28 @@ const file_system_view_proto_rawDesc = "" +
 	"\x11DeleteViewRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteViewResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xfc\x04\n" +
-	"\vViewService\x12t\n" +
-	"\tListViews\x12(.api.v1.services.system.ListViewsRequest\x1a).api.v1.services.system.ListViewsResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/sys/views\x12s\n" +
-	"\aGetView\x12&.api.v1.services.system.GetViewRequest\x1a'.api.v1.services.system.GetViewResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/views/{id}\x12z\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc6\x05\n" +
+	"\vViewService\x12\x82\x01\n" +
+	"\tListViews\x12(.api.v1.services.system.ListViewsRequest\x1a).api.v1.services.system.ListViewsResponse\" \xea\xea\x1b\n" +
 	"\n" +
-	"CreateView\x12).api.v1.services.system.CreateViewRequest\x1a*.api.v1.services.system.CreateViewResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/views\x12\x87\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\f\x12\n" +
+	"/sys/views\x12\x81\x01\n" +
+	"\aGetView\x12&.api.v1.services.system.GetViewRequest\x1a'.api.v1.services.system.GetViewResponse\"%\xea\xea\x1b\n" +
 	"\n" +
-	"UpdateView\x12).api.v1.services.system.UpdateViewRequest\x1a*.api.v1.services.system.UpdateViewResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04view\x1a\x14/sys/views/{view.id}\x12|\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/views/{id}\x12\x88\x01\n" +
 	"\n" +
-	"DeleteView\x12).api.v1.services.system.DeleteViewRequest\x1a*.api.v1.services.system.DeleteViewResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/sys/views/{id}B\xde\x01\n" +
+	"CreateView\x12).api.v1.services.system.CreateViewRequest\x1a*.api.v1.services.system.CreateViewResponse\"#\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/sys/views\x12\x95\x01\n" +
+	"\n" +
+	"UpdateView\x12).api.v1.services.system.UpdateViewRequest\x1a*.api.v1.services.system.UpdateViewResponse\"0\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1c:\x04view\x1a\x14/sys/views/{view.id}\x12\x8a\x01\n" +
+	"\n" +
+	"DeleteView\x12).api.v1.services.system.DeleteViewRequest\x1a*.api.v1.services.system.DeleteViewResponse\"%\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11*\x0f/sys/views/{id}B\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tViewProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

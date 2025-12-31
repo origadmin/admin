@@ -7,6 +7,7 @@
 package system
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -975,7 +976,7 @@ var File_system_user_proto protoreflect.FileDescriptor
 
 const file_system_user_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/user.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x12types/system.proto\"*\n" +
+	"\x11system/user.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"*\n" +
 	"\x18ListUserResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"p\n" +
 	"\x19ListUserResourcesResponse\x12\x14\n" +
@@ -1033,22 +1034,41 @@ const file_system_user_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\brole_ids\x18\x02 \x03(\x03R\brole_ids\"J\n" +
 	"\x17UpdateUserRolesResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf6\t\n" +
-	"\vUserService\x12t\n" +
-	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/sys/users\x12\x9b\x01\n" +
-	"\x11ListUserResources\x120.api.v1.services.system.ListUserResourcesRequest\x1a1.api.v1.services.system.ListUserResourcesResponse\"!\x82\xd3\xe4\x93\x02\x1b\x12\x19/sys/users/{id}/resources\x12s\n" +
-	"\aGetUser\x12&.api.v1.services.system.GetUserRequest\x1a'.api.v1.services.system.GetUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/users/{id}\x12z\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf8\n" +
 	"\n" +
-	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/users\x12\x84\x01\n" +
+	"\vUserService\x12\x82\x01\n" +
+	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\" \xea\xea\x1b\n" +
 	"\n" +
-	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*2\x14/sys/users/{user.id}\x12|\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\f\x12\n" +
+	"/sys/users\x12\xa9\x01\n" +
+	"\x11ListUserResources\x120.api.v1.services.system.ListUserResourcesRequest\x1a1.api.v1.services.system.ListUserResourcesResponse\"/\xea\xea\x1b\n" +
 	"\n" +
-	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/sys/users/{id}\x12\x98\x01\n" +
-	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\x94\x01\n" +
-	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\" \x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x12\xaa\x01\n" +
-	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\"0\x82\xd3\xe4\x93\x02*:\bpassword\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b\x12\x19/sys/users/{id}/resources\x12\x81\x01\n" +
+	"\aGetUser\x12&.api.v1.services.system.GetUserRequest\x1a'.api.v1.services.system.GetUserResponse\"%\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/users/{id}\x12\x88\x01\n" +
+	"\n" +
+	"CreateUser\x12).api.v1.services.system.CreateUserRequest\x1a*.api.v1.services.system.CreateUserResponse\"#\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/sys/users\x12\x92\x01\n" +
+	"\n" +
+	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"-\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*2\x14/sys/users/{user.id}\x12\x8a\x01\n" +
+	"\n" +
+	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"%\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11*\x0f/sys/users/{id}\x12\xa6\x01\n" +
+	"\x10UpdateUserStatus\x12/.api.v1.services.system.UpdateUserStatusRequest\x1a0.api.v1.services.system.UpdateUserStatusResponse\"/\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\xa2\x01\n" +
+	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\".\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x12\xb8\x01\n" +
+	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\">\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02*:\bpassword\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tUserProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

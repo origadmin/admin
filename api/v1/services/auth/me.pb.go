@@ -7,6 +7,7 @@
 package auth
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -446,7 +447,7 @@ var File_auth_me_proto protoreflect.FileDescriptor
 
 const file_auth_me_proto_rawDesc = "" +
 	"\n" +
-	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x12types/system.proto\"\x13\n" +
+	"\rauth/me.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x13\n" +
 	"\x11GetProfileRequest\"E\n" +
 	"\x12GetProfileResponse\x12/\n" +
 	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\"G\n" +
@@ -462,14 +463,24 @@ const file_auth_me_proto_rawDesc = "" +
 	"\tresources\x18\x01 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\"\x15\n" +
 	"\x13GetUserRolesRequest\"I\n" +
 	"\x14GetUserRolesResponse\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\x90\x05\n" +
-	"\tMeService\x12t\n" +
+	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles2\xd8\x05\n" +
+	"\tMeService\x12\x82\x01\n" +
 	"\n" +
-	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/me/profile\x12\x80\x01\n" +
-	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\x1a\v/me/profile\x12\x84\x01\n" +
-	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/password\x12\x88\x01\n" +
-	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12x\n" +
-	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xce\x01\n" +
+	"GetProfile\x12'.api.v1.services.auth.GetProfileRequest\x1a(.api.v1.services.auth.GetProfileResponse\"!\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\r\x12\v/me/profile\x12\x8e\x01\n" +
+	"\rUpdateProfile\x12*.api.v1.services.auth.UpdateProfileRequest\x1a+.api.v1.services.auth.UpdateProfileResponse\"$\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10:\x01*\x1a\v/me/profile\x12\x92\x01\n" +
+	"\x0eUpdatePassword\x12+.api.v1.services.auth.UpdatePasswordRequest\x1a,.api.v1.services.auth.UpdatePasswordResponse\"%\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\x1a\f/me/password\x12\x96\x01\n" +
+	"\x10GetUserResources\x12-.api.v1.services.auth.GetUserResourcesRequest\x1a..api.v1.services.auth.GetUserResourcesResponse\"#\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f\x12\r/me/resources\x12\x86\x01\n" +
+	"\fGetUserRoles\x12).api.v1.services.auth.GetUserRolesRequest\x1a*.api.v1.services.auth.GetUserRolesResponse\"\x1f\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\v\x12\t/me/rolesB\xce\x01\n" +
 	"\x18com.api.v1.services.authB\aMeProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 
 var (

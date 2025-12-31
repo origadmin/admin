@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -17,24 +18,29 @@ option objc_class_prefix = "APIServiceSystemPosition";
 service PositionService {
   rpc ListPositions(ListPositionsRequest) returns (ListPositionsResponse) {
     option (google.api.http) = {get: "/sys/positions"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc GetPosition(GetPositionRequest) returns (GetPositionResponse) {
     option (google.api.http) = {get: "/sys/positions/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc CreatePosition(CreatePositionRequest) returns (CreatePositionResponse) {
     option (google.api.http) = {
       post: "/sys/positions"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc UpdatePosition(UpdatePositionRequest) returns (UpdatePositionResponse) {
     option (google.api.http) = {
       put: "/sys/positions/{position.id}"
       body: "position"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc DeletePosition(DeletePositionRequest) returns (DeletePositionResponse) {
     option (google.api.http) = {delete: "/sys/positions/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

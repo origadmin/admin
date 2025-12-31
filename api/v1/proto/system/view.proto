@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -19,10 +20,12 @@ service ViewService {
   // Lists all view elements.
   rpc ListViews(ListViewsRequest) returns (ListViewsResponse) {
     option (google.api.http) = {get: "/sys/views"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Gets a single view element.
   rpc GetView(GetViewRequest) returns (GetViewResponse) {
     option (google.api.http) = {get: "/sys/views/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Creates a new view element.
   rpc CreateView(CreateViewRequest) returns (CreateViewResponse) {
@@ -30,6 +33,7 @@ service ViewService {
       post: "/sys/views"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Updates a view element.
   rpc UpdateView(UpdateViewRequest) returns (UpdateViewResponse) {
@@ -37,10 +41,12 @@ service ViewService {
       put: "/sys/views/{view.id}"
       body: "view"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // Deletes a view element.
   rpc DeleteView(DeleteViewRequest) returns (DeleteViewResponse) {
     option (google.api.http) = {delete: "/sys/views/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

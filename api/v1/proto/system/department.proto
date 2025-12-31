@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -17,24 +18,29 @@ option objc_class_prefix = "APIServiceSystemDepartment";
 service DepartmentService {
   rpc ListDepartments(ListDepartmentsRequest) returns (ListDepartmentsResponse) {
     option (google.api.http) = {get: "/sys/departments"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc GetDepartment(GetDepartmentRequest) returns (GetDepartmentResponse) {
     option (google.api.http) = {get: "/sys/departments/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc CreateDepartment(CreateDepartmentRequest) returns (CreateDepartmentResponse) {
     option (google.api.http) = {
       post: "/sys/departments"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc UpdateDepartment(UpdateDepartmentRequest) returns (UpdateDepartmentResponse) {
     option (google.api.http) = {
       put: "/sys/departments/{department.id}"
       body: "department"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc DeleteDepartment(DeleteDepartmentRequest) returns (DeleteDepartmentResponse) {
     option (google.api.http) = {delete: "/sys/departments/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

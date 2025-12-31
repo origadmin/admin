@@ -7,6 +7,7 @@
 package system
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -599,7 +600,7 @@ var File_system_resource_proto protoreflect.FileDescriptor
 
 const file_system_resource_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\x96\x02\n" +
+	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x96\x02\n" +
 	"\x14ListResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
@@ -640,13 +641,23 @@ const file_system_resource_proto_rawDesc = "" +
 	"\x15DeleteResourceRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"F\n" +
 	"\x16DeleteResourceResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xdc\x05\n" +
-	"\x0fResourceService\x12\x84\x01\n" +
-	"\rListResources\x12,.api.v1.services.system.ListResourcesRequest\x1a-.api.v1.services.system.ListResourcesResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/sys/resources\x12\x83\x01\n" +
-	"\vGetResource\x12*.api.v1.services.system.GetResourceRequest\x1a+.api.v1.services.system.GetResourceResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/resources/{id}\x12\x8a\x01\n" +
-	"\x0eCreateResource\x12-.api.v1.services.system.CreateResourceRequest\x1a..api.v1.services.system.CreateResourceResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/sys/resources\x12\x9f\x01\n" +
-	"\x0eUpdateResource\x12-.api.v1.services.system.UpdateResourceRequest\x1a..api.v1.services.system.UpdateResourceResponse\".\x82\xd3\xe4\x93\x02(:\bresource\x1a\x1c/sys/resources/{resource.id}\x12\x8c\x01\n" +
-	"\x0eDeleteResource\x12-.api.v1.services.system.DeleteResourceRequest\x1a..api.v1.services.system.DeleteResourceResponse\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/sys/resources/{id}B\xe2\x01\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xa2\x06\n" +
+	"\x0fResourceService\x12\x92\x01\n" +
+	"\rListResources\x12,.api.v1.services.system.ListResourcesRequest\x1a-.api.v1.services.system.ListResourcesResponse\"$\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10\x12\x0e/sys/resources\x12\x91\x01\n" +
+	"\vGetResource\x12*.api.v1.services.system.GetResourceRequest\x1a+.api.v1.services.system.GetResourceResponse\")\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15\x12\x13/sys/resources/{id}\x12\x98\x01\n" +
+	"\x0eCreateResource\x12-.api.v1.services.system.CreateResourceRequest\x1a..api.v1.services.system.CreateResourceResponse\"'\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/sys/resources\x12\xad\x01\n" +
+	"\x0eUpdateResource\x12-.api.v1.services.system.UpdateResourceRequest\x1a..api.v1.services.system.UpdateResourceResponse\"<\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02(:\bresource\x1a\x1c/sys/resources/{resource.id}\x12\x9a\x01\n" +
+	"\x0eDeleteResource\x12-.api.v1.services.system.DeleteResourceRequest\x1a..api.v1.services.system.DeleteResourceResponse\")\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15*\x13/sys/resources/{id}B\xe2\x01\n" +
 	"\x1acom.api.v1.services.systemB\rResourceProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

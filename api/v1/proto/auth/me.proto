@@ -4,6 +4,7 @@ package api.v1.services.auth;
 
 import "google/api/annotations.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
@@ -17,6 +18,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/profile"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // UpdateProfile updates the profile of the currently authenticated user.
@@ -25,6 +27,7 @@ service MeService {
       put: "/me/profile"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // UpdatePassword changes the password for the currently authenticated user.
@@ -33,6 +36,7 @@ service MeService {
       put: "/me/password"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // GetUserResources retrieves the menu/resource list for the current user.
@@ -40,6 +44,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/resources"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // GetUserRoles retrieves the role list for the current user.
@@ -47,6 +52,7 @@ service MeService {
     option (google.api.http) = {
       get: "/me/roles"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

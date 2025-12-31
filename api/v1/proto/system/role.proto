@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -17,24 +18,29 @@ option objc_class_prefix = "APIServiceSystemRole";
 service RoleService {
   rpc ListRoles(ListRolesRequest) returns (ListRolesResponse) {
     option (google.api.http) = {get: "/sys/roles"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc GetRole(GetRoleRequest) returns (GetRoleResponse) {
     option (google.api.http) = {get: "/sys/roles/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse) {
     option (google.api.http) = {
       post: "/sys/roles"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
       put: "/sys/roles/{role.id}"
       body: "role"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse) {
     option (google.api.http) = {delete: "/sys/roles/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

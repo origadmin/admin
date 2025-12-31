@@ -7,6 +7,7 @@ import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 import "types/system.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -18,29 +19,35 @@ option objc_class_prefix = "APIServiceSystemUser";
 service UserService {
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {get: "/sys/users"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   rpc ListUserResources(ListUserResourcesRequest) returns (ListUserResourcesResponse) {
     option (google.api.http) = {get: "/sys/users/{id}/resources"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   rpc GetUser(GetUserRequest) returns (GetUserResponse) {
     option (google.api.http) = {get: "/sys/users/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/sys/users"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       patch: "/sys/users/{user.id}"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
     option (google.api.http) = {delete: "/sys/users/{id}"};
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
   // UpdateUserStatus Update the status of the user information
   rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {
@@ -48,6 +55,7 @@ service UserService {
       put: "/sys/users/{id}/status"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // UpdateUserRoles update the user roles
@@ -56,6 +64,7 @@ service UserService {
       put: "/sys/users/{id}/roles"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // ResetUserPassword reset the user s password
@@ -64,6 +73,7 @@ service UserService {
       post: "/sys/users/{id}/password/reset"
       body: "password"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 }
 

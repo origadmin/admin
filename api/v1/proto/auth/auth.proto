@@ -3,6 +3,7 @@ syntax = "proto3";
 package api.v1.services.auth;
 
 import "google/api/annotations.proto";
+import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
@@ -19,6 +20,7 @@ service AuthService {
       post: "/auth/login"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "public"};
   }
 
   // Register creates a new user account.
@@ -27,6 +29,7 @@ service AuthService {
       post: "/auth/register"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "public"};
   }
 
   // Logout invalidates the user's session.
@@ -35,6 +38,7 @@ service AuthService {
       post: "/auth/logout"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // RefreshToken provides a new access token.
@@ -43,6 +47,7 @@ service AuthService {
       post: "/auth/token"
       body: "*"
     };
+    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }
 
   // --- Captcha ---
@@ -52,6 +57,7 @@ service AuthService {
     option (google.api.http) = {
       get: "/captcha"
     };
+    option (contrib.api.policy.v1.policy) = {name: "public"};
   }
 
   // --- Internal ---

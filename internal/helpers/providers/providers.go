@@ -22,6 +22,8 @@ import (
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
 	"github.com/origadmin/toolkits/crypto/hash/types"
+	_ "origadmin/application/admin/api/v1/services/auth"
+	_ "origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/data"
@@ -29,7 +31,17 @@ import (
 	"origadmin/application/admin/internal/helpers/captcha"
 )
 
-var factory = secmiddleware.NewFactory()
+var (
+	factory  = secmiddleware.NewFactory()
+	policies = map[string]security.Policy{}
+)
+
+func init() {
+	ps := security.RegisteredPolicies()
+	for _, p := range ps {
+		policies[p.ServiceMethod] = p
+	}
+}
 
 // ProvideAuthenticatorOptions creates the JWT options from the application configuration.
 func ProvideAuthenticatorOptions(c *conf.Config) (*jwt.Options, error) {
@@ -210,6 +222,9 @@ func ProvideSkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker
 	return func(ctx context.Context, req security.Request) bool {
 		helper.Infow("kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
 			req.GetRouteTemplate())
+		if v, ok := policies[req.GetOperation()]; ok && v.Name == "public" {
+			return true
+		}
 		return false
 	}
 }

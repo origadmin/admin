@@ -48,7 +48,9 @@ plugins:
   - local: protoc-gen-grpc-gateway
     out: api/v1/services
     opt: paths=source_relative
-
+  - local: protoc-gen-go-security
+    out: api/v1/services
+    opt: paths=source_relative
 #  - local: protoc-gen-ent
 #    out: database
 

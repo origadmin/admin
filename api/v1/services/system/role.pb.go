@@ -7,6 +7,7 @@
 package system
 
 import (
+	_ "github.com/origadmin/contrib/api/gen/go/policy/v1"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -606,7 +607,7 @@ var File_system_role_proto protoreflect.FileDescriptor
 
 const file_system_role_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\"\xcc\x01\n" +
+	"\x11system/role.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xcc\x01\n" +
 	"\x10ListRolesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
@@ -645,18 +646,28 @@ const file_system_role_proto_rawDesc = "" +
 	"\x11DeleteRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteRoleResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xfc\x04\n" +
-	"\vRoleService\x12t\n" +
-	"\tListRoles\x12(.api.v1.services.system.ListRolesRequest\x1a).api.v1.services.system.ListRolesResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/sys/roles\x12s\n" +
-	"\aGetRole\x12&.api.v1.services.system.GetRoleRequest\x1a'.api.v1.services.system.GetRoleResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/roles/{id}\x12z\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc6\x05\n" +
+	"\vRoleService\x12\x82\x01\n" +
+	"\tListRoles\x12(.api.v1.services.system.ListRolesRequest\x1a).api.v1.services.system.ListRolesResponse\" \xea\xea\x1b\n" +
 	"\n" +
-	"CreateRole\x12).api.v1.services.system.CreateRoleRequest\x1a*.api.v1.services.system.CreateRoleResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/roles\x12\x87\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\f\x12\n" +
+	"/sys/roles\x12\x81\x01\n" +
+	"\aGetRole\x12&.api.v1.services.system.GetRoleRequest\x1a'.api.v1.services.system.GetRoleResponse\"%\xea\xea\x1b\n" +
 	"\n" +
-	"UpdateRole\x12).api.v1.services.system.UpdateRoleRequest\x1a*.api.v1.services.system.UpdateRoleResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x04role\x1a\x14/sys/roles/{role.id}\x12|\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11\x12\x0f/sys/roles/{id}\x12\x88\x01\n" +
 	"\n" +
-	"DeleteRole\x12).api.v1.services.system.DeleteRoleRequest\x1a*.api.v1.services.system.DeleteRoleResponse\"\x17\x82\xd3\xe4\x93\x02\x11*\x0f/sys/roles/{id}B\xde\x01\n" +
+	"CreateRole\x12).api.v1.services.system.CreateRoleRequest\x1a*.api.v1.services.system.CreateRoleResponse\"#\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/sys/roles\x12\x95\x01\n" +
+	"\n" +
+	"UpdateRole\x12).api.v1.services.system.UpdateRoleRequest\x1a*.api.v1.services.system.UpdateRoleResponse\"0\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1c:\x04role\x1a\x14/sys/roles/{role.id}\x12\x8a\x01\n" +
+	"\n" +
+	"DeleteRole\x12).api.v1.services.system.DeleteRoleRequest\x1a*.api.v1.services.system.DeleteRoleResponse\"%\xea\xea\x1b\n" +
+	"\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11*\x0f/sys/roles/{id}B\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tRoleProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (
