@@ -7,9 +7,8 @@ package service
 import (
 	"github.com/google/wire"
 
-	"origadmin/application/admin/api/v1/services/auth"
 	gatewayAPI "origadmin/application/admin/api/v1/services/gateway"
-	"origadmin/application/admin/api/v1/services/system"
+	"origadmin/application/admin/internal/gateway/client"
 )
 
 // ProviderSet is service providers.
@@ -18,12 +17,12 @@ var ProviderSet = wire.NewSet(NewGatewayService)
 // GatewayService is a gateway service.
 type GatewayService struct {
 	gatewayAPI.UnimplementedGatewayServiceServer
-	authClient   auth.AuthServiceClient
-	systemClient system.UserServiceClient
+	authClient   *client.AuthClientSet
+	systemClient *client.SystemClientSet
 }
 
 // NewGatewayService new a gateway service.
-func NewGatewayService(authClient auth.AuthServiceClient, systemClient system.UserServiceClient) (*GatewayService, error) {
+func NewGatewayService(authClient *client.AuthClientSet, systemClient *client.SystemClientSet) (*GatewayService, error) {
 	return &GatewayService{
 		authClient:   authClient,
 		systemClient: systemClient,

@@ -19,10 +19,20 @@ import (
 )
 
 // ProviderSet is client providers.
-var ProviderSet = wire.NewSet(NewAuthClient, NewSystemClient, NewSystemClientSet)
+var ProviderSet = wire.NewSet(
+	NewAuthClient,
+	NewSystemClient,
+	NewAuthClientSet,
+	NewSystemClientSet,
+)
+
+// AuthClientSet holds all the clients for the 'auth' service.
+type AuthClientSet struct {
+	AuthClient auth.AuthServiceClient
+	MeClient   auth.MeServiceClient
+}
 
 // SystemClientSet holds all the clients for the 'system' service.
-// This avoids creating multiple connections to the same downstream service.
 type SystemClientSet struct {
 	UserClient       system.UserServiceClient
 	RoleClient       system.RoleServiceClient
@@ -31,8 +41,8 @@ type SystemClientSet struct {
 	ViewClient       system.ViewServiceClient
 }
 
-// newGRPCConn is a private helper to create a gRPC connection from config.
-func newGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, error) {
+// NewGRPCConn is a helper to create a gRPC connection from config by name.
+func NewGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
 	if bootstrap.Bootstrap.Clients != nil {
 		for _, cli := range bootstrap.Bootstrap.Clients.Configs {
@@ -55,19 +65,21 @@ func newGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, e
 	return runtimegrpc.NewClient(context.Background(), grpcConfig, &runtimegrpc.ClientOptions{})
 }
 
-// NewAuthClient creates a new AuthAPI client.
-func NewAuthClient(bootstrap *conf.Config) (auth.AuthServiceClient, error) {
-	conn, err := newGRPCConn(bootstrap, "client.auth")
+// NewAuthClientSet creates a set of clients for the auth service.
+func NewAuthClientSet(bootstrap *conf.Config) (*AuthClientSet, error) {
+	conn, err := NewGRPCConn(bootstrap, "client.auth")
 	if err != nil {
 		return nil, err
 	}
-	return auth.NewAuthServiceClient(conn), nil
+	return &AuthClientSet{
+		AuthClient: auth.NewAuthServiceClient(conn),
+		MeClient:   auth.NewMeServiceClient(conn),
+	}, nil
 }
 
 // NewSystemClientSet creates a set of clients for the system service.
-// It establishes a single gRPC connection and initializes all related clients.
 func NewSystemClientSet(bootstrap *conf.Config) (*SystemClientSet, error) {
-	conn, err := newGRPCConn(bootstrap, "client.system")
+	conn, err := NewGRPCConn(bootstrap, "client.system")
 	if err != nil {
 		return nil, err
 	}
@@ -80,10 +92,20 @@ func NewSystemClientSet(bootstrap *conf.Config) (*SystemClientSet, error) {
 	}, nil
 }
 
+// NewAuthClient creates a new AuthAPI client.
+// Deprecated: Use NewAuthClientSet instead.
+func NewAuthClient(bootstrap *conf.Config) (auth.AuthServiceClient, error) {
+	conn, err := NewGRPCConn(bootstrap, "client.auth")
+	if err != nil {
+		return nil, err
+	}
+	return auth.NewAuthServiceClient(conn), nil
+}
+
 // NewSystemClient creates a new SystemAPI client.
-// Deprecated: Use NewSystemClientSet instead to access all clients for the system service.
+// Deprecated: Use NewSystemClientSet instead.
 func NewSystemClient(bootstrap *conf.Config) (system.UserServiceClient, error) {
-	conn, err := newGRPCConn(bootstrap, "client.system")
+	conn, err := NewGRPCConn(bootstrap, "client.system")
 	if err != nil {
 		return nil, err
 	}

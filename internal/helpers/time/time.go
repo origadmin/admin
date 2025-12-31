@@ -8,13 +8,13 @@ package time
 import (
 	"time"
 
-	"github.com/origadmin/contrib/i18n/tz"
+	"github.com/origadmin/toolkits/i18n/tz"
 )
 
 type Time = time.Time
 
 func IsZero(t time.Time) bool {
-	location, err := time.LoadLocation(tz.Location())
+	location, err := tz.GetLocation()
 	if err != nil {
 		return false
 	}

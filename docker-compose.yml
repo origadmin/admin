@@ -1,0 +1,82 @@
+networks:
+  origadmin-net:
+    driver: bridge
+
+services:
+  # Service Discovery
+  consul:
+    image: hashicorp/consul:1.15.4
+    container_name: consul
+    ports:
+      - "8500:8500"
+    networks:
+      - origadmin-net
+    command: "agent -server -bootstrap-expect=1 -ui -client=0.0.0.0"
+
+  # Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_DB: origadmin
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    networks:
+      - origadmin-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Auth Service
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: auth
+    container_name: auth-service
+    depends_on:
+      - consul
+      - postgres
+    ports:
+      - "9001:9001"
+    networks:
+      - origadmin-net
+
+  # System Service
+  system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: system
+    container_name: system-service
+    depends_on:
+      - consul
+      - postgres
+    ports:
+      - "9002:9002"
+    networks:
+      - origadmin-net
+
+  # Gateway Service
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_NAME: gateway
+    container_name: gateway-service
+    depends_on:
+      - consul
+      - auth
+      - system
+    ports:
+      - "8000:8000"
+    networks:
+      - origadmin-net
+
+volumes:
+  postgres_data:
+    driver: local

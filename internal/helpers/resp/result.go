@@ -10,11 +10,10 @@ import (
 	"fmt"
 	"net/http"
 
-	paginationv1 "github.com/origadmin/runtime/api/gen/go/pagination/v1"
-	jwtv1 "github.com/origadmin/runtime/api/gen/go/security/jwt/v1"
-	"github.com/origadmin/toolkits/errors/httperr"
 	"google.golang.org/protobuf/proto"
 
+	commonv1 "github.com/origadmin/runtime/api/gen/go/config/common/v1"
+	"github.com/origadmin/runtime/errors"
 	datav1 "origadmin/application/admin/internal/helpers/resp/data/v1"
 )
 
@@ -39,7 +38,7 @@ type Result struct {
 	NextPageToken *string         `json:"next_page_token,omitempty"`
 	Data          json.RawMessage `json:"data,omitempty"`
 	Extra         json.RawMessage `json:"extra,omitempty"`
-	Error         *httperr.Error  `json:"error,omitempty"`
+	Error         *errors.Error   `json:"error,omitempty"`
 }
 
 type ResultBytes struct {
@@ -52,7 +51,7 @@ type ResultBytes struct {
 }
 
 type PageResponse struct {
-	*paginationv1.PageResponse
+	commonv1.Pagination
 	Data  []json.RawMessage          `json:"data"`
 	Extra map[string]json.RawMessage `json:"extra,omitempty"`
 }
@@ -145,13 +144,4 @@ func resultJSON(rw http.ResponseWriter, status int, data any) error {
 	rw.WriteHeader(status)
 	_, _ = rw.Write(v)
 	return nil
-}
-
-func FromToken(token *jwtv1.Token) *Token {
-	return &Token{
-		UserId:       token.UserId,
-		AccessToken:  token.AccessToken,
-		RefreshToken: token.RefreshToken,
-		ExpiresAt:    token.ExpirationTime,
-	}
 }
