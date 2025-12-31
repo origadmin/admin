@@ -76,7 +76,7 @@ type PermissionServiceDeletePermissionHooker interface {
 }
 
 func RegisterPermissionServiceBridgeServer(s *http.Server, srv PermissionServiceHookedBridger) {
-	r := s.Route("/api/v1")
+	r := s.Route("/")
 	r.GET("/sys/permissions", _PermissionService_ListPermissions0_Bridge_Handler(srv))
 	r.GET("/sys/permissions/:id", _PermissionService_GetPermission0_Bridge_Handler(srv))
 	r.POST("/sys/permissions", _PermissionService_CreatePermission0_Bridge_Handler(srv))

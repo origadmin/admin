@@ -76,7 +76,7 @@ type UploadServiceDeleteUploadHooker interface {
 }
 
 func RegisterUploadServiceBridgeServer(s *http.Server, srv UploadServiceHookedBridger) {
-	r := s.Route("/api/v1")
+	r := s.Route("/")
 	r.GET("/upload", _UploadService_ListUpload0_Bridge_Handler(srv))
 	r.GET("/upload/:id", _UploadService_GetUpload0_Bridge_Handler(srv))
 	r.POST("/upload", _UploadService_CreateUpload0_Bridge_Handler(srv))

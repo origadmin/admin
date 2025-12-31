@@ -76,7 +76,7 @@ type DatastoreServiceDeleteDatastoreHooker interface {
 }
 
 func RegisterDatastoreServiceBridgeServer(s *http.Server, srv DatastoreServiceHookedBridger) {
-	r := s.Route("/api/v1")
+	r := s.Route("/")
 	r.GET("/datastore", _DatastoreService_ListDatastore0_Bridge_Handler(srv))
 	r.GET("/datastore/:id", _DatastoreService_GetDatastore0_Bridge_Handler(srv))
 	r.POST("/datastore", _DatastoreService_CreateDatastore0_Bridge_Handler(srv))

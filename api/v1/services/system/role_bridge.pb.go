@@ -76,7 +76,7 @@ type RoleServiceDeleteRoleHooker interface {
 }
 
 func RegisterRoleServiceBridgeServer(s *http.Server, srv RoleServiceHookedBridger) {
-	r := s.Route("/api/v1")
+	r := s.Route("/")
 	r.GET("/sys/roles", _RoleService_ListRoles0_Bridge_Handler(srv))
 	r.GET("/sys/roles/:id", _RoleService_GetRole0_Bridge_Handler(srv))
 	r.POST("/sys/roles", _RoleService_CreateRole0_Bridge_Handler(srv))

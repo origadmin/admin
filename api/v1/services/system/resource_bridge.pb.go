@@ -81,7 +81,7 @@ type ResourceServiceDeleteResourceHooker interface {
 }
 
 func RegisterResourceServiceBridgeServer(s *http.Server, srv ResourceServiceHookedBridger) {
-	r := s.Route("/api/v1")
+	r := s.Route("/")
 	r.GET("/sys/resources", _ResourceService_ListResources0_Bridge_Handler(srv))
 	r.GET("/sys/resources/:id", _ResourceService_GetResource0_Bridge_Handler(srv))
 	r.POST("/sys/resources", _ResourceService_CreateResource0_Bridge_Handler(srv))
