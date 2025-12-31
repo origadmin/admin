@@ -20,7 +20,7 @@ import (
 
 var (
 	// Name is the name of the compiled software.
-	Name = "origadmin.gateway.v1"
+	Name = "origadmin.server.gateway"
 	// Version is the version of the compiled software.
 	Version = "v1.0.0"
 
