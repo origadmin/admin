@@ -166,10 +166,10 @@ message User {
   google.protobuf.Timestamp last_login_time = 19 [json_name = "last_login_time"];
   // user.field.sanction_date
   optional google.protobuf.Timestamp sanction_date = 20 [json_name = "sanction_date"];
-  // user.field.manager_id
-  int64 manager_id = 21 [json_name = "manager_id"];
-  // user.field.manager
-  string manager = 22 [json_name = "manager"];
+//  // user.field.manager_id
+//  int64 manager_id = 21 [json_name = "manager_id"];
+//  // user.field.manager
+//  string manager = 22 [json_name = "manager"];
   // Roles holds the value of the roles edge.
   repeated Role roles = 23 [json_name = "roles"];
   // Role Ids holds the value of the role_ids

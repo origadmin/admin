@@ -3316,17 +3316,16 @@ components:
                     type: string
                     description: user.field.sanction_date
                     format: date-time
-                manager_id:
-                    type: string
-                    description: user.field.manager_id
-                manager:
-                    type: string
-                    description: user.field.manager
                 roles:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Role'
-                    description: Roles holds the value of the roles edge.
+                    description: |-
+                        // user.field.manager_id
+                          int64 manager_id = 21 [json_name = "manager_id"];
+                          // user.field.manager
+                          string manager = 22 [json_name = "manager"];
+                         Roles holds the value of the roles edge.
                 role_ids:
                     type: array
                     items:

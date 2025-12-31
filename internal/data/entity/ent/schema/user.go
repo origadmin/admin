@@ -104,6 +104,10 @@ func (User) Fields() []ent.Field {
 		mixin.Time("last_login_time", i18n.Text("entity.user.field.last_login_time")),
 		mixin.Time("login_time", i18n.Text("entity.user.field.login_time")),
 		mixin.TimeOptional("sanction_date", i18n.Text("entity.user.field.sanction_date")),
+		//mixin.OptionalFK("manager_id", i18n.Text("entity.user.field.manager_id")),
+		//field.String("manager").
+		//	Default("").
+		//	Comment(i18n.Text("entity.user.field.manager")),
 	}
 }
 
@@ -148,7 +152,7 @@ func preventDuplicateSystemUser(next ent.Mutator) ent.Mutator {
 	return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
 		isSystem, ok := m.IsSystem()
 		if !ok || !isSystem {
-			return next.Mutate(ctx, m)
+			return m.Next().Mutate(ctx, m)
 		}
 		// If creating a system user, check if one already exists.
 		count, err := m.Client().User.
@@ -161,7 +165,7 @@ func preventDuplicateSystemUser(next ent.Mutator) ent.Mutator {
 		if count > 0 {
 			return nil, fmt.Errorf("a system user already exists")
 		}
-		return next.Mutate(ctx, m)
+		return m.Next().Mutate(ctx, m)
 	})
 }
 
@@ -170,7 +174,7 @@ func preventDeleteSystemUser(next ent.Mutator) ent.Mutator {
 	return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
 		// Add a predicate to ensure system users are not included in the delete operation.
 		m.Where(user.IsSystem(false))
-		return next.Mutate(ctx, m)
+		return m.Next().Mutate(ctx, m)
 	})
 }
 

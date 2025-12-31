@@ -1303,10 +1303,6 @@ func (m *User) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for ManagerId
-
-	// no validation rules for Manager
-
 	for idx, item := range m.GetRoles() {
 		_, _ = idx, item
 

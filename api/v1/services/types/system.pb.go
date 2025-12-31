@@ -647,10 +647,11 @@ type User struct {
 	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
 	// user.field.sanction_date
 	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
-	// user.field.manager_id
-	ManagerId int64 `protobuf:"varint,21,opt,name=manager_id,proto3" json:"manager_id,omitempty"`
-	// user.field.manager
-	Manager string `protobuf:"bytes,22,opt,name=manager,proto3" json:"manager,omitempty"`
+	//	// user.field.manager_id
+	//	int64 manager_id = 21 [json_name = "manager_id"];
+	//	// user.field.manager
+	//	string manager = 22 [json_name = "manager"];
+	//
 	// Roles holds the value of the roles edge.
 	Roles []*Role `protobuf:"bytes,23,rep,name=roles,proto3" json:"roles,omitempty"`
 	// Role Ids holds the value of the role_ids
@@ -827,20 +828,6 @@ func (x *User) GetSanctionDate() *timestamppb.Timestamp {
 		return x.SanctionDate
 	}
 	return nil
-}
-
-func (x *User) GetManagerId() int64 {
-	if x != nil {
-		return x.ManagerId
-	}
-	return 0
-}
-
-func (x *User) GetManager() string {
-	if x != nil {
-		return x.Manager
-	}
-	return ""
 }
 
 func (x *User) GetRoles() []*Role {
@@ -2845,7 +2832,7 @@ const file_types_system_proto_rawDesc = "" +
 	"role_views\x12?\n" +
 	"\n" +
 	"user_roles\x18\x04 \x03(\v2\x1f.api.v1.services.types.UserRoleR\n" +
-	"user_roles\"\xce\x06\n" +
+	"user_roles\"\x94\x06\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
@@ -2869,11 +2856,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\x06status\x18\x11 \x01(\x05R\x06status\x12$\n" +
 	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12D\n" +
 	"\x0flast_login_time\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12E\n" +
-	"\rsanction_date\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x12\x1e\n" +
-	"\n" +
-	"manager_id\x18\x15 \x01(\x03R\n" +
-	"manager_id\x12\x18\n" +
-	"\amanager\x18\x16 \x01(\tR\amanager\x121\n" +
+	"\rsanction_date\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
 	"\x05roles\x18\x17 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
 	"\brole_ids\x18\x18 \x03(\x03R\brole_idsB\x10\n" +
 	"\x0e_sanction_date\"\x7f\n" +
