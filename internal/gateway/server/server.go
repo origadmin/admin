@@ -6,7 +6,6 @@ package server
 
 import (
 	"errors"
-	stdhttp "net/http"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -16,8 +15,6 @@ import (
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/http"
-	"origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/gateway/service"
 )
 
@@ -86,23 +83,7 @@ func NewHTTPServer(
 	if err != nil {
 		return nil, err
 	}
-	// Register all services.
-	registerServices(srv, svc)
+	// Register all services using the GatewayService method.
+	svc.RegisterHTTPHandlers(srv)
 	return srv, nil
-}
-
-func registerServices(
-	srv *transport.HTTPServer,
-	svc *service.GatewayService,
-) {
-	system.RegisterUserServiceHTTPServer(srv, svc.System.User)
-	system.RegisterRoleServiceHTTPServer(srv, svc.System.Role)
-	system.RegisterPermissionServiceHTTPServer(srv, svc.System.Permission)
-	system.RegisterResourceServiceHTTPServer(srv, svc.System.Resource)
-	system.RegisterViewServiceHTTPServer(srv, svc.System.View)
-	auth.RegisterAuthServiceHTTPServer(srv, svc.Auth.Auth)
-	auth.RegisterMeServiceHTTPServer(srv, svc.Auth.Me)
-	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		log.Infof("HTTP %s %s", method, path)
-	})
 }

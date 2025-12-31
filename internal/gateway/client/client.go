@@ -6,7 +6,7 @@ package client
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"github.com/google/wire"
 	"google.golang.org/grpc"
@@ -39,7 +39,8 @@ type SystemBridgeSet struct {
 	View       system.ViewServiceHTTPServer
 }
 
-// NewGRPCConn is a helper to create a gRPC connection from config by name.
+// NewGRPCConn finds a client configuration by name from the bootstrap config
+// and establishes a gRPC connection.
 func NewGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
 	if bootstrap.Bootstrap.Clients != nil {
@@ -52,12 +53,12 @@ func NewGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, e
 	}
 
 	if clientConfig == nil {
-		return nil, errors.New("client config not found: " + clientName)
+		return nil, fmt.Errorf("client config not found: %s", clientName)
 	}
 
 	grpcConfig := clientConfig.GetGrpc()
 	if grpcConfig == nil {
-		return nil, errors.New("grpc client config not found: " + clientName)
+		return nil, fmt.Errorf("gRPC client config not found for: %s", clientName)
 	}
 
 	return runtimegrpc.NewClient(context.Background(), grpcConfig, &runtimegrpc.ClientOptions{})
