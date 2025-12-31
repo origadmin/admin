@@ -90,7 +90,7 @@ type AuthServiceAuthenticateHooker interface {
 }
 
 func RegisterAuthServiceBridgeServer(s *http.Server, srv AuthServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.POST("/auth/login", _AuthService_Login0_Bridge_Handler(srv))
 	r.POST("/auth/register", _AuthService_Register0_Bridge_Handler(srv))
 	r.POST("/auth/logout", _AuthService_Logout0_Bridge_Handler(srv))

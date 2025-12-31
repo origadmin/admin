@@ -5,12 +5,10 @@
 package service
 
 import (
-	stdhttp "net/http"
-
 	"github.com/google/wire"
 
-	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service/transport"
+	"github.com/origadmin/runtime/service/transport/http"
 	"origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/internal/gateway/client"
@@ -38,21 +36,16 @@ func NewGatewayService(authClient *client.AuthBridgeSet, systemClient *client.Sy
 }
 
 // RegisterHTTPHandlers registers all the HTTP handlers for the downstream services
-// onto the provided HTTP server. It also logs the registered routes.
-func (s *GatewayService) RegisterHTTPHandlers(srv *transport.HTTPServer) {
+// onto the provided HTTP router.
+func (s *GatewayService) RegisterHTTPHandlers(router *transport.RouterHTTP) {
 	// Register handlers for the 'system' service
-	system.RegisterUserServiceHTTPServer(srv, s.System.User)
-	system.RegisterRoleServiceHTTPServer(srv, s.System.Role)
-	system.RegisterPermissionServiceHTTPServer(srv, s.System.Permission)
-	system.RegisterResourceServiceHTTPServer(srv, s.System.Resource)
-	system.RegisterViewServiceHTTPServer(srv, s.System.View)
+	system.RegisterUserServiceHTTPServer(router, s.System.User)
+	system.RegisterRoleServiceHTTPServer(router, s.System.Role)
+	system.RegisterPermissionServiceHTTPServer(router, s.System.Permission)
+	system.RegisterResourceServiceHTTPServer(router, s.System.Resource)
+	system.RegisterViewServiceHTTPServer(router, s.System.View)
 
 	// Register handlers for the 'auth' service
-	auth.RegisterAuthServiceHTTPServer(srv, s.Auth.Auth)
-	auth.RegisterMeServiceHTTPServer(srv, s.Auth.Me)
-
-	// Log all registered HTTP routes for debugging and verification
-	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
-		log.Infof("HTTP %s %s", method, path)
-	})
+	auth.RegisterAuthServiceHTTPServer(router, s.Auth.Auth)
+	auth.RegisterMeServiceHTTPServer(router, s.Auth.Me)
 }

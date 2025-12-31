@@ -83,8 +83,13 @@ func NewHTTPServer(
 	if err != nil {
 		return nil, err
 	}
-	srv.HandlePrefix("/api/v1", srv)
-	// Register all services using the GatewayService method.
-	svc.RegisterHTTPHandlers(srv)
+
+	// Get a router group with the /api/v1 prefix.
+	// All subsequent routes registered on this router will be automatically prefixed.
+	apiRouter := srv.Route("/api/v1")
+
+	// Register all services onto this specific router group.
+	svc.RegisterHTTPHandlers(apiRouter)
+
 	return srv, nil
 }

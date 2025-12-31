@@ -76,7 +76,7 @@ type PositionServiceDeletePositionHooker interface {
 }
 
 func RegisterPositionServiceBridgeServer(s *http.Server, srv PositionServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.GET("/sys/positions", _PositionService_ListPositions0_Bridge_Handler(srv))
 	r.GET("/sys/positions/:id", _PositionService_GetPosition0_Bridge_Handler(srv))
 	r.POST("/sys/positions", _PositionService_CreatePosition0_Bridge_Handler(srv))

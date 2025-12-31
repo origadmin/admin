@@ -81,7 +81,7 @@ type MeServiceGetUserRolesHooker interface {
 }
 
 func RegisterMeServiceBridgeServer(s *http.Server, srv MeServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.GET("/me/profile", _MeService_GetProfile0_Bridge_Handler(srv))
 	r.PUT("/me/profile", _MeService_UpdateProfile0_Bridge_Handler(srv))
 	r.PUT("/me/password", _MeService_UpdatePassword0_Bridge_Handler(srv))

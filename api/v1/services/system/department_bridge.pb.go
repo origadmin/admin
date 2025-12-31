@@ -76,7 +76,7 @@ type DepartmentServiceDeleteDepartmentHooker interface {
 }
 
 func RegisterDepartmentServiceBridgeServer(s *http.Server, srv DepartmentServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.GET("/sys/departments", _DepartmentService_ListDepartments0_Bridge_Handler(srv))
 	r.GET("/sys/departments/:id", _DepartmentService_GetDepartment0_Bridge_Handler(srv))
 	r.POST("/sys/departments", _DepartmentService_CreateDepartment0_Bridge_Handler(srv))

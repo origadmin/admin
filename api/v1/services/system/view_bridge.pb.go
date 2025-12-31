@@ -81,7 +81,7 @@ type ViewServiceDeleteViewHooker interface {
 }
 
 func RegisterViewServiceBridgeServer(s *http.Server, srv ViewServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.GET("/sys/views", _ViewService_ListViews0_Bridge_Handler(srv))
 	r.GET("/sys/views/:id", _ViewService_GetView0_Bridge_Handler(srv))
 	r.POST("/sys/views", _ViewService_CreateView0_Bridge_Handler(srv))

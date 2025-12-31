@@ -107,7 +107,7 @@ type UserServiceResetUserPasswordHooker interface {
 }
 
 func RegisterUserServiceBridgeServer(s *http.Server, srv UserServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.GET("/sys/users", _UserService_ListUsers0_Bridge_Handler(srv))
 	r.GET("/sys/users/:id/resources", _UserService_ListUserResources0_Bridge_Handler(srv))
 	r.GET("/sys/users/:id", _UserService_GetUser0_Bridge_Handler(srv))

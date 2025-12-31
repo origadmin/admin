@@ -105,7 +105,7 @@ type PersonalServiceUpdatePersonalSettingHooker interface {
 }
 
 func RegisterPersonalServiceBridgeServer(s *http.Server, srv PersonalServiceHookedBridger) {
-	r := s.Route("/")
+	r := s.Route("/api/v1")
 	r.GET("/message/personal/profile", _PersonalService_GetPersonalProfile0_Bridge_Handler(srv))
 	r.GET("/message/personal/resources", _PersonalService_ListPersonalResources0_Bridge_Handler(srv))
 	r.GET("/message/personal/roles", _PersonalService_ListPersonalRoles0_Bridge_Handler(srv))

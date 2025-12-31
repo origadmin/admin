@@ -43,7 +43,9 @@ plugins:
     opt: paths=source_relative
   - local: protoc-gen-go-bridge
     out: api/v1/services
-    opt: paths=source_relative
+    opt:
+     - paths=source_relative
+     - prefix=/api/v1
   - local: protoc-gen-grpc-gateway
     out: api/v1/services
     opt: paths=source_relative
