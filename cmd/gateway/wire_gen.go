@@ -28,15 +28,15 @@ import (
 func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), error) {
 	confpbBootstrap := &bootstrap.Bootstrap
 	servers := confpbBootstrap.Servers
-	authClientSet, err := client.NewAuthClientSet(bootstrap)
+	authBridgeSet, err := client.NewAuthBridgeSet(app, bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	systemClientSet, err := client.NewSystemClientSet(bootstrap)
+	systemBridgeSet, err := client.NewSystemBridgeSet(app, bootstrap)
 	if err != nil {
 		return nil, nil, err
 	}
-	gatewayService, err := service.NewGatewayService(authClientSet, systemClientSet)
+	gatewayService, err := service.NewGatewayService(authBridgeSet, systemBridgeSet)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -16,6 +16,7 @@ import (
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
+	"origadmin/application/admin/internal/gateway/service"
 	"origadmin/application/admin/internal/helpers/providers"
 )
 
@@ -27,6 +28,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 
 		// Service-specific providers
 		server.ProviderSet,
+		service.ProviderSet,
 		client.ProviderSet,
 		NewApp,
 	))

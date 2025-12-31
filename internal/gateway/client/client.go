@@ -11,6 +11,7 @@ import (
 	"github.com/google/wire"
 	"google.golang.org/grpc"
 
+	"github.com/origadmin/runtime"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
 	runtimegrpc "github.com/origadmin/runtime/service/transport/grpc"
 	"origadmin/application/admin/api/v1/services/auth"
@@ -20,8 +21,8 @@ import (
 
 // ProviderSet is client providers.
 var ProviderSet = wire.NewSet(
-	NewAuthClientSet,
-	NewSystemClientSet,
+	NewAuthBridgeSet,
+	NewSystemBridgeSet,
 )
 
 const (
@@ -49,13 +50,10 @@ type SystemBridgeSet struct {
 // NewGRPCConn finds a client configuration by service name or convention
 // and establishes a gRPC connection.
 //
-// It implements smart matching logic:
-// 1. Capability Check: It ignores configs that do not have a 'grpc' section.
-// 2. Name Matching: It matches if the config name equals the input name (e.g., "auth")
-//    OR the conventional name (e.g., "origadmin.service.auth.client.grpc").
-func NewGRPCConn(bootstrap *conf.Config, name string) (*grpc.ClientConn, error) {
+// The provided context is used for the client lifecycle.
+func NewGRPCConn(ctx context.Context, bootstrap *conf.Config, name string) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
-	
+
 	// The conventional name for gRPC clients
 	convention := fmt.Sprintf("origadmin.service.%s.client.grpc", name)
 
@@ -78,13 +76,14 @@ func NewGRPCConn(bootstrap *conf.Config, name string) (*grpc.ClientConn, error) 
 		return nil, fmt.Errorf("gRPC client config not found for service: %s (checked name: '%s' and '%s')", name, name, convention)
 	}
 
-	return runtimegrpc.NewClient(context.Background(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{})
+	return runtimegrpc.NewClient(ctx, clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{})
 }
 
-// NewAuthClientSet creates a set of clients for the auth service.
-func NewAuthClientSet(bootstrap *conf.Config) (*AuthBridgeSet, error) {
-	// Pass the simple service name. The helper handles the smart matching.
-	conn, err := NewGRPCConn(bootstrap, ServiceNameAuth)
+// NewAuthBridgeSet creates a set of clients for the auth service.
+func NewAuthBridgeSet(app *runtime.App, bootstrap *conf.Config) (*AuthBridgeSet, error) {
+	// Use the application's root context. This ensures that the client's lifecycle
+	// is tied to the application's lifecycle.
+	conn, err := NewGRPCConn(app.Context(), bootstrap, ServiceNameAuth)
 	if err != nil {
 		return nil, err
 	}
@@ -94,10 +93,10 @@ func NewAuthClientSet(bootstrap *conf.Config) (*AuthBridgeSet, error) {
 	}, nil
 }
 
-// NewSystemClientSet creates a set of clients for the system service.
-func NewSystemClientSet(bootstrap *conf.Config) (*SystemBridgeSet, error) {
-	// Pass the simple service name. The helper handles the smart matching.
-	conn, err := NewGRPCConn(bootstrap, ServiceNameSystem)
+// NewSystemBridgeSet creates a set of clients for the system service.
+func NewSystemBridgeSet(app *runtime.App, bootstrap *conf.Config) (*SystemBridgeSet, error) {
+	// Use the application's root context.
+	conn, err := NewGRPCConn(app.Context(), bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, err
 	}
