@@ -1,0 +1,6 @@
+root_user:
+  enabled: true
+  username: admin
+  password: "admin123"
+  nickname: "Administrator"
+  email: "admin@example.com"

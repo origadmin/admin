@@ -8,3 +8,9 @@ security:
           signing_method: "HS256"
           access_token_ttl: 3600s
           refresh_token_ttl: 7200s
+  authz:
+    configs:
+      - type: casbin
+        casbin:
+          wildcard_item:  "*"
+          model_path: "resources/casbin_model.conf"

@@ -15,6 +15,7 @@ import (
 	"github.com/origadmin/runtime"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/http"
 	"origadmin/application/admin/internal/gateway/service"
@@ -28,6 +29,7 @@ func NewServers(
 	app *runtime.App,
 	serversCfg *transportv1.Servers,
 	svc *service.GatewayService,
+	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if serversCfg == nil {
 		return nil, errors.New("servers config is nil")
@@ -42,7 +44,7 @@ func NewServers(
 
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
@@ -61,18 +63,15 @@ func NewServers(
 
 // NewHTTPServer creates a new HTTP server and registers all downstream service handlers.
 func NewHTTPServer(
-	app *runtime.App,
+	_ *runtime.App,
 	cfg *httpv1.Server,
 	svc *service.GatewayService,
+	middlewareProvider container.ServerMiddlewareProvider,
 ) (transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	middlewareProvider, err := app.MiddlewareProvider()
-	if err != nil {
-		return nil, err
-	}
 	mws, err := middlewareProvider.ServerMiddlewares()
 	if err != nil {
 		return nil, err

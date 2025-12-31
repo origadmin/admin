@@ -938,8 +938,6 @@ func ConvertUserPBToUser(from *UserPB) *User {
 		LastLoginIP:   from.LastLoginIp,
 		LastLoginTime: ConvertTimestampToTime(from.LastLoginTime),
 		SanctionDate:  ConvertTimestampToTime(from.SanctionDate),
-		ManagerID:     from.ManagerId,
-		Manager:       from.Manager,
 	}
 	return to
 }
@@ -1129,8 +1127,6 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		LastLoginIp:   from.LastLoginIP,
 		LastLoginTime: ConvertTimeToTimestamp(from.LastLoginTime),
 		SanctionDate:  ConvertTimeToTimestamp(from.SanctionDate),
-		ManagerId:     from.ManagerID,
-		Manager:       from.Manager,
 		Roles:         ConvertRolesToRolesPB(from.Edges.Roles),
 	}
 	return to

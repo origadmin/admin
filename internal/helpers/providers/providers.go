@@ -1,23 +1,35 @@
 package providers
 
 import (
+	"context"
 	"errors"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 
 	authnv1 "github.com/origadmin/contrib/api/gen/go/security/authn/v1"
+	authzv1 "github.com/origadmin/contrib/api/gen/go/security/authz/v1"
+	"github.com/origadmin/contrib/security"
+	"github.com/origadmin/contrib/security/authn"
 	"github.com/origadmin/contrib/security/authn/jwt"
+	"github.com/origadmin/contrib/security/authz"
+	"github.com/origadmin/contrib/security/authz/casbin"
 	"github.com/origadmin/contrib/security/credential"
+	secmiddleware "github.com/origadmin/contrib/security/middleware"
 	"github.com/origadmin/runtime"
 	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/middleware"
 	"github.com/origadmin/toolkits/crypto/hash"
 	"github.com/origadmin/toolkits/crypto/hash/algorithms/bcrypt"
 	"github.com/origadmin/toolkits/crypto/hash/types"
 	"origadmin/application/admin/internal/conf"
 	confpb "origadmin/application/admin/internal/conf/pb"
+	"origadmin/application/admin/internal/data"
+	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/helpers/captcha"
 )
+
+var factory = secmiddleware.NewFactory()
 
 // ProvideAuthenticatorOptions creates the JWT options from the application configuration.
 func ProvideAuthenticatorOptions(c *conf.Config) (*jwt.Options, error) {
@@ -50,10 +62,59 @@ func ProvideCredentialCreator(opts *jwt.Options, logger log.Logger) (credential.
 	return jwt.New(opts, logger)
 }
 
-// ProvideAuthenticator creates the JWT authenticator instance.
-// It returns a *jwt.Authenticator, which is needed by the AuthService.
-func ProvideAuthenticator(opts *jwt.Options, logger log.Logger) (*jwt.Authenticator, error) {
-	return jwt.New(opts, logger)
+// ProvideAuthorizer creates the Casbin authorizer.
+func ProvideAuthorizer(app *runtime.App, c *conf.Config, database *ent.Database) (authz.Authorizer, error) {
+	securityConfig := c.GetBootstrap().GetSecurity()
+	if securityConfig == nil {
+		return nil, errors.New("security configuration not found")
+	}
+	authzConfig := securityConfig.GetAuthz()
+	if authzConfig == nil {
+		return nil, errors.New("authz configuration not found")
+	}
+
+	var casbinConfig *authzv1.Authorizer
+	for _, cfg := range authzConfig.GetConfigs() {
+		if cfg.GetType() == "casbin" {
+			casbinConfig = cfg
+			break
+		}
+	}
+
+	if casbinConfig == nil || casbinConfig.GetCasbin() == nil {
+		return nil, errors.New("casbin authorizer configuration not found")
+	}
+	adapter, err := data.NewAdapter(database)
+	if err != nil {
+		return nil, err
+	}
+
+	return casbin.NewAuthorizer(casbinConfig, log.WithLogger(app.Logger()), casbin.WithPolicyAdapter(adapter))
+}
+
+// ProvideAuthenticator creates the Casbin authorizer.
+func ProvideAuthenticator(app *runtime.App, c *conf.Config) (authn.Authenticator, error) {
+	securityConfig := c.GetBootstrap().GetSecurity()
+	if securityConfig == nil {
+		return nil, errors.New("security configuration not found")
+	}
+	authnConfig := securityConfig.GetAuthn()
+	if authnConfig == nil {
+		return nil, errors.New("authz configuration not found")
+	}
+
+	var jwtConfig *authnv1.Authenticator
+	for _, cfg := range authnConfig.GetConfigs() {
+		if cfg.GetType() == "jwt" {
+			jwtConfig = cfg
+			break
+		}
+	}
+
+	if jwtConfig == nil || jwtConfig.GetJwt() == nil {
+		return nil, errors.New("casbin authorizer configuration not found")
+	}
+	return jwt.NewAuthenticator(jwtConfig, log.WithLogger(app.Logger()))
 }
 
 func ProvideCache(r *runtime.App) (container.CacheProvider, error) {
@@ -101,6 +162,70 @@ func ProvideLogger(app *runtime.App) log.Logger {
 	return app.Logger()
 }
 
+func ProvideServiceMiddlewares(app *runtime.App, authorizer authz.Authorizer,
+	skip security.SkipChecker) (container.ServerMiddlewareProvider,
+	error) {
+	provider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
+	}
+	m := factory.NewBackend(authorizer, skip)
+	// authz for backend
+	provider.RegisterServerMiddleware("authz", m)
+	provider.RegisterClientMiddleware("authz", middleware.Noop())
+
+	return provider, nil
+}
+
+func ProvideGatewayMiddlewares(app *runtime.App, authenticator authn.Authenticator,
+	skip security.SkipChecker) (container.ServerMiddlewareProvider,
+	error) {
+	provider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
+	}
+	m := factory.NewGateway(authenticator, skip)
+	// authz for backend
+	provider.RegisterServerMiddleware("authn", m)
+	provider.RegisterClientMiddleware("authn", middleware.Noop())
+
+	return provider, nil
+}
+
+func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvider,
+	error) {
+	provider, err := app.MiddlewareProvider()
+	if err != nil {
+		return nil, err
+	}
+	m := factory.NewClient()
+	// authz for backend
+	provider.RegisterClientMiddleware("propagation", m)
+	provider.RegisterServerMiddleware("propagation", middleware.Noop())
+	return provider, nil
+}
+
+func ProvideSkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker {
+	helper := log.NewHelper(log.With(app.Logger(), "module", "security.skip"))
+	return func(ctx context.Context, req security.Request) bool {
+		helper.Infow("kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
+			req.GetRouteTemplate())
+		return false
+	}
+}
+
+var ProviderGatewaySet = wire.NewSet(
+	ProvideClientMiddlewares,
+	ProvideGatewayMiddlewares,
+	ProvideSkipChecker,
+)
+
+var ProviderBackendSet = wire.NewSet(
+	ProvideClientMiddlewares,
+	ProvideServiceMiddlewares,
+	ProvideSkipChecker,
+)
+
 var ProviderSet = wire.NewSet(
 	// Instructions for wire to extract nested configs
 	wire.FieldsOf(new(*conf.Config), "Bootstrap"),
@@ -111,6 +236,7 @@ var ProviderSet = wire.NewSet(
 	ProvideAuthenticatorOptions,
 	ProvideCredentialCreator,
 	ProvideAuthenticator,
+	ProvideAuthorizer,
 	ProvideCaptcha,
 	ProvideHasher,
 )

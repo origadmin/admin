@@ -152,7 +152,7 @@ func preventDuplicateSystemUser(next ent.Mutator) ent.Mutator {
 	return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
 		isSystem, ok := m.IsSystem()
 		if !ok || !isSystem {
-			return m.Next().Mutate(ctx, m)
+			return next.Mutate(ctx, m)
 		}
 		// If creating a system user, check if one already exists.
 		count, err := m.Client().User.
@@ -165,7 +165,7 @@ func preventDuplicateSystemUser(next ent.Mutator) ent.Mutator {
 		if count > 0 {
 			return nil, fmt.Errorf("a system user already exists")
 		}
-		return m.Next().Mutate(ctx, m)
+		return next.Mutate(ctx, m)
 	})
 }
 
@@ -174,7 +174,7 @@ func preventDeleteSystemUser(next ent.Mutator) ent.Mutator {
 	return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
 		// Add a predicate to ensure system users are not included in the delete operation.
 		m.Where(user.IsSystem(false))
-		return m.Next().Mutate(ctx, m)
+		return next.Mutate(ctx, m)
 	})
 }
 

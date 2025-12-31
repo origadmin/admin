@@ -25,7 +25,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	panic(wire.Build(
 		// Shared infrastructure providers
 		providers.ProviderSet,
-
+		providers.ProviderGatewaySet,
 		// Service-specific providers
 		server.ProviderSet,
 		service.ProviderSet,

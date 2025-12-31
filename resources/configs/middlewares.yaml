@@ -1,0 +1,8 @@
+# This file defines reusable middleware configurations.
+middlewares:
+  configs:
+    # Define a middleware instance named "security".
+    # The 'type' must match the name we registered in main.go's init() function.
+    - name: security
+      type: security
+      enabled: true

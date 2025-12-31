@@ -14,6 +14,7 @@ import (
 	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/log"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/grpc"
@@ -26,7 +27,8 @@ import (
 var ProviderSet = wire.NewSet(NewServers)
 
 // NewServers creates and configures the system service servers (gRPC, HTTP).
-func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemService, logger log.Logger) ([]transport.Server,
+func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemService,
+	middlwareProvider container.ServerMiddlewareProvider) ([]transport.Server,
 	error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
@@ -39,13 +41,13 @@ func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemS
 		}
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, logger)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), svc, middlwareProvider)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), svc, logger)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), svc, middlwareProvider)
 			if err != nil {
 				return nil, err
 			}
@@ -61,16 +63,13 @@ func NewServers(app *runtime.App, cfg *transportv1.Servers, svc *service.SystemS
 }
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(app *runtime.App, cfg *httpv1.Server, svc *service.SystemService, logger log.Logger) (*transport.HTTPServer, error) {
+func NewHTTPServer(_ *runtime.App, cfg *httpv1.Server, svc *service.SystemService,
+	provider container.ServerMiddlewareProvider) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	middlewareProvider, err := app.MiddlewareProvider()
-	if err != nil {
-		return nil, err
-	}
-	mws, err := middlewareProvider.ServerMiddlewares()
+	mws, err := provider.ServerMiddlewares()
 	if err != nil {
 		return nil, err
 	}
@@ -96,16 +95,13 @@ func NewHTTPServer(app *runtime.App, cfg *httpv1.Server, svc *service.SystemServ
 }
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(app *runtime.App, cfg *grpcv1.Server, svc *service.SystemService, logger log.Logger) (*transport.GRPCServer, error) {
+func NewGRPCServer(_ *runtime.App, cfg *grpcv1.Server, svc *service.SystemService,
+	provider container.ServerMiddlewareProvider) (*transport.GRPCServer, error) {
 	if cfg == nil {
 		return nil, errors.New("grpc config is nil")
 	}
 
-	middlewareProvider, err := app.MiddlewareProvider()
-	if err != nil {
-		return nil, err
-	}
-	mws, err := middlewareProvider.ServerMiddlewares()
+	mws, err := provider.ServerMiddlewares()
 	if err != nil {
 		return nil, err
 	}

@@ -13,6 +13,7 @@ import (
 	"origadmin/application/admin/internal/gateway/client"
 	"origadmin/application/admin/internal/gateway/server"
 	"origadmin/application/admin/internal/gateway/service"
+	"origadmin/application/admin/internal/helpers/providers"
 )
 
 import (
@@ -40,7 +41,16 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	if err != nil {
 		return nil, nil, err
 	}
-	v, err := server.NewServers(app, servers, gatewayService)
+	authenticator, err := providers.ProvideAuthenticator(app, bootstrap)
+	if err != nil {
+		return nil, nil, err
+	}
+	skipChecker := providers.ProvideSkipChecker(app, bootstrap)
+	serverMiddlewareProvider, err := providers.ProvideGatewayMiddlewares(app, authenticator, skipChecker)
+	if err != nil {
+		return nil, nil, err
+	}
+	v, err := server.NewServers(app, servers, gatewayService, serverMiddlewareProvider)
 	if err != nil {
 		return nil, nil, err
 	}
