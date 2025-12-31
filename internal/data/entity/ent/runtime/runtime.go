@@ -397,7 +397,10 @@ func init() {
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
 	userMixin := schema.User{}.Mixin()
 	userMixinHooks4 := userMixin[4].Hooks()
+	userHooks := schema.User{}.Hooks()
 	user.Hooks[0] = userMixinHooks4[0]
+	user.Hooks[1] = userHooks[0]
+	user.Hooks[2] = userHooks[1]
 	userMixinInters4 := userMixin[4].Interceptors()
 	user.Interceptors[0] = userMixinInters4[0]
 	userMixinFields0 := userMixin[0].Fields()
@@ -522,10 +525,6 @@ func init() {
 	userDescLoginTime := userFields[18].Descriptor()
 	// user.DefaultLoginTime holds the default value on creation for the login_time field.
 	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
-	// userDescManager is the schema descriptor for manager field.
-	userDescManager := userFields[21].Descriptor()
-	// user.DefaultManager holds the default value on creation for the manager field.
-	user.DefaultManager = userDescManager.Default.(string)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userMixinFields0[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.

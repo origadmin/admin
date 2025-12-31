@@ -179,9 +179,9 @@ var (
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "sys_permission_resources_resources_resource",
+				Symbol:     "sys_permission_resources_sys_resources_resource",
 				Columns:    []*schema.Column{SysPermissionResourcesColumns[2]},
-				RefColumns: []*schema.Column{ResourcesColumns[0]},
+				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
@@ -264,37 +264,38 @@ var (
 			},
 		},
 	}
-	// ResourcesColumns holds the columns for the "resources" table.
-	ResourcesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt64},
-		{Name: "create_time", Type: field.TypeTime},
-		{Name: "update_time", Type: field.TypeTime},
-		{Name: "service_name", Type: field.TypeString},
-		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255},
-		{Name: "path", Type: field.TypeString, Nullable: true},
-		{Name: "method", Type: field.TypeString, Nullable: true},
-		{Name: "operation", Type: field.TypeString, Nullable: true},
-		{Name: "policy", Type: field.TypeString, Default: ""},
-		{Name: "version_id", Type: field.TypeString, Default: ""},
-		{Name: "last_sync_version_id", Type: field.TypeString, Default: ""},
-		{Name: "sync_status", Type: field.TypeString, Default: "Synced"},
-		{Name: "status", Type: field.TypeEnum, Enums: []string{"enabled", "disabled"}, Default: "enabled"},
+	// SysResourcesColumns holds the columns for the "sys_resources" table.
+	SysResourcesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
+		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
+		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
+		{Name: "service_name", Type: field.TypeString, Comment: "resource.service_name.comment"},
+		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "resource.keyword.comment"},
+		{Name: "path", Type: field.TypeString, Nullable: true, Comment: "resource.path.comment"},
+		{Name: "method", Type: field.TypeString, Nullable: true, Comment: "resource.method.comment"},
+		{Name: "operation", Type: field.TypeString, Nullable: true, Comment: "resource.operation.comment"},
+		{Name: "policy", Type: field.TypeString, Comment: "resource.policy.comment", Default: ""},
+		{Name: "version_id", Type: field.TypeString, Comment: "resource.version_id.comment", Default: ""},
+		{Name: "last_sync_version_id", Type: field.TypeString, Comment: "resource.last_sync_version_id.comment", Default: ""},
+		{Name: "sync_status", Type: field.TypeString, Comment: "resource.sync_status.comment", Default: "Synced"},
+		{Name: "status", Type: field.TypeEnum, Comment: "resource.status.comment", Enums: []string{"enabled", "disabled"}, Default: "enabled"},
 	}
-	// ResourcesTable holds the schema information for the "resources" table.
-	ResourcesTable = &schema.Table{
-		Name:       "resources",
-		Columns:    ResourcesColumns,
-		PrimaryKey: []*schema.Column{ResourcesColumns[0]},
+	// SysResourcesTable holds the schema information for the "sys_resources" table.
+	SysResourcesTable = &schema.Table{
+		Name:       "sys_resources",
+		Comment:    "entity.resource.table.comment",
+		Columns:    SysResourcesColumns,
+		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
 		Indexes: []*schema.Index{
 			{
 				Name:    "resource_create_time",
 				Unique:  false,
-				Columns: []*schema.Column{ResourcesColumns[1]},
+				Columns: []*schema.Column{SysResourcesColumns[1]},
 			},
 			{
 				Name:    "resource_update_time",
 				Unique:  false,
-				Columns: []*schema.Column{ResourcesColumns[2]},
+				Columns: []*schema.Column{SysResourcesColumns[2]},
 			},
 		},
 	}
@@ -411,8 +412,6 @@ var (
 		{Name: "last_login_time", Type: field.TypeTime, Comment: "entity.user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "login_time", Type: field.TypeTime, Comment: "entity.user.field.login_time", SchemaType: map[string]string{"mysql": "datetime"}},
 		{Name: "sanction_date", Type: field.TypeTime, Nullable: true, Comment: "entity.user.field.sanction_date", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "manager_id", Type: field.TypeInt64, Nullable: true, Comment: "entity.user.field.manager_id"},
-		{Name: "manager", Type: field.TypeString, Comment: "entity.user.field.manager", Default: ""},
 	}
 	// SysUsersTable holds the schema information for the "sys_users" table.
 	SysUsersTable = &schema.Table{
@@ -696,9 +695,9 @@ var (
 				OnDelete:   schema.NoAction,
 			},
 			{
-				Symbol:     "sys_view_resources_resources_resource",
+				Symbol:     "sys_view_resources_sys_resources_resource",
 				Columns:    []*schema.Column{SysViewResourcesColumns[6]},
-				RefColumns: []*schema.Column{ResourcesColumns[0]},
+				RefColumns: []*schema.Column{SysResourcesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 		},
@@ -739,7 +738,7 @@ var (
 		SysPermissionResourcesTable,
 		SysPositionsTable,
 		SysPositionPermissionsTable,
-		ResourcesTable,
+		SysResourcesTable,
 		SysRolesTable,
 		SysRolePermissionsTable,
 		SysUsersTable,
@@ -764,7 +763,7 @@ func init() {
 		Table: "sys_permissions",
 	}
 	SysPermissionResourcesTable.ForeignKeys[0].RefTable = SysPermissionsTable
-	SysPermissionResourcesTable.ForeignKeys[1].RefTable = ResourcesTable
+	SysPermissionResourcesTable.ForeignKeys[1].RefTable = SysResourcesTable
 	SysPermissionResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_permission_resources",
 	}
@@ -776,6 +775,9 @@ func init() {
 	SysPositionPermissionsTable.ForeignKeys[1].RefTable = SysPermissionsTable
 	SysPositionPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_position_permissions",
+	}
+	SysResourcesTable.Annotation = &entsql.Annotation{
+		Table: "sys_resources",
 	}
 	SysRolesTable.Annotation = &entsql.Annotation{
 		Table: "sys_roles",
@@ -813,7 +815,7 @@ func init() {
 		Table: "sys_view_permissions",
 	}
 	SysViewResourcesTable.ForeignKeys[0].RefTable = SysViewsTable
-	SysViewResourcesTable.ForeignKeys[1].RefTable = ResourcesTable
+	SysViewResourcesTable.ForeignKeys[1].RefTable = SysResourcesTable
 	SysViewResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_view_resources",
 	}

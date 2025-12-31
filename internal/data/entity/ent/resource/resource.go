@@ -46,7 +46,7 @@ const (
 	// EdgeViewResources holds the string denoting the view_resources edge name in mutations.
 	EdgeViewResources = "view_resources"
 	// Table holds the table name of the resource in the database.
-	Table = "resources"
+	Table = "sys_resources"
 	// ViewsTable is the table that holds the views relation/edge. The primary key declared below.
 	ViewsTable = "sys_view_resources"
 	// ViewsInverseTable is the table name for the View entity.

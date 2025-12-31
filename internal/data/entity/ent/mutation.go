@@ -9209,9 +9209,6 @@ type UserMutation struct {
 	last_login_time         *time.Time
 	login_time              *time.Time
 	sanction_date           *time.Time
-	manager_id              *int64
-	addmanager_id           *int64
-	manager                 *string
 	clearedFields           map[string]struct{}
 	roles                   map[int64]struct{}
 	removedroles            map[int64]struct{}
@@ -10354,112 +10351,6 @@ func (m *UserMutation) ResetSanctionDate() {
 	delete(m.clearedFields, user.FieldSanctionDate)
 }
 
-// SetManagerID sets the "manager_id" field.
-func (m *UserMutation) SetManagerID(i int64) {
-	m.manager_id = &i
-	m.addmanager_id = nil
-}
-
-// ManagerID returns the value of the "manager_id" field in the mutation.
-func (m *UserMutation) ManagerID() (r int64, exists bool) {
-	v := m.manager_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldManagerID returns the old "manager_id" field's value of the User entity.
-// If the User object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldManagerID(ctx context.Context) (v int64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldManagerID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldManagerID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldManagerID: %w", err)
-	}
-	return oldValue.ManagerID, nil
-}
-
-// AddManagerID adds i to the "manager_id" field.
-func (m *UserMutation) AddManagerID(i int64) {
-	if m.addmanager_id != nil {
-		*m.addmanager_id += i
-	} else {
-		m.addmanager_id = &i
-	}
-}
-
-// AddedManagerID returns the value that was added to the "manager_id" field in this mutation.
-func (m *UserMutation) AddedManagerID() (r int64, exists bool) {
-	v := m.addmanager_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ClearManagerID clears the value of the "manager_id" field.
-func (m *UserMutation) ClearManagerID() {
-	m.manager_id = nil
-	m.addmanager_id = nil
-	m.clearedFields[user.FieldManagerID] = struct{}{}
-}
-
-// ManagerIDCleared returns if the "manager_id" field was cleared in this mutation.
-func (m *UserMutation) ManagerIDCleared() bool {
-	_, ok := m.clearedFields[user.FieldManagerID]
-	return ok
-}
-
-// ResetManagerID resets all changes to the "manager_id" field.
-func (m *UserMutation) ResetManagerID() {
-	m.manager_id = nil
-	m.addmanager_id = nil
-	delete(m.clearedFields, user.FieldManagerID)
-}
-
-// SetManager sets the "manager" field.
-func (m *UserMutation) SetManager(s string) {
-	m.manager = &s
-}
-
-// Manager returns the value of the "manager" field in the mutation.
-func (m *UserMutation) Manager() (r string, exists bool) {
-	v := m.manager
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldManager returns the old "manager" field's value of the User entity.
-// If the User object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldManager(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldManager is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldManager requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldManager: %w", err)
-	}
-	return oldValue.Manager, nil
-}
-
-// ResetManager resets all changes to the "manager" field.
-func (m *UserMutation) ResetManager() {
-	m.manager = nil
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by ids.
 func (m *UserMutation) AddRoleIDs(ids ...int64) {
 	if m.roles == nil {
@@ -10818,7 +10709,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 27)
+	fields := make([]string, 0, 25)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10894,12 +10785,6 @@ func (m *UserMutation) Fields() []string {
 	if m.sanction_date != nil {
 		fields = append(fields, user.FieldSanctionDate)
 	}
-	if m.manager_id != nil {
-		fields = append(fields, user.FieldManagerID)
-	}
-	if m.manager != nil {
-		fields = append(fields, user.FieldManager)
-	}
 	return fields
 }
 
@@ -10958,10 +10843,6 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.LoginTime()
 	case user.FieldSanctionDate:
 		return m.SanctionDate()
-	case user.FieldManagerID:
-		return m.ManagerID()
-	case user.FieldManager:
-		return m.Manager()
 	}
 	return nil, false
 }
@@ -11021,10 +10902,6 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldLoginTime(ctx)
 	case user.FieldSanctionDate:
 		return m.OldSanctionDate(ctx)
-	case user.FieldManagerID:
-		return m.OldManagerID(ctx)
-	case user.FieldManager:
-		return m.OldManager(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -11209,20 +11086,6 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetSanctionDate(v)
 		return nil
-	case user.FieldManagerID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetManagerID(v)
-		return nil
-	case user.FieldManager:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetManager(v)
-		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -11240,9 +11103,6 @@ func (m *UserMutation) AddedFields() []string {
 	if m.addstatus != nil {
 		fields = append(fields, user.FieldStatus)
 	}
-	if m.addmanager_id != nil {
-		fields = append(fields, user.FieldManagerID)
-	}
 	return fields
 }
 
@@ -11257,8 +11117,6 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdateAuthor()
 	case user.FieldStatus:
 		return m.AddedStatus()
-	case user.FieldManagerID:
-		return m.AddedManagerID()
 	}
 	return nil, false
 }
@@ -11289,13 +11147,6 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddStatus(v)
 		return nil
-	case user.FieldManagerID:
-		v, ok := value.(int64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddManagerID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -11315,9 +11166,6 @@ func (m *UserMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(user.FieldSanctionDate) {
 		fields = append(fields, user.FieldSanctionDate)
-	}
-	if m.FieldCleared(user.FieldManagerID) {
-		fields = append(fields, user.FieldManagerID)
 	}
 	return fields
 }
@@ -11344,9 +11192,6 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldSanctionDate:
 		m.ClearSanctionDate()
-		return nil
-	case user.FieldManagerID:
-		m.ClearManagerID()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -11430,12 +11275,6 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldSanctionDate:
 		m.ResetSanctionDate()
-		return nil
-	case user.FieldManagerID:
-		m.ResetManagerID()
-		return nil
-	case user.FieldManager:
-		m.ResetManager()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

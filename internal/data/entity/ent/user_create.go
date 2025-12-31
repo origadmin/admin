@@ -361,34 +361,6 @@ func (_c *UserCreate) SetNillableSanctionDate(v *time.Time) *UserCreate {
 	return _c
 }
 
-// SetManagerID sets the "manager_id" field.
-func (_c *UserCreate) SetManagerID(v int64) *UserCreate {
-	_c.mutation.SetManagerID(v)
-	return _c
-}
-
-// SetNillableManagerID sets the "manager_id" field if the given value is not nil.
-func (_c *UserCreate) SetNillableManagerID(v *int64) *UserCreate {
-	if v != nil {
-		_c.SetManagerID(*v)
-	}
-	return _c
-}
-
-// SetManager sets the "manager" field.
-func (_c *UserCreate) SetManager(v string) *UserCreate {
-	_c.mutation.SetManager(v)
-	return _c
-}
-
-// SetNillableManager sets the "manager" field if the given value is not nil.
-func (_c *UserCreate) SetNillableManager(v *string) *UserCreate {
-	if v != nil {
-		_c.SetManager(*v)
-	}
-	return _c
-}
-
 // SetID sets the "id" field.
 func (_c *UserCreate) SetID(v int64) *UserCreate {
 	_c.mutation.SetID(v)
@@ -626,10 +598,6 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultLoginTime()
 		_c.mutation.SetLoginTime(v)
 	}
-	if _, ok := _c.mutation.Manager(); !ok {
-		v := user.DefaultManager
-		_c.mutation.SetManager(v)
-	}
 	if _, ok := _c.mutation.ID(); !ok {
 		if user.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized user.DefaultID (forgotten import ent/runtime?)")
@@ -775,9 +743,6 @@ func (_c *UserCreate) check() error {
 	if _, ok := _c.mutation.LoginTime(); !ok {
 		return &ValidationError{Name: "login_time", err: errors.New(`ent: missing required field "User.login_time"`)}
 	}
-	if _, ok := _c.mutation.Manager(); !ok {
-		return &ValidationError{Name: "manager", err: errors.New(`ent: missing required field "User.manager"`)}
-	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := user.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "User.id": %w`, err)}
@@ -914,14 +879,6 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.SanctionDate(); ok {
 		_spec.SetField(user.FieldSanctionDate, field.TypeTime, value)
 		_node.SanctionDate = value
-	}
-	if value, ok := _c.mutation.ManagerID(); ok {
-		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)
-		_node.ManagerID = value
-	}
-	if value, ok := _c.mutation.Manager(); ok {
-		_spec.SetField(user.FieldManager, field.TypeString, value)
-		_node.Manager = value
 	}
 	if nodes := _c.mutation.RolesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

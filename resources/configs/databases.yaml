@@ -4,4 +4,4 @@ data:
     configs:
       - dialect: sqlite3
         name: default
-        source: file:./data.db?cache=shared&mode=memory&_fk=1
+        source: file:./data.db?cache=shared&_fk=1

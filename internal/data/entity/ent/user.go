@@ -71,10 +71,6 @@ type User struct {
 	LoginTime time.Time `json:"login_time,omitempty"`
 	// entity.user.field.sanction_date
 	SanctionDate time.Time `json:"sanction_date,omitempty"`
-	// entity.user.field.manager_id
-	ManagerID int64 `json:"manager_id,omitempty"`
-	// entity.user.field.manager
-	Manager string `json:"manager,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -161,9 +157,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldIsSystem:
 			values[i] = new(sql.NullBool)
-		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus, user.FieldManagerID:
+		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldManager:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -339,18 +335,6 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.SanctionDate = value.Time
 			}
-		case user.FieldManagerID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field manager_id", values[i])
-			} else if value.Valid {
-				_m.ManagerID = value.Int64
-			}
-		case user.FieldManager:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field manager", values[i])
-			} else if value.Valid {
-				_m.Manager = value.String
-			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -493,12 +477,6 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("sanction_date=")
 	builder.WriteString(_m.SanctionDate.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("manager_id=")
-	builder.WriteString(fmt.Sprintf("%v", _m.ManagerID))
-	builder.WriteString(", ")
-	builder.WriteString("manager=")
-	builder.WriteString(_m.Manager)
 	builder.WriteByte(')')
 	return builder.String()
 }

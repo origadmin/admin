@@ -6,12 +6,19 @@
 package schema
 
 import (
+	"context"
+	"fmt"
+
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+
+	gen "origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/hook"
+	"origadmin/application/admin/internal/data/entity/ent/user"
 
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
@@ -97,10 +104,6 @@ func (User) Fields() []ent.Field {
 		mixin.Time("last_login_time", i18n.Text("entity.user.field.last_login_time")),
 		mixin.Time("login_time", i18n.Text("entity.user.field.login_time")),
 		mixin.TimeOptional("sanction_date", i18n.Text("entity.user.field.sanction_date")),
-		mixin.OptionalFK("manager_id", i18n.Text("entity.user.field.manager_id")),
-		field.String("manager").
-			Default("").
-			Comment(i18n.Text("entity.user.field.manager")),
 	}
 }
 
@@ -131,22 +134,52 @@ func (User) Annotations() []schema.Annotation {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		// Roles of user
 		edge.To("roles", Role.Type).
 			Through("user_roles", UserRole.Type),
-		// Posts of user
-		// edge.To("posts", Post.Type).
-		//	Through("user_posts", UserPost.Type),
-		// Departments of user
 		edge.To("positions", Position.Type).
 			Through("user_positions", UserPosition.Type),
-		//// Departments of user
 		edge.To("departments", Department.Type).
 			Through("user_departments", UserDepartment.Type),
-		//edge.To("user_departments", UserDepartment.Type),
 	}
 }
 
+// preventDuplicateSystemUser is a hook that prevents creating more than one system user.
+func preventDuplicateSystemUser(next ent.Mutator) ent.Mutator {
+	return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
+		isSystem, ok := m.IsSystem()
+		if !ok || !isSystem {
+			return next.Mutate(ctx, m)
+		}
+		// If creating a system user, check if one already exists.
+		count, err := m.Client().User.
+			Query().
+			Where(user.IsSystem(true)).
+			Count(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("failed to check for existing system user: %w", err)
+		}
+		if count > 0 {
+			return nil, fmt.Errorf("a system user already exists")
+		}
+		return next.Mutate(ctx, m)
+	})
+}
+
+// preventDeleteSystemUser is a hook that prevents deleting a system user.
+func preventDeleteSystemUser(next ent.Mutator) ent.Mutator {
+	return hook.UserFunc(func(ctx context.Context, m *gen.UserMutation) (ent.Value, error) {
+		// Add a predicate to ensure system users are not included in the delete operation.
+		m.Where(user.IsSystem(false))
+		return next.Mutate(ctx, m)
+	})
+}
+
+// Hooks of the User.
 func (User) Hooks() []ent.Hook {
-	return []ent.Hook{}
+	return []ent.Hook{
+		// On CREATE, prevent creating more than one system user.
+		hook.On(preventDuplicateSystemUser, ent.OpCreate),
+		// On DELETE, prevent system users from being deleted.
+		hook.On(preventDeleteSystemUser, ent.OpDelete|ent.OpDeleteOne),
+	}
 }

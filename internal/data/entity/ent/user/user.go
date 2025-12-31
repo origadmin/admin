@@ -67,10 +67,6 @@ const (
 	FieldLoginTime = "login_time"
 	// FieldSanctionDate holds the string denoting the sanction_date field in the database.
 	FieldSanctionDate = "sanction_date"
-	// FieldManagerID holds the string denoting the manager_id field in the database.
-	FieldManagerID = "manager_id"
-	// FieldManager holds the string denoting the manager field in the database.
-	FieldManager = "manager"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
 	EdgeRoles = "roles"
 	// EdgePositions holds the string denoting the positions edge name in mutations.
@@ -150,8 +146,6 @@ var Columns = []string{
 	FieldLastLoginTime,
 	FieldLoginTime,
 	FieldSanctionDate,
-	FieldManagerID,
-	FieldManager,
 }
 
 var (
@@ -187,7 +181,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "origadmin/application/admin/internal/data/entity/ent/runtime"
 var (
-	Hooks        [1]ent.Hook
+	Hooks        [3]ent.Hook
 	Interceptors [1]ent.Interceptor
 	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
 	DefaultCreateAuthor int64
@@ -257,8 +251,6 @@ var (
 	DefaultLastLoginTime func() time.Time
 	// DefaultLoginTime holds the default value on creation for the "login_time" field.
 	DefaultLoginTime func() time.Time
-	// DefaultManager holds the default value on creation for the "manager" field.
-	DefaultManager string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -423,16 +415,6 @@ func ByLoginTime(opts ...sql.OrderTermOption) OrderOption {
 // BySanctionDate orders the results by the sanction_date field.
 func BySanctionDate(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSanctionDate, opts...).ToFunc()
-}
-
-// ByManagerID orders the results by the manager_id field.
-func ByManagerID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldManagerID, opts...).ToFunc()
-}
-
-// ByManager orders the results by the manager field.
-func ByManager(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldManager, opts...).ToFunc()
 }
 
 // ByRolesCount orders the results by roles count.

@@ -829,10 +829,6 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetLoginTime(input.LoginTime)
 		case user.FieldSanctionDate:
 			m.SetSanctionDate(input.SanctionDate)
-		case user.FieldManagerID:
-			m.SetManagerID(input.ManagerID)
-		case user.FieldManager:
-			m.SetManager(input.Manager)
 		case user.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -968,16 +964,6 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 		case user.FieldSanctionDate:
 			if input.SanctionDate.Unix() != 0 {
 				m.SetSanctionDate(input.SanctionDate)
-			}
-		case user.FieldManagerID:
-			// check int64 with sql.NullInt64 if it is zero
-			if input.ManagerID != 0 {
-				m.SetManagerID(input.ManagerID)
-			}
-		case user.FieldManager:
-			// check string with sql.NullString if it is empty
-			if input.Manager != "" {
-				m.SetManager(input.Manager)
 			}
 		case user.FieldID:
 			// check int64 with sql.NullInt64 if it is zero

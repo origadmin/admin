@@ -63,7 +63,7 @@ const (
 	ResourcesTable = "sys_permission_resources"
 	// ResourcesInverseTable is the table name for the Resource entity.
 	// It exists in this package in order to avoid circular dependency with the "resource" package.
-	ResourcesInverseTable = "resources"
+	ResourcesInverseTable = "sys_resources"
 	// ViewsTable is the table that holds the views relation/edge. The primary key declared below.
 	ViewsTable = "sys_view_permissions"
 	// ViewsInverseTable is the table name for the View entity.

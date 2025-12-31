@@ -2,6 +2,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
@@ -59,6 +61,15 @@ func (Resource) Edges() []ent.Edge {
 			Through("view_resources", ViewResource.Type),
 		edge.From("permissions", Permission.Type).
 			Ref("resources"),
+	}
+}
+
+// Annotations of the Resource.
+func (Resource) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Table("sys_resources"),
+		entsql.WithComments(true),
+		schema.Comment(i18n.Text("entity.resource.table.comment")),
 	}
 }
 

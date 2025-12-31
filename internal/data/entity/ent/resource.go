@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Resource is the model entity for the Resource schema.
+// entity.resource.table.comment
 type Resource struct {
 	config `json:"-"`
 	// ID of the ent.

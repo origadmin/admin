@@ -7,6 +7,7 @@ package data
 
 import (
 	"context"
+	"fmt"
 
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
@@ -37,6 +38,14 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 
 	activeDB := entsql.OpenDB(db.Dialect(), db.DB())
 	database := ent.NewDatabase(ent.Driver(activeDB), ent.Debug())
+	// === The migration logic is moved here ===
+	if err := database.Migration(context.Background(),
+		schema.WithDropIndex(true),
+		schema.WithDropColumn(true),
+		schema.WithForeignKeys(false),
+	); err != nil {
+		return nil, nil, fmt.Errorf("failed creating schema resources: %w", err)
+	}
 	return database, func() {
 		if database != nil {
 			if err := database.Client(context.Background()).Close(); err != nil {
@@ -65,7 +74,7 @@ func NewData(database *ent.Database, logger log.Logger) (*Data, error) {
 		schema.WithDropColumn(true),
 		schema.WithForeignKeys(false),
 	); err != nil {
-		logHelper.Fatalf("failed creating schema resources: %v", err)
+		return nil, fmt.Errorf("failed creating schema resources: %w", err)
 	}
 
 	d := &Data{

@@ -409,47 +409,6 @@ func (_u *UserUpdate) ClearSanctionDate() *UserUpdate {
 	return _u
 }
 
-// SetManagerID sets the "manager_id" field.
-func (_u *UserUpdate) SetManagerID(v int64) *UserUpdate {
-	_u.mutation.ResetManagerID()
-	_u.mutation.SetManagerID(v)
-	return _u
-}
-
-// SetNillableManagerID sets the "manager_id" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableManagerID(v *int64) *UserUpdate {
-	if v != nil {
-		_u.SetManagerID(*v)
-	}
-	return _u
-}
-
-// AddManagerID adds value to the "manager_id" field.
-func (_u *UserUpdate) AddManagerID(v int64) *UserUpdate {
-	_u.mutation.AddManagerID(v)
-	return _u
-}
-
-// ClearManagerID clears the value of the "manager_id" field.
-func (_u *UserUpdate) ClearManagerID() *UserUpdate {
-	_u.mutation.ClearManagerID()
-	return _u
-}
-
-// SetManager sets the "manager" field.
-func (_u *UserUpdate) SetManager(v string) *UserUpdate {
-	_u.mutation.SetManager(v)
-	return _u
-}
-
-// SetNillableManager sets the "manager" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableManager(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetManager(*v)
-	}
-	return _u
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *UserUpdate) AddRoleIDs(ids ...int64) *UserUpdate {
 	_u.mutation.AddRoleIDs(ids...)
@@ -898,18 +857,6 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.SanctionDateCleared() {
 		_spec.ClearField(user.FieldSanctionDate, field.TypeTime)
-	}
-	if value, ok := _u.mutation.ManagerID(); ok {
-		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedManagerID(); ok {
-		_spec.AddField(user.FieldManagerID, field.TypeInt64, value)
-	}
-	if _u.mutation.ManagerIDCleared() {
-		_spec.ClearField(user.FieldManagerID, field.TypeInt64)
-	}
-	if value, ok := _u.mutation.Manager(); ok {
-		_spec.SetField(user.FieldManager, field.TypeString, value)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1576,47 +1523,6 @@ func (_u *UserUpdateOne) ClearSanctionDate() *UserUpdateOne {
 	return _u
 }
 
-// SetManagerID sets the "manager_id" field.
-func (_u *UserUpdateOne) SetManagerID(v int64) *UserUpdateOne {
-	_u.mutation.ResetManagerID()
-	_u.mutation.SetManagerID(v)
-	return _u
-}
-
-// SetNillableManagerID sets the "manager_id" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableManagerID(v *int64) *UserUpdateOne {
-	if v != nil {
-		_u.SetManagerID(*v)
-	}
-	return _u
-}
-
-// AddManagerID adds value to the "manager_id" field.
-func (_u *UserUpdateOne) AddManagerID(v int64) *UserUpdateOne {
-	_u.mutation.AddManagerID(v)
-	return _u
-}
-
-// ClearManagerID clears the value of the "manager_id" field.
-func (_u *UserUpdateOne) ClearManagerID() *UserUpdateOne {
-	_u.mutation.ClearManagerID()
-	return _u
-}
-
-// SetManager sets the "manager" field.
-func (_u *UserUpdateOne) SetManager(v string) *UserUpdateOne {
-	_u.mutation.SetManager(v)
-	return _u
-}
-
-// SetNillableManager sets the "manager" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableManager(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetManager(*v)
-	}
-	return _u
-}
-
 // AddRoleIDs adds the "roles" edge to the Role entity by IDs.
 func (_u *UserUpdateOne) AddRoleIDs(ids ...int64) *UserUpdateOne {
 	_u.mutation.AddRoleIDs(ids...)
@@ -2095,18 +2001,6 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if _u.mutation.SanctionDateCleared() {
 		_spec.ClearField(user.FieldSanctionDate, field.TypeTime)
-	}
-	if value, ok := _u.mutation.ManagerID(); ok {
-		_spec.SetField(user.FieldManagerID, field.TypeInt64, value)
-	}
-	if value, ok := _u.mutation.AddedManagerID(); ok {
-		_spec.AddField(user.FieldManagerID, field.TypeInt64, value)
-	}
-	if _u.mutation.ManagerIDCleared() {
-		_spec.ClearField(user.FieldManagerID, field.TypeInt64)
-	}
-	if value, ok := _u.mutation.Manager(); ok {
-		_spec.SetField(user.FieldManager, field.TypeString, value)
 	}
 	if _u.mutation.RolesCleared() {
 		edge := &sqlgraph.EdgeSpec{
