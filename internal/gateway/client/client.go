@@ -24,19 +24,19 @@ var ProviderSet = wire.NewSet(
 	NewSystemClientSet,
 )
 
-// AuthClientSet holds all the clients for the 'auth' service.
-type AuthClientSet struct {
-	AuthClient auth.AuthServiceClient
-	MeClient   auth.MeServiceClient
+// AuthBridgeSet holds all the clients for the 'auth' service.
+type AuthBridgeSet struct {
+	Auth auth.AuthServiceHTTPServer
+	Me   auth.MeServiceHTTPServer
 }
 
-// SystemClientSet holds all the clients for the 'system' service.
-type SystemClientSet struct {
-	UserClient       system.UserServiceClient
-	RoleClient       system.RoleServiceClient
-	PermissionClient system.PermissionServiceClient
-	ResourceClient   system.ResourceServiceClient
-	ViewClient       system.ViewServiceClient
+// SystemBridgeSet holds all the clients for the 'system' service.
+type SystemBridgeSet struct {
+	User       system.UserServiceHTTPServer
+	Role       system.RoleServiceHTTPServer
+	Permission system.PermissionServiceHTTPServer
+	Resource   system.ResourceServiceHTTPServer
+	View       system.ViewServiceHTTPServer
 }
 
 // NewGRPCConn is a helper to create a gRPC connection from config by name.
@@ -64,28 +64,28 @@ func NewGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, e
 }
 
 // NewAuthClientSet creates a set of clients for the auth service.
-func NewAuthClientSet(bootstrap *conf.Config) (*AuthClientSet, error) {
+func NewAuthClientSet(bootstrap *conf.Config) (*AuthBridgeSet, error) {
 	conn, err := NewGRPCConn(bootstrap, "client.auth")
 	if err != nil {
 		return nil, err
 	}
-	return &AuthClientSet{
-		AuthClient: auth.NewAuthServiceClient(conn),
-		MeClient:   auth.NewMeServiceClient(conn),
+	return &AuthBridgeSet{
+		Auth: auth.NewAuthServiceGRPC2HTTP(conn),
+		Me:   auth.NewMeServiceGRPC2HTTP(conn),
 	}, nil
 }
 
 // NewSystemClientSet creates a set of clients for the system service.
-func NewSystemClientSet(bootstrap *conf.Config) (*SystemClientSet, error) {
+func NewSystemClientSet(bootstrap *conf.Config) (*SystemBridgeSet, error) {
 	conn, err := NewGRPCConn(bootstrap, "client.system")
 	if err != nil {
 		return nil, err
 	}
-	return &SystemClientSet{
-		UserClient:       system.NewUserServiceClient(conn),
-		RoleClient:       system.NewRoleServiceClient(conn),
-		PermissionClient: system.NewPermissionServiceClient(conn),
-		ResourceClient:   system.NewResourceServiceClient(conn),
-		ViewClient:       system.NewViewServiceClient(conn),
+	return &SystemBridgeSet{
+		User:       system.NewUserServiceGRPC2HTTP(conn),
+		Role:       system.NewRoleServiceGRPC2HTTP(conn),
+		Permission: system.NewPermissionServiceGRPC2HTTP(conn),
+		Resource:   system.NewResourceServiceGRPC2HTTP(conn),
+		View:       system.NewViewServiceGRPC2HTTP(conn),
 	}, nil
 }

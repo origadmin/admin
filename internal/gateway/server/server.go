@@ -6,6 +6,7 @@ package server
 
 import (
 	"errors"
+	stdhttp "net/http"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -60,12 +61,15 @@ func NewServers(
 }
 
 // NewHTTPServer creates a new HTTP server and registers all downstream service handlers.
-func NewHTTPServer(app *runtime.App, cfg *httpv1.Server, svc *service.GatewayService, ) (transport.Server, error) {
+func NewHTTPServer(
+	app *runtime.App,
+	cfg *httpv1.Server,
+	svc *service.GatewayService,
+) (transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	// 3. Create the server, passing the configured mux.
 	middlewareProvider, err := app.MiddlewareProvider()
 	if err != nil {
 		return nil, err
@@ -82,55 +86,23 @@ func NewHTTPServer(app *runtime.App, cfg *httpv1.Server, svc *service.GatewaySer
 	if err != nil {
 		return nil, err
 	}
-	// 2. Register all services.
+	// Register all services.
 	registerServices(srv, svc)
 	return srv, nil
 }
 
-func registerServices(srv *transport.HTTPServer, svc *service.GatewayService) {
-	system.RegisterUserServiceHTTPServer(srv, svc)
-	system.RegisterRoleServiceHTTPServer(srv, svc)
-	system.RegisterPermissionServiceHTTPServer(srv, svc)
-	system.RegisterResourceServiceHTTPServer(srv, svc)
-	system.RegisterViewServiceHTTPServer(srv, svc)
-	auth.RegisterAuthServiceHTTPServer(srv, svc)
-	auth.RegisterMeServiceHTTPServer(srv, svc)
+func registerServices(
+	srv *transport.HTTPServer,
+	svc *service.GatewayService,
+) {
+	system.RegisterUserServiceHTTPServer(srv, svc.System.User)
+	system.RegisterRoleServiceHTTPServer(srv, svc.System.Role)
+	system.RegisterPermissionServiceHTTPServer(srv, svc.System.Permission)
+	system.RegisterResourceServiceHTTPServer(srv, svc.System.Resource)
+	system.RegisterViewServiceHTTPServer(srv, svc.System.View)
+	auth.RegisterAuthServiceHTTPServer(srv, svc.Auth.Auth)
+	auth.RegisterMeServiceHTTPServer(srv, svc.Auth.Me)
+	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
+		log.Infof("HTTP %s %s", method, path)
+	})
 }
-
-// registerDownstreamServices creates connections and registers handlers to the provided ServeMux.
-//func registerDownstreamServices(srv *transport.HTTPServer, cfg *service.GatewayService) error {
-//	// --- Register System Service ---
-//	svc, err := client.NewGRPCConn(cfg, "client.system")
-//	if err != nil {
-//		return err
-//	}
-//	if err := system.RegisterUserServiceHTTPServer(srv, systemConn); err != nil {
-//		return err
-//	}
-//	if err := system.RegisterRoleServiceHTTPServer(srv, systemConn); err != nil {
-//		return err
-//	}
-//	if err := system.RegisterPermissionServiceHTTPServer(srv, systemConn); err != nil {
-//		return err
-//	}
-//	if err := system.RegisterResourceServiceHTTPServer(srv, systemConn); err != nil {
-//		return err
-//	}
-//	if err := system.RegisterViewServiceHTTPServer(srv, systemConn); err != nil {
-//		return err
-//	}
-//
-//	// --- Register Auth Service ---
-//	authConn, err := client.NewGRPCConn(cfg, "client.auth")
-//	if err != nil {
-//		return err
-//	}
-//	if err := auth.RegisterAuthServiceHTTPServer(srv, authConn); err != nil {
-//		return err
-//	}
-//	if err := auth.RegisterMeServiceHTTPServer(srv, authConn); err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
