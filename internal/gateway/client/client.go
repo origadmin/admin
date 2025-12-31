@@ -20,8 +20,6 @@ import (
 
 // ProviderSet is client providers.
 var ProviderSet = wire.NewSet(
-	NewAuthClient,
-	NewSystemClient,
 	NewAuthClientSet,
 	NewSystemClientSet,
 )
@@ -90,24 +88,4 @@ func NewSystemClientSet(bootstrap *conf.Config) (*SystemClientSet, error) {
 		ResourceClient:   system.NewResourceServiceClient(conn),
 		ViewClient:       system.NewViewServiceClient(conn),
 	}, nil
-}
-
-// NewAuthClient creates a new AuthAPI client.
-// Deprecated: Use NewAuthClientSet instead.
-func NewAuthClient(bootstrap *conf.Config) (auth.AuthServiceClient, error) {
-	conn, err := NewGRPCConn(bootstrap, "client.auth")
-	if err != nil {
-		return nil, err
-	}
-	return auth.NewAuthServiceClient(conn), nil
-}
-
-// NewSystemClient creates a new SystemAPI client.
-// Deprecated: Use NewSystemClientSet instead.
-func NewSystemClient(bootstrap *conf.Config) (system.UserServiceClient, error) {
-	conn, err := NewGRPCConn(bootstrap, "client.system")
-	if err != nil {
-		return nil, err
-	}
-	return system.NewUserServiceClient(conn), nil
 }

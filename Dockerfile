@@ -29,7 +29,7 @@ ARG SERVICE_NAME
 # - GOOS=linux ensures it's built for the Alpine base image.
 # - -a flag forces rebuilding of packages that are already up-to-date.
 # - -o specifies the output file path.
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o /app/${SERVICE_NAME} ./projects/backend/cmd/${SERVICE_NAME}
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o /app/${SERVICE_NAME} ./cmd/${SERVICE_NAME}
 
 # --- Runner Stage ---
 FROM alpine:latest

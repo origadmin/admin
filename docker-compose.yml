@@ -1,16 +1,16 @@
 networks:
-  origadmin-net:
+  original-net:
     driver: bridge
 
 services:
   # Service Discovery
   consul:
-    image: hashicorp/consul:1.15.4
+    image: hashicorp/consul:1.22.2
     container_name: consul
     ports:
       - "8500:8500"
     networks:
-      - origadmin-net
+      - original-net
     command: "agent -server -bootstrap-expect=1 -ui -client=0.0.0.0"
 
   # Database
@@ -24,7 +24,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - origadmin-net
+      - original-net
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -42,7 +42,7 @@ services:
     ports:
       - "9001:9001"
     networks:
-      - origadmin-net
+      - original-net
 
   # System Service
   system:
@@ -58,7 +58,7 @@ services:
     ports:
       - "9002:9002"
     networks:
-      - origadmin-net
+      - original-net
 
   # Gateway Service
   gateway:
@@ -75,7 +75,7 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - origadmin-net
+      - original-net
 
 volumes:
   postgres_data:
