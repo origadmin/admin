@@ -24,6 +24,13 @@ var ProviderSet = wire.NewSet(
 	NewSystemClientSet,
 )
 
+const (
+	// ServiceNameAuth is the short name for the auth service.
+	ServiceNameAuth = "auth"
+	// ServiceNameSystem is the short name for the system service.
+	ServiceNameSystem = "system"
+)
+
 // AuthBridgeSet holds all the clients for the 'auth' service.
 type AuthBridgeSet struct {
 	Auth auth.AuthServiceHTTPServer
@@ -39,13 +46,28 @@ type SystemBridgeSet struct {
 	View       system.ViewServiceHTTPServer
 }
 
-// NewGRPCConn finds a client configuration by name from the bootstrap config
+// NewGRPCConn finds a client configuration by service name or convention
 // and establishes a gRPC connection.
-func NewGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, error) {
+//
+// It implements smart matching logic:
+// 1. Capability Check: It ignores configs that do not have a 'grpc' section.
+// 2. Name Matching: It matches if the config name equals the input name (e.g., "auth")
+//    OR the conventional name (e.g., "origadmin.service.auth.client.grpc").
+func NewGRPCConn(bootstrap *conf.Config, name string) (*grpc.ClientConn, error) {
 	var clientConfig *transportv1.Client
+	
+	// The conventional name for gRPC clients
+	convention := fmt.Sprintf("origadmin.service.%s.client.grpc", name)
+
 	if bootstrap.Bootstrap.Clients != nil {
 		for _, cli := range bootstrap.Bootstrap.Clients.Configs {
-			if cli.Name == clientName {
+			// Capability Check: Must have gRPC config
+			if cli.GetGrpc() == nil {
+				continue
+			}
+
+			// Smart Matching: Match exact name OR convention name
+			if cli.Name == name || cli.Name == convention {
 				clientConfig = cli
 				break
 			}
@@ -53,20 +75,16 @@ func NewGRPCConn(bootstrap *conf.Config, clientName string) (*grpc.ClientConn, e
 	}
 
 	if clientConfig == nil {
-		return nil, fmt.Errorf("client config not found: %s", clientName)
+		return nil, fmt.Errorf("gRPC client config not found for service: %s (checked name: '%s' and '%s')", name, name, convention)
 	}
 
-	grpcConfig := clientConfig.GetGrpc()
-	if grpcConfig == nil {
-		return nil, fmt.Errorf("gRPC client config not found for: %s", clientName)
-	}
-
-	return runtimegrpc.NewClient(context.Background(), grpcConfig, &runtimegrpc.ClientOptions{})
+	return runtimegrpc.NewClient(context.Background(), clientConfig.GetGrpc(), &runtimegrpc.ClientOptions{})
 }
 
 // NewAuthClientSet creates a set of clients for the auth service.
 func NewAuthClientSet(bootstrap *conf.Config) (*AuthBridgeSet, error) {
-	conn, err := NewGRPCConn(bootstrap, "client.auth")
+	// Pass the simple service name. The helper handles the smart matching.
+	conn, err := NewGRPCConn(bootstrap, ServiceNameAuth)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +96,8 @@ func NewAuthClientSet(bootstrap *conf.Config) (*AuthBridgeSet, error) {
 
 // NewSystemClientSet creates a set of clients for the system service.
 func NewSystemClientSet(bootstrap *conf.Config) (*SystemBridgeSet, error) {
-	conn, err := NewGRPCConn(bootstrap, "client.system")
+	// Pass the simple service name. The helper handles the smart matching.
+	conn, err := NewGRPCConn(bootstrap, ServiceNameSystem)
 	if err != nil {
 		return nil, err
 	}
