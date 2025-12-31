@@ -36,7 +36,7 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 	}
 
 	activeDB := entsql.OpenDB(db.Dialect(), db.DB())
-	database := ent.NewDatabase(ent.Driver(activeDB))
+	database := ent.NewDatabase(ent.Driver(activeDB), ent.Debug())
 	return database, func() {
 		if database != nil {
 			if err := database.Client(context.Background()).Close(); err != nil {
@@ -67,7 +67,7 @@ func NewData(database *ent.Database, logger log.Logger) (*Data, error) {
 	); err != nil {
 		logHelper.Fatalf("failed creating schema resources: %v", err)
 	}
-	ent.Debug()
+
 	d := &Data{
 		DB:  database,
 		log: logHelper,

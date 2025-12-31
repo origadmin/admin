@@ -2,41 +2,19 @@ syntax = "proto3";
 
 package conf.pb;
 
-import "validate/validate.proto";
-
 option go_package = "origadmin/application/admin/internal/conf/pb;confpb";
 
+// RootUser defines the configuration for the initial administrator user.
+// This is used by the seed command.
 message RootUser {
-  bool enabled = 1 [json_name = "enabled"];
-  string id = 2 [
-    json_name = "id",
-    (validate.rules).string.min_len = 1 // Assuming id should not be empty
-  ];
-  string username = 3 [
-    json_name = "username",
-    (validate.rules).string.min_len = 1 // Required field
-  ];
-  string password = 4 [
-    json_name = "password",
-    (validate.rules).string = {
-      min_len: 6
-      max_len: 32
-    }
-  ];
-  string salt = 5 [
-    json_name = "salt",
-    (validate.rules).string = {
-      min_len: 6
-      max_len: 12
-    }
-  ];
-  string name = 6 [json_name = "name"];
-  string email = 7 [json_name = "email"];
-  string nickname = 8 [json_name = "nickname"];
-  string avatar = 9 [json_name = "avatar"];
-  string mobile = 10 [json_name = "mobile"];
-  string description = 11 [json_name = "description"];
-
-  bool auto_create = 100 [json_name = "auto_create"];
-  bool random_password = 101 [json_name = "random_password"];
+  // enabled controls whether the root user initialization task should run.
+  bool enabled = 1;
+  // username for the root user.
+  string username = 2;
+  // password for the root user. It is strongly recommended to change this after the first login.
+  string password = 3;
+  // nickname for the root user.
+  optional string nickname = 4;
+  // email for the root user.
+  optional string email = 5;
 }
