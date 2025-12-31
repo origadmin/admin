@@ -3036,6 +3036,10 @@ components:
                 keyword:
                     type: string
                     description: permission.field.keyword
+                status:
+                    type: integer
+                    description: permission.field.status
+                    format: int32
                 description:
                     type: string
                     description: permission.field.description

@@ -166,10 +166,10 @@ message User {
   google.protobuf.Timestamp last_login_time = 19 [json_name = "last_login_time"];
   // user.field.sanction_date
   optional google.protobuf.Timestamp sanction_date = 20 [json_name = "sanction_date"];
-//  // user.field.manager_id
-//  int64 manager_id = 21 [json_name = "manager_id"];
-//  // user.field.manager
-//  string manager = 22 [json_name = "manager"];
+  //  // user.field.manager_id
+  //  int64 manager_id = 21 [json_name = "manager_id"];
+  //  // user.field.manager
+  //  string manager = 22 [json_name = "manager"];
   // Roles holds the value of the roles edge.
   repeated Role roles = 23 [json_name = "roles"];
   // Role Ids holds the value of the role_ids
@@ -407,16 +407,18 @@ message Permission {
   string name = 4 [json_name = "name"];
   // permission.field.keyword
   string keyword = 5 [json_name = "keyword"];
+  // permission.field.status
+  int32 status = 6 [json_name = "status"];
   // permission.field.description
-  string description = 6 [json_name = "description"];
+  string description = 7 [json_name = "description"];
   // permission.field.data_scope
-  string data_scope = 7 [json_name = "data_scope"];
+  string data_scope = 8 [json_name = "data_scope"];
   // permission.field.data_rules
-  map<string, string> data_rules = 8 [json_name = "data_rules"];
+  map<string, string> data_rules = 9 [json_name = "data_rules"];
   // permission.field.resource_ids
-  repeated int64 resource_ids = 9 [json_name = "resource_ids"];
+  repeated int64 resource_ids = 10 [json_name = "resource_ids"];
   // permission.field.resources
-  repeated Resource resources = 10 [json_name = "resources"];
+  repeated Resource resources = 11 [json_name = "resources"];
 }
 
 // PermissionEdges holds the relations/edges for other nodes in the graph.

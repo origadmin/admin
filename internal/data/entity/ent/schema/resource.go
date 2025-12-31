@@ -19,35 +19,35 @@ type Resource struct {
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("service_name").
-			Comment(i18n.Text("resource.service_name.comment")),
+			Comment(i18n.Text("entity.resource.field.service_name.comment")),
 		field.String("keyword").
 			MaxLen(255).
-			Comment(i18n.Text("resource.keyword.comment")).
+			Comment(i18n.Text("entity.resource.field.keyword.comment")).
 			Unique().
 			NotEmpty(),
 		field.String("path").
-			Comment(i18n.Text("resource.path.comment")).
+			Comment(i18n.Text("entity.resource.field.path.comment")).
 			Optional(),
 		field.String("method").
-			Comment(i18n.Text("resource.method.comment")).
+			Comment(i18n.Text("entity.resource.field.method.comment")).
 			Optional(),
 		field.String("operation").
-			Comment(i18n.Text("resource.operation.comment")).
+			Comment(i18n.Text("entity.resource.field.operation.comment")).
 			Optional(),
 		field.String("policy").
-			Comment(i18n.Text("resource.policy.comment")).
+			Comment(i18n.Text("entity.resource.field.policy.comment")).
 			Default(""),
 		field.String("version_id").
-			Comment(i18n.Text("resource.version_id.comment")).
+			Comment(i18n.Text("entity.resource.field.version_id.comment")).
 			Default(""),
 		field.String("last_sync_version_id").
-			Comment(i18n.Text("resource.last_sync_version_id.comment")).
+			Comment(i18n.Text("entity.resource.field.last_sync_version_id.comment")).
 			Default(""),
 		field.String("sync_status").
-			Comment(i18n.Text("resource.sync_status.comment")).
+			Comment(i18n.Text("entity.resource.field.sync_status.comment")).
 			Default("Synced"),
 		field.Enum("status").
-			Comment(i18n.Text("resource.status.comment")).
+			Comment(i18n.Text("entity.resource.field.status.comment")).
 			Values("enabled", "disabled").
 			Default("enabled"),
 	}

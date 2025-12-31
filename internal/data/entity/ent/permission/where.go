@@ -435,6 +435,26 @@ func DataRulesNotNil() predicate.Permission {
 	return predicate.Permission(sql.FieldNotNull(FieldDataRules))
 }
 
+// StatusEQ applies the EQ predicate on the "status" field.
+func StatusEQ(v Status) predicate.Permission {
+	return predicate.Permission(sql.FieldEQ(FieldStatus, v))
+}
+
+// StatusNEQ applies the NEQ predicate on the "status" field.
+func StatusNEQ(v Status) predicate.Permission {
+	return predicate.Permission(sql.FieldNEQ(FieldStatus, v))
+}
+
+// StatusIn applies the In predicate on the "status" field.
+func StatusIn(vs ...Status) predicate.Permission {
+	return predicate.Permission(sql.FieldIn(FieldStatus, vs...))
+}
+
+// StatusNotIn applies the NotIn predicate on the "status" field.
+func StatusNotIn(vs ...Status) predicate.Permission {
+	return predicate.Permission(sql.FieldNotIn(FieldStatus, vs...))
+}
+
 // ActionsEQ applies the EQ predicate on the "actions" field.
 func ActionsEQ(v Actions) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldActions, v))

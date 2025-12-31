@@ -22,25 +22,25 @@ type Resource struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// resource.service_name.comment
+	// entity.resource.field.service_name.comment
 	ServiceName string `json:"service_name,omitempty"`
-	// resource.keyword.comment
+	// entity.resource.field.keyword.comment
 	Keyword string `json:"keyword,omitempty"`
-	// resource.path.comment
+	// entity.resource.field.path.comment
 	Path string `json:"path,omitempty"`
-	// resource.method.comment
+	// entity.resource.field.method.comment
 	Method string `json:"method,omitempty"`
-	// resource.operation.comment
+	// entity.resource.field.operation.comment
 	Operation string `json:"operation,omitempty"`
-	// resource.policy.comment
+	// entity.resource.field.policy.comment
 	Policy string `json:"policy,omitempty"`
-	// resource.version_id.comment
+	// entity.resource.field.version_id.comment
 	VersionID string `json:"version_id,omitempty"`
-	// resource.last_sync_version_id.comment
+	// entity.resource.field.last_sync_version_id.comment
 	LastSyncVersionID string `json:"last_sync_version_id,omitempty"`
-	// resource.sync_status.comment
+	// entity.resource.field.sync_status.comment
 	SyncStatus string `json:"sync_status,omitempty"`
-	// resource.status.comment
+	// entity.resource.field.status.comment
 	Status resource.Status `json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.

@@ -2941,6 +2941,7 @@ type PermissionMutation struct {
 	description                 *string
 	data_scope                  *string
 	data_rules                  *map[string]string
+	status                      *permission.Status
 	actions                     *permission.Actions
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
@@ -3339,6 +3340,42 @@ func (m *PermissionMutation) DataRulesCleared() bool {
 func (m *PermissionMutation) ResetDataRules() {
 	m.data_rules = nil
 	delete(m.clearedFields, permission.FieldDataRules)
+}
+
+// SetStatus sets the "status" field.
+func (m *PermissionMutation) SetStatus(pe permission.Status) {
+	m.status = &pe
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *PermissionMutation) Status() (r permission.Status, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Permission entity.
+// If the Permission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PermissionMutation) OldStatus(ctx context.Context) (v permission.Status, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *PermissionMutation) ResetStatus() {
+	m.status = nil
 }
 
 // SetActions sets the "actions" field.
@@ -3843,7 +3880,7 @@ func (m *PermissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PermissionMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.create_time != nil {
 		fields = append(fields, permission.FieldCreateTime)
 	}
@@ -3864,6 +3901,9 @@ func (m *PermissionMutation) Fields() []string {
 	}
 	if m.data_rules != nil {
 		fields = append(fields, permission.FieldDataRules)
+	}
+	if m.status != nil {
+		fields = append(fields, permission.FieldStatus)
 	}
 	if m.actions != nil {
 		fields = append(fields, permission.FieldActions)
@@ -3890,6 +3930,8 @@ func (m *PermissionMutation) Field(name string) (ent.Value, bool) {
 		return m.DataScope()
 	case permission.FieldDataRules:
 		return m.DataRules()
+	case permission.FieldStatus:
+		return m.Status()
 	case permission.FieldActions:
 		return m.Actions()
 	}
@@ -3915,6 +3957,8 @@ func (m *PermissionMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldDataScope(ctx)
 	case permission.FieldDataRules:
 		return m.OldDataRules(ctx)
+	case permission.FieldStatus:
+		return m.OldStatus(ctx)
 	case permission.FieldActions:
 		return m.OldActions(ctx)
 	}
@@ -3974,6 +4018,13 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDataRules(v)
+		return nil
+	case permission.FieldStatus:
+		v, ok := value.(permission.Status)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
 		return nil
 	case permission.FieldActions:
 		v, ok := value.(permission.Actions)
@@ -4060,6 +4111,9 @@ func (m *PermissionMutation) ResetField(name string) error {
 		return nil
 	case permission.FieldDataRules:
 		m.ResetDataRules()
+		return nil
+	case permission.FieldStatus:
+		m.ResetStatus()
 		return nil
 	case permission.FieldActions:
 		m.ResetActions()

@@ -2072,16 +2072,18 @@ type Permission struct {
 	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// permission.field.keyword
 	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// permission.field.status
+	Status int32 `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
 	// permission.field.description
-	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
 	// permission.field.data_scope
-	DataScope string `protobuf:"bytes,7,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
+	DataScope string `protobuf:"bytes,8,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
 	// permission.field.data_rules
-	DataRules map[string]string `protobuf:"bytes,8,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	DataRules map[string]string `protobuf:"bytes,9,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// permission.field.resource_ids
-	ResourceIds []int64 `protobuf:"varint,9,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	ResourceIds []int64 `protobuf:"varint,10,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// permission.field.resources
-	Resources     []*Resource `protobuf:"bytes,10,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources     []*Resource `protobuf:"bytes,11,rep,name=resources,proto3" json:"resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2149,6 +2151,13 @@ func (x *Permission) GetKeyword() string {
 		return x.Keyword
 	}
 	return ""
+}
+
+func (x *Permission) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
 }
 
 func (x *Permission) GetDescription() string {
@@ -2967,24 +2976,25 @@ const file_types_system_proto_rawDesc = "" +
 	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12C\n" +
 	"\vpermissions\x18\x03 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12K\n" +
 	"\x0euser_positions\x18\x04 \x03(\v2#.api.v1.services.types.UserPositionR\x0euser_positions\x12]\n" +
-	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xfb\x03\n" +
+	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\x93\x04\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\x05 \x01(\tR\akeyword\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x1e\n" +
+	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12 \n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1e\n" +
 	"\n" +
-	"data_scope\x18\a \x01(\tR\n" +
+	"data_scope\x18\b \x01(\tR\n" +
 	"data_scope\x12P\n" +
 	"\n" +
-	"data_rules\x18\b \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
+	"data_rules\x18\t \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
 	"data_rules\x12\"\n" +
-	"\fresource_ids\x18\t \x03(\x03R\fresource_ids\x12=\n" +
-	"\tresources\x18\n" +
-	" \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x1a<\n" +
+	"\fresource_ids\x18\n" +
+	" \x03(\x03R\fresource_ids\x12=\n" +
+	"\tresources\x18\v \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x1a<\n" +
 	"\x0eDataRulesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd3\x03\n" +

@@ -306,6 +306,8 @@ func (m *PermissionMutation) SetFields(input *Permission, fields ...string) erro
 			m.SetDataScope(input.DataScope)
 		case permission.FieldDataRules:
 			m.SetDataRules(input.DataRules)
+		case permission.FieldStatus:
+			m.SetStatus(input.Status)
 		case permission.FieldActions:
 			m.SetActions(input.Actions)
 		case permission.FieldID:
@@ -354,6 +356,12 @@ func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...stri
 		case permission.FieldDataRules:
 			if len(input.DataRules) > 0 {
 				m.SetDataRules(input.DataRules)
+			}
+		case permission.FieldStatus:
+			var zero permission.Status
+			// check permission.Status with sql.NullString if it is empty
+			if input.Status != zero {
+				m.SetStatus(input.Status)
 			}
 		case permission.FieldActions:
 			var zero permission.Actions

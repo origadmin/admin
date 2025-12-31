@@ -29,6 +29,8 @@ const (
 	FieldDataScope = "data_scope"
 	// FieldDataRules holds the string denoting the data_rules field in the database.
 	FieldDataRules = "data_rules"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// FieldActions holds the string denoting the actions field in the database.
 	FieldActions = "actions"
 	// EdgeRoles holds the string denoting the roles edge name in mutations.
@@ -109,6 +111,7 @@ var Columns = []string{
 	FieldDescription,
 	FieldDataScope,
 	FieldDataRules,
+	FieldStatus,
 	FieldActions,
 }
 
@@ -161,6 +164,32 @@ var (
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )
+
+// Status defines the type for the "status" enum field.
+type Status string
+
+// StatusEnabled is the default value of the Status enum.
+const DefaultStatus = StatusEnabled
+
+// Status values.
+const (
+	StatusEnabled  Status = "enabled"
+	StatusDisabled Status = "disabled"
+)
+
+func (s Status) String() string {
+	return string(s)
+}
+
+// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
+func StatusValidator(s Status) error {
+	switch s {
+	case StatusEnabled, StatusDisabled:
+		return nil
+	default:
+		return fmt.Errorf("permission: invalid enum value for status field: %q", s)
+	}
+}
 
 // Actions defines the type for the "actions" enum field.
 type Actions string
@@ -226,6 +255,11 @@ func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 // ByDataScope orders the results by the data_scope field.
 func ByDataScope(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDataScope, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
 // ByActions orders the results by the actions field.

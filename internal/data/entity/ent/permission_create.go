@@ -110,6 +110,20 @@ func (_c *PermissionCreate) SetDataRules(v map[string]string) *PermissionCreate 
 	return _c
 }
 
+// SetStatus sets the "status" field.
+func (_c *PermissionCreate) SetStatus(v permission.Status) *PermissionCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *PermissionCreate) SetNillableStatus(v *permission.Status) *PermissionCreate {
+	if v != nil {
+		_c.SetStatus(*v)
+	}
+	return _c
+}
+
 // SetActions sets the "actions" field.
 func (_c *PermissionCreate) SetActions(v permission.Actions) *PermissionCreate {
 	_c.mutation.SetActions(v)
@@ -313,6 +327,10 @@ func (_c *PermissionCreate) defaults() {
 		v := permission.DefaultDataScope
 		_c.mutation.SetDataScope(v)
 	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := permission.DefaultStatus
+		_c.mutation.SetStatus(v)
+	}
 	if _, ok := _c.mutation.Actions(); !ok {
 		v := permission.DefaultActions
 		_c.mutation.SetActions(v)
@@ -357,6 +375,14 @@ func (_c *PermissionCreate) check() error {
 	}
 	if _, ok := _c.mutation.DataScope(); !ok {
 		return &ValidationError{Name: "data_scope", err: errors.New(`ent: missing required field "Permission.data_scope"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Permission.status"`)}
+	}
+	if v, ok := _c.mutation.Status(); ok {
+		if err := permission.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.Actions(); !ok {
 		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "Permission.actions"`)}
@@ -430,6 +456,10 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.DataRules(); ok {
 		_spec.SetField(permission.FieldDataRules, field.TypeJSON, value)
 		_node.DataRules = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
+		_node.Status = value
 	}
 	if value, ok := _c.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)

@@ -4107,6 +4107,8 @@ func (m *Permission) validate(all bool) error {
 
 	// no validation rules for Keyword
 
+	// no validation rules for Status
+
 	// no validation rules for Description
 
 	// no validation rules for DataScope

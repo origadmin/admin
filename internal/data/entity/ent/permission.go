@@ -33,6 +33,8 @@ type Permission struct {
 	DataScope string `json:"data_scope,omitempty"`
 	// entity.permission.field.data_rules
 	DataRules map[string]string `json:"data_rules,omitempty"`
+	// entity.permission.field.status.comment
+	Status permission.Status `json:"status,omitempty"`
 	// entity.permission.field.actions
 	Actions permission.Actions `json:"actions,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -145,7 +147,7 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case permission.FieldID:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldActions:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldStatus, permission.FieldActions:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -213,6 +215,12 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 				if err := json.Unmarshal(*value, &_m.DataRules); err != nil {
 					return fmt.Errorf("unmarshal field data_rules: %w", err)
 				}
+			}
+		case permission.FieldStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				_m.Status = permission.Status(value.String)
 			}
 		case permission.FieldActions:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -316,6 +324,9 @@ func (_m *Permission) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("data_rules=")
 	builder.WriteString(fmt.Sprintf("%v", _m.DataRules))
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteString(", ")
 	builder.WriteString("actions=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Actions))

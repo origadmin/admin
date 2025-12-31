@@ -111,6 +111,20 @@ func (_u *PermissionUpdate) ClearDataRules() *PermissionUpdate {
 	return _u
 }
 
+// SetStatus sets the "status" field.
+func (_u *PermissionUpdate) SetStatus(v permission.Status) *PermissionUpdate {
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *PermissionUpdate) SetNillableStatus(v *permission.Status) *PermissionUpdate {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
 // SetActions sets the "actions" field.
 func (_u *PermissionUpdate) SetActions(v permission.Actions) *PermissionUpdate {
 	_u.mutation.SetActions(v)
@@ -471,6 +485,11 @@ func (_u *PermissionUpdate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Status(); ok {
+		if err := permission.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Actions(); ok {
 		if err := permission.ActionsValidator(v); err != nil {
 			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
@@ -517,6 +536,9 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	}
 	if _u.mutation.DataRulesCleared() {
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
@@ -998,6 +1020,20 @@ func (_u *PermissionUpdateOne) ClearDataRules() *PermissionUpdateOne {
 	return _u
 }
 
+// SetStatus sets the "status" field.
+func (_u *PermissionUpdateOne) SetStatus(v permission.Status) *PermissionUpdateOne {
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *PermissionUpdateOne) SetNillableStatus(v *permission.Status) *PermissionUpdateOne {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
 // SetActions sets the "actions" field.
 func (_u *PermissionUpdateOne) SetActions(v permission.Actions) *PermissionUpdateOne {
 	_u.mutation.SetActions(v)
@@ -1371,6 +1407,11 @@ func (_u *PermissionUpdateOne) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.Status(); ok {
+		if err := permission.StatusValidator(v); err != nil {
+			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Actions(); ok {
 		if err := permission.ActionsValidator(v); err != nil {
 			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
@@ -1434,6 +1475,9 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 	}
 	if _u.mutation.DataRulesCleared() {
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)

@@ -22,19 +22,19 @@ type View struct {
 func (View) Fields() []ent.Field {
 	return []ent.Field{
 		// Use OptionalFK for an optional foreign key, as designed in the mixin package.
-		mixin.OptionalFK("parent_id", i18n.Text("view.parent_id.comment")),
+		mixin.OptionalFK("parent_id", i18n.Text("entity.view.field.parent_id.comment")),
 		field.String("keyword").
 			MaxLen(255).
-			Comment(i18n.Text("view.keyword.comment")).
+			Comment(i18n.Text("entity.view.field.keyword.comment")).
 			Unique().
 			NotEmpty(),
 		field.String("scope").
-			Comment(i18n.Text("view.scope.comment")).
+			Comment(i18n.Text("entity.view.field.scope.comment")).
 			Default("default"),
 		field.String("name").
-			Comment(i18n.Text("view.name.comment")),
+			Comment(i18n.Text("entity.view.field.name.comment")),
 		field.Enum("type").
-			Comment(i18n.Text("view.type.comment")).
+			Comment(i18n.Text("entity.view.field.type.comment")).
 			Values(
 				string(enums.ViewTypeRoot),
 				string(enums.ViewTypeGroup),
@@ -48,22 +48,22 @@ func (View) Fields() []ent.Field {
 			).
 			Default(string(enums.ViewTypeUnknown)),
 		field.String("component").
-			Comment(i18n.Text("view.component.comment")).
+			Comment(i18n.Text("entity.view.field.component.comment")).
 			Optional(),
 		field.String("path").
-			Comment(i18n.Text("view.path.comment")).
+			Comment(i18n.Text("entity.view.field.path.comment")).
 			Optional(),
 		field.String("icon").
-			Comment(i18n.Text("view.icon.comment")).
+			Comment(i18n.Text("entity.view.field.icon.comment")).
 			Optional(),
 		field.Bool("visible").
-			Comment(i18n.Text("view.visible.comment")).
+			Comment(i18n.Text("entity.view.field.visible.comment")).
 			Default(true),
 		field.Int("sequence").
-			Comment(i18n.Text("view.sequence.comment")).
+			Comment(i18n.Text("entity.view.field.sequence.comment")).
 			Default(0),
 		field.String("tree_path").
-			Comment(i18n.Text("view.tree_path.comment")).
+			Comment(i18n.Text("entity.view.field.tree_path.comment")).
 			Optional(),
 	}
 }

@@ -50,6 +50,10 @@ func (Permission) Fields() []ent.Field {
 		field.JSON("data_rules", map[string]string{}).
 			Optional().
 			Comment(i18n.Text("entity.permission.field.data_rules")),
+		field.Enum("status").
+			Comment(i18n.Text("entity.permission.field.status.comment")).
+			Values("enabled", "disabled").
+			Default("enabled"),
 		//field.JSON("conditions", []types.PermissionCondition{}).
 		//	Optional().
 		//	Comment(i18n.Text("entity.permission.field.conditions")),
