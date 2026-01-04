@@ -11,6 +11,7 @@ message Captcha {
   float maxskew = 4 [json_name = "maxskew"];
   int32 dot_count = 5 [json_name = "dot_count"];
   string cache_name = 6 [json_name = "cache_name"];
+  string language = 7 [json_name = "language"];
 
   //  runtime.api.config.data.v1.Caches caches = 5 [json_name = "caches"];
   // 注释原有Redis配置（应由公共配置管理）

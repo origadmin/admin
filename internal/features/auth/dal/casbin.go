@@ -13,19 +13,19 @@ import (
 	"origadmin/application/admin/internal/features/auth/dto"
 )
 
-// casbinRepo is a repository for casbin rules that implements
-// the application's internal CasbinSourceRepo interface.
-type casbinRepo struct {
+// CasbinRepo is a repository for casbin rules that implements
+// the application's internal CasbinRepo interface.
+type CasbinRepo struct {
 	db *ent.Database
 }
 
 // NewCasbinRepo creates a new casbin repository.
-func NewCasbinRepo(db *ent.Database) (dto.CasbinSourceRepo, error) {
-	return &casbinRepo{db: db}, nil
+func NewCasbinRepo(db *ent.Database) (dto.CasbinRepo, error) {
+	return &CasbinRepo{db: db}, nil
 }
 
 // ListPolicies retrieves policy rules ("p" type) from the storage.
-func (r *casbinRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
+func (r *CasbinRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
 	rules, err := r.db.CasbinRule(ctx).Query().Where(casbinrule.PtypeEQ("p")).All(ctx)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (r *casbinRepo) ListPolicies(ctx context.Context, in *pb.ListPoliciesReques
 }
 
 // ListGroupings retrieves grouping rules ("g" type) from the storage.
-func (r *casbinRepo) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
+func (r *CasbinRepo) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
 	rules, err := r.db.CasbinRule(ctx).Query().Where(casbinrule.PtypeEQ("g")).All(ctx)
 	if err != nil {
 		return nil, err

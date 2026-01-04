@@ -896,7 +896,9 @@ func (m *GetCaptchaRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Reload
+	// no validation rules for CaptchaId
+
+	// no validation rules for CaptchaType
 
 	if len(errors) > 0 {
 		return GetCaptchaRequestMultiError(errors)
@@ -1002,7 +1004,9 @@ func (m *GetCaptchaResponse) validate(all bool) error {
 
 	// no validation rules for CaptchaId
 
-	// no validation rules for CaptchaImage
+	// no validation rules for CaptchaData
+
+	// no validation rules for MimeType
 
 	if len(errors) > 0 {
 		return GetCaptchaResponseMultiError(errors)

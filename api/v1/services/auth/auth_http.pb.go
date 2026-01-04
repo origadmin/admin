@@ -44,7 +44,7 @@ func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r.POST("/auth/register", _AuthService_Register0_HTTP_Handler(srv))
 	r.POST("/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
 	r.POST("/auth/token", _AuthService_RefreshToken0_HTTP_Handler(srv))
-	r.GET("/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
+	r.GET("/auth/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
 }
 
 func _AuthService_Login0_HTTP_Handler(srv AuthServiceHTTPServer) func(ctx http.Context) error {
@@ -178,7 +178,7 @@ func NewAuthServiceHTTPClient(client *http.Client) AuthServiceHTTPClient {
 // GetCaptcha GetCaptcha generates a new captcha.
 func (c *AuthServiceHTTPClientImpl) GetCaptcha(ctx context.Context, in *GetCaptchaRequest, opts ...http.CallOption) (*GetCaptchaResponse, error) {
 	var out GetCaptchaResponse
-	pattern := "/captcha"
+	pattern := "/auth/captcha"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAuthServiceGetCaptcha))
 	opts = append(opts, http.PathTemplate(pattern))

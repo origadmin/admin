@@ -4,38 +4,35 @@ import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/mojocn/base64Captcha"
 
-	confpb "origadmin/application/admin/internal/conf/pb"
-	"origadmin/application/admin/internal/features/auth/dto"
+	"origadmin/application/admin/internal/helpers/captcha"
 )
 
 // CaptchaUseCase is a captcha use case.
 type CaptchaUseCase struct {
-	repo   dto.CaptchaRepo
-	config *confpb.Captcha
-	log    *log.Helper
+	captcha *captcha.Captcha
+	log     *log.Helper
 }
 
 // NewCaptchaUseCase new a captcha use case.
-func NewCaptchaUseCase(repo dto.CaptchaRepo, c *confpb.Captcha, logger log.Logger) *CaptchaUseCase {
+func NewCaptchaUseCase(c *captcha.Captcha, logger log.Logger) *CaptchaUseCase {
 	return &CaptchaUseCase{
-		repo:   repo,
-		config: c,
-		log:    log.NewHelper(logger),
+		captcha: c,
+		log:     log.NewHelper(logger),
 	}
 }
 
 // GenerateCaptcha generates a new captcha.
-func (uc *CaptchaUseCase) GenerateCaptcha(ctx context.Context) (id, b64s string, err error) {
-	driver := base64Captcha.NewDriverDigit(
-		int(uc.config.GetHeight()),
-		int(uc.config.GetWidth()),
-		int(uc.config.GetLength()),
-		float64(uc.config.GetMaxskew()),
-		int(uc.config.GetDotCount()),
-	)
-	c := base64Captcha.NewCaptcha(driver, uc.repo)
-	id, content, _, err := c.Generate()
-	return id, content, err
+func (uc *CaptchaUseCase) GenerateCaptcha(ctx context.Context, captchaType string) (id, b64s, answer string, err error) {
+	return uc.captcha.Generate(captchaType)
+}
+
+// GetCaptchaAudio generates audio for a given captcha ID.
+func (uc *CaptchaUseCase) GetCaptchaAudio(ctx context.Context, id string) (string, error) {
+	return uc.captcha.GetAudioForID(id)
+}
+
+// VerifyCaptcha verifies a user's answer for a given captcha ID.
+func (uc *CaptchaUseCase) VerifyCaptcha(ctx context.Context, id, answer string) bool {
+	return uc.captcha.Verify(id, answer, true)
 }

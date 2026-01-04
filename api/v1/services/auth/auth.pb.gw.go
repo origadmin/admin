@@ -256,7 +256,7 @@ func RegisterAuthServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/GetCaptcha", runtime.WithHTTPPathPattern("/captcha"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.services.auth.AuthService/GetCaptcha", runtime.WithHTTPPathPattern("/auth/captcha"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -382,7 +382,7 @@ func RegisterAuthServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/GetCaptcha", runtime.WithHTTPPathPattern("/captcha"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.services.auth.AuthService/GetCaptcha", runtime.WithHTTPPathPattern("/auth/captcha"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -403,7 +403,7 @@ var (
 	pattern_AuthService_Register_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "register"}, ""))
 	pattern_AuthService_Logout_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "logout"}, ""))
 	pattern_AuthService_RefreshToken_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "token"}, ""))
-	pattern_AuthService_GetCaptcha_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"captcha"}, ""))
+	pattern_AuthService_GetCaptcha_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "captcha"}, ""))
 )
 
 var (

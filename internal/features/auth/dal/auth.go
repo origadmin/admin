@@ -10,21 +10,21 @@ import (
 	"origadmin/application/admin/internal/features/auth/dto"
 )
 
-type authRepo struct {
+type AuthRepo struct {
 	db  *ent.Database
 	log *log.Helper
 }
 
 // NewAuthRepo .
 func NewAuthRepo(db *ent.Database, logger log.Logger) dto.AuthRepo {
-	return &authRepo{
+	return &AuthRepo{
 		db:  db,
 		log: log.NewHelper(logger),
 	}
 }
 
 // GetUserByUsername retrieves a user by their username.
-func (r *authRepo) GetUserByUsername(ctx context.Context, username string) (*dto.User, error) {
+func (r *AuthRepo) GetUserByUsername(ctx context.Context, username string) (*dto.User, error) {
 	u, err := r.db.User(ctx).Query().Where(user.UsernameEQ(username)).Only(ctx)
 	if err != nil {
 		return nil, err

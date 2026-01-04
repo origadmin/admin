@@ -9,7 +9,6 @@ import (
 	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
 	"github.com/origadmin/contrib/security/credential"
 	securityPrincipal "github.com/origadmin/contrib/security/principal"
-	"github.com/origadmin/runtime/log"
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/biz"
 	"origadmin/application/admin/internal/helpers/captcha"
@@ -18,20 +17,20 @@ import (
 // AuthService is a service for authentication.
 type AuthService struct {
 	v1.UnimplementedAuthServiceServer
-	uc      *biz.AuthUseCase
-	captcha *captcha.Captcha
-	creator credential.Creator
+	uc        *biz.AuthUseCase
+	captchaUC *biz.CaptchaUseCase
+	creator   credential.Creator
 }
 
 // NewAuthService creates a new authentication service.
-func NewAuthService(uc *biz.AuthUseCase, captcha *captcha.Captcha, creator credential.Creator) *AuthService {
-	return &AuthService{uc: uc, captcha: captcha, creator: creator}
+func NewAuthService(uc *biz.AuthUseCase, cuc *biz.CaptchaUseCase, creator credential.Creator) *AuthService {
+	return &AuthService{uc: uc, captchaUC: cuc, creator: creator}
 }
 
 // Login authenticates a user and returns a token pair.
 func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResponse, error) {
 	// Verify captcha
-	if !s.captcha.Verify(req.GetCaptchaId(), req.GetCaptchaCode(), true) {
+	if !s.captchaUC.VerifyCaptcha(ctx, req.GetCaptchaId(), req.GetCaptchaCode()) {
 		return nil, errors.New(400, "CAPTCHA_INVALID", "invalid captcha")
 	}
 
@@ -64,14 +63,31 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 
 // GetCaptcha generates a new captcha.
 func (s *AuthService) GetCaptcha(ctx context.Context, req *v1.GetCaptchaRequest) (*v1.GetCaptchaResponse, error) {
-	id, b64s, answer, err := s.captcha.GenerateDigit()
+	captchaType := req.GetCaptchaType()
+	if captchaType == "" {
+		captchaType = captcha.TypeDigit
+	}
+
+	if captchaType == captcha.TypeAudio {
+		b64s, err := s.captchaUC.GetCaptchaAudio(ctx, req.GetCaptchaId())
+		if err != nil {
+			return nil, err
+		}
+		return &v1.GetCaptchaResponse{
+			CaptchaId:   req.GetCaptchaId(),
+			CaptchaData: b64s,
+			MimeType:    captcha.MimeTypeAudio,
+		}, nil
+	}
+
+	id, b64s, _, err := s.captchaUC.GenerateCaptcha(ctx, captchaType)
 	if err != nil {
 		return nil, err
 	}
-	log.Infof("Captcha generated: id=%s, answer=%s", id, answer)
 	return &v1.GetCaptchaResponse{
-		CaptchaId:    id,
-		CaptchaImage: b64s,
+		CaptchaId:   id,
+		CaptchaData: b64s,
+		MimeType:    captcha.MimeTypeImage,
 	}, nil
 }
 

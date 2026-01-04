@@ -154,14 +154,8 @@ func ProvideCaptcha(p container.CacheProvider, cfg *confpb.Captcha) (*captcha.Ca
 	}
 
 	c := &captcha.Config{
-		Store: captcha.NewStore(cache),
-		DriverDigit: &captcha.DriverDigit{
-			Height:   int(cfg.GetHeight()),
-			Width:    int(cfg.GetWidth()),
-			Length:   int(cfg.GetLength()),
-			MaxSkew:  float64(cfg.GetMaxskew()),
-			DotCount: int(cfg.GetDotCount()),
-		},
+		Store:   captcha.NewStore(cache),
+		Captcha: cfg,
 	}
 	return captcha.NewCaptcha(c), nil
 }
@@ -257,8 +251,9 @@ var ProviderBackendSet = wire.NewSet(
 )
 
 var ProviderSet = wire.NewSet(
-	// Instructions for wire to extract nested configs
+	// CORRECTED: Added FieldsOf for Security to ensure it's provided to the authenticator.
 	wire.FieldsOf(new(*conf.Config), "Bootstrap"),
+	wire.FieldsOf(new(*confpb.Bootstrap), "Security"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Servers"),
 	wire.FieldsOf(new(*confpb.Bootstrap), "Captcha"),
 	ProvideLogger,

@@ -7,8 +7,8 @@ import "policy/v1/policy.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/auth;auth";
 option java_multiple_files = true;
-option java_package = "com.origadmin.api.v1.services.auth";
 option java_outer_classname = "APIServiceAuthProto";
+option java_package = "com.origadmin.api.v1.services.auth";
 
 // Service AuthService provides APIs for the authentication lifecycle.
 service AuthService {
@@ -54,9 +54,7 @@ service AuthService {
 
   // GetCaptcha generates a new captcha.
   rpc GetCaptcha(GetCaptchaRequest) returns (GetCaptchaResponse) {
-    option (google.api.http) = {
-      get: "/captcha"
-    };
+    option (google.api.http) = {get: "/auth/captcha"};
     option (contrib.api.policy.v1.policy) = {name: "public"};
   }
 
@@ -71,27 +69,27 @@ service AuthService {
 
 // The request message for the Login RPC.
 message LoginRequest {
-  string username = 1;
-  string password = 2;
-  string captcha_id = 3;
-  string captcha_code = 4;
+  string username = 1 [json_name = "username"];
+  string password = 2 [json_name = "password"];
+  string captcha_id = 3 [json_name = "captcha_id"];
+  string captcha_code = 4 [json_name = "captcha_code"];
 }
 
 // The response message for the Login RPC.
 message LoginResponse {
-  string access_token = 1;
-  string refresh_token = 2;
-  string token_type = 3;
-  int64 expires_in = 4;
+  string access_token = 1 [json_name = "access_token"];
+  string refresh_token = 2 [json_name = "refresh_token"];
+  string token_type = 3 [json_name = "token_type"];
+  int64 expires_in = 4 [json_name = "expires_in"];
 }
 
 // The request message for the Register RPC.
 message RegisterRequest {
-  string username = 1;
-  string password = 2;
-  string email = 3;
-  string captcha_id = 4;
-  string captcha_code = 5;
+  string username = 1 [json_name = "username"];
+  string password = 2 [json_name = "password"];
+  string email = 3 [json_name = "email"];
+  string captcha_id = 4 [json_name = "captcha_id"];
+  string captcha_code = 5 [json_name = "captcha_code"];
 }
 
 // The response message for the Register RPC.
@@ -99,7 +97,7 @@ message RegisterResponse {}
 
 // The request message for the Logout RPC.
 message LogoutRequest {
-  string refresh_token = 1;
+  string refresh_token = 1 [json_name = "refresh_token"];
 }
 
 // The response message for the Logout RPC.
@@ -107,38 +105,43 @@ message LogoutResponse {}
 
 // The request message for the RefreshToken RPC.
 message RefreshTokenRequest {
-  string refresh_token = 1;
+  string refresh_token = 1 [json_name = "refresh_token"];
 }
 
 // The response message for the RefreshToken RPC.
 message RefreshTokenResponse {
-  string access_token = 1;
-  string token_type = 2;
-  int64 expires_in = 3;
+  string access_token = 1 [json_name = "access_token"];
+  string token_type = 2 [json_name = "token_type"];
+  int64 expires_in = 3 [json_name = "expires_in"];
 }
 
 // The request message for the GetCaptcha RPC.
 message GetCaptchaRequest {
-  // If true, forces reloading of the captcha.
-  bool reload = 1;
+  // The ID of an existing captcha, used for refreshing or getting audio.
+  string captcha_id = 1 [json_name = "captcha_id"];
+  // The type of captcha to generate (e.g., "digit", "string", "math", "chinese", "audio").
+  string captcha_type = 2 [json_name = "captcha_type"];
 }
 
 // The response message for the GetCaptcha RPC.
 message GetCaptchaResponse {
-  string captcha_id = 1;
-  // Base64 encoded image data.
-  string captcha_image = 2;
+  // The unique identifier for the generated captcha.
+  string captcha_id = 1 [json_name = "captcha_id"];
+  // Base64 encoded data of the captcha (image or audio).
+  string captcha_data = 2 [json_name = "captcha_data"];
+  // The MIME type of the captcha data (e.g., "image/png", "audio/wav").
+  string mime_type = 3 [json_name = "mime_type"];
 }
 
 // The request message for the Authenticate RPC.
 message AuthenticateRequest {
-  string token = 1;
-  string path = 2;
-  string method = 3;
+  string token = 1 [json_name = "token"];
+  string path = 2 [json_name = "path"];
+  string method = 3 [json_name = "method"];
 }
 
 // The response message for the Authenticate RPC.
 message AuthenticateResponse {
-  bool authorized = 1;
-  string user_id = 2;
+  bool authorized = 1 [json_name = "authorized"];
+  string user_id = 2 [json_name = "user_id"];
 }

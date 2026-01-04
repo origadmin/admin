@@ -28,8 +28,8 @@ type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	CaptchaId     string                 `protobuf:"bytes,3,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
-	CaptchaCode   string                 `protobuf:"bytes,4,opt,name=captcha_code,json=captchaCode,proto3" json:"captcha_code,omitempty"`
+	CaptchaId     string                 `protobuf:"bytes,3,opt,name=captcha_id,proto3" json:"captcha_id,omitempty"`
+	CaptchaCode   string                 `protobuf:"bytes,4,opt,name=captcha_code,proto3" json:"captcha_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -95,10 +95,10 @@ func (x *LoginRequest) GetCaptchaCode() string {
 // The response message for the Login RPC.
 type LoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
-	TokenType     string                 `protobuf:"bytes,3,opt,name=token_type,json=tokenType,proto3" json:"token_type,omitempty"`
-	ExpiresIn     int64                  `protobuf:"varint,4,opt,name=expires_in,json=expiresIn,proto3" json:"expires_in,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,proto3" json:"access_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,proto3" json:"refresh_token,omitempty"`
+	TokenType     string                 `protobuf:"bytes,3,opt,name=token_type,proto3" json:"token_type,omitempty"`
+	ExpiresIn     int64                  `protobuf:"varint,4,opt,name=expires_in,proto3" json:"expires_in,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -167,8 +167,8 @@ type RegisterRequest struct {
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
-	CaptchaId     string                 `protobuf:"bytes,4,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
-	CaptchaCode   string                 `protobuf:"bytes,5,opt,name=captcha_code,json=captchaCode,proto3" json:"captcha_code,omitempty"`
+	CaptchaId     string                 `protobuf:"bytes,4,opt,name=captcha_id,proto3" json:"captcha_id,omitempty"`
+	CaptchaCode   string                 `protobuf:"bytes,5,opt,name=captcha_code,proto3" json:"captcha_code,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -278,7 +278,7 @@ func (*RegisterResponse) Descriptor() ([]byte, []int) {
 // The request message for the Logout RPC.
 type LogoutRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,proto3" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -360,7 +360,7 @@ func (*LogoutResponse) Descriptor() ([]byte, []int) {
 // The request message for the RefreshToken RPC.
 type RefreshTokenRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,proto3" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -405,9 +405,9 @@ func (x *RefreshTokenRequest) GetRefreshToken() string {
 // The response message for the RefreshToken RPC.
 type RefreshTokenResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	TokenType     string                 `protobuf:"bytes,2,opt,name=token_type,json=tokenType,proto3" json:"token_type,omitempty"`
-	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expires_in,json=expiresIn,proto3" json:"expires_in,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,proto3" json:"access_token,omitempty"`
+	TokenType     string                 `protobuf:"bytes,2,opt,name=token_type,proto3" json:"token_type,omitempty"`
+	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expires_in,proto3" json:"expires_in,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -466,8 +466,10 @@ func (x *RefreshTokenResponse) GetExpiresIn() int64 {
 // The request message for the GetCaptcha RPC.
 type GetCaptchaRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// If true, forces reloading of the captcha.
-	Reload        bool `protobuf:"varint,1,opt,name=reload,proto3" json:"reload,omitempty"`
+	// The ID of an existing captcha, used for refreshing or getting audio.
+	CaptchaId string `protobuf:"bytes,1,opt,name=captcha_id,proto3" json:"captcha_id,omitempty"`
+	// The type of captcha to generate (e.g., "digit", "string", "math", "chinese", "audio").
+	CaptchaType   string `protobuf:"bytes,2,opt,name=captcha_type,proto3" json:"captcha_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -502,19 +504,29 @@ func (*GetCaptchaRequest) Descriptor() ([]byte, []int) {
 	return file_auth_auth_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetCaptchaRequest) GetReload() bool {
+func (x *GetCaptchaRequest) GetCaptchaId() string {
 	if x != nil {
-		return x.Reload
+		return x.CaptchaId
 	}
-	return false
+	return ""
+}
+
+func (x *GetCaptchaRequest) GetCaptchaType() string {
+	if x != nil {
+		return x.CaptchaType
+	}
+	return ""
 }
 
 // The response message for the GetCaptcha RPC.
 type GetCaptchaResponse struct {
-	state     protoimpl.MessageState `protogen:"open.v1"`
-	CaptchaId string                 `protobuf:"bytes,1,opt,name=captcha_id,json=captchaId,proto3" json:"captcha_id,omitempty"`
-	// Base64 encoded image data.
-	CaptchaImage  string `protobuf:"bytes,2,opt,name=captcha_image,json=captchaImage,proto3" json:"captcha_image,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier for the generated captcha.
+	CaptchaId string `protobuf:"bytes,1,opt,name=captcha_id,proto3" json:"captcha_id,omitempty"`
+	// Base64 encoded data of the captcha (image or audio).
+	CaptchaData string `protobuf:"bytes,2,opt,name=captcha_data,proto3" json:"captcha_data,omitempty"`
+	// The MIME type of the captcha data (e.g., "image/png", "audio/wav").
+	MimeType      string `protobuf:"bytes,3,opt,name=mime_type,proto3" json:"mime_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -556,9 +568,16 @@ func (x *GetCaptchaResponse) GetCaptchaId() string {
 	return ""
 }
 
-func (x *GetCaptchaResponse) GetCaptchaImage() string {
+func (x *GetCaptchaResponse) GetCaptchaData() string {
 	if x != nil {
-		return x.CaptchaImage
+		return x.CaptchaData
+	}
+	return ""
+}
+
+func (x *GetCaptchaResponse) GetMimeType() string {
+	if x != nil {
+		return x.MimeType
 	}
 	return ""
 }
@@ -628,7 +647,7 @@ func (x *AuthenticateRequest) GetMethod() string {
 type AuthenticateResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Authorized    bool                   `protobuf:"varint,1,opt,name=authorized,proto3" json:"authorized,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -681,54 +700,65 @@ var File_auth_auth_proto protoreflect.FileDescriptor
 
 const file_auth_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\"\x88\x01\n" +
+	"\x0fauth/auth.proto\x12\x14api.v1.services.auth\x1a\x1cgoogle/api/annotations.proto\x1a\x16policy/v1/policy.proto\"\x8a\x01\n" +
 	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1d\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1e\n" +
 	"\n" +
-	"captcha_id\x18\x03 \x01(\tR\tcaptchaId\x12!\n" +
-	"\fcaptcha_code\x18\x04 \x01(\tR\vcaptchaCode\"\x95\x01\n" +
-	"\rLoginResponse\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\x12\x1d\n" +
+	"captcha_id\x18\x03 \x01(\tR\n" +
+	"captcha_id\x12\"\n" +
+	"\fcaptcha_code\x18\x04 \x01(\tR\fcaptcha_code\"\x99\x01\n" +
+	"\rLoginResponse\x12\"\n" +
+	"\faccess_token\x18\x01 \x01(\tR\faccess_token\x12$\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\rrefresh_token\x12\x1e\n" +
 	"\n" +
-	"token_type\x18\x03 \x01(\tR\ttokenType\x12\x1d\n" +
+	"token_type\x18\x03 \x01(\tR\n" +
+	"token_type\x12\x1e\n" +
 	"\n" +
-	"expires_in\x18\x04 \x01(\x03R\texpiresIn\"\xa1\x01\n" +
+	"expires_in\x18\x04 \x01(\x03R\n" +
+	"expires_in\"\xa3\x01\n" +
 	"\x0fRegisterRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +
-	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1d\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1e\n" +
 	"\n" +
-	"captcha_id\x18\x04 \x01(\tR\tcaptchaId\x12!\n" +
-	"\fcaptcha_code\x18\x05 \x01(\tR\vcaptchaCode\"\x12\n" +
-	"\x10RegisterResponse\"4\n" +
-	"\rLogoutRequest\x12#\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"\x10\n" +
-	"\x0eLogoutResponse\":\n" +
-	"\x13RefreshTokenRequest\x12#\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"w\n" +
-	"\x14RefreshTokenResponse\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12\x1d\n" +
+	"captcha_id\x18\x04 \x01(\tR\n" +
+	"captcha_id\x12\"\n" +
+	"\fcaptcha_code\x18\x05 \x01(\tR\fcaptcha_code\"\x12\n" +
+	"\x10RegisterResponse\"5\n" +
+	"\rLogoutRequest\x12$\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\rrefresh_token\"\x10\n" +
+	"\x0eLogoutResponse\";\n" +
+	"\x13RefreshTokenRequest\x12$\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\rrefresh_token\"z\n" +
+	"\x14RefreshTokenResponse\x12\"\n" +
+	"\faccess_token\x18\x01 \x01(\tR\faccess_token\x12\x1e\n" +
 	"\n" +
-	"token_type\x18\x02 \x01(\tR\ttokenType\x12\x1d\n" +
+	"token_type\x18\x02 \x01(\tR\n" +
+	"token_type\x12\x1e\n" +
 	"\n" +
-	"expires_in\x18\x03 \x01(\x03R\texpiresIn\"+\n" +
-	"\x11GetCaptchaRequest\x12\x16\n" +
-	"\x06reload\x18\x01 \x01(\bR\x06reload\"X\n" +
-	"\x12GetCaptchaResponse\x12\x1d\n" +
+	"expires_in\x18\x03 \x01(\x03R\n" +
+	"expires_in\"W\n" +
+	"\x11GetCaptchaRequest\x12\x1e\n" +
 	"\n" +
-	"captcha_id\x18\x01 \x01(\tR\tcaptchaId\x12#\n" +
-	"\rcaptcha_image\x18\x02 \x01(\tR\fcaptchaImage\"W\n" +
+	"captcha_id\x18\x01 \x01(\tR\n" +
+	"captcha_id\x12\"\n" +
+	"\fcaptcha_type\x18\x02 \x01(\tR\fcaptcha_type\"v\n" +
+	"\x12GetCaptchaResponse\x12\x1e\n" +
+	"\n" +
+	"captcha_id\x18\x01 \x01(\tR\n" +
+	"captcha_id\x12\"\n" +
+	"\fcaptcha_data\x18\x02 \x01(\tR\fcaptcha_data\x12\x1c\n" +
+	"\tmime_type\x18\x03 \x01(\tR\tmime_type\"W\n" +
 	"\x13AuthenticateRequest\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12\x16\n" +
-	"\x06method\x18\x03 \x01(\tR\x06method\"O\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\"P\n" +
 	"\x14AuthenticateResponse\x12\x1e\n" +
 	"\n" +
 	"authorized\x18\x01 \x01(\bR\n" +
-	"authorized\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId2\xf6\x05\n" +
+	"authorized\x12\x18\n" +
+	"\auser_id\x18\x02 \x01(\tR\auser_id2\xfc\x05\n" +
 	"\vAuthService\x12t\n" +
 	"\x05Login\x12\".api.v1.services.auth.LoginRequest\x1a#.api.v1.services.auth.LoginResponse\"\"\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/login\x12\x80\x01\n" +
@@ -739,11 +769,10 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12\x8b\x01\n" +
 	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"$\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/token\x12}\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/token\x12\x82\x01\n" +
 	"\n" +
-	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"\x1c\xea\xea\x1b\b\n" +
-	"\x06public\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/captcha\x12e\n" +
+	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"!\xea\xea\x1b\b\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\x0f\x12\r/auth/captcha\x12e\n" +
 	"\fAuthenticate\x12).api.v1.services.auth.AuthenticateRequest\x1a*.api.v1.services.auth.AuthenticateResponseB\xd0\x01\n" +
 	"\x18com.api.v1.services.authB\tAuthProtoP\x01Z5origadmin/application/admin/api/v1/services/auth;auth\xa2\x02\x04AVSA\xaa\x02\x14Api.V1.Services.Auth\xca\x02\x14Api\\V1\\Services\\Auth\xe2\x02 Api\\V1\\Services\\Auth\\GPBMetadata\xea\x02\x17Api::V1::Services::Authb\x06proto3"
 

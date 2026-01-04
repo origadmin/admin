@@ -19,6 +19,7 @@ import (
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/http"
 	"origadmin/application/admin/internal/gateway/service"
+	"origadmin/application/admin/internal/gateway/web"
 )
 
 // ProviderSet is server providers.
@@ -63,7 +64,7 @@ func NewServers(
 
 // NewHTTPServer creates a new HTTP server and registers all downstream service handlers.
 func NewHTTPServer(
-	_ *runtime.App,
+	app *runtime.App,
 	cfg *httpv1.Server,
 	svc *service.GatewayService,
 	middlewareProvider container.ServerMiddlewareProvider,
@@ -76,10 +77,23 @@ func NewHTTPServer(
 	if err != nil {
 		return nil, err
 	}
+
+	serverOpts := []kratoshttp.ServerOption{
+		kratoshttp.PathPrefix("/api/v1"),
+	}
+
+	// Try to get the handler for the embedded Web UI.
+	webUIHandler, err := web.GetHandler()
+	if err == nil {
+		log.NewHelper(app.Logger()).Info("msg", "Embedded Web UI is enabled and will be served.")
+		// If the handler is available, register it for the root path.
+		serverOpts = append(serverOpts)
+	} else {
+		log.NewHelper(app.Logger()).Warn("msg", "Embedded Web UI is disabled. To enable, build with '-tags embed_ui'.")
+	}
+
 	opts := &http.ServerOptions{
-		ServerOptions: []kratoshttp.ServerOption{
-			kratoshttp.PathPrefix("/api/v1"),
-		},
+		ServerOptions:     serverOpts,
 		ServerMiddlewares: mws,
 	}
 
@@ -89,6 +103,8 @@ func NewHTTPServer(
 	}
 	// Register all services using the GatewayService method.
 	svc.RegisterHTTPHandlers(srv)
+	srv.HandlePrefix("/", webUIHandler)
+
 	// Log all registered HTTP routes for debugging and verification
 	srv.WalkHandle(func(method, path string, handler stdhttp.HandlerFunc) {
 		log.Infof("HTTP %s %s", method, path)

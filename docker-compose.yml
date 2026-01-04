@@ -1,82 +1,37 @@
-networks:
-  original-net:
-    driver: bridge
+version: '3.8'
 
 services:
-  # Service Discovery
-  consul:
-    image: hashicorp/consul:1.22.2
-    container_name: consul
-    ports:
-      - "8500:8500"
-    networks:
-      - original-net
-    command: "agent -server -bootstrap-expect=1 -ui -client=0.0.0.0"
-
-  # Database
-  postgres:
-    image: postgres:16-alpine
-    container_name: postgres
-    environment:
-      POSTGRES_DB: origadmin
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-    networks:
-      - original-net
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  # Auth Service
-  auth:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE_NAME: auth
-    container_name: auth-service
-    depends_on:
-      - consul
-      - postgres
-    ports:
-      - "9001:9001"
-    networks:
-      - original-net
-
-  # System Service
-  system:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE_NAME: system
-    container_name: system-service
-    depends_on:
-      - consul
-      - postgres
-    ports:
-      - "9002:9002"
-    networks:
-      - original-net
-
-  # Gateway Service
   gateway:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile # Use the root Dockerfile
       args:
-        SERVICE_NAME: gateway
-    container_name: gateway-service
+        SERVICE_NAME: gateway # Pass the service name as a build argument
+    ports:
+      - "8000:8000" # Expose gateway's HTTP port
+      - "9000:9000" # Expose gateway's gRPC port
+    volumes:
+      - .:/app # Mount the entire project directory to enable live reload
     depends_on:
-      - consul
       - auth
       - system
-    ports:
-      - "8000:8000"
-    networks:
-      - original-net
 
-volumes:
-  postgres_data:
-    driver: local
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile # Use the root Dockerfile
+      args:
+        SERVICE_NAME: auth # Pass the service name as a build argument
+    volumes:
+      - .:/app
+    # No ports need to be exposed as it's an internal service.
+
+  system:
+    build:
+      context: .
+      dockerfile: Dockerfile # Use the root Dockerfile
+      args:
+        SERVICE_NAME: system # Pass the service name as a build argument
+    volumes:
+      - .:/app
+    # No ports need to be exposed as it's an internal service.

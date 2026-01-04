@@ -35,9 +35,9 @@ func init() {
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.AuthService/GetCaptcha",
-			GatewayPath:   "GET:/captcha",
+			GatewayPath:   "GET:/auth/captcha",
 			Name:          "public",
-			VersionID:     "4c2d4078ffb54002daae7094b5af8c76dcbcaf87e1f79b9826fac1079d78889f",
+			VersionID:     "db87ea691879696f62dff3f5177ff7aa5e0be02f53c02273abeb016e185a5917",
 		},
 	}
 

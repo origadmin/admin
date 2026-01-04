@@ -26,7 +26,7 @@ func NewServers(
 	cfg *transportv1.Servers,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
-	casbinSvc *service.CasbinSourceService,
+	casbinSvc *service.CasbinService,
 	logger log.Logger,
 ) ([]transport.Server, error) {
 	if cfg == nil {
@@ -66,7 +66,7 @@ func NewHTTPServer(
 	cfg *httpv1.Server,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
-	casbinSvc *service.CasbinSourceService,
+	casbinSvc *service.CasbinService,
 	logger log.Logger,
 ) (*http.Server, error) {
 	if cfg == nil {
@@ -98,7 +98,7 @@ func NewGRPCServer(
 	cfg *grpcv1.Server,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
-	casbinSvc *service.CasbinSourceService,
+	casbinSvc *service.CasbinService,
 	logger log.Logger,
 ) (*grpc.Server, error) {
 	if cfg == nil {

@@ -2,7 +2,11 @@ package service
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/go-kratos/kratos/v2/errors"
+
+	"github.com/origadmin/contrib/security/principal"
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/biz"
 )
@@ -20,8 +24,18 @@ func NewMeService(uc *biz.MeUseCase) *MeService {
 
 // GetProfile retrieves the profile of the currently authenticated user.
 func (s *MeService) GetProfile(ctx context.Context, req *v1.GetProfileRequest) (*v1.GetProfileResponse, error) {
-	// TODO: Get userID from context
-	userID := int64(1) // Placeholder
+	// Get the principal from the context, which is populated by the auth middleware.
+	p, ok := principal.FromContext(ctx)
+	if !ok {
+		return nil, errors.Unauthorized("UNAUTHORIZED", "Missing user principal in context")
+	}
+
+	// The principal's ID is a string, so it needs to be converted to an integer.
+	userID, err := strconv.ParseInt(p.GetID(), 10, 64)
+	if err != nil {
+		return nil, errors.InternalServer("INVALID_PRINCIPAL_ID", "User ID in principal is not a valid integer")
+	}
+
 	user, err := s.uc.GetProfile(ctx, userID)
 	if err != nil {
 		return nil, err

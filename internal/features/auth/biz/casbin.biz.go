@@ -21,15 +21,15 @@ import (
 	"origadmin/application/admin/internal/features/auth/dto"
 )
 
-// CasbinSourceServiceBiz is a CasbinSource use case.
-type CasbinSourceServiceBiz struct {
-	dao          dto.CasbinSourceRepo
+// CasbinServiceBiz is a Casbin use case.
+type CasbinServiceBiz struct {
+	dao          dto.CasbinRepo
 	limiter      repo.PageLimiter
 	log          *log.Helper
 	lastModified *atomic.Int64
 }
 
-func (c CasbinSourceServiceBiz) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+func (c CasbinServiceBiz) StreamRules(request *pb.StreamRulesRequest, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
 	c.log.Debug("StreamRules")
 	ctx := stream.Context()
 	if request.WithPolicies {
@@ -46,28 +46,28 @@ func (c CasbinSourceServiceBiz) StreamRules(request *pb.StreamRulesRequest, stre
 	return nil
 }
 
-func (c CasbinSourceServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
+func (c CasbinServiceBiz) ListPolicies(ctx context.Context, in *pb.ListPoliciesRequest) (*pb.ListPoliciesResponse, error) {
 	c.log.Debug("ListPolicies")
 	return c.dao.ListPolicies(ctx, in)
 }
 
-func (c CasbinSourceServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
+func (c CasbinServiceBiz) ListGroupings(ctx context.Context, in *pb.ListGroupingsRequest) (*pb.ListGroupingsResponse, error) {
 	c.log.Debug("ListGroupings")
 	return c.dao.ListGroupings(ctx, in)
 }
 
-func (c CasbinSourceServiceBiz) WatchUpdate(_ context.Context,
+func (c CasbinServiceBiz) WatchUpdate(_ context.Context,
 	request *pb.WatchUpdateRequest) (*pb.WatchUpdateResponse, error) {
 	c.log.Debug("WatchUpdate")
 	return &pb.WatchUpdateResponse{ModifiedDate: c.lastModified.Load()}, nil
 }
 
-func (c CasbinSourceServiceBiz) UpdateRules() {
+func (c CasbinServiceBiz) UpdateRules() {
 	// todo: load from db
 	c.lastModified.Store(time.Now().Unix())
 }
 
-func (c CasbinSourceServiceBiz) streamPolicies(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+func (c CasbinServiceBiz) streamPolicies(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
 	policies, err := c.ListPolicies(ctx, &pb.ListPoliciesRequest{})
 	if err != nil {
 		return err
@@ -80,7 +80,7 @@ func (c CasbinSourceServiceBiz) streamPolicies(ctx context.Context, stream grpc.
 	return nil
 }
 
-func (c CasbinSourceServiceBiz) streamGroupings(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
+func (c CasbinServiceBiz) streamGroupings(ctx context.Context, stream grpc.ServerStreamingServer[pb.StreamRulesResponse]) error {
 	groupings, err := c.ListGroupings(ctx, &pb.ListGroupingsRequest{})
 	if err != nil {
 		return err
@@ -105,8 +105,8 @@ func newGroupingResponse(rule *pb.GroupingRule) *pb.StreamRulesResponse {
 	}
 }
 
-// NewCasbinSourceServiceBiz new a CasbinSource use case.
-func NewCasbinSourceServiceBiz(r *runtime.App, repo dto.CasbinSourceRepo) *CasbinSourceServiceBiz {
-	return &CasbinSourceServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(log.With(r.Logger(), "module", "biz/casbin")),
+// NewCasbinServiceBiz new a Casbin use case.
+func NewCasbinServiceBiz(r *runtime.App, repo dto.CasbinRepo) *CasbinServiceBiz {
+	return &CasbinServiceBiz{dao: repo, limiter: defaultLimiter, log: log.NewHelper(log.With(r.Logger(), "module", "biz/casbin")),
 		lastModified: &atomic.Int64{}}
 }

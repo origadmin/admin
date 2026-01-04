@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      # Mount the entire project to allow air to watch for changes
+      - .:/app
+    # The working_dir tells 'air' where to find its config
+    working_dir: /app/cmd/gateway
+    depends_on:
+      - auth
+      - system
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+    working_dir: /app/cmd/auth
+
+  system:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+    working_dir: /app/cmd/system

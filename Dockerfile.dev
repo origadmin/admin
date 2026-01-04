@@ -1,0 +1,18 @@
+# Dockerfile for DEVELOPMENT with live-reloading
+# Use a consistent Go version with the production Dockerfile
+FROM golang:1.25.3-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy go modules to cache dependencies.
+# This will also include the 'air' tool dependency.
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the rest of the source code
+COPY . .
+
+# Use 'go run' to execute the version of 'air' specified in go.mod.
+# This avoids installing it globally and ensures version consistency.
+CMD ["go", "run", "github.com/air-verse/air"]

@@ -18,7 +18,7 @@ type (
 	ListGroupingsResponse = pb.ListGroupingsResponse
 )
 
-type CasbinSourceRepo interface {
+type CasbinRepo interface {
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
 	ListGroupings(context.Context, *ListGroupingsRequest) (*ListGroupingsResponse, error)
 }

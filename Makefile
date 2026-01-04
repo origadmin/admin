@@ -10,6 +10,9 @@ PROTO_TOOLKITS_PATH=toolkits
 PROTO_API_PATH=api
 OPENAPI_DOCS_PATH=resources/api-docs/openapi
 
+# Path to the web UI submodule, relative to this Makefile
+WEBUI_PATH=./webui
+
 ifeq ($(GOHOSTOS), windows)
 	#the `find.exe` is different from `find` in bash/shell.
 	#to see https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/find.
@@ -61,16 +64,14 @@ endif
 
 BUILT_BY = $(PROJECT_ORG)
 
-ifeq ($(ENV), release)
-    LDFLAGS = -s -w
-endif
-MODULE_PATH=github.com/origadmin/toolkits/version
-LDFLAGS := -X $(MODULE_PATH).gitTag=$(TAG) \
-           -X $(MODULE_PATH).buildDate=$(BUILT_DATE) \
-           -X $(MODULE_PATH).gitCommit=$(COMMIT) \
-           -X $(MODULE_PATH).gitTreeState=$(TREE_STATE) \
-           -X $(MODULE_PATH).gitBranch=$(BRANCH) \
-           -X $(MODULE_PATH).gitVersion=$(VERSION)
+# LDFLAGS are now primarily managed by .goreleaser.yaml, but can be kept for direct go build commands if any.
+# We will let goreleaser handle the version injection to ensure consistency.
+LDFLAGS := -X github.com/origadmin/toolkits/version.gitTag=$(TAG) \
+           -X github.com/origadmin/toolkits/version.buildDate=$(BUILT_DATE) \
+           -X github.com/origadmin/toolkits/version.gitCommit=$(COMMIT) \
+           -X github.com/origadmin/toolkits/version.gitTreeState=$(TREE_STATE) \
+           -X github.com/origadmin/toolkits/version.gitBranch=$(BRANCH) \
+           -X github.com/origadmin/toolkits/version.gitVersion=$(VERSION)
 
 PROTO_PATH := --proto_path=. --proto_path=./third_party
 
@@ -114,20 +115,33 @@ ent:
 		--ent_out=./database/ent/schema \
 		api/v1/proto/secondworld/greeter.proto
 
-.PHONY: pre
-# pre
-pre:
-	goreleaser build --single-target --clean --snapshot
+.PHONY: build-ui
+# build the web UI from the submodule
+build-ui:
+	@echo "Building Web UI from submodule..."
+	@cd $(WEBUI_PATH) && npm install && npm run build
 
 .PHONY: build
-# build
+# build a standard backend-only snapshot binary
 build:
-	go build -ldflags "$(LDFLAGS)" -gcflags=all="-N -l" -o ./dist/ ./...
+	@echo "Building standard backend-only snapshot..."
+	goreleaser build --single-target --clean --snapshot
+
+.PHONY: build-all-in-one
+# build an all-in-one snapshot binary with embedded UI
+build-all-in-one: build-ui
+	@echo "Building all-in-one snapshot with embedded UI..."
+	goreleaser build --single-target --clean --snapshot --config .goreleaser.all-in-one.yaml
 
 .PHONY: release
-# release
+# create a full release (backend-only)
 release:
 	goreleaser release --clean
+
+.PHONY: release-all-in-one
+# create a full all-in-one release with embedded UI
+release-all-in-one: build-ui
+	goreleaser release --config .goreleaser.all-in-one.yaml --clean
 
 #.PHONY: server
 ## server used generate a service at first
