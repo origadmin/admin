@@ -419,6 +419,10 @@ message Permission {
   repeated int64 resource_ids = 10 [json_name = "resource_ids"];
   // permission.field.resources
   repeated Resource resources = 11 [json_name = "resources"];
+  // permission.field.view_ids
+  repeated int64 view_ids = 12 [json_name = "view_ids"];
+  // permission.field.views
+  repeated View views = 13 [json_name = "views"];
 }
 
 // PermissionEdges holds the relations/edges for other nodes in the graph.

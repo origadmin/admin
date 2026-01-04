@@ -2083,7 +2083,11 @@ type Permission struct {
 	// permission.field.resource_ids
 	ResourceIds []int64 `protobuf:"varint,10,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// permission.field.resources
-	Resources     []*Resource `protobuf:"bytes,11,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,11,rep,name=resources,proto3" json:"resources,omitempty"`
+	// permission.field.view_ids
+	ViewIds []int64 `protobuf:"varint,12,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
+	// permission.field.views
+	Views         []*View `protobuf:"bytes,13,rep,name=views,proto3" json:"views,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2191,6 +2195,20 @@ func (x *Permission) GetResourceIds() []int64 {
 func (x *Permission) GetResources() []*Resource {
 	if x != nil {
 		return x.Resources
+	}
+	return nil
+}
+
+func (x *Permission) GetViewIds() []int64 {
+	if x != nil {
+		return x.ViewIds
+	}
+	return nil
+}
+
+func (x *Permission) GetViews() []*View {
+	if x != nil {
+		return x.Views
 	}
 	return nil
 }
@@ -2976,7 +2994,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12C\n" +
 	"\vpermissions\x18\x03 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12K\n" +
 	"\x0euser_positions\x18\x04 \x03(\v2#.api.v1.services.types.UserPositionR\x0euser_positions\x12]\n" +
-	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\x93\x04\n" +
+	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xe2\x04\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
@@ -2994,7 +3012,9 @@ const file_types_system_proto_rawDesc = "" +
 	"data_rules\x12\"\n" +
 	"\fresource_ids\x18\n" +
 	" \x03(\x03R\fresource_ids\x12=\n" +
-	"\tresources\x18\v \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x1a<\n" +
+	"\tresources\x18\v \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x1a\n" +
+	"\bview_ids\x18\f \x03(\x03R\bview_ids\x121\n" +
+	"\x05views\x18\r \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x1a<\n" +
 	"\x0eDataRulesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd3\x03\n" +
@@ -3159,25 +3179,26 @@ var file_types_system_proto_depIdxs = []int32{
 	30, // 67: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
 	29, // 68: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
 	10, // 69: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
-	2,  // 70: api.v1.services.types.PermissionEdges.roles:type_name -> api.v1.services.types.Role
-	10, // 71: api.v1.services.types.PermissionEdges.resources:type_name -> api.v1.services.types.Resource
-	16, // 72: api.v1.services.types.PermissionEdges.positions:type_name -> api.v1.services.types.Position
-	24, // 73: api.v1.services.types.PermissionEdges.role_permissions:type_name -> api.v1.services.types.RolePermission
-	26, // 74: api.v1.services.types.PermissionEdges.permission_resources:type_name -> api.v1.services.types.PermissionResource
-	22, // 75: api.v1.services.types.PermissionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
-	4,  // 76: api.v1.services.types.UserPositionEdges.user:type_name -> api.v1.services.types.User
-	16, // 77: api.v1.services.types.UserPositionEdges.position:type_name -> api.v1.services.types.Position
-	16, // 78: api.v1.services.types.PositionPermissionEdges.position:type_name -> api.v1.services.types.Position
-	18, // 79: api.v1.services.types.PositionPermissionEdges.permission:type_name -> api.v1.services.types.Permission
-	2,  // 80: api.v1.services.types.RolePermissionEdges.role:type_name -> api.v1.services.types.Role
-	18, // 81: api.v1.services.types.RolePermissionEdges.permission:type_name -> api.v1.services.types.Permission
-	18, // 82: api.v1.services.types.PermissionResourceEdges.permission:type_name -> api.v1.services.types.Permission
-	10, // 83: api.v1.services.types.PermissionResourceEdges.resource:type_name -> api.v1.services.types.Resource
-	84, // [84:84] is the sub-list for method output_type
-	84, // [84:84] is the sub-list for method input_type
-	84, // [84:84] is the sub-list for extension type_name
-	84, // [84:84] is the sub-list for extension extendee
-	0,  // [0:84] is the sub-list for field type_name
+	0,  // 70: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
+	2,  // 71: api.v1.services.types.PermissionEdges.roles:type_name -> api.v1.services.types.Role
+	10, // 72: api.v1.services.types.PermissionEdges.resources:type_name -> api.v1.services.types.Resource
+	16, // 73: api.v1.services.types.PermissionEdges.positions:type_name -> api.v1.services.types.Position
+	24, // 74: api.v1.services.types.PermissionEdges.role_permissions:type_name -> api.v1.services.types.RolePermission
+	26, // 75: api.v1.services.types.PermissionEdges.permission_resources:type_name -> api.v1.services.types.PermissionResource
+	22, // 76: api.v1.services.types.PermissionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
+	4,  // 77: api.v1.services.types.UserPositionEdges.user:type_name -> api.v1.services.types.User
+	16, // 78: api.v1.services.types.UserPositionEdges.position:type_name -> api.v1.services.types.Position
+	16, // 79: api.v1.services.types.PositionPermissionEdges.position:type_name -> api.v1.services.types.Position
+	18, // 80: api.v1.services.types.PositionPermissionEdges.permission:type_name -> api.v1.services.types.Permission
+	2,  // 81: api.v1.services.types.RolePermissionEdges.role:type_name -> api.v1.services.types.Role
+	18, // 82: api.v1.services.types.RolePermissionEdges.permission:type_name -> api.v1.services.types.Permission
+	18, // 83: api.v1.services.types.PermissionResourceEdges.permission:type_name -> api.v1.services.types.Permission
+	10, // 84: api.v1.services.types.PermissionResourceEdges.resource:type_name -> api.v1.services.types.Resource
+	85, // [85:85] is the sub-list for method output_type
+	85, // [85:85] is the sub-list for method input_type
+	85, // [85:85] is the sub-list for extension type_name
+	85, // [85:85] is the sub-list for extension extendee
+	0,  // [0:85] is the sub-list for field type_name
 }
 
 func init() { file_types_system_proto_init() }

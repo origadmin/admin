@@ -3061,6 +3061,16 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
                     description: permission.field.resources
+                view_ids:
+                    type: array
+                    items:
+                        type: string
+                    description: permission.field.view_ids
+                views:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: permission.field.views
             description: permission.table.comment
         api.v1.services.types.Position:
             type: object
