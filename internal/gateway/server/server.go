@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/log"
 	kratoshttp "github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/goexts/generic/maps"
 	"github.com/google/wire"
 
 	"github.com/origadmin/runtime"
@@ -85,13 +86,14 @@ func NewHTTPServer(
 	// Try to get the handler for the embedded Web UI.
 	webUIHandler, err := web.GetHandler()
 	if err == nil {
-		log.NewHelper(app.Logger()).Info("msg", "Embedded Web UI is enabled and will be served.")
+		log.NewHelper(app.Logger()).Infow("msg", "Embedded Web UI is enabled and will be served.")
 		// If the handler is available, register it for the root path.
 		serverOpts = append(serverOpts)
 	} else {
-		log.NewHelper(app.Logger()).Warn("msg", "Embedded Web UI is disabled. To enable, build with '-tags embed_ui'.")
+		log.NewHelper(app.Logger()).Warnw("msg", "Embedded Web UI is disabled. To enable, build with '-tags embed_ui'.")
 	}
 
+	log.NewHelper(app.Logger()).Infow("msg", "Registering middleware", "middlewares", maps.Keys(mws))
 	opts := &http.ServerOptions{
 		ServerOptions:     serverOpts,
 		ServerMiddlewares: mws,

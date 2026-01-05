@@ -3,6 +3,18 @@ middlewares:
   configs:
     # Define a middleware instance named "security".
     # The 'type' must match the name we registered in main.go's init() function.
-    - name: security
-      type: security
+#    - name: security
+#      type: security
+#      enabled: true
+    - name: "logging"
+      type: "logging"
+      enabled: true
+    - name: "tracing"
+      type: "tracing"
+      enabled: true
+    - name: "metrics"
+      type: "metrics"
+      enabled: true
+    - name: "recovery"
+      type: "recovery"
       enabled: true

@@ -27,5 +27,8 @@ sources:
   - file:
       path: root_user.yaml
     type: file
+  - file:
+      path: middlewares.yaml
+    type: file
   # Environment variables are loaded last to override file settings.
   - type: env

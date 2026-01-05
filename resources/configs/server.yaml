@@ -19,6 +19,7 @@ servers:
             - "*"
           allow_credentials: true
         middlewares:
+          - "recovery"
           - "authn"
 
     # Auth Service gRPC Server
@@ -28,6 +29,7 @@ servers:
         addr: "0.0.0.0:9081"
         timeout: 5s
         middlewares:
+          - "recovery"
           - "authz"
     - name: "auth"
       protocol: "http"
@@ -35,6 +37,7 @@ servers:
         addr: "0.0.0.0:9082"
         timeout: 5s
         middlewares:
+          - "recovery"
           - "authz"
     # System Service gRPC Server
     - name: "system"
@@ -45,6 +48,7 @@ servers:
         # Apply middlewares by name. These names must correspond to entries
         # in the middlewares.yaml configuration file.
         middlewares:
+          - "recovery"
           - "authz"
     # System Service HTTP Server
     - name: "system"
@@ -54,4 +58,5 @@ servers:
         timeout: 5s
         # Apply middlewares by name.
         middlewares:
+          - "recovery"
           - "authz"

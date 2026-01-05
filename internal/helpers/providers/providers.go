@@ -179,7 +179,8 @@ func ProvideServiceMiddlewares(app *runtime.App, authorizer authz.Authorizer,
 	// authz for backend
 	provider.RegisterServerMiddleware("authz", m)
 	provider.RegisterClientMiddleware("authz", middleware.Noop())
-
+	helper := log.NewHelper(app.Logger())
+	helper.Infof("registered %+v middlewares", provider.Names())
 	return provider, nil
 }
 
@@ -194,7 +195,8 @@ func ProvideGatewayMiddlewares(app *runtime.App, authenticator authn.Authenticat
 	// authz for backend
 	provider.RegisterServerMiddleware("authn", m)
 	provider.RegisterClientMiddleware("authn", middleware.Noop())
-
+	helper := log.NewHelper(app.Logger())
+	helper.Infof("registered %+v middlewares", provider.Names())
 	return provider, nil
 }
 
@@ -208,6 +210,8 @@ func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvi
 	// authz for backend
 	provider.RegisterClientMiddleware("propagation", m)
 	provider.RegisterServerMiddleware("propagation", middleware.Noop())
+	helper := log.NewHelper(app.Logger())
+	helper.Infof("registered %+v client middlewares", provider.Names())
 	return provider, nil
 }
 

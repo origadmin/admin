@@ -139,6 +139,10 @@ func (c *Config) Transform(config interfaces.ConfigLoader, sc interfaces.Structu
 	if err != nil {
 		return nil, err
 	}
+	//var debugMap map[string]any
+	//if err = config.Decode("", &debugMap); err != nil {
+	//	return nil, err
+	//}
 	return c, nil
 }
 
