@@ -74,7 +74,18 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)
 	casbinService := service.NewCasbinService()
-	v2, err := server.NewServers(servers, authService, meService, casbinService, v)
+	authorizer, err := providers.ProvideAuthorizer(app, bootstrap, database)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	skipChecker := providers.ProvideSkipChecker(app, bootstrap)
+	serverMiddlewareProvider, err := providers.ProvideServiceMiddlewares(app, authorizer, skipChecker)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	v2, err := server.NewServers(app, servers, authService, meService, casbinService, serverMiddlewareProvider)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

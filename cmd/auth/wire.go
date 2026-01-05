@@ -7,7 +7,7 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
 
-	"github.comcom/origadmin/runtime"
+	"github.com/origadmin/runtime"
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data"
 	"origadmin/application/admin/internal/features/auth/biz"
@@ -22,7 +22,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 	panic(wire.Build(
 		// Shared infrastructure providers
 		providers.ProviderSet,
-		providers.ProviderBackendSet, // CORRECTED: Added the backend-specific security middleware providers.
+		providers.ProviderBackendSet,
 
 		// Service-specific providers
 		data.ProviderSet,

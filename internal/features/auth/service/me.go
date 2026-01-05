@@ -7,6 +7,7 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 
 	"github.com/origadmin/contrib/security/principal"
+	"github.com/origadmin/runtime/log"
 	v1 "origadmin/application/admin/api/v1/services/auth"
 	"origadmin/application/admin/internal/features/auth/biz"
 )
@@ -27,6 +28,7 @@ func (s *MeService) GetProfile(ctx context.Context, req *v1.GetProfileRequest) (
 	// Get the principal from the context, which is populated by the auth middleware.
 	p, ok := principal.FromContext(ctx)
 	if !ok {
+		log.Debugf("context type %T", ctx)
 		return nil, errors.Unauthorized("UNAUTHORIZED", "Missing user principal in context")
 	}
 

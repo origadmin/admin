@@ -1,21 +1,26 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package server
 
 import (
 	"errors"
 	stdhttp "net/http"
 
-	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 
-	"github.com/origadmin/runtime/log"
-	authv1 "origadmin/application/admin/api/v1/services/auth"
-	"origadmin/application/admin/internal/features/auth/service"
-
+	"github.com/origadmin/runtime"
 	grpcv1 "github.com/origadmin/runtime/api/gen/go/config/transport/grpc/v1"
 	httpv1 "github.com/origadmin/runtime/api/gen/go/config/transport/http/v1"
 	transportv1 "github.com/origadmin/runtime/api/gen/go/config/transport/v1"
+	"github.com/origadmin/runtime/container"
+	"github.com/origadmin/runtime/log"
+	"github.com/origadmin/runtime/service/transport"
+	"github.com/origadmin/runtime/service/transport/grpc"
+	"github.com/origadmin/runtime/service/transport/http"
+	authv1 "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/internal/features/auth/service"
 )
 
 // ProviderSet is server providers.
@@ -23,11 +28,12 @@ var ProviderSet = wire.NewSet(NewServers)
 
 // NewServers creates and configures the auth service servers (gRPC, HTTP).
 func NewServers(
+	app *runtime.App,
 	cfg *transportv1.Servers,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
 	casbinSvc *service.CasbinService,
-	logger log.Logger,
+	middlewareProvider container.ServerMiddlewareProvider,
 ) ([]transport.Server, error) {
 	if cfg == nil {
 		return nil, errors.New("servers config is nil")
@@ -40,13 +46,13 @@ func NewServers(
 		}
 		switch serverCfg.GetProtocol() {
 		case "http":
-			srv, err := NewHTTPServer(serverCfg.GetHttp(), authSvc, meSvc, casbinSvc, logger)
+			srv, err := NewHTTPServer(app, serverCfg.GetHttp(), authSvc, meSvc, casbinSvc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
 			transportServers = append(transportServers, srv)
 		case "grpc":
-			srv, err := NewGRPCServer(serverCfg.GetGrpc(), authSvc, meSvc, casbinSvc, logger)
+			srv, err := NewGRPCServer(app, serverCfg.GetGrpc(), authSvc, meSvc, casbinSvc, middlewareProvider)
 			if err != nil {
 				return nil, err
 			}
@@ -63,24 +69,29 @@ func NewServers(
 
 // NewHTTPServer new an HTTP server.
 func NewHTTPServer(
+	_ *runtime.App,
 	cfg *httpv1.Server,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
 	casbinSvc *service.CasbinService,
-	logger log.Logger,
-) (*http.Server, error) {
+	provider container.ServerMiddlewareProvider,
+) (*transport.HTTPServer, error) {
 	if cfg == nil {
 		return nil, errors.New("http config is nil")
 	}
 
-	var opts []http.ServerOption
-	if cfg.GetAddr() != "" {
-		opts = append(opts, http.Address(cfg.GetAddr()))
+	mws, err := provider.ServerMiddlewares()
+	if err != nil {
+		return nil, err
 	}
-	if cfg.GetTimeout() != nil {
-		opts = append(opts, http.Timeout(cfg.GetTimeout().AsDuration()))
+	opts := &http.ServerOptions{
+		ServerMiddlewares: mws,
 	}
-	srv := http.NewServer(opts...)
+
+	srv, err := http.NewServer(cfg, opts)
+	if err != nil {
+		return nil, err
+	}
 
 	// Register HTTP handlers
 	authv1.RegisterAuthServiceHTTPServer(srv, authSvc)
@@ -95,24 +106,28 @@ func NewHTTPServer(
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(
+	_ *runtime.App,
 	cfg *grpcv1.Server,
 	authSvc *service.AuthService,
 	meSvc *service.MeService,
 	casbinSvc *service.CasbinService,
-	logger log.Logger,
-) (*grpc.Server, error) {
+	provider container.ServerMiddlewareProvider,
+) (*transport.GRPCServer, error) {
 	if cfg == nil {
 		return nil, errors.New("grpc config is nil")
 	}
 
-	var opts []grpc.ServerOption
-	if cfg.GetAddr() != "" {
-		opts = append(opts, grpc.Address(cfg.GetAddr()))
+	mws, err := provider.ServerMiddlewares()
+	if err != nil {
+		return nil, err
 	}
-	if cfg.GetTimeout() != nil {
-		opts = append(opts, grpc.Timeout(cfg.GetTimeout().AsDuration()))
+	opts := &grpc.ServerOptions{
+		ServerMiddlewares: mws,
 	}
-	srv := grpc.NewServer(opts...)
+	srv, err := grpc.NewServer(cfg, opts)
+	if err != nil {
+		return nil, err
+	}
 
 	// Register gRPC handlers
 	authv1.RegisterAuthServiceServer(srv, authSvc)
