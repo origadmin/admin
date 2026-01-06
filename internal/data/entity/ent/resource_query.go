@@ -785,7 +785,7 @@ func (_q *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	  VersionID string `json:"version_id,omitempty"`
 //	  LastSyncVersionID string `json:"last_sync_version_id,omitempty"`
 //	  SyncStatus string `json:"sync_status,omitempty"`
-//	  Status resource.Status `json:"status,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
 //	}
 //
 //	client.Resource.Query().

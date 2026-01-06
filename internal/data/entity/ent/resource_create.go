@@ -10,6 +10,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -162,13 +163,13 @@ func (_c *ResourceCreate) SetNillableSyncStatus(v *string) *ResourceCreate {
 }
 
 // SetStatus sets the "status" field.
-func (_c *ResourceCreate) SetStatus(v resource.Status) *ResourceCreate {
+func (_c *ResourceCreate) SetStatus(v enums.Status) *ResourceCreate {
 	_c.mutation.SetStatus(v)
 	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_c *ResourceCreate) SetNillableStatus(v *resource.Status) *ResourceCreate {
+func (_c *ResourceCreate) SetNillableStatus(v *enums.Status) *ResourceCreate {
 	if v != nil {
 		_c.SetStatus(*v)
 	}
@@ -337,11 +338,6 @@ func (_c *ResourceCreate) check() error {
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
 	}
-	if v, ok := _c.mutation.Status(); ok {
-		if err := resource.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Resource.status": %w`, err)}
-		}
-	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := resource.IDValidator(v); err != nil {
 			return &ValidationError{Name: "id", err: fmt.Errorf(`ent: validator failed for field "Resource.id": %w`, err)}
@@ -424,7 +420,7 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_node.SyncStatus = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
-		_spec.SetField(resource.FieldStatus, field.TypeEnum, value)
+		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
 	if nodes := _c.mutation.ViewsIDs(); len(nodes) > 0 {

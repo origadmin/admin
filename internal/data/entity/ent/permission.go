@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
+	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
 
@@ -33,8 +34,8 @@ type Permission struct {
 	DataScope string `json:"data_scope,omitempty"`
 	// entity.permission.field.data_rules
 	DataRules map[string]string `json:"data_rules,omitempty"`
-	// entity.permission.field.status.comment
-	Status permission.Status `json:"status,omitempty"`
+	// entity.permission.field.status
+	Status enums.Status `json:"status,omitempty"`
 	// entity.permission.field.actions
 	Actions permission.Actions `json:"actions,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -145,9 +146,9 @@ func (*Permission) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case permission.FieldDataRules:
 			values[i] = new([]byte)
-		case permission.FieldID:
+		case permission.FieldID, permission.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldStatus, permission.FieldActions:
+		case permission.FieldName, permission.FieldKeyword, permission.FieldDescription, permission.FieldDataScope, permission.FieldActions:
 			values[i] = new(sql.NullString)
 		case permission.FieldCreateTime, permission.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -217,10 +218,10 @@ func (_m *Permission) assignValues(columns []string, values []any) error {
 				}
 			}
 		case permission.FieldStatus:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				_m.Status = permission.Status(value.String)
+				_m.Status = enums.Status(value.Int64)
 			}
 		case permission.FieldActions:
 			if value, ok := values[i].(*sql.NullString); !ok {

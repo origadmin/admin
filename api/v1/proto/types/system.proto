@@ -32,46 +32,34 @@ message View {
   int32 sequence = 9 [json_name = "sequence"];
   // Type holds the value of the "type" field.
   string type = 10 [json_name = "type"];
+  // Component holds the value of the "component" field.
+  string component = 11 [json_name = "component"];
   // Comment holds the value of the "comment" field.
-  string comment = 11 [json_name = "comment"];
+  string comment = 12 [json_name = "comment"];
   // Icon holds the value of the "icon" field.
-  string icon = 12 [json_name = "icon"];
+  string icon = 13 [json_name = "icon"];
   // Visible holds the value of the "visible" field.
-  bool visible = 13 [json_name = "visible"];
+  bool visible = 14 [json_name = "visible"];
   // Path holds the value of the "path" field.
-  string path = 14 [json_name = "path"];
+  string path = 15 [json_name = "path"];
   // TreePath holds the value of the "tree_path" field.
-  string tree_path = 15 [json_name = "tree_path"];
+  string tree_path = 16 [json_name = "tree_path"];
   // Properties holds the value of the "properties" field.
-  string properties = 16 [json_name = "properties"];
+  string properties = 17 [json_name = "properties"];
   // Status holds the value of the "status" field.
-  int32 status = 17 [json_name = "status"];
+  int32 status = 18 [json_name = "status"];
   // ParentID holds the value of the "parent_id" field.
-  int64 parent_id = 18 [json_name = "parent_id"];
+  int64 parent_id = 19 [json_name = "parent_id"];
   // ParentPath holds the value of the "parent_path" field.
-  string parent_path = 19 [json_name = "parent_path"];
+  string parent_path = 20 [json_name = "parent_path"];
   // Children holds the value of the children edge.
-  repeated View children = 20 [json_name = "children"];
+  repeated View children = 21 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  View parent = 21 [json_name = "parent"];
+  View parent = 22 [json_name = "parent"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 22 [json_name = "resources"];
+  repeated Resource resources = 23 [json_name = "resources"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 23 [json_name = "roles"];
-}
-
-// ViewEdges holds the relations/edges for other nodes in the graph.
-message ViewEdges {
-  // Children holds the value of the children edge.
-  repeated View children = 1 [json_name = "children"];
-  // Parent holds the value of the parent edge.
-  View parent = 2 [json_name = "parent"];
-  // Resources holds the value of the resources edge.
-  repeated Resource resources = 3 [json_name = "resources"];
-  // Roles holds the value of the roles edge.
-  repeated Role roles = 4 [json_name = "roles"];
-  // RoleView holds the value of the role_view edge.
-  repeated RoleView role_views = 5 [json_name = "role_views"];
+  repeated Role roles = 24 [json_name = "roles"];
 }
 
 // Role is the model entity for the Role schema.
@@ -83,44 +71,40 @@ message Role {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // create_author.field.comment
+  int64 create_author = 4 [json_name = "create_author"];
+  // update_author.field.comment
+  int64 update_author = 5 [json_name = "update_author"];
   // role.field.keyword
-  string keyword = 4 [json_name = "keyword"];
+  string keyword = 6 [json_name = "keyword"];
   // role.field.name
-  string name = 5 [json_name = "name"];
+  string name = 7 [json_name = "name"];
   // role.field.description
-  string description = 6 [json_name = "description"];
+  string description = 8 [json_name = "description"];
   // role.field.type
-  int32 type = 7 [json_name = "type"];
+  int32 type = 9 [json_name = "type"];
   // role.field.sequence
-  int32 sequence = 8 [json_name = "sequence"];
+  int32 sequence = 10 [json_name = "sequence"];
   // role.field.status
-  int32 status = 9 [json_name = "status"];
+  int32 status = 11 [json_name = "status"];
   // role.field.is_types
-  bool is_types = 10 [json_name = "is_types"];
+  bool is_types = 12 [json_name = "is_types"];
   // Views holds the value of the views edge.
   repeated View views = 21 [json_name = "views"];
+  // View Ids holds the value of the view_ids edge.
+  repeated int64 view_ids = 20 [json_name = "view_ids"];
   // Users holds the value of the users edge.
   repeated User users = 22 [json_name = "users"];
+  // Users Ids holds the value of the user_ids edge.
+  repeated int64 user_ids = 23 [json_name = "user_ids"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 23 [json_name = "resources"];
+  repeated Resource resources = 24 [json_name = "resources"];
   // Resource Ids holds the value of the resource_ids edge.
-  repeated int64 resource_ids = 24 [json_name = "resource_ids"];
+  repeated int64 resource_ids = 25 [json_name = "resource_ids"];
   // Permissions holds the value of the permissions edge.
-  repeated Permission permissions = 25 [json_name = "permissions"];
+  repeated Permission permissions = 26 [json_name = "permissions"];
   // Permission Ids holds the value of the permission_ids edge.
-  repeated int64 permission_ids = 26 [json_name = "permission_ids"];
-}
-
-// RoleEdges holds the relations/edges for other nodes in the graph.
-message RoleEdges {
-  // Views holds the value of the views edge.
-  repeated View views = 1 [json_name = "views"];
-  // Users holds the value of the users edge.
-  repeated User users = 2 [json_name = "users"];
-  // RoleView holds the value of the role_view edge.
-  repeated RoleView role_views = 3 [json_name = "role_views"];
-  // UserRole holds the value of the user_role edge.
-  repeated UserRole user_roles = 4 [json_name = "user_roles"];
+  repeated int64 permission_ids = 27 [json_name = "permission_ids"];
 }
 
 // User is the model entity for the User schema.
@@ -128,14 +112,14 @@ message User {
   // ID of the ent.
   // field.primary_key.comment
   int64 id = 1 [json_name = "id"];
-  // create_author.field.comment
-  int64 create_author = 2 [json_name = "create_author"];
-  // update_author.field.comment
-  int64 update_author = 3 [json_name = "update_author"];
   // create_time.field.comment
-  google.protobuf.Timestamp create_time = 4 [json_name = "create_time"];
+  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
-  google.protobuf.Timestamp update_time = 5 [json_name = "update_time"];
+  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // create_author.field.comment
+  int64 create_author = 4 [json_name = "create_author"];
+  // update_author.field.comment
+  int64 update_author = 5 [json_name = "update_author"];
   // user.field.uuid
   string uuid = 6 [json_name = "uuid"];
   // user.field.allowed_ip
@@ -160,32 +144,22 @@ message User {
   string token = 16 [json_name = "token"];
   // user.field.status
   int32 status = 17 [json_name = "status"];
+  // user.field.i18n
+  string i18n = 18 [json_name = "i18n"];
   // user.field.last_login_ip
-  string last_login_ip = 18 [json_name = "last_login_ip"];
+  string last_login_ip = 19 [json_name = "last_login_ip"];
   // user.field.login_ip
-  string login_ip = 19 [json_name = "login_ip"];
+  string login_ip = 20 [json_name = "login_ip"];
   // user.field.last_login_time
-  google.protobuf.Timestamp last_login_time = 20 [json_name = "last_login_time"];
+  google.protobuf.Timestamp last_login_time = 21 [json_name = "last_login_time"];
   // user.field.login_time
-  google.protobuf.Timestamp login_time = 21 [json_name = "login_time"];
+  google.protobuf.Timestamp login_time = 22 [json_name = "login_time"];
   // user.field.sanction_date
-  optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
-  //  // user.field.manager_id
-  //  int64 manager_id = 21 [json_name = "manager_id"];
-  //  // user.field.manager
-  //  string manager = 22 [json_name = "manager"];
+  optional google.protobuf.Timestamp sanction_date = 23 [json_name = "sanction_date"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 23 [json_name = "roles"];
+  repeated Role roles = 24 [json_name = "roles"];
   // Role Ids holds the value of the role_ids
-  repeated int64 role_ids = 24 [json_name = "role_ids"];
-}
-
-// UserEdges holds the relations/edges for other nodes in the graph.
-message UserEdges {
-  // Roles holds the value of the roles edge.
-  repeated Role roles = 1 [json_name = "roles"];
-  // UserRole holds the value of the user_role edge.
-  repeated UserRole user_roles = 2 [json_name = "user_roles"];
+  repeated int64 role_ids = 25 [json_name = "role_ids"];
 }
 
 // UserRole is the model entity for the UserRole schema.
@@ -208,14 +182,6 @@ message UserRole {
   Role role = 22 [json_name = "role"];
 }
 
-// UserRoleEdges holds the relations/edges for other nodes in the graph.
-message UserRoleEdges {
-  // User holds the value of the user edge.
-  User user = 1 [json_name = "user"];
-  // Role holds the value of the role edge.
-  Role role = 2 [json_name = "role"];
-}
-
 // RoleView is the model entity for the RoleView schema.
 message RoleView {
   // ID of the ent.
@@ -234,14 +200,6 @@ message RoleView {
   View view = 22 [json_name = "view"];
 }
 
-// RoleViewEdges holds the relations/edges for other nodes in the graph.
-message RoleViewEdges {
-  // Role holds the value of the role edge.
-  Role role = 1 [json_name = "role"];
-  // View holds the value of the view edge.
-  View view = 2 [json_name = "view"];
-}
-
 // Resource is the model entity for the Resource schema.
 message Resource {
   // ID of the ent.
@@ -251,30 +209,26 @@ message Resource {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // create_author.field.comment
+  int64 create_author = 4 [json_name = "create_author"];
+  // update_author.field.comment
+  int64 update_author = 5 [json_name = "update_author"];
   // resource.field.name
-  string name = 4 [json_name = "name"];
+  string name = 6 [json_name = "name"];
   // resource.field.keyword
-  string keyword = 5 [json_name = "keyword"];
-  // resource.field.i18n_key
-  string i18n_key = 6 [json_name = "i18n_key"];
+  string keyword = 7 [json_name = "keyword"];
   // resource.field.type
-  string type = 7 [json_name = "type"];
+  string type = 9 [json_name = "type"];
   // resource.field.status
-  int32 status = 8 [json_name = "status"];
+  int32 status = 10 [json_name = "status"];
   // resource.field.path
-  string path = 9 [json_name = "path"];
+  string path = 11 [json_name = "path"];
   // resource.field.operation
-  string operation = 10 [json_name = "operation"];
+  string operation = 12 [json_name = "operation"];
   // resource.field.method
-  string method = 11 [json_name = "method"];
-  // resource.field.component
-  string component = 12 [json_name = "component"];
-  // resource.field.icon
-  string icon = 13 [json_name = "icon"];
+  string method = 13 [json_name = "method"];
   // resource.field.sequence
   int32 sequence = 14 [json_name = "sequence"];
-  // resource.field.visible
-  bool visible = 15 [json_name = "visible"];
   // resource.field.tree_path
   string tree_path = 16 [json_name = "tree_path"];
   // resource.field.properties
@@ -291,12 +245,8 @@ message Resource {
   repeated int64 permission_ids = 23 [json_name = "permission_ids"];
   // Permissions holds the value of the permissions edge.
   repeated Permission permissions = 24 [json_name = "permissions"];
-}
 
-// ResourceEdges holds the relations/edges for other nodes in the graph.
-message ResourceEdges {
-  // View holds the value of the view edge.
-  View view = 1 [json_name = "view"];
+  string service_name = 25 [json_name = "service_name"];
 }
 
 // department.table.comment
@@ -308,39 +258,30 @@ message Department {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // create_author.field.comment
+  int64 create_author = 4 [json_name = "create_author"];
+  // update_author.field.comment
+  int64 update_author = 5 [json_name = "update_author"];
   // department.field.keyword
-  string keyword = 4 [json_name = "keyword"];
+  string keyword = 6 [json_name = "keyword"];
   // department.field.name
-  string name = 5 [json_name = "name"];
+  string name = 7 [json_name = "name"];
   // department.field.tree_path
-  string tree_path = 6 [json_name = "tree_path"];
+  string tree_path = 8 [json_name = "tree_path"];
   // department.field.sequence
-  int32 sequence = 7 [json_name = "sequence"];
+  int32 sequence = 9 [json_name = "sequence"];
   // department.field.status
-  int32 status = 8 [json_name = "status"];
+  int32 status = 10 [json_name = "status"];
   // department.field.level
-  int32 level = 9 [json_name = "level"];
+  int32 level = 11 [json_name = "level"];
   // department.field.description
-  string description = 10 [json_name = "description"];
+  string description = 12 [json_name = "description"];
   // department.field.parent_id
-  int64 parent_id = 11 [json_name = "parent_id"];
+  int64 parent_id = 13 [json_name = "parent_id"];
   // Children holds the value of the children edge.
-  repeated Department children = 12 [json_name = "children"];
+  repeated Department children = 14 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Department parent = 13 [json_name = "parent"];
-}
-
-message DepartmentEdges {
-  // Users holds the value of the users edge.
-  repeated User users = 1 [json_name = "users"];
-  // Positions holds the value of the positions edge.
-  repeated Position positions = 2 [json_name = "positions"];
-  // Children holds the value of the children edge.
-  repeated Department children = 3 [json_name = "children"];
-  // Parent holds the value of the parent edge.
-  Department parent = 4 [json_name = "parent"];
-  // UserDepartments holds the value of the user_departments edge.
-  repeated UserDepartment user_departments = 5 [json_name = "user_departments"];
+  Department parent = 15 [json_name = "parent"];
 }
 
 // user_department.table.comment
@@ -352,17 +293,6 @@ message UserDepartment {
   int64 user_id = 2 [json_name = "user_id"];
   // field.foreign_key.comment
   int64 department_id = 3 [json_name = "department_id"];
-  // Edges holds the relations/edges for other nodes in the graph.
-  // The values are being populated by the UserDepartmentQuery when eager-loading is set.
-  UserDepartmentEdges edges = 4 [json_name = "edges"];
-}
-
-// UserDepartmentEdges holds the relations/edges for other nodes in the graph.
-message UserDepartmentEdges {
-  // User holds the value of the user edge.
-  User user = 1 [json_name = "user"];
-  // Department holds the value of the department edge.
-  Department department = 2 [json_name = "department"];
 }
 
 // position.table.comment
@@ -374,28 +304,18 @@ message Position {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // create_author.field.comment
+  int64 create_author = 4 [json_name = "create_author"];
+  // update_author.field.comment
+  int64 update_author = 5 [json_name = "update_author"];
   // position.field.name
-  string name = 4 [json_name = "name"];
+  string name = 6 [json_name = "name"];
   // position.field.keyword
-  string keyword = 5 [json_name = "keyword"];
+  string keyword = 7 [json_name = "keyword"];
   // position.field.description
-  string description = 6 [json_name = "description"];
+  string description = 8 [json_name = "description"];
   // department.field.department_id
-  int64 department_id = 7 [json_name = "department_id"];
-}
-
-// PositionEdges holds the relations/edges for other nodes in the graph.
-message PositionEdges {
-  // Department holds the value of the department edge.
-  Department department = 1 [json_name = "department"];
-  // Users holds the value of the users edge.
-  repeated User users = 2 [json_name = "users"];
-  // Permissions holds the value of the permissions edge.
-  repeated Permission permissions = 3 [json_name = "permissions"];
-  // UserPositions holds the value of the user_positions edge.
-  repeated UserPosition user_positions = 4 [json_name = "user_positions"];
-  // PositionPermissions holds the value of the position_permissions edge.
-  repeated PositionPermission position_permissions = 5 [json_name = "position_permissions"];
+  int64 department_id = 9 [json_name = "department_id"];
 }
 
 // permission.table.comment
@@ -407,42 +327,30 @@ message Permission {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
+  // create_author.field.comment
+  int64 create_author = 4 [json_name = "create_author"];
+  // update_author.field.comment
+  int64 update_author = 5 [json_name = "update_author"];
   // permission.field.name
-  string name = 4 [json_name = "name"];
+  string name = 6 [json_name = "name"];
   // permission.field.keyword
-  string keyword = 5 [json_name = "keyword"];
+  string keyword = 7 [json_name = "keyword"];
   // permission.field.status
-  int32 status = 6 [json_name = "status"];
+  int32 status = 8 [json_name = "status"];
   // permission.field.description
-  string description = 7 [json_name = "description"];
+  string description = 9 [json_name = "description"];
   // permission.field.data_scope
-  string data_scope = 8 [json_name = "data_scope"];
+  string data_scope = 10 [json_name = "data_scope"];
   // permission.field.data_rules
-  map<string, string> data_rules = 9 [json_name = "data_rules"];
+  map<string, string> data_rules = 11 [json_name = "data_rules"];
   // permission.field.resource_ids
-  repeated int64 resource_ids = 10 [json_name = "resource_ids"];
+  repeated int64 resource_ids = 12 [json_name = "resource_ids"];
   // permission.field.resources
-  repeated Resource resources = 11 [json_name = "resources"];
+  repeated Resource resources = 13 [json_name = "resources"];
   // permission.field.view_ids
-  repeated int64 view_ids = 12 [json_name = "view_ids"];
+  repeated int64 view_ids = 14 [json_name = "view_ids"];
   // permission.field.views
-  repeated View views = 13 [json_name = "views"];
-}
-
-// PermissionEdges holds the relations/edges for other nodes in the graph.
-message PermissionEdges {
-  // Roles holds the value of the roles edge.
-  repeated Role roles = 1 [json_name = "roles"];
-  // Resources holds the value of the resources edge.
-  repeated Resource resources = 2 [json_name = "resources"];
-  // Positions holds the value of the positions edge.
-  repeated Position positions = 3 [json_name = "positions"];
-  // RolePermissions holds the value of the role_permissions edge.
-  repeated RolePermission role_permissions = 4 [json_name = "role_permissions"];
-  // PermissionResources holds the value of the permission_resources edge.
-  repeated PermissionResource permission_resources = 5 [json_name = "permission_resources"];
-  // PositionPermissions holds the value of the position_permissions edge.
-  repeated PositionPermission position_permissions = 6 [json_name = "position_permissions"];
+  repeated View views = 15 [json_name = "views"];
 }
 
 // user_position.table.comment
@@ -456,14 +364,6 @@ message UserPosition {
   int64 position_id = 3 [json_name = "position_id"];
 }
 
-// UserPositionEdges holds the relations/edges for other nodes in the graph.
-message UserPositionEdges {
-  // User holds the value of the user edge.
-  User user = 1 [json_name = "user"];
-  // Position holds the value of the position edge.
-  Position position = 2 [json_name = "position"];
-}
-
 // position_permission.table.comment
 message PositionPermission {
   // ID of the ent.
@@ -473,14 +373,6 @@ message PositionPermission {
   int64 position_id = 2 [json_name = "position_id"];
   // position_permission.field.permission_id
   int64 permission_id = 3 [json_name = "permission_id"];
-}
-
-// PositionPermissionEdges holds the relations/edges for other nodes in the graph.
-message PositionPermissionEdges {
-  // Position holds the value of the position edge.
-  Position position = 1 [json_name = "position"];
-  // Permission holds the value of the permission edge.
-  Permission permission = 2 [json_name = "permission"];
 }
 
 // role_permission.table.comment
@@ -494,14 +386,6 @@ message RolePermission {
   int64 permission_id = 3 [json_name = "permission_id"];
 }
 
-// RolePermissionEdges holds the relations/edges for other nodes in the graph.
-message RolePermissionEdges {
-  // Role holds the value of the role edge.
-  Role role = 1 [json_name = "role"];
-  // Permission holds the value of the permission edge.
-  Permission permission = 2 [json_name = "permission"];
-}
-
 // permission_resource.table.comment
 message PermissionResource {
   // ID of the ent.
@@ -513,12 +397,4 @@ message PermissionResource {
   int64 resource_id = 3 [json_name = "resource_id"];
   // permission_resource.field.actions
   string actions = 4 [json_name = "actions"];
-}
-
-// PermissionResourceEdges holds the relations/edges for other nodes in the graph.
-message PermissionResourceEdges {
-  // Permission holds the value of the permission edge.
-  Permission permission = 1 [json_name = "permission"];
-  // Resource holds the value of the resource edge.
-  Resource resource = 2 [json_name = "resource"];
 }

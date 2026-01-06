@@ -16,6 +16,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -112,16 +113,23 @@ func (_u *PermissionUpdate) ClearDataRules() *PermissionUpdate {
 }
 
 // SetStatus sets the "status" field.
-func (_u *PermissionUpdate) SetStatus(v permission.Status) *PermissionUpdate {
+func (_u *PermissionUpdate) SetStatus(v enums.Status) *PermissionUpdate {
+	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *PermissionUpdate) SetNillableStatus(v *permission.Status) *PermissionUpdate {
+func (_u *PermissionUpdate) SetNillableStatus(v *enums.Status) *PermissionUpdate {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *PermissionUpdate) AddStatus(v enums.Status) *PermissionUpdate {
+	_u.mutation.AddStatus(v)
 	return _u
 }
 
@@ -485,11 +493,6 @@ func (_u *PermissionUpdate) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Status(); ok {
-		if err := permission.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Actions(); ok {
 		if err := permission.ActionsValidator(v); err != nil {
 			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
@@ -538,7 +541,10 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.Status(); ok {
-		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
+		_spec.SetField(permission.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(permission.FieldStatus, field.TypeInt8, value)
 	}
 	if value, ok := _u.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)
@@ -1021,16 +1027,23 @@ func (_u *PermissionUpdateOne) ClearDataRules() *PermissionUpdateOne {
 }
 
 // SetStatus sets the "status" field.
-func (_u *PermissionUpdateOne) SetStatus(v permission.Status) *PermissionUpdateOne {
+func (_u *PermissionUpdateOne) SetStatus(v enums.Status) *PermissionUpdateOne {
+	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *PermissionUpdateOne) SetNillableStatus(v *permission.Status) *PermissionUpdateOne {
+func (_u *PermissionUpdateOne) SetNillableStatus(v *enums.Status) *PermissionUpdateOne {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *PermissionUpdateOne) AddStatus(v enums.Status) *PermissionUpdateOne {
+	_u.mutation.AddStatus(v)
 	return _u
 }
 
@@ -1407,11 +1420,6 @@ func (_u *PermissionUpdateOne) check() error {
 			return &ValidationError{Name: "description", err: fmt.Errorf(`ent: validator failed for field "Permission.description": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Status(); ok {
-		if err := permission.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
-		}
-	}
 	if v, ok := _u.mutation.Actions(); ok {
 		if err := permission.ActionsValidator(v); err != nil {
 			return &ValidationError{Name: "actions", err: fmt.Errorf(`ent: validator failed for field "Permission.actions": %w`, err)}
@@ -1477,7 +1485,10 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 		_spec.ClearField(permission.FieldDataRules, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.Status(); ok {
-		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
+		_spec.SetField(permission.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(permission.FieldStatus, field.TypeInt8, value)
 	}
 	if value, ok := _u.mutation.Actions(); ok {
 		_spec.SetField(permission.FieldActions, field.TypeEnum, value)

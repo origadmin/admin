@@ -1217,7 +1217,7 @@ func (_q *PermissionQuery) Modify(modifiers ...func(s *sql.Selector)) *Permissio
 //	  Description string `json:"description,omitempty"`
 //	  DataScope string `json:"data_scope,omitempty"`
 //	  DataRules map[string]string `json:"data_rules,omitempty"`
-//	  Status permission.Status `json:"status,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
 //	  Actions permission.Actions `json:"actions,omitempty"`
 //	}
 //

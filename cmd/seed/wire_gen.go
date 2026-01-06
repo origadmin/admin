@@ -41,7 +41,11 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*seeder.Seeder, func(), 
 		return nil, nil, err
 	}
 	userUseCase := biz.NewUserUseCase(userRepo, crypto)
-	seederSeeder, err := seeder.NewSeeder(userUseCase, bootstrap, v)
+	resourceRepo := dal.NewResourceRepo(database)
+	resourceUseCase := biz.NewResourceUseCase(resourceRepo)
+	viewRepo := dal.NewViewRepo(database)
+	viewUseCase := biz.NewViewUseCase(viewRepo)
+	seederSeeder, err := seeder.NewSeeder(userUseCase, resourceUseCase, viewUseCase, bootstrap, v)
 	if err != nil {
 		cleanup()
 		return nil, nil, err

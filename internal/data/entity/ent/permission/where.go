@@ -4,6 +4,7 @@ package permission
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -83,6 +84,12 @@ func Description(v string) predicate.Permission {
 // DataScope applies equality check predicate on the "data_scope" field. It's identical to DataScopeEQ.
 func DataScope(v string) predicate.Permission {
 	return predicate.Permission(sql.FieldEQ(FieldDataScope, v))
+}
+
+// Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
+func Status(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldEQ(FieldStatus, vc))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -436,23 +443,57 @@ func DataRulesNotNil() predicate.Permission {
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
-func StatusEQ(v Status) predicate.Permission {
-	return predicate.Permission(sql.FieldEQ(FieldStatus, v))
+func StatusEQ(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldEQ(FieldStatus, vc))
 }
 
 // StatusNEQ applies the NEQ predicate on the "status" field.
-func StatusNEQ(v Status) predicate.Permission {
-	return predicate.Permission(sql.FieldNEQ(FieldStatus, v))
+func StatusNEQ(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldNEQ(FieldStatus, vc))
 }
 
 // StatusIn applies the In predicate on the "status" field.
-func StatusIn(vs ...Status) predicate.Permission {
-	return predicate.Permission(sql.FieldIn(FieldStatus, vs...))
+func StatusIn(vs ...enums.Status) predicate.Permission {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Permission(sql.FieldIn(FieldStatus, v...))
 }
 
 // StatusNotIn applies the NotIn predicate on the "status" field.
-func StatusNotIn(vs ...Status) predicate.Permission {
-	return predicate.Permission(sql.FieldNotIn(FieldStatus, vs...))
+func StatusNotIn(vs ...enums.Status) predicate.Permission {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Permission(sql.FieldNotIn(FieldStatus, v...))
+}
+
+// StatusGT applies the GT predicate on the "status" field.
+func StatusGT(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldGT(FieldStatus, vc))
+}
+
+// StatusGTE applies the GTE predicate on the "status" field.
+func StatusGTE(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldGTE(FieldStatus, vc))
+}
+
+// StatusLT applies the LT predicate on the "status" field.
+func StatusLT(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldLT(FieldStatus, vc))
+}
+
+// StatusLTE applies the LTE predicate on the "status" field.
+func StatusLTE(v enums.Status) predicate.Permission {
+	vc := int8(v)
+	return predicate.Permission(sql.FieldLTE(FieldStatus, vc))
 }
 
 // ActionsEQ applies the EQ predicate on the "actions" field.

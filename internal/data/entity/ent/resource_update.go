@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -183,16 +184,23 @@ func (_u *ResourceUpdate) SetNillableSyncStatus(v *string) *ResourceUpdate {
 }
 
 // SetStatus sets the "status" field.
-func (_u *ResourceUpdate) SetStatus(v resource.Status) *ResourceUpdate {
+func (_u *ResourceUpdate) SetStatus(v enums.Status) *ResourceUpdate {
+	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *ResourceUpdate) SetNillableStatus(v *resource.Status) *ResourceUpdate {
+func (_u *ResourceUpdate) SetNillableStatus(v *enums.Status) *ResourceUpdate {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *ResourceUpdate) AddStatus(v enums.Status) *ResourceUpdate {
+	_u.mutation.AddStatus(v)
 	return _u
 }
 
@@ -352,11 +360,6 @@ func (_u *ResourceUpdate) check() error {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Status(); ok {
-		if err := resource.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Resource.status": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -418,7 +421,10 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 		_spec.SetField(resource.FieldSyncStatus, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
-		_spec.SetField(resource.FieldStatus, field.TypeEnum, value)
+		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
 	}
 	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -749,16 +755,23 @@ func (_u *ResourceUpdateOne) SetNillableSyncStatus(v *string) *ResourceUpdateOne
 }
 
 // SetStatus sets the "status" field.
-func (_u *ResourceUpdateOne) SetStatus(v resource.Status) *ResourceUpdateOne {
+func (_u *ResourceUpdateOne) SetStatus(v enums.Status) *ResourceUpdateOne {
+	_u.mutation.ResetStatus()
 	_u.mutation.SetStatus(v)
 	return _u
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_u *ResourceUpdateOne) SetNillableStatus(v *resource.Status) *ResourceUpdateOne {
+func (_u *ResourceUpdateOne) SetNillableStatus(v *enums.Status) *ResourceUpdateOne {
 	if v != nil {
 		_u.SetStatus(*v)
 	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *ResourceUpdateOne) AddStatus(v enums.Status) *ResourceUpdateOne {
+	_u.mutation.AddStatus(v)
 	return _u
 }
 
@@ -931,11 +944,6 @@ func (_u *ResourceUpdateOne) check() error {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
 	}
-	if v, ok := _u.mutation.Status(); ok {
-		if err := resource.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Resource.status": %w`, err)}
-		}
-	}
 	return nil
 }
 
@@ -1014,7 +1022,10 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 		_spec.SetField(resource.FieldSyncStatus, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
-		_spec.SetField(resource.FieldStatus, field.TypeEnum, value)
+		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(resource.FieldStatus, field.TypeInt8, value)
 	}
 	if _u.mutation.ViewsCleared() {
 		edge := &sqlgraph.EdgeSpec{

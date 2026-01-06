@@ -23,9 +23,9 @@ require (
 	github.com/origadmin/contrib v1.2.0
 	github.com/origadmin/runtime v0.2.15
 	github.com/origadmin/slog-kratos v1.0.5 // indirect
-	github.com/origadmin/toolkits/codec v1.3.0
+	github.com/origadmin/toolkits/codec v1.3.1
 	github.com/origadmin/toolkits/crypto v1.3.0
-	github.com/origadmin/toolkits/errors v1.2.0
+	github.com/origadmin/toolkits/errors v1.3.1
 	github.com/sony/sonyflake v1.3.0
 	github.com/sqlite3ent/sqlite3 v1.40.0
 	golang.org/x/net v0.48.0 // indirect
@@ -41,7 +41,7 @@ require (
 	github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2 v2.0.0-20260105075216-c7a58ff59f80
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
 	github.com/joho/godotenv v1.5.1
-	github.com/origadmin/toolkits/i18n v1.2.0
+	github.com/origadmin/toolkits/i18n v1.3.0
 	golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.6.0
 )
@@ -78,6 +78,7 @@ require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/bep/godartsass/v2 v2.5.0 // indirect
 	github.com/bep/golibsass v1.2.0 // indirect
+	github.com/bits-and-blooms/bitset v1.24.4 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.9.1 // indirect
 	github.com/bufbuild/protocompile v0.14.2-0.20251223142729-db46c1b9d34e // indirect
@@ -129,7 +130,8 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gofrs/flock v0.13.0 // indirect
-	github.com/gohugoio/hugo v0.149.1 // indirect
+	github.com/gohugoio/hashstructure v0.6.0 // indirect
+	github.com/gohugoio/hugo v0.154.2 // indirect
 	github.com/golang-cz/devslog v0.0.15 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/cel-go v0.26.1 // indirect
@@ -173,9 +175,10 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/muesli/termenv v0.16.0 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
+	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
 	github.com/olekukonko/errors v1.1.0 // indirect
-	github.com/olekukonko/ll v0.0.9 // indirect
-	github.com/olekukonko/tablewriter v1.0.9 // indirect
+	github.com/olekukonko/ll v0.1.3 // indirect
+	github.com/olekukonko/tablewriter v1.1.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/origadmin/toolkits/slogx v1.3.0 // indirect
@@ -203,7 +206,7 @@ require (
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/stoewer/go-strcase v1.3.1 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
-	github.com/tdewolff/parse/v2 v2.8.3 // indirect
+	github.com/tdewolff/parse/v2 v2.8.5 // indirect
 	github.com/tetratelabs/wazero v1.11.0 // indirect
 	github.com/tidwall/btree v1.8.1 // indirect
 	github.com/tklauser/go-sysconf v0.3.16 // indirect

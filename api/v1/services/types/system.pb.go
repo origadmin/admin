@@ -45,32 +45,34 @@ type View struct {
 	Sequence int32 `protobuf:"varint,9,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `protobuf:"bytes,10,opt,name=type,proto3" json:"type,omitempty"`
+	// Component holds the value of the "component" field.
+	Component string `protobuf:"bytes,11,opt,name=component,proto3" json:"component,omitempty"`
 	// Comment holds the value of the "comment" field.
-	Comment string `protobuf:"bytes,11,opt,name=comment,proto3" json:"comment,omitempty"`
+	Comment string `protobuf:"bytes,12,opt,name=comment,proto3" json:"comment,omitempty"`
 	// Icon holds the value of the "icon" field.
-	Icon string `protobuf:"bytes,12,opt,name=icon,proto3" json:"icon,omitempty"`
+	Icon string `protobuf:"bytes,13,opt,name=icon,proto3" json:"icon,omitempty"`
 	// Visible holds the value of the "visible" field.
-	Visible bool `protobuf:"varint,13,opt,name=visible,proto3" json:"visible,omitempty"`
+	Visible bool `protobuf:"varint,14,opt,name=visible,proto3" json:"visible,omitempty"`
 	// Path holds the value of the "path" field.
-	Path string `protobuf:"bytes,14,opt,name=path,proto3" json:"path,omitempty"`
+	Path string `protobuf:"bytes,15,opt,name=path,proto3" json:"path,omitempty"`
 	// TreePath holds the value of the "tree_path" field.
-	TreePath string `protobuf:"bytes,15,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
+	TreePath string `protobuf:"bytes,16,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// Properties holds the value of the "properties" field.
-	Properties string `protobuf:"bytes,16,opt,name=properties,proto3" json:"properties,omitempty"`
+	Properties string `protobuf:"bytes,17,opt,name=properties,proto3" json:"properties,omitempty"`
 	// Status holds the value of the "status" field.
-	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,18,opt,name=status,proto3" json:"status,omitempty"`
 	// ParentID holds the value of the "parent_id" field.
-	ParentId int64 `protobuf:"varint,18,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	ParentId int64 `protobuf:"varint,19,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
-	ParentPath string `protobuf:"bytes,19,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
+	ParentPath string `protobuf:"bytes,20,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*View `protobuf:"bytes,20,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*View `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *View `protobuf:"bytes,21,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *View `protobuf:"bytes,22,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,22,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,23,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles         []*Role `protobuf:"bytes,23,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles         []*Role `protobuf:"bytes,24,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -175,6 +177,13 @@ func (x *View) GetType() string {
 	return ""
 }
 
+func (x *View) GetComponent() string {
+	if x != nil {
+		return x.Component
+	}
+	return ""
+}
+
 func (x *View) GetComment() string {
 	if x != nil {
 		return x.Comment
@@ -266,88 +275,6 @@ func (x *View) GetRoles() []*Role {
 	return nil
 }
 
-// ViewEdges holds the relations/edges for other nodes in the graph.
-type ViewEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Children holds the value of the children edge.
-	Children []*View `protobuf:"bytes,1,rep,name=children,proto3" json:"children,omitempty"`
-	// Parent holds the value of the parent edge.
-	Parent *View `protobuf:"bytes,2,opt,name=parent,proto3" json:"parent,omitempty"`
-	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,3,rep,name=resources,proto3" json:"resources,omitempty"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,4,rep,name=roles,proto3" json:"roles,omitempty"`
-	// RoleView holds the value of the role_view edge.
-	RoleViews     []*RoleView `protobuf:"bytes,5,rep,name=role_views,proto3" json:"role_views,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ViewEdges) Reset() {
-	*x = ViewEdges{}
-	mi := &file_types_system_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ViewEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ViewEdges) ProtoMessage() {}
-
-func (x *ViewEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ViewEdges.ProtoReflect.Descriptor instead.
-func (*ViewEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *ViewEdges) GetChildren() []*View {
-	if x != nil {
-		return x.Children
-	}
-	return nil
-}
-
-func (x *ViewEdges) GetParent() *View {
-	if x != nil {
-		return x.Parent
-	}
-	return nil
-}
-
-func (x *ViewEdges) GetResources() []*Resource {
-	if x != nil {
-		return x.Resources
-	}
-	return nil
-}
-
-func (x *ViewEdges) GetRoles() []*Role {
-	if x != nil {
-		return x.Roles
-	}
-	return nil
-}
-
-func (x *ViewEdges) GetRoleViews() []*RoleView {
-	if x != nil {
-		return x.RoleViews
-	}
-	return nil
-}
-
 // Role is the model entity for the Role schema.
 type Role struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -358,39 +285,47 @@ type Role struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// role.field.keyword
-	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// role.field.name
-	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
 	// role.field.description
-	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
 	// role.field.type
-	Type int32 `protobuf:"varint,7,opt,name=type,proto3" json:"type,omitempty"`
+	Type int32 `protobuf:"varint,9,opt,name=type,proto3" json:"type,omitempty"`
 	// role.field.sequence
-	Sequence int32 `protobuf:"varint,8,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	Sequence int32 `protobuf:"varint,10,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// role.field.status
-	Status int32 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,11,opt,name=status,proto3" json:"status,omitempty"`
 	// role.field.is_types
-	IsTypes bool `protobuf:"varint,10,opt,name=is_types,proto3" json:"is_types,omitempty"`
+	IsTypes bool `protobuf:"varint,12,opt,name=is_types,proto3" json:"is_types,omitempty"`
 	// Views holds the value of the views edge.
 	Views []*View `protobuf:"bytes,21,rep,name=views,proto3" json:"views,omitempty"`
+	// View Ids holds the value of the view_ids edge.
+	ViewIds []int64 `protobuf:"varint,20,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
 	// Users holds the value of the users edge.
 	Users []*User `protobuf:"bytes,22,rep,name=users,proto3" json:"users,omitempty"`
+	// Users Ids holds the value of the user_ids edge.
+	UserIds []int64 `protobuf:"varint,23,rep,packed,name=user_ids,proto3" json:"user_ids,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,23,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,24,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Resource Ids holds the value of the resource_ids edge.
-	ResourceIds []int64 `protobuf:"varint,24,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	ResourceIds []int64 `protobuf:"varint,25,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// Permissions holds the value of the permissions edge.
-	Permissions []*Permission `protobuf:"bytes,25,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions []*Permission `protobuf:"bytes,26,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	// Permission Ids holds the value of the permission_ids edge.
-	PermissionIds []int64 `protobuf:"varint,26,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
+	PermissionIds []int64 `protobuf:"varint,27,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Role) Reset() {
 	*x = Role{}
-	mi := &file_types_system_proto_msgTypes[2]
+	mi := &file_types_system_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -402,7 +337,7 @@ func (x *Role) String() string {
 func (*Role) ProtoMessage() {}
 
 func (x *Role) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[2]
+	mi := &file_types_system_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -415,7 +350,7 @@ func (x *Role) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Role.ProtoReflect.Descriptor instead.
 func (*Role) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{2}
+	return file_types_system_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Role) GetId() int64 {
@@ -437,6 +372,20 @@ func (x *Role) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
+}
+
+func (x *Role) GetCreateAuthor() int64 {
+	if x != nil {
+		return x.CreateAuthor
+	}
+	return 0
+}
+
+func (x *Role) GetUpdateAuthor() int64 {
+	if x != nil {
+		return x.UpdateAuthor
+	}
+	return 0
 }
 
 func (x *Role) GetKeyword() string {
@@ -495,9 +444,23 @@ func (x *Role) GetViews() []*View {
 	return nil
 }
 
+func (x *Role) GetViewIds() []int64 {
+	if x != nil {
+		return x.ViewIds
+	}
+	return nil
+}
+
 func (x *Role) GetUsers() []*User {
 	if x != nil {
 		return x.Users
+	}
+	return nil
+}
+
+func (x *Role) GetUserIds() []int64 {
+	if x != nil {
+		return x.UserIds
 	}
 	return nil
 }
@@ -530,93 +493,20 @@ func (x *Role) GetPermissionIds() []int64 {
 	return nil
 }
 
-// RoleEdges holds the relations/edges for other nodes in the graph.
-type RoleEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Views holds the value of the views edge.
-	Views []*View `protobuf:"bytes,1,rep,name=views,proto3" json:"views,omitempty"`
-	// Users holds the value of the users edge.
-	Users []*User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
-	// RoleView holds the value of the role_view edge.
-	RoleViews []*RoleView `protobuf:"bytes,3,rep,name=role_views,proto3" json:"role_views,omitempty"`
-	// UserRole holds the value of the user_role edge.
-	UserRoles     []*UserRole `protobuf:"bytes,4,rep,name=user_roles,proto3" json:"user_roles,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RoleEdges) Reset() {
-	*x = RoleEdges{}
-	mi := &file_types_system_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoleEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoleEdges) ProtoMessage() {}
-
-func (x *RoleEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoleEdges.ProtoReflect.Descriptor instead.
-func (*RoleEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *RoleEdges) GetViews() []*View {
-	if x != nil {
-		return x.Views
-	}
-	return nil
-}
-
-func (x *RoleEdges) GetUsers() []*User {
-	if x != nil {
-		return x.Users
-	}
-	return nil
-}
-
-func (x *RoleEdges) GetRoleViews() []*RoleView {
-	if x != nil {
-		return x.RoleViews
-	}
-	return nil
-}
-
-func (x *RoleEdges) GetUserRoles() []*UserRole {
-	if x != nil {
-		return x.UserRoles
-	}
-	return nil
-}
-
 // User is the model entity for the User schema.
 type User struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the ent.
 	// field.primary_key.comment
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,2,opt,name=create_author,proto3" json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,3,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// create_time.field.comment
-	CreateTime *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=create_time,proto3" json:"create_time,omitempty"`
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
-	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// user.field.uuid
 	Uuid string `protobuf:"bytes,6,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	// user.field.allowed_ip
@@ -641,32 +531,29 @@ type User struct {
 	Token string `protobuf:"bytes,16,opt,name=token,proto3" json:"token,omitempty"`
 	// user.field.status
 	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
+	// user.field.i18n
+	I18N string `protobuf:"bytes,18,opt,name=i18n,proto3" json:"i18n,omitempty"`
 	// user.field.last_login_ip
-	LastLoginIp string `protobuf:"bytes,18,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
+	LastLoginIp string `protobuf:"bytes,19,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
 	// user.field.login_ip
-	LoginIp string `protobuf:"bytes,19,opt,name=login_ip,proto3" json:"login_ip,omitempty"`
+	LoginIp string `protobuf:"bytes,20,opt,name=login_ip,proto3" json:"login_ip,omitempty"`
 	// user.field.last_login_time
-	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
+	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
 	// user.field.login_time
-	LoginTime *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=login_time,proto3" json:"login_time,omitempty"`
+	LoginTime *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=login_time,proto3" json:"login_time,omitempty"`
 	// user.field.sanction_date
-	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
-	//	// user.field.manager_id
-	//	int64 manager_id = 21 [json_name = "manager_id"];
-	//	// user.field.manager
-	//	string manager = 22 [json_name = "manager"];
-	//
+	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,23,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,23,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles []*Role `protobuf:"bytes,24,rep,name=roles,proto3" json:"roles,omitempty"`
 	// Role Ids holds the value of the role_ids
-	RoleIds       []int64 `protobuf:"varint,24,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	RoleIds       []int64 `protobuf:"varint,25,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_types_system_proto_msgTypes[4]
+	mi := &file_types_system_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -678,7 +565,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[4]
+	mi := &file_types_system_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -691,26 +578,12 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{4}
+	return file_types_system_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *User) GetId() int64 {
 	if x != nil {
 		return x.Id
-	}
-	return 0
-}
-
-func (x *User) GetCreateAuthor() int64 {
-	if x != nil {
-		return x.CreateAuthor
-	}
-	return 0
-}
-
-func (x *User) GetUpdateAuthor() int64 {
-	if x != nil {
-		return x.UpdateAuthor
 	}
 	return 0
 }
@@ -727,6 +600,20 @@ func (x *User) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
+}
+
+func (x *User) GetCreateAuthor() int64 {
+	if x != nil {
+		return x.CreateAuthor
+	}
+	return 0
+}
+
+func (x *User) GetUpdateAuthor() int64 {
+	if x != nil {
+		return x.UpdateAuthor
+	}
+	return 0
 }
 
 func (x *User) GetUuid() string {
@@ -813,6 +700,13 @@ func (x *User) GetStatus() int32 {
 	return 0
 }
 
+func (x *User) GetI18N() string {
+	if x != nil {
+		return x.I18N
+	}
+	return ""
+}
+
 func (x *User) GetLastLoginIp() string {
 	if x != nil {
 		return x.LastLoginIp
@@ -862,61 +756,6 @@ func (x *User) GetRoleIds() []int64 {
 	return nil
 }
 
-// UserEdges holds the relations/edges for other nodes in the graph.
-type UserEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
-	// UserRole holds the value of the user_role edge.
-	UserRoles     []*UserRole `protobuf:"bytes,2,rep,name=user_roles,proto3" json:"user_roles,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserEdges) Reset() {
-	*x = UserEdges{}
-	mi := &file_types_system_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserEdges) ProtoMessage() {}
-
-func (x *UserEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserEdges.ProtoReflect.Descriptor instead.
-func (*UserEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *UserEdges) GetRoles() []*Role {
-	if x != nil {
-		return x.Roles
-	}
-	return nil
-}
-
-func (x *UserEdges) GetUserRoles() []*UserRole {
-	if x != nil {
-		return x.UserRoles
-	}
-	return nil
-}
-
 // UserRole is the model entity for the UserRole schema.
 type UserRole struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -942,7 +781,7 @@ type UserRole struct {
 
 func (x *UserRole) Reset() {
 	*x = UserRole{}
-	mi := &file_types_system_proto_msgTypes[6]
+	mi := &file_types_system_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -954,7 +793,7 @@ func (x *UserRole) String() string {
 func (*UserRole) ProtoMessage() {}
 
 func (x *UserRole) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[6]
+	mi := &file_types_system_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -967,7 +806,7 @@ func (x *UserRole) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserRole.ProtoReflect.Descriptor instead.
 func (*UserRole) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{6}
+	return file_types_system_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UserRole) GetId() int64 {
@@ -1026,61 +865,6 @@ func (x *UserRole) GetRole() *Role {
 	return nil
 }
 
-// UserRoleEdges holds the relations/edges for other nodes in the graph.
-type UserRoleEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User holds the value of the user edge.
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// Role holds the value of the role edge.
-	Role          *Role `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserRoleEdges) Reset() {
-	*x = UserRoleEdges{}
-	mi := &file_types_system_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserRoleEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserRoleEdges) ProtoMessage() {}
-
-func (x *UserRoleEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserRoleEdges.ProtoReflect.Descriptor instead.
-func (*UserRoleEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *UserRoleEdges) GetUser() *User {
-	if x != nil {
-		return x.User
-	}
-	return nil
-}
-
-func (x *UserRoleEdges) GetRole() *Role {
-	if x != nil {
-		return x.Role
-	}
-	return nil
-}
-
 // RoleView is the model entity for the RoleView schema.
 type RoleView struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1104,7 +888,7 @@ type RoleView struct {
 
 func (x *RoleView) Reset() {
 	*x = RoleView{}
-	mi := &file_types_system_proto_msgTypes[8]
+	mi := &file_types_system_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1116,7 +900,7 @@ func (x *RoleView) String() string {
 func (*RoleView) ProtoMessage() {}
 
 func (x *RoleView) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[8]
+	mi := &file_types_system_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1129,7 +913,7 @@ func (x *RoleView) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleView.ProtoReflect.Descriptor instead.
 func (*RoleView) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{8}
+	return file_types_system_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RoleView) GetId() int64 {
@@ -1181,61 +965,6 @@ func (x *RoleView) GetView() *View {
 	return nil
 }
 
-// RoleViewEdges holds the relations/edges for other nodes in the graph.
-type RoleViewEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Role holds the value of the role edge.
-	Role *Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
-	// View holds the value of the view edge.
-	View          *View `protobuf:"bytes,2,opt,name=view,proto3" json:"view,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RoleViewEdges) Reset() {
-	*x = RoleViewEdges{}
-	mi := &file_types_system_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoleViewEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoleViewEdges) ProtoMessage() {}
-
-func (x *RoleViewEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoleViewEdges.ProtoReflect.Descriptor instead.
-func (*RoleViewEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *RoleViewEdges) GetRole() *Role {
-	if x != nil {
-		return x.Role
-	}
-	return nil
-}
-
-func (x *RoleViewEdges) GetView() *View {
-	if x != nil {
-		return x.View
-	}
-	return nil
-}
-
 // Resource is the model entity for the Resource schema.
 type Resource struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1246,30 +975,26 @@ type Resource struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// resource.field.name
-	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
 	// resource.field.keyword
-	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	// resource.field.i18n_key
-	I18NKey string `protobuf:"bytes,6,opt,name=i18n_key,proto3" json:"i18n_key,omitempty"`
+	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// resource.field.type
-	Type string `protobuf:"bytes,7,opt,name=type,proto3" json:"type,omitempty"`
+	Type string `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
 	// resource.field.status
-	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
 	// resource.field.path
-	Path string `protobuf:"bytes,9,opt,name=path,proto3" json:"path,omitempty"`
+	Path string `protobuf:"bytes,11,opt,name=path,proto3" json:"path,omitempty"`
 	// resource.field.operation
-	Operation string `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
+	Operation string `protobuf:"bytes,12,opt,name=operation,proto3" json:"operation,omitempty"`
 	// resource.field.method
-	Method string `protobuf:"bytes,11,opt,name=method,proto3" json:"method,omitempty"`
-	// resource.field.component
-	Component string `protobuf:"bytes,12,opt,name=component,proto3" json:"component,omitempty"`
-	// resource.field.icon
-	Icon string `protobuf:"bytes,13,opt,name=icon,proto3" json:"icon,omitempty"`
+	Method string `protobuf:"bytes,13,opt,name=method,proto3" json:"method,omitempty"`
 	// resource.field.sequence
 	Sequence int32 `protobuf:"varint,14,opt,name=sequence,proto3" json:"sequence,omitempty"`
-	// resource.field.visible
-	Visible bool `protobuf:"varint,15,opt,name=visible,proto3" json:"visible,omitempty"`
 	// resource.field.tree_path
 	TreePath string `protobuf:"bytes,16,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// resource.field.properties
@@ -1286,13 +1011,14 @@ type Resource struct {
 	PermissionIds []int64 `protobuf:"varint,23,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
 	// Permissions holds the value of the permissions edge.
 	Permissions   []*Permission `protobuf:"bytes,24,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	ServiceName   string        `protobuf:"bytes,25,opt,name=service_name,proto3" json:"service_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Resource) Reset() {
 	*x = Resource{}
-	mi := &file_types_system_proto_msgTypes[10]
+	mi := &file_types_system_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1304,7 +1030,7 @@ func (x *Resource) String() string {
 func (*Resource) ProtoMessage() {}
 
 func (x *Resource) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[10]
+	mi := &file_types_system_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1317,7 +1043,7 @@ func (x *Resource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Resource.ProtoReflect.Descriptor instead.
 func (*Resource) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{10}
+	return file_types_system_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Resource) GetId() int64 {
@@ -1341,6 +1067,20 @@ func (x *Resource) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
+func (x *Resource) GetCreateAuthor() int64 {
+	if x != nil {
+		return x.CreateAuthor
+	}
+	return 0
+}
+
+func (x *Resource) GetUpdateAuthor() int64 {
+	if x != nil {
+		return x.UpdateAuthor
+	}
+	return 0
+}
+
 func (x *Resource) GetName() string {
 	if x != nil {
 		return x.Name
@@ -1351,13 +1091,6 @@ func (x *Resource) GetName() string {
 func (x *Resource) GetKeyword() string {
 	if x != nil {
 		return x.Keyword
-	}
-	return ""
-}
-
-func (x *Resource) GetI18NKey() string {
-	if x != nil {
-		return x.I18NKey
 	}
 	return ""
 }
@@ -1397,32 +1130,11 @@ func (x *Resource) GetMethod() string {
 	return ""
 }
 
-func (x *Resource) GetComponent() string {
-	if x != nil {
-		return x.Component
-	}
-	return ""
-}
-
-func (x *Resource) GetIcon() string {
-	if x != nil {
-		return x.Icon
-	}
-	return ""
-}
-
 func (x *Resource) GetSequence() int32 {
 	if x != nil {
 		return x.Sequence
 	}
 	return 0
-}
-
-func (x *Resource) GetVisible() bool {
-	if x != nil {
-		return x.Visible
-	}
-	return false
 }
 
 func (x *Resource) GetTreePath() string {
@@ -1481,50 +1193,11 @@ func (x *Resource) GetPermissions() []*Permission {
 	return nil
 }
 
-// ResourceEdges holds the relations/edges for other nodes in the graph.
-type ResourceEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// View holds the value of the view edge.
-	View          *View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ResourceEdges) Reset() {
-	*x = ResourceEdges{}
-	mi := &file_types_system_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ResourceEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ResourceEdges) ProtoMessage() {}
-
-func (x *ResourceEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[11]
+func (x *Resource) GetServiceName() string {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+		return x.ServiceName
 	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ResourceEdges.ProtoReflect.Descriptor instead.
-func (*ResourceEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *ResourceEdges) GetView() *View {
-	if x != nil {
-		return x.View
-	}
-	return nil
+	return ""
 }
 
 // department.table.comment
@@ -1537,33 +1210,37 @@ type Department struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// department.field.keyword
-	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// department.field.name
-	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
 	// department.field.tree_path
-	TreePath string `protobuf:"bytes,6,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
+	TreePath string `protobuf:"bytes,8,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// department.field.sequence
-	Sequence int32 `protobuf:"varint,7,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	Sequence int32 `protobuf:"varint,9,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// department.field.status
-	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
 	// department.field.level
-	Level int32 `protobuf:"varint,9,opt,name=level,proto3" json:"level,omitempty"`
+	Level int32 `protobuf:"varint,11,opt,name=level,proto3" json:"level,omitempty"`
 	// department.field.description
-	Description string `protobuf:"bytes,10,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,12,opt,name=description,proto3" json:"description,omitempty"`
 	// department.field.parent_id
-	ParentId int64 `protobuf:"varint,11,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	ParentId int64 `protobuf:"varint,13,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*Department `protobuf:"bytes,12,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*Department `protobuf:"bytes,14,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent        *Department `protobuf:"bytes,13,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent        *Department `protobuf:"bytes,15,opt,name=parent,proto3" json:"parent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Department) Reset() {
 	*x = Department{}
-	mi := &file_types_system_proto_msgTypes[12]
+	mi := &file_types_system_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1575,7 +1252,7 @@ func (x *Department) String() string {
 func (*Department) ProtoMessage() {}
 
 func (x *Department) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[12]
+	mi := &file_types_system_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1588,7 +1265,7 @@ func (x *Department) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Department.ProtoReflect.Descriptor instead.
 func (*Department) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{12}
+	return file_types_system_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Department) GetId() int64 {
@@ -1610,6 +1287,20 @@ func (x *Department) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
+}
+
+func (x *Department) GetCreateAuthor() int64 {
+	if x != nil {
+		return x.CreateAuthor
+	}
+	return 0
+}
+
+func (x *Department) GetUpdateAuthor() int64 {
+	if x != nil {
+		return x.UpdateAuthor
+	}
+	return 0
 }
 
 func (x *Department) GetKeyword() string {
@@ -1682,87 +1373,6 @@ func (x *Department) GetParent() *Department {
 	return nil
 }
 
-type DepartmentEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Users holds the value of the users edge.
-	Users []*User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
-	// Positions holds the value of the positions edge.
-	Positions []*Position `protobuf:"bytes,2,rep,name=positions,proto3" json:"positions,omitempty"`
-	// Children holds the value of the children edge.
-	Children []*Department `protobuf:"bytes,3,rep,name=children,proto3" json:"children,omitempty"`
-	// Parent holds the value of the parent edge.
-	Parent *Department `protobuf:"bytes,4,opt,name=parent,proto3" json:"parent,omitempty"`
-	// UserDepartments holds the value of the user_departments edge.
-	UserDepartments []*UserDepartment `protobuf:"bytes,5,rep,name=user_departments,proto3" json:"user_departments,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *DepartmentEdges) Reset() {
-	*x = DepartmentEdges{}
-	mi := &file_types_system_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DepartmentEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DepartmentEdges) ProtoMessage() {}
-
-func (x *DepartmentEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DepartmentEdges.ProtoReflect.Descriptor instead.
-func (*DepartmentEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *DepartmentEdges) GetUsers() []*User {
-	if x != nil {
-		return x.Users
-	}
-	return nil
-}
-
-func (x *DepartmentEdges) GetPositions() []*Position {
-	if x != nil {
-		return x.Positions
-	}
-	return nil
-}
-
-func (x *DepartmentEdges) GetChildren() []*Department {
-	if x != nil {
-		return x.Children
-	}
-	return nil
-}
-
-func (x *DepartmentEdges) GetParent() *Department {
-	if x != nil {
-		return x.Parent
-	}
-	return nil
-}
-
-func (x *DepartmentEdges) GetUserDepartments() []*UserDepartment {
-	if x != nil {
-		return x.UserDepartments
-	}
-	return nil
-}
-
 // user_department.table.comment
 type UserDepartment struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1772,17 +1382,14 @@ type UserDepartment struct {
 	// field.foreign_key.comment
 	UserId int64 `protobuf:"varint,2,opt,name=user_id,proto3" json:"user_id,omitempty"`
 	// field.foreign_key.comment
-	DepartmentId int64 `protobuf:"varint,3,opt,name=department_id,proto3" json:"department_id,omitempty"`
-	// Edges holds the relations/edges for other nodes in the graph.
-	// The values are being populated by the UserDepartmentQuery when eager-loading is set.
-	Edges         *UserDepartmentEdges `protobuf:"bytes,4,opt,name=edges,proto3" json:"edges,omitempty"`
+	DepartmentId  int64 `protobuf:"varint,3,opt,name=department_id,proto3" json:"department_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UserDepartment) Reset() {
 	*x = UserDepartment{}
-	mi := &file_types_system_proto_msgTypes[14]
+	mi := &file_types_system_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1794,7 +1401,7 @@ func (x *UserDepartment) String() string {
 func (*UserDepartment) ProtoMessage() {}
 
 func (x *UserDepartment) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[14]
+	mi := &file_types_system_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1807,7 +1414,7 @@ func (x *UserDepartment) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserDepartment.ProtoReflect.Descriptor instead.
 func (*UserDepartment) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{14}
+	return file_types_system_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *UserDepartment) GetId() int64 {
@@ -1831,68 +1438,6 @@ func (x *UserDepartment) GetDepartmentId() int64 {
 	return 0
 }
 
-func (x *UserDepartment) GetEdges() *UserDepartmentEdges {
-	if x != nil {
-		return x.Edges
-	}
-	return nil
-}
-
-// UserDepartmentEdges holds the relations/edges for other nodes in the graph.
-type UserDepartmentEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User holds the value of the user edge.
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// Department holds the value of the department edge.
-	Department    *Department `protobuf:"bytes,2,opt,name=department,proto3" json:"department,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserDepartmentEdges) Reset() {
-	*x = UserDepartmentEdges{}
-	mi := &file_types_system_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserDepartmentEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserDepartmentEdges) ProtoMessage() {}
-
-func (x *UserDepartmentEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserDepartmentEdges.ProtoReflect.Descriptor instead.
-func (*UserDepartmentEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *UserDepartmentEdges) GetUser() *User {
-	if x != nil {
-		return x.User
-	}
-	return nil
-}
-
-func (x *UserDepartmentEdges) GetDepartment() *Department {
-	if x != nil {
-		return x.Department
-	}
-	return nil
-}
-
 // position.table.comment
 type Position struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1903,21 +1448,25 @@ type Position struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// position.field.name
-	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
 	// position.field.keyword
-	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// position.field.description
-	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
 	// department.field.department_id
-	DepartmentId  int64 `protobuf:"varint,7,opt,name=department_id,proto3" json:"department_id,omitempty"`
+	DepartmentId  int64 `protobuf:"varint,9,opt,name=department_id,proto3" json:"department_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Position) Reset() {
 	*x = Position{}
-	mi := &file_types_system_proto_msgTypes[16]
+	mi := &file_types_system_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1929,7 +1478,7 @@ func (x *Position) String() string {
 func (*Position) ProtoMessage() {}
 
 func (x *Position) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[16]
+	mi := &file_types_system_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1942,7 +1491,7 @@ func (x *Position) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Position.ProtoReflect.Descriptor instead.
 func (*Position) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{16}
+	return file_types_system_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Position) GetId() int64 {
@@ -1964,6 +1513,20 @@ func (x *Position) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
+}
+
+func (x *Position) GetCreateAuthor() int64 {
+	if x != nil {
+		return x.CreateAuthor
+	}
+	return 0
+}
+
+func (x *Position) GetUpdateAuthor() int64 {
+	if x != nil {
+		return x.UpdateAuthor
+	}
+	return 0
 }
 
 func (x *Position) GetName() string {
@@ -1994,88 +1557,6 @@ func (x *Position) GetDepartmentId() int64 {
 	return 0
 }
 
-// PositionEdges holds the relations/edges for other nodes in the graph.
-type PositionEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Department holds the value of the department edge.
-	Department *Department `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
-	// Users holds the value of the users edge.
-	Users []*User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
-	// Permissions holds the value of the permissions edge.
-	Permissions []*Permission `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	// UserPositions holds the value of the user_positions edge.
-	UserPositions []*UserPosition `protobuf:"bytes,4,rep,name=user_positions,proto3" json:"user_positions,omitempty"`
-	// PositionPermissions holds the value of the position_permissions edge.
-	PositionPermissions []*PositionPermission `protobuf:"bytes,5,rep,name=position_permissions,proto3" json:"position_permissions,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *PositionEdges) Reset() {
-	*x = PositionEdges{}
-	mi := &file_types_system_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PositionEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PositionEdges) ProtoMessage() {}
-
-func (x *PositionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PositionEdges.ProtoReflect.Descriptor instead.
-func (*PositionEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *PositionEdges) GetDepartment() *Department {
-	if x != nil {
-		return x.Department
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetUsers() []*User {
-	if x != nil {
-		return x.Users
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetPermissions() []*Permission {
-	if x != nil {
-		return x.Permissions
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetUserPositions() []*UserPosition {
-	if x != nil {
-		return x.UserPositions
-	}
-	return nil
-}
-
-func (x *PositionEdges) GetPositionPermissions() []*PositionPermission {
-	if x != nil {
-		return x.PositionPermissions
-	}
-	return nil
-}
-
 // permission.table.comment
 type Permission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2086,33 +1567,37 @@ type Permission struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
+	// create_author.field.comment
+	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	// update_author.field.comment
+	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// permission.field.name
-	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
 	// permission.field.keyword
-	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// permission.field.status
-	Status int32 `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
 	// permission.field.description
-	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,9,opt,name=description,proto3" json:"description,omitempty"`
 	// permission.field.data_scope
-	DataScope string `protobuf:"bytes,8,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
+	DataScope string `protobuf:"bytes,10,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
 	// permission.field.data_rules
-	DataRules map[string]string `protobuf:"bytes,9,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	DataRules map[string]string `protobuf:"bytes,11,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// permission.field.resource_ids
-	ResourceIds []int64 `protobuf:"varint,10,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	ResourceIds []int64 `protobuf:"varint,12,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// permission.field.resources
-	Resources []*Resource `protobuf:"bytes,11,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,13,rep,name=resources,proto3" json:"resources,omitempty"`
 	// permission.field.view_ids
-	ViewIds []int64 `protobuf:"varint,12,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
+	ViewIds []int64 `protobuf:"varint,14,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
 	// permission.field.views
-	Views         []*View `protobuf:"bytes,13,rep,name=views,proto3" json:"views,omitempty"`
+	Views         []*View `protobuf:"bytes,15,rep,name=views,proto3" json:"views,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Permission) Reset() {
 	*x = Permission{}
-	mi := &file_types_system_proto_msgTypes[18]
+	mi := &file_types_system_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2124,7 +1609,7 @@ func (x *Permission) String() string {
 func (*Permission) ProtoMessage() {}
 
 func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[18]
+	mi := &file_types_system_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2137,7 +1622,7 @@ func (x *Permission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Permission.ProtoReflect.Descriptor instead.
 func (*Permission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{18}
+	return file_types_system_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Permission) GetId() int64 {
@@ -2159,6 +1644,20 @@ func (x *Permission) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
+}
+
+func (x *Permission) GetCreateAuthor() int64 {
+	if x != nil {
+		return x.CreateAuthor
+	}
+	return 0
+}
+
+func (x *Permission) GetUpdateAuthor() int64 {
+	if x != nil {
+		return x.UpdateAuthor
+	}
+	return 0
 }
 
 func (x *Permission) GetName() string {
@@ -2231,97 +1730,6 @@ func (x *Permission) GetViews() []*View {
 	return nil
 }
 
-// PermissionEdges holds the relations/edges for other nodes in the graph.
-type PermissionEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,1,rep,name=roles,proto3" json:"roles,omitempty"`
-	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
-	// Positions holds the value of the positions edge.
-	Positions []*Position `protobuf:"bytes,3,rep,name=positions,proto3" json:"positions,omitempty"`
-	// RolePermissions holds the value of the role_permissions edge.
-	RolePermissions []*RolePermission `protobuf:"bytes,4,rep,name=role_permissions,proto3" json:"role_permissions,omitempty"`
-	// PermissionResources holds the value of the permission_resources edge.
-	PermissionResources []*PermissionResource `protobuf:"bytes,5,rep,name=permission_resources,proto3" json:"permission_resources,omitempty"`
-	// PositionPermissions holds the value of the position_permissions edge.
-	PositionPermissions []*PositionPermission `protobuf:"bytes,6,rep,name=position_permissions,proto3" json:"position_permissions,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
-}
-
-func (x *PermissionEdges) Reset() {
-	*x = PermissionEdges{}
-	mi := &file_types_system_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PermissionEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PermissionEdges) ProtoMessage() {}
-
-func (x *PermissionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PermissionEdges.ProtoReflect.Descriptor instead.
-func (*PermissionEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *PermissionEdges) GetRoles() []*Role {
-	if x != nil {
-		return x.Roles
-	}
-	return nil
-}
-
-func (x *PermissionEdges) GetResources() []*Resource {
-	if x != nil {
-		return x.Resources
-	}
-	return nil
-}
-
-func (x *PermissionEdges) GetPositions() []*Position {
-	if x != nil {
-		return x.Positions
-	}
-	return nil
-}
-
-func (x *PermissionEdges) GetRolePermissions() []*RolePermission {
-	if x != nil {
-		return x.RolePermissions
-	}
-	return nil
-}
-
-func (x *PermissionEdges) GetPermissionResources() []*PermissionResource {
-	if x != nil {
-		return x.PermissionResources
-	}
-	return nil
-}
-
-func (x *PermissionEdges) GetPositionPermissions() []*PositionPermission {
-	if x != nil {
-		return x.PositionPermissions
-	}
-	return nil
-}
-
 // user_position.table.comment
 type UserPosition struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2338,7 +1746,7 @@ type UserPosition struct {
 
 func (x *UserPosition) Reset() {
 	*x = UserPosition{}
-	mi := &file_types_system_proto_msgTypes[20]
+	mi := &file_types_system_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2350,7 +1758,7 @@ func (x *UserPosition) String() string {
 func (*UserPosition) ProtoMessage() {}
 
 func (x *UserPosition) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[20]
+	mi := &file_types_system_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2363,7 +1771,7 @@ func (x *UserPosition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserPosition.ProtoReflect.Descriptor instead.
 func (*UserPosition) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{20}
+	return file_types_system_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UserPosition) GetId() int64 {
@@ -2387,61 +1795,6 @@ func (x *UserPosition) GetPositionId() int64 {
 	return 0
 }
 
-// UserPositionEdges holds the relations/edges for other nodes in the graph.
-type UserPositionEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// User holds the value of the user edge.
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	// Position holds the value of the position edge.
-	Position      *Position `protobuf:"bytes,2,opt,name=position,proto3" json:"position,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserPositionEdges) Reset() {
-	*x = UserPositionEdges{}
-	mi := &file_types_system_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserPositionEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserPositionEdges) ProtoMessage() {}
-
-func (x *UserPositionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserPositionEdges.ProtoReflect.Descriptor instead.
-func (*UserPositionEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *UserPositionEdges) GetUser() *User {
-	if x != nil {
-		return x.User
-	}
-	return nil
-}
-
-func (x *UserPositionEdges) GetPosition() *Position {
-	if x != nil {
-		return x.Position
-	}
-	return nil
-}
-
 // position_permission.table.comment
 type PositionPermission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2458,7 +1811,7 @@ type PositionPermission struct {
 
 func (x *PositionPermission) Reset() {
 	*x = PositionPermission{}
-	mi := &file_types_system_proto_msgTypes[22]
+	mi := &file_types_system_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2470,7 +1823,7 @@ func (x *PositionPermission) String() string {
 func (*PositionPermission) ProtoMessage() {}
 
 func (x *PositionPermission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[22]
+	mi := &file_types_system_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2483,7 +1836,7 @@ func (x *PositionPermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PositionPermission.ProtoReflect.Descriptor instead.
 func (*PositionPermission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{22}
+	return file_types_system_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PositionPermission) GetId() int64 {
@@ -2507,61 +1860,6 @@ func (x *PositionPermission) GetPermissionId() int64 {
 	return 0
 }
 
-// PositionPermissionEdges holds the relations/edges for other nodes in the graph.
-type PositionPermissionEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Position holds the value of the position edge.
-	Position *Position `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
-	// Permission holds the value of the permission edge.
-	Permission    *Permission `protobuf:"bytes,2,opt,name=permission,proto3" json:"permission,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PositionPermissionEdges) Reset() {
-	*x = PositionPermissionEdges{}
-	mi := &file_types_system_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PositionPermissionEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PositionPermissionEdges) ProtoMessage() {}
-
-func (x *PositionPermissionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PositionPermissionEdges.ProtoReflect.Descriptor instead.
-func (*PositionPermissionEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *PositionPermissionEdges) GetPosition() *Position {
-	if x != nil {
-		return x.Position
-	}
-	return nil
-}
-
-func (x *PositionPermissionEdges) GetPermission() *Permission {
-	if x != nil {
-		return x.Permission
-	}
-	return nil
-}
-
 // role_permission.table.comment
 type RolePermission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2578,7 +1876,7 @@ type RolePermission struct {
 
 func (x *RolePermission) Reset() {
 	*x = RolePermission{}
-	mi := &file_types_system_proto_msgTypes[24]
+	mi := &file_types_system_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2590,7 +1888,7 @@ func (x *RolePermission) String() string {
 func (*RolePermission) ProtoMessage() {}
 
 func (x *RolePermission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[24]
+	mi := &file_types_system_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2603,7 +1901,7 @@ func (x *RolePermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermission.ProtoReflect.Descriptor instead.
 func (*RolePermission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{24}
+	return file_types_system_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *RolePermission) GetId() int64 {
@@ -2627,61 +1925,6 @@ func (x *RolePermission) GetPermissionId() int64 {
 	return 0
 }
 
-// RolePermissionEdges holds the relations/edges for other nodes in the graph.
-type RolePermissionEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Role holds the value of the role edge.
-	Role *Role `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
-	// Permission holds the value of the permission edge.
-	Permission    *Permission `protobuf:"bytes,2,opt,name=permission,proto3" json:"permission,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RolePermissionEdges) Reset() {
-	*x = RolePermissionEdges{}
-	mi := &file_types_system_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RolePermissionEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RolePermissionEdges) ProtoMessage() {}
-
-func (x *RolePermissionEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RolePermissionEdges.ProtoReflect.Descriptor instead.
-func (*RolePermissionEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *RolePermissionEdges) GetRole() *Role {
-	if x != nil {
-		return x.Role
-	}
-	return nil
-}
-
-func (x *RolePermissionEdges) GetPermission() *Permission {
-	if x != nil {
-		return x.Permission
-	}
-	return nil
-}
-
 // permission_resource.table.comment
 type PermissionResource struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -2700,7 +1943,7 @@ type PermissionResource struct {
 
 func (x *PermissionResource) Reset() {
 	*x = PermissionResource{}
-	mi := &file_types_system_proto_msgTypes[26]
+	mi := &file_types_system_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2712,7 +1955,7 @@ func (x *PermissionResource) String() string {
 func (*PermissionResource) ProtoMessage() {}
 
 func (x *PermissionResource) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[26]
+	mi := &file_types_system_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2725,7 +1968,7 @@ func (x *PermissionResource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionResource.ProtoReflect.Descriptor instead.
 func (*PermissionResource) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{26}
+	return file_types_system_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *PermissionResource) GetId() int64 {
@@ -2756,66 +1999,11 @@ func (x *PermissionResource) GetActions() string {
 	return ""
 }
 
-// PermissionResourceEdges holds the relations/edges for other nodes in the graph.
-type PermissionResourceEdges struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Permission holds the value of the permission edge.
-	Permission *Permission `protobuf:"bytes,1,opt,name=permission,proto3" json:"permission,omitempty"`
-	// Resource holds the value of the resource edge.
-	Resource      *Resource `protobuf:"bytes,2,opt,name=resource,proto3" json:"resource,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PermissionResourceEdges) Reset() {
-	*x = PermissionResourceEdges{}
-	mi := &file_types_system_proto_msgTypes[27]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PermissionResourceEdges) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PermissionResourceEdges) ProtoMessage() {}
-
-func (x *PermissionResourceEdges) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[27]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PermissionResourceEdges.ProtoReflect.Descriptor instead.
-func (*PermissionResourceEdges) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{27}
-}
-
-func (x *PermissionResourceEdges) GetPermission() *Permission {
-	if x != nil {
-		return x.Permission
-	}
-	return nil
-}
-
-func (x *PermissionResourceEdges) GetResource() *Resource {
-	if x != nil {
-		return x.Resource
-	}
-	return nil
-}
-
 var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x96\x06\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb4\x06\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2827,63 +2015,51 @@ const file_types_system_proto_rawDesc = "" +
 	"\vdescription\x18\b \x01(\tR\vdescription\x12\x1a\n" +
 	"\bsequence\x18\t \x01(\x05R\bsequence\x12\x12\n" +
 	"\x04type\x18\n" +
-	" \x01(\tR\x04type\x12\x18\n" +
-	"\acomment\x18\v \x01(\tR\acomment\x12\x12\n" +
-	"\x04icon\x18\f \x01(\tR\x04icon\x12\x18\n" +
-	"\avisible\x18\r \x01(\bR\avisible\x12\x12\n" +
-	"\x04path\x18\x0e \x01(\tR\x04path\x12\x1c\n" +
-	"\ttree_path\x18\x0f \x01(\tR\ttree_path\x12\x1e\n" +
+	" \x01(\tR\x04type\x12\x1c\n" +
+	"\tcomponent\x18\v \x01(\tR\tcomponent\x12\x18\n" +
+	"\acomment\x18\f \x01(\tR\acomment\x12\x12\n" +
+	"\x04icon\x18\r \x01(\tR\x04icon\x12\x18\n" +
+	"\avisible\x18\x0e \x01(\bR\avisible\x12\x12\n" +
+	"\x04path\x18\x0f \x01(\tR\x04path\x12\x1c\n" +
+	"\ttree_path\x18\x10 \x01(\tR\ttree_path\x12\x1e\n" +
 	"\n" +
-	"properties\x18\x10 \x01(\tR\n" +
+	"properties\x18\x11 \x01(\tR\n" +
 	"properties\x12\x16\n" +
-	"\x06status\x18\x11 \x01(\x05R\x06status\x12\x1c\n" +
-	"\tparent_id\x18\x12 \x01(\x03R\tparent_id\x12 \n" +
-	"\vparent_path\x18\x13 \x01(\tR\vparent_path\x127\n" +
-	"\bchildren\x18\x14 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
-	"\x06parent\x18\x15 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18\x16 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
-	"\x05roles\x18\x17 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xac\x02\n" +
-	"\tViewEdges\x127\n" +
-	"\bchildren\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
-	"\x06parent\x18\x02 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18\x03 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
-	"\x05roles\x18\x04 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12?\n" +
-	"\n" +
-	"role_views\x18\x05 \x03(\v2\x1f.api.v1.services.types.RoleViewR\n" +
-	"role_views\"\xfc\x04\n" +
+	"\x06status\x18\x12 \x01(\x05R\x06status\x12\x1c\n" +
+	"\tparent_id\x18\x13 \x01(\x03R\tparent_id\x12 \n" +
+	"\vparent_path\x18\x14 \x01(\tR\vparent_path\x127\n" +
+	"\bchildren\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
+	"\x06parent\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
+	"\tresources\x18\x17 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
+	"\x05roles\x18\x18 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\x80\x06\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
-	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x12\n" +
-	"\x04type\x18\a \x01(\x05R\x04type\x12\x1a\n" +
-	"\bsequence\x18\b \x01(\x05R\bsequence\x12\x16\n" +
-	"\x06status\x18\t \x01(\x05R\x06status\x12\x1a\n" +
-	"\bis_types\x18\n" +
-	" \x01(\bR\bis_types\x121\n" +
-	"\x05views\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
-	"\x05users\x18\x16 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12=\n" +
-	"\tresources\x18\x17 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
-	"\fresource_ids\x18\x18 \x03(\x03R\fresource_ids\x12C\n" +
-	"\vpermissions\x18\x19 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
-	"\x0epermission_ids\x18\x1a \x03(\x03R\x0epermission_ids\"\xf3\x01\n" +
-	"\tRoleEdges\x121\n" +
-	"\x05views\x18\x01 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
-	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12?\n" +
-	"\n" +
-	"role_views\x18\x03 \x03(\v2\x1f.api.v1.services.types.RoleViewR\n" +
-	"role_views\x12?\n" +
-	"\n" +
-	"user_roles\x18\x04 \x03(\v2\x1f.api.v1.services.types.UserRoleR\n" +
-	"user_roles\"\xec\x06\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
+	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x18\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04name\x18\a \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\b \x01(\tR\vdescription\x12\x12\n" +
+	"\x04type\x18\t \x01(\x05R\x04type\x12\x1a\n" +
+	"\bsequence\x18\n" +
+	" \x01(\x05R\bsequence\x12\x16\n" +
+	"\x06status\x18\v \x01(\x05R\x06status\x12\x1a\n" +
+	"\bis_types\x18\f \x01(\bR\bis_types\x121\n" +
+	"\x05views\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x12\x1a\n" +
+	"\bview_ids\x18\x14 \x03(\x03R\bview_ids\x121\n" +
+	"\x05users\x18\x16 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12\x1a\n" +
+	"\buser_ids\x18\x17 \x03(\x03R\buser_ids\x12=\n" +
+	"\tresources\x18\x18 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
+	"\fresource_ids\x18\x19 \x03(\x03R\fresource_ids\x12C\n" +
+	"\vpermissions\x18\x1a \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
+	"\x0epermission_ids\x18\x1b \x03(\x03R\x0epermission_ids\"\x80\a\n" +
 	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
-	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x03 \x01(\x03R\rupdate_author\x12<\n" +
-	"\vcreate_time\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
+	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
+	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
 	"\x04uuid\x18\x06 \x01(\tR\x04uuid\x12\x1e\n" +
 	"\n" +
 	"allowed_ip\x18\a \x01(\tR\n" +
@@ -2898,22 +2074,18 @@ const file_types_system_proto_rawDesc = "" +
 	"\x05email\x18\x0e \x01(\tR\x05email\x12\x16\n" +
 	"\x06remark\x18\x0f \x01(\tR\x06remark\x12\x14\n" +
 	"\x05token\x18\x10 \x01(\tR\x05token\x12\x16\n" +
-	"\x06status\x18\x11 \x01(\x05R\x06status\x12$\n" +
-	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12\x1a\n" +
-	"\blogin_ip\x18\x13 \x01(\tR\blogin_ip\x12D\n" +
-	"\x0flast_login_time\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12:\n" +
+	"\x06status\x18\x11 \x01(\x05R\x06status\x12\x12\n" +
+	"\x04i18n\x18\x12 \x01(\tR\x04i18n\x12$\n" +
+	"\rlast_login_ip\x18\x13 \x01(\tR\rlast_login_ip\x12\x1a\n" +
+	"\blogin_ip\x18\x14 \x01(\tR\blogin_ip\x12D\n" +
+	"\x0flast_login_time\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12:\n" +
 	"\n" +
-	"login_time\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"login_time\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"login_time\x12E\n" +
-	"\rsanction_date\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
-	"\x05roles\x18\x17 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
-	"\brole_ids\x18\x18 \x03(\x03R\brole_idsB\x10\n" +
-	"\x0e_sanction_date\"\x7f\n" +
-	"\tUserEdges\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12?\n" +
-	"\n" +
-	"user_roles\x18\x02 \x03(\v2\x1f.api.v1.services.types.UserRoleR\n" +
-	"user_roles\"\xca\x02\n" +
+	"\rsanction_date\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
+	"\x05roles\x18\x18 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
+	"\brole_ids\x18\x19 \x03(\x03R\brole_idsB\x10\n" +
+	"\x0e_sanction_date\"\xca\x02\n" +
 	"\bUserRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2922,10 +2094,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\arole_id\x18\x05 \x01(\x03R\arole_id\x12\x1c\n" +
 	"\trole_name\x18\x06 \x01(\tR\trole_name\x12/\n" +
 	"\x04user\x18\x15 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12/\n" +
-	"\x04role\x18\x16 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"q\n" +
-	"\rUserRoleEdges\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12/\n" +
-	"\x04role\x18\x02 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x02\n" +
+	"\x04role\x18\x16 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x02\n" +
 	"\bRoleView\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2933,27 +2102,22 @@ const file_types_system_proto_rawDesc = "" +
 	"\arole_id\x18\x04 \x01(\x03R\arole_id\x12\x18\n" +
 	"\aview_id\x18\x05 \x01(\x03R\aview_id\x12/\n" +
 	"\x04role\x18\x15 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04view\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"q\n" +
-	"\rRoleViewEdges\x12/\n" +
-	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04view\x18\x02 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x8f\a\n" +
+	"\x04view\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x97\a\n" +
 	"\bResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x1a\n" +
-	"\bi18n_key\x18\x06 \x01(\tR\bi18n_key\x12\x12\n" +
-	"\x04type\x18\a \x01(\tR\x04type\x12\x16\n" +
-	"\x06status\x18\b \x01(\x05R\x06status\x12\x12\n" +
-	"\x04path\x18\t \x01(\tR\x04path\x12\x1c\n" +
-	"\toperation\x18\n" +
-	" \x01(\tR\toperation\x12\x16\n" +
-	"\x06method\x18\v \x01(\tR\x06method\x12\x1c\n" +
-	"\tcomponent\x18\f \x01(\tR\tcomponent\x12\x12\n" +
-	"\x04icon\x18\r \x01(\tR\x04icon\x12\x1a\n" +
-	"\bsequence\x18\x0e \x01(\x05R\bsequence\x12\x18\n" +
-	"\avisible\x18\x0f \x01(\bR\avisible\x12\x1c\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
+	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
+	"\x04name\x18\x06 \x01(\tR\x04name\x12\x18\n" +
+	"\akeyword\x18\a \x01(\tR\akeyword\x12\x12\n" +
+	"\x04type\x18\t \x01(\tR\x04type\x12\x16\n" +
+	"\x06status\x18\n" +
+	" \x01(\x05R\x06status\x12\x12\n" +
+	"\x04path\x18\v \x01(\tR\x04path\x12\x1c\n" +
+	"\toperation\x18\f \x01(\tR\toperation\x12\x16\n" +
+	"\x06method\x18\r \x01(\tR\x06method\x12\x1a\n" +
+	"\bsequence\x18\x0e \x01(\x05R\bsequence\x12\x1c\n" +
 	"\ttree_path\x18\x10 \x01(\tR\ttree_path\x12O\n" +
 	"\n" +
 	"properties\x18\x11 \x03(\v2/.api.v1.services.types.Resource.PropertiesEntryR\n" +
@@ -2963,125 +2127,85 @@ const file_types_system_proto_rawDesc = "" +
 	"\bchildren\x18\x15 \x03(\v2\x1f.api.v1.services.types.ResourceR\bchildren\x127\n" +
 	"\x06parent\x18\x16 \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12&\n" +
 	"\x0epermission_ids\x18\x17 \x03(\x03R\x0epermission_ids\x12C\n" +
-	"\vpermissions\x18\x18 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x1a=\n" +
+	"\vpermissions\x18\x18 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12\"\n" +
+	"\fservice_name\x18\x19 \x01(\tR\fservice_name\x1a=\n" +
 	"\x0fPropertiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"@\n" +
-	"\rResourceEdges\x12/\n" +
-	"\x04view\x18\x01 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xe8\x03\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb4\x04\n" +
 	"\n" +
 	"Department\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
-	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
-	"\x04name\x18\x05 \x01(\tR\x04name\x12\x1c\n" +
-	"\ttree_path\x18\x06 \x01(\tR\ttree_path\x12\x1a\n" +
-	"\bsequence\x18\a \x01(\x05R\bsequence\x12\x16\n" +
-	"\x06status\x18\b \x01(\x05R\x06status\x12\x14\n" +
-	"\x05level\x18\t \x01(\x05R\x05level\x12 \n" +
-	"\vdescription\x18\n" +
-	" \x01(\tR\vdescription\x12\x1c\n" +
-	"\tparent_id\x18\v \x01(\x03R\tparent_id\x12=\n" +
-	"\bchildren\x18\f \x03(\v2!.api.v1.services.types.DepartmentR\bchildren\x129\n" +
-	"\x06parent\x18\r \x01(\v2!.api.v1.services.types.DepartmentR\x06parent\"\xd0\x02\n" +
-	"\x0fDepartmentEdges\x121\n" +
-	"\x05users\x18\x01 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12=\n" +
-	"\tpositions\x18\x02 \x03(\v2\x1f.api.v1.services.types.PositionR\tpositions\x12=\n" +
-	"\bchildren\x18\x03 \x03(\v2!.api.v1.services.types.DepartmentR\bchildren\x129\n" +
-	"\x06parent\x18\x04 \x01(\v2!.api.v1.services.types.DepartmentR\x06parent\x12Q\n" +
-	"\x10user_departments\x18\x05 \x03(\v2%.api.v1.services.types.UserDepartmentR\x10user_departments\"\xa2\x01\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
+	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x18\n" +
+	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04name\x18\a \x01(\tR\x04name\x12\x1c\n" +
+	"\ttree_path\x18\b \x01(\tR\ttree_path\x12\x1a\n" +
+	"\bsequence\x18\t \x01(\x05R\bsequence\x12\x16\n" +
+	"\x06status\x18\n" +
+	" \x01(\x05R\x06status\x12\x14\n" +
+	"\x05level\x18\v \x01(\x05R\x05level\x12 \n" +
+	"\vdescription\x18\f \x01(\tR\vdescription\x12\x1c\n" +
+	"\tparent_id\x18\r \x01(\x03R\tparent_id\x12=\n" +
+	"\bchildren\x18\x0e \x03(\v2!.api.v1.services.types.DepartmentR\bchildren\x129\n" +
+	"\x06parent\x18\x0f \x01(\v2!.api.v1.services.types.DepartmentR\x06parent\"`\n" +
 	"\x0eUserDepartment\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\auser_id\x18\x02 \x01(\x03R\auser_id\x12$\n" +
-	"\rdepartment_id\x18\x03 \x01(\x03R\rdepartment_id\x12@\n" +
-	"\x05edges\x18\x04 \x01(\v2*.api.v1.services.types.UserDepartmentEdgesR\x05edges\"\x89\x01\n" +
-	"\x13UserDepartmentEdges\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12A\n" +
-	"\n" +
-	"department\x18\x02 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
-	"department\"\x8c\x02\n" +
+	"\rdepartment_id\x18\x03 \x01(\x03R\rdepartment_id\"\xd8\x02\n" +
 	"\bPosition\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\x05 \x01(\tR\akeyword\x12 \n" +
-	"\vdescription\x18\x06 \x01(\tR\vdescription\x12$\n" +
-	"\rdepartment_id\x18\a \x01(\x03R\rdepartment_id\"\xf6\x02\n" +
-	"\rPositionEdges\x12A\n" +
-	"\n" +
-	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
-	"department\x121\n" +
-	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12C\n" +
-	"\vpermissions\x18\x03 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12K\n" +
-	"\x0euser_positions\x18\x04 \x03(\v2#.api.v1.services.types.UserPositionR\x0euser_positions\x12]\n" +
-	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xe2\x04\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
+	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
+	"\x04name\x18\x06 \x01(\tR\x04name\x12\x18\n" +
+	"\akeyword\x18\a \x01(\tR\akeyword\x12 \n" +
+	"\vdescription\x18\b \x01(\tR\vdescription\x12$\n" +
+	"\rdepartment_id\x18\t \x01(\x03R\rdepartment_id\"\xae\x05\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
-	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x16\n" +
-	"\x06status\x18\x06 \x01(\x05R\x06status\x12 \n" +
-	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1e\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
+	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
+	"\x04name\x18\x06 \x01(\tR\x04name\x12\x18\n" +
+	"\akeyword\x18\a \x01(\tR\akeyword\x12\x16\n" +
+	"\x06status\x18\b \x01(\x05R\x06status\x12 \n" +
+	"\vdescription\x18\t \x01(\tR\vdescription\x12\x1e\n" +
 	"\n" +
-	"data_scope\x18\b \x01(\tR\n" +
+	"data_scope\x18\n" +
+	" \x01(\tR\n" +
 	"data_scope\x12P\n" +
 	"\n" +
-	"data_rules\x18\t \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
+	"data_rules\x18\v \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
 	"data_rules\x12\"\n" +
-	"\fresource_ids\x18\n" +
-	" \x03(\x03R\fresource_ids\x12=\n" +
-	"\tresources\x18\v \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x1a\n" +
-	"\bview_ids\x18\f \x03(\x03R\bview_ids\x121\n" +
-	"\x05views\x18\r \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x1a<\n" +
+	"\fresource_ids\x18\f \x03(\x03R\fresource_ids\x12=\n" +
+	"\tresources\x18\r \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x1a\n" +
+	"\bview_ids\x18\x0e \x03(\x03R\bview_ids\x121\n" +
+	"\x05views\x18\x0f \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x1a<\n" +
 	"\x0eDataRulesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xd3\x03\n" +
-	"\x0fPermissionEdges\x121\n" +
-	"\x05roles\x18\x01 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12=\n" +
-	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12=\n" +
-	"\tpositions\x18\x03 \x03(\v2\x1f.api.v1.services.types.PositionR\tpositions\x12Q\n" +
-	"\x10role_permissions\x18\x04 \x03(\v2%.api.v1.services.types.RolePermissionR\x10role_permissions\x12]\n" +
-	"\x14permission_resources\x18\x05 \x03(\v2).api.v1.services.types.PermissionResourceR\x14permission_resources\x12]\n" +
-	"\x14position_permissions\x18\x06 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"Z\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"Z\n" +
 	"\fUserPosition\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\auser_id\x18\x02 \x01(\x03R\auser_id\x12 \n" +
-	"\vposition_id\x18\x03 \x01(\x03R\vposition_id\"\x81\x01\n" +
-	"\x11UserPositionEdges\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12;\n" +
-	"\bposition\x18\x02 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\"l\n" +
+	"\vposition_id\x18\x03 \x01(\x03R\vposition_id\"l\n" +
 	"\x12PositionPermission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12 \n" +
 	"\vposition_id\x18\x02 \x01(\x03R\vposition_id\x12$\n" +
-	"\rpermission_id\x18\x03 \x01(\x03R\rpermission_id\"\x99\x01\n" +
-	"\x17PositionPermissionEdges\x12;\n" +
-	"\bposition\x18\x01 \x01(\v2\x1f.api.v1.services.types.PositionR\bposition\x12A\n" +
-	"\n" +
-	"permission\x18\x02 \x01(\v2!.api.v1.services.types.PermissionR\n" +
-	"permission\"`\n" +
+	"\rpermission_id\x18\x03 \x01(\x03R\rpermission_id\"`\n" +
 	"\x0eRolePermission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\arole_id\x18\x02 \x01(\x03R\arole_id\x12$\n" +
-	"\rpermission_id\x18\x03 \x01(\x03R\rpermission_id\"\x89\x01\n" +
-	"\x13RolePermissionEdges\x12/\n" +
-	"\x04role\x18\x01 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12A\n" +
-	"\n" +
-	"permission\x18\x02 \x01(\v2!.api.v1.services.types.PermissionR\n" +
-	"permission\"\x86\x01\n" +
+	"\rpermission_id\x18\x03 \x01(\x03R\rpermission_id\"\x86\x01\n" +
 	"\x12PermissionResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rpermission_id\x18\x02 \x01(\x03R\rpermission_id\x12 \n" +
 	"\vresource_id\x18\x03 \x01(\x03R\vresource_id\x12\x18\n" +
-	"\aactions\x18\x04 \x01(\tR\aactions\"\x99\x01\n" +
-	"\x17PermissionResourceEdges\x12A\n" +
-	"\n" +
-	"permission\x18\x01 \x01(\v2!.api.v1.services.types.PermissionR\n" +
-	"permission\x12;\n" +
-	"\bresource\x18\x02 \x01(\v2\x1f.api.v1.services.types.ResourceR\bresourceB\xd9\x01\n" +
+	"\aactions\x18\x04 \x01(\tR\aactionsB\xd9\x01\n" +
 	"\x19com.api.v1.services.typesB\vSystemProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (
@@ -3096,132 +2220,75 @@ func file_types_system_proto_rawDescGZIP() []byte {
 	return file_types_system_proto_rawDescData
 }
 
-var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
+var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_types_system_proto_goTypes = []any{
-	(*View)(nil),                    // 0: api.v1.services.types.View
-	(*ViewEdges)(nil),               // 1: api.v1.services.types.ViewEdges
-	(*Role)(nil),                    // 2: api.v1.services.types.Role
-	(*RoleEdges)(nil),               // 3: api.v1.services.types.RoleEdges
-	(*User)(nil),                    // 4: api.v1.services.types.User
-	(*UserEdges)(nil),               // 5: api.v1.services.types.UserEdges
-	(*UserRole)(nil),                // 6: api.v1.services.types.UserRole
-	(*UserRoleEdges)(nil),           // 7: api.v1.services.types.UserRoleEdges
-	(*RoleView)(nil),                // 8: api.v1.services.types.RoleView
-	(*RoleViewEdges)(nil),           // 9: api.v1.services.types.RoleViewEdges
-	(*Resource)(nil),                // 10: api.v1.services.types.Resource
-	(*ResourceEdges)(nil),           // 11: api.v1.services.types.ResourceEdges
-	(*Department)(nil),              // 12: api.v1.services.types.Department
-	(*DepartmentEdges)(nil),         // 13: api.v1.services.types.DepartmentEdges
-	(*UserDepartment)(nil),          // 14: api.v1.services.types.UserDepartment
-	(*UserDepartmentEdges)(nil),     // 15: api.v1.services.types.UserDepartmentEdges
-	(*Position)(nil),                // 16: api.v1.services.types.Position
-	(*PositionEdges)(nil),           // 17: api.v1.services.types.PositionEdges
-	(*Permission)(nil),              // 18: api.v1.services.types.Permission
-	(*PermissionEdges)(nil),         // 19: api.v1.services.types.PermissionEdges
-	(*UserPosition)(nil),            // 20: api.v1.services.types.UserPosition
-	(*UserPositionEdges)(nil),       // 21: api.v1.services.types.UserPositionEdges
-	(*PositionPermission)(nil),      // 22: api.v1.services.types.PositionPermission
-	(*PositionPermissionEdges)(nil), // 23: api.v1.services.types.PositionPermissionEdges
-	(*RolePermission)(nil),          // 24: api.v1.services.types.RolePermission
-	(*RolePermissionEdges)(nil),     // 25: api.v1.services.types.RolePermissionEdges
-	(*PermissionResource)(nil),      // 26: api.v1.services.types.PermissionResource
-	(*PermissionResourceEdges)(nil), // 27: api.v1.services.types.PermissionResourceEdges
-	nil,                             // 28: api.v1.services.types.Resource.PropertiesEntry
-	nil,                             // 29: api.v1.services.types.Permission.DataRulesEntry
-	(*timestamppb.Timestamp)(nil),   // 30: google.protobuf.Timestamp
+	(*View)(nil),                  // 0: api.v1.services.types.View
+	(*Role)(nil),                  // 1: api.v1.services.types.Role
+	(*User)(nil),                  // 2: api.v1.services.types.User
+	(*UserRole)(nil),              // 3: api.v1.services.types.UserRole
+	(*RoleView)(nil),              // 4: api.v1.services.types.RoleView
+	(*Resource)(nil),              // 5: api.v1.services.types.Resource
+	(*Department)(nil),            // 6: api.v1.services.types.Department
+	(*UserDepartment)(nil),        // 7: api.v1.services.types.UserDepartment
+	(*Position)(nil),              // 8: api.v1.services.types.Position
+	(*Permission)(nil),            // 9: api.v1.services.types.Permission
+	(*UserPosition)(nil),          // 10: api.v1.services.types.UserPosition
+	(*PositionPermission)(nil),    // 11: api.v1.services.types.PositionPermission
+	(*RolePermission)(nil),        // 12: api.v1.services.types.RolePermission
+	(*PermissionResource)(nil),    // 13: api.v1.services.types.PermissionResource
+	nil,                           // 14: api.v1.services.types.Resource.PropertiesEntry
+	nil,                           // 15: api.v1.services.types.Permission.DataRulesEntry
+	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
 }
 var file_types_system_proto_depIdxs = []int32{
-	30, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
-	30, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
+	16, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
+	16, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 2: api.v1.services.types.View.children:type_name -> api.v1.services.types.View
 	0,  // 3: api.v1.services.types.View.parent:type_name -> api.v1.services.types.View
-	10, // 4: api.v1.services.types.View.resources:type_name -> api.v1.services.types.Resource
-	2,  // 5: api.v1.services.types.View.roles:type_name -> api.v1.services.types.Role
-	0,  // 6: api.v1.services.types.ViewEdges.children:type_name -> api.v1.services.types.View
-	0,  // 7: api.v1.services.types.ViewEdges.parent:type_name -> api.v1.services.types.View
-	10, // 8: api.v1.services.types.ViewEdges.resources:type_name -> api.v1.services.types.Resource
-	2,  // 9: api.v1.services.types.ViewEdges.roles:type_name -> api.v1.services.types.Role
-	8,  // 10: api.v1.services.types.ViewEdges.role_views:type_name -> api.v1.services.types.RoleView
-	30, // 11: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
-	30, // 12: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
-	0,  // 13: api.v1.services.types.Role.views:type_name -> api.v1.services.types.View
-	4,  // 14: api.v1.services.types.Role.users:type_name -> api.v1.services.types.User
-	10, // 15: api.v1.services.types.Role.resources:type_name -> api.v1.services.types.Resource
-	18, // 16: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
-	0,  // 17: api.v1.services.types.RoleEdges.views:type_name -> api.v1.services.types.View
-	4,  // 18: api.v1.services.types.RoleEdges.users:type_name -> api.v1.services.types.User
-	8,  // 19: api.v1.services.types.RoleEdges.role_views:type_name -> api.v1.services.types.RoleView
-	6,  // 20: api.v1.services.types.RoleEdges.user_roles:type_name -> api.v1.services.types.UserRole
-	30, // 21: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
-	30, // 22: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
-	30, // 23: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
-	30, // 24: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
-	30, // 25: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
-	2,  // 26: api.v1.services.types.User.roles:type_name -> api.v1.services.types.Role
-	2,  // 27: api.v1.services.types.UserEdges.roles:type_name -> api.v1.services.types.Role
-	6,  // 28: api.v1.services.types.UserEdges.user_roles:type_name -> api.v1.services.types.UserRole
-	30, // 29: api.v1.services.types.UserRole.create_time:type_name -> google.protobuf.Timestamp
-	30, // 30: api.v1.services.types.UserRole.update_time:type_name -> google.protobuf.Timestamp
-	4,  // 31: api.v1.services.types.UserRole.user:type_name -> api.v1.services.types.User
-	2,  // 32: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
-	4,  // 33: api.v1.services.types.UserRoleEdges.user:type_name -> api.v1.services.types.User
-	2,  // 34: api.v1.services.types.UserRoleEdges.role:type_name -> api.v1.services.types.Role
-	30, // 35: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
-	30, // 36: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
-	2,  // 37: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
-	0,  // 38: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
-	2,  // 39: api.v1.services.types.RoleViewEdges.role:type_name -> api.v1.services.types.Role
-	0,  // 40: api.v1.services.types.RoleViewEdges.view:type_name -> api.v1.services.types.View
-	30, // 41: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
-	30, // 42: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
-	28, // 43: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
-	10, // 44: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
-	10, // 45: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
-	18, // 46: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
-	0,  // 47: api.v1.services.types.ResourceEdges.view:type_name -> api.v1.services.types.View
-	30, // 48: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
-	30, // 49: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
-	12, // 50: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department
-	12, // 51: api.v1.services.types.Department.parent:type_name -> api.v1.services.types.Department
-	4,  // 52: api.v1.services.types.DepartmentEdges.users:type_name -> api.v1.services.types.User
-	16, // 53: api.v1.services.types.DepartmentEdges.positions:type_name -> api.v1.services.types.Position
-	12, // 54: api.v1.services.types.DepartmentEdges.children:type_name -> api.v1.services.types.Department
-	12, // 55: api.v1.services.types.DepartmentEdges.parent:type_name -> api.v1.services.types.Department
-	14, // 56: api.v1.services.types.DepartmentEdges.user_departments:type_name -> api.v1.services.types.UserDepartment
-	15, // 57: api.v1.services.types.UserDepartment.edges:type_name -> api.v1.services.types.UserDepartmentEdges
-	4,  // 58: api.v1.services.types.UserDepartmentEdges.user:type_name -> api.v1.services.types.User
-	12, // 59: api.v1.services.types.UserDepartmentEdges.department:type_name -> api.v1.services.types.Department
-	30, // 60: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
-	30, // 61: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
-	12, // 62: api.v1.services.types.PositionEdges.department:type_name -> api.v1.services.types.Department
-	4,  // 63: api.v1.services.types.PositionEdges.users:type_name -> api.v1.services.types.User
-	18, // 64: api.v1.services.types.PositionEdges.permissions:type_name -> api.v1.services.types.Permission
-	20, // 65: api.v1.services.types.PositionEdges.user_positions:type_name -> api.v1.services.types.UserPosition
-	22, // 66: api.v1.services.types.PositionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
-	30, // 67: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
-	30, // 68: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
-	29, // 69: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
-	10, // 70: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
-	0,  // 71: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
-	2,  // 72: api.v1.services.types.PermissionEdges.roles:type_name -> api.v1.services.types.Role
-	10, // 73: api.v1.services.types.PermissionEdges.resources:type_name -> api.v1.services.types.Resource
-	16, // 74: api.v1.services.types.PermissionEdges.positions:type_name -> api.v1.services.types.Position
-	24, // 75: api.v1.services.types.PermissionEdges.role_permissions:type_name -> api.v1.services.types.RolePermission
-	26, // 76: api.v1.services.types.PermissionEdges.permission_resources:type_name -> api.v1.services.types.PermissionResource
-	22, // 77: api.v1.services.types.PermissionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
-	4,  // 78: api.v1.services.types.UserPositionEdges.user:type_name -> api.v1.services.types.User
-	16, // 79: api.v1.services.types.UserPositionEdges.position:type_name -> api.v1.services.types.Position
-	16, // 80: api.v1.services.types.PositionPermissionEdges.position:type_name -> api.v1.services.types.Position
-	18, // 81: api.v1.services.types.PositionPermissionEdges.permission:type_name -> api.v1.services.types.Permission
-	2,  // 82: api.v1.services.types.RolePermissionEdges.role:type_name -> api.v1.services.types.Role
-	18, // 83: api.v1.services.types.RolePermissionEdges.permission:type_name -> api.v1.services.types.Permission
-	18, // 84: api.v1.services.types.PermissionResourceEdges.permission:type_name -> api.v1.services.types.Permission
-	10, // 85: api.v1.services.types.PermissionResourceEdges.resource:type_name -> api.v1.services.types.Resource
-	86, // [86:86] is the sub-list for method output_type
-	86, // [86:86] is the sub-list for method input_type
-	86, // [86:86] is the sub-list for extension type_name
-	86, // [86:86] is the sub-list for extension extendee
-	0,  // [0:86] is the sub-list for field type_name
+	5,  // 4: api.v1.services.types.View.resources:type_name -> api.v1.services.types.Resource
+	1,  // 5: api.v1.services.types.View.roles:type_name -> api.v1.services.types.Role
+	16, // 6: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
+	16, // 7: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
+	0,  // 8: api.v1.services.types.Role.views:type_name -> api.v1.services.types.View
+	2,  // 9: api.v1.services.types.Role.users:type_name -> api.v1.services.types.User
+	5,  // 10: api.v1.services.types.Role.resources:type_name -> api.v1.services.types.Resource
+	9,  // 11: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
+	16, // 12: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
+	16, // 13: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
+	16, // 14: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
+	16, // 15: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
+	16, // 16: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
+	1,  // 17: api.v1.services.types.User.roles:type_name -> api.v1.services.types.Role
+	16, // 18: api.v1.services.types.UserRole.create_time:type_name -> google.protobuf.Timestamp
+	16, // 19: api.v1.services.types.UserRole.update_time:type_name -> google.protobuf.Timestamp
+	2,  // 20: api.v1.services.types.UserRole.user:type_name -> api.v1.services.types.User
+	1,  // 21: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
+	16, // 22: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
+	16, // 23: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
+	1,  // 24: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
+	0,  // 25: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
+	16, // 26: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
+	16, // 27: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
+	14, // 28: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
+	5,  // 29: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
+	5,  // 30: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
+	9,  // 31: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
+	16, // 32: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
+	16, // 33: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
+	6,  // 34: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department
+	6,  // 35: api.v1.services.types.Department.parent:type_name -> api.v1.services.types.Department
+	16, // 36: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
+	16, // 37: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
+	16, // 38: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
+	16, // 39: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
+	15, // 40: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
+	5,  // 41: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
+	0,  // 42: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
+	43, // [43:43] is the sub-list for method output_type
+	43, // [43:43] is the sub-list for method input_type
+	43, // [43:43] is the sub-list for extension type_name
+	43, // [43:43] is the sub-list for extension extendee
+	0,  // [0:43] is the sub-list for field type_name
 }
 
 func init() { file_types_system_proto_init() }
@@ -3229,14 +2296,14 @@ func file_types_system_proto_init() {
 	if File_types_system_proto != nil {
 		return
 	}
-	file_types_system_proto_msgTypes[4].OneofWrappers = []any{}
+	file_types_system_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_system_proto_rawDesc), len(file_types_system_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   30,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

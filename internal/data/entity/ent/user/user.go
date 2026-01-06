@@ -49,6 +49,8 @@ const (
 	FieldPhone = "phone"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
+	// FieldI18n holds the string denoting the i18n field in the database.
+	FieldI18n = "i18n"
 	// FieldDepartment holds the string denoting the department field in the database.
 	FieldDepartment = "department"
 	// FieldRemark holds the string denoting the remark field in the database.
@@ -139,6 +141,7 @@ var Columns = []string{
 	FieldEncryptedPassword,
 	FieldPhone,
 	FieldEmail,
+	FieldI18n,
 	FieldDepartment,
 	FieldRemark,
 	FieldToken,
@@ -230,6 +233,10 @@ var (
 	DefaultEmail string
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
+	// DefaultI18n holds the default value on creation for the "i18n" field.
+	DefaultI18n string
+	// I18nValidator is a validator for the "i18n" field. It is called by the builders before save.
+	I18nValidator func(string) error
 	// DefaultDepartment holds the default value on creation for the "department" field.
 	DefaultDepartment string
 	// DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
@@ -377,6 +384,11 @@ func ByPhone(opts ...sql.OrderTermOption) OrderOption {
 // ByEmail orders the results by the email field.
 func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
+}
+
+// ByI18n orders the results by the i18n field.
+func ByI18n(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18n, opts...).ToFunc()
 }
 
 // ByDepartment orders the results by the department field.

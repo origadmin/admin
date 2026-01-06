@@ -22,27 +22,27 @@ type View struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// entity.view.field.parent_id.comment
+	// entity.view.field.parent_id
 	ParentID int64 `json:"parent_id,omitempty"`
-	// entity.view.field.keyword.comment
+	// entity.view.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// entity.view.field.scope.comment
+	// entity.view.field.scope
 	Scope string `json:"scope,omitempty"`
-	// entity.view.field.name.comment
+	// entity.view.field.name
 	Name string `json:"name,omitempty"`
-	// entity.view.field.type.comment
+	// entity.view.field.type
 	Type view.Type `json:"type,omitempty"`
-	// entity.view.field.component.comment
+	// entity.view.field.component
 	Component string `json:"component,omitempty"`
-	// entity.view.field.path.comment
+	// entity.view.field.path
 	Path string `json:"path,omitempty"`
-	// entity.view.field.icon.comment
+	// entity.view.field.icon
 	Icon string `json:"icon,omitempty"`
-	// entity.view.field.visible.comment
+	// entity.view.field.visible
 	Visible bool `json:"visible,omitempty"`
-	// entity.view.field.sequence.comment
+	// entity.view.field.sequence
 	Sequence int `json:"sequence,omitempty"`
-	// entity.view.field.tree_path.comment
+	// entity.view.field.tree_path
 	TreePath string `json:"tree_path,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ViewQuery when eager-loading is set.

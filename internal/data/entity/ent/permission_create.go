@@ -15,6 +15,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/rolepermission"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -111,13 +112,13 @@ func (_c *PermissionCreate) SetDataRules(v map[string]string) *PermissionCreate 
 }
 
 // SetStatus sets the "status" field.
-func (_c *PermissionCreate) SetStatus(v permission.Status) *PermissionCreate {
+func (_c *PermissionCreate) SetStatus(v enums.Status) *PermissionCreate {
 	_c.mutation.SetStatus(v)
 	return _c
 }
 
 // SetNillableStatus sets the "status" field if the given value is not nil.
-func (_c *PermissionCreate) SetNillableStatus(v *permission.Status) *PermissionCreate {
+func (_c *PermissionCreate) SetNillableStatus(v *enums.Status) *PermissionCreate {
 	if v != nil {
 		_c.SetStatus(*v)
 	}
@@ -379,11 +380,6 @@ func (_c *PermissionCreate) check() error {
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Permission.status"`)}
 	}
-	if v, ok := _c.mutation.Status(); ok {
-		if err := permission.StatusValidator(v); err != nil {
-			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "Permission.status": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.Actions(); !ok {
 		return &ValidationError{Name: "actions", err: errors.New(`ent: missing required field "Permission.actions"`)}
 	}
@@ -458,7 +454,7 @@ func (_c *PermissionCreate) createSpec() (*Permission, *sqlgraph.CreateSpec) {
 		_node.DataRules = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
-		_spec.SetField(permission.FieldStatus, field.TypeEnum, value)
+		_spec.SetField(permission.FieldStatus, field.TypeInt8, value)
 		_node.Status = value
 	}
 	if value, ok := _c.mutation.Actions(); ok {

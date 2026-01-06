@@ -4,6 +4,7 @@ package permission
 
 import (
 	"fmt"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -159,37 +160,13 @@ var (
 	DescriptionValidator func(string) error
 	// DefaultDataScope holds the default value on creation for the "data_scope" field.
 	DefaultDataScope string
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus enums.Status
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(int64) error
 )
-
-// Status defines the type for the "status" enum field.
-type Status string
-
-// StatusEnabled is the default value of the Status enum.
-const DefaultStatus = StatusEnabled
-
-// Status values.
-const (
-	StatusEnabled  Status = "enabled"
-	StatusDisabled Status = "disabled"
-)
-
-func (s Status) String() string {
-	return string(s)
-}
-
-// StatusValidator is a validator for the "status" field enum values. It is called by the builders before save.
-func StatusValidator(s Status) error {
-	switch s {
-	case StatusEnabled, StatusDisabled:
-		return nil
-	default:
-		return fmt.Errorf("permission: invalid enum value for status field: %q", s)
-	}
-}
 
 // Actions defines the type for the "actions" enum field.
 type Actions string

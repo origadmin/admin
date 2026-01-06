@@ -33,7 +33,7 @@ import (
 
 var (
 	factory  = secmiddleware.NewFactory()
-	policies = map[string]security.Policy{}
+	policies = make(map[string]security.Policy)
 )
 
 func init() {

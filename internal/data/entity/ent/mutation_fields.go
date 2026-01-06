@@ -358,9 +358,8 @@ func (m *PermissionMutation) SetFieldsSkipZero(input *Permission, fields ...stri
 				m.SetDataRules(input.DataRules)
 			}
 		case permission.FieldStatus:
-			var zero permission.Status
-			// check permission.Status with sql.NullString if it is empty
-			if input.Status != zero {
+			// check enums.Status with sql.NullInt64 if it is zero
+			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
 		case permission.FieldActions:
@@ -633,9 +632,8 @@ func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) 
 				m.SetSyncStatus(input.SyncStatus)
 			}
 		case resource.FieldStatus:
-			var zero resource.Status
-			// check resource.Status with sql.NullString if it is empty
-			if input.Status != zero {
+			// check enums.Status with sql.NullInt64 if it is zero
+			if input.Status != 0 {
 				m.SetStatus(input.Status)
 			}
 		case resource.FieldID:
@@ -819,6 +817,8 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetPhone(input.Phone)
 		case user.FieldEmail:
 			m.SetEmail(input.Email)
+		case user.FieldI18n:
+			m.SetI18n(input.I18n)
 		case user.FieldDepartment:
 			m.SetDepartment(input.Department)
 		case user.FieldRemark:
@@ -933,6 +933,11 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 			// check string with sql.NullString if it is empty
 			if input.Email != "" {
 				m.SetEmail(input.Email)
+			}
+		case user.FieldI18n:
+			// check string with sql.NullString if it is empty
+			if input.I18n != "" {
+				m.SetI18n(input.I18n)
 			}
 		case user.FieldDepartment:
 			// check string with sql.NullString if it is empty

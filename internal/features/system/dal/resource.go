@@ -94,6 +94,10 @@ func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOptio
 		query.WithPermissions()
 	}
 
+	if opt.Keyword != "" {
+		query.Where(resource.KeywordContains(opt.Keyword))
+	}
+
 	if opt.ReadMask != nil {
 		selectCols := db.SelectFields(opt.ReadMask, resource.ValidColumn, resource.FieldID, new(types.Resource))
 		if len(selectCols) > 0 {

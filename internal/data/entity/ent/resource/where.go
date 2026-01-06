@@ -4,6 +4,7 @@ package resource
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -103,6 +104,12 @@ func LastSyncVersionID(v string) predicate.Resource {
 // SyncStatus applies equality check predicate on the "sync_status" field. It's identical to SyncStatusEQ.
 func SyncStatus(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEQ(FieldSyncStatus, v))
+}
+
+// Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
+func Status(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldEQ(FieldStatus, vc))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -801,23 +808,57 @@ func SyncStatusContainsFold(v string) predicate.Resource {
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.
-func StatusEQ(v Status) predicate.Resource {
-	return predicate.Resource(sql.FieldEQ(FieldStatus, v))
+func StatusEQ(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldEQ(FieldStatus, vc))
 }
 
 // StatusNEQ applies the NEQ predicate on the "status" field.
-func StatusNEQ(v Status) predicate.Resource {
-	return predicate.Resource(sql.FieldNEQ(FieldStatus, v))
+func StatusNEQ(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldNEQ(FieldStatus, vc))
 }
 
 // StatusIn applies the In predicate on the "status" field.
-func StatusIn(vs ...Status) predicate.Resource {
-	return predicate.Resource(sql.FieldIn(FieldStatus, vs...))
+func StatusIn(vs ...enums.Status) predicate.Resource {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Resource(sql.FieldIn(FieldStatus, v...))
 }
 
 // StatusNotIn applies the NotIn predicate on the "status" field.
-func StatusNotIn(vs ...Status) predicate.Resource {
-	return predicate.Resource(sql.FieldNotIn(FieldStatus, vs...))
+func StatusNotIn(vs ...enums.Status) predicate.Resource {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.Resource(sql.FieldNotIn(FieldStatus, v...))
+}
+
+// StatusGT applies the GT predicate on the "status" field.
+func StatusGT(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldGT(FieldStatus, vc))
+}
+
+// StatusGTE applies the GTE predicate on the "status" field.
+func StatusGTE(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldGTE(FieldStatus, vc))
+}
+
+// StatusLT applies the LT predicate on the "status" field.
+func StatusLT(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldLT(FieldStatus, vc))
+}
+
+// StatusLTE applies the LTE predicate on the "status" field.
+func StatusLTE(v enums.Status) predicate.Resource {
+	vc := int8(v)
+	return predicate.Resource(sql.FieldLTE(FieldStatus, vc))
 }
 
 // HasViews applies the HasEdge predicate on the "views" edge.

@@ -6,6 +6,8 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+
+	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/helpers/ent/mixin"
 	"origadmin/application/admin/internal/helpers/i18n"
 )
@@ -19,37 +21,38 @@ type Resource struct {
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("service_name").
-			Comment(i18n.Text("entity.resource.field.service_name.comment")),
+			Default("").
+			Comment(i18n.Text("entity.resource.field.service_name")),
 		field.String("keyword").
 			MaxLen(255).
-			Comment(i18n.Text("entity.resource.field.keyword.comment")).
+			Comment(i18n.Text("entity.resource.field.keyword")).
 			Unique().
 			NotEmpty(),
 		field.String("path").
-			Comment(i18n.Text("entity.resource.field.path.comment")).
+			Comment(i18n.Text("entity.resource.field.path")).
 			Optional(),
 		field.String("method").
-			Comment(i18n.Text("entity.resource.field.method.comment")).
+			Comment(i18n.Text("entity.resource.field.method")).
 			Optional(),
 		field.String("operation").
-			Comment(i18n.Text("entity.resource.field.operation.comment")).
+			Comment(i18n.Text("entity.resource.field.operation")).
 			Optional(),
 		field.String("policy").
-			Comment(i18n.Text("entity.resource.field.policy.comment")).
+			Comment(i18n.Text("entity.resource.field.policy")).
 			Default(""),
 		field.String("version_id").
-			Comment(i18n.Text("entity.resource.field.version_id.comment")).
+			Comment(i18n.Text("entity.resource.field.version_id")).
 			Default(""),
 		field.String("last_sync_version_id").
-			Comment(i18n.Text("entity.resource.field.last_sync_version_id.comment")).
+			Comment(i18n.Text("entity.resource.field.last_sync_version_id")).
 			Default(""),
 		field.String("sync_status").
-			Comment(i18n.Text("entity.resource.field.sync_status.comment")).
+			Comment(i18n.Text("entity.resource.field.sync_status")).
 			Default("Synced"),
-		field.Enum("status").
-			Comment(i18n.Text("entity.resource.field.status.comment")).
-			Values("enabled", "disabled").
-			Default("enabled"),
+		field.Int8("status").
+			GoType(enums.Status(0)).
+			Default(int8(enums.StatusActive)).
+			Comment(i18n.Text("entity.resource.field.status")),
 	}
 }
 

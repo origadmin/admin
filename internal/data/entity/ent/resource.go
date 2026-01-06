@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
+	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
 
@@ -22,26 +23,26 @@ type Resource struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// entity.resource.field.service_name.comment
+	// entity.resource.field.service_name
 	ServiceName string `json:"service_name,omitempty"`
-	// entity.resource.field.keyword.comment
+	// entity.resource.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// entity.resource.field.path.comment
+	// entity.resource.field.path
 	Path string `json:"path,omitempty"`
-	// entity.resource.field.method.comment
+	// entity.resource.field.method
 	Method string `json:"method,omitempty"`
-	// entity.resource.field.operation.comment
+	// entity.resource.field.operation
 	Operation string `json:"operation,omitempty"`
-	// entity.resource.field.policy.comment
+	// entity.resource.field.policy
 	Policy string `json:"policy,omitempty"`
-	// entity.resource.field.version_id.comment
+	// entity.resource.field.version_id
 	VersionID string `json:"version_id,omitempty"`
-	// entity.resource.field.last_sync_version_id.comment
+	// entity.resource.field.last_sync_version_id
 	LastSyncVersionID string `json:"last_sync_version_id,omitempty"`
-	// entity.resource.field.sync_status.comment
+	// entity.resource.field.sync_status
 	SyncStatus string `json:"sync_status,omitempty"`
-	// entity.resource.field.status.comment
-	Status resource.Status `json:"status,omitempty"`
+	// entity.resource.field.status
+	Status enums.Status `json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.
 	Edges        ResourceEdges `json:"edges"`
@@ -93,9 +94,9 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case resource.FieldID:
+		case resource.FieldID, resource.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case resource.FieldServiceName, resource.FieldKeyword, resource.FieldPath, resource.FieldMethod, resource.FieldOperation, resource.FieldPolicy, resource.FieldVersionID, resource.FieldLastSyncVersionID, resource.FieldSyncStatus, resource.FieldStatus:
+		case resource.FieldServiceName, resource.FieldKeyword, resource.FieldPath, resource.FieldMethod, resource.FieldOperation, resource.FieldPolicy, resource.FieldVersionID, resource.FieldLastSyncVersionID, resource.FieldSyncStatus:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -187,10 +188,10 @@ func (_m *Resource) assignValues(columns []string, values []any) error {
 				_m.SyncStatus = value.String
 			}
 		case resource.FieldStatus:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field status", values[i])
 			} else if value.Valid {
-				_m.Status = resource.Status(value.String)
+				_m.Status = enums.Status(value.Int64)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])

@@ -22,19 +22,19 @@ type View struct {
 func (View) Fields() []ent.Field {
 	return []ent.Field{
 		// Use OptionalFK for an optional foreign key, as designed in the mixin package.
-		mixin.OptionalFK("parent_id", i18n.Text("entity.view.field.parent_id.comment")),
+		mixin.OptionalFK("parent_id", i18n.Text("entity.view.field.parent_id")),
 		field.String("keyword").
 			MaxLen(255).
-			Comment(i18n.Text("entity.view.field.keyword.comment")).
+			Comment(i18n.Text("entity.view.field.keyword")).
 			Unique().
 			NotEmpty(),
 		field.String("scope").
-			Comment(i18n.Text("entity.view.field.scope.comment")).
+			Comment(i18n.Text("entity.view.field.scope")).
 			Default("default"),
 		field.String("name").
-			Comment(i18n.Text("entity.view.field.name.comment")),
+			Comment(i18n.Text("entity.view.field.name")),
 		field.Enum("type").
-			Comment(i18n.Text("entity.view.field.type.comment")).
+			Comment(i18n.Text("entity.view.field.type")).
 			Values(
 				string(enums.ViewTypeRoot),
 				string(enums.ViewTypeGroup),
@@ -48,22 +48,22 @@ func (View) Fields() []ent.Field {
 			).
 			Default(string(enums.ViewTypeUnknown)),
 		field.String("component").
-			Comment(i18n.Text("entity.view.field.component.comment")).
+			Comment(i18n.Text("entity.view.field.component")).
 			Optional(),
 		field.String("path").
-			Comment(i18n.Text("entity.view.field.path.comment")).
+			Comment(i18n.Text("entity.view.field.path")).
 			Optional(),
 		field.String("icon").
-			Comment(i18n.Text("entity.view.field.icon.comment")).
+			Comment(i18n.Text("entity.view.field.icon")).
 			Optional(),
 		field.Bool("visible").
-			Comment(i18n.Text("entity.view.field.visible.comment")).
+			Comment(i18n.Text("entity.view.field.visible")).
 			Default(true),
 		field.Int("sequence").
-			Comment(i18n.Text("entity.view.field.sequence.comment")).
+			Comment(i18n.Text("entity.view.field.sequence")).
 			Default(0),
 		field.String("tree_path").
-			Comment(i18n.Text("entity.view.field.tree_path.comment")).
+			Comment(i18n.Text("entity.view.field.tree_path")).
 			Optional(),
 	}
 }

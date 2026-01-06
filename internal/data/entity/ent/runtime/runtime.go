@@ -206,6 +206,10 @@ func init() {
 	permissionDescDataScope := permissionFields[3].Descriptor()
 	// permission.DefaultDataScope holds the default value on creation for the data_scope field.
 	permission.DefaultDataScope = permissionDescDataScope.Default.(string)
+	// permissionDescStatus is the schema descriptor for status field.
+	permissionDescStatus := permissionFields[5].Descriptor()
+	// permission.DefaultStatus holds the default value on creation for the status field.
+	permission.DefaultStatus = enums.Status(permissionDescStatus.Default.(int8))
 	// permissionDescID is the schema descriptor for id field.
 	permissionDescID := permissionMixinFields0[0].Descriptor()
 	// permission.DefaultID holds the default value on creation for the id field.
@@ -328,6 +332,10 @@ func init() {
 	resourceDescSyncStatus := resourceFields[8].Descriptor()
 	// resource.DefaultSyncStatus holds the default value on creation for the sync_status field.
 	resource.DefaultSyncStatus = resourceDescSyncStatus.Default.(string)
+	// resourceDescStatus is the schema descriptor for status field.
+	resourceDescStatus := resourceFields[9].Descriptor()
+	// resource.DefaultStatus holds the default value on creation for the status field.
+	resource.DefaultStatus = enums.Status(resourceDescStatus.Default.(int8))
 	// resourceDescID is the schema descriptor for id field.
 	resourceDescID := resourceMixinFields0[0].Descriptor()
 	// resource.DefaultID holds the default value on creation for the id field.
@@ -492,50 +500,56 @@ func init() {
 	user.DefaultEmail = userDescEmail.Default.(string)
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
+	// userDescI18n is the schema descriptor for i18n field.
+	userDescI18n := userFields[11].Descriptor()
+	// user.DefaultI18n holds the default value on creation for the i18n field.
+	user.DefaultI18n = userDescI18n.Default.(string)
+	// user.I18nValidator is a validator for the "i18n" field. It is called by the builders before save.
+	user.I18nValidator = userDescI18n.Validators[0].(func(string) error)
 	// userDescDepartment is the schema descriptor for department field.
-	userDescDepartment := userFields[11].Descriptor()
+	userDescDepartment := userFields[12].Descriptor()
 	// user.DefaultDepartment holds the default value on creation for the department field.
 	user.DefaultDepartment = userDescDepartment.Default.(string)
 	// user.DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
 	user.DepartmentValidator = userDescDepartment.Validators[0].(func(string) error)
 	// userDescRemark is the schema descriptor for remark field.
-	userDescRemark := userFields[12].Descriptor()
+	userDescRemark := userFields[13].Descriptor()
 	// user.DefaultRemark holds the default value on creation for the remark field.
 	user.DefaultRemark = userDescRemark.Default.(string)
 	// user.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
 	user.RemarkValidator = userDescRemark.Validators[0].(func(string) error)
 	// userDescToken is the schema descriptor for token field.
-	userDescToken := userFields[13].Descriptor()
+	userDescToken := userFields[14].Descriptor()
 	// user.DefaultToken holds the default value on creation for the token field.
 	user.DefaultToken = userDescToken.Default.(string)
 	// user.TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	user.TokenValidator = userDescToken.Validators[0].(func(string) error)
 	// userDescStatus is the schema descriptor for status field.
-	userDescStatus := userFields[14].Descriptor()
+	userDescStatus := userFields[15].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = enums.Status(userDescStatus.Default.(int8))
 	// userDescIsSystem is the schema descriptor for is_system field.
-	userDescIsSystem := userFields[15].Descriptor()
+	userDescIsSystem := userFields[16].Descriptor()
 	// user.DefaultIsSystem holds the default value on creation for the is_system field.
 	user.DefaultIsSystem = userDescIsSystem.Default.(bool)
 	// userDescLastLoginIP is the schema descriptor for last_login_ip field.
-	userDescLastLoginIP := userFields[16].Descriptor()
+	userDescLastLoginIP := userFields[17].Descriptor()
 	// user.DefaultLastLoginIP holds the default value on creation for the last_login_ip field.
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// user.LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	user.LastLoginIPValidator = userDescLastLoginIP.Validators[0].(func(string) error)
 	// userDescLoginIP is the schema descriptor for login_ip field.
-	userDescLoginIP := userFields[17].Descriptor()
+	userDescLoginIP := userFields[18].Descriptor()
 	// user.DefaultLoginIP holds the default value on creation for the login_ip field.
 	user.DefaultLoginIP = userDescLoginIP.Default.(string)
 	// user.LoginIPValidator is a validator for the "login_ip" field. It is called by the builders before save.
 	user.LoginIPValidator = userDescLoginIP.Validators[0].(func(string) error)
 	// userDescLastLoginTime is the schema descriptor for last_login_time field.
-	userDescLastLoginTime := userFields[18].Descriptor()
+	userDescLastLoginTime := userFields[19].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
 	// userDescLoginTime is the schema descriptor for login_time field.
-	userDescLoginTime := userFields[19].Descriptor()
+	userDescLoginTime := userFields[20].Descriptor()
 	// user.DefaultLoginTime holds the default value on creation for the login_time field.
 	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
 	// userDescID is the schema descriptor for id field.
@@ -722,6 +736,6 @@ func init() {
 }
 
 const (
-	Version = "v0.14.5"                                         // Version of ent codegen.
-	Sum     = "h1:Rj2WOYJtCkWyFo6a+5wB3EfBRP0rnx1fMk6gGA0UUe4=" // Sum of ent codegen.
+	Version = "v0.14.6-0.20251211203232-397ebe9f39af"           // Version of ent codegen.
+	Sum     = "h1:bTFOfVixGo0QXY69RnBIvUIYAJUrnkjqfV5UhU91hTU=" // Sum of ent codegen.
 )

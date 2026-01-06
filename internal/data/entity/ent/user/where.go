@@ -131,6 +131,11 @@ func Email(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldEmail, v))
 }
 
+// I18n applies equality check predicate on the "i18n" field. It's identical to I18nEQ.
+func I18n(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldI18n, v))
+}
+
 // Department applies equality check predicate on the "department" field. It's identical to DepartmentEQ.
 func Department(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldDepartment, v))
@@ -1080,6 +1085,71 @@ func EmailEqualFold(v string) predicate.User {
 // EmailContainsFold applies the ContainsFold predicate on the "email" field.
 func EmailContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldEmail, v))
+}
+
+// I18nEQ applies the EQ predicate on the "i18n" field.
+func I18nEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldI18n, v))
+}
+
+// I18nNEQ applies the NEQ predicate on the "i18n" field.
+func I18nNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldI18n, v))
+}
+
+// I18nIn applies the In predicate on the "i18n" field.
+func I18nIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldI18n, vs...))
+}
+
+// I18nNotIn applies the NotIn predicate on the "i18n" field.
+func I18nNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldI18n, vs...))
+}
+
+// I18nGT applies the GT predicate on the "i18n" field.
+func I18nGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldI18n, v))
+}
+
+// I18nGTE applies the GTE predicate on the "i18n" field.
+func I18nGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldI18n, v))
+}
+
+// I18nLT applies the LT predicate on the "i18n" field.
+func I18nLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldI18n, v))
+}
+
+// I18nLTE applies the LTE predicate on the "i18n" field.
+func I18nLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldI18n, v))
+}
+
+// I18nContains applies the Contains predicate on the "i18n" field.
+func I18nContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldI18n, v))
+}
+
+// I18nHasPrefix applies the HasPrefix predicate on the "i18n" field.
+func I18nHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldI18n, v))
+}
+
+// I18nHasSuffix applies the HasSuffix predicate on the "i18n" field.
+func I18nHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldI18n, v))
+}
+
+// I18nEqualFold applies the EqualFold predicate on the "i18n" field.
+func I18nEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldI18n, v))
+}
+
+// I18nContainsFold applies the ContainsFold predicate on the "i18n" field.
+func I18nContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldI18n, v))
 }
 
 // DepartmentEQ applies the EQ predicate on the "department" field.

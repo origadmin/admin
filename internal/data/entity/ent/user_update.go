@@ -270,6 +270,20 @@ func (_u *UserUpdate) SetNillableEmail(v *string) *UserUpdate {
 	return _u
 }
 
+// SetI18n sets the "i18n" field.
+func (_u *UserUpdate) SetI18n(v string) *UserUpdate {
+	_u.mutation.SetI18n(v)
+	return _u
+}
+
+// SetNillableI18n sets the "i18n" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableI18n(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetI18n(*v)
+	}
+	return _u
+}
+
 // SetDepartment sets the "department" field.
 func (_u *UserUpdate) SetDepartment(v string) *UserUpdate {
 	_u.mutation.SetDepartment(v)
@@ -738,6 +752,11 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.I18n(); ok {
+		if err := user.I18nValidator(v); err != nil {
+			return &ValidationError{Name: "i18n", err: fmt.Errorf(`ent: validator failed for field "User.i18n": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Department(); ok {
 		if err := user.DepartmentValidator(v); err != nil {
 			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
@@ -843,6 +862,9 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.I18n(); ok {
+		_spec.SetField(user.FieldI18n, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Department(); ok {
 		_spec.SetField(user.FieldDepartment, field.TypeString, value)
@@ -1406,6 +1428,20 @@ func (_u *UserUpdateOne) SetNillableEmail(v *string) *UserUpdateOne {
 	return _u
 }
 
+// SetI18n sets the "i18n" field.
+func (_u *UserUpdateOne) SetI18n(v string) *UserUpdateOne {
+	_u.mutation.SetI18n(v)
+	return _u
+}
+
+// SetNillableI18n sets the "i18n" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableI18n(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetI18n(*v)
+	}
+	return _u
+}
+
 // SetDepartment sets the "department" field.
 func (_u *UserUpdateOne) SetDepartment(v string) *UserUpdateOne {
 	_u.mutation.SetDepartment(v)
@@ -1887,6 +1923,11 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.I18n(); ok {
+		if err := user.I18nValidator(v); err != nil {
+			return &ValidationError{Name: "i18n", err: fmt.Errorf(`ent: validator failed for field "User.i18n": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Department(); ok {
 		if err := user.DepartmentValidator(v); err != nil {
 			return &ValidationError{Name: "department", err: fmt.Errorf(`ent: validator failed for field "User.department": %w`, err)}
@@ -2009,6 +2050,9 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.I18n(); ok {
+		_spec.SetField(user.FieldI18n, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Department(); ok {
 		_spec.SetField(user.FieldDepartment, field.TypeString, value)

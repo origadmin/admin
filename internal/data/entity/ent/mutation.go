@@ -2941,7 +2941,8 @@ type PermissionMutation struct {
 	description                 *string
 	data_scope                  *string
 	data_rules                  *map[string]string
-	status                      *permission.Status
+	status                      *enums.Status
+	addstatus                   *enums.Status
 	actions                     *permission.Actions
 	clearedFields               map[string]struct{}
 	roles                       map[int64]struct{}
@@ -3343,12 +3344,13 @@ func (m *PermissionMutation) ResetDataRules() {
 }
 
 // SetStatus sets the "status" field.
-func (m *PermissionMutation) SetStatus(pe permission.Status) {
-	m.status = &pe
+func (m *PermissionMutation) SetStatus(e enums.Status) {
+	m.status = &e
+	m.addstatus = nil
 }
 
 // Status returns the value of the "status" field in the mutation.
-func (m *PermissionMutation) Status() (r permission.Status, exists bool) {
+func (m *PermissionMutation) Status() (r enums.Status, exists bool) {
 	v := m.status
 	if v == nil {
 		return
@@ -3359,7 +3361,7 @@ func (m *PermissionMutation) Status() (r permission.Status, exists bool) {
 // OldStatus returns the old "status" field's value of the Permission entity.
 // If the Permission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PermissionMutation) OldStatus(ctx context.Context) (v permission.Status, err error) {
+func (m *PermissionMutation) OldStatus(ctx context.Context) (v enums.Status, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
 	}
@@ -3373,9 +3375,28 @@ func (m *PermissionMutation) OldStatus(ctx context.Context) (v permission.Status
 	return oldValue.Status, nil
 }
 
+// AddStatus adds e to the "status" field.
+func (m *PermissionMutation) AddStatus(e enums.Status) {
+	if m.addstatus != nil {
+		*m.addstatus += e
+	} else {
+		m.addstatus = &e
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *PermissionMutation) AddedStatus() (r enums.Status, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetStatus resets all changes to the "status" field.
 func (m *PermissionMutation) ResetStatus() {
 	m.status = nil
+	m.addstatus = nil
 }
 
 // SetActions sets the "actions" field.
@@ -4020,7 +4041,7 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 		m.SetDataRules(v)
 		return nil
 	case permission.FieldStatus:
-		v, ok := value.(permission.Status)
+		v, ok := value.(enums.Status)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -4040,13 +4061,21 @@ func (m *PermissionMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *PermissionMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, permission.FieldStatus)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case permission.FieldStatus:
+		return m.AddedStatus()
+	}
 	return nil, false
 }
 
@@ -4055,6 +4084,13 @@ func (m *PermissionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PermissionMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case permission.FieldStatus:
+		v, ok := value.(enums.Status)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Permission numeric field %s", name)
 }
@@ -6364,7 +6400,8 @@ type ResourceMutation struct {
 	version_id            *string
 	last_sync_version_id  *string
 	sync_status           *string
-	status                *resource.Status
+	status                *enums.Status
+	addstatus             *enums.Status
 	clearedFields         map[string]struct{}
 	views                 map[int64]struct{}
 	removedviews          map[int64]struct{}
@@ -6920,12 +6957,13 @@ func (m *ResourceMutation) ResetSyncStatus() {
 }
 
 // SetStatus sets the "status" field.
-func (m *ResourceMutation) SetStatus(r resource.Status) {
-	m.status = &r
+func (m *ResourceMutation) SetStatus(e enums.Status) {
+	m.status = &e
+	m.addstatus = nil
 }
 
 // Status returns the value of the "status" field in the mutation.
-func (m *ResourceMutation) Status() (r resource.Status, exists bool) {
+func (m *ResourceMutation) Status() (r enums.Status, exists bool) {
 	v := m.status
 	if v == nil {
 		return
@@ -6936,7 +6974,7 @@ func (m *ResourceMutation) Status() (r resource.Status, exists bool) {
 // OldStatus returns the old "status" field's value of the Resource entity.
 // If the Resource object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ResourceMutation) OldStatus(ctx context.Context) (v resource.Status, err error) {
+func (m *ResourceMutation) OldStatus(ctx context.Context) (v enums.Status, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
 	}
@@ -6950,9 +6988,28 @@ func (m *ResourceMutation) OldStatus(ctx context.Context) (v resource.Status, er
 	return oldValue.Status, nil
 }
 
+// AddStatus adds e to the "status" field.
+func (m *ResourceMutation) AddStatus(e enums.Status) {
+	if m.addstatus != nil {
+		*m.addstatus += e
+	} else {
+		m.addstatus = &e
+	}
+}
+
+// AddedStatus returns the value that was added to the "status" field in this mutation.
+func (m *ResourceMutation) AddedStatus() (r enums.Status, exists bool) {
+	v := m.addstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
 // ResetStatus resets all changes to the "status" field.
 func (m *ResourceMutation) ResetStatus() {
 	m.status = nil
+	m.addstatus = nil
 }
 
 // AddViewIDs adds the "views" edge to the View entity by ids.
@@ -7340,7 +7397,7 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 		m.SetSyncStatus(v)
 		return nil
 	case resource.FieldStatus:
-		v, ok := value.(resource.Status)
+		v, ok := value.(enums.Status)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -7353,13 +7410,21 @@ func (m *ResourceMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *ResourceMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addstatus != nil {
+		fields = append(fields, resource.FieldStatus)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case resource.FieldStatus:
+		return m.AddedStatus()
+	}
 	return nil, false
 }
 
@@ -7368,6 +7433,13 @@ func (m *ResourceMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *ResourceMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case resource.FieldStatus:
+		v, ok := value.(enums.Status)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStatus(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Resource numeric field %s", name)
 }
@@ -9253,6 +9325,7 @@ type UserMutation struct {
 	salt                    *string
 	phone                   *string
 	email                   *string
+	i18n                    *string
 	department              *string
 	remark                  *string
 	token                   *string
@@ -10049,6 +10122,42 @@ func (m *UserMutation) ResetEmail() {
 	m.email = nil
 }
 
+// SetI18n sets the "i18n" field.
+func (m *UserMutation) SetI18n(s string) {
+	m.i18n = &s
+}
+
+// I18n returns the value of the "i18n" field in the mutation.
+func (m *UserMutation) I18n() (r string, exists bool) {
+	v := m.i18n
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldI18n returns the old "i18n" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldI18n(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldI18n is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldI18n requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldI18n: %w", err)
+	}
+	return oldValue.I18n, nil
+}
+
+// ResetI18n resets all changes to the "i18n" field.
+func (m *UserMutation) ResetI18n() {
+	m.i18n = nil
+}
+
 // SetDepartment sets the "department" field.
 func (m *UserMutation) SetDepartment(s string) {
 	m.department = &s
@@ -10800,7 +10909,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 26)
+	fields := make([]string, 0, 27)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10848,6 +10957,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.email != nil {
 		fields = append(fields, user.FieldEmail)
+	}
+	if m.i18n != nil {
+		fields = append(fields, user.FieldI18n)
 	}
 	if m.department != nil {
 		fields = append(fields, user.FieldDepartment)
@@ -10919,6 +11031,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Phone()
 	case user.FieldEmail:
 		return m.Email()
+	case user.FieldI18n:
+		return m.I18n()
 	case user.FieldDepartment:
 		return m.Department()
 	case user.FieldRemark:
@@ -10980,6 +11094,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPhone(ctx)
 	case user.FieldEmail:
 		return m.OldEmail(ctx)
+	case user.FieldI18n:
+		return m.OldI18n(ctx)
 	case user.FieldDepartment:
 		return m.OldDepartment(ctx)
 	case user.FieldRemark:
@@ -11120,6 +11236,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEmail(v)
+		return nil
+	case user.FieldI18n:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetI18n(v)
 		return nil
 	case user.FieldDepartment:
 		v, ok := value.(string)
@@ -11353,6 +11476,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldEmail:
 		m.ResetEmail()
+		return nil
+	case user.FieldI18n:
+		m.ResetI18n()
 		return nil
 	case user.FieldDepartment:
 		m.ResetDepartment()

@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 )
@@ -52,26 +51,4 @@ func ConvertStringToType(from string) view.Type {
 // Please implement this function to complete the conversion.
 func ConvertTypeToString(from view.Type) string {
 	return ViewTypeName(from)
-}
-
-// ConvertInt32ToStatus is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertInt32ToStatus(from int32) resource.Status {
-	switch from {
-	case 1:
-		return resource.StatusEnabled
-	default:
-		return resource.StatusDisabled
-	}
-}
-
-// ConvertStatusToInt32 is a custom conversion function stub.
-// Please implement this function to complete the conversion.
-func ConvertStatusToInt32(from resource.Status) int32 {
-	switch from {
-	case resource.StatusEnabled:
-		return 1
-	default:
-		return 0
-	}
 }
