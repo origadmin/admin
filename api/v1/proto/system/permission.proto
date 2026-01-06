@@ -34,7 +34,7 @@ service PermissionService {
   rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse) {
     option (google.api.http) = {
       put: "/sys/permissions/{permission.id}"
-      body: "permission"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

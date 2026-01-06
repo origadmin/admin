@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/transport"
 
 	securityv1 "github.com/origadmin/contrib/api/gen/go/security/v1"
 	"github.com/origadmin/contrib/security/credential"
@@ -20,11 +22,12 @@ type AuthService struct {
 	uc        *biz.AuthUseCase
 	captchaUC *biz.CaptchaUseCase
 	creator   credential.Creator
+	log       *log.Helper
 }
 
 // NewAuthService creates a new authentication service.
-func NewAuthService(uc *biz.AuthUseCase, cuc *biz.CaptchaUseCase, creator credential.Creator) *AuthService {
-	return &AuthService{uc: uc, captchaUC: cuc, creator: creator}
+func NewAuthService(uc *biz.AuthUseCase, cuc *biz.CaptchaUseCase, creator credential.Creator, logger log.Logger) *AuthService {
+	return &AuthService{uc: uc, captchaUC: cuc, creator: creator, log: log.NewHelper(logger)}
 }
 
 // Login authenticates a user and returns a token pair.
@@ -34,13 +37,23 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		return nil, errors.New(400, "CAPTCHA_INVALID", "invalid captcha")
 	}
 
-	userID, err := s.uc.VerifyUser(ctx, req.Username, req.Password)
+	user, err := s.uc.VerifyUser(ctx, req.Username, req.Password)
 	if err != nil {
 		return nil, err
 	}
 
+	// Update login info before creating the token.
+	var loginIP string
+	if tr, ok := transport.FromServerContext(ctx); ok {
+		loginIP = tr.RequestHeader().Get("X-Real-IP")
+	}
+	if err := s.uc.UpdateLoginInfo(ctx, user.Id, loginIP); err != nil {
+		// Log the error but don't block the login process.
+		s.log.Errorf("failed to update login info for user %d: %v", user.Id, err)
+	}
+
 	// Create a principal for the user.
-	p := securityPrincipal.New(fmt.Sprint(userID))
+	p := securityPrincipal.New(fmt.Sprint(user.Id))
 
 	// Create a credential (which contains the token).
 	credResp, err := s.creator.CreateCredential(ctx, p)

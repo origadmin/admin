@@ -42,7 +42,7 @@ service ResourceService {
   rpc UpdateResource(UpdateResourceRequest) returns (UpdateResourceResponse) {
     option (google.api.http) = {
       put: "/sys/resources/{resource.id}"
-      body: "resource"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

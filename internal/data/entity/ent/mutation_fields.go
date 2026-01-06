@@ -831,6 +831,8 @@ func (m *UserMutation) SetFields(input *User, fields ...string) error {
 			m.SetIsSystem(input.IsSystem)
 		case user.FieldLastLoginIP:
 			m.SetLastLoginIP(input.LastLoginIP)
+		case user.FieldLoginIP:
+			m.SetLoginIP(input.LoginIP)
 		case user.FieldLastLoginTime:
 			m.SetLastLoginTime(input.LastLoginTime)
 		case user.FieldLoginTime:
@@ -960,6 +962,11 @@ func (m *UserMutation) SetFieldsSkipZero(input *User, fields ...string) error {
 			// check string with sql.NullString if it is empty
 			if input.LastLoginIP != "" {
 				m.SetLastLoginIP(input.LastLoginIP)
+			}
+		case user.FieldLoginIP:
+			// check string with sql.NullString if it is empty
+			if input.LoginIP != "" {
+				m.SetLoginIP(input.LoginIP)
 			}
 		case user.FieldLastLoginTime:
 			if input.LastLoginTime.Unix() != 0 {

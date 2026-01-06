@@ -643,10 +643,14 @@ type User struct {
 	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
 	// user.field.last_login_ip
 	LastLoginIp string `protobuf:"bytes,18,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
+	// user.field.login_ip
+	LoginIp string `protobuf:"bytes,19,opt,name=login_ip,proto3" json:"login_ip,omitempty"`
 	// user.field.last_login_time
-	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,19,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
+	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
+	// user.field.login_time
+	LoginTime *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=login_time,proto3" json:"login_time,omitempty"`
 	// user.field.sanction_date
-	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
+	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
 	//	// user.field.manager_id
 	//	int64 manager_id = 21 [json_name = "manager_id"];
 	//	// user.field.manager
@@ -816,9 +820,23 @@ func (x *User) GetLastLoginIp() string {
 	return ""
 }
 
+func (x *User) GetLoginIp() string {
+	if x != nil {
+		return x.LoginIp
+	}
+	return ""
+}
+
 func (x *User) GetLastLoginTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.LastLoginTime
+	}
+	return nil
+}
+
+func (x *User) GetLoginTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.LoginTime
 	}
 	return nil
 }
@@ -2859,7 +2877,7 @@ const file_types_system_proto_rawDesc = "" +
 	"role_views\x12?\n" +
 	"\n" +
 	"user_roles\x18\x04 \x03(\v2\x1f.api.v1.services.types.UserRoleR\n" +
-	"user_roles\"\x94\x06\n" +
+	"user_roles\"\xec\x06\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
@@ -2881,9 +2899,13 @@ const file_types_system_proto_rawDesc = "" +
 	"\x06remark\x18\x0f \x01(\tR\x06remark\x12\x14\n" +
 	"\x05token\x18\x10 \x01(\tR\x05token\x12\x16\n" +
 	"\x06status\x18\x11 \x01(\x05R\x06status\x12$\n" +
-	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12D\n" +
-	"\x0flast_login_time\x18\x13 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12E\n" +
-	"\rsanction_date\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
+	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12\x1a\n" +
+	"\blogin_ip\x18\x13 \x01(\tR\blogin_ip\x12D\n" +
+	"\x0flast_login_time\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12:\n" +
+	"\n" +
+	"login_time\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"login_time\x12E\n" +
+	"\rsanction_date\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
 	"\x05roles\x18\x17 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
 	"\brole_ids\x18\x18 \x03(\x03R\brole_idsB\x10\n" +
 	"\x0e_sanction_date\"\x7f\n" +
@@ -3133,72 +3155,73 @@ var file_types_system_proto_depIdxs = []int32{
 	30, // 21: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
 	30, // 22: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
 	30, // 23: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
-	30, // 24: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
-	2,  // 25: api.v1.services.types.User.roles:type_name -> api.v1.services.types.Role
-	2,  // 26: api.v1.services.types.UserEdges.roles:type_name -> api.v1.services.types.Role
-	6,  // 27: api.v1.services.types.UserEdges.user_roles:type_name -> api.v1.services.types.UserRole
-	30, // 28: api.v1.services.types.UserRole.create_time:type_name -> google.protobuf.Timestamp
-	30, // 29: api.v1.services.types.UserRole.update_time:type_name -> google.protobuf.Timestamp
-	4,  // 30: api.v1.services.types.UserRole.user:type_name -> api.v1.services.types.User
-	2,  // 31: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
-	4,  // 32: api.v1.services.types.UserRoleEdges.user:type_name -> api.v1.services.types.User
-	2,  // 33: api.v1.services.types.UserRoleEdges.role:type_name -> api.v1.services.types.Role
-	30, // 34: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
-	30, // 35: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
-	2,  // 36: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
-	0,  // 37: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
-	2,  // 38: api.v1.services.types.RoleViewEdges.role:type_name -> api.v1.services.types.Role
-	0,  // 39: api.v1.services.types.RoleViewEdges.view:type_name -> api.v1.services.types.View
-	30, // 40: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
-	30, // 41: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
-	28, // 42: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
-	10, // 43: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
-	10, // 44: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
-	18, // 45: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
-	0,  // 46: api.v1.services.types.ResourceEdges.view:type_name -> api.v1.services.types.View
-	30, // 47: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
-	30, // 48: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
-	12, // 49: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department
-	12, // 50: api.v1.services.types.Department.parent:type_name -> api.v1.services.types.Department
-	4,  // 51: api.v1.services.types.DepartmentEdges.users:type_name -> api.v1.services.types.User
-	16, // 52: api.v1.services.types.DepartmentEdges.positions:type_name -> api.v1.services.types.Position
-	12, // 53: api.v1.services.types.DepartmentEdges.children:type_name -> api.v1.services.types.Department
-	12, // 54: api.v1.services.types.DepartmentEdges.parent:type_name -> api.v1.services.types.Department
-	14, // 55: api.v1.services.types.DepartmentEdges.user_departments:type_name -> api.v1.services.types.UserDepartment
-	15, // 56: api.v1.services.types.UserDepartment.edges:type_name -> api.v1.services.types.UserDepartmentEdges
-	4,  // 57: api.v1.services.types.UserDepartmentEdges.user:type_name -> api.v1.services.types.User
-	12, // 58: api.v1.services.types.UserDepartmentEdges.department:type_name -> api.v1.services.types.Department
-	30, // 59: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
-	30, // 60: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
-	12, // 61: api.v1.services.types.PositionEdges.department:type_name -> api.v1.services.types.Department
-	4,  // 62: api.v1.services.types.PositionEdges.users:type_name -> api.v1.services.types.User
-	18, // 63: api.v1.services.types.PositionEdges.permissions:type_name -> api.v1.services.types.Permission
-	20, // 64: api.v1.services.types.PositionEdges.user_positions:type_name -> api.v1.services.types.UserPosition
-	22, // 65: api.v1.services.types.PositionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
-	30, // 66: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
-	30, // 67: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
-	29, // 68: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
-	10, // 69: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
-	0,  // 70: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
-	2,  // 71: api.v1.services.types.PermissionEdges.roles:type_name -> api.v1.services.types.Role
-	10, // 72: api.v1.services.types.PermissionEdges.resources:type_name -> api.v1.services.types.Resource
-	16, // 73: api.v1.services.types.PermissionEdges.positions:type_name -> api.v1.services.types.Position
-	24, // 74: api.v1.services.types.PermissionEdges.role_permissions:type_name -> api.v1.services.types.RolePermission
-	26, // 75: api.v1.services.types.PermissionEdges.permission_resources:type_name -> api.v1.services.types.PermissionResource
-	22, // 76: api.v1.services.types.PermissionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
-	4,  // 77: api.v1.services.types.UserPositionEdges.user:type_name -> api.v1.services.types.User
-	16, // 78: api.v1.services.types.UserPositionEdges.position:type_name -> api.v1.services.types.Position
-	16, // 79: api.v1.services.types.PositionPermissionEdges.position:type_name -> api.v1.services.types.Position
-	18, // 80: api.v1.services.types.PositionPermissionEdges.permission:type_name -> api.v1.services.types.Permission
-	2,  // 81: api.v1.services.types.RolePermissionEdges.role:type_name -> api.v1.services.types.Role
-	18, // 82: api.v1.services.types.RolePermissionEdges.permission:type_name -> api.v1.services.types.Permission
-	18, // 83: api.v1.services.types.PermissionResourceEdges.permission:type_name -> api.v1.services.types.Permission
-	10, // 84: api.v1.services.types.PermissionResourceEdges.resource:type_name -> api.v1.services.types.Resource
-	85, // [85:85] is the sub-list for method output_type
-	85, // [85:85] is the sub-list for method input_type
-	85, // [85:85] is the sub-list for extension type_name
-	85, // [85:85] is the sub-list for extension extendee
-	0,  // [0:85] is the sub-list for field type_name
+	30, // 24: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
+	30, // 25: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
+	2,  // 26: api.v1.services.types.User.roles:type_name -> api.v1.services.types.Role
+	2,  // 27: api.v1.services.types.UserEdges.roles:type_name -> api.v1.services.types.Role
+	6,  // 28: api.v1.services.types.UserEdges.user_roles:type_name -> api.v1.services.types.UserRole
+	30, // 29: api.v1.services.types.UserRole.create_time:type_name -> google.protobuf.Timestamp
+	30, // 30: api.v1.services.types.UserRole.update_time:type_name -> google.protobuf.Timestamp
+	4,  // 31: api.v1.services.types.UserRole.user:type_name -> api.v1.services.types.User
+	2,  // 32: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
+	4,  // 33: api.v1.services.types.UserRoleEdges.user:type_name -> api.v1.services.types.User
+	2,  // 34: api.v1.services.types.UserRoleEdges.role:type_name -> api.v1.services.types.Role
+	30, // 35: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
+	30, // 36: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
+	2,  // 37: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
+	0,  // 38: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
+	2,  // 39: api.v1.services.types.RoleViewEdges.role:type_name -> api.v1.services.types.Role
+	0,  // 40: api.v1.services.types.RoleViewEdges.view:type_name -> api.v1.services.types.View
+	30, // 41: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
+	30, // 42: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
+	28, // 43: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
+	10, // 44: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
+	10, // 45: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
+	18, // 46: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
+	0,  // 47: api.v1.services.types.ResourceEdges.view:type_name -> api.v1.services.types.View
+	30, // 48: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
+	30, // 49: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
+	12, // 50: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department
+	12, // 51: api.v1.services.types.Department.parent:type_name -> api.v1.services.types.Department
+	4,  // 52: api.v1.services.types.DepartmentEdges.users:type_name -> api.v1.services.types.User
+	16, // 53: api.v1.services.types.DepartmentEdges.positions:type_name -> api.v1.services.types.Position
+	12, // 54: api.v1.services.types.DepartmentEdges.children:type_name -> api.v1.services.types.Department
+	12, // 55: api.v1.services.types.DepartmentEdges.parent:type_name -> api.v1.services.types.Department
+	14, // 56: api.v1.services.types.DepartmentEdges.user_departments:type_name -> api.v1.services.types.UserDepartment
+	15, // 57: api.v1.services.types.UserDepartment.edges:type_name -> api.v1.services.types.UserDepartmentEdges
+	4,  // 58: api.v1.services.types.UserDepartmentEdges.user:type_name -> api.v1.services.types.User
+	12, // 59: api.v1.services.types.UserDepartmentEdges.department:type_name -> api.v1.services.types.Department
+	30, // 60: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
+	30, // 61: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
+	12, // 62: api.v1.services.types.PositionEdges.department:type_name -> api.v1.services.types.Department
+	4,  // 63: api.v1.services.types.PositionEdges.users:type_name -> api.v1.services.types.User
+	18, // 64: api.v1.services.types.PositionEdges.permissions:type_name -> api.v1.services.types.Permission
+	20, // 65: api.v1.services.types.PositionEdges.user_positions:type_name -> api.v1.services.types.UserPosition
+	22, // 66: api.v1.services.types.PositionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
+	30, // 67: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
+	30, // 68: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
+	29, // 69: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
+	10, // 70: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
+	0,  // 71: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
+	2,  // 72: api.v1.services.types.PermissionEdges.roles:type_name -> api.v1.services.types.Role
+	10, // 73: api.v1.services.types.PermissionEdges.resources:type_name -> api.v1.services.types.Resource
+	16, // 74: api.v1.services.types.PermissionEdges.positions:type_name -> api.v1.services.types.Position
+	24, // 75: api.v1.services.types.PermissionEdges.role_permissions:type_name -> api.v1.services.types.RolePermission
+	26, // 76: api.v1.services.types.PermissionEdges.permission_resources:type_name -> api.v1.services.types.PermissionResource
+	22, // 77: api.v1.services.types.PermissionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
+	4,  // 78: api.v1.services.types.UserPositionEdges.user:type_name -> api.v1.services.types.User
+	16, // 79: api.v1.services.types.UserPositionEdges.position:type_name -> api.v1.services.types.Position
+	16, // 80: api.v1.services.types.PositionPermissionEdges.position:type_name -> api.v1.services.types.Position
+	18, // 81: api.v1.services.types.PositionPermissionEdges.permission:type_name -> api.v1.services.types.Permission
+	2,  // 82: api.v1.services.types.RolePermissionEdges.role:type_name -> api.v1.services.types.Role
+	18, // 83: api.v1.services.types.RolePermissionEdges.permission:type_name -> api.v1.services.types.Permission
+	18, // 84: api.v1.services.types.PermissionResourceEdges.permission:type_name -> api.v1.services.types.Permission
+	10, // 85: api.v1.services.types.PermissionResourceEdges.resource:type_name -> api.v1.services.types.Resource
+	86, // [86:86] is the sub-list for method output_type
+	86, // [86:86] is the sub-list for method input_type
+	86, // [86:86] is the sub-list for extension type_name
+	86, // [86:86] is the sub-list for extension extendee
+	0,  // [0:86] is the sub-list for field type_name
 }
 
 func init() { file_types_system_proto_init() }

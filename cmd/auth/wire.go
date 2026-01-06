@@ -24,12 +24,13 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		providers.ProviderSet,
 		providers.ProviderBackendSet,
 
-		// Service-specific providers
+		// Auth-specific providers
 		data.ProviderSet,
 		dal.ProviderSet,
 		biz.ProviderSet,
 		service.ProviderSet,
 		server.ProviderSet,
+
 		NewApp,
 	))
 }

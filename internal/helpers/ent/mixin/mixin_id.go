@@ -26,6 +26,7 @@ type ID struct {
 	UseDefault           bool
 	DefaultFunc          func() int64
 	UseCustomIDGenerator bool
+	UseAlias             bool
 }
 
 func (obj ID) ToField() ent.Field {

@@ -8,15 +8,15 @@ import (
 	"net/http"
 )
 
-//go:embed all:../../../../resources/web
+//go:embed all:../../../../webui/dist
 var WebUI embed.FS
 
 // GetHandler returns an http.Handler that serves the embedded Web UI.
 // This version is compiled only when the 'embed_ui' build tag is provided.
 func GetHandler() (http.Handler, error) {
-	// The `WebUI` embed.FS now contains the `resources/web` directory structure.
+	// The `WebUI` embed.FS now contains the `webui/dist` directory structure.
 	// We need to create a sub-filesystem that starts from that directory.
-	distFS, err := fs.Sub(WebUI, "resources/web")
+	distFS, err := fs.Sub(WebUI, "webui/dist")
 	if err != nil {
 		return nil, err
 	}

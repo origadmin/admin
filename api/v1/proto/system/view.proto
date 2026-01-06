@@ -39,7 +39,7 @@ service ViewService {
   rpc UpdateView(UpdateViewRequest) returns (UpdateViewResponse) {
     option (google.api.http) = {
       put: "/sys/views/{view.id}"
-      body: "view"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

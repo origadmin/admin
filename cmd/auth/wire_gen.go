@@ -69,7 +69,7 @@ func wireApp(app *runtime.App, bootstrap *conf.Config) (*kratos.App, func(), err
 		cleanup()
 		return nil, nil, err
 	}
-	authService := service.NewAuthService(authUseCase, captchaUseCase, creator)
+	authService := service.NewAuthService(authUseCase, captchaUseCase, creator, v)
 	meRepo := dal.NewMeRepo(database, v)
 	meUseCase := biz.NewMeUseCase(meRepo, v)
 	meService := service.NewMeService(meUseCase)

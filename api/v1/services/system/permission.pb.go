@@ -666,7 +666,7 @@ const file_system_permission_proto_rawDesc = "" +
 	"\x17DeletePermissionRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
 	"\x18DeletePermissionResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xd0\x06\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc7\x06\n" +
 	"\x11PermissionService\x12\x9a\x01\n" +
 	"\x0fListPermissions\x12..api.v1.services.system.ListPermissionsRequest\x1a/.api.v1.services.system.ListPermissionsResponse\"&\xea\xea\x1b\n" +
 	"\n" +
@@ -676,11 +676,10 @@ const file_system_permission_proto_rawDesc = "" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x17\x12\x15/sys/permissions/{id}\x12\xa0\x01\n" +
 	"\x10CreatePermission\x12/.api.v1.services.system.CreatePermissionRequest\x1a0.api.v1.services.system.CreatePermissionResponse\")\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/permissions\x12\xb9\x01\n" +
-	"\x10UpdatePermission\x12/.api.v1.services.system.UpdatePermissionRequest\x1a0.api.v1.services.system.UpdatePermissionResponse\"B\xea\xea\x1b\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/sys/permissions\x12\xb0\x01\n" +
+	"\x10UpdatePermission\x12/.api.v1.services.system.UpdatePermissionRequest\x1a0.api.v1.services.system.UpdatePermissionResponse\"9\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02.:\n" +
-	"permission\x1a /sys/permissions/{permission.id}\x12\xa2\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02%:\x01*\x1a /sys/permissions/{permission.id}\x12\xa2\x01\n" +
 	"\x10DeletePermission\x12/.api.v1.services.system.DeletePermissionRequest\x1a0.api.v1.services.system.DeletePermissionResponse\"+\xea\xea\x1b\n" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x17*\x15/sys/permissions/{id}B\xe4\x01\n" +

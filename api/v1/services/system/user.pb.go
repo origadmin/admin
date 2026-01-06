@@ -1034,7 +1034,7 @@ const file_system_user_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\brole_ids\x18\x02 \x03(\x03R\brole_ids\"J\n" +
 	"\x17UpdateUserRolesResponse\x12/\n" +
-	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf8\n" +
+	"\x04user\x18\x01 \x01(\v2\x1b.api.v1.services.types.UserR\x04user2\xf1\n" +
 	"\n" +
 	"\vUserService\x12\x82\x01\n" +
 	"\tListUsers\x12(.api.v1.services.system.ListUsersRequest\x1a).api.v1.services.system.ListUsersResponse\" \xea\xea\x1b\n" +
@@ -1055,7 +1055,7 @@ const file_system_user_proto_rawDesc = "" +
 	"\n" +
 	"UpdateUser\x12).api.v1.services.system.UpdateUserRequest\x1a*.api.v1.services.system.UpdateUserResponse\"-\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*2\x14/sys/users/{user.id}\x12\x8a\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/users/{user.id}\x12\x8a\x01\n" +
 	"\n" +
 	"DeleteUser\x12).api.v1.services.system.DeleteUserRequest\x1a*.api.v1.services.system.DeleteUserResponse\"%\xea\xea\x1b\n" +
 	"\n" +
@@ -1065,10 +1065,10 @@ const file_system_user_proto_rawDesc = "" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1b:\x01*\x1a\x16/sys/users/{id}/status\x12\xa2\x01\n" +
 	"\x0fUpdateUserRoles\x12..api.v1.services.system.UpdateUserRolesRequest\x1a/.api.v1.services.system.UpdateUserRolesResponse\".\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x12\xb8\x01\n" +
-	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\">\xea\xea\x1b\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1a:\x01*\x1a\x15/sys/users/{id}/roles\x12\xb1\x01\n" +
+	"\x11ResetUserPassword\x120.api.v1.services.system.ResetUserPasswordRequest\x1a1.api.v1.services.system.ResetUserPasswordResponse\"7\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02*:\bpassword\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/sys/users/{id}/password/resetB\xde\x01\n" +
 	"\x1acom.api.v1.services.systemB\tUserProtoP\x01Z9origadmin/application/admin/api/v1/services/system;system\xa2\x02\x04AVSS\xaa\x02\x16Api.V1.Services.System\xca\x02\x16Api\\V1\\Services\\System\xe2\x02\"Api\\V1\\Services\\System\\GPBMetadata\xea\x02\x19Api::V1::Services::Systemb\x06proto3"
 
 var (

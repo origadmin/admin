@@ -1049,6 +1049,7 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  Status enums.Status `json:"status,omitempty"`
 //	  IsSystem bool `json:"is_system,omitempty"`
 //	  LastLoginIP string `json:"last_login_ip,omitempty"`
+//	  LoginIP string `json:"login_ip,omitempty"`
 //	  LastLoginTime time.Time `json:"last_login_time,omitempty"`
 //	  LoginTime time.Time `json:"login_time,omitempty"`
 //	  SanctionDate time.Time `json:"sanction_date,omitempty"`
@@ -1078,6 +1079,7 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldStatus,
 //	  user.FieldIsSystem,
 //	  user.FieldLastLoginIP,
+//	  user.FieldLoginIP,
 //	  user.FieldLastLoginTime,
 //	  user.FieldLoginTime,
 //	  user.FieldSanctionDate,

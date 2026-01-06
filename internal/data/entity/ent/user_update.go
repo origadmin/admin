@@ -361,6 +361,20 @@ func (_u *UserUpdate) SetNillableLastLoginIP(v *string) *UserUpdate {
 	return _u
 }
 
+// SetLoginIP sets the "login_ip" field.
+func (_u *UserUpdate) SetLoginIP(v string) *UserUpdate {
+	_u.mutation.SetLoginIP(v)
+	return _u
+}
+
+// SetNillableLoginIP sets the "login_ip" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLoginIP(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetLoginIP(*v)
+	}
+	return _u
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (_u *UserUpdate) SetLastLoginTime(v time.Time) *UserUpdate {
 	_u.mutation.SetLastLoginTime(v)
@@ -744,6 +758,11 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.LoginIP(); ok {
+		if err := user.LoginIPValidator(v); err != nil {
+			return &ValidationError{Name: "login_ip", err: fmt.Errorf(`ent: validator failed for field "User.login_ip": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -845,6 +864,9 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.LoginIP(); ok {
+		_spec.SetField(user.FieldLoginIP, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)
@@ -1475,6 +1497,20 @@ func (_u *UserUpdateOne) SetNillableLastLoginIP(v *string) *UserUpdateOne {
 	return _u
 }
 
+// SetLoginIP sets the "login_ip" field.
+func (_u *UserUpdateOne) SetLoginIP(v string) *UserUpdateOne {
+	_u.mutation.SetLoginIP(v)
+	return _u
+}
+
+// SetNillableLoginIP sets the "login_ip" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLoginIP(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetLoginIP(*v)
+	}
+	return _u
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (_u *UserUpdateOne) SetLastLoginTime(v time.Time) *UserUpdateOne {
 	_u.mutation.SetLastLoginTime(v)
@@ -1871,6 +1907,11 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.LoginIP(); ok {
+		if err := user.LoginIPValidator(v); err != nil {
+			return &ValidationError{Name: "login_ip", err: fmt.Errorf(`ent: validator failed for field "User.login_ip": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -1989,6 +2030,9 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.LoginIP(); ok {
+		_spec.SetField(user.FieldLoginIP, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)

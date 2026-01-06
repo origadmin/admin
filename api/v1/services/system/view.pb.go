@@ -631,7 +631,7 @@ const file_system_view_proto_rawDesc = "" +
 	"\x11DeleteViewRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteViewResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc6\x05\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc3\x05\n" +
 	"\vViewService\x12\x82\x01\n" +
 	"\tListViews\x12(.api.v1.services.system.ListViewsRequest\x1a).api.v1.services.system.ListViewsResponse\" \xea\xea\x1b\n" +
 	"\n" +
@@ -644,11 +644,11 @@ const file_system_view_proto_rawDesc = "" +
 	"CreateView\x12).api.v1.services.system.CreateViewRequest\x1a*.api.v1.services.system.CreateViewResponse\"#\xea\xea\x1b\n" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/views\x12\x95\x01\n" +
+	"/sys/views\x12\x92\x01\n" +
 	"\n" +
-	"UpdateView\x12).api.v1.services.system.UpdateViewRequest\x1a*.api.v1.services.system.UpdateViewResponse\"0\xea\xea\x1b\n" +
+	"UpdateView\x12).api.v1.services.system.UpdateViewRequest\x1a*.api.v1.services.system.UpdateViewResponse\"-\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1c:\x04view\x1a\x14/sys/views/{view.id}\x12\x8a\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/views/{view.id}\x12\x8a\x01\n" +
 	"\n" +
 	"DeleteView\x12).api.v1.services.system.DeleteViewRequest\x1a*.api.v1.services.system.DeleteViewResponse\"%\xea\xea\x1b\n" +
 	"\n" +

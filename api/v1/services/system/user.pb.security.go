@@ -35,9 +35,9 @@ func init() {
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.UserService/UpdateUser",
-			GatewayPath:   "PATCH:/sys/users/{user.id}",
+			GatewayPath:   "PUT:/sys/users/{user.id}",
 			Name:          "jwt-auth",
-			VersionID:     "d8e0be7e0fdf3b02e0af09c8d0f8404c763d57d14e621679533071caca4446bb",
+			VersionID:     "0fb25e54ac26e6ef490962ccb46f2f1e74a5391f77f26c6acb9c6ce0270b6ccd",
 		},
 		{
 			ServiceMethod: "/api.v1.services.system.UserService/DeleteUser",

@@ -1017,16 +1017,11 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: id
-                  in: query
-                  description: The resource name of the permission to update.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Permission'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdatePermissionRequest'
                 required: true
             responses:
                 "200":
@@ -1355,7 +1350,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Resource'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateResourceRequest'
                 required: true
             responses:
                 "200":
@@ -1513,16 +1508,11 @@ paths:
                   required: true
                   schema:
                     type: string
-                - name: id
-                  in: query
-                  description: The id of the role resource to update.
-                  schema:
-                    type: string
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.Role'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateRoleRequest'
                 required: true
             responses:
                 "200":
@@ -1683,7 +1673,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            type: string
+                            $ref: '#/components/schemas/api.v1.services.system.ResetUserPasswordRequest'
                 required: true
             responses:
                 "200":
@@ -1785,7 +1775,7 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/google.rpc.Status'
     /sys/users/{user.id}:
-        patch:
+        put:
             tags:
                 - UserService
             operationId: UserService_UpdateUser
@@ -1957,7 +1947,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.services.types.View'
+                            $ref: '#/components/schemas/api.v1.services.system.UpdateViewRequest'
                 required: true
             responses:
                 "200":
@@ -2858,6 +2848,13 @@ components:
                 extra:
                     $ref: '#/components/schemas/google.protobuf.Any'
             description: Response message for ViewService.ListViews.
+        api.v1.services.system.ResetUserPasswordRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                password:
+                    type: string
         api.v1.services.system.ResetUserPasswordResponse:
             type: object
             properties: {}
@@ -2866,6 +2863,16 @@ components:
             properties:
                 department:
                     $ref: '#/components/schemas/api.v1.services.types.Department'
+        api.v1.services.system.UpdatePermissionRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The resource name of the permission to update.
+                permission:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Permission'
+                    description: The permission resource which replaces the resource on the server.
         api.v1.services.system.UpdatePermissionResponse:
             type: object
             properties:
@@ -2876,12 +2883,28 @@ components:
             properties:
                 position:
                     $ref: '#/components/schemas/api.v1.services.types.Position'
+        api.v1.services.system.UpdateResourceRequest:
+            type: object
+            properties:
+                resource:
+                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+            description: Request message for ResourceService.UpdateResource.
         api.v1.services.system.UpdateResourceResponse:
             type: object
             properties:
                 resource:
                     $ref: '#/components/schemas/api.v1.services.types.Resource'
             description: Response message for ResourceService.UpdateResource.
+        api.v1.services.system.UpdateRoleRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The id of the role resource to update.
+                role:
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Role'
+                    description: The role resource which replaces the resource on the server.
         api.v1.services.system.UpdateRoleResponse:
             type: object
             properties:
@@ -2930,6 +2953,12 @@ components:
         api.v1.services.system.UpdateUserStatusResponse:
             type: object
             properties: {}
+        api.v1.services.system.UpdateViewRequest:
+            type: object
+            properties:
+                view:
+                    $ref: '#/components/schemas/api.v1.services.types.View'
+            description: Request message for ViewService.UpdateView.
         api.v1.services.system.UpdateViewResponse:
             type: object
             properties:
@@ -3331,9 +3360,16 @@ components:
                 last_login_ip:
                     type: string
                     description: user.field.last_login_ip
+                login_ip:
+                    type: string
+                    description: user.field.login_ip
                 last_login_time:
                     type: string
                     description: user.field.last_login_time
+                    format: date-time
+                login_time:
+                    type: string
+                    description: user.field.login_time
                     format: date-time
                 sanction_date:
                     type: string

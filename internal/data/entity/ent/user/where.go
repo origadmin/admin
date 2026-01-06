@@ -162,6 +162,11 @@ func LastLoginIP(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLastLoginIP, v))
 }
 
+// LoginIP applies equality check predicate on the "login_ip" field. It's identical to LoginIPEQ.
+func LoginIP(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLoginIP, v))
+}
+
 // LastLoginTime applies equality check predicate on the "last_login_time" field. It's identical to LastLoginTimeEQ.
 func LastLoginTime(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldLastLoginTime, v))
@@ -1399,6 +1404,71 @@ func LastLoginIPEqualFold(v string) predicate.User {
 // LastLoginIPContainsFold applies the ContainsFold predicate on the "last_login_ip" field.
 func LastLoginIPContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldLastLoginIP, v))
+}
+
+// LoginIPEQ applies the EQ predicate on the "login_ip" field.
+func LoginIPEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldLoginIP, v))
+}
+
+// LoginIPNEQ applies the NEQ predicate on the "login_ip" field.
+func LoginIPNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldLoginIP, v))
+}
+
+// LoginIPIn applies the In predicate on the "login_ip" field.
+func LoginIPIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldLoginIP, vs...))
+}
+
+// LoginIPNotIn applies the NotIn predicate on the "login_ip" field.
+func LoginIPNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldLoginIP, vs...))
+}
+
+// LoginIPGT applies the GT predicate on the "login_ip" field.
+func LoginIPGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldLoginIP, v))
+}
+
+// LoginIPGTE applies the GTE predicate on the "login_ip" field.
+func LoginIPGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldLoginIP, v))
+}
+
+// LoginIPLT applies the LT predicate on the "login_ip" field.
+func LoginIPLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldLoginIP, v))
+}
+
+// LoginIPLTE applies the LTE predicate on the "login_ip" field.
+func LoginIPLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldLoginIP, v))
+}
+
+// LoginIPContains applies the Contains predicate on the "login_ip" field.
+func LoginIPContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldLoginIP, v))
+}
+
+// LoginIPHasPrefix applies the HasPrefix predicate on the "login_ip" field.
+func LoginIPHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldLoginIP, v))
+}
+
+// LoginIPHasSuffix applies the HasSuffix predicate on the "login_ip" field.
+func LoginIPHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldLoginIP, v))
+}
+
+// LoginIPEqualFold applies the EqualFold predicate on the "login_ip" field.
+func LoginIPEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldLoginIP, v))
+}
+
+// LoginIPContainsFold applies the ContainsFold predicate on the "login_ip" field.
+func LoginIPContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldLoginIP, v))
 }
 
 // LastLoginTimeEQ applies the EQ predicate on the "last_login_time" field.

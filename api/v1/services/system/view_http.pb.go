@@ -113,7 +113,7 @@ func _ViewService_CreateView0_HTTP_Handler(srv ViewServiceHTTPServer) func(ctx h
 func _ViewService_UpdateView0_HTTP_Handler(srv ViewServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateViewRequest
-		if err := ctx.Bind(&in.View); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
@@ -241,7 +241,7 @@ func (c *ViewServiceHTTPClientImpl) UpdateView(ctx context.Context, in *UpdateVi
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationViewServiceUpdateView))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in.View, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

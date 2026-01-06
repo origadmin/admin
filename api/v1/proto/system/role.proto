@@ -34,7 +34,7 @@ service RoleService {
   rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse) {
     option (google.api.http) = {
       put: "/sys/roles/{role.id}"
-      body: "role"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

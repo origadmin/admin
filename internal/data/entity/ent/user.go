@@ -65,6 +65,8 @@ type User struct {
 	IsSystem bool `json:"is_system,omitempty"`
 	// entity.user.field.last_login_ip
 	LastLoginIP string `json:"last_login_ip,omitempty"`
+	// entity.user.field.login_ip
+	LoginIP string `json:"login_ip,omitempty"`
 	// entity.user.field.last_login_time
 	LastLoginTime time.Time `json:"last_login_time,omitempty"`
 	// entity.user.field.login_time
@@ -159,7 +161,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -317,6 +319,12 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.LastLoginIP = value.String
 			}
+		case user.FieldLoginIP:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field login_ip", values[i])
+			} else if value.Valid {
+				_m.LoginIP = value.String
+			}
 		case user.FieldLastLoginTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field last_login_time", values[i])
@@ -468,6 +476,9 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("last_login_ip=")
 	builder.WriteString(_m.LastLoginIP)
+	builder.WriteString(", ")
+	builder.WriteString("login_ip=")
+	builder.WriteString(_m.LoginIP)
 	builder.WriteString(", ")
 	builder.WriteString("last_login_time=")
 	builder.WriteString(_m.LastLoginTime.Format(time.ANSIC))

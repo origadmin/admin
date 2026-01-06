@@ -112,7 +112,7 @@ func RegisterUserServiceBridgeServer(s *http.Server, srv UserServiceHookedBridge
 	r.GET("/sys/users/:id/resources", _UserService_ListUserResources0_Bridge_Handler(srv))
 	r.GET("/sys/users/:id", _UserService_GetUser0_Bridge_Handler(srv))
 	r.POST("/sys/users", _UserService_CreateUser0_Bridge_Handler(srv))
-	r.PATCH("/sys/users/:user.id", _UserService_UpdateUser0_Bridge_Handler(srv))
+	r.PUT("/sys/users/:user.id", _UserService_UpdateUser0_Bridge_Handler(srv))
 	r.DELETE("/sys/users/:id", _UserService_DeleteUser0_Bridge_Handler(srv))
 	r.PUT("/sys/users/:id/status", _UserService_UpdateUserStatus0_Bridge_Handler(srv))
 	r.PUT("/sys/users/:id/roles", _UserService_UpdateUserRoles0_Bridge_Handler(srv))
@@ -336,7 +336,7 @@ func _UserService_UpdateUserRoles0_Bridge_Handler(srv UserServiceHookedBridger) 
 func _UserService_ResetUserPassword0_Bridge_Handler(srv UserServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetUserPasswordRequest
-		if err := ctx.Bind(&in.Password); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

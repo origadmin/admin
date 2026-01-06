@@ -7,6 +7,7 @@ package schema
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent"
@@ -101,6 +102,10 @@ func (User) Fields() []ent.Field {
 			MaxLen(32).
 			Default("").
 			Comment(i18n.Text("entity.user.field.last_login_ip")),
+		field.String("login_ip").
+			MaxLen(32).
+			Default("").
+			Comment(i18n.Text("entity.user.field.login_ip")),
 		mixin.Time("last_login_time", i18n.Text("entity.user.field.last_login_time")),
 		mixin.Time("login_time", i18n.Text("entity.user.field.login_time")),
 		mixin.TimeOptional("sanction_date", i18n.Text("entity.user.field.sanction_date")),
@@ -163,7 +168,7 @@ func preventDuplicateSystemUser(next ent.Mutator) ent.Mutator {
 			return nil, fmt.Errorf("failed to check for existing system user: %w", err)
 		}
 		if count > 0 {
-			return nil, fmt.Errorf("a system user already exists")
+			return nil, errors.New("only one system user is allowed")
 		}
 		return next.Mutate(ctx, m)
 	})

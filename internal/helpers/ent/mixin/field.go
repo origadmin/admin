@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"entgo.io/ent"
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 
 	"origadmin/application/admin/internal/helpers/i18n"
@@ -48,25 +47,18 @@ func OptionalFK(name string, comment ...string) ent.Field {
 	return innerID.Comment(comment[0]).OptionalFK(name)
 }
 
-// TimeOptional returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
+// TimeOptional returns a time field with a default value of ZeroTime.
 func TimeOptional(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
-		return field.Time(name).
-			Optional().
-			SchemaType(map[string]string{
-				dialect.MySQL: "datetime",
-			})
+		return field.Time(name).Optional()
 	}
 	// Create a time field with the given name and a default value of ZeroTime.
 	return field.Time(name).
 		Comment(comment[0]).
-		Optional().
-		SchemaType(map[string]string{
-			dialect.MySQL: "datetime",
-		})
+		Optional()
 }
 
-// Time returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
+// Time returns a time field with a default value of ZeroTime.
 func Time(name string, comment ...string) ent.Field {
 	if len(comment) == 0 {
 		return FieldTime(name)
@@ -77,10 +69,6 @@ func Time(name string, comment ...string) ent.Field {
 		// Set the default value of the field to ZeroTime.
 		Default(func() time.Time {
 			return ZeroTime
-		}).
-		// Set the schema type of the field to "datetime" for MySQL dialect.
-		SchemaType(map[string]string{
-			dialect.MySQL: "datetime",
 		})
 }
 
@@ -127,15 +115,11 @@ func FieldUUIDOptional(name string, comment ...string) ent.Field {
 	return UUID{}.Comment(comment[0]).OptionalFK(name)
 }
 
-// FieldTime returns a time field with a default value of ZeroTime and a custom schema type for MySQL.
+// FieldTime returns a time field with a default value of ZeroTime.
 func FieldTime(name string) ent.Field {
 	return field.Time(name).
 		// Set the default value of the field to ZeroTime.
 		Default(func() time.Time {
 			return ZeroTime
-		}).
-		// Set the schema type of the field to "datetime" for MySQL dialect.
-		SchemaType(map[string]string{
-			dialect.MySQL: "datetime",
 		})
 }

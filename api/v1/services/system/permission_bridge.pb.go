@@ -162,7 +162,7 @@ func _PermissionService_CreatePermission0_Bridge_Handler(srv PermissionServiceHo
 func _PermissionService_UpdatePermission0_Bridge_Handler(srv PermissionServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdatePermissionRequest
-		if err := ctx.Bind(&in.Permission); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {

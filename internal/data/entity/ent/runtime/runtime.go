@@ -517,12 +517,18 @@ func init() {
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// user.LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	user.LastLoginIPValidator = userDescLastLoginIP.Validators[0].(func(string) error)
+	// userDescLoginIP is the schema descriptor for login_ip field.
+	userDescLoginIP := userFields[17].Descriptor()
+	// user.DefaultLoginIP holds the default value on creation for the login_ip field.
+	user.DefaultLoginIP = userDescLoginIP.Default.(string)
+	// user.LoginIPValidator is a validator for the "login_ip" field. It is called by the builders before save.
+	user.LoginIPValidator = userDescLoginIP.Validators[0].(func(string) error)
 	// userDescLastLoginTime is the schema descriptor for last_login_time field.
-	userDescLastLoginTime := userFields[17].Descriptor()
+	userDescLastLoginTime := userFields[18].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
 	// userDescLoginTime is the schema descriptor for login_time field.
-	userDescLoginTime := userFields[18].Descriptor()
+	userDescLoginTime := userFields[19].Descriptor()
 	// user.DefaultLoginTime holds the default value on creation for the login_time field.
 	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
 	// userDescID is the schema descriptor for id field.

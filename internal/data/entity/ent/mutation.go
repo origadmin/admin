@@ -9260,6 +9260,7 @@ type UserMutation struct {
 	addstatus               *enums.Status
 	is_system               *bool
 	last_login_ip           *string
+	login_ip                *string
 	last_login_time         *time.Time
 	login_time              *time.Time
 	sanction_date           *time.Time
@@ -10284,6 +10285,42 @@ func (m *UserMutation) ResetLastLoginIP() {
 	m.last_login_ip = nil
 }
 
+// SetLoginIP sets the "login_ip" field.
+func (m *UserMutation) SetLoginIP(s string) {
+	m.login_ip = &s
+}
+
+// LoginIP returns the value of the "login_ip" field in the mutation.
+func (m *UserMutation) LoginIP() (r string, exists bool) {
+	v := m.login_ip
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLoginIP returns the old "login_ip" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldLoginIP(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLoginIP is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLoginIP requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLoginIP: %w", err)
+	}
+	return oldValue.LoginIP, nil
+}
+
+// ResetLoginIP resets all changes to the "login_ip" field.
+func (m *UserMutation) ResetLoginIP() {
+	m.login_ip = nil
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (m *UserMutation) SetLastLoginTime(t time.Time) {
 	m.last_login_time = &t
@@ -10763,7 +10800,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 25)
+	fields := make([]string, 0, 26)
 	if m.create_author != nil {
 		fields = append(fields, user.FieldCreateAuthor)
 	}
@@ -10830,6 +10867,9 @@ func (m *UserMutation) Fields() []string {
 	if m.last_login_ip != nil {
 		fields = append(fields, user.FieldLastLoginIP)
 	}
+	if m.login_ip != nil {
+		fields = append(fields, user.FieldLoginIP)
+	}
 	if m.last_login_time != nil {
 		fields = append(fields, user.FieldLastLoginTime)
 	}
@@ -10891,6 +10931,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.IsSystem()
 	case user.FieldLastLoginIP:
 		return m.LastLoginIP()
+	case user.FieldLoginIP:
+		return m.LoginIP()
 	case user.FieldLastLoginTime:
 		return m.LastLoginTime()
 	case user.FieldLoginTime:
@@ -10950,6 +10992,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldIsSystem(ctx)
 	case user.FieldLastLoginIP:
 		return m.OldLastLoginIP(ctx)
+	case user.FieldLoginIP:
+		return m.OldLoginIP(ctx)
 	case user.FieldLastLoginTime:
 		return m.OldLastLoginTime(ctx)
 	case user.FieldLoginTime:
@@ -11118,6 +11162,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetLastLoginIP(v)
+		return nil
+	case user.FieldLoginIP:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLoginIP(v)
 		return nil
 	case user.FieldLastLoginTime:
 		v, ok := value.(time.Time)
@@ -11320,6 +11371,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldLastLoginIP:
 		m.ResetLastLoginIP()
+		return nil
+	case user.FieldLoginIP:
+		m.ResetLoginIP()
 		return nil
 	case user.FieldLastLoginTime:
 		m.ResetLastLoginTime()

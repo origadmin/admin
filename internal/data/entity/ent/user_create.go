@@ -319,6 +319,20 @@ func (_c *UserCreate) SetNillableLastLoginIP(v *string) *UserCreate {
 	return _c
 }
 
+// SetLoginIP sets the "login_ip" field.
+func (_c *UserCreate) SetLoginIP(v string) *UserCreate {
+	_c.mutation.SetLoginIP(v)
+	return _c
+}
+
+// SetNillableLoginIP sets the "login_ip" field if the given value is not nil.
+func (_c *UserCreate) SetNillableLoginIP(v *string) *UserCreate {
+	if v != nil {
+		_c.SetLoginIP(*v)
+	}
+	return _c
+}
+
 // SetLastLoginTime sets the "last_login_time" field.
 func (_c *UserCreate) SetLastLoginTime(v time.Time) *UserCreate {
 	_c.mutation.SetLastLoginTime(v)
@@ -584,6 +598,10 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultLastLoginIP
 		_c.mutation.SetLastLoginIP(v)
 	}
+	if _, ok := _c.mutation.LoginIP(); !ok {
+		v := user.DefaultLoginIP
+		_c.mutation.SetLoginIP(v)
+	}
 	if _, ok := _c.mutation.LastLoginTime(); !ok {
 		if user.DefaultLastLoginTime == nil {
 			return fmt.Errorf("ent: uninitialized user.DefaultLastLoginTime (forgotten import ent/runtime?)")
@@ -737,6 +755,14 @@ func (_c *UserCreate) check() error {
 			return &ValidationError{Name: "last_login_ip", err: fmt.Errorf(`ent: validator failed for field "User.last_login_ip": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.LoginIP(); !ok {
+		return &ValidationError{Name: "login_ip", err: errors.New(`ent: missing required field "User.login_ip"`)}
+	}
+	if v, ok := _c.mutation.LoginIP(); ok {
+		if err := user.LoginIPValidator(v); err != nil {
+			return &ValidationError{Name: "login_ip", err: fmt.Errorf(`ent: validator failed for field "User.login_ip": %w`, err)}
+		}
+	}
 	if _, ok := _c.mutation.LastLoginTime(); !ok {
 		return &ValidationError{Name: "last_login_time", err: errors.New(`ent: missing required field "User.last_login_time"`)}
 	}
@@ -867,6 +893,10 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.LastLoginIP(); ok {
 		_spec.SetField(user.FieldLastLoginIP, field.TypeString, value)
 		_node.LastLoginIP = value
+	}
+	if value, ok := _c.mutation.LoginIP(); ok {
+		_spec.SetField(user.FieldLoginIP, field.TypeString, value)
+		_node.LoginIP = value
 	}
 	if value, ok := _c.mutation.LastLoginTime(); ok {
 		_spec.SetField(user.FieldLastLoginTime, field.TypeTime, value)

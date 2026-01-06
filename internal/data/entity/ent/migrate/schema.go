@@ -410,9 +410,10 @@ var (
 		{Name: "status", Type: field.TypeInt8, Comment: "entity.user.field.status", Default: 1},
 		{Name: "is_system", Type: field.TypeBool, Comment: "entity.user.field.is_system", Default: false},
 		{Name: "last_login_ip", Type: field.TypeString, Size: 32, Comment: "entity.user.field.last_login_ip", Default: ""},
-		{Name: "last_login_time", Type: field.TypeTime, Comment: "entity.user.field.last_login_time", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "login_time", Type: field.TypeTime, Comment: "entity.user.field.login_time", SchemaType: map[string]string{"mysql": "datetime"}},
-		{Name: "sanction_date", Type: field.TypeTime, Nullable: true, Comment: "entity.user.field.sanction_date", SchemaType: map[string]string{"mysql": "datetime"}},
+		{Name: "login_ip", Type: field.TypeString, Size: 32, Comment: "entity.user.field.login_ip", Default: ""},
+		{Name: "last_login_time", Type: field.TypeTime, Comment: "entity.user.field.last_login_time"},
+		{Name: "login_time", Type: field.TypeTime, Comment: "entity.user.field.login_time"},
+		{Name: "sanction_date", Type: field.TypeTime, Nullable: true, Comment: "entity.user.field.sanction_date"},
 	}
 	// SysUsersTable holds the schema information for the "sys_users" table.
 	SysUsersTable = &schema.Table{

@@ -646,7 +646,7 @@ const file_system_role_proto_rawDesc = "" +
 	"\x11DeleteRoleRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"B\n" +
 	"\x12DeleteRoleResponse\x12,\n" +
-	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc6\x05\n" +
+	"\x05empty\x18\x01 \x01(\v2\x16.google.protobuf.EmptyR\x05empty2\xc3\x05\n" +
 	"\vRoleService\x12\x82\x01\n" +
 	"\tListRoles\x12(.api.v1.services.system.ListRolesRequest\x1a).api.v1.services.system.ListRolesResponse\" \xea\xea\x1b\n" +
 	"\n" +
@@ -659,11 +659,11 @@ const file_system_role_proto_rawDesc = "" +
 	"CreateRole\x12).api.v1.services.system.CreateRoleRequest\x1a*.api.v1.services.system.CreateRoleResponse\"#\xea\xea\x1b\n" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/sys/roles\x12\x95\x01\n" +
+	"/sys/roles\x12\x92\x01\n" +
 	"\n" +
-	"UpdateRole\x12).api.v1.services.system.UpdateRoleRequest\x1a*.api.v1.services.system.UpdateRoleResponse\"0\xea\xea\x1b\n" +
+	"UpdateRole\x12).api.v1.services.system.UpdateRoleRequest\x1a*.api.v1.services.system.UpdateRoleResponse\"-\xea\xea\x1b\n" +
 	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x1c:\x04role\x1a\x14/sys/roles/{role.id}\x12\x8a\x01\n" +
+	"\bjwt-auth\x82\xd3\xe4\x93\x02\x19:\x01*\x1a\x14/sys/roles/{role.id}\x12\x8a\x01\n" +
 	"\n" +
 	"DeleteRole\x12).api.v1.services.system.DeleteRoleRequest\x1a*.api.v1.services.system.DeleteRoleResponse\"%\xea\xea\x1b\n" +
 	"\n" +

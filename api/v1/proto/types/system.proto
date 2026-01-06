@@ -162,10 +162,14 @@ message User {
   int32 status = 17 [json_name = "status"];
   // user.field.last_login_ip
   string last_login_ip = 18 [json_name = "last_login_ip"];
+  // user.field.login_ip
+  string login_ip = 19 [json_name = "login_ip"];
   // user.field.last_login_time
-  google.protobuf.Timestamp last_login_time = 19 [json_name = "last_login_time"];
+  google.protobuf.Timestamp last_login_time = 20 [json_name = "last_login_time"];
+  // user.field.login_time
+  google.protobuf.Timestamp login_time = 21 [json_name = "login_time"];
   // user.field.sanction_date
-  optional google.protobuf.Timestamp sanction_date = 20 [json_name = "sanction_date"];
+  optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
   //  // user.field.manager_id
   //  int64 manager_id = 21 [json_name = "manager_id"];
   //  // user.field.manager

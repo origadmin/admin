@@ -40,7 +40,7 @@ service UserService {
   }
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
-      patch: "/sys/users/{user.id}"
+      put: "/sys/users/{user.id}"
       body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
@@ -71,7 +71,7 @@ service UserService {
   rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordResponse) {
     option (google.api.http) = {
       post: "/sys/users/{id}/password/reset"
-      body: "password"
+      body: "*"
     };
     option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
   }

@@ -167,7 +167,7 @@ func _ViewService_CreateView0_Bridge_Handler(srv ViewServiceHookedBridger) func(
 func _ViewService_UpdateView0_Bridge_Handler(srv ViewServiceHookedBridger) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateViewRequest
-		if err := ctx.Bind(&in.View); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
