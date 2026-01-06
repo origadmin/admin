@@ -26,7 +26,7 @@ func NewAuthRepo(db *ent.Database, logger log.Logger) dto.AuthRepo {
 
 // GetUserByUsername retrieves a user's auth-specific data by their username.
 func (r *AuthRepo) GetUserByUsername(ctx context.Context, username string) (*dto.AuthedUser, error) {
-	u, err := r.db.User(ctx).Query().Where(user.UsernameEQ(username)).Only(ctx)
+	u, err := r.db.User(ctx).Query().Where(user.UsernameEQ(username)).WithRoles().Only(ctx)
 	if err != nil {
 		return nil, err
 	}

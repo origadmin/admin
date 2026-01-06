@@ -53,8 +53,15 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		s.log.Errorf("failed to update login info for user %d: %v", user.Id, err)
 	}
 
-	// Create a principal for the user.
-	p := securityPrincipal.New(fmt.Sprint(user.Id))
+	// Create a principal for the user, including their roles.
+	var roleKeywords []string
+	for _, role := range user.GetRoles() {
+		roleKeywords = append(roleKeywords, role.Keyword)
+	}
+	p := securityPrincipal.New(
+		fmt.Sprint(user.Id),
+		securityPrincipal.WithRoles(roleKeywords),
+	)
 
 	// Create a credential (which contains the token).
 	credResp, err := s.creator.CreateCredential(ctx, p)
@@ -62,7 +69,7 @@ func (s *AuthService) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		return nil, err
 	}
 
-	token := credResp.Response().GetPayload().GetToken()
+	token := credResp.Payload().GetToken()
 	if token == nil {
 		return nil, securityv1.ErrorTokenInvalid("token is missing")
 	}
