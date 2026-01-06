@@ -29,9 +29,9 @@ func init() {
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.AuthService/RefreshToken",
-			GatewayPath:   "POST:/auth/token",
-			Name:          "jwt-auth",
-			VersionID:     "440ef699b2899614bcdd7cee97480b260e7cf04f1ae1ad681fc491e9453d6218",
+			GatewayPath:   "POST:/auth/refresh",
+			Name:          "public",
+			VersionID:     "570c41f64c1e11446c73d2bc95b714c2cb88807d7210e3829149fb0f5d57b853",
 		},
 		{
 			ServiceMethod: "/api.v1.services.auth.AuthService/GetCaptcha",

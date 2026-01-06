@@ -6,9 +6,10 @@ import (
 	"time"
 
 	"github.com/mojocn/base64Captcha"
-	"github.com/origadmin/runtime/log"
 
 	storageiface "github.com/origadmin/runtime/interfaces/storage"
+	"github.com/origadmin/runtime/log"
+	"origadmin/application/admin/internal/helpers/contextutil"
 )
 
 const (
@@ -32,6 +33,15 @@ func NewStore(cache storageiface.Cache) base64Captcha.Store {
 	}
 }
 
+// NewStoreWithContext creates a new captcha store backed by the provided storage.Cache.
+// It holds a provided context for cache operations.
+func NewStoreWithContext(ctx context.Context, cache storageiface.Cache) base64Captcha.Store {
+	return &store{
+		ctx:   ctx,
+		cache: cache,
+	}
+}
+
 // Set stores the captcha value with a default expiration.
 func (s *store) Set(id string, value string) error {
 	key := captchaPrefix + id
@@ -42,15 +52,16 @@ func (s *store) Set(id string, value string) error {
 // Get retrieves the captcha value.
 func (s *store) Get(id string, clear bool) string {
 	key := captchaPrefix + id
+	helper := log.NewHelper(contextutil.GetLogger(s.ctx))
 	// The cache's Get method returns a string value.
 	val, err := s.cache.Get(s.ctx, key)
 	if err != nil {
-		log.Errorf("failed to get captcha from cache: %v", err)
+		helper.Errorf("failed to get captcha from cache: %v", err)
 		return ""
 	}
 	if clear {
 		if err := s.cache.Delete(s.ctx, key); err != nil {
-			log.Errorf("failed to delete captcha from cache: %v", err)
+			helper.Errorf("failed to delete captcha from cache: %v", err)
 		}
 	}
 	return val

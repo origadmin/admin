@@ -44,10 +44,10 @@ service AuthService {
   // RefreshToken provides a new access token.
   rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
     option (google.api.http) = {
-      post: "/auth/token"
+      post: "/auth/refresh"
       body: "*"
     };
-    option (contrib.api.policy.v1.policy) = {name: "jwt-auth"};
+    option (contrib.api.policy.v1.policy) = {name: "public"};
   }
 
   // --- Captcha ---
@@ -113,6 +113,7 @@ message RefreshTokenResponse {
   string access_token = 1 [json_name = "access_token"];
   string token_type = 2 [json_name = "token_type"];
   int64 expires_in = 3 [json_name = "expires_in"];
+  string refresh_token = 4 [json_name = "refresh_token"];
 }
 
 // The request message for the GetCaptcha RPC.

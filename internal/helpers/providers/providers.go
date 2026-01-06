@@ -215,7 +215,7 @@ func ProvideClientMiddlewares(app *runtime.App) (container.ClientMiddlewareProvi
 	return provider, nil
 }
 
-func ProvideGatewaySkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker {
+func ProvideGatewaySkipChecker(app *runtime.App, _ *conf.Config) security.SkipChecker {
 	return func(ctx context.Context, req security.Request) bool {
 		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",
 			req.GetRouteTemplate()))
@@ -229,7 +229,7 @@ func ProvideGatewaySkipChecker(app *runtime.App, cfg *conf.Config) security.Skip
 	}
 }
 
-func ProvideSkipChecker(app *runtime.App, cfg *conf.Config) security.SkipChecker {
+func ProvideSkipChecker(app *runtime.App, _ *conf.Config) security.SkipChecker {
 	//helper := log.NewHelper(log.With(app.Logger(), "module", "security.skip"))
 	return func(ctx context.Context, req security.Request) bool {
 		helper := log.NewHelper(log.With(app.Logger(), "kind", req.Kind(), "operation", req.GetOperation(), "method", req.GetMethod(), "path",

@@ -43,7 +43,7 @@ func RegisterAuthServiceHTTPServer(s *http.Server, srv AuthServiceHTTPServer) {
 	r.POST("/auth/login", _AuthService_Login0_HTTP_Handler(srv))
 	r.POST("/auth/register", _AuthService_Register0_HTTP_Handler(srv))
 	r.POST("/auth/logout", _AuthService_Logout0_HTTP_Handler(srv))
-	r.POST("/auth/token", _AuthService_RefreshToken0_HTTP_Handler(srv))
+	r.POST("/auth/refresh", _AuthService_RefreshToken0_HTTP_Handler(srv))
 	r.GET("/auth/captcha", _AuthService_GetCaptcha0_HTTP_Handler(srv))
 }
 
@@ -220,7 +220,7 @@ func (c *AuthServiceHTTPClientImpl) Logout(ctx context.Context, in *LogoutReques
 // RefreshToken RefreshToken provides a new access token.
 func (c *AuthServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...http.CallOption) (*RefreshTokenResponse, error) {
 	var out RefreshTokenResponse
-	pattern := "/auth/token"
+	pattern := "/auth/refresh"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthServiceRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))

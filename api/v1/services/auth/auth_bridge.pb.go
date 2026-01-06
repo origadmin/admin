@@ -94,7 +94,7 @@ func RegisterAuthServiceBridgeServer(s *http.Server, srv AuthServiceHookedBridge
 	r.POST("/auth/login", _AuthService_Login0_Bridge_Handler(srv))
 	r.POST("/auth/register", _AuthService_Register0_Bridge_Handler(srv))
 	r.POST("/auth/logout", _AuthService_Logout0_Bridge_Handler(srv))
-	r.POST("/auth/token", _AuthService_RefreshToken0_Bridge_Handler(srv))
+	r.POST("/auth/refresh", _AuthService_RefreshToken0_Bridge_Handler(srv))
 	r.GET("/auth/captcha", _AuthService_GetCaptcha0_Bridge_Handler(srv))
 }
 

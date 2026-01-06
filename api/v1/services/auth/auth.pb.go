@@ -767,9 +767,8 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\x06Logout\x12#.api.v1.services.auth.LogoutRequest\x1a$.api.v1.services.auth.LogoutResponse\"%\xea\xea\x1b\n" +
 	"\n" +
 	"\bjwt-auth\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/auth/logout\x12\x8b\x01\n" +
-	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"$\xea\xea\x1b\n" +
-	"\n" +
-	"\bjwt-auth\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/auth/token\x12\x82\x01\n" +
+	"\fRefreshToken\x12).api.v1.services.auth.RefreshTokenRequest\x1a*.api.v1.services.auth.RefreshTokenResponse\"$\xea\xea\x1b\b\n" +
+	"\x06public\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/auth/refresh\x12\x82\x01\n" +
 	"\n" +
 	"GetCaptcha\x12'.api.v1.services.auth.GetCaptchaRequest\x1a(.api.v1.services.auth.GetCaptchaResponse\"!\xea\xea\x1b\b\n" +
 	"\x06public\x82\xd3\xe4\x93\x02\x0f\x12\r/auth/captcha\x12e\n" +

@@ -12,6 +12,7 @@ import (
 	"github.com/origadmin/contrib/security/credential"
 	securityPrincipal "github.com/origadmin/contrib/security/principal"
 	v1 "origadmin/application/admin/api/v1/services/auth"
+	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/features/auth/biz"
 	"origadmin/application/admin/internal/helpers/captcha"
 )
@@ -116,7 +117,32 @@ func (s *AuthService) Logout(ctx context.Context, req *v1.LogoutRequest) (*v1.Lo
 
 // RefreshToken provides a new access token.
 func (s *AuthService) RefreshToken(ctx context.Context, req *v1.RefreshTokenRequest) (*v1.RefreshTokenResponse, error) {
-	return &v1.RefreshTokenResponse{}, nil
+	refreshToken := req.GetRefreshToken()
+	if refreshToken == "" {
+		return nil, types.ErrorAuthErrorReasonTokenMissing("refresh token is missing")
+	}
+
+	refresher, ok := s.creator.(credential.Refresher)
+	if !ok {
+		return nil, types.ErrorAuthErrorReasonUnspecified("credential creator does not support refresh")
+	}
+
+	credResp, err := refresher.RefreshCredential(ctx, refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	token := credResp.Response().GetPayload().GetToken()
+	if token == nil {
+		return nil, types.ErrorAuthErrorReasonTokenInvalid("token is missing in response")
+	}
+
+	return &v1.RefreshTokenResponse{
+		AccessToken:  token.GetAccessToken(),
+		TokenType:    token.GetTokenType(),
+		ExpiresIn:    token.GetExpiresIn(),
+		RefreshToken: token.GetRefreshToken(),
+	}, nil
 }
 
 // Authenticate is for internal use by the gateway to verify user access via gRPC.
