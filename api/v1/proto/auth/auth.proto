@@ -111,9 +111,9 @@ message RefreshTokenRequest {
 // The response message for the RefreshToken RPC.
 message RefreshTokenResponse {
   string access_token = 1 [json_name = "access_token"];
-  string token_type = 2 [json_name = "token_type"];
-  int64 expires_in = 3 [json_name = "expires_in"];
-  string refresh_token = 4 [json_name = "refresh_token"];
+  string refresh_token = 2 [json_name = "refresh_token"];
+  string token_type = 3 [json_name = "token_type"];
+  int64 expires_in = 4 [json_name = "expires_in"];
 }
 
 // The request message for the GetCaptcha RPC.

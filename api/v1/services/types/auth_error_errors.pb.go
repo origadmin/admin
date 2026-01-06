@@ -46,3 +46,27 @@ func IsAuthErrorReasonTokenExpired(err error) bool {
 func ErrorAuthErrorReasonTokenExpired(format string, args ...interface{}) *errors.Error {
 	return errors.New(401, AuthErrorReason_AUTH_ERROR_REASON_TOKEN_EXPIRED.String(), fmt.Sprintf(format, args...))
 }
+
+func IsAuthErrorReasonTokenInvalid(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == AuthErrorReason_AUTH_ERROR_REASON_TOKEN_INVALID.String() && e.Code == 401
+}
+
+func ErrorAuthErrorReasonTokenInvalid(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, AuthErrorReason_AUTH_ERROR_REASON_TOKEN_INVALID.String(), fmt.Sprintf(format, args...))
+}
+
+func IsAuthErrorReasonTokenMissing(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == AuthErrorReason_AUTH_ERROR_REASON_TOKEN_MISSING.String() && e.Code == 401
+}
+
+func ErrorAuthErrorReasonTokenMissing(format string, args ...interface{}) *errors.Error {
+	return errors.New(401, AuthErrorReason_AUTH_ERROR_REASON_TOKEN_MISSING.String(), fmt.Sprintf(format, args...))
+}

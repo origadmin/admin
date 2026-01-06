@@ -406,8 +406,9 @@ func (x *RefreshTokenRequest) GetRefreshToken() string {
 type RefreshTokenResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,proto3" json:"access_token,omitempty"`
-	TokenType     string                 `protobuf:"bytes,2,opt,name=token_type,proto3" json:"token_type,omitempty"`
-	ExpiresIn     int64                  `protobuf:"varint,3,opt,name=expires_in,proto3" json:"expires_in,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,proto3" json:"refresh_token,omitempty"`
+	TokenType     string                 `protobuf:"bytes,3,opt,name=token_type,proto3" json:"token_type,omitempty"`
+	ExpiresIn     int64                  `protobuf:"varint,4,opt,name=expires_in,proto3" json:"expires_in,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -445,6 +446,13 @@ func (*RefreshTokenResponse) Descriptor() ([]byte, []int) {
 func (x *RefreshTokenResponse) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *RefreshTokenResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
 	}
 	return ""
 }
@@ -730,14 +738,15 @@ const file_auth_auth_proto_rawDesc = "" +
 	"\rrefresh_token\x18\x01 \x01(\tR\rrefresh_token\"\x10\n" +
 	"\x0eLogoutResponse\";\n" +
 	"\x13RefreshTokenRequest\x12$\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\rrefresh_token\"z\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\rrefresh_token\"\xa0\x01\n" +
 	"\x14RefreshTokenResponse\x12\"\n" +
-	"\faccess_token\x18\x01 \x01(\tR\faccess_token\x12\x1e\n" +
+	"\faccess_token\x18\x01 \x01(\tR\faccess_token\x12$\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\rrefresh_token\x12\x1e\n" +
 	"\n" +
-	"token_type\x18\x02 \x01(\tR\n" +
+	"token_type\x18\x03 \x01(\tR\n" +
 	"token_type\x12\x1e\n" +
 	"\n" +
-	"expires_in\x18\x03 \x01(\x03R\n" +
+	"expires_in\x18\x04 \x01(\x03R\n" +
 	"expires_in\"W\n" +
 	"\x11GetCaptchaRequest\x12\x1e\n" +
 	"\n" +

@@ -28,6 +28,8 @@ const (
 	AuthErrorReason_AUTH_ERROR_REASON_UNSPECIFIED       AuthErrorReason = 0
 	AuthErrorReason_AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND AuthErrorReason = 2001
 	AuthErrorReason_AUTH_ERROR_REASON_TOKEN_EXPIRED     AuthErrorReason = 2002
+	AuthErrorReason_AUTH_ERROR_REASON_TOKEN_INVALID     AuthErrorReason = 2003
+	AuthErrorReason_AUTH_ERROR_REASON_TOKEN_MISSING     AuthErrorReason = 2004
 )
 
 // Enum value maps for AuthErrorReason.
@@ -36,11 +38,15 @@ var (
 		0:    "AUTH_ERROR_REASON_UNSPECIFIED",
 		2001: "AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND",
 		2002: "AUTH_ERROR_REASON_TOKEN_EXPIRED",
+		2003: "AUTH_ERROR_REASON_TOKEN_INVALID",
+		2004: "AUTH_ERROR_REASON_TOKEN_MISSING",
 	}
 	AuthErrorReason_value = map[string]int32{
 		"AUTH_ERROR_REASON_UNSPECIFIED":       0,
 		"AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND": 2001,
 		"AUTH_ERROR_REASON_TOKEN_EXPIRED":     2002,
+		"AUTH_ERROR_REASON_TOKEN_INVALID":     2003,
+		"AUTH_ERROR_REASON_TOKEN_MISSING":     2004,
 	}
 )
 
@@ -75,11 +81,13 @@ var File_types_auth_error_proto protoreflect.FileDescriptor
 
 const file_types_auth_error_proto_rawDesc = "" +
 	"\n" +
-	"\x16types/auth_error.proto\x12\x15api.v1.services.types\x1a\x13errors/errors.proto*\x96\x01\n" +
+	"\x16types/auth_error.proto\x12\x15api.v1.services.types\x1a\x13errors/errors.proto*\xee\x01\n" +
 	"\x0fAuthErrorReason\x12!\n" +
 	"\x1dAUTH_ERROR_REASON_UNSPECIFIED\x10\x00\x12.\n" +
 	"#AUTH_ERROR_REASON_CAPTCHA_NOT_FOUND\x10\xd1\x0f\x1a\x04\xa8E\x94\x03\x12*\n" +
-	"\x1fAUTH_ERROR_REASON_TOKEN_EXPIRED\x10\xd2\x0f\x1a\x04\xa8E\x91\x03\x1a\x04\xa0E\xf4\x03B\xdc\x01\n" +
+	"\x1fAUTH_ERROR_REASON_TOKEN_EXPIRED\x10\xd2\x0f\x1a\x04\xa8E\x91\x03\x12*\n" +
+	"\x1fAUTH_ERROR_REASON_TOKEN_INVALID\x10\xd3\x0f\x1a\x04\xa8E\x91\x03\x12*\n" +
+	"\x1fAUTH_ERROR_REASON_TOKEN_MISSING\x10\xd4\x0f\x1a\x04\xa8E\x91\x03\x1a\x04\xa0E\xf4\x03B\xdc\x01\n" +
 	"\x19com.api.v1.services.typesB\x0eAuthErrorProtoP\x01Z7origadmin/application/admin/api/v1/services/types;types\xa2\x02\x04AVST\xaa\x02\x15Api.V1.Services.Types\xca\x02\x15Api\\V1\\Services\\Types\xe2\x02!Api\\V1\\Services\\Types\\GPBMetadata\xea\x02\x18Api::V1::Services::Typesb\x06proto3"
 
 var (

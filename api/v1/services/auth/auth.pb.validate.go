@@ -790,6 +790,8 @@ func (m *RefreshTokenResponse) validate(all bool) error {
 
 	// no validation rules for AccessToken
 
+	// no validation rules for RefreshToken
+
 	// no validation rules for TokenType
 
 	// no validation rules for ExpiresIn
