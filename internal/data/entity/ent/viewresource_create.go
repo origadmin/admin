@@ -121,7 +121,9 @@ func (_c *ViewResourceCreate) Mutation() *ViewResourceMutation {
 
 // Save creates the ViewResource in the database.
 func (_c *ViewResourceCreate) Save(ctx context.Context) (*ViewResource, error) {
-	_c.defaults()
+	if err := _c.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -148,7 +150,7 @@ func (_c *ViewResourceCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_c *ViewResourceCreate) defaults() {
+func (_c *ViewResourceCreate) defaults() error {
 	if _, ok := _c.mutation.CreateAuthor(); !ok {
 		v := viewresource.DefaultCreateAuthor
 		_c.mutation.SetCreateAuthor(v)
@@ -158,17 +160,27 @@ func (_c *ViewResourceCreate) defaults() {
 		_c.mutation.SetUpdateAuthor(v)
 	}
 	if _, ok := _c.mutation.CreateTime(); !ok {
+		if viewresource.DefaultCreateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewresource.DefaultCreateTime (forgotten import ent/runtime?)")
+		}
 		v := viewresource.DefaultCreateTime()
 		_c.mutation.SetCreateTime(v)
 	}
 	if _, ok := _c.mutation.UpdateTime(); !ok {
+		if viewresource.DefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewresource.DefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := viewresource.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
+		if viewresource.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized viewresource.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := viewresource.DefaultID()
 		_c.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

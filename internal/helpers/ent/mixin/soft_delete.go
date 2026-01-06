@@ -2,16 +2,35 @@ package mixin
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+
+	gen "origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/hook"
+	"origadmin/application/admin/internal/data/entity/ent/intercept"
+	"origadmin/application/admin/internal/helpers/i18n"
 )
 
-// SoftDeleteMixin implements the soft-delete pattern for a schema.
+type softDeleteKey struct{}
+
+// SkipSoftDelete returns a new context that skips the soft-delete interceptor/mutators.
+func SkipSoftDelete(parent context.Context) context.Context {
+	return context.WithValue(parent, softDeleteKey{}, true)
+}
+
+// IsSkipSoftDelete checks if the context is configured to skip soft-delete.
+func IsSkipSoftDelete(ctx context.Context) bool {
+	v, _ := ctx.Value(softDeleteKey{}).(bool)
+	return v
+}
+
+// SoftDeleteMixin provides soft-delete capabilities to a schema.
+// It adds a `delete_time` field and a hook to intercept delete operations.
 type SoftDeleteMixin struct {
 	mixin.Schema
 }
@@ -20,84 +39,74 @@ type SoftDeleteMixin struct {
 func (SoftDeleteMixin) Fields() []ent.Field {
 	return []ent.Field{
 		field.Time("delete_time").
-			Comment("Time of soft-delete").
+			Comment(i18n.Text("delete_time.field.comment")).
 			Optional().
 			Nillable(),
 	}
 }
 
 // Hooks of the SoftDeleteMixin.
-func (SoftDeleteMixin) Hooks() []ent.Hook {
+// This hook intercepts delete operations and converts them to update operations
+// that set the `delete_time` field.
+func (d SoftDeleteMixin) Hooks() []ent.Hook {
 	return []ent.Hook{
-		softDeleteHook(),
+		SoftDeleteHook(d),
 	}
 }
 
 // Interceptors of the SoftDeleteMixin.
-func (SoftDeleteMixin) Interceptors() []ent.Interceptor {
+func (d SoftDeleteMixin) Interceptors() []ent.Interceptor {
 	return []ent.Interceptor{
-		softDeleteInterceptor(),
+		SoftDeleteInterceptor(d),
 	}
 }
 
-// softDeleteHook intercepts DELETE operations and converts them to UPDATEs.
-func softDeleteHook() ent.Hook {
-	// Define an interface for mutations that support soft-delete.
-	// This relies on structural typing and code generation.
-	type softDeleter interface {
-		SetOp(ent.Op)
-		SetDeleteTime(time.Time)
-	}
-
-	return func(next ent.Mutator) ent.Mutator {
-		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-			// Skip if not a DELETE operation or if soft-delete is skipped.
-			if !m.Op().Is(ent.OpDelete|ent.OpDeleteOne) || IsSkipSoftDelete(ctx) {
-				return next.Mutate(ctx, m)
-			}
-
-			// Check if the mutation implements the softDeleter interface.
-			mx, ok := m.(softDeleter)
-			if !ok {
-				return nil, errors.New("ent: mutation does not support soft-delete")
-			}
-
-			// Change the operation to UPDATE and set the delete_time.
-			mx.SetOp(ent.OpUpdate)
-			mx.SetDeleteTime(time.Now())
-
-			// Proceed with the mutation, which is now an update.
-			return next.Mutate(ctx, m)
-		})
-	}
-}
-
-// softDeleteInterceptor filters out soft-deleted records from queries.
-func softDeleteInterceptor() ent.Interceptor {
-	// Define an interface for queries that support WhereP.
-	type queryWither interface {
-		WhereP(...func(*sql.Selector))
-	}
-
-	return ent.InterceptFunc(func(next ent.Querier) ent.Querier {
-		return ent.QuerierFunc(func(ctx context.Context, query ent.Query) (ent.Value, error) {
-			// Skip if soft-delete is skipped for this query.
-			if IsSkipSoftDelete(ctx) {
-				return next.Query(ctx, query)
-			}
-
-			// Check if the query supports the WhereP method.
-			q, ok := query.(queryWither)
-			if !ok {
-				return next.Query(ctx, query)
-			}
-
-			// Add the WHERE clause to filter out soft-deleted records.
-			q.WhereP(func(s *sql.Selector) {
-				s.Where(sql.IsNull(s.C("delete_time")))
+// SoftDeleteHook intercepts DELETE operations and converts them to UPDATEs.
+func SoftDeleteHook(d SoftDeleteMixin) ent.Hook {
+	return hook.On(
+		func(next ent.Mutator) ent.Mutator {
+			return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+				// Skip soft-delete, means delete the entity permanently.
+				if IsSkipSoftDelete(ctx) {
+					return next.Mutate(ctx, m)
+				}
+				mx, ok := m.(interface {
+					SetOp(ent.Op)
+					Client() *gen.Client
+					SetDeleteTime(time.Time)
+					WhereP(...func(*sql.Selector))
+				})
+				if !ok {
+					return nil, fmt.Errorf("unexpected mutation type %T", m)
+				}
+				d.P(mx)
+				mx.SetOp(ent.OpUpdate)
+				mx.SetDeleteTime(time.Now())
+				return mx.Client().Mutate(ctx, m)
 			})
+		},
+		ent.OpDeleteOne|ent.OpDelete,
+	)
+}
 
-			return next.Query(ctx, query)
-		})
+type P interface {
+	WhereP(...func(*sql.Selector))
+}
+
+// P adds a storage-level predicate to the queries and mutations.
+func (d SoftDeleteMixin) P(w P) {
+	w.WhereP(
+		sql.FieldIsNull("delete_time"),
+	)
+}
+
+// SoftDeleteInterceptor returns a query interceptor that filters out soft-deleted records.
+func SoftDeleteInterceptor(d SoftDeleteMixin) ent.Interceptor {
+	return intercept.TraverseFunc(func(ctx context.Context, q intercept.Query) error {
+		if IsSkipSoftDelete(ctx) {
+			return nil
+		}
+		d.P(q)
+		return nil
 	})
 }

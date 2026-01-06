@@ -115,6 +115,8 @@ func init() {
 	// department.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	department.IDValidator = departmentDescID.Validators[0].(func(int64) error)
 	notificationMixin := schema.Notification{}.Mixin()
+	notificationMixinHooks1 := notificationMixin[1].Hooks()
+	notification.Hooks[0] = notificationMixinHooks1[0]
 	notificationMixinFields0 := notificationMixin[0].Fields()
 	_ = notificationMixinFields0
 	notificationMixinFields1 := notificationMixin[1].Fields()
@@ -396,13 +398,18 @@ func init() {
 	// rolepermission.PermissionIDValidator is a validator for the "permission_id" field. It is called by the builders before save.
 	rolepermission.PermissionIDValidator = rolepermissionDescPermissionID.Validators[0].(func(int64) error)
 	userMixin := schema.User{}.Mixin()
+	userMixinHooks1 := userMixin[1].Hooks()
 	userMixinHooks4 := userMixin[4].Hooks()
 	userHooks := schema.User{}.Hooks()
-	user.Hooks[0] = userMixinHooks4[0]
-	user.Hooks[1] = userHooks[0]
-	user.Hooks[2] = userHooks[1]
+	user.Hooks[0] = userMixinHooks1[0]
+	user.Hooks[1] = userMixinHooks4[0]
+	user.Hooks[2] = userHooks[0]
+	user.Hooks[3] = userHooks[1]
+	user.Hooks[4] = userHooks[2]
 	userMixinInters4 := userMixin[4].Interceptors()
+	userInters := schema.User{}.Interceptors()
 	user.Interceptors[0] = userMixinInters4[0]
+	user.Interceptors[1] = userInters[0]
 	userMixinFields0 := userMixin[0].Fields()
 	_ = userMixinFields0
 	userMixinFields1 := userMixin[1].Fields()
@@ -623,6 +630,8 @@ func init() {
 	// view.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	view.IDValidator = viewDescID.Validators[0].(func(int64) error)
 	viewpermissionMixin := schema.ViewPermission{}.Mixin()
+	viewpermissionMixinHooks1 := viewpermissionMixin[1].Hooks()
+	viewpermission.Hooks[0] = viewpermissionMixinHooks1[0]
 	viewpermissionMixinFields0 := viewpermissionMixin[0].Fields()
 	_ = viewpermissionMixinFields0
 	viewpermissionMixinFields1 := viewpermissionMixin[1].Fields()
@@ -666,6 +675,8 @@ func init() {
 	// viewpermission.IDValidator is a validator for the "id" field. It is called by the builders before save.
 	viewpermission.IDValidator = viewpermissionDescID.Validators[0].(func(int64) error)
 	viewresourceMixin := schema.ViewResource{}.Mixin()
+	viewresourceMixinHooks1 := viewresourceMixin[1].Hooks()
+	viewresource.Hooks[0] = viewresourceMixinHooks1[0]
 	viewresourceMixinFields0 := viewresourceMixin[0].Fields()
 	_ = viewresourceMixinFields0
 	viewresourceMixinFields1 := viewresourceMixin[1].Fields()

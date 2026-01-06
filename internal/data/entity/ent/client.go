@@ -796,7 +796,8 @@ func (c *NotificationClient) GetX(ctx context.Context, id int64) *Notification {
 
 // Hooks returns the client hooks.
 func (c *NotificationClient) Hooks() []Hook {
-	return c.hooks.Notification
+	hooks := c.hooks.Notification
+	return append(hooks[:len(hooks):len(hooks)], notification.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -3263,7 +3264,8 @@ func (c *ViewPermissionClient) QueryPermission(_m *ViewPermission) *PermissionQu
 
 // Hooks returns the client hooks.
 func (c *ViewPermissionClient) Hooks() []Hook {
-	return c.hooks.ViewPermission
+	hooks := c.hooks.ViewPermission
+	return append(hooks[:len(hooks):len(hooks)], viewpermission.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -3428,7 +3430,8 @@ func (c *ViewResourceClient) QueryResource(_m *ViewResource) *ResourceQuery {
 
 // Hooks returns the client hooks.
 func (c *ViewResourceClient) Hooks() []Hook {
-	return c.hooks.ViewResource
+	hooks := c.hooks.ViewResource
+	return append(hooks[:len(hooks):len(hooks)], viewresource.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.

@@ -432,7 +432,7 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			},
 		}
 		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -455,7 +455,7 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -478,7 +478,7 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1028,7 +1028,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			},
 		}
 		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1051,7 +1051,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1074,7 +1074,7 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewResourceCreate{config: _u.config, mutation: newViewResourceMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {

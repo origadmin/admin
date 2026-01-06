@@ -184,8 +184,8 @@ func ValidColumn(column string) bool {
 //
 //	import _ "origadmin/application/admin/internal/data/entity/ent/runtime"
 var (
-	Hooks        [3]ent.Hook
-	Interceptors [1]ent.Interceptor
+	Hooks        [5]ent.Hook
+	Interceptors [2]ent.Interceptor
 	// DefaultCreateAuthor holds the default value on creation for the "create_author" field.
 	DefaultCreateAuthor int64
 	// DefaultUpdateAuthor holds the default value on creation for the "update_author" field.

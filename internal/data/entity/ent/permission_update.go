@@ -690,7 +690,7 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			},
 		}
 		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -713,7 +713,7 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -736,7 +736,7 @@ func (_u *PermissionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1629,7 +1629,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			},
 		}
 		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1652,7 +1652,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1675,7 +1675,7 @@ func (_u *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission, 
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &ViewPermissionCreate{config: _u.config, mutation: newViewPermissionMutation(_u.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {

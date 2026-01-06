@@ -148,7 +148,9 @@ func (_u *ViewPermissionUpdate) ClearPermission() *ViewPermissionUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *ViewPermissionUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -175,11 +177,15 @@ func (_u *ViewPermissionUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *ViewPermissionUpdate) defaults() {
+func (_u *ViewPermissionUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if viewpermission.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewpermission.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := viewpermission.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -452,7 +458,9 @@ func (_u *ViewPermissionUpdateOne) Select(field string, fields ...string) *ViewP
 
 // Save executes the query and returns the updated ViewPermission entity.
 func (_u *ViewPermissionUpdateOne) Save(ctx context.Context) (*ViewPermission, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -479,11 +487,15 @@ func (_u *ViewPermissionUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *ViewPermissionUpdateOne) defaults() {
+func (_u *ViewPermissionUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if viewpermission.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewpermission.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := viewpermission.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

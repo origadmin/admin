@@ -37,7 +37,10 @@ func ProvideDatabase(pv storage.Provider, logger log.Logger) (*ent.Database, fun
 	}
 
 	activeDB := entsql.OpenDB(db.Dialect(), db.DB())
-	database := ent.NewDatabase(ent.Driver(activeDB), ent.Debug())
+	database := ent.NewDatabase(
+		ent.Driver(activeDB),
+		ent.Debug(),
+	)
 	// === The migration logic is moved here ===
 	if err := database.Migration(context.Background(),
 		schema.WithDropIndex(true),

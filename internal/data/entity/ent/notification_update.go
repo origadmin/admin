@@ -167,7 +167,9 @@ func (_u *NotificationUpdate) Mutation() *NotificationMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *NotificationUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -194,11 +196,15 @@ func (_u *NotificationUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *NotificationUpdate) defaults() {
+func (_u *NotificationUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if notification.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized notification.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := notification.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -440,7 +446,9 @@ func (_u *NotificationUpdateOne) Select(field string, fields ...string) *Notific
 
 // Save executes the query and returns the updated Notification entity.
 func (_u *NotificationUpdateOne) Save(ctx context.Context) (*Notification, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -467,11 +475,15 @@ func (_u *NotificationUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *NotificationUpdateOne) defaults() {
+func (_u *NotificationUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if notification.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized notification.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := notification.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

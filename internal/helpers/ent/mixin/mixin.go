@@ -278,28 +278,6 @@ func (m updateMixin) Indexes() []ent.Index {
 	}
 }
 
-// DeleteMixin schema to include control and time fields.
-type DeleteMixin struct {
-	mixin.Schema
-}
-
-// Fields of the Model.
-func (m DeleteMixin) Fields() []ent.Field {
-	return []ent.Field{
-		field.Time("delete_time").
-			Comment(i18n.Text("delete_time.field.comment")).
-			Optional().
-			Nillable(),
-	}
-}
-
-// Indexes of the mixin.
-func (m DeleteMixin) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("delete_time"),
-	}
-}
-
 var (
 	// ModelMixin provides a basic set of fields for standard models.
 	ModelMixin = []ent.Mixin{
@@ -324,15 +302,3 @@ var (
 		DefaultUpdateMixin(),
 	}
 )
-
-type softDeleteKey struct{}
-
-// SkipSoftDelete returns a new context that skips the soft-delete interceptor/mutators.
-func SkipSoftDelete(parent context.Context) context.Context {
-	return context.WithValue(parent, softDeleteKey{}, true)
-}
-
-func IsSkipSoftDelete(ctx context.Context) bool {
-	v, _ := ctx.Value(softDeleteKey{}).(bool)
-	return v
-}

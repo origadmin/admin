@@ -121,7 +121,9 @@ func (_c *ViewPermissionCreate) Mutation() *ViewPermissionMutation {
 
 // Save creates the ViewPermission in the database.
 func (_c *ViewPermissionCreate) Save(ctx context.Context) (*ViewPermission, error) {
-	_c.defaults()
+	if err := _c.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -148,7 +150,7 @@ func (_c *ViewPermissionCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_c *ViewPermissionCreate) defaults() {
+func (_c *ViewPermissionCreate) defaults() error {
 	if _, ok := _c.mutation.CreateAuthor(); !ok {
 		v := viewpermission.DefaultCreateAuthor
 		_c.mutation.SetCreateAuthor(v)
@@ -158,17 +160,27 @@ func (_c *ViewPermissionCreate) defaults() {
 		_c.mutation.SetUpdateAuthor(v)
 	}
 	if _, ok := _c.mutation.CreateTime(); !ok {
+		if viewpermission.DefaultCreateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewpermission.DefaultCreateTime (forgotten import ent/runtime?)")
+		}
 		v := viewpermission.DefaultCreateTime()
 		_c.mutation.SetCreateTime(v)
 	}
 	if _, ok := _c.mutation.UpdateTime(); !ok {
+		if viewpermission.DefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewpermission.DefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := viewpermission.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
+		if viewpermission.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized viewpermission.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := viewpermission.DefaultID()
 		_c.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

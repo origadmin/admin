@@ -148,7 +148,9 @@ func (_u *ViewResourceUpdate) ClearResource() *ViewResourceUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *ViewResourceUpdate) Save(ctx context.Context) (int, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return 0, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -175,11 +177,15 @@ func (_u *ViewResourceUpdate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *ViewResourceUpdate) defaults() {
+func (_u *ViewResourceUpdate) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if viewresource.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewresource.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := viewresource.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -452,7 +458,9 @@ func (_u *ViewResourceUpdateOne) Select(field string, fields ...string) *ViewRes
 
 // Save executes the query and returns the updated ViewResource entity.
 func (_u *ViewResourceUpdateOne) Save(ctx context.Context) (*ViewResource, error) {
-	_u.defaults()
+	if err := _u.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -479,11 +487,15 @@ func (_u *ViewResourceUpdateOne) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (_u *ViewResourceUpdateOne) defaults() {
+func (_u *ViewResourceUpdateOne) defaults() error {
 	if _, ok := _u.mutation.UpdateTime(); !ok {
+		if viewresource.UpdateDefaultUpdateTime == nil {
+			return fmt.Errorf("ent: uninitialized viewresource.UpdateDefaultUpdateTime (forgotten import ent/runtime?)")
+		}
 		v := viewresource.UpdateDefaultUpdateTime()
 		_u.mutation.SetUpdateTime(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
