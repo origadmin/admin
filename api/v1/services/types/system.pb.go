@@ -37,42 +37,40 @@ type View struct {
 	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
 	// Scope holds the value of the "scope" field.
 	Scope string `protobuf:"bytes,6,opt,name=scope,proto3" json:"scope,omitempty"`
-	// I18nKey holds the value of the "i18n_key" field.
-	I18NKey string `protobuf:"bytes,7,opt,name=i18n_key,proto3" json:"i18n_key,omitempty"`
+	// I18nKey holds the value of the "i18n" field.
+	I18N string `protobuf:"bytes,7,opt,name=i18n,proto3" json:"i18n,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
 	// Sequence holds the value of the "sequence" field.
 	Sequence int32 `protobuf:"varint,9,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// Type holds the value of the "type" field.
 	Type string `protobuf:"bytes,10,opt,name=type,proto3" json:"type,omitempty"`
-	// Component holds the value of the "component" field.
-	Component string `protobuf:"bytes,11,opt,name=component,proto3" json:"component,omitempty"`
 	// Comment holds the value of the "comment" field.
-	Comment string `protobuf:"bytes,12,opt,name=comment,proto3" json:"comment,omitempty"`
+	Comment string `protobuf:"bytes,11,opt,name=comment,proto3" json:"comment,omitempty"`
 	// Icon holds the value of the "icon" field.
-	Icon string `protobuf:"bytes,13,opt,name=icon,proto3" json:"icon,omitempty"`
+	Icon string `protobuf:"bytes,12,opt,name=icon,proto3" json:"icon,omitempty"`
 	// Visible holds the value of the "visible" field.
-	Visible bool `protobuf:"varint,14,opt,name=visible,proto3" json:"visible,omitempty"`
+	Visible bool `protobuf:"varint,13,opt,name=visible,proto3" json:"visible,omitempty"`
 	// Path holds the value of the "path" field.
-	Path string `protobuf:"bytes,15,opt,name=path,proto3" json:"path,omitempty"`
+	Path string `protobuf:"bytes,14,opt,name=path,proto3" json:"path,omitempty"`
 	// TreePath holds the value of the "tree_path" field.
-	TreePath string `protobuf:"bytes,16,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
+	TreePath string `protobuf:"bytes,15,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// Properties holds the value of the "properties" field.
-	Properties string `protobuf:"bytes,17,opt,name=properties,proto3" json:"properties,omitempty"`
+	Properties string `protobuf:"bytes,16,opt,name=properties,proto3" json:"properties,omitempty"`
 	// Status holds the value of the "status" field.
-	Status int32 `protobuf:"varint,18,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
 	// ParentID holds the value of the "parent_id" field.
-	ParentId int64 `protobuf:"varint,19,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	ParentId int64 `protobuf:"varint,18,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
-	ParentPath string `protobuf:"bytes,20,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
+	ParentPath string `protobuf:"bytes,19,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*View `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*View `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *View `protobuf:"bytes,22,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *View `protobuf:"bytes,101,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,23,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,102,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles         []*Role `protobuf:"bytes,24,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles         []*Role `protobuf:"bytes,103,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -149,9 +147,9 @@ func (x *View) GetScope() string {
 	return ""
 }
 
-func (x *View) GetI18NKey() string {
+func (x *View) GetI18N() string {
 	if x != nil {
-		return x.I18NKey
+		return x.I18N
 	}
 	return ""
 }
@@ -173,13 +171,6 @@ func (x *View) GetSequence() int32 {
 func (x *View) GetType() string {
 	if x != nil {
 		return x.Type
-	}
-	return ""
-}
-
-func (x *View) GetComponent() string {
-	if x != nil {
-		return x.Component
 	}
 	return ""
 }
@@ -285,40 +276,32 @@ type Role struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// role.field.keyword
-	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// role.field.name
-	Name string `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
 	// role.field.description
-	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
 	// role.field.type
-	Type int32 `protobuf:"varint,9,opt,name=type,proto3" json:"type,omitempty"`
+	Type int32 `protobuf:"varint,7,opt,name=type,proto3" json:"type,omitempty"`
 	// role.field.sequence
-	Sequence int32 `protobuf:"varint,10,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	Sequence int32 `protobuf:"varint,8,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// role.field.status
-	Status int32 `protobuf:"varint,11,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,9,opt,name=status,proto3" json:"status,omitempty"`
 	// role.field.is_types
-	IsTypes bool `protobuf:"varint,12,opt,name=is_types,proto3" json:"is_types,omitempty"`
+	IsTypes bool `protobuf:"varint,10,opt,name=is_types,proto3" json:"is_types,omitempty"`
 	// Views holds the value of the views edge.
-	Views []*View `protobuf:"bytes,21,rep,name=views,proto3" json:"views,omitempty"`
-	// View Ids holds the value of the view_ids edge.
-	ViewIds []int64 `protobuf:"varint,20,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
+	Views []*View `protobuf:"bytes,100,rep,name=views,proto3" json:"views,omitempty"`
 	// Users holds the value of the users edge.
-	Users []*User `protobuf:"bytes,22,rep,name=users,proto3" json:"users,omitempty"`
-	// Users Ids holds the value of the user_ids edge.
-	UserIds []int64 `protobuf:"varint,23,rep,packed,name=user_ids,proto3" json:"user_ids,omitempty"`
+	Users []*User `protobuf:"bytes,101,rep,name=users,proto3" json:"users,omitempty"`
 	// Resources holds the value of the resources edge.
-	Resources []*Resource `protobuf:"bytes,24,rep,name=resources,proto3" json:"resources,omitempty"`
+	Resources []*Resource `protobuf:"bytes,102,rep,name=resources,proto3" json:"resources,omitempty"`
 	// Resource Ids holds the value of the resource_ids edge.
-	ResourceIds []int64 `protobuf:"varint,25,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
+	ResourceIds []int64 `protobuf:"varint,103,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// Permissions holds the value of the permissions edge.
-	Permissions []*Permission `protobuf:"bytes,26,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	Permissions []*Permission `protobuf:"bytes,104,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	// Permission Ids holds the value of the permission_ids edge.
-	PermissionIds []int64 `protobuf:"varint,27,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
+	PermissionIds []int64 `protobuf:"varint,105,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -372,20 +355,6 @@ func (x *Role) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
-}
-
-func (x *Role) GetCreateAuthor() int64 {
-	if x != nil {
-		return x.CreateAuthor
-	}
-	return 0
-}
-
-func (x *Role) GetUpdateAuthor() int64 {
-	if x != nil {
-		return x.UpdateAuthor
-	}
-	return 0
 }
 
 func (x *Role) GetKeyword() string {
@@ -444,23 +413,9 @@ func (x *Role) GetViews() []*View {
 	return nil
 }
 
-func (x *Role) GetViewIds() []int64 {
-	if x != nil {
-		return x.ViewIds
-	}
-	return nil
-}
-
 func (x *Role) GetUsers() []*User {
 	if x != nil {
 		return x.Users
-	}
-	return nil
-}
-
-func (x *Role) GetUserIds() []int64 {
-	if x != nil {
-		return x.UserIds
 	}
 	return nil
 }
@@ -499,14 +454,14 @@ type User struct {
 	// ID of the ent.
 	// field.primary_key.comment
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	// create_time.field.comment
-	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
-	// update_time.field.comment
-	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
 	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
+	CreateAuthor int64 `protobuf:"varint,2,opt,name=create_author,proto3" json:"create_author,omitempty"`
 	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
+	UpdateAuthor int64 `protobuf:"varint,3,opt,name=update_author,proto3" json:"update_author,omitempty"`
+	// create_time.field.comment
+	CreateTime *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=create_time,proto3" json:"create_time,omitempty"`
+	// update_time.field.comment
+	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=update_time,proto3" json:"update_time,omitempty"`
 	// user.field.uuid
 	Uuid string `protobuf:"bytes,6,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	// user.field.allowed_ip
@@ -531,22 +486,20 @@ type User struct {
 	Token string `protobuf:"bytes,16,opt,name=token,proto3" json:"token,omitempty"`
 	// user.field.status
 	Status int32 `protobuf:"varint,17,opt,name=status,proto3" json:"status,omitempty"`
-	// user.field.i18n
-	I18N string `protobuf:"bytes,18,opt,name=i18n,proto3" json:"i18n,omitempty"`
 	// user.field.last_login_ip
-	LastLoginIp string `protobuf:"bytes,19,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
+	LastLoginIp string `protobuf:"bytes,18,opt,name=last_login_ip,proto3" json:"last_login_ip,omitempty"`
 	// user.field.login_ip
-	LoginIp string `protobuf:"bytes,20,opt,name=login_ip,proto3" json:"login_ip,omitempty"`
+	LoginIp string `protobuf:"bytes,19,opt,name=login_ip,proto3" json:"login_ip,omitempty"`
 	// user.field.last_login_time
-	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
+	LastLoginTime *timestamppb.Timestamp `protobuf:"bytes,20,opt,name=last_login_time,proto3" json:"last_login_time,omitempty"`
 	// user.field.login_time
-	LoginTime *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=login_time,proto3" json:"login_time,omitempty"`
+	LoginTime *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=login_time,proto3" json:"login_time,omitempty"`
 	// user.field.sanction_date
-	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,23,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
+	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
 	// Roles holds the value of the roles edge.
-	Roles []*Role `protobuf:"bytes,24,rep,name=roles,proto3" json:"roles,omitempty"`
+	Roles []*Role `protobuf:"bytes,100,rep,name=roles,proto3" json:"roles,omitempty"`
 	// Role Ids holds the value of the role_ids
-	RoleIds       []int64 `protobuf:"varint,25,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
+	RoleIds       []int64 `protobuf:"varint,101,rep,packed,name=role_ids,proto3" json:"role_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -588,20 +541,6 @@ func (x *User) GetId() int64 {
 	return 0
 }
 
-func (x *User) GetCreateTime() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreateTime
-	}
-	return nil
-}
-
-func (x *User) GetUpdateTime() *timestamppb.Timestamp {
-	if x != nil {
-		return x.UpdateTime
-	}
-	return nil
-}
-
 func (x *User) GetCreateAuthor() int64 {
 	if x != nil {
 		return x.CreateAuthor
@@ -614,6 +553,20 @@ func (x *User) GetUpdateAuthor() int64 {
 		return x.UpdateAuthor
 	}
 	return 0
+}
+
+func (x *User) GetCreateTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreateTime
+	}
+	return nil
+}
+
+func (x *User) GetUpdateTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdateTime
+	}
+	return nil
 }
 
 func (x *User) GetUuid() string {
@@ -700,13 +653,6 @@ func (x *User) GetStatus() int32 {
 	return 0
 }
 
-func (x *User) GetI18N() string {
-	if x != nil {
-		return x.I18N
-	}
-	return ""
-}
-
 func (x *User) GetLastLoginIp() string {
 	if x != nil {
 		return x.LastLoginIp
@@ -772,9 +718,9 @@ type UserRole struct {
 	// RoleName holds the value of the "role_name" field.
 	RoleName string `protobuf:"bytes,6,opt,name=role_name,proto3" json:"role_name,omitempty"`
 	// User holds the value of the user edge.
-	User *User `protobuf:"bytes,21,opt,name=user,proto3" json:"user,omitempty"`
+	User *User `protobuf:"bytes,100,opt,name=user,proto3" json:"user,omitempty"`
 	// Role holds the value of the role edge.
-	Role          *Role `protobuf:"bytes,22,opt,name=role,proto3" json:"role,omitempty"`
+	Role          *Role `protobuf:"bytes,101,opt,name=role,proto3" json:"role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -879,9 +825,9 @@ type RoleView struct {
 	// ViewID holds the value of the "view_id" field.
 	ViewId int64 `protobuf:"varint,5,opt,name=view_id,proto3" json:"view_id,omitempty"`
 	// Role holds the value of the role edge.
-	Role *Role `protobuf:"bytes,21,opt,name=role,proto3" json:"role,omitempty"`
+	Role *Role `protobuf:"bytes,100,opt,name=role,proto3" json:"role,omitempty"`
 	// View holds the value of the view edge.
-	View          *View `protobuf:"bytes,22,opt,name=view,proto3" json:"view,omitempty"`
+	View          *View `protobuf:"bytes,101,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -975,26 +921,30 @@ type Resource struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// resource.field.name
-	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// resource.field.keyword
-	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// resource.field.i18n_key
+	I18NKey string `protobuf:"bytes,6,opt,name=i18n_key,proto3" json:"i18n_key,omitempty"`
 	// resource.field.type
-	Type string `protobuf:"bytes,9,opt,name=type,proto3" json:"type,omitempty"`
+	Type string `protobuf:"bytes,7,opt,name=type,proto3" json:"type,omitempty"`
 	// resource.field.status
-	Status int32 `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
 	// resource.field.path
-	Path string `protobuf:"bytes,11,opt,name=path,proto3" json:"path,omitempty"`
+	Path string `protobuf:"bytes,9,opt,name=path,proto3" json:"path,omitempty"`
 	// resource.field.operation
-	Operation string `protobuf:"bytes,12,opt,name=operation,proto3" json:"operation,omitempty"`
+	Operation string `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
 	// resource.field.method
-	Method string `protobuf:"bytes,13,opt,name=method,proto3" json:"method,omitempty"`
+	Method string `protobuf:"bytes,11,opt,name=method,proto3" json:"method,omitempty"`
+	// resource.field.component
+	Component string `protobuf:"bytes,12,opt,name=component,proto3" json:"component,omitempty"`
+	// resource.field.icon
+	Icon string `protobuf:"bytes,13,opt,name=icon,proto3" json:"icon,omitempty"`
 	// resource.field.sequence
 	Sequence int32 `protobuf:"varint,14,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	// resource.field.visible
+	Visible bool `protobuf:"varint,15,opt,name=visible,proto3" json:"visible,omitempty"`
 	// resource.field.tree_path
 	TreePath string `protobuf:"bytes,16,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// resource.field.properties
@@ -1003,15 +953,18 @@ type Resource struct {
 	Description string `protobuf:"bytes,18,opt,name=description,proto3" json:"description,omitempty"`
 	// resource.field.parent_id
 	ParentId int64 `protobuf:"varint,19,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	// resource.field.sync_status
+	SyncStatus string `protobuf:"bytes,20,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
+	// resource.field.service_name
+	ServiceName string `protobuf:"bytes,21,opt,name=service_name,proto3" json:"service_name,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*Resource `protobuf:"bytes,21,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*Resource `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent *Resource `protobuf:"bytes,22,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent *Resource `protobuf:"bytes,101,opt,name=parent,proto3" json:"parent,omitempty"`
 	// Permission Ids holds the value of the permission_ids edge.
-	PermissionIds []int64 `protobuf:"varint,23,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
+	PermissionIds []int64 `protobuf:"varint,102,rep,packed,name=permission_ids,proto3" json:"permission_ids,omitempty"`
 	// Permissions holds the value of the permissions edge.
-	Permissions   []*Permission `protobuf:"bytes,24,rep,name=permissions,proto3" json:"permissions,omitempty"`
-	ServiceName   string        `protobuf:"bytes,25,opt,name=service_name,proto3" json:"service_name,omitempty"`
+	Permissions   []*Permission `protobuf:"bytes,103,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1067,20 +1020,6 @@ func (x *Resource) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *Resource) GetCreateAuthor() int64 {
-	if x != nil {
-		return x.CreateAuthor
-	}
-	return 0
-}
-
-func (x *Resource) GetUpdateAuthor() int64 {
-	if x != nil {
-		return x.UpdateAuthor
-	}
-	return 0
-}
-
 func (x *Resource) GetName() string {
 	if x != nil {
 		return x.Name
@@ -1091,6 +1030,13 @@ func (x *Resource) GetName() string {
 func (x *Resource) GetKeyword() string {
 	if x != nil {
 		return x.Keyword
+	}
+	return ""
+}
+
+func (x *Resource) GetI18NKey() string {
+	if x != nil {
+		return x.I18NKey
 	}
 	return ""
 }
@@ -1130,11 +1076,32 @@ func (x *Resource) GetMethod() string {
 	return ""
 }
 
+func (x *Resource) GetComponent() string {
+	if x != nil {
+		return x.Component
+	}
+	return ""
+}
+
+func (x *Resource) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
 func (x *Resource) GetSequence() int32 {
 	if x != nil {
 		return x.Sequence
 	}
 	return 0
+}
+
+func (x *Resource) GetVisible() bool {
+	if x != nil {
+		return x.Visible
+	}
+	return false
 }
 
 func (x *Resource) GetTreePath() string {
@@ -1165,6 +1132,20 @@ func (x *Resource) GetParentId() int64 {
 	return 0
 }
 
+func (x *Resource) GetSyncStatus() string {
+	if x != nil {
+		return x.SyncStatus
+	}
+	return ""
+}
+
+func (x *Resource) GetServiceName() string {
+	if x != nil {
+		return x.ServiceName
+	}
+	return ""
+}
+
 func (x *Resource) GetChildren() []*Resource {
 	if x != nil {
 		return x.Children
@@ -1193,13 +1174,6 @@ func (x *Resource) GetPermissions() []*Permission {
 	return nil
 }
 
-func (x *Resource) GetServiceName() string {
-	if x != nil {
-		return x.ServiceName
-	}
-	return ""
-}
-
 // department.table.comment
 type Department struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1210,30 +1184,26 @@ type Department struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// department.field.keyword
-	Keyword string `protobuf:"bytes,6,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,4,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// department.field.name
-	Name string `protobuf:"bytes,7,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
 	// department.field.tree_path
-	TreePath string `protobuf:"bytes,8,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
+	TreePath string `protobuf:"bytes,6,opt,name=tree_path,proto3" json:"tree_path,omitempty"`
 	// department.field.sequence
-	Sequence int32 `protobuf:"varint,9,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	Sequence int32 `protobuf:"varint,7,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	// department.field.status
-	Status int32 `protobuf:"varint,10,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
 	// department.field.level
-	Level int32 `protobuf:"varint,11,opt,name=level,proto3" json:"level,omitempty"`
+	Level int32 `protobuf:"varint,9,opt,name=level,proto3" json:"level,omitempty"`
 	// department.field.description
-	Description string `protobuf:"bytes,12,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,10,opt,name=description,proto3" json:"description,omitempty"`
 	// department.field.parent_id
-	ParentId int64 `protobuf:"varint,13,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
+	ParentId int64 `protobuf:"varint,11,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// Children holds the value of the children edge.
-	Children []*Department `protobuf:"bytes,14,rep,name=children,proto3" json:"children,omitempty"`
+	Children []*Department `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
-	Parent        *Department `protobuf:"bytes,15,opt,name=parent,proto3" json:"parent,omitempty"`
+	Parent        *Department `protobuf:"bytes,101,opt,name=parent,proto3" json:"parent,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1287,20 +1257,6 @@ func (x *Department) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
-}
-
-func (x *Department) GetCreateAuthor() int64 {
-	if x != nil {
-		return x.CreateAuthor
-	}
-	return 0
-}
-
-func (x *Department) GetUpdateAuthor() int64 {
-	if x != nil {
-		return x.UpdateAuthor
-	}
-	return 0
 }
 
 func (x *Department) GetKeyword() string {
@@ -1448,18 +1404,14 @@ type Position struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// position.field.name
-	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// position.field.keyword
-	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// position.field.description
-	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
 	// department.field.department_id
-	DepartmentId  int64 `protobuf:"varint,9,opt,name=department_id,proto3" json:"department_id,omitempty"`
+	DepartmentId  int64 `protobuf:"varint,7,opt,name=department_id,proto3" json:"department_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1515,20 +1467,6 @@ func (x *Position) GetUpdateTime() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *Position) GetCreateAuthor() int64 {
-	if x != nil {
-		return x.CreateAuthor
-	}
-	return 0
-}
-
-func (x *Position) GetUpdateAuthor() int64 {
-	if x != nil {
-		return x.UpdateAuthor
-	}
-	return 0
-}
-
 func (x *Position) GetName() string {
 	if x != nil {
 		return x.Name
@@ -1557,6 +1495,88 @@ func (x *Position) GetDepartmentId() int64 {
 	return 0
 }
 
+// PositionEdges holds the relations/edges for other nodes in the graph.
+type PositionEdges struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Department holds the value of the department edge.
+	Department *Department `protobuf:"bytes,1,opt,name=department,proto3" json:"department,omitempty"`
+	// Users holds the value of the users edge.
+	Users []*User `protobuf:"bytes,2,rep,name=users,proto3" json:"users,omitempty"`
+	// Permissions holds the value of the permissions edge.
+	Permissions []*Permission `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
+	// UserPositions holds the value of the user_positions edge.
+	UserPositions []*UserPosition `protobuf:"bytes,4,rep,name=user_positions,proto3" json:"user_positions,omitempty"`
+	// PositionPermissions holds the value of the position_permissions edge.
+	PositionPermissions []*PositionPermission `protobuf:"bytes,5,rep,name=position_permissions,proto3" json:"position_permissions,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *PositionEdges) Reset() {
+	*x = PositionEdges{}
+	mi := &file_types_system_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PositionEdges) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PositionEdges) ProtoMessage() {}
+
+func (x *PositionEdges) ProtoReflect() protoreflect.Message {
+	mi := &file_types_system_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PositionEdges.ProtoReflect.Descriptor instead.
+func (*PositionEdges) Descriptor() ([]byte, []int) {
+	return file_types_system_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *PositionEdges) GetDepartment() *Department {
+	if x != nil {
+		return x.Department
+	}
+	return nil
+}
+
+func (x *PositionEdges) GetUsers() []*User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+func (x *PositionEdges) GetPermissions() []*Permission {
+	if x != nil {
+		return x.Permissions
+	}
+	return nil
+}
+
+func (x *PositionEdges) GetUserPositions() []*UserPosition {
+	if x != nil {
+		return x.UserPositions
+	}
+	return nil
+}
+
+func (x *PositionEdges) GetPositionPermissions() []*PositionPermission {
+	if x != nil {
+		return x.PositionPermissions
+	}
+	return nil
+}
+
 // permission.table.comment
 type Permission struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1567,37 +1587,33 @@ type Permission struct {
 	CreateTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=create_time,proto3" json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=update_time,proto3" json:"update_time,omitempty"`
-	// create_author.field.comment
-	CreateAuthor int64 `protobuf:"varint,4,opt,name=create_author,proto3" json:"create_author,omitempty"`
-	// update_author.field.comment
-	UpdateAuthor int64 `protobuf:"varint,5,opt,name=update_author,proto3" json:"update_author,omitempty"`
 	// permission.field.name
-	Name string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// permission.field.keyword
-	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
 	// permission.field.status
-	Status int32 `protobuf:"varint,8,opt,name=status,proto3" json:"status,omitempty"`
+	Status int32 `protobuf:"varint,6,opt,name=status,proto3" json:"status,omitempty"`
 	// permission.field.description
-	Description string `protobuf:"bytes,9,opt,name=description,proto3" json:"description,omitempty"`
+	Description string `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
 	// permission.field.data_scope
-	DataScope string `protobuf:"bytes,10,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
+	DataScope string `protobuf:"bytes,8,opt,name=data_scope,proto3" json:"data_scope,omitempty"`
 	// permission.field.data_rules
-	DataRules map[string]string `protobuf:"bytes,11,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	DataRules map[string]string `protobuf:"bytes,9,rep,name=data_rules,proto3" json:"data_rules,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// permission.field.resource_ids
-	ResourceIds []int64 `protobuf:"varint,12,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
-	// permission.field.resources
-	Resources []*Resource `protobuf:"bytes,13,rep,name=resources,proto3" json:"resources,omitempty"`
+	ResourceIds []int64 `protobuf:"varint,10,rep,packed,name=resource_ids,proto3" json:"resource_ids,omitempty"`
 	// permission.field.view_ids
-	ViewIds []int64 `protobuf:"varint,14,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
+	ViewIds []int64 `protobuf:"varint,12,rep,packed,name=view_ids,proto3" json:"view_ids,omitempty"`
+	// permission.field.resources
+	Resources []*Resource `protobuf:"bytes,100,rep,name=resources,proto3" json:"resources,omitempty"`
 	// permission.field.views
-	Views         []*View `protobuf:"bytes,15,rep,name=views,proto3" json:"views,omitempty"`
+	Views         []*View `protobuf:"bytes,101,rep,name=views,proto3" json:"views,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Permission) Reset() {
 	*x = Permission{}
-	mi := &file_types_system_proto_msgTypes[9]
+	mi := &file_types_system_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1609,7 +1625,7 @@ func (x *Permission) String() string {
 func (*Permission) ProtoMessage() {}
 
 func (x *Permission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[9]
+	mi := &file_types_system_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1622,7 +1638,7 @@ func (x *Permission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Permission.ProtoReflect.Descriptor instead.
 func (*Permission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{9}
+	return file_types_system_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *Permission) GetId() int64 {
@@ -1644,20 +1660,6 @@ func (x *Permission) GetUpdateTime() *timestamppb.Timestamp {
 		return x.UpdateTime
 	}
 	return nil
-}
-
-func (x *Permission) GetCreateAuthor() int64 {
-	if x != nil {
-		return x.CreateAuthor
-	}
-	return 0
-}
-
-func (x *Permission) GetUpdateAuthor() int64 {
-	if x != nil {
-		return x.UpdateAuthor
-	}
-	return 0
 }
 
 func (x *Permission) GetName() string {
@@ -1709,16 +1711,16 @@ func (x *Permission) GetResourceIds() []int64 {
 	return nil
 }
 
-func (x *Permission) GetResources() []*Resource {
+func (x *Permission) GetViewIds() []int64 {
 	if x != nil {
-		return x.Resources
+		return x.ViewIds
 	}
 	return nil
 }
 
-func (x *Permission) GetViewIds() []int64 {
+func (x *Permission) GetResources() []*Resource {
 	if x != nil {
-		return x.ViewIds
+		return x.Resources
 	}
 	return nil
 }
@@ -1746,7 +1748,7 @@ type UserPosition struct {
 
 func (x *UserPosition) Reset() {
 	*x = UserPosition{}
-	mi := &file_types_system_proto_msgTypes[10]
+	mi := &file_types_system_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1758,7 +1760,7 @@ func (x *UserPosition) String() string {
 func (*UserPosition) ProtoMessage() {}
 
 func (x *UserPosition) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[10]
+	mi := &file_types_system_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1771,7 +1773,7 @@ func (x *UserPosition) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UserPosition.ProtoReflect.Descriptor instead.
 func (*UserPosition) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{10}
+	return file_types_system_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UserPosition) GetId() int64 {
@@ -1811,7 +1813,7 @@ type PositionPermission struct {
 
 func (x *PositionPermission) Reset() {
 	*x = PositionPermission{}
-	mi := &file_types_system_proto_msgTypes[11]
+	mi := &file_types_system_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1823,7 +1825,7 @@ func (x *PositionPermission) String() string {
 func (*PositionPermission) ProtoMessage() {}
 
 func (x *PositionPermission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[11]
+	mi := &file_types_system_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1836,7 +1838,7 @@ func (x *PositionPermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PositionPermission.ProtoReflect.Descriptor instead.
 func (*PositionPermission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{11}
+	return file_types_system_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PositionPermission) GetId() int64 {
@@ -1876,7 +1878,7 @@ type RolePermission struct {
 
 func (x *RolePermission) Reset() {
 	*x = RolePermission{}
-	mi := &file_types_system_proto_msgTypes[12]
+	mi := &file_types_system_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1888,7 +1890,7 @@ func (x *RolePermission) String() string {
 func (*RolePermission) ProtoMessage() {}
 
 func (x *RolePermission) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[12]
+	mi := &file_types_system_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1901,7 +1903,7 @@ func (x *RolePermission) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolePermission.ProtoReflect.Descriptor instead.
 func (*RolePermission) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{12}
+	return file_types_system_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *RolePermission) GetId() int64 {
@@ -1943,7 +1945,7 @@ type PermissionResource struct {
 
 func (x *PermissionResource) Reset() {
 	*x = PermissionResource{}
-	mi := &file_types_system_proto_msgTypes[13]
+	mi := &file_types_system_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1955,7 +1957,7 @@ func (x *PermissionResource) String() string {
 func (*PermissionResource) ProtoMessage() {}
 
 func (x *PermissionResource) ProtoReflect() protoreflect.Message {
-	mi := &file_types_system_proto_msgTypes[13]
+	mi := &file_types_system_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1968,7 +1970,7 @@ func (x *PermissionResource) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PermissionResource.ProtoReflect.Descriptor instead.
 func (*PermissionResource) Descriptor() ([]byte, []int) {
-	return file_types_system_proto_rawDescGZIP(), []int{13}
+	return file_types_system_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *PermissionResource) GetId() int64 {
@@ -2003,63 +2005,58 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb4\x06\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8e\x06\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
 	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
 	"\x04name\x18\x05 \x01(\tR\x04name\x12\x14\n" +
-	"\x05scope\x18\x06 \x01(\tR\x05scope\x12\x1a\n" +
-	"\bi18n_key\x18\a \x01(\tR\bi18n_key\x12 \n" +
+	"\x05scope\x18\x06 \x01(\tR\x05scope\x12\x12\n" +
+	"\x04i18n\x18\a \x01(\tR\x04i18n\x12 \n" +
 	"\vdescription\x18\b \x01(\tR\vdescription\x12\x1a\n" +
 	"\bsequence\x18\t \x01(\x05R\bsequence\x12\x12\n" +
 	"\x04type\x18\n" +
-	" \x01(\tR\x04type\x12\x1c\n" +
-	"\tcomponent\x18\v \x01(\tR\tcomponent\x12\x18\n" +
-	"\acomment\x18\f \x01(\tR\acomment\x12\x12\n" +
-	"\x04icon\x18\r \x01(\tR\x04icon\x12\x18\n" +
-	"\avisible\x18\x0e \x01(\bR\avisible\x12\x12\n" +
-	"\x04path\x18\x0f \x01(\tR\x04path\x12\x1c\n" +
-	"\ttree_path\x18\x10 \x01(\tR\ttree_path\x12\x1e\n" +
+	" \x01(\tR\x04type\x12\x18\n" +
+	"\acomment\x18\v \x01(\tR\acomment\x12\x12\n" +
+	"\x04icon\x18\f \x01(\tR\x04icon\x12\x18\n" +
+	"\avisible\x18\r \x01(\bR\avisible\x12\x12\n" +
+	"\x04path\x18\x0e \x01(\tR\x04path\x12\x1c\n" +
+	"\ttree_path\x18\x0f \x01(\tR\ttree_path\x12\x1e\n" +
 	"\n" +
-	"properties\x18\x11 \x01(\tR\n" +
+	"properties\x18\x10 \x01(\tR\n" +
 	"properties\x12\x16\n" +
-	"\x06status\x18\x12 \x01(\x05R\x06status\x12\x1c\n" +
-	"\tparent_id\x18\x13 \x01(\x03R\tparent_id\x12 \n" +
-	"\vparent_path\x18\x14 \x01(\tR\vparent_path\x127\n" +
-	"\bchildren\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
-	"\x06parent\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
-	"\tresources\x18\x17 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
-	"\x05roles\x18\x18 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\x80\x06\n" +
+	"\x06status\x18\x11 \x01(\x05R\x06status\x12\x1c\n" +
+	"\tparent_id\x18\x12 \x01(\x03R\tparent_id\x12 \n" +
+	"\vparent_path\x18\x13 \x01(\tR\vparent_path\x127\n" +
+	"\bchildren\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
+	"\x06parent\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
+	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
+	"\x05roles\x18g \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\"\xfc\x04\n" +
 	"\x04Role\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
-	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x18\n" +
-	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x12\n" +
-	"\x04name\x18\a \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\b \x01(\tR\vdescription\x12\x12\n" +
-	"\x04type\x18\t \x01(\x05R\x04type\x12\x1a\n" +
-	"\bsequence\x18\n" +
-	" \x01(\x05R\bsequence\x12\x16\n" +
-	"\x06status\x18\v \x01(\x05R\x06status\x12\x1a\n" +
-	"\bis_types\x18\f \x01(\bR\bis_types\x121\n" +
-	"\x05views\x18\x15 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x12\x1a\n" +
-	"\bview_ids\x18\x14 \x03(\x03R\bview_ids\x121\n" +
-	"\x05users\x18\x16 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12\x1a\n" +
-	"\buser_ids\x18\x17 \x03(\x03R\buser_ids\x12=\n" +
-	"\tresources\x18\x18 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
-	"\fresource_ids\x18\x19 \x03(\x03R\fresource_ids\x12C\n" +
-	"\vpermissions\x18\x1a \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
-	"\x0epermission_ids\x18\x1b \x03(\x03R\x0epermission_ids\"\x80\a\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
+	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\x12\x12\n" +
+	"\x04type\x18\a \x01(\x05R\x04type\x12\x1a\n" +
+	"\bsequence\x18\b \x01(\x05R\bsequence\x12\x16\n" +
+	"\x06status\x18\t \x01(\x05R\x06status\x12\x1a\n" +
+	"\bis_types\x18\n" +
+	" \x01(\bR\bis_types\x121\n" +
+	"\x05views\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x121\n" +
+	"\x05users\x18e \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12=\n" +
+	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
+	"\fresource_ids\x18g \x03(\x03R\fresource_ids\x12C\n" +
+	"\vpermissions\x18h \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
+	"\x0epermission_ids\x18i \x03(\x03R\x0epermission_ids\"\xec\x06\n" +
 	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
-	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
-	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
+	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
+	"\rupdate_author\x18\x03 \x01(\x03R\rupdate_author\x12<\n" +
+	"\vcreate_time\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
+	"\vupdate_time\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
 	"\x04uuid\x18\x06 \x01(\tR\x04uuid\x12\x1e\n" +
 	"\n" +
 	"allowed_ip\x18\a \x01(\tR\n" +
@@ -2074,17 +2071,16 @@ const file_types_system_proto_rawDesc = "" +
 	"\x05email\x18\x0e \x01(\tR\x05email\x12\x16\n" +
 	"\x06remark\x18\x0f \x01(\tR\x06remark\x12\x14\n" +
 	"\x05token\x18\x10 \x01(\tR\x05token\x12\x16\n" +
-	"\x06status\x18\x11 \x01(\x05R\x06status\x12\x12\n" +
-	"\x04i18n\x18\x12 \x01(\tR\x04i18n\x12$\n" +
-	"\rlast_login_ip\x18\x13 \x01(\tR\rlast_login_ip\x12\x1a\n" +
-	"\blogin_ip\x18\x14 \x01(\tR\blogin_ip\x12D\n" +
-	"\x0flast_login_time\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12:\n" +
+	"\x06status\x18\x11 \x01(\x05R\x06status\x12$\n" +
+	"\rlast_login_ip\x18\x12 \x01(\tR\rlast_login_ip\x12\x1a\n" +
+	"\blogin_ip\x18\x13 \x01(\tR\blogin_ip\x12D\n" +
+	"\x0flast_login_time\x18\x14 \x01(\v2\x1a.google.protobuf.TimestampR\x0flast_login_time\x12:\n" +
 	"\n" +
-	"login_time\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"login_time\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"login_time\x12E\n" +
-	"\rsanction_date\x18\x17 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
-	"\x05roles\x18\x18 \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
-	"\brole_ids\x18\x19 \x03(\x03R\brole_idsB\x10\n" +
+	"\rsanction_date\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
+	"\x05roles\x18d \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
+	"\brole_ids\x18e \x03(\x03R\brole_idsB\x10\n" +
 	"\x0e_sanction_date\"\xca\x02\n" +
 	"\bUserRole\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
@@ -2093,99 +2089,104 @@ const file_types_system_proto_rawDesc = "" +
 	"\auser_id\x18\x04 \x01(\x03R\auser_id\x12\x18\n" +
 	"\arole_id\x18\x05 \x01(\x03R\arole_id\x12\x1c\n" +
 	"\trole_name\x18\x06 \x01(\tR\trole_name\x12/\n" +
-	"\x04user\x18\x15 \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12/\n" +
-	"\x04role\x18\x16 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x02\n" +
+	"\x04user\x18d \x01(\v2\x1b.api.v1.services.types.UserR\x04user\x12/\n" +
+	"\x04role\x18e \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\"\xac\x02\n" +
 	"\bRoleView\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
 	"\arole_id\x18\x04 \x01(\x03R\arole_id\x12\x18\n" +
 	"\aview_id\x18\x05 \x01(\x03R\aview_id\x12/\n" +
-	"\x04role\x18\x15 \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04view\x18\x16 \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\x97\a\n" +
+	"\x04role\x18d \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
+	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xd5\a\n" +
 	"\bResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
-	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeyword\x12\x12\n" +
-	"\x04type\x18\t \x01(\tR\x04type\x12\x16\n" +
-	"\x06status\x18\n" +
-	" \x01(\x05R\x06status\x12\x12\n" +
-	"\x04path\x18\v \x01(\tR\x04path\x12\x1c\n" +
-	"\toperation\x18\f \x01(\tR\toperation\x12\x16\n" +
-	"\x06method\x18\r \x01(\tR\x06method\x12\x1a\n" +
-	"\bsequence\x18\x0e \x01(\x05R\bsequence\x12\x1c\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
+	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x1a\n" +
+	"\bi18n_key\x18\x06 \x01(\tR\bi18n_key\x12\x12\n" +
+	"\x04type\x18\a \x01(\tR\x04type\x12\x16\n" +
+	"\x06status\x18\b \x01(\x05R\x06status\x12\x12\n" +
+	"\x04path\x18\t \x01(\tR\x04path\x12\x1c\n" +
+	"\toperation\x18\n" +
+	" \x01(\tR\toperation\x12\x16\n" +
+	"\x06method\x18\v \x01(\tR\x06method\x12\x1c\n" +
+	"\tcomponent\x18\f \x01(\tR\tcomponent\x12\x12\n" +
+	"\x04icon\x18\r \x01(\tR\x04icon\x12\x1a\n" +
+	"\bsequence\x18\x0e \x01(\x05R\bsequence\x12\x18\n" +
+	"\avisible\x18\x0f \x01(\bR\avisible\x12\x1c\n" +
 	"\ttree_path\x18\x10 \x01(\tR\ttree_path\x12O\n" +
 	"\n" +
 	"properties\x18\x11 \x03(\v2/.api.v1.services.types.Resource.PropertiesEntryR\n" +
 	"properties\x12 \n" +
 	"\vdescription\x18\x12 \x01(\tR\vdescription\x12\x1c\n" +
-	"\tparent_id\x18\x13 \x01(\x03R\tparent_id\x12;\n" +
-	"\bchildren\x18\x15 \x03(\v2\x1f.api.v1.services.types.ResourceR\bchildren\x127\n" +
-	"\x06parent\x18\x16 \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12&\n" +
-	"\x0epermission_ids\x18\x17 \x03(\x03R\x0epermission_ids\x12C\n" +
-	"\vpermissions\x18\x18 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12\"\n" +
-	"\fservice_name\x18\x19 \x01(\tR\fservice_name\x1a=\n" +
+	"\tparent_id\x18\x13 \x01(\x03R\tparent_id\x12 \n" +
+	"\vsync_status\x18\x14 \x01(\tR\vsync_status\x12\"\n" +
+	"\fservice_name\x18\x15 \x01(\tR\fservice_name\x12;\n" +
+	"\bchildren\x18d \x03(\v2\x1f.api.v1.services.types.ResourceR\bchildren\x127\n" +
+	"\x06parent\x18e \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12&\n" +
+	"\x0epermission_ids\x18f \x03(\x03R\x0epermission_ids\x12C\n" +
+	"\vpermissions\x18g \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x1a=\n" +
 	"\x0fPropertiesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xb4\x04\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe8\x03\n" +
 	"\n" +
 	"Department\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
-	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x18\n" +
-	"\akeyword\x18\x06 \x01(\tR\akeyword\x12\x12\n" +
-	"\x04name\x18\a \x01(\tR\x04name\x12\x1c\n" +
-	"\ttree_path\x18\b \x01(\tR\ttree_path\x12\x1a\n" +
-	"\bsequence\x18\t \x01(\x05R\bsequence\x12\x16\n" +
-	"\x06status\x18\n" +
-	" \x01(\x05R\x06status\x12\x14\n" +
-	"\x05level\x18\v \x01(\x05R\x05level\x12 \n" +
-	"\vdescription\x18\f \x01(\tR\vdescription\x12\x1c\n" +
-	"\tparent_id\x18\r \x01(\x03R\tparent_id\x12=\n" +
-	"\bchildren\x18\x0e \x03(\v2!.api.v1.services.types.DepartmentR\bchildren\x129\n" +
-	"\x06parent\x18\x0f \x01(\v2!.api.v1.services.types.DepartmentR\x06parent\"`\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x18\n" +
+	"\akeyword\x18\x04 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04name\x18\x05 \x01(\tR\x04name\x12\x1c\n" +
+	"\ttree_path\x18\x06 \x01(\tR\ttree_path\x12\x1a\n" +
+	"\bsequence\x18\a \x01(\x05R\bsequence\x12\x16\n" +
+	"\x06status\x18\b \x01(\x05R\x06status\x12\x14\n" +
+	"\x05level\x18\t \x01(\x05R\x05level\x12 \n" +
+	"\vdescription\x18\n" +
+	" \x01(\tR\vdescription\x12\x1c\n" +
+	"\tparent_id\x18\v \x01(\x03R\tparent_id\x12=\n" +
+	"\bchildren\x18d \x03(\v2!.api.v1.services.types.DepartmentR\bchildren\x129\n" +
+	"\x06parent\x18e \x01(\v2!.api.v1.services.types.DepartmentR\x06parent\"`\n" +
 	"\x0eUserDepartment\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x18\n" +
 	"\auser_id\x18\x02 \x01(\x03R\auser_id\x12$\n" +
-	"\rdepartment_id\x18\x03 \x01(\x03R\rdepartment_id\"\xd8\x02\n" +
+	"\rdepartment_id\x18\x03 \x01(\x03R\rdepartment_id\"\x8c\x02\n" +
 	"\bPosition\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
-	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeyword\x12 \n" +
-	"\vdescription\x18\b \x01(\tR\vdescription\x12$\n" +
-	"\rdepartment_id\x18\t \x01(\x03R\rdepartment_id\"\xae\x05\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
+	"\akeyword\x18\x05 \x01(\tR\akeyword\x12 \n" +
+	"\vdescription\x18\x06 \x01(\tR\vdescription\x12$\n" +
+	"\rdepartment_id\x18\a \x01(\x03R\rdepartment_id\"\xf6\x02\n" +
+	"\rPositionEdges\x12A\n" +
+	"\n" +
+	"department\x18\x01 \x01(\v2!.api.v1.services.types.DepartmentR\n" +
+	"department\x121\n" +
+	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12C\n" +
+	"\vpermissions\x18\x03 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12K\n" +
+	"\x0euser_positions\x18\x04 \x03(\v2#.api.v1.services.types.UserPositionR\x0euser_positions\x12]\n" +
+	"\x14position_permissions\x18\x05 \x03(\v2).api.v1.services.types.PositionPermissionR\x14position_permissions\"\xe2\x04\n" +
 	"\n" +
 	"Permission\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
-	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12$\n" +
-	"\rcreate_author\x18\x04 \x01(\x03R\rcreate_author\x12$\n" +
-	"\rupdate_author\x18\x05 \x01(\x03R\rupdate_author\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeyword\x12\x16\n" +
-	"\x06status\x18\b \x01(\x05R\x06status\x12 \n" +
-	"\vdescription\x18\t \x01(\tR\vdescription\x12\x1e\n" +
+	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
+	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x16\n" +
+	"\x06status\x18\x06 \x01(\x05R\x06status\x12 \n" +
+	"\vdescription\x18\a \x01(\tR\vdescription\x12\x1e\n" +
 	"\n" +
-	"data_scope\x18\n" +
-	" \x01(\tR\n" +
+	"data_scope\x18\b \x01(\tR\n" +
 	"data_scope\x12P\n" +
 	"\n" +
-	"data_rules\x18\v \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
+	"data_rules\x18\t \x03(\v20.api.v1.services.types.Permission.DataRulesEntryR\n" +
 	"data_rules\x12\"\n" +
-	"\fresource_ids\x18\f \x03(\x03R\fresource_ids\x12=\n" +
-	"\tresources\x18\r \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x1a\n" +
-	"\bview_ids\x18\x0e \x03(\x03R\bview_ids\x121\n" +
-	"\x05views\x18\x0f \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x1a<\n" +
+	"\fresource_ids\x18\n" +
+	" \x03(\x03R\fresource_ids\x12\x1a\n" +
+	"\bview_ids\x18\f \x03(\x03R\bview_ids\x12=\n" +
+	"\tresources\x18d \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
+	"\x05views\x18e \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x1a<\n" +
 	"\x0eDataRulesEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"Z\n" +
@@ -2220,7 +2221,7 @@ func file_types_system_proto_rawDescGZIP() []byte {
 	return file_types_system_proto_rawDescData
 }
 
-var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_types_system_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_types_system_proto_goTypes = []any{
 	(*View)(nil),                  // 0: api.v1.services.types.View
 	(*Role)(nil),                  // 1: api.v1.services.types.Role
@@ -2231,64 +2232,70 @@ var file_types_system_proto_goTypes = []any{
 	(*Department)(nil),            // 6: api.v1.services.types.Department
 	(*UserDepartment)(nil),        // 7: api.v1.services.types.UserDepartment
 	(*Position)(nil),              // 8: api.v1.services.types.Position
-	(*Permission)(nil),            // 9: api.v1.services.types.Permission
-	(*UserPosition)(nil),          // 10: api.v1.services.types.UserPosition
-	(*PositionPermission)(nil),    // 11: api.v1.services.types.PositionPermission
-	(*RolePermission)(nil),        // 12: api.v1.services.types.RolePermission
-	(*PermissionResource)(nil),    // 13: api.v1.services.types.PermissionResource
-	nil,                           // 14: api.v1.services.types.Resource.PropertiesEntry
-	nil,                           // 15: api.v1.services.types.Permission.DataRulesEntry
-	(*timestamppb.Timestamp)(nil), // 16: google.protobuf.Timestamp
+	(*PositionEdges)(nil),         // 9: api.v1.services.types.PositionEdges
+	(*Permission)(nil),            // 10: api.v1.services.types.Permission
+	(*UserPosition)(nil),          // 11: api.v1.services.types.UserPosition
+	(*PositionPermission)(nil),    // 12: api.v1.services.types.PositionPermission
+	(*RolePermission)(nil),        // 13: api.v1.services.types.RolePermission
+	(*PermissionResource)(nil),    // 14: api.v1.services.types.PermissionResource
+	nil,                           // 15: api.v1.services.types.Resource.PropertiesEntry
+	nil,                           // 16: api.v1.services.types.Permission.DataRulesEntry
+	(*timestamppb.Timestamp)(nil), // 17: google.protobuf.Timestamp
 }
 var file_types_system_proto_depIdxs = []int32{
-	16, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
-	16, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
+	17, // 0: api.v1.services.types.View.create_time:type_name -> google.protobuf.Timestamp
+	17, // 1: api.v1.services.types.View.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 2: api.v1.services.types.View.children:type_name -> api.v1.services.types.View
 	0,  // 3: api.v1.services.types.View.parent:type_name -> api.v1.services.types.View
 	5,  // 4: api.v1.services.types.View.resources:type_name -> api.v1.services.types.Resource
 	1,  // 5: api.v1.services.types.View.roles:type_name -> api.v1.services.types.Role
-	16, // 6: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
-	16, // 7: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
+	17, // 6: api.v1.services.types.Role.create_time:type_name -> google.protobuf.Timestamp
+	17, // 7: api.v1.services.types.Role.update_time:type_name -> google.protobuf.Timestamp
 	0,  // 8: api.v1.services.types.Role.views:type_name -> api.v1.services.types.View
 	2,  // 9: api.v1.services.types.Role.users:type_name -> api.v1.services.types.User
 	5,  // 10: api.v1.services.types.Role.resources:type_name -> api.v1.services.types.Resource
-	9,  // 11: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
-	16, // 12: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
-	16, // 13: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
-	16, // 14: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
-	16, // 15: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
-	16, // 16: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
+	10, // 11: api.v1.services.types.Role.permissions:type_name -> api.v1.services.types.Permission
+	17, // 12: api.v1.services.types.User.create_time:type_name -> google.protobuf.Timestamp
+	17, // 13: api.v1.services.types.User.update_time:type_name -> google.protobuf.Timestamp
+	17, // 14: api.v1.services.types.User.last_login_time:type_name -> google.protobuf.Timestamp
+	17, // 15: api.v1.services.types.User.login_time:type_name -> google.protobuf.Timestamp
+	17, // 16: api.v1.services.types.User.sanction_date:type_name -> google.protobuf.Timestamp
 	1,  // 17: api.v1.services.types.User.roles:type_name -> api.v1.services.types.Role
-	16, // 18: api.v1.services.types.UserRole.create_time:type_name -> google.protobuf.Timestamp
-	16, // 19: api.v1.services.types.UserRole.update_time:type_name -> google.protobuf.Timestamp
+	17, // 18: api.v1.services.types.UserRole.create_time:type_name -> google.protobuf.Timestamp
+	17, // 19: api.v1.services.types.UserRole.update_time:type_name -> google.protobuf.Timestamp
 	2,  // 20: api.v1.services.types.UserRole.user:type_name -> api.v1.services.types.User
 	1,  // 21: api.v1.services.types.UserRole.role:type_name -> api.v1.services.types.Role
-	16, // 22: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
-	16, // 23: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
+	17, // 22: api.v1.services.types.RoleView.create_time:type_name -> google.protobuf.Timestamp
+	17, // 23: api.v1.services.types.RoleView.update_time:type_name -> google.protobuf.Timestamp
 	1,  // 24: api.v1.services.types.RoleView.role:type_name -> api.v1.services.types.Role
 	0,  // 25: api.v1.services.types.RoleView.view:type_name -> api.v1.services.types.View
-	16, // 26: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
-	16, // 27: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
-	14, // 28: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
+	17, // 26: api.v1.services.types.Resource.create_time:type_name -> google.protobuf.Timestamp
+	17, // 27: api.v1.services.types.Resource.update_time:type_name -> google.protobuf.Timestamp
+	15, // 28: api.v1.services.types.Resource.properties:type_name -> api.v1.services.types.Resource.PropertiesEntry
 	5,  // 29: api.v1.services.types.Resource.children:type_name -> api.v1.services.types.Resource
 	5,  // 30: api.v1.services.types.Resource.parent:type_name -> api.v1.services.types.Resource
-	9,  // 31: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
-	16, // 32: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
-	16, // 33: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
+	10, // 31: api.v1.services.types.Resource.permissions:type_name -> api.v1.services.types.Permission
+	17, // 32: api.v1.services.types.Department.create_time:type_name -> google.protobuf.Timestamp
+	17, // 33: api.v1.services.types.Department.update_time:type_name -> google.protobuf.Timestamp
 	6,  // 34: api.v1.services.types.Department.children:type_name -> api.v1.services.types.Department
 	6,  // 35: api.v1.services.types.Department.parent:type_name -> api.v1.services.types.Department
-	16, // 36: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
-	16, // 37: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
-	16, // 38: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
-	16, // 39: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
-	15, // 40: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
-	5,  // 41: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
-	0,  // 42: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
-	43, // [43:43] is the sub-list for method output_type
-	43, // [43:43] is the sub-list for method input_type
-	43, // [43:43] is the sub-list for extension type_name
-	43, // [43:43] is the sub-list for extension extendee
-	0,  // [0:43] is the sub-list for field type_name
+	17, // 36: api.v1.services.types.Position.create_time:type_name -> google.protobuf.Timestamp
+	17, // 37: api.v1.services.types.Position.update_time:type_name -> google.protobuf.Timestamp
+	6,  // 38: api.v1.services.types.PositionEdges.department:type_name -> api.v1.services.types.Department
+	2,  // 39: api.v1.services.types.PositionEdges.users:type_name -> api.v1.services.types.User
+	10, // 40: api.v1.services.types.PositionEdges.permissions:type_name -> api.v1.services.types.Permission
+	11, // 41: api.v1.services.types.PositionEdges.user_positions:type_name -> api.v1.services.types.UserPosition
+	12, // 42: api.v1.services.types.PositionEdges.position_permissions:type_name -> api.v1.services.types.PositionPermission
+	17, // 43: api.v1.services.types.Permission.create_time:type_name -> google.protobuf.Timestamp
+	17, // 44: api.v1.services.types.Permission.update_time:type_name -> google.protobuf.Timestamp
+	16, // 45: api.v1.services.types.Permission.data_rules:type_name -> api.v1.services.types.Permission.DataRulesEntry
+	5,  // 46: api.v1.services.types.Permission.resources:type_name -> api.v1.services.types.Resource
+	0,  // 47: api.v1.services.types.Permission.views:type_name -> api.v1.services.types.View
+	48, // [48:48] is the sub-list for method output_type
+	48, // [48:48] is the sub-list for method input_type
+	48, // [48:48] is the sub-list for extension type_name
+	48, // [48:48] is the sub-list for extension extendee
+	0,  // [0:48] is the sub-list for field type_name
 }
 
 func init() { file_types_system_proto_init() }
@@ -2303,7 +2310,7 @@ func file_types_system_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_types_system_proto_rawDesc), len(file_types_system_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

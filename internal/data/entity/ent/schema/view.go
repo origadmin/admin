@@ -33,6 +33,9 @@ func (View) Fields() []ent.Field {
 			Default("default"),
 		field.String("name").
 			Comment(i18n.Text("entity.view.field.name")),
+		field.String("i18n").
+			Comment(i18n.Text("entity.view.field.i18n")).
+			Optional(),
 		field.Enum("type").
 			Comment(i18n.Text("entity.view.field.type")).
 			Values(
@@ -65,6 +68,16 @@ func (View) Fields() []ent.Field {
 		field.String("tree_path").
 			Comment(i18n.Text("entity.view.field.tree_path")).
 			Optional(),
+		field.String("description").
+			Comment(i18n.Text("entity.view.field.description")).
+			Optional(),
+		field.String("properties").
+			Comment(i18n.Text("entity.view.field.properties")).
+			Optional(),
+		field.Int8("status").
+			GoType(enums.Status(0)).
+			Default(int8(enums.StatusActive)).
+			Comment(i18n.Text("entity.view.field.status")),
 	}
 }
 

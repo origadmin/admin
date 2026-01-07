@@ -33,11 +33,13 @@ type (
 	PermissionsPB           = []*types.Permission
 	Position                = ent.Position
 	PositionEdges           = ent.PositionEdges
+	PositionEdgesPB         = types.PositionEdges
 	PositionPB              = types.Position
 	PositionPermission      = ent.PositionPermission
 	PositionPermissionEdges = ent.PositionPermissionEdges
 	PositionPermissionPB    = types.PositionPermission
 	PositionPermissions     = []*ent.PositionPermission
+	PositionPermissionsPB   = []*types.PositionPermission
 	Positions               = []*ent.Position
 	Resource                = ent.Resource
 	ResourceEdges           = ent.ResourceEdges
@@ -64,6 +66,7 @@ type (
 	UserPositionEdges       = ent.UserPositionEdges
 	UserPositionPB          = types.UserPosition
 	UserPositions           = []*ent.UserPosition
+	UserPositionsPB         = []*types.UserPosition
 	UserRole                = ent.UserRole
 	UserRoleEdges           = ent.UserRoleEdges
 	UserRolePB              = types.UserRole
@@ -211,6 +214,18 @@ func ConvertPermissionToPermissionPB(from *Permission) *PermissionPB {
 	return to
 }
 
+// ConvertPermissionsPBToPermissions converts a slice of *PermissionPB to a slice of *Permission.
+func ConvertPermissionsPBToPermissions(froms PermissionsPB) Permissions {
+	if froms == nil {
+		return nil
+	}
+	tos := make(Permissions, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertPermissionPBToPermission(f)
+	}
+	return tos
+}
+
 // ConvertPermissionsToPermissionsPB converts a slice of *Permission to a slice of *PermissionPB.
 func ConvertPermissionsToPermissionsPB(froms Permissions) PermissionsPB {
 	if froms == nil {
@@ -221,6 +236,38 @@ func ConvertPermissionsToPermissionsPB(froms Permissions) PermissionsPB {
 		tos[i] = ConvertPermissionToPermissionPB(f)
 	}
 	return tos
+}
+
+// ConvertPositionEdgesPBToPositionEdges converts PositionEdgesPB to PositionEdges.
+func ConvertPositionEdgesPBToPositionEdges(from *PositionEdgesPB) *PositionEdges {
+	if from == nil {
+		return nil
+	}
+
+	to := &PositionEdges{
+		Department:          ConvertDepartmentPBToDepartment(from.Department),
+		Users:               ConvertUsersPBToUsers(from.Users),
+		Permissions:         ConvertPermissionsPBToPermissions(from.Permissions),
+		UserPositions:       ConvertUserPositionsPBToUserPositions(from.UserPositions),
+		PositionPermissions: ConvertPositionPermissionsPBToPositionPermissions(from.PositionPermissions),
+	}
+	return to
+}
+
+// ConvertPositionEdgesToPositionEdgesPB converts PositionEdges to PositionEdgesPB.
+func ConvertPositionEdgesToPositionEdgesPB(from *PositionEdges) *PositionEdgesPB {
+	if from == nil {
+		return nil
+	}
+
+	to := &PositionEdgesPB{
+		Department:          ConvertDepartmentToDepartmentPB(from.Department),
+		Users:               ConvertUsersToUsersPB(from.Users),
+		Permissions:         ConvertPermissionsToPermissionsPB(from.Permissions),
+		UserPositions:       ConvertUserPositionsToUserPositionsPB(from.UserPositions),
+		PositionPermissions: ConvertPositionPermissionsToPositionPermissionsPB(from.PositionPermissions),
+	}
+	return to
 }
 
 // ConvertPositionPBToPosition converts PositionPB to Position.
@@ -269,6 +316,30 @@ func ConvertPositionPermissionToPositionPermissionPB(from *PositionPermission) *
 	return to
 }
 
+// ConvertPositionPermissionsPBToPositionPermissions converts a slice of *PositionPermissionPB to a slice of *PositionPermission.
+func ConvertPositionPermissionsPBToPositionPermissions(froms PositionPermissionsPB) PositionPermissions {
+	if froms == nil {
+		return nil
+	}
+	tos := make(PositionPermissions, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertPositionPermissionPBToPositionPermission(f)
+	}
+	return tos
+}
+
+// ConvertPositionPermissionsToPositionPermissionsPB converts a slice of *PositionPermission to a slice of *PositionPermissionPB.
+func ConvertPositionPermissionsToPositionPermissionsPB(froms PositionPermissions) PositionPermissionsPB {
+	if froms == nil {
+		return nil
+	}
+	tos := make(PositionPermissionsPB, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertPositionPermissionToPositionPermissionPB(f)
+	}
+	return tos
+}
+
 // ConvertPositionToPositionPB converts Position to PositionPB.
 func ConvertPositionToPositionPB(from *Position) *PositionPB {
 	if from == nil {
@@ -294,14 +365,17 @@ func ConvertResourcePBToResource(from *ResourcePB) *Resource {
 	}
 
 	to := &Resource{
-		ID:         from.Id,
-		CreateTime: ConvertTimestampToTime(from.CreateTime),
-		UpdateTime: ConvertTimestampToTime(from.UpdateTime),
-		Keyword:    from.Keyword,
-		Path:       from.Path,
-		Method:     from.Method,
-		Operation:  from.Operation,
-		Status:     enums.Status(from.Status),
+		ID:          from.Id,
+		CreateTime:  ConvertTimestampToTime(from.CreateTime),
+		UpdateTime:  ConvertTimestampToTime(from.UpdateTime),
+		Name:        from.Name,
+		ServiceName: from.ServiceName,
+		Keyword:     from.Keyword,
+		Path:        from.Path,
+		Method:      from.Method,
+		Operation:   from.Operation,
+		SyncStatus:  from.SyncStatus,
+		Status:      enums.Status(from.Status),
 	}
 	return to
 }
@@ -316,11 +390,14 @@ func ConvertResourceToResourcePB(from *Resource) *ResourcePB {
 		Id:          from.ID,
 		CreateTime:  ConvertTimeToTimestamp(from.CreateTime),
 		UpdateTime:  ConvertTimeToTimestamp(from.UpdateTime),
+		Name:        from.Name,
 		Keyword:     from.Keyword,
 		Status:      int32(from.Status),
 		Path:        from.Path,
 		Operation:   from.Operation,
 		Method:      from.Method,
+		SyncStatus:  from.SyncStatus,
+		ServiceName: from.ServiceName,
 		Permissions: ConvertPermissionsToPermissionsPB(from.Edges.Permissions),
 	}
 	return to
@@ -469,7 +546,6 @@ func ConvertUserPBToUser(from *UserPB) *User {
 		Gender:        ConvertStringToGender(from.Gender),
 		Phone:         from.Phone,
 		Email:         from.Email,
-		I18n:          from.I18N,
 		Remark:        from.Remark,
 		Token:         from.Token,
 		Status:        enums.Status(from.Status),
@@ -510,6 +586,30 @@ func ConvertUserPositionToUserPositionPB(from *UserPosition) *UserPositionPB {
 	return to
 }
 
+// ConvertUserPositionsPBToUserPositions converts a slice of *UserPositionPB to a slice of *UserPosition.
+func ConvertUserPositionsPBToUserPositions(froms UserPositionsPB) UserPositions {
+	if froms == nil {
+		return nil
+	}
+	tos := make(UserPositions, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertUserPositionPBToUserPosition(f)
+	}
+	return tos
+}
+
+// ConvertUserPositionsToUserPositionsPB converts a slice of *UserPosition to a slice of *UserPositionPB.
+func ConvertUserPositionsToUserPositionsPB(froms UserPositions) UserPositionsPB {
+	if froms == nil {
+		return nil
+	}
+	tos := make(UserPositionsPB, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertUserPositionToUserPositionPB(f)
+	}
+	return tos
+}
+
 // ConvertUserRolePBToUserRole converts UserRolePB to UserRole.
 func ConvertUserRolePBToUserRole(from *UserRolePB) *UserRole {
 	if from == nil {
@@ -548,10 +648,10 @@ func ConvertUserToUserPB(from *User) *UserPB {
 
 	to := &UserPB{
 		Id:            from.ID,
-		CreateTime:    ConvertTimeToTimestamp(from.CreateTime),
-		UpdateTime:    ConvertTimeToTimestamp(from.UpdateTime),
 		CreateAuthor:  from.CreateAuthor,
 		UpdateAuthor:  from.UpdateAuthor,
+		CreateTime:    ConvertTimeToTimestamp(from.CreateTime),
+		UpdateTime:    ConvertTimeToTimestamp(from.UpdateTime),
 		Uuid:          from.UUID,
 		AllowedIp:     from.AllowedIP,
 		Username:      from.Username,
@@ -564,7 +664,6 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		Remark:        from.Remark,
 		Token:         from.Token,
 		Status:        int32(from.Status),
-		I18N:          from.I18n,
 		LastLoginIp:   from.LastLoginIP,
 		LoginIp:       from.LoginIP,
 		LastLoginTime: ConvertTimeToTimestamp(from.LastLoginTime),
@@ -573,6 +672,18 @@ func ConvertUserToUserPB(from *User) *UserPB {
 		Roles:         ConvertRolesToRolesPB(from.Edges.Roles),
 	}
 	return to
+}
+
+// ConvertUsersPBToUsers converts a slice of *UserPB to a slice of *User.
+func ConvertUsersPBToUsers(froms UsersPB) Users {
+	if froms == nil {
+		return nil
+	}
+	tos := make(Users, len(froms))
+	for i, f := range froms {
+		tos[i] = ConvertUserPBToUser(f)
+	}
+	return tos
 }
 
 // ConvertUsersToUsersPB converts a slice of *User to a slice of *UserPB.
@@ -602,7 +713,6 @@ func ConvertViewPBToView(from *ViewPB) *View {
 		Scope:      from.Scope,
 		Name:       from.Name,
 		Type:       ConvertStringToType(from.Type),
-		Component:  from.Component,
 		Path:       from.Path,
 		Icon:       from.Icon,
 		Visible:    from.Visible,
@@ -627,7 +737,6 @@ func ConvertViewToViewPB(from *View) *ViewPB {
 		Scope:      from.Scope,
 		Sequence:   int32(from.Sequence),
 		Type:       ConvertTypeToString(from.Type),
-		Component:  from.Component,
 		Icon:       from.Icon,
 		Visible:    from.Visible,
 		Path:       from.Path,

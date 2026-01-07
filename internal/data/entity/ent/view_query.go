@@ -1001,6 +1001,7 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  Keyword string `json:"keyword,omitempty"`
 //	  Scope string `json:"scope,omitempty"`
 //	  Name string `json:"name,omitempty"`
+//	  I18n string `json:"i18n,omitempty"`
 //	  Type view.Type `json:"type,omitempty"`
 //	  Component string `json:"component,omitempty"`
 //	  Path string `json:"path,omitempty"`
@@ -1008,6 +1009,9 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  Visible bool `json:"visible,omitempty"`
 //	  Sequence int `json:"sequence,omitempty"`
 //	  TreePath string `json:"tree_path,omitempty"`
+//	  Description string `json:"description,omitempty"`
+//	  Properties string `json:"properties,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
 //	}
 //
 //	client.View.Query().
@@ -1018,6 +1022,7 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  view.FieldKeyword,
 //	  view.FieldScope,
 //	  view.FieldName,
+//	  view.FieldI18n,
 //	  view.FieldType,
 //	  view.FieldComponent,
 //	  view.FieldPath,
@@ -1025,6 +1030,9 @@ func (_q *ViewQuery) Modify(modifiers ...func(s *sql.Selector)) *ViewSelect {
 //	  view.FieldVisible,
 //	  view.FieldSequence,
 //	  view.FieldTreePath,
+//	  view.FieldDescription,
+//	  view.FieldProperties,
+//	  view.FieldStatus,
 //	  ).
 //	  Scan(ctx, &v)
 func (vq *ViewQuery) Omit(fields ...string) *ViewSelect {

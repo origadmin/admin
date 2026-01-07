@@ -32,34 +32,34 @@ message View {
   int32 sequence = 9 [json_name = "sequence"];
   // Type holds the value of the "type" field.
   string type = 10 [json_name = "type"];
-  // Component holds the value of the "component" field.
-  string component = 11 [json_name = "component"];
   // Comment holds the value of the "comment" field.
-  string comment = 12 [json_name = "comment"];
+  string comment = 11 [json_name = "comment"];
   // Icon holds the value of the "icon" field.
-  string icon = 13 [json_name = "icon"];
+  string icon = 12 [json_name = "icon"];
   // Visible holds the value of the "visible" field.
-  bool visible = 14 [json_name = "visible"];
+  bool visible = 13 [json_name = "visible"];
   // Path holds the value of the "path" field.
-  string path = 15 [json_name = "path"];
+  string path = 14 [json_name = "path"];
   // TreePath holds the value of the "tree_path" field.
-  string tree_path = 16 [json_name = "tree_path"];
+  string tree_path = 15 [json_name = "tree_path"];
   // Properties holds the value of the "properties" field.
-  string properties = 17 [json_name = "properties"];
+  string properties = 16 [json_name = "properties"];
   // Status holds the value of the "status" field.
-  int32 status = 18 [json_name = "status"];
+  int32 status = 17 [json_name = "status"];
   // ParentID holds the value of the "parent_id" field.
-  int64 parent_id = 19 [json_name = "parent_id"];
+  int64 parent_id = 18 [json_name = "parent_id"];
   // ParentPath holds the value of the "parent_path" field.
-  string parent_path = 20 [json_name = "parent_path"];
+  string parent_path = 19 [json_name = "parent_path"];
+  // Component holds the value of the "component" field.
+  string component = 20 [json_name = "component"];
   // Children holds the value of the children edge.
-  repeated View children = 21 [json_name = "children"];
+  repeated View children = 100 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  View parent = 22 [json_name = "parent"];
+  View parent = 101 [json_name = "parent"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 23 [json_name = "resources"];
+  repeated Resource resources = 102 [json_name = "resources"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 24 [json_name = "roles"];
+  repeated Role roles = 103 [json_name = "roles"];
 }
 
 // Role is the model entity for the Role schema.
@@ -71,40 +71,32 @@ message Role {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // create_author.field.comment
-  int64 create_author = 4 [json_name = "create_author"];
-  // update_author.field.comment
-  int64 update_author = 5 [json_name = "update_author"];
   // role.field.keyword
-  string keyword = 6 [json_name = "keyword"];
+  string keyword = 4 [json_name = "keyword"];
   // role.field.name
-  string name = 7 [json_name = "name"];
+  string name = 5 [json_name = "name"];
   // role.field.description
-  string description = 8 [json_name = "description"];
+  string description = 6 [json_name = "description"];
   // role.field.type
-  int32 type = 9 [json_name = "type"];
+  int32 type = 7 [json_name = "type"];
   // role.field.sequence
-  int32 sequence = 10 [json_name = "sequence"];
+  int32 sequence = 8 [json_name = "sequence"];
   // role.field.status
-  int32 status = 11 [json_name = "status"];
+  int32 status = 9 [json_name = "status"];
   // role.field.is_types
-  bool is_types = 12 [json_name = "is_types"];
+  bool is_types = 10 [json_name = "is_types"];
   // Views holds the value of the views edge.
-  repeated View views = 21 [json_name = "views"];
-  // View Ids holds the value of the view_ids edge.
-  repeated int64 view_ids = 20 [json_name = "view_ids"];
+  repeated View views = 100 [json_name = "views"];
   // Users holds the value of the users edge.
-  repeated User users = 22 [json_name = "users"];
-  // Users Ids holds the value of the user_ids edge.
-  repeated int64 user_ids = 23 [json_name = "user_ids"];
+  repeated User users = 101 [json_name = "users"];
   // Resources holds the value of the resources edge.
-  repeated Resource resources = 24 [json_name = "resources"];
+  repeated Resource resources = 102 [json_name = "resources"];
   // Resource Ids holds the value of the resource_ids edge.
-  repeated int64 resource_ids = 25 [json_name = "resource_ids"];
+  repeated int64 resource_ids = 103 [json_name = "resource_ids"];
   // Permissions holds the value of the permissions edge.
-  repeated Permission permissions = 26 [json_name = "permissions"];
+  repeated Permission permissions = 104 [json_name = "permissions"];
   // Permission Ids holds the value of the permission_ids edge.
-  repeated int64 permission_ids = 27 [json_name = "permission_ids"];
+  repeated int64 permission_ids = 105 [json_name = "permission_ids"];
 }
 
 // User is the model entity for the User schema.
@@ -112,14 +104,14 @@ message User {
   // ID of the ent.
   // field.primary_key.comment
   int64 id = 1 [json_name = "id"];
-  // create_time.field.comment
-  google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
-  // update_time.field.comment
-  google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
   // create_author.field.comment
-  int64 create_author = 4 [json_name = "create_author"];
+  int64 create_author = 2 [json_name = "create_author"];
   // update_author.field.comment
-  int64 update_author = 5 [json_name = "update_author"];
+  int64 update_author = 3 [json_name = "update_author"];
+  // create_time.field.comment
+  google.protobuf.Timestamp create_time = 4 [json_name = "create_time"];
+  // update_time.field.comment
+  google.protobuf.Timestamp update_time = 5 [json_name = "update_time"];
   // user.field.uuid
   string uuid = 6 [json_name = "uuid"];
   // user.field.allowed_ip
@@ -144,22 +136,24 @@ message User {
   string token = 16 [json_name = "token"];
   // user.field.status
   int32 status = 17 [json_name = "status"];
-  // user.field.i18n
-  string i18n = 18 [json_name = "i18n"];
   // user.field.last_login_ip
-  string last_login_ip = 19 [json_name = "last_login_ip"];
+  string last_login_ip = 18 [json_name = "last_login_ip"];
   // user.field.login_ip
-  string login_ip = 20 [json_name = "login_ip"];
+  string login_ip = 19 [json_name = "login_ip"];
   // user.field.last_login_time
-  google.protobuf.Timestamp last_login_time = 21 [json_name = "last_login_time"];
+  google.protobuf.Timestamp last_login_time = 20 [json_name = "last_login_time"];
   // user.field.login_time
-  google.protobuf.Timestamp login_time = 22 [json_name = "login_time"];
+  google.protobuf.Timestamp login_time = 21 [json_name = "login_time"];
   // user.field.sanction_date
-  optional google.protobuf.Timestamp sanction_date = 23 [json_name = "sanction_date"];
+  optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
+  // user.field.i18n
+  string i18n = 23 [json_name = "i18n"];
+  // user.field.department
+  string department = 24 [json_name = "department"];
   // Roles holds the value of the roles edge.
-  repeated Role roles = 24 [json_name = "roles"];
+  repeated Role roles = 100 [json_name = "roles"];
   // Role Ids holds the value of the role_ids
-  repeated int64 role_ids = 25 [json_name = "role_ids"];
+  repeated int64 role_ids = 101 [json_name = "role_ids"];
 }
 
 // UserRole is the model entity for the UserRole schema.
@@ -177,9 +171,9 @@ message UserRole {
   // RoleName holds the value of the "role_name" field.
   string role_name = 6 [json_name = "role_name"];
   // User holds the value of the user edge.
-  User user = 21 [json_name = "user"];
+  User user = 100 [json_name = "user"];
   // Role holds the value of the role edge.
-  Role role = 22 [json_name = "role"];
+  Role role = 101 [json_name = "role"];
 }
 
 // RoleView is the model entity for the RoleView schema.
@@ -195,9 +189,9 @@ message RoleView {
   // ViewID holds the value of the "view_id" field.
   int64 view_id = 5 [json_name = "view_id"];
   // Role holds the value of the role edge.
-  Role role = 21 [json_name = "role"];
+  Role role = 100 [json_name = "role"];
   // View holds the value of the view edge.
-  View view = 22 [json_name = "view"];
+  View view = 101 [json_name = "view"];
 }
 
 // Resource is the model entity for the Resource schema.
@@ -209,26 +203,30 @@ message Resource {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // create_author.field.comment
-  int64 create_author = 4 [json_name = "create_author"];
-  // update_author.field.comment
-  int64 update_author = 5 [json_name = "update_author"];
   // resource.field.name
-  string name = 6 [json_name = "name"];
+  string name = 4 [json_name = "name"];
   // resource.field.keyword
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 5 [json_name = "keyword"];
+  // resource.field.i18n_key
+  string i18n_key = 6 [json_name = "i18n_key"];
   // resource.field.type
-  string type = 9 [json_name = "type"];
+  string type = 7 [json_name = "type"];
   // resource.field.status
-  int32 status = 10 [json_name = "status"];
+  int32 status = 8 [json_name = "status"];
   // resource.field.path
-  string path = 11 [json_name = "path"];
+  string path = 9 [json_name = "path"];
   // resource.field.operation
-  string operation = 12 [json_name = "operation"];
+  string operation = 10 [json_name = "operation"];
   // resource.field.method
-  string method = 13 [json_name = "method"];
+  string method = 11 [json_name = "method"];
+  // resource.field.component
+  string component = 12 [json_name = "component"];
+  // resource.field.icon
+  string icon = 13 [json_name = "icon"];
   // resource.field.sequence
   int32 sequence = 14 [json_name = "sequence"];
+  // resource.field.visible
+  bool visible = 15 [json_name = "visible"];
   // resource.field.tree_path
   string tree_path = 16 [json_name = "tree_path"];
   // resource.field.properties
@@ -237,16 +235,20 @@ message Resource {
   string description = 18 [json_name = "description"];
   // resource.field.parent_id
   int64 parent_id = 19 [json_name = "parent_id"];
+  // resource.field.sync_status
+  string sync_status = 20 [json_name = "sync_status"];
+  // resource.field.service_name
+  string service_name = 21 [json_name = "service_name"];
+  // resource.field.policy
+  string policy = 22 [json_name = "policy"];
   // Children holds the value of the children edge.
-  repeated Resource children = 21 [json_name = "children"];
+  repeated Resource children = 100 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Resource parent = 22 [json_name = "parent"];
+  Resource parent = 101 [json_name = "parent"];
   // Permission Ids holds the value of the permission_ids edge.
-  repeated int64 permission_ids = 23 [json_name = "permission_ids"];
+  repeated int64 permission_ids = 102 [json_name = "permission_ids"];
   // Permissions holds the value of the permissions edge.
-  repeated Permission permissions = 24 [json_name = "permissions"];
-
-  string service_name = 25 [json_name = "service_name"];
+  repeated Permission permissions = 103 [json_name = "permissions"];
 }
 
 // department.table.comment
@@ -258,30 +260,26 @@ message Department {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // create_author.field.comment
-  int64 create_author = 4 [json_name = "create_author"];
-  // update_author.field.comment
-  int64 update_author = 5 [json_name = "update_author"];
   // department.field.keyword
-  string keyword = 6 [json_name = "keyword"];
+  string keyword = 4 [json_name = "keyword"];
   // department.field.name
-  string name = 7 [json_name = "name"];
+  string name = 5 [json_name = "name"];
   // department.field.tree_path
-  string tree_path = 8 [json_name = "tree_path"];
+  string tree_path = 6 [json_name = "tree_path"];
   // department.field.sequence
-  int32 sequence = 9 [json_name = "sequence"];
+  int32 sequence = 7 [json_name = "sequence"];
   // department.field.status
-  int32 status = 10 [json_name = "status"];
+  int32 status = 8 [json_name = "status"];
   // department.field.level
-  int32 level = 11 [json_name = "level"];
+  int32 level = 9 [json_name = "level"];
   // department.field.description
-  string description = 12 [json_name = "description"];
+  string description = 10 [json_name = "description"];
   // department.field.parent_id
-  int64 parent_id = 13 [json_name = "parent_id"];
+  int64 parent_id = 11 [json_name = "parent_id"];
   // Children holds the value of the children edge.
-  repeated Department children = 14 [json_name = "children"];
+  repeated Department children = 100 [json_name = "children"];
   // Parent holds the value of the parent edge.
-  Department parent = 15 [json_name = "parent"];
+  Department parent = 101 [json_name = "parent"];
 }
 
 // user_department.table.comment
@@ -304,18 +302,28 @@ message Position {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // create_author.field.comment
-  int64 create_author = 4 [json_name = "create_author"];
-  // update_author.field.comment
-  int64 update_author = 5 [json_name = "update_author"];
   // position.field.name
-  string name = 6 [json_name = "name"];
+  string name = 4 [json_name = "name"];
   // position.field.keyword
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 5 [json_name = "keyword"];
   // position.field.description
-  string description = 8 [json_name = "description"];
+  string description = 6 [json_name = "description"];
   // department.field.department_id
-  int64 department_id = 9 [json_name = "department_id"];
+  int64 department_id = 7 [json_name = "department_id"];
+}
+
+// PositionEdges holds the relations/edges for other nodes in the graph.
+message PositionEdges {
+  // Department holds the value of the department edge.
+  Department department = 1 [json_name = "department"];
+  // Users holds the value of the users edge.
+  repeated User users = 2 [json_name = "users"];
+  // Permissions holds the value of the permissions edge.
+  repeated Permission permissions = 3 [json_name = "permissions"];
+  // UserPositions holds the value of the user_positions edge.
+  repeated UserPosition user_positions = 4 [json_name = "user_positions"];
+  // PositionPermissions holds the value of the position_permissions edge.
+  repeated PositionPermission position_permissions = 5 [json_name = "position_permissions"];
 }
 
 // permission.table.comment
@@ -327,30 +335,26 @@ message Permission {
   google.protobuf.Timestamp create_time = 2 [json_name = "create_time"];
   // update_time.field.comment
   google.protobuf.Timestamp update_time = 3 [json_name = "update_time"];
-  // create_author.field.comment
-  int64 create_author = 4 [json_name = "create_author"];
-  // update_author.field.comment
-  int64 update_author = 5 [json_name = "update_author"];
   // permission.field.name
-  string name = 6 [json_name = "name"];
+  string name = 4 [json_name = "name"];
   // permission.field.keyword
-  string keyword = 7 [json_name = "keyword"];
+  string keyword = 5 [json_name = "keyword"];
   // permission.field.status
-  int32 status = 8 [json_name = "status"];
+  int32 status = 6 [json_name = "status"];
   // permission.field.description
-  string description = 9 [json_name = "description"];
+  string description = 7 [json_name = "description"];
   // permission.field.data_scope
-  string data_scope = 10 [json_name = "data_scope"];
+  string data_scope = 8 [json_name = "data_scope"];
   // permission.field.data_rules
-  map<string, string> data_rules = 11 [json_name = "data_rules"];
+  map<string, string> data_rules = 9 [json_name = "data_rules"];
   // permission.field.resource_ids
-  repeated int64 resource_ids = 12 [json_name = "resource_ids"];
-  // permission.field.resources
-  repeated Resource resources = 13 [json_name = "resources"];
+  repeated int64 resource_ids = 10 [json_name = "resource_ids"];
   // permission.field.view_ids
-  repeated int64 view_ids = 14 [json_name = "view_ids"];
+  repeated int64 view_ids = 12 [json_name = "view_ids"];
+  // permission.field.resources
+  repeated Resource resources = 100 [json_name = "resources"];
   // permission.field.views
-  repeated View views = 15 [json_name = "views"];
+  repeated View views = 101 [json_name = "views"];
 }
 
 // user_position.table.comment

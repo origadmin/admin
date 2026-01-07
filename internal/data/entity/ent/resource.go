@@ -23,16 +23,26 @@ type Resource struct {
 	CreateTime time.Time `json:"create_time,omitempty"`
 	// update_time.field.comment
 	UpdateTime time.Time `json:"update_time,omitempty"`
-	// entity.resource.field.service_name
-	ServiceName string `json:"service_name,omitempty"`
 	// entity.resource.field.keyword
 	Keyword string `json:"keyword,omitempty"`
-	// entity.resource.field.path
-	Path string `json:"path,omitempty"`
+	// entity.resource.field.name
+	Name string `json:"name,omitempty"`
+	// entity.resource.field.i18n
+	I18n string `json:"i18n,omitempty"`
+	// entity.resource.field.type
+	Type string `json:"type,omitempty"`
+	// entity.resource.field.status
+	Status enums.Status `json:"status,omitempty"`
+	// entity.resource.field.sequence
+	Sequence int `json:"sequence,omitempty"`
 	// entity.resource.field.method
 	Method string `json:"method,omitempty"`
+	// entity.resource.field.path
+	Path string `json:"path,omitempty"`
 	// entity.resource.field.operation
 	Operation string `json:"operation,omitempty"`
+	// entity.resource.field.service_name
+	ServiceName string `json:"service_name,omitempty"`
 	// entity.resource.field.policy
 	Policy string `json:"policy,omitempty"`
 	// entity.resource.field.version_id
@@ -41,8 +51,14 @@ type Resource struct {
 	LastSyncVersionID string `json:"last_sync_version_id,omitempty"`
 	// entity.resource.field.sync_status
 	SyncStatus string `json:"sync_status,omitempty"`
-	// entity.resource.field.status
-	Status enums.Status `json:"status,omitempty"`
+	// entity.resource.field.tree_path
+	TreePath string `json:"tree_path,omitempty"`
+	// entity.resource.field.parent_id
+	ParentID int64 `json:"parent_id,omitempty"`
+	// entity.resource.field.properties
+	Properties string `json:"properties,omitempty"`
+	// entity.resource.field.description
+	Description string `json:"description,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ResourceQuery when eager-loading is set.
 	Edges        ResourceEdges `json:"edges"`
@@ -51,6 +67,10 @@ type Resource struct {
 
 // ResourceEdges holds the relations/edges for other nodes in the graph.
 type ResourceEdges struct {
+	// Parent holds the value of the parent edge.
+	Parent *Resource `json:"parent,omitempty"`
+	// Children holds the value of the children edge.
+	Children []*Resource `json:"children,omitempty"`
 	// Views holds the value of the views edge.
 	Views []*View `json:"views,omitempty"`
 	// Permissions holds the value of the permissions edge.
@@ -59,13 +79,33 @@ type ResourceEdges struct {
 	ViewResources []*ViewResource `json:"view_resources,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [3]bool
+	loadedTypes [5]bool
+}
+
+// ParentOrErr returns the Parent value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ResourceEdges) ParentOrErr() (*Resource, error) {
+	if e.Parent != nil {
+		return e.Parent, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: resource.Label}
+	}
+	return nil, &NotLoadedError{edge: "parent"}
+}
+
+// ChildrenOrErr returns the Children value or an error if the edge
+// was not loaded in eager-loading.
+func (e ResourceEdges) ChildrenOrErr() ([]*Resource, error) {
+	if e.loadedTypes[1] {
+		return e.Children, nil
+	}
+	return nil, &NotLoadedError{edge: "children"}
 }
 
 // ViewsOrErr returns the Views value or an error if the edge
 // was not loaded in eager-loading.
 func (e ResourceEdges) ViewsOrErr() ([]*View, error) {
-	if e.loadedTypes[0] {
+	if e.loadedTypes[2] {
 		return e.Views, nil
 	}
 	return nil, &NotLoadedError{edge: "views"}
@@ -74,7 +114,7 @@ func (e ResourceEdges) ViewsOrErr() ([]*View, error) {
 // PermissionsOrErr returns the Permissions value or an error if the edge
 // was not loaded in eager-loading.
 func (e ResourceEdges) PermissionsOrErr() ([]*Permission, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[3] {
 		return e.Permissions, nil
 	}
 	return nil, &NotLoadedError{edge: "permissions"}
@@ -83,7 +123,7 @@ func (e ResourceEdges) PermissionsOrErr() ([]*Permission, error) {
 // ViewResourcesOrErr returns the ViewResources value or an error if the edge
 // was not loaded in eager-loading.
 func (e ResourceEdges) ViewResourcesOrErr() ([]*ViewResource, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[4] {
 		return e.ViewResources, nil
 	}
 	return nil, &NotLoadedError{edge: "view_resources"}
@@ -94,9 +134,9 @@ func (*Resource) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case resource.FieldID, resource.FieldStatus:
+		case resource.FieldID, resource.FieldStatus, resource.FieldSequence, resource.FieldParentID:
 			values[i] = new(sql.NullInt64)
-		case resource.FieldServiceName, resource.FieldKeyword, resource.FieldPath, resource.FieldMethod, resource.FieldOperation, resource.FieldPolicy, resource.FieldVersionID, resource.FieldLastSyncVersionID, resource.FieldSyncStatus:
+		case resource.FieldKeyword, resource.FieldName, resource.FieldI18n, resource.FieldType, resource.FieldMethod, resource.FieldPath, resource.FieldOperation, resource.FieldServiceName, resource.FieldPolicy, resource.FieldVersionID, resource.FieldLastSyncVersionID, resource.FieldSyncStatus, resource.FieldTreePath, resource.FieldProperties, resource.FieldDescription:
 			values[i] = new(sql.NullString)
 		case resource.FieldCreateTime, resource.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -133,23 +173,41 @@ func (_m *Resource) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.UpdateTime = value.Time
 			}
-		case resource.FieldServiceName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field service_name", values[i])
-			} else if value.Valid {
-				_m.ServiceName = value.String
-			}
 		case resource.FieldKeyword:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field keyword", values[i])
 			} else if value.Valid {
 				_m.Keyword = value.String
 			}
-		case resource.FieldPath:
+		case resource.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field path", values[i])
+				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
-				_m.Path = value.String
+				_m.Name = value.String
+			}
+		case resource.FieldI18n:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field i18n", values[i])
+			} else if value.Valid {
+				_m.I18n = value.String
+			}
+		case resource.FieldType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field type", values[i])
+			} else if value.Valid {
+				_m.Type = value.String
+			}
+		case resource.FieldStatus:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				_m.Status = enums.Status(value.Int64)
+			}
+		case resource.FieldSequence:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field sequence", values[i])
+			} else if value.Valid {
+				_m.Sequence = int(value.Int64)
 			}
 		case resource.FieldMethod:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -157,11 +215,23 @@ func (_m *Resource) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Method = value.String
 			}
+		case resource.FieldPath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field path", values[i])
+			} else if value.Valid {
+				_m.Path = value.String
+			}
 		case resource.FieldOperation:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field operation", values[i])
 			} else if value.Valid {
 				_m.Operation = value.String
+			}
+		case resource.FieldServiceName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field service_name", values[i])
+			} else if value.Valid {
+				_m.ServiceName = value.String
 			}
 		case resource.FieldPolicy:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -187,11 +257,29 @@ func (_m *Resource) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.SyncStatus = value.String
 			}
-		case resource.FieldStatus:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field status", values[i])
+		case resource.FieldTreePath:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
 			} else if value.Valid {
-				_m.Status = enums.Status(value.Int64)
+				_m.TreePath = value.String
+			}
+		case resource.FieldParentID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field parent_id", values[i])
+			} else if value.Valid {
+				_m.ParentID = value.Int64
+			}
+		case resource.FieldProperties:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field properties", values[i])
+			} else if value.Valid {
+				_m.Properties = value.String
+			}
+		case resource.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				_m.Description = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -204,6 +292,16 @@ func (_m *Resource) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *Resource) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryParent queries the "parent" edge of the Resource entity.
+func (_m *Resource) QueryParent() *ResourceQuery {
+	return NewResourceClient(_m.config).QueryParent(_m)
+}
+
+// QueryChildren queries the "children" edge of the Resource entity.
+func (_m *Resource) QueryChildren() *ResourceQuery {
+	return NewResourceClient(_m.config).QueryChildren(_m)
 }
 
 // QueryViews queries the "views" edge of the Resource entity.
@@ -250,20 +348,35 @@ func (_m *Resource) String() string {
 	builder.WriteString("update_time=")
 	builder.WriteString(_m.UpdateTime.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("service_name=")
-	builder.WriteString(_m.ServiceName)
-	builder.WriteString(", ")
 	builder.WriteString("keyword=")
 	builder.WriteString(_m.Keyword)
 	builder.WriteString(", ")
-	builder.WriteString("path=")
-	builder.WriteString(_m.Path)
+	builder.WriteString("name=")
+	builder.WriteString(_m.Name)
+	builder.WriteString(", ")
+	builder.WriteString("i18n=")
+	builder.WriteString(_m.I18n)
+	builder.WriteString(", ")
+	builder.WriteString("type=")
+	builder.WriteString(_m.Type)
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
+	builder.WriteString(", ")
+	builder.WriteString("sequence=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Sequence))
 	builder.WriteString(", ")
 	builder.WriteString("method=")
 	builder.WriteString(_m.Method)
 	builder.WriteString(", ")
+	builder.WriteString("path=")
+	builder.WriteString(_m.Path)
+	builder.WriteString(", ")
 	builder.WriteString("operation=")
 	builder.WriteString(_m.Operation)
+	builder.WriteString(", ")
+	builder.WriteString("service_name=")
+	builder.WriteString(_m.ServiceName)
 	builder.WriteString(", ")
 	builder.WriteString("policy=")
 	builder.WriteString(_m.Policy)
@@ -277,8 +390,17 @@ func (_m *Resource) String() string {
 	builder.WriteString("sync_status=")
 	builder.WriteString(_m.SyncStatus)
 	builder.WriteString(", ")
-	builder.WriteString("status=")
-	builder.WriteString(fmt.Sprintf("%v", _m.Status))
+	builder.WriteString("tree_path=")
+	builder.WriteString(_m.TreePath)
+	builder.WriteString(", ")
+	builder.WriteString("parent_id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ParentID))
+	builder.WriteString(", ")
+	builder.WriteString("properties=")
+	builder.WriteString(_m.Properties)
+	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(_m.Description)
 	builder.WriteByte(')')
 	return builder.String()
 }

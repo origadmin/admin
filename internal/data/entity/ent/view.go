@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"origadmin/application/admin/internal/data/entity/ent/view"
+	"origadmin/application/admin/internal/data/enums"
 	"strings"
 	"time"
 
@@ -30,6 +31,8 @@ type View struct {
 	Scope string `json:"scope,omitempty"`
 	// entity.view.field.name
 	Name string `json:"name,omitempty"`
+	// entity.view.field.i18n
+	I18n string `json:"i18n,omitempty"`
 	// entity.view.field.type
 	Type view.Type `json:"type,omitempty"`
 	// entity.view.field.component
@@ -44,6 +47,12 @@ type View struct {
 	Sequence int `json:"sequence,omitempty"`
 	// entity.view.field.tree_path
 	TreePath string `json:"tree_path,omitempty"`
+	// entity.view.field.description
+	Description string `json:"description,omitempty"`
+	// entity.view.field.properties
+	Properties string `json:"properties,omitempty"`
+	// entity.view.field.status
+	Status enums.Status `json:"status,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ViewQuery when eager-loading is set.
 	Edges        ViewEdges `json:"edges"`
@@ -132,9 +141,9 @@ func (*View) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case view.FieldVisible:
 			values[i] = new(sql.NullBool)
-		case view.FieldID, view.FieldParentID, view.FieldSequence:
+		case view.FieldID, view.FieldParentID, view.FieldSequence, view.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case view.FieldKeyword, view.FieldScope, view.FieldName, view.FieldType, view.FieldComponent, view.FieldPath, view.FieldIcon, view.FieldTreePath:
+		case view.FieldKeyword, view.FieldScope, view.FieldName, view.FieldI18n, view.FieldType, view.FieldComponent, view.FieldPath, view.FieldIcon, view.FieldTreePath, view.FieldDescription, view.FieldProperties:
 			values[i] = new(sql.NullString)
 		case view.FieldCreateTime, view.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
@@ -195,6 +204,12 @@ func (_m *View) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Name = value.String
 			}
+		case view.FieldI18n:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field i18n", values[i])
+			} else if value.Valid {
+				_m.I18n = value.String
+			}
 		case view.FieldType:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
@@ -236,6 +251,24 @@ func (_m *View) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field tree_path", values[i])
 			} else if value.Valid {
 				_m.TreePath = value.String
+			}
+		case view.FieldDescription:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field description", values[i])
+			} else if value.Valid {
+				_m.Description = value.String
+			}
+		case view.FieldProperties:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field properties", values[i])
+			} else if value.Valid {
+				_m.Properties = value.String
+			}
+		case view.FieldStatus:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field status", values[i])
+			} else if value.Valid {
+				_m.Status = enums.Status(value.Int64)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -321,6 +354,9 @@ func (_m *View) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(_m.Name)
 	builder.WriteString(", ")
+	builder.WriteString("i18n=")
+	builder.WriteString(_m.I18n)
+	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Type))
 	builder.WriteString(", ")
@@ -341,6 +377,15 @@ func (_m *View) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("tree_path=")
 	builder.WriteString(_m.TreePath)
+	builder.WriteString(", ")
+	builder.WriteString("description=")
+	builder.WriteString(_m.Description)
+	builder.WriteString(", ")
+	builder.WriteString("properties=")
+	builder.WriteString(_m.Properties)
+	builder.WriteString(", ")
+	builder.WriteString("status=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Status))
 	builder.WriteByte(')')
 	return builder.String()
 }

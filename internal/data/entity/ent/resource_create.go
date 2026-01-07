@@ -52,28 +52,78 @@ func (_c *ResourceCreate) SetNillableUpdateTime(v *time.Time) *ResourceCreate {
 	return _c
 }
 
-// SetServiceName sets the "service_name" field.
-func (_c *ResourceCreate) SetServiceName(v string) *ResourceCreate {
-	_c.mutation.SetServiceName(v)
-	return _c
-}
-
 // SetKeyword sets the "keyword" field.
 func (_c *ResourceCreate) SetKeyword(v string) *ResourceCreate {
 	_c.mutation.SetKeyword(v)
 	return _c
 }
 
-// SetPath sets the "path" field.
-func (_c *ResourceCreate) SetPath(v string) *ResourceCreate {
-	_c.mutation.SetPath(v)
+// SetName sets the "name" field.
+func (_c *ResourceCreate) SetName(v string) *ResourceCreate {
+	_c.mutation.SetName(v)
 	return _c
 }
 
-// SetNillablePath sets the "path" field if the given value is not nil.
-func (_c *ResourceCreate) SetNillablePath(v *string) *ResourceCreate {
+// SetNillableName sets the "name" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableName(v *string) *ResourceCreate {
 	if v != nil {
-		_c.SetPath(*v)
+		_c.SetName(*v)
+	}
+	return _c
+}
+
+// SetI18n sets the "i18n" field.
+func (_c *ResourceCreate) SetI18n(v string) *ResourceCreate {
+	_c.mutation.SetI18n(v)
+	return _c
+}
+
+// SetNillableI18n sets the "i18n" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableI18n(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetI18n(*v)
+	}
+	return _c
+}
+
+// SetType sets the "type" field.
+func (_c *ResourceCreate) SetType(v string) *ResourceCreate {
+	_c.mutation.SetType(v)
+	return _c
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableType(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetType(*v)
+	}
+	return _c
+}
+
+// SetStatus sets the "status" field.
+func (_c *ResourceCreate) SetStatus(v enums.Status) *ResourceCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableStatus(v *enums.Status) *ResourceCreate {
+	if v != nil {
+		_c.SetStatus(*v)
+	}
+	return _c
+}
+
+// SetSequence sets the "sequence" field.
+func (_c *ResourceCreate) SetSequence(v int) *ResourceCreate {
+	_c.mutation.SetSequence(v)
+	return _c
+}
+
+// SetNillableSequence sets the "sequence" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableSequence(v *int) *ResourceCreate {
+	if v != nil {
+		_c.SetSequence(*v)
 	}
 	return _c
 }
@@ -92,6 +142,20 @@ func (_c *ResourceCreate) SetNillableMethod(v *string) *ResourceCreate {
 	return _c
 }
 
+// SetPath sets the "path" field.
+func (_c *ResourceCreate) SetPath(v string) *ResourceCreate {
+	_c.mutation.SetPath(v)
+	return _c
+}
+
+// SetNillablePath sets the "path" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillablePath(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetPath(*v)
+	}
+	return _c
+}
+
 // SetOperation sets the "operation" field.
 func (_c *ResourceCreate) SetOperation(v string) *ResourceCreate {
 	_c.mutation.SetOperation(v)
@@ -102,6 +166,20 @@ func (_c *ResourceCreate) SetOperation(v string) *ResourceCreate {
 func (_c *ResourceCreate) SetNillableOperation(v *string) *ResourceCreate {
 	if v != nil {
 		_c.SetOperation(*v)
+	}
+	return _c
+}
+
+// SetServiceName sets the "service_name" field.
+func (_c *ResourceCreate) SetServiceName(v string) *ResourceCreate {
+	_c.mutation.SetServiceName(v)
+	return _c
+}
+
+// SetNillableServiceName sets the "service_name" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableServiceName(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetServiceName(*v)
 	}
 	return _c
 }
@@ -162,16 +240,58 @@ func (_c *ResourceCreate) SetNillableSyncStatus(v *string) *ResourceCreate {
 	return _c
 }
 
-// SetStatus sets the "status" field.
-func (_c *ResourceCreate) SetStatus(v enums.Status) *ResourceCreate {
-	_c.mutation.SetStatus(v)
+// SetTreePath sets the "tree_path" field.
+func (_c *ResourceCreate) SetTreePath(v string) *ResourceCreate {
+	_c.mutation.SetTreePath(v)
 	return _c
 }
 
-// SetNillableStatus sets the "status" field if the given value is not nil.
-func (_c *ResourceCreate) SetNillableStatus(v *enums.Status) *ResourceCreate {
+// SetNillableTreePath sets the "tree_path" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableTreePath(v *string) *ResourceCreate {
 	if v != nil {
-		_c.SetStatus(*v)
+		_c.SetTreePath(*v)
+	}
+	return _c
+}
+
+// SetParentID sets the "parent_id" field.
+func (_c *ResourceCreate) SetParentID(v int64) *ResourceCreate {
+	_c.mutation.SetParentID(v)
+	return _c
+}
+
+// SetNillableParentID sets the "parent_id" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableParentID(v *int64) *ResourceCreate {
+	if v != nil {
+		_c.SetParentID(*v)
+	}
+	return _c
+}
+
+// SetProperties sets the "properties" field.
+func (_c *ResourceCreate) SetProperties(v string) *ResourceCreate {
+	_c.mutation.SetProperties(v)
+	return _c
+}
+
+// SetNillableProperties sets the "properties" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableProperties(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetProperties(*v)
+	}
+	return _c
+}
+
+// SetDescription sets the "description" field.
+func (_c *ResourceCreate) SetDescription(v string) *ResourceCreate {
+	_c.mutation.SetDescription(v)
+	return _c
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (_c *ResourceCreate) SetNillableDescription(v *string) *ResourceCreate {
+	if v != nil {
+		_c.SetDescription(*v)
 	}
 	return _c
 }
@@ -188,6 +308,26 @@ func (_c *ResourceCreate) SetNillableID(v *int64) *ResourceCreate {
 		_c.SetID(*v)
 	}
 	return _c
+}
+
+// SetParent sets the "parent" edge to the Resource entity.
+func (_c *ResourceCreate) SetParent(v *Resource) *ResourceCreate {
+	return _c.SetParentID(v.ID)
+}
+
+// AddChildIDs adds the "children" edge to the Resource entity by IDs.
+func (_c *ResourceCreate) AddChildIDs(ids ...int64) *ResourceCreate {
+	_c.mutation.AddChildIDs(ids...)
+	return _c
+}
+
+// AddChildren adds the "children" edges to the Resource entity.
+func (_c *ResourceCreate) AddChildren(v ...*Resource) *ResourceCreate {
+	ids := make([]int64, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddChildIDs(ids...)
 }
 
 // AddViewIDs adds the "views" edge to the View entity by IDs.
@@ -278,6 +418,22 @@ func (_c *ResourceCreate) defaults() {
 		v := resource.DefaultUpdateTime()
 		_c.mutation.SetUpdateTime(v)
 	}
+	if _, ok := _c.mutation.Name(); !ok {
+		v := resource.DefaultName
+		_c.mutation.SetName(v)
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := resource.DefaultStatus
+		_c.mutation.SetStatus(v)
+	}
+	if _, ok := _c.mutation.Sequence(); !ok {
+		v := resource.DefaultSequence
+		_c.mutation.SetSequence(v)
+	}
+	if _, ok := _c.mutation.ServiceName(); !ok {
+		v := resource.DefaultServiceName
+		_c.mutation.SetServiceName(v)
+	}
 	if _, ok := _c.mutation.Policy(); !ok {
 		v := resource.DefaultPolicy
 		_c.mutation.SetPolicy(v)
@@ -294,10 +450,6 @@ func (_c *ResourceCreate) defaults() {
 		v := resource.DefaultSyncStatus
 		_c.mutation.SetSyncStatus(v)
 	}
-	if _, ok := _c.mutation.Status(); !ok {
-		v := resource.DefaultStatus
-		_c.mutation.SetStatus(v)
-	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := resource.DefaultID()
 		_c.mutation.SetID(v)
@@ -312,9 +464,6 @@ func (_c *ResourceCreate) check() error {
 	if _, ok := _c.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "Resource.update_time"`)}
 	}
-	if _, ok := _c.mutation.ServiceName(); !ok {
-		return &ValidationError{Name: "service_name", err: errors.New(`ent: missing required field "Resource.service_name"`)}
-	}
 	if _, ok := _c.mutation.Keyword(); !ok {
 		return &ValidationError{Name: "keyword", err: errors.New(`ent: missing required field "Resource.keyword"`)}
 	}
@@ -322,6 +471,18 @@ func (_c *ResourceCreate) check() error {
 		if err := resource.KeywordValidator(v); err != nil {
 			return &ValidationError{Name: "keyword", err: fmt.Errorf(`ent: validator failed for field "Resource.keyword": %w`, err)}
 		}
+	}
+	if _, ok := _c.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Resource.name"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
+	}
+	if _, ok := _c.mutation.Sequence(); !ok {
+		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Resource.sequence"`)}
+	}
+	if _, ok := _c.mutation.ServiceName(); !ok {
+		return &ValidationError{Name: "service_name", err: errors.New(`ent: missing required field "Resource.service_name"`)}
 	}
 	if _, ok := _c.mutation.Policy(); !ok {
 		return &ValidationError{Name: "policy", err: errors.New(`ent: missing required field "Resource.policy"`)}
@@ -334,9 +495,6 @@ func (_c *ResourceCreate) check() error {
 	}
 	if _, ok := _c.mutation.SyncStatus(); !ok {
 		return &ValidationError{Name: "sync_status", err: errors.New(`ent: missing required field "Resource.sync_status"`)}
-	}
-	if _, ok := _c.mutation.Status(); !ok {
-		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
 	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := resource.IDValidator(v); err != nil {
@@ -383,25 +541,45 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_spec.SetField(resource.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
-	if value, ok := _c.mutation.ServiceName(); ok {
-		_spec.SetField(resource.FieldServiceName, field.TypeString, value)
-		_node.ServiceName = value
-	}
 	if value, ok := _c.mutation.Keyword(); ok {
 		_spec.SetField(resource.FieldKeyword, field.TypeString, value)
 		_node.Keyword = value
 	}
-	if value, ok := _c.mutation.Path(); ok {
-		_spec.SetField(resource.FieldPath, field.TypeString, value)
-		_node.Path = value
+	if value, ok := _c.mutation.Name(); ok {
+		_spec.SetField(resource.FieldName, field.TypeString, value)
+		_node.Name = value
+	}
+	if value, ok := _c.mutation.I18n(); ok {
+		_spec.SetField(resource.FieldI18n, field.TypeString, value)
+		_node.I18n = value
+	}
+	if value, ok := _c.mutation.GetType(); ok {
+		_spec.SetField(resource.FieldType, field.TypeString, value)
+		_node.Type = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
+		_node.Status = value
+	}
+	if value, ok := _c.mutation.Sequence(); ok {
+		_spec.SetField(resource.FieldSequence, field.TypeInt, value)
+		_node.Sequence = value
 	}
 	if value, ok := _c.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 		_node.Method = value
 	}
+	if value, ok := _c.mutation.Path(); ok {
+		_spec.SetField(resource.FieldPath, field.TypeString, value)
+		_node.Path = value
+	}
 	if value, ok := _c.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)
 		_node.Operation = value
+	}
+	if value, ok := _c.mutation.ServiceName(); ok {
+		_spec.SetField(resource.FieldServiceName, field.TypeString, value)
+		_node.ServiceName = value
 	}
 	if value, ok := _c.mutation.Policy(); ok {
 		_spec.SetField(resource.FieldPolicy, field.TypeString, value)
@@ -419,9 +597,50 @@ func (_c *ResourceCreate) createSpec() (*Resource, *sqlgraph.CreateSpec) {
 		_spec.SetField(resource.FieldSyncStatus, field.TypeString, value)
 		_node.SyncStatus = value
 	}
-	if value, ok := _c.mutation.Status(); ok {
-		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
-		_node.Status = value
+	if value, ok := _c.mutation.TreePath(); ok {
+		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
+		_node.TreePath = value
+	}
+	if value, ok := _c.mutation.Properties(); ok {
+		_spec.SetField(resource.FieldProperties, field.TypeString, value)
+		_node.Properties = value
+	}
+	if value, ok := _c.mutation.Description(); ok {
+		_spec.SetField(resource.FieldDescription, field.TypeString, value)
+		_node.Description = value
+	}
+	if nodes := _c.mutation.ParentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   resource.ParentTable,
+			Columns: []string{resource.ParentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.ParentID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ChildrenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   resource.ChildrenTable,
+			Columns: []string{resource.ChildrenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(resource.FieldID, field.TypeInt64),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := _c.mutation.ViewsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

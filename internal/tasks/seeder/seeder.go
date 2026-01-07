@@ -9,7 +9,6 @@ import (
 	"context"
 	"crypto/rand"
 	"math/big"
-	"strings"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -123,70 +122,22 @@ func (s *Seeder) createRootUser() error {
 func (s *Seeder) createInitialResources() error {
 	ctx := context.Background()
 	for _, policy := range security.RegisteredPolicies() {
-		parts := strings.Split(policy.ServiceMethod, "/")
-		if len(parts) < 3 {
-			continue
-		}
-		// e.g. /api.v1.services.auth.AuthService/Login -> auth:auth:Login:write
-		services := strings.SplitN(strings.TrimPrefix(policy.ServiceMethod, "/"), "/", 2)
-		keyword := strings.ReplaceAll(services[0], ".", ":")
-		keyword = strings.TrimPrefix(keyword, "api:v1:services:")
-		keyword = strings.ReplaceAll(keyword, "Service", "")
-
-		keyword = keyword + ":" + services[1]
-
-		// Map HTTP method to action suffix
-		var action string
-		if policy.GatewayPath != "" {
-			if methodParts := strings.SplitN(policy.GatewayPath, ":", 2); len(methodParts) >= 1 {
-				method := methodParts[0]
-				switch method {
-				case "GET", "HEAD", "OPTIONS":
-					action = "Read"
-				case "POST":
-					action = "Write"
-				case "PUT", "PATCH":
-					action = "Write"
-				case "DELETE":
-					action = "Delete"
-				default:
-					action = "Any"
-				}
-				keyword = keyword + ":" + action
-			}
-		}
-
-		// Extract method and path from GatewayPath, e.g., "GET:/api/v1/users/{id}"
-		var method, path string
-		if policy.GatewayPath != "" {
-			if parts := strings.SplitN(policy.GatewayPath, ":", 2); len(parts) == 2 {
-				method = parts[0]
-				path = parts[1]
-			}
-		}
-
-		resource := &types.Resource{
-			ServiceName: services[0],
-			Name:        policy.Name,
-			Keyword:     keyword,
-			Path:        path,
-			Operation:   policy.ServiceMethod,
-			Method:      method,
-		}
-
+		// Check if resource already exists by its operation, which should be unique.
 		_, count, err := s.resourceUseCase.ListResources(ctx,
 			&system.ListResourcesRequest{
-				Keyword:   resource.Keyword,
+				Operation: policy.ServiceMethod,
 				OnlyCount: true,
 			})
 		if err == nil && count > 0 {
-			s.log.Infof("Resource '%s' already exists, skipping.", resource.Keyword)
+			s.log.Infof("Resource for operation '%s' already exists, skipping.", policy.ServiceMethod)
 			continue
 		}
-		if _, err := s.resourceUseCase.CreateResource(ctx, resource); err != nil {
-			s.log.Errorf("failed to create resource %s: %v", resource.Keyword, err)
+
+		// If not exists, create it using the dedicated biz method.
+		if _, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, &policy); err != nil {
+			s.log.Errorf("failed to create resource from policy '%s': %v", policy.ServiceMethod, err)
 		} else {
-			s.log.Infof("Successfully created resource: %s", resource.Keyword)
+			s.log.Infof("Successfully created resource from policy: %s", policy.ServiceMethod)
 		}
 	}
 	return nil

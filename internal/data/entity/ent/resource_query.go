@@ -27,6 +27,8 @@ type ResourceQuery struct {
 	order             []resource.OrderOption
 	inters            []Interceptor
 	predicates        []predicate.Resource
+	withParent        *ResourceQuery
+	withChildren      *ResourceQuery
 	withViews         *ViewQuery
 	withPermissions   *PermissionQuery
 	withViewResources *ViewResourceQuery
@@ -65,6 +67,50 @@ func (_q *ResourceQuery) Unique(unique bool) *ResourceQuery {
 func (_q *ResourceQuery) Order(o ...resource.OrderOption) *ResourceQuery {
 	_q.order = append(_q.order, o...)
 	return _q
+}
+
+// QueryParent chains the current query on the "parent" edge.
+func (_q *ResourceQuery) QueryParent() *ResourceQuery {
+	query := (&ResourceClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, selector),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, resource.ParentTable, resource.ParentColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryChildren chains the current query on the "children" edge.
+func (_q *ResourceQuery) QueryChildren() *ResourceQuery {
+	query := (&ResourceClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(resource.Table, resource.FieldID, selector),
+			sqlgraph.To(resource.Table, resource.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, resource.ChildrenTable, resource.ChildrenColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // QueryViews chains the current query on the "views" edge.
@@ -325,6 +371,8 @@ func (_q *ResourceQuery) Clone() *ResourceQuery {
 		order:             append([]resource.OrderOption{}, _q.order...),
 		inters:            append([]Interceptor{}, _q.inters...),
 		predicates:        append([]predicate.Resource{}, _q.predicates...),
+		withParent:        _q.withParent.Clone(),
+		withChildren:      _q.withChildren.Clone(),
 		withViews:         _q.withViews.Clone(),
 		withPermissions:   _q.withPermissions.Clone(),
 		withViewResources: _q.withViewResources.Clone(),
@@ -333,6 +381,28 @@ func (_q *ResourceQuery) Clone() *ResourceQuery {
 		path:      _q.path,
 		modifiers: append([]func(*sql.Selector){}, _q.modifiers...),
 	}
+}
+
+// WithParent tells the query-builder to eager-load the nodes that are connected to
+// the "parent" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ResourceQuery) WithParent(opts ...func(*ResourceQuery)) *ResourceQuery {
+	query := (&ResourceClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withParent = query
+	return _q
+}
+
+// WithChildren tells the query-builder to eager-load the nodes that are connected to
+// the "children" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ResourceQuery) WithChildren(opts ...func(*ResourceQuery)) *ResourceQuery {
+	query := (&ResourceClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withChildren = query
+	return _q
 }
 
 // WithViews tells the query-builder to eager-load the nodes that are connected to
@@ -446,7 +516,9 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	var (
 		nodes       = []*Resource{}
 		_spec       = _q.querySpec()
-		loadedTypes = [3]bool{
+		loadedTypes = [5]bool{
+			_q.withParent != nil,
+			_q.withChildren != nil,
 			_q.withViews != nil,
 			_q.withPermissions != nil,
 			_q.withViewResources != nil,
@@ -473,6 +545,19 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := _q.withParent; query != nil {
+		if err := _q.loadParent(ctx, query, nodes, nil,
+			func(n *Resource, e *Resource) { n.Edges.Parent = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withChildren; query != nil {
+		if err := _q.loadChildren(ctx, query, nodes,
+			func(n *Resource) { n.Edges.Children = []*Resource{} },
+			func(n *Resource, e *Resource) { n.Edges.Children = append(n.Edges.Children, e) }); err != nil {
+			return nil, err
+		}
+	}
 	if query := _q.withViews; query != nil {
 		if err := _q.loadViews(ctx, query, nodes,
 			func(n *Resource) { n.Edges.Views = []*View{} },
@@ -497,6 +582,65 @@ func (_q *ResourceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Res
 	return nodes, nil
 }
 
+func (_q *ResourceQuery) loadParent(ctx context.Context, query *ResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *Resource)) error {
+	ids := make([]int64, 0, len(nodes))
+	nodeids := make(map[int64][]*Resource)
+	for i := range nodes {
+		fk := nodes[i].ParentID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(resource.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "parent_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (_q *ResourceQuery) loadChildren(ctx context.Context, query *ResourceQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *Resource)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int64]*Resource)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(resource.FieldParentID)
+	}
+	query.Where(predicate.Resource(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(resource.ChildrenColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ParentID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "parent_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
 func (_q *ResourceQuery) loadViews(ctx context.Context, query *ViewQuery, nodes []*Resource, init func(*Resource), assign func(*Resource, *View)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
 	byID := make(map[int64]*Resource)
@@ -678,6 +822,9 @@ func (_q *ResourceQuery) querySpec() *sqlgraph.QuerySpec {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
+		if _q.withParent != nil {
+			_spec.Node.AddColumnOnce(resource.FieldParentID)
+		}
 	}
 	if ps := _q.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -776,32 +923,48 @@ func (_q *ResourceQuery) Modify(modifiers ...func(s *sql.Selector)) *ResourceSel
 //	var v []struct {
 //	  CreateTime time.Time `json:"create_time,omitempty"`
 //	  UpdateTime time.Time `json:"update_time,omitempty"`
-//	  ServiceName string `json:"service_name,omitempty"`
 //	  Keyword string `json:"keyword,omitempty"`
-//	  Path string `json:"path,omitempty"`
+//	  Name string `json:"name,omitempty"`
+//	  I18n string `json:"i18n,omitempty"`
+//	  Type string `json:"type,omitempty"`
+//	  Status enums.Status `json:"status,omitempty"`
+//	  Sequence int `json:"sequence,omitempty"`
 //	  Method string `json:"method,omitempty"`
+//	  Path string `json:"path,omitempty"`
 //	  Operation string `json:"operation,omitempty"`
+//	  ServiceName string `json:"service_name,omitempty"`
 //	  Policy string `json:"policy,omitempty"`
 //	  VersionID string `json:"version_id,omitempty"`
 //	  LastSyncVersionID string `json:"last_sync_version_id,omitempty"`
 //	  SyncStatus string `json:"sync_status,omitempty"`
-//	  Status enums.Status `json:"status,omitempty"`
+//	  TreePath string `json:"tree_path,omitempty"`
+//	  ParentID int64 `json:"parent_id,omitempty"`
+//	  Properties string `json:"properties,omitempty"`
+//	  Description string `json:"description,omitempty"`
 //	}
 //
 //	client.Resource.Query().
 //	  Omit(
 //	  resource.FieldCreateTime,
 //	  resource.FieldUpdateTime,
-//	  resource.FieldServiceName,
 //	  resource.FieldKeyword,
-//	  resource.FieldPath,
+//	  resource.FieldName,
+//	  resource.FieldI18n,
+//	  resource.FieldType,
+//	  resource.FieldStatus,
+//	  resource.FieldSequence,
 //	  resource.FieldMethod,
+//	  resource.FieldPath,
 //	  resource.FieldOperation,
+//	  resource.FieldServiceName,
 //	  resource.FieldPolicy,
 //	  resource.FieldVersionID,
 //	  resource.FieldLastSyncVersionID,
 //	  resource.FieldSyncStatus,
-//	  resource.FieldStatus,
+//	  resource.FieldTreePath,
+//	  resource.FieldParentID,
+//	  resource.FieldProperties,
+//	  resource.FieldDescription,
 //	  ).
 //	  Scan(ctx, &v)
 func (rq *ResourceQuery) Omit(fields ...string) *ResourceSelect {

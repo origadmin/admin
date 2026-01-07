@@ -11,6 +11,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -89,6 +90,20 @@ func (_c *ViewCreate) SetNillableScope(v *string) *ViewCreate {
 // SetName sets the "name" field.
 func (_c *ViewCreate) SetName(v string) *ViewCreate {
 	_c.mutation.SetName(v)
+	return _c
+}
+
+// SetI18n sets the "i18n" field.
+func (_c *ViewCreate) SetI18n(v string) *ViewCreate {
+	_c.mutation.SetI18n(v)
+	return _c
+}
+
+// SetNillableI18n sets the "i18n" field if the given value is not nil.
+func (_c *ViewCreate) SetNillableI18n(v *string) *ViewCreate {
+	if v != nil {
+		_c.SetI18n(*v)
+	}
 	return _c
 }
 
@@ -186,6 +201,48 @@ func (_c *ViewCreate) SetTreePath(v string) *ViewCreate {
 func (_c *ViewCreate) SetNillableTreePath(v *string) *ViewCreate {
 	if v != nil {
 		_c.SetTreePath(*v)
+	}
+	return _c
+}
+
+// SetDescription sets the "description" field.
+func (_c *ViewCreate) SetDescription(v string) *ViewCreate {
+	_c.mutation.SetDescription(v)
+	return _c
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (_c *ViewCreate) SetNillableDescription(v *string) *ViewCreate {
+	if v != nil {
+		_c.SetDescription(*v)
+	}
+	return _c
+}
+
+// SetProperties sets the "properties" field.
+func (_c *ViewCreate) SetProperties(v string) *ViewCreate {
+	_c.mutation.SetProperties(v)
+	return _c
+}
+
+// SetNillableProperties sets the "properties" field if the given value is not nil.
+func (_c *ViewCreate) SetNillableProperties(v *string) *ViewCreate {
+	if v != nil {
+		_c.SetProperties(*v)
+	}
+	return _c
+}
+
+// SetStatus sets the "status" field.
+func (_c *ViewCreate) SetStatus(v enums.Status) *ViewCreate {
+	_c.mutation.SetStatus(v)
+	return _c
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_c *ViewCreate) SetNillableStatus(v *enums.Status) *ViewCreate {
+	if v != nil {
+		_c.SetStatus(*v)
 	}
 	return _c
 }
@@ -343,6 +400,10 @@ func (_c *ViewCreate) defaults() {
 		v := view.DefaultSequence
 		_c.mutation.SetSequence(v)
 	}
+	if _, ok := _c.mutation.Status(); !ok {
+		v := view.DefaultStatus
+		_c.mutation.SetStatus(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := view.DefaultID()
 		_c.mutation.SetID(v)
@@ -384,6 +445,9 @@ func (_c *ViewCreate) check() error {
 	}
 	if _, ok := _c.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "View.sequence"`)}
+	}
+	if _, ok := _c.mutation.Status(); !ok {
+		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "View.status"`)}
 	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := view.IDValidator(v); err != nil {
@@ -442,6 +506,10 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 		_spec.SetField(view.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
+	if value, ok := _c.mutation.I18n(); ok {
+		_spec.SetField(view.FieldI18n, field.TypeString, value)
+		_node.I18n = value
+	}
 	if value, ok := _c.mutation.GetType(); ok {
 		_spec.SetField(view.FieldType, field.TypeEnum, value)
 		_node.Type = value
@@ -469,6 +537,18 @@ func (_c *ViewCreate) createSpec() (*View, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.TreePath(); ok {
 		_spec.SetField(view.FieldTreePath, field.TypeString, value)
 		_node.TreePath = value
+	}
+	if value, ok := _c.mutation.Description(); ok {
+		_spec.SetField(view.FieldDescription, field.TypeString, value)
+		_node.Description = value
+	}
+	if value, ok := _c.mutation.Properties(); ok {
+		_spec.SetField(view.FieldProperties, field.TypeString, value)
+		_node.Properties = value
+	}
+	if value, ok := _c.mutation.Status(); ok {
+		_spec.SetField(view.FieldStatus, field.TypeInt8, value)
+		_node.Status = value
 	}
 	if nodes := _c.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

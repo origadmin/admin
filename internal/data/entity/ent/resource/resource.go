@@ -19,16 +19,26 @@ const (
 	FieldCreateTime = "create_time"
 	// FieldUpdateTime holds the string denoting the update_time field in the database.
 	FieldUpdateTime = "update_time"
-	// FieldServiceName holds the string denoting the service_name field in the database.
-	FieldServiceName = "service_name"
 	// FieldKeyword holds the string denoting the keyword field in the database.
 	FieldKeyword = "keyword"
-	// FieldPath holds the string denoting the path field in the database.
-	FieldPath = "path"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldI18n holds the string denoting the i18n field in the database.
+	FieldI18n = "i18n"
+	// FieldType holds the string denoting the type field in the database.
+	FieldType = "type"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
+	// FieldSequence holds the string denoting the sequence field in the database.
+	FieldSequence = "sequence"
 	// FieldMethod holds the string denoting the method field in the database.
 	FieldMethod = "method"
+	// FieldPath holds the string denoting the path field in the database.
+	FieldPath = "path"
 	// FieldOperation holds the string denoting the operation field in the database.
 	FieldOperation = "operation"
+	// FieldServiceName holds the string denoting the service_name field in the database.
+	FieldServiceName = "service_name"
 	// FieldPolicy holds the string denoting the policy field in the database.
 	FieldPolicy = "policy"
 	// FieldVersionID holds the string denoting the version_id field in the database.
@@ -37,8 +47,18 @@ const (
 	FieldLastSyncVersionID = "last_sync_version_id"
 	// FieldSyncStatus holds the string denoting the sync_status field in the database.
 	FieldSyncStatus = "sync_status"
-	// FieldStatus holds the string denoting the status field in the database.
-	FieldStatus = "status"
+	// FieldTreePath holds the string denoting the tree_path field in the database.
+	FieldTreePath = "tree_path"
+	// FieldParentID holds the string denoting the parent_id field in the database.
+	FieldParentID = "parent_id"
+	// FieldProperties holds the string denoting the properties field in the database.
+	FieldProperties = "properties"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
+	// EdgeParent holds the string denoting the parent edge name in mutations.
+	EdgeParent = "parent"
+	// EdgeChildren holds the string denoting the children edge name in mutations.
+	EdgeChildren = "children"
 	// EdgeViews holds the string denoting the views edge name in mutations.
 	EdgeViews = "views"
 	// EdgePermissions holds the string denoting the permissions edge name in mutations.
@@ -47,6 +67,14 @@ const (
 	EdgeViewResources = "view_resources"
 	// Table holds the table name of the resource in the database.
 	Table = "sys_resources"
+	// ParentTable is the table that holds the parent relation/edge.
+	ParentTable = "sys_resources"
+	// ParentColumn is the table column denoting the parent relation/edge.
+	ParentColumn = "parent_id"
+	// ChildrenTable is the table that holds the children relation/edge.
+	ChildrenTable = "sys_resources"
+	// ChildrenColumn is the table column denoting the children relation/edge.
+	ChildrenColumn = "parent_id"
 	// ViewsTable is the table that holds the views relation/edge. The primary key declared below.
 	ViewsTable = "sys_view_resources"
 	// ViewsInverseTable is the table name for the View entity.
@@ -71,16 +99,24 @@ var Columns = []string{
 	FieldID,
 	FieldCreateTime,
 	FieldUpdateTime,
-	FieldServiceName,
 	FieldKeyword,
-	FieldPath,
+	FieldName,
+	FieldI18n,
+	FieldType,
+	FieldStatus,
+	FieldSequence,
 	FieldMethod,
+	FieldPath,
 	FieldOperation,
+	FieldServiceName,
 	FieldPolicy,
 	FieldVersionID,
 	FieldLastSyncVersionID,
 	FieldSyncStatus,
-	FieldStatus,
+	FieldTreePath,
+	FieldParentID,
+	FieldProperties,
+	FieldDescription,
 }
 
 var (
@@ -111,6 +147,14 @@ var (
 	UpdateDefaultUpdateTime func() time.Time
 	// KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	KeywordValidator func(string) error
+	// DefaultName holds the default value on creation for the "name" field.
+	DefaultName string
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus enums.Status
+	// DefaultSequence holds the default value on creation for the "sequence" field.
+	DefaultSequence int
+	// DefaultServiceName holds the default value on creation for the "service_name" field.
+	DefaultServiceName string
 	// DefaultPolicy holds the default value on creation for the "policy" field.
 	DefaultPolicy string
 	// DefaultVersionID holds the default value on creation for the "version_id" field.
@@ -119,8 +163,6 @@ var (
 	DefaultLastSyncVersionID string
 	// DefaultSyncStatus holds the default value on creation for the "sync_status" field.
 	DefaultSyncStatus string
-	// DefaultStatus holds the default value on creation for the "status" field.
-	DefaultStatus enums.Status
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -145,19 +187,34 @@ func ByUpdateTime(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdateTime, opts...).ToFunc()
 }
 
-// ByServiceName orders the results by the service_name field.
-func ByServiceName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldServiceName, opts...).ToFunc()
-}
-
 // ByKeyword orders the results by the keyword field.
 func ByKeyword(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldKeyword, opts...).ToFunc()
 }
 
-// ByPath orders the results by the path field.
-func ByPath(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPath, opts...).ToFunc()
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByI18n orders the results by the i18n field.
+func ByI18n(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18n, opts...).ToFunc()
+}
+
+// ByType orders the results by the type field.
+func ByType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldType, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+}
+
+// BySequence orders the results by the sequence field.
+func BySequence(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSequence, opts...).ToFunc()
 }
 
 // ByMethod orders the results by the method field.
@@ -165,9 +222,19 @@ func ByMethod(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldMethod, opts...).ToFunc()
 }
 
+// ByPath orders the results by the path field.
+func ByPath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPath, opts...).ToFunc()
+}
+
 // ByOperation orders the results by the operation field.
 func ByOperation(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldOperation, opts...).ToFunc()
+}
+
+// ByServiceName orders the results by the service_name field.
+func ByServiceName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldServiceName, opts...).ToFunc()
 }
 
 // ByPolicy orders the results by the policy field.
@@ -190,9 +257,45 @@ func BySyncStatus(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSyncStatus, opts...).ToFunc()
 }
 
-// ByStatus orders the results by the status field.
-func ByStatus(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStatus, opts...).ToFunc()
+// ByTreePath orders the results by the tree_path field.
+func ByTreePath(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTreePath, opts...).ToFunc()
+}
+
+// ByParentID orders the results by the parent_id field.
+func ByParentID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldParentID, opts...).ToFunc()
+}
+
+// ByProperties orders the results by the properties field.
+func ByProperties(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldProperties, opts...).ToFunc()
+}
+
+// ByDescription orders the results by the description field.
+func ByDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByParentField orders the results by parent field.
+func ByParentField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newParentStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByChildrenCount orders the results by children count.
+func ByChildrenCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newChildrenStep(), opts...)
+	}
+}
+
+// ByChildren orders the results by children terms.
+func ByChildren(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newChildrenStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
 }
 
 // ByViewsCount orders the results by views count.
@@ -235,6 +338,20 @@ func ByViewResources(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newViewResourcesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
+}
+func newParentStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, ParentTable, ParentColumn),
+	)
+}
+func newChildrenStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(Table, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ChildrenTable, ChildrenColumn),
+	)
 }
 func newViewsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(

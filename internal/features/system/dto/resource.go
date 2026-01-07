@@ -8,6 +8,7 @@ package dto
 import (
 	"context"
 
+	"github.com/origadmin/contrib/security"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/helpers/repo"
@@ -18,6 +19,7 @@ type ResourceRepo interface {
 	Get(context.Context, int64, ...*ResourceQueryOption) (*types.Resource, error)
 	List(context.Context, ...*ResourceQueryOption) ([]*types.Resource, int32, error)
 	Create(context.Context, *types.Resource, ...*ResourceCreateOption) (*types.Resource, error)
+	CreateFromPolicy(ctx context.Context, policy *security.Policy) (*types.Resource, error)
 	Update(context.Context, *types.Resource, ...*ResourceUpdateOption) (*types.Resource, error)
 	Delete(context.Context, int64) error
 }

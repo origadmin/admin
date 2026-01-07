@@ -270,16 +270,24 @@ var (
 		{Name: "id", Type: field.TypeInt64, Comment: "field.primary_key.comment"},
 		{Name: "create_time", Type: field.TypeTime, Comment: "create_time.field.comment"},
 		{Name: "update_time", Type: field.TypeTime, Comment: "update_time.field.comment"},
-		{Name: "service_name", Type: field.TypeString, Comment: "entity.resource.field.service_name"},
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.resource.field.keyword"},
-		{Name: "path", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.path"},
+		{Name: "name", Type: field.TypeString, Comment: "entity.resource.field.name", Default: ""},
+		{Name: "i18n", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.i18n"},
+		{Name: "type", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.type"},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.resource.field.status", Default: 1},
+		{Name: "sequence", Type: field.TypeInt, Comment: "entity.resource.field.sequence", Default: 0},
 		{Name: "method", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.method"},
+		{Name: "path", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.path"},
 		{Name: "operation", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.operation"},
+		{Name: "service_name", Type: field.TypeString, Comment: "entity.resource.field.service_name", Default: ""},
 		{Name: "policy", Type: field.TypeString, Comment: "entity.resource.field.policy", Default: ""},
 		{Name: "version_id", Type: field.TypeString, Comment: "entity.resource.field.version_id", Default: ""},
 		{Name: "last_sync_version_id", Type: field.TypeString, Comment: "entity.resource.field.last_sync_version_id", Default: ""},
 		{Name: "sync_status", Type: field.TypeString, Comment: "entity.resource.field.sync_status", Default: "Synced"},
-		{Name: "status", Type: field.TypeInt8, Comment: "entity.resource.field.status", Default: 1},
+		{Name: "tree_path", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.tree_path"},
+		{Name: "properties", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.properties"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Comment: "entity.resource.field.description"},
+		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "entity.resource.field.parent_id"},
 	}
 	// SysResourcesTable holds the schema information for the "sys_resources" table.
 	SysResourcesTable = &schema.Table{
@@ -287,6 +295,14 @@ var (
 		Comment:    "entity.resource.table.comment",
 		Columns:    SysResourcesColumns,
 		PrimaryKey: []*schema.Column{SysResourcesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sys_resources_sys_resources_children",
+				Columns:    []*schema.Column{SysResourcesColumns[20]},
+				RefColumns: []*schema.Column{SysResourcesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 		Indexes: []*schema.Index{
 			{
 				Name:    "resource_create_time",
@@ -575,6 +591,7 @@ var (
 		{Name: "keyword", Type: field.TypeString, Unique: true, Size: 255, Comment: "entity.view.field.keyword"},
 		{Name: "scope", Type: field.TypeString, Comment: "entity.view.field.scope", Default: "default"},
 		{Name: "name", Type: field.TypeString, Comment: "entity.view.field.name"},
+		{Name: "i18n", Type: field.TypeString, Nullable: true, Comment: "entity.view.field.i18n"},
 		{Name: "type", Type: field.TypeEnum, Comment: "entity.view.field.type", Enums: []string{"T", "G", "M", "L", "P", "B", "E", "R", "U"}, Default: "U"},
 		{Name: "component", Type: field.TypeString, Nullable: true, Comment: "entity.view.field.component"},
 		{Name: "path", Type: field.TypeString, Nullable: true, Comment: "entity.view.field.path"},
@@ -582,6 +599,9 @@ var (
 		{Name: "visible", Type: field.TypeBool, Comment: "entity.view.field.visible", Default: true},
 		{Name: "sequence", Type: field.TypeInt, Comment: "entity.view.field.sequence", Default: 0},
 		{Name: "tree_path", Type: field.TypeString, Nullable: true, Comment: "entity.view.field.tree_path"},
+		{Name: "description", Type: field.TypeString, Nullable: true, Comment: "entity.view.field.description"},
+		{Name: "properties", Type: field.TypeString, Nullable: true, Comment: "entity.view.field.properties"},
+		{Name: "status", Type: field.TypeInt8, Comment: "entity.view.field.status", Default: 1},
 		{Name: "parent_id", Type: field.TypeInt64, Nullable: true, Comment: "entity.view.field.parent_id"},
 	}
 	// SysViewsTable holds the schema information for the "sys_views" table.
@@ -593,7 +613,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "sys_views_sys_views_children",
-				Columns:    []*schema.Column{SysViewsColumns[13]},
+				Columns:    []*schema.Column{SysViewsColumns[17]},
 				RefColumns: []*schema.Column{SysViewsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -779,6 +799,7 @@ func init() {
 	SysPositionPermissionsTable.Annotation = &entsql.Annotation{
 		Table: "sys_position_permissions",
 	}
+	SysResourcesTable.ForeignKeys[0].RefTable = SysResourcesTable
 	SysResourcesTable.Annotation = &entsql.Annotation{
 		Table: "sys_resources",
 	}

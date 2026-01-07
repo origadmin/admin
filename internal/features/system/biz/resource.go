@@ -8,6 +8,7 @@ package biz
 import (
 	"context"
 
+	"github.com/origadmin/contrib/security"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
@@ -33,14 +34,21 @@ func (uc *ResourceUseCase) GetResource(ctx context.Context, id int64) (*types.Re
 	return uc.repo.Get(ctx, id)
 }
 
-// CreateResource creates a new resource, ensuring essential fields have valid default values.
+// CreateResource creates a new resource, intended for use by external APIs (e.g., frontend).
+// It handles manual creation logic.
 func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
-	// The backend must always enforce data integrity, regardless of frontend behavior.
+	// The backend must always enforce data integrity.
 	if in.Status == 0 {
 		in.Status = int32(enums.StatusEnabled)
 	}
 
 	return uc.repo.Create(ctx, in)
+}
+
+// CreateResourceFromPolicy creates a new resource based on a security policy definition.
+// This is intended for internal use, like database seeding.
+func (uc *ResourceUseCase) CreateResourceFromPolicy(ctx context.Context, policy *security.Policy) (*types.Resource, error) {
+	return uc.repo.CreateFromPolicy(ctx, policy)
 }
 
 func (uc *ResourceUseCase) UpdateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {

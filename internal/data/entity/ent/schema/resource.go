@@ -20,23 +20,39 @@ type Resource struct {
 // Fields of the Resource.
 func (Resource) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("service_name").
-			Default("").
-			Comment(i18n.Text("entity.resource.field.service_name")),
 		field.String("keyword").
 			MaxLen(255).
 			Comment(i18n.Text("entity.resource.field.keyword")).
 			Unique().
 			NotEmpty(),
-		field.String("path").
-			Comment(i18n.Text("entity.resource.field.path")).
+		field.String("name").
+			Comment(i18n.Text("entity.resource.field.name")).
+			Default(""),
+		field.String("i18n").
+			Comment(i18n.Text("entity.resource.field.i18n")).
 			Optional(),
+		field.String("type").
+			Comment(i18n.Text("entity.resource.field.type")).
+			Optional(),
+		field.Int8("status").
+			GoType(enums.Status(0)).
+			Default(int8(enums.StatusActive)).
+			Comment(i18n.Text("entity.resource.field.status")),
+		field.Int("sequence").
+			Comment(i18n.Text("entity.resource.field.sequence")).
+			Default(0),
 		field.String("method").
 			Comment(i18n.Text("entity.resource.field.method")).
+			Optional(),
+		field.String("path").
+			Comment(i18n.Text("entity.resource.field.path")).
 			Optional(),
 		field.String("operation").
 			Comment(i18n.Text("entity.resource.field.operation")).
 			Optional(),
+		field.String("service_name").
+			Default("").
+			Comment(i18n.Text("entity.resource.field.service_name")),
 		field.String("policy").
 			Comment(i18n.Text("entity.resource.field.policy")).
 			Default(""),
@@ -49,16 +65,26 @@ func (Resource) Fields() []ent.Field {
 		field.String("sync_status").
 			Comment(i18n.Text("entity.resource.field.sync_status")).
 			Default("Synced"),
-		field.Int8("status").
-			GoType(enums.Status(0)).
-			Default(int8(enums.StatusActive)).
-			Comment(i18n.Text("entity.resource.field.status")),
+		field.String("tree_path").
+			Comment(i18n.Text("entity.resource.field.tree_path")).
+			Optional(),
+		mixin.OptionalFK("parent_id", i18n.Text("entity.resource.field.parent_id")),
+		field.String("properties").
+			Comment(i18n.Text("entity.resource.field.properties")).
+			Optional(),
+		field.String("description").
+			Comment(i18n.Text("entity.resource.field.description")).
+			Optional(),
 	}
 }
 
 // Edges of the Resource.
 func (Resource) Edges() []ent.Edge {
 	return []ent.Edge{
+		edge.To("children", Resource.Type).
+			From("parent").
+			Field("parent_id").
+			Unique(),
 		edge.From("views", View.Type).
 			Ref("resources").
 			Through("view_resources", ViewResource.Type),

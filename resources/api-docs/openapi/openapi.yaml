@@ -3017,12 +3017,6 @@ components:
                     type: string
                     description: update_time.field.comment
                     format: date-time
-                create_author:
-                    type: string
-                    description: create_author.field.comment
-                update_author:
-                    type: string
-                    description: update_author.field.comment
                 keyword:
                     type: string
                     description: department.field.keyword
@@ -3076,12 +3070,6 @@ components:
                     type: string
                     description: update_time.field.comment
                     format: date-time
-                create_author:
-                    type: string
-                    description: create_author.field.comment
-                update_author:
-                    type: string
-                    description: update_author.field.comment
                 name:
                     type: string
                     description: permission.field.name
@@ -3108,16 +3096,16 @@ components:
                     items:
                         type: string
                     description: permission.field.resource_ids
-                resources:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/api.v1.services.types.Resource'
-                    description: permission.field.resources
                 view_ids:
                     type: array
                     items:
                         type: string
                     description: permission.field.view_ids
+                resources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: permission.field.resources
                 views:
                     type: array
                     items:
@@ -3140,12 +3128,6 @@ components:
                     type: string
                     description: update_time.field.comment
                     format: date-time
-                create_author:
-                    type: string
-                    description: create_author.field.comment
-                update_author:
-                    type: string
-                    description: update_author.field.comment
                 name:
                     type: string
                     description: position.field.name
@@ -3175,18 +3157,15 @@ components:
                     type: string
                     description: update_time.field.comment
                     format: date-time
-                create_author:
-                    type: string
-                    description: create_author.field.comment
-                update_author:
-                    type: string
-                    description: update_author.field.comment
                 name:
                     type: string
                     description: resource.field.name
                 keyword:
                     type: string
                     description: resource.field.keyword
+                i18n_key:
+                    type: string
+                    description: resource.field.i18n_key
                 type:
                     type: string
                     description: resource.field.type
@@ -3203,10 +3182,19 @@ components:
                 method:
                     type: string
                     description: resource.field.method
+                component:
+                    type: string
+                    description: resource.field.component
+                icon:
+                    type: string
+                    description: resource.field.icon
                 sequence:
                     type: integer
                     description: resource.field.sequence
                     format: int32
+                visible:
+                    type: boolean
+                    description: resource.field.visible
                 tree_path:
                     type: string
                     description: resource.field.tree_path
@@ -3221,6 +3209,12 @@ components:
                 parent_id:
                     type: string
                     description: resource.field.parent_id
+                sync_status:
+                    type: string
+                    description: resource.field.sync_status
+                service_name:
+                    type: string
+                    description: resource.field.service_name
                 children:
                     type: array
                     items:
@@ -3240,8 +3234,6 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Permission'
                     description: Permissions holds the value of the permissions edge.
-                service_name:
-                    type: string
             description: Resource is the model entity for the Resource schema.
         api.v1.services.types.Role:
             type: object
@@ -3259,12 +3251,6 @@ components:
                     type: string
                     description: update_time.field.comment
                     format: date-time
-                create_author:
-                    type: string
-                    description: create_author.field.comment
-                update_author:
-                    type: string
-                    description: update_author.field.comment
                 keyword:
                     type: string
                     description: role.field.keyword
@@ -3294,21 +3280,11 @@ components:
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
                     description: Views holds the value of the views edge.
-                view_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: View Ids holds the value of the view_ids edge.
                 users:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.User'
                     description: Users holds the value of the users edge.
-                user_ids:
-                    type: array
-                    items:
-                        type: string
-                    description: Users Ids holds the value of the user_ids edge.
                 resources:
                     type: array
                     items:
@@ -3338,6 +3314,12 @@ components:
                     description: |-
                         ID of the ent.
                          field.primary_key.comment
+                create_author:
+                    type: string
+                    description: create_author.field.comment
+                update_author:
+                    type: string
+                    description: update_author.field.comment
                 create_time:
                     type: string
                     description: create_time.field.comment
@@ -3346,12 +3328,6 @@ components:
                     type: string
                     description: update_time.field.comment
                     format: date-time
-                create_author:
-                    type: string
-                    description: create_author.field.comment
-                update_author:
-                    type: string
-                    description: update_author.field.comment
                 uuid:
                     type: string
                     description: user.field.uuid
@@ -3389,9 +3365,6 @@ components:
                     type: integer
                     description: user.field.status
                     format: int32
-                i18n:
-                    type: string
-                    description: user.field.i18n
                 last_login_ip:
                     type: string
                     description: user.field.last_login_ip
@@ -3444,9 +3417,9 @@ components:
                 scope:
                     type: string
                     description: Scope holds the value of the "scope" field.
-                i18n_key:
+                i18n:
                     type: string
-                    description: I18nKey holds the value of the "i18n_key" field.
+                    description: I18nKey holds the value of the "i18n" field.
                 description:
                     type: string
                     description: Description holds the value of the "description" field.
@@ -3457,9 +3430,6 @@ components:
                 type:
                     type: string
                     description: Type holds the value of the "type" field.
-                component:
-                    type: string
-                    description: Component holds the value of the "component" field.
                 comment:
                     type: string
                     description: Comment holds the value of the "comment" field.

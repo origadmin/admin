@@ -299,7 +299,7 @@ func init() {
 	// resource.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
 	resource.UpdateDefaultUpdateTime = resourceDescUpdateTime.UpdateDefault.(func() time.Time)
 	// resourceDescKeyword is the schema descriptor for keyword field.
-	resourceDescKeyword := resourceFields[1].Descriptor()
+	resourceDescKeyword := resourceFields[0].Descriptor()
 	// resource.KeywordValidator is a validator for the "keyword" field. It is called by the builders before save.
 	resource.KeywordValidator = func() func(string) error {
 		validators := resourceDescKeyword.Validators
@@ -316,26 +316,38 @@ func init() {
 			return nil
 		}
 	}()
+	// resourceDescName is the schema descriptor for name field.
+	resourceDescName := resourceFields[1].Descriptor()
+	// resource.DefaultName holds the default value on creation for the name field.
+	resource.DefaultName = resourceDescName.Default.(string)
+	// resourceDescStatus is the schema descriptor for status field.
+	resourceDescStatus := resourceFields[4].Descriptor()
+	// resource.DefaultStatus holds the default value on creation for the status field.
+	resource.DefaultStatus = enums.Status(resourceDescStatus.Default.(int8))
+	// resourceDescSequence is the schema descriptor for sequence field.
+	resourceDescSequence := resourceFields[5].Descriptor()
+	// resource.DefaultSequence holds the default value on creation for the sequence field.
+	resource.DefaultSequence = resourceDescSequence.Default.(int)
+	// resourceDescServiceName is the schema descriptor for service_name field.
+	resourceDescServiceName := resourceFields[9].Descriptor()
+	// resource.DefaultServiceName holds the default value on creation for the service_name field.
+	resource.DefaultServiceName = resourceDescServiceName.Default.(string)
 	// resourceDescPolicy is the schema descriptor for policy field.
-	resourceDescPolicy := resourceFields[5].Descriptor()
+	resourceDescPolicy := resourceFields[10].Descriptor()
 	// resource.DefaultPolicy holds the default value on creation for the policy field.
 	resource.DefaultPolicy = resourceDescPolicy.Default.(string)
 	// resourceDescVersionID is the schema descriptor for version_id field.
-	resourceDescVersionID := resourceFields[6].Descriptor()
+	resourceDescVersionID := resourceFields[11].Descriptor()
 	// resource.DefaultVersionID holds the default value on creation for the version_id field.
 	resource.DefaultVersionID = resourceDescVersionID.Default.(string)
 	// resourceDescLastSyncVersionID is the schema descriptor for last_sync_version_id field.
-	resourceDescLastSyncVersionID := resourceFields[7].Descriptor()
+	resourceDescLastSyncVersionID := resourceFields[12].Descriptor()
 	// resource.DefaultLastSyncVersionID holds the default value on creation for the last_sync_version_id field.
 	resource.DefaultLastSyncVersionID = resourceDescLastSyncVersionID.Default.(string)
 	// resourceDescSyncStatus is the schema descriptor for sync_status field.
-	resourceDescSyncStatus := resourceFields[8].Descriptor()
+	resourceDescSyncStatus := resourceFields[13].Descriptor()
 	// resource.DefaultSyncStatus holds the default value on creation for the sync_status field.
 	resource.DefaultSyncStatus = resourceDescSyncStatus.Default.(string)
-	// resourceDescStatus is the schema descriptor for status field.
-	resourceDescStatus := resourceFields[9].Descriptor()
-	// resource.DefaultStatus holds the default value on creation for the status field.
-	resource.DefaultStatus = enums.Status(resourceDescStatus.Default.(int8))
 	// resourceDescID is the schema descriptor for id field.
 	resourceDescID := resourceMixinFields0[0].Descriptor()
 	// resource.DefaultID holds the default value on creation for the id field.
@@ -630,13 +642,17 @@ func init() {
 	// view.DefaultScope holds the default value on creation for the scope field.
 	view.DefaultScope = viewDescScope.Default.(string)
 	// viewDescVisible is the schema descriptor for visible field.
-	viewDescVisible := viewFields[8].Descriptor()
+	viewDescVisible := viewFields[9].Descriptor()
 	// view.DefaultVisible holds the default value on creation for the visible field.
 	view.DefaultVisible = viewDescVisible.Default.(bool)
 	// viewDescSequence is the schema descriptor for sequence field.
-	viewDescSequence := viewFields[9].Descriptor()
+	viewDescSequence := viewFields[10].Descriptor()
 	// view.DefaultSequence holds the default value on creation for the sequence field.
 	view.DefaultSequence = viewDescSequence.Default.(int)
+	// viewDescStatus is the schema descriptor for status field.
+	viewDescStatus := viewFields[14].Descriptor()
+	// view.DefaultStatus holds the default value on creation for the status field.
+	view.DefaultStatus = enums.Status(viewDescStatus.Default.(int8))
 	// viewDescID is the schema descriptor for id field.
 	viewDescID := viewMixinFields0[0].Descriptor()
 	// view.DefaultID holds the default value on creation for the id field.

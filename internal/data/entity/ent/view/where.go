@@ -4,6 +4,7 @@ package view
 
 import (
 	"origadmin/application/admin/internal/data/entity/ent/predicate"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -85,6 +86,11 @@ func Name(v string) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldName, v))
 }
 
+// I18n applies equality check predicate on the "i18n" field. It's identical to I18nEQ.
+func I18n(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldI18n, v))
+}
+
 // Component applies equality check predicate on the "component" field. It's identical to ComponentEQ.
 func Component(v string) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldComponent, v))
@@ -113,6 +119,22 @@ func Sequence(v int) predicate.View {
 // TreePath applies equality check predicate on the "tree_path" field. It's identical to TreePathEQ.
 func TreePath(v string) predicate.View {
 	return predicate.View(sql.FieldEQ(FieldTreePath, v))
+}
+
+// Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
+func Description(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldDescription, v))
+}
+
+// Properties applies equality check predicate on the "properties" field. It's identical to PropertiesEQ.
+func Properties(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldProperties, v))
+}
+
+// Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
+func Status(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldEQ(FieldStatus, vc))
 }
 
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
@@ -418,6 +440,81 @@ func NameEqualFold(v string) predicate.View {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.View {
 	return predicate.View(sql.FieldContainsFold(FieldName, v))
+}
+
+// I18nEQ applies the EQ predicate on the "i18n" field.
+func I18nEQ(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldI18n, v))
+}
+
+// I18nNEQ applies the NEQ predicate on the "i18n" field.
+func I18nNEQ(v string) predicate.View {
+	return predicate.View(sql.FieldNEQ(FieldI18n, v))
+}
+
+// I18nIn applies the In predicate on the "i18n" field.
+func I18nIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldIn(FieldI18n, vs...))
+}
+
+// I18nNotIn applies the NotIn predicate on the "i18n" field.
+func I18nNotIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldNotIn(FieldI18n, vs...))
+}
+
+// I18nGT applies the GT predicate on the "i18n" field.
+func I18nGT(v string) predicate.View {
+	return predicate.View(sql.FieldGT(FieldI18n, v))
+}
+
+// I18nGTE applies the GTE predicate on the "i18n" field.
+func I18nGTE(v string) predicate.View {
+	return predicate.View(sql.FieldGTE(FieldI18n, v))
+}
+
+// I18nLT applies the LT predicate on the "i18n" field.
+func I18nLT(v string) predicate.View {
+	return predicate.View(sql.FieldLT(FieldI18n, v))
+}
+
+// I18nLTE applies the LTE predicate on the "i18n" field.
+func I18nLTE(v string) predicate.View {
+	return predicate.View(sql.FieldLTE(FieldI18n, v))
+}
+
+// I18nContains applies the Contains predicate on the "i18n" field.
+func I18nContains(v string) predicate.View {
+	return predicate.View(sql.FieldContains(FieldI18n, v))
+}
+
+// I18nHasPrefix applies the HasPrefix predicate on the "i18n" field.
+func I18nHasPrefix(v string) predicate.View {
+	return predicate.View(sql.FieldHasPrefix(FieldI18n, v))
+}
+
+// I18nHasSuffix applies the HasSuffix predicate on the "i18n" field.
+func I18nHasSuffix(v string) predicate.View {
+	return predicate.View(sql.FieldHasSuffix(FieldI18n, v))
+}
+
+// I18nIsNil applies the IsNil predicate on the "i18n" field.
+func I18nIsNil() predicate.View {
+	return predicate.View(sql.FieldIsNull(FieldI18n))
+}
+
+// I18nNotNil applies the NotNil predicate on the "i18n" field.
+func I18nNotNil() predicate.View {
+	return predicate.View(sql.FieldNotNull(FieldI18n))
+}
+
+// I18nEqualFold applies the EqualFold predicate on the "i18n" field.
+func I18nEqualFold(v string) predicate.View {
+	return predicate.View(sql.FieldEqualFold(FieldI18n, v))
+}
+
+// I18nContainsFold applies the ContainsFold predicate on the "i18n" field.
+func I18nContainsFold(v string) predicate.View {
+	return predicate.View(sql.FieldContainsFold(FieldI18n, v))
 }
 
 // TypeEQ applies the EQ predicate on the "type" field.
@@ -788,6 +885,210 @@ func TreePathEqualFold(v string) predicate.View {
 // TreePathContainsFold applies the ContainsFold predicate on the "tree_path" field.
 func TreePathContainsFold(v string) predicate.View {
 	return predicate.View(sql.FieldContainsFold(FieldTreePath, v))
+}
+
+// DescriptionEQ applies the EQ predicate on the "description" field.
+func DescriptionEQ(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldDescription, v))
+}
+
+// DescriptionNEQ applies the NEQ predicate on the "description" field.
+func DescriptionNEQ(v string) predicate.View {
+	return predicate.View(sql.FieldNEQ(FieldDescription, v))
+}
+
+// DescriptionIn applies the In predicate on the "description" field.
+func DescriptionIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldIn(FieldDescription, vs...))
+}
+
+// DescriptionNotIn applies the NotIn predicate on the "description" field.
+func DescriptionNotIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldNotIn(FieldDescription, vs...))
+}
+
+// DescriptionGT applies the GT predicate on the "description" field.
+func DescriptionGT(v string) predicate.View {
+	return predicate.View(sql.FieldGT(FieldDescription, v))
+}
+
+// DescriptionGTE applies the GTE predicate on the "description" field.
+func DescriptionGTE(v string) predicate.View {
+	return predicate.View(sql.FieldGTE(FieldDescription, v))
+}
+
+// DescriptionLT applies the LT predicate on the "description" field.
+func DescriptionLT(v string) predicate.View {
+	return predicate.View(sql.FieldLT(FieldDescription, v))
+}
+
+// DescriptionLTE applies the LTE predicate on the "description" field.
+func DescriptionLTE(v string) predicate.View {
+	return predicate.View(sql.FieldLTE(FieldDescription, v))
+}
+
+// DescriptionContains applies the Contains predicate on the "description" field.
+func DescriptionContains(v string) predicate.View {
+	return predicate.View(sql.FieldContains(FieldDescription, v))
+}
+
+// DescriptionHasPrefix applies the HasPrefix predicate on the "description" field.
+func DescriptionHasPrefix(v string) predicate.View {
+	return predicate.View(sql.FieldHasPrefix(FieldDescription, v))
+}
+
+// DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
+func DescriptionHasSuffix(v string) predicate.View {
+	return predicate.View(sql.FieldHasSuffix(FieldDescription, v))
+}
+
+// DescriptionIsNil applies the IsNil predicate on the "description" field.
+func DescriptionIsNil() predicate.View {
+	return predicate.View(sql.FieldIsNull(FieldDescription))
+}
+
+// DescriptionNotNil applies the NotNil predicate on the "description" field.
+func DescriptionNotNil() predicate.View {
+	return predicate.View(sql.FieldNotNull(FieldDescription))
+}
+
+// DescriptionEqualFold applies the EqualFold predicate on the "description" field.
+func DescriptionEqualFold(v string) predicate.View {
+	return predicate.View(sql.FieldEqualFold(FieldDescription, v))
+}
+
+// DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
+func DescriptionContainsFold(v string) predicate.View {
+	return predicate.View(sql.FieldContainsFold(FieldDescription, v))
+}
+
+// PropertiesEQ applies the EQ predicate on the "properties" field.
+func PropertiesEQ(v string) predicate.View {
+	return predicate.View(sql.FieldEQ(FieldProperties, v))
+}
+
+// PropertiesNEQ applies the NEQ predicate on the "properties" field.
+func PropertiesNEQ(v string) predicate.View {
+	return predicate.View(sql.FieldNEQ(FieldProperties, v))
+}
+
+// PropertiesIn applies the In predicate on the "properties" field.
+func PropertiesIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldIn(FieldProperties, vs...))
+}
+
+// PropertiesNotIn applies the NotIn predicate on the "properties" field.
+func PropertiesNotIn(vs ...string) predicate.View {
+	return predicate.View(sql.FieldNotIn(FieldProperties, vs...))
+}
+
+// PropertiesGT applies the GT predicate on the "properties" field.
+func PropertiesGT(v string) predicate.View {
+	return predicate.View(sql.FieldGT(FieldProperties, v))
+}
+
+// PropertiesGTE applies the GTE predicate on the "properties" field.
+func PropertiesGTE(v string) predicate.View {
+	return predicate.View(sql.FieldGTE(FieldProperties, v))
+}
+
+// PropertiesLT applies the LT predicate on the "properties" field.
+func PropertiesLT(v string) predicate.View {
+	return predicate.View(sql.FieldLT(FieldProperties, v))
+}
+
+// PropertiesLTE applies the LTE predicate on the "properties" field.
+func PropertiesLTE(v string) predicate.View {
+	return predicate.View(sql.FieldLTE(FieldProperties, v))
+}
+
+// PropertiesContains applies the Contains predicate on the "properties" field.
+func PropertiesContains(v string) predicate.View {
+	return predicate.View(sql.FieldContains(FieldProperties, v))
+}
+
+// PropertiesHasPrefix applies the HasPrefix predicate on the "properties" field.
+func PropertiesHasPrefix(v string) predicate.View {
+	return predicate.View(sql.FieldHasPrefix(FieldProperties, v))
+}
+
+// PropertiesHasSuffix applies the HasSuffix predicate on the "properties" field.
+func PropertiesHasSuffix(v string) predicate.View {
+	return predicate.View(sql.FieldHasSuffix(FieldProperties, v))
+}
+
+// PropertiesIsNil applies the IsNil predicate on the "properties" field.
+func PropertiesIsNil() predicate.View {
+	return predicate.View(sql.FieldIsNull(FieldProperties))
+}
+
+// PropertiesNotNil applies the NotNil predicate on the "properties" field.
+func PropertiesNotNil() predicate.View {
+	return predicate.View(sql.FieldNotNull(FieldProperties))
+}
+
+// PropertiesEqualFold applies the EqualFold predicate on the "properties" field.
+func PropertiesEqualFold(v string) predicate.View {
+	return predicate.View(sql.FieldEqualFold(FieldProperties, v))
+}
+
+// PropertiesContainsFold applies the ContainsFold predicate on the "properties" field.
+func PropertiesContainsFold(v string) predicate.View {
+	return predicate.View(sql.FieldContainsFold(FieldProperties, v))
+}
+
+// StatusEQ applies the EQ predicate on the "status" field.
+func StatusEQ(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldEQ(FieldStatus, vc))
+}
+
+// StatusNEQ applies the NEQ predicate on the "status" field.
+func StatusNEQ(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldNEQ(FieldStatus, vc))
+}
+
+// StatusIn applies the In predicate on the "status" field.
+func StatusIn(vs ...enums.Status) predicate.View {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.View(sql.FieldIn(FieldStatus, v...))
+}
+
+// StatusNotIn applies the NotIn predicate on the "status" field.
+func StatusNotIn(vs ...enums.Status) predicate.View {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = int8(vs[i])
+	}
+	return predicate.View(sql.FieldNotIn(FieldStatus, v...))
+}
+
+// StatusGT applies the GT predicate on the "status" field.
+func StatusGT(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldGT(FieldStatus, vc))
+}
+
+// StatusGTE applies the GTE predicate on the "status" field.
+func StatusGTE(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldGTE(FieldStatus, vc))
+}
+
+// StatusLT applies the LT predicate on the "status" field.
+func StatusLT(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldLT(FieldStatus, vc))
+}
+
+// StatusLTE applies the LTE predicate on the "status" field.
+func StatusLTE(v enums.Status) predicate.View {
+	vc := int8(v)
+	return predicate.View(sql.FieldLTE(FieldStatus, vc))
 }
 
 // HasParent applies the HasEdge predicate on the "parent" edge.

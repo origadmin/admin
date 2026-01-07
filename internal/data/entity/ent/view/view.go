@@ -4,6 +4,7 @@ package view
 
 import (
 	"fmt"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -27,6 +28,8 @@ const (
 	FieldScope = "scope"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldI18n holds the string denoting the i18n field in the database.
+	FieldI18n = "i18n"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
 	// FieldComponent holds the string denoting the component field in the database.
@@ -41,6 +44,12 @@ const (
 	FieldSequence = "sequence"
 	// FieldTreePath holds the string denoting the tree_path field in the database.
 	FieldTreePath = "tree_path"
+	// FieldDescription holds the string denoting the description field in the database.
+	FieldDescription = "description"
+	// FieldProperties holds the string denoting the properties field in the database.
+	FieldProperties = "properties"
+	// FieldStatus holds the string denoting the status field in the database.
+	FieldStatus = "status"
 	// EdgeParent holds the string denoting the parent edge name in mutations.
 	EdgeParent = "parent"
 	// EdgeChildren holds the string denoting the children edge name in mutations.
@@ -98,6 +107,7 @@ var Columns = []string{
 	FieldKeyword,
 	FieldScope,
 	FieldName,
+	FieldI18n,
 	FieldType,
 	FieldComponent,
 	FieldPath,
@@ -105,6 +115,9 @@ var Columns = []string{
 	FieldVisible,
 	FieldSequence,
 	FieldTreePath,
+	FieldDescription,
+	FieldProperties,
+	FieldStatus,
 }
 
 var (
@@ -141,6 +154,8 @@ var (
 	DefaultVisible bool
 	// DefaultSequence holds the default value on creation for the "sequence" field.
 	DefaultSequence int
+	// DefaultStatus holds the default value on creation for the "status" field.
+	DefaultStatus enums.Status
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -218,6 +233,11 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
+// ByI18n orders the results by the i18n field.
+func ByI18n(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldI18n, opts...).ToFunc()
+}
+
 // ByType orders the results by the type field.
 func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
@@ -251,6 +271,21 @@ func BySequence(opts ...sql.OrderTermOption) OrderOption {
 // ByTreePath orders the results by the tree_path field.
 func ByTreePath(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTreePath, opts...).ToFunc()
+}
+
+// ByDescription orders the results by the description field.
+func ByDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByProperties orders the results by the properties field.
+func ByProperties(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldProperties, opts...).ToFunc()
+}
+
+// ByStatus orders the results by the status field.
+func ByStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStatus, opts...).ToFunc()
 }
 
 // ByParentField orders the results by parent field.

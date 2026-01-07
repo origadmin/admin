@@ -543,16 +543,26 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			m.SetCreateTime(input.CreateTime)
 		case resource.FieldUpdateTime:
 			m.SetUpdateTime(input.UpdateTime)
-		case resource.FieldServiceName:
-			m.SetServiceName(input.ServiceName)
 		case resource.FieldKeyword:
 			m.SetKeyword(input.Keyword)
-		case resource.FieldPath:
-			m.SetPath(input.Path)
+		case resource.FieldName:
+			m.SetName(input.Name)
+		case resource.FieldI18n:
+			m.SetI18n(input.I18n)
+		case resource.FieldType:
+			m.SetType(input.Type)
+		case resource.FieldStatus:
+			m.SetStatus(input.Status)
+		case resource.FieldSequence:
+			m.SetSequence(input.Sequence)
 		case resource.FieldMethod:
 			m.SetMethod(input.Method)
+		case resource.FieldPath:
+			m.SetPath(input.Path)
 		case resource.FieldOperation:
 			m.SetOperation(input.Operation)
+		case resource.FieldServiceName:
+			m.SetServiceName(input.ServiceName)
 		case resource.FieldPolicy:
 			m.SetPolicy(input.Policy)
 		case resource.FieldVersionID:
@@ -561,8 +571,14 @@ func (m *ResourceMutation) SetFields(input *Resource, fields ...string) error {
 			m.SetLastSyncVersionID(input.LastSyncVersionID)
 		case resource.FieldSyncStatus:
 			m.SetSyncStatus(input.SyncStatus)
-		case resource.FieldStatus:
-			m.SetStatus(input.Status)
+		case resource.FieldTreePath:
+			m.SetTreePath(input.TreePath)
+		case resource.FieldParentID:
+			m.SetParentID(input.ParentID)
+		case resource.FieldProperties:
+			m.SetProperties(input.Properties)
+		case resource.FieldDescription:
+			m.SetDescription(input.Description)
 		case resource.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -586,30 +602,55 @@ func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) 
 			if input.UpdateTime.Unix() != 0 {
 				m.SetUpdateTime(input.UpdateTime)
 			}
-		case resource.FieldServiceName:
-			// check string with sql.NullString if it is empty
-			if input.ServiceName != "" {
-				m.SetServiceName(input.ServiceName)
-			}
 		case resource.FieldKeyword:
 			// check string with sql.NullString if it is empty
 			if input.Keyword != "" {
 				m.SetKeyword(input.Keyword)
 			}
-		case resource.FieldPath:
+		case resource.FieldName:
 			// check string with sql.NullString if it is empty
-			if input.Path != "" {
-				m.SetPath(input.Path)
+			if input.Name != "" {
+				m.SetName(input.Name)
+			}
+		case resource.FieldI18n:
+			// check string with sql.NullString if it is empty
+			if input.I18n != "" {
+				m.SetI18n(input.I18n)
+			}
+		case resource.FieldType:
+			// check string with sql.NullString if it is empty
+			if input.Type != "" {
+				m.SetType(input.Type)
+			}
+		case resource.FieldStatus:
+			// check enums.Status with sql.NullInt64 if it is zero
+			if input.Status != 0 {
+				m.SetStatus(input.Status)
+			}
+		case resource.FieldSequence:
+			// check int with sql.NullInt64 if it is zero
+			if input.Sequence != 0 {
+				m.SetSequence(input.Sequence)
 			}
 		case resource.FieldMethod:
 			// check string with sql.NullString if it is empty
 			if input.Method != "" {
 				m.SetMethod(input.Method)
 			}
+		case resource.FieldPath:
+			// check string with sql.NullString if it is empty
+			if input.Path != "" {
+				m.SetPath(input.Path)
+			}
 		case resource.FieldOperation:
 			// check string with sql.NullString if it is empty
 			if input.Operation != "" {
 				m.SetOperation(input.Operation)
+			}
+		case resource.FieldServiceName:
+			// check string with sql.NullString if it is empty
+			if input.ServiceName != "" {
+				m.SetServiceName(input.ServiceName)
 			}
 		case resource.FieldPolicy:
 			// check string with sql.NullString if it is empty
@@ -631,10 +672,25 @@ func (m *ResourceMutation) SetFieldsSkipZero(input *Resource, fields ...string) 
 			if input.SyncStatus != "" {
 				m.SetSyncStatus(input.SyncStatus)
 			}
-		case resource.FieldStatus:
-			// check enums.Status with sql.NullInt64 if it is zero
-			if input.Status != 0 {
-				m.SetStatus(input.Status)
+		case resource.FieldTreePath:
+			// check string with sql.NullString if it is empty
+			if input.TreePath != "" {
+				m.SetTreePath(input.TreePath)
+			}
+		case resource.FieldParentID:
+			// check int64 with sql.NullInt64 if it is zero
+			if input.ParentID != 0 {
+				m.SetParentID(input.ParentID)
+			}
+		case resource.FieldProperties:
+			// check string with sql.NullString if it is empty
+			if input.Properties != "" {
+				m.SetProperties(input.Properties)
+			}
+		case resource.FieldDescription:
+			// check string with sql.NullString if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
 			}
 		case resource.FieldID:
 			// check int64 with sql.NullInt64 if it is zero
@@ -1135,6 +1191,8 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 			m.SetScope(input.Scope)
 		case view.FieldName:
 			m.SetName(input.Name)
+		case view.FieldI18n:
+			m.SetI18n(input.I18n)
 		case view.FieldType:
 			m.SetType(input.Type)
 		case view.FieldComponent:
@@ -1149,6 +1207,12 @@ func (m *ViewMutation) SetFields(input *View, fields ...string) error {
 			m.SetSequence(input.Sequence)
 		case view.FieldTreePath:
 			m.SetTreePath(input.TreePath)
+		case view.FieldDescription:
+			m.SetDescription(input.Description)
+		case view.FieldProperties:
+			m.SetProperties(input.Properties)
+		case view.FieldStatus:
+			m.SetStatus(input.Status)
 		case view.FieldID:
 			m.SetID(input.ID)
 		default:
@@ -1192,6 +1256,11 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 			if input.Name != "" {
 				m.SetName(input.Name)
 			}
+		case view.FieldI18n:
+			// check string with sql.NullString if it is empty
+			if input.I18n != "" {
+				m.SetI18n(input.I18n)
+			}
 		case view.FieldType:
 			var zero view.Type
 			// check view.Type with sql.NullString if it is empty
@@ -1226,6 +1295,21 @@ func (m *ViewMutation) SetFieldsSkipZero(input *View, fields ...string) error {
 			// check string with sql.NullString if it is empty
 			if input.TreePath != "" {
 				m.SetTreePath(input.TreePath)
+			}
+		case view.FieldDescription:
+			// check string with sql.NullString if it is empty
+			if input.Description != "" {
+				m.SetDescription(input.Description)
+			}
+		case view.FieldProperties:
+			// check string with sql.NullString if it is empty
+			if input.Properties != "" {
+				m.SetProperties(input.Properties)
+			}
+		case view.FieldStatus:
+			// check enums.Status with sql.NullInt64 if it is zero
+			if input.Status != 0 {
+				m.SetStatus(input.Status)
 			}
 		case view.FieldID:
 			// check int64 with sql.NullInt64 if it is zero

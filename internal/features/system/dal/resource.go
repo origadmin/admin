@@ -6,7 +6,9 @@ package dal
 
 import (
 	"context"
+	"strings"
 
+	"github.com/origadmin/contrib/security"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
@@ -52,7 +54,47 @@ func (r *resourceRepo) Get(ctx context.Context, id int64, opts ...*dto.ResourceQ
 
 func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...*dto.ResourceCreateOption) (*types.Resource, error) {
 	entResource := dto.ConvertResourcePBToResource(res)
-	create := r.db.Resource(ctx).Create().SetResourceSkipZero(entResource)
+	create := r.db.Resource(ctx).Create().
+		SetResourceSkipZero(entResource).
+		SetName(res.Name).
+		SetSyncStatus("Modified").
+		SetVersionID("").
+		SetLastSyncVersionID("")
+
+	saved, err := create.Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return dto.ConvertResourceToResourcePB(saved), nil
+}
+
+func (r *resourceRepo) CreateFromPolicy(ctx context.Context, policy *security.Policy) (*types.Resource, error) {
+	// e.g. /api.v1.services.auth.AuthService/Login -> auth:auth:Login:write
+	keyword := strings.ReplaceAll(strings.TrimPrefix(policy.ServiceMethod, "/"), ".", ":")
+	keyword = strings.ReplaceAll(keyword, "Service", "")
+
+	// Extract method and path from GatewayPath, e.g., "GET:/api/v1/users/{id}"
+	var method, path string
+	if policy.GatewayPath != "" {
+		if parts := strings.SplitN(policy.GatewayPath, ":", 2); len(parts) == 2 {
+			method = parts[0]
+			path = parts[1]
+		}
+	}
+
+	create := r.db.Resource(ctx).Create().
+		SetKeyword(keyword).
+		SetPath(path).
+		SetMethod(method).
+		SetOperation(policy.ServiceMethod).
+		SetPolicy(policy.Name).
+		SetVersionID(policy.VersionID).
+		SetLastSyncVersionID(policy.VersionID).
+		SetSyncStatus("Synced")
+
+	if policy.DisplayName != "" {
+		create.SetName(policy.DisplayName)
+	}
 
 	saved, err := create.Save(ctx)
 	if err != nil {

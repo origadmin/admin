@@ -12,6 +12,7 @@ import (
 	"origadmin/application/admin/internal/data/entity/ent/view"
 	"origadmin/application/admin/internal/data/entity/ent/viewpermission"
 	"origadmin/application/admin/internal/data/entity/ent/viewresource"
+	"origadmin/application/admin/internal/data/enums"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -98,6 +99,26 @@ func (_u *ViewUpdate) SetNillableName(v *string) *ViewUpdate {
 	if v != nil {
 		_u.SetName(*v)
 	}
+	return _u
+}
+
+// SetI18n sets the "i18n" field.
+func (_u *ViewUpdate) SetI18n(v string) *ViewUpdate {
+	_u.mutation.SetI18n(v)
+	return _u
+}
+
+// SetNillableI18n sets the "i18n" field if the given value is not nil.
+func (_u *ViewUpdate) SetNillableI18n(v *string) *ViewUpdate {
+	if v != nil {
+		_u.SetI18n(*v)
+	}
+	return _u
+}
+
+// ClearI18n clears the value of the "i18n" field.
+func (_u *ViewUpdate) ClearI18n() *ViewUpdate {
+	_u.mutation.ClearI18n()
 	return _u
 }
 
@@ -227,6 +248,67 @@ func (_u *ViewUpdate) SetNillableTreePath(v *string) *ViewUpdate {
 // ClearTreePath clears the value of the "tree_path" field.
 func (_u *ViewUpdate) ClearTreePath() *ViewUpdate {
 	_u.mutation.ClearTreePath()
+	return _u
+}
+
+// SetDescription sets the "description" field.
+func (_u *ViewUpdate) SetDescription(v string) *ViewUpdate {
+	_u.mutation.SetDescription(v)
+	return _u
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (_u *ViewUpdate) SetNillableDescription(v *string) *ViewUpdate {
+	if v != nil {
+		_u.SetDescription(*v)
+	}
+	return _u
+}
+
+// ClearDescription clears the value of the "description" field.
+func (_u *ViewUpdate) ClearDescription() *ViewUpdate {
+	_u.mutation.ClearDescription()
+	return _u
+}
+
+// SetProperties sets the "properties" field.
+func (_u *ViewUpdate) SetProperties(v string) *ViewUpdate {
+	_u.mutation.SetProperties(v)
+	return _u
+}
+
+// SetNillableProperties sets the "properties" field if the given value is not nil.
+func (_u *ViewUpdate) SetNillableProperties(v *string) *ViewUpdate {
+	if v != nil {
+		_u.SetProperties(*v)
+	}
+	return _u
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (_u *ViewUpdate) ClearProperties() *ViewUpdate {
+	_u.mutation.ClearProperties()
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *ViewUpdate) SetStatus(v enums.Status) *ViewUpdate {
+	_u.mutation.ResetStatus()
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *ViewUpdate) SetNillableStatus(v *enums.Status) *ViewUpdate {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *ViewUpdate) AddStatus(v enums.Status) *ViewUpdate {
+	_u.mutation.AddStatus(v)
 	return _u
 }
 
@@ -507,6 +589,12 @@ func (_u *ViewUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(view.FieldName, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.I18n(); ok {
+		_spec.SetField(view.FieldI18n, field.TypeString, value)
+	}
+	if _u.mutation.I18nCleared() {
+		_spec.ClearField(view.FieldI18n, field.TypeString)
+	}
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(view.FieldType, field.TypeEnum, value)
 	}
@@ -542,6 +630,24 @@ func (_u *ViewUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.TreePathCleared() {
 		_spec.ClearField(view.FieldTreePath, field.TypeString)
+	}
+	if value, ok := _u.mutation.Description(); ok {
+		_spec.SetField(view.FieldDescription, field.TypeString, value)
+	}
+	if _u.mutation.DescriptionCleared() {
+		_spec.ClearField(view.FieldDescription, field.TypeString)
+	}
+	if value, ok := _u.mutation.Properties(); ok {
+		_spec.SetField(view.FieldProperties, field.TypeString, value)
+	}
+	if _u.mutation.PropertiesCleared() {
+		_spec.ClearField(view.FieldProperties, field.TypeString)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(view.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(view.FieldStatus, field.TypeInt8, value)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -929,6 +1035,26 @@ func (_u *ViewUpdateOne) SetNillableName(v *string) *ViewUpdateOne {
 	return _u
 }
 
+// SetI18n sets the "i18n" field.
+func (_u *ViewUpdateOne) SetI18n(v string) *ViewUpdateOne {
+	_u.mutation.SetI18n(v)
+	return _u
+}
+
+// SetNillableI18n sets the "i18n" field if the given value is not nil.
+func (_u *ViewUpdateOne) SetNillableI18n(v *string) *ViewUpdateOne {
+	if v != nil {
+		_u.SetI18n(*v)
+	}
+	return _u
+}
+
+// ClearI18n clears the value of the "i18n" field.
+func (_u *ViewUpdateOne) ClearI18n() *ViewUpdateOne {
+	_u.mutation.ClearI18n()
+	return _u
+}
+
 // SetType sets the "type" field.
 func (_u *ViewUpdateOne) SetType(v view.Type) *ViewUpdateOne {
 	_u.mutation.SetType(v)
@@ -1055,6 +1181,67 @@ func (_u *ViewUpdateOne) SetNillableTreePath(v *string) *ViewUpdateOne {
 // ClearTreePath clears the value of the "tree_path" field.
 func (_u *ViewUpdateOne) ClearTreePath() *ViewUpdateOne {
 	_u.mutation.ClearTreePath()
+	return _u
+}
+
+// SetDescription sets the "description" field.
+func (_u *ViewUpdateOne) SetDescription(v string) *ViewUpdateOne {
+	_u.mutation.SetDescription(v)
+	return _u
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (_u *ViewUpdateOne) SetNillableDescription(v *string) *ViewUpdateOne {
+	if v != nil {
+		_u.SetDescription(*v)
+	}
+	return _u
+}
+
+// ClearDescription clears the value of the "description" field.
+func (_u *ViewUpdateOne) ClearDescription() *ViewUpdateOne {
+	_u.mutation.ClearDescription()
+	return _u
+}
+
+// SetProperties sets the "properties" field.
+func (_u *ViewUpdateOne) SetProperties(v string) *ViewUpdateOne {
+	_u.mutation.SetProperties(v)
+	return _u
+}
+
+// SetNillableProperties sets the "properties" field if the given value is not nil.
+func (_u *ViewUpdateOne) SetNillableProperties(v *string) *ViewUpdateOne {
+	if v != nil {
+		_u.SetProperties(*v)
+	}
+	return _u
+}
+
+// ClearProperties clears the value of the "properties" field.
+func (_u *ViewUpdateOne) ClearProperties() *ViewUpdateOne {
+	_u.mutation.ClearProperties()
+	return _u
+}
+
+// SetStatus sets the "status" field.
+func (_u *ViewUpdateOne) SetStatus(v enums.Status) *ViewUpdateOne {
+	_u.mutation.ResetStatus()
+	_u.mutation.SetStatus(v)
+	return _u
+}
+
+// SetNillableStatus sets the "status" field if the given value is not nil.
+func (_u *ViewUpdateOne) SetNillableStatus(v *enums.Status) *ViewUpdateOne {
+	if v != nil {
+		_u.SetStatus(*v)
+	}
+	return _u
+}
+
+// AddStatus adds value to the "status" field.
+func (_u *ViewUpdateOne) AddStatus(v enums.Status) *ViewUpdateOne {
+	_u.mutation.AddStatus(v)
 	return _u
 }
 
@@ -1365,6 +1552,12 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(view.FieldName, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.I18n(); ok {
+		_spec.SetField(view.FieldI18n, field.TypeString, value)
+	}
+	if _u.mutation.I18nCleared() {
+		_spec.ClearField(view.FieldI18n, field.TypeString)
+	}
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(view.FieldType, field.TypeEnum, value)
 	}
@@ -1400,6 +1593,24 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	}
 	if _u.mutation.TreePathCleared() {
 		_spec.ClearField(view.FieldTreePath, field.TypeString)
+	}
+	if value, ok := _u.mutation.Description(); ok {
+		_spec.SetField(view.FieldDescription, field.TypeString, value)
+	}
+	if _u.mutation.DescriptionCleared() {
+		_spec.ClearField(view.FieldDescription, field.TypeString)
+	}
+	if value, ok := _u.mutation.Properties(); ok {
+		_spec.SetField(view.FieldProperties, field.TypeString, value)
+	}
+	if _u.mutation.PropertiesCleared() {
+		_spec.ClearField(view.FieldProperties, field.TypeString)
+	}
+	if value, ok := _u.mutation.Status(); ok {
+		_spec.SetField(view.FieldStatus, field.TypeInt8, value)
+	}
+	if value, ok := _u.mutation.AddedStatus(); ok {
+		_spec.AddField(view.FieldStatus, field.TypeInt8, value)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
