@@ -19,9 +19,19 @@ type ResourceRepo interface {
 	Get(context.Context, int64, ...*ResourceQueryOption) (*types.Resource, error)
 	List(context.Context, ...*ResourceQueryOption) ([]*types.Resource, int32, error)
 	Create(context.Context, *types.Resource, ...*ResourceCreateOption) (*types.Resource, error)
-	CreateFromPolicy(ctx context.Context, policy *security.Policy) (*types.Resource, error)
+	CreateFromPolicy(ctx context.Context, input *ResourceFromPolicyInput) (*types.Resource, error)
 	Update(context.Context, *types.Resource, ...*ResourceUpdateOption) (*types.Resource, error)
 	Delete(context.Context, int64) error
+}
+
+// ResourceFromPolicyInput contains the data needed to create a resource from a policy.
+type ResourceFromPolicyInput struct {
+	Policy      *security.Policy
+	DisplayName string
+	I18n        string
+	Sequence    int
+	Keyword     string
+	ServiceName string
 }
 
 // ResourceQueryOption specifies options for querying resources.

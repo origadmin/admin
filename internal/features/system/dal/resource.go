@@ -8,7 +8,6 @@ import (
 	"context"
 	"strings"
 
-	"github.com/origadmin/contrib/security"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
@@ -56,6 +55,7 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 	entResource := dto.ConvertResourcePBToResource(res)
 	create := r.db.Resource(ctx).Create().
 		SetResourceSkipZero(entResource).
+		SetName(res.Name).
 		SetSyncStatus("Modified").
 		SetVersionID("").
 		SetLastSyncVersionID("")
@@ -67,10 +67,8 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 	return dto.ConvertResourceToResourcePB(saved), nil
 }
 
-func (r *resourceRepo) CreateFromPolicy(ctx context.Context, policy *security.Policy) (*types.Resource, error) {
-	// e.g. /api.v1.services.auth.AuthService/Login -> auth:auth:Login:write
-	keyword := strings.ReplaceAll(strings.TrimPrefix(policy.ServiceMethod, "/"), ".", ":")
-	keyword = strings.ReplaceAll(keyword, "Service", "")
+func (r *resourceRepo) CreateFromPolicy(ctx context.Context, input *dto.ResourceFromPolicyInput) (*types.Resource, error) {
+	policy := input.Policy
 
 	// Extract method and path from GatewayPath, e.g., "GET:/api/v1/users/{id}"
 	var method, path string
@@ -82,17 +80,26 @@ func (r *resourceRepo) CreateFromPolicy(ctx context.Context, policy *security.Po
 	}
 
 	create := r.db.Resource(ctx).Create().
-		SetKeyword(keyword).
+		SetKeyword(input.Keyword).
 		SetPath(path).
 		SetMethod(method).
 		SetOperation(policy.ServiceMethod).
 		SetPolicy(policy.Name).
 		SetVersionID(policy.VersionID).
 		SetLastSyncVersionID(policy.VersionID).
-		SetSyncStatus("Synced")
+		SetSyncStatus("Synced").
+		SetSequence(input.Sequence)
 
-	if policy.DisplayName != "" {
-		create.SetName(policy.DisplayName)
+	if input.DisplayName != "" {
+		create.SetName(input.DisplayName)
+	}
+
+	if input.I18n != "" {
+		create.SetI18n(input.I18n)
+	}
+
+	if input.ServiceName != "" {
+		create.SetServiceName(input.ServiceName)
 	}
 
 	saved, err := create.Save(ctx)

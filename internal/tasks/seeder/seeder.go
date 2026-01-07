@@ -8,7 +8,10 @@ package seeder
 import (
 	"context"
 	"crypto/rand"
+	"fmt"
 	"math/big"
+	"strings"
+	"unicode"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
@@ -19,6 +22,7 @@ import (
 	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/conf/pb"
 	"origadmin/application/admin/internal/features/system/biz"
+	"origadmin/application/admin/internal/features/system/dto"
 )
 
 // ProviderSet is for wire injection.
@@ -100,7 +104,13 @@ func (s *Seeder) createRootUser() error {
 			s.log.Errorf("Failed to generate random password: %v", err)
 			return err
 		}
-		s.log.Infof("Generated random password for user '%s': %s", username, password)
+		// Use fmt.Printf with ANSI colors for high visibility
+		fmt.Printf("\n")
+		fmt.Printf("\033[1;32m==================== [Root User Created] ===================\033[0m\n")
+		fmt.Printf("\033[1;33mUsername: %s\033[0m\n", username)
+		fmt.Printf("\033[1;33mPassword: %s\033[0m\n", password)
+		fmt.Printf("\033[1;32m============================================================\033[0m\n")
+		fmt.Printf("\n")
 	}
 
 	newUser := &types.User{
@@ -121,21 +131,83 @@ func (s *Seeder) createRootUser() error {
 
 func (s *Seeder) createInitialResources() error {
 	ctx := context.Background()
+	// Use a counter for sequence
+	seq := 1
 	for _, policy := range security.RegisteredPolicies() {
+		// Parse gRPC method: /package.Service/Method
+		// e.g. /api.v1.services.auth.AuthService/Login
+		parts := strings.Split(policy.ServiceMethod, "/")
+		if len(parts) < 3 {
+			s.log.Warnf("Skipping malformed service method: %s", policy.ServiceMethod)
+			continue
+		}
+		// parts[0] is empty, parts[1] is package.Service, parts[2] is Method
+		fullService := parts[1]
+		method := parts[2]
+
+		// Parse Service: api.v1.services.auth.AuthService
+		serviceParts := strings.Split(fullService, ".")
+		if len(serviceParts) < 2 {
+			s.log.Warnf("Skipping malformed service name: %s", fullService)
+			continue
+		}
+
+		// Extract Module Name (e.g. "auth" from "api.v1.services.auth.AuthService")
+		// Assuming standard structure: ...services.<module>.<Service>
+		var moduleName string
+		if len(serviceParts) >= 2 {
+			// Take the second to last part as module name
+			moduleName = serviceParts[len(serviceParts)-2]
+		} else {
+			moduleName = "system" // Fallback
+		}
+
+		// Ensure module name ends with "-service"
+		if !strings.HasSuffix(moduleName, "-service") {
+			moduleName += "-service"
+		}
+
+		// Extract Resource Name (e.g. "Auth" from "AuthService")
+		serviceName := serviceParts[len(serviceParts)-1]
+		resourceName := strings.TrimSuffix(serviceName, "Service")
+
+		// Construct Keyword: module:resource:method (e.g. auth-service:Auth:Login)
+		// Use toSnakeCase for resourceName and method to ensure consistency
+		keyword := strings.Join([]string{strings.ToLower(moduleName), toSnakeCase(resourceName), toSnakeCase(method)}, ":")
+
+		// Construct Name: Resource Method (e.g. Auth Login)
+		// Convert CamelCase to Title Case with spaces
+		displayName := toTitleCase(resourceName) + " " + toTitleCase(method)
+
+		// Construct I18n: resource.module.resource.method (e.g. resource.auth-service.auth.login)
+		i18nKey := "resource." + strings.ToLower(moduleName) + "." + toSnakeCase(resourceName) + "." + toSnakeCase(method)
+
+		// Check if resource already exists
 		_, count, err := s.resourceUseCase.ListResources(ctx,
 			&system.ListResourcesRequest{
 				Operation: policy.ServiceMethod,
 				OnlyCount: true,
 			})
 		if err == nil && count > 0 {
-			s.log.Infof("Resource '%s' already exists, skipping.", policy.ServiceMethod)
+			s.log.Infof("Resource '%s' already exists, skipping.", keyword)
 			continue
 		}
-		if _, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, &policy); err != nil {
-			s.log.Errorf("failed to create resource %s: %v", policy.ServiceMethod, err)
-		} else {
-			s.log.Infof("Successfully created resource: %s", policy.ServiceMethod)
+
+		input := &dto.ResourceFromPolicyInput{
+			Policy:      &policy,
+			DisplayName: displayName,
+			I18n:        i18nKey,
+			Sequence:    seq,
+			Keyword:     keyword,
+			ServiceName: moduleName,
 		}
+
+		if _, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, input); err != nil {
+			s.log.Errorf("failed to create resource from policy '%s': %v", policy.ServiceMethod, err)
+		} else {
+			s.log.Infof("Successfully created resource from policy: %s", policy.ServiceMethod)
+		}
+		seq++
 	}
 	return nil
 }
@@ -160,6 +232,30 @@ func (s *Seeder) createInitialViews() error {
 		}
 	}
 	return nil
+}
+
+// toTitleCase converts CamelCase to Title Case (e.g. "GetProfile" -> "Get Profile")
+func toTitleCase(s string) string {
+	var result strings.Builder
+	for i, r := range s {
+		if i > 0 && unicode.IsUpper(r) {
+			result.WriteRune(' ')
+		}
+		result.WriteRune(r)
+	}
+	return result.String()
+}
+
+// toSnakeCase converts CamelCase to snake_case (e.g. "GetProfile" -> "get_profile")
+func toSnakeCase(s string) string {
+	var result strings.Builder
+	for i, r := range s {
+		if i > 0 && unicode.IsUpper(r) {
+			result.WriteRune('_')
+		}
+		result.WriteRune(unicode.ToLower(r))
+	}
+	return result.String()
 }
 
 // generateRandomPassword creates a random string of a given length.

@@ -163,21 +163,26 @@ release-all-in-one: build-ui
 #go generate ./cmd/system #generate system module
 #go generate ./cmd/internal/start #generate main module start
 gen:
-#	@echo "Generating Protobuf service api..."
-#	@buf dep update
-#	@buf build
-#	@buf generate
-#
-#	@echo "Generating Protobuf code for conf/pb..."
-#	@protoc -I. -I./third_party --go_out=paths=source_relative:. --validate_out=paths=source_relative,lang=go:. ./internal/conf/pb/*.proto
-#
-#	@echo "Generating Ent data..."
-#	@go generate ./internal/data/entity/ent/generate.go
+	@echo "Generating Protobuf service api..."
+	@buf dep update
+	@buf build
+	@buf generate
+
+	@echo "Generating Protobuf code for conf/pb..."
+	@protoc -I. -I./third_party --go_out=paths=source_relative:. --validate_out=paths=source_relative,lang=go:. ./internal/conf/pb/*.proto
+
+	@echo "Generating Ent data..."
+	@go generate ./internal/data/entity/ent/generate.go
+
 	@echo "Generating main wire..."
 	@go generate ./cmd/seed/wire.work.go
 	@go generate ./cmd/system/wire.work.go
 	@go generate ./cmd/auth/wire.work.go
 	@go generate ./cmd/gateway/wire.work.go
+
+	@echo "Generating dto data convert functions ..."
+	@go generate ./internal/features/system/dto
+	@go generate ./internal/features/auth/dto
 
 .PHONY: all
 # generate all

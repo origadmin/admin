@@ -8,7 +8,6 @@ package biz
 import (
 	"context"
 
-	"github.com/origadmin/contrib/security"
 	"origadmin/application/admin/api/v1/services/system"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/enums"
@@ -47,8 +46,8 @@ func (uc *ResourceUseCase) CreateResource(ctx context.Context, in *types.Resourc
 
 // CreateResourceFromPolicy creates a new resource based on a security policy definition.
 // This is intended for internal use, like database seeding.
-func (uc *ResourceUseCase) CreateResourceFromPolicy(ctx context.Context, policy *security.Policy) (*types.Resource, error) {
-	return uc.repo.CreateFromPolicy(ctx, policy)
+func (uc *ResourceUseCase) CreateResourceFromPolicy(ctx context.Context, input *dto.ResourceFromPolicyInput) (*types.Resource, error) {
+	return uc.repo.CreateFromPolicy(ctx, input)
 }
 
 func (uc *ResourceUseCase) UpdateResource(ctx context.Context, in *types.Resource) (*types.Resource, error) {
