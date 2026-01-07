@@ -130,8 +130,6 @@ func (m *View) validate(all bool) error {
 
 	// no validation rules for Type
 
-	// no validation rules for Comment
-
 	// no validation rules for Icon
 
 	// no validation rules for Visible
@@ -145,8 +143,6 @@ func (m *View) validate(all bool) error {
 	// no validation rules for Status
 
 	// no validation rules for ParentId
-
-	// no validation rules for ParentPath
 
 	// no validation rules for Component
 
@@ -450,8 +446,6 @@ func (m *Role) validate(all bool) error {
 	// no validation rules for Sequence
 
 	// no validation rules for Status
-
-	// no validation rules for IsTypes
 
 	for idx, item := range m.GetViews() {
 		_, _ = idx, item
@@ -1525,13 +1519,7 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Method
 
-	// no validation rules for Component
-
-	// no validation rules for Icon
-
 	// no validation rules for Sequence
-
-	// no validation rules for Visible
 
 	// no validation rules for TreePath
 

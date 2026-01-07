@@ -35,7 +35,6 @@ func validateFields(t *testing.T, entStruct interface{}, protoStruct interface{}
 		if field.PkgPath != "" || field.Anonymous {
 			continue
 		}
-		// Skip specific fields
 		if isIgnored(field.Name, ignoreFields) {
 			continue
 		}
@@ -49,9 +48,13 @@ func validateFields(t *testing.T, entStruct interface{}, protoStruct interface{}
 		if field.PkgPath != "" || strings.HasPrefix(field.Name, "XXX_") {
 			continue
 		}
+		if isIgnored(field.Name, ignoreFields) {
+			continue
+		}
 		protoFields[strings.ToLower(field.Name)] = field
 	}
 
+	// Check 1: Ent -> Proto
 	for name, entField := range entFields {
 		// Special handling for ID field which might be named differently or handled by mixin
 		if name == "id" {
@@ -60,23 +63,33 @@ func validateFields(t *testing.T, entStruct interface{}, protoStruct interface{}
 			}
 		}
 
-		protoField, exists := protoFields[name]
+		_, exists := protoFields[name]
 		if !exists {
 			assert.Fail(t, fmt.Sprintf("[%s] Field mismatch: '%s' (%s) exists in Ent but missing in Proto",
 				entType.Name(), entField.Name, entField.Type))
-			continue
+		}
+	}
+
+	// Check 2: Proto -> Ent
+	for name, protoField := range protoFields {
+		// Special handling for ID field
+		if name == "id" {
+			if _, ok := entFields["id"]; ok {
+				continue
+			}
 		}
 
-		// Optional: Check for type compatibility if needed.
-		// Note: Ent types (e.g. int8) might differ from Proto types (e.g. int32), so strict equality check might fail.
-		// We can add loose type checking here if required.
-		_ = protoField
+		_, exists := entFields[name]
+		if !exists {
+			assert.Fail(t, fmt.Sprintf("[%s] Field mismatch: '%s' (%s) exists in Proto but missing in Ent",
+				protoType.Name(), protoField.Name, protoField.Type))
+		}
 	}
 }
 
 func isIgnored(fieldName string, ignoreList []string) bool {
 	for _, ignored := range ignoreList {
-		if fieldName == ignored {
+		if strings.EqualFold(fieldName, ignored) {
 			return true
 		}
 	}
@@ -84,25 +97,34 @@ func isIgnored(fieldName string, ignoreList []string) bool {
 }
 
 func TestSchemaProtoConsistency(t *testing.T) {
-	// Common fields to ignore in Ent entities that are not expected in Proto
+	// Common fields to ignore in both Ent and Proto
 	commonIgnores := []string{
 		"Edges",
 		"config",
+		"DeleteTime",
+		"XXX_NoUnkeyedLiteral",
+		"XXX_unrecognized",
+		"XXX_sizecache",
 	}
 
 	t.Run("User", func(t *testing.T) {
-		validateFields(t, &ent.User{}, &types.User{}, append(commonIgnores, "EncryptedPassword", "Salt", "Token", "IsSystem", "DeleteTime"))
+		specificIgnores := append(commonIgnores, "EncryptedPassword", "Salt", "Token", "IsSystem", "RoleIds", "Roles")
+		validateFields(t, &ent.User{}, &types.User{}, specificIgnores)
 	})
 
 	t.Run("Role", func(t *testing.T) {
-		validateFields(t, &ent.Role{}, &types.Role{}, commonIgnores)
+		specificIgnores := append(commonIgnores, "views", "users", "resources", "ResourceIds", "permissions",
+			"PermissionIds")
+		validateFields(t, &ent.Role{}, &types.Role{}, specificIgnores)
 	})
 
 	t.Run("Resource", func(t *testing.T) {
-		validateFields(t, &ent.Resource{}, &types.Resource{}, commonIgnores)
+		specificIgnores := append(commonIgnores, "VersionID", "LastSyncVersionID", "children", "parent", "PermissionIds", "permissions")
+		validateFields(t, &ent.Resource{}, &types.Resource{}, specificIgnores)
 	})
 
 	t.Run("View", func(t *testing.T) {
-		validateFields(t, &ent.View{}, &types.View{}, commonIgnores)
+		specificIgnores := append(commonIgnores, "children", "parent", "resources", "roles")
+		validateFields(t, &ent.View{}, &types.View{}, specificIgnores)
 	})
 }

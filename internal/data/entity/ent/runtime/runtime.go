@@ -544,56 +544,50 @@ func init() {
 	user.DefaultEmail = userDescEmail.Default.(string)
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
-	// userDescI18n is the schema descriptor for i18n field.
-	userDescI18n := userFields[11].Descriptor()
-	// user.DefaultI18n holds the default value on creation for the i18n field.
-	user.DefaultI18n = userDescI18n.Default.(string)
-	// user.I18nValidator is a validator for the "i18n" field. It is called by the builders before save.
-	user.I18nValidator = userDescI18n.Validators[0].(func(string) error)
 	// userDescDepartment is the schema descriptor for department field.
-	userDescDepartment := userFields[12].Descriptor()
+	userDescDepartment := userFields[11].Descriptor()
 	// user.DefaultDepartment holds the default value on creation for the department field.
 	user.DefaultDepartment = userDescDepartment.Default.(string)
 	// user.DepartmentValidator is a validator for the "department" field. It is called by the builders before save.
 	user.DepartmentValidator = userDescDepartment.Validators[0].(func(string) error)
 	// userDescRemark is the schema descriptor for remark field.
-	userDescRemark := userFields[13].Descriptor()
+	userDescRemark := userFields[12].Descriptor()
 	// user.DefaultRemark holds the default value on creation for the remark field.
 	user.DefaultRemark = userDescRemark.Default.(string)
 	// user.RemarkValidator is a validator for the "remark" field. It is called by the builders before save.
 	user.RemarkValidator = userDescRemark.Validators[0].(func(string) error)
 	// userDescToken is the schema descriptor for token field.
-	userDescToken := userFields[14].Descriptor()
+	userDescToken := userFields[13].Descriptor()
 	// user.DefaultToken holds the default value on creation for the token field.
 	user.DefaultToken = userDescToken.Default.(string)
 	// user.TokenValidator is a validator for the "token" field. It is called by the builders before save.
 	user.TokenValidator = userDescToken.Validators[0].(func(string) error)
 	// userDescStatus is the schema descriptor for status field.
-	userDescStatus := userFields[15].Descriptor()
+	userDescStatus := userFields[14].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = enums.Status(userDescStatus.Default.(int8))
 	// userDescIsSystem is the schema descriptor for is_system field.
-	userDescIsSystem := userFields[16].Descriptor()
+	userDescIsSystem := userFields[15].Descriptor()
 	// user.DefaultIsSystem holds the default value on creation for the is_system field.
 	user.DefaultIsSystem = userDescIsSystem.Default.(bool)
 	// userDescLastLoginIP is the schema descriptor for last_login_ip field.
-	userDescLastLoginIP := userFields[17].Descriptor()
+	userDescLastLoginIP := userFields[16].Descriptor()
 	// user.DefaultLastLoginIP holds the default value on creation for the last_login_ip field.
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// user.LastLoginIPValidator is a validator for the "last_login_ip" field. It is called by the builders before save.
 	user.LastLoginIPValidator = userDescLastLoginIP.Validators[0].(func(string) error)
 	// userDescLoginIP is the schema descriptor for login_ip field.
-	userDescLoginIP := userFields[18].Descriptor()
+	userDescLoginIP := userFields[17].Descriptor()
 	// user.DefaultLoginIP holds the default value on creation for the login_ip field.
 	user.DefaultLoginIP = userDescLoginIP.Default.(string)
 	// user.LoginIPValidator is a validator for the "login_ip" field. It is called by the builders before save.
 	user.LoginIPValidator = userDescLoginIP.Validators[0].(func(string) error)
 	// userDescLastLoginTime is the schema descriptor for last_login_time field.
-	userDescLastLoginTime := userFields[19].Descriptor()
+	userDescLastLoginTime := userFields[18].Descriptor()
 	// user.DefaultLastLoginTime holds the default value on creation for the last_login_time field.
 	user.DefaultLastLoginTime = userDescLastLoginTime.Default.(func() time.Time)
 	// userDescLoginTime is the schema descriptor for login_time field.
-	userDescLoginTime := userFields[20].Descriptor()
+	userDescLoginTime := userFields[19].Descriptor()
 	// user.DefaultLoginTime holds the default value on creation for the login_time field.
 	user.DefaultLoginTime = userDescLoginTime.Default.(func() time.Time)
 	// userDescID is the schema descriptor for id field.

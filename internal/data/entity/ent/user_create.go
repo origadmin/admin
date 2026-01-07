@@ -235,20 +235,6 @@ func (_c *UserCreate) SetNillableEmail(v *string) *UserCreate {
 	return _c
 }
 
-// SetI18n sets the "i18n" field.
-func (_c *UserCreate) SetI18n(v string) *UserCreate {
-	_c.mutation.SetI18n(v)
-	return _c
-}
-
-// SetNillableI18n sets the "i18n" field if the given value is not nil.
-func (_c *UserCreate) SetNillableI18n(v *string) *UserCreate {
-	if v != nil {
-		_c.SetI18n(*v)
-	}
-	return _c
-}
-
 // SetDepartment sets the "department" field.
 func (_c *UserCreate) SetDepartment(v string) *UserCreate {
 	_c.mutation.SetDepartment(v)
@@ -588,10 +574,6 @@ func (_c *UserCreate) defaults() error {
 		v := user.DefaultEmail
 		_c.mutation.SetEmail(v)
 	}
-	if _, ok := _c.mutation.I18n(); !ok {
-		v := user.DefaultI18n
-		_c.mutation.SetI18n(v)
-	}
 	if _, ok := _c.mutation.Department(); !ok {
 		v := user.DefaultDepartment
 		_c.mutation.SetDepartment(v)
@@ -733,14 +715,6 @@ func (_c *UserCreate) check() error {
 	if v, ok := _c.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
-		}
-	}
-	if _, ok := _c.mutation.I18n(); !ok {
-		return &ValidationError{Name: "i18n", err: errors.New(`ent: missing required field "User.i18n"`)}
-	}
-	if v, ok := _c.mutation.I18n(); ok {
-		if err := user.I18nValidator(v); err != nil {
-			return &ValidationError{Name: "i18n", err: fmt.Errorf(`ent: validator failed for field "User.i18n": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Department(); !ok {
@@ -895,10 +869,6 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 		_node.Email = value
-	}
-	if value, ok := _c.mutation.I18n(); ok {
-		_spec.SetField(user.FieldI18n, field.TypeString, value)
-		_node.I18n = value
 	}
 	if value, ok := _c.mutation.Department(); ok {
 		_spec.SetField(user.FieldDepartment, field.TypeString, value)

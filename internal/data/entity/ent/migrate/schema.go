@@ -420,7 +420,6 @@ var (
 		{Name: "salt", Type: field.TypeString, Size: 64, Comment: "entity.user.field.salt", Default: ""},
 		{Name: "phone", Type: field.TypeString, Size: 32, Comment: "entity.user.field.phone", Default: ""},
 		{Name: "email", Type: field.TypeString, Size: 64, Comment: "entity.user.field.email", Default: ""},
-		{Name: "i18n", Type: field.TypeString, Size: 64, Comment: "entity.user.field.i18n", Default: ""},
 		{Name: "department", Type: field.TypeString, Size: 64, Comment: "entity.user.field.department", Default: ""},
 		{Name: "remark", Type: field.TypeString, Size: 1024, Comment: "entity.user.field.remark", Default: ""},
 		{Name: "token", Type: field.TypeString, Size: 512, Comment: "entity.user.field.token", Default: ""},
@@ -477,7 +476,7 @@ var (
 			{
 				Name:    "user_status",
 				Unique:  false,
-				Columns: []*schema.Column{SysUsersColumns[21]},
+				Columns: []*schema.Column{SysUsersColumns[20]},
 			},
 		},
 	}

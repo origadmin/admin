@@ -1043,7 +1043,6 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  Salt string `json:"salt,omitempty"`
 //	  Phone string `json:"phone,omitempty"`
 //	  Email string `json:"email,omitempty"`
-//	  I18n string `json:"i18n,omitempty"`
 //	  Department string `json:"department,omitempty"`
 //	  Remark string `json:"remark,omitempty"`
 //	  Token string `json:"token,omitempty"`
@@ -1074,7 +1073,6 @@ func (_q *UserQuery) Modify(modifiers ...func(s *sql.Selector)) *UserSelect {
 //	  user.FieldSalt,
 //	  user.FieldPhone,
 //	  user.FieldEmail,
-//	  user.FieldI18n,
 //	  user.FieldDepartment,
 //	  user.FieldRemark,
 //	  user.FieldToken,

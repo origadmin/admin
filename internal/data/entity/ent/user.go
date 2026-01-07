@@ -53,8 +53,6 @@ type User struct {
 	Phone string `json:"phone,omitempty"`
 	// entity.user.field.email
 	Email string `json:"email,omitempty"`
-	// entity.user.field.i18n
-	I18n string `json:"i18n,omitempty"`
 	// entity.user.field.department
 	Department string `json:"department,omitempty"`
 	// entity.user.field.remark
@@ -163,7 +161,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case user.FieldID, user.FieldCreateAuthor, user.FieldUpdateAuthor, user.FieldStatus:
 			values[i] = new(sql.NullInt64)
-		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldI18n, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldLoginIP:
+		case user.FieldUUID, user.FieldAllowedIP, user.FieldUsername, user.FieldNickname, user.FieldAvatar, user.FieldName, user.FieldGender, user.FieldEncryptedPassword, user.FieldSalt, user.FieldPhone, user.FieldEmail, user.FieldDepartment, user.FieldRemark, user.FieldToken, user.FieldLastLoginIP, user.FieldLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreateTime, user.FieldUpdateTime, user.FieldDeleteTime, user.FieldLastLoginTime, user.FieldLoginTime, user.FieldSanctionDate:
 			values[i] = new(sql.NullTime)
@@ -284,12 +282,6 @@ func (_m *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field email", values[i])
 			} else if value.Valid {
 				_m.Email = value.String
-			}
-		case user.FieldI18n:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field i18n", values[i])
-			} else if value.Valid {
-				_m.I18n = value.String
 			}
 		case user.FieldDepartment:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -466,9 +458,6 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(_m.Email)
-	builder.WriteString(", ")
-	builder.WriteString("i18n=")
-	builder.WriteString(_m.I18n)
 	builder.WriteString(", ")
 	builder.WriteString("department=")
 	builder.WriteString(_m.Department)

@@ -3186,19 +3186,10 @@ components:
                 method:
                     type: string
                     description: resource.field.method
-                component:
-                    type: string
-                    description: resource.field.component
-                icon:
-                    type: string
-                    description: resource.field.icon
                 sequence:
                     type: integer
                     description: resource.field.sequence
                     format: int32
-                visible:
-                    type: boolean
-                    description: resource.field.visible
                 tree_path:
                     type: string
                     description: resource.field.tree_path
@@ -3279,9 +3270,6 @@ components:
                     type: integer
                     description: role.field.status
                     format: int32
-                is_types:
-                    type: boolean
-                    description: role.field.is_types
                 views:
                     type: array
                     items:
@@ -3440,9 +3428,6 @@ components:
                 type:
                     type: string
                     description: Type holds the value of the "type" field.
-                comment:
-                    type: string
-                    description: Comment holds the value of the "comment" field.
                 icon:
                     type: string
                     description: Icon holds the value of the "icon" field.
@@ -3465,9 +3450,6 @@ components:
                 parent_id:
                     type: string
                     description: ParentID holds the value of the "parent_id" field.
-                parent_path:
-                    type: string
-                    description: ParentPath holds the value of the "parent_path" field.
                 component:
                     type: string
                     description: Component holds the value of the "component" field.

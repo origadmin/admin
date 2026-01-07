@@ -32,8 +32,6 @@ message View {
   int32 sequence = 9 [json_name = "sequence"];
   // Type holds the value of the "type" field.
   string type = 10 [json_name = "type"];
-  // Comment holds the value of the "comment" field.
-  string comment = 11 [json_name = "comment"];
   // Icon holds the value of the "icon" field.
   string icon = 12 [json_name = "icon"];
   // Visible holds the value of the "visible" field.
@@ -48,8 +46,6 @@ message View {
   int32 status = 17 [json_name = "status"];
   // ParentID holds the value of the "parent_id" field.
   int64 parent_id = 18 [json_name = "parent_id"];
-  // ParentPath holds the value of the "parent_path" field.
-  string parent_path = 19 [json_name = "parent_path"];
   // Component holds the value of the "component" field.
   string component = 20 [json_name = "component"];
   // Children holds the value of the children edge.
@@ -83,8 +79,6 @@ message Role {
   int32 sequence = 8 [json_name = "sequence"];
   // role.field.status
   int32 status = 9 [json_name = "status"];
-  // role.field.is_types
-  bool is_types = 10 [json_name = "is_types"];
   // Views holds the value of the views edge.
   repeated View views = 100 [json_name = "views"];
   // Users holds the value of the users edge.
@@ -217,14 +211,8 @@ message Resource {
   string operation = 10 [json_name = "operation"];
   // resource.field.method
   string method = 11 [json_name = "method"];
-  // resource.field.component
-  string component = 12 [json_name = "component"];
-  // resource.field.icon
-  string icon = 13 [json_name = "icon"];
   // resource.field.sequence
   int32 sequence = 14 [json_name = "sequence"];
-  // resource.field.visible
-  bool visible = 15 [json_name = "visible"];
   // resource.field.tree_path
   string tree_path = 16 [json_name = "tree_path"];
   // resource.field.properties
