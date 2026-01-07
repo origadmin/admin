@@ -39,6 +39,7 @@ type ListResourcesRequest struct {
 	ServiceName   string                 `protobuf:"bytes,8,opt,name=service_name,proto3" json:"service_name,omitempty"`
 	SyncStatus    string                 `protobuf:"bytes,9,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
 	Operation     string                 `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
+	Sorting       []string               `protobuf:"bytes,11,rep,name=sorting,proto3" json:"sorting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -141,6 +142,13 @@ func (x *ListResourcesRequest) GetOperation() string {
 		return x.Operation
 	}
 	return ""
+}
+
+func (x *ListResourcesRequest) GetSorting() []string {
+	if x != nil {
+		return x.Sorting
+	}
+	return nil
 }
 
 // Response message for ResourceService.ListResources.
@@ -608,7 +616,7 @@ var File_system_resource_proto protoreflect.FileDescriptor
 
 const file_system_resource_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xb4\x02\n" +
+	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xce\x02\n" +
 	"\x14ListResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
@@ -624,7 +632,8 @@ const file_system_resource_proto_rawDesc = "" +
 	"\fservice_name\x18\b \x01(\tR\fservice_name\x12 \n" +
 	"\vsync_status\x18\t \x01(\tR\vsync_status\x12\x1c\n" +
 	"\toperation\x18\n" +
-	" \x01(\tR\toperation\"\x83\x02\n" +
+	" \x01(\tR\toperation\x12\x18\n" +
+	"\asorting\x18\v \x03(\tR\asorting\"\x83\x02\n" +
 	"\x15ListResourcesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12=\n" +
 	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x12\n" +

@@ -1252,6 +1252,12 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: sorting
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: string
             responses:
                 "200":
                     description: OK

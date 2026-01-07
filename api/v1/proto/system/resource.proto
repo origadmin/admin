@@ -5,8 +5,8 @@ package api.v1.services.system;
 import "google/api/annotations.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";
-import "types/system.proto";
 import "policy/v1/policy.proto";
+import "types/system.proto";
 
 option go_package = "origadmin/application/admin/api/v1/services/system;system";
 option java_multiple_files = true;
@@ -65,6 +65,7 @@ message ListResourcesRequest {
   string service_name = 8 [json_name = "service_name"];
   string sync_status = 9 [json_name = "sync_status"];
   string operation = 10 [json_name = "operation"];
+  repeated string sorting = 11 [json_name = "sorting"];
 }
 
 // Response message for ResourceService.ListResources.

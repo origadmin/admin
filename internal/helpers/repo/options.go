@@ -46,6 +46,11 @@ type KeywordRequest interface {
 	GetKeyword() string
 }
 
+// SortingRequest defines the contract for any request that supports sorting
+type SortingRequest interface {
+	GetSorting() []string
+}
+
 // QueryOption holds common query options like pagination and ordering.
 // It is intended to be embedded in more specific query option structs.
 type QueryOption struct {
@@ -83,6 +88,10 @@ func QueryOptionFromRequest(req interface{}) QueryOption {
 
 	if r, ok := req.(KeywordRequest); ok {
 		opt.Keyword = r.GetKeyword()
+	}
+
+	if r, ok := req.(SortingRequest); ok {
+		opt.OrderBy = r.GetSorting()
 	}
 
 	// This is a generic helper. The ReadMask should be populated from the specific
