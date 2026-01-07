@@ -19,6 +19,7 @@ import (
 	"github.com/origadmin/runtime/container"
 	"github.com/origadmin/runtime/service/transport"
 	"github.com/origadmin/runtime/service/transport/http"
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/gateway/service"
 	"origadmin/application/admin/internal/gateway/web"
 )
@@ -80,7 +81,7 @@ func NewHTTPServer(
 	}
 
 	serverOpts := []kratoshttp.ServerOption{
-		kratoshttp.PathPrefix("/api/v1"),
+		kratoshttp.PathPrefix(conf.APIPrefix),
 	}
 
 	log.NewHelper(app.Logger()).Infow("msg", "Registering middleware", "middlewares", maps.Keys(mws))

@@ -12,6 +12,11 @@ import (
 	confpb "origadmin/application/admin/internal/conf/pb"
 )
 
+const (
+	// APIPrefix is the prefix for all API routes.
+	APIPrefix = "/api/v1"
+)
+
 type Config struct {
 	Bootstrap confpb.Bootstrap
 }

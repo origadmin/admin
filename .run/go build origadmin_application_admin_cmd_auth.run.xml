@@ -9,4 +9,12 @@
     <filePath value="$PROJECT_DIR$/cmd/system/main.go" />
     <method v="2" />
   </configuration>
+  <configuration default="false" name="go build origadmin/application/admin/cmd/auth" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="framework" />
+    <working_directory value="$PROJECT_DIR$/projects/backend" />
+    <kind value="PACKAGE" />
+    <package value="origadmin/application/admin/cmd/auth" />
+    <directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
 </component>

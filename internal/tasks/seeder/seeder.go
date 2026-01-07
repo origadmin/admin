@@ -162,16 +162,11 @@ func (s *Seeder) createInitialResources() error {
 			moduleName = "system" // Fallback
 		}
 
-		// Ensure module name ends with "-service"
-		if !strings.HasSuffix(moduleName, "-service") {
-			moduleName += "-service"
-		}
-
 		// Extract Resource Name (e.g. "Auth" from "AuthService")
 		serviceName := serviceParts[len(serviceParts)-1]
 		resourceName := strings.TrimSuffix(serviceName, "Service")
 
-		// Construct Keyword: module:resource:method (e.g. auth-service:Auth:Login)
+		// Construct Keyword: module:resource:method (e.g. auth:auth:login)
 		// Use toSnakeCase for resourceName and method to ensure consistency
 		keyword := strings.Join([]string{strings.ToLower(moduleName), toSnakeCase(resourceName), toSnakeCase(method)}, ":")
 
@@ -179,8 +174,14 @@ func (s *Seeder) createInitialResources() error {
 		// Convert CamelCase to Title Case with spaces
 		displayName := toTitleCase(resourceName) + " " + toTitleCase(method)
 
-		// Construct I18n: resource.module.resource.method (e.g. resource.auth-service.auth.login)
+		// Construct I18n: resource.module.resource.method (e.g. resource.auth.auth.login)
 		i18nKey := "resource." + strings.ToLower(moduleName) + "." + toSnakeCase(resourceName) + "." + toSnakeCase(method)
+
+		// Ensure service name ends with "-service"
+		fullServiceName := moduleName
+		if !strings.HasSuffix(fullServiceName, "-service") {
+			fullServiceName += "-service"
+		}
 
 		// Check if resource already exists
 		_, count, err := s.resourceUseCase.ListResources(ctx,
@@ -199,7 +200,7 @@ func (s *Seeder) createInitialResources() error {
 			I18n:        i18nKey,
 			Sequence:    seq,
 			Keyword:     keyword,
-			ServiceName: moduleName,
+			ServiceName: fullServiceName,
 		}
 
 		if _, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, input); err != nil {

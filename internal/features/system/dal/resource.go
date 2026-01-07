@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"origadmin/application/admin/api/v1/services/types"
+	"origadmin/application/admin/internal/conf"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/resource"
 	"origadmin/application/admin/internal/features/system/dto"
@@ -77,6 +78,11 @@ func (r *resourceRepo) CreateFromPolicy(ctx context.Context, input *dto.Resource
 			method = parts[0]
 			path = parts[1]
 		}
+	}
+
+	// Ensure path has the correct prefix
+	if path != "" && !strings.HasPrefix(path, conf.APIPrefix) {
+		path = conf.APIPrefix + path
 	}
 
 	create := r.db.Resource(ctx).Create().
