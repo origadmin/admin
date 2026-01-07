@@ -35,6 +35,7 @@ require (
 )
 
 require (
+	entgo.io/contrib v0.7.0
 	github.com/air-verse/air v1.63.6
 	github.com/bufbuild/buf v1.62.1
 	github.com/go-kratos/kratos/cmd/kratos/v2 v2.0.0-20260105075216-c7a58ff59f80
@@ -134,6 +135,7 @@ require (
 	github.com/gohugoio/hugo v0.154.2 // indirect
 	github.com/golang-cz/devslog v0.0.15 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/cel-go v0.26.1 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
@@ -153,6 +155,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/jdx/go-netrc v1.0.0 // indirect
+	github.com/jhump/protoreflect v1.10.1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/compress v1.18.2 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
@@ -205,7 +208,6 @@ require (
 	github.com/spf13/cobra v1.10.2 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/stoewer/go-strcase v1.3.1 // indirect
-	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/tdewolff/parse/v2 v2.8.5 // indirect
 	github.com/tetratelabs/wazero v1.11.0 // indirect
 	github.com/tidwall/btree v1.8.1 // indirect
