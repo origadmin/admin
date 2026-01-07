@@ -59,65 +59,17 @@ func (m *RootUser) validate(all bool) error {
 
 	// no validation rules for Enabled
 
-	if utf8.RuneCountInString(m.GetId()) < 1 {
-		err := RootUserValidationError{
-			field:  "Id",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+	// no validation rules for Username
+
+	// no validation rules for Password
+
+	if m.Nickname != nil {
+		// no validation rules for Nickname
 	}
 
-	if utf8.RuneCountInString(m.GetUsername()) < 1 {
-		err := RootUserValidationError{
-			field:  "Username",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+	if m.Email != nil {
+		// no validation rules for Email
 	}
-
-	if l := utf8.RuneCountInString(m.GetPassword()); l < 6 || l > 32 {
-		err := RootUserValidationError{
-			field:  "Password",
-			reason: "value length must be between 6 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetSalt()); l < 6 || l > 12 {
-		err := RootUserValidationError{
-			field:  "Salt",
-			reason: "value length must be between 6 and 12 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	// no validation rules for Name
-
-	// no validation rules for Email
-
-	// no validation rules for Nickname
-
-	// no validation rules for Avatar
-
-	// no validation rules for Mobile
-
-	// no validation rules for Description
-
-	// no validation rules for AutoCreate
-
-	// no validation rules for RandomPassword
 
 	if len(errors) > 0 {
 		return RootUserMultiError(errors)

@@ -27,6 +27,7 @@ type ResourceRepo interface {
 // ResourceQueryOption specifies options for querying resources.
 type ResourceQueryOption struct {
 	repo.QueryOption
+	Operation       string
 	WithPermissions bool
 }
 
@@ -46,6 +47,8 @@ func ListResourcesRequestToQueryOption(req *system.ListResourcesRequest) *Resour
 	}
 	return &ResourceQueryOption{
 		QueryOption: repo.QueryOptionFromRequest(req),
+		//WithPermissions: req.WithPermissions,
+		Operation: req.Operation,
 	}
 }
 

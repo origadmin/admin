@@ -1,6 +1,8 @@
 package dto
 
 import (
+	"encoding/json"
+
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/entity/ent/view"
 )
@@ -18,6 +20,27 @@ const (
 	StatusEnabled  = 1
 	StatusDisabled = 0
 )
+
+// ConvertStringToStringMapToString is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToStringMapToString(from map[string]string) string {
+	bytes, err := json.Marshal(from)
+	if err != nil {
+		return ""
+	}
+	return string(bytes)
+}
+
+// ConvertStringToStringToStringMap is a custom conversion function stub.
+// Please implement this function to complete the conversion.
+func ConvertStringToStringToStringMap(from string) map[string]string {
+	m := make(map[string]string)
+	err := json.Unmarshal([]byte(from), &m)
+	if err != nil {
+		return nil
+	}
+	return m
+}
 
 // ConvertGenderToString is a custom conversion function stub.
 // Please implement this function to complete the conversion.

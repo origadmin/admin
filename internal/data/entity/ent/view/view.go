@@ -150,10 +150,24 @@ var (
 	KeywordValidator func(string) error
 	// DefaultScope holds the default value on creation for the "scope" field.
 	DefaultScope string
+	// DefaultI18n holds the default value on creation for the "i18n" field.
+	DefaultI18n string
+	// DefaultComponent holds the default value on creation for the "component" field.
+	DefaultComponent string
+	// DefaultPath holds the default value on creation for the "path" field.
+	DefaultPath string
+	// DefaultIcon holds the default value on creation for the "icon" field.
+	DefaultIcon string
 	// DefaultVisible holds the default value on creation for the "visible" field.
 	DefaultVisible bool
 	// DefaultSequence holds the default value on creation for the "sequence" field.
 	DefaultSequence int
+	// DefaultTreePath holds the default value on creation for the "tree_path" field.
+	DefaultTreePath string
+	// DefaultDescription holds the default value on creation for the "description" field.
+	DefaultDescription string
+	// DefaultProperties holds the default value on creation for the "properties" field.
+	DefaultProperties string
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus enums.Status
 	// DefaultID holds the default value on creation for the "id" field.

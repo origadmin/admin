@@ -388,9 +388,25 @@ func (_c *ViewCreate) defaults() {
 		v := view.DefaultScope
 		_c.mutation.SetScope(v)
 	}
+	if _, ok := _c.mutation.I18n(); !ok {
+		v := view.DefaultI18n
+		_c.mutation.SetI18n(v)
+	}
 	if _, ok := _c.mutation.GetType(); !ok {
 		v := view.DefaultType
 		_c.mutation.SetType(v)
+	}
+	if _, ok := _c.mutation.Component(); !ok {
+		v := view.DefaultComponent
+		_c.mutation.SetComponent(v)
+	}
+	if _, ok := _c.mutation.Path(); !ok {
+		v := view.DefaultPath
+		_c.mutation.SetPath(v)
+	}
+	if _, ok := _c.mutation.Icon(); !ok {
+		v := view.DefaultIcon
+		_c.mutation.SetIcon(v)
 	}
 	if _, ok := _c.mutation.Visible(); !ok {
 		v := view.DefaultVisible
@@ -399,6 +415,18 @@ func (_c *ViewCreate) defaults() {
 	if _, ok := _c.mutation.Sequence(); !ok {
 		v := view.DefaultSequence
 		_c.mutation.SetSequence(v)
+	}
+	if _, ok := _c.mutation.TreePath(); !ok {
+		v := view.DefaultTreePath
+		_c.mutation.SetTreePath(v)
+	}
+	if _, ok := _c.mutation.Description(); !ok {
+		v := view.DefaultDescription
+		_c.mutation.SetDescription(v)
+	}
+	if _, ok := _c.mutation.Properties(); !ok {
+		v := view.DefaultProperties
+		_c.mutation.SetProperties(v)
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := view.DefaultStatus
@@ -432,6 +460,9 @@ func (_c *ViewCreate) check() error {
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "View.name"`)}
 	}
+	if _, ok := _c.mutation.I18n(); !ok {
+		return &ValidationError{Name: "i18n", err: errors.New(`ent: missing required field "View.i18n"`)}
+	}
 	if _, ok := _c.mutation.GetType(); !ok {
 		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "View.type"`)}
 	}
@@ -440,11 +471,29 @@ func (_c *ViewCreate) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "View.type": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.Component(); !ok {
+		return &ValidationError{Name: "component", err: errors.New(`ent: missing required field "View.component"`)}
+	}
+	if _, ok := _c.mutation.Path(); !ok {
+		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "View.path"`)}
+	}
+	if _, ok := _c.mutation.Icon(); !ok {
+		return &ValidationError{Name: "icon", err: errors.New(`ent: missing required field "View.icon"`)}
+	}
 	if _, ok := _c.mutation.Visible(); !ok {
 		return &ValidationError{Name: "visible", err: errors.New(`ent: missing required field "View.visible"`)}
 	}
 	if _, ok := _c.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "View.sequence"`)}
+	}
+	if _, ok := _c.mutation.TreePath(); !ok {
+		return &ValidationError{Name: "tree_path", err: errors.New(`ent: missing required field "View.tree_path"`)}
+	}
+	if _, ok := _c.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "View.description"`)}
+	}
+	if _, ok := _c.mutation.Properties(); !ok {
+		return &ValidationError{Name: "properties", err: errors.New(`ent: missing required field "View.properties"`)}
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "View.status"`)}

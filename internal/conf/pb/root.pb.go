@@ -7,7 +7,6 @@
 package confpb
 
 import (
-	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -22,23 +21,22 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// RootUser defines the configuration for the initial administrator user.
+// This is used by the seed command.
 type RootUser struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Enabled        bool                   `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	Id             string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
-	Username       string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
-	Password       string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
-	Salt           string                 `protobuf:"bytes,5,opt,name=salt,proto3" json:"salt,omitempty"`
-	Name           string                 `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
-	Email          string                 `protobuf:"bytes,7,opt,name=email,proto3" json:"email,omitempty"`
-	Nickname       string                 `protobuf:"bytes,8,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	Avatar         string                 `protobuf:"bytes,9,opt,name=avatar,proto3" json:"avatar,omitempty"`
-	Mobile         string                 `protobuf:"bytes,10,opt,name=mobile,proto3" json:"mobile,omitempty"`
-	Description    string                 `protobuf:"bytes,11,opt,name=description,proto3" json:"description,omitempty"`
-	AutoCreate     bool                   `protobuf:"varint,100,opt,name=auto_create,proto3" json:"auto_create,omitempty"`
-	RandomPassword bool                   `protobuf:"varint,101,opt,name=random_password,proto3" json:"random_password,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// enabled controls whether the root user initialization task should run.
+	Enabled bool `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	// username for the root user.
+	Username string `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	// password for the root user. It is strongly recommended to change this after the first login.
+	Password string `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	// nickname for the root user.
+	Nickname *string `protobuf:"bytes,4,opt,name=nickname,proto3,oneof" json:"nickname,omitempty"`
+	// email for the root user.
+	Email         *string `protobuf:"bytes,5,opt,name=email,proto3,oneof" json:"email,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RootUser) Reset() {
@@ -78,13 +76,6 @@ func (x *RootUser) GetEnabled() bool {
 	return false
 }
 
-func (x *RootUser) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
 func (x *RootUser) GetUsername() string {
 	if x != nil {
 		return x.Username
@@ -99,89 +90,33 @@ func (x *RootUser) GetPassword() string {
 	return ""
 }
 
-func (x *RootUser) GetSalt() string {
-	if x != nil {
-		return x.Salt
-	}
-	return ""
-}
-
-func (x *RootUser) GetName() string {
-	if x != nil {
-		return x.Name
+func (x *RootUser) GetNickname() string {
+	if x != nil && x.Nickname != nil {
+		return *x.Nickname
 	}
 	return ""
 }
 
 func (x *RootUser) GetEmail() string {
-	if x != nil {
-		return x.Email
+	if x != nil && x.Email != nil {
+		return *x.Email
 	}
 	return ""
-}
-
-func (x *RootUser) GetNickname() string {
-	if x != nil {
-		return x.Nickname
-	}
-	return ""
-}
-
-func (x *RootUser) GetAvatar() string {
-	if x != nil {
-		return x.Avatar
-	}
-	return ""
-}
-
-func (x *RootUser) GetMobile() string {
-	if x != nil {
-		return x.Mobile
-	}
-	return ""
-}
-
-func (x *RootUser) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *RootUser) GetAutoCreate() bool {
-	if x != nil {
-		return x.AutoCreate
-	}
-	return false
-}
-
-func (x *RootUser) GetRandomPassword() bool {
-	if x != nil {
-		return x.RandomPassword
-	}
-	return false
 }
 
 var File_internal_conf_pb_root_proto protoreflect.FileDescriptor
 
 const file_internal_conf_pb_root_proto_rawDesc = "" +
 	"\n" +
-	"\x1binternal/conf/pb/root.proto\x12\aconf.pb\x1a\x17validate/validate.proto\"\x8c\x03\n" +
+	"\x1binternal/conf/pb/root.proto\x12\aconf.pb\"\xaf\x01\n" +
 	"\bRootUser\x12\x18\n" +
-	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x17\n" +
-	"\x02id\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x02id\x12#\n" +
-	"\busername\x18\x03 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\busername\x12%\n" +
-	"\bpassword\x18\x04 \x01(\tB\t\xfaB\x06r\x04\x10\x06\x18 R\bpassword\x12\x1d\n" +
-	"\x04salt\x18\x05 \x01(\tB\t\xfaB\x06r\x04\x10\x06\x18\fR\x04salt\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\x12\x14\n" +
-	"\x05email\x18\a \x01(\tR\x05email\x12\x1a\n" +
-	"\bnickname\x18\b \x01(\tR\bnickname\x12\x16\n" +
-	"\x06avatar\x18\t \x01(\tR\x06avatar\x12\x16\n" +
-	"\x06mobile\x18\n" +
-	" \x01(\tR\x06mobile\x12 \n" +
-	"\vdescription\x18\v \x01(\tR\vdescription\x12 \n" +
-	"\vauto_create\x18d \x01(\bR\vauto_create\x12(\n" +
-	"\x0frandom_password\x18e \x01(\bR\x0frandom_passwordB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
+	"\aenabled\x18\x01 \x01(\bR\aenabled\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\x12\x1f\n" +
+	"\bnickname\x18\x04 \x01(\tH\x00R\bnickname\x88\x01\x01\x12\x19\n" +
+	"\x05email\x18\x05 \x01(\tH\x01R\x05email\x88\x01\x01B\v\n" +
+	"\t_nicknameB\b\n" +
+	"\x06_emailB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_internal_conf_pb_root_proto_rawDescOnce sync.Once
@@ -212,6 +147,7 @@ func file_internal_conf_pb_root_proto_init() {
 	if File_internal_conf_pb_root_proto != nil {
 		return
 	}
+	file_internal_conf_pb_root_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

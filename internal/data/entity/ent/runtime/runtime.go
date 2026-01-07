@@ -320,6 +320,14 @@ func init() {
 	resourceDescName := resourceFields[1].Descriptor()
 	// resource.DefaultName holds the default value on creation for the name field.
 	resource.DefaultName = resourceDescName.Default.(string)
+	// resourceDescI18n is the schema descriptor for i18n field.
+	resourceDescI18n := resourceFields[2].Descriptor()
+	// resource.DefaultI18n holds the default value on creation for the i18n field.
+	resource.DefaultI18n = resourceDescI18n.Default.(string)
+	// resourceDescType is the schema descriptor for type field.
+	resourceDescType := resourceFields[3].Descriptor()
+	// resource.DefaultType holds the default value on creation for the type field.
+	resource.DefaultType = resourceDescType.Default.(string)
 	// resourceDescStatus is the schema descriptor for status field.
 	resourceDescStatus := resourceFields[4].Descriptor()
 	// resource.DefaultStatus holds the default value on creation for the status field.
@@ -328,6 +336,18 @@ func init() {
 	resourceDescSequence := resourceFields[5].Descriptor()
 	// resource.DefaultSequence holds the default value on creation for the sequence field.
 	resource.DefaultSequence = resourceDescSequence.Default.(int)
+	// resourceDescMethod is the schema descriptor for method field.
+	resourceDescMethod := resourceFields[6].Descriptor()
+	// resource.DefaultMethod holds the default value on creation for the method field.
+	resource.DefaultMethod = resourceDescMethod.Default.(string)
+	// resourceDescPath is the schema descriptor for path field.
+	resourceDescPath := resourceFields[7].Descriptor()
+	// resource.DefaultPath holds the default value on creation for the path field.
+	resource.DefaultPath = resourceDescPath.Default.(string)
+	// resourceDescOperation is the schema descriptor for operation field.
+	resourceDescOperation := resourceFields[8].Descriptor()
+	// resource.DefaultOperation holds the default value on creation for the operation field.
+	resource.DefaultOperation = resourceDescOperation.Default.(string)
 	// resourceDescServiceName is the schema descriptor for service_name field.
 	resourceDescServiceName := resourceFields[9].Descriptor()
 	// resource.DefaultServiceName holds the default value on creation for the service_name field.
@@ -348,6 +368,18 @@ func init() {
 	resourceDescSyncStatus := resourceFields[13].Descriptor()
 	// resource.DefaultSyncStatus holds the default value on creation for the sync_status field.
 	resource.DefaultSyncStatus = resourceDescSyncStatus.Default.(string)
+	// resourceDescTreePath is the schema descriptor for tree_path field.
+	resourceDescTreePath := resourceFields[14].Descriptor()
+	// resource.DefaultTreePath holds the default value on creation for the tree_path field.
+	resource.DefaultTreePath = resourceDescTreePath.Default.(string)
+	// resourceDescProperties is the schema descriptor for properties field.
+	resourceDescProperties := resourceFields[16].Descriptor()
+	// resource.DefaultProperties holds the default value on creation for the properties field.
+	resource.DefaultProperties = resourceDescProperties.Default.(string)
+	// resourceDescDescription is the schema descriptor for description field.
+	resourceDescDescription := resourceFields[17].Descriptor()
+	// resource.DefaultDescription holds the default value on creation for the description field.
+	resource.DefaultDescription = resourceDescDescription.Default.(string)
 	// resourceDescID is the schema descriptor for id field.
 	resourceDescID := resourceMixinFields0[0].Descriptor()
 	// resource.DefaultID holds the default value on creation for the id field.
@@ -641,6 +673,22 @@ func init() {
 	viewDescScope := viewFields[2].Descriptor()
 	// view.DefaultScope holds the default value on creation for the scope field.
 	view.DefaultScope = viewDescScope.Default.(string)
+	// viewDescI18n is the schema descriptor for i18n field.
+	viewDescI18n := viewFields[4].Descriptor()
+	// view.DefaultI18n holds the default value on creation for the i18n field.
+	view.DefaultI18n = viewDescI18n.Default.(string)
+	// viewDescComponent is the schema descriptor for component field.
+	viewDescComponent := viewFields[6].Descriptor()
+	// view.DefaultComponent holds the default value on creation for the component field.
+	view.DefaultComponent = viewDescComponent.Default.(string)
+	// viewDescPath is the schema descriptor for path field.
+	viewDescPath := viewFields[7].Descriptor()
+	// view.DefaultPath holds the default value on creation for the path field.
+	view.DefaultPath = viewDescPath.Default.(string)
+	// viewDescIcon is the schema descriptor for icon field.
+	viewDescIcon := viewFields[8].Descriptor()
+	// view.DefaultIcon holds the default value on creation for the icon field.
+	view.DefaultIcon = viewDescIcon.Default.(string)
 	// viewDescVisible is the schema descriptor for visible field.
 	viewDescVisible := viewFields[9].Descriptor()
 	// view.DefaultVisible holds the default value on creation for the visible field.
@@ -649,6 +697,18 @@ func init() {
 	viewDescSequence := viewFields[10].Descriptor()
 	// view.DefaultSequence holds the default value on creation for the sequence field.
 	view.DefaultSequence = viewDescSequence.Default.(int)
+	// viewDescTreePath is the schema descriptor for tree_path field.
+	viewDescTreePath := viewFields[11].Descriptor()
+	// view.DefaultTreePath holds the default value on creation for the tree_path field.
+	view.DefaultTreePath = viewDescTreePath.Default.(string)
+	// viewDescDescription is the schema descriptor for description field.
+	viewDescDescription := viewFields[12].Descriptor()
+	// view.DefaultDescription holds the default value on creation for the description field.
+	view.DefaultDescription = viewDescDescription.Default.(string)
+	// viewDescProperties is the schema descriptor for properties field.
+	viewDescProperties := viewFields[13].Descriptor()
+	// view.DefaultProperties holds the default value on creation for the properties field.
+	view.DefaultProperties = viewDescProperties.Default.(string)
 	// viewDescStatus is the schema descriptor for status field.
 	viewDescStatus := viewFields[14].Descriptor()
 	// view.DefaultStatus holds the default value on creation for the status field.

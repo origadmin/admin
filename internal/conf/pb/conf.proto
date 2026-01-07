@@ -5,7 +5,6 @@ package conf.pb;
 import "config/data/v1/data.proto";
 import "config/discovery/v1/discovery.proto";
 import "config/logger/v1/logger.proto";
-import "config/middleware/cors/v1/cors.proto";
 import "config/middleware/v1/middleware.proto";
 import "config/transport/v1/transport.proto";
 import "internal/conf/pb/captcha.proto";

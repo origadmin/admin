@@ -68,6 +68,8 @@ func (m *Captcha) validate(all bool) error {
 
 	// no validation rules for CacheName
 
+	// no validation rules for Language
+
 	if len(errors) > 0 {
 		return CaptchaMultiError(errors)
 	}

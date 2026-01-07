@@ -422,6 +422,14 @@ func (_c *ResourceCreate) defaults() {
 		v := resource.DefaultName
 		_c.mutation.SetName(v)
 	}
+	if _, ok := _c.mutation.I18n(); !ok {
+		v := resource.DefaultI18n
+		_c.mutation.SetI18n(v)
+	}
+	if _, ok := _c.mutation.GetType(); !ok {
+		v := resource.DefaultType
+		_c.mutation.SetType(v)
+	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := resource.DefaultStatus
 		_c.mutation.SetStatus(v)
@@ -429,6 +437,18 @@ func (_c *ResourceCreate) defaults() {
 	if _, ok := _c.mutation.Sequence(); !ok {
 		v := resource.DefaultSequence
 		_c.mutation.SetSequence(v)
+	}
+	if _, ok := _c.mutation.Method(); !ok {
+		v := resource.DefaultMethod
+		_c.mutation.SetMethod(v)
+	}
+	if _, ok := _c.mutation.Path(); !ok {
+		v := resource.DefaultPath
+		_c.mutation.SetPath(v)
+	}
+	if _, ok := _c.mutation.Operation(); !ok {
+		v := resource.DefaultOperation
+		_c.mutation.SetOperation(v)
 	}
 	if _, ok := _c.mutation.ServiceName(); !ok {
 		v := resource.DefaultServiceName
@@ -449,6 +469,18 @@ func (_c *ResourceCreate) defaults() {
 	if _, ok := _c.mutation.SyncStatus(); !ok {
 		v := resource.DefaultSyncStatus
 		_c.mutation.SetSyncStatus(v)
+	}
+	if _, ok := _c.mutation.TreePath(); !ok {
+		v := resource.DefaultTreePath
+		_c.mutation.SetTreePath(v)
+	}
+	if _, ok := _c.mutation.Properties(); !ok {
+		v := resource.DefaultProperties
+		_c.mutation.SetProperties(v)
+	}
+	if _, ok := _c.mutation.Description(); !ok {
+		v := resource.DefaultDescription
+		_c.mutation.SetDescription(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := resource.DefaultID()
@@ -475,11 +507,26 @@ func (_c *ResourceCreate) check() error {
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Resource.name"`)}
 	}
+	if _, ok := _c.mutation.I18n(); !ok {
+		return &ValidationError{Name: "i18n", err: errors.New(`ent: missing required field "Resource.i18n"`)}
+	}
+	if _, ok := _c.mutation.GetType(); !ok {
+		return &ValidationError{Name: "type", err: errors.New(`ent: missing required field "Resource.type"`)}
+	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Resource.status"`)}
 	}
 	if _, ok := _c.mutation.Sequence(); !ok {
 		return &ValidationError{Name: "sequence", err: errors.New(`ent: missing required field "Resource.sequence"`)}
+	}
+	if _, ok := _c.mutation.Method(); !ok {
+		return &ValidationError{Name: "method", err: errors.New(`ent: missing required field "Resource.method"`)}
+	}
+	if _, ok := _c.mutation.Path(); !ok {
+		return &ValidationError{Name: "path", err: errors.New(`ent: missing required field "Resource.path"`)}
+	}
+	if _, ok := _c.mutation.Operation(); !ok {
+		return &ValidationError{Name: "operation", err: errors.New(`ent: missing required field "Resource.operation"`)}
 	}
 	if _, ok := _c.mutation.ServiceName(); !ok {
 		return &ValidationError{Name: "service_name", err: errors.New(`ent: missing required field "Resource.service_name"`)}
@@ -495,6 +542,15 @@ func (_c *ResourceCreate) check() error {
 	}
 	if _, ok := _c.mutation.SyncStatus(); !ok {
 		return &ValidationError{Name: "sync_status", err: errors.New(`ent: missing required field "Resource.sync_status"`)}
+	}
+	if _, ok := _c.mutation.TreePath(); !ok {
+		return &ValidationError{Name: "tree_path", err: errors.New(`ent: missing required field "Resource.tree_path"`)}
+	}
+	if _, ok := _c.mutation.Properties(); !ok {
+		return &ValidationError{Name: "properties", err: errors.New(`ent: missing required field "Resource.properties"`)}
+	}
+	if _, ok := _c.mutation.Description(); !ok {
+		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Resource.description"`)}
 	}
 	if v, ok := _c.mutation.ID(); ok {
 		if err := resource.IDValidator(v); err != nil {

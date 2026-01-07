@@ -149,10 +149,20 @@ var (
 	KeywordValidator func(string) error
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
+	// DefaultI18n holds the default value on creation for the "i18n" field.
+	DefaultI18n string
+	// DefaultType holds the default value on creation for the "type" field.
+	DefaultType string
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus enums.Status
 	// DefaultSequence holds the default value on creation for the "sequence" field.
 	DefaultSequence int
+	// DefaultMethod holds the default value on creation for the "method" field.
+	DefaultMethod string
+	// DefaultPath holds the default value on creation for the "path" field.
+	DefaultPath string
+	// DefaultOperation holds the default value on creation for the "operation" field.
+	DefaultOperation string
 	// DefaultServiceName holds the default value on creation for the "service_name" field.
 	DefaultServiceName string
 	// DefaultPolicy holds the default value on creation for the "policy" field.
@@ -163,6 +173,12 @@ var (
 	DefaultLastSyncVersionID string
 	// DefaultSyncStatus holds the default value on creation for the "sync_status" field.
 	DefaultSyncStatus string
+	// DefaultTreePath holds the default value on creation for the "tree_path" field.
+	DefaultTreePath string
+	// DefaultProperties holds the default value on creation for the "properties" field.
+	DefaultProperties string
+	// DefaultDescription holds the default value on creation for the "description" field.
+	DefaultDescription string
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() int64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.

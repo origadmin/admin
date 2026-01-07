@@ -30,10 +30,10 @@ func (Resource) Fields() []ent.Field {
 			Default(""),
 		field.String("i18n").
 			Comment(i18n.Text("entity.resource.field.i18n")).
-			Optional(),
+			Default(""),
 		field.String("type").
 			Comment(i18n.Text("entity.resource.field.type")).
-			Optional(),
+			Default("API"),
 		field.Int8("status").
 			GoType(enums.Status(0)).
 			Default(int8(enums.StatusActive)).
@@ -43,13 +43,13 @@ func (Resource) Fields() []ent.Field {
 			Default(0),
 		field.String("method").
 			Comment(i18n.Text("entity.resource.field.method")).
-			Optional(),
+			Default(""),
 		field.String("path").
 			Comment(i18n.Text("entity.resource.field.path")).
-			Optional(),
+			Default(""),
 		field.String("operation").
 			Comment(i18n.Text("entity.resource.field.operation")).
-			Optional(),
+			Default(""),
 		field.String("service_name").
 			Default("").
 			Comment(i18n.Text("entity.resource.field.service_name")),
@@ -67,14 +67,14 @@ func (Resource) Fields() []ent.Field {
 			Default("Synced"),
 		field.String("tree_path").
 			Comment(i18n.Text("entity.resource.field.tree_path")).
-			Optional(),
+			Default(""),
 		mixin.OptionalFK("parent_id", i18n.Text("entity.resource.field.parent_id")),
 		field.String("properties").
 			Comment(i18n.Text("entity.resource.field.properties")).
-			Optional(),
+			Default(""),
 		field.String("description").
 			Comment(i18n.Text("entity.resource.field.description")).
-			Optional(),
+			Default(""),
 	}
 }
 

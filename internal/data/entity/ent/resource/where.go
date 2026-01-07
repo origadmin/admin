@@ -417,16 +417,6 @@ func I18nHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldI18n, v))
 }
 
-// I18nIsNil applies the IsNil predicate on the "i18n" field.
-func I18nIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldI18n))
-}
-
-// I18nNotNil applies the NotNil predicate on the "i18n" field.
-func I18nNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldI18n))
-}
-
 // I18nEqualFold applies the EqualFold predicate on the "i18n" field.
 func I18nEqualFold(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEqualFold(FieldI18n, v))
@@ -490,16 +480,6 @@ func TypeHasPrefix(v string) predicate.Resource {
 // TypeHasSuffix applies the HasSuffix predicate on the "type" field.
 func TypeHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldType, v))
-}
-
-// TypeIsNil applies the IsNil predicate on the "type" field.
-func TypeIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldType))
-}
-
-// TypeNotNil applies the NotNil predicate on the "type" field.
-func TypeNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldType))
 }
 
 // TypeEqualFold applies the EqualFold predicate on the "type" field.
@@ -661,16 +641,6 @@ func MethodHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldMethod, v))
 }
 
-// MethodIsNil applies the IsNil predicate on the "method" field.
-func MethodIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldMethod))
-}
-
-// MethodNotNil applies the NotNil predicate on the "method" field.
-func MethodNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldMethod))
-}
-
 // MethodEqualFold applies the EqualFold predicate on the "method" field.
 func MethodEqualFold(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEqualFold(FieldMethod, v))
@@ -736,16 +706,6 @@ func PathHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldPath, v))
 }
 
-// PathIsNil applies the IsNil predicate on the "path" field.
-func PathIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldPath))
-}
-
-// PathNotNil applies the NotNil predicate on the "path" field.
-func PathNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldPath))
-}
-
 // PathEqualFold applies the EqualFold predicate on the "path" field.
 func PathEqualFold(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEqualFold(FieldPath, v))
@@ -809,16 +769,6 @@ func OperationHasPrefix(v string) predicate.Resource {
 // OperationHasSuffix applies the HasSuffix predicate on the "operation" field.
 func OperationHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldOperation, v))
-}
-
-// OperationIsNil applies the IsNil predicate on the "operation" field.
-func OperationIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldOperation))
-}
-
-// OperationNotNil applies the NotNil predicate on the "operation" field.
-func OperationNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldOperation))
 }
 
 // OperationEqualFold applies the EqualFold predicate on the "operation" field.
@@ -1211,16 +1161,6 @@ func TreePathHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldTreePath, v))
 }
 
-// TreePathIsNil applies the IsNil predicate on the "tree_path" field.
-func TreePathIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldTreePath))
-}
-
-// TreePathNotNil applies the NotNil predicate on the "tree_path" field.
-func TreePathNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldTreePath))
-}
-
 // TreePathEqualFold applies the EqualFold predicate on the "tree_path" field.
 func TreePathEqualFold(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEqualFold(FieldTreePath, v))
@@ -1316,16 +1256,6 @@ func PropertiesHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldProperties, v))
 }
 
-// PropertiesIsNil applies the IsNil predicate on the "properties" field.
-func PropertiesIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldProperties))
-}
-
-// PropertiesNotNil applies the NotNil predicate on the "properties" field.
-func PropertiesNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldProperties))
-}
-
 // PropertiesEqualFold applies the EqualFold predicate on the "properties" field.
 func PropertiesEqualFold(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldEqualFold(FieldProperties, v))
@@ -1389,16 +1319,6 @@ func DescriptionHasPrefix(v string) predicate.Resource {
 // DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
 func DescriptionHasSuffix(v string) predicate.Resource {
 	return predicate.Resource(sql.FieldHasSuffix(FieldDescription, v))
-}
-
-// DescriptionIsNil applies the IsNil predicate on the "description" field.
-func DescriptionIsNil() predicate.Resource {
-	return predicate.Resource(sql.FieldIsNull(FieldDescription))
-}
-
-// DescriptionNotNil applies the NotNil predicate on the "description" field.
-func DescriptionNotNil() predicate.Resource {
-	return predicate.Resource(sql.FieldNotNull(FieldDescription))
 }
 
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.

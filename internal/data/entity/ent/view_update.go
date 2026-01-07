@@ -116,12 +116,6 @@ func (_u *ViewUpdate) SetNillableI18n(v *string) *ViewUpdate {
 	return _u
 }
 
-// ClearI18n clears the value of the "i18n" field.
-func (_u *ViewUpdate) ClearI18n() *ViewUpdate {
-	_u.mutation.ClearI18n()
-	return _u
-}
-
 // SetType sets the "type" field.
 func (_u *ViewUpdate) SetType(v view.Type) *ViewUpdate {
 	_u.mutation.SetType(v)
@@ -150,12 +144,6 @@ func (_u *ViewUpdate) SetNillableComponent(v *string) *ViewUpdate {
 	return _u
 }
 
-// ClearComponent clears the value of the "component" field.
-func (_u *ViewUpdate) ClearComponent() *ViewUpdate {
-	_u.mutation.ClearComponent()
-	return _u
-}
-
 // SetPath sets the "path" field.
 func (_u *ViewUpdate) SetPath(v string) *ViewUpdate {
 	_u.mutation.SetPath(v)
@@ -170,12 +158,6 @@ func (_u *ViewUpdate) SetNillablePath(v *string) *ViewUpdate {
 	return _u
 }
 
-// ClearPath clears the value of the "path" field.
-func (_u *ViewUpdate) ClearPath() *ViewUpdate {
-	_u.mutation.ClearPath()
-	return _u
-}
-
 // SetIcon sets the "icon" field.
 func (_u *ViewUpdate) SetIcon(v string) *ViewUpdate {
 	_u.mutation.SetIcon(v)
@@ -187,12 +169,6 @@ func (_u *ViewUpdate) SetNillableIcon(v *string) *ViewUpdate {
 	if v != nil {
 		_u.SetIcon(*v)
 	}
-	return _u
-}
-
-// ClearIcon clears the value of the "icon" field.
-func (_u *ViewUpdate) ClearIcon() *ViewUpdate {
-	_u.mutation.ClearIcon()
 	return _u
 }
 
@@ -245,12 +221,6 @@ func (_u *ViewUpdate) SetNillableTreePath(v *string) *ViewUpdate {
 	return _u
 }
 
-// ClearTreePath clears the value of the "tree_path" field.
-func (_u *ViewUpdate) ClearTreePath() *ViewUpdate {
-	_u.mutation.ClearTreePath()
-	return _u
-}
-
 // SetDescription sets the "description" field.
 func (_u *ViewUpdate) SetDescription(v string) *ViewUpdate {
 	_u.mutation.SetDescription(v)
@@ -265,12 +235,6 @@ func (_u *ViewUpdate) SetNillableDescription(v *string) *ViewUpdate {
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *ViewUpdate) ClearDescription() *ViewUpdate {
-	_u.mutation.ClearDescription()
-	return _u
-}
-
 // SetProperties sets the "properties" field.
 func (_u *ViewUpdate) SetProperties(v string) *ViewUpdate {
 	_u.mutation.SetProperties(v)
@@ -282,12 +246,6 @@ func (_u *ViewUpdate) SetNillableProperties(v *string) *ViewUpdate {
 	if v != nil {
 		_u.SetProperties(*v)
 	}
-	return _u
-}
-
-// ClearProperties clears the value of the "properties" field.
-func (_u *ViewUpdate) ClearProperties() *ViewUpdate {
-	_u.mutation.ClearProperties()
 	return _u
 }
 
@@ -592,29 +550,17 @@ func (_u *ViewUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.I18n(); ok {
 		_spec.SetField(view.FieldI18n, field.TypeString, value)
 	}
-	if _u.mutation.I18nCleared() {
-		_spec.ClearField(view.FieldI18n, field.TypeString)
-	}
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(view.FieldType, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.Component(); ok {
 		_spec.SetField(view.FieldComponent, field.TypeString, value)
 	}
-	if _u.mutation.ComponentCleared() {
-		_spec.ClearField(view.FieldComponent, field.TypeString)
-	}
 	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(view.FieldPath, field.TypeString, value)
 	}
-	if _u.mutation.PathCleared() {
-		_spec.ClearField(view.FieldPath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Icon(); ok {
 		_spec.SetField(view.FieldIcon, field.TypeString, value)
-	}
-	if _u.mutation.IconCleared() {
-		_spec.ClearField(view.FieldIcon, field.TypeString)
 	}
 	if value, ok := _u.mutation.Visible(); ok {
 		_spec.SetField(view.FieldVisible, field.TypeBool, value)
@@ -628,20 +574,11 @@ func (_u *ViewUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.TreePath(); ok {
 		_spec.SetField(view.FieldTreePath, field.TypeString, value)
 	}
-	if _u.mutation.TreePathCleared() {
-		_spec.ClearField(view.FieldTreePath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(view.FieldDescription, field.TypeString, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(view.FieldDescription, field.TypeString)
-	}
 	if value, ok := _u.mutation.Properties(); ok {
 		_spec.SetField(view.FieldProperties, field.TypeString, value)
-	}
-	if _u.mutation.PropertiesCleared() {
-		_spec.ClearField(view.FieldProperties, field.TypeString)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(view.FieldStatus, field.TypeInt8, value)
@@ -1049,12 +986,6 @@ func (_u *ViewUpdateOne) SetNillableI18n(v *string) *ViewUpdateOne {
 	return _u
 }
 
-// ClearI18n clears the value of the "i18n" field.
-func (_u *ViewUpdateOne) ClearI18n() *ViewUpdateOne {
-	_u.mutation.ClearI18n()
-	return _u
-}
-
 // SetType sets the "type" field.
 func (_u *ViewUpdateOne) SetType(v view.Type) *ViewUpdateOne {
 	_u.mutation.SetType(v)
@@ -1083,12 +1014,6 @@ func (_u *ViewUpdateOne) SetNillableComponent(v *string) *ViewUpdateOne {
 	return _u
 }
 
-// ClearComponent clears the value of the "component" field.
-func (_u *ViewUpdateOne) ClearComponent() *ViewUpdateOne {
-	_u.mutation.ClearComponent()
-	return _u
-}
-
 // SetPath sets the "path" field.
 func (_u *ViewUpdateOne) SetPath(v string) *ViewUpdateOne {
 	_u.mutation.SetPath(v)
@@ -1103,12 +1028,6 @@ func (_u *ViewUpdateOne) SetNillablePath(v *string) *ViewUpdateOne {
 	return _u
 }
 
-// ClearPath clears the value of the "path" field.
-func (_u *ViewUpdateOne) ClearPath() *ViewUpdateOne {
-	_u.mutation.ClearPath()
-	return _u
-}
-
 // SetIcon sets the "icon" field.
 func (_u *ViewUpdateOne) SetIcon(v string) *ViewUpdateOne {
 	_u.mutation.SetIcon(v)
@@ -1120,12 +1039,6 @@ func (_u *ViewUpdateOne) SetNillableIcon(v *string) *ViewUpdateOne {
 	if v != nil {
 		_u.SetIcon(*v)
 	}
-	return _u
-}
-
-// ClearIcon clears the value of the "icon" field.
-func (_u *ViewUpdateOne) ClearIcon() *ViewUpdateOne {
-	_u.mutation.ClearIcon()
 	return _u
 }
 
@@ -1178,12 +1091,6 @@ func (_u *ViewUpdateOne) SetNillableTreePath(v *string) *ViewUpdateOne {
 	return _u
 }
 
-// ClearTreePath clears the value of the "tree_path" field.
-func (_u *ViewUpdateOne) ClearTreePath() *ViewUpdateOne {
-	_u.mutation.ClearTreePath()
-	return _u
-}
-
 // SetDescription sets the "description" field.
 func (_u *ViewUpdateOne) SetDescription(v string) *ViewUpdateOne {
 	_u.mutation.SetDescription(v)
@@ -1198,12 +1105,6 @@ func (_u *ViewUpdateOne) SetNillableDescription(v *string) *ViewUpdateOne {
 	return _u
 }
 
-// ClearDescription clears the value of the "description" field.
-func (_u *ViewUpdateOne) ClearDescription() *ViewUpdateOne {
-	_u.mutation.ClearDescription()
-	return _u
-}
-
 // SetProperties sets the "properties" field.
 func (_u *ViewUpdateOne) SetProperties(v string) *ViewUpdateOne {
 	_u.mutation.SetProperties(v)
@@ -1215,12 +1116,6 @@ func (_u *ViewUpdateOne) SetNillableProperties(v *string) *ViewUpdateOne {
 	if v != nil {
 		_u.SetProperties(*v)
 	}
-	return _u
-}
-
-// ClearProperties clears the value of the "properties" field.
-func (_u *ViewUpdateOne) ClearProperties() *ViewUpdateOne {
-	_u.mutation.ClearProperties()
 	return _u
 }
 
@@ -1555,29 +1450,17 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	if value, ok := _u.mutation.I18n(); ok {
 		_spec.SetField(view.FieldI18n, field.TypeString, value)
 	}
-	if _u.mutation.I18nCleared() {
-		_spec.ClearField(view.FieldI18n, field.TypeString)
-	}
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(view.FieldType, field.TypeEnum, value)
 	}
 	if value, ok := _u.mutation.Component(); ok {
 		_spec.SetField(view.FieldComponent, field.TypeString, value)
 	}
-	if _u.mutation.ComponentCleared() {
-		_spec.ClearField(view.FieldComponent, field.TypeString)
-	}
 	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(view.FieldPath, field.TypeString, value)
 	}
-	if _u.mutation.PathCleared() {
-		_spec.ClearField(view.FieldPath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Icon(); ok {
 		_spec.SetField(view.FieldIcon, field.TypeString, value)
-	}
-	if _u.mutation.IconCleared() {
-		_spec.ClearField(view.FieldIcon, field.TypeString)
 	}
 	if value, ok := _u.mutation.Visible(); ok {
 		_spec.SetField(view.FieldVisible, field.TypeBool, value)
@@ -1591,20 +1474,11 @@ func (_u *ViewUpdateOne) sqlSave(ctx context.Context) (_node *View, err error) {
 	if value, ok := _u.mutation.TreePath(); ok {
 		_spec.SetField(view.FieldTreePath, field.TypeString, value)
 	}
-	if _u.mutation.TreePathCleared() {
-		_spec.ClearField(view.FieldTreePath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(view.FieldDescription, field.TypeString, value)
 	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(view.FieldDescription, field.TypeString)
-	}
 	if value, ok := _u.mutation.Properties(); ok {
 		_spec.SetField(view.FieldProperties, field.TypeString, value)
-	}
-	if _u.mutation.PropertiesCleared() {
-		_spec.ClearField(view.FieldProperties, field.TypeString)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(view.FieldStatus, field.TypeInt8, value)

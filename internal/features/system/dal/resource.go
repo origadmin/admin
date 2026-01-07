@@ -56,7 +56,6 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 	entResource := dto.ConvertResourcePBToResource(res)
 	create := r.db.Resource(ctx).Create().
 		SetResourceSkipZero(entResource).
-		SetName(res.Name).
 		SetSyncStatus("Modified").
 		SetVersionID("").
 		SetLastSyncVersionID("")
@@ -138,6 +137,10 @@ func (r *resourceRepo) List(ctx context.Context, opts ...*dto.ResourceQueryOptio
 
 	if opt.Keyword != "" {
 		query.Where(resource.KeywordContains(opt.Keyword))
+	}
+
+	if opt.Operation != "" {
+		query.Where(resource.Operation(opt.Operation))
 	}
 
 	if opt.ReadMask != nil {

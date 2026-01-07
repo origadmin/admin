@@ -63,6 +63,8 @@ type View struct {
 	ParentId int64 `protobuf:"varint,18,opt,name=parent_id,proto3" json:"parent_id,omitempty"`
 	// ParentPath holds the value of the "parent_path" field.
 	ParentPath string `protobuf:"bytes,19,opt,name=parent_path,proto3" json:"parent_path,omitempty"`
+	// Component holds the value of the "component" field.
+	Component string `protobuf:"bytes,20,opt,name=component,proto3" json:"component,omitempty"`
 	// Children holds the value of the children edge.
 	Children []*View `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
@@ -234,6 +236,13 @@ func (x *View) GetParentId() int64 {
 func (x *View) GetParentPath() string {
 	if x != nil {
 		return x.ParentPath
+	}
+	return ""
+}
+
+func (x *View) GetComponent() string {
+	if x != nil {
+		return x.Component
 	}
 	return ""
 }
@@ -496,6 +505,8 @@ type User struct {
 	LoginTime *timestamppb.Timestamp `protobuf:"bytes,21,opt,name=login_time,proto3" json:"login_time,omitempty"`
 	// user.field.sanction_date
 	SanctionDate *timestamppb.Timestamp `protobuf:"bytes,22,opt,name=sanction_date,proto3,oneof" json:"sanction_date,omitempty"`
+	// user.field.department
+	Department string `protobuf:"bytes,23,opt,name=department,proto3" json:"department,omitempty"`
 	// Roles holds the value of the roles edge.
 	Roles []*Role `protobuf:"bytes,100,rep,name=roles,proto3" json:"roles,omitempty"`
 	// Role Ids holds the value of the role_ids
@@ -686,6 +697,13 @@ func (x *User) GetSanctionDate() *timestamppb.Timestamp {
 		return x.SanctionDate
 	}
 	return nil
+}
+
+func (x *User) GetDepartment() string {
+	if x != nil {
+		return x.Department
+	}
+	return ""
 }
 
 func (x *User) GetRoles() []*Role {
@@ -925,8 +943,8 @@ type Resource struct {
 	Name string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
 	// resource.field.keyword
 	Keyword string `protobuf:"bytes,5,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	// resource.field.i18n_key
-	I18NKey string `protobuf:"bytes,6,opt,name=i18n_key,proto3" json:"i18n_key,omitempty"`
+	// resource.field.i18n
+	I18N string `protobuf:"bytes,6,opt,name=i18n,proto3" json:"i18n,omitempty"`
 	// resource.field.type
 	Type string `protobuf:"bytes,7,opt,name=type,proto3" json:"type,omitempty"`
 	// resource.field.status
@@ -957,6 +975,8 @@ type Resource struct {
 	SyncStatus string `protobuf:"bytes,20,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
 	// resource.field.service_name
 	ServiceName string `protobuf:"bytes,21,opt,name=service_name,proto3" json:"service_name,omitempty"`
+	// resource.field.policy
+	Policy string `protobuf:"bytes,22,opt,name=policy,proto3" json:"policy,omitempty"`
 	// Children holds the value of the children edge.
 	Children []*Resource `protobuf:"bytes,100,rep,name=children,proto3" json:"children,omitempty"`
 	// Parent holds the value of the parent edge.
@@ -1034,9 +1054,9 @@ func (x *Resource) GetKeyword() string {
 	return ""
 }
 
-func (x *Resource) GetI18NKey() string {
+func (x *Resource) GetI18N() string {
 	if x != nil {
-		return x.I18NKey
+		return x.I18N
 	}
 	return ""
 }
@@ -1142,6 +1162,13 @@ func (x *Resource) GetSyncStatus() string {
 func (x *Resource) GetServiceName() string {
 	if x != nil {
 		return x.ServiceName
+	}
+	return ""
+}
+
+func (x *Resource) GetPolicy() string {
+	if x != nil {
+		return x.Policy
 	}
 	return ""
 }
@@ -2005,7 +2032,7 @@ var File_types_system_proto protoreflect.FileDescriptor
 
 const file_types_system_proto_rawDesc = "" +
 	"\n" +
-	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8e\x06\n" +
+	"\x12types/system.proto\x12\x15api.v1.services.types\x1a\x1fgoogle/protobuf/timestamp.proto\"\xac\x06\n" +
 	"\x04View\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
@@ -2028,7 +2055,8 @@ const file_types_system_proto_rawDesc = "" +
 	"properties\x12\x16\n" +
 	"\x06status\x18\x11 \x01(\x05R\x06status\x12\x1c\n" +
 	"\tparent_id\x18\x12 \x01(\x03R\tparent_id\x12 \n" +
-	"\vparent_path\x18\x13 \x01(\tR\vparent_path\x127\n" +
+	"\vparent_path\x18\x13 \x01(\tR\vparent_path\x12\x1c\n" +
+	"\tcomponent\x18\x14 \x01(\tR\tcomponent\x127\n" +
 	"\bchildren\x18d \x03(\v2\x1b.api.v1.services.types.ViewR\bchildren\x123\n" +
 	"\x06parent\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x06parent\x12=\n" +
 	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x121\n" +
@@ -2050,7 +2078,7 @@ const file_types_system_proto_rawDesc = "" +
 	"\tresources\x18f \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\"\n" +
 	"\fresource_ids\x18g \x03(\x03R\fresource_ids\x12C\n" +
 	"\vpermissions\x18h \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12&\n" +
-	"\x0epermission_ids\x18i \x03(\x03R\x0epermission_ids\"\xec\x06\n" +
+	"\x0epermission_ids\x18i \x03(\x03R\x0epermission_ids\"\x8c\a\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12$\n" +
 	"\rcreate_author\x18\x02 \x01(\x03R\rcreate_author\x12$\n" +
@@ -2078,7 +2106,10 @@ const file_types_system_proto_rawDesc = "" +
 	"\n" +
 	"login_time\x18\x15 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"login_time\x12E\n" +
-	"\rsanction_date\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x121\n" +
+	"\rsanction_date\x18\x16 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\rsanction_date\x88\x01\x01\x12\x1e\n" +
+	"\n" +
+	"department\x18\x17 \x01(\tR\n" +
+	"department\x121\n" +
 	"\x05roles\x18d \x03(\v2\x1b.api.v1.services.types.RoleR\x05roles\x12\x1a\n" +
 	"\brole_ids\x18e \x03(\x03R\brole_idsB\x10\n" +
 	"\x0e_sanction_date\"\xca\x02\n" +
@@ -2098,14 +2129,14 @@ const file_types_system_proto_rawDesc = "" +
 	"\arole_id\x18\x04 \x01(\x03R\arole_id\x12\x18\n" +
 	"\aview_id\x18\x05 \x01(\x03R\aview_id\x12/\n" +
 	"\x04role\x18d \x01(\v2\x1b.api.v1.services.types.RoleR\x04role\x12/\n" +
-	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xd5\a\n" +
+	"\x04view\x18e \x01(\v2\x1b.api.v1.services.types.ViewR\x04view\"\xe5\a\n" +
 	"\bResource\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12<\n" +
 	"\vcreate_time\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\vcreate_time\x12<\n" +
 	"\vupdate_time\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\vupdate_time\x12\x12\n" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x18\n" +
-	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x1a\n" +
-	"\bi18n_key\x18\x06 \x01(\tR\bi18n_key\x12\x12\n" +
+	"\akeyword\x18\x05 \x01(\tR\akeyword\x12\x12\n" +
+	"\x04i18n\x18\x06 \x01(\tR\x04i18n\x12\x12\n" +
 	"\x04type\x18\a \x01(\tR\x04type\x12\x16\n" +
 	"\x06status\x18\b \x01(\x05R\x06status\x12\x12\n" +
 	"\x04path\x18\t \x01(\tR\x04path\x12\x1c\n" +
@@ -2123,7 +2154,8 @@ const file_types_system_proto_rawDesc = "" +
 	"\vdescription\x18\x12 \x01(\tR\vdescription\x12\x1c\n" +
 	"\tparent_id\x18\x13 \x01(\x03R\tparent_id\x12 \n" +
 	"\vsync_status\x18\x14 \x01(\tR\vsync_status\x12\"\n" +
-	"\fservice_name\x18\x15 \x01(\tR\fservice_name\x12;\n" +
+	"\fservice_name\x18\x15 \x01(\tR\fservice_name\x12\x16\n" +
+	"\x06policy\x18\x16 \x01(\tR\x06policy\x12;\n" +
 	"\bchildren\x18d \x03(\v2\x1f.api.v1.services.types.ResourceR\bchildren\x127\n" +
 	"\x06parent\x18e \x01(\v2\x1f.api.v1.services.types.ResourceR\x06parent\x12&\n" +
 	"\x0epermission_ids\x18f \x03(\x03R\x0epermission_ids\x12C\n" +

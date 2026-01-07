@@ -81,12 +81,6 @@ func (_u *ResourceUpdate) SetNillableI18n(v *string) *ResourceUpdate {
 	return _u
 }
 
-// ClearI18n clears the value of the "i18n" field.
-func (_u *ResourceUpdate) ClearI18n() *ResourceUpdate {
-	_u.mutation.ClearI18n()
-	return _u
-}
-
 // SetType sets the "type" field.
 func (_u *ResourceUpdate) SetType(v string) *ResourceUpdate {
 	_u.mutation.SetType(v)
@@ -98,12 +92,6 @@ func (_u *ResourceUpdate) SetNillableType(v *string) *ResourceUpdate {
 	if v != nil {
 		_u.SetType(*v)
 	}
-	return _u
-}
-
-// ClearType clears the value of the "type" field.
-func (_u *ResourceUpdate) ClearType() *ResourceUpdate {
-	_u.mutation.ClearType()
 	return _u
 }
 
@@ -163,12 +151,6 @@ func (_u *ResourceUpdate) SetNillableMethod(v *string) *ResourceUpdate {
 	return _u
 }
 
-// ClearMethod clears the value of the "method" field.
-func (_u *ResourceUpdate) ClearMethod() *ResourceUpdate {
-	_u.mutation.ClearMethod()
-	return _u
-}
-
 // SetPath sets the "path" field.
 func (_u *ResourceUpdate) SetPath(v string) *ResourceUpdate {
 	_u.mutation.SetPath(v)
@@ -183,12 +165,6 @@ func (_u *ResourceUpdate) SetNillablePath(v *string) *ResourceUpdate {
 	return _u
 }
 
-// ClearPath clears the value of the "path" field.
-func (_u *ResourceUpdate) ClearPath() *ResourceUpdate {
-	_u.mutation.ClearPath()
-	return _u
-}
-
 // SetOperation sets the "operation" field.
 func (_u *ResourceUpdate) SetOperation(v string) *ResourceUpdate {
 	_u.mutation.SetOperation(v)
@@ -200,12 +176,6 @@ func (_u *ResourceUpdate) SetNillableOperation(v *string) *ResourceUpdate {
 	if v != nil {
 		_u.SetOperation(*v)
 	}
-	return _u
-}
-
-// ClearOperation clears the value of the "operation" field.
-func (_u *ResourceUpdate) ClearOperation() *ResourceUpdate {
-	_u.mutation.ClearOperation()
 	return _u
 }
 
@@ -293,12 +263,6 @@ func (_u *ResourceUpdate) SetNillableTreePath(v *string) *ResourceUpdate {
 	return _u
 }
 
-// ClearTreePath clears the value of the "tree_path" field.
-func (_u *ResourceUpdate) ClearTreePath() *ResourceUpdate {
-	_u.mutation.ClearTreePath()
-	return _u
-}
-
 // SetParentID sets the "parent_id" field.
 func (_u *ResourceUpdate) SetParentID(v int64) *ResourceUpdate {
 	_u.mutation.SetParentID(v)
@@ -333,12 +297,6 @@ func (_u *ResourceUpdate) SetNillableProperties(v *string) *ResourceUpdate {
 	return _u
 }
 
-// ClearProperties clears the value of the "properties" field.
-func (_u *ResourceUpdate) ClearProperties() *ResourceUpdate {
-	_u.mutation.ClearProperties()
-	return _u
-}
-
 // SetDescription sets the "description" field.
 func (_u *ResourceUpdate) SetDescription(v string) *ResourceUpdate {
 	_u.mutation.SetDescription(v)
@@ -350,12 +308,6 @@ func (_u *ResourceUpdate) SetNillableDescription(v *string) *ResourceUpdate {
 	if v != nil {
 		_u.SetDescription(*v)
 	}
-	return _u
-}
-
-// ClearDescription clears the value of the "description" field.
-func (_u *ResourceUpdate) ClearDescription() *ResourceUpdate {
-	_u.mutation.ClearDescription()
 	return _u
 }
 
@@ -595,14 +547,8 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.I18n(); ok {
 		_spec.SetField(resource.FieldI18n, field.TypeString, value)
 	}
-	if _u.mutation.I18nCleared() {
-		_spec.ClearField(resource.FieldI18n, field.TypeString)
-	}
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(resource.FieldType, field.TypeString, value)
-	}
-	if _u.mutation.TypeCleared() {
-		_spec.ClearField(resource.FieldType, field.TypeString)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
@@ -619,20 +565,11 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 	}
-	if _u.mutation.MethodCleared() {
-		_spec.ClearField(resource.FieldMethod, field.TypeString)
-	}
 	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 	}
-	if _u.mutation.PathCleared() {
-		_spec.ClearField(resource.FieldPath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)
-	}
-	if _u.mutation.OperationCleared() {
-		_spec.ClearField(resource.FieldOperation, field.TypeString)
 	}
 	if value, ok := _u.mutation.ServiceName(); ok {
 		_spec.SetField(resource.FieldServiceName, field.TypeString, value)
@@ -652,20 +589,11 @@ func (_u *ResourceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.TreePath(); ok {
 		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
 	}
-	if _u.mutation.TreePathCleared() {
-		_spec.ClearField(resource.FieldTreePath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Properties(); ok {
 		_spec.SetField(resource.FieldProperties, field.TypeString, value)
 	}
-	if _u.mutation.PropertiesCleared() {
-		_spec.ClearField(resource.FieldProperties, field.TypeString)
-	}
 	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(resource.FieldDescription, field.TypeString, value)
-	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(resource.FieldDescription, field.TypeString)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -967,12 +895,6 @@ func (_u *ResourceUpdateOne) SetNillableI18n(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// ClearI18n clears the value of the "i18n" field.
-func (_u *ResourceUpdateOne) ClearI18n() *ResourceUpdateOne {
-	_u.mutation.ClearI18n()
-	return _u
-}
-
 // SetType sets the "type" field.
 func (_u *ResourceUpdateOne) SetType(v string) *ResourceUpdateOne {
 	_u.mutation.SetType(v)
@@ -984,12 +906,6 @@ func (_u *ResourceUpdateOne) SetNillableType(v *string) *ResourceUpdateOne {
 	if v != nil {
 		_u.SetType(*v)
 	}
-	return _u
-}
-
-// ClearType clears the value of the "type" field.
-func (_u *ResourceUpdateOne) ClearType() *ResourceUpdateOne {
-	_u.mutation.ClearType()
 	return _u
 }
 
@@ -1049,12 +965,6 @@ func (_u *ResourceUpdateOne) SetNillableMethod(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// ClearMethod clears the value of the "method" field.
-func (_u *ResourceUpdateOne) ClearMethod() *ResourceUpdateOne {
-	_u.mutation.ClearMethod()
-	return _u
-}
-
 // SetPath sets the "path" field.
 func (_u *ResourceUpdateOne) SetPath(v string) *ResourceUpdateOne {
 	_u.mutation.SetPath(v)
@@ -1069,12 +979,6 @@ func (_u *ResourceUpdateOne) SetNillablePath(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// ClearPath clears the value of the "path" field.
-func (_u *ResourceUpdateOne) ClearPath() *ResourceUpdateOne {
-	_u.mutation.ClearPath()
-	return _u
-}
-
 // SetOperation sets the "operation" field.
 func (_u *ResourceUpdateOne) SetOperation(v string) *ResourceUpdateOne {
 	_u.mutation.SetOperation(v)
@@ -1086,12 +990,6 @@ func (_u *ResourceUpdateOne) SetNillableOperation(v *string) *ResourceUpdateOne 
 	if v != nil {
 		_u.SetOperation(*v)
 	}
-	return _u
-}
-
-// ClearOperation clears the value of the "operation" field.
-func (_u *ResourceUpdateOne) ClearOperation() *ResourceUpdateOne {
-	_u.mutation.ClearOperation()
 	return _u
 }
 
@@ -1179,12 +1077,6 @@ func (_u *ResourceUpdateOne) SetNillableTreePath(v *string) *ResourceUpdateOne {
 	return _u
 }
 
-// ClearTreePath clears the value of the "tree_path" field.
-func (_u *ResourceUpdateOne) ClearTreePath() *ResourceUpdateOne {
-	_u.mutation.ClearTreePath()
-	return _u
-}
-
 // SetParentID sets the "parent_id" field.
 func (_u *ResourceUpdateOne) SetParentID(v int64) *ResourceUpdateOne {
 	_u.mutation.SetParentID(v)
@@ -1219,12 +1111,6 @@ func (_u *ResourceUpdateOne) SetNillableProperties(v *string) *ResourceUpdateOne
 	return _u
 }
 
-// ClearProperties clears the value of the "properties" field.
-func (_u *ResourceUpdateOne) ClearProperties() *ResourceUpdateOne {
-	_u.mutation.ClearProperties()
-	return _u
-}
-
 // SetDescription sets the "description" field.
 func (_u *ResourceUpdateOne) SetDescription(v string) *ResourceUpdateOne {
 	_u.mutation.SetDescription(v)
@@ -1236,12 +1122,6 @@ func (_u *ResourceUpdateOne) SetNillableDescription(v *string) *ResourceUpdateOn
 	if v != nil {
 		_u.SetDescription(*v)
 	}
-	return _u
-}
-
-// ClearDescription clears the value of the "description" field.
-func (_u *ResourceUpdateOne) ClearDescription() *ResourceUpdateOne {
-	_u.mutation.ClearDescription()
 	return _u
 }
 
@@ -1511,14 +1391,8 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 	if value, ok := _u.mutation.I18n(); ok {
 		_spec.SetField(resource.FieldI18n, field.TypeString, value)
 	}
-	if _u.mutation.I18nCleared() {
-		_spec.ClearField(resource.FieldI18n, field.TypeString)
-	}
 	if value, ok := _u.mutation.GetType(); ok {
 		_spec.SetField(resource.FieldType, field.TypeString, value)
-	}
-	if _u.mutation.TypeCleared() {
-		_spec.ClearField(resource.FieldType, field.TypeString)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(resource.FieldStatus, field.TypeInt8, value)
@@ -1535,20 +1409,11 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 	if value, ok := _u.mutation.Method(); ok {
 		_spec.SetField(resource.FieldMethod, field.TypeString, value)
 	}
-	if _u.mutation.MethodCleared() {
-		_spec.ClearField(resource.FieldMethod, field.TypeString)
-	}
 	if value, ok := _u.mutation.Path(); ok {
 		_spec.SetField(resource.FieldPath, field.TypeString, value)
 	}
-	if _u.mutation.PathCleared() {
-		_spec.ClearField(resource.FieldPath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Operation(); ok {
 		_spec.SetField(resource.FieldOperation, field.TypeString, value)
-	}
-	if _u.mutation.OperationCleared() {
-		_spec.ClearField(resource.FieldOperation, field.TypeString)
 	}
 	if value, ok := _u.mutation.ServiceName(); ok {
 		_spec.SetField(resource.FieldServiceName, field.TypeString, value)
@@ -1568,20 +1433,11 @@ func (_u *ResourceUpdateOne) sqlSave(ctx context.Context) (_node *Resource, err 
 	if value, ok := _u.mutation.TreePath(); ok {
 		_spec.SetField(resource.FieldTreePath, field.TypeString, value)
 	}
-	if _u.mutation.TreePathCleared() {
-		_spec.ClearField(resource.FieldTreePath, field.TypeString)
-	}
 	if value, ok := _u.mutation.Properties(); ok {
 		_spec.SetField(resource.FieldProperties, field.TypeString, value)
 	}
-	if _u.mutation.PropertiesCleared() {
-		_spec.ClearField(resource.FieldProperties, field.TypeString)
-	}
 	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(resource.FieldDescription, field.TypeString, value)
-	}
-	if _u.mutation.DescriptionCleared() {
-		_spec.ClearField(resource.FieldDescription, field.TypeString)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{

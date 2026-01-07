@@ -122,22 +122,19 @@ func (s *Seeder) createRootUser() error {
 func (s *Seeder) createInitialResources() error {
 	ctx := context.Background()
 	for _, policy := range security.RegisteredPolicies() {
-		// Check if resource already exists by its operation, which should be unique.
 		_, count, err := s.resourceUseCase.ListResources(ctx,
 			&system.ListResourcesRequest{
 				Operation: policy.ServiceMethod,
 				OnlyCount: true,
 			})
 		if err == nil && count > 0 {
-			s.log.Infof("Resource for operation '%s' already exists, skipping.", policy.ServiceMethod)
+			s.log.Infof("Resource '%s' already exists, skipping.", policy.ServiceMethod)
 			continue
 		}
-
-		// If not exists, create it using the dedicated biz method.
 		if _, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, &policy); err != nil {
-			s.log.Errorf("failed to create resource from policy '%s': %v", policy.ServiceMethod, err)
+			s.log.Errorf("failed to create resource %s: %v", policy.ServiceMethod, err)
 		} else {
-			s.log.Infof("Successfully created resource from policy: %s", policy.ServiceMethod)
+			s.log.Infof("Successfully created resource: %s", policy.ServiceMethod)
 		}
 	}
 	return nil
@@ -146,8 +143,8 @@ func (s *Seeder) createInitialResources() error {
 func (s *Seeder) createInitialViews() error {
 	ctx := context.Background()
 	views := []*types.View{
-		{Name: "Dashboard", Keyword: "dashboard", Path: "/dashboard", Component: "default"},
-		{Name: "System", Keyword: "system", Path: "/system", Component: "default"},
+		{Name: "Dashboard", Keyword: "dashboard", Path: "/dashboard"}, // TODO: Add Component: "default" after proto regen
+		{Name: "System", Keyword: "system", Path: "/system"},          // TODO: Add Component: "default" after proto regen
 	}
 
 	for _, view := range views {

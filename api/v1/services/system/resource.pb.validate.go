@@ -75,6 +75,8 @@ func (m *ListResourcesRequest) validate(all bool) error {
 
 	// no validation rules for SyncStatus
 
+	// no validation rules for Operation
+
 	if len(errors) > 0 {
 		return ListResourcesRequestMultiError(errors)
 	}

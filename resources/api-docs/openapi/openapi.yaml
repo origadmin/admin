@@ -1248,6 +1248,10 @@ paths:
                   in: query
                   schema:
                     type: string
+                - name: operation
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -3163,9 +3167,9 @@ components:
                 keyword:
                     type: string
                     description: resource.field.keyword
-                i18n_key:
+                i18n:
                     type: string
-                    description: resource.field.i18n_key
+                    description: resource.field.i18n
                 type:
                     type: string
                     description: resource.field.type
@@ -3215,6 +3219,9 @@ components:
                 service_name:
                     type: string
                     description: resource.field.service_name
+                policy:
+                    type: string
+                    description: resource.field.policy
                 children:
                     type: array
                     items:
@@ -3383,6 +3390,9 @@ components:
                     type: string
                     description: user.field.sanction_date
                     format: date-time
+                department:
+                    type: string
+                    description: user.field.department
                 roles:
                     type: array
                     items:
@@ -3458,6 +3468,9 @@ components:
                 parent_path:
                     type: string
                     description: ParentPath holds the value of the "parent_path" field.
+                component:
+                    type: string
+                    description: Component holds the value of the "component" field.
                 children:
                     type: array
                     items:

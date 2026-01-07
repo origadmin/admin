@@ -6709,22 +6709,9 @@ func (m *ResourceMutation) OldI18n(ctx context.Context) (v string, err error) {
 	return oldValue.I18n, nil
 }
 
-// ClearI18n clears the value of the "i18n" field.
-func (m *ResourceMutation) ClearI18n() {
-	m.i18n = nil
-	m.clearedFields[resource.FieldI18n] = struct{}{}
-}
-
-// I18nCleared returns if the "i18n" field was cleared in this mutation.
-func (m *ResourceMutation) I18nCleared() bool {
-	_, ok := m.clearedFields[resource.FieldI18n]
-	return ok
-}
-
 // ResetI18n resets all changes to the "i18n" field.
 func (m *ResourceMutation) ResetI18n() {
 	m.i18n = nil
-	delete(m.clearedFields, resource.FieldI18n)
 }
 
 // SetType sets the "type" field.
@@ -6758,22 +6745,9 @@ func (m *ResourceMutation) OldType(ctx context.Context) (v string, err error) {
 	return oldValue.Type, nil
 }
 
-// ClearType clears the value of the "type" field.
-func (m *ResourceMutation) ClearType() {
-	m._type = nil
-	m.clearedFields[resource.FieldType] = struct{}{}
-}
-
-// TypeCleared returns if the "type" field was cleared in this mutation.
-func (m *ResourceMutation) TypeCleared() bool {
-	_, ok := m.clearedFields[resource.FieldType]
-	return ok
-}
-
 // ResetType resets all changes to the "type" field.
 func (m *ResourceMutation) ResetType() {
 	m._type = nil
-	delete(m.clearedFields, resource.FieldType)
 }
 
 // SetStatus sets the "status" field.
@@ -6919,22 +6893,9 @@ func (m *ResourceMutation) OldMethod(ctx context.Context) (v string, err error) 
 	return oldValue.Method, nil
 }
 
-// ClearMethod clears the value of the "method" field.
-func (m *ResourceMutation) ClearMethod() {
-	m.method = nil
-	m.clearedFields[resource.FieldMethod] = struct{}{}
-}
-
-// MethodCleared returns if the "method" field was cleared in this mutation.
-func (m *ResourceMutation) MethodCleared() bool {
-	_, ok := m.clearedFields[resource.FieldMethod]
-	return ok
-}
-
 // ResetMethod resets all changes to the "method" field.
 func (m *ResourceMutation) ResetMethod() {
 	m.method = nil
-	delete(m.clearedFields, resource.FieldMethod)
 }
 
 // SetPath sets the "path" field.
@@ -6968,22 +6929,9 @@ func (m *ResourceMutation) OldPath(ctx context.Context) (v string, err error) {
 	return oldValue.Path, nil
 }
 
-// ClearPath clears the value of the "path" field.
-func (m *ResourceMutation) ClearPath() {
-	m._path = nil
-	m.clearedFields[resource.FieldPath] = struct{}{}
-}
-
-// PathCleared returns if the "path" field was cleared in this mutation.
-func (m *ResourceMutation) PathCleared() bool {
-	_, ok := m.clearedFields[resource.FieldPath]
-	return ok
-}
-
 // ResetPath resets all changes to the "path" field.
 func (m *ResourceMutation) ResetPath() {
 	m._path = nil
-	delete(m.clearedFields, resource.FieldPath)
 }
 
 // SetOperation sets the "operation" field.
@@ -7017,22 +6965,9 @@ func (m *ResourceMutation) OldOperation(ctx context.Context) (v string, err erro
 	return oldValue.Operation, nil
 }
 
-// ClearOperation clears the value of the "operation" field.
-func (m *ResourceMutation) ClearOperation() {
-	m.operation = nil
-	m.clearedFields[resource.FieldOperation] = struct{}{}
-}
-
-// OperationCleared returns if the "operation" field was cleared in this mutation.
-func (m *ResourceMutation) OperationCleared() bool {
-	_, ok := m.clearedFields[resource.FieldOperation]
-	return ok
-}
-
 // ResetOperation resets all changes to the "operation" field.
 func (m *ResourceMutation) ResetOperation() {
 	m.operation = nil
-	delete(m.clearedFields, resource.FieldOperation)
 }
 
 // SetServiceName sets the "service_name" field.
@@ -7246,22 +7181,9 @@ func (m *ResourceMutation) OldTreePath(ctx context.Context) (v string, err error
 	return oldValue.TreePath, nil
 }
 
-// ClearTreePath clears the value of the "tree_path" field.
-func (m *ResourceMutation) ClearTreePath() {
-	m.tree_path = nil
-	m.clearedFields[resource.FieldTreePath] = struct{}{}
-}
-
-// TreePathCleared returns if the "tree_path" field was cleared in this mutation.
-func (m *ResourceMutation) TreePathCleared() bool {
-	_, ok := m.clearedFields[resource.FieldTreePath]
-	return ok
-}
-
 // ResetTreePath resets all changes to the "tree_path" field.
 func (m *ResourceMutation) ResetTreePath() {
 	m.tree_path = nil
-	delete(m.clearedFields, resource.FieldTreePath)
 }
 
 // SetParentID sets the "parent_id" field.
@@ -7344,22 +7266,9 @@ func (m *ResourceMutation) OldProperties(ctx context.Context) (v string, err err
 	return oldValue.Properties, nil
 }
 
-// ClearProperties clears the value of the "properties" field.
-func (m *ResourceMutation) ClearProperties() {
-	m.properties = nil
-	m.clearedFields[resource.FieldProperties] = struct{}{}
-}
-
-// PropertiesCleared returns if the "properties" field was cleared in this mutation.
-func (m *ResourceMutation) PropertiesCleared() bool {
-	_, ok := m.clearedFields[resource.FieldProperties]
-	return ok
-}
-
 // ResetProperties resets all changes to the "properties" field.
 func (m *ResourceMutation) ResetProperties() {
 	m.properties = nil
-	delete(m.clearedFields, resource.FieldProperties)
 }
 
 // SetDescription sets the "description" field.
@@ -7393,22 +7302,9 @@ func (m *ResourceMutation) OldDescription(ctx context.Context) (v string, err er
 	return oldValue.Description, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *ResourceMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[resource.FieldDescription] = struct{}{}
-}
-
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *ResourceMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[resource.FieldDescription]
-	return ok
-}
-
 // ResetDescription resets all changes to the "description" field.
 func (m *ResourceMutation) ResetDescription() {
 	m.description = nil
-	delete(m.clearedFields, resource.FieldDescription)
 }
 
 // ClearParent clears the "parent" edge to the Resource entity.
@@ -8052,32 +7948,8 @@ func (m *ResourceMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ResourceMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(resource.FieldI18n) {
-		fields = append(fields, resource.FieldI18n)
-	}
-	if m.FieldCleared(resource.FieldType) {
-		fields = append(fields, resource.FieldType)
-	}
-	if m.FieldCleared(resource.FieldMethod) {
-		fields = append(fields, resource.FieldMethod)
-	}
-	if m.FieldCleared(resource.FieldPath) {
-		fields = append(fields, resource.FieldPath)
-	}
-	if m.FieldCleared(resource.FieldOperation) {
-		fields = append(fields, resource.FieldOperation)
-	}
-	if m.FieldCleared(resource.FieldTreePath) {
-		fields = append(fields, resource.FieldTreePath)
-	}
 	if m.FieldCleared(resource.FieldParentID) {
 		fields = append(fields, resource.FieldParentID)
-	}
-	if m.FieldCleared(resource.FieldProperties) {
-		fields = append(fields, resource.FieldProperties)
-	}
-	if m.FieldCleared(resource.FieldDescription) {
-		fields = append(fields, resource.FieldDescription)
 	}
 	return fields
 }
@@ -8093,32 +7965,8 @@ func (m *ResourceMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ResourceMutation) ClearField(name string) error {
 	switch name {
-	case resource.FieldI18n:
-		m.ClearI18n()
-		return nil
-	case resource.FieldType:
-		m.ClearType()
-		return nil
-	case resource.FieldMethod:
-		m.ClearMethod()
-		return nil
-	case resource.FieldPath:
-		m.ClearPath()
-		return nil
-	case resource.FieldOperation:
-		m.ClearOperation()
-		return nil
-	case resource.FieldTreePath:
-		m.ClearTreePath()
-		return nil
 	case resource.FieldParentID:
 		m.ClearParentID()
-		return nil
-	case resource.FieldProperties:
-		m.ClearProperties()
-		return nil
-	case resource.FieldDescription:
-		m.ClearDescription()
 		return nil
 	}
 	return fmt.Errorf("unknown Resource nullable field %s", name)
@@ -14296,22 +14144,9 @@ func (m *ViewMutation) OldI18n(ctx context.Context) (v string, err error) {
 	return oldValue.I18n, nil
 }
 
-// ClearI18n clears the value of the "i18n" field.
-func (m *ViewMutation) ClearI18n() {
-	m.i18n = nil
-	m.clearedFields[view.FieldI18n] = struct{}{}
-}
-
-// I18nCleared returns if the "i18n" field was cleared in this mutation.
-func (m *ViewMutation) I18nCleared() bool {
-	_, ok := m.clearedFields[view.FieldI18n]
-	return ok
-}
-
 // ResetI18n resets all changes to the "i18n" field.
 func (m *ViewMutation) ResetI18n() {
 	m.i18n = nil
-	delete(m.clearedFields, view.FieldI18n)
 }
 
 // SetType sets the "type" field.
@@ -14381,22 +14216,9 @@ func (m *ViewMutation) OldComponent(ctx context.Context) (v string, err error) {
 	return oldValue.Component, nil
 }
 
-// ClearComponent clears the value of the "component" field.
-func (m *ViewMutation) ClearComponent() {
-	m.component = nil
-	m.clearedFields[view.FieldComponent] = struct{}{}
-}
-
-// ComponentCleared returns if the "component" field was cleared in this mutation.
-func (m *ViewMutation) ComponentCleared() bool {
-	_, ok := m.clearedFields[view.FieldComponent]
-	return ok
-}
-
 // ResetComponent resets all changes to the "component" field.
 func (m *ViewMutation) ResetComponent() {
 	m.component = nil
-	delete(m.clearedFields, view.FieldComponent)
 }
 
 // SetPath sets the "path" field.
@@ -14430,22 +14252,9 @@ func (m *ViewMutation) OldPath(ctx context.Context) (v string, err error) {
 	return oldValue.Path, nil
 }
 
-// ClearPath clears the value of the "path" field.
-func (m *ViewMutation) ClearPath() {
-	m._path = nil
-	m.clearedFields[view.FieldPath] = struct{}{}
-}
-
-// PathCleared returns if the "path" field was cleared in this mutation.
-func (m *ViewMutation) PathCleared() bool {
-	_, ok := m.clearedFields[view.FieldPath]
-	return ok
-}
-
 // ResetPath resets all changes to the "path" field.
 func (m *ViewMutation) ResetPath() {
 	m._path = nil
-	delete(m.clearedFields, view.FieldPath)
 }
 
 // SetIcon sets the "icon" field.
@@ -14479,22 +14288,9 @@ func (m *ViewMutation) OldIcon(ctx context.Context) (v string, err error) {
 	return oldValue.Icon, nil
 }
 
-// ClearIcon clears the value of the "icon" field.
-func (m *ViewMutation) ClearIcon() {
-	m.icon = nil
-	m.clearedFields[view.FieldIcon] = struct{}{}
-}
-
-// IconCleared returns if the "icon" field was cleared in this mutation.
-func (m *ViewMutation) IconCleared() bool {
-	_, ok := m.clearedFields[view.FieldIcon]
-	return ok
-}
-
 // ResetIcon resets all changes to the "icon" field.
 func (m *ViewMutation) ResetIcon() {
 	m.icon = nil
-	delete(m.clearedFields, view.FieldIcon)
 }
 
 // SetVisible sets the "visible" field.
@@ -14620,22 +14416,9 @@ func (m *ViewMutation) OldTreePath(ctx context.Context) (v string, err error) {
 	return oldValue.TreePath, nil
 }
 
-// ClearTreePath clears the value of the "tree_path" field.
-func (m *ViewMutation) ClearTreePath() {
-	m.tree_path = nil
-	m.clearedFields[view.FieldTreePath] = struct{}{}
-}
-
-// TreePathCleared returns if the "tree_path" field was cleared in this mutation.
-func (m *ViewMutation) TreePathCleared() bool {
-	_, ok := m.clearedFields[view.FieldTreePath]
-	return ok
-}
-
 // ResetTreePath resets all changes to the "tree_path" field.
 func (m *ViewMutation) ResetTreePath() {
 	m.tree_path = nil
-	delete(m.clearedFields, view.FieldTreePath)
 }
 
 // SetDescription sets the "description" field.
@@ -14669,22 +14452,9 @@ func (m *ViewMutation) OldDescription(ctx context.Context) (v string, err error)
 	return oldValue.Description, nil
 }
 
-// ClearDescription clears the value of the "description" field.
-func (m *ViewMutation) ClearDescription() {
-	m.description = nil
-	m.clearedFields[view.FieldDescription] = struct{}{}
-}
-
-// DescriptionCleared returns if the "description" field was cleared in this mutation.
-func (m *ViewMutation) DescriptionCleared() bool {
-	_, ok := m.clearedFields[view.FieldDescription]
-	return ok
-}
-
 // ResetDescription resets all changes to the "description" field.
 func (m *ViewMutation) ResetDescription() {
 	m.description = nil
-	delete(m.clearedFields, view.FieldDescription)
 }
 
 // SetProperties sets the "properties" field.
@@ -14718,22 +14488,9 @@ func (m *ViewMutation) OldProperties(ctx context.Context) (v string, err error) 
 	return oldValue.Properties, nil
 }
 
-// ClearProperties clears the value of the "properties" field.
-func (m *ViewMutation) ClearProperties() {
-	m.properties = nil
-	m.clearedFields[view.FieldProperties] = struct{}{}
-}
-
-// PropertiesCleared returns if the "properties" field was cleared in this mutation.
-func (m *ViewMutation) PropertiesCleared() bool {
-	_, ok := m.clearedFields[view.FieldProperties]
-	return ok
-}
-
 // ResetProperties resets all changes to the "properties" field.
 func (m *ViewMutation) ResetProperties() {
 	m.properties = nil
-	delete(m.clearedFields, view.FieldProperties)
 }
 
 // SetStatus sets the "status" field.
@@ -15448,27 +15205,6 @@ func (m *ViewMutation) ClearedFields() []string {
 	if m.FieldCleared(view.FieldParentID) {
 		fields = append(fields, view.FieldParentID)
 	}
-	if m.FieldCleared(view.FieldI18n) {
-		fields = append(fields, view.FieldI18n)
-	}
-	if m.FieldCleared(view.FieldComponent) {
-		fields = append(fields, view.FieldComponent)
-	}
-	if m.FieldCleared(view.FieldPath) {
-		fields = append(fields, view.FieldPath)
-	}
-	if m.FieldCleared(view.FieldIcon) {
-		fields = append(fields, view.FieldIcon)
-	}
-	if m.FieldCleared(view.FieldTreePath) {
-		fields = append(fields, view.FieldTreePath)
-	}
-	if m.FieldCleared(view.FieldDescription) {
-		fields = append(fields, view.FieldDescription)
-	}
-	if m.FieldCleared(view.FieldProperties) {
-		fields = append(fields, view.FieldProperties)
-	}
 	return fields
 }
 
@@ -15485,27 +15221,6 @@ func (m *ViewMutation) ClearField(name string) error {
 	switch name {
 	case view.FieldParentID:
 		m.ClearParentID()
-		return nil
-	case view.FieldI18n:
-		m.ClearI18n()
-		return nil
-	case view.FieldComponent:
-		m.ClearComponent()
-		return nil
-	case view.FieldPath:
-		m.ClearPath()
-		return nil
-	case view.FieldIcon:
-		m.ClearIcon()
-		return nil
-	case view.FieldTreePath:
-		m.ClearTreePath()
-		return nil
-	case view.FieldDescription:
-		m.ClearDescription()
-		return nil
-	case view.FieldProperties:
-		m.ClearProperties()
 		return nil
 	}
 	return fmt.Errorf("unknown View nullable field %s", name)

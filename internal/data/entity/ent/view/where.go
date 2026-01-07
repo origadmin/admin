@@ -497,16 +497,6 @@ func I18nHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldI18n, v))
 }
 
-// I18nIsNil applies the IsNil predicate on the "i18n" field.
-func I18nIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldI18n))
-}
-
-// I18nNotNil applies the NotNil predicate on the "i18n" field.
-func I18nNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldI18n))
-}
-
 // I18nEqualFold applies the EqualFold predicate on the "i18n" field.
 func I18nEqualFold(v string) predicate.View {
 	return predicate.View(sql.FieldEqualFold(FieldI18n, v))
@@ -592,16 +582,6 @@ func ComponentHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldComponent, v))
 }
 
-// ComponentIsNil applies the IsNil predicate on the "component" field.
-func ComponentIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldComponent))
-}
-
-// ComponentNotNil applies the NotNil predicate on the "component" field.
-func ComponentNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldComponent))
-}
-
 // ComponentEqualFold applies the EqualFold predicate on the "component" field.
 func ComponentEqualFold(v string) predicate.View {
 	return predicate.View(sql.FieldEqualFold(FieldComponent, v))
@@ -667,16 +647,6 @@ func PathHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldPath, v))
 }
 
-// PathIsNil applies the IsNil predicate on the "path" field.
-func PathIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldPath))
-}
-
-// PathNotNil applies the NotNil predicate on the "path" field.
-func PathNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldPath))
-}
-
 // PathEqualFold applies the EqualFold predicate on the "path" field.
 func PathEqualFold(v string) predicate.View {
 	return predicate.View(sql.FieldEqualFold(FieldPath, v))
@@ -740,16 +710,6 @@ func IconHasPrefix(v string) predicate.View {
 // IconHasSuffix applies the HasSuffix predicate on the "icon" field.
 func IconHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldIcon, v))
-}
-
-// IconIsNil applies the IsNil predicate on the "icon" field.
-func IconIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldIcon))
-}
-
-// IconNotNil applies the NotNil predicate on the "icon" field.
-func IconNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldIcon))
 }
 
 // IconEqualFold applies the EqualFold predicate on the "icon" field.
@@ -867,16 +827,6 @@ func TreePathHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldTreePath, v))
 }
 
-// TreePathIsNil applies the IsNil predicate on the "tree_path" field.
-func TreePathIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldTreePath))
-}
-
-// TreePathNotNil applies the NotNil predicate on the "tree_path" field.
-func TreePathNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldTreePath))
-}
-
 // TreePathEqualFold applies the EqualFold predicate on the "tree_path" field.
 func TreePathEqualFold(v string) predicate.View {
 	return predicate.View(sql.FieldEqualFold(FieldTreePath, v))
@@ -942,16 +892,6 @@ func DescriptionHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldDescription, v))
 }
 
-// DescriptionIsNil applies the IsNil predicate on the "description" field.
-func DescriptionIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldDescription))
-}
-
-// DescriptionNotNil applies the NotNil predicate on the "description" field.
-func DescriptionNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldDescription))
-}
-
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
 func DescriptionEqualFold(v string) predicate.View {
 	return predicate.View(sql.FieldEqualFold(FieldDescription, v))
@@ -1015,16 +955,6 @@ func PropertiesHasPrefix(v string) predicate.View {
 // PropertiesHasSuffix applies the HasSuffix predicate on the "properties" field.
 func PropertiesHasSuffix(v string) predicate.View {
 	return predicate.View(sql.FieldHasSuffix(FieldProperties, v))
-}
-
-// PropertiesIsNil applies the IsNil predicate on the "properties" field.
-func PropertiesIsNil() predicate.View {
-	return predicate.View(sql.FieldIsNull(FieldProperties))
-}
-
-// PropertiesNotNil applies the NotNil predicate on the "properties" field.
-func PropertiesNotNil() predicate.View {
-	return predicate.View(sql.FieldNotNull(FieldProperties))
 }
 
 // PropertiesEqualFold applies the EqualFold predicate on the "properties" field.

@@ -29,6 +29,7 @@ type Captcha struct {
 	Maxskew       float32                `protobuf:"fixed32,4,opt,name=maxskew,proto3" json:"maxskew,omitempty"`
 	DotCount      int32                  `protobuf:"varint,5,opt,name=dot_count,proto3" json:"dot_count,omitempty"`
 	CacheName     string                 `protobuf:"bytes,6,opt,name=cache_name,proto3" json:"cache_name,omitempty"`
+	Language      string                 `protobuf:"bytes,7,opt,name=language,proto3" json:"language,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -105,11 +106,18 @@ func (x *Captcha) GetCacheName() string {
 	return ""
 }
 
+func (x *Captcha) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
 var File_internal_conf_pb_captcha_proto protoreflect.FileDescriptor
 
 const file_internal_conf_pb_captcha_proto_rawDesc = "" +
 	"\n" +
-	"\x1einternal/conf/pb/captcha.proto\x12\aconf.pb\"\xa7\x01\n" +
+	"\x1einternal/conf/pb/captcha.proto\x12\aconf.pb\"\xc3\x01\n" +
 	"\aCaptcha\x12\x16\n" +
 	"\x06length\x18\x01 \x01(\x05R\x06length\x12\x14\n" +
 	"\x05width\x18\x02 \x01(\x05R\x05width\x12\x16\n" +
@@ -118,7 +126,8 @@ const file_internal_conf_pb_captcha_proto_rawDesc = "" +
 	"\tdot_count\x18\x05 \x01(\x05R\tdot_count\x12\x1e\n" +
 	"\n" +
 	"cache_name\x18\x06 \x01(\tR\n" +
-	"cache_nameB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
+	"cache_name\x12\x1a\n" +
+	"\blanguage\x18\a \x01(\tR\blanguageB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
 var (
 	file_internal_conf_pb_captcha_proto_rawDescOnce sync.Once

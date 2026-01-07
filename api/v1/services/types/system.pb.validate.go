@@ -148,6 +148,8 @@ func (m *View) validate(all bool) error {
 
 	// no validation rules for ParentPath
 
+	// no validation rules for Component
+
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item
 
@@ -835,6 +837,8 @@ func (m *User) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for Department
+
 	for idx, item := range m.GetRoles() {
 		_, _ = idx, item
 
@@ -1509,7 +1513,7 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Keyword
 
-	// no validation rules for I18NKey
+	// no validation rules for I18N
 
 	// no validation rules for Type
 
@@ -1540,6 +1544,8 @@ func (m *Resource) validate(all bool) error {
 	// no validation rules for SyncStatus
 
 	// no validation rules for ServiceName
+
+	// no validation rules for Policy
 
 	for idx, item := range m.GetChildren() {
 		_, _ = idx, item

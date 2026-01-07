@@ -24,8 +24,8 @@ message View {
   string name = 5 [json_name = "name"];
   // Scope holds the value of the "scope" field.
   string scope = 6 [json_name = "scope"];
-  // I18nKey holds the value of the "i18n_key" field.
-  string i18n_key = 7 [json_name = "i18n_key"];
+  // I18nKey holds the value of the "i18n" field.
+  string i18n = 7 [json_name = "i18n"];
   // Description holds the value of the "description" field.
   string description = 8 [json_name = "description"];
   // Sequence holds the value of the "sequence" field.
@@ -146,10 +146,8 @@ message User {
   google.protobuf.Timestamp login_time = 21 [json_name = "login_time"];
   // user.field.sanction_date
   optional google.protobuf.Timestamp sanction_date = 22 [json_name = "sanction_date"];
-  // user.field.i18n
-  string i18n = 23 [json_name = "i18n"];
   // user.field.department
-  string department = 24 [json_name = "department"];
+  string department = 23 [json_name = "department"];
   // Roles holds the value of the roles edge.
   repeated Role roles = 100 [json_name = "roles"];
   // Role Ids holds the value of the role_ids
@@ -207,8 +205,8 @@ message Resource {
   string name = 4 [json_name = "name"];
   // resource.field.keyword
   string keyword = 5 [json_name = "keyword"];
-  // resource.field.i18n_key
-  string i18n_key = 6 [json_name = "i18n_key"];
+  // resource.field.i18n
+  string i18n = 6 [json_name = "i18n"];
   // resource.field.type
   string type = 7 [json_name = "type"];
   // resource.field.status

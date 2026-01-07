@@ -47,11 +47,11 @@ type Bootstrap struct {
 	// Security configuration for authentication and authorization.
 	Security *v15.Security `protobuf:"bytes,8,opt,name=security,proto3" json:"security,omitempty"`
 	// Captcha feature specific configuration.
-	Captcha *Captcha `protobuf:"bytes,9,opt,name=captcha,proto3" json:"captcha,omitempty"`
+	Captcha *Captcha `protobuf:"bytes,10,opt,name=captcha,proto3" json:"captcha,omitempty"`
 	// RootUser feature specific configuration for initial user setup.
-	RootUser *RootUser `protobuf:"bytes,10,opt,name=root_user,json=rootUser,proto3" json:"root_user,omitempty"`
+	RootUser *RootUser `protobuf:"bytes,11,opt,name=root_user,json=rootUser,proto3" json:"root_user,omitempty"`
 	// Default discovery service name.
-	DefaultDiscovery string `protobuf:"bytes,11,opt,name=default_discovery,json=defaultDiscovery,proto3" json:"default_discovery,omitempty"`
+	DefaultDiscovery string `protobuf:"bytes,12,opt,name=default_discovery,json=defaultDiscovery,proto3" json:"default_discovery,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -213,7 +213,7 @@ var File_internal_conf_pb_conf_proto protoreflect.FileDescriptor
 
 const file_internal_conf_pb_conf_proto_rawDesc = "" +
 	"\n" +
-	"\x1binternal/conf/pb/conf.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\x1a#config/discovery/v1/discovery.proto\x1a\x1dconfig/logger/v1/logger.proto\x1a%config/middleware/v1/middleware.proto\x1a#config/transport/v1/transport.proto\x1a\x1asecurity/v1/security.proto\x1a\x1einternal/conf/pb/captcha.proto\x1a\x1binternal/conf/pb/root.proto\"\xb2\x05\n" +
+	"\x1binternal/conf/pb/conf.proto\x12\aconf.pb\x1a\x19config/data/v1/data.proto\x1a#config/discovery/v1/discovery.proto\x1a\x1dconfig/logger/v1/logger.proto\x1a%config/middleware/v1/middleware.proto\x1a#config/transport/v1/transport.proto\x1a\x1einternal/conf/pb/captcha.proto\x1a\x1binternal/conf/pb/root.proto\x1a\x1asecurity/v1/security.proto\"\xb2\x05\n" +
 	"\tBootstrap\x12B\n" +
 	"\aservers\x18\x01 \x01(\v2(.runtime.api.config.transport.v1.ServersR\aservers\x12B\n" +
 	"\aclients\x18\x02 \x01(\v2(.runtime.api.config.transport.v1.ClientsR\aclients\x12@\n" +
@@ -223,10 +223,10 @@ const file_internal_conf_pb_conf_proto_rawDesc = "" +
 	"\x06logger\x18\x06 \x01(\v2$.runtime.api.config.logger.v1.LoggerR\x06logger\x12O\n" +
 	"\vmiddlewares\x18\a \x01(\v2-.runtime.api.config.middleware.v1.MiddlewaresR\vmiddlewares\x12=\n" +
 	"\bsecurity\x18\b \x01(\v2!.contrib.api.security.v1.SecurityR\bsecurity\x12*\n" +
-	"\acaptcha\x18\t \x01(\v2\x10.conf.pb.CaptchaR\acaptcha\x12.\n" +
-	"\troot_user\x18\n" +
-	" \x01(\v2\x11.conf.pb.RootUserR\brootUser\x12+\n" +
-	"\x11default_discovery\x18\v \x01(\tR\x10defaultDiscovery\"*\n" +
+	"\acaptcha\x18\n" +
+	" \x01(\v2\x10.conf.pb.CaptchaR\acaptcha\x12.\n" +
+	"\troot_user\x18\v \x01(\v2\x11.conf.pb.RootUserR\brootUser\x12+\n" +
+	"\x11default_discovery\x18\f \x01(\tR\x10defaultDiscovery\"*\n" +
 	"\x0eSelectorGlobal\x12\x18\n" +
 	"\abuilder\x18\x01 \x01(\tR\abuilderB5Z3origadmin/application/admin/internal/conf/pb;confpbb\x06proto3"
 
