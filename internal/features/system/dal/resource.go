@@ -69,43 +69,68 @@ func (r *resourceRepo) Create(ctx context.Context, res *types.Resource, opts ...
 }
 
 func (r *resourceRepo) CreateFromPolicy(ctx context.Context, input *dto.ResourceFromPolicyInput) (*types.Resource, error) {
-	policy := input.Policy
-
-	// Extract method and path from GatewayPath, e.g., "GET:/api/v1/users/{id}"
-	var method, path string
-	if policy.GatewayPath != "" {
-		if parts := strings.SplitN(policy.GatewayPath, ":", 2); len(parts) == 2 {
-			method = parts[0]
-			path = parts[1]
-		}
-	}
-
-	// Ensure path has the correct prefix
-	if path != "" && !strings.HasPrefix(path, conf.APIPrefix) {
-		path = conf.APIPrefix + path
-	}
-
 	create := r.db.Resource(ctx).Create().
-		SetKeyword(input.Keyword).
-		SetPath(path).
-		SetMethod(method).
-		SetOperation(policy.ServiceMethod).
-		SetPolicy(policy.Name).
-		SetVersionID(policy.VersionID).
-		SetLastSyncVersionID(policy.VersionID).
-		SetSyncStatus("Synced").
-		SetSequence(input.Sequence)
+		SetKeyword(input.Resource.Keyword).
+		SetSequence(int(input.Resource.Sequence))
 
-	if input.DisplayName != "" {
-		create.SetName(input.DisplayName)
+	// Set Type if provided
+	if input.Resource.Type != "" {
+		create.SetType(input.Resource.Type)
 	}
 
-	if input.I18n != "" {
-		create.SetI18n(input.I18n)
+	// Set TreePath if provided
+	if input.Resource.TreePath != "" {
+		create.SetTreePath(input.Resource.TreePath)
 	}
 
-	if input.ServiceName != "" {
-		create.SetServiceName(input.ServiceName)
+	// Set ParentID if provided
+	if input.Resource.ParentId != 0 {
+		create.SetParentID(input.Resource.ParentId)
+	}
+
+	// Set Name, I18n, ServiceName if provided
+	if input.Resource.Name != "" {
+		create.SetName(input.Resource.Name)
+	}
+
+	if input.Resource.I18N != "" {
+		create.SetI18n(input.Resource.I18N)
+	}
+
+	if input.Resource.ServiceName != "" {
+		create.SetServiceName(input.Resource.ServiceName)
+	}
+
+	// Only set policy-related fields if Policy is provided
+	if input.Policy != nil {
+		policy := input.Policy
+
+		// Extract method and path from GatewayPath if not already provided
+		method := input.Resource.Method
+		path := input.Resource.Path
+		if policy.GatewayPath != "" && (method == "" || path == "") {
+			if parts := strings.SplitN(policy.GatewayPath, ":", 2); len(parts) == 2 {
+				if method == "" {
+					method = parts[0]
+				}
+				if path == "" {
+					path = parts[1]
+				}
+			}
+		}
+
+		// Ensure path has the correct prefix
+		if path != "" && !strings.HasPrefix(path, conf.APIPrefix) {
+			path = conf.APIPrefix + path
+		}
+
+		create.SetPath(path).
+			SetMethod(method).
+			SetOperation(policy.ServiceMethod).
+			SetPolicy(policy.Name).
+			SetVersionID(policy.VersionID).
+			SetLastSyncVersionID(policy.VersionID).
+			SetSyncStatus("Synced")
 	}
 
 	saved, err := create.Save(ctx)

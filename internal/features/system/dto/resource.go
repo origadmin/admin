@@ -26,12 +26,8 @@ type ResourceRepo interface {
 
 // ResourceFromPolicyInput contains the data needed to create a resource from a policy.
 type ResourceFromPolicyInput struct {
-	Policy      *security.Policy
-	DisplayName string
-	I18n        string
-	Sequence    int
-	Keyword     string
-	ServiceName string
+	Policy *security.Policy
+	types.Resource
 }
 
 // ResourceQueryOption specifies options for querying resources.
@@ -39,6 +35,7 @@ type ResourceQueryOption struct {
 	repo.QueryOption
 	Operation       string
 	WithPermissions bool
+	CreationMethod  string
 }
 
 // ResourceCreateOption specifies options for creating a resource.
@@ -57,8 +54,7 @@ func ListResourcesRequestToQueryOption(req *system.ListResourcesRequest) *Resour
 	}
 	return &ResourceQueryOption{
 		QueryOption: repo.QueryOptionFromRequest(req),
-		//WithPermissions: req.WithPermissions,
-		Operation: req.Operation,
+		Operation:   req.Operation,
 	}
 }
 

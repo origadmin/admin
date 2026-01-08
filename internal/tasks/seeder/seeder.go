@@ -131,8 +131,10 @@ func (s *Seeder) createRootUser() error {
 
 func (s *Seeder) createInitialResources() error {
 	ctx := context.Background()
-	// Use a counter for sequence
-	seq := 1
+
+	// Collect resources by module:service
+	moduleResources := make(map[string]map[string][]*security.Policy)
+
 	for _, policy := range security.RegisteredPolicies() {
 		// Parse gRPC method: /package.Service/Method
 		// e.g. /api.v1.services.auth.AuthService/Login
@@ -141,9 +143,8 @@ func (s *Seeder) createInitialResources() error {
 			s.log.Warnf("Skipping malformed service method: %s", policy.ServiceMethod)
 			continue
 		}
-		// parts[0] is empty, parts[1] is package.Service, parts[2] is Method
+
 		fullService := parts[1]
-		method := parts[2]
 
 		// Parse Service: api.v1.services.auth.AuthService
 		serviceParts := strings.Split(fullService, ".")
@@ -153,64 +154,159 @@ func (s *Seeder) createInitialResources() error {
 		}
 
 		// Extract Module Name (e.g. "auth" from "api.v1.services.auth.AuthService")
-		// Assuming standard structure: ...services.<module>.<Service>
 		var moduleName string
 		if len(serviceParts) >= 2 {
-			// Take the second to last part as module name
 			moduleName = serviceParts[len(serviceParts)-2]
 		} else {
-			moduleName = "system" // Fallback
+			moduleName = "system"
 		}
 
 		// Extract Resource Name (e.g. "Auth" from "AuthService")
 		serviceName := serviceParts[len(serviceParts)-1]
-		resourceName := strings.TrimSuffix(serviceName, "Service")
 
-		// Construct Keyword: module:resource:method (e.g. auth:auth:login)
-		// Use toSnakeCase for resourceName and method to ensure consistency
-		keyword := strings.Join([]string{strings.ToLower(moduleName), toSnakeCase(resourceName), toSnakeCase(method)}, ":")
-
-		// Construct Name: Resource Method (e.g. Auth Login)
-		// Convert CamelCase to Title Case with spaces
-		displayName := toTitleCase(resourceName) + " " + toTitleCase(method)
-
-		// Construct I18n: resource.module.resource.method (e.g. resource.auth.auth.login)
-		i18nKey := "resource." + strings.ToLower(moduleName) + "." + toSnakeCase(resourceName) + "." + toSnakeCase(method)
-
-		// Ensure service name ends with "-service"
-		fullServiceName := moduleName
-		if !strings.HasSuffix(fullServiceName, "-service") {
-			fullServiceName += "-service"
+		// Ensure module and service collections exist
+		if moduleResources[moduleName] == nil {
+			moduleResources[moduleName] = make(map[string][]*security.Policy)
+		}
+		if moduleResources[moduleName][serviceName] == nil {
+			moduleResources[moduleName][serviceName] = []*security.Policy{}
 		}
 
-		// Check if resource already exists
-		_, count, err := s.resourceUseCase.ListResources(ctx,
-			&system.ListResourcesRequest{
-				Operation: policy.ServiceMethod,
-				OnlyCount: true,
-			})
-		if err == nil && count > 0 {
-			s.log.Infof("Resource '%s' already exists, skipping.", keyword)
+		moduleResources[moduleName][serviceName] = append(moduleResources[moduleName][serviceName], &policy)
+	}
+
+	// Create resources with 3-level structure: Module -> Service -> API
+	seq := 1
+	for moduleName, services := range moduleResources {
+		// Create module level resource
+		moduleKeyword := toSnakeCase(moduleName)
+		moduleNameDisplay := toTitleCase(moduleName) + " Module"
+		moduleI18n := "resource." + moduleKeyword + ".module"
+		moduleTreePath := "/" + moduleKeyword
+
+		moduleResource := &dto.ResourceFromPolicyInput{
+			Resource: types.Resource{
+				Name:        moduleNameDisplay,
+				I18N:        moduleI18n,
+				Sequence:    int32(seq),
+				Keyword:     moduleKeyword,
+				ServiceName: moduleName,
+				Type:        "module",
+				TreePath:    moduleTreePath,
+			},
+			Policy: nil, // No policy for module
+		}
+
+		moduleID, err := s.createOrUpdateResource(ctx, moduleResource, moduleKeyword, true)
+		if err != nil {
+			s.log.Errorf("failed to create module resource '%s': %v", moduleName, err)
 			continue
 		}
-
-		input := &dto.ResourceFromPolicyInput{
-			Policy:      &policy,
-			DisplayName: displayName,
-			I18n:        i18nKey,
-			Sequence:    seq,
-			Keyword:     keyword,
-			ServiceName: fullServiceName,
-		}
-
-		if _, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, input); err != nil {
-			s.log.Errorf("failed to create resource from policy '%s': %v", policy.ServiceMethod, err)
-		} else {
-			s.log.Infof("Successfully created resource from policy: %s", policy.ServiceMethod)
-		}
 		seq++
+
+		// Create service level resources
+		for serviceName, policies := range services {
+			resourceName := strings.TrimSuffix(serviceName, "Service")
+			serviceKeyword := strings.Join([]string{moduleKeyword, toSnakeCase(resourceName)}, ":")
+			serviceNameDisplay := toTitleCase(resourceName) + " Service"
+			serviceI18n := "resource." + serviceKeyword + ".service"
+			serviceTreePath := moduleTreePath + "/" + toSnakeCase(resourceName)
+
+			serviceResource := &dto.ResourceFromPolicyInput{
+				Resource: types.Resource{
+					Name:        serviceNameDisplay,
+					I18N:        serviceI18n,
+					Sequence:    int32(seq),
+					Keyword:     serviceKeyword,
+					ServiceName: resourceName,
+					Type:        "service",
+					TreePath:    serviceTreePath,
+					ParentId:    moduleID,
+				},
+				Policy: nil, // No policy for service
+			}
+
+			serviceID, err := s.createOrUpdateResource(ctx, serviceResource, serviceKeyword, false)
+			if err != nil {
+				s.log.Errorf("failed to create service resource '%s': %v", serviceName, err)
+				continue
+			}
+			seq++
+
+			// Create API level resources
+			for _, policy := range policies {
+				parts := strings.Split(policy.ServiceMethod, "/")
+				method := parts[2]
+
+				apiKeyword := strings.Join([]string{moduleKeyword, toSnakeCase(resourceName), toSnakeCase(method)}, ":")
+				apiNameDisplay := toTitleCase(resourceName) + " " + toTitleCase(method)
+				apiI18n := "resource." + apiKeyword + ".api"
+				apiTreePath := serviceTreePath + "/" + toSnakeCase(method)
+
+				// Extract method and path from GatewayPath
+				var httpMethod, path string
+				if policy.GatewayPath != "" {
+					if gatewayParts := strings.SplitN(policy.GatewayPath, ":", 2); len(gatewayParts) == 2 {
+						httpMethod = gatewayParts[0]
+						path = gatewayParts[1]
+					}
+				}
+
+				apiResource := &dto.ResourceFromPolicyInput{
+					Resource: types.Resource{
+						Name:        apiNameDisplay,
+						I18N:        apiI18n,
+						Sequence:    int32(seq),
+						Keyword:     apiKeyword,
+						ServiceName: resourceName,
+						Type:        "api",
+						TreePath:    apiTreePath,
+						ParentId:    serviceID,
+						Method:      httpMethod,
+						Path:        path,
+					},
+					Policy: policy,
+				}
+
+				_, err := s.createOrUpdateResource(ctx, apiResource, apiKeyword, false)
+				if err != nil {
+					s.log.Errorf("failed to create API resource from policy '%s': %v", policy.ServiceMethod, err)
+				} else {
+					s.log.Infof("Successfully created resource from policy: %s", policy.ServiceMethod)
+				}
+				seq++
+			}
+		}
 	}
+
 	return nil
+}
+
+// createOrUpdateResource creates or updates a resource based on keyword
+func (s *Seeder) createOrUpdateResource(ctx context.Context, input *dto.ResourceFromPolicyInput, keyword string, isModule bool) (int64, error) {
+	// Check if resource already exists
+	resources, count, err := s.resourceUseCase.ListResources(ctx,
+		&system.ListResourcesRequest{
+			Keyword:   keyword,
+			OnlyCount: false,
+			PageSize:  1,
+		})
+	if err != nil && count == 0 {
+		s.log.Errorf("failed to check existing resource '%s': %v", keyword, err)
+		return 0, err
+	}
+
+	if count > 0 && len(resources) > 0 {
+		s.log.Infof("Resource '%s' already exists, skipping.", keyword)
+		return resources[0].Id, nil
+	}
+
+	created, err := s.resourceUseCase.CreateResourceFromPolicy(ctx, input)
+	if err != nil {
+		return 0, err
+	}
+
+	return created.Id, nil
 }
 
 func (s *Seeder) createInitialViews() error {
