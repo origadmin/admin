@@ -8,8 +8,11 @@ package seeder
 import (
 	"context"
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"math/big"
+	"os"
+	"path/filepath"
 	"strings"
 	"unicode"
 
@@ -214,22 +217,59 @@ func (s *Seeder) createInitialResources() error {
 }
 
 func (s *Seeder) createInitialViews() error {
-	ctx := context.Background()
-	views := []*types.View{
-		{Name: "Dashboard", Keyword: "dashboard", Path: "/dashboard"}, // TODO: Add Component: "default" after proto regen
-		{Name: "System", Keyword: "system", Path: "/system"},          // TODO: Add Component: "default" after proto regen
+	jsonPath := filepath.Join("resources", "data", "views.json")
+	data, err := os.ReadFile(jsonPath)
+	if err != nil {
+		return fmt.Errorf("failed to read views.json: %w", err)
 	}
 
+	var views []*types.View
+	if err := json.Unmarshal(data, &views); err != nil {
+		return fmt.Errorf("failed to unmarshal views.json: %w", err)
+	}
+
+	ctx := context.Background()
+	return s.createViewsRecursive(ctx, views, nil)
+}
+
+func (s *Seeder) createViewsRecursive(ctx context.Context, views []*types.View, parentID *int64) error {
 	for _, view := range views {
-		_, _, err := s.viewUseCase.ListViews(ctx, &system.ListViewsRequest{Keyword: view.Keyword})
-		if err == nil {
+		// Check if view already exists
+		existing, total, err := s.viewUseCase.ListViews(ctx, &system.ListViewsRequest{Keyword: view.Keyword, PageSize: 1})
+		if err != nil {
+			s.log.Warnf("failed to check for existing view '%s': %v", view.Keyword, err)
+		}
+		if total > 0 && len(existing) > 0 {
 			s.log.Infof("View '%s' already exists, skipping.", view.Name)
+			// If the view has children, recurse with the existing view's ID
+			if len(view.Children) > 0 {
+				existingID := existing[0].Id
+				if err := s.createViewsRecursive(ctx, view.Children, &existingID); err != nil {
+					return err
+				}
+			}
 			continue
 		}
-		if _, err := s.viewUseCase.CreateView(ctx, view); err != nil {
-			s.log.Errorf("failed to create view %s: %v", view.Name, err)
-		} else {
-			s.log.Infof("Successfully created view: %s", view.Name)
+
+		// Set parent ID if provided
+		if parentID != nil {
+			view.ParentId = *parentID
+		}
+
+		// Create the view
+		createdView, err := s.viewUseCase.CreateView(ctx, view)
+		if err != nil {
+			s.log.Errorf("failed to create view '%s': %v", view.Name, err)
+			continue // Continue to the next view even if one fails
+		}
+		s.log.Infof("Successfully created view: %s", createdView.Name)
+
+		// Recurse for children
+		if len(view.Children) > 0 {
+			createdID := createdView.Id
+			if err := s.createViewsRecursive(ctx, view.Children, &createdID); err != nil {
+				return err // If a child fails, we might want to stop the whole branch
+			}
 		}
 	}
 	return nil

@@ -1,0 +1,114 @@
+[
+  {
+    "name": "Sidebar Root",
+    "keyword": "sidebar_root",
+    "scope": "sidebar",
+    "type": "ROOT",
+    "sequence": 0,
+    "children": [
+      {
+        "name": "Dashboard",
+        "keyword": "dashboard",
+        "path": "/dashboard",
+        "icon": "layout-dashboard",
+        "scope": "sidebar",
+        "type": "GROUP",
+        "sequence": 10,
+        "children": [
+          {
+            "name": "Overview",
+            "keyword": "dashboard:overview",
+            "path": "/dashboard/overview",
+            "icon": "layout-dashboard",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 11
+          },
+          {
+            "name": "Analytics",
+            "keyword": "dashboard:analytics",
+            "path": "/dashboard/analytics",
+            "icon": "chart-bar",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 12
+          }
+        ]
+      },
+      {
+        "name": "System",
+        "keyword": "system",
+        "path": "/system",
+        "icon": "settings",
+        "scope": "sidebar",
+        "type": "GROUP",
+        "sequence": 20,
+        "children": [
+          {
+            "name": "Users",
+            "keyword": "system:user",
+            "path": "/system/user",
+            "icon": "users",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 21
+          },
+          {
+            "name": "Roles",
+            "keyword": "system:role",
+            "path": "/system/role",
+            "icon": "user-check",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 22
+          },
+          {
+            "name": "Permissions",
+            "keyword": "system:permission",
+            "path": "/system/permission",
+            "icon": "shield-lock",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 23
+          },
+          {
+            "name": "Views",
+            "keyword": "system:view",
+            "path": "/system/view",
+            "icon": "layout-grid",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 24
+          },
+          {
+            "name": "Resources",
+            "keyword": "system:resource",
+            "path": "/system/resource",
+            "icon": "box",
+            "scope": "sidebar",
+            "type": "MENU",
+            "sequence": 25
+          }
+        ]
+      },
+      {
+        "name": "Tasks",
+        "keyword": "tasks",
+        "path": "/tasks",
+        "icon": "check-check",
+        "scope": "sidebar_footer",
+        "type": "MENU",
+        "sequence": 100
+      },
+      {
+        "name": "Chats",
+        "keyword": "chats",
+        "path": "/chats",
+        "icon": "message-circle",
+        "scope": "sidebar_footer",
+        "type": "MENU",
+        "sequence": 101
+      }
+    ]
+  }
+]
