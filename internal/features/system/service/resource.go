@@ -29,18 +29,23 @@ func (s *ResourceService) ListResources(ctx context.Context, req *system.ListRes
 		return nil, err
 	}
 
+	pageSize := db.GetPageSize(req)
 	resp := &system.ListResourcesResponse{
 		Resources: resources,
 		Total:     total,
-		PageSize:  req.GetPageSize(),
+		PageSize:  int32(pageSize),
 	}
 
 	if req.GetPagingMode() == db.PagingModeCursor {
-		nextToken, err := db.GenerateNextPageToken(resources, req)
-		if err != nil {
-			return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+		// Only generate a next page token if the number of results equals the page size,
+		// which implies there might be more data.
+		if len(resources) > 0 && len(resources) == pageSize {
+			nextToken, err := db.GenerateNextPageToken(resources, req)
+			if err != nil {
+				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+			}
+			resp.NextPageToken = nextToken
 		}
-		resp.NextPageToken = nextToken
 	} else {
 		resp.Page = req.GetPage()
 	}

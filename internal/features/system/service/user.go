@@ -75,18 +75,23 @@ func (s *UserService) ListUsers(ctx context.Context, req *system.ListUsersReques
 		return nil, err
 	}
 
+	pageSize := db.GetPageSize(req)
 	resp := &system.ListUsersResponse{
 		Users:    users,
 		Total:    total,
-		PageSize: req.GetPageSize(),
+		PageSize: int32(pageSize),
 	}
 
 	if req.GetPagingMode() == db.PagingModeCursor {
-		nextToken, err := db.GenerateNextPageToken(users, req)
-		if err != nil {
-			return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+		// Only generate a next page token if the number of results equals the page size,
+		// which implies there might be more data.
+		if len(users) > 0 && len(users) == pageSize {
+			nextToken, err := db.GenerateNextPageToken(users, req)
+			if err != nil {
+				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+			}
+			resp.NextPageToken = nextToken
 		}
-		resp.NextPageToken = nextToken
 	} else {
 		resp.Page = req.GetPage()
 	}

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024 OrigAdmin. All rights reserved.
+ */
+
 package service
 
 import (
@@ -19,25 +23,29 @@ func NewViewService(uc *biz.ViewUseCase) *ViewService {
 	return &ViewService{uc: uc}
 }
 
-// ListViews handles the RPC for listing views.
 func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsRequest) (*system.ListViewsResponse, error) {
 	views, total, err := s.uc.ListViews(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
+	pageSize := db.GetPageSize(req)
 	resp := &system.ListViewsResponse{
 		Views:    views,
 		Total:    total,
-		PageSize: req.GetPageSize(),
+		PageSize: int32(pageSize),
 	}
 
 	if req.GetPagingMode() == db.PagingModeCursor {
-		nextToken, err := db.GenerateNextPageToken(views, req)
-		if err != nil {
-			return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+		// Only generate a next page token if the number of results equals the page size,
+		// which implies there might be more data.
+		if len(views) > 0 && len(views) == pageSize {
+			nextToken, err := db.GenerateNextPageToken(views, req)
+			if err != nil {
+				return nil, errors.InternalServer("TOKEN_GENERATION_FAILED", err.Error())
+			}
+			resp.NextPageToken = nextToken
 		}
-		resp.NextPageToken = nextToken
 	} else {
 		resp.Page = req.GetPage()
 	}
@@ -45,7 +53,6 @@ func (s *ViewService) ListViews(ctx context.Context, req *system.ListViewsReques
 	return resp, nil
 }
 
-// GetView handles the RPC for getting a single view.
 func (s *ViewService) GetView(ctx context.Context, req *system.GetViewRequest) (*system.GetViewResponse, error) {
 	view, err := s.uc.GetView(ctx, req.GetId())
 	if err != nil {
@@ -57,7 +64,6 @@ func (s *ViewService) GetView(ctx context.Context, req *system.GetViewRequest) (
 	return &system.GetViewResponse{View: view}, nil
 }
 
-// CreateView handles the RPC for creating a new view.
 func (s *ViewService) CreateView(ctx context.Context, req *system.CreateViewRequest) (*system.CreateViewResponse, error) {
 	view, err := s.uc.CreateView(ctx, req.GetView())
 	if err != nil {
@@ -66,7 +72,6 @@ func (s *ViewService) CreateView(ctx context.Context, req *system.CreateViewRequ
 	return &system.CreateViewResponse{View: view}, nil
 }
 
-// UpdateView handles the RPC for updating an existing view.
 func (s *ViewService) UpdateView(ctx context.Context, req *system.UpdateViewRequest) (*system.UpdateViewResponse, error) {
 	view, err := s.uc.UpdateView(ctx, req.GetView())
 	if err != nil {
@@ -78,7 +83,6 @@ func (s *ViewService) UpdateView(ctx context.Context, req *system.UpdateViewRequ
 	return &system.UpdateViewResponse{View: view}, nil
 }
 
-// DeleteView handles the RPC for deleting a view.
 func (s *ViewService) DeleteView(ctx context.Context, req *system.DeleteViewRequest) (*system.DeleteViewResponse, error) {
 	err := s.uc.DeleteView(ctx, req.GetId())
 	if err != nil {

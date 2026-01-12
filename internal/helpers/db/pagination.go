@@ -34,43 +34,40 @@ type Identifiable interface {
 	GetId() int64
 }
 
-// GenerateNextPageToken creates a pagination token for cursor-based pagination.
-// It accepts the raw request interface and extracts necessary options internally.
-func GenerateNextPageToken[T Identifiable](results []T, req interface{}) (string, error) {
+// GetPageSize returns the normalized page size that will be used for a query.
+func GetPageSize(req interface{}) int {
 	opt := repo.QueryOptionFromRequest(req)
+	normalizedOpt := normalizeQueryOption(&opt) // Pass a pointer to opt
+	return normalizedOpt.PageSize
+}
 
-	pagingMode := opt.PagingMode
-	if pagingMode == "" {
-		pagingMode = PagingModeOffset // Default to offset for backward compatibility
+// GenerateNextPageToken creates a pagination token from the last item in a result set.
+// It no longer contains logic to decide *if* a token should be generated.
+func GenerateNextPageToken[T Identifiable](results []T, req interface{}) (string, error) {
+	if len(results) == 0 {
+		return "", fmt.Errorf("cannot generate token from empty results")
 	}
 
-	if pagingMode != PagingModeCursor {
-		return "", nil
-	}
+	opt := repo.QueryOptionFromRequest(req)
+	last := results[len(results)-1]
 
-	if len(results) > 0 && len(results) == opt.PageSize {
-		last := results[len(results)-1]
-
-		// Default sort order if not provided
-		sortField := "id"
-		sortDesc := true
-		if len(opt.OrderBy) > 0 {
-			parts := strings.Fields(opt.OrderBy[0])
-			sortField = parts[0]
-			if len(parts) > 1 && strings.ToLower(parts[1]) == "asc" {
-				sortDesc = false
-			}
+	// Default sort order if not provided
+	sortField := "id"
+	sortDesc := true
+	if len(opt.OrderBy) > 0 {
+		parts := strings.Fields(opt.OrderBy[0])
+		sortField = parts[0]
+		if len(parts) > 1 && strings.ToLower(parts[1]) == "asc" {
+			sortDesc = false
 		}
-
-		cursor := Cursor{ID: last.GetId(), Field: sortField, Desc: sortDesc}
-		token, err := EncodeCursor(cursor)
-		if err != nil {
-			return "", fmt.Errorf("failed to encode next page token: %w", err)
-		}
-		return token, nil
 	}
 
-	return "", nil
+	cursor := Cursor{ID: last.GetId(), Field: sortField, Desc: sortDesc}
+	token, err := EncodeCursor(cursor)
+	if err != nil {
+		return "", fmt.Errorf("failed to encode next page token: %w", err)
+	}
+	return token, nil
 }
 
 type Cursor struct {
@@ -84,12 +81,12 @@ func EncodeCursor(c Cursor) (string, error) {
 	if err := gob.NewEncoder(&buf).Encode(c); err != nil {
 		return "", fmt.Errorf("gob encode cursor: %w", err)
 	}
-	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
+	return base64.URLEncoding.WithPadding(base64.NoPadding).EncodeToString(buf.Bytes()), nil
 }
 
 func DecodeCursor(token string) (Cursor, error) {
 	var c Cursor
-	data, err := base64.StdEncoding.DecodeString(token)
+	data, err := base64.URLEncoding.WithPadding(base64.NoPadding).DecodeString(token)
 	if err != nil {
 		return c, fmt.Errorf("base64 decode token: %w", err)
 	}

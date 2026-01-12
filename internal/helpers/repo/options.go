@@ -95,12 +95,9 @@ func QueryOptionFromRequest(req interface{}) QueryOption {
 		opt.OrderBy = r.GetSorting()
 	}
 
-	// This is a generic helper. The ReadMask should be populated from the specific
-	// request type in the service layer, as the field name (`read_mask`) can vary.
-	// Example in service layer:
-	// if r, ok := req.(interface{ GetReadMask() *fieldmaskpb.FieldMask }); ok {
-	// 	opt.ReadMask = r.GetReadMask()
-	// }
+	if r, ok := req.(interface{ GetReadMask() *fieldmaskpb.FieldMask }); ok {
+		opt.ReadMask = r.GetReadMask()
+	}
 
 	return opt
 }
