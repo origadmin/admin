@@ -11,6 +11,7 @@ import (
 	"github.com/origadmin/toolkits/crypto/rand"
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/role"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
@@ -115,7 +116,14 @@ func (r *roleRepo) List(ctx context.Context, opts ...*dto.RoleQueryOption) ([]*t
 		query = s.RoleQuery
 	}
 
-	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	cursorCallback := func(cursor db.Cursor) predicate.Role {
+		if cursor.Desc {
+			return role.IDLT(cursor.ID)
+		}
+		return role.IDGT(cursor.ID)
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption, cursorCallback)
 	if err != nil {
 		return nil, 0, err
 	}

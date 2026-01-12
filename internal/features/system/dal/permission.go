@@ -10,6 +10,7 @@ import (
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
 	"origadmin/application/admin/internal/data/entity/ent/permission"
+	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/features/system/dto"
 	"origadmin/application/admin/internal/helpers/db"
 	"origadmin/application/admin/internal/helpers/repo"
@@ -103,7 +104,14 @@ func (r *permissionRepo) List(ctx context.Context, opts ...*dto.PermissionQueryO
 		query = s.PermissionQuery
 	}
 
-	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	cursorCallback := func(cursor db.Cursor) predicate.Permission {
+		if cursor.Desc {
+			return permission.IDLT(cursor.ID)
+		}
+		return permission.IDGT(cursor.ID)
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption, cursorCallback)
 	if err != nil {
 		return nil, 0, err
 	}

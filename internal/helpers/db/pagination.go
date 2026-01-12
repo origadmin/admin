@@ -174,29 +174,17 @@ func normalizeQueryOption(opt *repo.QueryOption) *repo.QueryOption {
 	return opt
 }
 
-func applyPageSize(opt *repo.QueryOption) int {
-	if opt == nil {
-		return repo.DefaultPageSize
-	}
-
-	if opt.PagingMode == PagingModeNone {
-		return repo.HardLimit
-	}
-
-	return opt.PageSize
-}
-
 type cursorCallback[T any] func(cursor Cursor) T
 
-// Paginate is the single, unified function for applying pagination logic.
+// Paginate is the single, unified function for applying pagination and sorting logic.
 func Paginate[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](query P, opt *repo.QueryOption,
 	callbacks ...cursorCallback[W]) P {
 	if opt == nil {
-		return query.Limit(repo.DefaultPageSize)
+		opt = &repo.QueryOption{} // Ensure opt is not nil
 	}
+	opt = normalizeQueryOption(opt)
 
-	pageSize := applyPageSize(opt)
-	query = query.Limit(pageSize)
+	query = query.Limit(opt.PageSize)
 
 	pagingMode := opt.PagingMode
 	if pagingMode == "" {
@@ -208,19 +196,40 @@ func Paginate[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](query P, o
 		if opt.PageToken != "" {
 			cursor, err := DecodeCursor(opt.PageToken)
 			if err != nil {
-				query = query.Limit(0)
-			} else {
-				opt.SortFromToken = true // Mark that sorting is now dictated by the token
-				query = query.Order(OrderByField[O](cursor.Field, cursor.Desc))
-				for _, cb := range callbacks {
-					query = query.Where(cb(cursor))
+				return query.Limit(0)
+			}
+			// Token dictates sorting. Ignore any user-provided sort.
+			query = query.Order(OrderByField[O](cursor.Field, cursor.Desc))
+			for _, cb := range callbacks {
+				query = query.Where(cb(cursor))
+			}
+		} else {
+			// First page of cursor pagination. Use user sort, or default.
+			if len(opt.OrderBy) > 0 {
+				orders := OrderBy[O](opt.OrderBy)
+				if len(orders) > 0 {
+					query = query.Order(orders...)
 				}
+			} else {
+				// A stable default order is required for cursor pagination.
+				query = query.Order(OrderByField[O]("id", true))
 			}
 		}
 	case PagingModeOffset:
-		query = query.Offset((opt.Page - 1) * pageSize)
+		if len(opt.OrderBy) > 0 {
+			orders := OrderBy[O](opt.OrderBy)
+			if len(orders) > 0 {
+				query = query.Order(orders...)
+			}
+		}
+		query = query.Offset((opt.Page - 1) * opt.PageSize)
 	case PagingModeNone:
-		// NoPaging is handled by applyPageSize, so nothing more to do here.
+		if len(opt.OrderBy) > 0 {
+			orders := OrderBy[O](opt.OrderBy)
+			if len(orders) > 0 {
+				query = query.Order(orders...)
+			}
+		}
 	}
 
 	return query
@@ -239,46 +248,20 @@ func CountTotal[Q Counter[Q]](ctx context.Context, query Q) (int32, error) {
 func Find[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](ctx context.Context, query P,
 	o *repo.QueryOption, callbacks ...cursorCallback[W]) ([]R, int32, error) {
 
-	o = normalizeQueryOption(o)
-
-	if o.OnlyCount {
-		count, err := CountTotal(ctx, query)
-		if err != nil {
-			return nil, 0, fmt.Errorf("count query failed: %w", err)
-		}
-		return nil, count, nil
-	}
-
+	// Count logic remains the same
 	var count int32
 	var err error
-
 	if o.PagingMode != PagingModeCursor {
 		count, err = CountTotal(ctx, query)
 		if err != nil {
 			return nil, 0, fmt.Errorf("count query failed: %w", err)
 		}
-
 		if count == 0 {
 			return []R{}, 0, nil
 		}
-
-		if o.PageSize > 0 && o.PagingMode == PagingModeOffset {
-			totalPages := (int(count) + o.PageSize - 1) / o.PageSize
-			if o.Page > totalPages {
-				return nil, count, nil
-			}
-		}
 	}
 
-	if !o.SortFromToken {
-		if len(o.OrderBy) > 0 {
-			orders := OrderBy[O](o.OrderBy)
-			if len(orders) > 0 {
-				query.Order(orders...)
-			}
-		}
-	}
-
+	// All sorting and pagination logic is now encapsulated in Paginate.
 	query = Paginate(query, o, callbacks...)
 
 	result, err := query.All(ctx)
@@ -286,5 +269,7 @@ func Find[R any, W any, O SourceSelector, P Pageable[P, W, O, R]](ctx context.Co
 		return nil, 0, fmt.Errorf("data query failed: %w", err)
 	}
 
+	// For cursor pagination, total count is not typically returned, but we can return it if needed.
+	// For now, we return the count we have.
 	return result, count, nil
 }

@@ -12,6 +12,7 @@ import (
 
 	"origadmin/application/admin/api/v1/services/types"
 	"origadmin/application/admin/internal/data/entity/ent"
+	"origadmin/application/admin/internal/data/entity/ent/predicate"
 	"origadmin/application/admin/internal/data/entity/ent/user"
 	"origadmin/application/admin/internal/data/enums"
 	"origadmin/application/admin/internal/features/system/dto"
@@ -115,7 +116,14 @@ func (r *userRepo) List(ctx context.Context, opts ...*dto.UserQueryOption) ([]*t
 		query = s.UserQuery
 	}
 
-	result, count, err := db.Find(ctx, query, &opt.QueryOption)
+	cursorCallback := func(cursor db.Cursor) predicate.User {
+		if cursor.Desc {
+			return user.IDLT(cursor.ID)
+		}
+		return user.IDGT(cursor.ID)
+	}
+
+	result, count, err := db.Find(ctx, query, &opt.QueryOption, cursorCallback)
 	if err != nil {
 		return nil, 0, err
 	}
