@@ -55,67 +55,94 @@ service ResourceService {
 
 // Request message for ResourceService.ListResources.
 message ListResourcesRequest {
+  // The unique identifier of the resource.
   int64 id = 1 [json_name = "id"];
+  // The page number.
   int32 page = 2 [json_name = "page"];
+  // The maximum number of items to return per page.
   int32 page_size = 3 [json_name = "page_size"];
+  // The token for retrieving the next page of results.
   string page_token = 4 [json_name = "page_token"];
-  bool no_paging = 5 [json_name = "no_paging"];
+  // The paging_mode is used to specify the pagination mode.
+  optional string paging_mode = 5 [json_name = "paging_mode"];
+  // Whether to return only the count of items.
   bool only_count = 6 [json_name = "only_count"];
+  // The keyword for searching resources.
   string keyword = 7 [json_name = "keyword"];
+  // The service name of the resources.
   string service_name = 8 [json_name = "service_name"];
+  // The synchronization status of the resources.
   string sync_status = 9 [json_name = "sync_status"];
+  // The operation of the resources.
   string operation = 10 [json_name = "operation"];
+  // The sorting criteria for the results.
   repeated string sorting = 11 [json_name = "sorting"];
 }
 
 // Response message for ResourceService.ListResources.
 message ListResourcesResponse {
+  // The total number of resources.
   int32 total = 1 [json_name = "total"];
+  // The list of resources.
   repeated api.v1.services.types.Resource resources = 2 [json_name = "resources"];
+  // The current page number.
   int32 page = 3 [json_name = "page"];
+  // The number of items per page.
   int32 page_size = 4 [json_name = "page_size"];
+  // Token to retrieve the next page of results, or empty if there are no more results.
   string next_page_token = 5 [json_name = "next_page_token"];
+  // Additional information about this response.
   optional google.protobuf.Any extra = 6 [json_name = "extra"];
 }
 
 // Request message for ResourceService.GetResource.
 message GetResourceRequest {
+  // The unique identifier of the resource.
   int64 id = 1;
 }
 
 // Response message for ResourceService.GetResource.
 message GetResourceResponse {
+  // The resource resource.
   api.v1.services.types.Resource resource = 1;
 }
 
 // Request message for ResourceService.CreateResource.
 message CreateResourceRequest {
+  // The parent resource id where the resource is to be created.
   string parent = 1;
+  // The resource id to use for this resource.
   string resource_id = 2;
+  // The resource resource to create.
   api.v1.services.types.Resource resource = 3;
 }
 
 // Response message for ResourceService.CreateResource.
 message CreateResourceResponse {
+  // The created resource resource.
   api.v1.services.types.Resource resource = 1;
 }
 
 // Request message for ResourceService.UpdateResource.
 message UpdateResourceRequest {
+  // The resource resource to update.
   api.v1.services.types.Resource resource = 1;
 }
 
 // Response message for ResourceService.UpdateResource.
 message UpdateResourceResponse {
+  // The updated resource resource.
   api.v1.services.types.Resource resource = 1;
 }
 
 // Request message for ResourceService.DeleteResource.
 message DeleteResourceRequest {
+  // The unique identifier of the resource to delete.
   int64 id = 1;
 }
 
 // Response message for ResourceService.DeleteResource.
 message DeleteResourceResponse {
+  // Empty response.
   google.protobuf.Empty empty = 1;
 }

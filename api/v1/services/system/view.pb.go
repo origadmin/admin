@@ -28,15 +28,23 @@ const (
 
 // Request message for ViewService.ListViews.
 type ListViewsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Page          int32                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
-	NoPaging      bool                   `protobuf:"varint,5,opt,name=no_paging,proto3" json:"no_paging,omitempty"`
-	OnlyCount     bool                   `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
-	Keyword       string                 `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	Scope         string                 `protobuf:"bytes,8,opt,name=scope,proto3" json:"scope,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier of the view.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The page number.
+	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	// The maximum number of items to return per page.
+	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	// The token for retrieving the next page of results.
+	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	// The paging_mode is used to specify the pagination mode.
+	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	// Whether to return only the count of items.
+	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	// The keyword for searching views.
+	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// The scope of the views to list.
+	Scope         string `protobuf:"bytes,8,opt,name=scope,proto3" json:"scope,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -99,11 +107,11 @@ func (x *ListViewsRequest) GetPageToken() string {
 	return ""
 }
 
-func (x *ListViewsRequest) GetNoPaging() bool {
-	if x != nil {
-		return x.NoPaging
+func (x *ListViewsRequest) GetPagingMode() string {
+	if x != nil && x.PagingMode != nil {
+		return *x.PagingMode
 	}
-	return false
+	return ""
 }
 
 func (x *ListViewsRequest) GetOnlyCount() bool {
@@ -129,13 +137,19 @@ func (x *ListViewsRequest) GetScope() string {
 
 // Response message for ViewService.ListViews.
 type ListViewsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Views         []*types.View          `protobuf:"bytes,2,rep,name=views,proto3" json:"views,omitempty"`
-	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
-	Extra         *anypb.Any             `protobuf:"bytes,6,opt,name=extra,proto3,oneof" json:"extra,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The total number of views.
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	// The list of views.
+	Views []*types.View `protobuf:"bytes,2,rep,name=views,proto3" json:"views,omitempty"`
+	// The current page number.
+	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	// The number of items per page.
+	PageSize int32 `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	// Token to retrieve the next page of results, or empty if there are no more results.
+	NextPageToken string `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
+	// Additional information about this response.
+	Extra         *anypb.Any `protobuf:"bytes,6,opt,name=extra,proto3,oneof" json:"extra,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -214,8 +228,9 @@ func (x *ListViewsResponse) GetExtra() *anypb.Any {
 
 // Request message for ViewService.GetView.
 type GetViewRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier of the view.
+	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -259,8 +274,9 @@ func (x *GetViewRequest) GetId() int64 {
 
 // Response message for ViewService.GetView.
 type GetViewResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	View          *types.View            `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The view resource.
+	View          *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -304,10 +320,13 @@ func (x *GetViewResponse) GetView() *types.View {
 
 // Request message for ViewService.CreateView.
 type CreateViewRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Parent        string                 `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	ViewId        string                 `protobuf:"bytes,2,opt,name=view_id,json=viewId,proto3" json:"view_id,omitempty"`
-	View          *types.View            `protobuf:"bytes,3,opt,name=view,proto3" json:"view,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The parent resource id where the view is to be created.
+	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	// The view id to use for this view.
+	ViewId string `protobuf:"bytes,2,opt,name=view_id,json=viewId,proto3" json:"view_id,omitempty"`
+	// The view resource to create.
+	View          *types.View `protobuf:"bytes,3,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -365,8 +384,9 @@ func (x *CreateViewRequest) GetView() *types.View {
 
 // Response message for ViewService.CreateView.
 type CreateViewResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	View          *types.View            `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The created view resource.
+	View          *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -410,8 +430,9 @@ func (x *CreateViewResponse) GetView() *types.View {
 
 // Request message for ViewService.UpdateView.
 type UpdateViewRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	View          *types.View            `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The view resource to update.
+	View          *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -455,8 +476,9 @@ func (x *UpdateViewRequest) GetView() *types.View {
 
 // Response message for ViewService.UpdateView.
 type UpdateViewResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	View          *types.View            `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The updated view resource.
+	View          *types.View `protobuf:"bytes,1,opt,name=view,proto3" json:"view,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -500,8 +522,9 @@ func (x *UpdateViewResponse) GetView() *types.View {
 
 // Request message for ViewService.DeleteView.
 type DeleteViewRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier of the view to delete.
+	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -545,8 +568,9 @@ func (x *DeleteViewRequest) GetId() int64 {
 
 // Response message for ViewService.DeleteView.
 type DeleteViewResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Empty         *emptypb.Empty         `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Empty response.
+	Empty         *emptypb.Empty `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -592,20 +616,21 @@ var File_system_view_proto protoreflect.FileDescriptor
 
 const file_system_view_proto_rawDesc = "" +
 	"\n" +
-	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xe2\x01\n" +
+	"\x11system/view.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xfb\x01\n" +
 	"\x10ListViewsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
 	"page_token\x18\x04 \x01(\tR\n" +
-	"page_token\x12\x1c\n" +
-	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
+	"page_token\x12%\n" +
+	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
 	"\akeyword\x18\a \x01(\tR\akeyword\x12\x14\n" +
-	"\x05scope\x18\b \x01(\tR\x05scope\"\xf3\x01\n" +
+	"\x05scope\x18\b \x01(\tR\x05scopeB\x0e\n" +
+	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListViewsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
 	"\x05views\x18\x02 \x03(\v2\x1b.api.v1.services.types.ViewR\x05views\x12\x12\n" +
@@ -714,6 +739,7 @@ func file_system_view_proto_init() {
 	if File_system_view_proto != nil {
 		return
 	}
+	file_system_view_proto_msgTypes[0].OneofWrappers = []any{}
 	file_system_view_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

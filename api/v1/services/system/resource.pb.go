@@ -28,18 +28,29 @@ const (
 
 // Request message for ResourceService.ListResources.
 type ListResourcesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Page          int32                  `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
-	NoPaging      bool                   `protobuf:"varint,5,opt,name=no_paging,proto3" json:"no_paging,omitempty"`
-	OnlyCount     bool                   `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
-	Keyword       string                 `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	ServiceName   string                 `protobuf:"bytes,8,opt,name=service_name,proto3" json:"service_name,omitempty"`
-	SyncStatus    string                 `protobuf:"bytes,9,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
-	Operation     string                 `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
-	Sorting       []string               `protobuf:"bytes,11,rep,name=sorting,proto3" json:"sorting,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier of the resource.
+	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// The page number.
+	Page int32 `protobuf:"varint,2,opt,name=page,proto3" json:"page,omitempty"`
+	// The maximum number of items to return per page.
+	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	// The token for retrieving the next page of results.
+	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
+	// The paging_mode is used to specify the pagination mode.
+	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
+	// Whether to return only the count of items.
+	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
+	// The keyword for searching resources.
+	Keyword string `protobuf:"bytes,7,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	// The service name of the resources.
+	ServiceName string `protobuf:"bytes,8,opt,name=service_name,proto3" json:"service_name,omitempty"`
+	// The synchronization status of the resources.
+	SyncStatus string `protobuf:"bytes,9,opt,name=sync_status,proto3" json:"sync_status,omitempty"`
+	// The operation of the resources.
+	Operation string `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
+	// The sorting criteria for the results.
+	Sorting       []string `protobuf:"bytes,11,rep,name=sorting,proto3" json:"sorting,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -102,11 +113,11 @@ func (x *ListResourcesRequest) GetPageToken() string {
 	return ""
 }
 
-func (x *ListResourcesRequest) GetNoPaging() bool {
-	if x != nil {
-		return x.NoPaging
+func (x *ListResourcesRequest) GetPagingMode() string {
+	if x != nil && x.PagingMode != nil {
+		return *x.PagingMode
 	}
-	return false
+	return ""
 }
 
 func (x *ListResourcesRequest) GetOnlyCount() bool {
@@ -153,13 +164,19 @@ func (x *ListResourcesRequest) GetSorting() []string {
 
 // Response message for ResourceService.ListResources.
 type ListResourcesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Total         int32                  `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
-	Resources     []*types.Resource      `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
-	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
-	NextPageToken string                 `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
-	Extra         *anypb.Any             `protobuf:"bytes,6,opt,name=extra,proto3,oneof" json:"extra,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The total number of resources.
+	Total int32 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	// The list of resources.
+	Resources []*types.Resource `protobuf:"bytes,2,rep,name=resources,proto3" json:"resources,omitempty"`
+	// The current page number.
+	Page int32 `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	// The number of items per page.
+	PageSize int32 `protobuf:"varint,4,opt,name=page_size,proto3" json:"page_size,omitempty"`
+	// Token to retrieve the next page of results, or empty if there are no more results.
+	NextPageToken string `protobuf:"bytes,5,opt,name=next_page_token,proto3" json:"next_page_token,omitempty"`
+	// Additional information about this response.
+	Extra         *anypb.Any `protobuf:"bytes,6,opt,name=extra,proto3,oneof" json:"extra,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -238,8 +255,9 @@ func (x *ListResourcesResponse) GetExtra() *anypb.Any {
 
 // Request message for ResourceService.GetResource.
 type GetResourceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier of the resource.
+	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -283,8 +301,9 @@ func (x *GetResourceRequest) GetId() int64 {
 
 // Response message for ResourceService.GetResource.
 type GetResourceResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      *types.Resource        `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource resource.
+	Resource      *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -328,10 +347,13 @@ func (x *GetResourceResponse) GetResource() *types.Resource {
 
 // Request message for ResourceService.CreateResource.
 type CreateResourceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Parent        string                 `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
-	ResourceId    string                 `protobuf:"bytes,2,opt,name=resource_id,json=resourceId,proto3" json:"resource_id,omitempty"`
-	Resource      *types.Resource        `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The parent resource id where the resource is to be created.
+	Parent string `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	// The resource id to use for this resource.
+	ResourceId string `protobuf:"bytes,2,opt,name=resource_id,json=resourceId,proto3" json:"resource_id,omitempty"`
+	// The resource resource to create.
+	Resource      *types.Resource `protobuf:"bytes,3,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -389,8 +411,9 @@ func (x *CreateResourceRequest) GetResource() *types.Resource {
 
 // Response message for ResourceService.CreateResource.
 type CreateResourceResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      *types.Resource        `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The created resource resource.
+	Resource      *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -434,8 +457,9 @@ func (x *CreateResourceResponse) GetResource() *types.Resource {
 
 // Request message for ResourceService.UpdateResource.
 type UpdateResourceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      *types.Resource        `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The resource resource to update.
+	Resource      *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -479,8 +503,9 @@ func (x *UpdateResourceRequest) GetResource() *types.Resource {
 
 // Response message for ResourceService.UpdateResource.
 type UpdateResourceResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Resource      *types.Resource        `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The updated resource resource.
+	Resource      *types.Resource `protobuf:"bytes,1,opt,name=resource,proto3" json:"resource,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -524,8 +549,9 @@ func (x *UpdateResourceResponse) GetResource() *types.Resource {
 
 // Request message for ResourceService.DeleteResource.
 type DeleteResourceRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The unique identifier of the resource to delete.
+	Id            int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -569,8 +595,9 @@ func (x *DeleteResourceRequest) GetId() int64 {
 
 // Response message for ResourceService.DeleteResource.
 type DeleteResourceResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Empty         *emptypb.Empty         `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Empty response.
+	Empty         *emptypb.Empty `protobuf:"bytes,1,opt,name=empty,proto3" json:"empty,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -616,15 +643,15 @@ var File_system_resource_proto protoreflect.FileDescriptor
 
 const file_system_resource_proto_rawDesc = "" +
 	"\n" +
-	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xce\x02\n" +
+	"\x15system/resource.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x16policy/v1/policy.proto\x1a\x12types/system.proto\"\xe7\x02\n" +
 	"\x14ListResourcesRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
 	"page_token\x18\x04 \x01(\tR\n" +
-	"page_token\x12\x1c\n" +
-	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
+	"page_token\x12%\n" +
+	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
@@ -633,7 +660,8 @@ const file_system_resource_proto_rawDesc = "" +
 	"\vsync_status\x18\t \x01(\tR\vsync_status\x12\x1c\n" +
 	"\toperation\x18\n" +
 	" \x01(\tR\toperation\x12\x18\n" +
-	"\asorting\x18\v \x03(\tR\asorting\"\x83\x02\n" +
+	"\asorting\x18\v \x03(\tR\asortingB\x0e\n" +
+	"\f_paging_mode\"\x83\x02\n" +
 	"\x15ListResourcesResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12=\n" +
 	"\tresources\x18\x02 \x03(\v2\x1f.api.v1.services.types.ResourceR\tresources\x12\x12\n" +
@@ -738,6 +766,7 @@ func file_system_resource_proto_init() {
 	if File_system_resource_proto != nil {
 		return
 	}
+	file_system_resource_proto_msgTypes[0].OneofWrappers = []any{}
 	file_system_resource_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

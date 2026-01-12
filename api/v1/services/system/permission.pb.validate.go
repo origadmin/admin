@@ -65,11 +65,13 @@ func (m *ListPermissionsRequest) validate(all bool) error {
 
 	// no validation rules for PageToken
 
-	// no validation rules for NoPaging
-
 	// no validation rules for OnlyCount
 
 	// no validation rules for Keyword
+
+	if m.PagingMode != nil {
+		// no validation rules for PagingMode
+	}
 
 	if len(errors) > 0 {
 		return ListPermissionsRequestMultiError(errors)

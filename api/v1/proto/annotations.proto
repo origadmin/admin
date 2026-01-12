@@ -21,8 +21,8 @@ option (gnostic.openapi.v3.document) = {
     }
   }
   servers: [
-  {url: "http://localhost:10080"},
-  {url: "https://localhost:10080"}]
+  {url: "http://localhost:8000"},
+  {url: "https://localhost:8000"}]
   components: {
     security_schemes: {
       additional_properties: [

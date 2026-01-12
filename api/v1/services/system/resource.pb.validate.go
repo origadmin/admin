@@ -65,8 +65,6 @@ func (m *ListResourcesRequest) validate(all bool) error {
 
 	// no validation rules for PageToken
 
-	// no validation rules for NoPaging
-
 	// no validation rules for OnlyCount
 
 	// no validation rules for Keyword
@@ -76,6 +74,10 @@ func (m *ListResourcesRequest) validate(all bool) error {
 	// no validation rules for SyncStatus
 
 	// no validation rules for Operation
+
+	if m.PagingMode != nil {
+		// no validation rules for PagingMode
+	}
 
 	if len(errors) > 0 {
 		return ListResourcesRequestMultiError(errors)

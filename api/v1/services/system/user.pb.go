@@ -309,8 +309,8 @@ type ListUsersRequest struct {
 	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The next_page_token value returned from a previous List request, if any.
 	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
-	// The no_paging is used to disable pagination.
-	NoPaging bool `protobuf:"varint,5,opt,name=no_paging,proto3" json:"no_paging,omitempty"`
+	// The paging_mode is used to specify the pagination mode.
+	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// The only_count is the query parameter for set only to query the total number
 	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The title query parameter for set only to query the title
@@ -377,11 +377,11 @@ func (x *ListUsersRequest) GetPageToken() string {
 	return ""
 }
 
-func (x *ListUsersRequest) GetNoPaging() bool {
-	if x != nil {
-		return x.NoPaging
+func (x *ListUsersRequest) GetPagingMode() string {
+	if x != nil && x.PagingMode != nil {
+		return *x.PagingMode
 	}
-	return false
+	return ""
 }
 
 func (x *ListUsersRequest) GetOnlyCount() bool {
@@ -989,19 +989,20 @@ const file_system_user_proto_rawDesc = "" +
 	"\x18ResetUserPasswordRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"\x1b\n" +
-	"\x19ResetUserPasswordResponse\"\xcc\x01\n" +
+	"\x19ResetUserPasswordResponse\"\xe5\x01\n" +
 	"\x10ListUsersRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
 	"page_token\x18\x04 \x01(\tR\n" +
-	"page_token\x12\x1c\n" +
-	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
+	"page_token\x12%\n" +
+	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12\x18\n" +
-	"\akeyword\x18\a \x01(\tR\akeyword\"\xf3\x01\n" +
+	"\akeyword\x18\a \x01(\tR\akeywordB\x0e\n" +
+	"\f_paging_mode\"\xf3\x01\n" +
 	"\x11ListUsersResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x121\n" +
 	"\x05users\x18\x02 \x03(\v2\x1b.api.v1.services.types.UserR\x05users\x12\x12\n" +
@@ -1151,6 +1152,7 @@ func file_system_user_proto_init() {
 	if File_system_user_proto != nil {
 		return
 	}
+	file_system_user_proto_msgTypes[6].OneofWrappers = []any{}
 	file_system_user_proto_msgTypes[7].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

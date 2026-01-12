@@ -25,12 +25,12 @@ var File_annotations_proto protoreflect.FileDescriptor
 
 const file_annotations_proto_rawDesc = "" +
 	"\n" +
-	"\x11annotations.proto\x12\x0fapi.v1.services\x1a$gnostic/openapi/v3/annotations.protoB\xcd\x04\xbaG\x8e\x03\x12\x8b\x02\n" +
+	"\x11annotations.proto\x12\x0fapi.v1.services\x1a$gnostic/openapi/v3/annotations.protoB\xcb\x04\xbaG\x8c\x03\x12\x8b\x02\n" +
 	"\rOrigAdmin API\x12_A lightweight, flexible, elegant and full-featured RBAC scaffolding backend management project.\"@\n" +
 	"\aGodCong\x12\x1chttps://github.com/origadmin\x1a\x17waitforadding@gmail.com*>\n" +
-	"\x03MIT\x127https://origadmin/application/admin/blob/master/LICENSE2\x17Version from annotation\x1a\x18\n" +
-	"\x16http://localhost:10080\x1a\x19\n" +
-	"\x17https://localhost:10080*I:G\n" +
+	"\x03MIT\x127https://origadmin/application/admin/blob/master/LICENSE2\x17Version from annotation\x1a\x17\n" +
+	"\x15http://localhost:8000\x1a\x18\n" +
+	"\x16https://localhost:8000*I:G\n" +
 	"\x18\n" +
 	"\x05Basic\x12\x0f\n" +
 	"\r\n" +

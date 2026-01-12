@@ -36,8 +36,8 @@ type ListPermissionsRequest struct {
 	PageSize int32 `protobuf:"varint,3,opt,name=page_size,proto3" json:"page_size,omitempty"`
 	// The next_page_token value returned from a previous List request, if any.
 	PageToken string `protobuf:"bytes,4,opt,name=page_token,proto3" json:"page_token,omitempty"`
-	// The no_paging is used to disable pagination.
-	NoPaging bool `protobuf:"varint,5,opt,name=no_paging,proto3" json:"no_paging,omitempty"`
+	// The paging_mode is used to specify the pagination mode.
+	PagingMode *string `protobuf:"bytes,5,opt,name=paging_mode,proto3,oneof" json:"paging_mode,omitempty"`
 	// The only_count is the query parameter for set only to query the total number
 	OnlyCount bool `protobuf:"varint,6,opt,name=only_count,proto3" json:"only_count,omitempty"`
 	// The data_scopes is used to query the permission by data scopes.
@@ -106,11 +106,11 @@ func (x *ListPermissionsRequest) GetPageToken() string {
 	return ""
 }
 
-func (x *ListPermissionsRequest) GetNoPaging() bool {
-	if x != nil {
-		return x.NoPaging
+func (x *ListPermissionsRequest) GetPagingMode() string {
+	if x != nil && x.PagingMode != nil {
+		return *x.PagingMode
 	}
-	return false
+	return ""
 }
 
 func (x *ListPermissionsRequest) GetOnlyCount() bool {
@@ -616,20 +616,21 @@ var File_system_permission_proto protoreflect.FileDescriptor
 
 const file_system_permission_proto_rawDesc = "" +
 	"\n" +
-	"\x17system/permission.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\xf4\x01\n" +
+	"\x17system/permission.proto\x12\x16api.v1.services.system\x1a\x1cgoogle/api/annotations.proto\x1a\x19google/protobuf/any.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12types/system.proto\x1a\x16policy/v1/policy.proto\"\x8d\x02\n" +
 	"\x16ListPermissionsRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1c\n" +
 	"\tpage_size\x18\x03 \x01(\x05R\tpage_size\x12\x1e\n" +
 	"\n" +
 	"page_token\x18\x04 \x01(\tR\n" +
-	"page_token\x12\x1c\n" +
-	"\tno_paging\x18\x05 \x01(\bR\tno_paging\x12\x1e\n" +
+	"page_token\x12%\n" +
+	"\vpaging_mode\x18\x05 \x01(\tH\x00R\vpaging_mode\x88\x01\x01\x12\x1e\n" +
 	"\n" +
 	"only_count\x18\x06 \x01(\bR\n" +
 	"only_count\x12 \n" +
 	"\vdata_scopes\x18\a \x03(\tR\vdata_scopes\x12\x18\n" +
-	"\akeyword\x18\b \x01(\tR\akeyword\"\x8b\x02\n" +
+	"\akeyword\x18\b \x01(\tR\akeywordB\x0e\n" +
+	"\f_paging_mode\"\x8b\x02\n" +
 	"\x17ListPermissionsResponse\x12\x14\n" +
 	"\x05total\x18\x01 \x01(\x05R\x05total\x12C\n" +
 	"\vpermissions\x18\x02 \x03(\v2!.api.v1.services.types.PermissionR\vpermissions\x12\x12\n" +
@@ -744,6 +745,7 @@ func file_system_permission_proto_init() {
 	if File_system_permission_proto != nil {
 		return
 	}
+	file_system_permission_proto_msgTypes[0].OneofWrappers = []any{}
 	file_system_permission_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

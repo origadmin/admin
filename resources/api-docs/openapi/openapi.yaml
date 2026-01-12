@@ -14,8 +14,8 @@ info:
         url: https://origadmin/application/admin/blob/master/LICENSE
     version: Version from annotation
 servers:
-    - url: http://localhost:10080
-    - url: https://localhost:10080
+    - url: http://localhost:8000
+    - url: https://localhost:8000
 paths:
     /auth/captcha:
         get:
@@ -728,11 +728,11 @@ paths:
                   description: The next_page_token value returned from a previous List request, if any.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
-                  description: The no_paging is used to disable pagination.
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
                   description: The only_count is the query parameter for set only to query the total number
@@ -895,11 +895,11 @@ paths:
                   description: The next_page_token value returned from a previous List request, if any.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
-                  description: The no_paging is used to disable pagination.
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
                   description: The only_count is the query parameter for set only to query the total number
@@ -1064,11 +1064,11 @@ paths:
                   description: The next_page_token value returned from a previous List request, if any.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
-                  description: The no_paging is used to disable pagination.
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
                   description: The only_count is the query parameter for set only to query the total number
@@ -1212,48 +1212,59 @@ paths:
             parameters:
                 - name: id
                   in: query
+                  description: The unique identifier of the resource.
                   schema:
                     type: string
                 - name: page
                   in: query
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
                 - name: page_size
                   in: query
+                  description: The maximum number of items to return per page.
                   schema:
                     type: integer
                     format: int32
                 - name: page_token
                   in: query
+                  description: The token for retrieving the next page of results.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
+                  description: Whether to return only the count of items.
                   schema:
                     type: boolean
                 - name: keyword
                   in: query
+                  description: The keyword for searching resources.
                   schema:
                     type: string
                 - name: service_name
                   in: query
+                  description: The service name of the resources.
                   schema:
                     type: string
                 - name: sync_status
                   in: query
+                  description: The synchronization status of the resources.
                   schema:
                     type: string
                 - name: operation
                   in: query
+                  description: The operation of the resources.
                   schema:
                     type: string
                 - name: sorting
                   in: query
+                  description: The sorting criteria for the results.
                   schema:
                     type: array
                     items:
@@ -1304,6 +1315,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The unique identifier of the resource.
                   required: true
                   schema:
                     type: string
@@ -1328,6 +1340,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The unique identifier of the resource to delete.
                   required: true
                   schema:
                     type: string
@@ -1403,11 +1416,11 @@ paths:
                   description: The next_page_token value returned from a previous List request, if any.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
-                  description: The no_paging is used to disable pagination.
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
                   description: The only_count is the query parameter for set only to query the total number
@@ -1565,11 +1578,11 @@ paths:
                   description: The next_page_token value returned from a previous List request, if any.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
-                  description: The no_paging is used to disable pagination.
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
                   description: The only_count is the query parameter for set only to query the total number
@@ -1823,36 +1836,44 @@ paths:
             parameters:
                 - name: id
                   in: query
+                  description: The unique identifier of the view.
                   schema:
                     type: string
                 - name: page
                   in: query
+                  description: The page number.
                   schema:
                     type: integer
                     format: int32
                 - name: page_size
                   in: query
+                  description: The maximum number of items to return per page.
                   schema:
                     type: integer
                     format: int32
                 - name: page_token
                   in: query
+                  description: The token for retrieving the next page of results.
                   schema:
                     type: string
-                - name: no_paging
+                - name: paging_mode
                   in: query
+                  description: The paging_mode is used to specify the pagination mode.
                   schema:
-                    type: boolean
+                    type: string
                 - name: only_count
                   in: query
+                  description: Whether to return only the count of items.
                   schema:
                     type: boolean
                 - name: keyword
                   in: query
+                  description: The keyword for searching views.
                   schema:
                     type: string
                 - name: scope
                   in: query
+                  description: The scope of the views to list.
                   schema:
                     type: string
             responses:
@@ -1901,6 +1922,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The unique identifier of the view.
                   required: true
                   schema:
                     type: string
@@ -1925,6 +1947,7 @@ paths:
             parameters:
                 - name: id
                   in: path
+                  description: The unique identifier of the view to delete.
                   required: true
                   schema:
                     type: string
@@ -2526,16 +2549,22 @@ components:
             properties:
                 parent:
                     type: string
+                    description: The parent resource id where the resource is to be created.
                 resource_id:
                     type: string
+                    description: The resource id to use for this resource.
                 resource:
-                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The resource resource to create.
             description: Request message for ResourceService.CreateResource.
         api.v1.services.system.CreateResourceResponse:
             type: object
             properties:
                 resource:
-                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The created resource resource.
             description: Response message for ResourceService.CreateResource.
         api.v1.services.system.CreateRoleRequest:
             type: object
@@ -2582,16 +2611,22 @@ components:
             properties:
                 parent:
                     type: string
+                    description: The parent resource id where the view is to be created.
                 view_id:
                     type: string
+                    description: The view id to use for this view.
                 view:
-                    $ref: '#/components/schemas/api.v1.services.types.View'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The view resource to create.
             description: Request message for ViewService.CreateView.
         api.v1.services.system.CreateViewResponse:
             type: object
             properties:
                 view:
-                    $ref: '#/components/schemas/api.v1.services.types.View'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The created view resource.
             description: Response message for ViewService.CreateView.
         api.v1.services.system.DeleteDepartmentResponse:
             type: object
@@ -2635,7 +2670,9 @@ components:
             type: object
             properties:
                 resource:
-                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The resource resource.
             description: Response message for ResourceService.GetResource.
         api.v1.services.system.GetRoleResponse:
             type: object
@@ -2651,7 +2688,9 @@ components:
             type: object
             properties:
                 view:
-                    $ref: '#/components/schemas/api.v1.services.types.View'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The view resource.
             description: Response message for ViewService.GetView.
         api.v1.services.system.ListDepartmentsResponse:
             type: object
@@ -2751,21 +2790,28 @@ components:
             properties:
                 total:
                     type: integer
+                    description: The total number of resources.
                     format: int32
                 resources:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The list of resources.
                 page:
                     type: integer
+                    description: The current page number.
                     format: int32
                 page_size:
                     type: integer
+                    description: The number of items per page.
                     format: int32
                 next_page_token:
                     type: string
+                    description: Token to retrieve the next page of results, or empty if there are no more results.
                 extra:
-                    $ref: '#/components/schemas/google.protobuf.Any'
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: Additional information about this response.
             description: Response message for ResourceService.ListResources.
         api.v1.services.system.ListRolesResponse:
             type: object
@@ -2844,21 +2890,28 @@ components:
             properties:
                 total:
                     type: integer
+                    description: The total number of views.
                     format: int32
                 views:
                     type: array
                     items:
                         $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The list of views.
                 page:
                     type: integer
+                    description: The current page number.
                     format: int32
                 page_size:
                     type: integer
+                    description: The number of items per page.
                     format: int32
                 next_page_token:
                     type: string
+                    description: Token to retrieve the next page of results, or empty if there are no more results.
                 extra:
-                    $ref: '#/components/schemas/google.protobuf.Any'
+                    allOf:
+                        - $ref: '#/components/schemas/google.protobuf.Any'
+                    description: Additional information about this response.
             description: Response message for ViewService.ListViews.
         api.v1.services.system.ResetUserPasswordRequest:
             type: object
@@ -2899,13 +2952,17 @@ components:
             type: object
             properties:
                 resource:
-                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The resource resource to update.
             description: Request message for ResourceService.UpdateResource.
         api.v1.services.system.UpdateResourceResponse:
             type: object
             properties:
                 resource:
-                    $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.Resource'
+                    description: The updated resource resource.
             description: Response message for ResourceService.UpdateResource.
         api.v1.services.system.UpdateRoleRequest:
             type: object
@@ -2969,13 +3026,17 @@ components:
             type: object
             properties:
                 view:
-                    $ref: '#/components/schemas/api.v1.services.types.View'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The view resource to update.
             description: Request message for ViewService.UpdateView.
         api.v1.services.system.UpdateViewResponse:
             type: object
             properties:
                 view:
-                    $ref: '#/components/schemas/api.v1.services.types.View'
+                    allOf:
+                        - $ref: '#/components/schemas/api.v1.services.types.View'
+                    description: The updated view resource.
             description: Response message for ViewService.UpdateView.
         api.v1.services.types.DataObject:
             type: object

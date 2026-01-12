@@ -53,8 +53,8 @@ message ListPositionsRequest {
   int32 page_size = 3 [json_name = "page_size"];
   // The next_page_token value returned from a previous List request, if any.
   string page_token = 4 [json_name = "page_token"];
-  // The no_paging is used to disable pagination.
-  bool no_paging = 5 [json_name = "no_paging"];
+  // The paging_mode is used to specify the pagination mode.
+  optional string paging_mode = 5 [json_name = "paging_mode"];
   // The only_count is the query parameter for set only to query the total number
   bool only_count = 6 [json_name = "only_count"];
   // The keyword is the query parameter for set only to query the position by keyword
